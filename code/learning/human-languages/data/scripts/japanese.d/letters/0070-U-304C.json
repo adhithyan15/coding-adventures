@@ -7,9 +7,18 @@
     "the dakuten ゛"
   ],
   "strokeOrder": [
-    "か in full",
-    "two short strokes at the upper right"
+    "draw the bar from left to right, then without lifting turn down the right side and hook back to the left at the foot",
+    "lift, begin above the bar and draw the long stroke down through it to the lower left",
+    "lift, draw the dot at the right down and to the right",
+    "lift, draw the left tick of the dakuten down to the right",
+    "lift, draw the right tick down to the right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 0304c file records が as five stroke paths in this order and direction: か's three strokes (the bar that turns down the right side, the long stroke falling to the lower left and the dot), then the dakuten's two ticks, the left one first, each drawn down to the right; so there are four pen lifts.",
+  "penLifts": 4,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0304c.svg",
+    "citation": "KanjiVG, kanji/0304c.svg, hiragana が (U+304C HIRAGANA LETTER GA), five stroke paths kvg:0304c-s1 to s5 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 to s3 are か's strokes, the same paths as in its file for か, kanji/0304b.svg; s4 and s5 are the dakuten, the left tick first and then the right one, each drawn down to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
   "notes": "Third sign of ありがとう."
 }

@@ -64,6 +64,31 @@ const JAPANESE_HA = DUCTUS[ductusKey("japanese", "は")];
 const JAPANESE_MA = DUCTUS[ductusKey("japanese", "ま")];
 const JAPANESE_RI = DUCTUS[ductusKey("japanese", "り")];
 const JAPANESE_N = DUCTUS[ductusKey("japanese", "ん")];
+const JAPANESE_GA = DUCTUS[ductusKey("japanese", "が")];
+const JAPANESE_GI = DUCTUS[ductusKey("japanese", "ぎ")];
+const JAPANESE_GU = DUCTUS[ductusKey("japanese", "ぐ")];
+const JAPANESE_GE = DUCTUS[ductusKey("japanese", "げ")];
+const JAPANESE_GO = DUCTUS[ductusKey("japanese", "ご")];
+const JAPANESE_ZA = DUCTUS[ductusKey("japanese", "ざ")];
+const JAPANESE_ZU = DUCTUS[ductusKey("japanese", "ず")];
+const JAPANESE_ZE = DUCTUS[ductusKey("japanese", "ぜ")];
+const JAPANESE_ZO = DUCTUS[ductusKey("japanese", "ぞ")];
+const JAPANESE_DA = DUCTUS[ductusKey("japanese", "だ")];
+const JAPANESE_DE = DUCTUS[ductusKey("japanese", "で")];
+const JAPANESE_DO = DUCTUS[ductusKey("japanese", "ど")];
+const JAPANESE_BA = DUCTUS[ductusKey("japanese", "ば")];
+const JAPANESE_BI = DUCTUS[ductusKey("japanese", "び")];
+const JAPANESE_BU = DUCTUS[ductusKey("japanese", "ぶ")];
+const JAPANESE_BE = DUCTUS[ductusKey("japanese", "べ")];
+const JAPANESE_BO = DUCTUS[ductusKey("japanese", "ぼ")];
+const JAPANESE_PA = DUCTUS[ductusKey("japanese", "ぱ")];
+const JAPANESE_PI = DUCTUS[ductusKey("japanese", "ぴ")];
+const JAPANESE_PU = DUCTUS[ductusKey("japanese", "ぷ")];
+const JAPANESE_PE = DUCTUS[ductusKey("japanese", "ぺ")];
+const JAPANESE_PO = DUCTUS[ductusKey("japanese", "ぽ")];
+const JAPANESE_DAKUTEN_MARK = DUCTUS[ductusKey("japanese", "゛")];
+const JAPANESE_HANDAKUTEN_MARK = DUCTUS[ductusKey("japanese", "゜")];
+const JAPANESE_LONG_VOWEL_MARK = DUCTUS[ductusKey("japanese", "ー")];
 
 const OWNER_SCRIPTS = new Set(["japanese"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -1468,5 +1493,301 @@ describe("handwriting ductus", () => {
       );
       expect(letter.source.citation).toMatch(/Sirgazil.*frames.*seconds/i);
     }
+  });
+
+  // The voiced kana and the three spacing marks. KanjiVG draws each voiced
+  // kana as one glyph: its base sign's paths, then the dakuten's two ticks or
+  // the handakuten's ring. Each is fitted to its own Noto Sans JP outline.
+  for (const [letter, file, name, labels] of [
+    [
+      JAPANESE_GA,
+      "0304c",
+      "U+304C HIRAGANA LETTER GA",
+      [["draw the bar to the right", "turn down the right side", "hook back to the left"], ["draw the long stroke down to the left"], ["draw the dot down to the right"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_GI,
+      "0304e",
+      "U+304E HIRAGANA LETTER GI",
+      [["draw the upper bar from left to right"], ["draw the lower bar from left to right"], ["run the long diagonal down to the right", "turn sharply and hook back to the left"], ["curve down and along the base"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_GU,
+      "03050",
+      "U+3050 HIRAGANA LETTER GU",
+      [["sweep down to the left into the turn", "turn and run down to the right"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_GE,
+      "03052",
+      "U+3052 HIRAGANA LETTER GE",
+      [["draw the left vertical down", "turn and flick up to the right"], ["draw the bar from left to right"], ["run down and sweep to the lower left"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_GO,
+      "03054",
+      "U+3054 HIRAGANA LETTER GO",
+      [["draw the top stroke to the right"], ["curve down and run out to the right"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_ZA,
+      "03056",
+      "U+3056 HIRAGANA LETTER ZA",
+      [["draw the bar to the right"], ["slant down to the right through the bar", "hook back to the left"], ["curve down and run out to the right"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_ZU,
+      "0305a",
+      "U+305A HIRAGANA LETTER ZU",
+      [["draw the bar from left to right"], ["draw the vertical down through the bar", "loop round to the left and over the top", "come down and sweep to the lower left"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_ZE,
+      "0305c",
+      "U+305C HIRAGANA LETTER ZE",
+      [["draw the long bar from left to right"], ["draw the right stem down", "hook back to the left"], ["draw the left stem down", "curve right along the base"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_ZO,
+      "0305e",
+      "U+305E HIRAGANA LETTER ZO",
+      [["draw the short top bar from left to right", "turn and run down-left to the bar", "swing back right along the long bar", "double back and drop into the curve", "round the lower left and finish on the base"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_DA,
+      "03060",
+      "U+3060 HIRAGANA LETTER DA",
+      [["draw the upper bar to the right"], ["draw the long stem down to the left"], ["draw the short bar to the right"], ["curve down and run out to the right"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_DE,
+      "03067",
+      "U+3067 HIRAGANA LETTER DE",
+      [["draw the top bar to the right", "turn back down to the left", "curve round and out to the right"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_DO,
+      "03069",
+      "U+3069 HIRAGANA LETTER DO",
+      [["draw the short stroke down to the right"], ["sweep down to the left", "curve round and run out to the right"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_BA,
+      "03070",
+      "U+3070 HIRAGANA LETTER BA",
+      [["draw the left vertical down", "turn and flick up to the right"], ["draw the bar to the right"], ["draw the vertical down through the bar", "loop round to the left and up", "cross it and run out to the lower right"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_BI,
+      "03073",
+      "U+3073 HIRAGANA LETTER BI",
+      [["draw the short shoulder to the right", "swing down round the bottom", "rise up the right side and flick out"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_BU,
+      "03076",
+      "U+3076 HIRAGANA LETTER BU",
+      [["draw the top tick down to the right"], ["curve round and away to the lower left"], ["draw the lower-left mark up to the right"], ["draw the lower-right mark down to the right"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_BE,
+      "03079",
+      "U+3079 HIRAGANA LETTER BE",
+      [["rise up to the peak", "run down to the right"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_BO,
+      "0307c",
+      "U+307C HIRAGANA LETTER BO",
+      [["draw the left vertical down", "turn and flick up to the right"], ["draw the upper bar to the right"], ["draw the lower bar to the right"], ["draw the vertical down from the upper bar", "loop round to the left and up", "cross it and run out to the lower right"], ["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_PA,
+      "03071",
+      "U+3071 HIRAGANA LETTER PA",
+      [["draw the left vertical down", "turn and flick up to the right"], ["draw the bar to the right"], ["draw the vertical down through the bar", "loop round to the left and up", "cross it and run out to the lower right"], ["draw the circle clockwise from its foot"]],
+    ],
+    [
+      JAPANESE_PI,
+      "03074",
+      "U+3074 HIRAGANA LETTER PI",
+      [["draw the short shoulder to the right", "swing down round the bottom", "rise up the right side and flick out"], ["draw the circle clockwise from its foot"]],
+    ],
+    [
+      JAPANESE_PU,
+      "03077",
+      "U+3077 HIRAGANA LETTER PU",
+      [["draw the top tick down to the right"], ["curve round and away to the lower left"], ["draw the lower-left mark up to the right"], ["draw the lower-right mark down to the right"], ["draw the circle clockwise from its foot"]],
+    ],
+    [
+      JAPANESE_PE,
+      "0307a",
+      "U+307A HIRAGANA LETTER PE",
+      [["rise up to the peak", "run down to the right"], ["draw the circle clockwise from its foot"]],
+    ],
+    [
+      JAPANESE_PO,
+      "0307d",
+      "U+307D HIRAGANA LETTER PO",
+      [["draw the left vertical down", "turn and flick up to the right"], ["draw the upper bar to the right"], ["draw the lower bar to the right"], ["draw the vertical down from the upper bar", "loop round to the left and up", "cross it and run out to the lower right"], ["draw the circle clockwise from its foot"]],
+    ],
+    [
+      JAPANESE_DAKUTEN_MARK,
+      "0309b",
+      "U+309B",
+      [["draw the left tick down to the right"], ["draw the right tick down to the right"]],
+    ],
+    [
+      JAPANESE_HANDAKUTEN_MARK,
+      "0309c",
+      "U+309C",
+      [["draw the circle clockwise from its foot"]],
+    ],
+    [
+      JAPANESE_LONG_VOWEL_MARK,
+      "030fc",
+      "U+30FC",
+      [["draw the bar from left to right"]],
+    ],
+  ] as const) {
+    it(`Japanese ${letter.glyph} follows KanjiVG's ${labels.length}-path order on its own outline`, () => {
+      expect(letter.strokes).toHaveLength(labels.length);
+      expect(penLifts(letter)).toBe(labels.length - 1);
+      expect(
+        letter.strokes.map((stroke) =>
+          stroke.segments.map((segment) => segment.label),
+        ),
+      ).toEqual(labels);
+      for (const stroke of letter.strokes) {
+        for (const gap of joinGaps(stroke)) expect(gap).toBe(0);
+      }
+      expect(letter.source.url).toBe(
+        `https://github.com/KanjiVG/kanjivg/blob/master/kanji/${file}.svg`,
+      );
+      for (const phrase of [
+        "KanjiVG",
+        name,
+        "Ulrich Apel and contributors, CC BY-SA 3.0",
+      ]) {
+        expect(letter.source.citation, phrase).toContain(phrase);
+      }
+      for (const phrase of [
+        "Only the order and direction",
+        "Noto Sans JP outline's own medial line",
+      ]) {
+        expect(letter.source.variation, phrase).toContain(phrase);
+      }
+    });
+  }
+
+  it("Japanese voiced kana and marks run in the directions their captions claim", () => {
+    const first = (path: readonly Point[]) => path[0];
+    const last = (path: readonly Point[]) => path[path.length - 1];
+    const box = (letter: LetterDuctus, from: number, to: number) => {
+      const points = letter.strokes.slice(from, to).flatMap((stroke) => penPath(stroke));
+      return {
+        right: Math.max(...points.map((p) => p.x)),
+        top: Math.max(...points.map((p) => p.y)),
+        bottom: Math.min(...points.map((p) => p.y)),
+      };
+    };
+    const dakuten = [
+      JAPANESE_GA, JAPANESE_GI, JAPANESE_GU, JAPANESE_GE, JAPANESE_GO,
+      JAPANESE_ZA, JAPANESE_ZU, JAPANESE_ZE, JAPANESE_ZO, JAPANESE_DA,
+      JAPANESE_DE, JAPANESE_DO, JAPANESE_BA, JAPANESE_BI, JAPANESE_BU,
+      JAPANESE_BE, JAPANESE_BO,
+    ];
+    const handakuten = [JAPANESE_PA, JAPANESE_PI, JAPANESE_PU, JAPANESE_PE, JAPANESE_PO];
+    // Every dakuten: the last two strokes, the LEFT tick first, each running
+    // DOWN to the RIGHT, both at the right of the base sign and in its upper
+    // half.
+    for (const letter of [...dakuten, JAPANESE_DAKUTEN_MARK]) {
+      const n = letter.strokes.length;
+      const [left, right] = [penPath(letter.strokes[n - 2]), penPath(letter.strokes[n - 1])];
+      expect(first(left).x, letter.glyph).toBeLessThan(first(right).x);
+      for (const tick of [left, right]) {
+        expect(last(tick).x, letter.glyph).toBeGreaterThan(first(tick).x + 25);
+        expect(last(tick).y, letter.glyph).toBeLessThan(first(tick).y - 50);
+      }
+      if (n > 2) {
+        const base = box(letter, 0, n - 2);
+        expect(Math.min(...left.map((p) => p.x)), letter.glyph).toBeGreaterThan(base.right - 300);
+        expect(Math.min(...right.map((p) => p.y)), letter.glyph).toBeGreaterThan((base.top + base.bottom) / 2);
+      }
+    }
+    // Every handakuten: one closed ring, last, that starts at its FOOT and
+    // first swings LEFT, so it runs clockwise on the page.
+    for (const letter of [...handakuten, JAPANESE_HANDAKUTEN_MARK]) {
+      const ring = penPath(letter.strokes[letter.strokes.length - 1]);
+      const lowest = Math.min(...ring.map((p) => p.y));
+      const middle = (Math.min(...ring.map((p) => p.x)) + Math.max(...ring.map((p) => p.x))) / 2;
+      expect(first(ring).y - lowest, letter.glyph).toBeLessThan(10);
+      expect(Math.abs(first(ring).x - middle), letter.glyph).toBeLessThan(20);
+      expect(Math.hypot(last(ring).x - first(ring).x, last(ring).y - first(ring).y), letter.glyph).toBeLessThan(15);
+      const quarter = ring[Math.floor(ring.length / 4)];
+      expect(quarter.x, letter.glyph).toBeLessThan(first(ring).x - 30);
+      expect(quarter.y, letter.glyph).toBeGreaterThan(first(ring).y + 30);
+    }
+    // ー: one bar, left to right.
+    const bar = penPath(JAPANESE_LONG_VOWEL_MARK.strokes[0]);
+    expect(last(bar).x).toBeGreaterThan(first(bar).x + 600);
+    expect(Math.abs(last(bar).y - first(bar).y)).toBeLessThan(20);
+    // ぜ: KanjiVG's RIGHT stem comes second and hooks back LEFT; the LEFT stem
+    // comes third and curves RIGHT along the base.
+    const [zeRight, zeHook] = JAPANESE_ZE.strokes[1].segments.map((s) => s.path);
+    const [zeLeft, zeBase] = JAPANESE_ZE.strokes[2].segments.map((s) => s.path);
+    expect(first(zeRight).x).toBeGreaterThan(first(zeLeft).x + 250);
+    expect(last(zeRight).y).toBeLessThan(first(zeRight).y - 300);
+    expect(last(zeHook).x).toBeLessThan(first(zeHook).x - 100);
+    expect(last(zeLeft).y).toBeLessThan(first(zeLeft).y - 500);
+    expect(last(zeBase).x).toBeGreaterThan(first(zeBase).x + 350);
+    // ぶ and ぷ: the lower-left mark runs UP to the RIGHT.
+    for (const letter of [JAPANESE_BU, JAPANESE_PU]) {
+      const mark = penPath(letter.strokes[2]);
+      expect(last(mark).x, letter.glyph).toBeGreaterThan(first(mark).x + 150);
+      expect(last(mark).y, letter.glyph).toBeGreaterThan(first(mark).y + 100);
+    }
+    // ぼ and ぽ: the left vertical runs DOWN, then flicks UP to the RIGHT; the
+    // last base stroke starts at the upper bar, runs DOWN, loops LEFT and
+    // comes back UP, then crosses and runs out to the LOWER RIGHT.
+    for (const letter of [JAPANESE_BO, JAPANESE_PO]) {
+      const [down, flick] = letter.strokes[0].segments.map((s) => s.path);
+      expect(last(down).y, letter.glyph).toBeLessThan(first(down).y - 600);
+      expect(last(flick).x, letter.glyph).toBeGreaterThan(first(flick).x + 30);
+      expect(last(flick).y, letter.glyph).toBeGreaterThan(first(flick).y + 150);
+      const upper = penPath(letter.strokes[1]);
+      const [stem, loop, cross] = letter.strokes[3].segments.map((s) => s.path);
+      expect(Math.abs(first(stem).y - first(upper).y), letter.glyph).toBeLessThan(40);
+      expect(last(stem).y, letter.glyph).toBeLessThan(first(stem).y - 400);
+      expect(Math.min(...loop.map((p) => p.x)), letter.glyph).toBeLessThan(first(loop).x - 200);
+      expect(last(loop).y, letter.glyph).toBeGreaterThan(Math.min(...loop.map((p) => p.y)) + 150);
+      expect(last(cross).x, letter.glyph).toBeGreaterThan(last(stem).x + 100);
+      expect(last(cross).y, letter.glyph).toBeLessThan(first(cross).y - 100);
+    }
+  });
+
+  // Every voiced kana the inventory holds, and the three spacing marks, has a
+  // cited stroke order and a ductus drawn from it.
+  it("every voiced kana in the inventory and every spacing mark has a cited stroke order and a ductus", () => {
+    const japanese = SCRIPTS.find((script) => script.script === "japanese")!;
+    const voiced = japanese.letters
+      .filter((letter) => letter.role === "hiragana")
+      .map((letter) => letter.glyph)
+      .filter((glyph) => /[\u3099\u309a]/.test(glyph.normalize("NFD")));
+    expect(voiced.join("")).toBe("がぎぐげござずぜぞだでどばぱべぺびぴぶぷぼぽ");
+    const uncited = [
+      ...voiced.filter(
+        (glyph) =>
+          japanese.letters.find((letter) => letter.glyph === glyph)?.strokeOrderSource === undefined,
+      ),
+      ...(japanese.marks ?? [])
+        .filter((mark) => mark.strokeOrderSource === undefined)
+        .map((mark) => mark.mark),
+    ];
+    const undrawn = [...voiced, ...(japanese.marks ?? []).map((mark) => mark.mark)].filter(
+      (glyph) => DUCTUS[ductusKey("japanese", glyph)] === undefined,
+    );
+    expect(uncited).toEqual([]);
+    expect(undrawn).toEqual([]);
   });
 });

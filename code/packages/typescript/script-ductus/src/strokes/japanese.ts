@@ -13,8 +13,17 @@ const canonicalScript = (id: string): ScriptData => {
 
 const japanese = canonicalScript("japanese");
 
-const strokeSource = (glyph: string): StrokeSource =>
-  japanese.letters.find((letter) => letter.glyph === glyph)!.strokeOrderSource!;
+// A ductus may belong to a letter row or, for the spacing marks ゛, ゜ and ー,
+// to a mark row: both carry the same strokeOrderSource claim, and the
+// provenance gate in tests/strokes.test.ts checks either against the ductus.
+const strokeSource = (glyph: string): StrokeSource => {
+  const owner =
+    japanese.letters.find((letter) => letter.glyph === glyph) ??
+    japanese.marks?.find((mark) => mark.mark === glyph);
+  if (owner?.strokeOrderSource === undefined)
+    throw new Error(`Japanese ${glyph} has no cited stroke-order source`);
+  return owner.strokeOrderSource;
+};
 
 export const entries: DuctusEntry[] = [
   // Sirgazil's 23-frame animation writes hiragana し in one uninterrupted
@@ -3769,6 +3778,2476 @@ export const entries: DuctusEntry[] = [
         },
       ],
       source: strokeSource("ん"),
+    },
+  ],
+  // The voiced kana: が to ぽ, every one the inventory holds, and the three
+  // spacing marks ゛, ゜ and ー. Their rows had no cited stroke-order source,
+  // so they had no ductus and their writing lessons printed no filmstrip.
+  // KanjiVG draws each voiced kana as one whole glyph: the base sign's own
+  // paths, the same as in its file for the base sign, then the dakuten's two
+  // ticks, left first, each down to the right, or the handakuten's one ring,
+  // from its foot, clockwise. KanjiVG supplies only the ORDER and DIRECTION;
+  // the bundled outline's medial line supplies the coordinates. The base
+  // strokes start from the base sign's own fitted path, moved by the offset
+  // measured between the two glyphs' outlines, and are re-fitted to this
+  // glyph's ridge; the marks are fitted on their own contours. Every sharp
+  // turn inside a stroke is a segment boundary and each join is exact. Where
+  // KanjiVG's voiced file disagrees with the base sign's Sirgazil-cited row
+  // (the stems of ぜ, the lower-left mark of ぶ and ぷ, the left vertical of
+  // ぼ and ぽ), the voiced glyph follows its own citation, KanjiVG.
+  [
+    "japanese:が",
+    {
+      script: "japanese",
+      glyph: "が",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the bar to the right",
+              path: [
+                { x: 108, y: 517 },
+                { x: 182, y: 521 },
+                { x: 256, y: 528 },
+                { x: 331, y: 532 },
+                { x: 404, y: 541 },
+                { x: 478, y: 545 },
+                { x: 551, y: 536 },
+                { x: 608, y: 489 },
+              ],
+            },
+            {
+              label:
+                "turn down the right side",
+              path: [
+                { x: 608, y: 489 },
+                { x: 620, y: 420 },
+                { x: 620, y: 349 },
+                { x: 617, y: 279 },
+                { x: 608, y: 209 },
+                { x: 594, y: 140 },
+                { x: 570, y: 74 },
+                { x: 524, y: 21 },
+              ],
+            },
+            {
+              label:
+                "hook back to the left",
+              path: [
+                { x: 524, y: 21 },
+                { x: 451, y: 7 },
+                { x: 376, y: 13 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the long stroke down to the left",
+              path: [
+                { x: 372, y: 741 },
+                { x: 365, y: 672 },
+                { x: 353, y: 603 },
+                { x: 339, y: 536 },
+                { x: 322, y: 469 },
+                { x: 303, y: 402 },
+                { x: 282, y: 336 },
+                { x: 259, y: 270 },
+                { x: 234, y: 205 },
+                { x: 207, y: 141 },
+                { x: 177, y: 78 },
+                { x: 144, y: 17 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the dot down to the right",
+              path: [
+                { x: 756, y: 613 },
+                { x: 796, y: 546 },
+                { x: 832, y: 476 },
+                { x: 866, y: 405 },
+                { x: 896, y: 333 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 768, y: 769 },
+                { x: 797, y: 725 },
+                { x: 824, y: 681 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 880, y: 813 },
+                { x: 908, y: 767 },
+                { x: 940, y: 725 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("が"),
+    },
+  ],
+  [
+    "japanese:ぎ",
+    {
+      script: "japanese",
+      glyph: "ぎ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the upper bar from left to right",
+              path: [
+                { x: 176, y: 644 },
+                { x: 250, y: 637 },
+                { x: 324, y: 632 },
+                { x: 398, y: 632 },
+                { x: 472, y: 637 },
+                { x: 546, y: 641 },
+                { x: 619, y: 653 },
+                { x: 692, y: 668 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the lower bar from left to right",
+              path: [
+                { x: 164, y: 436 },
+                { x: 232, y: 432 },
+                { x: 301, y: 432 },
+                { x: 370, y: 428 },
+                { x: 438, y: 432 },
+                { x: 507, y: 434 },
+                { x: 575, y: 442 },
+                { x: 642, y: 448 },
+                { x: 709, y: 460 },
+                { x: 776, y: 476 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "run the long diagonal down to the right",
+              path: [
+                { x: 484, y: 752 },
+                { x: 502, y: 686 },
+                { x: 524, y: 620 },
+                { x: 542, y: 554 },
+                { x: 566, y: 489 },
+                { x: 597, y: 428 },
+                { x: 621, y: 364 },
+                { x: 655, y: 304 },
+                { x: 680, y: 240 },
+              ],
+            },
+            {
+              label:
+                "turn sharply and hook back to the left",
+              path: [
+                { x: 680, y: 240 },
+                { x: 600, y: 234 },
+                { x: 520, y: 244 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "curve down and along the base",
+              path: [
+                { x: 208, y: 236 },
+                { x: 188, y: 168 },
+                { x: 194, y: 97 },
+                { x: 234, y: 39 },
+                { x: 297, y: 6 },
+                { x: 367, y: -9 },
+                { x: 438, y: -12 },
+                { x: 510, y: -12 },
+                { x: 581, y: -8 },
+                { x: 652, y: 0 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 748, y: 768 },
+                { x: 776, y: 722 },
+                { x: 804, y: 676 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 856, y: 808 },
+                { x: 884, y: 762 },
+                { x: 916, y: 720 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ぎ"),
+    },
+  ],
+  [
+    "japanese:ぐ",
+    {
+      script: "japanese",
+      glyph: "ぐ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "sweep down to the left into the turn",
+              path: [
+                { x: 628, y: 747 },
+                { x: 581, y: 700 },
+                { x: 530, y: 656 },
+                { x: 479, y: 612 },
+                { x: 427, y: 570 },
+                { x: 375, y: 528 },
+                { x: 324, y: 485 },
+                { x: 274, y: 440 },
+                { x: 240, y: 383 },
+              ],
+            },
+            {
+              label:
+                "turn and run down to the right",
+              path: [
+                { x: 240, y: 383 },
+                { x: 279, y: 324 },
+                { x: 333, y: 278 },
+                { x: 387, y: 232 },
+                { x: 441, y: 186 },
+                { x: 496, y: 141 },
+                { x: 549, y: 93 },
+                { x: 602, y: 45 },
+                { x: 652, y: -5 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 628, y: 531 },
+                { x: 657, y: 484 },
+                { x: 684, y: 435 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 744, y: 579 },
+                { x: 774, y: 531 },
+                { x: 804, y: 483 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ぐ"),
+    },
+  ],
+  [
+    "japanese:げ",
+    {
+      script: "japanese",
+      glyph: "げ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the left vertical down",
+              path: [
+                { x: 192, y: 714 },
+                { x: 180, y: 648 },
+                { x: 169, y: 582 },
+                { x: 161, y: 516 },
+                { x: 153, y: 449 },
+                { x: 148, y: 383 },
+                { x: 148, y: 316 },
+                { x: 148, y: 249 },
+                { x: 154, y: 182 },
+                { x: 175, y: 119 },
+                { x: 184, y: 54 },
+              ],
+            },
+            {
+              label:
+                "turn and flick up to the right",
+              path: [
+                { x: 184, y: 54 },
+                { x: 205, y: 124 },
+                { x: 239, y: 193 },
+                { x: 264, y: 266 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the bar from left to right",
+              path: [
+                { x: 424, y: 514 },
+                { x: 498, y: 510 },
+                { x: 572, y: 510 },
+                { x: 647, y: 510 },
+                { x: 720, y: 518 },
+                { x: 794, y: 521 },
+                { x: 868, y: 530 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "run down and sweep to the lower left",
+              path: [
+                { x: 696, y: 722 },
+                { x: 700, y: 649 },
+                { x: 700, y: 577 },
+                { x: 700, y: 504 },
+                { x: 700, y: 431 },
+                { x: 700, y: 358 },
+                { x: 697, y: 285 },
+                { x: 688, y: 213 },
+                { x: 670, y: 143 },
+                { x: 636, y: 78 },
+                { x: 589, y: 24 },
+                { x: 532, y: -22 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 804, y: 762 },
+                { x: 825, y: 716 },
+                { x: 844, y: 670 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 904, y: 790 },
+                { x: 926, y: 747 },
+                { x: 944, y: 702 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("げ"),
+    },
+  ],
+  [
+    "japanese:ご",
+    {
+      script: "japanese",
+      glyph: "ご",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the top stroke to the right",
+              path: [
+                { x: 255, y: 648 },
+                { x: 330, y: 644 },
+                { x: 406, y: 640 },
+                { x: 481, y: 640 },
+                { x: 557, y: 640 },
+                { x: 632, y: 641 },
+                { x: 707, y: 648 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "curve down and run out to the right",
+              path: [
+                { x: 207, y: 256 },
+                { x: 199, y: 188 },
+                { x: 205, y: 121 },
+                { x: 243, y: 66 },
+                { x: 302, y: 32 },
+                { x: 368, y: 14 },
+                { x: 436, y: 8 },
+                { x: 504, y: 4 },
+                { x: 572, y: 7 },
+                { x: 640, y: 12 },
+                { x: 708, y: 20 },
+                { x: 775, y: 32 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 767, y: 768 },
+                { x: 796, y: 724 },
+                { x: 823, y: 680 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 879, y: 808 },
+                { x: 908, y: 763 },
+                { x: 939, y: 720 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ご"),
+    },
+  ],
+  [
+    "japanese:ざ",
+    {
+      script: "japanese",
+      glyph: "ざ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the bar to the right",
+              path: [
+                { x: 187, y: 578 },
+                { x: 256, y: 575 },
+                { x: 326, y: 573 },
+                { x: 395, y: 570 },
+                { x: 464, y: 570 },
+                { x: 534, y: 575 },
+                { x: 603, y: 579 },
+                { x: 671, y: 590 },
+                { x: 739, y: 603 },
+                { x: 807, y: 618 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "slant down to the right through the bar",
+              path: [
+                { x: 543, y: 738 },
+                { x: 563, y: 671 },
+                { x: 580, y: 604 },
+                { x: 609, y: 543 },
+                { x: 636, y: 479 },
+                { x: 668, y: 417 },
+                { x: 704, y: 357 },
+                { x: 731, y: 294 },
+              ],
+            },
+            {
+              label:
+                "hook back to the left",
+              path: [
+                { x: 731, y: 294 },
+                { x: 656, y: 286 },
+                { x: 579, y: 290 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "curve down and run out to the right",
+              path: [
+                { x: 243, y: 274 },
+                { x: 221, y: 208 },
+                { x: 219, y: 138 },
+                { x: 242, y: 73 },
+                { x: 295, y: 29 },
+                { x: 360, y: 4 },
+                { x: 429, y: -7 },
+                { x: 499, y: -10 },
+                { x: 568, y: -10 },
+                { x: 638, y: -4 },
+                { x: 707, y: 6 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 759, y: 786 },
+                { x: 788, y: 743 },
+                { x: 815, y: 698 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 871, y: 826 },
+                { x: 902, y: 782 },
+                { x: 931, y: 738 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ざ"),
+    },
+  ],
+  [
+    "japanese:ず",
+    {
+      script: "japanese",
+      glyph: "ず",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the bar from left to right",
+              path: [
+                { x: 107, y: 603 },
+                { x: 176, y: 607 },
+                { x: 244, y: 609 },
+                { x: 313, y: 611 },
+                { x: 382, y: 615 },
+                { x: 451, y: 615 },
+                { x: 519, y: 615 },
+                { x: 588, y: 619 },
+                { x: 657, y: 619 },
+                { x: 726, y: 619 },
+                { x: 794, y: 619 },
+                { x: 863, y: 615 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the vertical down through the bar",
+              path: [
+                { x: 555, y: 743 },
+                { x: 555, y: 672 },
+                { x: 555, y: 601 },
+                { x: 555, y: 531 },
+                { x: 550, y: 460 },
+                { x: 565, y: 393 },
+                { x: 582, y: 325 },
+                { x: 575, y: 255 },
+              ],
+            },
+            {
+              label:
+                "loop round to the left and over the top",
+              path: [
+                { x: 575, y: 255 },
+                { x: 527, y: 210 },
+                { x: 458, y: 187 },
+                { x: 387, y: 198 },
+                { x: 333, y: 244 },
+                { x: 315, y: 313 },
+                { x: 327, y: 384 },
+                { x: 377, y: 436 },
+                { x: 446, y: 455 },
+                { x: 517, y: 445 },
+                { x: 564, y: 397 },
+                { x: 583, y: 327 },
+              ],
+            },
+            {
+              label:
+                "come down and sweep to the lower left",
+              path: [
+                { x: 583, y: 327 },
+                { x: 576, y: 262 },
+                { x: 563, y: 198 },
+                { x: 548, y: 136 },
+                { x: 508, y: 84 },
+                { x: 459, y: 41 },
+                { x: 403, y: 8 },
+                { x: 343, y: -17 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 723, y: 763 },
+                { x: 747, y: 729 },
+                { x: 771, y: 695 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 843, y: 791 },
+                { x: 869, y: 755 },
+                { x: 895, y: 719 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ず"),
+    },
+  ],
+  [
+    "japanese:ぜ",
+    {
+      script: "japanese",
+      glyph: "ぜ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the long bar from left to right",
+              path: [
+                { x: 70, y: 447 },
+                { x: 143, y: 453 },
+                { x: 215, y: 461 },
+                { x: 287, y: 470 },
+                { x: 359, y: 476 },
+                { x: 431, y: 483 },
+                { x: 504, y: 490 },
+                { x: 577, y: 496 },
+                { x: 649, y: 499 },
+                { x: 720, y: 511 },
+                { x: 793, y: 511 },
+                { x: 866, y: 515 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right stem down",
+              path: [
+                { x: 678, y: 719 },
+                { x: 678, y: 643 },
+                { x: 678, y: 568 },
+                { x: 675, y: 492 },
+                { x: 674, y: 417 },
+                { x: 672, y: 341 },
+                { x: 658, y: 267 },
+              ],
+            },
+            {
+              label:
+                "hook back to the left",
+              path: [
+                { x: 658, y: 267 },
+                { x: 596, y: 243 },
+                { x: 526, y: 247 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left stem down",
+              path: [
+                { x: 282, y: 687 },
+                { x: 282, y: 620 },
+                { x: 282, y: 553 },
+                { x: 282, y: 487 },
+                { x: 282, y: 420 },
+                { x: 282, y: 353 },
+                { x: 282, y: 286 },
+                { x: 282, y: 220 },
+                { x: 283, y: 153 },
+                { x: 294, y: 87 },
+              ],
+            },
+            {
+              label:
+                "curve right along the base",
+              path: [
+                { x: 294, y: 87 },
+                { x: 337, y: 33 },
+                { x: 404, y: 13 },
+                { x: 474, y: 7 },
+                { x: 544, y: 7 },
+                { x: 614, y: 9 },
+                { x: 684, y: 14 },
+                { x: 754, y: 23 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 794, y: 731 },
+                { x: 813, y: 683 },
+                { x: 834, y: 635 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 894, y: 763 },
+                { x: 915, y: 714 },
+                { x: 938, y: 667 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ぜ"),
+    },
+  ],
+  [
+    "japanese:ぞ",
+    {
+      script: "japanese",
+      glyph: "ぞ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the short top bar from left to right",
+              path: [
+                { x: 272, y: 706 },
+                { x: 342, y: 710 },
+                { x: 412, y: 712 },
+                { x: 482, y: 715 },
+                { x: 552, y: 718 },
+                { x: 620, y: 706 },
+              ],
+            },
+            {
+              label:
+                "turn and run down-left to the bar",
+              path: [
+                { x: 620, y: 706 },
+                { x: 583, y: 649 },
+                { x: 530, y: 603 },
+                { x: 476, y: 558 },
+                { x: 423, y: 513 },
+                { x: 369, y: 469 },
+                { x: 326, y: 414 },
+                { x: 262, y: 386 },
+                { x: 193, y: 376 },
+                { x: 124, y: 366 },
+              ],
+            },
+            {
+              label:
+                "swing back right along the long bar",
+              path: [
+                { x: 124, y: 366 },
+                { x: 192, y: 374 },
+                { x: 260, y: 385 },
+                { x: 326, y: 405 },
+                { x: 394, y: 398 },
+                { x: 462, y: 393 },
+                { x: 530, y: 403 },
+                { x: 598, y: 414 },
+                { x: 666, y: 418 },
+                { x: 735, y: 422 },
+                { x: 804, y: 422 },
+              ],
+            },
+            {
+              label:
+                "double back and drop into the curve",
+              path: [
+                { x: 804, y: 422 },
+                { x: 735, y: 422 },
+                { x: 667, y: 420 },
+                { x: 598, y: 414 },
+                { x: 530, y: 403 },
+                { x: 471, y: 374 },
+                { x: 427, y: 321 },
+                { x: 386, y: 267 },
+                { x: 364, y: 202 },
+              ],
+            },
+            {
+              label:
+                "round the lower left and finish on the base",
+              path: [
+                { x: 364, y: 202 },
+                { x: 369, y: 132 },
+                { x: 403, y: 71 },
+                { x: 461, y: 31 },
+                { x: 528, y: 10 },
+                { x: 598, y: 0 },
+                { x: 668, y: -2 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 716, y: 610 },
+                { x: 741, y: 571 },
+                { x: 764, y: 530 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 824, y: 650 },
+                { x: 850, y: 610 },
+                { x: 876, y: 570 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ぞ"),
+    },
+  ],
+  [
+    "japanese:だ",
+    {
+      script: "japanese",
+      glyph: "だ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the upper bar to the right",
+              path: [
+                { x: 111, y: 570 },
+                { x: 182, y: 570 },
+                { x: 254, y: 570 },
+                { x: 325, y: 574 },
+                { x: 394, y: 586 },
+                { x: 465, y: 593 },
+                { x: 535, y: 606 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the long stem down to the left",
+              path: [
+                { x: 363, y: 742 },
+                { x: 351, y: 672 },
+                { x: 343, y: 602 },
+                { x: 319, y: 537 },
+                { x: 308, y: 467 },
+                { x: 290, y: 398 },
+                { x: 270, y: 330 },
+                { x: 249, y: 262 },
+                { x: 226, y: 195 },
+                { x: 202, y: 128 },
+                { x: 177, y: 62 },
+                { x: 147, y: -2 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the short bar to the right",
+              path: [
+                { x: 543, y: 434 },
+                { x: 614, y: 438 },
+                { x: 685, y: 441 },
+                { x: 757, y: 440 },
+                { x: 827, y: 430 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "curve down and run out to the right",
+              path: [
+                { x: 487, y: 194 },
+                { x: 475, y: 125 },
+                { x: 503, y: 62 },
+                { x: 559, y: 21 },
+                { x: 628, y: 6 },
+                { x: 698, y: 6 },
+                { x: 769, y: 7 },
+                { x: 839, y: 14 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 743, y: 706 },
+                { x: 772, y: 662 },
+                { x: 799, y: 618 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 855, y: 750 },
+                { x: 883, y: 703 },
+                { x: 915, y: 658 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("だ"),
+    },
+  ],
+  [
+    "japanese:で",
+    {
+      script: "japanese",
+      glyph: "で",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the top bar to the right",
+              path: [
+                { x: 127, y: 619 },
+                { x: 198, y: 627 },
+                { x: 270, y: 635 },
+                { x: 341, y: 643 },
+                { x: 412, y: 649 },
+                { x: 484, y: 656 },
+                { x: 555, y: 659 },
+                { x: 626, y: 656 },
+                { x: 696, y: 670 },
+                { x: 768, y: 678 },
+                { x: 839, y: 683 },
+              ],
+            },
+            {
+              label:
+                "turn back down to the left",
+              path: [
+                { x: 839, y: 683 },
+                { x: 767, y: 678 },
+                { x: 696, y: 672 },
+                { x: 626, y: 655 },
+                { x: 572, y: 608 },
+                { x: 521, y: 557 },
+                { x: 475, y: 502 },
+                { x: 441, y: 439 },
+                { x: 419, y: 371 },
+                { x: 415, y: 299 },
+              ],
+            },
+            {
+              label:
+                "curve round and out to the right",
+              path: [
+                { x: 415, y: 299 },
+                { x: 419, y: 230 },
+                { x: 445, y: 166 },
+                { x: 488, y: 112 },
+                { x: 543, y: 70 },
+                { x: 605, y: 39 },
+                { x: 671, y: 19 },
+                { x: 739, y: 7 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 723, y: 487 },
+                { x: 750, y: 440 },
+                { x: 779, y: 395 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 835, y: 527 },
+                { x: 862, y: 482 },
+                { x: 891, y: 439 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("で"),
+    },
+  ],
+  [
+    "japanese:ど",
+    {
+      script: "japanese",
+      glyph: "ど",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the short stroke down to the right",
+              path: [
+                { x: 263, y: 695 },
+                { x: 292, y: 626 },
+                { x: 324, y: 558 },
+                { x: 356, y: 491 },
+                { x: 395, y: 427 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "sweep down to the left",
+              path: [
+                { x: 703, y: 583 },
+                { x: 641, y: 549 },
+                { x: 577, y: 517 },
+                { x: 515, y: 484 },
+                { x: 453, y: 449 },
+                { x: 390, y: 417 },
+                { x: 337, y: 370 },
+                { x: 285, y: 321 },
+                { x: 243, y: 265 },
+                { x: 223, y: 198 },
+                { x: 223, y: 127 },
+              ],
+            },
+            {
+              label:
+                "curve round and run out to the right",
+              path: [
+                { x: 223, y: 127 },
+                { x: 258, y: 72 },
+                { x: 311, y: 32 },
+                { x: 374, y: 12 },
+                { x: 440, y: 3 },
+                { x: 506, y: -1 },
+                { x: 573, y: -1 },
+                { x: 639, y: 4 },
+                { x: 705, y: 11 },
+                { x: 771, y: 19 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 767, y: 743 },
+                { x: 794, y: 696 },
+                { x: 823, y: 651 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 875, y: 783 },
+                { x: 904, y: 738 },
+                { x: 935, y: 695 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ど"),
+    },
+  ],
+  [
+    "japanese:ば",
+    {
+      script: "japanese",
+      glyph: "ば",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the left vertical down",
+              path: [
+                { x: 183, y: 720 },
+                { x: 169, y: 651 },
+                { x: 158, y: 581 },
+                { x: 149, y: 512 },
+                { x: 140, y: 442 },
+                { x: 134, y: 371 },
+                { x: 131, y: 301 },
+                { x: 131, y: 231 },
+                { x: 133, y: 160 },
+                { x: 156, y: 94 },
+                { x: 155, y: 24 },
+              ],
+            },
+            {
+              label:
+                "turn and flick up to the right",
+              path: [
+                { x: 155, y: 24 },
+                { x: 165, y: 99 },
+                { x: 209, y: 160 },
+                { x: 235, y: 232 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the bar to the right",
+              path: [
+                { x: 411, y: 540 },
+                { x: 484, y: 537 },
+                { x: 558, y: 536 },
+                { x: 631, y: 537 },
+                { x: 705, y: 544 },
+                { x: 778, y: 546 },
+                { x: 851, y: 556 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the vertical down through the bar",
+              path: [
+                { x: 679, y: 716 },
+                { x: 679, y: 649 },
+                { x: 679, y: 581 },
+                { x: 679, y: 514 },
+                { x: 679, y: 446 },
+                { x: 681, y: 379 },
+                { x: 683, y: 312 },
+                { x: 683, y: 244 },
+                { x: 699, y: 180 },
+              ],
+            },
+            {
+              label:
+                "loop round to the left and up",
+              path: [
+                { x: 699, y: 180 },
+                { x: 691, y: 109 },
+                { x: 663, y: 44 },
+                { x: 605, y: 1 },
+                { x: 534, y: -4 },
+                { x: 463, y: 7 },
+                { x: 406, y: 50 },
+                { x: 391, y: 119 },
+                { x: 424, y: 180 },
+                { x: 487, y: 213 },
+                { x: 559, y: 220 },
+              ],
+            },
+            {
+              label:
+                "cross it and run out to the lower right",
+              path: [
+                { x: 559, y: 220 },
+                { x: 630, y: 215 },
+                { x: 693, y: 188 },
+                { x: 760, y: 166 },
+                { x: 819, y: 128 },
+                { x: 875, y: 84 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 795, y: 760 },
+                { x: 817, y: 715 },
+                { x: 835, y: 668 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 899, y: 792 },
+                { x: 919, y: 745 },
+                { x: 943, y: 700 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ば"),
+    },
+  ],
+  [
+    "japanese:び",
+    {
+      script: "japanese",
+      glyph: "び",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the short shoulder to the right",
+              path: [
+                { x: 130, y: 630 },
+                { x: 206, y: 637 },
+                { x: 281, y: 646 },
+                { x: 357, y: 646 },
+                { x: 422, y: 670 },
+                { x: 358, y: 630 },
+              ],
+            },
+            {
+              label:
+                "swing down round the bottom",
+              path: [
+                { x: 358, y: 630 },
+                { x: 325, y: 572 },
+                { x: 284, y: 517 },
+                { x: 248, y: 459 },
+                { x: 218, y: 397 },
+                { x: 195, y: 333 },
+                { x: 180, y: 266 },
+                { x: 178, y: 198 },
+                { x: 182, y: 130 },
+                { x: 212, y: 69 },
+                { x: 260, y: 20 },
+                { x: 320, y: -12 },
+                { x: 387, y: -22 },
+                { x: 456, y: -21 },
+                { x: 522, y: -6 },
+              ],
+            },
+            {
+              label:
+                "rise up the right side and flick out",
+              path: [
+                { x: 522, y: -6 },
+                { x: 582, y: 27 },
+                { x: 630, y: 76 },
+                { x: 665, y: 135 },
+                { x: 689, y: 199 },
+                { x: 703, y: 267 },
+                { x: 708, y: 335 },
+                { x: 710, y: 404 },
+                { x: 725, y: 470 },
+                { x: 718, y: 538 },
+                { x: 702, y: 605 },
+                { x: 689, y: 658 },
+                { x: 705, y: 592 },
+                { x: 721, y: 525 },
+                { x: 746, y: 462 },
+                { x: 789, y: 408 },
+                { x: 826, y: 351 },
+                { x: 870, y: 298 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 790, y: 746 },
+                { x: 814, y: 700 },
+                { x: 838, y: 654 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 894, y: 786 },
+                { x: 916, y: 739 },
+                { x: 942, y: 694 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("び"),
+    },
+  ],
+  [
+    "japanese:ぶ",
+    {
+      script: "japanese",
+      glyph: "ぶ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the top tick down to the right",
+              path: [
+                { x: 400, y: 719 },
+                { x: 468, y: 687 },
+                { x: 533, y: 651 },
+                { x: 587, y: 601 },
+                { x: 544, y: 543 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "curve round and away to the lower left",
+              path: [
+                { x: 400, y: 419 },
+                { x: 447, y: 369 },
+                { x: 491, y: 317 },
+                { x: 534, y: 263 },
+                { x: 570, y: 205 },
+                { x: 591, y: 140 },
+                { x: 584, y: 73 },
+                { x: 537, y: 22 },
+                { x: 473, y: 3 },
+                { x: 404, y: 3 },
+                { x: 336, y: 11 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the lower-left mark up to the right",
+              path: [
+                { x: 80, y: 71 },
+                { x: 131, y: 105 },
+                { x: 179, y: 143 },
+                { x: 226, y: 182 },
+                { x: 272, y: 223 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the lower-right mark down to the right",
+              path: [
+                { x: 760, y: 323 },
+                { x: 797, y: 266 },
+                { x: 831, y: 207 },
+                { x: 862, y: 146 },
+                { x: 888, y: 83 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 756, y: 631 },
+                { x: 782, y: 586 },
+                { x: 812, y: 543 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 864, y: 671 },
+                { x: 894, y: 627 },
+                { x: 924, y: 583 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ぶ"),
+    },
+  ],
+  [
+    "japanese:べ",
+    {
+      script: "japanese",
+      glyph: "べ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "rise up to the peak",
+              path: [
+                { x: 115, y: 250 },
+                { x: 160, y: 306 },
+                { x: 206, y: 360 },
+                { x: 251, y: 417 },
+                { x: 295, y: 473 },
+                { x: 343, y: 526 },
+                { x: 399, y: 570 },
+              ],
+            },
+            {
+              label:
+                "run down to the right",
+              path: [
+                { x: 399, y: 570 },
+                { x: 459, y: 542 },
+                { x: 507, y: 493 },
+                { x: 552, y: 441 },
+                { x: 597, y: 389 },
+                { x: 642, y: 337 },
+                { x: 687, y: 286 },
+                { x: 732, y: 234 },
+                { x: 780, y: 185 },
+                { x: 826, y: 135 },
+                { x: 875, y: 86 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 679, y: 638 },
+                { x: 713, y: 584 },
+                { x: 747, y: 530 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 811, y: 686 },
+                { x: 844, y: 635 },
+                { x: 875, y: 582 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("べ"),
+    },
+  ],
+  [
+    "japanese:ぼ",
+    {
+      script: "japanese",
+      glyph: "ぼ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the left vertical down",
+              path: [
+                { x: 174, y: 708 },
+                { x: 163, y: 639 },
+                { x: 153, y: 570 },
+                { x: 143, y: 500 },
+                { x: 135, y: 431 },
+                { x: 128, y: 361 },
+                { x: 126, y: 291 },
+                { x: 126, y: 221 },
+                { x: 129, y: 152 },
+                { x: 151, y: 86 },
+                { x: 150, y: 16 },
+              ],
+            },
+            {
+              label:
+                "turn and flick up to the right",
+              path: [
+                { x: 150, y: 16 },
+                { x: 164, y: 93 },
+                { x: 207, y: 160 },
+                { x: 234, y: 236 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the upper bar to the right",
+              path: [
+                { x: 430, y: 664 },
+                { x: 496, y: 664 },
+                { x: 563, y: 664 },
+                { x: 629, y: 662 },
+                { x: 694, y: 667 },
+                { x: 760, y: 672 },
+                { x: 826, y: 680 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the lower bar to the right",
+              path: [
+                { x: 422, y: 432 },
+                { x: 492, y: 432 },
+                { x: 562, y: 432 },
+                { x: 632, y: 432 },
+                { x: 702, y: 436 },
+                { x: 772, y: 436 },
+                { x: 842, y: 444 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the vertical down from the upper bar",
+              path: [
+                { x: 658, y: 652 },
+                { x: 659, y: 585 },
+                { x: 662, y: 519 },
+                { x: 662, y: 452 },
+                { x: 658, y: 386 },
+                { x: 662, y: 319 },
+                { x: 665, y: 253 },
+                { x: 672, y: 187 },
+                { x: 674, y: 121 },
+                { x: 662, y: 56 },
+              ],
+            },
+            {
+              label:
+                "loop round to the left and up",
+              path: [
+                { x: 662, y: 56 },
+                { x: 611, y: 9 },
+                { x: 542, y: -4 },
+                { x: 472, y: 4 },
+                { x: 415, y: 43 },
+                { x: 394, y: 108 },
+                { x: 421, y: 170 },
+                { x: 484, y: 202 },
+                { x: 554, y: 208 },
+              ],
+            },
+            {
+              label:
+                "cross it and run out to the lower right",
+              path: [
+                { x: 554, y: 208 },
+                { x: 623, y: 201 },
+                { x: 686, y: 175 },
+                { x: 752, y: 155 },
+                { x: 811, y: 119 },
+                { x: 866, y: 76 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 806, y: 756 },
+                { x: 824, y: 708 },
+                { x: 846, y: 664 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 910, y: 788 },
+                { x: 928, y: 741 },
+                { x: 950, y: 696 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ぼ"),
+    },
+  ],
+  [
+    "japanese:ぱ",
+    {
+      script: "japanese",
+      glyph: "ぱ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the left vertical down",
+              path: [
+                { x: 183, y: 720 },
+                { x: 169, y: 651 },
+                { x: 158, y: 581 },
+                { x: 149, y: 512 },
+                { x: 140, y: 442 },
+                { x: 134, y: 371 },
+                { x: 131, y: 301 },
+                { x: 131, y: 231 },
+                { x: 133, y: 160 },
+                { x: 156, y: 94 },
+                { x: 155, y: 24 },
+              ],
+            },
+            {
+              label:
+                "turn and flick up to the right",
+              path: [
+                { x: 155, y: 24 },
+                { x: 165, y: 99 },
+                { x: 209, y: 160 },
+                { x: 235, y: 232 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the bar to the right",
+              path: [
+                { x: 411, y: 540 },
+                { x: 484, y: 537 },
+                { x: 558, y: 536 },
+                { x: 631, y: 537 },
+                { x: 705, y: 544 },
+                { x: 778, y: 546 },
+                { x: 851, y: 556 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the vertical down through the bar",
+              path: [
+                { x: 679, y: 716 },
+                { x: 679, y: 649 },
+                { x: 679, y: 581 },
+                { x: 679, y: 514 },
+                { x: 679, y: 446 },
+                { x: 681, y: 379 },
+                { x: 683, y: 312 },
+                { x: 683, y: 244 },
+                { x: 699, y: 180 },
+              ],
+            },
+            {
+              label:
+                "loop round to the left and up",
+              path: [
+                { x: 699, y: 180 },
+                { x: 691, y: 109 },
+                { x: 663, y: 44 },
+                { x: 605, y: 1 },
+                { x: 534, y: -4 },
+                { x: 463, y: 7 },
+                { x: 406, y: 50 },
+                { x: 391, y: 119 },
+                { x: 424, y: 180 },
+                { x: 487, y: 213 },
+                { x: 559, y: 220 },
+              ],
+            },
+            {
+              label:
+                "cross it and run out to the lower right",
+              path: [
+                { x: 559, y: 220 },
+                { x: 630, y: 215 },
+                { x: 693, y: 188 },
+                { x: 760, y: 166 },
+                { x: 819, y: 128 },
+                { x: 875, y: 84 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the circle clockwise from its foot",
+              path: [
+                { x: 871, y: 652 },
+                { x: 847, y: 658 },
+                { x: 825, y: 669 },
+                { x: 808, y: 685 },
+                { x: 796, y: 707 },
+                { x: 791, y: 730 },
+                { x: 792, y: 755 },
+                { x: 801, y: 778 },
+                { x: 816, y: 796 },
+                { x: 836, y: 810 },
+                { x: 859, y: 818 },
+                { x: 884, y: 818 },
+                { x: 907, y: 810 },
+                { x: 927, y: 796 },
+                { x: 941, y: 777 },
+                { x: 950, y: 754 },
+                { x: 952, y: 730 },
+                { x: 947, y: 706 },
+                { x: 935, y: 685 },
+                { x: 916, y: 669 },
+                { x: 894, y: 659 },
+                { x: 871, y: 652 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ぱ"),
+    },
+  ],
+  [
+    "japanese:ぴ",
+    {
+      script: "japanese",
+      glyph: "ぴ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the short shoulder to the right",
+              path: [
+                { x: 130, y: 630 },
+                { x: 206, y: 637 },
+                { x: 281, y: 646 },
+                { x: 357, y: 646 },
+                { x: 422, y: 670 },
+                { x: 358, y: 630 },
+              ],
+            },
+            {
+              label:
+                "swing down round the bottom",
+              path: [
+                { x: 358, y: 630 },
+                { x: 325, y: 572 },
+                { x: 284, y: 517 },
+                { x: 248, y: 459 },
+                { x: 218, y: 397 },
+                { x: 195, y: 333 },
+                { x: 180, y: 266 },
+                { x: 178, y: 198 },
+                { x: 182, y: 130 },
+                { x: 212, y: 69 },
+                { x: 260, y: 20 },
+                { x: 320, y: -12 },
+                { x: 387, y: -22 },
+                { x: 456, y: -21 },
+                { x: 522, y: -6 },
+              ],
+            },
+            {
+              label:
+                "rise up the right side and flick out",
+              path: [
+                { x: 522, y: -6 },
+                { x: 582, y: 27 },
+                { x: 630, y: 76 },
+                { x: 665, y: 135 },
+                { x: 689, y: 199 },
+                { x: 703, y: 267 },
+                { x: 708, y: 335 },
+                { x: 710, y: 404 },
+                { x: 725, y: 470 },
+                { x: 718, y: 538 },
+                { x: 702, y: 605 },
+                { x: 689, y: 658 },
+                { x: 705, y: 592 },
+                { x: 721, y: 525 },
+                { x: 746, y: 462 },
+                { x: 789, y: 408 },
+                { x: 826, y: 351 },
+                { x: 870, y: 298 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the circle clockwise from its foot",
+              path: [
+                { x: 870, y: 622 },
+                { x: 846, y: 625 },
+                { x: 823, y: 636 },
+                { x: 805, y: 652 },
+                { x: 792, y: 673 },
+                { x: 786, y: 697 },
+                { x: 786, y: 721 },
+                { x: 792, y: 745 },
+                { x: 806, y: 765 },
+                { x: 825, y: 782 },
+                { x: 847, y: 792 },
+                { x: 872, y: 794 },
+                { x: 896, y: 791 },
+                { x: 918, y: 781 },
+                { x: 936, y: 764 },
+                { x: 949, y: 743 },
+                { x: 956, y: 720 },
+                { x: 957, y: 695 },
+                { x: 949, y: 672 },
+                { x: 936, y: 651 },
+                { x: 917, y: 636 },
+                { x: 894, y: 625 },
+                { x: 870, y: 622 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ぴ"),
+    },
+  ],
+  [
+    "japanese:ぷ",
+    {
+      script: "japanese",
+      glyph: "ぷ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the top tick down to the right",
+              path: [
+                { x: 400, y: 719 },
+                { x: 468, y: 687 },
+                { x: 533, y: 651 },
+                { x: 587, y: 601 },
+                { x: 544, y: 543 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "curve round and away to the lower left",
+              path: [
+                { x: 400, y: 419 },
+                { x: 447, y: 369 },
+                { x: 491, y: 317 },
+                { x: 534, y: 263 },
+                { x: 570, y: 205 },
+                { x: 591, y: 140 },
+                { x: 584, y: 73 },
+                { x: 537, y: 22 },
+                { x: 473, y: 3 },
+                { x: 404, y: 3 },
+                { x: 336, y: 11 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the lower-left mark up to the right",
+              path: [
+                { x: 80, y: 71 },
+                { x: 131, y: 105 },
+                { x: 179, y: 143 },
+                { x: 226, y: 182 },
+                { x: 272, y: 223 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the lower-right mark down to the right",
+              path: [
+                { x: 760, y: 323 },
+                { x: 797, y: 266 },
+                { x: 831, y: 207 },
+                { x: 862, y: 146 },
+                { x: 888, y: 83 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the circle clockwise from its foot",
+              path: [
+                { x: 848, y: 511 },
+                { x: 823, y: 517 },
+                { x: 800, y: 527 },
+                { x: 781, y: 544 },
+                { x: 766, y: 564 },
+                { x: 758, y: 588 },
+                { x: 757, y: 614 },
+                { x: 764, y: 638 },
+                { x: 778, y: 660 },
+                { x: 796, y: 677 },
+                { x: 819, y: 688 },
+                { x: 844, y: 692 },
+                { x: 869, y: 690 },
+                { x: 893, y: 680 },
+                { x: 911, y: 663 },
+                { x: 926, y: 642 },
+                { x: 934, y: 618 },
+                { x: 935, y: 592 },
+                { x: 928, y: 568 },
+                { x: 914, y: 546 },
+                { x: 895, y: 529 },
+                { x: 872, y: 518 },
+                { x: 848, y: 511 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ぷ"),
+    },
+  ],
+  [
+    "japanese:ぺ",
+    {
+      script: "japanese",
+      glyph: "ぺ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "rise up to the peak",
+              path: [
+                { x: 115, y: 250 },
+                { x: 160, y: 306 },
+                { x: 206, y: 360 },
+                { x: 251, y: 417 },
+                { x: 295, y: 473 },
+                { x: 343, y: 526 },
+                { x: 399, y: 570 },
+              ],
+            },
+            {
+              label:
+                "run down to the right",
+              path: [
+                { x: 399, y: 570 },
+                { x: 459, y: 542 },
+                { x: 507, y: 493 },
+                { x: 552, y: 441 },
+                { x: 597, y: 389 },
+                { x: 642, y: 337 },
+                { x: 687, y: 286 },
+                { x: 732, y: 234 },
+                { x: 780, y: 185 },
+                { x: 826, y: 135 },
+                { x: 875, y: 86 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the circle clockwise from its foot",
+              path: [
+                { x: 775, y: 494 },
+                { x: 750, y: 497 },
+                { x: 727, y: 507 },
+                { x: 707, y: 523 },
+                { x: 691, y: 543 },
+                { x: 681, y: 566 },
+                { x: 677, y: 591 },
+                { x: 680, y: 616 },
+                { x: 690, y: 640 },
+                { x: 706, y: 660 },
+                { x: 726, y: 675 },
+                { x: 749, y: 685 },
+                { x: 775, y: 688 },
+                { x: 800, y: 686 },
+                { x: 823, y: 676 },
+                { x: 843, y: 660 },
+                { x: 858, y: 640 },
+                { x: 869, y: 617 },
+                { x: 872, y: 592 },
+                { x: 869, y: 567 },
+                { x: 859, y: 543 },
+                { x: 844, y: 523 },
+                { x: 823, y: 508 },
+                { x: 800, y: 498 },
+                { x: 775, y: 494 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ぺ"),
+    },
+  ],
+  [
+    "japanese:ぽ",
+    {
+      script: "japanese",
+      glyph: "ぽ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the left vertical down",
+              path: [
+                { x: 174, y: 708 },
+                { x: 163, y: 639 },
+                { x: 153, y: 570 },
+                { x: 143, y: 500 },
+                { x: 135, y: 431 },
+                { x: 128, y: 361 },
+                { x: 126, y: 291 },
+                { x: 126, y: 221 },
+                { x: 129, y: 152 },
+                { x: 151, y: 86 },
+                { x: 150, y: 16 },
+              ],
+            },
+            {
+              label:
+                "turn and flick up to the right",
+              path: [
+                { x: 150, y: 16 },
+                { x: 164, y: 93 },
+                { x: 207, y: 160 },
+                { x: 234, y: 236 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the upper bar to the right",
+              path: [
+                { x: 430, y: 664 },
+                { x: 504, y: 664 },
+                { x: 578, y: 664 },
+                { x: 652, y: 658 },
+                { x: 725, y: 669 },
+                { x: 798, y: 680 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the lower bar to the right",
+              path: [
+                { x: 422, y: 432 },
+                { x: 492, y: 432 },
+                { x: 562, y: 432 },
+                { x: 632, y: 432 },
+                { x: 702, y: 436 },
+                { x: 772, y: 436 },
+                { x: 842, y: 444 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the vertical down from the upper bar",
+              path: [
+                { x: 658, y: 652 },
+                { x: 659, y: 585 },
+                { x: 662, y: 519 },
+                { x: 662, y: 452 },
+                { x: 658, y: 386 },
+                { x: 662, y: 319 },
+                { x: 665, y: 253 },
+                { x: 672, y: 187 },
+                { x: 674, y: 121 },
+                { x: 662, y: 56 },
+              ],
+            },
+            {
+              label:
+                "loop round to the left and up",
+              path: [
+                { x: 662, y: 56 },
+                { x: 611, y: 9 },
+                { x: 542, y: -4 },
+                { x: 472, y: 4 },
+                { x: 415, y: 43 },
+                { x: 394, y: 108 },
+                { x: 421, y: 170 },
+                { x: 484, y: 202 },
+                { x: 554, y: 208 },
+              ],
+            },
+            {
+              label:
+                "cross it and run out to the lower right",
+              path: [
+                { x: 554, y: 208 },
+                { x: 623, y: 201 },
+                { x: 686, y: 175 },
+                { x: 752, y: 155 },
+                { x: 811, y: 119 },
+                { x: 866, y: 76 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the circle clockwise from its foot",
+              path: [
+                { x: 886, y: 672 },
+                { x: 861, y: 677 },
+                { x: 838, y: 688 },
+                { x: 820, y: 705 },
+                { x: 809, y: 728 },
+                { x: 806, y: 754 },
+                { x: 809, y: 779 },
+                { x: 820, y: 801 },
+                { x: 839, y: 819 },
+                { x: 861, y: 831 },
+                { x: 886, y: 836 },
+                { x: 911, y: 831 },
+                { x: 934, y: 819 },
+                { x: 952, y: 801 },
+                { x: 964, y: 779 },
+                { x: 969, y: 754 },
+                { x: 965, y: 729 },
+                { x: 952, y: 707 },
+                { x: 933, y: 689 },
+                { x: 911, y: 677 },
+                { x: 886, y: 672 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ぽ"),
+    },
+  ],
+  [
+    "japanese:゛",
+    {
+      script: "japanese",
+      glyph: "゛",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the left tick down to the right",
+              path: [
+                { x: 57, y: 753 },
+                { x: 91, y: 699 },
+                { x: 125, y: 645 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the right tick down to the right",
+              path: [
+                { x: 181, y: 801 },
+                { x: 218, y: 748 },
+                { x: 253, y: 693 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("゛"),
+    },
+  ],
+  [
+    "japanese:゜",
+    {
+      script: "japanese",
+      glyph: "゜",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the circle clockwise from its foot",
+              path: [
+                { x: 142, y: 613 },
+                { x: 118, y: 619 },
+                { x: 95, y: 628 },
+                { x: 75, y: 643 },
+                { x: 61, y: 663 },
+                { x: 51, y: 686 },
+                { x: 49, y: 711 },
+                { x: 53, y: 736 },
+                { x: 64, y: 758 },
+                { x: 81, y: 776 },
+                { x: 102, y: 790 },
+                { x: 125, y: 797 },
+                { x: 150, y: 798 },
+                { x: 175, y: 792 },
+                { x: 196, y: 779 },
+                { x: 213, y: 761 },
+                { x: 225, y: 740 },
+                { x: 230, y: 715 },
+                { x: 229, y: 690 },
+                { x: 222, y: 666 },
+                { x: 208, y: 646 },
+                { x: 188, y: 630 },
+                { x: 166, y: 620 },
+                { x: 142, y: 613 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("゜"),
+    },
+  ],
+  [
+    "japanese:ー",
+    {
+      script: "japanese",
+      glyph: "ー",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the bar from left to right",
+              path: [
+                { x: 146, y: 383 },
+                { x: 216, y: 383 },
+                { x: 287, y: 383 },
+                { x: 357, y: 383 },
+                { x: 428, y: 383 },
+                { x: 498, y: 383 },
+                { x: 568, y: 383 },
+                { x: 639, y: 383 },
+                { x: 709, y: 383 },
+                { x: 780, y: 383 },
+                { x: 850, y: 383 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ー"),
     },
   ],
 ];

@@ -7,5 +7,18 @@
     "base": "は",
     "combined": "ぱ",
     "sound": "ha to pa"
+  },
+  "components": [
+    "one small closed circle"
+  ],
+  "strokeOrder": [
+    "begin at the foot of the circle and draw it clockwise, round the left side, over the top and down the right side back to the foot"
+  ],
+  "strokeOrderNote": "KanjiVG's 0309c file records ゜ as one stroke path in this order and direction: one closed ring that starts at its foot and runs clockwise; so there are no pen lifts.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0309c.svg",
+    "citation": "KanjiVG, kanji/0309c.svg, the spacing handakuten ゜ (U+309C), one stroke path kvg:0309c-s1 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores the mark as one closed directed path: it starts at the foot of the circle and runs clockwise, round the left side, over the top and down the right side back to the foot. It is the same path KanjiVG gives the handakuten inside ぱ (kanji/03071.svg, s4). Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
   }
 }

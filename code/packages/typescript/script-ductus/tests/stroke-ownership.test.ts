@@ -370,12 +370,19 @@ describe("stroke ownership migration baseline", () => {
       // lifts, down from 1, 2, 3, 3, 1, 1, 2, 2, 3, 3, 2, 3, 1, 1, 1 and 2).
       // Again only the non-Tamil data hash moves; keys, the key hash, every
       // count, Tamil and both shared-identity values remain unchanged.
+      //
+      // The 22 voiced kana the inventory holds, が to ぽ, and the three spacing
+      // marks ゛, ゜ and ー now cite KanjiVG and gain a ductus each. Keys move
+      // 439 -> 464 and Japanese 50 -> 75, with the ordered key hash and the
+      // non-Tamil data hash, measured after the last caption was settled;
+      // Tamil and both shared-identity values remain unchanged. The non-Tamil
+      // hash was re-measured on top of the Telugu native-lift batches.
     }).toEqual({
-      keys: 439,
+      keys: 464,
       keyHash:
-        "952c14e67c27696d414897603004184adb25c58878d6a78cd91d85e6b269918c",
+        "05dfa3df620cd317b291e1ae04550323339e8b72e97bcbc6911a1620da2b269a",
       nonTamilDataHash:
-        "baf7297488c44d74f73c67785ab3ea7a7d4b1d47aeb6f09f6dc1953f09d0ae3a",
+        "14d0e1079303c5e72238effa8071509c966f3467fb01d2c14308f9ff8a381603",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -386,7 +393,7 @@ describe("stroke ownership migration baseline", () => {
         devanagari: 44,
         gujarati: 44,
         hebrew: 22,
-        japanese: 50,
+        japanese: 75,
         kannada: 13,
         malayalam: 14,
         "perso-arabic": 24,

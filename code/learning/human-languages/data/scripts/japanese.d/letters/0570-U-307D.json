@@ -7,9 +7,18 @@
     "the handakuten ゜"
   ],
   "strokeOrder": [
-    "ほ in full",
-    "a small circle at the upper right"
+    "draw the left vertical from top to bottom, then without lifting turn and flick up to the right",
+    "lift, draw the upper bar from left to right",
+    "lift, draw the lower bar from left to right",
+    "lift, begin at the upper bar and draw the vertical down through the lower one, then without lifting loop round to the left and back up, cross the vertical and run out to the lower right",
+    "lift, draw the small circle of the handakuten clockwise, starting and ending at its foot"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 0307d file records ぽ as five stroke paths in this order and direction: ほ's four strokes (the left vertical with its flick, the upper bar, the lower bar and the vertical with its loop), then the handakuten, one small circle drawn clockwise from its foot; so there are four pen lifts.",
+  "penLifts": 4,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0307d.svg",
+    "citation": "KanjiVG, kanji/0307d.svg, hiragana ぽ (U+307D HIRAGANA LETTER PO), five stroke paths kvg:0307d-s1 to s5 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 to s4 are ほ's strokes, the same paths as in its file for ほ, kanji/0307b.svg; s5 is the handakuten, one closed ring that starts at its foot and runs clockwise, round the left side, over the top and down the right side back to the foot. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. KanjiVG's left vertical ends in a flick up to the right, as in its file for ほ, kanji/0307b.svg, and as in は. This inventory's ほ row, which cites Sirgazil's animation, says that stroke hooks left at its foot; this path follows KanjiVG, and, as in は, goes down to the foot of the print stroke and climbs back a short way before the flick. KanjiVG's last stroke starts at the upper bar, not above it, and so does the print glyph's."
+  },
   "notes": "ほ with the handakuten. The one, six, eight and ten of いっぽん, ろっぽん, はっぽん and じゅっぽん — every place the counter for long thin things follows a held beat."
 }
