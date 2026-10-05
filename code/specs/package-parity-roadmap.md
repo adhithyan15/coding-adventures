@@ -107,7 +107,7 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 
 The missing matrix is heavily concentrated in singleton packages. The current
 working inventory was regenerated from exact `origin/main` at
-`935ab6cedd1f77162ce2edb246fb58f1860733bc` after PR #16722 and two
+`87d1a0cb258309cd0307a85a5e2eafffe628248b` after PR #16722 and three
 unrelated commits merged. It
 contains 1,487 normalized implementation identities across 4,757
 established-lane package slots and found zero canonical collisions or unknown
