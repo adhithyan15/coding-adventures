@@ -76,6 +76,18 @@ The same lane also runs this package's tests.
 and the Compose lane runs `gradle compileKotlin`. Both use the same strict
 binding, with zero degradations.
 
+**Android** (UI89 step 7) builds and runs in CI with no source changes. The
+Compose lane builds `journal-mosaic-app` for the four Android ABIs and
+packages it into the generated project's debug APK. On an x86_64 emulator it
+then launches `JournalApp` three times, and the app must:
+
+- write its state under the app's `filesDir`;
+- restore that state on the next launch;
+- quarantine state the runtime refuses.
+
+The application id and label are the manifest defaults,
+`dev.codingadventures.journalapp` and `JournalApp`.
+
 **The browser** (J5c): `host/web` is a Vite and React page. It mounts the
 generated `JournalApp` over the `journal-mosaic-app` runtime built for wasm32,
 and it keeps the journal in `localStorage`. See [`host/web/README.md`](host/web/README.md).

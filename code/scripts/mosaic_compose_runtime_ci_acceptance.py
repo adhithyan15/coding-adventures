@@ -50,6 +50,9 @@ CI_SCRIPT_PATHS = (
     # Checks the generated gradle-wrapper.jar against Gradle's published
     # checksum before either Trestle build runs it.
     "code/scripts/verify-gradle-wrapper-jar.sh",
+    # Assembles Journal's generated Android project through that verified
+    # jar (UI89 §3.9).
+    "code/scripts/assemble-mosaic-android-debug.sh",
 )
 
 

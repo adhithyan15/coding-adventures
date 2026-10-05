@@ -3688,12 +3688,99 @@ jobs:
             fi
           done
 
-      # UI89 step 5, second half: the APK above runs. An x86_64 emulator boots
-      # headless under KVM, and mosaic-android-emulator-gate.sh installs
-      # Trestle, launches MosaicActivity three times and requires that it
-      # writes its state under filesDir, restores it, quarantines state the
-      # runtime refuses, and is still running ten seconds after each launch.
-      - name: Launch Trestle on an Android emulator (UI89 step 5)
+      # UI89 step 7 (§3.9): Journal is the second app on Android. Its engine
+      # is built for every ABI and packaged exactly as Trestle's above; the
+      # APK is assembled through the same verified wrapper jar, by
+      # assemble-mosaic-android-debug.sh. Gate: native-complete with no
+      # degradations, Journal's own identity in the badging, and
+      # libmosaic_app.so exporting mosaic_app_create for each ABI.
+      - name: Build Journal for Android with its Rust runtime (UI89 step 7)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 45
+        run: |
+          set -euo pipefail
+          ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
+          if [ -z "$ndk" ] || [ ! -d "$ndk" ]; then
+            echo "::error::this runner has no Android NDK (ANDROID_NDK_LATEST_HOME / ANDROID_NDK_HOME)"
+            exit 1
+          fi
+          export ANDROID_NDK_HOME="$ndk"
+          # Both no-ops after the Trestle step; kept so this step stands alone.
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+          cargo install --locked cargo-ndk --version 4.1.2
+
+          jni_libs="$RUNNER_TEMP/mosaic-journal-jnilibs"
+          rm -rf "$jni_libs"
+          bash code/scripts/build-mosaic-android-libs.sh journal-mosaic-app "$jni_libs"
+
+          output="$RUNNER_TEMP/mosaic-compose-journal-android-runtime"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend compose --output "$output" --emit-project --profile native-complete --runtime-library "$jni_libs"
+          jq -e '.replacedGeneratedFiles == []' "$output/compose/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
+          android_project="$output/compose/android"
+          bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"
+
+          apk="$(find "$android_project/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
+          test -n "$apk"
+          aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
+          test -n "$aapt2"
+          badging="$RUNNER_TEMP/mosaic-journal-android-badging.txt"
+          "$aapt2" dump badging "$apk" > "$badging"
+          expect_badging() {
+            if ! grep -Eq "$1" "$badging"; then
+              echo "::error::Journal's APK badging has no line matching $1"
+              cat "$badging"
+              exit 1
+            fi
+          }
+          # The defaults Journal's manifest leaves in place (UI89 §3.9).
+          expect_badging "^package: name='dev\.codingadventures\.journalapp'"
+          expect_badging "^application-label:'JournalApp'"
+          expect_badging "^launchable-activity: name='mosaic\.android\.MosaicActivity'"
+          # aapt prints `sdkVersion:`, newer aapt2 `minSdkVersion:`.
+          expect_badging "^(min)?[sS]dkVersion:'26'"
+          expect_badging "^targetSdkVersion:'36'"
+
+          unpacked="$RUNNER_TEMP/mosaic-journal-android-runtime-apk"
+          rm -rf "$unpacked"
+          unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$unpacked"
+          for class in 'LJournalAppKt;' 'LMosaicRuntimeHost;' 'Lmosaic/android/MosaicActivity;'; do
+            if ! grep -a -q -F "$class" "$unpacked"/classes*.dex; then
+              echo "::error::no $class in Journal's dex"
+              exit 1
+            fi
+          done
+          if ! test -f "$unpacked/lib/x86_64/libjnidispatch.so"; then
+            echo "::error::Journal's APK has no lib/x86_64/libjnidispatch.so"
+            find "$unpacked/lib" -type f
+            exit 1
+          fi
+          llvm_nm="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm"
+          test -x "$llvm_nm"
+          for abi in arm64-v8a armeabi-v7a x86_64 x86; do
+            library="$unpacked/lib/$abi/libmosaic_app.so"
+            if ! test -f "$library"; then
+              echo "::error::Journal's APK has no lib/$abi/libmosaic_app.so"
+              find "$unpacked/lib" -type f
+              exit 1
+            fi
+            symbols="$RUNNER_TEMP/mosaic-journal-$abi-symbols.txt"
+            "$llvm_nm" -D --defined-only "$library" > "$symbols"
+            if ! grep -Eq ' T mosaic_app_create$' "$symbols"; then
+              echo "::error::Journal's lib/$abi/libmosaic_app.so does not export mosaic_app_create"
+              head -n 40 "$symbols"
+              exit 1
+            fi
+          done
+
+      # UI89 step 5, second half, and step 7: the APKs above run. An x86_64
+      # emulator boots headless under KVM, and mosaic-android-emulator-gate.sh
+      # installs Trestle, then Journal, launches each one's MosaicActivity
+      # three times and requires that it writes its state under filesDir,
+      # restores it, quarantines state the runtime refuses, and is still
+      # running ten seconds after each launch.
+      - name: Launch Trestle and Journal on an Android emulator (UI89 steps 5, 7)
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
         shell: bash
         timeout-minutes: 30
@@ -3721,6 +3808,10 @@ jobs:
           trap finish EXIT
           bash code/scripts/start-mosaic-android-emulator.sh "$emulator_log"
           bash code/scripts/mosaic-android-emulator-gate.sh "$apk" dev.codingadventures.trestle task-app
+
+          journal_apk="$(find "$RUNNER_TEMP/mosaic-compose-journal-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
+          test -n "$journal_apk"
+          bash code/scripts/mosaic-android-emulator-gate.sh "$journal_apk" dev.codingadventures.journalapp journal-app
 
       - name: Build concrete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'

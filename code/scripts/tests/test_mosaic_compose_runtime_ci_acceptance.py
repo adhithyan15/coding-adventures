@@ -192,12 +192,40 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("' T mosaic_app_create$'", block)
         self.assertIn("cargo install --locked cargo-ndk --version", block)
 
+    def test_journal_android_apk_carries_its_rust_runtime(self) -> None:
+        """UI89 step 7 (§3.9): Journal's engine is built for every ABI and
+        packaged like Trestle's, through the verified wrapper jar."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Journal for Android with its Rust runtime (UI89 step 7)")
+        block = workflow[start:workflow.index("\n      - name:", start)]
+        self.assertLess(
+            workflow.index("- name: Build Trestle for Android with its Rust runtime (UI89 step 5)"),
+            start,
+        )
+        self.assertIn("needs.detect.outputs.needs_mosaic_compose_runtime == 'true'", block)
+        self.assertIn('bash code/scripts/build-mosaic-android-libs.sh journal-mosaic-app "$jni_libs"', block)
+        self.assertIn("pkg code/programs/mosaic/journal-app --backend compose", block)
+        self.assertIn('--runtime-library "$jni_libs"', block)
+        self.assertIn('bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"', block)
+        self.assertIn("package: name='dev\\.codingadventures\\.journalapp'", block)
+        self.assertIn("launchable-activity: name='mosaic\\.android\\.MosaicActivity'", block)
+        self.assertIn("for abi in arm64-v8a armeabi-v7a x86_64 x86; do", block)
+        self.assertIn("' T mosaic_app_create$'", block)
+
+        assemble = (SCRIPT.parent / "assemble-mosaic-android-debug.sh").read_text(encoding="utf-8")
+        # The jar is verified before anything runs it.
+        self.assertLess(
+            assemble.index("verify-gradle-wrapper-jar.sh"),
+            assemble.index("org.gradle.wrapper.GradleWrapperMain"),
+        )
+
     def test_trestle_launches_and_restores_on_an_android_emulator(self) -> None:
         """UI89 step 5, second half: the APK with the runtime boots on an
         x86_64 emulator, keeps its state and quarantines refused state."""
 
         workflow = WORKFLOW.read_text(encoding="utf-8")
-        start = workflow.index("- name: Launch Trestle on an Android emulator (UI89 step 5)")
+        start = workflow.index("- name: Launch Trestle and Journal on an Android emulator (UI89 steps 5, 7)")
         block = workflow[start:workflow.index("\n      - name:", start)]
         self.assertLess(
             workflow.index("- name: Build Trestle for Android with its Rust runtime (UI89 step 5)"),
@@ -211,6 +239,15 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             block,
         )
         self.assertIn("adb emu kill", block)
+        # Journal runs the same gate after Trestle, on the same emulator.
+        self.assertIn("mosaic-compose-journal-android-runtime/compose/android/build/outputs/apk/debug", block)
+        self.assertLess(
+            block.index("dev.codingadventures.trestle task-app"),
+            block.index(
+                'bash code/scripts/mosaic-android-emulator-gate.sh "$journal_apk" '
+                "dev.codingadventures.journalapp journal-app"
+            ),
+        )
 
         scripts = SCRIPT.parent
         gate = (scripts / "mosaic-android-emulator-gate.sh").read_text(encoding="utf-8")
@@ -274,7 +311,8 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         for name in (
             "Build Trestle for Android (UI89 step 4)",
             "Build Trestle for Android with its Rust runtime (UI89 step 5)",
-            "Launch Trestle on an Android emulator (UI89 step 5)",
+            "Build Journal for Android with its Rust runtime (UI89 step 7)",
+            "Launch Trestle and Journal on an Android emulator (UI89 steps 5, 7)",
         ):
             start = workflow.index(f"- name: {name}")
             block = workflow[start : workflow.index("\n      - name:", start)]
