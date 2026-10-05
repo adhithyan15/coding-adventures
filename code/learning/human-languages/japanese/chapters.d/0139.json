@@ -1,0 +1,22 @@
+{
+  "chapter": 139,
+  "title": "Is It? No: Nothing, Nobody, Nowhere",
+  "label": "ch:ja-is-it-no-nothing-nobody-nowhere",
+  "canDo": "I can ask a yes-or-no question with ka, answer that something is not so, and say nothing, nobody and nowhere with a negative verb.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-C139-dokonimo",
+    "kind": "production",
+    "summary": "Ask a yes-or-no question with desu ka, answer no with chigaimasu, say what is not so with ja nai, and say nothing, nobody and nowhere, each with a verb in -masen.",
+    "assesses": [
+      "JA-LEX-C139-DESUKA",
+      "JA-LEX-C139-CHIGAIMASU",
+      "JA-LEX-C139-JANAI",
+      "JA-LEX-C139-NANIMO",
+      "JA-LEX-C139-DAREMO",
+      "JA-LEX-C139-DOKONIMO"
+    ]
+  }
+}

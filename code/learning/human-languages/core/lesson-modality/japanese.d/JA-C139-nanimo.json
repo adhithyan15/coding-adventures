@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C139-nanimo",
+    "language": "japanese",
+    "chapter": 139,
+    "sequence": 8550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3aeb345a24acc445"
+  },
+  "findings": []
+}

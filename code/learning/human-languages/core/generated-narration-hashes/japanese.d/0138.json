@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:d38b96288c3071d4",
+  "lessonIds": [
+    "JA-C138-okimasu",
+    "JA-C138-hatarakimasu",
+    "JA-C138-arukimasu",
+    "JA-C138-kaerimasu",
+    "JA-C138-nemasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch138.txt",
+  "json": "japanese/narration/ch138.json",
+  "textHash": "fnv1a64:d56768121f9bc286",
+  "jsonHash": "fnv1a64:93f70cc10afc3b2d",
+  "findings": []
+}

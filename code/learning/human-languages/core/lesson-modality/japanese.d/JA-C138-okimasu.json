@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C138-okimasu",
+    "language": "japanese",
+    "chapter": 138,
+    "sequence": 8470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d8f6d8e8a33396f"
+  },
+  "findings": []
+}

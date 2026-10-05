@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:05dd3c75e3391504",
+  "lessonIds": [
+    "JA-C140-senshuu",
+    "JA-C140-sengetsu",
+    "JA-C140-kyonen",
+    "JA-C140-sakki",
+    "JA-C140-owarimashita"
+  ],
+  "tex": "japanese/book/chapters/ch140-last-week-last-month-last-year-the-past.tex"
+}

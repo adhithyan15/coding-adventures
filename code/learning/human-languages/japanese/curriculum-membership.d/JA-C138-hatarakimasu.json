@@ -1,0 +1,11 @@
+{
+  "id": "JA-C138-hatarakimasu",
+  "pathSegment": "JA-PATH-138-DO138",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-138-DO138",
+      "order": 1
+    }
+  ]
+}

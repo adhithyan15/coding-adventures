@@ -1,0 +1,21 @@
+{
+  "chapter": 142,
+  "title": "Notices: Caution, No Smoking, Reception, Open",
+  "label": "ch:ja-notices-caution-no-smoking-reception-open",
+  "canDo": "I can read short notices and door signs, such as caution, no smoking, reception, open and not yet open, and act on what they ask of me.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R142-second-pass-the-future-and-notices",
+    "kind": "production",
+    "summary": "Read caution, no smoking, reception, open and not yet open, then read a three-line notice on a clinic door and say what you do; say next week, next month, next year, a plan and probably.",
+    "assesses": [
+      "JA-LEX-C142-CHUUI",
+      "JA-LEX-C142-KINEN",
+      "JA-LEX-C142-UKETSUKE",
+      "JA-LEX-C142-EIGYOUCHUU",
+      "JA-LEX-C142-JUNBICHUU"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C140-sengetsu",
+  "pathSegment": "JA-PATH-140-PAST140",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-140-PAST140",
+      "order": 1
+    }
+  ]
+}

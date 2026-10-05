@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C138-kaerimasu",
+    "language": "japanese",
+    "chapter": 138,
+    "sequence": 8500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6038d5e393725a99"
+  },
+  "findings": []
+}

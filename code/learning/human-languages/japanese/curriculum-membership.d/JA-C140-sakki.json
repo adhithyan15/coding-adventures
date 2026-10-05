@@ -1,0 +1,11 @@
+{
+  "id": "JA-C140-sakki",
+  "pathSegment": "JA-PATH-140-PAST140",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-140-PAST140",
+      "order": 3
+    }
+  ]
+}

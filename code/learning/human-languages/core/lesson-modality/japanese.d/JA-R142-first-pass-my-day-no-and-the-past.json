@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R142-first-pass-my-day-no-and-the-past",
+    "language": "japanese",
+    "chapter": 142,
+    "sequence": 8730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4343b4f0d82d8593"
+  },
+  "findings": []
+}

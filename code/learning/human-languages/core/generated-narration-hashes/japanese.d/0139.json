@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:f489f4b24f6f3736",
+  "lessonIds": [
+    "JA-C139-desuka",
+    "JA-C139-chigaimasu",
+    "JA-C139-janai",
+    "JA-C139-nanimo",
+    "JA-C139-daremo",
+    "JA-C139-dokonimo"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch139.txt",
+  "json": "japanese/narration/ch139.json",
+  "textHash": "fnv1a64:054e0bfd498d9c2d",
+  "jsonHash": "fnv1a64:29d6d69995a17545",
+  "findings": []
+}

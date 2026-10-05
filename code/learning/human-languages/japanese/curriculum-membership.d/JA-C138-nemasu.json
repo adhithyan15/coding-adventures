@@ -1,0 +1,11 @@
+{
+  "id": "JA-C138-nemasu",
+  "pathSegment": "JA-PATH-138-DO138",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-138-DO138",
+      "order": 4
+    }
+  ]
+}

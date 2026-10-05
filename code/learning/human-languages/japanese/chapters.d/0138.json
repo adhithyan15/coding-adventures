@@ -1,0 +1,21 @@
+{
+  "chapter": 138,
+  "title": "My Day: Get Up, Work, Walk, Go Home, Sleep",
+  "label": "ch:ja-my-day-get-up-work-walk-go-home-sleep",
+  "canDo": "I can say what I do every day with the polite -masu form, and find the stem of a verb: I get up, I work, I walk, I go home, I go to bed.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C138-nemasu",
+    "kind": "production",
+    "summary": "Say a whole day in order with five polite verbs, okimasu, hatarakimasu, arukimasu, kaerimasu and nemasu, and give the dictionary form beside each one.",
+    "assesses": [
+      "JA-LEX-C138-OKIMASU",
+      "JA-LEX-C138-HATARAKIMASU",
+      "JA-LEX-C138-ARUKIMASU",
+      "JA-LEX-C138-KAERIMASU",
+      "JA-LEX-C138-NEMASU"
+    ]
+  }
+}

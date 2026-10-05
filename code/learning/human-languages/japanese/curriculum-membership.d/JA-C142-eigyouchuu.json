@@ -1,0 +1,11 @@
+{
+  "id": "JA-C142-eigyouchuu",
+  "pathSegment": "JA-PATH-142-READ142",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-142-READ142",
+      "order": 3
+    }
+  ]
+}
