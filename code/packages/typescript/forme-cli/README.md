@@ -127,3 +127,10 @@ leaf-first. Bootstrap installs use npm's legacy peer-dependency mode so npm 10
 does not fail while resolving unrelated development-tool peers in the local
 package graph. Published consumers use normal package-manager installation and
 do not need this helper.
+
+Pass `--frozen` in release automation to require every discovered local
+package's committed lockfile. Frozen bootstrap runs `npm ci` with dependency
+lifecycle scripts disabled, then invokes each package's reviewed build script
+explicitly in the same leaf-first order. This keeps generated local-package
+artifacts available without turning install-time hooks into an ambient code
+execution surface.

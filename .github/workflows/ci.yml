@@ -28,7 +28,9 @@
 #       every official Unicode 17 normalization/casing vector.
 #   13. unicode17-dart-conformance: runs the generated Dart tables against
 #       every official Unicode 17 normalization/casing vector.
-#   14. build: Installs only the needed toolchains, then runs the build.
+#   14. forme-web-quality: runs the generated live sites through exact browser
+#       performance, accessibility, resource, and static-fallback budgets.
+#   15. build: Installs only the needed toolchains, then runs the build.
 #
 # This saves 3-5 minutes on language-specific changes by skipping
 # unneeded toolchain installations (e.g., Rust tarpaulin, Elixir/Erlang).
@@ -1452,7 +1454,96 @@ jobs:
           cargo test --manifest-path code/packages/rust/mosaic-app-bindings/Cargo.toml \
             --test flutter_platform_effects -- --nocapture
 
-  # ── Job 14: Build and test ─────────────────────────────────────
+  # ── Job 14: Forme browser quality ──────────────────────────────
+  #
+  # This is a dependency of CI gate, rather than a side workflow, so branch
+  # protection cannot merge a Forme web regression while Chrome is still
+  # running. Branch pushes skip the duplicate browser work; pull requests are
+  # authoritative and main reruns the release evidence after the squash.
+  forme-web-quality:
+    name: Forme web quality
+    needs: detect
+    if: needs.detect.outputs.needs_typescript == 'true' && (github.event_name == 'pull_request' || needs.detect.outputs.is_main == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "22.23.2"
+          cache: npm
+          cache-dependency-path: |
+            code/sites/blog/package-lock.json
+            code/sites/landing-page/package-lock.json
+
+      - name: Install reviewed Chrome for Testing
+        id: chrome
+        uses: browser-actions/setup-chrome@48ad923757ca74d66703209fe939badbdf80f2f4 # v2.2.0
+        with:
+          chrome-version: 154.0.8037.92
+          install-dependencies: true
+
+      - name: Install the reviewed Chrome SUID sandbox
+        shell: bash
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          FORME_CHROME_SANDBOX_SHA256: 24beb85e4149c65db5bf40fa307721143d0883ab8952e60dde1158606f644dee
+        run: |
+          sandbox_source="$(dirname "$CHROME_PATH")/chrome_sandbox"
+          sandbox_target=/usr/local/sbin/forme-chrome-sandbox
+          test -f "$sandbox_source"
+          test ! -L "$sandbox_source"
+          test "$(stat -c '%F %h' "$sandbox_source")" = "regular file 1"
+          test "$(sha256sum "$sandbox_source" | cut -d ' ' -f 1)" = \
+            "$FORME_CHROME_SANDBOX_SHA256"
+          sudo install -o root -g root -m 0755 "$sandbox_source" "$sandbox_target"
+          test -f "$sandbox_target"
+          test ! -L "$sandbox_target"
+          test "$(stat -c '%F %h %U:%G %a' "$sandbox_target")" = \
+            "regular file 1 root:root 755"
+          test "$(sha256sum "$sandbox_target" | cut -d ' ' -f 1)" = \
+            "$FORME_CHROME_SANDBOX_SHA256"
+          sudo chmod 4755 "$sandbox_target"
+          test "$(stat -c '%F %h %U:%G %a' "$sandbox_target")" = \
+            "regular file 1 root:root 4755"
+          test "$(sha256sum "$sandbox_target" | cut -d ' ' -f 1)" = \
+            "$FORME_CHROME_SANDBOX_SHA256"
+
+      - name: Build both live Forme sites
+        shell: bash
+        run: |
+          node code/packages/typescript/forme-cli/bin/bootstrap.mjs code/sites/landing-page --frozen
+          npm --prefix code/sites/landing-page run clean
+          npm --prefix code/sites/landing-page run build
+          node code/packages/typescript/forme-cli/bin/bootstrap.mjs code/sites/blog --frozen
+          npm --prefix code/sites/blog run clean
+          npm --prefix code/sites/blog run build
+
+      - name: Enforce browser and static-fallback budgets
+        working-directory: code/sites/blog
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          CHROME_DEVEL_SANDBOX: /usr/local/sbin/forme-chrome-sandbox
+          FORME_EXPECTED_CHROME_VERSION: 154.0.8037.92
+        run: npm run quality:release
+
+      - name: Publish bounded Forme quality evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: forme-web-quality
+          path: code/sites/blog/dist/.forme-web-quality.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # ── Job 15: Build and test ─────────────────────────────────────
   #
   # Installs only the toolchains flagged by the detect job, then
   # compiles the build tool and runs the incremental build.
@@ -4269,7 +4360,7 @@ jobs:
           fi
           $BT "${job_flags[@]}" -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -language all
 
-  # ── Job 14: CI gate ────────────────────────────────────────────
+  # ── Job 16: CI gate ────────────────────────────────────────────
   #
   # A single, always-present status check that summarizes the result of
   # every real job. The `build` job is a DYNAMIC matrix — its `build (…)`
@@ -4286,7 +4377,7 @@ jobs:
   # dependency failed, so it can report the failure rather than being skipped.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, build]
+    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-web-quality, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -4311,11 +4402,12 @@ jobs:
           UNICODE17_SWIFT_RESULT: ${{ needs['unicode17-swift-conformance'].result }}
           UNICODE17_DART_RESULT: ${{ needs['unicode17-dart-conformance'].result }}
           MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT: ${{ needs['mosaic-flutter-platform-library'].result }}
+          FORME_WEB_QUALITY_RESULT: ${{ needs['forme-web-quality'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
         run: |
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_web_quality=$FORME_WEB_QUALITY_RESULT build=$BUILD_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_WEB_QUALITY_RESULT" "$BUILD_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;
