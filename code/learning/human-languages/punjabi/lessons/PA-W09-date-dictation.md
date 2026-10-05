@@ -7,7 +7,7 @@ delivery: script
 chapter: 153
 type: writing
 headword: "ਤਾਰੀਖ਼"
-romanization: "heard fictional date"
+romanization: "tārīkh"
 gloss: "transcribe one heard fictional date into Gurmukhi digits"
 prerequisites: [PA-W09-date-delayed]
 sounds: []

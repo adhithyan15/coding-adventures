@@ -7,7 +7,7 @@ delivery: script
 chapter: 153
 type: writing
 headword: "ਤਾਰੀਖ਼"
-romanization: "delayed fictional date field"
+romanization: "tārīkh"
 gloss: "hide the closed bank, then fill one requested date after a short delay"
 prerequisites: [PA-W09-date-supported]
 sounds: []

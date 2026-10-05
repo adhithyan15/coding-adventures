@@ -37,6 +37,7 @@ it("builds a Punjabi A1 date field from taught months to independent Gurmukhi en
 
   for (const id of ["PA-W09-date-delayed", "PA-W09-date-dictation"]) {
     expect(String(byId.get(id)!.frontmatter.headword)).not.toMatch(/[੦-੯]/);
+    expect(byId.get(id)!.frontmatter.romanization).toBe("tārīkh");
   }
   const [selection] = compileLessonActivities(byId.get("PA-W09-date-select")!.blocks);
   expect([selection!.answer, ...selection!.accepted].every(
