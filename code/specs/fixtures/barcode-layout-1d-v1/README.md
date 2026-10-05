@@ -28,12 +28,13 @@ Large expected run arrays use the digest encoding defined by the normative
 spec. Compact `repeat`, `repeatRuns`, and `repeatSymbols` inputs are fixture
 transport encodings; their limits are validated before expansion.
 
-`targets.json` records all twelve current implementation lanes and their
-adapter/test hooks. All twelve established implementations are now conformant
-with the portable v1 contract. A pending target may name only its planned
+`targets.json` records the fifteen established implementation lanes and their
+adapter/test hooks. The twelve existing implementations are conformant with
+the portable v1 contract; Java, Kotlin, and Dart remain explicitly pending
+until their packages and complete native evidence are added. A pending target may name only its planned
 conformance test and known divergences; promotion fields are rejected. A conformant target must
 name an executed package test, carry the exact raw `cases.json` SHA-256, bind a
-tested pre-publication revision, match the checked-out canonical package tree,
+reachable tested revision, match the checked-out canonical package tree,
 and name the durable adoption PR. Revision and PR evidence are checked against
 the durable backlog owner. A conformant target must use the canonical
 language/package root and have no remaining divergence. Package evidence paths
