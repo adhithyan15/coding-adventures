@@ -1,0 +1,1 @@
+mkdir -p ../../../../.build-locks && while ! mkdir ../../../../.build-locks/kotlin-barcode-layout-1d.lock 2>/dev/null; do sleep 1; done; gradle --no-daemon --no-build-cache --max-workers=1 check; status=$?; rmdir ../../../../.build-locks/kotlin-barcode-layout-1d.lock; exit $status

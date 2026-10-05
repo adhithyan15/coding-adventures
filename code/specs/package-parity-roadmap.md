@@ -15521,6 +15521,39 @@ implementations as pending, and completing it unblocks 13 downstream owners,
 including Java/Kotlin/Dart layout parity. A live open-PR path audit found no
 overlap with its package, fixture, state, or roadmap files.
 
+### Post-#16706 exact-merge inventory and next dependency
+
+PR #16706 passed all 53 final-head checks (12 successes and 41 expected
+skips), was reported `MERGEABLE` and `CLEAN`, and squash-merged through guarded
+auto-merge as `9a99df33af2dc2dfe89e0748422e4ba387f97e22`. Elixir and Lua
+barcode-layout-1d are conformant in the 12-target registry. A collision-checked
+Git-tree inventory at that exact merge has 15 established lanes, 1,487
+implementation identities, 4,754 occupied slots, and 1,529 all-reported
+identities. Its completion bands remain 178/265, 123/934, 181/2,282, and
+1,005/14,070 (packages/missing slots); Rust has 806 singleton identities,
+OCaml remains emerging with five package roots, and canonical collisions and
+unknown language buckets are both zero. The merge changed behavior inside
+existing package roots, so it added no new identity or unowned gap. The
+inventory was derived from the complete tracked Git tree, not the sparse
+checkout.
+
+A read-only governing-contract audit also found one unowned build-tool fixture
+gap: repository-boundary reverse diff selection must include *every* declared
+consumer of a shared source input, while the current neutral case has only one
+consumer. The new pending
+`build-tool-shared-input-multiconsumer-diff-selection-fixture` owner will add a
+process-free Haskell `cabal.project` case with two declared consumers and an
+unregistered decoy; it does not claim an engine implementation or host
+authority.
+
+After recording that discovery, the next selected serial owner is
+`barcode-layout-1d-java-kotlin-dart-lane-parity`. Its four dependencies are
+merged, all three paint-instructions foundations already exist, and this pure
+layout port unlocks six symbology owners plus the barcode-1d facade. A live
+open-PR path audit found no overlap with its package, fixture, state, or
+roadmap paths. Work starts on a fresh clean `codex/` branch at the exact merge
+revision; the separate build-tool fixture stays pending.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

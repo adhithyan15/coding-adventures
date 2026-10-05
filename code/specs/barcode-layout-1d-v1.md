@@ -204,8 +204,10 @@ request, executed-test path, or zero-authority proof. A `conformant` entry has
 no known divergence and must carry all of those promotion fields.
 
 The corpus digest is SHA-256 over the raw checked-in `cases.json` bytes. The
-verified revision is the pre-publication commit whose package source and
-conformance test were executed. `package_tree` is that commit's Git tree ID for
+verified revision is a reachable evidence commit whose package source and
+conformance test match the bytes executed before publication. After a squash
+merge, it may be the durable merge commit when that commit preserves the tested
+package tree. `package_tree` is that commit's Git tree ID for
 the canonical package root and must equal the package tree in the checked-out
 adoption commit. This binds the tested package bytes; the repository contract
 job fetches history so it can resolve the exact implementation revision rather
