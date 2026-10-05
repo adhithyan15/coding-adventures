@@ -572,6 +572,9 @@ and lightness before conversion to backend-neutral sRGB.
 The `hwb` interpolation space shares that angular behavior while mixing
 whiteness and blackness with premultiplied alpha and treating near-achromatic
 whiteness-plus-blackness sums as powerless hues.
+The rectangular D50 `lab` interpolation space converts sRGB stops through
+chromatic adaptation before premultiplied-alpha mixing and converts the result
+back to backend-neutral sRGB paint.
 The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
