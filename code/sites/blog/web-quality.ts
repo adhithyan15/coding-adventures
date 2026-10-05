@@ -122,17 +122,36 @@ export function evaluateLighthouseResult(target: QualityTarget, raw: unknown): L
       `accessibility score ${accessibility} < ${target.accessibilityMinimum}`,
     );
   }
-  const auditRefs = Array.isArray(accessibilityCategory?.auditRefs)
-    ? accessibilityCategory.auditRefs.slice(0, MAX_AUDIT_REFS)
-    : [];
+  const auditRefs = accessibilityCategory?.auditRefs;
+  if (!Array.isArray(auditRefs) || auditRefs.length > MAX_AUDIT_REFS) {
+    throw new Error("Lighthouse accessibility category is missing bounded auditRefs");
+  }
   const failedAuditIds = new Set<string>();
   for (const candidate of auditRefs) {
     const ref = nullableRecord(candidate);
-    if (ref === null || typeof ref.id !== "string" || ref.id.length > 128) continue;
-    if (typeof ref.weight !== "number" || ref.weight <= 0) continue;
-    const audit = nullableRecord(audits[ref.id]);
-    if (audit === null || audit.score === 1) continue;
+    if (
+      ref === null ||
+      typeof ref.id !== "string" ||
+      ref.id.length === 0 ||
+      ref.id.length > 128 ||
+      typeof ref.weight !== "number" ||
+      !Number.isFinite(ref.weight) ||
+      ref.weight < 0
+    ) {
+      throw new Error("Lighthouse accessibility category has an invalid auditRef");
+    }
+    if (ref.weight === 0) continue;
+    const audit = record(audits[ref.id], `Lighthouse accessibility audit ${ref.id}`);
     if (audit.scoreDisplayMode === "manual" || audit.scoreDisplayMode === "notApplicable") continue;
+    if (
+      typeof audit.score !== "number" ||
+      !Number.isFinite(audit.score) ||
+      audit.score < 0 ||
+      audit.score > 1
+    ) {
+      throw new Error(`Lighthouse accessibility audit ${ref.id} has an invalid score`);
+    }
+    if (audit.score === 1) continue;
     failedAuditIds.add(ref.id);
   }
   for (const id of [...failedAuditIds].sort()) {
