@@ -545,9 +545,9 @@ struct Compiler {
     /// real-procedure result with zero parameters or only value-mode scalar
     /// parameters, or a copy of another such slot.
     runtime_real_slots: HashSet<String>,
-    /// Module-global slots created specifically for captured real value
+    /// Module-global slots for captured real scalars and captured real value
     /// formals. Their concrete f64 representation remains formatter-safe in
-    /// both the outer procedure and its nested sibling functions.
+    /// both the enclosing block and its nested functions.
     runtime_real_global_slots: HashSet<String>,
     /// Canonical text for local real scalars assigned a finite compile-time
     /// expression along a straight-line path. This deliberately stops tracking
@@ -886,6 +886,12 @@ impl Compiler {
             .map(|t| t.value.clone())
         {
             let slot = self.declare_var(&name, ty, is_own)?;
+            // An ordinary captured real scalar is stored as a concrete f64 in
+            // the existing E6 global slot. Nested sibling functions may format
+            // reads from that slot directly; no closure or thunk ABI is needed.
+            if ty == ScalarType::Real && self.block_captured.contains(&name) {
+                self.runtime_real_global_slots.insert(slot.clone());
+            }
             // A global (an `own` variable, or an E6-captured block scalar) is
             // zero-initialised once at module load — exactly the `own`
             // lifetime semantics — so it must NOT get a per-declaration `const`
@@ -12388,7 +12394,6 @@ mod tests {
     #[test]
     fn al4_runtime_real_scalar_copy_provenance_does_not_admit_wrappers() {
         for source in [
-            "begin real procedure pick; pick := 2.25; real x, y; procedure capture; y := x; x := pick(); y := x; output(y) end",
             "begin real procedure pick; pick := 2.25; boolean flag; real x; x := if flag then pick() else 1.0; output(x) end",
             "begin real procedure pick; pick := 2.25; boolean procedure choose; choose := true; real x; x := pick(); output(if choose() then x else x) end",
         ] {
@@ -12584,16 +12589,17 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_capture_provenance_is_limited_to_value_formals() {
-        let error = compile_source(
+    fn al4_runtime_real_provenance_includes_ordinary_captured_globals() {
+        let module = compile_source(
             "begin real x; procedure show; output(x); x := 2.25; show() end",
             "test",
         )
-        .expect_err("ordinary captured real globals remain outside the bounded proof");
-        assert!(
-            format!("{error:?}").contains("cannot print a real value"),
-            "unexpected rejection: {error:?}"
-        );
+        .expect("ordinary captured real globals carry formatter provenance");
+        let show = module.get_function("show").expect("has show procedure");
+        assert!(show.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
     }
 
     #[test]
