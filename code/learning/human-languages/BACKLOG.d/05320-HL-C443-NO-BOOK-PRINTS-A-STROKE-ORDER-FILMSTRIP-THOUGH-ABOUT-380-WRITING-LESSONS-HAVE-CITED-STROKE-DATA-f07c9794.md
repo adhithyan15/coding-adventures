@@ -124,6 +124,16 @@ That is about 380 filmstrips that could print today.
   figure (15 Chinese copy drills). 14 are fully cited words in a joined
   script. The other 136 are placeholders, punctuation, or headwords that
   mix in Latin text or A/B options.
+- **Tamil vowel signs, in written order.** ா, ி, ீ, ெ, ே and ை gained a
+  cited ductus each (native writers' pen traces in HP Labs India's LipiTk
+  Tamil recognizer), and the composer now draws a Tamil sign where the hand
+  writes it: ெ, ே and ை before their consonant, ொ and ோ in two halves around
+  it (`WRITTEN_SIGN_SIDES`, each side cited in the sign's mark record).
+  14 Tamil lessons gained a filmstrip (Tamil 34 → 48): seven sign lessons and
+  the words சரி, சொ, போ, மேலே, கடை, மேசை and சரியா. Still open for Tamil: the
+  pulli ் (32 lessons) and ு/ூ (17 and more), which need a citable pen path;
+  the repository's research could reach no source for them (Info-farmer's
+  Commons animations and Radhakrishnan's Appendix I could not be opened).
 - **Telugu consonants started with క.** The first base consonant now has the
   five-movement, two-run order from Sathish Shanmugam's packaged tracing guide,
   fitted to the bundled Noto Sans Telugu outline. Its existing `TE-S03` lesson

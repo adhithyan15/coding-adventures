@@ -440,10 +440,19 @@ describe("stroke ownership migration baseline", () => {
       // Kannada 33 -> 43, with the ordered key hash and the non-Tamil data
       // hash, measured after the last caption was settled; Tamil and both
       // shared-identity values remain unchanged.
+      //
+      // The six Tamil vowel signs written as separate symbols beside their
+      // consonant — ா (U+0BBE), ி (U+0BBF), ீ (U+0BC0), ெ (U+0BC6),
+      // ே (U+0BC7) and ை (U+0BC8) — gain a ductus each, cited to native
+      // writers' pen traces in HP Labs India's LipiTk Tamil recognizer. They
+      // join the Tamil tail owner after எ, ஏ and ஓ, so every existing key keeps
+      // its relative order. Keys move 439 -> 445 and Tamil 29 -> 35, with the
+      // ordered key hash, measured after the last caption was settled. No
+      // other script changes, so the non-Tamil data hash and both
     }).toEqual({
-      keys: 499,
+      keys: 505,
       keyHash:
-        "723742960210e323f16c1a55602b970f3b0a1bedc4b60afc4e132d9bc02d1a11",
+        "82ce632afb100f9d0b41d80a82f79683ed0fd554007f0ef1f7cc75f131ba1e6d",
       nonTamilDataHash:
         "5aaa8578256ae13c9331691b4b70480ff1e4f582b3851a5e246bc09e1429d2e4",
       sharedIdentityGroups: 17,
@@ -460,7 +469,7 @@ describe("stroke ownership migration baseline", () => {
         kannada: 43,
         malayalam: 14,
         "perso-arabic": 24,
-        tamil: 29,
+        tamil: 35,
         telugu: 43,
         "urdu-nastaliq": 31,
       },

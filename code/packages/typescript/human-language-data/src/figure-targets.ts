@@ -123,9 +123,9 @@ export function letterBlockIndex(lesson: ParsedLesson): number {
  * The one letter a writing lesson teaches, or `undefined` when the lesson is
  * not a single-letter writing lesson with a Writing block. A headword like
  * "வ, க" teaches more than one letter; `writingSequenceOf` below decides
- * whether it becomes a sequence strip. "வணக்கம்" does not yet: it carries a
- * pulli, and a mark is not drawn in a sequence until its written order is
- * modelled.
+ * whether it becomes a sequence strip, as does a word like "மேசை" whose vowel
+ * signs have a cited written order. "வணக்கம்" does not yet: its puḷḷi has
+ * neither a cited ductus nor a written-order row (`WRITTEN_SIGN_SIDES`).
  */
 export function writingLetterOf(lesson: ParsedLesson): string | undefined {
   if (lesson.realization.type !== "writing") return undefined;
@@ -188,15 +188,107 @@ export const SEPARATE_LETTER_SCRIPTS: ReadonlySet<string> = new Set([
 const LIST_SEPARATORS = /[\s,\u060C\u3001\u2014\u00B7]+/u;
 
 /**
- * A word may only be drawn letter by letter when every grapheme is ONE base
- * letter: a single code point of category L that is not a modifier (Lm, like
- * ー). That leaves out every vowel sign, virama and nasal mark, and it does so
- * on purpose — some of those are WRITTEN before the consonant they follow in
- * Unicode (Tamil ெ, Devanagari ि), so drawing a word in code-point order would
- * put strokes in the wrong order once marks have a ductus. Until a design that
- * knows the written order exists, a word with a mark is not a sequence.
+ * One base letter: a single code point of category L that is not a modifier
+ * (Lm, like ー). A word may only be drawn letter by letter when every grapheme
+ * is one of these, unless its script has a written-order table below.
  */
 const BASE_LETTER = /^(?!\p{Lm})\p{L}$/u;
+
+/** A grapheme made of combining signs alone: a vowel sign taught by itself. */
+const SIGNS_ONLY = /^\p{M}+$/u;
+
+// ---------------------------------------------------------------------------
+// Vowel signs: drawn in the order they are WRITTEN, not the order they are typed
+// ---------------------------------------------------------------------------
+//
+// Unicode stores a vowel sign AFTER its consonant, but a hand does not always
+// write it there. Tamil writes three signs to the LEFT of the consonant, and
+// writes them first:
+//
+//     typed (code points)      written (by hand)        looks like
+//     ----------------------   ----------------------   ----------
+//     க + ெ                    ெ, then க               கெ
+//     க + ே                    ே, then க               கே
+//     க + ை                    ை, then க               கை
+//     க + ொ  (= ெ + ா)         ெ, then க, then ா       கொ
+//     க + ோ  (= ே + ா)         ே, then க, then ா       கோ
+//     க + ா / ி / ீ            க, then the sign         கா கி கீ
+//
+// A strip drawn in code-point order would put the left-hand sign's strokes
+// AFTER the consonant's. So a script may compose words with signs only through
+// a table that says, for each sign, which side of its consonant it is written
+// on, and each side must be cited:
+//
+//   * The Tamil mark records (data/scripts/tamil.d/marks) cite it as their
+//     `compositionSource`: Radhakrishnan's Tamil Script Learners Manual,
+//     Modules 6 and 7, for ெ and ே ("written before the primary consonant");
+//     HP Labs India's Lipi Indic Character Recognizers 4.0 User Manual for
+//     ா, ி, ீ and ை (signs written as distinct characters to the left or right
+//     of the consonant, and units written from left to right). A test holds
+//     this table to those records.
+//   * ொ and ோ are not in the table: Unicode decomposes them (NFD) into ெ/ே
+//     plus ா, and each half is placed by its own row. ௌ decomposes into ெ
+//     plus ௗ, which has no row, so it stays refused.
+//
+// Everything without a row is refused: the puḷḷi ் and the signs ு and ூ (no
+// cited ductus, and ு and ூ fuse with their consonant into shapes of their
+// own), and every sign in every other script (Gujarati ા, Devanagari ि, the
+// kana voicing mark ゙), because no other script has a table yet.
+//
+// Some consonant-sign pairs fuse into one ligature even though both halves
+// have rows: Unicode 17.0 §12.6.3 (Ligatures with Vowel i, Figure 12-21)
+// shows ட with ி and ீ, and ல with ீ, joined into new shapes. Drawing the
+// consonant and the sign apart would draw a word nobody writes, so those
+// pairs are refused too.
+
+/** Which side of its consonant a sign is WRITTEN on, per script. */
+export const WRITTEN_SIGN_SIDES: Readonly<Record<string, Readonly<Record<string, "before" | "after">>>> = {
+  tamil: {
+    "\u0BC6": "before", // ெ  e
+    "\u0BC7": "before", // ே  ē
+    "\u0BC8": "before", // ை  ai
+    "\u0BBE": "after", //  ா  ā
+    "\u0BBF": "after", //  ி  i
+    "\u0BC0": "after", //  ீ  ī
+  },
+};
+
+/** Consonant + sign pairs that fuse into a ligature, per script (NFD). */
+export const FUSED_SIGN_PAIRS: Readonly<Record<string, ReadonlySet<string>>> = {
+  tamil: new Set(["\u0B9F\u0BBF", "\u0B9F\u0BC0", "\u0BB2\u0BC0"]), // டி டீ லீ
+};
+
+/**
+ * The pieces one grapheme is written as, in written order, or `undefined`
+ * when this module will not draw it.
+ *
+ *   * a base letter is one piece, itself, in every script;
+ *   * in a script with a `WRITTEN_SIGN_SIDES` table, a base letter with signs
+ *     is its before-signs, the letter, then its after-signs ("கை" -> ை, க);
+ *     a grapheme of signs alone (a sign lesson's headword, "ோ") is its
+ *     before-signs then its after-signs (ே, ா);
+ *   * anything else (a sign with no row, a fused pair, a digit, a mark in a
+ *     script with no table) is `undefined`.
+ */
+export function writtenPiecesOf(grapheme: string, script: string): string[] | undefined {
+  if (BASE_LETTER.test(grapheme)) return [grapheme];
+  const sides = WRITTEN_SIGN_SIDES[script];
+  if (sides === undefined) return undefined;
+  const [first, ...rest] = [...grapheme.normalize("NFD")];
+  if (first === undefined) return undefined;
+  const base = BASE_LETTER.test(first) ? first : undefined;
+  const signs = base === undefined ? [first, ...rest] : rest;
+  if (base === undefined && !SIGNS_ONLY.test(grapheme)) return undefined;
+  if (signs.length === 0 || signs.some((sign) => !Object.prototype.hasOwnProperty.call(sides, sign))) {
+    return undefined;
+  }
+  if (base !== undefined && signs.some((sign) => FUSED_SIGN_PAIRS[script]?.has(`${base}${sign}`))) {
+    return undefined;
+  }
+  const before = signs.filter((sign) => sides[sign] === "before");
+  const after = signs.filter((sign) => sides[sign] === "after");
+  return [...before, ...(base === undefined ? [] : [base]), ...after];
+}
 
 /**
  * The letters a writing lesson's headword spells out, in writing order, or
@@ -206,12 +298,17 @@ const BASE_LETTER = /^(?!\p{Lm})\p{L}$/u;
  *
  *   * a LIST of two or more items, each exactly one grapheme, in any script; or
  *   * one or more WORDS in a `SEPARATE_LETTER_SCRIPTS` script, two or more
- *     letters in all, where every grapheme is a single base letter.
+ *     pieces in all, where every grapheme is a single base letter or, in a
+ *     script with a written-order table, a base letter with cited signs; or
+ *   * in a script with a written-order table, ONE grapheme that is written in
+ *     two or more pieces: a two-part sign taught by itself ("ோ" -> ே, ா).
  *
- * A one-letter headword is not a sequence; `writingLetterOf` owns it. Like a
- * single letter, a sequence needs a Writing or Script block to land in. This
- * function only reads the headword; whether each letter has a CITED ductus is
- * `withDerivedFilmstrips`' question, answered by the ledger.
+ * In a script with a table, each piece of a sign-bearing grapheme is placed in
+ * written order (`writtenPiecesOf`). A one-piece headword is not a sequence;
+ * `writingLetterOf` owns it. Like a single letter, a sequence needs a Writing
+ * or Script block to land in. This function only reads the headword; whether
+ * each piece has a CITED ductus is `withDerivedFilmstrips`' question, answered
+ * by the ledger.
  */
 export function writingSequenceOf(lesson: ParsedLesson, script: string): string[] | undefined {
   if (lesson.realization.type !== "writing") return undefined;
@@ -220,10 +317,22 @@ export function writingSequenceOf(lesson: ParsedLesson, script: string): string[
   const items = headword.split(LIST_SEPARATORS).filter((item) => item !== "");
   const graphemes = items.map((item) => [...GRAPHEMES.segment(item)].map((part) => part.segment));
   const letters = graphemes.flat();
-  if (letters.length < 2) return undefined;
-  if (items.length >= 2 && graphemes.every((item) => item.length === 1)) return letters;
+  if (letters.length === 0) return undefined;
+  const hasTable = WRITTEN_SIGN_SIDES[script] !== undefined;
+  if (letters.length === 1) {
+    if (!hasTable) return undefined;
+    const pieces = writtenPiecesOf(letters[0]!, script);
+    return pieces !== undefined && pieces.length >= 2 ? pieces : undefined;
+  }
+  if (items.length >= 2 && graphemes.every((item) => item.length === 1)) {
+    // A list keeps a grapheme no table can place (a digit, an uncited sign)
+    // as it is: the ledger then decides, exactly as before signs were placed.
+    return hasTable ? letters.flatMap((letter) => writtenPiecesOf(letter, script) ?? [letter]) : letters;
+  }
   if (!SEPARATE_LETTER_SCRIPTS.has(script)) return undefined;
-  return letters.every((letter) => BASE_LETTER.test(letter)) ? letters : undefined;
+  const pieces = letters.map((letter) => writtenPiecesOf(letter, script));
+  if (pieces.some((piece) => piece === undefined)) return undefined;
+  return pieces.flat() as string[];
 }
 
 /** Every lesson on a switched-on track that COULD carry a filmstrip. */
@@ -237,13 +346,14 @@ export function filmstripCandidates(
     if (script === undefined) continue;
     const lessonId = lesson.realization.lessonId;
     const output = `${lesson.language}/book/figures/${lessonId}-filmstrip.svg`;
-    const glyph = writingLetterOf(lesson);
-    if (glyph !== undefined) {
-      candidates.push({ kind: "script-filmstrip", lessonId, script, glyph, output });
+    // A sequence first: a one-grapheme headword that is written in two pieces
+    // (the two-part sign ோ) is a sequence, not a letter.
+    const letters = writingSequenceOf(lesson, script);
+    if (letters === undefined) {
+      const glyph = writingLetterOf(lesson);
+      if (glyph !== undefined) candidates.push({ kind: "script-filmstrip", lessonId, script, glyph, output });
       continue;
     }
-    const letters = writingSequenceOf(lesson, script);
-    if (letters === undefined) continue;
     candidates.push({
       kind: "script-filmstrip",
       lessonId,
@@ -298,11 +408,19 @@ export function withDerivedFilmstrips(
  * A sequence reads "How はい is written" when its letters spell the headword
  * as one word, and "How the letters வ, க are written" when the headword is a
  * LIST — the letters joined back together are then not the headword, because
- * the separators are gone.
+ * the separators are gone. A strip that holds a vowel sign reads "How மேசை is
+ * written, part by part": its pieces are in WRITTEN order, so they never spell
+ * the headword back.
  */
 export function filmstripImageMarkdown(target: ScriptFilmstripTarget): string {
   const file = `figures/${basename(target.output)}`;
   if (target.letters === undefined) return `![How ${target.glyph} is written, stroke by stroke](${file})`;
+  // A strip with a vowel sign in it draws PIECES in written order ("மேசை" is
+  // ே, ம, ை, ச), which never spell the headword back, so it is captioned by
+  // its parts.
+  if (target.letters.some((letter) => SIGNS_ONLY.test(letter))) {
+    return `![How ${target.glyph} is written, part by part, stroke by stroke](${file})`;
+  }
   const what = target.letters.join("") === target.glyph
     ? `How ${target.glyph} is written`
     : `How the letters ${target.glyph} are written`;

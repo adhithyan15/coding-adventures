@@ -6,7 +6,7 @@ export const scriptInventoryEvidence = tamilInventoryEvidence({
   name: "Tamil U-BC7",
   section: "marks",
   id: "U-BC7",
-  digest: "dec38eacb4d87fc69cc9d8c34b957e624d2ec3b1390aed7e3d3d8f2cf7478551",
+  digest: "7e18dddfc503bf417bb8d0f1cfffb9c374c4e12eb881da702368e3d616d1365a",
   assert(entry) {
     const tamilEe = entry as Mark;
     expect(tamilEe.compositionOrder).toEqual([
@@ -23,5 +23,17 @@ export const scriptInventoryEvidence = tamilInventoryEvidence({
     expect(tamilEe.compositionSource?.variation).toMatch(
       /handwritten sign-before-carrier order.*left-side placement.*does not supply a standalone directional path or pen-lift count.*no ductus is inferred/i,
     );
+    // One continuous stroke of three movements, from native writers' traces.
+    expect(tamilEe.penLifts).toBe(0);
+    expect(tamilEe.strokeOrder).toEqual([
+      "start inside the small upper loop and circle it",
+      "without lifting, sweep left and down the big curve",
+      "without lifting, curl up into the lower loop — and only now lift",
+    ]);
+    expect(tamilEe.strokeOrderSource?.url).toBe("https://lipitk.sourceforge.net/lipi-reco.htm");
+    expect(tamilEe.strokeOrderSource?.citation).toMatch(
+      /HP Labs India.*Lipi Indic Character Recognizers 4\.0.*Tamil recognizer.*class 42 \(ே, ee sign\).*native Tamil writers.*MIT licence/,
+    );
+    expect(tamilEe.strokeOrderSource?.variation).toMatch(/one pen-down stroke.*scaled to a square.*Noto Sans Tamil/);
   },
 });

@@ -15,6 +15,23 @@
   "compositionSource": {
     "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Module 7, Frame 7: the secondary symbol for ē is written before the primary consonant (University of Texas at Austin, 2009)",
     "url": "https://sites.la.utexas.edu/tamilscript/category/3-moduals/module-07",
-    "variation": "Module 7 verifies the handwritten sign-before-carrier order and the sign's left-side placement. It does not supply a standalone directional path or pen-lift count, so no ductus is inferred."
+    "variation": "Module 7 verifies the handwritten sign-before-carrier order and the sign's left-side placement. It does not supply a standalone directional path or pen-lift count, so no ductus is inferred from it; the sign's own path is cited in strokeOrderSource."
+  },
+  "components": [
+    "a small upper loop",
+    "a big open curve",
+    "a lower loop"
+  ],
+  "strokeOrder": [
+    "start inside the small upper loop and circle it",
+    "without lifting, sweep left and down the big curve",
+    "without lifting, curl up into the lower loop — and only now lift"
+  ],
+  "strokeOrderNote": "one continuous stroke — three joined movements, no pen lift; cited to native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 42",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Tamil recognizer, class 42 (ே, ee sign): stored online-handwriting prototypes from native Tamil writers (MIT licence, 2012)",
+    "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+    "variation": "The recognizer stores native Tamil writers' tablet pen traces, each resampled to 60 points. 105 of the 108 stored prototypes of the ee sign (97%) are one pen-down stroke. 104 of those 105 turn counterclockwise: the pen starts in the upper half (98), inside the small upper curl, circles it, sweeps left and down the big curve, and curls up into the lower loop, ending in the lower half (102). The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Tamil outline. Handwriting varies by writer."
   }
 }

@@ -56,9 +56,11 @@ describe("which headwords are sequences", () => {
     }
   });
 
-  it("refuses a word with a vowel sign, virama or length mark, even in a separate-letter script", () => {
+  it("refuses a word with a sign no written-order table places, even in a separate-letter script", () => {
     // Some marks are written BEFORE the consonant they follow in Unicode, so a
-    // code-point-order strip would draw them in the wrong order.
+    // code-point-order strip would draw them in the wrong order. Only Tamil
+    // has a table (WRITTEN_SIGN_SIDES), and its puḷḷi is not in it; see
+    // vowel-signs-in-written-order for the signs it does place.
     expect(writingSequenceOf(lesson("TA-W2", { headword: "வணக்கம்" }), "tamil")).toBeUndefined();
     expect(writingSequenceOf(lesson("GU-W1", { headword: "બજાર" }), "gujarati")).toBeUndefined();
     expect(writingSequenceOf(lesson("JA-W3", { headword: "ラーメン" }), "japanese")).toBeUndefined();

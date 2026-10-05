@@ -18,35 +18,71 @@ describe("the real corpus", () => {
   );
 
   it("draws a filmstrip for every Tamil letter lesson whose letter has a cited ductus", () => {
-    // 30 one-letter lessons, 29 letters. வ has both TA-S01-va and the guided
+    // 36 one-glyph lessons, 35 glyphs. வ has both TA-S01-va and the guided
     // copy TA-W00, while a letter lesson without cited ductus remains an
-    // undrawn candidate.
+    // undrawn candidate. Six of the 35 are vowel signs taught by themselves
+    // (ா ி ீ ெ ே ை); the puḷḷi ் and the signs ு and ூ have no cited ductus
+    // and stay undrawn.
     const tamil = targets.filter((target) => target.lessonId.startsWith("TA-"));
     const single = tamil.filter((target) => target.letters === undefined);
-    expect(single).toHaveLength(30);
-    expect(new Set(single.map((target) => target.glyph)).size).toBe(29);
+    expect(single).toHaveLength(36);
+    expect(new Set(single.map((target) => target.glyph)).size).toBe(35);
+    expect(
+      Object.fromEntries(
+        single
+          .filter((target) => /^\p{M}+$/u.test(target.glyph))
+          .map((target) => [target.lessonId, target.glyph]),
+      ),
+    ).toEqual({
+      "TA-S09-i-sign": "ி",
+      "TA-S114-vowel-sign-aa": "ா",
+      "TA-S123-vowel-sign-ee": "ே",
+      "TA-S128-vowel-sign-ai": "ை",
+      "TA-S132-vowel-sign-ii": "ீ",
+      "TA-S133-vowel-sign-e": "ெ",
+    });
+    const lessonIds = new Set(targets.map((target) => target.lessonId));
+    for (const id of ["TA-S08-pulli", "TA-S121-vowel-sign-u", "TA-S135-vowel-sign-uu"]) {
+      expect(lessonIds.has(id), id).toBe(false);
+    }
   });
 
-  it("draws every Tamil letter-list lesson whose letters are all cited, and no Tamil word yet", () => {
-    // Four lessons list letters ("வ, க"). Every Tamil WORD headword so far
-    // carries a vowel sign or pulli, and marks are never composed, so none is
-    // drawn — `writingSequenceOf` refuses them before the ledger is asked.
+  it("draws every Tamil letter list, and every Tamil word whose signs have a cited written order", () => {
+    // Four lessons list letters ("வ, க"). The rest are drawn in WRITTEN order:
+    // a sign written left of its consonant (ெ ே ை, and the left half of ொ ோ)
+    // comes before it, so மேசை is ே, ம, ை, ச. A word with a puḷḷi or ு/ூ
+    // (வணக்கம், பேசு) is still refused before the ledger is asked.
     const sequences = targets.filter(
       (target) => target.lessonId.startsWith("TA-") && target.letters !== undefined,
     );
     expect(
       Object.fromEntries(sequences.map((target) => [target.lessonId, target.letters!.join(" ")])),
     ).toEqual({
+      "TA-S102-vowel-sign-oo": "ே ா",
       "TA-W01-abugida-va-ka": "வ க",
       "TA-W02-ma-retroflex-na": "ம ண",
       "TA-W02-three-ns": "ந ன ண",
       "TA-W04-vowel-signs-nandri": "ந ன ற",
+      "TA-W07-write-sari": "ச ர ி",
+      "TA-W08-short-o-observe": "ெ ச ா",
+      "TA-W15-read-po": "ே ப ா",
+      "TA-W22-read-mele": "ே ம ே ல",
+      "TA-W24-read-kadai": "க ை ட",
+      "TA-W26-read-mesai": "ே ம ை ச",
+      "TA-W30-read-sariyaa": "ச ர ி ய ா",
     });
+    const lessonIds = new Set(targets.map((target) => target.lessonId));
+    for (const id of ["TA-W03-write-vanakkam", "TA-W14-read-pesu", "TA-W32-read-sol"]) {
+      expect(lessonIds.has(id), id).toBe(false);
+    }
   });
 
   it("composes words only in scripts whose letters stand apart", () => {
-    // The three Japanese words are the corpus's only word sequences today.
-    // Devanagari (मम), the Arabic family (سلام) and Cyrillic (привет) have
+    // Words whose pieces spell the headword back: three Japanese words, and
+    // the two Tamil words whose only sign is written AFTER its consonant (சரி,
+    // சரியா). A Tamil word with a sign written before its consonant is drawn
+    // in written order, which does not spell it back (see above). Devanagari
+    // (मम), the Arabic family (سلام) and Cyrillic (привет) have
     // fully cited words that are deliberately NOT drawn: see
     // SEPARATE_LETTER_SCRIPTS for why each would draw something false.
     const words = targets.filter(
@@ -56,6 +92,8 @@ describe("the real corpus", () => {
       "JA-W01-hai-read",
       "JA-W01-konnichiwa-read",
       "JA-W08-sayounara-read",
+      "TA-W07-write-sari",
+      "TA-W30-read-sariyaa",
     ]);
     const lessonIds = new Set(targets.map((target) => target.lessonId));
     for (const id of ["SA-W03-mama-guided-copy", "UR-W04-joining", "RU-W05-privet-guided-copy"]) {

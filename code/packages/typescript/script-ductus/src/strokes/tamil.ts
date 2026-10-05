@@ -29,6 +29,12 @@ import { entry as uBAE } from "./tamil/U-BAE.ts";
 import { entry as uB8E } from "./tamil/U-B8E.ts";
 import { entry as uB8F } from "./tamil/U-B8F.ts";
 import { entry as uB93 } from "./tamil/U-B93.ts";
+import { entry as uBBE } from "./tamil/U-BBE.ts";
+import { entry as uBBF } from "./tamil/U-BBF.ts";
+import { entry as uBC0 } from "./tamil/U-BC0.ts";
+import { entry as uBC6 } from "./tamil/U-BC6.ts";
+import { entry as uBC7 } from "./tamil/U-BC7.ts";
+import { entry as uBC8 } from "./tamil/U-BC8.ts";
 
 import type { DuctusEntry } from "./registry.ts";
 
@@ -62,4 +68,17 @@ export const mainEntries: DuctusEntry[] = [
 ];
 
 // The historical Tamil tail entry followed the later Indic owner blocks.
-export const tailEntries: DuctusEntry[] = [uB8E, uB8F, uB93];
+// The six vowel signs written as separate symbols beside their consonant
+// (three to its right, three to its left) follow, one owner each like a
+// letter, after the letters so every existing key keeps its relative order.
+export const tailEntries: DuctusEntry[] = [
+  uB8E,
+  uB8F,
+  uB93,
+  uBBE,
+  uBBF,
+  uBC0,
+  uBC6,
+  uBC7,
+  uBC8,
+];

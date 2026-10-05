@@ -148,11 +148,38 @@ something false. Devanagari (and Bengali and Gurmukhi) words share one
 continuous headline, while every cited letter draws its own; Arabic-family
 letters join and change shape by position, while the ductus holds isolated
 forms; the cited Cyrillic hand is connected cursive. A word with a vowel sign,
-virama or length mark is refused in every script, because some marks are
-written before the consonant they follow in Unicode, so drawing in code-point
-order would draw strokes in the wrong order. These are the open work for
-combinations: mark ductus with a written-order model, a cited word-level
-headline, and positional or joined forms.
+virama or length mark is refused in every script that has no written-order
+table (below), because some marks are written before the consonant they follow
+in Unicode, so drawing in code-point order would draw strokes in the wrong
+order. These are the open work for combinations: mark ductus with a
+written-order model for scripts other than Tamil, a cited word-level headline,
+and positional or joined forms.
+
+#### As built — Tamil vowel signs in written order
+
+Six Tamil vowel signs have a cited ductus of their own (ா ி ீ ெ ே ை, from the
+native-writer pen traces in HP Labs India's LipiTk Tamil recognizer), so a sign
+lesson prints a one-glyph strip of the sign alone. To compose words with them,
+`figure-targets.ts` holds a per-script table of which side of its consonant
+each sign is **written** on (`WRITTEN_SIGN_SIDES`). Tamil is the only script
+with one:
+
+| typed | written | source of the side |
+|---|---|---|
+| C + ெ / ே / ை | sign, then C | Radhakrishnan Modules 6–7 (ெ ே); LipiTk recognizer manual (ை) |
+| C + ொ / ோ (NFD: left half + ா) | left half, C, ா | the rows for each half |
+| C + ா / ி / ீ | C, then sign | LipiTk recognizer manual |
+
+Each row must match the cited `compositionSource` of its mark record, and a test
+enforces it. A sequence strip that contains a sign calls its groups "parts"
+("Part 2 of 4"), says in its `<desc>` that they are in written order, and draws
+each sign without its consonant. A two-part sign taught by itself (ோ) prints
+its two halves. Refused: any sign without a row (the pulli ், ு and ூ, which
+have no cited ductus and fuse with their consonant, and ௌ, whose right half ௗ
+has none), the pairs Unicode fuses into ligatures (டி, டீ, லீ), and every sign
+in every other script. The pen lift between parts is the same assumption the
+separate-letter word strips already make: the recognizer stores these signs as
+distinct symbols, written left to right.
 
 ### Class B — data diagrams (generated)
 

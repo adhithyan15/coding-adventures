@@ -1,0 +1,128 @@
+// Tamil vowel signs in a filmstrip — a sign is drawn where the hand WRITES it,
+// which is not always where Unicode TYPES it. ெ, ே and ை are typed after their
+// consonant and written before it; ொ and ோ are written in two halves around
+// it. Every side is cited in the Tamil mark records, and this file holds the
+// composer's table to them.
+import { describe, expect, it } from "vitest";
+import {
+  filmstripCandidates,
+  filmstripImageMarkdown,
+  FUSED_SIGN_PAIRS,
+  WRITTEN_SIGN_SIDES,
+  writingLetterOf,
+  writingSequenceOf,
+  writtenPiecesOf,
+} from "../../src/figure-targets.js";
+import { defaultCurriculumRoot, loadScripts } from "../../src/loader.js";
+import { lesson } from "./fixture.js";
+
+describe("where each Tamil sign is written", () => {
+  it("puts a sign written left of its consonant BEFORE it, and one written right of it after", () => {
+    expect(writtenPiecesOf("கெ", "tamil")).toEqual(["ெ", "க"]);
+    expect(writtenPiecesOf("கே", "tamil")).toEqual(["ே", "க"]);
+    expect(writtenPiecesOf("கை", "tamil")).toEqual(["ை", "க"]);
+    expect(writtenPiecesOf("கா", "tamil")).toEqual(["க", "ா"]);
+    expect(writtenPiecesOf("கி", "tamil")).toEqual(["க", "ி"]);
+    expect(writtenPiecesOf("கீ", "tamil")).toEqual(["க", "ீ"]);
+    expect(writtenPiecesOf("க", "tamil")).toEqual(["க"]);
+  });
+
+  it("splits a two-part sign around its consonant, typed whole or in halves", () => {
+    // U+0BCA and U+0BCB decompose (NFD) into a left half and ா.
+    expect(writtenPiecesOf("கொ", "tamil")).toEqual(["ெ", "க", "ா"]);
+    expect(writtenPiecesOf("கோ", "tamil")).toEqual(["ே", "க", "ா"]);
+    expect(writtenPiecesOf("கொ", "tamil")).toEqual(["ெ", "க", "ா"]);
+    expect(writtenPiecesOf("ோ", "tamil")).toEqual(["ே", "ா"]);
+    expect(writtenPiecesOf("ா", "tamil")).toEqual(["ா"]);
+  });
+
+  it("refuses every sign whose written place is not cited, and the fused pairs", () => {
+    // ் and ு/ூ have no row; ௌ's right half ௗ has none either.
+    for (const grapheme of ["க்", "கு", "கூ", "கௌ", "்", "ு"]) {
+      expect(writtenPiecesOf(grapheme, "tamil"), grapheme).toBeUndefined();
+    }
+    // Unicode joins these pairs into ligatures of their own.
+    for (const grapheme of ["டி", "டீ", "லீ"]) {
+      expect(writtenPiecesOf(grapheme, "tamil"), grapheme).toBeUndefined();
+    }
+    expect(writtenPiecesOf("லி", "tamil")).toEqual(["ல", "ி"]);
+    expect(writtenPiecesOf("௭", "tamil")).toBeUndefined();
+  });
+
+  it("keeps every other script's signs refused: only Tamil has a table", () => {
+    expect(Object.keys(WRITTEN_SIGN_SIDES)).toEqual(["tamil"]);
+    expect(Object.keys(FUSED_SIGN_PAIRS)).toEqual(["tamil"]);
+    expect(writtenPiecesOf("કા", "gujarati")).toBeUndefined();
+    expect(writtenPiecesOf("कि", "devanagari")).toBeUndefined();
+    expect(writtenPiecesOf("が", "japanese")).toEqual(["が"]);
+    expect(writtenPiecesOf("ಕಾ", "kannada")).toBeUndefined();
+    expect(writingSequenceOf(lesson("GU-W1", { headword: "બજાર" }), "gujarati")).toBeUndefined();
+    expect(writingSequenceOf(lesson("TE-W1", { headword: "కాకి" }), "telugu")).toBeUndefined();
+  });
+
+  it("matches the cited written place in every Tamil mark record", () => {
+    // Each row must stand on a record whose `compositionSource` cites it: a
+    // row with no record, or a record saying the other side, fails here.
+    const tamil = loadScripts(defaultCurriculumRoot()).tamil!;
+    for (const [sign, side] of Object.entries(WRITTEN_SIGN_SIDES.tamil!)) {
+      const mark = (tamil.marks ?? []).find((entry) => entry.mark === sign);
+      expect(mark, sign).toBeDefined();
+      expect(mark!.compositionSource?.citation, sign).toMatch(/\S/);
+      expect(mark!.compositionSource?.url, sign).toMatch(/^https:\/\//);
+      const order = (mark!.compositionOrder ?? []).join(" | ");
+      if (side === "before") expect(order, sign).toMatch(/^in handwriting, write the .* to the left before the primary consonant/);
+      else expect(order, sign).toMatch(/^write the Tamil consonant carrier first \| write the .* sign after it/);
+    }
+    // And no record claims a side the table leaves out.
+    for (const mark of tamil.marks ?? []) {
+      if (mark.mark in WRITTEN_SIGN_SIDES.tamil!) continue;
+      expect(mark.compositionOrder?.join(" ") ?? "", mark.mark).not.toMatch(/before the primary consonant/);
+    }
+  });
+});
+
+describe("Tamil words and signs as strips", () => {
+  it("draws a word in written order, and a two-part sign taught alone as its halves", () => {
+    expect(writingSequenceOf(lesson("TA-W1", { headword: "மேசை" }), "tamil")).toEqual(["ே", "ம", "ை", "ச"]);
+    expect(writingSequenceOf(lesson("TA-W2", { headword: "சொ" }), "tamil")).toEqual(["ெ", "ச", "ா"]);
+    expect(writingSequenceOf(lesson("TA-W3", { headword: "சரியா" }), "tamil")).toEqual(["ச", "ர", "ி", "ய", "ா"]);
+    expect(writingSequenceOf(lesson("TA-S1", { headword: "ோ" }), "tamil")).toEqual(["ே", "ா"]);
+    expect(writingSequenceOf(lesson("TA-S2", { headword: "ா" }), "tamil")).toBeUndefined();
+    expect(writingLetterOf(lesson("TA-S2", { headword: "ா" }))).toBe("ா");
+  });
+
+  it("refuses a word with any sign that has no cited place", () => {
+    expect(writingSequenceOf(lesson("TA-W4", { headword: "பேசு" }), "tamil")).toBeUndefined();
+    expect(writingSequenceOf(lesson("TA-W5", { headword: "சொல்" }), "tamil")).toBeUndefined();
+    expect(writingSequenceOf(lesson("TA-W6", { headword: "குடி" }), "tamil")).toBeUndefined();
+    expect(writingSequenceOf(lesson("TA-W7", { headword: "வண்டி" }), "tamil")).toBeUndefined();
+  });
+
+  it("keeps a list's digits as they are, and places a list's signs", () => {
+    expect(writingSequenceOf(lesson("TA-W8", { headword: "௧ ௨ ௩" }), "tamil")).toEqual(["௧", "௨", "௩"]);
+    expect(writingSequenceOf(lesson("TA-W9", { headword: "கெ, கா" }), "tamil")).toEqual(["ெ", "க", "க", "ா"]);
+  });
+
+  it("becomes a candidate captioned part by part", () => {
+    const [sign, single, word] = filmstripCandidates([
+      lesson("TA-S102", { headword: "ோ" }),
+      lesson("TA-W26", { headword: "மேசை" }),
+      lesson("TA-S114", { headword: "ா" }),
+    ]);
+    expect(sign).toMatchObject({ lessonId: "TA-S102", glyph: "ோ", letters: ["ே", "ா"] });
+    expect(word).toMatchObject({ lessonId: "TA-W26", glyph: "மேசை", letters: ["ே", "ம", "ை", "ச"] });
+    expect(single).toEqual({
+      kind: "script-filmstrip",
+      lessonId: "TA-S114",
+      script: "tamil",
+      glyph: "ா",
+      output: "tamil/book/figures/TA-S114-filmstrip.svg",
+    });
+    expect(filmstripImageMarkdown(word!)).toBe(
+      "![How மேசை is written, part by part, stroke by stroke](figures/TA-W26-filmstrip.svg)",
+    );
+    expect(filmstripImageMarkdown(sign!)).toBe(
+      "![How ோ is written, part by part, stroke by stroke](figures/TA-S102-filmstrip.svg)",
+    );
+  });
+});

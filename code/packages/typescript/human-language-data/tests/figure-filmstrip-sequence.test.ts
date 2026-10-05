@@ -5,6 +5,7 @@ import {
   letterNumbers,
   renderScriptSequenceFilmstripFigure,
   scriptSequenceFilmstripFigureSource,
+  sequenceUnit,
   shelveLetters,
   type FilmstripEntry,
 } from "../src/figure-filmstrip.js";
@@ -62,6 +63,41 @@ describe("naming letters by number", () => {
     expect(letterNumbers([2])).toBe("Letter 2");
     expect(letterNumbers([1, 3])).toBe("Letters 1 and 3");
     expect(letterNumbers([1, 2, 4])).toBe("Letters 1, 2 and 4");
+    expect(letterNumbers([1, 3], "Part")).toBe("Parts 1 and 3");
+  });
+});
+
+describe("a strip that holds a vowel sign", () => {
+  // Tamil மேசை is drawn ே, ம, ை, ச: a sign is not a letter, and the groups are
+  // in WRITTEN order, so they are called parts.
+  const parts = [
+    entry("ே", { source: { citation: "Pen traces", url: "https://example.org/traces" } }),
+    entry("ம"),
+    entry("ை", { source: { citation: "Pen traces", url: "https://example.org/traces" } }),
+    entry("ச"),
+  ];
+
+  it("is a strip of parts once any group is a sign, and of letters otherwise", () => {
+    expect(sequenceUnit(parts)).toBe("Part");
+    expect(sequenceUnit([entry("வ"), entry("க")])).toBe("Letter");
+  });
+
+  it("labels, heads, credits and describes its groups as parts in written order", () => {
+    const figure = renderScriptSequenceFilmstripFigure("TA-W26", "மேசை", parts);
+    expect(texts(figure.svg, 15)).toEqual(["How it is written — 4 parts, one after another"]);
+    expect(texts(figure.svg, 12)).toEqual([
+      "Part 1 of 4 — 2 strokes",
+      "Part 2 of 4 — 2 strokes",
+      "Part 3 of 4 — 2 strokes",
+      "Part 4 of 4 — 2 strokes",
+    ]);
+    expect(figure.svg).toContain("Parts 1 and 3: stroke order after Pen traces");
+    expect(figure.svg).toContain("Parts 2 and 4: stroke order after A cited primer");
+    expect(figure.svg).toContain('aria-label="How to write மேசை: 4 parts, ே, ம, ை, ச, one after another"');
+    expect(figure.svg).toMatch(
+      /<desc>4 parts written one after another: ே, ம, ை, ச \(tamil\)\. The parts are in the order the hand writes them.*a vowel sign written to the left of its consonant comes before it\. Each vowel sign is drawn on its own, without the consonant it attaches to\. Each part has its own group of frames/,
+    );
+    expect(figure.svg).not.toMatch(/Letter/);
   });
 });
 

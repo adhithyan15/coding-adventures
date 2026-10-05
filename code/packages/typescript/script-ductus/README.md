@@ -153,6 +153,10 @@ one level deeper: every existing record and both evidence suites use the same
 ASCII `U-<CODEPOINT>` owner below `tamil/`, while `tamil.ts` remains assembly
 only. Adding an ordinary glyph changes only its owner files; `strokes.ts`
 remains the bounded public facade and duplicate-rejecting assembly point.
+The six Tamil vowel signs written as separate symbols beside their consonant
+(ா ி ீ ெ ே ை) are owners of the same kind, cited to the native-writer pen
+traces in HP Labs India's LipiTk Tamil recognizer; the book decides where each
+is drawn in a word (`human-language-data`'s `WRITTEN_SIGN_SIDES`).
 
 More than 2,200 tests cover the registry, paths, font fit, provenance, and
 rendering. `jsdom` is a devDependency for exactly two of them: the SVG

@@ -975,8 +975,13 @@ Two kinds exist:
   letter's own cited strip in writing order, one labelled group per letter.
   It prints only if every letter is cited. Words are not composed in
   Devanagari (one shared headline), the Arabic family (joined, positional
-  forms) or Cyrillic (cursive joins), nor in any script when they carry a vowel
-  sign or virama, because the per-letter ductus cannot draw those honestly. Generated book chapters rewrite the lesson's `.svg` image
+  forms) or Cyrillic (cursive joins), nor when they carry a vowel sign or
+  virama that no written-order table places, because the per-letter ductus
+  cannot draw those honestly. Tamil has such a table (`WRITTEN_SIGN_SIDES`):
+  its signs are drawn in the order they are WRITTEN, so `மேசை` is ே, ம, ை, ச
+  and `சொ` is ெ, ச, ா, each side cited in the sign's mark record; the strip
+  then calls its groups "parts". The pulli and ு/ூ have no row and stay
+  refused. Generated book chapters rewrite the lesson's `.svg` image
 destination to `.pdf`; the books workflow creates that PDF with `rsvg-convert`
 before XeLaTeX runs.
 

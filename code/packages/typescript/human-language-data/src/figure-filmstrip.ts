@@ -733,11 +733,30 @@ export function scriptSequenceFilmstripFigureSource(
   });
 }
 
-/** "Letter 2", "Letters 1 and 3", "Letters 1, 2 and 4". */
-export function letterNumbers(numbers: readonly number[]): string {
-  if (numbers.length === 1) return `Letter ${numbers[0]}`;
+/** "Letter 2", "Letters 1 and 3", "Letters 1, 2 and 4" (or "Part 2", …). */
+export function letterNumbers(numbers: readonly number[], unit: SequenceUnit = "Letter"): string {
+  if (numbers.length === 1) return `${unit} ${numbers[0]}`;
   const head = numbers.slice(0, -1).join(", ");
-  return `Letters ${head} and ${numbers[numbers.length - 1]}`;
+  return `${unit}s ${head} and ${numbers[numbers.length - 1]}`;
+}
+
+/**
+ * What one group of a sequence strip is called.
+ *
+ * A strip of letters says "Letter 2 of 3". Once a vowel sign is one of the
+ * groups (Tamil மேசை is drawn ே, ம, ை, ச), "letter" would be wrong: a sign is
+ * not a letter, and the groups no longer spell the word in typed order. Such a
+ * strip says "Part 2 of 4" instead. A strip with no sign prints exactly what
+ * it printed before signs could be drawn.
+ */
+export type SequenceUnit = "Letter" | "Part";
+
+/** A ledger glyph made only of combining signs is a vowel sign drawn alone. */
+const SIGN_GLYPH = /^\p{M}+$/u;
+
+/** "Part" when any group is a vowel sign, else "Letter". */
+export function sequenceUnit(entries: readonly FilmstripEntry[]): SequenceUnit {
+  return entries.some((entry) => SIGN_GLYPH.test(entry.glyph)) ? "Part" : "Letter";
 }
 
 /**
@@ -748,7 +767,11 @@ export function letterNumbers(numbers: readonly number[]): string {
  * in the order the letters are written, so a reader can match a source to a
  * row without counting.
  */
-function sequenceCitationLines(entries: readonly FilmstripEntry[], width: number): string[] {
+function sequenceCitationLines(
+  entries: readonly FilmstripEntry[],
+  width: number,
+  unit: SequenceUnit = "Letter",
+): string[] {
   const bySource = new Map<string, number[]>();
   entries.forEach((entry, index) => {
     const numbers = bySource.get(entry.source.citation) ?? [];
@@ -761,7 +784,7 @@ function sequenceCitationLines(entries: readonly FilmstripEntry[], width: number
   } else {
     for (const [citation, numbers] of bySource) {
       lines.push(
-        ...wrapFigureText(`${letterNumbers(numbers)}: stroke order after ${citation}`, width, CITATION_SIZE),
+        ...wrapFigureText(`${letterNumbers(numbers, unit)}: stroke order after ${citation}`, width, CITATION_SIZE),
       );
     }
   }
@@ -829,6 +852,8 @@ export function renderScriptSequenceFilmstripFigure(
   }
   const boxes = entries.map((entry) => checkedFilmstripEntry(lessonId, entry));
   const count = entries.length;
+  const unit = sequenceUnit(entries);
+  const units = `${unit.toLowerCase()}s`;
 
   // Each group's own geometry, before anything is placed: how many columns it
   // spans, how wide that is, how tall one of its panels is, and its label.
@@ -845,7 +870,7 @@ export function renderScriptSequenceFilmstripFigure(
       width,
       frameHeight,
       height: rows * frameHeight + (rows - 1) * ROW_GAP,
-      label: wrapHeading(`Letter ${index + 1} of ${count} — ${entry.summary}`, width, GROUP_LABEL_SIZE),
+      label: wrapHeading(`${unit} ${index + 1} of ${count} — ${entry.summary}`, width, GROUP_LABEL_SIZE),
     };
   });
   const shelves = shelveLetters(entries.map((entry) => entry.frames.length));
@@ -853,7 +878,7 @@ export function renderScriptSequenceFilmstripFigure(
     shelf.reduce((sum, index) => sum + groups[index]!.width, 0) + (shelf.length - 1) * GROUP_GAP_X;
   const gridWidth = Math.max(...shelves.map(shelfWidth));
 
-  const headingLines = wrapHeading(`How it is written — ${count} letters, one after another`, gridWidth);
+  const headingLines = wrapHeading(`How it is written — ${count} ${units}, one after another`, gridWidth);
   const headingBand = HEADING_BAND + (headingLines.length - 1) * HEADING_SIZE * 1.25;
 
   // Walk down the page once, shelf by shelf. `cursor` is the top of the next
@@ -886,7 +911,7 @@ export function renderScriptSequenceFilmstripFigure(
     if (shelfIndex < shelves.length - 1) cursor = round(cursor + GROUP_GAP);
   });
 
-  const citationLines = sequenceCitationLines(entries, gridWidth);
+  const citationLines = sequenceCitationLines(entries, gridWidth, unit);
   const citationTop = cursor + CITATION_LEADING;
   const width = MARGIN * 2 + gridWidth;
   const height = round(
@@ -907,16 +932,21 @@ export function renderScriptSequenceFilmstripFigure(
   parts.push(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" ` +
       `viewBox="0 0 ${width} ${height}" role="img" ` +
-      `aria-label="${escapeXml(`How to write ${text}: ${count} letters, ${letters.join(", ")}, one after another`)}">`,
+      `aria-label="${escapeXml(`How to write ${text}: ${count} ${units}, ${letters.join(", ")}, one after another`)}">`,
   );
   parts.push(`<title>${escapeXml(`Writing ${text}`)}</title>`);
   parts.push(
     `<desc>${escapeXml(
-      `${count} letters written one after another: ${letters.join(", ")} (${script}). ` +
-        `Each letter has its own group of frames; frame N of a group shows movements 1 to N ` +
-        `of that letter, the movement being added drawn in ink over the finished letter, ` +
-        `whose outline is read from ${fonts}. Each letter is drawn at its own scale from ` +
-        `its own cited stroke order, so the strip does not show how large the letters are ` +
+      `${count} ${units} written one after another: ${letters.join(", ")} (${script}). ` +
+        (unit === "Part"
+          ? `The parts are in the order the hand writes them, which is not always the order ` +
+            `they are typed: a vowel sign written to the left of its consonant comes before ` +
+            `it. Each vowel sign is drawn on its own, without the consonant it attaches to. `
+          : "") +
+        `Each ${unit.toLowerCase()} has its own group of frames; frame N of a group shows movements 1 to N ` +
+        `of that ${unit.toLowerCase()}, the movement being added drawn in ink over the finished ${unit.toLowerCase()}, ` +
+        `whose outline is read from ${fonts}. Each ${unit.toLowerCase()} is drawn at its own scale from ` +
+        `its own cited stroke order, so the strip does not show how large the ${units} are ` +
         `next to each other, how far apart they sit, or any join between them. ` +
         `Stroke order: ${sources}.` +
         (variations === "" ? "" : ` Source notes on variation: ${variations}`),
