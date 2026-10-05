@@ -498,17 +498,29 @@ func mosaicCheckSaveRequest(_ payload: Any) throws -> MosaicSaveRequest {
   if bytes.count > mosaicMaxSaveBytes {
     throw MosaicFileFailure("the file is larger than \(mosaicMaxSaveBytes) bytes")
   }
-  // When the app says what it is saving, the name must agree: a JSON export
-  // cannot be offered as `notes.exe`.
   let accept = mosaicAccept(for: request)
+  try mosaicCheckSaveName(suggestedName, accept: accept)
+  return MosaicSaveRequest(suggestedName: suggestedName, bytes: bytes, accept: accept)
+}
+
+/// The name rules every save meets, a standard `files.save` or an app's own
+/// (UI89 §2.6): a plain file name, and, when the save says what it is
+/// saving, an extension that agrees -- a JSON export cannot be offered as
+/// `notes.exe`; when it does not, no executable extension.
+func mosaicCheckSaveName(_ suggestedName: String, accept: MosaicAccept) throws {
+  guard mosaicIsPlainFileName(suggestedName) else {
+    throw MosaicFileFailure("suggestedName must be a plain file name")
+  }
   let suggestedExtension = mosaicFileExtension(suggestedName)
-  if !accept.extensions.isEmpty && !accept.extensions.contains(where: { $0 == suggestedExtension }) {
+  // Compared without case: an app's own list (UI89 §2.6) may say `APKG`.
+  if !accept.extensions.isEmpty
+    && !accept.extensions.contains(where: { $0.lowercased() == suggestedExtension })
+  {
     throw MosaicFileFailure("suggestedName must end in an extension of an accepted type")
   }
   if accept.extensions.isEmpty && mosaicHasExecutableExtension(suggestedName) {
     throw MosaicFileFailure("suggestedName must not end in an executable extension")
   }
-  return MosaicSaveRequest(suggestedName: suggestedName, bytes: bytes, accept: accept)
 }
 
 /// A flag that can be claimed once, from any thread.
@@ -542,17 +554,45 @@ func mosaicAnswerFilesOpen(
   runInBackground: @escaping (@escaping () -> Void) -> Void,
   answer: @escaping ([String: Any]) -> Void
 ) {
+  mosaicAnswerOpen(
+    accept: mosaicAccept(for: mosaicPayloadDictionary(payload)),
+    limit: mosaicMaxOpenBytes,
+    picker: picker,
+    runInBackground: runInBackground,
+    ok: { document, bytes in
+      [
+        "name": document.name,
+        "mimeType": document.mimeType ?? mosaicMimeType(forName: document.name),
+        "bytes": bytes.base64EncodedString(),
+      ]
+    },
+    answer: answer
+  )
+}
+
+/// Any open, from picker to `answer` -- called once, never with a thrown
+/// error: `files.open`'s, and an app's own through its router (UI89 §2.6).
+/// The chosen document is read on `runInBackground`, `limit` enforced while
+/// reading; `ok` builds the success answer from what was read.
+func mosaicAnswerOpen(
+  accept: MosaicAccept,
+  limit: Int,
+  picker: MosaicDocumentPicker,
+  runInBackground: @escaping (@escaping () -> Void) -> Void,
+  ok: @escaping (MosaicOpenedDocument, Data) -> [String: Any],
+  answer: @escaping ([String: Any]) -> Void
+) {
   let once = mosaicOnce(answer)
   let picked = MosaicOnceFlag()
   do {
-    try picker.open(mosaicAccept(for: mosaicPayloadDictionary(payload))) { document in
+    try picker.open(accept) { document in
       // A picker that answers twice is heard once.
       guard picked.claim() else { return }
       guard let document else {
         once(mosaicCancelled())
         return
       }
-      runInBackground { once(mosaicReadOpened(document)) }
+      runInBackground { once(mosaicReadOpened(document, limit: limit, ok: ok)) }
     }
   } catch let failure as MosaicFileFailure {
     once(mosaicFailed(failure.message))
@@ -561,11 +601,15 @@ func mosaicAnswerFilesOpen(
   }
 }
 
-private func mosaicReadOpened(_ document: MosaicOpenedDocument) -> [String: Any] {
+private func mosaicReadOpened(
+  _ document: MosaicOpenedDocument,
+  limit: Int,
+  ok: (MosaicOpenedDocument, Data) -> [String: Any]
+) -> [String: Any] {
   let bytes: Data
   do {
-    guard let read = try document.read(limit: mosaicMaxOpenBytes) else {
-      return mosaicFailed("the selected file is larger than \(mosaicMaxOpenBytes) bytes")
+    guard let read = try document.read(limit: limit) else {
+      return mosaicFailed("the selected file is larger than \(limit) bytes")
     }
     bytes = read
   } catch let failure as MosaicFileFailure {
@@ -573,11 +617,7 @@ private func mosaicReadOpened(_ document: MosaicOpenedDocument) -> [String: Any]
   } catch {
     return mosaicFailed("couldn't read the selected file")
   }
-  return mosaicOk([
-    "name": document.name,
-    "mimeType": document.mimeType ?? mosaicMimeType(forName: document.name),
-    "bytes": bytes.base64EncodedString(),
-  ])
+  return mosaicOk(ok(document, bytes))
 }
 
 /// `files.save`, from request to `answer` -- called once, never with a thrown
@@ -600,6 +640,27 @@ func mosaicAnswerFilesSave(
     once(mosaicFailed("couldn't save the file"))
     return
   }
+  mosaicAnswerSave(
+    request,
+    picker: picker,
+    runInBackground: runInBackground,
+    ok: { name in ["name": name] },
+    answer: once
+  )
+}
+
+/// Any checked save, from picker to `answer` -- called once, never with a
+/// thrown error: `files.save`'s, and an app's own through its router (UI89
+/// §2.6). The bytes are written on `runInBackground`; `ok` builds the success
+/// answer from the name the picker reports.
+func mosaicAnswerSave(
+  _ request: MosaicSaveRequest,
+  picker: MosaicDocumentPicker,
+  runInBackground: @escaping (@escaping () -> Void) -> Void,
+  ok: @escaping (String) -> [String: Any],
+  answer: @escaping ([String: Any]) -> Void
+) {
+  let once = mosaicOnce(answer)
   let picked = MosaicOnceFlag()
   do {
     try picker.create(request) { target in
@@ -608,7 +669,7 @@ func mosaicAnswerFilesSave(
         once(mosaicCancelled())
         return
       }
-      runInBackground { once(mosaicWriteTarget(target, request.bytes)) }
+      runInBackground { once(mosaicWriteTarget(target, request.bytes, ok: ok)) }
     }
   } catch let failure as MosaicFileFailure {
     once(mosaicFailed(failure.message))
@@ -617,10 +678,14 @@ func mosaicAnswerFilesSave(
   }
 }
 
-private func mosaicWriteTarget(_ target: MosaicSaveTarget, _ bytes: Data) -> [String: Any] {
+private func mosaicWriteTarget(
+  _ target: MosaicSaveTarget,
+  _ bytes: Data,
+  ok: (String) -> [String: Any]
+) -> [String: Any] {
   do {
     try target.write(bytes)
-    return mosaicOk(["name": target.name])
+    return mosaicOk(ok(target.name))
   } catch let failure as MosaicFileFailure {
     return mosaicFailed(failure.message)
   } catch {
@@ -819,11 +884,91 @@ final class MosaicPlatformRouter {
 
   private func answerStandard(_ id: UInt64, _ kind: String, _ payload: Any, _ delivery: String) {
     // Only an Await has someone waiting for the answer.
-    guard delivery.lowercased() == "await", let host else { return }
+    guard delivery.lowercased() == "await" else { return }
+    answerThroughPicker(id, unavailable: "\(kind) is not available on this platform yet") {
+      picker, work, answer in
+      if kind == "files.open" {
+        mosaicAnswerFilesOpen(payload, picker: picker, runInBackground: work, answer: answer)
+      } else {
+        mosaicAnswerFilesSave(payload, picker: picker, runInBackground: work, answer: answer)
+      }
+    }
+  }
+
+  /// Answer the app's own Await `id` by opening a document through this
+  /// library's picker (UI89 §2.6), under the rules `files.open` keeps: one
+  /// file operation at a time, deferred before anything is shown, read off
+  /// the main queue with `limit` enforced while reading. The app chooses what
+  /// is accepted, the limit, and the success answer, built by `ok` from the
+  /// document's name and bytes. `ok` runs on the background queue (iOS) or
+  /// inline (macOS), so it must only build the answer.
+  func openForApp(
+    _ id: UInt64,
+    accept: MosaicAccept,
+    limit: Int,
+    ok: @escaping (_ name: String, _ bytes: Data) -> [String: Any]
+  ) {
+    answerThroughPicker(id, unavailable: "file dialogs are not available on this platform") {
+      picker, work, answer in
+      mosaicAnswerOpen(
+        accept: accept, limit: limit, picker: picker, runInBackground: work,
+        ok: { document, bytes in ok(document.name, bytes) }, answer: answer)
+    }
+  }
+
+  /// Answer the app's own Await `id` by saving `bytes` through this library's
+  /// picker (UI89 §2.6). The name is checked by the rules every save meets,
+  /// so a refused name fails before anything is shown -- and, since the app
+  /// chooses its own extensions here rather than taking them from the MIME
+  /// table, an executable extension is refused whatever it accepts. The
+  /// success answer is built by `ok` from the name the picker reports, on the
+  /// background queue (iOS) or inline (macOS).
+  func saveForApp(
+    _ id: UInt64,
+    suggestedName: String,
+    bytes: Data,
+    accept: MosaicAccept,
+    ok: @escaping (_ name: String) -> [String: Any]
+  ) {
+    let request: MosaicSaveRequest
+    do {
+      try mosaicCheckSaveName(suggestedName, accept: accept)
+      if mosaicHasExecutableExtension(suggestedName) {
+        throw MosaicFileFailure("suggestedName must not end in an executable extension")
+      }
+      request = MosaicSaveRequest(suggestedName: suggestedName, bytes: bytes, accept: accept)
+    } catch let failure as MosaicFileFailure {
+      _ = host?.completeEffect(id, mosaicFailed(failure.message))
+      return
+    } catch {
+      _ = host?.completeEffect(id, mosaicFailed("couldn't save the file"))
+      return
+    }
+    answerThroughPicker(id, unavailable: "file dialogs are not available on this platform") {
+      picker, work, answer in
+      mosaicAnswerSave(request, picker: picker, runInBackground: work, ok: ok, answer: answer)
+    }
+  }
+
+  /// The one way an Await is answered through the picker, standard or the
+  /// app's own: refused at once without a picker, while another file
+  /// operation is open, or for an id the runtime is not awaiting; otherwise
+  /// `operation` runs on the UI queue with the picker, where to do the slow
+  /// work, and the answer to give -- once.
+  private func answerThroughPicker(
+    _ id: UInt64,
+    unavailable: String,
+    operation: @escaping (
+      MosaicDocumentPicker,
+      @escaping (@escaping () -> Void) -> Void,
+      @escaping ([String: Any]) -> Void
+    ) -> Void
+  ) {
+    guard let host else { return }
     // No picker here: answer inline, which the recursive lock allows, instead
     // of pretending the person cancelled.
     guard hasDialogs else {
-      _ = host.completeEffect(id, mosaicFailed("\(kind) is not available on this platform yet"))
+      _ = host.completeEffect(id, mosaicFailed(unavailable))
       return
     }
     guard claim() else {
@@ -865,11 +1010,7 @@ final class MosaicPlatformRouter {
         work = { $0() }
         answer = finish
       }
-      if kind == "files.open" {
-        mosaicAnswerFilesOpen(payload, picker: picker, runInBackground: work, answer: answer)
-      } else {
-        mosaicAnswerFilesSave(payload, picker: picker, runInBackground: work, answer: answer)
-      }
+      operation(picker, work, answer)
     }
   }
 }
@@ -881,10 +1022,25 @@ final class MosaicPlatformRouter {
 // Foundation lacks, so the harness compiles this file as it is.)
 private final class MosaicWeakHost {
   weak var host: AnyObject?
+  // The host's router, held weakly: the host's `effectHandler` closure keeps
+  // it alive for exactly the host's lifetime, and this table must not keep
+  // it -- or the app handler it wraps -- alive any longer.
+  weak var router: MosaicPlatformRouter?
   init(_ host: AnyObject) { self.host = host }
 }
 private var mosaicRoutedHosts: [MosaicWeakHost] = []
 private let mosaicRoutedHostsLock = NSLock()
+
+/// The router `installMosaicPlatformEffects` installed on `host`, or nil when
+/// it never was. A package's `[host_effects]` handler uses it to answer its
+/// own kinds through this library's picker (UI89 §2.6): by the time an app
+/// kind reaches that handler, the router that passed it on exists.
+func mosaicPlatformRouter(for host: AnyObject) -> MosaicPlatformRouter? {
+  mosaicRoutedHostsLock.lock()
+  defer { mosaicRoutedHostsLock.unlock() }
+  mosaicRoutedHosts.removeAll { $0.host == nil }
+  return mosaicRoutedHosts.first(where: { $0.host === host })?.router
+}
 
 /// This platform's picker: the panels (through `dialogs`) on macOS, the
 /// document picker on iOS and iPadOS, where `dialogs` is not used.
@@ -929,7 +1085,8 @@ func installMosaicPlatformEffects(
   defer { mosaicRoutedHostsLock.unlock() }
   mosaicRoutedHosts.removeAll { $0.host == nil }
   if mosaicRoutedHosts.contains(where: { $0.host === host }) { return }
-  mosaicRoutedHosts.append(MosaicWeakHost(host))
+  let entry = MosaicWeakHost(host)
+  mosaicRoutedHosts.append(entry)
   let router = MosaicPlatformRouter(
     host: host,
     appHandler: host.effectHandler,
@@ -939,6 +1096,7 @@ func installMosaicPlatformEffects(
     runOnUI: runOnUI,
     runInBackground: runInBackground
   )
+  entry.router = router
   host.effectHandler = { id, kind, payload, delivery in
     router.handle(id, kind, payload, delivery)
   }
