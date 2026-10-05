@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:3b336187ebf8b847",
+  "lessonIds": [
+    "JA-C135-byouin",
+    "JA-W135-bi",
+    "JA-C135-doyoubi",
+    "JA-C135-iriguchi",
+    "JA-W135-gu",
+    "JA-C135-deguchi",
+    "JA-C135-getsuyoubi",
+    "JA-W135-ge",
+    "JA-C135-genki",
+    "JA-C135-ginkou",
+    "JA-W135-gi",
+    "JA-R135-hospital-and-bank"
+  ],
+  "tex": "japanese/book/chapters/ch135-hospital-and-bank-bi-gu-ge-gi.tex"
+}

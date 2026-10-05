@@ -1,0 +1,11 @@
+{
+  "id": "JA-C134-denwa",
+  "pathSegment": "JA-PATH-134-WRITE134",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-134-WRITE134",
+      "order": 0
+    }
+  ]
+}

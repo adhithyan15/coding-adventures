@@ -1,0 +1,15 @@
+{
+  "glyph": "ぶ",
+  "sound": "bu",
+  "role": "hiragana",
+  "components": [
+    "ふ",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "ふ in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "ふ voiced, read bu, not fu. The third sign of しんぶん, a newspaper."
+}

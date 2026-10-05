@@ -22,9 +22,15 @@ export const integrationTrackEvidence: IntegrationTrackEvidence = {
     // 752 -> 764: chapter 133 writes the last four basic hiragana, き, け, ぬ
     // and へ, the same way (えき, いけ, いぬ, へや), with three more words
     // (きのう, けさ, ぬの) and one review.
-    expect(japanese).toHaveLength(764);
+    // 764 -> 788: chapters 134 and 135 write eight voiced kana, で, ば, べ, ぶ
+    // and び, ぐ, げ, ぎ, the same way: each one lesson after the word that
+    // holds it (でんわ, かばん, たべる, しんぶん, びょういん, いりぐち,
+    // げつようび, ぎんこう), with six more words (でんしゃ, ばしょ, べんきょう,
+    // どようび, でぐち, げんき) and one review per chapter. A2 words such as
+    // でんわ and べんきょう needed these signs.
+    expect(japanese).toHaveLength(788);
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter)))
-      .toEqual(new Set(Array.from({ length: 133 }, (_, index) => index + 1)));
+      .toEqual(new Set(Array.from({ length: 135 }, (_, index) => index + 1)));
     expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(japanese.map((lesson) => [
       lesson.realization.lessonId,

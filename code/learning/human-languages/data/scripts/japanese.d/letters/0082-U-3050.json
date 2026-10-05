@@ -1,0 +1,15 @@
+{
+  "glyph": "ぐ",
+  "sound": "gu",
+  "role": "hiragana",
+  "components": [
+    "く",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "く in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "く voiced. The third sign of いりぐち and the second of でぐち, where くち, a mouth, is voiced as it joins the word in front."
+}

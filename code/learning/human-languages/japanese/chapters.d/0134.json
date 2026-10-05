@@ -1,0 +1,28 @@
+{
+  "chapter": 134,
+  "title": "Phone and Train: De, Ba, Be and Bu",
+  "label": "ch:ja-phone-and-train-de-ba-be-bu",
+  "canDo": "I can write de, ba, be and bu by adding the voicing mark to signs I already write, and read words that use them, such as denwa, densha and shinbun.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-R134-phone-and-train",
+    "kind": "production",
+    "summary": "Read denwa, densha, kaban, basho, taberu, benkyou and shinbun, write the four new signs beside the signs they voice, write densha and basho from memory and say which one you can ride, and write shinbun.",
+    "assesses": [
+      "JA-LEX-ANCHOR-DENWA",
+      "JA-SCRIPT-DE-01",
+      "JA-LEX-C134-DENSHA",
+      "JA-LEX-ANCHOR-KABAN",
+      "JA-SCRIPT-BA-01",
+      "JA-LEX-C134-BASHO",
+      "JA-LEX-ANCHOR-TABERU",
+      "JA-SCRIPT-BE-01",
+      "JA-LEX-C134-BENKYOU",
+      "JA-LEX-ANCHOR-SHINBUN",
+      "JA-SCRIPT-BU-01"
+    ],
+    "note": "Word before sign, every time. Each of the four voiced signs is first SEEN inside a word taught one lesson earlier -- denwa for de, kaban for ba, taberu for be, shinbun for bu -- and only then written, so every letter lesson is anchored (HL-C443) rather than building toward a later word. Each one is a sign the book already writes plus the two-stroke voicing mark, and each writing lesson pairs it with that base sign. Two lessons separate each writing lesson from the next, and each new sign is spent at once in a second word (densha, basho, benkyou) or in the review. These are the first voiced signs since chapter 18, and the words that need them (a telephone, a train, studying, a newspaper) are A2 vocabulary the book could not write before."
+  }
+}

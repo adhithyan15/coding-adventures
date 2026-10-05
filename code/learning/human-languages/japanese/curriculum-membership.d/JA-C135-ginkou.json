@@ -1,0 +1,11 @@
+{
+  "id": "JA-C135-ginkou",
+  "pathSegment": "JA-PATH-135-WRITE135",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "JA-EXT-135-WRITE135",
+      "order": 9
+    }
+  ]
+}

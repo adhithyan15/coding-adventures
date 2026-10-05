@@ -1,0 +1,11 @@
+{
+  "id": "JA-C135-iriguchi",
+  "pathSegment": "JA-PATH-135-WRITE135",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-135-WRITE135",
+      "order": 3
+    }
+  ]
+}

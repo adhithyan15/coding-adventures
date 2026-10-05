@@ -34,7 +34,12 @@ const CONFIGS = [
   // holds it (えき, いけ, いぬ, へや). 69 -> 70: ら (U+3089), written since
   // chapter 8 (JA-W08-ra) but never given an inventory row, gets its record,
   // its KanjiVG stroke-order source and its ductus in the same chapter.
-  { language: "japanese", script: "japanese", letters: 70, marks: 3 },
+  // 70 -> 78: chapters 134 and 135 write eight voiced kana, で (U+3067),
+  // ば (U+3070), べ (U+3079), ぶ (U+3076), び (U+3073), ぐ (U+3050),
+  // げ (U+3052) and ぎ (U+304E). Each row follows が, ご, ざ and ぼ: the base
+  // sign plus the dakuten, with no stroke-order source of its own and so no
+  // ductus.
+  { language: "japanese", script: "japanese", letters: 78, marks: 3 },
   // 24 -> 26: HL-C350 adds ج and ص as RECOGNITION-ONLY owners. panj (five) and
   // sad (a hundred) need them in a headword, and `uncoveredGlyphs` is a
   // headword check, so the numerals could not be taught without them. Both

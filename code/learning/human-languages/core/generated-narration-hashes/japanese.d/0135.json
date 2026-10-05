@@ -1,0 +1,26 @@
+{
+  "language": "japanese",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:0923c8db5d5d3e63",
+  "lessonIds": [
+    "JA-C135-byouin",
+    "JA-W135-bi",
+    "JA-C135-doyoubi",
+    "JA-C135-iriguchi",
+    "JA-W135-gu",
+    "JA-C135-deguchi",
+    "JA-C135-getsuyoubi",
+    "JA-W135-ge",
+    "JA-C135-genki",
+    "JA-C135-ginkou",
+    "JA-W135-gi",
+    "JA-R135-hospital-and-bank"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 1,
+  "text": "japanese/narration/ch135.txt",
+  "json": "japanese/narration/ch135.json",
+  "textHash": "fnv1a64:e342ee2ecfa0160f",
+  "jsonHash": "fnv1a64:e63b653419b1b44f",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R135-hospital-and-bank",
+    "language": "japanese",
+    "chapter": 135,
+    "sequence": 8250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40f9f05cf2b0ab89"
+  },
+  "findings": []
+}
