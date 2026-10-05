@@ -112,27 +112,40 @@ VERIFIED_INDEPENDENT_VOWELS = {
             "return left along the inner bar",
         ],
         "strokeOrderNote": (
-            "Four numbered movements in two pen-down runs: movements 1–2 stay joined "
-            "around the left lobe and lower bowl; after one lift, movements 3–4 stay "
-            "joined around the right lobe and back along the inner bar."
+            "The source numbers four movements; native writers draw అ as one pen-down "
+            "stroke (97% of HP Labs India's native-writer samples, 100 of 103). This "
+            "ductus follows the four movements in order without lifting: movements 1–2 "
+            "run around the left lobe and the lower bowl, movement 3 continues up the "
+            "bowl's right side and around the right lobe, and movement 4 returns left "
+            "along the inner bar."
         ),
-        "penLifts": 1,
+        "penLifts": 0,
         "strokeOrderSource": {
             "citation": (
-                "Sathish Shanmugam, Write Telugu Alphabets, independent vowel అ "
-                "tracing screen, movements 1–4 (version 2.6)"
+                "Sathish Shanmugam, Write Telugu Alphabets, independent vowel అ tracing"
+                " screen, movements 1–4 (version 2.6)"
             ),
             "url": "https://write-telugu-alphabets.en.aptoide.com/app",
             "variation": (
-                "The tracing screen numbers four directional movements and marks two "
-                "pen-down starts; the visible joins group movements 1–2 and 3–4. "
-                "Telugu letter direction is not uniform across the script, so this is "
-                "one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+                "The tracing screen numbers four directional movements and places a "
+                "second start at the inner bar's right end; the visible joins group "
+                "movements 1–2 and 3–4. Those numbers mark movements, not pen lifts: "
+                "the lift count follows HP Labs India's isolated handwritten Telugu "
+                "character data (hpl-telugu-iso-char, "
+                "https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted "
+                "from the native-writer prototypes in the MIT-licensed LipiTk 4.0 "
+                "Telugu recognizer. Those counts say how many strokes writers use, not "
+                "where they break, so the single run keeps the guide's order. In the "
+                "bundled Noto Sans Telugu outline the lower bowl runs straight up into "
+                "the right lobe, so movement 3 begins where movement 2 ends instead of "
+                "at the bar's end. Telugu letter direction is not uniform across the "
+                "script, so this is one attested pedagogical order fitted to the "
+                "bundled Noto Sans Telugu outline."
             ),
         },
         "notes": (
-            "Independent short a used when a word or syllable begins with a vowel; "
-            "it is distinct from the inherent a carried by an unmarked consonant."
+            "Independent short a used when a word or syllable begins with a vowel; it "
+            "is distinct from the inherent a carried by an unmarked consonant."
         ),
     },
     ("telugu", "E"): {
@@ -141,17 +154,18 @@ VERIFIED_INDEPENDENT_VOWELS = {
             "the broad outer arch sweeping up to the high left tip",
         ],
         "strokeOrder": [
-            "turn down and left around the compact lower loop",
-            "continue around its base and return to the central junction",
-            "restart at the junction and sweep up through the broad outer arch",
+            "turn down and left round the lower loop",
+            "round its base and back to the junction",
+            "sweep up the broad outer arch",
         ],
         "strokeOrderNote": (
-            "Three numbered movements in two pen-down runs: movements 1–2 stay joined "
-            "around the compact lower loop and return to the central junction; after "
-            "one lift, movement 3 restarts at that junction and sweeps up through the "
-            "broad outer arch."
+            "The source numbers three movements; native writers draw ఎ as one pen-down "
+            "stroke (86% of HP Labs India's native-writer samples, 81 of 94). This "
+            "ductus follows the three movements in order without lifting: movements 1–2"
+            " run around the compact lower loop and back to the central junction, and "
+            "movement 3 sweeps on from that junction up through the broad outer arch."
         ),
-        "penLifts": 1,
+        "penLifts": 0,
         "strokeOrderSource": {
             "citation": (
                 "Sathish Shanmugam, Write Telugu Alphabets, independent vowel ఎ "
@@ -161,10 +175,17 @@ VERIFIED_INDEPENDENT_VOWELS = {
             "url": "https://write-telugu-alphabets.en.aptoide.com/app",
             "variation": (
                 "The packaged tracing guide numbers three directional movements and "
-                "marks the compact loop and outer arch as two pen-down runs; the visible "
-                "join groups movements 1–2 before movement 3 restarts. Telugu letter "
-                "direction is not uniform across the script, so this is one attested "
-                "pedagogical order fitted to the bundled Noto Sans Telugu outline."
+                "places movement 3's start at the junction where movement 2 ends. Those"
+                " numbers mark movements, not pen lifts: the lift count follows HP Labs"
+                " India's isolated handwritten Telugu character data "
+                "(hpl-telugu-iso-char, "
+                "https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted "
+                "from the native-writer prototypes in the MIT-licensed LipiTk 4.0 "
+                "Telugu recognizer. Those counts say how many strokes writers use, not "
+                "where they break, so the single run keeps the guide's order. Telugu "
+                "letter direction is not uniform across the script, so this is one "
+                "attested pedagogical order fitted to the bundled Noto Sans Telugu "
+                "outline."
             ),
         },
         "notes": (

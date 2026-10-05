@@ -415,9 +415,9 @@ struct ProcSig {
 struct ByNameBinding {
     actual: GrammarASTNode,
     ty: ScalarType,
-    /// The stored, non-assignable actual is a bounded runtime-real expression.
-    /// This lets a specialised read-only name formal retain formatter
-    /// provenance without introducing a runtime thunk ABI.
+    /// The stored actual is a bounded runtime-real expression. This lets a
+    /// specialised name formal retain formatter provenance without introducing
+    /// a runtime thunk ABI; assignability only affects the separate write path.
     runtime_real: bool,
     /// Stable representation of the actual after forwarded formals resolve to
     /// their captured caller storage. This identifies a finite recursive
@@ -4314,13 +4314,7 @@ impl Compiler {
         for (param, actual) in sig.params.iter().zip(actuals) {
             match param.ty {
                 ProcedureParamType::Scalar(ty) if param.mode == ProcedureParamMode::Name => {
-                    let forwards_runtime_real = exact_bare_variable_expression_name(actual)
-                        .and_then(|name| self.active_by_name_binding(&name))
-                        .is_some_and(|binding| {
-                            binding.ty == ScalarType::Real && binding.runtime_real
-                        });
                     let runtime_real = ty == ScalarType::Real
-                        && (expr_variable_node(actual).is_none() || forwards_runtime_real)
                         && self.is_runtime_real_assignment_value(actual);
                     let (actual, key) = self.prepare_by_name_actual(actual)?;
                     by_name_bindings.insert(
@@ -12639,29 +12633,39 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_name_provenance_excludes_assignable_actuals() {
-        let error = compile_source(
+    fn al4_runtime_real_name_provenance_includes_assignable_array_actuals() {
+        let module = compile_source(
             "begin real array a[1:1]; procedure show(x); real x; output(x); a[1] := 2.25; show(a[1]) end",
             "test",
         )
-        .expect_err("an assignable name actual remains outside the bounded proof");
-        assert!(
-            format!("{error:?}").contains("cannot print a real value"),
-            "unexpected rejection: {error:?}"
-        );
+        .expect("an assignable real array-element actual retains formatter provenance");
+        let show = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_show"))
+            .expect("has specialised name-formal procedure");
+        assert!(show.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
     }
 
     #[test]
-    fn al4_runtime_real_forwarding_still_excludes_assignable_actuals() {
-        let error = compile_source(
+    fn al4_runtime_real_name_provenance_forwards_assignable_array_actuals() {
+        let module = compile_source(
             "begin real array a[1:1]; procedure sink(y); real y; output(y); procedure relay(x); real x; sink(x); a[1] := 2.25; relay(a[1]) end",
             "test",
         )
-        .expect_err("forwarding must not convert an assignable actual into an immutable proof");
-        assert!(
-            format!("{error:?}").contains("cannot print a real value"),
-            "unexpected rejection: {error:?}"
-        );
+        .expect("forwarding retains assignable real array-element formatter provenance");
+        let sink = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_sink"))
+            .expect("has specialised forwarded name-formal procedure");
+        assert!(sink.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
     }
 
     #[test]

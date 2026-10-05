@@ -779,6 +779,56 @@ Everything else is Journal's:
 
 Venture follows after BR02's host work.
 
+### 3.11 App effects through the platform picker (Android)
+
+Written before implementation: the Android counterpart of §2.6, in two PRs.
+
+**The Kotlin seam (first PR).** It is the same contract as Swift's, in the
+shared `MosaicFileEffects.kt`, so the desktop Compose library has it too.
+
+- **Finding the router.** The router *is* the host's `effectHandler`
+  (`installMosaicPlatformEffects` replaces the app's handler with a
+  `MosaicPlatformRouter` that wraps it). So `mosaicPlatformRouter(host)` is
+  `host.effectHandler as? MosaicPlatformRouter`, with no table to keep.
+- **`openForApp(id, accept, limit, ok)` and `saveForApp(id, suggestedName,
+  bytes, accept, ok)`** keep `files.*`'s rules, as in §2.6:
+  - one file operation at a time;
+  - deferred before anything is shown;
+  - slow work on the background thread, handed back to the UI thread before
+    the effect is completed;
+  - exactly one answer, and `failPending` still reaches a request in flight;
+  - the same name checks (`mosaicCheckSaveName`, extensions compared without
+    case), and an executable extension refused for an app save whatever the
+    app accepts.
+
+  The app supplies the accepted extensions, the read limit and the `ok`
+  answer. On Android, reads and writes go through the stall watch as before.
+  `ok` runs on the background thread, so it only builds the answer.
+- **Robustness (both libraries, after review).**
+  - A refusal never throws into the app's handler: the host's own refusal of
+    an id it is not awaiting is swallowed, as in Swift.
+  - The request in flight, asked for again with the same id, is left to its
+    own picker rather than answered "busy". A busy answer would make the
+    picker's later answer undeliverable.
+  - A throw inside the posted operation still answers the effect and frees
+    the router.
+  - Kotlin compares extensions the way Swift does: the last extension
+    whole, folded.
+- **Shared, not copied.** `files.open` and `files.save` are rebuilt on the
+  same `mosaicAnswerOpen` and `mosaicAnswerSave`. Their behaviour is
+  unchanged.
+- **Gate.** The JVM harness (`MosaicPlatformEffectsTest`) drives both
+  operations with the fake pickers, mirroring the Swift checks of §2.6.
+
+**Android `[host_effects]` (second PR).** Today Android installs no package
+handler: the Compose handler is the desktop's, AWT and all (§3.5). A package
+may declare handler files and a handler for the `android` target. The
+builder copies those files into `android/src/main/kotlin`, and
+`MosaicActivity` installs the handler on the host before the platform
+library, passing its `kinds`. Engram gains an Android handler that answers
+`importAnki` and `exportAnki` through the seam above, with the rules of
+§2.6. That PR specifies the manifest form in its own subsection.
+
 ## 4. CI
 
 | lane | builds | drives |

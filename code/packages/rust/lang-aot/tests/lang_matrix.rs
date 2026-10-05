@@ -1868,6 +1868,16 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an assignable real array-element actual is re-evaluated at
+    // each name-formal read and retains formatter provenance through direct
+    // forwarding. The existing specialised write path remains unchanged.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real array a[1:1]; procedure sink(y); real y; output(y); procedure relay(x); real x; sink(x); a[1] := 2.25; relay(a[1]) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — static integer-valued functions may feed checked snapshots and widen into
     // bounded static real expressions. Copying preserves the destination when
     // the source is reassigned; overflow, control flow, calls, captures,
@@ -12548,6 +12558,30 @@ fn algol_forwarded_name_formal_runtime_real_output_runs_on_every_available_stand
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but forwarded name-formal runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_assignable_name_formal_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real array a[1:1]")
+                && program.src.contains("relay(a[1])")
+        })
+        .expect("the assignable name-formal runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but assignable name-formal runtime real output did not complete"
             );
             continue;
         };
