@@ -79,7 +79,7 @@ Write コー and tap its two beats: ko-o.
 Script — the last new shape.
 ヒ (hi).
 Write two strokes:
-a short stroke from right toward left.
+a short stroke from left to right, rising a little.
 a longer vertical stroke that turns and sweeps right at the bottom.
 Read it hi, one mora. Japanese h is light; keep the vowel clean, like the ee in machine but short.
 Now every distinct sign in the word ahead is known: コ (ko), ー (chōonpu), and ヒ (hi).

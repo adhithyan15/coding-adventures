@@ -44,7 +44,12 @@ const CONFIGS = [
   // three z signs follow ざ (base plus the dakuten); the four p signs follow
   // ぽ (base plus the handakuten). None has a stroke-order source of its own,
   // and so none has a ductus.
-  { language: "japanese", script: "japanese", letters: 85, marks: 3 },
+  // 85 -> 87: だ (U+3060) and ど (U+3069), written since chapters 9 and 11
+  // (JA-W09-do, JA-W11-da) but covered until now only through decomposition,
+  // get rows of their own, because a cited stroke order and a ductus need a
+  // row to belong to. Every voiced kana row and the three spacing marks now
+  // cite KanjiVG.
+  { language: "japanese", script: "japanese", letters: 87, marks: 3 },
   // 24 -> 26: HL-C350 adds ج and ص as RECOGNITION-ONLY owners. panj (five) and
   // sad (a hundred) need them in a headword, and `uncoveredGlyphs` is a
   // headword check, so the numerals could not be taught without them. Both

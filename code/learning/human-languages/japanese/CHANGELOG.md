@@ -2,6 +2,100 @@
 
 All notable changes to the Japanese curriculum track are recorded here.
 
+## Stroke order for the katakana and kanji of the writing lessons
+
+Five writing lessons taught a katakana or kanji sign with an inventory row
+and printed no stroke-order filmstrip: **コ** and **ヒ**
+(JA-W06-ko-katakana, JA-W06-hi-katakana) and **語**, **日** and **本**
+(JA-W05-go-kanji, -nichi-kanji, -hon-kanji). Their rows said only
+"authoritative". Each now cites KanjiVG's directed paths for its own code
+point, and all five lessons now print a filmstrip.
+
+| sign | KanjiVG | strokes, in order |
+|---|---|---|
+| コ | kanji/030b3.svg | the top bar turning down the right side; the base bar |
+| ヒ | kanji/030d2.svg | the short bar, left to right, rising; the vertical turning right along the base |
+| 日 | kanji/065e5.svg | the left side down; the top turning down the right side; the middle bar; the base |
+| 語 | kanji/08a9e.svg | 言 (top mark, three bars, its box), then 五 (top bar, a short stroke falling to the left, the middle bar turning down, the long base bar), then 口 (left side, top turning down, base) |
+| 本 | kanji/0672c.svg | the bar; the stem; the left sweep; the right sweep; the short lower bar |
+
+Only the order and direction come from KanjiVG; the pen paths follow the
+bundled font's own outline. KanjiVG draws the top mark of 語's 言 as a dot
+falling to the right, where the print glyph has a short bar, so the path
+runs along the bar from left to right; the record says so.
+
+**言, 五 and 口 still print no filmstrip.** Chapter 5 also writes them on
+their own (JA-W05-gen-component, -five-component, -mouth-component), but
+they have no inventory row, and a stroke order needs a row to belong to. No
+word lesson spells them alone, so adding rows would raise the track's count
+of inventory letters read in no word, which may only fall. For now they are
+drawn as the parts of 語, in JA-W05-go-kanji's filmstrip.
+
+**Two lessons are corrected to match KanjiVG.** JA-W06-hi-katakana said
+ヒ's first stroke runs "from right toward left"; it runs from left to right,
+rising a little. JA-W05-five-component put 五's turn on the second stroke
+("a short vertical and turn; a second horizontal"); the second stroke is a
+short stroke falling to the left, and the turn ends the middle bar, as 語's
+filmstrip shows. Its trace line and feedback, and the recall line "top,
+turn, middle, long bottom" in JA-C14-go, now read "top, down, middle and
+turn, (long) bottom". No assessment answer changes and no lesson is added,
+moved or retagged. The generated LaTeX of chapters 5 and 6 gains the five
+figures, and the book and narration of chapters 5, 6 and 14 are
+regenerated.
+
+## Stroke order for the voiced kana, ゛, ゜ and ー
+
+Seventeen writing lessons taught a voiced kana and printed no stroke-order
+filmstrip: **ど** and **だ** (JA-W09-do, JA-W11-da), the eight of chapters 134
+and 135, and the seven of chapters 136 and 137. Three more taught the marks
+themselves: the dakuten **゛** (JA-W03-dakuten), the handakuten **゜**
+(JA-W18-handakuten) and the long-vowel mark **ー** (JA-W06-long-mark). The
+voiced rows said only "authoritative", the mark records had no stroke order at
+all, and ど and だ had no row, being covered only through their decomposition.
+Every voiced kana row the inventory holds (が ぎ ぐ げ ご ざ ず ぜ ぞ だ で ど ば
+び ぶ べ ぼ ぱ ぴ ぷ ぺ ぽ, 22 in all, with だ and ど added) and the three mark
+records now cite KanjiVG's directed paths for their own code point. All
+twenty lessons now print a filmstrip.
+
+KanjiVG draws a voiced kana as one glyph: the base sign's own paths, the same
+as in its file for the base sign, then the mark.
+
+| part | KanjiVG | order and direction |
+|---|---|---|
+| dakuten ゛ | kanji/0309b.svg, and the last two paths of every voiced kana | two ticks, the left one first, each drawn down to the right |
+| handakuten ゜ | kanji/0309c.svg, and the last path of ぱ ぴ ぷ ぺ ぽ | one ring, from its foot, clockwise: round the left, over the top, down the right |
+| long-vowel mark ー | kanji/030fc.svg | one bar, left to right (horizontal writing) |
+
+So a dakuten adds two strokes and two pen lifts to the base sign, and a
+handakuten one of each: が has five strokes and four pen lifts, ぱ four
+strokes and three.
+
+Only the order and direction come from KanjiVG. The pen paths follow the
+bundled font's own outline: each base sign's fitted path, moved to where the
+voiced glyph's outline puts that sign, and re-fitted to its medial line; the
+mark fitted on its own contours.
+
+**Where KanjiVG and an older base row disagree, the voiced glyph follows
+KanjiVG and says so.** Three base rows cite Sirgazil's animations, and on
+three points KanjiVG's files for both the base and the voiced sign differ
+from them:
+
+- **ぜ**: KanjiVG draws せ's right stem (with its hook) second and the left
+  stem third. The せ row has them the other way round.
+- **ぶ, ぷ**: KanjiVG draws ふ's lower-left mark up to the right. The ふ row
+  draws it down and to the left.
+- **ぼ, ぽ**: KanjiVG's left vertical of ほ ends in a flick up to the right,
+  as は's does. The ほ row says it hooks left.
+
+The せ, ふ and ほ rows and their filmstrips are not changed here. JA-W136-ze
+asks the reader to write せ "in the order you learned it", which is the せ
+row's order; its filmstrip now shows KanjiVG's. Reconciling the three base
+rows with KanjiVG is left as follow-up work.
+
+No lesson text changes, no assessment answer changes, and no lesson is added,
+moved or retagged. The generated LaTeX of chapters 3, 6, 9, 11, 18 and 134 to
+137 gains the twenty figures.
+
 ## Chapters 138-142: the A2 spine, what I do, negation and questions, the past, the future and practical texts
 
 The level gate counted none of the five A2 spine nodes as realized for

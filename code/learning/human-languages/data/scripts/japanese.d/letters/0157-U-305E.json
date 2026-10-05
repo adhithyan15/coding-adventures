@@ -7,9 +7,18 @@
     "the dakuten ゛"
   ],
   "strokeOrder": [
-    "そ in full",
-    "two short strokes at the upper right"
+    "draw the short upper bar from left to right, then without lifting turn sharply and run down and left onto the long middle bar",
+    "without lifting, turn back and run right along the whole middle bar",
+    "without lifting, double back a little, drop down and left into the open curve, round the lower left and finish along the base to the right",
+    "lift, draw the left tick of the dakuten down to the right",
+    "lift, draw the right tick down to the right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 0305e file records ぞ as three stroke paths in this order and direction: そ's stroke (the one zigzag stroke), then the dakuten's two ticks, the left one first, each drawn down to the right; so there are two pen lifts.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0305e.svg",
+    "citation": "KanjiVG, kanji/0305e.svg, hiragana ぞ (U+305E HIRAGANA LETTER ZO), three stroke paths kvg:0305e-s1 to s3 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is そ's stroke, the same paths as in its file for そ, kanji/0305d.svg; s2 and s3 are the dakuten, the left tick first and then the right one, each drawn down to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. Where the print glyph has no separate ink for the turn back from the bar into the curve, the path doubles back along the bar."
+  },
   "notes": "そ voiced, read zo. The middle of かぞく and of かぞえる."
 }

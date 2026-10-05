@@ -7,9 +7,18 @@
     "the handakuten ゜"
   ],
   "strokeOrder": [
-    "ふ in full",
-    "a small circle at the upper right"
+    "draw the short tick at the top, sloping down to the right",
+    "lift; begin below the tick and curve down, round to the right and away down to the lower left",
+    "lift; draw the short mark at the lower left, from its lower end up to the right",
+    "lift; draw the short mark at the lower right, sloping down and to the right",
+    "lift, draw the small circle of the handakuten clockwise, starting and ending at its foot"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 03077 file records ぷ as five stroke paths in this order and direction: ふ's four strokes (the top tick, the curving body, the lower-left mark drawn up to the right and the lower-right mark), then the handakuten, one small circle drawn clockwise from its foot; so there are four pen lifts.",
+  "penLifts": 4,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03077.svg",
+    "citation": "KanjiVG, kanji/03077.svg, hiragana ぷ (U+3077 HIRAGANA LETTER PU), five stroke paths kvg:03077-s1 to s5 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 to s4 are ふ's strokes, the same paths as in its file for ふ, kanji/03075.svg; s5 is the handakuten, one closed ring that starts at its foot and runs clockwise, round the left side, over the top and down the right side back to the foot. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. KanjiVG's lower-left mark starts at its upper left, dips and then runs up to the right, as in its file for ふ, kanji/03075.svg. The print mark has no dip, so the path starts at the lower end of that mark and runs up to the right. This inventory's ふ row, which cites Sirgazil's animation, draws that mark down and to the left; this path follows KanjiVG."
+  },
   "notes": "ふ with the handakuten, read pu. The end of きっぷ and the third sign of てんぷら."
 }

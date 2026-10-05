@@ -7,5 +7,18 @@
     "base": "コ",
     "combined": "コー",
     "sound": "ko to koo"
+  },
+  "components": [
+    "one horizontal bar"
+  ],
+  "strokeOrder": [
+    "draw the bar from left to right"
+  ],
+  "strokeOrderNote": "KanjiVG's 030fc file records ー as one stroke path in this order and direction: one bar, drawn from left to right; so there are no pen lifts.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/030fc.svg",
+    "citation": "KanjiVG, kanji/030fc.svg, the long-vowel mark ー (U+30FC), one stroke path kvg:030fc-s1 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores the mark as one directed path, a bar drawn from left to right, the form it takes in horizontal writing. In vertical writing the mark turns with the line and is drawn from top to bottom; this course writes horizontally. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
   }
 }
