@@ -1,4 +1,4 @@
-# 0.368.0
+## 0.368.0 - 2026-10-05 - Runtime-real value-scalar call results
 
 - Preserve runtime-real formatter provenance for direct real procedure results
   when every formal parameter is a value-mode scalar. Name parameters, arrays,
