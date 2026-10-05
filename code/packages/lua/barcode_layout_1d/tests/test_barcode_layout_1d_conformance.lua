@@ -314,6 +314,26 @@ describe("barcode-layout-1d-v1 neutral corpus", function()
         assert.equal(0, calls)
     end)
 
+    it("deep-copies mutable run and scene results", function()
+        local runs_value = layout.runs_from_binary_pattern_v1("10", {
+            source_label = "A", source_index = 0, role = "data",
+        })
+        local caller_metadata = {label = "collision", note = "original"}
+        local first = layout.project_barcode_1d_scene_v1(runs_value, 10,
+            {metadata = caller_metadata})
+        runs_value[1].source_label = "changed"
+        caller_metadata.note = "changed"
+        assert.equal("A", first.instructions[1].metadata.sourceLabel)
+        assert.equal("original", first.metadata.note)
+        assert.equal("1D barcode", first.metadata.label)
+        first.instructions[1].metadata.sourceLabel = "mutated result"
+        local second = layout.project_barcode_1d_scene_v1(
+            layout.runs_from_binary_pattern_v1("10", {
+                source_label = "A", source_index = 0, role = "data",
+            }), 10, {metadata = {note = "original"}})
+        assert.equal("A", second.instructions[1].metadata.sourceLabel)
+    end)
+
     it("rejects duplicate keys and hostile fixture envelopes", function()
         assert.has_error(function() strict_decode('{"a":1,"a":2}', 8) end)
         assert.has_error(function() strict_decode(string.rep("x", max_bytes + 1), 8) end)

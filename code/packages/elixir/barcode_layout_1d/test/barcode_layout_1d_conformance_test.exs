@@ -337,6 +337,19 @@ defmodule CodingAdventures.BarcodeLayout1DConformanceTest do
     refute_received :resolver_called
   end
 
+  test "immutable results are equal across independent calls" do
+    options = [source_label: "A", source_index: 0, role: "data"]
+    first = Layout.runs_from_binary_pattern_v1("10", options)
+    second = Layout.runs_from_binary_pattern_v1("10", options)
+    assert first == second
+
+    assert Layout.compute_barcode_1d_layout_v1(first, 10) ==
+             Layout.compute_barcode_1d_layout_v1(second, 10)
+
+    assert Layout.project_barcode_1d_scene_v1(first, 10) ==
+             Layout.project_barcode_1d_scene_v1(second, 10)
+  end
+
   test "the bounded loader rejects duplicate keys, deep and malformed bytes" do
     assert_raise ArgumentError, fn -> decode_unique!(~s({"a":1,"a":2})) end
     assert_raise ArgumentError, fn -> decode_unique!(String.duplicate("x", @max_bytes + 1)) end
