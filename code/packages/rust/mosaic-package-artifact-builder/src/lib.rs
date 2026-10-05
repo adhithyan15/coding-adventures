@@ -14886,25 +14886,29 @@ layout NativeEvents {
 
     #[test]
     fn an_android_handler_source_must_stay_inside_the_package() {
-        let pkg = card_package_with_android_effects(concat!(
-            "files = [ { backend = \"compose-android\", source = \"host/android/Escape.kt\", ",
-            "target = \"src/main/kotlin/Escape.kt\" } ]\n",
-            "handlers = [ { backend = \"compose-android\", install = \"installProbe\" } ]\n",
-        ));
-        let outside = TempDir::new().unwrap();
-        fs::write(outside.path().join("secret.kt"), "secret").unwrap();
+        // A symbolic link out of the package. Unix only: creating one on
+        // Windows needs a privilege CI's runner does not grant. Scoped to a
+        // block rather than an early return, so Windows still runs the
+        // directory case below (and `-D warnings` sees no unreachable code).
         #[cfg(unix)]
-        std::os::unix::fs::symlink(
-            outside.path().join("secret.kt"),
-            pkg.path().join("host/android/Escape.kt"),
-        )
-        .unwrap();
-        #[cfg(not(unix))]
-        return;
-        let out = TempDir::new().unwrap();
-        let err = build_package(&swiftui_options(&pkg, &out, Backend::Compose))
-            .expect_err("a symlink out of the package");
-        assert!(err.to_string().contains("outside the package"), "{err}");
+        {
+            let pkg = card_package_with_android_effects(concat!(
+                "files = [ { backend = \"compose-android\", source = \"host/android/Escape.kt\", ",
+                "target = \"src/main/kotlin/Escape.kt\" } ]\n",
+                "handlers = [ { backend = \"compose-android\", install = \"installProbe\" } ]\n",
+            ));
+            let outside = TempDir::new().unwrap();
+            fs::write(outside.path().join("secret.kt"), "secret").unwrap();
+            std::os::unix::fs::symlink(
+                outside.path().join("secret.kt"),
+                pkg.path().join("host/android/Escape.kt"),
+            )
+            .unwrap();
+            let out = TempDir::new().unwrap();
+            let err = build_package(&swiftui_options(&pkg, &out, Backend::Compose))
+                .expect_err("a symlink out of the package");
+            assert!(err.to_string().contains("outside the package"), "{err}");
+        }
 
         // A directory is not a source either.
         let pkg = card_package_with_android_effects(concat!(
