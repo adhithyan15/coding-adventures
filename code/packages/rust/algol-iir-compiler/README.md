@@ -211,7 +211,9 @@ same provenance. The real-valued standard functions `abs`, `sqrt`, `sin`,
 runtime-real operand while respecting user-declared overrides. Reads from real
 array elements and real value formals, including formals promoted into the
 existing nested-procedure capture globals, also carry runtime-real provenance
-through assignment and composition. Ordinary captured real globals remain
+through assignment and composition. A specialised read-only real name formal
+also retains the proof when its actual is a non-assignable runtime-real
+expression. Assignable name actuals and ordinary captured real globals remain
 outside this bounded proof.
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
