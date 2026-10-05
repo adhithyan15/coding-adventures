@@ -2266,6 +2266,8 @@ fn parse_css_color_function(css: &str) -> Option<Color> {
                 alpha,
             ))
         }
+        "xyz" | "xyz-d65" => Some(xyz_d65_to_color(r, g, b, alpha)),
+        "xyz-d50" => Some(xyz_d50_to_color(r, g, b, alpha)),
         _ => None,
     }
 }
@@ -7775,6 +7777,17 @@ mod tests {
         assert_eq!(css_to_color("color(rec2020 20% 40% 60% / 80%)"), expected);
         assert_eq!(with_opacity("color(rec2020 0.2 0.4 0.6 / 80%)", 0.5), "rgba(0,119,168,0.4)");
         assert_eq!(normalize_css_paint("color(rec2020 20% 40% 60% / 80%)".into()), "rgba(0,119,168,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_color_xyz_profiles() {
+        let d65 = Color { r: 0, g: 167, b: 164, a: 204 };
+        let d50 = Color { r: 0, g: 168, b: 189, a: 204 };
+        assert_eq!(css_to_color("color(xyz 0.2 0.3 0.4 / 0.8)"), d65);
+        assert_eq!(css_to_color("color(xyz-d65 20% 30% 40% / 80%)"), d65);
+        assert_eq!(css_to_color("color(xyz-d50 0.2 0.3 0.4 / 80%)"), d50);
+        assert_eq!(with_opacity("color(xyz-d65 0.2 0.3 0.4 / 80%)", 0.5), "rgba(0,167,164,0.4)");
+        assert_eq!(normalize_css_paint("color(xyz-d50 20% 30% 40% / 80%)".into()), "rgba(0,168,189,0.8)");
     }
 
     #[test]
