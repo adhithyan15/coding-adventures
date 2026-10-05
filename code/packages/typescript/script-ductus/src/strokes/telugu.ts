@@ -67,7 +67,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "turn downward along the inner-right shoulder",
+              label: "turn down the inner-right shoulder",
               path: [
                 { x: 610, y: 405 }, { x: 575, y: 385 },
                 { x: 535, y: 350 },
@@ -76,7 +76,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "return upward and curve left across the upper shoulder",
+              label: "curve up and left over the upper shoulder",
               path: [
                 { x: 555, y: 160 }, { x: 585, y: 220 },
                 { x: 600, y: 290 }, { x: 610, y: 355 },
@@ -213,59 +213,63 @@ export const entries: DuctusEntry[] = [
             {
               label: "sweep down around the upper-left curve",
               path: [
-                { x: 285, y: 430 }, { x: 220, y: 425 },
-                { x: 155, y: 395 }, { x: 105, y: 345 },
-                { x: 75, y: 285 }, { x: 65, y: 215 },
+                { x: 287, y: 431 }, { x: 246, y: 439 },
+                { x: 204, y: 430 }, { x: 168, y: 406 },
+                { x: 137, y: 376 }, { x: 112, y: 341 },
+                { x: 94, y: 303 }, { x: 83, y: 261 },
+                { x: 79, y: 218 }, { x: 79, y: 175 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "turn right around the lower-left bowl",
               path: [
-                { x: 65, y: 180 }, { x: 75, y: 110 },
-                { x: 115, y: 50 }, { x: 180, y: 15 },
-                { x: 245, y: 15 }, { x: 300, y: 70 },
+                { x: 79, y: 175 }, { x: 84, y: 131 },
+                { x: 99, y: 90 }, { x: 127, y: 56 },
+                { x: 165, y: 34 }, { x: 208, y: 31 },
+                { x: 252, y: 35 }, { x: 290, y: 56 },
+                { x: 319, y: 89 }, { x: 347, y: 124 },
+                { x: 351, y: 167 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "sweep right and upward around the lower-right bowl",
+              label: "sweep right and up the lower-right bowl",
               path: [
-                { x: 410, y: 70 }, { x: 465, y: 15 },
-                { x: 530, y: 15 }, { x: 590, y: 50 },
-                { x: 630, y: 115 }, { x: 645, y: 185 },
+                { x: 351, y: 167 }, { x: 359, y: 122 },
+                { x: 388, y: 86 }, { x: 421, y: 53 },
+                { x: 463, y: 33 }, { x: 509, y: 31 },
+                { x: 555, y: 39 }, { x: 591, y: 68 },
+                { x: 615, y: 108 }, { x: 625, y: 153 },
+                { x: 631, y: 199 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "curve left around the upper-right shoulder",
+              label: "curve left round the upper-right shoulder",
               path: [
-                { x: 645, y: 225 }, { x: 635, y: 295 },
-                { x: 605, y: 350 }, { x: 560, y: 400 },
-                { x: 505, y: 430 }, { x: 450, y: 440 },
+                { x: 631, y: 199 }, { x: 628, y: 243 },
+                { x: 619, y: 286 }, { x: 604, y: 327 },
+                { x: 581, y: 365 }, { x: 551, y: 397 },
+                { x: 516, y: 423 }, { x: 477, y: 443 },
+                { x: 435, y: 457 }, { x: 394, y: 472 },
+                { x: 351, y: 463 }, { x: 307, y: 463 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "curl upward through the separate top flourish",
+              label: "climb up the flourish's left arm",
               path: [
-                { x: 205, y: 575 }, { x: 230, y: 525 },
-                { x: 270, y: 475 }, { x: 315, y: 445 },
-                { x: 355, y: 450 }, { x: 400, y: 490 },
-                { x: 450, y: 550 }, { x: 500, y: 610 },
-                { x: 555, y: 660 }, { x: 620, y: 690 },
+                { x: 307, y: 463 }, { x: 263, y: 484 },
+                { x: 237, y: 529 }, { x: 207, y: 571 },
+              ],
+            },
+            {
+              label: "curl upward through the top flourish",
+              path: [
+                { x: 207, y: 571 }, { x: 232, y: 536 },
+                { x: 255, y: 498 }, { x: 282, y: 467 },
+                { x: 326, y: 463 }, { x: 369, y: 466 },
+                { x: 406, y: 486 }, { x: 430, y: 523 },
+                { x: 457, y: 557 }, { x: 484, y: 591 },
+                { x: 512, y: 624 }, { x: 545, y: 653 },
+                { x: 583, y: 675 }, { x: 623, y: 691 },
               ],
             },
           ],
@@ -370,7 +374,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep upward around the left bowl and into the middle",
+              label: "sweep up the left bowl into the middle",
               path: [
                 { x: 105, y: 5 }, { x: 75, y: 65 },
                 { x: 60, y: 135 }, { x: 70, y: 205 },
@@ -385,7 +389,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep right and upward around the broad lower bowl",
+              label: "sweep right and up the broad lower bowl",
               path: [
                 { x: 425, y: 40 }, { x: 475, y: 15 },
                 { x: 530, y: 15 }, { x: 585, y: 45 },
@@ -400,7 +404,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "curl upward through the separate top flourish",
+              label: "curl up through the separate top flourish",
               path: [
                 { x: 125, y: 570 }, { x: 145, y: 520 },
                 { x: 180, y: 470 }, { x: 225, y: 440 },
@@ -466,7 +470,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "curl upward through the separate top flourish",
+              label: "curl up through the separate top flourish",
               path: [
                 { x: 85, y: 570 }, { x: 105, y: 520 },
                 { x: 140, y: 470 }, { x: 185, y: 440 },
@@ -493,38 +497,36 @@ export const entries: DuctusEntry[] = [
             {
               label: "sweep left across the upper-left curve",
               path: [
-                { x: 360, y: 90 }, { x: 325, y: 125 },
-                { x: 290, y: 170 }, { x: 250, y: 215 },
-                { x: 210, y: 245 }, { x: 165, y: 260 },
-                { x: 120, y: 255 }, { x: 80, y: 230 },
+                { x: 329, y: 115 }, { x: 305, y: 150 },
+                { x: 279, y: 184 }, { x: 249, y: 214 },
+                { x: 212, y: 237 }, { x: 170, y: 243 },
+                { x: 128, y: 235 }, { x: 93, y: 211 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "turn right around the lower-left bowl",
               path: [
-                { x: 65, y: 205 }, { x: 55, y: 150 },
-                { x: 65, y: 95 }, { x: 95, y: 50 },
-                { x: 140, y: 25 }, { x: 195, y: 25 },
-                { x: 245, y: 50 }, { x: 285, y: 90 },
+                { x: 93, y: 211 }, { x: 74, y: 173 },
+                { x: 69, y: 131 }, { x: 78, y: 89 },
+                { x: 102, y: 54 }, { x: 138, y: 32 },
+                { x: 181, y: 27 }, { x: 223, y: 33 },
+                { x: 258, y: 57 }, { x: 288, y: 88 },
+                { x: 317, y: 119 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "sweep upward around the broad right bowl",
               path: [
-                { x: 340, y: 45 }, { x: 395, y: 20 },
-                { x: 455, y: 15 }, { x: 515, y: 30 },
-                { x: 565, y: 65 }, { x: 605, y: 115 },
-                { x: 625, y: 180 }, { x: 625, y: 245 },
-                { x: 605, y: 315 }, { x: 565, y: 375 },
-                { x: 515, y: 420 }, { x: 465, y: 450 },
+                { x: 317, y: 119 }, { x: 353, y: 95 },
+                { x: 385, y: 64 }, { x: 422, y: 41 },
+                { x: 465, y: 31 }, { x: 509, y: 31 },
+                { x: 551, y: 40 }, { x: 585, y: 67 },
+                { x: 614, y: 101 }, { x: 628, y: 142 },
+                { x: 633, y: 185 }, { x: 632, y: 229 },
+                { x: 624, y: 273 }, { x: 607, y: 313 },
+                { x: 583, y: 350 }, { x: 555, y: 384 },
+                { x: 521, y: 412 }, { x: 484, y: 436 },
+                { x: 445, y: 455 },
               ],
             },
           ],
@@ -532,14 +534,15 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "curl upward through the separate top flourish",
+              label: "curl up through the separate top flourish",
               path: [
-                { x: 85, y: 570 }, { x: 105, y: 520 },
-                { x: 140, y: 470 }, { x: 185, y: 440 },
-                { x: 230, y: 445 }, { x: 275, y: 480 },
-                { x: 320, y: 535 }, { x: 370, y: 595 },
-                { x: 425, y: 650 }, { x: 480, y: 690 },
-                { x: 525, y: 700 },
+                { x: 105, y: 555 }, { x: 121, y: 513 },
+                { x: 150, y: 480 }, { x: 192, y: 464 },
+                { x: 236, y: 469 }, { x: 274, y: 493 },
+                { x: 306, y: 525 }, { x: 334, y: 560 },
+                { x: 362, y: 595 }, { x: 391, y: 629 },
+                { x: 426, y: 658 }, { x: 466, y: 678 },
+                { x: 509, y: 691 },
               ],
             },
           ],
@@ -570,46 +573,51 @@ export const entries: DuctusEntry[] = [
             {
               label: "sweep right around the upper-left curve",
               path: [
-                { x: 85, y: 312 }, { x: 75, y: 380 },
-                { x: 110, y: 440 }, { x: 170, y: 465 },
-                { x: 235, y: 465 }, { x: 295, y: 430 },
-                { x: 319, y: 370 },
+                { x: 84, y: 328 }, { x: 84, y: 373 },
+                { x: 92, y: 417 }, { x: 126, y: 447 },
+                { x: 169, y: 460 }, { x: 215, y: 463 },
+                { x: 259, y: 455 }, { x: 296, y: 430 },
+                { x: 315, y: 389 }, { x: 316, y: 344 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
+            {
+              label: "curve down and left through the shoulder",
+              path: [
+                { x: 316, y: 344 }, { x: 289, y: 309 },
+                { x: 256, y: 280 }, { x: 217, y: 261 },
+                { x: 176, y: 245 }, { x: 137, y: 224 },
+                { x: 104, y: 196 },
+              ],
+            },
             {
               label: "turn right around the lower-left bowl",
               path: [
-                { x: 65, y: 180 }, { x: 75, y: 110 },
-                { x: 115, y: 50 }, { x: 180, y: 15 },
-                { x: 245, y: 15 }, { x: 300, y: 70 },
+                { x: 104, y: 196 }, { x: 86, y: 156 },
+                { x: 85, y: 112 }, { x: 102, y: 72 },
+                { x: 136, y: 43 }, { x: 178, y: 30 },
+                { x: 222, y: 28 }, { x: 266, y: 35 },
+                { x: 305, y: 55 }, { x: 337, y: 85 },
+                { x: 372, y: 112 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "sweep right and upward around the lower-right bowl",
+              label: "sweep right and up the lower-right bowl",
               path: [
-                { x: 410, y: 70 }, { x: 465, y: 15 },
-                { x: 530, y: 15 }, { x: 590, y: 50 },
-                { x: 630, y: 115 }, { x: 645, y: 185 },
+                { x: 372, y: 112 }, { x: 409, y: 87 },
+                { x: 442, y: 56 }, { x: 482, y: 35 },
+                { x: 528, y: 32 }, { x: 573, y: 34 },
+                { x: 614, y: 53 }, { x: 645, y: 86 },
+                { x: 664, y: 127 }, { x: 672, y: 172 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "curve left around the upper-right shoulder",
+              label: "curve left round the upper-right shoulder",
               path: [
-                { x: 670, y: 220 }, { x: 655, y: 290 },
-                { x: 625, y: 350 }, { x: 590, y: 400 },
-                { x: 535, y: 440 }, { x: 480, y: 460 },
+                { x: 672, y: 172 }, { x: 672, y: 217 },
+                { x: 666, y: 261 }, { x: 651, y: 303 },
+                { x: 628, y: 341 }, { x: 600, y: 375 },
+                { x: 568, y: 406 }, { x: 531, y: 432 },
+                { x: 492, y: 452 },
               ],
             },
           ],
@@ -816,7 +824,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "loop counterclockwise around the left bowl",
+              label: "loop the left bowl counterclockwise",
               path: [
                 { x: 542, y: 217 }, { x: 510, y: 370 },
                 { x: 395, y: 476 }, { x: 240, y: 493 },
@@ -831,7 +839,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "loop counterclockwise around the centre bowl",
+              label: "loop the centre bowl counterclockwise",
               path: [
                 { x: 543, y: 162 }, { x: 595, y: 56 },
                 { x: 690, y: -9 }, { x: 804, y: 19 },
@@ -845,7 +853,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "draw down and up through the lower angled join",
+              label: "draw down and up the lower angled join",
               path: [
                 { x: 520, y: 550 }, { x: 560, y: 520 },
                 { x: 600, y: 470 }, { x: 640, y: 460 },
@@ -859,7 +867,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "loop counterclockwise around the right bowl",
+              label: "loop the right bowl counterclockwise",
               path: [
                 { x: 895, y: 113 }, { x: 973, y: 23 },
                 { x: 1083, y: -10 }, { x: 1185, y: 47 },
@@ -883,7 +891,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "loop counterclockwise around the main bowl",
+              label: "loop the main bowl counterclockwise",
               path: [
                 { x: 293, y: 462 }, { x: 258, y: 458 },
                 { x: 225, y: 450 }, { x: 194, y: 436 },
@@ -913,7 +921,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "draw down and up through the separate upper chevron",
+              label: "draw the separate chevron down and up",
               path: [
                 { x: 160, y: 555 }, { x: 185, y: 535 },
                 { x: 210, y: 510 }, { x: 235, y: 490 },
@@ -939,7 +947,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "loop counterclockwise around the small upper bowl",
+              label: "loop the small upper bowl counterclockwise",
               path: [
                 { x: 120, y: 390 }, { x: 110, y: 355 },
                 { x: 105, y: 325 }, { x: 180, y: 290 },
@@ -957,7 +965,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep down and around the broad lower bowl",
+              label: "sweep down round the broad lower bowl",
               path: [
                 { x: 118, y: 378 }, { x: 104, y: 358 },
                 { x: 93, y: 338 }, { x: 84, y: 315 },
@@ -1003,72 +1011,64 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "loop counterclockwise around the small inner bowl",
+              label: "loop the small inner bowl counterclockwise",
               path: [
-                { x: 134, y: 367 }, { x: 109, y: 340 },
-                { x: 100, y: 308 }, { x: 109, y: 276 },
-                { x: 135, y: 251 }, { x: 174, y: 239 },
-                { x: 215, y: 242 }, { x: 248, y: 262 },
-                { x: 268, y: 290 }, { x: 268, y: 323 },
-                { x: 249, y: 352 }, { x: 215, y: 372 },
-                { x: 175, y: 382 }, { x: 133, y: 383 },
-                { x: 92, y: 380 },
+                { x: 125, y: 396 }, { x: 92, y: 366 },
+                { x: 73, y: 327 }, { x: 76, y: 283 },
+                { x: 101, y: 246 }, { x: 138, y: 223 },
+                { x: 181, y: 212 }, { x: 224, y: 221 },
+                { x: 254, y: 253 }, { x: 283, y: 287 },
+                { x: 289, y: 331 }, { x: 272, y: 371 },
+                { x: 236, y: 397 }, { x: 193, y: 404 },
+                { x: 148, y: 403 }, { x: 109, y: 383 },
+                { x: 77, y: 352 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "sweep down around the broad left body and loop the lower bowl",
+              label: "sweep down the body, loop the lower bowl",
               path: [
-                { x: 163, y: 439 }, { x: 130, y: 426 },
-                { x: 102, y: 405 }, { x: 82, y: 378 },
-                { x: 70, y: 347 }, { x: 69, y: 314 },
-                { x: 79, y: 282 }, { x: 100, y: 255 },
-                { x: 129, y: 236 }, { x: 160, y: 220 },
-                { x: 194, y: 209 }, { x: 229, y: 200 },
-                { x: 264, y: 192 }, { x: 299, y: 185 },
-                { x: 334, y: 177 }, { x: 367, y: 164 },
-                { x: 394, y: 142 }, { x: 409, y: 113 },
-                { x: 409, y: 80 }, { x: 394, y: 51 },
-                { x: 366, y: 30 }, { x: 331, y: 22 },
-                { x: 297, y: 31 }, { x: 268, y: 50 },
-                { x: 250, y: 78 }, { x: 250, y: 111 },
-                { x: 265, y: 141 }, { x: 289, y: 165 },
+                { x: 77, y: 352 }, { x: 73, y: 307 },
+                { x: 87, y: 264 }, { x: 120, y: 233 },
+                { x: 161, y: 214 }, { x: 206, y: 210 },
+                { x: 247, y: 195 }, { x: 288, y: 180 },
+                { x: 334, y: 180 }, { x: 379, y: 179 },
+                { x: 416, y: 154 }, { x: 436, y: 113 },
+                { x: 434, y: 68 }, { x: 403, y: 36 },
+                { x: 359, y: 24 }, { x: 314, y: 24 },
+                { x: 269, y: 31 }, { x: 233, y: 58 },
+                { x: 222, y: 101 }, { x: 240, y: 142 },
+                { x: 265, y: 180 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "sweep right and up around the broad outer body",
+              label: "sweep right and up the broad outer body",
               path: [
-                { x: 289, y: 178 }, { x: 324, y: 187 },
-                { x: 359, y: 191 }, { x: 395, y: 196 },
-                { x: 430, y: 205 }, { x: 463, y: 218 },
-                { x: 493, y: 236 }, { x: 520, y: 258 },
-                { x: 540, y: 286 }, { x: 550, y: 317 },
-                { x: 547, y: 350 }, { x: 532, y: 379 },
-                { x: 509, y: 404 }, { x: 480, y: 424 },
-                { x: 446, y: 436 }, { x: 411, y: 442 },
+                { x: 265, y: 180 }, { x: 310, y: 180 },
+                { x: 356, y: 180 }, { x: 401, y: 180 },
+                { x: 444, y: 194 }, { x: 486, y: 209 },
+                { x: 526, y: 231 }, { x: 556, y: 264 },
+                { x: 570, y: 307 }, { x: 569, y: 352 },
+                { x: 548, y: 392 }, { x: 514, y: 421 },
+                { x: 474, y: 442 }, { x: 437, y: 468 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "draw down and up through the separate upper chevron",
+              label: "climb up the chevron's left arm",
               path: [
-                { x: 261, y: 518 }, { x: 278, y: 497 },
-                { x: 296, y: 476 }, { x: 314, y: 457 },
-                { x: 334, y: 438 }, { x: 355, y: 433 },
-                { x: 374, y: 451 }, { x: 392, y: 472 },
-                { x: 409, y: 493 }, { x: 427, y: 513 },
-                { x: 445, y: 533 }, { x: 462, y: 554 },
-                { x: 480, y: 574 },
+                { x: 437, y: 468 }, { x: 391, y: 468 },
+                { x: 345, y: 469 }, { x: 307, y: 494 },
+                { x: 281, y: 532 },
+              ],
+            },
+            {
+              label: "draw the upper chevron down and up",
+              path: [
+                { x: 281, y: 532 }, { x: 304, y: 494 },
+                { x: 340, y: 470 }, { x: 384, y: 468 },
+                { x: 427, y: 470 }, { x: 455, y: 503 },
+                { x: 484, y: 536 }, { x: 511, y: 571 },
+                { x: 539, y: 605 }, { x: 570, y: 637 },
+                { x: 604, y: 664 }, { x: 645, y: 680 },
               ],
             },
           ],
@@ -1086,7 +1086,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "loop counterclockwise around the small lower-left bowl",
+              label: "loop the lower-left bowl counterclockwise",
               path: [
                 { x: 290, y: 140 }, { x: 285, y: 185 },
                 { x: 255, y: 225 }, { x: 210, y: 245 },
@@ -1103,7 +1103,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep around the broad lower and right body",
+              label: "sweep round the lower and right body",
               path: [
                 { x: 300, y: 140 }, { x: 340, y: 100 },
                 { x: 390, y: 65 }, { x: 445, y: 40 },
@@ -1120,7 +1120,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "draw down and up through the separate upper chevron",
+              label: "draw the separate chevron down and up",
               path: [
                 { x: 140, y: 565 }, { x: 170, y: 530 },
                 { x: 210, y: 485 }, { x: 245, y: 465 },
@@ -1165,7 +1165,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep around the tall lower and right body",
+              label: "sweep round the tall lower and right body",
               path: [
                 { x: 245, y: 205 }, { x: 275, y: 225 },
                 { x: 310, y: 245 }, { x: 350, y: 260 },
@@ -1182,7 +1182,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "draw down and up through the separate upper chevron",
+              label: "draw the separate chevron down and up",
               path: [
                 { x: 175, y: 570 }, { x: 190, y: 535 },
                 { x: 215, y: 490 }, { x: 245, y: 465 },
@@ -1226,7 +1226,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep around the broad lower and right body",
+              label: "sweep round the lower and right body",
               path: [
                 { x: 334, y: 123 }, { x: 356, y: 88 },
                 { x: 381, y: 55 }, { x: 410, y: 26 },
@@ -1259,7 +1259,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "draw down and up through the separate upper chevron",
+              label: "draw the separate chevron down and up",
               path: [
                 { x: 99, y: 579 }, { x: 126, y: 548 },
                 { x: 152, y: 516 }, { x: 178, y: 484 },
@@ -1285,7 +1285,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "loop around the left bowl and sweep around the right body",
+              label: "loop the left bowl, sweep the right body",
               path: [
                 { x: 70, y: 59 }, { x: 55, y: 73 },
                 { x: 47, y: 82 }, { x: 40, y: 99 },
@@ -1313,7 +1313,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "draw down and up through the separate upper chevron",
+              label: "draw the separate chevron down and up",
               path: [
                 { x: 103, y: 569 }, { x: 130, y: 538 },
                 { x: 158, y: 507 }, { x: 186, y: 477 },
@@ -1358,7 +1358,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep around the broad lower and right body",
+              label: "sweep round the lower and right body",
               path: [
                 { x: 333, y: 133 }, { x: 350, y: 107 },
                 { x: 372, y: 85 }, { x: 397, y: 65 },
@@ -1379,7 +1379,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "draw right across the middle bar and curl around its end",
+              label: "draw the middle bar right and curl its end",
               path: [
                 { x: 472, y: 464 }, { x: 511, y: 464 },
                 { x: 550, y: 464 }, { x: 589, y: 464 },
@@ -1400,7 +1400,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "draw down and up through the separate upper chevron",
+              label: "draw the separate chevron down and up",
               path: [
                 { x: 78, y: 517 }, { x: 98, y: 496 },
                 { x: 117, y: 476 }, { x: 138, y: 456 },
@@ -1426,78 +1426,56 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep left and upward around the lower-left bowl",
+              label: "sweep left and up the lower-left bowl",
               path: [
-                { x: 345, y: 130 },
-                { x: 320, y: 80 },
-                { x: 235, y: 25 },
-                { x: 170, y: 45 },
-                { x: 115, y: 90 },
-                { x: 80, y: 150 },
-                { x: 85, y: 225 },
+                { x: 329, y: 88 }, { x: 300, y: 56 },
+                { x: 261, y: 37 }, { x: 218, y: 28 },
+                { x: 175, y: 28 }, { x: 132, y: 38 },
+                { x: 98, y: 65 }, { x: 81, y: 104 },
+                { x: 81, y: 148 }, { x: 100, y: 186 },
+                { x: 132, y: 216 }, { x: 165, y: 244 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "curve right across the upper-left bowl",
               path: [
-                { x: 85, y: 265 },
-                { x: 80, y: 335 },
-                { x: 110, y: 400 },
-                { x: 165, y: 450 },
-                { x: 235, y: 465 },
-                { x: 310, y: 450 },
-                { x: 385, y: 390 },
+                { x: 165, y: 244 }, { x: 132, y: 277 },
+                { x: 100, y: 311 }, { x: 85, y: 354 },
+                { x: 93, y: 399 }, { x: 124, y: 433 },
+                { x: 165, y: 454 }, { x: 211, y: 460 },
+                { x: 258, y: 460 }, { x: 303, y: 452 },
+                { x: 344, y: 431 }, { x: 378, y: 399 },
+                { x: 413, y: 368 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "arch right and downward over the upper-right bowl",
+              label: "arch right and down the upper-right bowl",
               path: [
-                { x: 455, y: 390 },
-                { x: 520, y: 445 },
-                { x: 590, y: 462 },
-                { x: 660, y: 445 },
-                { x: 715, y: 395 },
-                { x: 750, y: 330 },
-                { x: 750, y: 245 },
+                { x: 413, y: 368 }, { x: 448, y: 395 },
+                { x: 481, y: 427 }, { x: 520, y: 450 },
+                { x: 564, y: 456 }, { x: 610, y: 456 },
+                { x: 652, y: 442 }, { x: 687, y: 414 },
+                { x: 715, y: 378 }, { x: 734, y: 337 },
+                { x: 744, y: 293 }, { x: 749, y: 248 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "turn left around the lower-right bowl",
               path: [
-                { x: 735, y: 145 },
-                { x: 705, y: 90 },
-                { x: 655, y: 50 },
-                { x: 595, y: 28 },
-                { x: 545, y: 38 },
-                { x: 505, y: 75 },
+                { x: 749, y: 248 }, { x: 745, y: 202 },
+                { x: 733, y: 158 }, { x: 729, y: 113 },
+                { x: 705, y: 74 }, { x: 670, y: 45 },
+                { x: 627, y: 29 }, { x: 581, y: 28 },
+                { x: 536, y: 34 }, { x: 500, y: 63 },
+                { x: 481, y: 104 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "sweep upward along the inner curve",
               path: [
-                { x: 480, y: 180 },
-                { x: 490, y: 195 },
-                { x: 505, y: 215 },
-                { x: 525, y: 235 },
-                { x: 550, y: 250 },
-                { x: 580, y: 260 },
-                { x: 610, y: 250 },
+                { x: 481, y: 104 }, { x: 482, y: 149 },
+                { x: 501, y: 189 }, { x: 536, y: 216 },
+                { x: 580, y: 224 }, { x: 625, y: 224 },
               ],
             },
           ],
@@ -1604,29 +1582,47 @@ export const entries: DuctusEntry[] = [
             {
               label: "sweep down around the upper-left curve",
               path: [
-                { x: 277, y: 500 },
-                { x: 220, y: 485 },
-                { x: 165, y: 450 },
-                { x: 120, y: 410 },
-                { x: 75, y: 350 },
-                { x: 45, y: 285 },
-                { x: 35, y: 195 },
+                { x: 627, y: 399 }, { x: 584, y: 413 },
+                { x: 543, y: 430 }, { x: 500, y: 446 },
+                { x: 457, y: 458 }, { x: 415, y: 472 },
+                { x: 370, y: 467 }, { x: 325, y: 467 },
+                { x: 280, y: 461 }, { x: 240, y: 440 },
+                { x: 199, y: 422 }, { x: 162, y: 396 },
+                { x: 131, y: 364 }, { x: 106, y: 326 },
+                { x: 89, y: 284 }, { x: 80, y: 240 },
+                { x: 75, y: 195 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "turn right around the lower-left bowl",
               path: [
-                { x: 35, y: 195 },
-                { x: 55, y: 110 },
-                { x: 125, y: 25 },
-                { x: 200, y: -12 },
-                { x: 275, y: 0 },
-                { x: 345, y: 85 },
-                { x: 390, y: 130 },
+                { x: 75, y: 195 }, { x: 79, y: 150 },
+                { x: 91, y: 106 }, { x: 115, y: 67 },
+                { x: 151, y: 39 }, { x: 195, y: 31 },
+                { x: 241, y: 32 }, { x: 282, y: 50 },
+                { x: 314, y: 82 }, { x: 344, y: 117 },
+                { x: 359, y: 159 },
+              ],
+            },
+            {
+              label: "sweep right and up the lower-right bowl",
+              path: [
+                { x: 359, y: 159 }, { x: 363, y: 116 },
+                { x: 391, y: 83 }, { x: 423, y: 54 },
+                { x: 465, y: 45 }, { x: 506, y: 30 },
+                { x: 549, y: 27 }, { x: 592, y: 30 },
+                { x: 631, y: 49 }, { x: 659, y: 82 },
+                { x: 670, y: 124 }, { x: 671, y: 167 },
+              ],
+            },
+            {
+              label: "curve left round the upper-right shoulder",
+              path: [
+                { x: 671, y: 167 }, { x: 641, y: 204 },
+                { x: 598, y: 222 }, { x: 551, y: 223 },
+                { x: 506, y: 210 }, { x: 474, y: 176 },
+                { x: 467, y: 129 }, { x: 471, y: 82 },
+                { x: 488, y: 44 }, { x: 535, y: 47 },
               ],
             },
           ],
@@ -1634,48 +1630,15 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep right and upward around the lower-right bowl",
+              label: "curl up through the separate top flourish",
               path: [
-                { x: 465, y: 35 },
-                { x: 535, y: 0 },
-                { x: 605, y: 0 },
-                { x: 665, y: 35 },
-                { x: 705, y: 95 },
-                { x: 711, y: 172 },
-              ],
-            },
-          ],
-        },
-        {
-          segments: [
-            {
-              label: "curve left around the upper-right shoulder",
-              path: [
-                { x: 675, y: 385 },
-                { x: 620, y: 415 },
-                { x: 560, y: 420 },
-                { x: 520, y: 395 },
-                { x: 520, y: 340 },
-                { x: 530, y: 285 },
-                { x: 505, y: 230 },
-              ],
-            },
-          ],
-        },
-        {
-          segments: [
-            {
-              label: "curl upward through the separate top flourish",
-              path: [
-                { x: 235, y: 540 },
-                { x: 270, y: 565 },
-                { x: 310, y: 545 },
-                { x: 350, y: 490 },
-                { x: 405, y: 505 },
-                { x: 465, y: 555 },
-                { x: 525, y: 620 },
-                { x: 585, y: 675 },
-                { x: 645, y: 690 },
+                { x: 255, y: 567 }, { x: 263, y: 524 },
+                { x: 283, y: 486 }, { x: 321, y: 467 },
+                { x: 365, y: 467 }, { x: 407, y: 476 },
+                { x: 438, y: 507 }, { x: 465, y: 541 },
+                { x: 493, y: 575 }, { x: 521, y: 609 },
+                { x: 552, y: 640 }, { x: 586, y: 667 },
+                { x: 626, y: 684 }, { x: 667, y: 699 },
               ],
             },
           ],
@@ -1693,7 +1656,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep left and around the broad circular body",
+              label: "sweep left round the broad circular body",
               path: [
                 { x: 295, y: 465 },
                 { x: 220, y: 455 },
@@ -1717,7 +1680,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "curl upward through the separate top flourish",
+              label: "curl up through the separate top flourish",
               path: [
                 { x: 150, y: 550 },
                 { x: 180, y: 570 },
@@ -1944,7 +1907,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "continue down and around the broad lower bowl",
+              label: "continue down round the broad lower bowl",
               path: [
                 { x: 260, y: 270 },
                 { x: 190, y: 245 },
@@ -1980,8 +1943,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "lift and draw the inner horizontal bar from left to right",
+              label: "lift and draw the inner bar left to right",
               path: [
                 { x: 310, y: 321 },
                 { x: 380, y: 321 },
@@ -1996,7 +1958,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift again and draw the short upper headstroke downward",
+              label: "lift again, draw the upper headstroke down",
               path: [
                 { x: 499, y: 480 },
                 { x: 499, y: 440 },
@@ -2019,7 +1981,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep right across the rounded upper-left arch",
+              label: "sweep right across the upper-left arch",
               path: [
                 { x: 80, y: 360 },
                 { x: 95, y: 410 },
@@ -2036,7 +1998,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "curve down and right around the lower-left bowl",
+              label: "curve down and right round the left bowl",
               path: [
                 { x: 215, y: 285 },
                 { x: 250, y: 260 },
@@ -2061,7 +2023,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep right and up around the lower-right bowl",
+              label: "sweep right and up the lower-right bowl",
               path: [
                 { x: 366, y: 105 },
                 { x: 405, y: 62 },
@@ -2080,7 +2042,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "restart and curl through the upper-right flourish",
+              label: "restart and curl the upper-right flourish",
               path: [
                 { x: 325, y: 350 },
                 { x: 350, y: 325 },
@@ -2185,7 +2147,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "restart and sweep through the upper flourish",
+              label: "restart and sweep the upper flourish",
               path: [
                 { x: 160, y: 565 },
                 { x: 175, y: 525 },
@@ -2281,7 +2243,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "restart and cup through the upper flourish",
+              label: "restart and cup the upper flourish",
               path: [
                 { x: 288, y: 570 },
                 { x: 310, y: 520 },
@@ -2420,7 +2382,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "continue down and right around the lower-left bowl",
+              label: "continue down round the lower-left bowl",
               path: [
                 { x: 65, y: 165 },
                 { x: 65, y: 125 },
@@ -2480,7 +2442,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "restart and cup through the upper flourish",
+              label: "restart and cup the upper flourish",
               path: [
                 { x: 98, y: 570 },
                 { x: 120, y: 520 },
@@ -2619,7 +2581,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "sweep right and up around the broad outer bowl",
+              label: "sweep right and up the broad outer bowl",
               path: [
                 { x: 158, y: 190 },
                 { x: 220, y: 178 },
@@ -2689,7 +2651,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "continue right through the middle shoulder",
+              label: "continue right over the middle shoulder",
               path: [
                 { x: 100, y: 292 },
                 { x: 165, y: 268 },
@@ -2839,8 +2801,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "turn around the hooked left lobe and sweep through the broad lower bowl",
+              label: "turn round the left lobe and lower bowl",
               path: [
                 { x: 142, y: 258 },
                 { x: 200, y: 270 },
@@ -2869,8 +2830,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "turn around the rounded right lobe and return left along the inner bar",
+              label: "turn the right lobe, then left along the bar",
               path: [
                 { x: 610, y: 220 },
                 { x: 610, y: 190 },
@@ -3006,7 +2966,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "continue down and around the broad lower bowl",
+              label: "continue down round the broad lower bowl",
               path: [
                 { x: 110, y: 285 },
                 { x: 78, y: 215 },
@@ -3022,8 +2982,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label:
-                "curl upward around the rounded right lobe without lifting",
+              label: "curl up round the right lobe, no lift",
               path: [
                 { x: 455, y: 42 },
                 { x: 520, y: 20 },
@@ -3041,8 +3000,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "lift and draw the inner horizontal bar from left to right",
+              label: "lift and draw the inner bar left to right",
               path: [
                 { x: 95, y: 282 },
                 { x: 205, y: 282 },
@@ -3058,7 +3016,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift again and draw the short upper headstroke downward",
+              label: "lift again, draw the upper headstroke down",
               path: [
                 { x: 378, y: 610 },
                 { x: 378, y: 570 },
@@ -3081,7 +3039,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "turn down and left around the compact lower loop",
+              label: "turn down and left round the lower loop",
               path: [
                 { x: 275, y: 141 },
                 { x: 255, y: 195 },
@@ -3094,8 +3052,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label:
-                "continue around its base and return to the central junction",
+              label: "round its base and back to the junction",
               path: [
                 { x: 78, y: 82 },
                 { x: 105, y: 42 },
@@ -3110,8 +3067,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "restart at the junction and sweep up through the broad outer arch",
+              label: "restart and sweep up the broad outer arch",
               path: [
                 { x: 275, y: 141 },
                 { x: 325, y: 95 },
@@ -3143,7 +3099,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "turn down and left around the compact lower loop",
+              label: "turn down and left round the lower loop",
               path: [
                 { x: 275, y: 141 },
                 { x: 255, y: 195 },
@@ -3156,8 +3112,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label:
-                "continue around its base and return to the central junction",
+              label: "round its base and back to the junction",
               path: [
                 { x: 78, y: 82 },
                 { x: 105, y: 42 },
@@ -3172,8 +3127,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "restart at the lower-right tail and sweep up through the broad outer arch",
+              label: "restart at the tail, sweep up the outer arch",
               path: [
                 { x: 260, y: 655 },
                 { x: 345, y: 610 },
@@ -3195,8 +3149,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "restart below the upper-left hook and sweep upward to its tip",
+              label: "restart and sweep up the upper-left hook",
               path: [
                 { x: 210, y: 535 },
                 { x: 175, y: 585 },
@@ -3294,90 +3247,54 @@ export const entries: DuctusEntry[] = [
             {
               label: "sweep left across the compact upper arch",
               path: [
-                { x: 390, y: 370 },
-                { x: 365, y: 405 },
-                { x: 335, y: 430 },
-                { x: 300, y: 450 },
-                { x: 260, y: 460 },
-                { x: 220, y: 455 },
-                { x: 185, y: 425 },
-                { x: 230, y: 410 },
-                { x: 270, y: 380 },
-                { x: 295, y: 340 },
-                { x: 290, y: 300 },
-                { x: 260, y: 270 },
-                { x: 220, y: 245 },
-                { x: 180, y: 230 },
+                { x: 324, y: 112 }, { x: 314, y: 155 },
+                { x: 286, y: 190 }, { x: 253, y: 220 },
+                { x: 214, y: 240 }, { x: 169, y: 243 },
+                { x: 127, y: 229 }, { x: 96, y: 198 },
+                { x: 80, y: 156 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "curve down around the left bowl",
               path: [
-                { x: 52, y: 302 },
-                { x: 42, y: 250 },
-                { x: 55, y: 170 },
-                { x: 80, y: 95 },
-                { x: 120, y: 45 },
-                { x: 180, y: 22 },
-                { x: 240, y: 30 },
-                { x: 290, y: 70 },
-                { x: 325, y: 115 },
+                { x: 80, y: 156 }, { x: 82, y: 111 },
+                { x: 101, y: 72 }, { x: 134, y: 41 },
+                { x: 176, y: 28 }, { x: 220, y: 30 },
+                { x: 260, y: 49 }, { x: 292, y: 80 },
+                { x: 324, y: 112 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "sweep right around the broad lower bowl",
               path: [
-                { x: 285, y: 140 },
-                { x: 330, y: 90 },
-                { x: 380, y: 50 },
-                { x: 440, y: 25 },
-                { x: 500, y: 25 },
-                { x: 555, y: 45 },
-                { x: 610, y: 80 },
-                { x: 650, y: 135 },
-                { x: 668, y: 200 },
+                { x: 324, y: 112 }, { x: 363, y: 93 },
+                { x: 396, y: 64 }, { x: 433, y: 41 },
+                { x: 476, y: 32 }, { x: 521, y: 32 },
+                { x: 563, y: 41 }, { x: 597, y: 69 },
+                { x: 625, y: 103 }, { x: 640, y: 144 },
+                { x: 648, y: 188 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "sweep left across the upper-right arch",
               path: [
-                { x: 650, y: 300 },
-                { x: 630, y: 365 },
-                { x: 590, y: 420 },
-                { x: 535, y: 455 },
-                { x: 480, y: 465 },
-                { x: 425, y: 450 },
-                { x: 375, y: 420 },
-                { x: 340, y: 390 },
+                { x: 648, y: 188 }, { x: 648, y: 233 },
+                { x: 647, y: 278 }, { x: 639, y: 322 },
+                { x: 624, y: 365 }, { x: 600, y: 403 },
+                { x: 568, y: 434 }, { x: 527, y: 454 },
+                { x: 483, y: 460 }, { x: 438, y: 454 },
+                { x: 399, y: 433 }, { x: 367, y: 401 },
+                { x: 336, y: 368 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "sweep left across the upper-left arch",
               path: [
-                { x: 323, y: 396 },
-                { x: 295, y: 435 },
-                { x: 255, y: 465 },
-                { x: 205, y: 478 },
-                { x: 155, y: 472 },
-                { x: 110, y: 450 },
-                { x: 75, y: 415 },
-                { x: 55, y: 375 },
+                { x: 336, y: 368 }, { x: 306, y: 399 },
+                { x: 276, y: 431 }, { x: 239, y: 453 },
+                { x: 196, y: 460 }, { x: 153, y: 458 },
+                { x: 115, y: 438 }, { x: 87, y: 406 },
+                { x: 80, y: 363 }, { x: 80, y: 320 },
               ],
             },
           ],
@@ -3397,72 +3314,45 @@ export const entries: DuctusEntry[] = [
             {
               label: "sweep right across the upper shoulder",
               path: [
-                { x: 85, y: 365 },
-                { x: 90, y: 405 },
-                { x: 125, y: 445 },
-                { x: 175, y: 463 },
-                { x: 225, y: 460 },
-                { x: 275, y: 438 },
-                { x: 315, y: 400 },
-                { x: 320, y: 360 },
-                { x: 300, y: 320 },
-                { x: 270, y: 280 },
-                { x: 230, y: 250 },
-                { x: 190, y: 225 },
+                { x: 84, y: 328 }, { x: 84, y: 373 },
+                { x: 91, y: 416 }, { x: 124, y: 446 },
+                { x: 167, y: 459 }, { x: 211, y: 463 },
+                { x: 255, y: 456 }, { x: 293, y: 433 },
+                { x: 314, y: 394 }, { x: 315, y: 350 },
+                { x: 292, y: 312 }, { x: 259, y: 282 },
+                { x: 219, y: 262 }, { x: 178, y: 245 },
+                { x: 138, y: 225 }, { x: 104, y: 196 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "curve down around the left bowl",
               path: [
-                { x: 90, y: 300 },
-                { x: 80, y: 245 },
-                { x: 80, y: 180 },
-                { x: 95, y: 115 },
-                { x: 130, y: 70 },
-                { x: 180, y: 40 },
-                { x: 235, y: 35 },
-                { x: 285, y: 50 },
-                { x: 325, y: 85 },
+                { x: 104, y: 196 }, { x: 86, y: 156 },
+                { x: 85, y: 112 }, { x: 102, y: 72 },
+                { x: 136, y: 43 }, { x: 178, y: 30 },
+                { x: 222, y: 28 }, { x: 266, y: 35 },
+                { x: 305, y: 55 }, { x: 337, y: 85 },
+                { x: 372, y: 112 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "sweep right around the lower bowl",
               path: [
-                { x: 350, y: 115 },
-                { x: 390, y: 65 },
-                { x: 440, y: 40 },
-                { x: 500, y: 30 },
-                { x: 560, y: 35 },
-                { x: 610, y: 65 },
-                { x: 650, y: 110 },
+                { x: 372, y: 112 }, { x: 410, y: 86 },
+                { x: 445, y: 53 }, { x: 488, y: 34 },
+                { x: 535, y: 32 }, { x: 582, y: 36 },
+                { x: 620, y: 64 }, { x: 653, y: 98 },
+                { x: 672, y: 140 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
               label: "curl up around the first right lobe",
               path: [
-                { x: 410, y: 125 },
-                { x: 450, y: 75 },
-                { x: 510, y: 40 },
-                { x: 575, y: 45 },
-                { x: 630, y: 85 },
-                { x: 670, y: 150 },
-                { x: 675, y: 225 },
-                { x: 650, y: 300 },
-                { x: 605, y: 360 },
-                { x: 550, y: 410 },
-                { x: 475, y: 450 },
+                { x: 672, y: 140 }, { x: 672, y: 183 },
+                { x: 672, y: 226 }, { x: 664, y: 269 },
+                { x: 648, y: 309 }, { x: 625, y: 345 },
+                { x: 597, y: 378 }, { x: 565, y: 407 },
+                { x: 530, y: 432 }, { x: 492, y: 452 },
               ],
             },
           ],
@@ -3472,17 +3362,16 @@ export const entries: DuctusEntry[] = [
             {
               label: "curl up around the middle lobe",
               path: [
-                { x: 690, y: 125 },
-                { x: 755, y: 70 },
-                { x: 825, y: 40 },
-                { x: 890, y: 45 },
-                { x: 945, y: 85 },
-                { x: 990, y: 150 },
-                { x: 995, y: 225 },
-                { x: 970, y: 300 },
-                { x: 925, y: 360 },
-                { x: 870, y: 410 },
-                { x: 815, y: 450 },
+                { x: 688, y: 124 }, { x: 721, y: 95 },
+                { x: 755, y: 66 }, { x: 794, y: 44 },
+                { x: 836, y: 32 }, { x: 880, y: 32 },
+                { x: 924, y: 36 }, { x: 961, y: 61 },
+                { x: 992, y: 92 }, { x: 1017, y: 128 },
+                { x: 1020, y: 172 }, { x: 1019, y: 216 },
+                { x: 1012, y: 260 }, { x: 998, y: 302 },
+                { x: 975, y: 340 }, { x: 946, y: 374 },
+                { x: 914, y: 404 }, { x: 879, y: 431 },
+                { x: 840, y: 452 },
               ],
             },
           ],
@@ -3492,17 +3381,16 @@ export const entries: DuctusEntry[] = [
             {
               label: "curl up around the final lobe",
               path: [
-                { x: 1035, y: 125 },
-                { x: 1100, y: 70 },
-                { x: 1170, y: 40 },
-                { x: 1235, y: 45 },
-                { x: 1290, y: 85 },
-                { x: 1335, y: 150 },
-                { x: 1340, y: 225 },
-                { x: 1315, y: 300 },
-                { x: 1270, y: 360 },
-                { x: 1215, y: 410 },
-                { x: 1160, y: 450 },
+                { x: 1036, y: 124 }, { x: 1069, y: 94 },
+                { x: 1102, y: 65 }, { x: 1140, y: 43 },
+                { x: 1183, y: 32 }, { x: 1227, y: 32 },
+                { x: 1271, y: 36 }, { x: 1308, y: 60 },
+                { x: 1338, y: 92 }, { x: 1357, y: 131 },
+                { x: 1364, y: 175 }, { x: 1364, y: 219 },
+                { x: 1358, y: 263 }, { x: 1342, y: 304 },
+                { x: 1320, y: 342 }, { x: 1292, y: 376 },
+                { x: 1259, y: 406 }, { x: 1223, y: 432 },
+                { x: 1184, y: 452 },
               ],
             },
           ],
