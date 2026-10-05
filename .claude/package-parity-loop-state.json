@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16744,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16744",
+    "branch": "codex/parity-build-tool-swift-graph-diff-20261005",
+    "implementation_revision": "e41ff9eb4163c93339ed12392d548af17644d131",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-05T17:28:00Z",
-    "pr_number": 16737,
-    "status": "merged",
-    "notes": "All 53 final-head checks were terminal and acceptable (24 success, 29 skipped), and GitHub reported MERGEABLE. Guarded squash auto-merge was enabled without manual merging; PR #16737 merged at 17:28:00Z as 0eb0f3f560b8336ecdd5181ea2d9ef3b5c636b24."
+    "observed_at": "2026-10-05T18:21:35Z",
+    "pr_number": 16744,
+    "status": "checks-pending",
+    "notes": "Ready-for-review Swift graph/diff PR opened from tested head e41ff9eb4163c93339ed12392d548af17644d131. Initial GitHub checks are queued, with no failures yet; GitHub reports MERGEABLE but auto-merge stays disabled until every final-head required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "0eb0f3f560b8336ecdd5181ea2d9ef3b5c636b24",
@@ -1305,10 +1311,10 @@
     {
       "id": "build-tool-swift-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Swift build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": "codex/parity-build-tool-swift-graph-diff-20261005",
-      "pr_number": null,
+      "pr_number": 16744,
       "selected_at": "2026-10-05T17:37:42Z",
       "selection_revision": "0eb0f3f560b8336ecdd5181ea2d9ef3b5c636b24",
       "selection_notes": "Selected only after #16737 merged and exact-main schema-3 inventory remained collision-clean. All six prerequisites are merged, no open PR claims Swift build-tool paths, and the process-free 8-graph/12-diff native core directly unlocks three pending owners. The ready Python source-registry owner also has three direct dependents but is a narrower follow-up; AES neutral work is recorded with governing NIST/security review, while OCaml promotion remains blocked by owned build-substrate/oracle work. Implement this single Swift owner in the fresh clean origin/main worktree, without adding host authority or claiming adapter readiness.",
