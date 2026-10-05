@@ -2288,29 +2288,44 @@ fn parse_css_modern_color_components(inner: &str) -> Option<([String; 3], u8)> {
 }
 
 fn parse_css_lab_lightness(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
     let lightness = value.strip_suffix('%').unwrap_or(value).parse::<f64>().ok()?;
     lightness.is_finite().then(|| lightness.clamp(0.0, 100.0))
 }
 
 fn parse_css_lab_axis(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
     let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 1.25));
     let axis = number.parse::<f64>().ok()? * scale;
     axis.is_finite().then_some(axis)
 }
 
 fn parse_css_lch_chroma(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
     let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 1.5));
     let chroma = number.parse::<f64>().ok()? * scale;
     chroma.is_finite().then(|| chroma.max(0.0))
 }
 
 fn parse_css_oklab_lightness(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
     let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 0.01));
     let lightness = number.parse::<f64>().ok()? * scale;
     lightness.is_finite().then(|| lightness.clamp(0.0, 1.0))
 }
 
 fn parse_css_oklab_axis(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
     let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 0.004));
     let axis = number.parse::<f64>().ok()? * scale;
     axis.is_finite().then_some(axis)
@@ -2322,6 +2337,9 @@ fn parse_css_oklch_chroma(value: &str) -> Option<f64> {
 }
 
 fn parse_css_unit_interval(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
     let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 0.01));
     let component = number.parse::<f64>().ok()? * scale;
     component.is_finite().then(|| component.clamp(0.0, 1.0))
@@ -2393,6 +2411,9 @@ fn xyz_d50_to_color(x: f64, y: f64, z: f64, alpha: u8) -> Color {
 }
 
 fn parse_css_hue(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
     let (number, scale) = if let Some(value) = value.strip_suffix("deg") {
         (value, 1.0)
     } else if let Some(value) = value.strip_suffix("grad") {
@@ -2409,11 +2430,17 @@ fn parse_css_hue(value: &str) -> Option<f64> {
 }
 
 fn parse_css_percentage(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
     value.strip_suffix('%')?.parse::<f64>().ok().filter(|value| value.is_finite())
         .map(|value| (value / 100.0).clamp(0.0, 1.0))
 }
 
 fn parse_css_byte(value: &str, numeric_scale: f64) -> Option<u8> {
+    if value == "none" {
+        return Some(0);
+    }
     let (number, percentage) = value.strip_suffix('%').map_or((value, false), |value| (value, true));
     number.parse::<f64>().ok().filter(|value| value.is_finite()).map(|value| {
         let scaled = if percentage { value / 100.0 * 255.0 } else { value * numeric_scale };
@@ -7788,6 +7815,23 @@ mod tests {
         assert_eq!(css_to_color("color(xyz-d50 0.2 0.3 0.4 / 80%)"), d50);
         assert_eq!(with_opacity("color(xyz-d65 0.2 0.3 0.4 / 80%)", 0.5), "rgba(0,167,164,0.4)");
         assert_eq!(normalize_css_paint("color(xyz-d50 20% 30% 40% / 80%)".into()), "rgba(0,168,189,0.8)");
+    }
+
+    #[test]
+    fn css_colors_lower_missing_components_to_zero() {
+        assert_eq!(css_to_color("rgb(none 40% 60% / 80%)"), css_to_color("rgb(0% 40% 60% / 80%)"));
+        assert_eq!(css_to_color("hsl(none 100% 50%)"), css_to_color("hsl(0 100% 50%)"));
+        assert_eq!(css_to_color("hwb(none 20% 40%)"), css_to_color("hwb(0 20% 40%)"));
+        assert_eq!(css_to_color("lab(29.2345% none 20.0664)"), css_to_color("lab(29.2345% 0 20.0664)"));
+        assert_eq!(css_to_color("lch(29.2345% none none)"), css_to_color("lch(29.2345% 0 0)"));
+        assert_eq!(css_to_color("oklab(40.1% none 0.045)"), css_to_color("oklab(40.1% 0 0.045)"));
+        assert_eq!(css_to_color("oklch(40.1% none none)"), css_to_color("oklch(40.1% 0 0)"));
+        assert_eq!(
+            css_to_color("color(display-p3 none 0.4 0.6 / 80%)"),
+            css_to_color("color(display-p3 0 0.4 0.6 / 80%)"),
+        );
+        assert_eq!(css_to_color("rgb(20% 40% 60% / none)").a, 0);
+        assert_eq!(css_to_color("rgb(20% 40% 60%)").a, 255);
     }
 
     #[test]

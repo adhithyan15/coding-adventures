@@ -15465,6 +15465,17 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn treemap_preserves_css_missing_color_components() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:oklch(62% 0.1442 none / 80%),fill:color(display-p3 none 40% 60% / 75%),stroke:rgb(none 20% 40%)",
+        ).expect("CSS missing color components must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("oklch(62% 0.1442 none / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color(display-p3 none 40% 60% / 75%)"));
+        assert_eq!(style.node.stroke.as_deref(), Some("rgb(none 20% 40%)"));
+    }
+
+    #[test]
     fn treemap_preserves_basic_named_colors() {
         let diagram = parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:teal,fill:orange,stroke:navy",

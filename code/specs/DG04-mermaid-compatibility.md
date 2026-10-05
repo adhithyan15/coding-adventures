@@ -552,7 +552,11 @@ D50-based `prophoto-rgb` profile applies its piecewise transfer curve and chroma
 adaptation before backend-neutral sRGB lowering. The `rec2020` profile likewise
 uses its standard transfer curve and D65 matrix before backend-neutral lowering.
 Direct `xyz`/`xyz-d65` and chromatically adapted `xyz-d50` profiles complete the
-predefined CSS `color()` spaces on the same backend-neutral path.
+predefined CSS `color()` spaces on the same backend-neutral path. Across modern
+color functions, the CSS missing-component keyword `none` survives semantic IR
+and resolves to zero when lowered to absolute backend-neutral paint; an omitted
+alpha component remains fully opaque, while an explicit `/ none` resolves to
+transparent alpha.
 The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
