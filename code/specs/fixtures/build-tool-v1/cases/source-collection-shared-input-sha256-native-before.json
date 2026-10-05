@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "source-collection/shared-input-sha256-native-before",
+  "domain": "source_collection",
+  "summary": "The independent SHA-256 consumer selects the same exact tracked Rust workspace manifest before its edit.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["source_collection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "source_collection",
+    "options": {
+      "mode": "repository_boundary",
+      "language": "swift",
+      "package_root": "code/packages/swift/sha256-native",
+      "boundary_sha256": "220436e5989c1d3b46770da00de3d5c7d55cc0c4d0535f2940daa9c6daa6d6e3",
+      "candidates": [
+        {"path": "code/packages/rust/Cargo.toml", "kind": "file", "tracked": true, "content_hex": "776f726b7370616365203d202262617365220a"},
+        {"path": "code/packages/rust/Cargo.toml.backup", "kind": "file", "tracked": true, "content_hex": "6465636f790a"}
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "source-collection/shared-input-sha256-native-before",
+    "domain": "source_collection",
+    "outcome": "ok",
+    "result": {"files": [
+      {"path": "code/packages/rust/Cargo.toml", "digest": "3c297b75a39130e20488d11a81e39e151e3181e4396d2d67b884f5d0fed8c317"}
+    ]},
+    "diagnostics": []
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

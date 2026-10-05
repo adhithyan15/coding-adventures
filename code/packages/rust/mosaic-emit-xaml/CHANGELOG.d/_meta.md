@@ -16,3 +16,5 @@
 
 - `tests/task_app_hover_compiles_to_xaml.rs` expects 14 native hover bindings, not 8, and names the Checklists targets (C3c, #14018). The test reads the app by path, so #15962 never ran it and main was red.
 
+
+- Container onClick/onTap now dispatches native Tapped events with explicit numeric payloads from typed nested row contexts; transparent hit areas make empty grid cells clickable (#14274).

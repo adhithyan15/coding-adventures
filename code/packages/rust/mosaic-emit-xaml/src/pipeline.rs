@@ -4325,6 +4325,89 @@ fn emit_stack(
     emit_container(node, indent, part_styles, "Grid", ctx)
 }
 
+/// A container tap carries the sender's row context, including outer indices.
+/// Reading selected-row here would dispatch the previously selected cell.
+fn container_tap_attrs(
+    node: &LayoutNode,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let Some(LayoutPropValue::EmitRef(emit_name)) =
+        find_prop_value(node, "onClick").or_else(|| find_prop_value(node, "onTap"))
+    else {
+        return Ok(String::new());
+    };
+    let params = ctx
+        .emit_payloads
+        .get(emit_name)
+        .cloned()
+        .unwrap_or_default();
+    let binding = ctx.for_scope.last().cloned();
+    let mut args = Vec::new();
+    for (name, kind) in params {
+        if kind != "double" {
+            return Err(PipelineEmitError::UnsupportedExpression(format!(
+                "container tap payload {name}: only explicit numeric props are supported"
+            )));
+        }
+        let value = find_prop_value(node, &name).ok_or_else(|| {
+            PipelineEmitError::UnsupportedExpression(format!(
+                "missing container tap payload {name}"
+            ))
+        })?;
+        if let LayoutPropValue::Number(number) = value {
+            if number.is_finite() {
+                args.push(number.to_string());
+                continue;
+            }
+            return Err(PipelineEmitError::UnsupportedExpression(format!(
+                "non-finite container tap payload {name}"
+            )));
+        }
+        let src = match value {
+            LayoutPropValue::Expr(src) | LayoutPropValue::Keyword(src) => src.clone(),
+            LayoutPropValue::SlotRef(slot) => kebab_to_pascal_case(slot),
+            _ => {
+                return Err(PipelineEmitError::UnsupportedExpression(format!(
+                    "unsupported container tap payload {name}"
+                )))
+            }
+        };
+        let path = match lower_expr_for_xbind(&src, ctx) {
+            ExprLowering::Bindable(path) => path,
+            _ => {
+                return Err(PipelineEmitError::UnsupportedExpression(format!(
+                    "unsupported container tap payload {name}"
+                )))
+            }
+        };
+        args.push(if binding.is_some() {
+            format!("row.{path}")
+        } else {
+            path
+        });
+    }
+    let handler = format!("{}_Tapped", ctx.next_state_target_name());
+    let case = kebab_to_pascal_case(&strip_on_prefix(emit_name));
+    let union = ctx.event_union();
+    let (tag, guard) = if let Some(binding) = binding {
+        (" Tag=\"{x:Bind}\"", format!(
+            "        if (sender is not Microsoft.UI.Xaml.FrameworkElement element || element.Tag is not {} row) return;\n",
+            binding.vm_class
+        ))
+    } else {
+        ("", String::new())
+    };
+    ctx.add_host_handler(HostHandler {
+        name: handler.clone(),
+        source: format!(
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)\n    {{\n{guard}        Dispatch?.Invoke(this, new {union}.{case}({}));\n        e.Handled = true;\n    }}",
+            args.join(", ")
+        ),
+    });
+    Ok(format!("{tag} Tapped=\"{handler}\""))
+}
+
+
 fn emit_container(
     node: &LayoutNode,
     indent: usize,
@@ -4344,8 +4427,14 @@ fn emit_container(
     // style. WinUI's implicit-style resolution then applies them to
     // every TextBlock descendant inside. Caught by the toolkit Alert
     // + Badge demo (#4548).
-    let (container_attrs, text_setters) =
+    let (mut container_attrs, text_setters) =
         partition_box_style(node.part_name.as_deref(), part_styles);
+    let tap_attrs = container_tap_attrs(node, ctx)?;
+    if !tap_attrs.is_empty() && !container_attrs.contains(" Background=") {
+        // Null backgrounds ignore pointer input in empty cell space.
+        container_attrs.push_str(" Background=\"Transparent\"");
+    }
+    container_attrs.push_str(&tap_attrs);
     let has_runtime_states = has_runtime_container_states(node, part_styles);
     let state_target = has_runtime_states.then(|| ctx.next_state_target_name());
     if let Some(target_name) = state_target.as_deref() {
@@ -17755,6 +17844,107 @@ mod tests {
             "got:\n{}",
             r.code_behind
         );
+    }
+
+    #[test]
+    fn container_tap_carries_nested_row_and_column() {
+        let c = component(
+            "Foo",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                true,
+            )],
+            vec![emit(
+                "onNavigate",
+                vec![
+                    param("row", EmitPayloadType::Number),
+                    param("col", EmitPayloadType::Number),
+                ],
+            )],
+        );
+        let cell = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            children: vec![],
+            props: vec![
+                LayoutProp {
+                    name: "onClick".to_string(),
+                    value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+                },
+                LayoutProp {
+                    name: "row".to_string(),
+                    value: LayoutPropValue::Expr("r".to_string()),
+                },
+                LayoutProp {
+                    name: "col".to_string(),
+                    value: LayoutPropValue::Expr("c".to_string()),
+                },
+            ],
+        };
+        let l = layout_with_root(
+            "Foo",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                Some("r"),
+                vec![for_node(
+                    LayoutPropValue::Keyword("row".to_string()),
+                    "value",
+                    Some("c"),
+                    vec![cell],
+                )],
+            ),
+        );
+        let result = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            result
+                .xaml
+                .contains("Background=\"Transparent\" Tag=\"{x:Bind}\" Tapped=\""),
+            "{}",
+            result.xaml
+        );
+        assert!(
+            result
+                .code_behind
+                .contains("new FooEvent.Navigate(row.R, row.Index)"),
+            "{}",
+            result.code_behind
+        );
+        assert!(
+            result
+                .code_behind
+                .contains("element.Tag is not Foo_ValueVm row) return;"),
+            "{}",
+            result.code_behind
+        );
+        assert!(result.code_behind.contains("e.Handled = true;"));
+    }
+
+    #[test]
+    fn container_tap_rejects_missing_payload_instead_of_defaulting_coordinates() {
+        let c = component(
+            "Foo",
+            vec![],
+            vec![emit(
+                "onNavigate",
+                vec![param("row", EmitPayloadType::Number)],
+            )],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".into(),
+                part_name: None,
+                children: vec![],
+                props: vec![LayoutProp {
+                    name: "onClick".into(),
+                    value: LayoutPropValue::EmitRef("onNavigate".into()),
+                }],
+            },
+        );
+        let result = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts());
+        assert!(result.is_err());
     }
 
     /// UI29-2 §2.1.1: in a `For`, an `( index : number )` `onToggle` carries

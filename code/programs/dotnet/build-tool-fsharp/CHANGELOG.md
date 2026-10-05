@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expanded independent F# facade replay from 16/4 to 20/8 neutral
+  source-collection/package-hash cases, including both shared-input consumers'
+  before/after digest evidence, without changing production authority.
 - Added native facade regressions for self edges, diff cycles, nested roots,
   and empty failure values after the shared core's diagnostic correction.
 - Exposed no-inline `evaluateGraph` and `evaluateDiffSelection` F# facade

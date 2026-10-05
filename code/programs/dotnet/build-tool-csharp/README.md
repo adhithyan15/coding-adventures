@@ -65,7 +65,10 @@ dotnet run -- --emit-plan --plan-file build-plan.json
   a changed shared input to every exact consumer.
 - Package hashes sort canonical repository-relative UTF-8 paths and frame each
   path and exact raw file body with unsigned 64-bit big-endian lengths before
-  SHA-256. Dependency and combined-digest framing remain a separate contract.
+  SHA-256. Native tests now replay all 20 neutral source-collection cases and
+  eight hashing/cache package-digest cases, including both before/after
+  consumers of one exact shared Rust manifest. Dependency and combined-digest
+  framing remain a separate contract.
 - Live hashing incrementally bounds 100,000 candidates, 50,000 selected files,
   50,000,000 declared-glob match-work units, 64 MiB per file, and 1 GiB per
   package. Native no-follow opens reject linked,
