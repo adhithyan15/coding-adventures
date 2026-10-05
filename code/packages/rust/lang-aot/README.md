@@ -1,9 +1,10 @@
 # lang-aot
 
 ALGOL runtime real output now includes values migrated through provenance-tracked
-scalar slots: a zero-argument real procedure result can be assigned and copied
-between real locals before the shared portable formatter prints it on all seven
-standard backends. Unknown statement conditions may also merge that provenance
+scalar slots: a real procedure result with zero parameters or only value-mode
+scalar parameters can be assigned and copied between real locals before the
+shared portable formatter prints it on all seven standard backends. Unknown
+statement conditions may also merge that provenance
 when both exits establish it for the same slot, and side-effect-free conditional
 value selectors may choose between proven runtime-real branches. One-sided
 reassignment and selector calls remain gated. Unary signs, additive

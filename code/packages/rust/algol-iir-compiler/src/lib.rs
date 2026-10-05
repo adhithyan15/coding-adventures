@@ -542,7 +542,8 @@ struct Compiler {
     /// procedure call copied into a scalar local.
     initialized_string_slots: HashSet<String>,
     /// Local real slots whose latest straight-line assignment is a direct
-    /// zero-argument real-procedure result or a copy of another such slot.
+    /// real-procedure result with zero parameters or only value-mode scalar
+    /// parameters, or a copy of another such slot.
     runtime_real_slots: HashSet<String>,
     /// Module-global slots created specifically for captured real value
     /// formals. Their concrete f64 representation remains formatter-safe in
@@ -2337,9 +2338,9 @@ impl Compiler {
             // the literal/variable fast paths above — no literal-backing is
             // required. Integer expressions use the shared numeric stdout
             // builtin, booleans select typed string literals, and direct
-            // zero-argument real-procedure results and path-independent
-            // conditional values over proven runtime-real branches use the
-            // portable formatter.
+            // zero-argument or value-scalar-parameter real-procedure results
+            // and path-independent conditional values over proven runtime-real
+            // branches use the portable formatter.
             // Provenance-backed real scalar variables take the bounded path
             // above; composed dynamic real expressions still fail closed here.
             let allow_runtime_real = self.is_runtime_real_assignment_value(actual);
@@ -3778,7 +3779,7 @@ impl Compiler {
         self.emit_label(&end_label);
     }
 
-    fn is_direct_declared_real_procedure_call(&self, node: &GrammarASTNode) -> bool {
+    fn is_direct_value_scalar_real_procedure_call(&self, node: &GrammarASTNode) -> bool {
         if node.rule_name == "proc_call" {
             let Some(source_name) = direct_tokens(node)
                 .into_iter()
@@ -3792,21 +3793,25 @@ impl Compiler {
                 .proc_sigs
                 .get(&target_name)
                 .is_some_and(|sig| {
-                    sig.params.is_empty() && sig.ret == Some(ScalarType::Real)
+                    sig.ret == Some(ScalarType::Real)
+                        && sig.params.iter().all(|param| {
+                            param.mode == ProcedureParamMode::Value
+                                && matches!(param.ty, ProcedureParamType::Scalar(_))
+                        })
                 });
         }
         if let Some(child) = single_parenthesized_child(node) {
-            return self.is_direct_declared_real_procedure_call(child);
+            return self.is_direct_value_scalar_real_procedure_call(child);
         }
         if !direct_tokens(node).is_empty() {
             return false;
         }
         let children = direct_nodes(node);
-        children.len() == 1 && self.is_direct_declared_real_procedure_call(children[0])
+        children.len() == 1 && self.is_direct_value_scalar_real_procedure_call(children[0])
     }
 
     fn is_runtime_real_assignment_value(&self, node: &GrammarASTNode) -> bool {
-        if self.is_direct_declared_real_procedure_call(node) {
+        if self.is_direct_value_scalar_real_procedure_call(node) {
             return true;
         }
         if node.rule_name == "variable" && array_subscripts(node).is_some() {
@@ -12490,13 +12495,17 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_standard_function_provenance_respects_user_overrides() {
-        let err = compile_source(
+    fn al4_runtime_real_standard_function_overrides_use_declared_call_provenance() {
+        let module = compile_source(
             "begin real procedure pick; pick := 9.0; real procedure sqrt(x); value x; real x; sqrt := x; output(sqrt(pick())) end",
             "test",
         )
-        .expect_err("a user-declared standard-function override must not use builtin provenance");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a user-declared override uses declared value-scalar call provenance");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
     }
 
     #[test]
@@ -12533,6 +12542,33 @@ mod tests {
                 && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
         }));
         assert!(module.get_function("__basic_print_real").is_some());
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_includes_value_scalar_procedure_results() {
+        let module = compile_source(
+            "begin real procedure scale(x); value x; real x; scale := x * 2.0; real result; result := scale(1.125); output(result) end",
+            "test",
+        )
+        .expect("a value-scalar real procedure result carries formatter provenance");
+        let main = module.get_function("main").expect("has main procedure");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_procedure_result_provenance_excludes_name_formals() {
+        let error = compile_source(
+            "begin real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; output(relay(pick())) end",
+            "test",
+        )
+        .expect_err("name-formal results remain outside the bounded formatter proof");
+        assert!(
+            format!("{error:?}").contains("cannot print a real value"),
+            "unexpected rejection: {error:?}"
+        );
     }
 
     #[test]
@@ -14376,13 +14412,17 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_static_standard_function_respects_user_override() {
-        let err = compile_source(
+    fn al4_print_standard_function_override_uses_runtime_formatter() {
+        let module = compile_source(
             "begin real procedure abs(x); value x; real x; abs := x + 1.0; print(abs(2.0)) end",
             "test",
         )
-        .expect_err("a user-defined abs result still requires runtime formatting");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a user-defined abs result uses runtime formatting");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
     }
 
     #[test]
@@ -14408,13 +14448,17 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_nested_static_standard_function_respects_user_override() {
-        let err = compile_source(
+    fn al4_print_nested_standard_function_override_uses_runtime_formatter() {
+        let module = compile_source(
             "begin real procedure abs(x); value x; real x; abs := x + 1.0; print(abs(2.0) + 0.5) end",
             "test",
         )
-        .expect_err("a nested user-defined abs result still requires runtime formatting");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a nested user-defined abs result uses runtime formatting");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
     }
 
     #[test]
@@ -14445,13 +14489,17 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_conditional_static_standard_function_respects_user_override() {
-        let err = compile_source(
+    fn al4_print_conditional_standard_function_override_uses_runtime_formatter() {
+        let module = compile_source(
             "begin real procedure abs(x); value x; real x; abs := x + 1.0; boolean flag; flag := true; print(if flag then abs(2.0) else 1.5) end",
             "test",
         )
-        .expect_err("a conditional user-defined abs result still requires runtime formatting");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a conditional user-defined abs result uses runtime formatting");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
     }
 
     #[test]

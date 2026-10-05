@@ -191,8 +191,9 @@ Integer literals also enter that real evaluator when their magnitude is within
 binary64's exact integer range; larger widenings remain unsupported.
 Labels, branches, loops,
 gotos, calls, dynamic reassignment, and captured globals invalidate that shortcut.
-Direct zero-argument real-procedure results and local real scalar variables whose
-latest straight-line assignment is such a result or a bare copy of another
+Direct real-procedure results with zero parameters or only value-mode scalar
+parameters, and local real scalar variables whose latest straight-line assignment
+is such a result or a bare copy of another
 provenance-backed local call the portable six-significant-digit
 IIR formatter shared with Dartmouth BASIC; its helper
 functions use only typed arithmetic, control flow, calls, conversions, and
