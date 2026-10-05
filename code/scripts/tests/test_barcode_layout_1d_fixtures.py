@@ -319,10 +319,13 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
             {entry["language"] for entry in entries},
             {
                 "csharp",
+                "dart",
                 "elixir",
                 "fsharp",
                 "go",
                 "haskell",
+                "java",
+                "kotlin",
                 "lua",
                 "perl",
                 "python",
@@ -332,7 +335,7 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
                 "typescript",
             },
         )
-        self.assertEqual(len(entries), 12)
+        self.assertEqual(len(entries), 15)
         corpus_digest = hashlib.sha256(self.document_encoded).hexdigest()
         self.assertEqual(
             corpus_digest,
@@ -350,10 +353,13 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
         )
         package_roots = {
             "csharp": "code/packages/csharp/barcode-layout-1d",
+            "dart": "code/packages/dart/barcode-layout-1d",
             "elixir": "code/packages/elixir/barcode_layout_1d",
             "fsharp": "code/packages/fsharp/barcode-layout-1d",
             "go": "code/packages/go/barcode-layout-1d",
             "haskell": "code/packages/haskell/barcode-layout-1d",
+            "java": "code/packages/java/barcode-layout-1d",
+            "kotlin": "code/packages/kotlin/barcode-layout-1d",
             "lua": "code/packages/lua/barcode_layout_1d",
             "perl": "code/packages/perl/barcode-layout-1d",
             "python": "code/packages/python/barcode-layout-1d",
@@ -364,14 +370,15 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
         }
         owner_ids = {
             "elixir": "barcode-layout-1d-elixir-lua-v1-conformance",
+            "dart": "barcode-layout-1d-java-kotlin-dart-lane-parity",
+            "java": "barcode-layout-1d-java-kotlin-dart-lane-parity",
+            "kotlin": "barcode-layout-1d-java-kotlin-dart-lane-parity",
             "lua": "barcode-layout-1d-elixir-lua-v1-conformance",
             "ruby": "barcode-layout-1d-ruby-swift-v1-conformance",
             "swift": "barcode-layout-1d-ruby-swift-v1-conformance",
         }
         for entry in entries:
             package_root = REPO_ROOT / entry["package_root"]
-            self.assertTrue(package_root.is_dir())
-            self.assertTrue(_target_package_path(entry, "native_test_path").is_file())
             self.assertEqual(
                 entry["package_root"],
                 package_roots[entry["language"]],
@@ -385,6 +392,8 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
                 continue
 
             self.assertEqual(entry["status"], "conformant")
+            self.assertTrue(package_root.is_dir())
+            self.assertTrue(_target_package_path(entry, "native_test_path").is_file())
             self.assertEqual(entry["known_divergences"], [])
             self.assertEqual(entry["corpus_sha256"], corpus_digest)
             conformance_path = _target_package_path(entry, "conformance_test_path")
