@@ -4,7 +4,7 @@
   "chapter": 154,
   "title": "Join Three Fictional Form Fields",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:73adba5eeee65edd",
+  "sourceHash": "fnv1a64:461bc34bae47da4f",
   "lessons": [
     {
       "id": "PA-W10-form-order",
@@ -200,7 +200,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:4ac4061f580c252e",
+      "sourceHash": "fnv1a64:be34582acb57f07a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -243,7 +243,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Compare the selected bank letter first, the value on each line second, and line order third. Correct just one difference at a time. This supported copy does not count as independent writing."
+              "text": "Compare the selected bank letter first, the value on each line second, and line order third. Correct one difference at a time. This supported copy does not count as independent writing."
             }
           ]
         },
@@ -292,7 +292,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:3d572f696e10f4bc",
+      "sourceHash": "fnv1a64:bdb0d110230ade88",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -320,7 +320,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Cover the model. Wait five seconds. The card is ਖ. Write the three lines in the known order, recalling just one line at a time. Keep the model covered until all three lines are finished."
+              "text": "Cover the model. Wait five seconds. The card is ਖ. Write the three lines in the known order, recalling one line at a time. Keep the model covered until all three lines are finished."
             },
             {
               "kind": "speech",
@@ -383,7 +383,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:6b1343b33e3fbc4e",
+      "sourceHash": "fnv1a64:dc8b30023e8e4024",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -438,7 +438,7 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "PA-W10-form-repair-phone-order",
+              "id": "PA-W10-form-repair-values-phone-order",
               "prompt": "For ਖ, repair only the wrong digit order in ਫ਼ੋਨ: ੦੨੫ ੧੫੨.",
               "assesses": [
                 "PA-FORM-AGE-PHONE-DATE-REPAIR-01",
@@ -472,7 +472,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:c20038eaefd346f8",
+      "sourceHash": "fnv1a64:603084bc60f784a2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -527,7 +527,7 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "PA-W10-form-repair-date-label",
+              "id": "PA-W10-form-repair-layout-date-label",
               "prompt": "Repair only the label spelling in ਤਾਰੀਖ: ੨੫/੦੨/੨੦੨੫.",
               "assesses": [
                 "PA-FORM-LABEL-DATE-01",
@@ -560,7 +560,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:b8cd570285073b60",
+      "sourceHash": "fnv1a64:d5220d8dcbb851f4",
       "notice": {
         "modality": "pen",
         "needs": [

@@ -159,7 +159,9 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // and three R2 windows newly become measurable; all 11 create R3/R4 windows
   // for earlier atoms in the measured report.
   // Chapter 154 adds seven short integration sessions after the date runway.
-  // Their new tail makes one R2 and seven R3/R4 windows measurable; the
-  // chapter-3 reinforcement assertions above still guard the original debt.
-  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 563, R3: 500, R4: 549 });
+  // Their new tail makes one R2 and seven R3/R4 windows measurable. The
+  // independent form also revisits date-format repair within its R2 window,
+  // closing that one missed retrieval; the chapter-3 assertions still guard
+  // the original debt.
+  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 562, R3: 500, R4: 549 });
 });

@@ -57,7 +57,7 @@ unchanged. In **ਫੋਨ: ੦੨੫ ੧੨੫**, fix only the label to **ਫ਼
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-DATE-01, PA-FORM-AGE-PHONE-DATE-REPAIR-01] -->
-<!-- hl-activity: {"id":"PA-W10-form-repair-date-label","kind":"text","assesses":["PA-FORM-LABEL-DATE-01","PA-FORM-AGE-PHONE-DATE-REPAIR-01"],"prompt":"Repair only the label spelling in ਤਾਰੀਖ: ੨੫/੦੨/੨੦੨੫.","answer":"ਤਾਰੀਖ਼: ੨੫/੦੨/੨੦੨੫","accepted":[],"feedback":{"correct":"The dot beneath ਖ was restored; the correct value stayed put.","incorrect":"Keep every date digit and slash; repair only the label's final letter."},"response_seconds":25} -->
+<!-- hl-activity: {"id":"PA-W10-form-repair-layout-date-label","kind":"text","assesses":["PA-FORM-LABEL-DATE-01","PA-FORM-AGE-PHONE-DATE-REPAIR-01"],"prompt":"Repair only the label spelling in ਤਾਰੀਖ: ੨੫/੦੨/੨੦੨੫.","answer":"ਤਾਰੀਖ਼: ੨੫/੦੨/੨੦੨੫","accepted":[],"feedback":{"correct":"The dot beneath ਖ was restored; the correct value stayed put.","incorrect":"Keep every date digit and slash; repair only the label's final letter."},"response_seconds":25} -->
 
 You have now practised six distinct checks: choice, digit order, date format,
 label spelling, spacing, and placement. The final short attempt hides the

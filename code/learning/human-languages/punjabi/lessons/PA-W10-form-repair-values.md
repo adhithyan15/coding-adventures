@@ -15,14 +15,14 @@ roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [PA-FORM-AGE-PHONE-DATE-CUE-01, PA-FORM-AGE-PHONE-DATE-ORDER-01, PA-FORM-PHONE-DIGIT-ORDER-01, PA-FORM-PHONE-GROUPING-01, PA-FORM-DATE-FORMAT-01]
+  knowledge: [PA-FORM-AGE-PHONE-DATE-CUE-01, PA-FORM-AGE-PHONE-DATE-ORDER-01, PA-FORM-PHONE-DIGIT-ORDER-01, PA-FORM-PHONE-GROUPING-01, PA-FORM-DATE-FORMAT-01, PA-FORM-DATE-REPAIR-01]
 introduces:
   knowledge: [PA-FORM-AGE-PHONE-DATE-REPAIR-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-FORM-AGE-PHONE-DATE-CUE-01, PA-FORM-AGE-PHONE-DATE-ORDER-01, PA-FORM-AGE-PHONE-DATE-REPAIR-01, PA-FORM-PHONE-DIGIT-ORDER-01, PA-FORM-PHONE-GROUPING-01, PA-FORM-DATE-FORMAT-01]
+  knowledge: [PA-FORM-AGE-PHONE-DATE-CUE-01, PA-FORM-AGE-PHONE-DATE-ORDER-01, PA-FORM-AGE-PHONE-DATE-REPAIR-01, PA-FORM-PHONE-DIGIT-ORDER-01, PA-FORM-PHONE-GROUPING-01, PA-FORM-DATE-FORMAT-01, PA-FORM-DATE-REPAIR-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -48,7 +48,7 @@ and three. Last check the date's day/month/year boxes and two slash marks.
 Do not erase a correct line to fix another one.
 
 ## Guided Practice — one change at a time
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-AGE-PHONE-DATE-REPAIR-01, PA-FORM-PHONE-GROUPING-01, PA-FORM-DATE-FORMAT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-AGE-PHONE-DATE-REPAIR-01, PA-FORM-AGE-PHONE-DATE-ORDER-01, PA-FORM-PHONE-GROUPING-01, PA-FORM-DATE-FORMAT-01, PA-FORM-DATE-REPAIR-01] -->
 <!-- hl-writing-stage: controlled-composition -->
 
 For **ਖ**, suppose the age line says **੧੫**. Change only its selected value
@@ -58,6 +58,6 @@ repair only the last two digit positions. If the date says
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-AGE-PHONE-DATE-REPAIR-01, PA-FORM-PHONE-DIGIT-ORDER-01] -->
-<!-- hl-activity: {"id":"PA-W10-form-repair-phone-order","kind":"text","assesses":["PA-FORM-AGE-PHONE-DATE-REPAIR-01","PA-FORM-PHONE-DIGIT-ORDER-01"],"prompt":"For ਖ, repair only the wrong digit order in ਫ਼ੋਨ: ੦੨੫ ੧੫੨.","answer":"ਫ਼ੋਨ: ੦੨੫ ੧੨੫","accepted":["੦੨੫ ੧੨੫"],"feedback":{"correct":"Only the phone's last two digit positions changed.","incorrect":"Keep the first group and the label; check the known B phone digits left to right."},"response_seconds":28} -->
+<!-- hl-activity: {"id":"PA-W10-form-repair-values-phone-order","kind":"text","assesses":["PA-FORM-AGE-PHONE-DATE-REPAIR-01","PA-FORM-PHONE-DIGIT-ORDER-01"],"prompt":"For ਖ, repair only the wrong digit order in ਫ਼ੋਨ: ੦੨੫ ੧੫੨.","answer":"ਫ਼ੋਨ: ੦੨੫ ੧੨੫","accepted":["੦੨੫ ੧੨੫"],"feedback":{"correct":"Only the phone's last two digit positions changed.","incorrect":"Keep the first group and the label; check the known B phone digits left to right."},"response_seconds":28} -->
 
 Label spelling, spacing, and placement get their own pass next.

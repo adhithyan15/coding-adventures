@@ -40,7 +40,7 @@ The card **ਕ** asks for A in each old bank. The three A values are visible:
 age **੧੫**, phone **੦੧੨ ੨੫੧**, date **੧੫/੦੧/੨੦੨੫**.
 
 ## Writing — one familiar line at a time
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-AGE-PHONE-DATE-ORDER-01, PA-FORM-LABEL-AGE-01, PA-FORM-LABEL-PHONE-01, PA-FORM-LABEL-DATE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-AGE-PHONE-DATE-ORDER-01, PA-FORM-LABEL-AGE-01, PA-FORM-LABEL-PHONE-01, PA-FORM-LABEL-DATE-01, PA-FORM-AGE-FIFTEEN-01, PA-FORM-PHONE-A-01, PA-FORM-DATE-A-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
 For **ਕ**, copy the selected value after each printed label. Finish one
@@ -57,7 +57,7 @@ date's two slash marks.
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-AGE-PHONE-DATE-CUE-01, PA-FORM-AGE-PHONE-DATE-ORDER-01] -->
 
 Compare the selected bank letter first, the value on each line second, and
-line order third. Correct just one difference at a time. This supported
+line order third. Correct one difference at a time. This supported
 copy does not count as independent writing.
 
 ## Wrap-up recall

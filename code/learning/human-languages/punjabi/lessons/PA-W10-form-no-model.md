@@ -15,14 +15,14 @@ roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [PA-FORM-AGE-PHONE-DATE-CUE-01, PA-FORM-AGE-PHONE-DATE-ORDER-01, PA-FORM-AGE-PHONE-DATE-REPAIR-01, PA-FORM-LABEL-AGE-01, PA-FORM-LABEL-PHONE-01, PA-FORM-LABEL-DATE-01, PA-FORM-AGE-TWENTY-FIVE-01, PA-FORM-PHONE-B-01, PA-FORM-DATE-B-01]
+  knowledge: [PA-FORM-AGE-PHONE-DATE-CUE-01, PA-FORM-AGE-PHONE-DATE-ORDER-01, PA-FORM-AGE-PHONE-DATE-REPAIR-01, PA-FORM-LABEL-AGE-01, PA-FORM-LABEL-PHONE-01, PA-FORM-LABEL-DATE-01, PA-FORM-AGE-TWENTY-FIVE-01, PA-FORM-PHONE-B-01, PA-FORM-DATE-B-01, PA-FORM-DATE-REPAIR-01]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-FORM-AGE-PHONE-DATE-CUE-01, PA-FORM-AGE-PHONE-DATE-ORDER-01, PA-FORM-AGE-PHONE-DATE-REPAIR-01, PA-FORM-LABEL-AGE-01, PA-FORM-LABEL-PHONE-01, PA-FORM-LABEL-DATE-01, PA-FORM-AGE-TWENTY-FIVE-01, PA-FORM-PHONE-B-01, PA-FORM-DATE-B-01]
+  knowledge: [PA-FORM-AGE-PHONE-DATE-CUE-01, PA-FORM-AGE-PHONE-DATE-ORDER-01, PA-FORM-AGE-PHONE-DATE-REPAIR-01, PA-FORM-LABEL-AGE-01, PA-FORM-LABEL-PHONE-01, PA-FORM-LABEL-DATE-01, PA-FORM-AGE-TWENTY-FIVE-01, PA-FORM-PHONE-B-01, PA-FORM-DATE-B-01, PA-FORM-DATE-REPAIR-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -40,7 +40,7 @@ Close the earlier lessons. No value bank, support-language label,
 Latin-digit version, romanization, or copyable Gurmukhi value appears below.
 
 ## Writing — independent controlled choice
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-AGE-PHONE-DATE-CUE-01, PA-FORM-AGE-PHONE-DATE-ORDER-01, PA-FORM-LABEL-AGE-01, PA-FORM-LABEL-PHONE-01, PA-FORM-LABEL-DATE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-AGE-PHONE-DATE-CUE-01, PA-FORM-AGE-PHONE-DATE-ORDER-01, PA-FORM-LABEL-AGE-01, PA-FORM-LABEL-PHONE-01, PA-FORM-LABEL-DATE-01, PA-FORM-AGE-TWENTY-FIVE-01, PA-FORM-PHONE-B-01, PA-FORM-DATE-B-01] -->
 <!-- hl-writing-stage: controlled-composition -->
 
 Complete the fictional form for the one card mark. Use only the old known
@@ -56,7 +56,7 @@ lesson until all three lines are filled.
 > ਤਾਰੀਖ਼: ______
 
 ## Guided Practice — repair after the attempt
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-AGE-PHONE-DATE-REPAIR-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-AGE-PHONE-DATE-REPAIR-01, PA-FORM-DATE-REPAIR-01] -->
 <!-- hl-writing-stage: controlled-composition -->
 
 Only after writing, check six dimensions separately: selection, digit order,

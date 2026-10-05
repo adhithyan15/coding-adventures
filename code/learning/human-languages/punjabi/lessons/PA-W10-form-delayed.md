@@ -44,7 +44,7 @@ Read the familiar B set once: **ਉਮਰ: ੨੫**, **ਫ਼ੋਨ: ੦੨੫ �
 <!-- hl-writing-stage: delayed-copy -->
 
 Cover the model. Wait five seconds. The card is **ਖ**. Write the three lines
-in the known order, recalling just one line at a time. Keep the model
+in the known order, recalling one line at a time. Keep the model
 covered until all three lines are finished.
 
 > ਉਮਰ: ______
