@@ -18,7 +18,9 @@ formals retain it for runtime-real actual expressions on all seven standard
 backends, including assignable real array elements and direct forwarding
 through another name formal. Writes still use the existing specialised caller
 storage path. Ordinary captured real scalars also retain formatter provenance
-through their existing E6 typed-global slots in nested sibling procedures.
+through their existing E6 typed-global slots in nested sibling procedures. Real
+procedure results also retain it when every name formal is a real scalar bound
+by the existing finite specialisation to a proven runtime-real actual.
 
 The opt-in CLR integration suite `tests/clr_strict_flow.rs` executes forward-only
 conditional control, nested Bool branches and wide values through joins,

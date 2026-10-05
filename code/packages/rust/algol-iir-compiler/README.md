@@ -191,9 +191,10 @@ Integer literals also enter that real evaluator when their magnitude is within
 binary64's exact integer range; larger widenings remain unsupported.
 Labels, branches, loops,
 gotos, calls, dynamic reassignment, and captured globals invalidate that shortcut.
-Direct real-procedure results with zero parameters or only value-mode scalar
-parameters, and local real scalar variables whose latest straight-line assignment
-is such a result or a bare copy of another
+Direct real-procedure results with zero parameters, only value-mode scalar
+parameters, or a finitely specialised real scalar name formal bound to a proven
+runtime-real actual, and local real scalar variables whose latest straight-line
+assignment is such a result or a bare copy of another
 provenance-backed local call the portable six-significant-digit
 IIR formatter shared with Dartmouth BASIC; its helper
 functions use only typed arithmetic, control flow, calls, conversions, and
@@ -219,8 +220,11 @@ writes continue through the existing specialised caller-storage path. Direct
 forwarding into another name formal preserves that original actual and its
 proof. Ordinary real scalars captured through the existing E6 typed-global
 path likewise remain concrete f64 values and retain formatter provenance in
-nested sibling procedures. Broader computed scalar formatting remains outside
-this bounded proof.
+nested sibling procedures. A real procedure specialised for a proven
+runtime-real scalar name actual also retains formatter provenance on its result;
+the existing finite specialisation supplies the caller expression directly, so
+no runtime thunk ABI is introduced. Broader computed scalar formatting remains
+outside this bounded proof.
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.
