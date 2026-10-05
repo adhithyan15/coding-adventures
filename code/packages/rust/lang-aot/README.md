@@ -7,8 +7,8 @@ standard backends. Unknown statement conditions may also merge that provenance
 when both exits establish it for the same slot, and side-effect-free conditional
 value selectors may choose between proven runtime-real branches. One-sided
 reassignment and selector calls remain gated. Unary signs, additive
-composition, multiplication, and division over proven runtime-real or finite
-static operands preserve runtime-real provenance; powers remain gated.
+composition, multiplication, division, and exponentiation over proven
+runtime-real or finite static operands preserve runtime-real provenance.
 
 The opt-in CLR integration suite `tests/clr_strict_flow.rs` executes forward-only
 conditional control, nested Bool branches and wide values through joins,

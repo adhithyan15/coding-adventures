@@ -3834,6 +3834,34 @@ impl Compiler {
                 }
             }
         }
+        if node.rule_name == "expr_pow" {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut saw_runtime_real = false;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_runtime_real_assignment_value(operand) {
+                            saw_runtime_real = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(
+                        piece,
+                        Piece::Op(op) if matches!(op.as_str(), "^" | "**")
+                    ) {
+                        return false;
+                    }
+                }
+                if saw_runtime_real {
+                    return true;
+                }
+            }
+        }
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
             if self.contains_procedure_call(condition) {
                 return false;
@@ -12337,13 +12365,25 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_scalar_formatter_still_rejects_powers() {
-        let err = compile_source(
-            "begin real procedure pick; pick := 2.25; output(pick() ^ 2) end",
-            "test",
-        )
-        .expect_err("the scalar formatter gate must not admit dynamic powers");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+    fn al4_runtime_real_provenance_crosses_power_composition() {
+        for source in [
+            "begin real procedure pick; pick := 2.0; output(pick() ^ 3) end",
+            "begin real procedure pick; pick := 2.0; real x; x := pick() ^ 3; output(x) end",
+            "begin real procedure pick; pick := 2.0; real x; x := pick() ^ 3; output(x ^ 2) end",
+            "begin real procedure pick; pick := 3.0; output(2.0 ^ pick()) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "power composition must preserve runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
     }
 
     #[test]
