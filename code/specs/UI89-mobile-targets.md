@@ -120,6 +120,38 @@ Venture scale from one generator rather than four hand-made projects.
   `UIDocumentPickerViewController` for `files.open` / `files.save`,
   `PHPickerViewController` for images.
 
+### 2.4 Journal on iOS and iPadOS (step 7)
+
+Written before implementation. Journal joins Trestle on the iPhone and iPad
+simulators. Nothing in Journal changes.
+
+- **The runtime.** `build-mosaic-xcframework.sh journal-mosaic-app` builds
+  the engine as an `.xcframework` of static libraries, as for Trestle (§2.1).
+  Journal's SwiftUI project is built native-complete with it, and the
+  generated `iOS/App.xcodeproj` (§2.2) builds the simulator `.app`.
+- **Identity.** The defaults (§3.9 gives the reason): bundle identifier
+  `dev.codingadventures.journalapp` and display name `JournalApp`.
+- **The gate: three launches, as on Android (§3.7), not a seeded first
+  launch.** Since UI48 ENV4 the SwiftUI shell reports the window's
+  environment once it lays out. That report is an event, and the host
+  persists after it, so a fresh launch writes state with no finger and no
+  seed. `code/scripts/mosaic-ios-simulator-gate.sh <app> <bundle id>
+  <mosaic application id>` installs the app on a booted simulator and
+  launches it three times. Each launch must leave the app running ten
+  seconds later:
+  1. fresh: `Library/Application Support/journal-app/mosaic-state.v1.json`
+     appears in the app's data container;
+  2. again: that state is restored, with nothing quarantined;
+  3. seeded with `{}`, which the runtime refuses: the seed is moved to
+     `….corrupt` holding `{}`, and fresh state is written.
+  The app restores its own state, not a macOS snapshot. The macOS lane only
+  builds Journal; it never runs it, so there is no snapshot to take.
+  Trestle's gate stays as it is. The same `.app` then installs and runs on
+  an iPad simulator.
+- **Lane selection.** The Swift runtime lane, like the Compose one, now
+  reruns when a script only it calls changes (`CI_SCRIPT_PATHS`):
+  `build-mosaic-xcframework.sh` and the new gate.
+
 ## 3. Android
 
 ### 3.1 Project
@@ -646,7 +678,7 @@ lanes are green, as their own PRs.
    Compose on Android and SwiftUI on iOS and iPadOS; Flutter's arrive with
    step 8, which builds Flutter for phones.*
 7. **Every app:** Journal, Engram, Venture (after BR02's host work).
-   *Journal on Android: §3.9.*
+   *Journal on Android: §3.9; on iOS and iPadOS: §2.4.*
 8. **Flutter:** `flutter create --platforms=android,ios`, per-ABI native
    assets, `path_provider` for state.
 
