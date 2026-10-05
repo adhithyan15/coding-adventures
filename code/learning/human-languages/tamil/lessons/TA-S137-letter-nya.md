@@ -51,16 +51,16 @@ most.
 ## Writing: ஞ
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-RECOG-137] -->
 
-- **1.** start here: curve down into the compact left inner turn
-- **2.** without lifting, circle the left inner loop and return upward, then lift
-- **3.** put the pen down again and carry the long top bar straight to the right, then lift
-- **4.** put the pen down again and curve left from the upper-right shoulder
-- **5.** without lifting, descend the central upright, then lift
-- **6.** put the pen down again and sweep around the broad outer-right curve
-- **7.** without lifting, continue around the broad bottom bowl
-- **8.** without lifting, return up the outer-left side — and only now lift
+- **1.** start inside the compact left body and curl round its small inner loop
+- **2.** without lifting, climb its outer left side and curve over into the long top bar
+- **3.** without lifting, carry the long top bar straight to the right
+- **4.** without lifting, come back along the bar to the central upright and start down it
+- **5.** without lifting, descend the central upright to its lower end
+- **6.** without lifting, climb back up the upright and sweep around the broad outer-right curve
+- **7.** without lifting, continue around the bottom bowl toward the far left
+- **8.** without lifting, return up the outer-left side and finish below the top bar — and only now lift
 
-**Pen lifts: 3.**
+**Pen lifts: 0.** The pen never leaves the paper.
 
 > Stroke order is one attested teaching order, not a national standard —
 > Tamil handwriting is taught with school-to-school variation. Source:

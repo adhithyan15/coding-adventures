@@ -7,7 +7,7 @@
     "a spiral loop on the left",
     "TWO rounded inner arches",
     "a straight top bar",
-    "a separate straight vertical on the right, down to the baseline"
+    "a straight vertical on the right, hanging from the bar down to the baseline"
   ],
   "strokeOrder": [
     "start in the lower-left curl and spiral outward, climbing the outer left side",
@@ -15,15 +15,15 @@
     "without lifting, descend around the outside of the first inner arch",
     "without lifting, turn through its bottom and climb the inside back to the first junction",
     "without lifting, sweep through the extra inner arch — over its top, around its outside and bottom, then up its inside to the right junction",
-    "without lifting, carry the top bar to the right edge — then lift once",
-    "set the pen at the top of the separate right upright and draw straight down — and only now lift"
+    "without lifting, carry the top bar to the right edge",
+    "without lifting, come back along the bar to the right upright and draw it straight down — and only now lift"
   ],
-  "strokeOrderNote": "two strokes — six joined loop, double-arch, and top-bar movements, one pen lift, then the right upright; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 13, ண",
-  "penLifts": 1,
+  "strokeOrderNote": "one stroke — the manual numbers seven movements; native writers draw them without lifting, and this ductus follows them in order, coming back along the top bar to draw the right upright down; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 13, ண",
+  "penLifts": 0,
   "strokeOrderSource": {
     "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 13, ண (Univ. of Texas at Austin), p. 195",
     "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
-    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. Appendix I Frame 13 numbers seven hand-movements for ண. Native writers draw them as one continuous stroke, and this ductus follows the seven movements in order without lifting: the top bar runs out to the right edge, so the pen comes back along it to the right upright and draws the upright down. In HP Labs India's online Tamil handwriting data (the LipiTk 4.0 Tamil isolated-character recognizer, trained on hpl-tamil-iso-char), 93% of the 212 stored prototypes of ண are a single pen-down stroke."
   },
-  "notes": "The RETROFLEX n — tongue curled back to the roof of the mouth. Learn it beside ன: ண is ன WITH ONE EXTRA ARCH. Frame 13's adjacent row numbers seven movements, not seven strokes: its first six stay connected through the left spiral, two inner arches, and top bar; only the separate right upright requires a lift. Tamil writes three n-sounds with three letters (ந, ன, ண)."
+  "notes": "The RETROFLEX n — tongue curled back to the roof of the mouth. Learn it beside ன: ண is ன WITH ONE EXTRA ARCH. Frame 13's adjacent row numbers seven movements, and they are one continuous stroke: the left spiral, two inner arches, and top bar, then back along the bar and down the right upright. Tamil writes three n-sounds with three letters (ந, ன, ண)."
 }

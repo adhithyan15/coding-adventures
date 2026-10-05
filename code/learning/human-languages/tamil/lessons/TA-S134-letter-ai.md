@@ -51,13 +51,13 @@ word that begins with *ai*.
 ## Writing: ஐ
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-RECOG-134] -->
 
-- **1.** start here: curl inward around the upper-left spiral, then lift
-- **2.** put the pen down again and draw the central upright upward, then lift
-- **3.** put the pen down again and sweep around the upper-right loop and return left across the middle, then lift
-- **4.** put the pen down again and circle the lower-left bowl back toward the centre, then lift
-- **5.** put the pen down again and descend and circle through the lower-right bowl — and only now lift
+- **1.** start inside the upper-left spiral, curl outward round it, and run down the central upright to its foot
+- **2.** without lifting, draw the central upright back up
+- **3.** without lifting, sweep around the upper-right loop and return left across the middle
+- **4.** without lifting, circle the lower-left bowl back up to the centre
+- **5.** without lifting, come back down the centre stem and circle through the lower-right bowl — and only now lift
 
-**Pen lifts: 4.**
+**Pen lifts: 0.** The pen never leaves the paper.
 
 > Stroke order is one attested teaching order, not a national standard —
 > Tamil handwriting is taught with school-to-school variation. Source:

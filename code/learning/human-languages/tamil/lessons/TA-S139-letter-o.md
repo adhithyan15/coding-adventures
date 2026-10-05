@@ -51,11 +51,11 @@ carries more at its foot.
 ## Writing: ஒ
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-RECOG-139] -->
 
-- **1.** start here: circle the small left loop and climb into the crown
-- **2.** without lifting, sweep through the large right loop and curl inward, then lift
-- **3.** put the pen down again and draw the separate lower bowl and return left — and only now lift
+- **1.** circle the small left loop and climb into the crown
+- **2.** without lifting, sweep through the large right loop, curl inward, and run out along the tail
+- **3.** without lifting, come back along the tail to the lower bowl, draw it down and around, and return left — and only now lift
 
-**Pen lifts: 1.**
+**Pen lifts: 0.** The pen never leaves the paper.
 
 > Stroke order is one attested teaching order, not a national standard —
 > Tamil handwriting is taught with school-to-school variation. Source:

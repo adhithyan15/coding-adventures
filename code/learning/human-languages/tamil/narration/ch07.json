@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e8e5d4f6c20ae53e",
+  "sourceHash": "fnv1a64:ac734c96797ed25a",
   "lessons": [
     {
       "id": "TA-C07-numbers-1-5",
@@ -1310,7 +1310,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:68cb16365e7b3e60",
+      "sourceHash": "fnv1a64:10097b63db72b920",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1383,7 +1383,7 @@
             },
             {
               "kind": "speech",
-              "text": "a separate straight vertical on the right, down to the baseline."
+              "text": "a straight vertical on the right, hanging from the bar down to the baseline."
             },
             {
               "kind": "speech",
@@ -1414,15 +1414,15 @@
             },
             {
               "kind": "speech",
-              "text": "5. without lifting, carry the top bar to the right edge — then lift once."
+              "text": "5. without lifting, carry the top bar to the right edge."
             },
             {
               "kind": "speech",
-              "text": "6. set the pen at the top of the separate right upright and draw straight down — and only now lift."
+              "text": "6. without lifting, come back along the bar to the right upright and draw it straight down — and only now lift."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 1. The pen comes up 1 time and no more."
+              "text": "Pen lifts: 0. The pen never leaves the paper."
             },
             {
               "kind": "speech",

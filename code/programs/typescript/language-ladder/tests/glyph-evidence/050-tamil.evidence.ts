@@ -23,12 +23,12 @@ export default [
     suite: "Tamil consonants in the starter inventory",
     suiteOrder: 40,
     caseOrder: 20,
-    name: "keeps ஞ sourced as four Frame 8 runs",
+    name: "keeps ஞ's Frame 8 movements inside one native stroke",
     verify: ({ SCRIPTS }) => {
       const tamil = SCRIPTS.find((script) => script.script === "tamil")!;
       const nya = tamil.letters.find((entry) => entry.glyph === "ஞ")!;
       expect(nya.sound).toBe("ña");
-      expect(nya.penLifts).toBe(3);
+      expect(nya.penLifts).toBe(0);
       expect(nya.strokeOrder).toHaveLength(8);
       expect(nya.strokeOrderSource?.citation).toMatch(/Frame 8.*ஞ.*p\. 194/i);
     },
@@ -37,12 +37,12 @@ export default [
     suite: "Tamil independent vowels in the starter inventory",
     suiteOrder: 40,
     caseOrder: 30,
-    name: "constructs long ஊ from familiar உ and ள",
+    name: "constructs long ஊ from familiar உ and ள in two native strokes",
     verify: ({ SCRIPTS }) => {
       const tamil = SCRIPTS.find((script) => script.script === "tamil")!;
       const longU = tamil.letters.find((entry) => entry.glyph === "ஊ")!;
       expect(longU.sound).toBe("ū");
-      expect(longU.penLifts).toBe(3);
+      expect(longU.penLifts).toBe(1);
       expect(longU.strokeOrder).toHaveLength(9);
       expect(longU.strokeOrderSource?.url).toContain("frame-17");
     },
@@ -51,12 +51,12 @@ export default [
     suite: "Tamil independent vowels in the starter inventory",
     suiteOrder: 40,
     caseOrder: 40,
-    name: "keeps short ஒ sourced as two Frame 14 runs",
+    name: "keeps short ஒ's Frame 14 movements inside one native stroke",
     verify: ({ SCRIPTS }) => {
       const tamil = SCRIPTS.find((script) => script.script === "tamil")!;
       const shortO = tamil.letters.find((entry) => entry.glyph === "ஒ")!;
       expect(shortO.sound).toBe("o");
-      expect(shortO.penLifts).toBe(1);
+      expect(shortO.penLifts).toBe(0);
       expect(shortO.strokeOrder).toHaveLength(3);
       expect(shortO.strokeOrderSource?.citation).toMatch(/Module 14.*Frame 14/i);
     },
@@ -65,12 +65,12 @@ export default [
     suite: "Tamil independent vowels in the starter inventory",
     suiteOrder: 40,
     caseOrder: 50,
-    name: "keeps ஐ sourced as five independently animated runs",
+    name: "keeps ஐ's five animated movements inside one native stroke",
     verify: ({ SCRIPTS }) => {
       const tamil = SCRIPTS.find((script) => script.script === "tamil")!;
       const ai = tamil.letters.find((entry) => entry.glyph === "ஐ")!;
       expect(ai.sound).toBe("ai");
-      expect(ai.penLifts).toBe(4);
+      expect(ai.penLifts).toBe(0);
       expect(ai.strokeOrder).toHaveLength(5);
       expect(ai.strokeOrderSource?.url).toBe(
         "https://commons.wikimedia.org/wiki/File:Writing_Tamil_10.gif",

@@ -51,17 +51,17 @@ right: short vowel, then more pen for the long one.
 ## Writing: ஊ
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-RECOG-138] -->
 
-- **1.** start here: sweep outward around the compact upper spiral
-- **2.** without lifting, descend through the broad outer curve and turn left onto the baseline
-- **3.** without lifting, carry the long baseline straight to the right, then lift
-- **4.** put the pen down again and curl around the added left loop
-- **5.** without lifting, turn inward through the added loop
-- **6.** without lifting, descend around the added inner curl, then lift
-- **7.** put the pen down again and rise on the added adjoining upright
-- **8.** without lifting, carry the added top bar right, then lift
-- **9.** put the pen down again and descend the added separate right upright — and only now lift
+- **1.** write உ first: start inside its compact upper spiral and sweep outward around it
+- **2.** without lifting, descend through its broad outer curve and turn left onto the baseline
+- **3.** without lifting, carry the long baseline straight to the right — then lift once
+- **4.** write ள over that base: start inside its loop, curl round its inner bowl, and climb the outer loop
+- **5.** without lifting, curve over the top and into the junction with the middle upright
+- **6.** without lifting, draw the adjoining stem straight down
+- **7.** without lifting, rise back up the same stem to the top
+- **8.** without lifting, carry the top bar to the right edge
+- **9.** without lifting, return along the bar to the right upright and draw it straight down — and only now lift
 
-**Pen lifts: 3.**
+**Pen lifts: 1.** The pen comes up 1 time and no more.
 
 > Stroke order is one attested teaching order, not a national standard —
 > Tamil handwriting is taught with school-to-school variation. Source:
