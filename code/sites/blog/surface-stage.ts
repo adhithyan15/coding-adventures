@@ -1,6 +1,7 @@
 /** Build the collection-derived public blog surface: index, feeds, sitemap. */
 
 import {
+  KERNEL_API_VERSION,
   Kinds,
   streamOf,
   type Collection,
@@ -33,7 +34,7 @@ export interface BlogSurfaceConfig {
 const blogSurface = defineStage({
   name: "@coding-adventures/blog-surface",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: KERNEL_API_VERSION,
   description: "Render a chronological collection as an index, RSS, Atom, and sitemap.",
   consumes: Kinds.Collection,
   produces: streamOf(Kinds.RenderedPage),

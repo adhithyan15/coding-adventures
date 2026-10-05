@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import unittest
 from pathlib import Path
@@ -12,6 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 SPECS = REPO_ROOT / "code" / "specs"
 TYPESCRIPT_PACKAGES = REPO_ROOT / "code" / "packages" / "typescript"
 TYPESCRIPT_PROGRAMS = REPO_ROOT / "code" / "programs" / "typescript"
+TYPESCRIPT_SITES = REPO_ROOT / "code" / "sites"
 FORME_STABLE_PACKAGE_VERSION = "1.0.0"
 
 NUMBERED_SPECS = {
@@ -38,6 +40,28 @@ ROADMAP_SEPARATOR = "|---:|---|---|---|---|"
 
 
 class FormeSpecMapTests(unittest.TestCase):
+    def test_live_site_local_stages_target_kernel_api_v2(self) -> None:
+        stage_sources: list[tuple[Path, str]] = []
+        for directory, child_dirs, filenames in os.walk(TYPESCRIPT_SITES):
+            child_dirs[:] = sorted(
+                name
+                for name in child_dirs
+                if name not in {".forme", "dist", "node_modules"}
+            )
+            for filename in sorted(filenames):
+                if not filename.endswith((".ts", ".tsx")):
+                    continue
+                path = Path(directory) / filename
+                source = path.read_text(encoding="utf-8")
+                if "defineStage(" in source:
+                    stage_sources.append((path, source))
+
+        self.assertTrue(stage_sources, "live Forme sites must expose stage definitions")
+        for path, source in stage_sources:
+            with self.subTest(stage=path.relative_to(TYPESCRIPT_SITES)):
+                self.assertIn("KERNEL_API_VERSION", source)
+                self.assertRegex(source, r"apiVersion:\s*KERNEL_API_VERSION")
+
     def test_forme_products_report_the_stable_version(self) -> None:
         for program_name in (
             "forme-doc-demo",
