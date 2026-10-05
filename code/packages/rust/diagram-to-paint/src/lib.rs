@@ -2246,6 +2246,26 @@ fn parse_css_color_function(css: &str) -> Option<Color> {
                 alpha,
             ))
         }
+        "rec2020" => {
+            let transfer_alpha = 1.09929682680944;
+            let beta = 0.018053968510807;
+            let decode = |value: f64| {
+                if value < beta * 4.5 {
+                    value / 4.5
+                } else {
+                    ((value + transfer_alpha - 1.0) / transfer_alpha).powf(1.0 / 0.45)
+                }
+            };
+            let r = decode(r);
+            let g = decode(g);
+            let b = decode(b);
+            Some(xyz_d65_to_color(
+                (63426534.0 / 99577255.0) * r + (20160776.0 / 139408157.0) * g + (47086771.0 / 278816314.0) * b,
+                (26158966.0 / 99577255.0) * r + (472592308.0 / 697040785.0) * g + (8267143.0 / 139408157.0) * b,
+                (19567812.0 / 697040785.0) * g + (295819943.0 / 278816314.0) * b,
+                alpha,
+            ))
+        }
         _ => None,
     }
 }
@@ -7746,6 +7766,15 @@ mod tests {
         assert_eq!(css_to_color("color(prophoto-rgb 20% 40% 60% / 80%)"), expected);
         assert_eq!(with_opacity("color(prophoto-rgb 0.2 0.4 0.6 / 80%)", 0.5), "rgba(0,130,176,0.4)");
         assert_eq!(normalize_css_paint("color(prophoto-rgb 20% 40% 60% / 80%)".into()), "rgba(0,130,176,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_color_rec2020_profile() {
+        let expected = Color { r: 0, g: 119, b: 168, a: 204 };
+        assert_eq!(css_to_color("color(rec2020 0.2 0.4 0.6 / 0.8)"), expected);
+        assert_eq!(css_to_color("color(rec2020 20% 40% 60% / 80%)"), expected);
+        assert_eq!(with_opacity("color(rec2020 0.2 0.4 0.6 / 80%)", 0.5), "rgba(0,119,168,0.4)");
+        assert_eq!(normalize_css_paint("color(rec2020 20% 40% 60% / 80%)".into()), "rgba(0,119,168,0.8)");
     }
 
     #[test]
