@@ -73,6 +73,29 @@ describe("local dependency bootstrap", () => {
     expect(logs).toEqual(["[bootstrap] leaf", "[bootstrap] project"]);
   });
 
+  it("offers a lock-enforced lifecycle-script-free install mode", async () => {
+    const root = await mkdtemp(path.join(tmpdir(), "forme-cli-bootstrap-frozen-"));
+    roots.push(root);
+    const project = await packageAt(root, "project");
+    const calls = [];
+    await bootstrap(project, {
+      frozen: true,
+      install: async (command, args, cwd) => { calls.push({ command, args, cwd }); },
+    });
+    expect(calls).toEqual([{
+      command: process.platform === "win32" ? "npm.cmd" : "npm",
+      args: [
+        "ci",
+        "--silent",
+        "--ignore-scripts",
+        "--legacy-peer-deps",
+        "--audit=false",
+        "--fund=false",
+      ],
+      cwd: project,
+    }]);
+  });
+
   it("reports child-process success, exit failure, and spawn failure", async () => {
     const root = await mkdtemp(path.join(tmpdir(), "forme-cli-bootstrap-child-"));
     roots.push(root);

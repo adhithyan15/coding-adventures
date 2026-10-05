@@ -15,7 +15,7 @@
     "dev": "forme watch",
     "benchmark:release": "tsx release-benchmark.ts",
     "quality:release": "tsx release-web-quality.ts",
-    "test": "vitest run surface-stage.test.ts interactivity-stage.test.ts pipeline-steps.test.ts product-build.test.ts release-benchmark.test.ts web-quality.test.ts"
+    "test": "vitest run surface-stage.test.ts interactivity-stage.test.ts pipeline-steps.test.ts product-build.test.ts release-benchmark.test.ts web-quality.test.ts release-web-quality.test.ts"
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
