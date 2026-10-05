@@ -2066,6 +2066,7 @@ enum CssColorMixSpace {
     Hsl,
     Hwb,
     Lab,
+    Lch,
     Oklab,
     Oklch,
 }
@@ -2084,6 +2085,7 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         ["in", "hsl"] => CssColorMixSpace::Hsl,
         ["in", "hwb"] => CssColorMixSpace::Hwb,
         ["in", "lab"] => CssColorMixSpace::Lab,
+        ["in", "lch"] => CssColorMixSpace::Lch,
         ["in", "oklab"] => CssColorMixSpace::Oklab,
         ["in", "oklch"] => CssColorMixSpace::Oklch,
         _ => return None,
@@ -2125,6 +2127,12 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
                 &mut first_components, &mut second_components, powerless.0, powerless.1,
             );
         }
+        CssColorMixSpace::Lch => {
+            let powerless = (first_components[1] <= 0.02, second_components[1] <= 0.02);
+            fixup_css_polar_hues(
+                &mut first_components, &mut second_components, powerless.0, powerless.1,
+            );
+        }
         CssColorMixSpace::Oklch => {
             let powerless = (first_components[1] <= 0.000004, second_components[1] <= 0.000004);
             fixup_css_polar_hues(
@@ -2134,7 +2142,11 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         _ => {}
     }
     let component = |index: usize| {
-        if matches!(space, CssColorMixSpace::Hsl | CssColorMixSpace::Hwb | CssColorMixSpace::Oklch)
+        if matches!(
+            space,
+            CssColorMixSpace::Hsl | CssColorMixSpace::Hwb
+                | CssColorMixSpace::Lch | CssColorMixSpace::Oklch
+        )
             && index == 2
         {
             first_components[index] * first_weight + second_components[index] * second_weight
@@ -2166,6 +2178,12 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         CssColorMixSpace::Lab => css_lab_to_color(
             components[0], components[1], components[2], alpha,
         ),
+        CssColorMixSpace::Lch => css_lab_to_color(
+            components[0],
+            components[1] * components[2].cos(),
+            components[1] * components[2].sin(),
+            alpha,
+        ),
         CssColorMixSpace::Oklab => css_oklab_to_color(
             components[0], components[1], components[2], alpha,
         ),
@@ -2190,6 +2208,10 @@ fn css_color_mix_components(color: Color, space: CssColorMixSpace) -> [f64; 3] {
         CssColorMixSpace::Hsl => css_color_to_hsl(encoded),
         CssColorMixSpace::Hwb => css_color_to_hwb(encoded),
         CssColorMixSpace::Lab => css_color_to_lab(encoded),
+        CssColorMixSpace::Lch => {
+            let [lightness, a, b] = css_color_to_lab(encoded);
+            [lightness, a.hypot(b), b.atan2(a)]
+        }
         CssColorMixSpace::Oklab => css_color_to_oklab(encoded),
         CssColorMixSpace::Oklch => {
             let [lightness, a, b] = css_color_to_oklab(encoded);
@@ -8196,6 +8218,23 @@ mod tests {
             Color { r: 255, g: 0, b: 0, a: 51 },
         );
         assert_eq!(with_opacity("color-mix(in lab, black, white)", 0.5), "rgba(119,119,119,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_lch() {
+        assert_eq!(
+            css_to_color("color-mix(in lch, black, white)"),
+            Color { r: 119, g: 119, b: 119, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in lch, red, blue)"),
+            Color { r: 245, g: 0, b: 134, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in lch, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in lch, black, white)", 0.5), "rgba(119,119,119,0.5)");
     }
 
     #[test]

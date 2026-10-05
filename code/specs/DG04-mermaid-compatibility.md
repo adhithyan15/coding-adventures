@@ -575,6 +575,9 @@ whiteness-plus-blackness sums as powerless hues.
 The rectangular D50 `lab` interpolation space converts sRGB stops through
 chromatic adaptation before premultiplied-alpha mixing and converts the result
 back to backend-neutral sRGB paint.
+The cylindrical D50 `lch` interpolation space adds shortest-path hue
+interpolation and powerless low-chroma hue fixup to that same backend-neutral
+conversion path.
 The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
