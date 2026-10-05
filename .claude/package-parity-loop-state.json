@@ -19,7 +19,7 @@
     "notes": "Both required final-head gates passed, no CI failure or merge conflict remained, and guarded squash auto-merge merged the reviewed Swift graph/diff PR as 7196f381b006d3c1436c05b67fc08bf71c1637c2. A non-required duplicate Unicode Lua job was still queued; the required gates were terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "7196f381b006d3c1436c05b67fc08bf71c1637c2",
+    "revision": "bbac63d317db4d311773d71bee0260745e48e73f",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
