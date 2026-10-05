@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 167)
+        self.assertEqual(summary["case_count"], 175)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -3541,6 +3541,109 @@ class PureDomainValidationTests(unittest.TestCase):
         self.assertEqual(combined_digest, expected["combined_digest"])
         runner.validate_case_document(case, **self._schema_args())
 
+    def test_shared_input_changes_both_consumers_source_and_package_digests(
+        self,
+    ) -> None:
+        boundary = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        shared_path = "code/packages/rust/Cargo.toml"
+
+        for consumer in ("conduit", "sha256-native"):
+            source_cases = {}
+            hash_cases = {}
+            for snapshot in ("before", "after"):
+                source = load_case(
+                    f"source-collection-shared-input-{consumer}-{snapshot}.json"
+                )
+                hashing = load_case(
+                    f"hashing-cache-shared-input-{consumer}-{snapshot}.json"
+                )
+                with self.subTest(consumer=consumer, snapshot=snapshot):
+                    self.assertEqual(
+                        source["input"]["options"]["package_root"],
+                        f"code/packages/swift/{consumer}",
+                    )
+                    self.assertEqual(
+                        runner._expected_repository_source_collection(
+                            source["input"]["options"], boundary
+                        ),
+                        source["expected"]["result"]["files"],
+                    )
+                    self.assertEqual(
+                        [item["path"] for item in source["expected"]["result"]["files"]],
+                        [shared_path],
+                    )
+                    runner.validate_case_document(source, **self._schema_args())
+
+                    workspace = runner.preflight_workspace(hashing)
+                    self.assertEqual(
+                        runner._expected_hashes(hashing["input"]["options"], workspace),
+                        (
+                            hashing["expected"]["result"]["package_digest"],
+                            hashing["expected"]["result"]["dependencies_digest"],
+                            hashing["expected"]["result"]["combined_digest"],
+                        ),
+                    )
+                    self.assertIn(shared_path, hashing["input"]["options"]["include_paths"])
+                    runner.validate_case_document(hashing, **self._schema_args())
+                source_cases[snapshot] = source
+                hash_cases[snapshot] = hashing
+
+            before_source = source_cases["before"]
+            after_source = source_cases["after"]
+            before_hashing = hash_cases["before"]
+            after_hashing = hash_cases["after"]
+            self.assertEqual(
+                before_source["input"]["options"]["candidates"][0]["path"], shared_path
+            )
+            self.assertEqual(
+                after_source["input"]["options"]["candidates"][0]["path"], shared_path
+            )
+            self.assertNotEqual(
+                before_source["expected"]["result"]["files"][0]["digest"],
+                after_source["expected"]["result"]["files"][0]["digest"],
+            )
+            before_files = {
+                item["path"]: item["content_utf8"]
+                for item in before_hashing["workspace"]["files"]
+            }
+            after_files = {
+                item["path"]: item["content_utf8"]
+                for item in after_hashing["workspace"]["files"]
+            }
+            self.assertEqual(set(before_files), set(after_files))
+            self.assertEqual(
+                [path for path in before_files if path != shared_path],
+                [path for path in after_files if path != shared_path],
+            )
+            self.assertEqual(
+                {path: content for path, content in before_files.items() if path != shared_path},
+                {path: content for path, content in after_files.items() if path != shared_path},
+            )
+            self.assertNotEqual(before_files[shared_path], after_files[shared_path])
+            self.assertEqual(
+                before_source["expected"]["result"]["files"][0]["digest"],
+                hashlib.sha256(before_files[shared_path].encode("utf-8")).hexdigest(),
+            )
+            self.assertEqual(
+                after_source["expected"]["result"]["files"][0]["digest"],
+                hashlib.sha256(after_files[shared_path].encode("utf-8")).hexdigest(),
+            )
+            self.assertEqual(
+                before_hashing["input"]["options"]["dependency_digests"],
+                after_hashing["input"]["options"]["dependency_digests"],
+            )
+            self.assertEqual(
+                before_hashing["expected"]["result"]["dependencies_digest"],
+                after_hashing["expected"]["result"]["dependencies_digest"],
+            )
+            for field in ("package_digest", "combined_digest"):
+                self.assertNotEqual(
+                    before_hashing["expected"]["result"][field],
+                    after_hashing["expected"]["result"][field],
+                )
+
     def test_dependency_cycles_are_rejected_without_recursion(self) -> None:
         cyclic = load_case("diff-selection-transitive.json")
         cyclic["input"]["options"]["edges"].append(["python/app", "python/base"])
@@ -4281,7 +4384,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 167)
+        self.assertEqual(summary["case_count"], 175)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"
