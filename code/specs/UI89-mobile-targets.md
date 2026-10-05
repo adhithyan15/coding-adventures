@@ -246,7 +246,7 @@ platform library now lends its picker to the app's handler.
   - a second request refused while one is open;
   - lookup of an uninstalled host.
   The iOS simulator build compiles Engram's new branch; driving the picker
-  itself waits for §4's XCUITest. Android follows with the Kotlin library.
+  itself waits for §4.4. Android follows with the Kotlin library.
 
 ## 3. Android
 
@@ -429,7 +429,7 @@ What step 4 changed from §3.4, and why:
   restores its own: the Linux job has no desktop TaskApp snapshot to hand,
   and one written by the same APK is the case a user meets.
 - **Still to come:** an instrumented Compose test that edits, relaunches and
-  reads the screen (§4). Journal runs the same gate (§3.9).
+  reads the screen (§4.2). Journal runs the same gate (§3.9).
 
 ### 3.8 Mobile file effects, designed (step 6)
 
@@ -903,7 +903,7 @@ Written before implementation.
   - The Engram APK's dex must now hold `EngramAndroidEffectsKt` and still
     not `EngramEffectsKt`.
   - The JVM harness keeps covering the seam. The handler itself is
-    type-checked by the APK build. Driving it on a device needs §4's
+    type-checked by the APK build. Driving it on a device needs §4.4's
     instrumented test; until then it was driven once against the real
     router and a fake picker, outside the repository.
 
@@ -911,11 +911,152 @@ Written before implementation.
 
 | lane | builds | drives |
 |---|---|---|
-| iOS | Trestle, Journal: xcframework + app for the simulator, unsigned | an XCUITest launch-and-restore test on an iOS simulator (the JournalUiTest shape) |
-| Android | Trestle, Journal: debug APK, all ABIs | an instrumented Compose test on an x86_64 emulator |
+| iOS | Trestle, Journal, Engram: xcframework + app for the simulator, unsigned | an XCUITest launch-and-restore test on an iOS simulator (the JournalUiTest shape) |
+| Android | Trestle, Journal, Engram: debug APK, all ABIs | an instrumented Compose test on an x86_64 emulator |
 
 Signing, store packaging (`.ipa`, `.aab`) and release workflows come after the
 lanes are green, as their own PRs.
+
+### 4.1 Driving the screen on a device, designed
+
+Written before implementation. The emulator and simulator gates (§2.3, §3.7)
+prove that an app starts, persists and restores without touching it. They
+cannot show that a person can use it: that a field takes text, a button
+reaches the engine, and what was typed is on screen again after a cold
+relaunch. The desktop Compose lane already proves this for Journal with
+`JournalUiTest` (`journal-mosaic-app/conformance/compose/JournalUiTest.kt`).
+§4 brings the same test to the phones.
+
+**What the test does (both platforms).** The JournalUiTest shape, in two
+cold launches against one state file:
+
+| launch | starts with | does | must see |
+|---|---|---|---|
+| 1 | no state | waits for `mosaic-startup-loading` to go; types a title and body into `draft-editor-title` / `draft-editor-body`, taps `draft-editor-save`; does it again for a second entry; deletes one with `draft-editor-delete` | "No entries yet" first; then exactly the surviving entry's row |
+| 2 | launch 1's state, new process | nothing until the screen is read | the surviving entry's row (restored, not re-typed); then deletes it and sees "No entries yet" |
+
+- **Nodes are found by part name.** Compose tags host controls with
+  `Modifier.testTag(<part>)` and SwiftUI gives them
+  `.accessibilityIdentifier(<part>)`, so one set of names serves both. A
+  second mount of a component suffixes every part with `-m<N>`, so row
+  matchers use a prefix (`record-list-title`), as JournalUiTest already does.
+- **Launch 2 is a new process.** Recomposing in the same process would read
+  the engine's memory, not the state file; only a new process shows that the
+  snapshot was written where the platform keeps app data and read back.
+- **Journal first.** It has the most input. Trestle follows with the same
+  harness (its desktop `TaskAppUiTest` steps). Engram's picker round trip is
+  §4.4.
+- **The tests live with the app,** beside the desktop one:
+  `<app>/conformance/compose-android/<App>AndroidUiTest.kt` and
+  `<app>/conformance/swiftui-ios/<App>UiTests.swift`. The generated projects
+  stay free of app-specific tests; CI hands the test to the build, as it
+  copies `JournalUiTest.kt` into the desktop project today.
+
+### 4.2 Android: an instrumented Compose test
+
+- **The project.** `build.gradle.kts` for `android/` gains
+  `testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"`
+  and `androidTestImplementation` dependencies only: `androidx.test:runner`,
+  `androidx.test.ext:junit` and `androidx.compose.ui:ui-test-junit4` at the
+  androidx version that the pinned JetBrains Compose version resolves to on
+  Android (checked with `dependencyInsight` in the implementation PR, and
+  pinned beside it). The app APK is unchanged: `assembleDebug` never resolves
+  the `androidTest` classpath, and no `debugImplementation` test manifest is
+  needed because the rule drives `MosaicActivity` itself.
+- **The test.** `createAndroidComposeRule<MosaicActivity>()`, so the real
+  activity starts: real `filesDir`, real JNA load, real picker. Launch 1 or 2
+  is chosen by an instrumentation argument (`-e mosaicLaunch 1|2`), read
+  through `InstrumentationRegistry.getArguments()`, the Android form of the
+  desktop test's `MOSAIC_EXPECT_RESTORED`. The test cannot set environment
+  variables, so state goes where `MosaicActivity` always puts it
+  (`filesDir/<application id>/mosaic-state.v1.json`).
+- **Running it.** Gradle's `connectedDebugAndroidTest` uninstalls the app
+  after each run, which would erase the state launch 2 needs. So:
+  1. `assemble-mosaic-android-debug.sh` builds `assembleDebugAndroidTest`
+     beside `assembleDebug` when asked for the test APK;
+  2. a new `code/scripts/mosaic-android-ui-test.sh <apk> <test apk>
+     <android package> <test class>` installs both, runs `pm clear` on the
+     app so launch 1 starts empty, then runs
+     `am instrument -w -r -e class <test class> -e mosaicLaunch N
+     <package>.test/androidx.test.runner.AndroidJUnitRunner` for N = 1, 2.
+     Each `am instrument` starts a new app process.
+  3. `am instrument` exits 0 even when a test fails, so the script reads the
+     raw output and requires `INSTRUMENTATION_CODE: -1` with an
+     `OK (<n> tests)` line and no `FAILURES!!!`. An empty or truncated
+     output fails, as the gate's logcat read does.
+  The package and class names are validated as the gate validates its own
+  (they reach a remote shell command line).
+- **Where it runs.** In the emulator step, after the three-launch gate for
+  the same app. The gate leaves state behind, which is why the script clears
+  first rather than relying on a fresh install.
+- **Animations** are already off (`start-mosaic-android-emulator.sh`), which
+  the Compose test rule needs for stable idling.
+
+### 4.3 iOS: an XCUITest
+
+- **The project.** `mosaic-ios-project` can add a second target: a UI test
+  bundle (`com.apple.product-type.bundle.ui-testing`, `TEST_TARGET_NAME =
+  App`, a dependency on App), and a shared scheme
+  `xcshareddata/xcschemes/App.xcscheme` whose test action runs it, because
+  `xcodebuild test` needs a scheme. Xcode lists every source file in
+  `project.pbxproj`, so CI cannot copy a test in afterwards as it does on
+  Android: the builder takes the test sources through a new
+  `mosaic-compile --ios-ui-test <file.swift>` (repeatable). Without the flag
+  the project is exactly today's: one target, no scheme.
+- **The test.** `XCUIApplication`: launch, act, `terminate()`, `launch()`
+  again. A real terminate gives the new process launch 2 needs inside one
+  test method. Nodes are found with `descendants(matching: .any)
+  .matching(identifier:)`, and rows with a predicate
+  `identifier BEGINSWITH 'record-list-title'`. Text goes in with `tap()` and
+  `typeText`, which needs only the focus the tap gives.
+- **A known start.** The gate leaves its own state in the app's container,
+  so the step runs `xcrun simctl uninstall <udid> <bundle id>` first, and
+  `xcodebuild test` installs the app fresh. The test does not override
+  `MOSAIC_APP_STATE_PATH`: the override must be an absolute path, and the
+  test runner cannot know the app's container, so state goes where users'
+  state goes (Application Support), which is the path worth proving.
+- **Running it.** `xcodebuild test -project App.xcodeproj -scheme App
+  -destination 'platform=iOS Simulator,id=<udid>' CODE_SIGNING_ALLOWED=NO`
+  on the simulator the gate already picked, after the gate. Test bundles
+  need no signing on the simulator.
+
+### 4.4 Engram: the picker round trip (after 4.2 and 4.3)
+
+Engram's Anki import and export go through the platform picker (§2.6,
+§3.11), which the system draws: neither test framework should drive
+DocumentsUI or `UIDocumentPickerViewController`, whose layout changes with
+the OS. Both platforms answer the picker for the test instead:
+
+- **Android.** Espresso-Intents stubs `ACTION_OPEN_DOCUMENT` and
+  `ACTION_CREATE_DOCUMENT` (the Activity Result API starts them through
+  `startActivityForResult`, which Espresso-Intents intercepts) with a URI the
+  test owns. The test checks that an import of a fixture `.apkg` adds its
+  cards to the screen, and that an export writes a zip whose first bytes are
+  a local header. Whether the URI is a `file://` in the app's cache or a
+  test-only provider is decided there, by what the picker's
+  `OpenableColumns.DISPLAY_NAME` query needs.
+- **iOS.** The picker is presented by the platform library, so the test
+  build swaps in the fake picker the Swift harness already uses (§2.6) when
+  launched with a test-only argument. That needs a seam in the generated app
+  and is designed in that PR.
+
+### 4.5 Order and gates
+
+1. This design (spec only).
+2. Android: the `build.gradle.kts` additions (builder tests assert them, and
+   that `assembleDebug`'s output is unchanged), `mosaic-android-ui-test.sh`,
+   and `JournalAndroidUiTest.kt` run in the emulator step.
+3. iOS: the optional UI test target and scheme (builder tests: no flag gives
+   today's one target; with the flag, two targets, the dependency, and the
+   scheme's test action), `--ios-ui-test`, and `JournalUiTests.swift` run in
+   the simulator step.
+4. Trestle on both, then Engram's round trip (§4.4).
+
+Neither lane can be run in this repository's Linux sandbox (no `/dev/kvm`,
+no Xcode), so each PR is proven in CI. A green run must show it drove the
+screen: the scripts require the expected test count (`OK (1 test)`, or
+xcodebuild's `Executed 1 test, with 0 failures`), so a test that was never
+compiled in or was filtered out fails the step instead of passing it.
 
 ## 5. Order
 
