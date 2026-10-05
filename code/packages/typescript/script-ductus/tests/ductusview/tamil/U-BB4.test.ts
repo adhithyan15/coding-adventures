@@ -15,39 +15,32 @@ it("owns U-BB4 view evidence for ழ", () => {
   expect(ductusFor("ழ")).toBe(TAMIL_ZHA);
 });
 
-describe("Tamil ழ — joined left body, joined right bowl, then lower hook", () => {
+describe("ழ — a real cited one-stroke 6-movement filmstrip", () => {
   const steps = ductusSteps(TAMIL_ZHA);
   const strip = ductusFilmstrip(TAMIL_ZHA, tamilZhaOutline);
 
-  it("places lifts before movements 4 and 6", () => {
-    expect(steps.map((step) => step.startsAfterLift)).toEqual([
-      false,
-      false,
-      false,
-      true,
-      false,
-      true,
-    ]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 1, 2]);
+  it("never lifts the pen between movements", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual(
+      Array(6).fill(false),
+    );
+    expect(steps.map((step) => step.strokeIndex)).toEqual(Array(6).fill(0));
   });
 
-  it("reports six movements in three strokes", () => {
+  it("reports 6 movements in one unbroken stroke", () => {
     expect(strip.frames).toHaveLength(6);
-    expect(strip.penLifts).toBe(2);
-    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 6 movements");
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 6 movements");
   });
 
-  it("keeps both body runs visible while the detached hook completes", () => {
-    const last = strip.frames[5];
+  it("draws the whole letter as the one pen path in the last frame", () => {
+    const last = strip.frames.at(-1)!;
     const done = byTag(last, "path").filter(
-      (path) => path.attrs.class === "ductus__done",
+      (node) => node.attrs.class === "ductus__done",
     );
     const pen = byTag(last, "path").find(
-      (path) => path.attrs.class === "ductus__pen",
+      (node) => node.attrs.class === "ductus__pen",
     )!;
-    expect(done).toHaveLength(2);
-    expect(done[0].attrs.d).toBe(penPathD(TAMIL_ZHA.strokes[0], 1));
-    expect(done[1].attrs.d).toBe(penPathD(TAMIL_ZHA.strokes[1], 1));
-    expect(pen.attrs.d).toBe(penPathD(TAMIL_ZHA.strokes[2], 1));
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(TAMIL_ZHA.strokes[0], 1));
   });
 });

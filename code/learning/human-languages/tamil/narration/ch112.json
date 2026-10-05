@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Letters From Days, Towns and Gladness",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0ed8bc5c91001c4d",
+  "sourceHash": "fnv1a64:b8848f6dd473b3e4",
   "lessons": [
     {
       "id": "TA-S137-letter-nya",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:228e65c0f78d959e",
+      "sourceHash": "fnv1a64:1e90f18598034592",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -84,39 +84,39 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start here: curve down into the compact left inner turn."
+              "text": "1. start inside the compact left body and curl round its small inner loop."
             },
             {
               "kind": "speech",
-              "text": "2. without lifting, circle the left inner loop and return upward, then lift."
+              "text": "2. without lifting, climb its outer left side and curve over into the long top bar."
             },
             {
               "kind": "speech",
-              "text": "3. put the pen down again and carry the long top bar straight to the right, then lift."
+              "text": "3. without lifting, carry the long top bar straight to the right."
             },
             {
               "kind": "speech",
-              "text": "4. put the pen down again and curve left from the upper-right shoulder."
+              "text": "4. without lifting, come back along the bar to the central upright and start down it."
             },
             {
               "kind": "speech",
-              "text": "5. without lifting, descend the central upright, then lift."
+              "text": "5. without lifting, descend the central upright to its lower end."
             },
             {
               "kind": "speech",
-              "text": "6. put the pen down again and sweep around the broad outer-right curve."
+              "text": "6. without lifting, climb back up the upright and sweep around the broad outer-right curve."
             },
             {
               "kind": "speech",
-              "text": "7. without lifting, continue around the broad bottom bowl."
+              "text": "7. without lifting, continue around the bottom bowl toward the far left."
             },
             {
               "kind": "speech",
-              "text": "8. without lifting, return up the outer-left side — and only now lift."
+              "text": "8. without lifting, return up the outer-left side and finish below the top bar — and only now lift."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3."
+              "text": "Pen lifts: 0. The pen never leaves the paper."
             },
             {
               "kind": "speech",
