@@ -3,6 +3,8 @@
 
 ## [Unreleased]
 
+- Compound visual-state predicates inside repeated templates now use row-VM helper properties and invalidate row projections when referenced component slots change, preserving nested selection/editing backgrounds (#14274).
+
 - Nested container text styles now derive from their enclosing generated style, preserving foreground and typography when a child changes alignment. Sibling containers and structural table rows keep independent style scopes (#14274).
 
 - Structural table headers now bind the repeated colgroup widths and refresh after width changes, keeping headers aligned with fixed-width data cells (#14274).
