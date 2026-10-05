@@ -4,6 +4,11 @@
 
 ### Added
 
+- Added the FM-B072 supported-platform release composition, which runs the
+  checked-in desktop product front beside the live-site, API-v2, benchmark,
+  browser-budget, and external exact-head security-review policy on Linux,
+  macOS, and Windows and contributes one bounded host attestation to the
+  aggregate technical verdict.
 - Added the FM09 Tauri v2 product boundary and restrictive main-window CSP.
 - Added contained, crash-safe native project storage with opaque
   compare-and-swap revisions, full persisted-state validation, and canonical

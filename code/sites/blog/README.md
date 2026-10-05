@@ -117,6 +117,14 @@ characters from a bounded, no-follow read of its startup log so hosted-runner
 failures remain diagnosable without retaining raw browser traces. The required
 CI gate waits for this lane.
 
+FM-B072 composes that browser contract with the 1,000-page benchmark, API-v2
+map, landing-page build, and desktop authoring product on Linux, macOS, and
+Windows. Each host publishes only a bounded digest attestation; the final CI
+job accepts exactly those three attestations for one commit before publishing
+the technical verdict. The evidence records that a separately authenticated
+exact-head security review remains mandatory without letting repository data
+self-assert that approval.
+
 The installed `forme` launcher registers `tsx` for TypeScript-first packages;
 the site uses `tsx` directly only for its post-build verifier and unit tests.
 

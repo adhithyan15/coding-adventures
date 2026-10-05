@@ -207,8 +207,8 @@ class CIGateRegistryTests(unittest.TestCase):
             self.assertIn(artifact, body)
         self.assertIn("exit 1", body)
 
-    def test_forme_web_quality_installs_browser_runtime_without_disabling_sandbox(self) -> None:
-        body = self._job_body("forme-web-quality")
+    def test_forme_release_installs_browser_runtime_without_disabling_sandbox(self) -> None:
+        body = self._job_body("forme-release-platform")
         self.assertIn("install-dependencies: true", body)
         self.assertIn("chrome_sandbox", body)
         self.assertIn("24beb85e4149c65db5bf40fa307721143d0883ab8952e60dde1158606f644dee", body)
@@ -216,10 +216,36 @@ class CIGateRegistryTests(unittest.TestCase):
         self.assertIn("sha256sum", body)
         self.assertIn("install -o root -g root -m 0755", body)
         self.assertIn("chmod 4755", body)
-        self.assertIn("CHROME_DEVEL_SANDBOX: /usr/local/sbin/forme-chrome-sandbox", body)
+        self.assertIn("CHROME_DEVEL_SANDBOX:", body)
+        self.assertIn("/usr/local/sbin/forme-chrome-sandbox", body)
         self.assertNotIn("--no-sandbox", body)
         self.assertNotIn("--disable-setuid-sandbox", body)
         self.assertNotIn("apparmor_restrict_unprivileged_userns", body)
+
+    def test_forme_release_runs_every_supported_host_and_composes_one_verdict(self) -> None:
+        body = self._job_body("forme-release-platform")
+        for host, runner in (
+            ("linux", "ubuntu-latest"),
+            ("macos", "macos-latest"),
+            ("windows", "windows-latest"),
+        ):
+            self.assertIn(f"host: {host}", body)
+            self.assertIn(f"os: {runner}", body)
+        self.assertIn("test_forme_spec_map.py", body)
+        self.assertIn("build-products", body)
+        self.assertIn("quality:release", body)
+        self.assertIn("forme_release_gate.py attest", body)
+        self.assertNotIn("forme-release-security-review.json", body)
+        self.assertIn("actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97", body)
+        self.assertIn("python-version: '3.13.7'", body)
+        self.assertIn("toolchain: '1.95.0'", body)
+        verdict = self._job_body("forme-release-verdict")
+        self.assertIn("pattern: forme-release-*", verdict)
+        self.assertIn("forme_release_gate.py verdict", verdict)
+        self.assertIn("actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c", verdict)
+        final_gate = self._job_body("ci-gate")
+        self.assertIn("forme-release-platform", final_gate)
+        self.assertIn("forme-release-verdict", final_gate)
 
     def _job_body(self, job_id: str) -> str:
         """Return the ci.yml text of one job, from its key to the next job key."""

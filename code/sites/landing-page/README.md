@@ -43,6 +43,13 @@ explicit transfer budgets, and a separate no-JavaScript fallback check. The
 required CI gate waits for that browser lane and retains its bounded JSON
 summary with the blog artifacts.
 
+The FM-B072 supported-platform gate rebuilds this product through its checked-in
+platform front on Linux, macOS, and Windows, then composes its browser evidence
+with the blog benchmark, API-v2 map, desktop product, and exact reviewed source
+contract. The aggregate verdict rejects missing or mixed-host evidence and
+records, but cannot self-assert, the mandatory external exact-head security
+review policy.
+
 For live preview, run `npm run bootstrap` once and then `npm run dev`. Forme
 serves the successful in-memory artifact at `http://127.0.0.1:3000`, rebuilds
 after coalesced authored-file changes, reloads connected browsers, and keeps

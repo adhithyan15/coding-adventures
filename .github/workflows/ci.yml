@@ -28,8 +28,8 @@
 #       every official Unicode 17 normalization/casing vector.
 #   13. unicode17-dart-conformance: runs the generated Dart tables against
 #       every official Unicode 17 normalization/casing vector.
-#   14. forme-web-quality: runs the generated live sites through exact browser
-#       performance, accessibility, resource, and static-fallback budgets.
+#   14. forme-release-platform: composes the complete Forme release contract
+#       on Linux, macOS, and Windows and publishes one reviewed verdict.
 #   15. build: Installs only the needed toolchains, then runs the build.
 #
 # This saves 3-5 minutes on language-specific changes by skipping
@@ -125,6 +125,7 @@ jobs:
       run_build_linux_os_suites: ${{ steps.detect.outputs.run_build_linux_os_suites }}
       run_build_macos_os_suites: ${{ steps.detect.outputs.run_build_macos_os_suites }}
       run_build_windows_os_suites: ${{ steps.detect.outputs.run_build_windows_os_suites }}
+      run_forme_release_platform: ${{ steps.detect.outputs.run_forme_release_platform }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -1454,18 +1455,27 @@ jobs:
           cargo test --manifest-path code/packages/rust/mosaic-app-bindings/Cargo.toml \
             --test flutter_platform_effects -- --nocapture
 
-  # ── Job 14: Forme browser quality ──────────────────────────────
+  # ── Job 14: Forme supported-platform release gate ─────────────
   #
-  # This is a dependency of CI gate, rather than a side workflow, so branch
-  # protection cannot merge a Forme web regression while Chrome is still
-  # running. Branch pushes skip the duplicate browser work; pull requests are
-  # authoritative and main reruns the release evidence after the squash.
-  forme-web-quality:
-    name: Forme web quality
+  # Pull requests are authoritative. Every supported host runs the same API,
+  # product, benchmark, browser, and reviewed-source contract; main repeats it
+  # after the squash. Branch pushes deliberately skip this expensive duplicate.
+  forme-release-platform:
+    name: Forme release (${{ matrix.host }})
     needs: detect
-    if: needs.detect.outputs.needs_typescript == 'true' && (github.event_name == 'pull_request' || needs.detect.outputs.is_main == 'true')
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+    if: needs.detect.outputs.run_forme_release_platform == 'true' && (github.event_name == 'pull_request' || needs.detect.outputs.is_main == 'true')
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - host: linux
+            os: ubuntu-latest
+          - host: macos
+            os: macos-latest
+          - host: windows
+            os: windows-latest
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
     permissions:
       contents: read
     steps:
@@ -1473,6 +1483,11 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13.7'
 
       - name: Setup Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
@@ -1482,6 +1497,13 @@ jobs:
           cache-dependency-path: |
             code/sites/blog/package-lock.json
             code/sites/landing-page/package-lock.json
+            code/programs/typescript/forme-shell-desktop/package-lock.json
+
+      - name: Set up Rust for the native macOS product
+        if: runner.os == 'macOS'
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # rust-toolchain action
+        with:
+          toolchain: '1.95.0'
 
       - name: Install reviewed Chrome for Testing
         id: chrome
@@ -1491,6 +1513,7 @@ jobs:
           install-dependencies: true
 
       - name: Install the reviewed Chrome SUID sandbox
+        if: runner.os == 'Linux'
         shell: bash
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
@@ -1516,32 +1539,77 @@ jobs:
           test "$(sha256sum "$sandbox_target" | cut -d ' ' -f 1)" = \
             "$FORME_CHROME_SANDBOX_SHA256"
 
-      - name: Build both live Forme sites
-        shell: bash
-        run: |
-          node code/packages/typescript/forme-cli/bin/bootstrap.mjs code/sites/landing-page --frozen
-          npm --prefix code/sites/landing-page run clean
-          npm --prefix code/sites/landing-page run build
-          node code/packages/typescript/forme-cli/bin/bootstrap.mjs code/sites/blog --frozen
-          npm --prefix code/sites/blog run clean
-          npm --prefix code/sites/blog run build
+      - name: Verify package and kernel API compatibility
+        run: python -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
+
+      - name: Build and test every Forme product
+        run: python code/scripts/forme_release_gate.py build-products --host ${{ matrix.host }}
 
       - name: Enforce browser and static-fallback budgets
+        shell: bash
         working-directory: code/sites/blog
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
-          CHROME_DEVEL_SANDBOX: /usr/local/sbin/forme-chrome-sandbox
+          CHROME_DEVEL_SANDBOX: ${{ runner.os == 'Linux' && '/usr/local/sbin/forme-chrome-sandbox' || '' }}
           FORME_EXPECTED_CHROME_VERSION: 154.0.8037.92
         run: npm run quality:release
 
-      - name: Publish bounded Forme quality evidence
+      - name: Emit reviewed host attestation
+        run: >-
+          python code/scripts/forme_release_gate.py attest
+          --host ${{ matrix.host }}
+          --commit ${{ github.sha }}
+          --benchmark code/sites/blog/dist/.forme-release-benchmark.json
+          --web-quality code/sites/blog/dist/.forme-web-quality.json
+          --output .forme-release-evidence/forme-release-${{ matrix.host }}.json
+
+      - name: Publish bounded Forme release evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: forme-web-quality
-          path: code/sites/blog/dist/.forme-web-quality.json
+          name: forme-release-${{ matrix.host }}
+          path: .forme-release-evidence/forme-release-${{ matrix.host }}.json
           if-no-files-found: ignore
           retention-days: 7
+
+  forme-release-verdict:
+    name: Forme release verdict
+    needs: [detect, forme-release-platform]
+    if: always() && needs.detect.outputs.run_forme_release_platform == 'true' && (github.event_name == 'pull_request' || needs.detect.outputs.is_main == 'true')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Require every supported host
+        shell: bash
+        env:
+          PLATFORM_RESULT: ${{ needs['forme-release-platform'].result }}
+        run: test "$PLATFORM_RESULT" = success
+
+      - name: Download host attestations
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: forme-release-*
+          path: .forme-release-evidence
+
+      - name: Compose one release verdict
+        run: >-
+          python code/scripts/forme_release_gate.py verdict
+          --evidence-dir .forme-release-evidence
+          --output forme-release-verdict.json
+
+      - name: Publish the Forme release verdict
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: forme-release-verdict
+          path: forme-release-verdict.json
+          if-no-files-found: error
+          retention-days: 30
 
   # ── Job 15: Build and test ─────────────────────────────────────
   #
@@ -4657,7 +4725,7 @@ jobs:
   # dependency failed, so it can report the failure rather than being skipped.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-web-quality, build]
+    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -4682,12 +4750,13 @@ jobs:
           UNICODE17_SWIFT_RESULT: ${{ needs['unicode17-swift-conformance'].result }}
           UNICODE17_DART_RESULT: ${{ needs['unicode17-dart-conformance'].result }}
           MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT: ${{ needs['mosaic-flutter-platform-library'].result }}
-          FORME_WEB_QUALITY_RESULT: ${{ needs['forme-web-quality'].result }}
+          FORME_RELEASE_PLATFORM_RESULT: ${{ needs['forme-release-platform'].result }}
+          FORME_RELEASE_VERDICT_RESULT: ${{ needs['forme-release-verdict'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
         run: |
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_web_quality=$FORME_WEB_QUALITY_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_WEB_QUALITY_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;

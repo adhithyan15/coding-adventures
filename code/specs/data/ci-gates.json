@@ -425,6 +425,25 @@
         "code/scripts/tests/test_ocaml_capability_gate.py"
       ]
     },
+    "forme-release-platform": {
+      "scope": "job",
+      "description": "FM-B072 benchmark, browser, API-v2, product, and reviewed release evidence on every supported host.",
+      "packages": [
+        "typescript/forme-cli",
+        "typescript/programs/forme-shell-desktop"
+      ],
+      "paths": [
+        ".github/workflows/ci.yml",
+        "code/packages/typescript/forme-*/**",
+        "code/sites/landing-page/**",
+        "code/sites/blog/**",
+        "code/programs/typescript/forme-shell-desktop/**",
+        "code/specs/FM0*-forme-*.md",
+        "code/specs/data/ci-gates.json",
+        "code/scripts/forme_release_gate.py",
+        "code/scripts/tests/test_forme_release_gate.py"
+      ]
+    },
     "build-linux-os-suites": {
       "scope": "step",
       "description": "Suites that require Linux kernel isolation primitives and a delegated cgroup-v2 root.",

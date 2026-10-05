@@ -135,6 +135,23 @@ class FormeSpecMapTests(unittest.TestCase):
                     "stable package releases must be recorded in every changelog",
                 )
 
+    def test_live_site_locks_do_not_retain_pre_v1_forme_snapshots(self) -> None:
+        for site_name in ("landing-page", "blog"):
+            lock = json.loads(
+                (TYPESCRIPT_SITES / site_name / "package-lock.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            for entry_path, entry in lock["packages"].items():
+                name = entry.get("name", "")
+                if name.startswith("@coding-adventures/forme-"):
+                    with self.subTest(site=site_name, dependency=entry_path):
+                        self.assertEqual(
+                            entry.get("version"),
+                            FORME_STABLE_PACKAGE_VERSION,
+                            f"{site_name}:{entry_path} carries {name} at a mixed version",
+                        )
+
     def test_kernel_api_v2_contract_and_migration_guide_are_pinned(self) -> None:
         kinds = (
             TYPESCRIPT_PACKAGES / "forme-types" / "src" / "kinds.ts"
