@@ -55,6 +55,6 @@ one at a time. If a piece differs, change only that piece.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-DATE-01, PA-FORM-DATE-A-01, PA-FORM-DATE-CUE-MAP-01, PA-FORM-DATE-FORMAT-01] -->
-<!-- hl-activity: {"id":"PA-W09-date-supported-a","kind":"text","assesses":["PA-FORM-LABEL-DATE-01","PA-FORM-DATE-A-01","PA-FORM-DATE-CUE-MAP-01","PA-FORM-DATE-FORMAT-01"],"prompt":"With the bank visible, complete the fictional date field for ਕ.","answer":"ਤਾਰੀਖ਼: ੧੫/੦੧/੨੦੨੫","accepted":["੧੫/੦੧/੨੦੨੫","ਤਾਰੀਖ਼:੧੫/੦੧/੨੦੨੫"],"feedback":{"correct":"The supported line has A in day/month/year order.","incorrect":"Select A first; then copy one box at a time."},"response_seconds":32} -->
+<!-- hl-activity: {"id":"PA-W09-date-supported-a","kind":"text","assesses":["PA-FORM-LABEL-DATE-01","PA-FORM-DATE-A-01","PA-FORM-DATE-CUE-MAP-01","PA-FORM-DATE-FORMAT-01"],"prompt":"With the bank visible, complete the fictional date field for ਕ.","answer":"ਤਾਰੀਖ਼: ੧੫/੦੧/੨੦੨੫","accepted":["ਤਾਰੀਖ਼:੧੫/੦੧/੨੦੨੫"],"feedback":{"correct":"The supported line has A in day/month/year order.","incorrect":"Select A first; then copy one box at a time."},"response_seconds":32} -->
 
 This is supported copying, not the independent checkpoint.

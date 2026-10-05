@@ -43,6 +43,12 @@ it("builds a Punjabi A1 date field from taught months to independent Gurmukhi en
   expect([selection!.answer, ...selection!.accepted].every(
     (response) => response.includes("B") && response.includes("੨੫/੦੨/੨੦੨੫"),
   )).toBe(true);
+  for (const id of ["PA-W09-date-supported", "PA-W09-date-delayed"]) {
+    const [field] = compileLessonActivities(byId.get(id)!.blocks);
+    expect([field!.answer, ...field!.accepted].every(
+      (response) => response.includes("ਤਾਰੀਖ਼:"),
+    )).toBe(true);
+  }
   const [dictation] = compileLessonActivities(byId.get("PA-W09-date-dictation")!.blocks);
   expect(dictation!.prompt).not.toMatch(/fifteenth|January|two thousand|[੦-੯]/i);
 

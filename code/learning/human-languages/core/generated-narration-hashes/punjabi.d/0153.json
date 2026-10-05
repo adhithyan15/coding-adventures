@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 153,
-  "sourceHash": "fnv1a64:bc93a4f71e4529da",
+  "sourceHash": "fnv1a64:d68e460a991bd089",
   "lessonIds": [
     "PA-W09-date-label",
     "PA-W09-month-map",
@@ -20,6 +20,6 @@
   "text": "punjabi/narration/ch153.txt",
   "json": "punjabi/narration/ch153.json",
   "textHash": "fnv1a64:7e5c259d26ae2d41",
-  "jsonHash": "fnv1a64:c5c4a48ab8b037b1",
+  "jsonHash": "fnv1a64:3a655a94e26ef058",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 153,
   "title": "Write One Fictional Date Field",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bc93a4f71e4529da",
+  "sourceHash": "fnv1a64:d68e460a991bd089",
   "lessons": [
     {
       "id": "PA-W09-date-label",
@@ -544,7 +544,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:43a6d86309e5f6a2",
+      "sourceHash": "fnv1a64:891ece602a54a03a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -610,7 +610,6 @@
               "responseSeconds": 32,
               "acceptedResponses": [
                 "ਤਾਰੀਖ਼: ੧੫/੦੧/੨੦੨੫",
-                "੧੫/੦੧/੨੦੨੫",
                 "ਤਾਰੀਖ਼:੧੫/੦੧/੨੦੨੫"
               ],
               "feedback": {
@@ -636,7 +635,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:38a8f872ec784b20",
+      "sourceHash": "fnv1a64:002d72867d8ab8fe",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -702,7 +701,6 @@
               "responseSeconds": 36,
               "acceptedResponses": [
                 "ਤਾਰੀਖ਼: ੨੫/੦੨/੨੦੨੫",
-                "੨੫/੦੨/੨੦੨੫",
                 "ਤਾਰੀਖ਼:੨੫/੦੨/੨੦੨੫"
               ],
               "feedback": {
