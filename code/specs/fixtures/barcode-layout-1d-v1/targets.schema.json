@@ -9,8 +9,8 @@
     "profile": { "const": "barcode-layout-1d-v1-targets" },
     "targets": {
       "type": "array",
-      "minItems": 12,
-      "maxItems": 12,
+      "minItems": 15,
+      "maxItems": 15,
       "items": { "$ref": "#/$defs/target" }
     }
   },
@@ -71,6 +71,10 @@
           "then": { "properties": { "package_root": { "const": "code/packages/csharp/barcode-layout-1d" } } }
         },
         {
+          "if": { "properties": { "language": { "const": "dart" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/dart/barcode-layout-1d" } } }
+        },
+        {
           "if": { "properties": { "language": { "const": "elixir" } }, "required": ["language"] },
           "then": { "properties": { "package_root": { "const": "code/packages/elixir/barcode_layout_1d" } } }
         },
@@ -85,6 +89,14 @@
         {
           "if": { "properties": { "language": { "const": "haskell" } }, "required": ["language"] },
           "then": { "properties": { "package_root": { "const": "code/packages/haskell/barcode-layout-1d" } } }
+        },
+        {
+          "if": { "properties": { "language": { "const": "java" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/java/barcode-layout-1d" } } }
+        },
+        {
+          "if": { "properties": { "language": { "const": "kotlin" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/kotlin/barcode-layout-1d" } } }
         },
         {
           "if": { "properties": { "language": { "const": "lua" } }, "required": ["language"] },
@@ -116,7 +128,7 @@
         }
       ],
       "properties": {
-        "language": { "enum": ["csharp", "elixir", "fsharp", "go", "haskell", "lua", "perl", "python", "ruby", "rust", "swift", "typescript"] },
+        "language": { "enum": ["csharp", "dart", "elixir", "fsharp", "go", "haskell", "java", "kotlin", "lua", "perl", "python", "ruby", "rust", "swift", "typescript"] },
         "status": { "enum": ["pending-adoption", "conformant"] },
         "api_family": { "enum": ["modern", "legacy"] },
         "package_root": { "type": "string", "pattern": "^code/packages/[^/]+/[^/]+$" },

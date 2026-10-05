@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16706,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16706",
-    "branch": "codex/parity-barcode-layout-elixir-lua-20261005",
-    "implementation_revision": "9231812e3c993a8614104b199f888f892b912238",
+    "number": 16717,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16717",
+    "branch": "codex/parity-barcode-layout-jvm-dart-20261005",
+    "implementation_revision": "a83535aa7f70bb40c8a0ae3bf4be4c68de503ec4",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-05T07:41:36Z",
-    "pr_number": 16706,
+    "observed_at": "2026-10-05T09:54:38Z",
+    "pr_number": 16717,
     "status": "checks-pending",
-    "notes": "Ready-for-review PR #16706 opened after focused Elixir, Lua, downstream, fixture, capability, build syntax, diff, and security validation. GitHub reports MERGEABLE with no merge conflict, but initial CI and CodeQL checks are queued. Registry promotion and durable active-PR state are being added to the same branch; auto-merge remains disabled while checks are pending."
+    "notes": "Draft PR #16717 was opened only to bind tested Java, Kotlin, and Dart package trees to the durable adoption number. GitHub reports MERGEABLE with initial checks queued; auto-merge remains disabled. Conformant evidence and pr-open state are being added before marking the same PR ready for review."
   },
   "last_inventory": {
-    "revision": "91d191d2244b78717c6c24a8f6f2fa185398507c",
+    "revision": "9a99df33af2dc2dfe89e0748422e4ba387f97e22",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -10618,8 +10618,11 @@
       "implementation_revision": "9a99df33af2dc2dfe89e0748422e4ba387f97e22",
       "validation_revision": "9a99df33af2dc2dfe89e0748422e4ba387f97e22",
       "validation_notes": "Both native v1 adapters execute all 56 neutral cases. Elixir package passes six tests at 91.44% coverage; seven direct and aggregate downstream suites pass above 80%. Lua's package and seven downstream test bodies pass through a local Busted-compatible harness because the installed Windows LuaRocks executable hangs even for --version; CI runs the normal Busted front. Shared fixture and reporter tests, capability schemas, build syntax, diff checks, and a read-only security review pass. Three reviewer-discovered bounded-input defects were fixed with regression tests and re-reviewed.",
-      "publication_notes": "PR #16706 squash-merged. Evidence now references the durable merge commit; Elixir and Lua package-tree hashes are unchanged. Deleted PR-head objects are not repository evidence.",
+      "publication_notes": "Ready-for-review PR #16706 carried the Elixir and Lua package trees bound to pre-publication implementation revision 9231812e3c993a8614104b199f888f892b912238. The final evidence registry promoted both canonical package roots on the same PR; the durable squash merge preserves those package trees.",
+      "merged_head_revision": "52276b074f2d664c20ab53851c115b4b2c8777a8",
+      "merged_at": "2026-10-05T08:50:07Z",
       "merge_revision": "9a99df33af2dc2dfe89e0748422e4ba387f97e22",
+      "merge_notes": "All 53 final-head checks were terminal and acceptable (12 successes and 41 expected skips). GitHub reported MERGEABLE and CLEAN; guarded squash auto-merge completed without a manual merge. Exact package-tree identities remain unchanged at the durable merge commit.",
       "selection_notes": "Selected after merged PR #16361 and exact-main Git-tree schema-3 inventory refresh. The 15 established lanes have 1,487 identities and 4,754 slots, with zero canonical collisions or unknown buckets. Eleven newly discovered TypeScript Forme roots were first assigned to the existing Forme family classification owner. All three dependencies are merged; reconciling the two pending established implementations completes the 12-target barcode-layout registry and unlocks 13 pending descendant owners, including Java/Kotlin/Dart layout parity. A live open-PR path audit found no overlap with package, fixture, state, or roadmap paths. Work begins on a fresh clean branch from exact origin/main.",
       "notes": "The collision-checked follow-up audit found established implementations at code/packages/elixir/barcode_layout_1d and code/packages/lua/barcode_layout_1d that were omitted from the eight-target adoption registry. Reconcile both legacy APIs with the complete barcode-layout-1d-v1 corpus, strict bounded fixture loading, exact error precedence, zero-authority text rejection, metadata projection, overflow behavior, immutability, native build fronts, capability evidence, and downstream consumers before either lane is reported conformant."
     },
@@ -10644,12 +10647,29 @@
       "notes": "Ruby and Swift retain their legacy public APIs and now expose strict additive v1 facades, execute all 56 neutral cases dynamically, publish empty capability manifests, preserve zero-authority resolver precedence, and carry native build and downstream evidence. Elixir and Lua remain truthfully pending in the complete 12-target registry."
     },
     {
-      "id": "barcode-layout-1d-java-kotlin-dart-lane-parity",
-      "title": "Complete barcode-layout-1d parity in Java, Kotlin, and Dart",
+      "id": "build-tool-shared-input-multiconsumer-diff-selection-fixture",
+      "title": "Prove reverse diff selects every declared consumer of one shared input",
       "status": "pending",
-      "depends_on": ["barcode-layout-1d-language-neutral-conformance", "barcode-layout-existing-lanes-v1-conformance", "barcode-layout-1d-ruby-swift-v1-conformance", "barcode-layout-1d-elixir-lua-v1-conformance"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus"],
       "branch": null,
       "pr_number": null,
+      "notes": "Post-#16706 read-only audit found that the normative repository-boundary reverse-diff contract selects every applicable declared consumer, but the checked-in neutral case exercises only one Swift consumer. Add a process-free corpus case for the registered Haskell cabal.project shared input with arithmetic and clock declared as consumers and an unregistered decoy excluded; pin its boundary digest and focused runner assertion before further engine adoptions. This is separate from the selected Java/Kotlin/Dart barcode-layout foundation."
+    },
+    {
+      "id": "barcode-layout-1d-java-kotlin-dart-lane-parity",
+      "title": "Complete barcode-layout-1d parity in Java, Kotlin, and Dart",
+      "status": "pr-open",
+      "depends_on": ["barcode-layout-1d-language-neutral-conformance", "barcode-layout-existing-lanes-v1-conformance", "barcode-layout-1d-ruby-swift-v1-conformance", "barcode-layout-1d-elixir-lua-v1-conformance"],
+      "branch": "codex/parity-barcode-layout-jvm-dart-20261005",
+      "pr_number": 16717,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16717",
+      "selected_at": "2026-10-05T08:51:51Z",
+      "selection_revision": "9a99df33af2dc2dfe89e0748422e4ba387f97e22",
+      "implementation_revision": "a83535aa7f70bb40c8a0ae3bf4be4c68de503ec4",
+      "validation_revision": "a83535aa7f70bb40c8a0ae3bf4be4c68de503ec4",
+      "validation_notes": "All 56 neutral cases execute dynamically in Java, Kotlin, and Dart, with native examples and text-request precedence assertions. Java Gradle check passes 62 tests at 100% JaCoCo line coverage; Kotlin Gradle check passes at 98.71%; Dart native and conformance direct tests pass (+5 and +58), analysis/format pass, and coverage-gated conformance reaches 95.51% lines. The shared registry suite passes nine tests. Three schema-v1 empty-capability manifests, build fronts, exact package-tree evidence, rebase, diff hygiene, and read-only security review are recorded; two reviewer findings on pending path containment and bounded fixture reads were fixed and retested. On this Windows host the Dart aggregate test runner cannot launch its relative frontend-server path, so checked-in Windows BUILD runs the same test files directly; the coverage launcher with an explicit test script passes.",
+      "publication_notes": "Draft PR #16717 was opened only to obtain its durable adoption number. This PR promotes all three previously pending targets using tested package trees at a83535aa7f70bb40c8a0ae3bf4be4c68de503ec4; it will be marked ready after this evidence commit and full PR summary are pushed. Initial CI is pending, and auto-merge is disabled until all required checks are terminal and acceptable with no conflict.",
+      "selection_notes": "Selected only after #16706 passed all 53 checks and merged by guarded auto-merge. A collision-checked exact-merge Git-tree refresh found 15 established lanes, 1,487 identities, 4,754 occupied slots, five emerging OCaml roots, zero canonical collisions, zero unknown buckets, and no newly unowned gap. All four dependencies are merged; this missing pure geometry foundation unlocks six Java/Kotlin/Dart symbology owners and the barcode-1d facade. A live open-PR path audit found no overlap across prospective barcode, fixture, state, or roadmap paths. The distinct shared-input multi-consumer build-tool fixture was added as a pending owner before this selection.",
       "notes": "Port the pure shared geometry layer into the three missing established lanes using their existing paint-instructions packages. Preserve exact pattern expansion, symbol inference, spans, finite checked geometry, authoritative metadata, immutable outputs, fail-closed text behavior, and empty capability profiles."
     },
     {
