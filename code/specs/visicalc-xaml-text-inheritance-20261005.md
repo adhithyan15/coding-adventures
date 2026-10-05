@@ -21,3 +21,5 @@ Validate nested color/alignment and local overrides, siblings, repeated/conditio
 ## CI repair for #16719
 
 The repository metadata gate references a deleted PR-head commit for the merged Elixir/Lua barcode adoption. Bind registry and owning backlog-item implementation/validation revisions to verified squash merge 9a99df33af2dc2dfe89e0748422e4ba387f97e22. Keep package-tree hashes unchanged, mark that item merged, and preserve unrelated parity-loop scheduling state for its owner. Validate the neutral fixture contract and JSON state. No gate weakening or package implementation changes.
+
+The main refresh also brings merged PR #16717. Apply the same durable-evidence rule to its Java/Kotlin/Dart targets after verifying all three tree hashes against squash merge 103296279680459f634c213a1cf3828367e71568. Preserve main's complete Elixir/Lua merge record when resolving the overlapping state edit.
