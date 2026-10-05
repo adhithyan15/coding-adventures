@@ -8,5 +8,7 @@
   navigation offline and retaining only bounded atomic evidence.
 - Build the quality lane from committed local-package locks with dependency
   lifecycle scripts disabled and reviewed package builds invoked explicitly.
+- Install Chrome's hosted-runner runtime libraries through the pinned setup
+  action while retaining the browser sandbox.
 - Document the cross-site quality command and close FM-B070 in the living Forme
   completion roadmap.

@@ -207,6 +207,11 @@ class CIGateRegistryTests(unittest.TestCase):
             self.assertIn(artifact, body)
         self.assertIn("exit 1", body)
 
+    def test_forme_web_quality_installs_browser_runtime_without_disabling_sandbox(self) -> None:
+        body = self._job_body("forme-web-quality")
+        self.assertIn("install-dependencies: true", body)
+        self.assertNotIn("--no-sandbox", body)
+
     def _job_body(self, job_id: str) -> str:
         """Return the ci.yml text of one job, from its key to the next job key."""
         start = self.jobs_section.index(f"\n  {job_id}:\n")
