@@ -4,7 +4,7 @@
   "chapter": 153,
   "title": "Write One Fictional Date Field",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b419f19727d445bf",
+  "sourceHash": "fnv1a64:66aa453807f9527a",
   "lessons": [
     {
       "id": "PA-W09-date-label",
@@ -192,7 +192,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:e2f84f0a59d0df50",
+      "sourceHash": "fnv1a64:9d5d300edc5808dc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -247,7 +247,7 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "PA-W09-format-check",
+              "id": "PA-W09-date-format-check",
               "prompt": "On this printed day/month/year form, which box holds the month?",
               "assesses": [
                 "PA-FORM-DATE-FORMAT-01"
@@ -367,7 +367,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:80633fcc17746e35",
+      "sourceHash": "fnv1a64:5b1b47493764e09e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -545,7 +545,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:8055f4c4f1af5594",
+      "sourceHash": "fnv1a64:43a6d86309e5f6a2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -562,7 +562,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to the ਤਾਰੀਖ਼ (tārīkh) label. Keep the closed bank in view: A ੧੫/੦੧/੨੦੨੫ (heard fictional date A) (fictional January date A), B ੨੫/੦੨/੨੦੨੫ (fictional February date B)."
+              "text": "Point to the ਤਾਰੀਖ਼ (tārīkh) label and to both bank entries. Keep the closed bank in view: A ੧੫/੦੧/੨੦੨੫ (heard fictional date A) (fictional January date A), B ੨੫/੦੨/੨੦੨੫ (fictional February date B)."
             }
           ]
         },
@@ -637,7 +637,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:44b2ee5f27517dc4",
+      "sourceHash": "fnv1a64:a0e46571e6839d08",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -729,7 +729,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:6cb9a4660e11cf3e",
+      "sourceHash": "fnv1a64:b2a7e08a7e75518a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -817,7 +817,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:54ff670c8996746d",
+      "sourceHash": "fnv1a64:80e269caa058a10f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -906,7 +906,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:f8c91db14459711c",
+      "sourceHash": "fnv1a64:90b46a8d676015d8",
       "notice": {
         "modality": "pen",
         "needs": [

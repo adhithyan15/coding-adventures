@@ -128,7 +128,7 @@ Fill one date line with help — fill one date line with the model and bank visi
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
-Point to the ਤਾਰੀਖ਼ (tārīkh) label. Keep the closed bank in view: A ੧੫/੦੧/੨੦੨੫ (heard fictional date A) (fictional January date A), B ੨੫/੦੨/੨੦੨੫ (fictional February date B).
+Point to the ਤਾਰੀਖ਼ (tārīkh) label and to both bank entries. Keep the closed bank in view: A ੧੫/੦੧/੨੦੨੫ (heard fictional date A) (fictional January date A), B ੨੫/੦੨/੨੦੨੫ (fictional February date B).
 
 Writing — supported entry.
 For the fictional card ਕ, select A. Copy its day into the first box, January's numeric month into the middle box, and its year into the final box: ਤਾਰੀਖ਼ (tārīkh): ੧੫/੦੧/੨੦੨੫ (heard fictional date A) (fictional January date A) (supported fictional date field). Keep both slash marks.
