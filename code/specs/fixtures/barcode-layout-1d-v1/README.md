@@ -29,9 +29,9 @@ spec. Compact `repeat`, `repeatRuns`, and `repeatSymbols` inputs are fixture
 transport encodings; their limits are validated before expansion.
 
 `targets.json` records the fifteen established implementation lanes and their
-adapter/test hooks. The twelve existing implementations are conformant with
-the portable v1 contract; Java, Kotlin, and Dart remain explicitly pending
-until their packages and complete native evidence are added. A pending target may name only its planned
+adapter/test hooks. All fifteen implementations are conformant with the
+portable v1 contract, including the Java, Kotlin, and Dart pure geometry ports.
+A pending target may name only its planned
 conformance test and known divergences; promotion fields are rejected. A conformant target must
 name an executed package test, carry the exact raw `cases.json` SHA-256, bind a
 reachable tested revision, match the checked-out canonical package tree,
