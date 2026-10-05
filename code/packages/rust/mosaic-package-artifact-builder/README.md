@@ -314,6 +314,41 @@ files, go through `write_export_file`, which is exempt. Two exports whose names
 differ only in letter case (`Card`, `CARD`) are refused on every build, flat
 or project, for the same reason.
 
+### Android `[host_effects]` (UI89 §3.12)
+
+A Compose project build also writes `compose/android/`. A package's Android
+effect handler is a `[host_effects]` entry of its own, `compose-android`,
+because the desktop `compose` one opens Swing dialogs:
+
+```toml
+[host_effects]
+files = [
+  { backend = "compose-android", source = "host/android/EngramAndroidEffects.kt",
+    target = "src/main/kotlin/EngramAndroidEffects.kt" },
+]
+handlers = [
+  { backend = "compose-android", install = "installEngramAndroidEffects",
+    kinds = ["importAnki", "exportAnki"] },
+]
+```
+
+The files are copied into the Android project only, under the desktop
+copy's rules: inside the package, and a regular file. Each target must be a
+Kotlin source under `src/main/kotlin/`; elsewhere in the project a file would
+reach the build itself (`buildSrc/`), the merged manifest or the native
+libraries. A target that would
+replace a file the Android project already holds is refused, compared
+without case. `MosaicActivity` calls the install function as the host loads,
+then installs the platform library with the handler's `kinds`:
+
+```kotlin
+?.also { installEngramAndroidEffects(it); platformRouter = installMosaicPlatformEffects(it, documentPicker, setOf("importAnki", "exportAnki")) }
+```
+
+A plain install name is imported into `mosaic.android`, and a dotted one is
+called by its full name. `include` and a `:` qualifier are refused, because
+Kotlin has neither.
+
 ## Layout Per Backend
 
 | Backend | Files written |

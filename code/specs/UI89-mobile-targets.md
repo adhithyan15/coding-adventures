@@ -326,9 +326,10 @@ What step 4 changed from §3.4, and why:
   `android/src/main/kotlin`: `MosaicAppShell.kt`, `MosaicRuntimeHost.kt`, and
   every exported component with its layout variants. It writes the Android
   project last, after `[host_assets]` and `[host_effects]` are installed (the
-  iOS project's rule), so a replaced shared file reaches Android too. Package
-  effect handlers stay desktop-only; the standard file effects reach Android
-  through its own platform library (§3.8).
+  iOS project's rule), so a replaced shared file reaches Android too. The
+  desktop `compose` effect handlers stay on the desktop; a package's Android
+  handler is its own `compose-android` entry (§3.12), and the standard file
+  effects reach Android through its own platform library (§3.8).
 - **The activity lives in a package.** A manifest cannot name a class in the
   root package, and the shared sources live there. `MosaicActivity` is
   `mosaic.android.MosaicActivity`, and imports the root-package shell, which
@@ -543,10 +544,9 @@ where both paths share it.
   here: the provider owns the file, and SAF offers no atomic replace.
 - *Install.* `MosaicActivity` installs the library when the host loads, as
   the desktop `Main.kt` does: `installMosaicPlatformEffects(host, picker)`,
-  with the picker it built in `onCreate`, returning the router. Package
-  `[host_effects]` handlers remain desktop-only (§3.5),
-  so on Android the standard kinds always go to the library, and any other
-  kind is failed by the host as unanswered.
+  with the picker it built in `onCreate`, returning the router. Without a
+  `compose-android` handler (§3.12), the standard kinds always go to the
+  library, and any other kind is failed by the host as unanswered.
 - *The activity goes away.* `MosaicActivity` already handles rotation and
   size changes itself. If it is destroyed anyway while a picker is open (the
   system reclaims it), the router answers the waiting effect `failed` with a
@@ -759,7 +759,7 @@ does (§3.9), with two differences that are Engram's own:
   (§3.5). On Android the platform library answers the standard `files.*`
   kinds. An Anki import or export is failed by the host as unanswered, so
   the app reports it and is never left waiting. An Android handler, through
-  the document picker of §3.8, is its own later step.
+  the document picker of §3.8, is its own later step. (Since done: §3.12.)
 
 Everything else is Journal's:
 
@@ -820,14 +820,92 @@ shared `MosaicFileEffects.kt`, so the desktop Compose library has it too.
 - **Gate.** The JVM harness (`MosaicPlatformEffectsTest`) drives both
   operations with the fake pickers, mirroring the Swift checks of §2.6.
 
-**Android `[host_effects]` (second PR).** Today Android installs no package
-handler: the Compose handler is the desktop's, AWT and all (§3.5). A package
-may declare handler files and a handler for the `android` target. The
+**Android `[host_effects]` (second PR).** Before it, Android installed no
+package handler: the Compose handler is the desktop's, AWT and all (§3.5). A
+package may declare handler files and a handler for its own Android target
+(`compose-android`, §3.12). The
 builder copies those files into `android/src/main/kotlin`, and
 `MosaicActivity` installs the handler on the host before the platform
 library, passing its `kinds`. Engram gains an Android handler that answers
 `importAnki` and `exportAnki` through the seam above, with the rules of
 §2.6. That PR specifies the manifest form in its own subsection.
+
+### 3.12 Android `[host_effects]` (§3.11, second PR)
+
+Written before implementation.
+
+- **Manifest form.** `compose-android` is a handler target of its own, so
+  nothing in the manifest format changes:
+
+  ```toml
+  [host_effects]
+  files = [
+    { backend = "compose-android", source = "host/android/EngramAndroidEffects.kt",
+      target = "src/main/kotlin/EngramAndroidEffects.kt" },
+  ]
+  handlers = [
+    { backend = "compose-android", install = "installEngramAndroidEffects",
+      kinds = ["importAnki", "exportAnki"] },
+  ]
+  ```
+
+  The desktop `compose` handler is untouched, so a package can declare both.
+  The manifest already allows one handler per backend name, and requires
+  every file to belong to a declared handler.
+- **Files.** The Android project writer copies `compose-android` files into
+  `compose/android/<target>` after the shared sources, under the same rules
+  as `install_host_effects`:
+  - paths relative to the package, with no `..` and nothing absolute;
+  - the source resolved inside the package and a regular file;
+  - the target a Kotlin source (`.kt`) under `src/main/kotlin/`. A handler
+    is Kotlin, and elsewhere in the project a file has more reach than a
+    handler needs: `buildSrc/` runs at build time,
+    `src/debug/AndroidManifest.xml` is merged into the app, and
+    `src/main/jniLibs/` is wiped by the runtime copy. (Added after review.)
+
+  A target that would replace any file the Android project already holds
+  (`MosaicActivity.kt`, a shared source, a component) is refused, compared
+  without case, because the handler would silently replace generated code.
+- **Install.** `MosaicActivity` calls the handler's `install(host)` on the
+  loaded `MosaicRuntimeHost`, then installs the platform library with the
+  handler's `kinds`. Android's `installMosaicPlatformEffects(host, picker,
+  appKinds)` gains the `appKinds` parameter. With no handler, nothing
+  changes. The activity lives in `mosaic.android`, so a plain install
+  name (a root-package function) is imported there, and a dotted one is
+  called by its full name. The manifest already restricts the name to an
+  identifier path; the builder also refuses:
+  - `:` or `::`, which the manifest allows for C++ and C#, and Kotlin
+    cannot compile;
+  - `include`, as the desktop Compose handler does: Kotlin has no include
+    directive, so the field would be silently ignored.
+- **Only with an Android project.** `compose-android` entries are used only
+  when the Compose build writes `android/` (`--emit-project`). Every other
+  backend ignores them, as it ignores another backend's entries.
+- **Engram.** `host/android/EngramAndroidEffects.kt` answers `importAnki`
+  and `exportAnki` through `mosaicPlatformRouter(host)` and the §3.11 seam,
+  with the rules of §2.6:
+  - import: `.apkg` / `.colpkg`, 256 MiB, answers `ok { apkg }`;
+  - export: strict base64 and a zip local header, `.apkg` only, the
+    suggested name with `.apkg` added, falling back to `engram.apkg`. The
+    decode runs on the main thread, so base64 longer than a 256 MiB package
+    is refused before it, and running out of memory while decoding is
+    answered as a failure (added after review).
+
+  Without a router it answers "file dialogs are not available on this
+  platform". A refusal never throws.
+- **Gates.**
+  - Builder tests: the files are copied, the activity installs the handler
+    with its kinds before the platform library (strict and sample), and a
+    colliding target, a target outside `src/main/kotlin/*.kt`, a source
+    outside the package, a directory, `include` and a colon are refused.
+  - The Engram Compose CI step greps the generated activity for the install
+    line before building the APK.
+  - The Engram APK's dex must now hold `EngramAndroidEffectsKt` and still
+    not `EngramEffectsKt`.
+  - The JVM harness keeps covering the seam. The handler itself is
+    type-checked by the APK build. Driving it on a device needs §4's
+    instrumented test; until then it was driven once against the real
+    router and a fake picker, outside the repository.
 
 ## 4. CI
 

@@ -87,6 +87,9 @@ files = [
   # the target is a path there and no build-list entry is needed -- the same
   # shape as SwiftUI, unlike Qt.
   { backend = "compose", source = "host/compose/EngramEffects.kt", target = "src/main/kotlin/EngramEffects.kt" },
+  # Android's own (UI89 §3.12): copied into the Compose build's Android
+  # project, never the desktop one, whose Swing dialogs Android does not have.
+  { backend = "compose-android", source = "host/android/EngramAndroidEffects.kt", target = "src/main/kotlin/EngramAndroidEffects.kt" },
 ]
 # Each handler claims Engram's two kinds explicitly (UI87 §7.2). Every
 # handler already answers exactly these and fails anything else, so this is the
@@ -103,6 +106,9 @@ handlers = [
   # No `include`: Kotlin has no include directive and every file in the module
   # is visible. The emitter refuses one here for exactly that reason.
   { backend = "compose", install = "installEngramEffects", kinds = ["importAnki", "exportAnki"] },
+  # Installed by the generated `MosaicActivity`, before the platform library,
+  # which lends it the document picker (UI89 §3.11).
+  { backend = "compose-android", install = "installEngramAndroidEffects", kinds = ["importAnki", "exportAnki"] },
 ]
 
 [kernel]
