@@ -960,7 +960,10 @@ cold launches against one state file:
   `androidx.test.ext:junit` and `androidx.compose.ui:ui-test-junit4` at the
   androidx version that the pinned JetBrains Compose version resolves to on
   Android (checked with `dependencyInsight` in the implementation PR, and
-  pinned beside it). The app APK is unchanged: `assembleDebug` never resolves
+  pinned beside it). Every `androidTest` dependency, including §4.4's
+  `espresso-intents`, is pinned to an exact version (no `+`, range or
+  BOM-only resolution) and comes from the app's own repositories. The app
+  APK is unchanged: `assembleDebug` never resolves
   the `androidTest` classpath, and no `debugImplementation` test manifest is
   needed because the rule drives `MosaicActivity` itself.
 - **The test.** `createAndroidComposeRule<MosaicActivity>()`, so the real
@@ -984,8 +987,13 @@ cold launches against one state file:
      raw output and requires `INSTRUMENTATION_CODE: -1` with an
      `OK (<n> tests)` line and no `FAILURES!!!`. An empty or truncated
      output fails, as the gate's logcat read does.
-  The package and class names are validated as the gate validates its own
-  (they reach a remote shell command line).
+  `adb shell` joins its arguments into one remote command line, so nothing
+  the caller passes reaches it unchecked: the package must match the gate's
+  package pattern, and the test class
+  `^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)+$` (no `$`, `#` or
+  space, which the device shell would expand or cut). `mosaicLaunch` is the
+  literal 1 or 2 in the script, never the caller's. The APK paths go only to
+  host-side `adb install`, as separate arguments.
 - **Where it runs.** In the emulator step, after the three-launch gate for
   the same app. The gate leaves state behind, which is why the script clears
   first rather than relying on a fresh install.
@@ -1002,7 +1010,12 @@ cold launches against one state file:
   `project.pbxproj`, so CI cannot copy a test in afterwards as it does on
   Android: the builder takes the test sources through a new
   `mosaic-compile --ios-ui-test <file.swift>` (repeatable). Without the flag
-  the project is exactly today's: one target, no scheme.
+  the project is exactly today's: one target, no scheme. The flag takes
+  only a `.swift` file whose name matches `^[A-Za-z0-9_]+\.swift$`. The file
+  is copied into the project, and only that basename reaches
+  `project.pbxproj`, through the same `check_path` as every other source.
+  The scheme is XML built from the same names, so its attribute values are
+  escaped, and builder tests cover a product name with `&` and `"`.
 - **The test.** `XCUIApplication`: launch, act, `terminate()`, `launch()`
   again. A real terminate gives the new process launch 2 needs inside one
   test method. Nodes are found with `descendants(matching: .any)
@@ -1030,15 +1043,26 @@ the OS. Both platforms answer the picker for the test instead:
 - **Android.** Espresso-Intents stubs `ACTION_OPEN_DOCUMENT` and
   `ACTION_CREATE_DOCUMENT` (the Activity Result API starts them through
   `startActivityForResult`, which Espresso-Intents intercepts) with a URI the
-  test owns. The test checks that an import of a fixture `.apkg` adds its
+  test owns. Any provider that answers the stub is declared only in the
+  `androidTest` manifest, so it ships in the test APK and never in the app's
+  main or debug manifest. It is `exported="false"` and grants per-URI
+  access. A `file://` fixture lives in the app's own cache and is written by
+  the test. The builder test that pins `assembleDebug`'s output also checks
+  that the app's manifest gains no provider. The test checks that an import of a fixture `.apkg` adds its
   cards to the screen, and that an export writes a zip whose first bytes are
   a local header. Whether the URI is a `file://` in the app's cache or a
   test-only provider is decided there, by what the picker's
   `OpenableColumns.DISPLAY_NAME` query needs.
 - **iOS.** The picker is presented by the platform library, so the test
   build swaps in the fake picker the Swift harness already uses (§2.6) when
-  launched with a test-only argument. That needs a seam in the generated app
-  and is designed in that PR.
+  launched with a test-only argument. The seam is compiled only with the UI
+  test: it lives in a source file the builder adds only under
+  `--ios-ui-test`, and only to the Debug configuration. A project built
+  without the flag, and any Release build, has no code that reads the
+  argument, and builder tests assert both. The argument only selects the
+  fake. It never carries a path or URL, and the fake reads and writes fixed
+  fixture names inside the app's own container. The rest of the seam is
+  designed in that PR.
 
 ### 4.5 Order and gates
 
