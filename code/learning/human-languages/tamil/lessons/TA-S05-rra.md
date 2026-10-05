@@ -55,12 +55,12 @@ It is the ṟ in நன்றி — and with it, every consonant of *thank you*
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-DRIZZLE-05] -->
 
 - **1.** start at the lower left, climb the left side, and arch to the middle
-- **2.** without lifting, descend the first middle upright — then lift once
-- **3.** set the pen at the adjacent middle upright and descend — then lift a second time
-- **4.** set the pen at the middle top, arch over, and descend the right side
-- **5.** without lifting again, sweep left below the baseline and drop into the long descender — and only now lift
+- **2.** without lifting, descend the middle upright
+- **3.** without lifting, climb back up the same upright
+- **4.** without lifting, arch over and descend the right side
+- **5.** without lifting, sweep left below the baseline and drop into the long descender — and only now lift
 
-**Pen lifts: 2.** The pen comes up 2 times and no more.
+**Pen lifts: 0.** The pen never leaves the paper.
 
 > Stroke order is one attested teaching order, not a national standard —
 > Tamil handwriting is taught with school-to-school variation. Source:

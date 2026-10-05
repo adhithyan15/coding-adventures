@@ -15,41 +15,32 @@ it("owns U-BA8 view evidence for ந", () => {
   expect(ductusFor("ந")).toBe(DENTAL_NA);
 });
 
-describe("ந — a real cited three-stroke six-movement filmstrip", () => {
+describe("ந — a real cited one-stroke 6-movement filmstrip", () => {
   const steps = ductusSteps(DENTAL_NA);
   const strip = ductusFilmstrip(DENTAL_NA, dentalNaOutline);
 
-  it("marks the two source-backed lift transitions", () => {
-    expect(steps.map((step) => step.startsAfterLift)).toEqual([
-      false,
-      false,
-      true,
-      false,
-      true,
-      false,
-    ]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1, 2, 2]);
+  it("never lifts the pen between movements", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual(
+      Array(6).fill(false),
+    );
+    expect(steps.map((step) => step.strokeIndex)).toEqual(Array(6).fill(0));
   });
 
-  it("reports six movements in three strokes with two lifts", () => {
+  it("reports 6 movements in one unbroken stroke", () => {
     expect(strip.frames).toHaveLength(6);
-    expect(strip.penLifts).toBe(2);
-    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 6 movements");
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 6 movements");
   });
 
-  it("keeps both completed strokes visible during the right-bowl tail", () => {
-    const last = strip.frames[5];
+  it("draws the whole letter as the one pen path in the last frame", () => {
+    const last = strip.frames.at(-1)!;
     const done = byTag(last, "path").filter(
-      (path) => path.attrs.class === "ductus__done",
+      (node) => node.attrs.class === "ductus__done",
     );
     const pen = byTag(last, "path").find(
-      (path) => path.attrs.class === "ductus__pen",
+      (node) => node.attrs.class === "ductus__pen",
     )!;
-    expect(done).toHaveLength(2);
-    expect(done.map((path) => path.attrs.d)).toEqual([
-      penPathD(DENTAL_NA.strokes[0], 1),
-      penPathD(DENTAL_NA.strokes[1], 1),
-    ]);
-    expect(pen.attrs.d).toBe(penPathD(DENTAL_NA.strokes[2], 1));
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(DENTAL_NA.strokes[0], 1));
   });
 });
