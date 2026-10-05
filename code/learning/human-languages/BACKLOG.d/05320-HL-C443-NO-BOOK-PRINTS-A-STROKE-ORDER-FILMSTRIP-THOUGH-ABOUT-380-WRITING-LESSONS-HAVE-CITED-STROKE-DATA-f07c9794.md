@@ -146,6 +146,18 @@ That is about 380 filmstrips that could print today.
   જો, and ુ/ૂ under the 22 consonants that take a stem form);
   and the bucket-b lessons that have no Writing or Script block to land in
   (GU-C20 to GU-C23, GU-R21, GU-R23-map-ten, GU-W21).
+- **Devanagari signs drawn alone.** ु ू े ं ़ ् ृ and ँ gained a cited ductus
+  each (stroke count, start and direction from native writers' pen traces in
+  HP Labs India's LipiTk Devanagari recognizer, counts and shares only; paths
+  fitted to Noto). 32 sign lessons gained a one-glyph filmstrip: Hindi
+  44 → 54, Marathi 42 → 49, Sanskrit 39 → 48, Marwadi 33 → 39. Still open for
+  Devanagari: ा ि ी ो and ः (Noto prints a headline piece the sign-only traces
+  never draw, so the fit leaves 3.5% to 37% of the ink untraced; a cited
+  two-stroke form with the headline stub, such as ा's 28% minority, would
+  need a decision to draw a minority form), ै and ौ (the traces split), and
+  every word with a sign, which needs the written order of a sign against its
+  consonant and the shared headline (HP Labs' hpl-dvng-iso-word data would
+  show it, but its host is blocked here).
 - **Telugu consonants started with క.** The first base consonant now has the
   five-movement, two-run order from Sathish Shanmugam's packaged tracing guide,
   fitted to the bundled Noto Sans Telugu outline. Its existing `TE-S03` lesson

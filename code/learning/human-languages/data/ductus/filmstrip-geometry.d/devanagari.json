@@ -3,6 +3,76 @@
   "entries": [
     {
       "script": "devanagari",
+      "glyph": "ँ",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Devanagari recognizer, class 59 (ँ, candrabindu): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 79 of the 82 stored prototypes of the candrabindu (96%) are two pen-down strokes. In 76 of the 82 the crescent comes first and the dot second; all 79 two-stroke crescents run from left to right, turning anticlockwise, and 78 put the dot above the crescent. The dot's own direction is not settled (48 of the 82 end lower than they start), so it is drawn as a short downward dab. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant or the headline; the book draws the sign alone and composes no Devanagari word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Devanagari outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 3 movements",
+      "viewBox": {
+        "minX": -401,
+        "minY": -966,
+        "width": 516,
+        "height": 584.5
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "start at the crescent's left tip and curve down",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M-192 847Q-192 868 -177.5 882Q-163 896 -143 896Q-123 896 -108.5 882Q-94 868 -94 847Q-94 826 -108.5 811.5Q-123 797 -143 797Q-163 797 -177.5 811.5Q-192 826 -192 847ZM45 848Q27 754 -21.5 716Q-70 678 -143 678Q-216 678 -264.5 716Q-313 754 -331 848L-262 870Q-251 797 -220.5 769.5Q-190 742 -143 742Q-96 742 -65 769.5Q-34 797 -24 870L45 848Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-300 850 L-300 850\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-300 850 L-290 800 L-265 760 L-220 725\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-220\" cy=\"725\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-143\" y=\"-496.7\" text-anchor=\"middle\" font-size=\"41.3\" fill=\"#6b7280\"><tspan x=\"-143\" y=\"-496.7\">1. start at the</tspan><tspan x=\"-143\" y=\"-446.3\">crescent&apos;s left tip and</tspan><tspan x=\"-143\" y=\"-395.9\">curve down</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "round the bottom and up to the right tip",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M-192 847Q-192 868 -177.5 882Q-163 896 -143 896Q-123 896 -108.5 882Q-94 868 -94 847Q-94 826 -108.5 811.5Q-123 797 -143 797Q-163 797 -177.5 811.5Q-192 826 -192 847ZM45 848Q27 754 -21.5 716Q-70 678 -143 678Q-216 678 -264.5 716Q-313 754 -331 848L-262 870Q-251 797 -220.5 769.5Q-190 742 -143 742Q-96 742 -65 769.5Q-34 797 -24 870L45 848Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-300 850 L-290 800 L-265 760 L-220 725 L-220 725\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-220 725 L-160 712 L-100 725 L-55 760 L-30 800 L-20 850\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-20\" cy=\"850\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-143\" y=\"-496.7\" text-anchor=\"middle\" font-size=\"41.3\" fill=\"#6b7280\"><tspan x=\"-143\" y=\"-496.7\">2. round the bottom and</tspan><tspan x=\"-143\" y=\"-446.3\">up to the right tip</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "lift, then dab the dot above the crescent",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M-192 847Q-192 868 -177.5 882Q-163 896 -143 896Q-123 896 -108.5 882Q-94 868 -94 847Q-94 826 -108.5 811.5Q-123 797 -143 797Q-163 797 -177.5 811.5Q-192 826 -192 847ZM45 848Q27 754 -21.5 716Q-70 678 -143 678Q-216 678 -264.5 716Q-313 754 -331 848L-262 870Q-251 797 -220.5 769.5Q-190 742 -143 742Q-96 742 -65 769.5Q-34 797 -24 870L45 848Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-300 850 L-290 800 L-265 760 L-220 725 L-160 712 L-100 725 L-55 760 L-30 800 L-20 850\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M-152 872 L-152 872\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-152 872 L-152 851 L-152 830\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-152\" cy=\"830\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-143\" y=\"-496.7\" text-anchor=\"middle\" font-size=\"41.3\" fill=\"#6b7280\"><tspan x=\"-143\" y=\"-496.7\">3. lift, then dab the</tspan><tspan x=\"-143\" y=\"-446.3\">dot above the crescent</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "devanagari",
+      "glyph": "ं",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Devanagari recognizer, class 57 (ं, anusvara): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 156 of the 157 stored prototypes of the anusvara are one pen-down stroke, and 112 of the 157 (71%) turn anticlockwise. Where the small loop starts is less settled: 94 of the 157 (60%) start in its upper half, so the path starts at the top. The printed dot is solid, so the pen path circles inside it. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant or the headline; the book draws the sign alone and composes no Devanagari word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Devanagari outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": -255,
+        "minY": -900,
+        "width": 250,
+        "height": 401.8
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "start at the top and curve down the left side",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M-185 772Q-185 796 -168.5 813Q-152 830 -130 830Q-107 830 -91 813Q-75 796 -75 772Q-75 748 -91 731Q-107 714 -130 714Q-152 714 -168.5 731Q-185 748 -185 772Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-130 798 L-130 798\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-130 798 L-140 796 L-148 790 L-154 782 L-156 772 L-154 762 L-148 754 L-140 748 L-130 746\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-130\" cy=\"746\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-130\" y=\"-554\" text-anchor=\"middle\" font-size=\"20\" fill=\"#6b7280\"><tspan x=\"-130\" y=\"-554\">1. start at the top and</tspan><tspan x=\"-130\" y=\"-529.6\">curve down the left side</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "round the bottom and up the right side to close the loop",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M-185 772Q-185 796 -168.5 813Q-152 830 -130 830Q-107 830 -91 813Q-75 796 -75 772Q-75 748 -91 731Q-107 714 -130 714Q-152 714 -168.5 731Q-185 748 -185 772Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-130 798 L-140 796 L-148 790 L-154 782 L-156 772 L-154 762 L-148 754 L-140 748 L-130 746 L-130 746\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-130 746 L-120 748 L-112 754 L-106 762 L-104 772 L-106 782 L-112 790 L-120 796 L-130 798\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-130\" cy=\"798\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-130\" y=\"-554\" text-anchor=\"middle\" font-size=\"20\" fill=\"#6b7280\"><tspan x=\"-130\" y=\"-554\">2. round the bottom and</tspan><tspan x=\"-130\" y=\"-529.6\">up the right side to</tspan><tspan x=\"-130\" y=\"-505.2\">close the loop</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "devanagari",
       "glyph": "अ",
       "font": "_fonts/NotoSansDevanagari-Static.ttf",
       "source": {
@@ -2000,6 +2070,204 @@
           "label": "lift, then draw the shirorekha rightward",
           "startsAfterLift": true,
           "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M147 229Q112 256 90.5 286.5Q69 317 69 354Q69 408 107 436.5Q145 465 223 465L361 465L361 551L0 551L0 622L545 622L545 551L442 551L442 394L234 394Q190 394 169.5 381Q149 368 149 341Q149 322 161.5 304.5Q174 287 193 274L147 229ZM333 64Q368 79 386.5 100.5Q405 122 405 146Q405 179 378.5 200.5Q352 222 291 222Q222 222 185.5 193Q149 164 149 114Q149 74 176.5 42.5Q204 11 256.5 -16.5Q309 -44 383 -74L343 -142Q265 -110 203 -74.5Q141 -39 105 7.5Q69 54 69 117Q69 177 99 216Q129 255 179.5 274Q230 293 293 293Q361 293 403 272.5Q445 252 464.5 218.5Q484 185 484 145Q484 103 463.5 68.5Q443 34 390 6L333 64Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M402 550 L402 510 L402 470 L402 430 L360 430 L315 430 L270 430 L225 430 L180 420 L140 400 L110 370 L105 340 L110 310 L135 285 L175 265 L225 258 L280 260 L335 245 L385 220 L425 185 L445 145 L445 110 L425 70 L390 40\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M150 245 L125 220 L100 185 L88 145 L90 105 L110 65 L145 25 L190 -10 L240 -40 L295 -70 L350 -100\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M5 585 L5 585\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M5 585 L70 585 L135 585 L200 585 L265 585 L330 585 L395 585 L460 585 L540 585\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"540\" cy=\"585\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"272.5\" y=\"336.9\" text-anchor=\"middle\" font-size=\"54.9\" fill=\"#6b7280\"><tspan x=\"272.5\" y=\"336.9\">3. lift, then draw the</tspan><tspan x=\"272.5\" y=\"403.9\">shirorekha rightward</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "devanagari",
+      "glyph": "़",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Devanagari recognizer, class 62 (़, nukta): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 82 of the 83 stored prototypes of the nukta are one pen-down stroke, and all 82 move down and to the left: a short dab, not a closed loop. The printed dot is solid, so the dab runs inside it. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant or the headline; the book draws the sign alone and composes no Devanagari word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Devanagari outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 1 movement",
+      "viewBox": {
+        "minX": -408,
+        "minY": 6,
+        "width": 250,
+        "height": 377.4
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "dab the dot down to the left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M-338 -134Q-338 -110 -321.5 -93Q-305 -76 -283 -76Q-260 -76 -244 -93Q-228 -110 -228 -134Q-228 -159 -244 -175.5Q-260 -192 -283 -192Q-305 -192 -321.5 -175.5Q-338 -159 -338 -134Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-262 -112 L-262 -112\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-262 -112 L-283 -134 L-304 -156\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-304\" cy=\"-156\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-283\" y=\"352\" text-anchor=\"middle\" font-size=\"20\" fill=\"#6b7280\"><tspan x=\"-283\" y=\"352\">1. dab the dot down to</tspan><tspan x=\"-283\" y=\"376.4\">the left</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "devanagari",
+      "glyph": "ु",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Devanagari recognizer, class 50 (ु, u sign): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 79 of the 83 stored prototypes of the u sign (95%) are one pen-down stroke. In 67 of the 83 the pen starts in the top third of the sign, in 65 it turns clockwise, and in 65 it ends to the left of where it began (57 do all three): the pen swings right from the top, rounds the bowl and leaves to the left. The printed sign starts its upper arm partway down, so the path starts at the arm's tip. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant or the headline; the book draws the sign alone and composes no Devanagari word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Devanagari outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": -526,
+        "minY": -81,
+        "width": 612,
+        "height": 674.7
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "start at the upper arm's tip and swing to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M-162 -268Q-220 -268 -270.5 -249.5Q-321 -231 -366.5 -195.5Q-412 -160 -456 -110L-397 -57Q-357 -105 -320.5 -136Q-284 -167 -246 -181.5Q-208 -196 -165 -196Q-112 -196 -85.5 -176.5Q-59 -157 -59 -122Q-59 -93 -76 -75Q-93 -57 -128 -57Q-156 -57 -181 -69Q-206 -81 -229 -103L-274 -48Q-245 -19 -210 -4Q-175 11 -127 11Q-58 11 -21 -28.5Q16 -68 16 -129Q16 -194 -30 -231Q-76 -268 -162 -268Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-250 -78 L-250 -78\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-250 -78 L-215 -45 L-170 -25 L-125 -23 L-75 -35 L-35 -70\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-35\" cy=\"-70\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-220\" y=\"457\" text-anchor=\"middle\" font-size=\"49\" fill=\"#6b7280\"><tspan x=\"-220\" y=\"457\">1. start at the upper</tspan><tspan x=\"-220\" y=\"516.8\">arm&apos;s tip and swing to</tspan><tspan x=\"-220\" y=\"576.6\">the right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "round the bowl and back to the left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M-162 -268Q-220 -268 -270.5 -249.5Q-321 -231 -366.5 -195.5Q-412 -160 -456 -110L-397 -57Q-357 -105 -320.5 -136Q-284 -167 -246 -181.5Q-208 -196 -165 -196Q-112 -196 -85.5 -176.5Q-59 -157 -59 -122Q-59 -93 -76 -75Q-93 -57 -128 -57Q-156 -57 -181 -69Q-206 -81 -229 -103L-274 -48Q-245 -19 -210 -4Q-175 11 -127 11Q-58 11 -21 -28.5Q16 -68 16 -129Q16 -194 -30 -231Q-76 -268 -162 -268Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-250 -78 L-215 -45 L-170 -25 L-125 -23 L-75 -35 L-35 -70 L-35 -70\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-35 -70 L-22 -125 L-35 -180 L-80 -220 L-163 -232 L-163 -232\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-163\" cy=\"-232\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-220\" y=\"457\" text-anchor=\"middle\" font-size=\"49\" fill=\"#6b7280\"><tspan x=\"-220\" y=\"457\">2. round the bowl and</tspan><tspan x=\"-220\" y=\"516.8\">back to the left</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "sweep out to the lower-left tip",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M-162 -268Q-220 -268 -270.5 -249.5Q-321 -231 -366.5 -195.5Q-412 -160 -456 -110L-397 -57Q-357 -105 -320.5 -136Q-284 -167 -246 -181.5Q-208 -196 -165 -196Q-112 -196 -85.5 -176.5Q-59 -157 -59 -122Q-59 -93 -76 -75Q-93 -57 -128 -57Q-156 -57 -181 -69Q-206 -81 -229 -103L-274 -48Q-245 -19 -210 -4Q-175 11 -127 11Q-58 11 -21 -28.5Q16 -68 16 -129Q16 -194 -30 -231Q-76 -268 -162 -268Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-250 -78 L-215 -45 L-170 -25 L-125 -23 L-75 -35 L-35 -70 L-22 -125 L-35 -180 L-80 -220 L-163 -232 L-163 -232\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-163 -232 L-240 -220 L-310 -185 L-370 -135 L-420 -88\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-420\" cy=\"-88\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-220\" y=\"457\" text-anchor=\"middle\" font-size=\"49\" fill=\"#6b7280\"><tspan x=\"-220\" y=\"457\">3. sweep out to the</tspan><tspan x=\"-220\" y=\"516.8\">lower-left tip</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "devanagari",
+      "glyph": "ू",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Devanagari recognizer, class 51 (ू, uu sign): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. All 83 stored prototypes of the uu sign are one pen-down stroke. In 75 of them the pen first moves to the left, 72 turn clockwise, and 77 end lower and to the right of where they began (69 both turn clockwise and end there): the pen curls left round the loop, arches over its top and sweeps down the tail to the right. Where the stroke starts is less settled: 41 of the 83 start in the top third of the sign, the rest lower down; the path starts at the loop's inner tip, where the printed outline begins. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant or the headline; the book draws the sign alone and composes no Devanagari word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Devanagari outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": -403,
+        "minY": -81,
+        "width": 604,
+        "height": 678.4
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "start at the loop's inner tip and curl to the left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M63 -274Q26 -194 -8 -146.5Q-42 -99 -79 -78Q-116 -57 -163 -57Q-208 -57 -233 -76Q-258 -95 -258 -130Q-258 -153 -247.5 -167.5Q-237 -182 -219 -189Q-201 -196 -180 -196Q-158 -196 -138.5 -190.5Q-119 -185 -99 -172L-69 -236Q-92 -253 -119 -260.5Q-146 -268 -178 -268Q-251 -268 -292 -229.5Q-333 -191 -333 -128Q-333 -62 -287 -25.5Q-241 11 -162 11Q-94 11 -42 -17.5Q10 -46 51.5 -101.5Q93 -157 131 -238L63 -274Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-84 -204 L-84 -204\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-84 -204 L-120 -228 L-180 -232 L-240 -215 L-282 -175 L-295 -129\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-295\" cy=\"-129\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-101\" y=\"462.4\" text-anchor=\"middle\" font-size=\"48.4\" fill=\"#6b7280\"><tspan x=\"-101\" y=\"462.4\">1. start at the loop&apos;s</tspan><tspan x=\"-101\" y=\"521.4\">inner tip and curl to</tspan><tspan x=\"-101\" y=\"580.5\">the left</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "climb and arch over the top",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M63 -274Q26 -194 -8 -146.5Q-42 -99 -79 -78Q-116 -57 -163 -57Q-208 -57 -233 -76Q-258 -95 -258 -130Q-258 -153 -247.5 -167.5Q-237 -182 -219 -189Q-201 -196 -180 -196Q-158 -196 -138.5 -190.5Q-119 -185 -99 -172L-69 -236Q-92 -253 -119 -260.5Q-146 -268 -178 -268Q-251 -268 -292 -229.5Q-333 -191 -333 -128Q-333 -62 -287 -25.5Q-241 11 -162 11Q-94 11 -42 -17.5Q10 -46 51.5 -101.5Q93 -157 131 -238L63 -274Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-84 -204 L-120 -228 L-180 -232 L-240 -215 L-282 -175 L-295 -129 L-295 -129\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-295 -129 L-280 -80 L-235 -38 L-162 -23 L-110 -28\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-110\" cy=\"-28\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-101\" y=\"462.4\" text-anchor=\"middle\" font-size=\"48.4\" fill=\"#6b7280\"><tspan x=\"-101\" y=\"462.4\">2. climb and arch over</tspan><tspan x=\"-101\" y=\"521.4\">the top</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "sweep down to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M63 -274Q26 -194 -8 -146.5Q-42 -99 -79 -78Q-116 -57 -163 -57Q-208 -57 -233 -76Q-258 -95 -258 -130Q-258 -153 -247.5 -167.5Q-237 -182 -219 -189Q-201 -196 -180 -196Q-158 -196 -138.5 -190.5Q-119 -185 -99 -172L-69 -236Q-92 -253 -119 -260.5Q-146 -268 -178 -268Q-251 -268 -292 -229.5Q-333 -191 -333 -128Q-333 -62 -287 -25.5Q-241 11 -162 11Q-94 11 -42 -17.5Q10 -46 51.5 -101.5Q93 -157 131 -238L63 -274Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-84 -204 L-120 -228 L-180 -232 L-240 -215 L-282 -175 L-295 -129 L-280 -80 L-235 -38 L-162 -23 L-110 -28 L-110 -28\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-110 -28 L-60 -50 L-10 -95 L30 -145 L65 -200 L95 -250\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"95\" cy=\"-250\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-101\" y=\"462.4\" text-anchor=\"middle\" font-size=\"48.4\" fill=\"#6b7280\"><tspan x=\"-101\" y=\"462.4\">3. sweep down to the</tspan><tspan x=\"-101\" y=\"521.4\">right</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "devanagari",
+      "glyph": "ृ",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Devanagari recognizer, class 52 (ृ, vocalic r sign): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 81 of the 83 stored prototypes of the vocalic r sign (98%) are one pen-down stroke. In 77 of the 83 the pen starts in the top third, in 78 it first moves to the left, 80 turn anticlockwise, and 69 end lower and to the right of where they began: the pen curls left from the top, rounds the bottom and runs out to the right. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant or the headline; the book draws the sign alone and composes no Devanagari word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Devanagari outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": -336,
+        "minY": -88,
+        "width": 433,
+        "height": 627.5
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "start at the upper tip and curve to the left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M27 -231Q2 -248 -32.5 -258Q-67 -268 -105 -268Q-178 -268 -222 -230Q-266 -192 -266 -125Q-266 -63 -221.5 -25Q-177 13 -89 18L-82 -48Q-139 -55 -165.5 -74.5Q-192 -94 -192 -129Q-192 -166 -168.5 -181.5Q-145 -197 -108 -197Q-79 -197 -54 -189Q-29 -181 0 -165L27 -231Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-105 -35 L-105 -35\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-105 -35 L-160 -45 L-215 -70 L-250 -120\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-250\" cy=\"-120\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-119.5\" y=\"442.7\" text-anchor=\"middle\" font-size=\"34.7\" fill=\"#6b7280\"><tspan x=\"-119.5\" y=\"442.7\">1. start at the upper</tspan><tspan x=\"-119.5\" y=\"485\">tip and curve to the</tspan><tspan x=\"-119.5\" y=\"527.4\">left</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "round down and along the bottom",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M27 -231Q2 -248 -32.5 -258Q-67 -268 -105 -268Q-178 -268 -222 -230Q-266 -192 -266 -125Q-266 -63 -221.5 -25Q-177 13 -89 18L-82 -48Q-139 -55 -165.5 -74.5Q-192 -94 -192 -129Q-192 -166 -168.5 -181.5Q-145 -197 -108 -197Q-79 -197 -54 -189Q-29 -181 0 -165L27 -231Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-105 -35 L-160 -45 L-215 -70 L-250 -120 L-250 -120\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-250 -120 L-245 -180 L-205 -228 L-140 -240\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-140\" cy=\"-240\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-119.5\" y=\"442.7\" text-anchor=\"middle\" font-size=\"34.7\" fill=\"#6b7280\"><tspan x=\"-119.5\" y=\"442.7\">2. round down and along</tspan><tspan x=\"-119.5\" y=\"485\">the bottom</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "run out to the lower-right tip",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M27 -231Q2 -248 -32.5 -258Q-67 -268 -105 -268Q-178 -268 -222 -230Q-266 -192 -266 -125Q-266 -63 -221.5 -25Q-177 13 -89 18L-82 -48Q-139 -55 -165.5 -74.5Q-192 -94 -192 -129Q-192 -166 -168.5 -181.5Q-145 -197 -108 -197Q-79 -197 -54 -189Q-29 -181 0 -165L27 -231Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-105 -35 L-160 -45 L-215 -70 L-250 -120 L-245 -180 L-205 -228 L-140 -240 L-140 -240\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-140 -240 L-80 -230 L-30 -210 L10 -188\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"10\" cy=\"-188\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-119.5\" y=\"442.7\" text-anchor=\"middle\" font-size=\"34.7\" fill=\"#6b7280\"><tspan x=\"-119.5\" y=\"442.7\">3. run out to the</tspan><tspan x=\"-119.5\" y=\"485\">lower-right tip</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "devanagari",
+      "glyph": "े",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Devanagari recognizer, class 53 (े, e sign): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 162 of the 165 stored prototypes of the e sign (98%) are one pen-down stroke, and 116 of the 165 (70%) end lower and to the right of where they began: the pen starts at the upper-left tip, arcs right and comes down. Most of the rest run the other way. In a word the sign's foot meets the headline; written alone it has none, so the sign is drawn floating and no headline is added. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant or the headline; the book draws the sign alone and composes no Devanagari word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Devanagari outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": -487,
+        "minY": -966,
+        "width": 462,
+        "height": 586.1
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "arc to the right along the top",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M-169 615Q-190 682 -205.5 723Q-221 764 -235.5 785.5Q-250 807 -268 815Q-286 823 -312 823Q-333 823 -355 818.5Q-377 814 -395 807L-417 878Q-396 886 -369 891Q-342 896 -317 896Q-273 896 -242.5 883.5Q-212 871 -188 839.5Q-164 808 -142.5 753.5Q-121 699 -95 615L-169 615Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-405 842 L-405 842\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-405 842 L-360 858 L-310 862 L-260 852 L-220 825\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-220\" cy=\"825\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-256\" y=\"-438\" text-anchor=\"middle\" font-size=\"37\" fill=\"#6b7280\"><tspan x=\"-256\" y=\"-438\">1. arc to the right</tspan><tspan x=\"-256\" y=\"-392.9\">along the top</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "curve down to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M-169 615Q-190 682 -205.5 723Q-221 764 -235.5 785.5Q-250 807 -268 815Q-286 823 -312 823Q-333 823 -355 818.5Q-377 814 -395 807L-417 878Q-396 886 -369 891Q-342 896 -317 896Q-273 896 -242.5 883.5Q-212 871 -188 839.5Q-164 808 -142.5 753.5Q-121 699 -95 615L-169 615Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-405 842 L-360 858 L-310 862 L-260 852 L-220 825 L-220 825\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-220 825 L-195 780 L-170 720 L-150 660 L-140 625\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"-140\" cy=\"625\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-256\" y=\"-438\" text-anchor=\"middle\" font-size=\"37\" fill=\"#6b7280\"><tspan x=\"-256\" y=\"-438\">2. curve down to the</tspan><tspan x=\"-256\" y=\"-392.9\">right</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "devanagari",
+      "glyph": "्",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Devanagari recognizer, class 61 (्, virama): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 80 of the 82 stored prototypes of the virama (98%) are one pen-down stroke, and 79 of the 82 move downward, starting at the top. Because the traces are stretched to a square, they cannot show the slant; the slant is the printed one, so the stroke runs down to the right. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant or the headline; the book draws the sign alone and composes no Devanagari word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Devanagari outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 1 movement",
+      "viewBox": {
+        "minX": -249,
+        "minY": -31,
+        "width": 451,
+        "height": 515.8
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the stroke down to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M-179 -44Q-166 -42 -151.5 -40.5Q-137 -39 -122 -39Q-68 -39 -28 -55.5Q12 -72 49.5 -110Q87 -148 132 -212L74 -252Q32 -193 3.5 -163.5Q-25 -134 -52 -123.5Q-79 -113 -117 -113Q-131 -113 -143.5 -114.5Q-156 -116 -167 -118L-179 -44Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-172 -80 L-172 -80\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-172 -80 L-120 -77 L-70 -80 L-20 -98 L25 -130 L65 -175 L100 -228\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"100\" cy=\"-228\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"-23.5\" y=\"428.1\" text-anchor=\"middle\" font-size=\"36.1\" fill=\"#6b7280\"><tspan x=\"-23.5\" y=\"428.1\">1. draw the stroke down</tspan><tspan x=\"-23.5\" y=\"472.1\">to the right</tspan></text>"
         }
       ]
     }

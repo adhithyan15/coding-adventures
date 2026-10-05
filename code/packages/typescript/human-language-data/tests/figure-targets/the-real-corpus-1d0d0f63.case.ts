@@ -131,6 +131,70 @@ describe("the real corpus", () => {
     }
   });
 
+  it("draws a Devanagari sign only where a lesson teaches it alone", () => {
+    // 32 Hindi, Marathi, Sanskrit and Marwadi lessons teach one of eight
+    // signs by itself (ु ू े ं ़ ् ृ ँ), each cited to native writers who wrote
+    // it alone. Each is one glyph, never a sequence: Devanagari has no
+    // written-order table, so no sign is ever placed against a consonant.
+    const devanagari = targets.filter((target) => target.script === "devanagari");
+    const signs = devanagari.filter((target) => /^\p{M}+$/u.test(target.glyph));
+    expect(signs.every((target) => target.letters === undefined)).toBe(true);
+    expect(Object.fromEntries(signs.map((target) => [target.lessonId, target.glyph]))).toEqual({
+      "HI-S05-sign-virama": "्",
+      "HI-S112-vowel-sign-e": "े",
+      "HI-S118-sign-candrabindu": "ँ",
+      "HI-S120-vowel-sign-u": "ु",
+      "HI-S140-nuqta": "़",
+      "HI-S144-vowel-sign-vocalic-r": "ृ",
+      "HI-S148-sign-anusvara": "ं",
+      "HI-S149-vowel-sign-uu": "ू",
+      "HI-W12-chandrabindu": "ँ",
+      "HI-W12-u-matra": "ु",
+      "MR-W01-virama": "्",
+      "MR-W02-anusvara": "ं",
+      "MR-W02-e-matra": "े",
+      "MR-W05-candrabindu": "ँ",
+      "MR-W05-ru-matra": "ृ",
+      "MR-W05-u-matra": "ु",
+      "MR-W05-uu-matra": "ू",
+      "MW-W03-anusvara": "ं",
+      "MW-W05-virama": "्",
+      "MW-W06-uu-matra": "ू",
+      "MW-W07-e-matra": "े",
+      "MW-W13-u-matra": "ु",
+      "MW-W15-nukta": "़",
+      "SA-S05-sign-virama": "्",
+      "SA-S112-vowel-sign-e": "े",
+      "SA-S203-vowel-sign-u": "ु",
+      "SA-S205-vowel-sign-vocalic-r": "ृ",
+      "SA-S209-sign-anusvara": "ं",
+      "SA-S222-vowel-sign-uu": "ू",
+      "SA-W05-vocalic-r-delayed-copy": "ृ",
+      "SA-W05-vocalic-r-dictation": "ृ",
+      "SA-W05-vocalic-r-guided-copy": "ृ",
+    });
+    // Left undrawn: the signs Noto prints with a piece of headline the traces
+    // never draw (ा ि ी ो ः), the signs whose traces split (ै ौ), a sign
+    // lesson with no Writing or Script block (HI-W03-preposed-i), and every
+    // word or list that puts a sign on a consonant.
+    const lessonIds = new Set(targets.map((target) => target.lessonId));
+    for (const id of [
+      "HI-S06-vowel-sign-aa",
+      "HI-W128-vowel-sign-i",
+      "HI-S116-vowel-sign-ii",
+      "HI-S150-vowel-sign-o",
+      "HI-S134-vowel-sign-au",
+      "HI-W12-ai-matra",
+      "MR-W02-visarga",
+      "SA-S201-sign-visarga",
+      "HI-W03-preposed-i",
+      "HI-W03-matras-naam",
+      "SA-W03-mama-guided-copy",
+    ]) {
+      expect(lessonIds.has(id), id).toBe(false);
+    }
+  });
+
   it("composes words only in scripts whose letters stand apart", () => {
     // Words whose pieces spell the headword back: three Japanese words, the
     // two Tamil words whose only sign is written AFTER its consonant (சரி,

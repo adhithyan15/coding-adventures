@@ -213,6 +213,50 @@ read from its GSUB table: the ligatures ણુ, રુ, રૂ and the "stem" fo
 consonants take before ુ and ૂ (`blws`), and જ and ૹ with ા, ી, ો and ૌ, whose
 ā bar joins the consonant (`psts`). So જો and બજાર stay undrawn.
 
+#### As built — Devanagari signs drawn alone
+
+Eight Devanagari signs have a cited ductus of their own: ु ू े, the anusvara ं,
+the nukta ़, the virama ्, ृ and the candrabindu ँ. Their stroke count, start
+and direction come from native writers' tablet pen traces in HP Labs India's
+LipiTk Devanagari recognizer (classes 50 to 62; the model is MIT, the data
+under it research-only, so the mark records cite counts and shares only and
+no trace was copied). Each path is fitted to the bundled Noto Sans Devanagari
+outline of the sign by itself, at the default tolerances.
+
+| sign | strokes (share of stored prototypes) | start and direction (share) |
+|---|---|---|
+| ु | 1 (79/83) | top third (67/83), clockwise (65/83), ends left (65/83) |
+| ू | 1 (83/83) | first move left (75/83), clockwise (72/83), ends lower right (77/83) |
+| े | 1 (162/165) | upper left to lower right (116/165) |
+| ं | 1 (156/157) | anticlockwise (112/157); start in the upper half (94/157) |
+| ़ | 1 (82/83) | a dab down to the left (82/83) |
+| ् | 1 (80/82) | downward (79/82); the slant is the printed one |
+| ृ | 1 (81/83) | top third (77/83), anticlockwise (80/83), ends lower right (69/83) |
+| ँ | 2 (79/82) | crescent first (76/82), left to right; then the dot above (78/82) |
+
+The writers wrote each sign alone, with no consonant and no headline, so the
+traces say nothing about when a sign is written against its consonant or the
+shared headline. Devanagari therefore gets **no** `WRITTEN_SIGN_SIDES` row and
+no mark record gains a `compositionOrder` (the nukta keeps its earlier
+Unicode-cited carrier-first convention). Only a lesson whose headword is the
+sign by itself prints a strip (32 lessons across Hindi, Marathi, Sanskrit and
+Marwadi); a sign on a consonant (कि) and every word with a sign stay refused.
+े's foot meets the headline in a word; drawn alone it floats, and no headline
+is added.
+
+Left out:
+
+* ा, ि, ी, ो and ः. Noto Sans Devanagari prints each with a short piece of
+  headline (x 0 to 273 font units) that the traces, written without one, never
+  draw. A path that follows the traces leaves 9.7% (ा), 4.0% (ि), 3.5% (ी),
+  4.5% (ो) and 37% (ः, two dots under a headline piece) of the printed ink
+  untraced, over the 2% the honesty check allows, and no override is taken. ी's drawn form (stem, then the arch left
+  to right) is also a minority (39 of 91, 43%), and ो's two-stroke form a weak
+  one (42 of 83, 51%).
+* ै and ौ. ै is two strokes in 76 of 83, but the flags' direction splits: 28
+  of 83 (34%) draw both from upper left to lower right. ौ's commonest count
+  is three strokes in 35 of 83 (42%).
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams

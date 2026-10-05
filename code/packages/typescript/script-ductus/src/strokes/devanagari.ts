@@ -18,6 +18,22 @@ const devanagariAlphabetSource = (glyph: string): StrokeSource => {
   return letter.strokeOrderSource;
 };
 
+// A vowel sign or other mark has no letter record: its cited stroke order
+// lives on its mark record (devanagari.json `marks`). Unlike Gujarati, no
+// Devanagari mark record claims where the sign is written against its
+// consonant, because the cited traces were written one sign at a time.
+const devanagariMarkSource = (mark: string): StrokeSource => {
+  const record = devanagari.marks.find((candidate) => candidate.mark === mark);
+  if (
+    !record ||
+    !("strokeOrderSource" in record) ||
+    !record.strokeOrderSource
+  ) {
+    throw new Error(`Devanagari mark ${mark} has no verified source`);
+  }
+  return record.strokeOrderSource;
+};
+
 export const entries: DuctusEntry[] = [
   // Saurmandal's four buildup frames write the joined left body, then the
   // middle shoulder, the right stem and the headline. Native writers draw अ in
@@ -4138,6 +4154,336 @@ export const entries: DuctusEntry[] = [
         },
       ],
       source: devanagariAlphabetSource("ह"),
+    },
+  ],
+  // ---------------------------------------------------------------------
+  // Vowel signs and other marks, drawn alone (no consonant, no headline).
+  // Their start, direction and pen lifts follow native writers' pen traces
+  // in HP Labs India's LipiTk Devanagari recognizer (cited on each mark
+  // record), which were written one sign at a time; no trace was copied.
+  // Each path is fitted to the bundled Noto Sans Devanagari outline of the
+  // sign by itself. The traces say nothing about when a sign is written
+  // against its consonant or the headline, so Devanagari words with signs
+  // stay undrawn (human-language-data's WRITTEN_SIGN_SIDES has no Devanagari
+  // row). ा ि ी ो ौ ै and ः are left out; spec HL06 ("As built —
+  // Devanagari signs drawn alone") says why.
+  // ---------------------------------------------------------------------
+  // ु: one run from the tip of the upper arm, right and down round the bowl
+  // (clockwise), and out to the lower-left tip.
+  [
+    "devanagari:ु",
+    {
+      script: "devanagari",
+      glyph: "ु",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the upper arm's tip and swing to the right",
+              path: [
+                { x: -250, y: -78 },
+                { x: -215, y: -45 },
+                { x: -170, y: -25 },
+                { x: -125, y: -23 },
+                { x: -75, y: -35 },
+                { x: -35, y: -70 },
+              ],
+            },
+            {
+              label: "round the bowl and back to the left",
+              path: [
+                { x: -35, y: -70 },
+                { x: -22, y: -125 },
+                { x: -35, y: -180 },
+                { x: -80, y: -220 },
+                { x: -163, y: -232 },
+              ],
+            },
+            {
+              label: "sweep out to the lower-left tip",
+              path: [
+                { x: -163, y: -232 },
+                { x: -240, y: -220 },
+                { x: -310, y: -185 },
+                { x: -370, y: -135 },
+                { x: -420, y: -88 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariMarkSource("ु"),
+    },
+  ],
+  // ू: one run from the loop's inner tip, left round the bottom, up and over
+  // the top (clockwise), and down the long tail to the right.
+  [
+    "devanagari:ू",
+    {
+      script: "devanagari",
+      glyph: "ू",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the loop's inner tip and curl to the left",
+              path: [
+                { x: -84, y: -204 },
+                { x: -120, y: -228 },
+                { x: -180, y: -232 },
+                { x: -240, y: -215 },
+                { x: -282, y: -175 },
+                { x: -295, y: -129 },
+              ],
+            },
+            {
+              label: "climb and arch over the top",
+              path: [
+                { x: -295, y: -129 },
+                { x: -280, y: -80 },
+                { x: -235, y: -38 },
+                { x: -162, y: -23 },
+                { x: -110, y: -28 },
+              ],
+            },
+            {
+              label: "sweep down to the right",
+              path: [
+                { x: -110, y: -28 },
+                { x: -60, y: -50 },
+                { x: -10, y: -95 },
+                { x: 30, y: -145 },
+                { x: 65, y: -200 },
+                { x: 95, y: -250 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariMarkSource("ू"),
+    },
+  ],
+  // े: one run from the upper-left tip, to the right and down to the foot
+  // that meets the headline in a word. Drawn alone, it floats: no headline
+  // is added.
+  [
+    "devanagari:े",
+    {
+      script: "devanagari",
+      glyph: "े",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "arc to the right along the top",
+              path: [
+                { x: -405, y: 842 },
+                { x: -360, y: 858 },
+                { x: -310, y: 862 },
+                { x: -260, y: 852 },
+                { x: -220, y: 825 },
+              ],
+            },
+            {
+              label: "curve down to the right",
+              path: [
+                { x: -220, y: 825 },
+                { x: -195, y: 780 },
+                { x: -170, y: 720 },
+                { x: -150, y: 660 },
+                { x: -140, y: 625 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariMarkSource("े"),
+    },
+  ],
+  // ं: one small loop inside the printed dot, from its top, anticlockwise.
+  [
+    "devanagari:ं",
+    {
+      script: "devanagari",
+      glyph: "ं",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the top and curve down the left side",
+              path: [
+                { x: -130, y: 798 },
+                { x: -140, y: 796 },
+                { x: -148, y: 790 },
+                { x: -154, y: 782 },
+                { x: -156, y: 772 },
+                { x: -154, y: 762 },
+                { x: -148, y: 754 },
+                { x: -140, y: 748 },
+                { x: -130, y: 746 },
+              ],
+            },
+            {
+              label: "round the bottom and up the right side to close the loop",
+              path: [
+                { x: -130, y: 746 },
+                { x: -120, y: 748 },
+                { x: -112, y: 754 },
+                { x: -106, y: 762 },
+                { x: -104, y: 772 },
+                { x: -106, y: 782 },
+                { x: -112, y: 790 },
+                { x: -120, y: 796 },
+                { x: -130, y: 798 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariMarkSource("ं"),
+    },
+  ],
+  // ़ (nukta): one short dab inside the printed dot, from its upper right down
+  // to the left.
+  [
+    "devanagari:़",
+    {
+      script: "devanagari",
+      glyph: "़",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "dab the dot down to the left",
+              path: [
+                { x: -262, y: -112 },
+                { x: -283, y: -134 },
+                { x: -304, y: -156 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariMarkSource("़"),
+    },
+  ],
+  // ् (virama): one stroke, written downward. The traces are scaled to a
+  // square, so its slant is the printed one.
+  [
+    "devanagari:्",
+    {
+      script: "devanagari",
+      glyph: "्",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the stroke down to the right",
+              path: [
+                { x: -172, y: -80 },
+                { x: -120, y: -77 },
+                { x: -70, y: -80 },
+                { x: -20, y: -98 },
+                { x: 25, y: -130 },
+                { x: 65, y: -175 },
+                { x: 100, y: -228 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariMarkSource("्"),
+    },
+  ],
+  // ृ: one run from the upper tip, left and down round the bottom
+  // (anticlockwise), and out to the lower-right tip.
+  [
+    "devanagari:ृ",
+    {
+      script: "devanagari",
+      glyph: "ृ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the upper tip and curve to the left",
+              path: [
+                { x: -105, y: -35 },
+                { x: -160, y: -45 },
+                { x: -215, y: -70 },
+                { x: -250, y: -120 },
+              ],
+            },
+            {
+              label: "round down and along the bottom",
+              path: [
+                { x: -250, y: -120 },
+                { x: -245, y: -180 },
+                { x: -205, y: -228 },
+                { x: -140, y: -240 },
+              ],
+            },
+            {
+              label: "run out to the lower-right tip",
+              path: [
+                { x: -140, y: -240 },
+                { x: -80, y: -230 },
+                { x: -30, y: -210 },
+                { x: 10, y: -188 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariMarkSource("ृ"),
+    },
+  ],
+  // ँ: the crescent first, from its left tip down round the bottom and up to
+  // the right (anticlockwise); then a lift, and the dot above it.
+  [
+    "devanagari:ँ",
+    {
+      script: "devanagari",
+      glyph: "ँ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the crescent's left tip and curve down",
+              path: [
+                { x: -300, y: 850 },
+                { x: -290, y: 800 },
+                { x: -265, y: 760 },
+                { x: -220, y: 725 },
+              ],
+            },
+            {
+              label: "round the bottom and up to the right tip",
+              path: [
+                { x: -220, y: 725 },
+                { x: -160, y: 712 },
+                { x: -100, y: 725 },
+                { x: -55, y: 760 },
+                { x: -30, y: 800 },
+                { x: -20, y: 850 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then dab the dot above the crescent",
+              path: [
+                { x: -152, y: 872 },
+                { x: -152, y: 851 },
+                { x: -152, y: 830 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariMarkSource("ँ"),
     },
   ],
 ];

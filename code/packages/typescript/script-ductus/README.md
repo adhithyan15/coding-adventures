@@ -163,6 +163,14 @@ sign's mark record (`gujaratiMarkSource`): order, start, direction and lifts
 from KanoAI's hand-made barakhadi templates, paths fitted to Noto Sans
 Gujarati. `tests/strokes/gujarati-marks.test.ts` and
 `tests/ductusview/gujarati-marks.test.ts` hold their evidence.
+Eight Devanagari signs (ु ू े ं ़ ् ृ ँ) sit at the end of the Devanagari
+owner the same way, sourced through `devanagariMarkSource` to native writers'
+pen traces in HP Labs India's LipiTk Devanagari recognizer (counts and shares
+only). Those writers wrote each sign alone, so the entries draw the sign by
+itself and say nothing about its order against a consonant or the headline;
+ा ि ी ो ौ ै and ः are left out because Noto prints a headline piece the traces
+never draw, or the traces split. `tests/strokes/devanagari-marks.test.ts` and
+`tests/ductusview/devanagari-marks.test.ts` hold their evidence.
 
 More than 2,200 tests cover the registry, paths, font fit, provenance, and
 rendering. `jsdom` is a devDependency for exactly two of them: the SVG

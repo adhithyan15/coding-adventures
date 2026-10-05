@@ -52,6 +52,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "SA-S05-sign-virama",
+      "sourceHash": "fnv1a64:8add23af6c9357ed",
+      "svgHash": "fnv1a64:dae49f2d60712dbf",
+      "svg": "sanskrit/book/figures/SA-S05-sign-virama-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "SA-S107-letter-ta",
       "sourceHash": "fnv1a64:a84a27cecedb9e19",
       "svgHash": "fnv1a64:8092566e5078aa4a",
@@ -77,6 +84,13 @@
       "sourceHash": "fnv1a64:19ac11a70d687681",
       "svgHash": "fnv1a64:80a016a33cc7a661",
       "svg": "sanskrit/book/figures/SA-S111-letter-ka-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "SA-S112-vowel-sign-e",
+      "sourceHash": "fnv1a64:a5d503446d6d72a2",
+      "svgHash": "fnv1a64:fec51e0cc9ef5761",
+      "svg": "sanskrit/book/figures/SA-S112-vowel-sign-e-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -164,10 +178,24 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "SA-S203-vowel-sign-u",
+      "sourceHash": "fnv1a64:ba478104b7de0351",
+      "svgHash": "fnv1a64:e0420c51914dbcf7",
+      "svg": "sanskrit/book/figures/SA-S203-vowel-sign-u-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "SA-S204-letter-ya",
       "sourceHash": "fnv1a64:a2060bd3a465f297",
       "svgHash": "fnv1a64:90d2e3699ae40ca4",
       "svg": "sanskrit/book/figures/SA-S204-letter-ya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "SA-S205-vowel-sign-vocalic-r",
+      "sourceHash": "fnv1a64:2974f71362372da4",
+      "svgHash": "fnv1a64:2865fe9e10ac84e6",
+      "svg": "sanskrit/book/figures/SA-S205-vowel-sign-vocalic-r-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -189,6 +217,13 @@
       "sourceHash": "fnv1a64:47c7258a213a49a5",
       "svgHash": "fnv1a64:15e1342eb448aee5",
       "svg": "sanskrit/book/figures/SA-S208-letter-va-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "SA-S209-sign-anusvara",
+      "sourceHash": "fnv1a64:f77e8d73a30ece8b",
+      "svgHash": "fnv1a64:14eca191576a3a0a",
+      "svg": "sanskrit/book/figures/SA-S209-sign-anusvara-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -262,6 +297,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "SA-S222-vowel-sign-uu",
+      "sourceHash": "fnv1a64:4d2e6ad20def8105",
+      "svgHash": "fnv1a64:46e3b957a3caaf99",
+      "svg": "sanskrit/book/figures/SA-S222-vowel-sign-uu-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "SA-S224-letter-i",
       "sourceHash": "fnv1a64:2210c60e46560a9f",
       "svgHash": "fnv1a64:7eb244f3142c9450",
@@ -273,6 +315,27 @@
       "sourceHash": "fnv1a64:773aee3190d0b763",
       "svgHash": "fnv1a64:1705eb2212ce2097",
       "svg": "sanskrit/book/figures/SA-S225-letter-vocalic-r-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "SA-W05-vocalic-r-delayed-copy",
+      "sourceHash": "fnv1a64:4f87fcc06bca68c7",
+      "svgHash": "fnv1a64:2865fe9e10ac84e6",
+      "svg": "sanskrit/book/figures/SA-W05-vocalic-r-delayed-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "SA-W05-vocalic-r-dictation",
+      "sourceHash": "fnv1a64:5aa269372cd432b6",
+      "svgHash": "fnv1a64:2865fe9e10ac84e6",
+      "svg": "sanskrit/book/figures/SA-W05-vocalic-r-dictation-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "SA-W05-vocalic-r-guided-copy",
+      "sourceHash": "fnv1a64:9e00045c73a71dd9",
+      "svgHash": "fnv1a64:2865fe9e10ac84e6",
+      "svg": "sanskrit/book/figures/SA-W05-vocalic-r-guided-copy-filmstrip.svg"
     }
   ]
 }

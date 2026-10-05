@@ -45,6 +45,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "MR-W01-virama",
+      "sourceHash": "fnv1a64:84b3dcb5a217de08",
+      "svgHash": "fnv1a64:dae49f2d60712dbf",
+      "svg": "marathi/book/figures/MR-W01-virama-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "MR-W02-aa-independent",
       "sourceHash": "fnv1a64:cd72e7114e4aec3f",
       "svgHash": "fnv1a64:feefdf6ef9b98be7",
@@ -52,10 +59,24 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "MR-W02-anusvara",
+      "sourceHash": "fnv1a64:a6d6db70f39e973f",
+      "svgHash": "fnv1a64:14eca191576a3a0a",
+      "svg": "marathi/book/figures/MR-W02-anusvara-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "MR-W02-bha",
       "sourceHash": "fnv1a64:5ef7abcbad3c52c0",
       "svgHash": "fnv1a64:32d1bd67a576841a",
       "svg": "marathi/book/figures/MR-W02-bha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W02-e-matra",
+      "sourceHash": "fnv1a64:30bdb9720fac5db1",
+      "svgHash": "fnv1a64:fec51e0cc9ef5761",
+      "svg": "marathi/book/figures/MR-W02-e-matra-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -112,6 +133,34 @@
       "sourceHash": "fnv1a64:ca178b029f3c5758",
       "svgHash": "fnv1a64:e07bc90c1d679ff4",
       "svg": "marathi/book/figures/MR-W05-a-independent-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W05-candrabindu",
+      "sourceHash": "fnv1a64:f23e83fa3268bc62",
+      "svgHash": "fnv1a64:9da5f59209c3fc45",
+      "svg": "marathi/book/figures/MR-W05-candrabindu-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W05-ru-matra",
+      "sourceHash": "fnv1a64:f3fb9cddf76abb08",
+      "svgHash": "fnv1a64:2865fe9e10ac84e6",
+      "svg": "marathi/book/figures/MR-W05-ru-matra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W05-u-matra",
+      "sourceHash": "fnv1a64:a03b3c80d8a4dafc",
+      "svgHash": "fnv1a64:e0420c51914dbcf7",
+      "svg": "marathi/book/figures/MR-W05-u-matra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W05-uu-matra",
+      "sourceHash": "fnv1a64:bf2d1dfd340044c7",
+      "svgHash": "fnv1a64:46e3b957a3caaf99",
+      "svg": "marathi/book/figures/MR-W05-uu-matra-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

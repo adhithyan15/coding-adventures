@@ -458,12 +458,20 @@ describe("stroke ownership migration baseline", () => {
       // end of the Gujarati owner, so every existing key keeps its relative
       // order. Keys move 445 -> 456 and Gujarati 44 -> 55, with the ordered
       // key hash and the non-Tamil data hash; Tamil and both shared-identity
+      //
+      // Eight Devanagari signs — ु (U+0941), ू (U+0942), े (U+0947), the
+      // anusvara ं (U+0902), the nukta ़ (U+093C), the virama ् (U+094D),
+      // ृ (U+0943) and the candrabindu ँ (U+0901) — gain a ductus each, drawn
+      // alone, their lifts, start and direction cited to native writers' pen
+      // traces in HP Labs India's LipiTk Devanagari recognizer. They follow ह
+      // at the end of the Devanagari owner, so every existing key keeps its
+      // relative order. Keys move 456 -> 464 and Devanagari 44 -> 52, with the
     }).toEqual({
-      keys: 516,
+      keys: 524,
       keyHash:
-        "13b189762d85d09e1e32ff4450aa04a3d935dea39e38cf97696df49c8e2edecf",
+        "2f95f4f0638bfd1c71a13f058046cec3df4f79ca4bff54c3ba895eaaf1332b9d",
       nonTamilDataHash:
-        "e39de9543f1f9c69ea6435e42eac42ddc4e54ab8f98e0cffe04a1946d92e6f96",
+        "d4edb42a3b9a45eed007cbdd854b6a9262d667a126043029edf4819b796c862a",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -471,7 +479,7 @@ describe("stroke ownership migration baseline", () => {
         arabic: 32,
         chinese: 60,
         cyrillic: 33,
-        devanagari: 44,
+        devanagari: 52,
         gujarati: 55,
         hebrew: 22,
         japanese: 80,

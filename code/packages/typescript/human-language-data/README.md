@@ -987,6 +987,11 @@ Two kinds exist:
   virama ્ and ૃ have no row, two signs on one consonant (ાં) are refused, and
   so are the pairs the bundled font reshapes (ણુ, રુ, રૂ; ુ and ૂ under the
   22 consonants that take a stem form; જ and ૹ with ા, ી, ો, ૌ).
+  Devanagari has no table on purpose: its eight cited signs (ु ू े ं ़ ् ृ ँ)
+  come from native writers who wrote each sign alone, which says nothing about
+  its order against a consonant or the headline, so only a lesson whose
+  headword is the bare sign prints one (a one-glyph strip), and कि or any
+  Devanagari word with a sign stays refused.
   Generated book chapters rewrite the lesson's `.svg` image
 destination to `.pdf`; the books workflow creates that PDF with `rsvg-convert`
 before XeLaTeX runs.
