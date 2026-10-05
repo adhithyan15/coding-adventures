@@ -41,8 +41,9 @@ reviews_of: [JA-W01-ko]
 
 > ん
 
-**One stroke.** Start with a small tick down-left, then sweep down, round to the
-right and up in a single unbroken movement, finishing with a rise.
+**One stroke.** Start at the top and cut down to the lower left, climb back up
+the same line, turn over a small hump and down, then round to the right and up,
+all in a single unbroken movement, finishing with a rise.
 
 Now the part that matters more than the shape. Every sign you have met so far is
 a consonant plus a vowel, or a vowel alone. **This one is a consonant with no

@@ -3,14 +3,21 @@
   "sound": "ma",
   "role": "hiragana",
   "components": [
-    "two horizontals",
-    "a looping vertical"
+    "an upper bar",
+    "a lower bar",
+    "a vertical that runs down through both bars, ties a loop at its foot and runs out to the lower right"
   ],
   "strokeOrder": [
-    "upper horizontal",
-    "lower horizontal",
-    "looping vertical"
+    "draw the upper bar from left to right",
+    "lift, draw the lower bar from left to right",
+    "lift, begin above the upper bar and draw the vertical down through both, then without lifting loop round to the left and back up, cross the vertical and run out to the lower right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 0307e file records ま as three stroke paths in this order and direction: the upper bar, the lower bar, then the vertical with its loop; so there are two pen lifts.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0307e.svg",
+    "citation": "KanjiVG, kanji/0307e.svg, hiragana ま (U+307E HIRAGANA LETTER MA), three stroke paths kvg:0307e-s1 to s3 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the upper bar drawn left to right; s2 is the lower bar drawn left to right; s3 starts above the upper bar, runs down through both, rounds to the left at its foot, comes back up, crosses the vertical and runs out to the lower right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
   "notes": "Fourth sign of ございます."
 }
