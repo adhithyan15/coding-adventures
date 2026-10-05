@@ -4,9 +4,9 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; pre-A1 and A1 task inventories and the pre-A1
-mock pair are checked in. A2-C2 inventories, A1-C2 mocks, calibration, and
-human validation remain backlog. No book-only readiness is claimed.
+**Status:** target specified; pre-A1 and A1 task inventories and mock pairs are
+checked in. A2-C2 inventories and mocks, calibration, and human validation
+remain backlog. No book-only readiness is claimed.
 
 This specification names the assessment that the complete Bengali book must
 eventually prepare a book-only learner to pass. It is not an external
