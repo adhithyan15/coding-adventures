@@ -13,6 +13,8 @@ const sha256 = (value: string): string =>
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ownerNames = [
   "arabic-family",
+  // Bengali joins as one owner module, like Malayalam and Gujarati.
+  "bengali",
   "chinese",
   "cyrillic",
   "devanagari",
@@ -466,17 +468,28 @@ describe("stroke ownership migration baseline", () => {
       // traces in HP Labs India's LipiTk Devanagari recognizer. They follow ह
       // at the end of the Devanagari owner, so every existing key keeps its
       // relative order. Keys move 456 -> 464 and Devanagari 44 -> 52, with the
+      //
+  // Bengali joins as one owner module, like Malayalam and Gujarati.
+  // Bengali joins as one owner module, like Malayalam and Gujarati.
+      // Bengali joins as a new last owner with nine glyphs cited to native
+      // writers' pen traces in HP Labs India's LipiTk Bangla recognizer:
+      // এ ও খ থ ঞ ব র and the signs ঃ ঁ, keyed `bengali:<glyph>`. Appending
+      // the owner keeps every existing key in place. Keys move 439 -> 448 with
+      // a new `bengali: 9` count, and the ordered key hash and the non-Tamil
+      // data hash move, measured after the last caption was settled; Tamil
+      // and both shared-identity values remain unchanged.
     }).toEqual({
-      keys: 524,
+      keys: 533,
       keyHash:
-        "2f95f4f0638bfd1c71a13f058046cec3df4f79ca4bff54c3ba895eaaf1332b9d",
+        "c3be04625d5755ff855bf3f9b2e83061021b1e8eb589166f3bdb30080819394e",
       nonTamilDataHash:
-        "d4edb42a3b9a45eed007cbdd854b6a9262d667a126043029edf4819b796c862a",
+        "28b6df713fb26f3b7a006e6985bdfc88ab2bc38d066f10dad19c45ebd54150ab",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
       counts: {
         arabic: 32,
+        bengali: 9,
         chinese: 60,
         cyrillic: 33,
         devanagari: 52,

@@ -996,6 +996,17 @@ Two kinds exist:
 destination to `.pdf`; the books workflow creates that PDF with `rsvg-convert`
 before XeLaTeX runs.
 
+  Single-letter writing lessons on the tracks in `DERIVED_FILMSTRIP_SCRIPTS`
+  (`figure-targets.ts`) need no declaration: each becomes a candidate, and it
+  is drawn when its letter has a cited ledger entry. Bengali is the latest
+  track switched on; nine of its letter lessons print a strip, cited to native
+  writers' pen traces in HP Labs India's LipiTk Bangla recognizer.
+
+  Script inventories (`data/scripts/<script>.json`) close a track's headwords:
+  `validate` warns about any script character no row covers. Letters, marks,
+  cited independent vowels and final consonants count, and so do a script's
+  own `digits` rows, which is what lets the Bengali numbers lessons (০–৯) close.
+
 Print the registry-ordered track table on demand, or verify that its former
 tracked projection remains absent:
 

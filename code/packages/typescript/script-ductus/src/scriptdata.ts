@@ -38,6 +38,9 @@ import gujarati from "../../../../learning/human-languages/data/scripts/gujarati
 import kannada from "../../../../learning/human-languages/data/scripts/kannada.json";
 import telugu from "../../../../learning/human-languages/data/scripts/telugu.json";
 import malayalam from "../../../../learning/human-languages/data/scripts/malayalam.json";
+// Bengali is hand-authored like Gujarati: exactly the letters, signs and digits
+// the Bengali track reads, with a cited ductus on the rows that have one.
+import bengali from "../../../../learning/human-languages/data/scripts/bengali.json";
 
 /** One base letter (or character/radical) of a script. */
 export interface Letter {
@@ -154,6 +157,8 @@ export const SCRIPTS: ScriptData[] = [
   kannada as ScriptData,
   telugu as ScriptData,
   malayalam as ScriptData,
+  // Bengali last: a new tab, without moving any existing script's index.
+  bengali as ScriptData,
 ];
 
 /** Resolve a cited letter back to the exact canonical script font that owns it. */

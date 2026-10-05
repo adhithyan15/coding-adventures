@@ -25,7 +25,9 @@ describe("which lessons are filmstrip candidates", () => {
   it("only draws candidates from switched-on tracks, into that track's own book", () => {
     const candidates = filmstripCandidates([
       lesson("TA-S1"),
-      lesson("BN-S1", { language: "bengali", headword: "অ" }),
+      // Punjabi stands in for a track that is still switched off. (This was
+      // Bengali until Bengali's first cited letters switched it on.)
+      lesson("PA-S1", { language: "punjabi", headword: "ਅ" }),
     ]);
     expect(candidates).toEqual([
       {
