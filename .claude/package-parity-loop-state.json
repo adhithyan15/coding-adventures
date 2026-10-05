@@ -19,7 +19,7 @@
     "notes": "All 53 final-head checks were terminal and acceptable (24 success, 29 skipped) with GitHub reporting MERGEABLE. Guarded squash auto-merge was enabled without manual merging; PR #16730 merged at 15:46:14Z as 2297f5372b04191eb9705faf03476bdc08c5450c."
   },
   "last_inventory": {
-    "revision": "a99fb66a572dd807f827eb32e39c28e2a811a565",
+    "revision": "fdee63c8cc0de3e2a6fc8a545980af730fc10dcd",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -11879,6 +11879,9 @@
       "selected_at": "2026-10-05T16:01:19Z",
       "selection_revision": "a99fb66a572dd807f827eb32e39c28e2a811a565",
       "selection_notes": "Selected only after #16730 merged, exact-main schema-3 inventory stayed collision-clean, four AES owners and the distinct .NET digest child were registered, and missing event-loop/digest edges were repaired. Its prerequisite is merged and 14 pending consumers depend directly on this neutral fixture; the ready Swift 20-case engine remains next in the leverage tier. No parity PR is open; implementation starts in a fresh clean origin/main worktree and renamed codex branch.",
+      "rebase_revision": "fdee63c8cc0de3e2a6fc8a545980af730fc10dcd",
+      "rebase_notes": "Rebased conflict-free onto latest origin/main after unrelated XAML and Mermaid changes. The exact-main schema-3 inventory remains at 15 established lanes, 1,487 identities, 4,757 slots, 1,529 all-reported identities, 178/262 high-consensus packages/missing slots, zero collisions, and zero unknown buckets.",
+      "validation_notes": "The eight new neutral cases pin identical before/after tracked Cargo.toml bytes for both Swift consumers, unchanged local and dependency digests, and changed source, package, and combined digests with stale-cache misses; an independent Python regression test cross-checks both consumers and excludes an unregistered decoy. The 175-case/293-file corpus validates with unchanged repository-input and boundary registry hashes; the full conformance/report suite passes 126 tests and 308 subtests, and the runner reaches 92% statement coverage with 90 tests and 288 subtests. Native Go tests and vet, Swift's 86 tests, C#'s 93 tests, and F#'s 22 tests pass. The Go build tool validates all build files in an origin/main sparse dry run. Ruff check, diff hygiene, collision-checked inventory, state-DAG validation, open-PR path collision audit, and independent read-only security review pass; whole-file Ruff format still reports unrelated pre-existing drift, while the new test block was range-formatted. No production engine, registry, source-input boundary, workflow, or runtime authority changed.",
       "notes": "The merged reverse-diff fixture proves both consumers are selected, but does not prove both source and package digests include the same Cargo.toml change. Add bounded before/after source_collection and hashing_cache neutral cases for both Swift consumers, with stable dependency digests and no new engine authority."
     },
     {
