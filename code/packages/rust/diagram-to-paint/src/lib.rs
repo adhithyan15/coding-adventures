@@ -2063,6 +2063,7 @@ fn parse_css_color(css: &str) -> Option<Color> {
 enum CssColorMixSpace {
     Srgb,
     SrgbLinear,
+    DisplayP3,
     Hsl,
     Hwb,
     Lab,
@@ -2082,6 +2083,7 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
     let space = match interpolation.as_slice() {
         ["in", "srgb"] => CssColorMixSpace::Srgb,
         ["in", "srgb-linear"] => CssColorMixSpace::SrgbLinear,
+        ["in", "display-p3"] => CssColorMixSpace::DisplayP3,
         ["in", "hsl"] => CssColorMixSpace::Hsl,
         ["in", "hwb"] => CssColorMixSpace::Hwb,
         ["in", "lab"] => CssColorMixSpace::Lab,
@@ -2169,6 +2171,7 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         CssColorMixSpace::SrgbLinear => linear_srgb_to_color(
             components[0], components[1], components[2], alpha,
         ),
+        CssColorMixSpace::DisplayP3 => css_display_p3_to_color(components, alpha),
         CssColorMixSpace::Hsl => css_hsl_to_color(
             components[2].to_degrees(), components[0], components[1], alpha,
         ),
@@ -2205,6 +2208,7 @@ fn css_color_mix_components(color: Color, space: CssColorMixSpace) -> [f64; 3] {
     match space {
         CssColorMixSpace::Srgb => encoded,
         CssColorMixSpace::SrgbLinear => encoded.map(encoded_srgb_to_linear),
+        CssColorMixSpace::DisplayP3 => css_color_to_display_p3(encoded),
         CssColorMixSpace::Hsl => css_color_to_hsl(encoded),
         CssColorMixSpace::Hwb => css_color_to_hwb(encoded),
         CssColorMixSpace::Lab => css_color_to_lab(encoded),
@@ -2512,15 +2516,7 @@ fn parse_css_color_function(css: &str) -> Option<Color> {
         }),
         "srgb-linear" => Some(linear_srgb_to_color(r, g, b, alpha)),
         "display-p3" => {
-            let r = encoded_srgb_to_linear(r);
-            let g = encoded_srgb_to_linear(g);
-            let b = encoded_srgb_to_linear(b);
-            Some(xyz_d65_to_color(
-                0.4865709486482162 * r + 0.2656676931690931 * g + 0.1982172852343625 * b,
-                0.2289745640697488 * r + 0.6917385218365064 * g + 0.0792869140937450 * b,
-                0.0451133818589026 * g + 1.043_944_368_900_976 * b,
-                alpha,
-            ))
+            Some(css_display_p3_to_color([r, g, b], alpha))
         }
         "a98-rgb" => {
             let r = r.powf(563.0 / 256.0);
@@ -2671,24 +2667,61 @@ fn css_oklab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
 }
 
 fn linear_srgb_to_color(r: f64, g: f64, b: f64, alpha: u8) -> Color {
-    let encode = |linear: f64| {
-        let value = if linear <= 0.0031308 {
-            12.92 * linear
-        } else {
-            1.055 * linear.powf(1.0 / 2.4) - 0.055
-        };
-        (value.clamp(0.0, 1.0) * 255.0).round() as u8
-    };
     Color {
-        r: encode(r),
-        g: encode(g),
-        b: encode(b),
+        r: (linear_srgb_to_encoded(r).clamp(0.0, 1.0) * 255.0).round() as u8,
+        g: (linear_srgb_to_encoded(g).clamp(0.0, 1.0) * 255.0).round() as u8,
+        b: (linear_srgb_to_encoded(b).clamp(0.0, 1.0) * 255.0).round() as u8,
         a: alpha,
+    }
+}
+
+fn linear_srgb_to_encoded(linear: f64) -> f64 {
+    if linear <= 0.0031308 {
+        12.92 * linear
+    } else {
+        1.055 * linear.powf(1.0 / 2.4) - 0.055
     }
 }
 
 fn encoded_srgb_to_linear(value: f64) -> f64 {
     if value <= 0.04045 { value / 12.92 } else { ((value + 0.055) / 1.055).powf(2.4) }
+}
+
+fn css_display_p3_to_color([r, g, b]: [f64; 3], alpha: u8) -> Color {
+    let r = encoded_srgb_to_linear(r);
+    let g = encoded_srgb_to_linear(g);
+    let b = encoded_srgb_to_linear(b);
+    let x = 0.4865709486482162 * r + 0.2656676931690931 * g + 0.1982172852343625 * b;
+    let y = 0.2289745640697488 * r + 0.6917385218365064 * g + 0.0792869140937450 * b;
+    let z = 0.0451133818589026 * g + 1.043_944_368_900_976 * b;
+    linear_srgb_to_color(
+        3.2409699419045226 * x - 1.537383177570094 * y - 0.4986107602930034 * z,
+        -0.9692436362808796 * x + 1.8759675015077202 * y + 0.04155505740717559 * z,
+        0.05563007969699366 * x - 0.20397695888897652 * y + 1.0569715142428786 * z,
+        alpha,
+    )
+}
+
+fn css_color_to_display_p3(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    let x = 0.4123907992659595 * r + 0.357_584_339_383_878 * g + 0.1804807884018343 * b;
+    let y = 0.2126390058715104 * r + 0.715_168_678_767_756 * g + 0.0721923153607337 * b;
+    let z = 0.0193308187155918 * r + 0.119_194_779_794_626 * g + 0.9505321522496607 * b;
+    let linear = [
+        2.493496911941425 * x - 0.9313836179191239 * y - 0.40271078445071684 * z,
+        -0.8294889695615747 * x + 1.7626640603183463 * y + 0.023624685841943577 * z,
+        0.03584583024378447 * x - 0.07617238926804182 * y + 0.9568845240076872 * z,
+    ];
+    linear.map(|value| {
+        let encoded = linear_srgb_to_encoded(value);
+        if encoded.abs() < 1e-12 {
+            0.0
+        } else if (encoded - 1.0).abs() < 1e-12 {
+            1.0
+        } else {
+            encoded
+        }
+    })
 }
 
 fn xyz_d65_to_color(x: f64, y: f64, z: f64, alpha: u8) -> Color {
@@ -8163,6 +8196,23 @@ mod tests {
             Color { r: 255, g: 0, b: 0, a: 51 },
         );
         assert_eq!(with_opacity("color-mix(in srgb-linear, black, white)", 0.5), "rgba(188,188,188,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_display_p3() {
+        assert_eq!(
+            css_to_color("color-mix(in display-p3, black, white)"),
+            Color { r: 128, g: 128, b: 128, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in display-p3, red, blue)"),
+            Color { r: 128, g: 10, b: 145, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in display-p3, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in display-p3, black, white)", 0.5), "rgba(128,128,128,0.5)");
     }
 
     #[test]

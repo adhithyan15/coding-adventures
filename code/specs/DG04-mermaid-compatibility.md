@@ -578,6 +578,9 @@ back to backend-neutral sRGB paint.
 The cylindrical D50 `lch` interpolation space adds shortest-path hue
 interpolation and powerless low-chroma hue fixup to that same backend-neutral
 conversion path.
+The encoded `display-p3` interpolation space converts sRGB paint into the
+wider D65 gamut for premultiplied-alpha mixing, then lowers the result back to
+backend-neutral sRGB paint instructions.
 The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.

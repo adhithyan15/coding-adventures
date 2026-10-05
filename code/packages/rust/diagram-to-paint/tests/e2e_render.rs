@@ -2918,6 +2918,38 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_mermaid_treemap_color_mix_display_p3_to_png() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Display P3 mix\": 1:::mixed\nclassDef mixed fill:color-mix(in display-p3, black, white),stroke:color-mix(in display-p3, red, blue),color:color-mix(in display-p3, red 20%, transparent)",
+        )
+        .expect("Display P3 color-mix treemap parse failed");
+        let layout = layout_treemap(&diagram, 480.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_treemap(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("rgb(128,128,128)")
+                    && rect.stroke.as_deref() == Some("rgb(128,10,145)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::GlyphRun(run)
+                if run.fill.as_deref() == Some("rgba(255, 0, 0, 0.2000)"))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_treemap_color_mix_display_p3_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
     fn render_mermaid_treemap_color_mix_oklab_to_png() {
         let diagram = parse_treemap(
             "treemap\n\"Root\"\n  \"OKLab mix\": 1:::mixed\nclassDef mixed fill:color-mix(in oklab, black, white),stroke:color-mix(in oklab, red, blue),color:color-mix(in oklab, red 20%, transparent)",
