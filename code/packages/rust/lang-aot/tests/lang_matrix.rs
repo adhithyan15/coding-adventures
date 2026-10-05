@@ -1714,6 +1714,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — runtime-real formatter provenance also begins at a direct
+    // real procedure call whose formal parameters are all value-mode scalars.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure scale(x); value x; real x; scale := x * 2.0; real result; result := scale(1.125); output(result) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — the same runtime result may migrate through a direct real
     // scalar slot before the shared portable formatter consumes it.
     Prog {
@@ -12146,6 +12155,29 @@ fn algol_runtime_real_output_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_runtime_real_value_scalar_call_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("result := scale(1.125); output(result)")
+        })
+        .expect("the ALGOL value-scalar runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but value-scalar runtime real output did not complete"
             );
             continue;
         };
