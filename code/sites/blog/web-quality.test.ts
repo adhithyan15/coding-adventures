@@ -234,9 +234,9 @@ describe("Forme release web-quality gate", () => {
     ] as const;
 
     expect(resolveStaticRequest("GET", "/coding-adventures/blog/hello.html", mounts))
-      .toBe("/tmp/generated/blog/hello.html");
+      .toBe(resolve("/tmp/generated/blog/hello.html"));
     expect(resolveStaticRequest("HEAD", "/coding-adventures/", mounts))
-      .toBe("/tmp/generated/landing/index.html");
+      .toBe(resolve("/tmp/generated/landing/index.html"));
     expect(() => resolveStaticRequest("POST", "/coding-adventures/", mounts))
       .toThrow(/GET and HEAD/);
     expect(() => resolveStaticRequest("GET", "/coding-adventures/%2e%2e/secret", mounts))
