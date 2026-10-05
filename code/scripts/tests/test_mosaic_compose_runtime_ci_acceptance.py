@@ -220,12 +220,42 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             assemble.index("org.gradle.wrapper.GradleWrapperMain"),
         )
 
+    def test_engram_android_apk_carries_its_rust_runtime(self) -> None:
+        """UI89 step 7 (§3.10): Engram is built like Journal, and its
+        desktop-only Anki handler is kept out of the Android dex."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Engram for Android with its Rust runtime (UI89 step 7)")
+        block = workflow[start : workflow.index("\n      - name:", start)]
+        self.assertLess(
+            workflow.index("- name: Build Journal for Android with its Rust runtime (UI89 step 7)"),
+            start,
+        )
+        self.assertIn('bash code/scripts/build-mosaic-android-libs.sh engram-mosaic-app "$jni_libs"', block)
+        self.assertIn("pkg code/programs/mosaic/engram-app --backend compose", block)
+        self.assertIn('bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"', block)
+        self.assertIn("package: name='dev\\.codingadventures\\.engramapp'", block)
+        self.assertIn("'LEngramAppKt;'", block)
+        self.assertIn("for needle in 'LEngramEffectsKt;' 'installEngramEffects'; do", block)
+        self.assertIn('if [ "$found" -ne 1 ]; then', block)
+        self.assertIn("' T mosaic_app_create$'", block)
+
+        emulator = workflow.index("- name: Launch Trestle, Journal and Engram on an Android emulator")
+        gate = workflow[emulator : workflow.index("\n      - name:", emulator)]
+        self.assertLess(
+            gate.index("dev.codingadventures.journalapp journal-app"),
+            gate.index(
+                'bash code/scripts/mosaic-android-emulator-gate.sh "$engram_apk" '
+                "dev.codingadventures.engramapp engram-app"
+            ),
+        )
+
     def test_trestle_launches_and_restores_on_an_android_emulator(self) -> None:
         """UI89 step 5, second half: the APK with the runtime boots on an
         x86_64 emulator, keeps its state and quarantines refused state."""
 
         workflow = WORKFLOW.read_text(encoding="utf-8")
-        start = workflow.index("- name: Launch Trestle and Journal on an Android emulator (UI89 steps 5, 7)")
+        start = workflow.index("- name: Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)")
         block = workflow[start:workflow.index("\n      - name:", start)]
         self.assertLess(
             workflow.index("- name: Build Trestle for Android with its Rust runtime (UI89 step 5)"),
@@ -312,7 +342,8 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             "Build Trestle for Android (UI89 step 4)",
             "Build Trestle for Android with its Rust runtime (UI89 step 5)",
             "Build Journal for Android with its Rust runtime (UI89 step 7)",
-            "Launch Trestle and Journal on an Android emulator (UI89 steps 5, 7)",
+            "Build Engram for Android with its Rust runtime (UI89 step 7)",
+            "Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)",
         ):
             start = workflow.index(f"- name: {name}")
             block = workflow[start : workflow.index("\n      - name:", start)]

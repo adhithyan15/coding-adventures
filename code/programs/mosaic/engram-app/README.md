@@ -244,6 +244,24 @@ checks the downloaded zip against `checksums.json` inside the lock-pinned
 `electron` tarball, and points electron-builder at that copy (`electronDist`)
 instead of letting it download one of its own.
 
+## Android
+
+CI builds Engram for Android and runs it on an x86_64 emulator (UI89 §3.10).
+
+- **Engine:** `engram-mosaic-app` is built for the four Android ABIs and
+  packaged into the generated Compose project's debug APK. Its dependencies
+  are pure Rust, so the NDK is the only toolchain it needs.
+- **Gate:** three launches must write state under the app's `filesDir`,
+  restore it, and quarantine state the runtime refuses.
+- **Layout:** the touch layout reaches the Android project with the default
+  one, and the layout rules choose between them on a phone as they do on the
+  desktop.
+- **Anki import and export:** desktop-only. Their handler is installed by the
+  desktop hosts' `Main` and never reaches the APK, and CI fails if it does.
+  On Android the host fails these two effects as unanswered.
+- **Identity:** the manifest defaults, `dev.codingadventures.engramapp` and
+  `EngramApp`.
+
 ## Emitting every host shell
 
 ```powershell
