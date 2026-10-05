@@ -11,12 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 16737,
   "last_ci_action": {
-    "observed_at": "2026-10-05T15:46:14Z",
-    "pr_number": 16730,
-    "status": "merged",
-    "notes": "All 53 final-head checks were terminal and acceptable (24 success, 29 skipped) with GitHub reporting MERGEABLE. Guarded squash auto-merge was enabled without manual merging; PR #16730 merged at 15:46:14Z as 2297f5372b04191eb9705faf03476bdc08c5450c."
+    "observed_at": "2026-10-05T16:51:38Z",
+    "pr_number": 16737,
+    "status": "pending",
+    "notes": "The sole active parity PR #16737 is OPEN and MERGEABLE at head d6e4d20629aedba5e2cd65719a4042b9bd3a2a06. GitHub checks are queued or in progress; no auto-merge request is enabled while checks remain pending."
   },
   "last_inventory": {
     "revision": "fdee63c8cc0de3e2a6fc8a545980af730fc10dcd",
@@ -11872,10 +11872,12 @@
     {
       "id": "build-tool-shared-input-multiconsumer-digest-evidence-fixture",
       "title": "Prove both shared-input consumers change source and package digests",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": "codex/parity-build-tool-shared-digest-20261005",
-      "pr_number": null,
+      "pr_number": 16737,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16737",
+      "pr_opened_at": "2026-10-05T16:51:27Z",
       "selected_at": "2026-10-05T16:01:19Z",
       "selection_revision": "a99fb66a572dd807f827eb32e39c28e2a811a565",
       "selection_notes": "Selected only after #16730 merged, exact-main schema-3 inventory stayed collision-clean, four AES owners and the distinct .NET digest child were registered, and missing event-loop/digest edges were repaired. Its prerequisite is merged and 14 pending consumers depend directly on this neutral fixture; the ready Swift 20-case engine remains next in the leverage tier. No parity PR is open; implementation starts in a fresh clean origin/main worktree and renamed codex branch.",
