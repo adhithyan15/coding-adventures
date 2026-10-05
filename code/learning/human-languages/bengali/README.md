@@ -4,6 +4,13 @@ A track of the [Human Languages](../README.md) curriculum, built the same way
 as: one word per lesson, taken apart and traced to its root; the pieces taught
 before the whole; and a book you can read straight through.
 
+The [pre-A1 assessment inventory](task-shapes/pre-a1.json) now has two timed
+[mock papers, keys, and a rubric](mocks/pre-a1/). They exercise four independent
+skills, including delayed Bengali-script recall and dictation. These artifacts
+define an assessment target; they do not prove the book has taught those writing
+stages or that a book-only learner is ready. The A2-C2 inventories and later
+mock pairs remain to be built before the machine-readable assessment contract.
+
 ## What's different about the Bengali track
 
 - **Bengali script, taught inline.** Bengali (*Bāṅlā*) is **Indo-Aryan** (like
