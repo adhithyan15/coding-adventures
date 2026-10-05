@@ -7,9 +7,10 @@ symbology, draw text, or invoke a native renderer.
 
 The API follows [barcode-layout-1d v1](../../../specs/barcode-layout-1d-v1.md).
 The Dart tests execute every checked-in neutral fixture case plus copy and
-text-precedence examples. Run `dart pub get` and `dart test` from this directory;
-on Windows, the direct `dart run test/...` commands in `BUILD_windows` avoid a
-test-runner SDK path-launch issue while executing the same test files.
+text-precedence examples. Run the checked-in `BUILD` front for formatting,
+analysis, native examples, and coverage-gated conformance. On Windows, direct
+`dart run test/...` execution avoids a test-runner SDK path-launch issue while
+executing the same test files.
 
 The production library requires no filesystem, network, process, environment,
 font, or backend authority; only the test adapter reads the fixture corpus.

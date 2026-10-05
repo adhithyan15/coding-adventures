@@ -8,7 +8,7 @@ symbology, draw text, or invoke a native renderer.
 The API follows [barcode-layout-1d v1](../../../specs/barcode-layout-1d-v1.md).
 The native JUnit suite executes every checked-in neutral fixture case plus
 mutation and text-precedence examples. Run `gradle --no-daemon --no-build-cache
---max-workers=1 test` from this directory.
+--max-workers=1 check` from this directory to enforce the coverage gate.
 
 The production library requires no filesystem, network, process, environment,
 font, or backend authority; only the test adapter reads the fixture corpus.
