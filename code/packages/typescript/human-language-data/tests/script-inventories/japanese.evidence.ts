@@ -374,5 +374,29 @@ export const scriptInventoryEvidence = {
     }
     expect(missingJapanese.has("を")).toBe(false);
     expect(affected.get("を") ?? 0).toBe(0);
+    // Chapter 132: そ, れ and る take their order and direction from KanjiVG's
+    // directed paths, as を does, and say that the coordinates are the font's.
+    // Their lift counts are KanjiVG's path counts minus one: そ and る are one
+    // path each, れ is two. Phrase by phrase with toContain, as above.
+    for (const [glyph, file, name, lifts] of [
+      ["そ", "0305d", "U+305D HIRAGANA LETTER SO", 0],
+      ["れ", "0308c", "U+308C HIRAGANA LETTER RE", 1],
+      ["る", "0308b", "U+308B HIRAGANA LETTER RU", 0],
+    ] as const) {
+      const letter = scripts.japanese!.letters.find((entry) => entry.glyph === glyph)!;
+      expect(letter.role).toBe("hiragana");
+      expect(letter.penLifts).toBe(lifts);
+      expect(letter.strokeOrderSource?.url).toBe(
+        `https://github.com/KanjiVG/kanjivg/blob/master/kanji/${file}.svg`,
+      );
+      for (const phrase of ["KanjiVG", name, "Ulrich Apel and contributors, CC BY-SA 3.0"]) {
+        expect(letter.strokeOrderSource?.citation, phrase).toContain(phrase);
+      }
+      for (const phrase of ["Only the order and direction", "Noto Sans JP outline's own medial line"]) {
+        expect(letter.strokeOrderSource?.variation, phrase).toContain(phrase);
+      }
+      expect(missingJapanese.has(glyph)).toBe(false);
+      expect(affected.get(glyph) ?? 0).toBe(0);
+    }
   },
 };

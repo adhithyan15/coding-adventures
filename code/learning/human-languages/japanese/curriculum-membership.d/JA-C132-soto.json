@@ -1,0 +1,11 @@
+{
+  "id": "JA-C132-soto",
+  "pathSegment": "JA-PATH-132-WRITE132",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-132-WRITE132",
+      "order": 2
+    }
+  ]
+}

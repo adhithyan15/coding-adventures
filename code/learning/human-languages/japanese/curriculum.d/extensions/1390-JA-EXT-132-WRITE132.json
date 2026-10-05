@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-132-WRITE132",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write so, re and ru, read words that use them, and point to things and places near me and near the listener.",
+  "prerequisites": []
+}

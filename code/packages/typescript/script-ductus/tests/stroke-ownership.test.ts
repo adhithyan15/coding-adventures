@@ -316,12 +316,17 @@ describe("stroke ownership migration baseline", () => {
       // を (U+3092). Keys move 412 -> 415 and Japanese 23 -> 26, with the
       // ordered key hash and the non-Tamil data hash; Tamil and both
       // shared-identity values remain unchanged.
+      //
+      // Japanese chapter 132 writes そ (U+305D), れ (U+308C) and る (U+308B).
+      // Keys move 415 -> 418 and Japanese 26 -> 29, with the ordered key hash
+      // and the non-Tamil data hash; Tamil and both shared-identity values
+      // remain unchanged.
     }).toEqual({
-      keys: 415,
+      keys: 418,
       keyHash:
-        "6357958aef9fb62732f270ebd05148148b2974120a98c66cd315732277b03809",
+        "fb8a3b61b3d468f8130075573fa5a3ef61d844360c5eadb2075dac47dd7a5c50",
       nonTamilDataHash:
-        "04862eea8eec0682574d409f3763ea0363876bb858e0e2886d03b68ce5ca2445",
+        "58fb99edebc9b195bde435a33c0542db8947324aa89d1403b0717e614b1d3f62",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -332,7 +337,7 @@ describe("stroke ownership migration baseline", () => {
         devanagari: 44,
         gujarati: 44,
         hebrew: 22,
-        japanese: 26,
+        japanese: 29,
         kannada: 13,
         malayalam: 14,
         "perso-arabic": 24,

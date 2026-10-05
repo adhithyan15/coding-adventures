@@ -1,0 +1,24 @@
+{
+  "glyph": "る",
+  "sound": "ru",
+  "role": "hiragana",
+  "components": [
+    "a short upper bar turning sharply at its right end",
+    "a long diagonal down to the left",
+    "a broad clockwise bowl",
+    "a small closed loop at the bottom"
+  ],
+  "strokeOrder": [
+    "draw the short upper bar from left to right, then without lifting turn sharply and run the long diagonal down to the lower left",
+    "without lifting, swing back up to the right and round the broad bowl clockwise",
+    "without lifting, curl up into the small loop at the bottom and finish where it meets the base"
+  ],
+  "strokeOrderNote": "KanjiVG's 0308b file records る as a single stroke path in this order and direction: the top bar, the long diagonal, the bowl, then the small closing loop; so there are no pen lifts.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0308b.svg",
+    "citation": "KanjiVG, kanji/0308b.svg, hiragana る (U+308B HIRAGANA LETTER RU), one stroke path kvg:0308b-s1 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores る as one directed path in writing order: it starts at the left of the short top bar, runs right, turns sharply down and left along the diagonal, swings back up to the right around the clockwise bowl, and curls into the small loop at the bottom. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each part of the stroke runs."
+  },
+  "notes": "The ru of くるま, a car. Up to the bowl it is written exactly like ろ; the small closed loop at the bottom is the whole difference."
+}

@@ -27,7 +27,9 @@ const CONFIGS = [
   // 59 -> 62: chapter 131 writes small ゃ (U+3083), small ょ (U+3087) and を
   // (U+3092), each after a word that already holds it (おちゃ, ちょっと,
   // おちゃを ください).
-  { language: "japanese", script: "japanese", letters: 62, marks: 3 },
+  // 62 -> 65: chapter 132 writes そ (U+305D), れ (U+308C) and る (U+308B),
+  // each after a word that already holds it (そこ, これ, くるま).
+  { language: "japanese", script: "japanese", letters: 65, marks: 3 },
   // 24 -> 26: HL-C350 adds ج and ص as RECOGNITION-ONLY owners. panj (five) and
   // sad (a hundred) need them in a headword, and `uncoveredGlyphs` is a
   // headword check, so the numerals could not be taught without them. Both
