@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16749,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16749",
+    "branch": "codex/parity-ct-compare-fixtures-20261005",
+    "implementation_revision": "d28e2cb09e4ab99e92393d7cd7d985da9eee0c79",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-05T19:20:12Z",
-    "pr_number": 16744,
-    "status": "merged",
-    "notes": "Both required final-head gates passed, no CI failure or merge conflict remained, and guarded squash auto-merge merged the reviewed Swift graph/diff PR as 7196f381b006d3c1436c05b67fc08bf71c1637c2. A non-required duplicate Unicode Lua job was still queued; the required gates were terminal and acceptable."
+    "observed_at": "2026-10-05T19:52:12Z",
+    "pr_number": 16749,
+    "status": "checks-pending",
+    "notes": "Ready-for-review CT01 neutral conformance PR opened from reviewed head d28e2cb09e4ab99e92393d7cd7d985da9eee0c79. GitHub initially reports MERGEABLE with checks queued; do not enable auto-merge until required final-head gates are terminal and acceptable with no CI failure or merge conflict."
   },
   "last_inventory": {
     "revision": "bbac63d317db4d311773d71bee0260745e48e73f",
@@ -6706,10 +6712,10 @@
     {
       "id": "ct-compare-language-neutral-conformance",
       "title": "Define language-neutral constant-time comparison conformance",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/parity-ct-compare-fixtures-20261005",
-      "pr_number": null,
+      "pr_number": 16749,
       "selected_at": "2026-10-05T19:25:39Z",
       "selection_revision": "7196f381b006d3c1436c05b67fc08bf71c1637c2",
       "selection_notes": "Selected after reviewed #16744 merged and an exact-main schema-3 collision-checked refresh found 15 established lanes, 1,487 identities, 4,757 slots, 178 high-consensus packages with 262 missing slots, and zero collisions or unknown buckets. This zero-dependency contract has six direct pending children and nine unfinished descendants, more immediate leverage than the ready Python source-registry and Haskell graph/diff owners (three direct children each). The new HF06/KD03 and DT17 owners were registered first. Scope is CT01 plus a versioned neutral fixture corpus and independent validator only; lane adoption and timing assurance remain separate.",
