@@ -10615,7 +10615,7 @@
       "pr_number": 16706,
       "selected_at": "2026-10-05T06:21:11Z",
       "selection_revision": "91d191d2244b78717c6c24a8f6f2fa185398507c",
-      "implementation_revision": "9231812e3c993a8614104b199f888f892b912238",
+      "implementation_revision": "9a99df33af2dc2dfe89e0748422e4ba387f97e22",
       "validation_revision": "9231812e3c993a8614104b199f888f892b912238",
       "validation_notes": "Both native v1 adapters execute all 56 neutral cases. Elixir package passes six tests at 91.44% coverage; seven direct and aggregate downstream suites pass above 80%. Lua's package and seven downstream test bodies pass through a local Busted-compatible harness because the installed Windows LuaRocks executable hangs even for --version; CI runs the normal Busted front. Shared fixture and reporter tests, capability schemas, build syntax, diff checks, and a read-only security review pass. Three reviewer-discovered bounded-input defects were fixed with regression tests and re-reviewed.",
       "publication_notes": "Ready-for-review PR #16706 carries the Elixir and Lua package trees bound to pre-publication implementation revision 9231812e3c993a8614104b199f888f892b912238. The final evidence registry promotes both canonical package roots on the same PR; GitHub checks are pending and auto-merge is disabled.",
