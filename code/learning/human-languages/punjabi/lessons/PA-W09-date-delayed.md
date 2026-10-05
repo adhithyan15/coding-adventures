@@ -54,7 +54,7 @@ Uncover B only after the attempt. Compare one box at a time. If the month is
 wrong, correct only the middle two digits; keep the other boxes unchanged.
 
 ## Wrap-up recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-B-01, PA-FORM-DATE-CUE-MAP-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-DATE-01, PA-FORM-DATE-B-01, PA-FORM-DATE-CUE-MAP-01, PA-FORM-DATE-FORMAT-01] -->
 <!-- hl-activity: {"id":"PA-W09-date-delayed-b","kind":"text","assesses":["PA-FORM-LABEL-DATE-01","PA-FORM-DATE-B-01","PA-FORM-DATE-CUE-MAP-01","PA-FORM-DATE-FORMAT-01"],"prompt":"After hiding the bank for five seconds, complete the fictional date field for ਖ.","answer":"ਤਾਰੀਖ਼: ੨੫/੦੨/੨੦੨੫","accepted":["੨੫/੦੨/੨੦੨੫","ਤਾਰੀਖ਼:੨੫/੦੨/੨੦੨੫"],"feedback":{"correct":"B was recovered after a short delay in the printed order.","incorrect":"Finish the attempt, uncover B, and repair only the first mismatched box."},"response_seconds":36} -->
 
 This is delayed practice. The final no-model checkpoint still comes later.

@@ -59,7 +59,7 @@ After writing, compare selector, day, month, year, separators, label spelling,
 and spacing separately. Repair only the first differing dimension.
 
 ## Wrap-up recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-B-01, PA-FORM-DATE-FORMAT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-B-01, PA-FORM-DATE-CUE-MAP-01, PA-FORM-DATE-FORMAT-01] -->
 <!-- hl-activity: {"id":"PA-W09-date-no-model-b","kind":"text","assesses":["PA-FORM-DATE-B-01","PA-FORM-DATE-CUE-MAP-01","PA-FORM-DATE-FORMAT-01"],"prompt":"With no bank or copyable answer, complete the fictional date field for ਖ.","answer":"੨੫/੦੨/੨੦੨੫","accepted":["ਤਾਰੀਖ਼: ੨੫/੦੨/੨੦੨੫","ਤਾਰੀਖ਼:੨੫/੦੨/੨੦੨੫"],"feedback":{"correct":"The selector independently selected B in the printed date order.","incorrect":"Finish the attempt first; then reopen the bank and repair one dimension."},"response_seconds":45} -->
 
 This closes only the untimed date-field ladder. Integration with other form

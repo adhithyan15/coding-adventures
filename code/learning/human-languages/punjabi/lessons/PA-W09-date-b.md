@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-FORM-DATE-A-01, PA-FORM-DATE-B-01, PA-FORM-DATE-MONTH-MAP-01]
+  knowledge: [PA-FORM-DATE-A-01, PA-FORM-DATE-B-01, PA-FORM-DATE-FORMAT-01, PA-FORM-DATE-MONTH-MAP-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]

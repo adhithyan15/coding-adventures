@@ -47,7 +47,7 @@ twenty-five.” Listen once; then listen again. Do not display a digit model
 while you write.
 
 ## Writing — transcription
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-A-01, PA-FORM-DATE-FORMAT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-A-01, PA-FORM-DATE-MONTH-MAP-01, PA-FORM-DATE-FORMAT-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
 Write only the three heard pieces in Gurmukhi digits. Put the day in the
@@ -55,7 +55,7 @@ first box, January's taught two-digit month in the middle, and the year last.
 Then check only the two slash positions.
 
 ## Wrap-up recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-A-01, PA-FORM-DATE-FORMAT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-A-01, PA-FORM-DATE-MONTH-MAP-01, PA-FORM-DATE-FORMAT-01] -->
 <!-- hl-activity: {"id":"PA-W09-date-dictation-a","kind":"text","assesses":["PA-FORM-DATE-A-01","PA-FORM-DATE-MONTH-MAP-01","PA-FORM-DATE-FORMAT-01"],"prompt":"Write in Gurmukhi digits the heard fictional date: the fifteenth of January, two thousand twenty-five.","answer":"੧੫/੦੧/੨੦੨੫","accepted":[],"feedback":{"correct":"The heard day, month, and year are in the printed order.","incorrect":"Replay one piece at a time; check the month and slashes separately."},"response_seconds":38} -->
 
 No real birth date or other personal data is being collected.

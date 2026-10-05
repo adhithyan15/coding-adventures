@@ -34,9 +34,9 @@ reviews_of: [PA-W09-date-label, PA-W09-date-format, PA-W09-date-select]
 # Fill one date line with help
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-DATE-01, PA-FORM-DATE-CUE-MAP-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-DATE-01, PA-FORM-DATE-B-01, PA-FORM-DATE-CUE-MAP-01] -->
 
-Point to the **ਤਾਰੀਖ਼** label. Keep the closed bank in view: A
+Point to the **ਤਾਰੀਖ਼** label and to both bank entries. Keep the closed bank in view: A
 **੧੫/੦੧/੨੦੨੫**, B **੨੫/੦੨/੨੦੨੫**.
 
 ## Writing — supported entry
@@ -54,7 +54,7 @@ Read the line from left to right. Check cue, day, month, year, and separators
 one at a time. If a piece differs, change only that piece.
 
 ## Wrap-up recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-A-01, PA-FORM-DATE-CUE-MAP-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-DATE-01, PA-FORM-DATE-A-01, PA-FORM-DATE-CUE-MAP-01, PA-FORM-DATE-FORMAT-01] -->
 <!-- hl-activity: {"id":"PA-W09-date-supported-a","kind":"text","assesses":["PA-FORM-LABEL-DATE-01","PA-FORM-DATE-A-01","PA-FORM-DATE-CUE-MAP-01","PA-FORM-DATE-FORMAT-01"],"prompt":"With the bank visible, complete the fictional date field for ਕ.","answer":"ਤਾਰੀਖ਼: ੧੫/੦੧/੨੦੨੫","accepted":["੧੫/੦੧/੨੦੨੫","ਤਾਰੀਖ਼:੧੫/੦੧/੨੦੨੫"],"feedback":{"correct":"The supported line has A in day/month/year order.","incorrect":"Select A first; then copy one box at a time."},"response_seconds":32} -->
 
 This is supported copying, not the independent checkpoint.

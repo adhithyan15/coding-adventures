@@ -55,7 +55,7 @@ that slash. Next, **ਤਾਰੀਖ: ੧੫/੦੧/੨੦੨੫** has the right 
 in the label; repair only **ਤਾਰੀਖ਼**. Keep the date digits untouched.
 
 ## Wrap-up recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-REPAIR-01, PA-FORM-DATE-FORMAT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-A-01, PA-FORM-DATE-REPAIR-01, PA-FORM-DATE-FORMAT-01] -->
 <!-- hl-activity: {"id":"PA-W09-date-repair-separator","kind":"text","assesses":["PA-FORM-DATE-A-01","PA-FORM-DATE-FORMAT-01","PA-FORM-DATE-REPAIR-01"],"prompt":"For ਕ, repair only the missing separator in ੧੫/੦੧੨੦੨੫.","answer":"੧੫/੦੧/੨੦੨੫","accepted":[],"feedback":{"correct":"Only the missing slash was inserted.","incorrect":"Keep every digit; add a slash after the month."},"response_seconds":24} -->
 
 If the value is right but the label or spacing is wrong, repair that later as

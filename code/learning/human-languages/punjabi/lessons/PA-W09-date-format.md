@@ -58,6 +58,6 @@ two empty slash-separated boxes again.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-FORMAT-01] -->
-<!-- hl-activity: {"id":"PA-W09-format-check","kind":"text","assesses":["PA-FORM-DATE-FORMAT-01"],"prompt":"On this printed day/month/year form, which box holds the month?","answer":"middle","accepted":["the middle box","second"],"feedback":{"correct":"The month is the second, middle box.","incorrect":"Read the printed order: day, month, year."},"response_seconds":12} -->
+<!-- hl-activity: {"id":"PA-W09-date-format-check","kind":"text","assesses":["PA-FORM-DATE-FORMAT-01"],"prompt":"On this printed day/month/year form, which box holds the month?","answer":"middle","accepted":["the middle box","second"],"feedback":{"correct":"The month is the second, middle box.","incorrect":"Read the printed order: day, month, year."},"response_seconds":12} -->
 
 The next lessons build two complete fictional examples, one piece at a time.
