@@ -18,6 +18,23 @@ This port mirrors the other build-tool implementations in the repo:
 9. Validates bounded orphan-crate coverage snapshots and exemption records
 10. Evaluates bounded extra-CI toolchain declarations from inert snapshots
 
+## Process-free graph and diff selection
+
+`BuildToolGraphDiff.evaluateGraph` and `evaluateDiffSelection` accept typed,
+already-materialized package, edge, changed-path, and optional repository
+source-input boundary values. They do not discover packages, inspect Git, read
+files, execute builds, or acquire host authority. Graph levels are
+prerequisite-first; cycles and structural errors return no partial output.
+Diff selection handles exact recursive BUILD fronts, strict portable source
+globs, forced packages, exact shared-input fanout, transitive dependents and
+prerequisites, and the explicit unknown-path policy. A caller-supplied
+boundary digest is checked against the inert boundary before selection; the
+operation-wide 50,000,000-unit Unicode-scalar glob-work limit is preflighted
+before matching. The native suite pins and evaluates every one of the eight
+graph and twelve diff-selection neutral cases, plus structural and digest
+precedence regressions. This core alone does not claim a neutral execution
+adapter or change the legacy Git-facing CLI path.
+
 ## Extra CI toolchain declarations
 
 `ToolchainDetection.evaluateSnapshot` accepts caller-supplied package names,

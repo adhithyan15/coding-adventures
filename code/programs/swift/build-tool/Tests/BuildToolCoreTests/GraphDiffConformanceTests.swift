@@ -127,7 +127,122 @@ private func loadCase<T: Decodable>(_ name: String, as type: T.Type) throws -> T
     return try JSONDecoder().decode(type, from: data)
 }
 
+private func loadBoundary() throws -> BuildToolGraphDiff.Boundary {
+    let path = sharedCaseDirectory().deletingLastPathComponent()
+        .appendingPathComponent("repository-source-input-boundary.json")
+    return try JSONDecoder().decode(BuildToolGraphDiff.Boundary.self, from: Data(contentsOf: path))
+}
+
 struct GraphDiffConformanceTests {
+    private func diffInput(
+        packages: [BuildToolGraphDiff.DiffPackage] = [
+            .init(name: "fixture/a", relPath: "code/packages/swift/a", sourceMode: "strict_globs", sourceGlobs: ["*.swift"]),
+        ],
+        edges: [[String]] = [],
+        forced: [String] = [],
+        policy: String = "error",
+        boundary: String? = nil,
+        boundaryValue: BuildToolGraphDiff.Boundary? = nil,
+        paths: [String] = []
+    ) -> BuildToolGraphDiff.DiffInput {
+        .init(
+            packages: packages, edges: edges, forcedPackages: forced,
+            unknownPathPolicy: policy, boundarySHA256: boundary, boundary: boundaryValue,
+            changedPaths: paths
+        )
+    }
+
+    @Test
+    func graphRejectsMalformedStructureAndCyclesWithoutPartialOutput() {
+        let cases: [(BuildToolGraphDiff.GraphInput, String)] = [
+            (.init(packages: ["bad"], edges: []), "GRAPH_PACKAGE_INVALID"),
+            (.init(packages: ["fixture/a", "fixture/a"], edges: []), "GRAPH_PACKAGE_DUPLICATE"),
+            (.init(packages: ["fixture/a"], edges: [["fixture/a"]]), "GRAPH_EDGE_INVALID"),
+            (.init(packages: ["fixture/a"], edges: [["fixture/a", "fixture/b"]]), "GRAPH_EDGE_UNKNOWN"),
+            (.init(packages: ["fixture/a"], edges: [["fixture/a", "fixture/a"]]), "GRAPH_EDGE_SELF"),
+            (.init(packages: ["fixture/a", "fixture/b"], edges: [["fixture/a", "fixture/b"], ["fixture/a", "fixture/b"]]), "GRAPH_EDGE_DUPLICATE"),
+            (.init(packages: ["fixture/a", "fixture/b"], edges: [["fixture/a", "fixture/b"], ["fixture/b", "fixture/a"]]), "GRAPH_CYCLE"),
+        ]
+        for (input, code) in cases {
+            let result = BuildToolGraphDiff.evaluateGraph(input)
+            #expect(result.diagnosticCodes == [code])
+            #expect(result.edges.isEmpty)
+            #expect(result.levels.isEmpty)
+        }
+        let overLimit = (0...4_096).map { "fixture/p\($0)" }
+        #expect(BuildToolGraphDiff.evaluateGraph(.init(packages: overLimit, edges: [])).diagnosticCodes
+                == ["GRAPH_PACKAGE_LIMIT_EXCEEDED"])
+    }
+
+    @Test
+    func diffRejectsPortablePathGlobAndRootAliases() {
+        let aliasPackages: [BuildToolGraphDiff.DiffPackage] = [
+            .init(name: "fixture/a", relPath: "code/packages/swift/a", sourceMode: "package_prefix", sourceGlobs: []),
+            .init(name: "fixture/b", relPath: "code/packages/swift/A/child", sourceMode: "package_prefix", sourceGlobs: []),
+        ]
+        let cases: [(BuildToolGraphDiff.DiffInput, String)] = [
+            (diffInput(packages: aliasPackages), "DIFF_PATH_INVALID"),
+            (diffInput(packages: [.init(name: "fixture/a", relPath: "../escape", sourceMode: "package_prefix", sourceGlobs: [])]), "DIFF_PATH_INVALID"),
+            (diffInput(packages: [.init(name: "fixture/a", relPath: "code/packages/swift/a", sourceMode: "bad", sourceGlobs: [])]), "DIFF_SOURCE_MODE_INVALID"),
+            (diffInput(packages: [.init(name: "fixture/a", relPath: "code/packages/swift/a", sourceMode: "strict_globs", sourceGlobs: ["[z-a].swift"])]), "DIFF_GLOB_INVALID"),
+            (diffInput(paths: ["code/packages/swift/a/../secret"]), "DIFF_PATH_INVALID"),
+            (diffInput(forced: ["fixture/b"]), "DIFF_FORCED_PACKAGE_UNKNOWN"),
+            (diffInput(policy: "ignore"), "DIFF_POLICY_INVALID"),
+        ]
+        for (input, code) in cases {
+            let result = BuildToolGraphDiff.evaluateDiffSelection(input)
+            #expect(result.diagnosticCodes == [code])
+            #expect(result.changedPackages.isEmpty)
+            #expect(result.affectedPackages.isEmpty)
+            #expect(result.prerequisitePackages.isEmpty)
+        }
+    }
+
+    @Test
+    func boundaryFailurePrecedesUnknownPathAndForcedSelection() {
+        let result = BuildToolGraphDiff.evaluateDiffSelection(diffInput(
+            forced: ["fixture/a"], boundary: String(repeating: "0", count: 64),
+            paths: ["outside/unknown.txt"]
+        ))
+        #expect(result.diagnosticCodes == ["DIFF_BOUNDARY_DIGEST_MISMATCH"])
+        #expect(result.changedPackages.isEmpty)
+        #expect(result.affectedPackages.isEmpty)
+        #expect(result.prerequisitePackages.isEmpty)
+    }
+
+    @Test
+    func callerSuppliedBoundaryDigestAndExactFanout() throws {
+        let boundary = BuildToolGraphDiff.Boundary(
+            schemaVersion: 1,
+            languageSourceInputRegistrySHA256: String(repeating: "a", count: 64),
+            boundaries: [
+                .init(
+                    id: "test-shared-config", inputOrigin: "repository",
+                    appliesTo: .init(
+                        exactRoots: ["code/packages/swift/a"],
+                        descendantRoots: [], excludedRoots: []
+                    ),
+                    inputs: [.init(path: "shared/config", role: "cross_package_exact")],
+                    reason: "Test exact inert input", owner: "test"
+                ),
+            ]
+        )
+        let digest = try boundary.digest()
+        let selected = BuildToolGraphDiff.evaluateDiffSelection(diffInput(
+            boundary: digest, boundaryValue: boundary, paths: ["shared/config"]
+        ))
+        #expect(selected.diagnosticCodes.isEmpty)
+        #expect(selected.changedPackages == ["fixture/a"])
+        #expect(selected.affectedPackages == ["fixture/a"])
+
+        let mismatch = BuildToolGraphDiff.evaluateDiffSelection(diffInput(
+            boundary: String(repeating: "0", count: 64),
+            boundaryValue: boundary, paths: ["shared/config"]
+        ))
+        #expect(mismatch.diagnosticCodes == ["DIFF_BOUNDARY_DIGEST_MISMATCH"])
+        #expect(mismatch.changedPackages.isEmpty)
+    }
+
     @Test
     func allEightGraphCasesUseProductionCore() throws {
         #expect(try exactCaseNames(prefix: "graph-") == graphCaseNames)
@@ -162,6 +277,7 @@ struct GraphDiffConformanceTests {
                 forcedPackages: options.forcedPackages,
                 unknownPathPolicy: options.unknownPathPolicy,
                 boundarySHA256: options.boundarySHA256,
+                boundary: options.boundarySHA256 == nil ? nil : try loadBoundary(),
                 changedPaths: fixture.input.changedPaths
             ))
             #expect(actual.changedPackages == (fixture.expected.result.changedPackages ?? []), "\(fixture.id) changed")
