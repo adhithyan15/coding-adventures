@@ -30,7 +30,7 @@ Before we start: this one needs your hands, so it is not a driving lesson. You w
 Warm-up.
 Say the two month names already met: ਜਨਵਰੀ (January), then ਫ਼ਰਵਰੀ (February). Do not try to memorise a new list of months.
 
-Language focus — month position.
+Grammar lens — month position.
 In a two-place month box, January is ੦੧ and February is ੦੨. The first place is the already-taught zero; the second is one or two. Point to each Gurmukhi digit while saying the month name. These are month positions, not new ways to pronounce the words.
 
 Guided Practice — one place at a time.
@@ -50,7 +50,7 @@ Before we start: this one needs your hands, so it is not a driving lesson. You w
 Warm-up.
 Point to ੦੧ for January and ੦੨ for February. We will put one of these in the middle of a date, not at the beginning.
 
-Language focus — the form's printed order.
+Grammar lens — the form's printed order.
 This fictional form explicitly prints day / month / year. It has two places for the day, two for the month, and four for the year: __/__/____ (day/month/year). Copy the two slash marks between the boxes. A slash is a separator, never a digit. Other forms may use another order; follow the printed order on this one.
 
 Guided Practice — locate the month box.
@@ -110,7 +110,7 @@ Before we start: this one needs your hands, so it is not a driving lesson. You w
 Warm-up.
 Read the closed bank once: A ੧੫/੦੧/੨੦੨੫ (heard fictional date A) (fictional January date A); B ੨੫/੦੨/੨੦੨੫ (fictional February date B). Point to the middle box in each. A is January; B is February.
 
-Meaning — a symbol, not a copied answer.
+You'll want to know — a symbol, not a copied answer.
 The fictional card marked ਕ requests A. The card marked ਖ requests B. These single-letter shapes are selectors, not month names or dates. The same two shapes were used in the earlier bounded form-field practice.
 
 Guided Practice — decide before writing.
@@ -170,7 +170,7 @@ Before we start: this one needs your hands, so it is not a driving lesson. You w
 Warm-up.
 Draw three empty boxes separated by slashes. Say “day, month, year” while pointing. Cover all written date examples.
 
-Listening — one short fictional prompt.
+You'll want to know — one short fictional prompt.
 Have a partner or the narration read: “the fifteenth of January, two thousand twenty-five.” Listen once; then listen again. Do not display a digit model while you write.
 
 Writing — transcription.
@@ -190,7 +190,7 @@ Before we start: this one needs your hands, so it is not a driving lesson. You w
 Warm-up.
 Read A and B once. A is January; B is February. Their year is the same.
 
-Language focus — a short repair order.
+Grammar lens — a short repair order.
 Check one dimension at a time: selector becomes day becomes month becomes year becomes slash marks becomes label spelling and spacing. On a printed date form, a correct set of digits in the wrong boxes is still wrong. The label is ਤਾਰੀਖ਼ (tārīkh); keep the final dot beneath ਖ਼, and leave a readable space after the colon.
 
 Guided Practice — two tiny repairs.

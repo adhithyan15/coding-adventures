@@ -155,5 +155,8 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // clue, both closed because the insertions move a later retrieval into the
   // window; 0 lost, because the two panj atoms the hona insertion pushed past R1
   // are retrieved by name in PA-C07-hona-two-roots' warm-up.
-  expect(report.summary.missedByWindow).toEqual({ R1: 55, R2: 559, R3: 482, R4: 531 });
+  // Chapter 153 extends the tail by 11 short date-writing sessions. One R1
+  // and three R2 windows newly become measurable; all 11 create R3/R4 windows
+  // for earlier atoms in the measured report.
+  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 562, R3: 493, R4: 542 });
 });

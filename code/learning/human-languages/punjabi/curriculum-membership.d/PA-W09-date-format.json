@@ -1,11 +1,11 @@
 {
   "id": "PA-W09-date-format",
   "pathSegment": "PA-PATH-153-DATE",
-  "pathOrder": 3,
+  "pathOrder": 2,
   "extensions": [
     {
       "id": "PA-EXT-153-A1-DATE-FIELD",
-      "order": 3
+      "order": 2
     }
   ]
 }

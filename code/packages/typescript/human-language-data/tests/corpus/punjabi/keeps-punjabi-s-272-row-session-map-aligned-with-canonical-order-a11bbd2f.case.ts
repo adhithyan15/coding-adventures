@@ -40,8 +40,9 @@ it("keeps Punjabi's 272-row session map aligned with canonical order", () => {
     }),
   );
   // 818 -> 820: chapter 7's hona and khana each split a continuation off.
-  expect(rows).toHaveLength(820);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 820 }, (_, index) => index + 1));
+  // 820 -> 831: chapter 153 appends the 11-step fictional date-field runway.
+  expect(rows).toHaveLength(831);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 831 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );

@@ -73,7 +73,9 @@ it("pins Punjabi lesson-content budgets", () =>
     // two over-budget number lessons. No idiom, sense or culture claim.
     // 818 -> 820: PA-C07-hona-two-roots and PA-C07-khana-tone, the atom-budget
     // continuations. No idiom, sense or culture claim.
-    lessons: 820,
+    // 820 -> 831: the date-field runway, using taught months and digits. No
+    // idiom, sense or culture claim.
+    lessons: 831,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

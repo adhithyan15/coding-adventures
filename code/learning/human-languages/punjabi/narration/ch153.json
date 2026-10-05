@@ -4,7 +4,7 @@
   "chapter": 153,
   "title": "Write One Fictional Date Field",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:408ed2a6a733a439",
+  "sourceHash": "fnv1a64:b419f19727d445bf",
   "lessons": [
     {
       "id": "PA-W09-date-label",
@@ -106,7 +106,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:4be1757773939d2f",
+      "sourceHash": "fnv1a64:1b8882c69ca2eafe",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -129,8 +129,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Language focus — month position",
+          "type": "grammar",
+          "title": "Grammar lens — month position",
           "segments": [
             {
               "kind": "speech",
@@ -192,7 +192,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:9a44ee59c5fc17e9",
+      "sourceHash": "fnv1a64:e2f84f0a59d0df50",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -215,8 +215,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Language focus — the form's printed order",
+          "type": "grammar",
+          "title": "Grammar lens — the form's printed order",
           "segments": [
             {
               "kind": "speech",
@@ -454,7 +454,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b9dfabeea8820187",
+      "sourceHash": "fnv1a64:589f47c860847e43",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -478,8 +478,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Meaning — a symbol, not a copied answer",
+          "type": "input",
+          "title": "You'll want to know — a symbol, not a copied answer",
           "segments": [
             {
               "kind": "speech",
@@ -729,7 +729,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:3f818bba3567bb94",
+      "sourceHash": "fnv1a64:6cb9a4660e11cf3e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -752,8 +752,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Listening — one short fictional prompt",
+          "type": "input",
+          "title": "You'll want to know — one short fictional prompt",
           "segments": [
             {
               "kind": "speech",
@@ -817,7 +817,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:5c8587ceb28db1d2",
+      "sourceHash": "fnv1a64:54ff670c8996746d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -840,8 +840,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Language focus — a short repair order",
+          "type": "grammar",
+          "title": "Grammar lens — a short repair order",
           "segments": [
             {
               "kind": "speech",
