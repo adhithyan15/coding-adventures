@@ -94,6 +94,19 @@ retirement. The disposable source/cache/output tree lives in a freshly created
 private project-temporary directory and is removed in `finally` on both success and failure;
 the retained summary is replaced atomically without following a target symlink.
 
+`npm run quality:release` owns the cross-site FM-B070 release gate. After both
+live sites have been built, it serves only their generated directories on an
+ephemeral loopback port and audits the landing page, blog index, and `Hello,
+Forme` article with Lighthouse 13.5.0 and a reviewed Chrome binary. Every route
+must score at least 0.95 for desktop performance and exactly 1.00 for
+accessibility. Explicit total, image, and script transfer budgets keep the
+static routes at zero JavaScript while bounding the enhanced article's one
+module. A script-free DOM pass separately proves useful navigation, content,
+and all thirteen fallback steps before Chrome runs. CI pins Chrome for Testing
+154.0.8037.92 and retains only the bounded
+`dist/.forme-web-quality.json` summary; browser phases have finite deadlines and
+fresh processes, and the required CI gate waits for this lane.
+
 The installed `forme` launcher registers `tsx` for TypeScript-first packages;
 the site uses `tsx` directly only for its post-build verifier and unit tests.
 
@@ -114,6 +127,9 @@ last good blog when an edit produces a build error.
 - `release-benchmark.config.ts` / `release-benchmark.ts` — disposable
   1,000-page clean/single-edit incremental release-scale evidence derived from
   the exact live DAG.
+- `web-quality.ts` / `release-web-quality.ts` — pure score, resource,
+  fallback, containment, and evidence contracts plus the bounded browser
+  runner shared by both live sites.
 - `interactivity-stage.ts` — the narrow product authority boundary that
   attaches the reviewed pipeline-step module identity and source to the one
   article allowed to use it.

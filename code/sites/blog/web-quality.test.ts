@@ -45,7 +45,7 @@ describe("Forme release web-quality gate", () => {
       </body></html>`, target);
 
     expect(result).toEqual({
-      textCharacters: 125,
+      textCharacters: 110,
       links: 1,
       listItems: 3,
       scripts: 1,

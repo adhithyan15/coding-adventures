@@ -35,6 +35,14 @@ reproducible mode. It requires identical build IDs, canonical output reports,
 and file hashes; verifies safe source, pure-transform, and emitter reuse; and
 confirms that the stylesheet and asset readers rerun conservatively.
 
+The blog package owns the cross-site `npm run quality:release` command used by
+CI after both live sites build. It audits this generated landing page at its
+real `/coding-adventures/` project-page route with exact Lighthouse/Chrome
+pins, a 0.95 desktop performance floor, a 1.00 accessibility requirement,
+explicit transfer budgets, and a separate no-JavaScript fallback check. The
+required CI gate waits for that browser lane and retains its bounded JSON
+summary with the blog artifacts.
+
 For live preview, run `npm run bootstrap` once and then `npm run dev`. Forme
 serves the successful in-memory artifact at `http://127.0.0.1:3000`, rebuilds
 after coalesced authored-file changes, reloads connected browsers, and keeps
