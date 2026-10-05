@@ -19,21 +19,21 @@
     "notes": "PR #16361 merged through squash auto-merge as durable revision 02e8b7fc6dc0156808acf3d0395974c13ff6aa75. The merge preserves the exact validated Ruby and Swift package trees; registry evidence now names the durable merge rather than a deleted PR-head object."
   },
   "last_inventory": {
-    "revision": "2a75d68df071c01cbe9cd76d791904afb19819a5",
+    "revision": "91d191d2244b78717c6c24a8f6f2fa185398507c",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1475,
-    "implementation_package_slots": 4742,
-    "all_reported_identities": 1517,
+    "implementation_identities": 1487,
+    "implementation_package_slots": 4754,
+    "all_reported_identities": 1529,
     "high_consensus_packages": 178,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 993,
-    "singleton_missing_slots": 13902,
-    "rust_singletons": 805,
+    "singleton_packages": 1005,
+    "singleton_missing_slots": 14070,
+    "rust_singletons": 806,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -4036,7 +4036,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": false,
-      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, provenance, and deploy-planning kernels concrete enough for a dedicated family owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, asset/MIME derivation, and the merged `forme-deploy-runner-core` manifest-validation, complete-set planning, injected-content preflight, verified-snapshot, and dry-run/report behavior from browser, Vite, filesystem, network, credential, CLI, and UI authority; define fixtures and dependency order; and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, #13401, #13409, #13420, #13455, #13765, #15785, and #15820 are merged. The collision-clean inventory includes TypeScript-only `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, `forme-emit-site-fs`, `forme-cli`, `forme-dev-server`, `forme-deploy-runner-core`, `forme-deploy-runner-fs-adapter`, and `forme-deploy-runner-github-pages-adapter`; all remain covered by this family rather than creating duplicate singleton owners. The filesystem adapter is effectful native-authority work; the GitHub Pages adapter adds network, time, credentials, repository publication, filesystem, and CLI authority. Both stay outside autonomous parity-loop selection."
+      "notes": "The roadmap records the TypeScript-led forme-* static-site family, including pure graph, routing, content-model, rendering, provenance, deploy-planning, immutable theme, asset/MIME, and deploy-runner-core behavior. The exact-main 91d191d Git-tree inventory registers eleven new TypeScript-only identities under this existing owner before selecting another tranche: `forme-authoring-core`, `forme-authoring-editor`, `forme-authoring-preview`, `forme-authoring-publish`, `forme-authoring-shell`, `forme-interactivity-ir`, `forme-render-terminal`, `forme-sandbox-core`, `forme-sandbox-linux`, `forme-sandbox-macos`, and `forme-sandbox-windows`. Authoring core, preview and publish coordinators, interactivity IR, and terminal projection are portable candidates needing a neutral fixture and applicability review. Editor and shell are React UI products. Sandbox core and the three OS launchers control native process isolation and require reviewed host-bound exceptions outside autonomous parity selection; only a separately demonstrated process-free projection could enter the portable denominator. Preserve the earlier coverage of `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, `forme-emit-site-fs`, `forme-cli`, `forme-dev-server`, `forme-deploy-runner-core`, `forme-deploy-runner-fs-adapter`, and `forme-deploy-runner-github-pages-adapter`; filesystem, network, credential, CLI, and UI authority remains out of scope. Governing specs include FM02, FM05, and FM09."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -10603,10 +10603,13 @@
     {
       "id": "barcode-layout-1d-elixir-lua-v1-conformance",
       "title": "Reconcile Elixir and Lua barcode-layout-1d with the neutral contract",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["barcode-layout-1d-language-neutral-conformance", "barcode-layout-existing-lanes-v1-conformance", "barcode-layout-1d-ruby-swift-v1-conformance"],
-      "branch": null,
+      "branch": "codex/parity-barcode-layout-elixir-lua-20261005",
       "pr_number": null,
+      "selected_at": "2026-10-05T06:21:11Z",
+      "selection_revision": "91d191d2244b78717c6c24a8f6f2fa185398507c",
+      "selection_notes": "Selected after merged PR #16361 and exact-main Git-tree schema-3 inventory refresh. The 15 established lanes have 1,487 identities and 4,754 slots, with zero canonical collisions or unknown buckets. Eleven newly discovered TypeScript Forme roots were first assigned to the existing Forme family classification owner. All three dependencies are merged; reconciling the two pending established implementations completes the 12-target barcode-layout registry and unlocks 13 pending descendant owners, including Java/Kotlin/Dart layout parity. A live open-PR path audit found no overlap with package, fixture, state, or roadmap paths. Work begins on a fresh clean branch from exact origin/main.",
       "notes": "The collision-checked follow-up audit found established implementations at code/packages/elixir/barcode_layout_1d and code/packages/lua/barcode_layout_1d that were omitted from the eight-target adoption registry. Reconcile both legacy APIs with the complete barcode-layout-1d-v1 corpus, strict bounded fixture loading, exact error precedence, zero-authority text rejection, metadata projection, overflow behavior, immutability, native build fronts, capability evidence, and downstream consumers before either lane is reported conformant."
     },
     {
