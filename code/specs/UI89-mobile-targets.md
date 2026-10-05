@@ -152,6 +152,36 @@ simulators. Nothing in Journal changes.
   reruns when a script only it calls changes (`CI_SCRIPT_PATHS`):
   `build-mosaic-xcframework.sh` and the new gate.
 
+### 2.5 Engram on iOS and iPadOS (step 7)
+
+Written before implementation. Engram follows Journal (§2.4) through the
+same recipe and the same gate. Two points are Engram's own:
+
+- **Its effect handler is compiled for iOS.** `[host_effects]` installs
+  `Sources/App/EngramEffects.swift`, and the iOS app target compiles every
+  file under `Sources/App` (§2.2), so the handler is in the app. Its AppKit
+  panels are under `#if os(macOS)`. On iOS the `#else` branch answers
+  `importAnki` and `exportAnki` with `failed { message: "file dialogs are not
+  available on this platform" }`, so the app reports it instead of waiting.
+  This PR is the first to compile that branch. Routing both kinds through
+  §3.8's document picker is a later step, together with Android's.
+- **Its touch layout.** `EngramApp.touch.swift` is compiled too, and the
+  layout rules choose it on a phone-sized window, as on Android (§3.10).
+
+The rest is Journal's:
+
+- `build-mosaic-xcframework.sh engram-mosaic-app`, whose dependencies are
+  pure Rust;
+- the native-complete project with no degradations, and the generated iOS
+  app target;
+- `_mosaic_app_create` linked into the app;
+- the default identity, `dev.codingadventures.engramapp` and `EngramApp`;
+- `mosaic-ios-simulator-gate.sh` with Mosaic application id `engram-app`,
+  then a launch on the iPad simulator.
+
+The macOS lane's step timeout goes from 45 to 60 minutes. It took about 25
+minutes with Journal, and Engram adds a second engine and app build.
+
 ## 3. Android
 
 ### 3.1 Project
@@ -713,7 +743,7 @@ lanes are green, as their own PRs.
    step 8, which builds Flutter for phones.*
 7. **Every app:** Journal, Engram, Venture (after BR02's host work).
    *Journal on Android: §3.9; on iOS and iPadOS: §2.4. Engram on Android:
-   §3.10.*
+   §3.10; on iOS and iPadOS: §2.5.*
 8. **Flutter:** `flutter create --platforms=android,ios`, per-ABI native
    assets, `path_provider` for state.
 

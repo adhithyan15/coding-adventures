@@ -195,6 +195,27 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("printf '{}' > \"$state\"", script)
         self.assertLess(script.index('test -e "$corrupt"'), script.rindex('test -s "$state"'))
 
+    def test_engram_runs_and_keeps_its_state_on_ios(self) -> None:
+        """UI89 §2.5 (step 7): Engram follows Journal's iOS recipe, after
+        Journal, and its iOS target compiles the [host_effects] handler."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        journal = workflow.index("# ---- Journal on iOS and iPadOS (UI89 §2.4, step 7).")
+        start = workflow.index("# ---- Engram on iOS and iPadOS (UI89 §2.5, step 7).")
+        self.assertLess(journal, start)
+        block = workflow[start : workflow.index("\n\n", start)]
+        self.assertIn("bash code/scripts/build-mosaic-xcframework.sh engram-mosaic-app", block)
+        self.assertIn("pkg code/programs/mosaic/engram-app --backend swiftui", block)
+        self.assertIn("grep -qF 'Sources/App/EngramEffects.swift'", block)
+        self.assertIn("= dev.codingadventures.engramapp", block)
+        self.assertNotRegex(block, r"(?m)^\s*nm [^\n]*\| *grep -q")
+        gate = (
+            'bash code/scripts/mosaic-ios-simulator-gate.sh "$engram_ios_app" '
+            'dev.codingadventures.engramapp engram-app "$simulator"'
+        )
+        self.assertIn(gate, block)
+        self.assertLess(block.index(gate), block.index('xcrun simctl install "$ipad" "$engram_ios_app"'))
+
     def test_a_lane_script_change_alone_requires_acceptance(self) -> None:
         """The iOS scripts belong to no package; changing one must still run
         the lane that executes it."""
@@ -323,9 +344,10 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn(
             "Round-trip Rust engine through standard SwiftUI binding", workflow
         )
-        # 30, not 15: since UI89 §2.2 the step also boots an iOS simulator
-        # and launches the generated app.
-        self.assertIn("timeout-minutes: 45", swift_runtime_step)
+        # 60: since UI89 §2.2 the step boots iOS simulators and launches the
+        # generated apps, and §2.4/§2.5 add Journal's and Engram's engines,
+        # app builds and simulator gates.
+        self.assertIn("timeout-minutes: 60", swift_runtime_step)
         self.assertIn(
             "mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app",
             workflow,

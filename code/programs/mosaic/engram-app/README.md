@@ -262,6 +262,22 @@ CI builds Engram for Android and runs it on an x86_64 emulator (UI89 §3.10).
 - **Identity:** the manifest defaults, `dev.codingadventures.engramapp` and
   `EngramApp`.
 
+## iOS and iPadOS
+
+CI also runs Engram on the iPhone and iPad simulators (UI89 §2.5):
+
+- **Engine:** linked statically from an `.xcframework`, into the
+  generated Xcode project's simulator app.
+- **Gate:** three launches must write state into the app's container,
+  restore it, and quarantine refused state. The same app then runs on an
+  iPad simulator.
+- **Anki import and export:** the SwiftUI handler `EngramEffects.swift` is
+  compiled into the iOS app. On iOS it fails these two effects with "file
+  dialogs are not available on this platform", because its panels are
+  AppKit-only.
+- **Identity:** the defaults, `dev.codingadventures.engramapp` and
+  `EngramApp`.
+
 ## Emitting every host shell
 
 ```powershell
