@@ -244,6 +244,68 @@ struct GraphDiffConformanceTests {
     }
 
     @Test
+    func boundaryDescendantsExcludeOnlyExactRoots() throws {
+        let boundary = BuildToolGraphDiff.Boundary(
+            schemaVersion: 1,
+            languageSourceInputRegistrySHA256: String(repeating: "a", count: 64),
+            boundaries: [
+                .init(
+                    id: "test-descendant", inputOrigin: "repository",
+                    appliesTo: .init(
+                        exactRoots: [], descendantRoots: ["code/packages/swift"],
+                        excludedRoots: ["code/packages/swift/b"]
+                    ),
+                    inputs: [.init(path: "shared/config", role: "cross_package_exact")],
+                    reason: "Test descendant projection", owner: "test"
+                ),
+            ]
+        )
+        let packages: [BuildToolGraphDiff.DiffPackage] = [
+            .init(name: "fixture/a", relPath: "code/packages/swift/a", sourceMode: "package_prefix", sourceGlobs: []),
+            .init(name: "fixture/b", relPath: "code/packages/swift/b", sourceMode: "package_prefix", sourceGlobs: []),
+            .init(name: "fixture/c", relPath: "code/packages/swift/c", sourceMode: "package_prefix", sourceGlobs: []),
+        ]
+        let result = BuildToolGraphDiff.evaluateDiffSelection(diffInput(
+            packages: packages, boundary: try boundary.digest(),
+            boundaryValue: boundary, paths: ["shared/config"]
+        ))
+        #expect(result.diagnosticCodes.isEmpty)
+        #expect(result.changedPackages == ["fixture/a", "fixture/c"])
+    }
+
+    @Test
+    func oversizedOrUnsafeBoundaryFailsBeforeEncodingAndSelection() {
+        let rule = BuildToolGraphDiff.Boundary.Rule(
+            id: "test-rule", inputOrigin: "repository",
+            appliesTo: .init(exactRoots: ["code/packages/swift/a"], descendantRoots: [], excludedRoots: []),
+            inputs: [.init(path: "shared/config", role: "cross_package_exact")],
+            reason: "Test finite boundary", owner: "test"
+        )
+        let oversized = BuildToolGraphDiff.Boundary(
+            schemaVersion: 1,
+            languageSourceInputRegistrySHA256: String(repeating: "a", count: 64),
+            boundaries: Array(repeating: rule, count: 257)
+        )
+        #expect((try? oversized.digest()) == nil)
+        let result = BuildToolGraphDiff.evaluateDiffSelection(diffInput(
+            boundary: String(repeating: "0", count: 64),
+            boundaryValue: oversized, paths: ["shared/config"]
+        ))
+        #expect(result.diagnosticCodes == ["DIFF_BOUNDARY_DIGEST_MISMATCH"])
+        #expect(result.changedPackages.isEmpty)
+        let unsafe = BuildToolGraphDiff.Boundary(
+            schemaVersion: 1,
+            languageSourceInputRegistrySHA256: String(repeating: "a", count: 64),
+            boundaries: [.init(
+                id: "test-rule", inputOrigin: "repository", appliesTo: rule.appliesTo,
+                inputs: [.init(path: "../secret", role: "cross_package_exact")],
+                reason: "Test unsafe input", owner: "test"
+            )]
+        )
+        #expect((try? unsafe.digest()) == nil)
+    }
+
+    @Test
     func allEightGraphCasesUseProductionCore() throws {
         #expect(try exactCaseNames(prefix: "graph-") == graphCaseNames)
         for name in graphCaseNames.sorted() {

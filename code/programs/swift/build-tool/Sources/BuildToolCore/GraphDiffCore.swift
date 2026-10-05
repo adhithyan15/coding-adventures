@@ -38,6 +38,8 @@ public enum BuildToolGraphDiff {
     // Keeping it explicit permits a future validated registry without silently
     // borrowing the process's checkout or the source-embedded hash registry.
     public struct Boundary: Codable {
+        public enum ValidationError: Error { case invalid }
+
         public struct Rule: Codable {
             public struct Applicability: Codable {
                 public let exactRoots: [String]
@@ -56,11 +58,6 @@ public enum BuildToolGraphDiff {
                     self.excludedRoots = excludedRoots
                 }
 
-                fileprivate func matches(_ root: String) -> Bool {
-                    exactRoots.contains(root) || descendantRoots.contains {
-                        root.hasPrefix($0 + "/") && !excludedRoots.contains(root)
-                    }
-                }
             }
 
             public struct Input: Codable {
@@ -126,8 +123,81 @@ public enum BuildToolGraphDiff {
             self.boundaries = boundaries
         }
 
+        private static func validDigest(_ value: String) -> Bool {
+            value.utf8.count == 64 && value.utf8.allSatisfy {
+                (0x30...0x39).contains($0) || (0x61...0x66).contains($0)
+            }
+        }
+
+        private static func validID(_ value: String) -> Bool {
+            guard (1...120).contains(value.utf8.count),
+                  let first = value.utf8.first, let last = value.utf8.last else { return false }
+            let letterOrDigit: (UInt8) -> Bool = {
+                (0x61...0x7A).contains($0) || (0x30...0x39).contains($0)
+            }
+            guard letterOrDigit(first), letterOrDigit(last) else { return false }
+            var previousHyphen = false
+            for byte in value.utf8 {
+                if byte == 0x2D {
+                    if previousHyphen { return false }
+                    previousHyphen = true
+                } else {
+                    if !letterOrDigit(byte) { return false }
+                    previousHyphen = false
+                }
+            }
+            return true
+        }
+
+        // Mirror the neutral boundary schema's finite collection and scalar
+        // bounds before JSON encoding or projecting a public caller value.
+        private func isSchemaBounded() -> Bool {
+            guard schemaVersion == 1,
+                  Self.validDigest(languageSourceInputRegistrySHA256),
+                  (1...256).contains(boundaries.count) else { return false }
+            let origins: Set<String> = [
+                "c", "cpp", "csharp", "dart", "dotnet", "elixir", "fsharp", "go",
+                "haskell", "java", "kotlin", "lua", "mosaic", "ocaml", "perl",
+                "python", "repository", "ruby", "rust", "starlark", "swift",
+                "twig", "typescript", "wasm",
+            ]
+            let roles: Set<String> = [
+                "cross_package_exact", "generated_pruning_exception", "shared_ancestor",
+            ]
+            for rule in boundaries {
+                let applicability = rule.appliesTo
+                guard Self.validID(rule.id), Self.validID(rule.owner),
+                      origins.contains(rule.inputOrigin),
+                      (1...512).contains(rule.reason.unicodeScalars.count),
+                      (1...64).contains(rule.inputs.count),
+                      applicability.exactRoots.count <= 4_096,
+                      applicability.descendantRoots.count <= 64,
+                      applicability.excludedRoots.count <= 4_096,
+                      !applicability.exactRoots.isEmpty || !applicability.descendantRoots.isEmpty
+                else { return false }
+                for roots in [applicability.exactRoots, applicability.descendantRoots,
+                              applicability.excludedRoots] {
+                    guard Set(roots).count == roots.count,
+                          roots.allSatisfy(BuildToolGraphDiff.validPath) else { return false }
+                }
+                for input in rule.inputs {
+                    guard BuildToolGraphDiff.validPath(input.path), roles.contains(input.role) else {
+                        return false
+                    }
+                    if input.role == "generated_pruning_exception" {
+                        guard let component = input.generatedComponent,
+                              (1...128).contains(component.unicodeScalars.count),
+                              !component.contains("/"), !component.contains("\\"),
+                              BuildToolGraphDiff.validPath(component) else { return false }
+                    } else if input.generatedComponent != nil { return false }
+                }
+            }
+            return true
+        }
+
         public func digest() throws -> String {
-            try Hasher.canonicalRepositorySourceInputBoundaryDigest(from: JSONEncoder().encode(self))
+            guard isSchemaBounded() else { throw ValidationError.invalid }
+            return try Hasher.canonicalRepositorySourceInputBoundaryDigest(from: JSONEncoder().encode(self))
         }
     }
 
@@ -317,11 +387,35 @@ public enum BuildToolGraphDiff {
               (try? boundary.digest()) == digest
         else { return nil }
         var consumers: [String: Set<String>] = [:]
-        for package in input.packages {
-            for rule in boundary.boundaries where rule.appliesTo.matches(package.relPath) {
-                for boundaryInput in rule.inputs {
-                    consumers[boundaryInput.path, default: []].insert(package.name)
+        let changedPaths = Set(input.changedPaths)
+        let packageByRoot = Dictionary(uniqueKeysWithValues: input.packages.map { ($0.relPath, $0.name) })
+        let sortedRoots = packageByRoot.keys.sorted(by: ordinalLess)
+        for rule in boundary.boundaries {
+            let relevantPaths = rule.inputs.map(\.path).filter(changedPaths.contains)
+            if relevantPaths.isEmpty { continue }
+            var matches = Set<String>()
+            for root in rule.appliesTo.exactRoots {
+                if let name = packageByRoot[root] { matches.insert(name) }
+            }
+            let excluded = Set(rule.appliesTo.excludedRoots)
+            for ancestor in rule.appliesTo.descendantRoots {
+                let prefix = ancestor + "/"
+                var low = 0, high = sortedRoots.count
+                while low < high {
+                    let middle = low + (high - low) / 2
+                    if ordinalLess(sortedRoots[middle], prefix) { low = middle + 1 }
+                    else { high = middle }
                 }
+                while low < sortedRoots.count, sortedRoots[low].hasPrefix(prefix) {
+                    let root = sortedRoots[low]
+                    if !excluded.contains(root), let name = packageByRoot[root] {
+                        matches.insert(name)
+                    }
+                    low += 1
+                }
+            }
+            for path in relevantPaths {
+                consumers[path, default: []].formUnion(matches)
             }
         }
         return consumers
