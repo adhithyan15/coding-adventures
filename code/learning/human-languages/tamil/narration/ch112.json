@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Letters From Days, Towns and Gladness",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0ed8bc5c91001c4d",
+  "sourceHash": "fnv1a64:6e36275a55afa231",
   "lessons": [
     {
       "id": "TA-S137-letter-nya",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:228e65c0f78d959e",
+      "sourceHash": "fnv1a64:1e90f18598034592",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -84,39 +84,39 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start here: curve down into the compact left inner turn."
+              "text": "1. start inside the compact left body and curl round its small inner loop."
             },
             {
               "kind": "speech",
-              "text": "2. without lifting, circle the left inner loop and return upward, then lift."
+              "text": "2. without lifting, climb its outer left side and curve over into the long top bar."
             },
             {
               "kind": "speech",
-              "text": "3. put the pen down again and carry the long top bar straight to the right, then lift."
+              "text": "3. without lifting, carry the long top bar straight to the right."
             },
             {
               "kind": "speech",
-              "text": "4. put the pen down again and curve left from the upper-right shoulder."
+              "text": "4. without lifting, come back along the bar to the central upright and start down it."
             },
             {
               "kind": "speech",
-              "text": "5. without lifting, descend the central upright, then lift."
+              "text": "5. without lifting, descend the central upright to its lower end."
             },
             {
               "kind": "speech",
-              "text": "6. put the pen down again and sweep around the broad outer-right curve."
+              "text": "6. without lifting, climb back up the upright and sweep around the broad outer-right curve."
             },
             {
               "kind": "speech",
-              "text": "7. without lifting, continue around the broad bottom bowl."
+              "text": "7. without lifting, continue around the bottom bowl toward the far left."
             },
             {
               "kind": "speech",
-              "text": "8. without lifting, return up the outer-left side — and only now lift."
+              "text": "8. without lifting, return up the outer-left side and finish below the top bar — and only now lift."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3."
+              "text": "Pen lifts: 0. The pen never leaves the paper."
             },
             {
               "kind": "speech",
@@ -207,7 +207,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ee7b0bd92864405b",
+      "sourceHash": "fnv1a64:5357583226941921",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -270,43 +270,43 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start here: sweep outward around the compact upper spiral."
+              "text": "1. write உ first: start inside its compact upper spiral and sweep outward around it."
             },
             {
               "kind": "speech",
-              "text": "2. without lifting, descend through the broad outer curve and turn left onto the baseline."
+              "text": "2. without lifting, descend through its broad outer curve and turn left onto the baseline."
             },
             {
               "kind": "speech",
-              "text": "3. without lifting, carry the long baseline straight to the right, then lift."
+              "text": "3. without lifting, carry the long baseline straight to the right — then lift once."
             },
             {
               "kind": "speech",
-              "text": "4. put the pen down again and curl around the added left loop."
+              "text": "4. write ள over that base: start inside its loop, curl round its inner bowl, and climb the outer loop."
             },
             {
               "kind": "speech",
-              "text": "5. without lifting, turn inward through the added loop."
+              "text": "5. without lifting, curve over the top and into the junction with the middle upright."
             },
             {
               "kind": "speech",
-              "text": "6. without lifting, descend around the added inner curl, then lift."
+              "text": "6. without lifting, draw the adjoining stem straight down."
             },
             {
               "kind": "speech",
-              "text": "7. put the pen down again and rise on the added adjoining upright."
+              "text": "7. without lifting, rise back up the same stem to the top."
             },
             {
               "kind": "speech",
-              "text": "8. without lifting, carry the added top bar right, then lift."
+              "text": "8. without lifting, carry the top bar to the right edge."
             },
             {
               "kind": "speech",
-              "text": "9. put the pen down again and descend the added separate right upright — and only now lift."
+              "text": "9. without lifting, return along the bar to the right upright and draw it straight down — and only now lift."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3."
+              "text": "Pen lifts: 1. The pen comes up 1 time and no more."
             },
             {
               "kind": "speech",
@@ -397,7 +397,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:830c9c3f9e85b6ff",
+      "sourceHash": "fnv1a64:2f54b85f33fc39ef",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -460,19 +460,19 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start here: circle the small left loop and climb into the crown."
+              "text": "1. circle the small left loop and climb into the crown."
             },
             {
               "kind": "speech",
-              "text": "2. without lifting, sweep through the large right loop and curl inward, then lift."
+              "text": "2. without lifting, sweep through the large right loop, curl inward, and run out along the tail."
             },
             {
               "kind": "speech",
-              "text": "3. put the pen down again and draw the separate lower bowl and return left — and only now lift."
+              "text": "3. without lifting, come back along the tail to the lower bowl, draw it down and around, and return left — and only now lift."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 1."
+              "text": "Pen lifts: 0. The pen never leaves the paper."
             },
             {
               "kind": "speech",

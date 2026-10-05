@@ -17,7 +17,8 @@ provenance through assignment and composition. Specialised read-only real name
 formals retain it for runtime-real actual expressions on all seven standard
 backends, including assignable real array elements and direct forwarding
 through another name formal. Writes still use the existing specialised caller
-storage path.
+storage path. Ordinary captured real scalars also retain formatter provenance
+through their existing E6 typed-global slots in nested sibling procedures.
 
 The opt-in CLR integration suite `tests/clr_strict_flow.rs` executes forward-only
 conditional control, nested Bool branches and wide values through joins,

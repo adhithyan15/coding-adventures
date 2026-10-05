@@ -2065,6 +2065,7 @@ enum CssColorMixSpace {
     SrgbLinear,
     Hsl,
     Hwb,
+    Lab,
     Oklab,
     Oklch,
 }
@@ -2082,6 +2083,7 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         ["in", "srgb-linear"] => CssColorMixSpace::SrgbLinear,
         ["in", "hsl"] => CssColorMixSpace::Hsl,
         ["in", "hwb"] => CssColorMixSpace::Hwb,
+        ["in", "lab"] => CssColorMixSpace::Lab,
         ["in", "oklab"] => CssColorMixSpace::Oklab,
         ["in", "oklch"] => CssColorMixSpace::Oklch,
         _ => return None,
@@ -2161,6 +2163,9 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         CssColorMixSpace::Hwb => css_hwb_to_color(
             components[2].to_degrees(), components[0], components[1], alpha,
         ),
+        CssColorMixSpace::Lab => css_lab_to_color(
+            components[0], components[1], components[2], alpha,
+        ),
         CssColorMixSpace::Oklab => css_oklab_to_color(
             components[0], components[1], components[2], alpha,
         ),
@@ -2184,6 +2189,7 @@ fn css_color_mix_components(color: Color, space: CssColorMixSpace) -> [f64; 3] {
         CssColorMixSpace::SrgbLinear => encoded.map(encoded_srgb_to_linear),
         CssColorMixSpace::Hsl => css_color_to_hsl(encoded),
         CssColorMixSpace::Hwb => css_color_to_hwb(encoded),
+        CssColorMixSpace::Lab => css_color_to_lab(encoded),
         CssColorMixSpace::Oklab => css_color_to_oklab(encoded),
         CssColorMixSpace::Oklch => {
             let [lightness, a, b] = css_color_to_oklab(encoded);
@@ -2219,6 +2225,27 @@ fn css_color_to_hwb(encoded: [f64; 3]) -> [f64; 3] {
     let whiteness = encoded[0].min(encoded[1]).min(encoded[2]);
     let blackness = 1.0 - encoded[0].max(encoded[1]).max(encoded[2]);
     [whiteness, blackness, hue]
+}
+
+fn css_color_to_lab(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    let x65 = 0.4124 * r + 0.3576 * g + 0.1805 * b;
+    let y65 = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    let z65 = 0.0193 * r + 0.1192 * g + 0.9505 * b;
+    let x50 = 1.0479298 * x65 + 0.0229468 * y65 - 0.0501922 * z65;
+    let y50 = 0.0296278 * x65 + 0.9904345 * y65 - 0.0170738 * z65;
+    let z50 = -0.0092430 * x65 + 0.0150552 * y65 + 0.7518743 * z65;
+    let transform = |value: f64| {
+        if value > 216.0 / 24_389.0 {
+            value.cbrt()
+        } else {
+            ((24_389.0 / 27.0) * value + 16.0) / 116.0
+        }
+    };
+    let f0 = transform(x50 / 0.96422);
+    let f1 = transform(y50);
+    let f2 = transform(z50 / 0.82521);
+    [116.0 * f1 - 16.0, 500.0 * (f0 - f1), 200.0 * (f1 - f2)]
 }
 
 fn css_color_to_oklab(encoded: [f64; 3]) -> [f64; 3] {
@@ -8148,6 +8175,27 @@ mod tests {
             Color { r: 255, g: 0, b: 0, a: 51 },
         );
         assert_eq!(with_opacity("color-mix(in hwb, black, white)", 0.5), "rgba(128,128,128,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_lab() {
+        assert_eq!(
+            css_to_color("color-mix(in lab, black, white)"),
+            Color { r: 119, g: 119, b: 119, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in lab, red, blue)"),
+            Color { r: 193, g: 0, b: 136, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in lab, red 100%, blue 0%)"),
+            Color { r: 255, g: 0, b: 0, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in lab, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in lab, black, white)", 0.5), "rgba(119,119,119,0.5)");
     }
 
     #[test]

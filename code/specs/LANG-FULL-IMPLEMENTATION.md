@@ -1310,9 +1310,10 @@ backend immediately) come before the enabler-dependent items.
   `arctan` preserve it for a proven runtime-real operand while user-declared
   overrides remain conservative. Reads from real array elements and real value
   formals also carry the proof through assignment and composition, including
-  value formals promoted into the existing nested-procedure capture globals;
-  ordinary captured globals and broader computed scalar `f64` formatting
-  remain follow-ups.
+  value formals promoted into the existing nested-procedure capture globals.
+  Ordinary real scalars captured through E6 typed globals likewise carry the
+  proof into nested sibling procedures. Broader computed scalar `f64`
+  formatting remains a follow-up.
   Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across

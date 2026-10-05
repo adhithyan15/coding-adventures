@@ -49,7 +49,7 @@ What it is made of:
 - a spiral loop on the left
 - TWO rounded inner arches
 - a straight top bar
-- a separate straight vertical on the right, down to the baseline
+- a straight vertical on the right, hanging from the bar down to the baseline
 
 It is the second letter of வணக்கம்.
 
@@ -61,10 +61,10 @@ It is the second letter of வணக்கம்.
 - **3.** without lifting, descend around the outside of the first inner arch
 - **4.** without lifting, turn through its bottom and climb the inside back to the first junction
 - **5.** without lifting, sweep through the extra inner arch — over its top, around its outside and bottom, then up its inside to the right junction
-- **6.** without lifting, carry the top bar to the right edge — then lift once
-- **7.** set the pen at the top of the separate right upright and draw straight down — and only now lift
+- **6.** without lifting, carry the top bar to the right edge
+- **7.** without lifting, come back along the bar to the right upright and draw it straight down — and only now lift
 
-**Pen lifts: 1.** The pen comes up 1 time and no more.
+**Pen lifts: 0.** The pen never leaves the paper.
 
 > Stroke order is one attested teaching order, not a national standard —
 > Tamil handwriting is taught with school-to-school variation. Source:
@@ -81,4 +81,4 @@ It is the second letter of வணக்கம்.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-DRIZZLE-02] -->
 
-[PAUSE 3s] Where does the tongue go for ண? (**Curled back**, to the roof of the mouth.) How many pen lifts? (**One** — the body, then the upright.)
+[PAUSE 3s] Where does the tongue go for ண? (**Curled back**, to the roof of the mouth.) How many pen lifts? (**None** — the bar runs back into the upright.)

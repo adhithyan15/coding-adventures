@@ -49,7 +49,7 @@ What it is made of:
 - a spiral loop on the left
 - ONE rounded inner arch
 - a straight top bar
-- a separate straight vertical on the right, down to the baseline
+- a straight vertical on the right, hanging from the bar down to the baseline
 
 It ends நான் — *I* — and நன்றி's second syllable.
 
@@ -60,10 +60,10 @@ It ends நான் — *I* — and நன்றி's second syllable.
 - **2.** without lifting, arch over the top of the left loop to the middle junction
 - **3.** without lifting, descend around the outside of the single inner arch
 - **4.** without lifting, turn through its bottom and climb the inside back to the top junction
-- **5.** without lifting, carry the top bar to the right edge — then lift once
-- **6.** set the pen at the top of the separate right upright and draw straight down — and only now lift
+- **5.** without lifting, carry the top bar to the right edge
+- **6.** without lifting, come back along the bar to the right upright and draw it straight down — and only now lift
 
-**Pen lifts: 1.** The pen comes up 1 time and no more.
+**Pen lifts: 0.** The pen never leaves the paper.
 
 > Stroke order is one attested teaching order, not a national standard —
 > Tamil handwriting is taught with school-to-school variation. Source:

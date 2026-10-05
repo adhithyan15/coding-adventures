@@ -83,16 +83,19 @@ export const entry: DuctusEntry = [
               { x: 1210, y: 518 },
             ],
           },
-        ],
-      },
-      {
-        segments: [
           {
-            label: "descend the separate right upright",
+            label: "back, then down the right upright",
             path: [
-              { x: 1004, y: 480 },
-              { x: 1004, y: 350 },
-              { x: 1004, y: 180 },
+              { x: 1210, y: 518 },
+              { x: 1141, y: 518 },
+              { x: 1073, y: 518 },
+              { x: 1004, y: 500 },
+              { x: 1004, y: 432 },
+              { x: 1004, y: 364 },
+              { x: 1004, y: 296 },
+              { x: 1004, y: 229 },
+              { x: 1004, y: 161 },
+              { x: 1004, y: 93 },
               { x: 1004, y: 25 },
             ],
           },
@@ -104,7 +107,7 @@ export const entry: DuctusEntry = [
         "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 13, ன (Univ. of Texas at Austin), p. 195",
       url: "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
       variation:
-        "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order.",
+        "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. Appendix I Frame 13 numbers six hand-movements for ன. Native writers draw them as one continuous stroke, and this ductus follows the six movements in order without lifting: the top bar runs out to the right edge, so the pen comes back along it to the right upright and draws the upright down. In HP Labs India's online Tamil handwriting data (the LipiTk 4.0 Tamil isolated-character recognizer, trained on hpl-tamil-iso-char), 94% of the 335 stored prototypes of ன are a single pen-down stroke.",
     },
   },
 ];
