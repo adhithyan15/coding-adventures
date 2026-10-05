@@ -2063,9 +2063,15 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
     let source = css.trim().to_ascii_lowercase();
     let inner = source.strip_prefix("color-mix(")?.strip_suffix(')')?.trim();
     let parts = split_css_top_level_commas(inner)?;
-    if parts.len() != 3 || parts[0].split_whitespace().collect::<Vec<_>>() != ["in", "srgb"] {
+    if parts.len() != 3 {
         return None;
     }
+    let interpolation = parts[0].split_whitespace().collect::<Vec<_>>();
+    let linear_light = match interpolation.as_slice() {
+        ["in", "srgb"] => false,
+        ["in", "srgb-linear"] => true,
+        _ => return None,
+    };
     let (first_source, first_percentage) = parse_css_color_mix_stop(parts[1])?;
     let (second_source, second_percentage) = parse_css_color_mix_stop(parts[2])?;
     let first = parse_css_color(first_source)?;
@@ -2087,19 +2093,31 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
     let mixed_alpha = first_alpha * first_weight + second_alpha * second_weight;
     let channel = |first: u8, second: u8| {
         if mixed_alpha == 0.0 {
-            0
+            0.0
         } else {
-            ((f64::from(first) * first_alpha * first_weight
-                + f64::from(second) * second_alpha * second_weight) / mixed_alpha)
-                .clamp(0.0, 255.0).round() as u8
+            let decode = |value: u8| {
+                let encoded = f64::from(value) / 255.0;
+                if linear_light { encoded_srgb_to_linear(encoded) } else { encoded }
+            };
+            ((decode(first) * first_alpha * first_weight
+                + decode(second) * second_alpha * second_weight) / mixed_alpha)
+                .clamp(0.0, 1.0)
         }
     };
-    Some(Color {
-        r: channel(first.r, second.r),
-        g: channel(first.g, second.g),
-        b: channel(first.b, second.b),
-        a: (mixed_alpha * alpha_multiplier * 255.0).clamp(0.0, 255.0).round() as u8,
-    })
+    let r = channel(first.r, second.r);
+    let g = channel(first.g, second.g);
+    let b = channel(first.b, second.b);
+    let alpha = (mixed_alpha * alpha_multiplier * 255.0).clamp(0.0, 255.0).round() as u8;
+    if linear_light {
+        Some(linear_srgb_to_color(r, g, b, alpha))
+    } else {
+        Some(Color {
+            r: (r * 255.0).round() as u8,
+            g: (g * 255.0).round() as u8,
+            b: (b * 255.0).round() as u8,
+            a: alpha,
+        })
+    }
 }
 
 fn split_css_top_level_commas(source: &str) -> Option<Vec<&str>> {
@@ -7940,6 +7958,23 @@ mod tests {
             Color { r: 128, g: 0, b: 128, a: 102 },
         );
         assert_eq!(with_opacity("color-mix(in srgb, red, blue)", 0.5), "rgba(128,0,128,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_linear_srgb() {
+        assert_eq!(
+            css_to_color("color-mix(in srgb-linear, black, white)"),
+            Color { r: 188, g: 188, b: 188, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in srgb-linear, red, blue)"),
+            Color { r: 188, g: 0, b: 188, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in srgb-linear, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in srgb-linear, black, white)", 0.5), "rgba(188,188,188,0.5)");
     }
 
     #[test]
