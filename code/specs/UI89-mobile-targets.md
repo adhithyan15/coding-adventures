@@ -163,8 +163,9 @@ same recipe and the same gate. Two points are Engram's own:
   panels are under `#if os(macOS)`. On iOS the `#else` branch answers
   `importAnki` and `exportAnki` with `failed { message: "file dialogs are not
   available on this platform" }`, so the app reports it instead of waiting.
-  This PR is the first to compile that branch. Routing both kinds through
-  §3.8's document picker is a later step, together with Android's.
+  This PR is the first to compile that branch. *Since §2.6, that branch
+  answers both kinds through the platform library's document picker instead;
+  Android's follows.*
 - **Its touch layout.** `EngramApp.touch.swift` is compiled too, and the
   layout rules choose it on a phone-sized window, as on Android (§3.10).
 
@@ -181,6 +182,60 @@ The rest is Journal's:
 
 The macOS lane's step timeout goes from 45 to 60 minutes. It took about 25
 minutes with Journal, and Engram adds a second engine and app build.
+
+### 2.6 App effects through the platform picker (iOS)
+
+Written before implementation. On iOS a package's `[host_effects]` handler
+cannot show a file dialog of its own: AppKit's panels do not exist, and
+presenting a `UIDocumentPickerViewController` needs a view controller and the
+one-request-at-a-time rule that only the platform library has (§3.8). Engram's
+handler has therefore failed `importAnki` and `exportAnki` on iOS (§2.5). The
+platform library now lends its picker to the app's handler.
+
+- **Finding the router.** `installMosaicPlatformEffects` already keeps a
+  table of the hosts it has routed. That table now holds each host's router,
+  and `mosaicPlatformRouter(for: host)` returns it, or nil when the library
+  was never installed on that host. By the time an app kind reaches the app's
+  handler, the router that passed it on exists.
+- **Open.** `router.openForApp(id, accept:, limit:, ok:)` answers the app's
+  Await `id` through the picker. It follows the rules `files.open` follows:
+  - one file operation at a time (a second request fails at once);
+  - the effect is deferred first, and nothing is shown for an id the runtime
+    is not awaiting;
+  - the document is read on the background queue, bounded while it is read;
+  - `cancelled {}` on a cancel, and `failed` with a fixed message otherwise.
+
+  Three things are the app's own:
+  - the accepted extensions (`MosaicAccept`, not a MIME list, since an app
+    type such as `.apkg` is in no MIME table);
+  - the size limit, which the app sets for its own data;
+  - the `ok` answer, built by `ok(name, bytes)` from the bytes read.
+- **Save.** `router.saveForApp(id, suggestedName:, bytes:, accept:, ok:)`
+  checks the name exactly as `files.save` does, by the same function, so a
+  refused name fails before anything is shown. It then asks the picker and
+  answers with `ok(name)`. The bytes come from the app's own payload, so there
+  is no `files.save` 16 MiB limit: the app's runtime already holds them.
+- **Shared, not copied.** The standard `files.open` and `files.save` paths are
+  rebuilt on the same two operations with the library's own accept list,
+  limits and `ok` shapes, so there is one implementation of each.
+- **Engram on iOS.**
+  - `importAnki` opens with `.apkg` and `.colpkg` and Engram's 256 MiB
+    limit, and answers `ok { apkg: <base64> }`.
+  - `exportAnki` validates its package as on macOS (strict base64, a zip
+    local header). It saves as `suggestedName` or `engram.apkg`, accepting
+    `.apkg`, and answers `ok {}`.
+  - The macOS panels are unchanged. A host without the library (none today)
+    keeps the old "not available" failure.
+- **Gates.** The Linux and macOS Swift harness drives both operations with
+  fake pickers:
+  - an open answered later, mapped through `ok`;
+  - a read over the app's limit;
+  - an extension filter passed to the picker;
+  - a refused save name, with no picker shown;
+  - a second request refused while one is open;
+  - lookup of an uninstalled host.
+  The iOS simulator build compiles Engram's new branch; driving the picker
+  itself waits for §4's XCUITest. Android follows with the Kotlin library.
 
 ## 3. Android
 
