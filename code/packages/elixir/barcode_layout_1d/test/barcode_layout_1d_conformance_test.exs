@@ -82,15 +82,19 @@ defmodule CodingAdventures.BarcodeLayout1DConformanceTest do
 
     if document["schema_version"] != 1 or document["profile"] != "barcode-layout-1d-v1" or
          not is_list(cases) or length(cases) > 64 or length(cases) == 0,
-      do: raise(ArgumentError, "invalid corpus")
+       do: raise(ArgumentError, "invalid corpus")
 
-    ids = Enum.map(cases, fn row ->
-      if not is_map(row) or Map.keys(row) |> Enum.sort() != ["expected", "id", "input", "operation"],
-        do: raise(ArgumentError, "invalid case")
-      if not is_map(row["input"]) or not is_map(row["expected"]),
-        do: raise(ArgumentError, "invalid case")
-      row["id"]
-    end)
+    ids =
+      Enum.map(cases, fn row ->
+        if not is_map(row) or
+             Map.keys(row) |> Enum.sort() != ["expected", "id", "input", "operation"],
+           do: raise(ArgumentError, "invalid case")
+
+        if not is_map(row["input"]) or not is_map(row["expected"]),
+          do: raise(ArgumentError, "invalid case")
+
+        row["id"]
+      end)
 
     if length(Enum.uniq(ids)) != length(ids), do: raise(ArgumentError, "duplicate case")
     cases
@@ -98,69 +102,103 @@ defmodule CodingAdventures.BarcodeLayout1DConformanceTest do
 
   defp pattern(input) do
     case input do
-      %{"pattern" => value} -> value
+      %{"pattern" => value} ->
+        value
+
       %{"repeat" => %{"token" => token, "count" => count} = repeated} ->
         suffix = Map.get(repeated, "suffix", "")
+
         unless is_integer(count) and count in 0..65_569 and is_binary(token) and
                  String.length(token) in 1..2 and String.length(suffix) <= 1,
-          do: raise(ArgumentError, "invalid repeat")
+               do: raise(ArgumentError, "invalid repeat")
+
         String.duplicate(token, count) <> suffix
     end
   end
 
   defp runs(input) do
-    rows = case input do
-      %{"runs" => value} -> value
-      %{"repeatRuns" => %{"count" => count} = repeated} ->
-        unless is_integer(count) and count in 0..40_980,
-          do: raise(ArgumentError, "invalid repeatRuns")
-        Enum.map(0..(count - 1)//1, fn index ->
-          first = repeated["firstColor"]
-          %{
-            "color" => if(rem(index, 2) == 0, do: first, else: if(first == "bar", do: "space", else: "bar")),
-            "modules" => repeated["modules"],
-            "sourceLabel" => repeated["sourceLabel"],
-            "sourceIndex" => repeated["sourceIndex"],
-            "role" => repeated["role"]
-          }
-        end)
-    end
+    rows =
+      case input do
+        %{"runs" => value} ->
+          value
+
+        %{"repeatRuns" => %{"count" => count} = repeated} ->
+          unless is_integer(count) and count in 0..40_980,
+            do: raise(ArgumentError, "invalid repeatRuns")
+
+          Enum.map(0..(count - 1)//1, fn index ->
+            first = repeated["firstColor"]
+
+            %{
+              "color" =>
+                if(rem(index, 2) == 0,
+                  do: first,
+                  else: if(first == "bar", do: "space", else: "bar")
+                ),
+              "modules" => repeated["modules"],
+              "sourceLabel" => repeated["sourceLabel"],
+              "sourceIndex" => repeated["sourceIndex"],
+              "role" => repeated["role"]
+            }
+          end)
+      end
 
     Enum.map(rows, fn row ->
-      %{color: row["color"], modules: row["modules"], source_label: row["sourceLabel"],
-        source_index: row["sourceIndex"], role: row["role"]}
+      %{
+        color: row["color"],
+        modules: row["modules"],
+        source_label: row["sourceLabel"],
+        source_index: row["sourceIndex"],
+        role: row["role"]
+      }
     end)
   end
 
   defp symbols(input) do
     cond do
-      Map.has_key?(input, "symbols") -> input["symbols"]
+      Map.has_key?(input, "symbols") ->
+        input["symbols"]
+
       Map.has_key?(input, "repeatSymbols") ->
         repeated = input["repeatSymbols"]
         count = repeated["count"]
+
         unless is_integer(count) and count in 0..40_980,
           do: raise(ArgumentError, "invalid repeatSymbols")
+
         Enum.map(0..(count - 1)//1, fn index ->
-          %{"label" => repeated["label"], "modules" => repeated["modules"],
-            "sourceIndex" => index, "role" => repeated["role"]}
+          %{
+            "label" => repeated["label"],
+            "modules" => repeated["modules"],
+            "sourceIndex" => index,
+            "role" => repeated["role"]
+          }
         end)
-      true -> nil
+
+      true ->
+        nil
     end
   end
 
   defp execute(%{"operation" => "expand-binary", "input" => input}) do
-    Layout.runs_from_binary_pattern_v1(pattern(input), source_label: input["sourceLabel"],
-      source_index: input["sourceIndex"], role: input["role"])
+    Layout.runs_from_binary_pattern_v1(pattern(input),
+      source_label: input["sourceLabel"],
+      source_index: input["sourceIndex"],
+      role: input["role"]
+    )
   end
 
   defp execute(%{"operation" => "expand-width", "input" => input}) do
-    Layout.runs_from_width_pattern_v1(pattern(input), source_label: input["sourceLabel"],
-      source_index: input["sourceIndex"], role: input["role"],
+    Layout.runs_from_width_pattern_v1(pattern(input),
+      source_label: input["sourceLabel"],
+      source_index: input["sourceIndex"],
+      role: input["role"],
       narrow_marker: Map.get(input, "narrowMarker", "N"),
       wide_marker: Map.get(input, "wideMarker", "W"),
       narrow_modules: Map.get(input, "narrowModules", 1),
       wide_modules: Map.get(input, "wideModules", 3),
-      starting_color: Map.get(input, "startingColor", "bar"))
+      starting_color: Map.get(input, "startingColor", "bar")
+    )
   end
 
   defp execute(%{"operation" => "compute-layout", "input" => input}) do
@@ -169,6 +207,7 @@ defmodule CodingAdventures.BarcodeLayout1DConformanceTest do
 
   defp execute(%{"operation" => "project-scene", "input" => input}) do
     render = Map.get(input, "renderConfig", %{})
+
     Layout.project_barcode_1d_scene_v1(runs(input), input["quietZoneModules"], %{
       render_config: %{
         module_width: Map.get(render, "moduleWidth", 4),
@@ -185,34 +224,62 @@ defmodule CodingAdventures.BarcodeLayout1DConformanceTest do
   end
 
   defp run_projection(run) do
-    %{"color" => run.color, "modules" => run.modules, "sourceLabel" => run.source_label,
-      "sourceIndex" => run.source_index, "role" => run.role}
+    %{
+      "color" => run.color,
+      "modules" => run.modules,
+      "sourceLabel" => run.source_label,
+      "sourceIndex" => run.source_index,
+      "role" => run.role
+    }
   end
 
   defp scene_projection(scene) do
-    %{"width" => scene.width, "height" => scene.height, "background" => scene.background,
-      "rectangles" => Enum.map(scene.instructions, fn rect ->
-        %{"x" => rect.x, "y" => rect.y, "width" => rect.width, "height" => rect.height,
-          "fill" => rect.fill, "metadata" => rect.metadata}
-      end), "metadata" => scene.metadata}
+    %{
+      "width" => scene.width,
+      "height" => scene.height,
+      "background" => scene.background,
+      "rectangles" =>
+        Enum.map(scene.instructions, fn rect ->
+          %{
+            "x" => rect.x,
+            "y" => rect.y,
+            "width" => rect.width,
+            "height" => rect.height,
+            "fill" => rect.fill,
+            "metadata" => rect.metadata
+          }
+        end),
+      "metadata" => scene.metadata
+    }
   end
 
   defp canonical_runs(runs) do
-    objects = Enum.map(runs, fn run ->
-      "{\"color\":" <> IO.iodata_to_binary(:json.encode(run["color"])) <>
-        ",\"modules\":" <> Integer.to_string(run["modules"]) <>
-        ",\"role\":" <> IO.iodata_to_binary(:json.encode(run["role"])) <>
-        ",\"sourceIndex\":" <> Integer.to_string(run["sourceIndex"]) <>
-        ",\"sourceLabel\":" <> IO.iodata_to_binary(:json.encode(run["sourceLabel"])) <> "}"
-    end)
+    objects =
+      Enum.map(runs, fn run ->
+        "{\"color\":" <>
+          IO.iodata_to_binary(:json.encode(run["color"])) <>
+          ",\"modules\":" <>
+          Integer.to_string(run["modules"]) <>
+          ",\"role\":" <>
+          IO.iodata_to_binary(:json.encode(run["role"])) <>
+          ",\"sourceIndex\":" <>
+          Integer.to_string(run["sourceIndex"]) <>
+          ",\"sourceLabel\":" <> IO.iodata_to_binary(:json.encode(run["sourceLabel"])) <> "}"
+      end)
+
     "[" <> Enum.join(objects, ",") <> "]"
   end
 
   test "all 56 neutral cases execute through the native v1 facade" do
     cases = load_cases!()
+
     assert Enum.frequencies_by(cases, & &1["operation"]) ==
-             %{"expand-binary" => 12, "expand-width" => 12,
-               "compute-layout" => 19, "project-scene" => 13}
+             %{
+               "expand-binary" => 12,
+               "expand-width" => 12,
+               "compute-layout" => 19,
+               "project-scene" => 13
+             }
 
     Enum.each(cases, fn row ->
       expected = row["expected"]
@@ -232,7 +299,10 @@ defmodule CodingAdventures.BarcodeLayout1DConformanceTest do
           assert Enum.sum(Enum.map(projected, & &1["modules"])) == digest["contentModules"], id
           assert hd(projected) == digest["firstRun"], id
           assert List.last(projected) == digest["lastRun"], id
-          actual_sha = :crypto.hash(:sha256, canonical_runs(projected)) |> Base.encode16(case: :lower)
+
+          actual_sha =
+            :crypto.hash(:sha256, canonical_runs(projected)) |> Base.encode16(case: :lower)
+
           assert actual_sha == digest["runsSha256"], id
 
         Map.has_key?(expected, "layout") ->
@@ -249,15 +319,21 @@ defmodule CodingAdventures.BarcodeLayout1DConformanceTest do
     invalid_runs = [%{color: "unknown", modules: 0}]
 
     assert_raise V1Error, "human-readable-text-unsupported", fn ->
-      Layout.project_barcode_1d_scene_v1(invalid_runs, 0,
-        %{human_readable_text: "text", font_resolver: resolver})
+      Layout.project_barcode_1d_scene_v1(invalid_runs, 0, %{
+        human_readable_text: "text",
+        font_resolver: resolver
+      })
     end
+
     refute_received :resolver_called
 
     assert_raise V1Error, "human-readable-text-unsupported", fn ->
-      Layout.project_barcode_1d_scene_v1(invalid_runs, 0,
-        %{render_config: %{include_human_readable_text: true}, font_resolver: resolver})
+      Layout.project_barcode_1d_scene_v1(invalid_runs, 0, %{
+        render_config: %{include_human_readable_text: true},
+        font_resolver: resolver
+      })
     end
+
     refute_received :resolver_called
   end
 

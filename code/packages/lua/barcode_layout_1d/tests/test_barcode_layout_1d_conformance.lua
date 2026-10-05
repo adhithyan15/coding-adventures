@@ -113,7 +113,7 @@ local function strict_decode(raw, depth_limit)
     space()
     assert(cursor == #raw + 1, "fixture-trailing-data")
     local decoded, next_cursor, err = json.decode(raw, 1, json.null)
-    assert(err == nil and next_cursor == #raw + 1, "fixture-invalid-json")
+    assert(err == nil and raw:sub(next_cursor):match("^%s*$"), "fixture-invalid-json")
     return decoded
 end
 
