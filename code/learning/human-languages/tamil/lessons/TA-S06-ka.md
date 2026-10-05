@@ -37,7 +37,7 @@ reviews_of: [TA-S05-rra]
 
 [PAUSE 2s] One letter this time. Just one.
 
-The most-used consonant in Tamil, and the most built: a square frame on top, then two bowls hanging under it. Three pen-down runs. Take it slowly — nothing else in this book asks for as many separate pieces.
+The most-used consonant in Tamil, and the most built: a square frame on top, then two bowls hanging under it. One continuous stroke, and a long one. Take it slowly — the pen climbs, crosses, drops and goes round both bowls before it lifts.
 
 ## Script you'll notice: க
 <!-- hl-knowledge: introduces=[TA-SCRIPT-DRIZZLE-06]; assesses=[] -->
@@ -57,12 +57,12 @@ What it is made of:
 
 - **1.** start at the middle left and climb the left upright
 - **2.** without lifting, carry the top bar to the right and return along it to the inner corner
-- **3.** without lifting, drop the inner upright and carry the middle bar left — then lift once
-- **4.** set the pen at the inner crossing and curve down and around the lower-left bowl
-- **5.** without lifting again, return up its outer left side — then lift a second time
-- **6.** set the pen at the inner crossing and turn around the lower-right bowl — and only now lift
+- **3.** without lifting, drop the inner upright to the inner crossing
+- **4.** without lifting, curve down and around the lower-left bowl
+- **5.** without lifting, return up its outer left side to the middle left
+- **6.** without lifting, cross the middle bar and turn around the lower-right bowl — and only now lift
 
-**Pen lifts: 2.** The pen comes up 2 times and no more.
+**Pen lifts: 0.** The pen never leaves the paper.
 
 > Stroke order is one attested teaching order, not a national standard —
 > Tamil handwriting is taught with school-to-school variation. Source:
@@ -79,4 +79,4 @@ What it is made of:
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-DRIZZLE-06] -->
 
-[PAUSE 3s] How many pen lifts does க take? (**Two** — three separate runs.) What are the three parts? (**Upper frame, lower-left bowl, lower-right bowl.**)
+[PAUSE 3s] How many pen lifts does க take? (**None** — it is one continuous stroke.) What are the three parts? (**Upper frame, lower-left bowl, lower-right bowl.**)

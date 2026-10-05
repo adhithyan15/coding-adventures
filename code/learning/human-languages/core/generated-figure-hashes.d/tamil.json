@@ -25,22 +25,22 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-S04-na",
-      "sourceHash": "fnv1a64:5b416cb7b4056d6e",
-      "svgHash": "fnv1a64:e5e5a9af84c1319a",
+      "sourceHash": "fnv1a64:811ac5bc80d222a8",
+      "svgHash": "fnv1a64:e760ae5da1031194",
       "svg": "tamil/book/figures/TA-S04-na-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-S05-rra",
-      "sourceHash": "fnv1a64:b89892377138c8a4",
-      "svgHash": "fnv1a64:09bf9f5ee32368fa",
+      "sourceHash": "fnv1a64:7b4acfce5d0fd398",
+      "svgHash": "fnv1a64:12500931384d2a40",
       "svg": "tamil/book/figures/TA-S05-rra-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-S06-ka",
-      "sourceHash": "fnv1a64:8edefb51c1c92796",
-      "svgHash": "fnv1a64:6be2e514d749e213",
+      "sourceHash": "fnv1a64:08076d8c91ff371a",
+      "svgHash": "fnv1a64:f2adb524ffbaa98f",
       "svg": "tamil/book/figures/TA-S06-ka-filmstrip.svg"
     },
     {
@@ -88,8 +88,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-S117-letter-ra",
-      "sourceHash": "fnv1a64:626db9935d662930",
-      "svgHash": "fnv1a64:8b2958e73eaae58b",
+      "sourceHash": "fnv1a64:8d9639f1623b1232",
+      "svgHash": "fnv1a64:8dd54f115875ca87",
       "svg": "tamil/book/figures/TA-S117-letter-ra-filmstrip.svg"
     },
     {
@@ -116,8 +116,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-S122-letter-ta",
-      "sourceHash": "fnv1a64:ae09384df2b52fd4",
-      "svgHash": "fnv1a64:ba24077cbf35dfec",
+      "sourceHash": "fnv1a64:49f1ae7474d27b86",
+      "svgHash": "fnv1a64:786235eed22791c0",
       "svg": "tamil/book/figures/TA-S122-letter-ta-filmstrip.svg"
     },
     {
@@ -158,8 +158,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-S131-letter-lla",
-      "sourceHash": "fnv1a64:87df382a72c12cc8",
-      "svgHash": "fnv1a64:2a8b7586beff7059",
+      "sourceHash": "fnv1a64:6d04e4694a25f626",
+      "svgHash": "fnv1a64:df45a57e4b10607f",
       "svg": "tamil/book/figures/TA-S131-letter-lla-filmstrip.svg"
     },
     {

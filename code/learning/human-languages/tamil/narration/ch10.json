@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:66e21d74d6d5d57b",
+  "sourceHash": "fnv1a64:a2a52e10b3739407",
   "lessons": [
     {
       "id": "TA-C10-vaara-kizhamai",
@@ -153,7 +153,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:440ab96ba5c13ab1",
+      "sourceHash": "fnv1a64:e6dad3c1cbc381ff",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -236,23 +236,23 @@
             },
             {
               "kind": "speech",
-              "text": "2. without lifting, descend the first middle upright — then lift once."
+              "text": "2. without lifting, descend the middle upright."
             },
             {
               "kind": "speech",
-              "text": "3. set the pen at the adjacent middle upright and descend — then lift a second time."
+              "text": "3. without lifting, climb back up the same upright."
             },
             {
               "kind": "speech",
-              "text": "4. set the pen at the middle top, arch over, and descend the right side."
+              "text": "4. without lifting, arch over and descend the right side."
             },
             {
               "kind": "speech",
-              "text": "5. without lifting again, sweep left below the baseline and drop into the long descender — and only now lift."
+              "text": "5. without lifting, sweep left below the baseline and drop into the long descender — and only now lift."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "Pen lifts: 0. The pen never leaves the paper."
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4277d0750bf33dee",
+  "sourceHash": "fnv1a64:bd78adb5ba32baf0",
   "lessons": [
     {
       "id": "TA-C08-sontham",
@@ -811,7 +811,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bedfe07a6787c3c1",
+      "sourceHash": "fnv1a64:a6e31febf81b2c7f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -875,11 +875,11 @@
             },
             {
               "kind": "speech",
-              "text": "a separately started middle upright."
+              "text": "a middle upright hanging from the top bar."
             },
             {
               "kind": "speech",
-              "text": "a separately started right bowl that curls below the baseline and sweeps left into a descender."
+              "text": "a right bowl that leaves the middle upright, curls below the baseline, and sweeps left into a descender."
             },
             {
               "kind": "speech",
@@ -898,19 +898,19 @@
             },
             {
               "kind": "speech",
-              "text": "2. without lifting, carry the top bar to the right — then lift once."
+              "text": "2. without lifting, carry the top bar to the right."
             },
             {
               "kind": "speech",
-              "text": "3. set the pen at the top-right junction and make the short return left to the middle upright."
+              "text": "3. without lifting, make the short return left to the middle upright."
             },
             {
               "kind": "speech",
-              "text": "4. without lifting, draw the middle upright straight down — then lift a second time."
+              "text": "4. without lifting, draw the middle upright straight down."
             },
             {
               "kind": "speech",
-              "text": "5. set the pen at the upper junction and descend around the outside of the right bowl."
+              "text": "5. without lifting, climb back up to the junction and descend around the outside of the right bowl."
             },
             {
               "kind": "speech",
@@ -918,7 +918,7 @@
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "Pen lifts: 0. The pen never leaves the paper."
             },
             {
               "kind": "speech",
@@ -979,7 +979,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which of the three n's has no spiral loop? (ந (na).) How many pen lifts does it take? (Two.)"
+              "text": "Which of the three n's has no spiral loop? (ந (na).) How many pen lifts does it take? (None.)"
             }
           ]
         }

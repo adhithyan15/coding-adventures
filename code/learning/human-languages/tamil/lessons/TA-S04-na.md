@@ -47,8 +47,8 @@ The third n, and the one that finally looks different: no spiral loop at all. �
 What it is made of:
 
 - a left upright joined to the top bar
-- a separately started middle upright
-- a separately started right bowl that curls below the baseline and sweeps left into a descender
+- a middle upright hanging from the top bar
+- a right bowl that leaves the middle upright, curls below the baseline, and sweeps left into a descender
 
 நன்றி — *thank you* — opens with it, and so does நான்.
 
@@ -56,13 +56,13 @@ What it is made of:
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-DRIZZLE-04] -->
 
 - **1.** start at the lower left and draw the left upright upward
-- **2.** without lifting, carry the top bar to the right — then lift once
-- **3.** set the pen at the top-right junction and make the short return left to the middle upright
-- **4.** without lifting, draw the middle upright straight down — then lift a second time
-- **5.** set the pen at the upper junction and descend around the outside of the right bowl
+- **2.** without lifting, carry the top bar to the right
+- **3.** without lifting, make the short return left to the middle upright
+- **4.** without lifting, draw the middle upright straight down
+- **5.** without lifting, climb back up to the junction and descend around the outside of the right bowl
 - **6.** without lifting, turn through the bottom and sweep left into the below-baseline tail — and only now lift
 
-**Pen lifts: 2.** The pen comes up 2 times and no more.
+**Pen lifts: 0.** The pen never leaves the paper.
 
 > Stroke order is one attested teaching order, not a national standard —
 > Tamil handwriting is taught with school-to-school variation. Module 5 notes
@@ -81,4 +81,4 @@ What it is made of:
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-DRIZZLE-04] -->
 
-[PAUSE 3s] Which of the three n's has no spiral loop? (**ந**.) How many pen lifts does it take? (**Two**.)
+[PAUSE 3s] Which of the three n's has no spiral loop? (**ந**.) How many pen lifts does it take? (**None**.)
