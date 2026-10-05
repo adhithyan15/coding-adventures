@@ -8,11 +8,12 @@
  * `web-quality.ts` reaches the retained summary.
  */
 import { execFile, type ChildProcess } from "node:child_process";
+import { constants as fsConstants } from "node:fs";
 import { createServer, type Server } from "node:http";
-import { open, readFile, realpath, stat } from "node:fs/promises";
+import { lstat, open, readFile, realpath, stat } from "node:fs/promises";
 import { dirname, extname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { promisify } from "node:util";
+import { promisify, types } from "node:util";
 import { Launcher } from "chrome-launcher";
 import lighthouse from "lighthouse";
 import {
@@ -128,6 +129,7 @@ async function main(): Promise<void> {
     for (const target of targets) {
       const html = await readBoundedUtf8(
         resolve(here, target.document),
+        target.id === "landing" ? landingRoot : blogRoot,
         MAX_FALLBACK_HTML_BYTES,
       );
       const fallback = inspectStaticFallback(html, target);
@@ -174,18 +176,11 @@ async function main(): Promise<void> {
 }
 
 async function runLighthouse(url: string, chromePath: string): Promise<unknown> {
-  const origin = new URL(url);
   const chrome = new Launcher({
     chromePath,
     connectionPollInterval: CHROME_CONNECTION_POLL_MS,
     maxConnectionRetries: CHROME_CONNECTION_RETRIES,
-    chromeFlags: [
-      "--headless=new",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-      `--proxy-server=http://127.0.0.1:${origin.port}`,
-      "--proxy-bypass-list=127.0.0.1",
-    ],
+    chromeFlags: chromeFlagsFor(url),
     handleSIGINT: false,
     logLevel: "silent",
   });
@@ -229,6 +224,20 @@ async function runLighthouse(url: string, chromePath: string): Promise<unknown> 
   } finally {
     await retireChrome(chrome);
   }
+}
+
+export function chromeFlagsFor(url: string): string[] {
+  const origin = new URL(url);
+  if (origin.protocol !== "http:" || origin.hostname !== "127.0.0.1" || origin.port === "") {
+    throw new Error("Chrome quality target must use an ephemeral IPv4 loopback origin");
+  }
+  return [
+    "--headless=new",
+    "--disable-dev-shm-usage",
+    "--disable-gpu",
+    `--proxy-server=http://127.0.0.1:${origin.port}`,
+    `--proxy-bypass-list=<-loopback>;127.0.0.1:${origin.port}`,
+  ];
 }
 
 async function retireChrome(chrome: Launcher): Promise<void> {
@@ -397,8 +406,26 @@ function contained(root: string, candidate: string): boolean {
   return suffix === "" || (!isAbsolute(suffix) && suffix !== ".." && !suffix.startsWith(`..${sep}`));
 }
 
-function boundedError(error: unknown): string {
-  const raw = error instanceof Error ? error.message : String(error);
+export function boundedError(error: unknown): string {
+  let raw = "uninspectable thrown value";
+  try {
+    if (
+      (typeof error === "object" && error !== null) ||
+      typeof error === "function"
+    ) {
+      if (types.isProxy(error)) return raw;
+      if (error instanceof Error) {
+        const descriptor = Object.getOwnPropertyDescriptor(error, "message");
+        if (descriptor !== undefined && "value" in descriptor && typeof descriptor.value === "string") {
+          raw = descriptor.value;
+        }
+      }
+    } else {
+      raw = String(error);
+    }
+  } catch {
+    return raw;
+  }
   return raw.replace(/[^\x20-\x7E]+/g, "?").slice(0, MAX_ERROR_CHARACTERS);
 }
 
@@ -418,14 +445,57 @@ if (invokedPath === fileURLToPath(import.meta.url)) {
   });
 }
 
-async function readBoundedUtf8(path: string, maximumBytes: number): Promise<string> {
-  const handle = await open(path, "r");
+export async function readBoundedUtf8(
+  path: string,
+  allowedRoot: string,
+  maximumBytes: number,
+): Promise<string> {
+  const canonicalRoot = await realpath(allowedRoot);
+  const lexicalRoot = resolve(allowedRoot);
+  const candidate = resolve(path);
+  if (!contained(lexicalRoot, candidate)) {
+    throw new Error("fallback HTML escaped its generated root");
+  }
+  const noFollow = typeof fsConstants.O_NOFOLLOW === "number" ? fsConstants.O_NOFOLLOW : 0;
+  const handle = await open(
+    candidate,
+    fsConstants.O_RDONLY | fsConstants.O_NONBLOCK | noFollow,
+  );
   try {
-    const info = await handle.stat();
-    if (!info.isFile() || info.size > maximumBytes) {
+    const before = await handle.stat();
+    const pathInfo = await lstat(candidate);
+    const canonicalPath = await realpath(candidate);
+    if (
+      !contained(canonicalRoot, canonicalPath) ||
+      !before.isFile() ||
+      !pathInfo.isFile() ||
+      before.nlink !== 1 ||
+      pathInfo.nlink !== 1 ||
+      before.dev !== pathInfo.dev ||
+      before.ino !== pathInfo.ino ||
+      before.size > maximumBytes
+    ) {
       throw new Error(`fallback HTML must be a file no larger than ${maximumBytes} bytes`);
     }
-    return await handle.readFile("utf8");
+    const bytes = Buffer.alloc(maximumBytes + 1);
+    let offset = 0;
+    while (offset < bytes.byteLength) {
+      const result = await handle.read(bytes, offset, bytes.byteLength - offset, null);
+      if (result.bytesRead === 0) break;
+      offset += result.bytesRead;
+    }
+    const after = await handle.stat();
+    if (
+      offset > maximumBytes ||
+      !after.isFile() ||
+      after.nlink !== 1 ||
+      after.dev !== before.dev ||
+      after.ino !== before.ino ||
+      after.size > maximumBytes
+    ) {
+      throw new Error(`fallback HTML must be a stable file no larger than ${maximumBytes} bytes`);
+    }
+    return bytes.subarray(0, offset).toString("utf8");
   } finally {
     await handle.close();
   }

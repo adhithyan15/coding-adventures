@@ -82,18 +82,26 @@ describe("local dependency bootstrap", () => {
       frozen: true,
       install: async (command, args, cwd) => { calls.push({ command, args, cwd }); },
     });
-    expect(calls).toEqual([{
-      command: process.platform === "win32" ? "npm.cmd" : "npm",
-      args: [
-        "ci",
-        "--silent",
-        "--ignore-scripts",
-        "--legacy-peer-deps",
-        "--audit=false",
-        "--fund=false",
-      ],
-      cwd: project,
-    }]);
+    const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+    expect(calls).toEqual([
+      {
+        command: npm,
+        args: [
+          "ci",
+          "--silent",
+          "--ignore-scripts",
+          "--legacy-peer-deps",
+          "--audit=false",
+          "--fund=false",
+        ],
+        cwd: project,
+      },
+      {
+        command: npm,
+        args: ["run", "build", "--if-present"],
+        cwd: project,
+      },
+    ]);
   });
 
   it("reports child-process success, exit failure, and spawn failure", async () => {

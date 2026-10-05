@@ -1492,14 +1492,12 @@ jobs:
       - name: Build both live Forme sites
         shell: bash
         run: |
-          cd code/sites/landing-page
-          npm run build:clean
-          cd ../blog
-          npm run build:clean
-
-      - name: Restore reviewed browser dependency graph
-        working-directory: code/sites/blog
-        run: npm ci --ignore-scripts
+          node code/packages/typescript/forme-cli/bin/bootstrap.mjs code/sites/landing-page --frozen
+          npm --prefix code/sites/landing-page run clean
+          npm --prefix code/sites/landing-page run build
+          node code/packages/typescript/forme-cli/bin/bootstrap.mjs code/sites/blog --frozen
+          npm --prefix code/sites/blog run clean
+          npm --prefix code/sites/blog run build
 
       - name: Enforce browser and static-fallback budgets
         working-directory: code/sites/blog

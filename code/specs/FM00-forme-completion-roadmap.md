@@ -232,8 +232,9 @@ The retained JSON summary records the exact tool/browser versions, scores,
 resource totals, fallback evidence, and at most twenty sorted diagnostics per
 target. It omits raw Lighthouse traces and host timing thresholds so reports
 remain bounded and runner load cannot silently weaken or fail the contract.
-The CI lane restores the reviewed browser dependency lock after product builds,
-uses an exact Node release, and does not run dependency lifecycle scripts.
+The CI lane uses an exact Node release and the frozen local bootstrap to enforce
+every reviewed npm lock before explicitly building packages and products; it
+does not run dependency lifecycle scripts.
 
 ## Dependency path
 

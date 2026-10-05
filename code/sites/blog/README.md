@@ -106,7 +106,8 @@ navigation, content, and all thirteen fallback steps before Chrome runs. The
 browser is sandboxed, proxied back to the loopback artifact server, constrained
 by a restrictive response policy, and required to report the exact requested
 and final route. CI pins Node 22.23.2 and Chrome for Testing 154.0.8037.92,
-restores the reviewed npm lock without lifecycle scripts after product builds,
+uses the frozen local bootstrap to enforce every reviewed npm lock without
+dependency lifecycle scripts before explicitly building packages and products,
 and retains only the bounded
 `dist/.forme-web-quality.json` summary; browser phases have finite deadlines and
 fresh processes, and the required CI gate waits for this lane.
