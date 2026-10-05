@@ -49,17 +49,24 @@ You already say these, and every one of them has ಳ somewhere inside it:
 
 - **ನಾಳೆ ಸಿಗೋಣ** *nāḷe sigōṇa* — see you tomorrow
 
-## Writing: ಳ — copy what you see
+## Writing: ಳ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-113] -->
 
-Put your pen on ಳ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** start at the left of the small loop and close it counterclockwise
+- **2.** without lifting, sweep down the outer left side and along the base
+- **3.** without lifting, go clockwise round the lower loop and back across its top
+- **4.** without lifting, climb the right bowl to the top bar
+- **5.** lift, then draw the top bar from left to right
+- **6.** without lifting, curl up into the hook
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 1.** Both loops and the climb up the right side are one run,
+starting on the left side of the small loop at the top; the curled bar on
+top comes after the only lift, as it does for ನ.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-lla.gif', 35 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-113] -->

@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Good Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:07c72dba7e2ac5ea",
+  "sourceHash": "fnv1a64:1f9c609992ca8776",
   "lessons": [
     {
       "id": "HI-C32-shubh-sandhya",
@@ -135,7 +135,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b3d39149fae02ef8",
+      "sourceHash": "fnv1a64:45c0223c9f22b324",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -266,19 +266,23 @@
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the right stem top-to-bottom."
+              "text": "3. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more — one more than ज, because of the crossbar."
+              "text": "5. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "Verified four-stroke teaching form fitted to the bundled printed outline; everyday handwriting may join the crossbar to the bowl."
+              "text": "Pen lifts: 2. The same as ज: the crossbar runs into the stem."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw झ (jha) in three strokes (53% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the crossbar and the headline."
             },
             {
               "kind": "speech",
@@ -343,7 +347,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter is झ (jha) the breathy partner of? (ज.) How many pen lifts does it take, and why one more than ज? (Three — the crossbar.) Which word did it come from? (साँझ.)"
+              "text": "Which letter is झ (jha) the breathy partner of? (ज.) How many pen lifts does it take? (Two.) Which word did it come from? (साँझ.)"
             }
           ]
         }

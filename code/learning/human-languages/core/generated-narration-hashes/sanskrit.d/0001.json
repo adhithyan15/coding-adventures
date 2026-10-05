@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 1,
-  "sourceHash": "fnv1a64:8790ae0e955f641e",
+  "sourceHash": "fnv1a64:857770ebd8f0f0ef",
   "lessonIds": [
     "SA-C01-namaste",
     "SA-C01-namaskara",
@@ -21,7 +21,7 @@
   "drivablePrefix": 1,
   "text": "sanskrit/narration/ch01.txt",
   "json": "sanskrit/narration/ch01.json",
-  "textHash": "fnv1a64:91c61634f4b379d3",
-  "jsonHash": "fnv1a64:05ca2a48936c9b80",
+  "textHash": "fnv1a64:95de832c9fc8e452",
+  "jsonHash": "fnv1a64:f9bf846eec4dadd8",
   "findings": []
 }

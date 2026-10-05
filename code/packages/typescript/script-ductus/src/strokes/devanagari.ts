@@ -19,9 +19,11 @@ const devanagariAlphabetSource = (glyph: string): StrokeSource => {
 };
 
 export const entries: DuctusEntry[] = [
-  // The four-frame Commons sequence writes the complete left body in one
-  // continuous run, lifts for the middle shoulder, descends the right stem,
-  // then closes with the short shirorekha: four strokes and three lifts.
+  // Saurmandal's four buildup frames write the joined left body, then the
+  // middle shoulder, the right stem and the headline. Native writers draw अ in
+  // three strokes (HP Labs India, LipiTk 4.0), so the shoulder runs on into
+  // the right stem: it climbs the stem and descends it. Three strokes, two
+  // lifts.
   [
     "devanagari:अ",
     {
@@ -48,7 +50,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "continue down and around the lower bowl without lifting",
+              label: "continue round the lower bowl",
               path: [
                 { x: 275, y: 355 },
                 { x: 335, y: 330 },
@@ -82,12 +84,18 @@ export const entries: DuctusEntry[] = [
                 { x: 625, y: 342 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "climb up the right stem without lifting",
+              path: [
+                { x: 625, y: 342 },
+                { x: 635, y: 370 },
+                { x: 635, y: 443 },
+                { x: 635, y: 517 },
+                { x: 635, y: 590 },
+              ],
+            },
+            {
+              label: "descend the right stem",
               path: [
                 { x: 635, y: 590 },
                 { x: 635, y: 500 },
@@ -104,7 +112,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 525, y: 585 },
                 { x: 570, y: 585 },
@@ -121,9 +129,10 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("अ"),
     },
   ],
-  // The five Commons buildup frames preserve the joined left body of अ, then
-  // add the shoulder, inner stem, trailing stem, and headline as four lifted
-  // runs: five strokes and four lifts in all.
+  // The five Commons buildup frames keep अ's joined left body, then add the
+  // shoulder, inner stem, trailing stem and headline. Native writers draw आ in
+  // four strokes (HP Labs India, LipiTk 4.0), so the shoulder runs on into the
+  // inner stem: it climbs the stem and descends it. Four strokes, three lifts.
   [
     "devanagari:आ",
     {
@@ -150,7 +159,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "continue down and around the lower bowl without lifting",
+              label: "continue round the lower bowl",
               path: [
                 { x: 275, y: 355 },
                 { x: 335, y: 330 },
@@ -184,12 +193,18 @@ export const entries: DuctusEntry[] = [
                 { x: 625, y: 342 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the inner stem",
+              label: "climb up the inner stem without lifting",
+              path: [
+                { x: 625, y: 342 },
+                { x: 635, y: 370 },
+                { x: 635, y: 443 },
+                { x: 635, y: 517 },
+                { x: 635, y: 590 },
+              ],
+            },
+            {
+              label: "descend the inner stem",
               path: [
                 { x: 635, y: 590 },
                 { x: 635, y: 500 },
@@ -223,7 +238,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 525, y: 585 },
                 { x: 610, y: 585 },
@@ -260,8 +275,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label:
-                "turn left and curve around the upper bowl without lifting",
+              label: "turn left round the upper bowl",
               path: [
                 { x: 363, y: 440 },
                 { x: 320, y: 430 },
@@ -277,7 +291,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "sweep right through the waist and around the lower bowl",
+              label: "sweep through the waist and lower bowl",
               path: [
                 { x: 170, y: 250 },
                 { x: 220, y: 260 },
@@ -298,7 +312,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "finish down-right through the tail without lifting",
+              label: "finish down-right through the tail",
               path: [
                 { x: 80, y: 85 },
                 { x: 120, y: 80 },
@@ -315,7 +329,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -352,8 +366,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label:
-                "turn left and curve around the upper bowl without lifting",
+              label: "turn left round the upper bowl",
               path: [
                 { x: 363, y: 440 },
                 { x: 320, y: 430 },
@@ -369,7 +382,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "sweep right through the waist and around the lower bowl",
+              label: "sweep through the waist and lower bowl",
               path: [
                 { x: 170, y: 250 },
                 { x: 220, y: 260 },
@@ -390,7 +403,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "finish down-right through the tail without lifting",
+              label: "finish down-right through the tail",
               path: [
                 { x: 80, y: 85 },
                 { x: 120, y: 80 },
@@ -407,8 +420,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "lift, then sweep the upper curl upward and around to the right",
+              label: "lift, then curl up and round to the right",
               path: [
                 { x: 352, y: 620 },
                 { x: 330, y: 660 },
@@ -427,7 +439,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -469,8 +481,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label:
-                "sweep back through the waist and around the lower loop without lifting",
+              label: "sweep back round the lower loop",
               path: [
                 { x: 235, y: 320 },
                 { x: 280, y: 325 },
@@ -497,7 +508,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 95, y: 585 },
@@ -539,8 +550,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label:
-                "sweep back through the waist and around the lower loop without lifting",
+              label: "sweep back round the lower loop",
               path: [
                 { x: 235, y: 320 },
                 { x: 280, y: 325 },
@@ -567,8 +577,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "lift, then sweep the right-hand loop up, around, and down-left",
+              label: "lift, then loop up, round and down-left",
               path: [
                 { x: 455, y: 250 },
                 { x: 490, y: 280 },
@@ -590,7 +599,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 135, y: 585 },
@@ -620,7 +629,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep right along the short upper shoulder",
+              label: "sweep right along the upper shoulder",
               path: [
                 { x: 41, y: 381 },
                 { x: 111, y: 408 },
@@ -632,7 +641,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "turn back down-left through the long diagonal",
+              label: "turn back down-left along the diagonal",
               path: [
                 { x: 382, y: 266 },
                 { x: 310, y: 225 },
@@ -646,7 +655,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then carry the short arm out to the right",
+              label: "lift, then carry the short arm right",
               path: [
                 { x: 444, y: 278 },
                 { x: 500, y: 285 },
@@ -656,8 +665,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label:
-                "loop anticlockwise round the little ball: up its right side and back over the top",
+              label: "loop anticlockwise round the little ball",
               path: [
                 { x: 620, y: 325 },
                 { x: 655, y: 333 },
@@ -686,8 +694,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label:
-                "swing the bowl left, round the bottom, and up to the right",
+              label: "swing the bowl left, round and up right",
               path: [
                 { x: 728, y: 190 },
                 { x: 667, y: 194 },
@@ -709,8 +716,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "lift, then drop the right stem from the headline to the foot",
+              label: "lift, then drop the right stem to the foot",
               path: [
                 { x: 422, y: 548 },
                 { x: 422, y: 400 },
@@ -724,7 +730,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 12, y: 586 },
                 { x: 220, y: 586 },
@@ -750,7 +756,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "descend the long left stem from the headline",
+              label: "descend the long left stem",
               path: [
                 { x: 120, y: 585 },
                 { x: 120, y: 530 },
@@ -761,8 +767,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label:
-                "curve right through the lower shoulder and sweep down the tail without lifting",
+              label: "curve right and sweep down the tail",
               path: [
                 { x: 125, y: 290 },
                 { x: 145, y: 245 },
@@ -782,8 +787,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "lift, then descend the shorter right stem into its inward hook",
+              label: "lift, then descend the short stem and hook",
               path: [
                 { x: 435, y: 585 },
                 { x: 435, y: 530 },
@@ -800,7 +804,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 95, y: 585 },
@@ -828,7 +832,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "descend the long left stem from the headline",
+              label: "descend the long left stem",
               path: [
                 { x: 120, y: 585 },
                 { x: 120, y: 530 },
@@ -839,8 +843,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label:
-                "curve right through the lower shoulder and sweep down the tail without lifting",
+              label: "curve right and sweep down the tail",
               path: [
                 { x: 125, y: 290 },
                 { x: 145, y: 245 },
@@ -860,8 +863,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "lift, then descend the shorter right stem into its inward hook",
+              label: "lift, then descend the short stem and hook",
               path: [
                 { x: 435, y: 585 },
                 { x: 435, y: 530 },
@@ -878,7 +880,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then sweep the upper arc upward and left",
+              label: "lift, then sweep the upper arc up and left",
               path: [
                 { x: 430, y: 620 },
                 { x: 415, y: 680 },
@@ -896,7 +898,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 95, y: 585 },
@@ -913,9 +915,10 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("ऐ"),
     },
   ],
-  // The six Commons panels reuse आ's joined left body, separate shoulder,
-  // inner stem, and trailing stem, then add the upper arc and headline as two
-  // separately placed runs: six strokes and five lifts in all.
+  // The six Commons panels reuse आ's four base runs, then add the upper arc
+  // and the headline. Native writers draw ओ in five strokes (HP Labs India,
+  // LipiTk 4.0), so the shoulder runs on into the inner stem, as in आ: it
+  // climbs the stem and descends it. Five strokes, four lifts.
   [
     "devanagari:ओ",
     {
@@ -942,7 +945,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "continue down and around the lower bowl without lifting",
+              label: "continue round the lower bowl",
               path: [
                 { x: 275, y: 355 },
                 { x: 335, y: 330 },
@@ -976,12 +979,18 @@ export const entries: DuctusEntry[] = [
                 { x: 625, y: 342 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the inner stem",
+              label: "climb up the inner stem without lifting",
+              path: [
+                { x: 625, y: 342 },
+                { x: 635, y: 370 },
+                { x: 635, y: 443 },
+                { x: 635, y: 517 },
+                { x: 635, y: 590 },
+              ],
+            },
+            {
+              label: "descend the inner stem",
               path: [
                 { x: 635, y: 590 },
                 { x: 635, y: 500 },
@@ -1015,7 +1024,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then sweep the upper arc upward and left",
+              label: "lift, then sweep the upper arc up and left",
               path: [
                 { x: 890, y: 620 },
                 { x: 880, y: 680 },
@@ -1034,7 +1043,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 525, y: 585 },
                 { x: 610, y: 585 },
@@ -1051,9 +1060,10 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("ओ"),
     },
   ],
-  // The seven Commons panels reuse आ's four base runs, then separately sweep
-  // the lower and taller upper arcs upward and left before the final headline:
-  // seven strokes and six lifts in all.
+  // The seven Commons panels draw आ's four base runs, the lower and taller
+  // upper arcs, and the headline. Native writers lift five times (HP Labs
+  // India, LipiTk 4.0), so the shoulder runs on into the inner stem: it climbs
+  // the stem and descends it. Six strokes, five lifts.
   [
     "devanagari:औ",
     {
@@ -1080,7 +1090,7 @@ export const entries: DuctusEntry[] = [
               ],
             },
             {
-              label: "continue down and around the lower bowl without lifting",
+              label: "continue round the lower bowl",
               path: [
                 { x: 275, y: 355 },
                 { x: 335, y: 330 },
@@ -1114,12 +1124,18 @@ export const entries: DuctusEntry[] = [
                 { x: 625, y: 342 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the inner stem",
+              label: "climb up the inner stem without lifting",
+              path: [
+                { x: 625, y: 342 },
+                { x: 635, y: 370 },
+                { x: 635, y: 443 },
+                { x: 635, y: 517 },
+                { x: 635, y: 590 },
+              ],
+            },
+            {
+              label: "descend the inner stem",
               path: [
                 { x: 635, y: 590 },
                 { x: 635, y: 500 },
@@ -1153,7 +1169,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then sweep the lower upper arc upward and left",
+              label: "lift, then sweep the lower arc up and left",
               path: [
                 { x: 890, y: 620 },
                 { x: 875, y: 650 },
@@ -1172,7 +1188,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then sweep the taller upper arc upward and left",
+              label: "lift, then sweep the taller arc up and left",
               path: [
                 { x: 890, y: 620 },
                 { x: 880, y: 680 },
@@ -1191,7 +1207,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 525, y: 585 },
                 { x: 610, y: 585 },
@@ -1208,10 +1224,12 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("औ"),
     },
   ],
-  // Opiaterein's animation writes the left bowl counterclockwise, then places
-  // the central stem, right-hand arch, and headline as three separate runs.
-  // The Central Hindi Directorate's 2019 deskbook independently shows the
-  // same four-part buildup: four strokes and three lifts in all.
+  // Opiaterein's animation (and the Central Hindi Directorate's 2019 deskbook)
+  // builds क from four parts: the counterclockwise left bowl, the central
+  // stem, the right-hand arch, the headline. Native writers draw क in two
+  // strokes (HP Labs India, LipiTk 4.0), so the first three parts run on: the
+  // pen climbs the stem, descends it, climbs back to the junction and sweeps
+  // the arch. Two strokes, one lift.
   [
     "devanagari:क",
     {
@@ -1245,12 +1263,18 @@ export const entries: DuctusEntry[] = [
                 { x: 387, y: 290 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the central stem",
+              label: "climb up the central stem without lifting",
+              path: [
+                { x: 387, y: 290 },
+                { x: 417, y: 330 },
+                { x: 417, y: 404 },
+                { x: 417, y: 477 },
+                { x: 417, y: 551 },
+              ],
+            },
+            {
+              label: "descend the central stem",
               path: [
                 { x: 417, y: 551 },
                 { x: 417, y: 480 },
@@ -1262,12 +1286,19 @@ export const entries: DuctusEntry[] = [
                 { x: 417, y: 5 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then sweep the right-hand arch clockwise",
+              label: "climb back up to the upper junction",
+              path: [
+                { x: 417, y: 5 },
+                { x: 417, y: 84 },
+                { x: 417, y: 162 },
+                { x: 417, y: 241 },
+                { x: 417, y: 320 },
+                { x: 455, y: 350 },
+              ],
+            },
+            {
+              label: "sweep the right-hand arch clockwise",
               path: [
                 { x: 455, y: 350 },
                 { x: 490, y: 365 },
@@ -1289,7 +1320,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 115, y: 585 },
@@ -1319,8 +1350,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "descend, curl around the small loop, and sweep through the lower bowl",
+              label: "descend, curl the loop and sweep the bowl",
               path: [
                 { x: 225, y: 551 },
                 { x: 225, y: 500 },
@@ -1357,7 +1387,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then sweep clockwise around the upper-right loop",
+              label: "lift, then sweep the right loop clockwise",
               path: [
                 { x: 380, y: 405 },
                 { x: 430, y: 430 },
@@ -1402,7 +1432,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 105, y: 585 },
@@ -1433,8 +1463,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "sweep counterclockwise around the loop and up the joined stem",
+              label: "loop anticlockwise and up the stem",
               path: [
                 { x: 168, y: 315 },
                 { x: 140, y: 322 },
@@ -1474,7 +1503,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -1492,9 +1521,11 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("ग"),
     },
   ],
-  // Opiaterein's animation keeps the upper curl, middle hook, lower bowl, and
-  // rising right side in one run, then separately descends the short lower
-  // stem and finishes the headline: three strokes, two lifts.
+  // Opiaterein's animation keeps the upper curl, middle hook, lower bowl and
+  // rising right side in one run, then descends the short lower stem and
+  // finishes the headline. Native writers draw घ in two strokes (HP Labs
+  // India, LipiTk 4.0), so the pen comes back down the right side into the
+  // short stem. Two strokes, one lift.
   [
     "devanagari:घ",
     {
@@ -1504,8 +1535,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "sweep through the upper curl and hook, around the lower bowl, and up the right side",
+              label: "sweep the curls and bowl, up the right side",
               path: [
                 { x: 115, y: 525 },
                 { x: 90, y: 515 },
@@ -1538,12 +1568,19 @@ export const entries: DuctusEntry[] = [
                 { x: 470, y: 551 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the short lower stem",
+              label: "descend back down the right side",
+              path: [
+                { x: 470, y: 551 },
+                { x: 470, y: 476 },
+                { x: 470, y: 401 },
+                { x: 470, y: 325 },
+                { x: 470, y: 250 },
+                { x: 470, y: 175 },
+              ],
+            },
+            {
+              label: "continue down the short lower stem",
               path: [
                 { x: 470, y: 175 },
                 { x: 470, y: 135 },
@@ -1557,7 +1594,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -1575,10 +1612,11 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("घ"),
     },
   ],
-  // Opiaterein's animation joins the short upper bar directly to the rounded
-  // body, then separately descends the right stem and finishes the headline.
-  // The Central Hindi Directorate deskbook corroborates component order while
-  // staging the bar and body separately: three animated strokes, two lifts.
+  // Opiaterein's animation joins the short upper bar to the rounded body, then
+  // descends the right stem and finishes the headline; the Central Hindi
+  // Directorate deskbook corroborates the component order. Native writers draw
+  // च in two strokes (HP Labs India, LipiTk 4.0), so the body runs on: the pen
+  // climbs the right stem and descends it. Two strokes, one lift.
   [
     "devanagari:च",
     {
@@ -1588,7 +1626,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "draw the upper bar right and curve around the open body",
+              label: "draw the top bar, curve round the body",
               path: [
                 { x: 45, y: 412 },
                 { x: 100, y: 412 },
@@ -1616,12 +1654,19 @@ export const entries: DuctusEntry[] = [
                 { x: 470, y: 238 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "climb up the right stem without lifting",
+              path: [
+                { x: 470, y: 238 },
+                { x: 505, y: 260 },
+                { x: 505, y: 333 },
+                { x: 505, y: 406 },
+                { x: 505, y: 478 },
+                { x: 505, y: 551 },
+              ],
+            },
+            {
+              label: "descend the right stem",
               path: [
                 { x: 505, y: 551 },
                 { x: 505, y: 475 },
@@ -1638,7 +1683,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 95, y: 585 },
@@ -1668,8 +1713,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "sweep through both left loops, around the lower bowl, and into the inner loop",
+              label: "sweep the loops, bowl and inner loop",
               path: [
                 { x: 275, y: 458 },
                 { x: 245, y: 478 },
@@ -1737,7 +1781,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 95, y: 585 },
@@ -1768,8 +1812,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "sweep around the lower bowl and continue right through the middle bar",
+              label: "sweep round the bowl into the middle bar",
               path: [
                 { x: 90, y: 420 },
                 { x: 70, y: 370 },
@@ -1814,7 +1857,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -1834,9 +1877,11 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("ज"),
     },
   ],
-  // Opiaterein's animation joins the short upper stem, upper bowl, lower loop,
-  // and diagonal tail, then separately adds the middle crossbar, right stem,
-  // and headline: four strokes, three lifts.
+  // Opiaterein's animation joins the short upper stem, both bowls and the
+  // diagonal tail, then adds the middle crossbar, right stem and headline.
+  // Native writers draw झ in three strokes (HP Labs India, LipiTk 4.0), and
+  // the crossbar ends on the right stem, so the pen climbs the stem and
+  // descends it. Three strokes, two lifts.
   [
     "devanagari:झ",
     {
@@ -1846,8 +1891,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "descend through both bowls and finish through the diagonal tail",
+              label: "descend both bowls into the diagonal tail",
               path: [
                 { x: 362, y: 551 },
                 { x: 362, y: 510 },
@@ -1893,7 +1937,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the middle crossbar left-to-right",
+              label: "lift, then draw the middle bar rightward",
               path: [
                 { x: 315, y: 240 },
                 { x: 365, y: 240 },
@@ -1903,12 +1947,18 @@ export const entries: DuctusEntry[] = [
                 { x: 610, y: 240 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "climb up the right stem without lifting",
+              path: [
+                { x: 610, y: 240 },
+                { x: 610, y: 318 },
+                { x: 610, y: 396 },
+                { x: 610, y: 473 },
+                { x: 610, y: 551 },
+              ],
+            },
+            {
+              label: "descend the right stem",
               path: [
                 { x: 610, y: 551 },
                 { x: 610, y: 475 },
@@ -1925,7 +1975,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -1957,7 +2007,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep clockwise around the open-left bowl",
+              label: "sweep clockwise round the open bowl",
               path: [
                 { x: 215, y: 420 },
                 { x: 255, y: 438 },
@@ -1988,8 +2038,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "lift, then sweep the shoulder right and rise to the headline",
+              label: "lift, then sweep the shoulder right and up",
               path: [
                 { x: 415, y: 275 },
                 { x: 460, y: 270 },
@@ -2022,7 +2071,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -2054,8 +2103,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "descend the stem and sweep counterclockwise around the open body",
+              label: "descend the stem and sweep round the body",
               path: [
                 { x: 358, y: 551 },
                 { x: 358, y: 500 },
@@ -2086,7 +2134,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 75, y: 585 },
@@ -2104,9 +2152,10 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("ट"),
     },
   ],
-  // Opiaterein's animation descends the short central stem, then separately
-  // traces the closed body counterclockwise before the final headline:
-  // three strokes, two lifts.
+  // Opiaterein's animation descends the short central stem, traces the closed
+  // body counterclockwise, then draws the headline. Native writers draw ठ in
+  // two strokes (HP Labs India, LipiTk 4.0), and the body starts where the
+  // stem ends, so the two run on unbroken. Two strokes, one lift.
   [
     "devanagari:ठ",
     {
@@ -2125,12 +2174,8 @@ export const entries: DuctusEntry[] = [
                 { x: 350, y: 390 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then trace the closed body counterclockwise",
+              label: "circle the closed body counterclockwise",
               path: [
                 { x: 350, y: 390 },
                 { x: 305, y: 390 },
@@ -2168,7 +2213,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 75, y: 585 },
@@ -2199,8 +2244,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "descend the stem and sweep through the upper loop and open lower bowl",
+              label: "descend the stem, then the loop and bowl",
               path: [
                 { x: 415, y: 551 },
                 { x: 415, y: 500 },
@@ -2243,7 +2287,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 75, y: 585 },
@@ -2274,8 +2318,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "descend the stem and sweep through the outer bowl and inner loop",
+              label: "descend the stem, then the bowl and loop",
               path: [
                 { x: 415, y: 551 },
                 { x: 415, y: 500 },
@@ -2323,7 +2366,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 75, y: 585 },
@@ -2354,8 +2397,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "descend the left stem, curve around the bowl, and rise along the inner stem",
+              label: "descend, round the bowl, up the inner stem",
               path: [
                 { x: 120, y: 551 },
                 { x: 120, y: 480 },
@@ -2399,7 +2441,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -2432,8 +2474,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "sweep left across the shoulder and curve down to the open tip",
+              label: "sweep left and curve down to the tip",
               path: [
                 { x: 400, y: 364 },
                 { x: 350, y: 364 },
@@ -2474,7 +2515,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -2493,8 +2534,10 @@ export const entries: DuctusEntry[] = [
     },
   ],
   // Opiaterein's animation keeps the upper spiral and broad lower bowl in one
-  // continuous run, then separately descends the right stem and finishes the
-  // headline: three strokes, two lifts.
+  // run, then descends the right stem and finishes the headline. Native
+  // writers draw थ in two strokes (HP Labs India, LipiTk 4.0), so the bowl
+  // runs on: the pen climbs the right stem and descends it. Two strokes, one
+  // lift.
   [
     "devanagari:थ",
     {
@@ -2504,8 +2547,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "curl around the upper spiral and continue around the broad lower bowl",
+              label: "curl the spiral and round the lower bowl",
               path: [
                 { x: 200, y: 445 },
                 { x: 170, y: 425 },
@@ -2548,12 +2590,18 @@ export const entries: DuctusEntry[] = [
                 { x: 480, y: 260 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "climb up the right stem without lifting",
+              path: [
+                { x: 480, y: 260 },
+                { x: 508, y: 285 },
+                { x: 508, y: 374 },
+                { x: 508, y: 462 },
+                { x: 508, y: 551 },
+              ],
+            },
+            {
+              label: "descend the right stem",
               path: [
                 { x: 508, y: 551 },
                 { x: 508, y: 475 },
@@ -2570,7 +2618,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 394, y: 585 },
                 { x: 435, y: 585 },
@@ -2587,10 +2635,12 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("थ"),
     },
   ],
-  // Opiaterein's animation descends the short stem, then joins the outer body
-  // directly through the inward curl and tail before the final headline. The
-  // Central Hindi Directorate deskbook corroborates component order while
-  // staging the body and curl-tail separately: three animated strokes, two lifts.
+  // Opiaterein's animation descends the short stem, then sweeps the outer body
+  // through the inward curl and tail before the final headline; the Central
+  // Hindi Directorate deskbook corroborates the component order. Native
+  // writers draw द in two strokes (HP Labs India, LipiTk 4.0), and the body
+  // starts where the stem ends, so the two run on unbroken. Two strokes, one
+  // lift.
   [
     "devanagari:द",
     {
@@ -2608,12 +2658,8 @@ export const entries: DuctusEntry[] = [
                 { x: 395, y: 420 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then sweep around the body, inner curl, and tail",
+              label: "continue round the body, curl and tail",
               path: [
                 { x: 395, y: 420 },
                 { x: 350, y: 420 },
@@ -2653,7 +2699,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 80, y: 585 },
@@ -2671,9 +2717,12 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("द"),
     },
   ],
-  // Opiaterein's animation writes the upper spiral and shoulder, lower bowl,
-  // right stem, and headline as four separate runs. The Central Hindi
-  // Directorate deskbook independently shows the same buildup: three lifts.
+  // Opiaterein's animation (and the Central Hindi Directorate deskbook) writes
+  // the upper spiral and shoulder, the lower bowl, the right stem and the
+  // headline. Native writers draw ध in two strokes (HP Labs India, LipiTk
+  // 4.0), so the first three run on: the pen turns back along the shoulder
+  // into the bowl, then climbs the stem and descends it. Two strokes, one
+  // lift.
   [
     "devanagari:ध",
     {
@@ -2683,8 +2732,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "curl around the upper spiral and sweep right through the shoulder",
+              label: "curl the spiral and pull the shoulder right",
               path: [
                 { x: 285, y: 450 },
                 { x: 300, y: 475 },
@@ -2709,12 +2757,18 @@ export const entries: DuctusEntry[] = [
                 { x: 325, y: 350 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then sweep down and around the lower bowl",
+              label: "turn back left along the shoulder",
+              path: [
+                { x: 325, y: 350 },
+                { x: 290, y: 340 },
+                { x: 250, y: 335 },
+                { x: 210, y: 338 },
+                { x: 170, y: 330 },
+              ],
+            },
+            {
+              label: "sweep down and around the lower bowl",
               path: [
                 { x: 170, y: 330 },
                 { x: 140, y: 320 },
@@ -2732,12 +2786,18 @@ export const entries: DuctusEntry[] = [
                 { x: 435, y: 180 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "climb up the right stem without lifting",
+              path: [
+                { x: 435, y: 180 },
+                { x: 485, y: 215 },
+                { x: 485, y: 327 },
+                { x: 485, y: 439 },
+                { x: 485, y: 551 },
+              ],
+            },
+            {
+              label: "descend the right stem",
               path: [
                 { x: 485, y: 551 },
                 { x: 485, y: 475 },
@@ -2754,7 +2814,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 388, y: 585 },
                 { x: 430, y: 585 },
@@ -2782,7 +2842,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "circle clockwise around the left loop and sweep right",
+              label: "circle the loop clockwise, sweep right",
               path: [
                 { x: 185, y: 255 },
                 { x: 178, y: 225 },
@@ -2824,7 +2884,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 80, y: 585 },
@@ -2842,10 +2902,11 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("न"),
     },
   ],
-  // Opiaterein's animation descends the left stem and curves right around the
-  // lower bowl, then separately descends the right stem and finishes the
-  // headline. The Central Hindi Directorate deskbook independently shows the
-  // same three-part buildup and directions: three strokes, two lifts.
+  // Opiaterein's animation (and the Central Hindi Directorate deskbook)
+  // descends the left stem and curves right around the lower bowl, then
+  // descends the right stem and finishes the headline. Native writers draw प
+  // in two strokes (HP Labs India, LipiTk 4.0), so the bowl runs on: the pen
+  // climbs the right stem and descends it. Two strokes, one lift.
   [
     "devanagari:प",
     {
@@ -2855,8 +2916,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "descend the left stem and curve right around the lower bowl",
+              label: "descend the left stem and round the bowl",
               path: [
                 { x: 120, y: 551 },
                 { x: 120, y: 480 },
@@ -2875,12 +2935,18 @@ export const entries: DuctusEntry[] = [
                 { x: 408, y: 320 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "climb up the right stem without lifting",
+              path: [
+                { x: 408, y: 320 },
+                { x: 438, y: 350 },
+                { x: 438, y: 417 },
+                { x: 438, y: 484 },
+                { x: 438, y: 551 },
+              ],
+            },
+            {
+              label: "descend the right stem",
               path: [
                 { x: 438, y: 551 },
                 { x: 438, y: 475 },
@@ -2897,7 +2963,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -2927,8 +2993,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "descend around the lower bowl, rise, and retrace down the central stem",
+              label: "descend round the bowl, retrace the stem",
               path: [
                 { x: 120, y: 551 },
                 { x: 120, y: 480 },
@@ -2962,7 +3027,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then sweep clockwise through the right arch",
+              label: "lift, then sweep the right arch clockwise",
               path: [
                 { x: 420, y: 315 },
                 { x: 470, y: 335 },
@@ -2985,7 +3050,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -3006,10 +3071,12 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("फ"),
     },
   ],
-  // JackPotte's animation circles counterclockwise around the oval, then
-  // separately descends the right stem, crosses down-right through the body,
-  // and finishes the headline. The Central Hindi Directorate deskbook shows
-  // the same four-part buildup and directions: four strokes, three lifts.
+  // JackPotte's animation circles the oval counterclockwise, then descends the
+  // right stem, crosses down-right through the body and finishes the headline;
+  // the Central Hindi Directorate deskbook shows the same buildup. Native
+  // writers draw ब in three strokes (HP Labs India, LipiTk 4.0), so the oval
+  // runs on: the pen climbs the right stem and descends it. Three strokes, two
+  // lifts.
   [
     "devanagari:ब",
     {
@@ -3019,7 +3086,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "circle counterclockwise around the oval body",
+              label: "circle the oval body counterclockwise",
               path: [
                 { x: 350, y: 390 },
                 { x: 320, y: 415 },
@@ -3039,12 +3106,20 @@ export const entries: DuctusEntry[] = [
                 { x: 350, y: 198 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "climb up the right stem without lifting",
+              path: [
+                { x: 350, y: 198 },
+                { x: 400, y: 215 },
+                { x: 442, y: 240 },
+                { x: 442, y: 318 },
+                { x: 442, y: 396 },
+                { x: 442, y: 473 },
+                { x: 442, y: 551 },
+              ],
+            },
+            {
+              label: "descend the right stem",
               path: [
                 { x: 442, y: 551 },
                 { x: 442, y: 475 },
@@ -3077,7 +3152,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -3095,11 +3170,11 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("ब"),
     },
   ],
-  // JackPotte's animation keeps the clockwise upper loop, descending trunk,
-  // clockwise lower bowl, and rightward crossbar in one continuous run, then
-  // separately descends the right stem and finishes the headline. The Central
-  // Hindi Directorate deskbook confirms the component order but stages the two
-  // body parts separately: three animation-backed strokes, two lifts.
+  // JackPotte's animation keeps the upper loop, trunk, lower bowl and crossbar
+  // in one run, then descends the right stem and finishes the headline; the
+  // Central Hindi Directorate deskbook confirms the order. Native writers draw
+  // भ in two strokes (HP Labs India, LipiTk 4.0), so the crossbar runs on: the
+  // pen climbs the right stem and descends it. Two strokes, one lift.
   [
     "devanagari:भ",
     {
@@ -3109,7 +3184,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "circle clockwise through both loops and sweep right",
+              label: "circle both loops clockwise, sweep right",
               path: [
                 { x: 200, y: 410 },
                 { x: 165, y: 414 },
@@ -3145,12 +3220,18 @@ export const entries: DuctusEntry[] = [
                 { x: 530, y: 285 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "climb up the right stem without lifting",
+              path: [
+                { x: 530, y: 285 },
+                { x: 575, y: 300 },
+                { x: 575, y: 384 },
+                { x: 575, y: 467 },
+                { x: 575, y: 551 },
+              ],
+            },
+            {
+              label: "descend the right stem",
               path: [
                 { x: 575, y: 551 },
                 { x: 575, y: 475 },
@@ -3167,7 +3248,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 405, y: 585 },
                 { x: 455, y: 585 },
@@ -3184,11 +3265,11 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("भ"),
     },
   ],
-  // JackPotte's animation joins the descending left stem directly to the
-  // clockwise lower loop and rightward crossbar, then separately descends the
-  // right stem and finishes the headline. The Central Hindi Directorate
-  // deskbook confirms the component order but stages the left stem and lower
-  // body separately: three animation-backed strokes, two lifts.
+  // JackPotte's animation joins the left stem to the lower loop and crossbar,
+  // then descends the right stem and finishes the headline; the Central Hindi
+  // Directorate deskbook confirms the order. Native writers draw म in two
+  // strokes (HP Labs India, LipiTk 4.0), so the crossbar runs on: the pen
+  // climbs the right stem and descends it. Two strokes, one lift.
   [
     "devanagari:म",
     {
@@ -3198,8 +3279,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "descend the left stem, circle clockwise through the loop, and sweep right",
+              label: "descend, loop clockwise, sweep right",
               path: [
                 { x: 166, y: 551 },
                 { x: 166, y: 475 },
@@ -3223,12 +3303,18 @@ export const entries: DuctusEntry[] = [
                 { x: 405, y: 285 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "climb up the right stem without lifting",
+              path: [
+                { x: 405, y: 285 },
+                { x: 468, y: 300 },
+                { x: 468, y: 384 },
+                { x: 468, y: 467 },
+                { x: 468, y: 551 },
+              ],
+            },
+            {
+              label: "descend the right stem",
               path: [
                 { x: 468, y: 551 },
                 { x: 468, y: 475 },
@@ -3245,7 +3331,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -3263,11 +3349,11 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("म"),
     },
   ],
-  // Opiaterein's animation and the Central Hindi Directorate deskbook agree
-  // on four runs: the clockwise inner curl, the restarted lower bowl, the
-  // descending right stem, and the headline. JackPotte documents a joined
-  // two-lift body as a real variation; this path follows the corroborated
-  // four-stroke form.
+  // Opiaterein's animation and the Central Hindi Directorate deskbook agree on
+  // four movements: the clockwise inner curl, the lower bowl, the descending
+  // right stem and the headline. Native writers draw य in two strokes (HP Labs
+  // India, LipiTk 4.0), so the curl runs into the bowl, and the pen climbs the
+  // right stem and descends it. Two strokes, one lift.
   [
     "devanagari:य",
     {
@@ -3290,14 +3376,10 @@ export const entries: DuctusEntry[] = [
                 { x: 55, y: 355 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then curve around the lower bowl to the right",
+              label: "continue around the lower bowl to the right",
               path: [
-                { x: 55, y: 350 },
+                { x: 55, y: 355 },
                 { x: 80, y: 310 },
                 { x: 110, y: 270 },
                 { x: 150, y: 235 },
@@ -3308,12 +3390,18 @@ export const entries: DuctusEntry[] = [
                 { x: 425, y: 245 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "climb up the right stem without lifting",
+              path: [
+                { x: 425, y: 245 },
+                { x: 450, y: 270 },
+                { x: 450, y: 364 },
+                { x: 450, y: 457 },
+                { x: 450, y: 551 },
+              ],
+            },
+            {
+              label: "descend the right stem",
               path: [
                 { x: 450, y: 551 },
                 { x: 450, y: 475 },
@@ -3330,7 +3418,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -3348,10 +3436,11 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("य"),
     },
   ],
-  // Opiaterein's animation and the Central Hindi Directorate deskbook agree
-  // on three runs: the descending stem and clockwise lower loop, the restarted
-  // diagonal tail, and the headline. JackPotte documents a joined loop-and-tail
-  // variation; this path follows the corroborated three-stroke form.
+  // Opiaterein's animation and the Central Hindi Directorate deskbook agree on
+  // three movements: the descending stem and clockwise lower loop, the
+  // diagonal tail, and the headline. Native writers draw र in two strokes (HP
+  // Labs India, LipiTk 4.0), so the loop runs on into the tail. Two strokes,
+  // one lift.
   [
     "devanagari:र",
     {
@@ -3361,7 +3450,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "descend and curl clockwise around the lower loop",
+              label: "descend and curl clockwise into the loop",
               path: [
                 { x: 285, y: 551 },
                 { x: 285, y: 510 },
@@ -3384,14 +3473,10 @@ export const entries: DuctusEntry[] = [
                 { x: 155, y: 245 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then draw the diagonal tail down-right",
+              label: "continue down-right along the diagonal tail",
               path: [
-                { x: 145, y: 235 },
+                { x: 155, y: 245 },
                 { x: 170, y: 205 },
                 { x: 200, y: 170 },
                 { x: 235, y: 135 },
@@ -3405,7 +3490,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -3421,10 +3506,11 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("र"),
     },
   ],
-  // Opiaterein's animation and the Central Hindi Directorate deskbook agree
-  // on four runs: the clockwise open loop, diagonal arm, descending right stem,
-  // and headline. JackPotte documents a stem-first order variation; this path
-  // follows the corroborated loop-first form.
+  // Opiaterein's animation and the Central Hindi Directorate deskbook agree on
+  // four movements: the clockwise open loop, the diagonal arm, the descending
+  // right stem and the headline. Native writers draw ल in two strokes (HP Labs
+  // India, LipiTk 4.0), so the arm runs on: the pen climbs the right stem and
+  // descends it. Two strokes, one lift.
   [
     "devanagari:ल",
     {
@@ -3434,7 +3520,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "curve up and clockwise around the open left loop",
+              label: "curve up clockwise round the open loop",
               path: [
                 { x: 255, y: 5 },
                 { x: 220, y: 25 },
@@ -3458,12 +3544,8 @@ export const entries: DuctusEntry[] = [
                 { x: 300, y: 260 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then sweep the diagonal arm up-right",
+              label: "sweep the diagonal arm up-right",
               path: [
                 { x: 300, y: 260 },
                 { x: 320, y: 280 },
@@ -3476,12 +3558,17 @@ export const entries: DuctusEntry[] = [
                 { x: 510, y: 395 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "climb up the right stem without lifting",
+              path: [
+                { x: 510, y: 395 },
+                { x: 548, y: 420 },
+                { x: 548, y: 486 },
+                { x: 548, y: 551 },
+              ],
+            },
+            {
+              label: "descend the right stem",
               path: [
                 { x: 548, y: 551 },
                 { x: 548, y: 475 },
@@ -3498,7 +3585,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -3529,7 +3616,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "sweep through the joined left and right loops",
+              label: "sweep through both joined loops",
               path: [
                 { x: 389, y: 295 },
                 { x: 355, y: 332 },
@@ -3585,7 +3672,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 85, y: 585 },
@@ -3606,8 +3693,10 @@ export const entries: DuctusEntry[] = [
     },
   ],
   // JackPotte's animation and the Central Hindi Directorate deskbook agree on
-  // three parts: the counterclockwise loop, descending right stem, and final
-  // headline. The animation supplies the within-run directions and two lifts.
+  // three parts: the counterclockwise loop, the descending right stem and the
+  // headline. Native writers draw व in two strokes (HP Labs India, LipiTk
+  // 4.0), so the loop runs on: the pen climbs the right stem and descends it.
+  // Two strokes, one lift.
   [
     "devanagari:व",
     {
@@ -3617,7 +3706,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "circle counterclockwise around the left loop",
+              label: "circle the left loop counterclockwise",
               path: [
                 { x: 350, y: 415 },
                 { x: 305, y: 428 },
@@ -3638,12 +3727,18 @@ export const entries: DuctusEntry[] = [
                 { x: 392, y: 260 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "climb up the right stem without lifting",
+              path: [
+                { x: 392, y: 260 },
+                { x: 427, y: 285 },
+                { x: 427, y: 374 },
+                { x: 427, y: 462 },
+                { x: 427, y: 551 },
+              ],
+            },
+            {
+              label: "descend the right stem",
               path: [
                 { x: 427, y: 551 },
                 { x: 427, y: 475 },
@@ -3660,7 +3755,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 75, y: 585 },
@@ -3691,7 +3786,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "trace the joined double-loop body and diagonal tail",
+              label: "trace both loops and the diagonal tail",
               path: [
                 { x: 240, y: 380 },
                 { x: 220, y: 395 },
@@ -3751,7 +3846,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 425, y: 585 },
                 { x: 480, y: 585 },
@@ -3767,9 +3862,11 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("श"),
     },
   ],
-  // Opiaterein's animation draws the U-shaped body first, then separately
-  // retraces and descends its right stem, adds the diagonal, and finishes the
-  // headline: four strokes, three lifts.
+  // Opiaterein's animation draws the U-shaped body rising along its right
+  // side, then descends that right stem, adds the diagonal and finishes the
+  // headline. Native writers draw ष in three strokes (HP Labs India, LipiTk
+  // 4.0), and the descent starts where the body ends, so the two run on
+  // unbroken. Three strokes, two lifts.
   [
     "devanagari:ष",
     {
@@ -3779,8 +3876,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label:
-                "descend the left side, curve around the bowl, and rise along the right side",
+              label: "descend, round the bowl, up the right side",
               path: [
                 { x: 120, y: 551 },
                 { x: 120, y: 480 },
@@ -3802,12 +3898,8 @@ export const entries: DuctusEntry[] = [
                 { x: 420, y: 551 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "descend the right stem without lifting",
               path: [
                 { x: 420, y: 551 },
                 { x: 420, y: 475 },
@@ -3824,7 +3916,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the inner diagonal down-right",
+              label: "lift, then draw the diagonal down-right",
               path: [
                 { x: 175, y: 530 },
                 { x: 220, y: 475 },
@@ -3839,7 +3931,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 75, y: 585 },
@@ -3858,9 +3950,11 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("ष"),
     },
   ],
-  // JackPotte's animation joins the descending left stem, hook, and tail, then
-  // restarts for the crossbar, right stem, and headline. The Directorate
-  // deskbook confirms that order while staging the hook and tail separately.
+  // JackPotte's animation joins the left stem, hook and tail, then restarts
+  // for the crossbar, right stem and headline; the Directorate deskbook
+  // confirms that order. Native writers draw स in three strokes (HP Labs
+  // India, LipiTk 4.0), and the crossbar ends on the right stem, so the pen
+  // climbs the stem and descends it. Three strokes, two lifts.
   [
     "devanagari:स",
     {
@@ -3901,7 +3995,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the middle crossbar left-to-right",
+              label: "lift, then draw the middle bar rightward",
               path: [
                 { x: 230, y: 300 },
                 { x: 280, y: 285 },
@@ -3912,12 +4006,18 @@ export const entries: DuctusEntry[] = [
                 { x: 550, y: 310 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then descend the right stem",
+              label: "climb up the right stem without lifting",
+              path: [
+                { x: 550, y: 310 },
+                { x: 546, y: 330 },
+                { x: 546, y: 403 },
+                { x: 546, y: 477 },
+                { x: 546, y: 550 },
+              ],
+            },
+            {
+              label: "descend the right stem",
               path: [
                 { x: 546, y: 550 },
                 { x: 546, y: 475 },
@@ -3934,7 +4034,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 75, y: 585 },
@@ -3968,7 +4068,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "descend, sweep left, and curve around the hooked body",
+              label: "descend, sweep left, round the hooked body",
               path: [
                 { x: 402, y: 550 },
                 { x: 402, y: 510 },
@@ -4001,7 +4101,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then sweep down-left and through the diagonal tail",
+              label: "lift, then sweep down-left into the tail",
               path: [
                 { x: 150, y: 245 },
                 { x: 125, y: 220 },
@@ -4021,7 +4121,7 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "lift, then draw the shirorekha left-to-right",
+              label: "lift, then draw the shirorekha rightward",
               path: [
                 { x: 5, y: 585 },
                 { x: 70, y: 585 },

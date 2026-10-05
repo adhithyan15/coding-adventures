@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "What You'd Ask For",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fe1a80a1874549e0",
+  "sourceHash": "fnv1a64:fa228301d7be826f",
   "lessons": [
     {
       "id": "SA-C10-paniyam",
@@ -177,7 +177,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:122c3ef9ef80a9cb",
+      "sourceHash": "fnv1a64:b1768471baa0b3cd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -288,19 +288,23 @@
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the right stem top-to-bottom."
+              "text": "3. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "5. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "verified four-stroke teaching form; the corroborating deskbook stages the left curve and diagonal tail separately."
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw स in three strokes (71% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the crossbar and the headline."
             },
             {
               "kind": "speech",

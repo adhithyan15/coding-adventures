@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:40a7ed4b4bfce1fc",
+  "sourceHash": "fnv1a64:4f800b8bbee7585a",
   "lessons": [
     {
       "id": "HI-C13-sir",
@@ -431,7 +431,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:73ccdd0fbd709fd9",
+      "sourceHash": "fnv1a64:cc76b11200bb67eb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -534,19 +534,23 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift and draw the right stem top-to-bottom."
+              "text": "2. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the top shirorekhā left-to-right."
+              "text": "3. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "4. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "Verified three-stroke teaching form; everyday handwriting may join or simplify the body differently."
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows three movements; most native writers draw च (ca) in two strokes (76% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

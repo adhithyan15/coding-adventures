@@ -68,7 +68,7 @@ You already say these, and every one of them has ಅ somewhere inside it:
 > A, 'Kannada-alphabet-a.gif', 35 frames, Wikimedia Commons, 25 May 2016,
 > CC BY-SA 4.0.
 
-> Every character before this one asked you only to copy what you could see,
+> Many characters before this one asked you only to copy what you could see,
 > because nothing available to this book said where the pen starts. For ಅ
 > somebody wrote it down and published it, so here it is. The characters still
 > waiting on a source keep the older instruction, and will until one turns up.

@@ -57,14 +57,18 @@ You already say these:
 ## Writing: ಖ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-170] -->
 
-Put your pen on ಖ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** start at the inner tip of the curl and wind out of it, up and over to the right
+- **2.** without lifting, come down through the waist to the base
+- **3.** without lifting, round the lower loop and cross back through the waist
+- **4.** without lifting, run along the base and climb the right side, curving over to its tip
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 0.** The whole letter is one run, from the curl through the
+lower loop to the tip of the long right side. There is no curled bar on top.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-kha.gif', 37 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-170, KA-SCRIPT-RECOG-169] -->

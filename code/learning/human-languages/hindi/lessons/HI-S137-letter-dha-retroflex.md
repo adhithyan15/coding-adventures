@@ -38,7 +38,7 @@ reviews_of: [HI-S136-letter-gha]
 
 [PAUSE 1s] Before the new one: **घ** — how many pen lifts did it take?
 
-[PAUSE 2s] This one takes fewer than any character in the book.
+[PAUSE 2s] This one takes the same.
 
 ## Script you'll notice: ढ
 <!-- hl-knowledge: introduces=[HI-SCRIPT-RECOG-137]; assesses=[] -->
@@ -57,8 +57,8 @@ Two parts, where most characters have three or four.
 
 **One pen lift.** Everything below the headline is a single unbroken run —
 stem, shoulder, outer bowl and inner loop without the pen leaving the paper —
-and then the headline goes on top. Nothing else in this book is drawn in two
-strokes.
+and then the headline goes on top. Many consonants are drawn in these two
+strokes; **घ**, the letter before it, was one.
 
 It is also **the last letter you will meet before the words that use it**. From
 here on, every remaining character will be one you have already been reading
@@ -82,7 +82,7 @@ without being shown, and each of those lessons will say so.
 
 [PAUSE 1s]
 - [YOU TRACE: ढ three times, lifting the pen only once each time]
-- [YOU SAY: how many pen lifts it takes, against the last letter's two]
+- [YOU SAY: how many pen lifts it takes, and which letter before it took the same]
 - [YOU SAY: what happens to every letter after this one]
 
 ## Wrap-up Recall

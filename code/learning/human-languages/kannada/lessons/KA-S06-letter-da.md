@@ -51,17 +51,26 @@ You already say these, and every one of them has ದ somewhere inside it:
 - **ಹೌದು** *haudu* — yes (haudu)
 - **ನೀವು ಹೇಗಿದ್ದೀರಾ?** *nīvu hēgiddīrā* — how are you? (respectful)
 
-## Writing: ದ — copy what you see
+## Writing: ದ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-06] -->
 
-Put your pen on ದ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** start at the upper left and go down the left side into the left lobe, rising into the middle point
+- **2.** without lifting, drop from the point around the right lobe and climb the right side
+- **3.** without lifting, close the bowl leftward along the top
+- **4.** lift, then draw the top bar from left to right
+- **5.** without lifting, curl up into the hook
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 1.** The whole bowl, with the small point in the middle of its
+base, is one run that closes along the top; the curled bar comes after the
+only lift.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-dha.gif', 39 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
+
+> The animation is filed as 'dha': that series spells dental ದ with an *h*
+> and keeps 'da' for a different letter, ಡ.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-06] -->

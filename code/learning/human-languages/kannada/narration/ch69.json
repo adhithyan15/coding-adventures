@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Asking, and Asking Why",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:40e3616231060b8d",
+  "sourceHash": "fnv1a64:725c9be14b612d67",
   "lessons": [
     {
       "id": "KA-S136-vowel-sign-uu",
@@ -711,7 +711,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8ab7f7d2d9b0ae4b",
+      "sourceHash": "fnv1a64:4bbf2d9ab3886313",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -794,11 +794,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಲ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. start at the left of the small loop and close it counterclockwise."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. without lifting, sweep down the outer left side and round the base."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, climb the right side and curl in to its tip."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 0. The whole letter is one run, from the small loop round the outside to the tip of the right side. ಲ (la) has no curled bar on top, so there is nothing to lift for."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-la.gif', 30 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0."
             }
           ]
         },

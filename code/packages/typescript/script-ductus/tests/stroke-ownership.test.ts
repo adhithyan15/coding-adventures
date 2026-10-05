@@ -385,12 +385,67 @@ describe("stroke ownership migration baseline", () => {
       // remain unchanged.
       // The non-Tamil hash was re-measured on top of the Telugu native-lift
       // batches.
+      //
+      // Devanagari क, य, र, प, ध, ल, द, ठ, घ, ष and औ now lift only where HP
+      // Labs India's native writers do: their sourced runs become segments of
+      // fewer strokes, with new captions and source notes. Only the non-Tamil
+      // data hash moves, measured after the last caption was settled; keys,
+      // the key hash, every script count, Tamil and both shared-identity
+      // values remain unchanged.
+      //
+      // Devanagari अ, आ, ओ, झ, स, ब, च, थ, भ, म and व follow: each joins one
+      // run into the next by climbing the stem it then descends, so each lifts
+      // once less. Every Devanagari headline caption now reads "rightward" and
+      // every long caption is shortened to fit two lines. Only the non-Tamil
+      // data hash moves, measured after the last caption was settled.
+      //
+      // Kannada base consonants ನ (U+0CA8), ತ (U+0CA4), ದ (U+0CA6), ರ (U+0CB0),
+      // ಕ (U+0C95) and ಗ (U+0C97), taught since chapters 1 to 7 but never
+      // given a cited stroke-order source, now cite Gopala Krishna A's Commons
+      // animations and gain a ductus each. Keys move 439 -> 445 and Kannada
+      // 13 -> 19, with the ordered key hash and the non-Tamil data hash,
+      // measured after the last caption was settled; Tamil and both
+      // shared-identity values remain unchanged.
+      //
+      // Kannada base consonants ಬ (U+0CAC), ಳ (U+0CB3), ಯ (U+0CAF), ಡ (U+0CA1),
+      // ಹ (U+0CB9) and ಸ (U+0CB8), taught since chapters 4 to 12 but never
+      // given a cited stroke-order source, now cite Gopala Krishna A's Commons
+      // animations and gain a ductus each. Keys move
+      // 445 -> 451 and Kannada 19 -> 25, with the ordered key hash and the
+      // non-Tamil data hash, measured after the last caption was settled;
+      // Tamil and both shared-identity values remain unchanged.
+      //
+      // Kannada base consonants ಚ (U+0C9A), ಪ (U+0CAA), ಝ (U+0C9D), ಥ (U+0CA5),
+      // ಮ (U+0CAE), ಲ (U+0CB2), ವ (U+0CB5) and ಜ (U+0C9C), taught since
+      // chapters 13 to 72 but never given a cited stroke-order source, now cite
+      // Gopala Krishna A's Commons animations and gain a ductus each. Keys move
+      // 451 -> 459 and Kannada 25 -> 33, with the ordered key hash and the
+      // non-Tamil data hash, measured after the last caption was settled;
+      // Tamil and both shared-identity values remain unchanged.
+      //
+      // Kannada ಚ (U+0C9A) and ಯ (U+0CAF) lifted the pen after every run of
+      // their animations (three lifts each), more often than even Omniglot's
+      // non-native copyists. ಚ now joins its body, lower bar and link (one
+      // lift) and ಯ its middle arm and hooked bar (two lifts), through short
+      // connectors along the bars. Only the non-Tamil data hash moves,
+      // measured after the last caption was settled; keys, Tamil and both
+      // shared-identity values remain unchanged.
+      //
+      // Kannada base consonants ಟ (U+0C9F), ಣ (U+0CA3), ಶ (U+0CB6), ಷ (U+0CB7),
+      // ಧ (U+0CA7), ಭ (U+0CAD), ಫ (U+0CAB), ಖ (U+0C96), ಘ (U+0C98) and ಢ
+      // (U+0CA2), taught since chapters 73 to 80 but never given a cited
+      // stroke-order source, now cite Gopala Krishna A's Commons animations and
+      // gain a ductus each; ಭ and ಘ join one pair of runs so they lift no more
+      // often than Omniglot's copyists most often do. Keys move 459 -> 469 and
+      // Kannada 33 -> 43, with the ordered key hash and the non-Tamil data
+      // hash, measured after the last caption was settled; Tamil and both
+      // shared-identity values remain unchanged.
     }).toEqual({
-      keys: 469,
+      keys: 499,
       keyHash:
-        "a94dcc62ecb888f6d99cc3af625b2bf9ad784a37b2072f2bea505a0131281b3a",
+        "723742960210e323f16c1a55602b970f3b0a1bedc4b60afc4e132d9bc02d1a11",
       nonTamilDataHash:
-        "b66c9cab0d0365feba7887298ca714ae493c20fa95190d433c0c0bdbcb0e7a4e",
+        "5aaa8578256ae13c9331691b4b70480ff1e4f582b3851a5e246bc09e1429d2e4",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -402,7 +457,7 @@ describe("stroke ownership migration baseline", () => {
         gujarati: 44,
         hebrew: 22,
         japanese: 80,
-        kannada: 13,
+        kannada: 43,
         malayalam: 14,
         "perso-arabic": 24,
         tamil: 29,

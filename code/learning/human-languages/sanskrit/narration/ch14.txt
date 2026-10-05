@@ -141,11 +141,12 @@ You already say these, and every one of them has ल (la) somewhere inside it:
 
 Writing: ल.
 1. start at the open lower-left tip, curve up and clockwise around the left loop, and finish at the inner junction.
-2. lift at that junction and sweep the diagonal arm up-right to the right stem.
-3. lift and draw the right stem top-to-bottom.
-4. lift and draw the top shirorekhā left-to-right.
-Pen lifts: 3. The pen comes up 3 times and no more.
-verified four-stroke teaching form; another animated learner source writes the same parts in a stem-first order.
+2. without lifting, sweep the diagonal arm up-right to the right stem.
+3. climb up the right stem to the headline.
+4. descend the right stem top-to-bottom.
+5. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 1. The pen comes up once.
+The source shows four movements; most native writers draw ल (la) in two strokes (54% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ल (la)-order.gif’, strokes 1–4, Wikimedia Commons, 11 May 2009.
 
 Guided Practice.
@@ -328,10 +329,11 @@ You already say these, and every one of them has थ (tha) somewhere inside it:
 
 Writing: थ.
 1. start at the upper spiral's inner-right tip, curl clockwise around the small opening and outward to the left waist, then continue down and clockwise around the broad lower bowl to the right-stem junction without lifting.
-2. lift and draw the right stem top-to-bottom.
-3. lift and draw the top shirorekhā left-to-right.
-Pen lifts: 2. The pen comes up 2 times and no more.
-verified three-stroke teaching form fitted to the bundled printed outline.
+2. without lifting, climb up the right stem to the headline.
+3. descend the right stem top-to-bottom.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 1. The pen comes up once.
+The source shows three movements; most native writers draw थ (tha) in two strokes (72% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-थ (tha)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
 
 Guided Practice.

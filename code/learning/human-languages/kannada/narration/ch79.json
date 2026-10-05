@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "Long, Moving and Curled",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:645cce14f52d377e",
+  "sourceHash": "fnv1a64:8c7397f4bf93ca04",
   "lessons": [
     {
       "id": "KA-S161-vowel-sign-ii",
@@ -526,7 +526,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:096a158bd861b4e2",
+      "sourceHash": "fnv1a64:8b19234e60a8a366",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -617,11 +617,27 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಣ (ṇa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. start at the foot of the lower curl and round it up to the short tick at the waist."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. without lifting, come back and round the upper curl into the middle point."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, arch over to the right and come down the right side."
+            },
+            {
+              "kind": "speech",
+              "text": "4. without lifting, round the base and spiral in to the centre."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 0. The whole letter is one run, from the foot of the lower curl over the arch to the end of the spiral. There is no curled bar on top."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-nna.gif', 45 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0."
             }
           ]
         },
@@ -703,7 +719,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:02f48988f45e2268",
+      "sourceHash": "fnv1a64:8640a1cabd929888",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -780,11 +796,31 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಶ (śa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. start at the head and rise to run right along the top."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. without lifting, curve down and sweep across to the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, round the base and climb the right side to the top bar."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift, then draw the top bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "5. without lifting, curl up into the hook."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The body is one run, from the head along the top and round the base up to the bar; the curled bar comes after the only lift, as in ದ."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-sha.gif', 31 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0."
             }
           ]
         },
@@ -867,7 +903,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b7d408b786b01960",
+      "sourceHash": "fnv1a64:f13db5ce9033f314",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -964,11 +1000,39 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಷ (ṣa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. start at the inner tip of the curl and wind up and round it to the left."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. without lifting, run along the base and rise into the middle point."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, drop round the right lobe and climb the right side to its tip."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift, then set the dot in the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "5. lift, then draw the top bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "6. without lifting, curl up into the hook."
+            },
+            {
+              "kind": "speech",
+              "text": "7. lift, then draw the slanting stroke down to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. The body is ಪ's run; then come the dot, the curled bar and last the slanting stroke, each after a lift."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-shha.gif', 40 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0."
             }
           ]
         },

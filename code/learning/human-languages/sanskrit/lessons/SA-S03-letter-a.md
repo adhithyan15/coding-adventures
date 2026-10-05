@@ -51,7 +51,7 @@ It is an **independent vowel**: the full-size letter a vowel wears when it opens
 What it is made of:
 
 - a joined upper-and-lower left body
-- a middle shoulder
+- a middle shoulder running into the right stem
 - a right vertical stem
 - the top shirorekhā
 
@@ -67,12 +67,13 @@ You already say these words, and अ is one of the shapes inside them — the re
 
 - **1.** curve around the upper bowl, then continue down and around the lower bowl without lifting
 - **2.** lift and sweep the middle shoulder right
-- **3.** lift and draw the right stem top-to-bottom
-- **4.** lift and draw the top shirorekhā left-to-right
+- **3.** without lifting, climb up the right stem to the headline
+- **4.** descend the right stem top-to-bottom
+- **5.** lift and draw the top shirorekhā left-to-right
 
-**Pen lifts: 3.** The pen comes up 3 times and no more.
+**Pen lifts: 2.** The pen comes up 2 times and no more.
 
-> verified modern printed teaching form; other Devanagari traditions split the body into more strokes
+> The source shows four movements; most native writers draw अ in three strokes (74% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the shoulder and the headline.
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari अ stroke order.svg’, frames 1–4, Wikimedia Commons, 5 August 2023.

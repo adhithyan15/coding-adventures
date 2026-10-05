@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 12,
-  "sourceHash": "fnv1a64:48d468a99a007ed3",
+  "sourceHash": "fnv1a64:8cd8f0601e95a320",
   "lessonIds": [
     "SA-C12-akshi",
     "SA-C12-karnah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "sanskrit/narration/ch12.txt",
   "json": "sanskrit/narration/ch12.json",
-  "textHash": "fnv1a64:979f1e7584992744",
-  "jsonHash": "fnv1a64:1ab7d6374b124d91",
+  "textHash": "fnv1a64:47c9d1c694bedfea",
+  "jsonHash": "fnv1a64:625af167e4cd4d9a",
   "findings": []
 }

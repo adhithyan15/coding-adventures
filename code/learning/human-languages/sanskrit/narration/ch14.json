@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Pointing, and Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:81187c0143397279",
+  "sourceHash": "fnv1a64:4062a1baf3b0b5e0",
   "lessons": [
     {
       "id": "SA-C14-this",
@@ -518,7 +518,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3fa7b0037628db92",
+      "sourceHash": "fnv1a64:1f3b9a59229a92c6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -613,23 +613,27 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift at that junction and sweep the diagonal arm up-right to the right stem."
+              "text": "2. without lifting, sweep the diagonal arm up-right to the right stem."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the right stem top-to-bottom."
+              "text": "3. climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "5. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "verified four-stroke teaching form; another animated learner source writes the same parts in a stem-first order."
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw ल (la) in two strokes (54% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",
@@ -1323,7 +1327,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6b6df413fa7b22dc",
+      "sourceHash": "fnv1a64:0264c6682c037622",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1418,19 +1422,23 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift and draw the right stem top-to-bottom."
+              "text": "2. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the top shirorekhā left-to-right."
+              "text": "3. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "4. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "verified three-stroke teaching form fitted to the bundled printed outline."
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows three movements; most native writers draw थ (tha) in two strokes (72% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

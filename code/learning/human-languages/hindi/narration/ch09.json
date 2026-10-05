@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:aebfc7067b3f62b8",
+  "sourceHash": "fnv1a64:287de8a471728e74",
   "lessons": [
     {
       "id": "HI-C09-maaf-kijiye",
@@ -147,7 +147,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:271785cc3009a6fa",
+      "sourceHash": "fnv1a64:f011725eb6dc6ea2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -211,7 +211,7 @@
             },
             {
               "kind": "speech",
-              "text": "a middle shoulder."
+              "text": "a middle shoulder running into the inner stem."
             },
             {
               "kind": "speech",
@@ -262,23 +262,27 @@
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the inner stem top-to-bottom."
+              "text": "3. without lifting, climb up the inner stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the trailing stem top-to-bottom."
+              "text": "4. descend the inner stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "5. lift and draw the top shirorekhā left-to-right."
+              "text": "5. lift and draw the trailing stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 4. The pen comes up 4 times and no more."
+              "text": "6. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "Verified modern printed teaching form; other Devanagari traditions split the shared अ body into more strokes."
+              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows five movements; most native writers draw आ (ā) in four strokes (71% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts three times: the shoulder runs on up the inner stem and back down it."
             },
             {
               "kind": "speech",
@@ -364,7 +368,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c4f8ef3178eb3be7",
+      "sourceHash": "fnv1a64:62b91a93fecc6177",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -463,23 +467,27 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. descend the left stem, then curve right around the lower bowl and rise to its upper-right junction without lifting."
+              "text": "1. descend the left stem, then curve right around the lower bowl and rise to its upper-right junction."
             },
             {
               "kind": "speech",
-              "text": "2. lift and draw the right stem top-to-bottom."
+              "text": "2. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the top shirorekhā left-to-right."
+              "text": "3. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "4. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "Verified three-stroke teaching form; everyday handwriting may join or simplify the bowl differently."
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows three movements; most native writers draw प in two strokes (98% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

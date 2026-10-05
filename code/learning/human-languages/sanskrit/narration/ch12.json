@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "The Face, Part One",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:48d468a99a007ed3",
+  "sourceHash": "fnv1a64:8cd8f0601e95a320",
   "lessons": [
     {
       "id": "SA-C12-akshi",
@@ -325,7 +325,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:70b91440e81110a7",
+      "sourceHash": "fnv1a64:2e9a5fecd3212705",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -389,7 +389,7 @@
             },
             {
               "kind": "speech",
-              "text": "a separate counterclockwise closed round body."
+              "text": "a counterclockwise closed round body."
             },
             {
               "kind": "speech",
@@ -416,7 +416,7 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift at the stem's lower junction and sweep left, then counterclockwise around the closed round body back to the junction without lifting."
+              "text": "2. without lifting, sweep left, then counterclockwise around the closed round body back to the junction."
             },
             {
               "kind": "speech",
@@ -424,11 +424,11 @@
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "Pen lifts: 1. The pen comes up once."
             },
             {
               "kind": "speech",
-              "text": "verified three-stroke teaching form fitted to the bundled printed outline."
+              "text": "The source shows three movements; most native writers draw ठ (ṭha) in two strokes (89% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",
