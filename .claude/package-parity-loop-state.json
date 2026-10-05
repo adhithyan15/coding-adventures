@@ -1210,30 +1210,30 @@
     },
     {
       "id": "build-tool-elixir-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the Elixir build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the Elixir build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-elixir-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-elixir-glob-matcher-complexity-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Dynamically consume all eight graph and eleven diff-selection cases through production code with stable no-partial errors, closures, strict memoized Unicode-scalar matching, exact BUILD fronts, and unchanged process-free authority."
+      "notes": "Dynamically consume all eight graph and twelve diff-selection cases, including shared-input multi-consumer selection, through production code with stable no-partial errors, closures, strict memoized Unicode-scalar matching, exact BUILD fronts, and unchanged process-free authority."
     },
     {
       "id": "build-tool-haskell-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the Haskell build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the Haskell build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Implement and dynamically consume the complete eight-graph and eleven-diff process-free contract, including canonical topology, no-partial cycle failures, closures, boundary selection, strict bounded matching, and stable diagnostics."
+      "notes": "Implement and dynamically consume the complete eight-graph and twelve-diff process-free contract, including shared-input multi-consumer selection, canonical topology, no-partial cycle failures, closures, boundary selection, strict bounded matching, and stable diagnostics."
     },
     {
       "id": "build-tool-lua-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the Lua build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the Lua build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Implement and dynamically consume all eight graph and eleven diff-selection cases in one process-free Lua core with stable errors, deterministic closures, and bounded memoized Unicode-scalar matching."
+      "notes": "Implement and dynamically consume all eight graph and twelve diff-selection cases, including shared-input multi-consumer selection, in one process-free Lua core with stable errors, deterministic closures, and bounded memoized Unicode-scalar matching."
     },
     {
       "id": "build-tool-perl-diff-selection-match-work-ceiling-adoption",
@@ -1275,43 +1275,43 @@
     },
     {
       "id": "build-tool-ruby-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the Ruby build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the Ruby build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-ruby-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-ruby-glob-matcher-complexity-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Complete and dynamically consume the eight-graph and eleven-diff process-free contract through production code, reusing the separately hardened shared Ruby matcher and preserving stable empty failures."
+      "notes": "Complete and dynamically consume the eight-graph and twelve-diff process-free contract, including shared-input multi-consumer selection, through production code, reusing the separately hardened shared Ruby matcher and preserving stable empty failures."
     },
     {
       "id": "build-tool-rust-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the Rust build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the Rust build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-rust-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-rust-glob-matcher-complexity-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Complete canonical graph projection and the total diff result contract, consume all 19 cases through production modules, reuse the separately hardened matcher, and preserve stable empty failures without new authority."
+      "notes": "Complete canonical graph projection and the total diff result contract, consume all 20 cases including shared-input multi-consumer selection through production modules, reuse the separately hardened matcher, and preserve stable empty failures without new authority."
     },
     {
       "id": "build-tool-swift-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the Swift build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the Swift build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Dynamically consume all eight graph and eleven diff-selection cases through production code with canonical topology, stable errors, exact BUILD fronts, boundary behavior, and bounded Unicode-scalar matching."
+      "notes": "Dynamically consume all eight graph and twelve diff-selection cases, including shared-input multi-consumer selection, through production code with canonical topology, stable errors, exact BUILD fronts, boundary behavior, and bounded Unicode-scalar matching."
     },
     {
       "id": "build-tool-typescript-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the TypeScript build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the TypeScript build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-typescript-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-typescript-glob-matcher-complexity-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Dynamically consume all 19 cases through authority-free graph and diff operations, reuse the separately hardened Unicode-scalar matcher, and keep Node host authority outside the pure core."
+      "notes": "Dynamically consume all 20 cases, including shared-input multi-consumer selection, through authority-free graph and diff operations, reuse the separately hardened Unicode-scalar matcher, and keep Node host authority outside the pure core."
     },
     {
       "id": "build-tool-diff-selection-match-work-ceiling-remaining-engines",
-      "title": "Complete the 19-case process-free graph and diff-selection contract across every build-tool engine",
+      "title": "Complete the 20-case process-free graph and diff-selection contract across every build-tool engine",
       "status": "pending",
       "selection_blocked": true,
       "depends_on": ["build-tool-go-diff-selection-match-work-ceiling-adoption", "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption", "build-tool-elixir-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-lua-diff-selection-match-work-ceiling-adoption", "build-tool-perl-diff-selection-match-work-ceiling-adoption", "build-tool-python-diff-selection-match-work-ceiling-adoption", "build-tool-ruby-diff-selection-match-work-ceiling-adoption", "build-tool-rust-diff-selection-match-work-ceiling-adoption", "build-tool-swift-diff-selection-match-work-ceiling-adoption", "build-tool-typescript-diff-selection-match-work-ceiling-adoption", "build-tool-jvm-process-free-graph-diff-core", "build-tool-dart-process-free-graph-diff-core", "ocaml-build-tool-process-free-graph-diff-core"],

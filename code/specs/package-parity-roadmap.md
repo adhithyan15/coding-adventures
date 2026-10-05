@@ -136,6 +136,10 @@ implementation selection:
 - The merged reverse-diff case proves selection of both consumers of one
   shared input, but not both consumers' digest changes. A separate neutral
   source/package-digest evidence owner records that remaining gap.
+- Seven pending build-tool engine adoptions (Elixir, Haskell, Lua, Ruby, Rust,
+  Swift, and TypeScript) now explicitly include the twelfth diff case and its
+  merged two-consumer fixture dependency. Their older 19-case descriptions
+  were stale ownership scope, not evidence of completed 20-case conformance.
 
 The next serial implementation is the C#/F# shared-engine adoption of the
 complete 20-case process-free graph/diff suite (eight graph, twelve diff).
