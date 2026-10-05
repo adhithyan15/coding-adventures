@@ -44,7 +44,10 @@ public sealed class GraphDiffConformanceTests
             {
                 var result = expected.GetProperty("result");
                 Assert.Equal(Edges(result.GetProperty("edges")), actual.Edges);
-                Assert.Equal(result.GetProperty("levels").EnumerateArray().Select(Strings), actual.Levels);
+                var levels = result.GetProperty("levels").EnumerateArray().Select(Strings).ToArray();
+                Assert.Equal(levels.Length, actual.Levels.Count);
+                for (var index = 0; index < levels.Length; index++)
+                    Assert.Equal(levels[index], actual.Levels[index]);
             }
         }
     }
@@ -107,6 +110,84 @@ public sealed class GraphDiffConformanceTests
         Assert.NotNull(diff.ErrorCode);
         Assert.NotEqual("DIFF_MATCH_LIMIT_EXCEEDED", diff.ErrorCode);
         Assert.Empty(diff.ChangedPackages);
+    }
+
+    [Fact]
+    public void StructuralFailuresReturnNoPartialOutput()
+    {
+        var duplicate = GraphDiffCore.EvaluateGraph(new GraphInput(["a/a", "a/a"], []));
+        Assert.Equal("GRAPH_INVALID_INPUT", duplicate.ErrorCode);
+        Assert.Empty(duplicate.Levels);
+        Assert.Equal("GRAPH_INVALID_INPUT", GraphDiffCore.EvaluateGraph(
+            new GraphInput(["a/a\n"], [])).ErrorCode);
+        var cycle = GraphDiffCore.EvaluateGraph(new GraphInput(["a/a", "b/b", "c/c"],
+            [new GraphEdge("a/a", "b/b"), new GraphEdge("b/b", "a/a")]));
+        Assert.Equal("GRAPH_CYCLE", cycle.ErrorCode);
+        Assert.Empty(cycle.Edges);
+        Assert.Empty(cycle.Levels); // The disconnected ready node must not leak.
+
+        var invalidGlob = GraphDiffCore.EvaluateDiffSelection(new DiffSelectionInput(
+            [new DiffPackage("a/a", "a", "strict_globs", ["src/[z-a].cs"])],
+            [], ["a/a"], "error", ["outside"], null, null));
+        Assert.Equal("DIFF_INVALID_INPUT", invalidGlob.ErrorCode);
+        Assert.Empty(invalidGlob.ChangedPackages);
+        var alias = GraphDiffCore.EvaluateDiffSelection(new DiffSelectionInput(
+            [new DiffPackage("a/a", "a", "package_prefix", null)], [], [], "error",
+            ["a/SS.txt", "a/ß.txt"], null, null));
+        Assert.Equal("DIFF_INVALID_INPUT", alias.ErrorCode);
+        var malformedUtf16 = GraphDiffCore.EvaluateDiffSelection(new DiffSelectionInput(
+            [new DiffPackage("a/a", "a", "package_prefix", null)], [], [], "error",
+            ["a/\ud800"], null, null));
+        Assert.Equal("DIFF_INVALID_INPUT", malformedUtf16.ErrorCode);
+    }
+
+    [Fact]
+    public void DigestFailurePrecedesLimitAndLimitPrecedesUnknownPath()
+    {
+        var overLimit = Path.Combine(Cases, "diff-selection-match-work-over-limit.json");
+        using var document = JsonDocument.Parse(File.ReadAllText(overLimit));
+        var input = document.RootElement.GetProperty("input");
+        var options = input.GetProperty("options");
+        var packages = options.GetProperty("packages").EnumerateArray().Select(value =>
+            new DiffPackage(value.GetProperty("name").GetString()!,
+                value.GetProperty("rel_path").GetString()!,
+                value.GetProperty("source_mode").GetString()!,
+                Strings(value.GetProperty("source_globs")))).ToArray();
+        var request = new DiffSelectionInput(packages, [], [], "error",
+            Strings(input.GetProperty("changed_paths")).Append("outside/unknown").ToArray(),
+            null, null);
+        Assert.Equal("DIFF_MATCH_LIMIT_EXCEEDED",
+            GraphDiffCore.EvaluateDiffSelection(request).ErrorCode);
+        Assert.Equal("DIFF_BOUNDARY_INVALID",
+            GraphDiffCore.EvaluateDiffSelection(request with
+            {
+                BoundarySha256 = new string('0', 64),
+            }).ErrorCode);
+        var boundary = JsonSerializer.Deserialize<RepositoryBoundary>(
+            File.ReadAllText(Path.Combine(Directory.GetParent(Cases)!.FullName,
+                "repository-source-input-boundary.json")))!;
+        Assert.Equal("DIFF_BOUNDARY_INVALID",
+            GraphDiffCore.EvaluateDiffSelection(request with
+            {
+                BoundarySha256 = Hasher.RepositorySourceInputBoundaryDigest,
+                Boundary = boundary with { SchemaVersion = 2 },
+            }).ErrorCode);
+    }
+
+    [Fact]
+    public void ExactBuildFrontAndPortableClassesAreNotHostGlobs()
+    {
+        var result = GraphDiffCore.EvaluateDiffSelection(new DiffSelectionInput(
+            [new DiffPackage("a/a", "a", "strict_globs", ["src/[!a].cs"])],
+            [], [], "error", ["a/nested/BUILD", "a/src/b.cs", "a/src/a.cs"],
+            null, null));
+        Assert.Null(result.ErrorCode);
+        Assert.Equal(["a/a"], result.ChangedPackages);
+        var nearBuild = GraphDiffCore.EvaluateDiffSelection(new DiffSelectionInput(
+            [new DiffPackage("a/a", "a", "strict_globs", [])],
+            [], [], "error", ["a/nested/BUILD_debug"], null, null));
+        Assert.Null(nearBuild.ErrorCode);
+        Assert.Empty(nearBuild.ChangedPackages);
     }
 
     private static string ReadId(string path)

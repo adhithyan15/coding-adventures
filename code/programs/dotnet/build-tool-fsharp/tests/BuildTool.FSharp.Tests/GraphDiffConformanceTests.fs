@@ -43,9 +43,9 @@ let private readId path =
     use document = JsonDocument.Parse(File.ReadAllText(path))
     document.RootElement.GetProperty("id").GetString()
 
-let private assertRoster prefix expected =
+let private assertRoster (prefix: string) (expected: string array) =
     let paths = Directory.GetFiles(cases, prefix + "-*.json")
-    let ids = paths |> Array.map readId |> Array.sortWith StringComparer.Ordinal.Compare
+    let ids = paths |> Array.map readId |> Array.sortWith (fun left right -> StringComparer.Ordinal.Compare(left, right))
     Assert.Equal<string>(expected, ids)
     paths
 
@@ -70,8 +70,9 @@ let ``F sharp facade evaluates every graph fixture`` () =
             let result = expected.GetProperty("result")
             Assert.Equal<GraphEdge>(edges (result.GetProperty("edges")), actual.Edges)
             let expectedLevels = result.GetProperty("levels").EnumerateArray() |> Seq.map strings |> Seq.toArray
-            Assert.Equal<string>(expectedLevels |> Array.collect id, actual.Levels |> Seq.collect id)
             Assert.Equal(expectedLevels.Length, actual.Levels.Count)
+            for index in 0 .. expectedLevels.Length - 1 do
+                Assert.Equal<string>(expectedLevels.[index], actual.Levels.[index])
 
 [<Fact>]
 let ``F sharp facade evaluates every diff fixture`` () =
@@ -108,3 +109,18 @@ let ``F sharp facade evaluates every diff fixture`` () =
             Assert.Equal<string>(strings (result.GetProperty("changed_packages")), actual.ChangedPackages)
             Assert.Equal<string>(strings (result.GetProperty("affected_packages")), actual.AffectedPackages)
             Assert.Equal<string>(strings (result.GetProperty("prerequisite_packages")), actual.PrerequisitePackages)
+
+[<Fact>]
+let ``F sharp facade returns empty failure values for invalid graph and diff`` () =
+    let graph =
+        evaluateGraph (GraphInput([| "a/a"; "b/b" |],
+                                  [| GraphEdge("a/a", "b/b"); GraphEdge("b/b", "a/a") |]))
+    Assert.Equal("GRAPH_CYCLE", graph.ErrorCode)
+    Assert.Empty(graph.Edges)
+    Assert.Empty(graph.Levels)
+    let diff =
+        evaluateDiffSelection
+            (DiffSelectionInput([| DiffPackage("a/a", "a", "strict_globs", [| "src/[z-a].fs" |]) |],
+                                Array.empty, [| "a/a" |], "error", [| "outside" |], null, null))
+    Assert.Equal("DIFF_INVALID_INPUT", diff.ErrorCode)
+    Assert.Empty(diff.ChangedPackages)

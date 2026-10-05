@@ -23,6 +23,14 @@ let validateTrackedArtifactSnapshot (unicodeVersion: string) (entries: IReadOnly
 let validateOrphanCrateSnapshot (snapshot: OrphanCrateSnapshot) =
     Validator.ValidateOrphanCrateSnapshot(snapshot)
 
+// These are native F# entry points over the same pure typed core. No fixture
+// parsing or host discovery crosses this boundary.
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let evaluateGraph (input: GraphInput) = GraphDiffCore.EvaluateGraph(input)
+
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let evaluateDiffSelection (input: DiffSelectionInput) = GraphDiffCore.EvaluateDiffSelection(input)
+
 // Toolchain declarations are BUILD metadata, not executable commands. This
 // native F# symbol accepts only the already-bounded, caller-supplied snapshot
 // records defined by the shared .NET engine. It deliberately does not discover
