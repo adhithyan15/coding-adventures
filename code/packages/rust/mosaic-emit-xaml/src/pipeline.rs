@@ -1187,6 +1187,8 @@ struct EmitContext<'a> {
     table_font_size: Option<LayoutPropValue>,
     /// Flow of repeated siblings in the immediate layout container.
     horizontal_repeater: bool,
+    /// Colgroup source and loop depth for structural header item widths.
+    header_width_source: Option<(String, usize)>,
 }
 
 impl<'a> EmitContext<'a> {
@@ -1239,6 +1241,7 @@ impl<'a> EmitContext<'a> {
             needs_font_size_support: false,
             table_font_size: None,
             horizontal_repeater: false,
+            header_width_source: None,
         }
     }
 
@@ -6712,6 +6715,10 @@ fn emit_for(
         .into_iter()
         .map(|(_, argument)| argument)
         .collect::<Vec<_>>();
+    let header_width_source = ctx.header_width_source.as_ref()
+        .filter(|(_, depth)| *depth == ctx.for_scope.len())
+        .map(|(source, _)| source.clone());
+    let has_width = is_cell_loop || header_width_source.is_some();
     let width_component_source = is_cell_loop.then(|| {
         ctx.slot_types
             .keys()
@@ -6719,7 +6726,7 @@ fn emit_for(
             .min()
             .map(|slot| ctx.slot_property_name(slot))
     });
-    let width_component_source = width_component_source.flatten();
+    let width_component_source = header_width_source.or(width_component_source.flatten());
 
     let vm = RowVm {
         class_name: vm_class.clone(),
@@ -6727,7 +6734,7 @@ fn emit_for(
         element_type: element_type.clone(),
         has_index,
         // GROUP C: only the per-column cell loop's VM carries `Width`.
-        has_width: is_cell_loop,
+        has_width,
         has_is_selected: false,
         helper_bindings: Vec::new(),
         captures,
@@ -6752,10 +6759,11 @@ fn emit_for(
         let projection = RowProjection {
             property_name: prop.clone(),
             source_path: source.clone(),
-            dependency_paths: vec![source.clone()],
+            dependency_paths: std::iter::once(source.clone())
+                .chain(width_component_source.iter().cloned()).collect(),
             vm_class: vm_class.clone(),
             has_index,
-            has_width: is_cell_loop,
+            has_width,
             width_source_path: width_component_source.as_ref().map(|path| {
                 if is_nested {
                     format!("Owner.{path}")
@@ -6907,7 +6915,7 @@ fn emit_for(
     // and so have a `Width` property). Inject `Width="{x:Bind Width}"`
     // into that opening tag so the column renders at the colgroup's
     // fixed pixel width regardless of cell content.
-    if is_cell_loop {
+    if has_width {
         body = inject_attr_into_first_element(&body, "Width=\"{x:Bind Width, Mode=OneWay}\"");
     }
 
@@ -13427,9 +13435,22 @@ fn emit_host_table_contents(
         }
     }
 
-    // colgroup is recognised but not yet rendered — the column-widths
-    // story needs more design (§5.2 caveat). PR-4 silently ignores it.
-    let _ = colgroup;
+    // A single repeated Col defines the data-column widths. Fixed leading
+    // columns retain their authored geometry. Do not guess among groups.
+    let repeated_columns = colgroup.map(|group| group.children.iter()
+        .filter(|child| child.tag == "For").collect::<Vec<_>>()).unwrap_or_default();
+    let header_width_source = match repeated_columns.as_slice() {
+        [columns] if columns.children.len() == 1 && columns.children[0].tag == "Col" => {
+            match (find_prop_value(columns, "each"),
+                find_prop_value(&columns.children[0], "width"),
+                find_prop_keyword(columns, "as")) {
+                (Some(LayoutPropValue::SlotRef(slot)), Some(LayoutPropValue::Expr(value)), Some(binding))
+                    if strip_balanced_outer_parens(value.trim()) == binding => Some(ctx.slot_property_name(slot)),
+                _ => None,
+            }
+        }
+        _ => None,
+    };
 
     // -- 2. Empty HostTable → empty `<Grid/>`. Preserves part style. --
     if head.is_none() && body.is_none() && foot.is_none() {
@@ -13462,14 +13483,18 @@ fn emit_host_table_contents(
     // -- 5. Per-section content. Assign Grid.Row indices in source order. --
     let mut row_index = 0u32;
     if let Some(h) = head {
-        out.push_str(&emit_host_table_section(
+        let previous_width_source = ctx.header_width_source.take();
+        ctx.header_width_source = header_width_source.map(|source| (source, ctx.for_scope.len()));
+        let header_result = emit_host_table_section(
             h,
             row_index,
             indent + 4,
             part_styles,
             ctx,
             false, // header doesn't wrap in ScrollViewer
-        )?);
+        );
+        ctx.header_width_source = previous_width_source;
+        out.push_str(&header_result?);
         row_index += 1;
     }
     if let Some(b) = body {
@@ -23424,6 +23449,33 @@ mod tests {
             ],
             vec![],
         )
+    }
+
+    #[test]
+    fn structural_header_uses_colgroup_widths_and_invalidates_on_resize() {
+        let c = component("Sheet", vec![
+            slot("sizes", SlotType::List(Box::new(ListInnerType::Number)), true),
+            slot("labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+        ], vec![]);
+        let header = for_node(LayoutPropValue::SlotRef("labels".into()), "label", Some("i"),
+            vec![wrapper_node("Box", vec![], vec![])]);
+        let columns = for_node(LayoutPropValue::SlotRef("sizes".into()), "size", Some("i"),
+            vec![wrapper_node("Col", vec![LayoutProp { name: "width".into(),
+                value: LayoutPropValue::Expr("( size )".into()) }], vec![])]);
+        let table = host_table_node(None, vec![
+            section_node("HostTableColGroup", vec![columns]),
+            section_node("HostTableHead", vec![wrapper_node("Row", vec![], vec![header])]),
+        ]);
+        let unrelated = for_node(LayoutPropValue::SlotRef("labels".into()), "other", None,
+            vec![wrapper_node("Box", vec![], vec![])]);
+        let r = compile(&c, &layout_with_root("Sheet", wrapper_node("Column", vec![],
+            vec![table, unrelated])), &empty_style("Sheet"));
+        assert_eq!(r.xaml.matches("Width=\"{x:Bind Width, Mode=OneWay}\"").count(), 1, "{}", r.xaml);
+        assert!(r.code_behind.contains("Sizes is { } widths && i < widths.Count ? widths[i] : 0"), "{}", r.code_behind);
+        let callback = r.code_behind.split("void OnMosaicSizesRowProjectionInputChanged").nth(1).expect("width callback");
+        assert!(callback.split("    }").next().unwrap().contains("SheetLabelVmRows"), "{callback}");
+        let unrelated_vm = r.for_view_models.iter().find(|vm| vm.filename.contains("OtherVm")).unwrap();
+        assert!(!unrelated_vm.source.contains("double Width"));
     }
 
     /// GROUP B: the inner value VM (`Grid_VVm`) must type its value
