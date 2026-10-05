@@ -1765,8 +1765,7 @@ jobs:
 
           foreach ($entry in $afterEntries) {
             $acl = Get-Acl -LiteralPath $entry.FullName -ErrorAction Stop
-            $descriptorBytes = [byte[]]::new($acl.BinaryLength)
-            $acl.GetSecurityDescriptorBinaryForm($descriptorBytes, 0)
+            $descriptorBytes = $acl.GetSecurityDescriptorBinaryForm()
             $descriptor = [Security.AccessControl.RawSecurityDescriptor]::new($descriptorBytes, 0)
             Assert-ReviewedAppContainerAcl $descriptor $entry.FullName
           }

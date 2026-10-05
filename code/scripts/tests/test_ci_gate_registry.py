@@ -253,6 +253,7 @@ class CIGateRegistryTests(unittest.TestCase):
         self.assertIn("*S-1-15-2-1:(OI)(CI)RX", body)
         self.assertIn("RawSecurityDescriptor", body)
         self.assertIn("CommonAce", body)
+        self.assertIn("GetSecurityDescriptorBinaryForm()", body)
         self.assertIn("InheritOnly", body)
         self.assertIn("IsCallback", body)
         self.assertIn("CompoundAce", body)
