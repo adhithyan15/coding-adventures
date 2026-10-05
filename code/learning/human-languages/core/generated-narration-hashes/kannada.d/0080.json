@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 80,
-  "sourceHash": "fnv1a64:f4906290b685ad1c",
+  "sourceHash": "fnv1a64:052fdab463a28a42",
   "lessonIds": [
     "KA-S167-letter-dha",
     "KA-S168-letter-bha",
@@ -16,7 +16,7 @@
   "drivablePrefix": 0,
   "text": "kannada/narration/ch80.txt",
   "json": "kannada/narration/ch80.json",
-  "textHash": "fnv1a64:8cb40998a6564c96",
-  "jsonHash": "fnv1a64:bc056666c69259e4",
+  "textHash": "fnv1a64:7a6eea2fa3ff8100",
+  "jsonHash": "fnv1a64:b706455ebcc44e6a",
   "findings": []
 }

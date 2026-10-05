@@ -62,14 +62,21 @@ You already say these:
 ## Writing: ಫ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-169] -->
 
-Put your pen on ಫ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** start at the inner tip of the curl and wind up and round it to the left
+- **2.** without lifting, run along the base and rise into the middle point
+- **3.** without lifting, drop round the right lobe and climb the right side to its tip
+- **4.** lift, then set the dot in the middle
+- **5.** lift, then draw the top bar from left to right
+- **6.** without lifting, curl up into the hook
+- **7.** lift, then draw the tail downward
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 3.** This is ಪ with a tail: the body, the dot, the curled
+bar, and last the tail, each after a lift.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-pha.gif', 43 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-169, KA-SCRIPT-RECOG-168] -->

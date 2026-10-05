@@ -47,6 +47,16 @@ const KANNADA_MA = DUCTUS[ductusKey("kannada", "ಮ")];
 const KANNADA_LA = DUCTUS[ductusKey("kannada", "ಲ")];
 const KANNADA_VA = DUCTUS[ductusKey("kannada", "ವ")];
 const KANNADA_JA = DUCTUS[ductusKey("kannada", "ಜ")];
+const KANNADA_TTA = DUCTUS[ductusKey("kannada", "ಟ")];
+const KANNADA_NNA = DUCTUS[ductusKey("kannada", "ಣ")];
+const KANNADA_SHA = DUCTUS[ductusKey("kannada", "ಶ")];
+const KANNADA_SSA = DUCTUS[ductusKey("kannada", "ಷ")];
+const KANNADA_DHA = DUCTUS[ductusKey("kannada", "ಧ")];
+const KANNADA_BHA = DUCTUS[ductusKey("kannada", "ಭ")];
+const KANNADA_PHA = DUCTUS[ductusKey("kannada", "ಫ")];
+const KANNADA_KHA = DUCTUS[ductusKey("kannada", "ಖ")];
+const KANNADA_GHA = DUCTUS[ductusKey("kannada", "ಘ")];
+const KANNADA_DDHA = DUCTUS[ductusKey("kannada", "ಢ")];
 
 const OWNER_SCRIPTS = new Set(["kannada"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -863,6 +873,289 @@ describe("handwriting ductus", () => {
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ja.gif",
     );
     expect(verifiedLetterFont("ಜ", KANNADA_JA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಟ carries its top curl, small loop, both lobes, and upper bowl in one run", () => {
+    expect(penLifts(KANNADA_TTA)).toBe(0);
+    expect(KANNADA_TTA.strokes).toHaveLength(1);
+    expect(
+      KANNADA_TTA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "curve down from the top tip to the waist",
+        "round the small loop and close it",
+        "go down round the left lobe to the point",
+        "drop round the right lobe and climb",
+        "curl in to the middle tick",
+        "round the upper bowl to its tip",
+      ],
+    ]);
+    expect(KANNADA_TTA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ta.gif",
+    );
+    expect(verifiedLetterFont("ಟ", KANNADA_TTA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಣ carries both left curls over the arch and into the spiral in one run", () => {
+    expect(penLifts(KANNADA_NNA)).toBe(0);
+    expect(KANNADA_NNA.strokes).toHaveLength(1);
+    expect(
+      KANNADA_NNA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "round the lower curl to the tick",
+        "come back and round the upper curl",
+        "arch over and down the right side",
+        "round the base and spiral in",
+      ],
+    ]);
+    expect(KANNADA_NNA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-nna.gif",
+    );
+    expect(verifiedLetterFont("ಣ", KANNADA_NNA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಶ sweeps from the head round the base up to the bar, then lifts once for the hooked bar", () => {
+    expect(penLifts(KANNADA_SHA)).toBe(1);
+    expect(KANNADA_SHA.strokes).toHaveLength(2);
+    expect(
+      KANNADA_SHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "rise from the head and run along the top",
+        "sweep down to the lower left",
+        "round the base and climb to the top bar",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+    ]);
+    expect(KANNADA_SHA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-sha.gif",
+    );
+    expect(verifiedLetterFont("ಶ", KANNADA_SHA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಷ draws ಪ's body, dot, hooked bar, and slanting stroke in four runs", () => {
+    expect(penLifts(KANNADA_SSA)).toBe(3);
+    expect(KANNADA_SSA.strokes).toHaveLength(4);
+    expect(
+      KANNADA_SSA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "wind round the curl from its inner tip",
+        "run along the base into the middle point",
+        "drop round the right lobe and climb",
+      ],
+      [
+        "lift, then set the dot in the middle",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+      [
+        "lift, then slant down to the right",
+      ],
+    ]);
+    expect(KANNADA_SSA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-shha.gif",
+    );
+    expect(verifiedLetterFont("ಷ", KANNADA_SSA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಧ draws ದ's bowl, hooked bar, and tail in three runs", () => {
+    expect(penLifts(KANNADA_DHA)).toBe(2);
+    expect(KANNADA_DHA.strokes).toHaveLength(3);
+    expect(
+      KANNADA_DHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "go down the left side into the left lobe",
+        "drop from the point around the right lobe",
+        "close the bowl leftward along the top",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+      [
+        "lift, then draw the tail downward",
+      ],
+    ]);
+    expect(KANNADA_DHA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-dhha.gif",
+    );
+    expect(verifiedLetterFont("ಧ", KANNADA_DHA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಭ runs ಬ's body back along the bar into the hook, lifting only before the tail", () => {
+    expect(penLifts(KANNADA_BHA)).toBe(1);
+    expect(KANNADA_BHA.strokes).toHaveLength(2);
+    expect(
+      KANNADA_BHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "loop over the head from its curled tip",
+        "slant round the left lobe to the point",
+        "drop round the right lobe up to the bar",
+        "run back left along the bar",
+        "draw the short bar rightward",
+        "curl up into the hook",
+      ],
+      [
+        "lift, then draw the tail downward",
+      ],
+    ]);
+    expect(KANNADA_BHA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-bha.gif",
+    );
+    expect(verifiedLetterFont("ಭ", KANNADA_BHA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಫ draws ಪ's body, dot, hooked bar, and tail in four runs", () => {
+    expect(penLifts(KANNADA_PHA)).toBe(3);
+    expect(KANNADA_PHA.strokes).toHaveLength(4);
+    expect(
+      KANNADA_PHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "wind round the curl from its inner tip",
+        "run along the base into the middle point",
+        "drop round the right lobe and climb",
+      ],
+      [
+        "lift, then set the dot in the middle",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+      [
+        "lift, then draw the tail downward",
+      ],
+    ]);
+    expect(KANNADA_PHA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-pha.gif",
+    );
+    expect(verifiedLetterFont("ಫ", KANNADA_PHA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಖ carries its curl, lower loop, and long right side in one run", () => {
+    expect(penLifts(KANNADA_KHA)).toBe(0);
+    expect(KANNADA_KHA.strokes).toHaveLength(1);
+    expect(
+      KANNADA_KHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "wind out of the curl from its inner tip",
+        "come down through the waist to the base",
+        "round the lower loop back to the waist",
+        "run along the base up the right side",
+      ],
+    ]);
+    expect(KANNADA_KHA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-kha.gif",
+    );
+    expect(verifiedLetterFont("ಖ", KANNADA_KHA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಘ comes back down the middle arm into the right arm, then lifts for the hooked bar, dot, and tail", () => {
+    expect(penLifts(KANNADA_GHA)).toBe(3);
+    expect(KANNADA_GHA.strokes).toHaveLength(4);
+    expect(
+      KANNADA_GHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "wind round the curl from its inner tip",
+        "run along the base into the middle point",
+        "drop round the right lobe and climb",
+        "climb the middle arm to its tip",
+        "come back down the middle arm",
+        "round the right arm and curl in",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+      [
+        "lift, then set the dot in the middle",
+      ],
+      [
+        "lift, then draw the tail downward",
+      ],
+    ]);
+    expect(KANNADA_GHA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-gha.gif",
+    );
+    expect(verifiedLetterFont("ಘ", KANNADA_GHA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಢ draws ಡ's bowl, hooked bar, and tail in three runs", () => {
+    expect(penLifts(KANNADA_DDHA)).toBe(2);
+    expect(KANNADA_DDHA.strokes).toHaveLength(3);
+    expect(
+      KANNADA_DDHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "go down into the left lobe and the point",
+        "round the right lobe and up the right side",
+        "curl into the small loop and round it",
+        "rise out and close the bowl along the top",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+      [
+        "lift, then draw the tail downward",
+      ],
+    ]);
+    expect(KANNADA_DDHA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-dda.gif",
+    );
+    expect(verifiedLetterFont("ಢ", KANNADA_DDHA.source.url)).toBe(
       "_fonts/NotoSansKannada-Static.ttf",
     );
   });

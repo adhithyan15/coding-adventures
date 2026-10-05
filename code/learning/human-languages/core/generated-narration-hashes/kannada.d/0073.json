@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 73,
-  "sourceHash": "fnv1a64:de3f7811214c69d0",
+  "sourceHash": "fnv1a64:ddee95b969d10592",
   "lessonIds": [
     "KA-C73-very",
     "KA-C73-in-order-to",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "kannada/narration/ch73.txt",
   "json": "kannada/narration/ch73.json",
-  "textHash": "fnv1a64:b3493461f6cb6ce3",
-  "jsonHash": "fnv1a64:c5b3f24bf8daae46",
+  "textHash": "fnv1a64:89719640fc1c9500",
+  "jsonHash": "fnv1a64:985b636981ae530d",
   "findings": []
 }

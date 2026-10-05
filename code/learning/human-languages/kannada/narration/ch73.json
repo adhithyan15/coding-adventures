@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "In Order To, and Being Able",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:de3f7811214c69d0",
+  "sourceHash": "fnv1a64:ddee95b969d10592",
   "lessons": [
     {
       "id": "KA-C73-very",
@@ -374,7 +374,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:11ba005aa2460a2b",
+      "sourceHash": "fnv1a64:b7314c07ff934a25",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -457,11 +457,39 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಟ (ṭa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. start at the tip of the top curl and curve round to the left and down into the waist."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. without lifting, go round the small loop counterclockwise and close it at the waist."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, go down the left side and round the left lobe, rising into the middle point."
+            },
+            {
+              "kind": "speech",
+              "text": "4. without lifting, drop round the right lobe and climb the right side."
+            },
+            {
+              "kind": "speech",
+              "text": "5. without lifting, curl in to the short tick in the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "6. without lifting, come back and round the upper bowl to its tip."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 0. The whole letter is one run, from the curl at the top through the small loop and both lobes to the tip of the upper bowl. Like ಲ, ಟ (ṭa) has no curled bar on top."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-ta.gif', 34 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0."
+            },
+            {
+              "kind": "speech",
+              "text": "The animation is filed as 'ta': that series spells ತ as 'tha'."
             }
           ]
         },

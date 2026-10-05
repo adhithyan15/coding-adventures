@@ -59,14 +59,23 @@ You already say these:
 ## Writing: ಭ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-168] -->
 
-Put your pen on ಭ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** start at the curled tip inside the head and loop up over it clockwise
+- **2.** without lifting, slant down to the left and round the left lobe, rising into the middle point
+- **3.** without lifting, drop round the right lobe and climb the right side to the bar
+- **4.** without lifting, run back left along the bar
+- **5.** without lifting, draw the bar from left to right
+- **6.** without lifting, curl up into the hook
+- **7.** lift, then draw the tail downward
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 1.** The body is drawn as ಬ's is; then the pen runs back
+along the short bar and draws it into the hook. It lifts once, for the
+tail. The animation also lifts before the bar; most people copying ಭ in
+the Omniglot study used two strokes.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-bha.gif', 33 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-168, KA-SCRIPT-RECOG-167] -->
