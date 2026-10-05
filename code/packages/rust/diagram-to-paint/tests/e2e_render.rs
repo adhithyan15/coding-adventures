@@ -2630,6 +2630,38 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_mermaid_treemap_color_rec2020_to_png() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Rec. 2020 leaf\": 1:::rec2020\nclassDef rec2020 fill:color(rec2020 0.2 0.4 0.6 / 80%),stroke:color(rec2020 0.8 0.2 0.2),color:color(rec2020 0.1 0.7 0.1)",
+        )
+        .expect("color() Rec. 2020 treemap parse failed");
+        let layout = layout_treemap(&diagram, 480.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_treemap(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("rgba(0,119,168,0.8)")
+                    && rect.stroke.as_deref() == Some("rgb(255,0,60)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::GlyphRun(run)
+                if run.fill.as_deref() == Some("rgb(0, 196, 0)"))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_treemap_color_rec2020_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
     fn render_mermaid_treeview_to_png() {
         let diagram = parse_treeview("treeView-beta\ntitle Application Files\naccTitle: Application tree\nproject/ :::highlight icon(folder)\n    src/ icon(folder)\n        App.tsx icon(logos:react) ## main component\n        index.ts ## entry point\n    README.md").expect("treeview parse failed");
         let layout = layout_treeview(&diagram, 720.0);
