@@ -15644,6 +15644,37 @@ Select only the digest-evidence fixture on the next fresh clean `codex/`
 branch. The portable evidence is process-free and does not broaden host or
 credential authority.
 
+## Post-#16737 refresh and next bounded owner (2026-10-05)
+
+PR #16737 merged by guarded auto-merge as `0eb0f3f560` after all 53 checks
+completed acceptably (24 success, 29 skipped). The exact-main schema-3 report
+still has 15 established lanes, 1,487 implementation identities, 4,757 slots,
+1,529 all-reported identities, 178 high-consensus identities with 262 missing
+slots, and zero canonical collisions or unknown buckets. The durable DAG has
+992 unique owners and 1,919 dependency edges with no missing IDs or cycles;
+the shared-input digest fixture is now merged. No parity PR remains open.
+
+Read-only audits found no further unowned graph/diff or OCaml promotion gap.
+OCaml remains emerging with five packages, an intentionally missing native
+build-tool front door and adapter, and an owned execution/oracle chain before
+its 15-to-16 denominator promotion. The AES and AES-modes owners already in
+the DAG cover the three missing Java/Kotlin/Dart lanes; their neutral tranche
+must first correct SE01 vector attribution and its public API matrix, add an
+AES-192 KAT, and close SE02 nonce/counter/authentication/error semantics.
+Existing Java/Kotlin/Dart GF(256) packages use `0x11D`, not AES's `0x11B`.
+These findings are recorded in their owner notes without treating directory
+presence as behavioral conformance.
+
+A quick readiness/leverage comparison found both the Swift 20-case graph/diff
+core and Python source-input-registry adoption ready, each with three direct
+pending dependents. Swift is selected as the next single owner because it
+closes a foundational missing native contract in an established lane and
+directly unlocks its neutral-adapter, remaining-engine, and boundary-digest
+follow-ups. All six prerequisites are merged, and no open PR touches the Swift
+build-tool paths. The Python owner, AES neutral reconciliation, and OCaml
+execution chain remain separate serial candidates; no second parity PR is
+opened alongside this one.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
