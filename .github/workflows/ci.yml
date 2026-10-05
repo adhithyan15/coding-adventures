@@ -1624,37 +1624,151 @@ jobs:
           }
 
           $appPackages = 'S-1-15-2-1'
-          $writeMask = [Security.AccessControl.FileSystemRights]::Write -bor
-            [Security.AccessControl.FileSystemRights]::Modify -bor
-            [Security.AccessControl.FileSystemRights]::FullControl -bor
-            [Security.AccessControl.FileSystemRights]::Delete -bor
-            [Security.AccessControl.FileSystemRights]::DeleteSubdirectoriesAndFiles -bor
-            [Security.AccessControl.FileSystemRights]::ChangePermissions -bor
-            [Security.AccessControl.FileSystemRights]::TakeOwnership
-          $readExecute = [Security.AccessControl.FileSystemRights]::ReadAndExecute
-          foreach ($entry in $afterEntries) {
-            $combined = [Security.AccessControl.FileSystemRights]0
-            foreach ($rule in (Get-Acl -LiteralPath $entry.FullName -ErrorAction Stop).Access) {
-              try {
-                $identity = $rule.IdentityReference.Translate(
-                  [Security.Principal.SecurityIdentifier]
-                ).Value
-              } catch {
+          $requiredMask = [int][Security.AccessControl.FileSystemRights]::ReadAndExecute
+          $allowedMask = $requiredMask -bor [int][Security.AccessControl.FileSystemRights]::Synchronize
+          function Assert-ReviewedAppContainerAcl {
+            param(
+              [Security.AccessControl.RawSecurityDescriptor] $Descriptor,
+              [string] $Label
+            )
+            $combined = 0
+            foreach ($rule in $Descriptor.DiscretionaryAcl) {
+              if (
+                $rule.GetType() -ne [Security.AccessControl.CommonAce] -or
+                $rule.IsCallback
+              ) {
+                throw "unexpected Windows Chrome AppContainer ACE form: $Label"
+              }
+              if ($rule.SecurityIdentifier.Value -ne $appPackages) { continue }
+              $isEffective = ($rule.AceFlags -band [Security.AccessControl.AceFlags]::InheritOnly) -eq 0
+              if ($rule.AceQualifier -eq [Security.AccessControl.AceQualifier]::AccessDenied) {
+                if ($isEffective -and $rule.AccessMask -ne 0) {
+                  throw "effective Windows Chrome AppContainer deny ACE: $Label"
+                }
                 continue
               }
-              if (
-                $identity -eq $appPackages -and
-                $rule.AccessControlType -eq [Security.AccessControl.AccessControlType]::Allow
-              ) {
-                if (($rule.FileSystemRights -band $writeMask) -ne 0) {
-                  throw "dangerous Windows Chrome AppContainer ACE: $($entry.FullName)"
-                }
-                $combined = $combined -bor $rule.FileSystemRights
+              if ($rule.AceQualifier -ne [Security.AccessControl.AceQualifier]::AccessAllowed) {
+                throw "unexpected Windows Chrome AppContainer ACE qualifier: $Label"
+              }
+              if (($rule.AccessMask -band (-bnot $allowedMask)) -ne 0) {
+                throw "unexpected Windows Chrome AppContainer rights: $Label"
+              }
+              if ($isEffective) {
+                $combined = $combined -bor $rule.AccessMask
               }
             }
-            if (($combined -band $readExecute) -ne $readExecute) {
-              throw "Windows Chrome AppContainer ACL lacks read/execute: $($entry.FullName)"
+            if (($combined -band $requiredMask) -ne $requiredMask) {
+              throw "Windows Chrome AppContainer ACL lacks read/execute: $Label"
             }
+          }
+
+          function Assert-AclSelfTestFailure {
+            param([string] $Sddl, [string] $Expected)
+            try {
+              Assert-ReviewedAppContainerAcl (
+                [Security.AccessControl.RawSecurityDescriptor]::new($Sddl)
+              ) 'self-test'
+            } catch {
+              if ($_.Exception.Message.Contains($Expected)) { return }
+              throw
+            }
+            throw "Windows Chrome ACL self-test failed open: $Expected"
+          }
+          Assert-AclSelfTestFailure `
+            'D:(A;OICIIO;0x1200a9;;;S-1-15-2-1)' `
+            'lacks read/execute'
+          Assert-ReviewedAppContainerAcl (
+            [Security.AccessControl.RawSecurityDescriptor]::new(
+              'D:(A;ID;0x1200a9;;;S-1-15-2-1)'
+            )
+          ) 'inherited-effective self-test'
+          Assert-AclSelfTestFailure `
+            'D:(A;;GA;;;S-1-15-2-1)' `
+            'unexpected Windows Chrome AppContainer rights'
+
+          $appPackagesSid = [Security.Principal.SecurityIdentifier]::new($appPackages)
+          $callbackAcl = [Security.AccessControl.RawAcl]::new(2, 1)
+          $callbackAcl.InsertAce(0, [Security.AccessControl.CommonAce]::new(
+            [Security.AccessControl.AceFlags]::None,
+            [Security.AccessControl.AceQualifier]::AccessAllowed,
+            $allowedMask,
+            $appPackagesSid,
+            $true,
+            [byte[]]@(0, 0, 0, 0)
+          ))
+          $callbackDescriptor = [Security.AccessControl.RawSecurityDescriptor]::new(
+            [Security.AccessControl.ControlFlags]::DiscretionaryAclPresent,
+            $null,
+            $null,
+            $null,
+            $callbackAcl
+          )
+          try {
+            Assert-ReviewedAppContainerAcl $callbackDescriptor 'callback self-test'
+            throw 'Windows Chrome ACL self-test failed open: callback'
+          } catch {
+            if (-not $_.Exception.Message.Contains('unexpected Windows Chrome AppContainer ACE form')) {
+              throw
+            }
+          }
+
+          $compoundAcl = [Security.AccessControl.RawAcl]::new(2, 1)
+          $compoundAcl.InsertAce(0, [Security.AccessControl.CompoundAce]::new(
+            [Security.AccessControl.AceFlags]::None,
+            $allowedMask,
+            [Security.AccessControl.CompoundAceType]::Impersonation,
+            $appPackagesSid
+          ))
+          $compoundDescriptor = [Security.AccessControl.RawSecurityDescriptor]::new(
+            [Security.AccessControl.ControlFlags]::DiscretionaryAclPresent,
+            $null,
+            $null,
+            $null,
+            $compoundAcl
+          )
+          try {
+            Assert-ReviewedAppContainerAcl $compoundDescriptor 'compound self-test'
+            throw 'Windows Chrome ACL self-test failed open: compound'
+          } catch {
+            if (-not $_.Exception.Message.Contains('unexpected Windows Chrome AppContainer ACE form')) {
+              throw
+            }
+          }
+
+          $objectAcl = [Security.AccessControl.RawAcl]::new(4, 1)
+          $objectAcl.InsertAce(0, [Security.AccessControl.ObjectAce]::new(
+            [Security.AccessControl.AceFlags]::None,
+            [Security.AccessControl.AceQualifier]::AccessAllowed,
+            $allowedMask,
+            $appPackagesSid,
+            [Security.AccessControl.ObjectAceFlags]::ObjectAceTypePresent,
+            [Guid]::NewGuid(),
+            [Guid]::Empty,
+            $false,
+            $null
+          ))
+          $objectDescriptor = [Security.AccessControl.RawSecurityDescriptor]::new(
+            [Security.AccessControl.ControlFlags]::DiscretionaryAclPresent,
+            $null,
+            $null,
+            $null,
+            $objectAcl
+          )
+          try {
+            Assert-ReviewedAppContainerAcl $objectDescriptor 'object self-test'
+            throw 'Windows Chrome ACL self-test failed open: object'
+          } catch {
+            if (-not $_.Exception.Message.Contains('unexpected Windows Chrome AppContainer ACE form')) {
+              throw
+            }
+          }
+
+          foreach ($entry in $afterEntries) {
+            $acl = Get-Acl -LiteralPath $entry.FullName -ErrorAction Stop
+            $descriptorBytes = [byte[]]::new($acl.BinaryLength)
+            $acl.GetSecurityDescriptorBinaryForm($descriptorBytes, 0)
+            $descriptor = [Security.AccessControl.RawSecurityDescriptor]::new($descriptorBytes, 0)
+            Assert-ReviewedAppContainerAcl $descriptor $entry.FullName
           }
 
           $final = Get-TreeSnapshot (Get-BrowserTree $browserRoot)
