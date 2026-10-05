@@ -569,6 +569,9 @@ powerless achromatic hues, before backend-neutral lowering.
 The cylindrical `hsl` interpolation space likewise applies shortest-path hue
 interpolation and achromatic hue fixup while alpha-premultiplying saturation
 and lightness before conversion to backend-neutral sRGB.
+The `hwb` interpolation space shares that angular behavior while mixing
+whiteness and blackness with premultiplied alpha and treating near-achromatic
+whiteness-plus-blackness sums as powerless hues.
 The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.

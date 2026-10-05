@@ -15506,6 +15506,16 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn treemap_preserves_css_hwb_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in hwb, red 20%, transparent),fill:color-mix(in hwb, black, white)",
+        ).expect("CSS HWB color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in hwb, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in hwb, black, white)"));
+    }
+
+    #[test]
     fn treemap_preserves_css_oklab_color_mix() {
         let diagram = parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in oklab, red 20%, transparent),fill:color-mix(in oklab, black, white)",
