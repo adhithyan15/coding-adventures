@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-154-AGE-PHONE-DATE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "PA-EXT-154-A1-AGE-PHONE-DATE-FORM"
+  ],
+  "after": []
+}
