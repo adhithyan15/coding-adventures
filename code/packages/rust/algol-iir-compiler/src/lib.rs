@@ -415,6 +415,10 @@ struct ProcSig {
 struct ByNameBinding {
     actual: GrammarASTNode,
     ty: ScalarType,
+    /// The stored, non-assignable actual is a bounded runtime-real expression.
+    /// This lets a specialised read-only name formal retain formatter
+    /// provenance without introducing a runtime thunk ABI.
+    runtime_real: bool,
     /// Stable representation of the actual after forwarded formals resolve to
     /// their captured caller storage. This identifies a finite recursive
     /// remapping even when each lexical use receives a fresh local alias.
@@ -2295,6 +2299,13 @@ impl Compiler {
             }
 
             if let Some(var_name) = exact_bare_variable_expression_name(actual) {
+                if let Some(binding) = self.active_by_name_binding(&var_name) {
+                    let allow_runtime_real = binding.ty == ScalarType::Real
+                        && binding.runtime_real;
+                    let value = self.emit_by_name_read(&var_name, binding)?;
+                    self.emit_standard_output_value(name, value, allow_runtime_real)?;
+                    continue;
+                }
                 let binding = self.require_var(&var_name)?;
                 if binding.ty == ScalarType::Real && !binding.is_global {
                     if let Some(text) = self.static_real_slots.get(&binding.slot).cloned() {
@@ -3931,8 +3942,8 @@ impl Compiler {
         let Some(source_name) = exact_bare_variable_expression_name(node) else {
             return false;
         };
-        if self.active_by_name_binding(&source_name).is_some() {
-            return false;
+        if let Some(binding) = self.active_by_name_binding(&source_name) {
+            return binding.ty == ScalarType::Real && binding.runtime_real;
         }
         self.require_var(&source_name).is_ok_and(|binding| {
             binding.ty == ScalarType::Real
@@ -4298,8 +4309,19 @@ impl Compiler {
         for (param, actual) in sig.params.iter().zip(actuals) {
             match param.ty {
                 ProcedureParamType::Scalar(ty) if param.mode == ProcedureParamMode::Name => {
+                    let runtime_real = ty == ScalarType::Real
+                        && expr_variable_node(actual).is_none()
+                        && self.is_runtime_real_assignment_value(actual);
                     let (actual, key) = self.prepare_by_name_actual(actual)?;
-                    by_name_bindings.insert(param.name.clone(), ByNameBinding { actual, ty, key });
+                    by_name_bindings.insert(
+                        param.name.clone(),
+                        ByNameBinding {
+                            actual,
+                            ty,
+                            runtime_real,
+                            key,
+                        },
+                    );
                 }
                 ProcedureParamType::Procedure { expected_ret } => {
                     let binding = self.prepare_procedure_actual(
@@ -12533,7 +12555,41 @@ mod tests {
             "test",
         )
         .expect_err("ordinary captured real globals remain outside the bounded proof");
-        assert!(format!("{error:?}").contains("cannot print a real value"));
+        assert!(
+            format!("{error:?}").contains("cannot print a real value"),
+            "unexpected rejection: {error:?}"
+        );
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_includes_nonassignable_name_actuals() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; procedure show(x); real x; output(x); show(pick()) end",
+            "test",
+        )
+        .expect("a non-assignable runtime-real name actual retains formatter provenance");
+        let show = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_show"))
+            .expect("has specialised name-formal procedure");
+        assert!(show.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_name_provenance_excludes_assignable_actuals() {
+        let error = compile_source(
+            "begin real array a[1:1]; procedure show(x); real x; output(x); a[1] := 2.25; show(a[1]) end",
+            "test",
+        )
+        .expect_err("an assignable name actual remains outside the bounded proof");
+        assert!(
+            format!("{error:?}").contains("cannot print a real value"),
+            "unexpected rejection: {error:?}"
+        );
     }
 
     #[test]
