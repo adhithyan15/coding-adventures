@@ -505,16 +505,29 @@ fun mosaicCheckSaveRequest(payload: Any?): MosaicSaveRequest {
     if (bytes.size > MOSAIC_MAX_SAVE_BYTES) {
         throw MosaicFileFailure("the file is larger than $MOSAIC_MAX_SAVE_BYTES bytes")
     }
-    // When the app says what it is saving, the name must agree: a JSON export
-    // cannot be offered as `notes.exe`.
     val accept = mosaicAcceptFor(request)
-    if (accept.extensions.isNotEmpty() && accept.extensions.none { suggestedName.lowercase().endsWith(".$it") }) {
+    mosaicCheckSaveName(suggestedName, accept)
+    return MosaicSaveRequest(suggestedName, bytes, accept)
+}
+
+/**
+ * The name rules every save meets, a standard `files.save` or an app's own
+ * (UI89 §3.11): a plain file name, and, when the save says what it is
+ * saving, an extension that agrees -- a JSON export cannot be offered as
+ * `notes.exe`; when it does not, no executable extension. Extensions are
+ * compared without case: an app's own list may say `APKG`.
+ */
+fun mosaicCheckSaveName(suggestedName: String, accept: MosaicAccept) {
+    if (!mosaicIsPlainFileName(suggestedName)) {
+        throw MosaicFileFailure("suggestedName must be a plain file name")
+    }
+    val lowered = suggestedName.lowercase()
+    if (accept.extensions.isNotEmpty() && accept.extensions.none { lowered.endsWith(".${it.lowercase()}") }) {
         throw MosaicFileFailure("suggestedName must end in an extension of an accepted type")
     }
     if (accept.extensions.isEmpty() && mosaicHasExecutableExtension(suggestedName)) {
         throw MosaicFileFailure("suggestedName must not end in an executable extension")
     }
-    return MosaicSaveRequest(suggestedName, bytes, accept)
 }
 
 /** [answer], called at most once however often the result is. */
@@ -534,10 +547,40 @@ fun mosaicAnswerFilesOpen(
     runInBackground: (() -> Unit) -> Unit,
     answer: (Map<String, Any?>) -> Unit,
 ) {
+    mosaicAnswerOpen(
+        mosaicAcceptFor(mosaicPayloadMap(payload)),
+        MOSAIC_MAX_OPEN_BYTES,
+        picker,
+        runInBackground,
+        { document, bytes ->
+            mapOf(
+                "name" to document.name,
+                "mimeType" to (document.mimeType ?: mosaicMimeTypeForName(document.name)),
+                "bytes" to Base64.getEncoder().encodeToString(bytes),
+            )
+        },
+        answer,
+    )
+}
+
+/**
+ * Any open, from picker to [answer] -- called once, never with an exception:
+ * `files.open`'s, and an app's own through its router (UI89 §3.11). The
+ * chosen document is read on [runInBackground] with [limit] enforced while
+ * reading; [ok] builds the success answer from what was read.
+ */
+fun mosaicAnswerOpen(
+    accept: MosaicAccept,
+    limit: Long,
+    picker: MosaicDocumentPicker,
+    runInBackground: (() -> Unit) -> Unit,
+    ok: (MosaicOpenedDocument, ByteArray) -> Map<String, Any?>,
+    answer: (Map<String, Any?>) -> Unit,
+) {
     val once = mosaicOnce(answer)
     val picked = AtomicBoolean(false)
     try {
-        picker.open(mosaicAcceptFor(mosaicPayloadMap(payload))) { document ->
+        picker.open(accept) { document ->
             // A picker that answers twice is heard once.
             if (!picked.compareAndSet(false, true)) return@open
             if (document == null) {
@@ -551,7 +594,7 @@ fun mosaicAnswerFilesOpen(
                     // caller and leave the effect awaited for good.
                     once(
                         try {
-                            mosaicReadOpened(document)
+                            mosaicReadOpened(document, limit, ok)
                         } catch (error: Throwable) {
                             mosaicFailed("couldn't read the selected file")
                         }
@@ -568,21 +611,19 @@ fun mosaicAnswerFilesOpen(
     }
 }
 
-private fun mosaicReadOpened(document: MosaicOpenedDocument): Map<String, Any?> {
+private fun mosaicReadOpened(
+    document: MosaicOpenedDocument,
+    limit: Long,
+    ok: (MosaicOpenedDocument, ByteArray) -> Map<String, Any?>,
+): Map<String, Any?> {
     val bytes = try {
-        document.read(MOSAIC_MAX_OPEN_BYTES)
+        document.read(limit)
     } catch (failure: MosaicFileFailure) {
         return mosaicFailed(failure.message ?: "couldn't read the selected file")
     } catch (error: Throwable) {
         return mosaicFailed("couldn't read the selected file")
-    } ?: return mosaicFailed("the selected file is larger than $MOSAIC_MAX_OPEN_BYTES bytes")
-    return mosaicOk(
-        mapOf(
-            "name" to document.name,
-            "mimeType" to (document.mimeType ?: mosaicMimeTypeForName(document.name)),
-            "bytes" to Base64.getEncoder().encodeToString(bytes),
-        )
-    )
+    } ?: return mosaicFailed("the selected file is larger than $limit bytes")
+    return mosaicOk(ok(document, bytes))
 }
 
 /**
@@ -603,6 +644,23 @@ fun mosaicAnswerFilesSave(
         once(mosaicFailed(failure.message ?: "couldn't save the file"))
         return
     }
+    mosaicAnswerSave(request, picker, runInBackground, { name -> mapOf("name" to name) }, once)
+}
+
+/**
+ * Any checked save, from picker to [answer] -- called once, never with an
+ * exception: `files.save`'s, and an app's own through its router (UI89
+ * §3.11). The bytes are written on [runInBackground]; [ok] builds the
+ * success answer from the name the picker reports.
+ */
+fun mosaicAnswerSave(
+    request: MosaicSaveRequest,
+    picker: MosaicDocumentPicker,
+    runInBackground: (() -> Unit) -> Unit,
+    ok: (String) -> Map<String, Any?>,
+    answer: (Map<String, Any?>) -> Unit,
+) {
+    val once = mosaicOnce(answer)
     val picked = AtomicBoolean(false)
     try {
         picker.create(request) { target ->
@@ -615,7 +673,7 @@ fun mosaicAnswerFilesSave(
                 runInBackground {
                     once(
                         try {
-                            mosaicWriteTarget(target, request.bytes)
+                            mosaicWriteTarget(target, request.bytes, ok)
                         } catch (error: Throwable) {
                             mosaicFailed("couldn't save the file")
                         }
@@ -632,10 +690,14 @@ fun mosaicAnswerFilesSave(
     }
 }
 
-private fun mosaicWriteTarget(target: MosaicSaveTarget, bytes: ByteArray): Map<String, Any?> =
+private fun mosaicWriteTarget(
+    target: MosaicSaveTarget,
+    bytes: ByteArray,
+    ok: (String) -> Map<String, Any?>,
+): Map<String, Any?> =
     try {
         target.write(bytes)
-        mosaicOk(mapOf("name" to target.name))
+        mosaicOk(ok(target.name))
     } catch (failure: MosaicFileFailure) {
         mosaicFailed(failure.message ?: "couldn't save the file")
     } catch (error: Throwable) {
@@ -682,6 +744,81 @@ class MosaicPlatformRouter(
     private fun answerStandard(id: Long, kind: String, payload: Any?, delivery: String) {
         // Only an Await has someone waiting for the answer.
         if (delivery.lowercase() != "await") return
+        answerThroughPicker(id) { picker, work, answer ->
+            if (kind == "files.open") {
+                mosaicAnswerFilesOpen(payload, picker, work, answer)
+            } else {
+                mosaicAnswerFilesSave(payload, picker, work, answer)
+            }
+        }
+    }
+
+    /**
+     * Answer the app's own Await [id] by opening a document through this
+     * library's picker (UI89 §3.11), under the rules `files.open` keeps: one
+     * file operation at a time, deferred before anything is shown, read on
+     * the background thread with [limit] enforced while reading. The app
+     * chooses what is accepted, the limit, and the success answer, built by
+     * [ok] from the document's name and bytes -- on the background thread
+     * (Android) or inline (the desktop), so it must only build the answer.
+     */
+    fun openForApp(
+        id: Long,
+        accept: MosaicAccept,
+        limit: Long,
+        ok: (name: String, bytes: ByteArray) -> Map<String, Any?>,
+    ) {
+        answerThroughPicker(id) { picker, work, answer ->
+            mosaicAnswerOpen(accept, limit, picker, work, { document, bytes -> ok(document.name, bytes) }, answer)
+        }
+    }
+
+    /**
+     * Answer the app's own Await [id] by saving [bytes] through this
+     * library's picker (UI89 §3.11). The name is checked by the rules every
+     * save meets, so a refused name fails before anything is shown -- and,
+     * since the app chooses its own extensions here rather than taking them
+     * from the MIME table, an executable extension is refused whatever it
+     * accepts. The success answer is built by [ok] from the name the picker
+     * reports, on the background thread (Android) or inline (the desktop).
+     */
+    fun saveForApp(
+        id: Long,
+        suggestedName: String,
+        bytes: ByteArray,
+        accept: MosaicAccept,
+        ok: (name: String) -> Map<String, Any?>,
+    ) {
+        val request = try {
+            mosaicCheckSaveName(suggestedName, accept)
+            if (mosaicHasExecutableExtension(suggestedName)) {
+                throw MosaicFileFailure("suggestedName must not end in an executable extension")
+            }
+            MosaicSaveRequest(suggestedName, bytes, accept)
+        } catch (failure: MosaicFileFailure) {
+            host.completeEffect(id, mosaicFailed(failure.message ?: "couldn't save the file"))
+            return
+        }
+        answerThroughPicker(id) { picker, work, answer ->
+            mosaicAnswerSave(request, picker, work, ok, answer)
+        }
+    }
+
+    /**
+     * The one way an Await is answered through the picker, standard or the
+     * app's own: refused at once, without a picker, while another file
+     * operation is open or for an id the runtime is not awaiting; otherwise
+     * [operation] runs on the UI thread with the picker, where to do the slow
+     * work, and the answer to give -- once.
+     */
+    private fun answerThroughPicker(
+        id: Long,
+        operation: (
+            picker: MosaicDocumentPicker,
+            work: (() -> Unit) -> Unit,
+            answer: (Map<String, Any?>) -> Unit,
+        ) -> Unit,
+    ) {
         if (!busy.compareAndSet(false, true)) {
             host.completeEffect(id, mosaicFailed("another file operation is in progress"))
             return
@@ -725,13 +862,7 @@ class MosaicPlatformRouter(
             }
         }
         try {
-            runOnUi {
-                if (kind == "files.open") {
-                    mosaicAnswerFilesOpen(payload, picker, work, answer)
-                } else {
-                    mosaicAnswerFilesSave(payload, picker, work, answer)
-                }
-            }
+            runOnUi { operation(picker, work, answer) }
         } catch (error: Throwable) {
             complete(mosaicFailed("the file dialog failed"))
         }
@@ -749,3 +880,12 @@ class MosaicPlatformRouter(
         return true
     }
 }
+
+/**
+ * The router [installMosaicPlatformEffects] installed on [host], or null when
+ * it never was. The router *is* the host's handler -- it wraps the app's -- so
+ * a package's `[host_effects]` handler reaches it here to answer its own kinds
+ * through this library's picker (UI89 §3.11).
+ */
+fun mosaicPlatformRouter(host: MosaicPlatformEffectHost): MosaicPlatformRouter? =
+    host.effectHandler as? MosaicPlatformRouter

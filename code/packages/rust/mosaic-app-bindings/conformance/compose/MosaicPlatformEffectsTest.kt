@@ -219,6 +219,7 @@ class MosaicPlatformEffectsTest {
         var creates = 0
         var lastAccept: MosaicAccept? = null
         var lastSuggestedName: String? = null
+        var lastBytes: ByteArray? = null
         var openDone: ((MosaicOpenedDocument?) -> Unit)? = null
         var createDone: ((MosaicSaveTarget?) -> Unit)? = null
         override fun open(accept: MosaicAccept, done: (MosaicOpenedDocument?) -> Unit) {
@@ -230,6 +231,7 @@ class MosaicPlatformEffectsTest {
             creates += 1
             lastAccept = request.accept
             lastSuggestedName = request.suggestedName
+            lastBytes = request.bytes
             createDone = done
         }
     }
@@ -469,6 +471,99 @@ class MosaicPlatformEffectsTest {
         routed.waitingOn += 7L
         routed.effectHandler!!(7, "files.open", null, "await")
         assertEquals(1, ui.size)
+    }
+
+    /** UI89 §3.11: an app's own kinds answered through the library's picker. */
+    @Test
+    fun anAppsOwnKindsAreAnsweredThroughThePicker() {
+        assertEquals(null, mosaicPlatformRouter(FakeHost()), "no router before the library is installed")
+
+        val host = FakeHost()
+        val appCalls = mutableListOf<String>()
+        host.effectHandler = { _, kind, _, _ -> appCalls += kind }
+        val ui = mutableListOf<() -> Unit>()
+        val background = Background()
+        val picker = LaterPicker()
+        host.effectHandler =
+            MosaicPlatformRouter(host, host.effectHandler, setOf("importThing"), picker, { ui += it }, background.run)
+        val router = mosaicPlatformRouter(host)!!
+        // The app's kinds still reach the app first.
+        host.effectHandler!!(9, "importThing", null, "await")
+        assertEquals(listOf("importThing"), appCalls)
+        assertTrue(host.deferred.isEmpty())
+
+        // Open: the app's extensions reach the picker; the app's ok builds the answer.
+        host.waitingOn += 1L
+        router.openForApp(1, MosaicAccept(emptyList(), listOf("apkg", "colpkg")), 4) { name, bytes ->
+            mapOf("apkg" to Base64.getEncoder().encodeToString(bytes), "from" to name)
+        }
+        assertEquals(listOf(1L), host.deferred)
+        assertEquals(1, ui.size)
+        ui.removeAt(0)()
+        assertEquals(listOf("apkg", "colpkg"), picker.lastAccept!!.extensions)
+        // One file operation at a time.
+        host.waitingOn += 2L
+        router.saveForApp(2, "out.apkg", "PK".toByteArray(), MosaicAccept(emptyList(), listOf("apkg"))) { emptyMap() }
+        assertEquals(mapOf("failed" to mapOf("message" to "another file operation is in progress")), host.answers[2])
+        picker.openDone!!(Document("deck.apkg", null, "PK34".toByteArray()))
+        background.drain()
+        ui.removeAt(0)()
+        assertEquals(
+            mapOf("ok" to mapOf("apkg" to Base64.getEncoder().encodeToString("PK34".toByteArray()), "from" to "deck.apkg")),
+            host.answers[1],
+        )
+
+        // The app's limit, not files.open's, bounds the read.
+        host.waitingOn += 3L
+        router.openForApp(3, MosaicAccept(emptyList(), emptyList()), 4) { _, _ -> emptyMap() }
+        ui.removeAt(0)()
+        picker.openDone!!(Document("big.apkg", null, ByteArray(5)))
+        background.drain()
+        ui.removeAt(0)()
+        assertEquals(mapOf("failed" to mapOf("message" to "the selected file is larger than 4 bytes")), host.answers[3])
+
+        // A refused name shows no picker and defers nothing; an executable
+        // extension is refused even when the app accepts it; an upper-case
+        // extension in the app's list still matches.
+        val creates = picker.creates
+        host.waitingOn += setOf(4L, 5L, 6L)
+        router.saveForApp(4, "../deck.apkg", "PK".toByteArray(), MosaicAccept(emptyList(), listOf("apkg"))) { emptyMap() }
+        router.saveForApp(5, "deck.exe", "PK".toByteArray(), MosaicAccept(emptyList(), listOf("apkg"))) { emptyMap() }
+        router.saveForApp(6, "run.command", "x".toByteArray(), MosaicAccept(emptyList(), listOf("command"))) { emptyMap() }
+        assertEquals(creates, picker.creates)
+        assertTrue(ui.isEmpty())
+        assertEquals(mapOf("failed" to mapOf("message" to "suggestedName must be a plain file name")), host.answers[4])
+        assertEquals(
+            mapOf("failed" to mapOf("message" to "suggestedName must end in an extension of an accepted type")),
+            host.answers[5],
+        )
+        assertEquals(
+            mapOf("failed" to mapOf("message" to "suggestedName must not end in an executable extension")),
+            host.answers[6],
+        )
+        assertTrue(host.deferred.none { it in setOf(4L, 5L, 6L) })
+
+        // Save: the app's name and bytes reach the picker; the app's ok answers.
+        host.waitingOn += 7L
+        router.saveForApp(7, "engram.apkg", "PK\u0003\u0004".toByteArray(), MosaicAccept(emptyList(), listOf("APKG"))) {
+            name -> mapOf("savedAs" to name)
+        }
+        ui.removeAt(0)()
+        assertEquals("engram.apkg", picker.lastSuggestedName)
+        assertTrue("PK\u0003\u0004".toByteArray().contentEquals(picker.lastBytes))
+        val target = Target("engram (1).apkg")
+        picker.createDone!!(target)
+        background.drain()
+        ui.removeAt(0)()
+        assertEquals(mapOf("ok" to mapOf("savedAs" to "engram (1).apkg")), host.answers[7])
+        assertTrue("PK\u0003\u0004".toByteArray().contentEquals(target.written))
+
+        // failPending still reaches an app request in flight.
+        host.waitingOn += 8L
+        router.openForApp(8, MosaicAccept(emptyList(), emptyList()), 4) { _, _ -> emptyMap() }
+        ui.removeAt(0)()
+        assertTrue(router.failPending("the activity went away"))
+        assertEquals(mapOf("failed" to mapOf("message" to "the activity went away")), host.answers[8])
     }
 
     @Test

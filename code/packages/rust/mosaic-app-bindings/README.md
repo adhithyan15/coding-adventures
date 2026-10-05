@@ -27,7 +27,11 @@ Android's (`compose_android_platform_effects()`) through the Storage Access
 Framework's document picker. Android's reads and writes are watched by the
 shared `MosaicStallWatch`: a provider that moves no byte for a minute, or never
 finishes opening the document, is stopped and the request fails, instead of
-holding the one file operation (UI89 §3.8). The shared half and the desktop's are tested with
+holding the one file operation (UI89 §3.8). A package's `[host_effects]` handler
+can borrow the picker for the app's own kinds. It calls
+`mosaicPlatformRouter(host)`, the router installed as the host's handler,
+then `openForApp` / `saveForApp`, under `files.*`'s rules, with the app's
+own extensions, limit and `ok` answer (UI89 §3.11). The shared half and the desktop's are tested with
 fake dialogs, pickers and hosts by
 `conformance/compose/MosaicPlatformEffectsTest.kt`.
 
