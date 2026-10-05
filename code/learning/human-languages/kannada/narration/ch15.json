@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b1c9daff8e832574",
+  "sourceHash": "fnv1a64:392bf47717dd4d0e",
   "lessons": [
     {
       "id": "KA-C15-niiru-akki",
@@ -148,7 +148,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:abb7349e926ce1b9",
+      "sourceHash": "fnv1a64:20f9b247c8e3612b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -223,15 +223,39 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ಪ — copy what you see",
+          "title": "Writing: ಪ",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಪ (pa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. start at the inner tip of the curl and wind up and round it to the left."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. without lifting, run along the base and rise into the middle point."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, drop round the right lobe and climb the right side to its tip."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift, then set the dot in the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "5. lift, then draw the top bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "6. without lifting, curl up into the hook."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2. The body is one run, from the inner tip of the curl to the tip of the right side; then comes the dot in the middle, and last the curled bar on top, each after a lift."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-pa.gif', 32 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0."
             }
           ]
         },

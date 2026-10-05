@@ -57,14 +57,22 @@ You already say these, and every one of them has ಮ somewhere inside it:
 ## Writing: ಮ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-134] -->
 
-Put your pen on ಮ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** start at the inner tip of the curl and wind up and round it to the left
+- **2.** without lifting, run along the base and rise into the middle point
+- **3.** without lifting, drop round the right lobe and climb the right side to the top bar
+- **4.** lift, then draw the top bar from left to right
+- **5.** without lifting, curl up into the hook
+- **6.** lift, then round the right bowl from its foot
+- **7.** without lifting, climb its right side and curl in at the top
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 2.** The body is one run, drawn as ಪ's is, from the inner tip of
+the curl up the right side; then comes the curled bar, and last the bowl on
+the right, from its foot, each after a lift.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-ma.gif', 42 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-133, KA-SCRIPT-RECOG-134] -->

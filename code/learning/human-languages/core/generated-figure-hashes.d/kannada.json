@@ -115,6 +115,20 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "KA-S122-letter-ca",
+      "sourceHash": "fnv1a64:d95e9026317dd420",
+      "svgHash": "fnv1a64:13771d240ea9e932",
+      "svg": "kannada/book/figures/KA-S122-letter-ca-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S124-letter-pa",
+      "sourceHash": "fnv1a64:4dad963dcd827585",
+      "svgHash": "fnv1a64:5b9275ecb7b02195",
+      "svg": "kannada/book/figures/KA-S124-letter-pa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "KA-S125-letter-oo",
       "sourceHash": "fnv1a64:2da92290d9342c92",
       "svgHash": "fnv1a64:343ea88f3ec7beb4",
@@ -136,6 +150,20 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "KA-S128-letter-jha",
+      "sourceHash": "fnv1a64:134fe0f6ead67579",
+      "svgHash": "fnv1a64:213eff038b8d5b1d",
+      "svg": "kannada/book/figures/KA-S128-letter-jha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S129-letter-tha",
+      "sourceHash": "fnv1a64:62eb0581f1d78c07",
+      "svgHash": "fnv1a64:507f9cb1e4058fda",
+      "svg": "kannada/book/figures/KA-S129-letter-tha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "KA-S130-letter-ii",
       "sourceHash": "fnv1a64:f773d28dc039127c",
       "svgHash": "fnv1a64:f8a15a8b95e7e184",
@@ -150,10 +178,38 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "KA-S134-letter-ma",
+      "sourceHash": "fnv1a64:f5b0a5d63639bdf9",
+      "svgHash": "fnv1a64:c9849857e6d0d0e1",
+      "svg": "kannada/book/figures/KA-S134-letter-ma-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "KA-S135-letter-a",
       "sourceHash": "fnv1a64:718c9d9ed4d41cab",
       "svgHash": "fnv1a64:6abb275feff6d80f",
       "svg": "kannada/book/figures/KA-S135-letter-a-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S137-letter-la",
+      "sourceHash": "fnv1a64:d4ac061664225a55",
+      "svgHash": "fnv1a64:cc1464f8eb084449",
+      "svg": "kannada/book/figures/KA-S137-letter-la-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S139-letter-va",
+      "sourceHash": "fnv1a64:4d1a671e6c7fb1c2",
+      "svgHash": "fnv1a64:0abd8ddd7a008bcd",
+      "svg": "kannada/book/figures/KA-S139-letter-va-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S150-letter-ja",
+      "sourceHash": "fnv1a64:bf47f0cebf570d9d",
+      "svgHash": "fnv1a64:fcf56fe79e8d03b6",
+      "svg": "kannada/book/figures/KA-S150-letter-ja-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

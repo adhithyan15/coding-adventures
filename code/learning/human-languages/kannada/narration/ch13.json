@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0f57bcd640395e1a",
+  "sourceHash": "fnv1a64:c929e4980fadbc64",
   "lessons": [
     {
       "id": "KA-C13-dehada-bhagagalu",
@@ -137,7 +137,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:40b13d661f908da7",
+      "sourceHash": "fnv1a64:f6a963232268eebf",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -208,15 +208,47 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ಚ — copy what you see",
+          "title": "Writing: ಚ",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಚ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. start at the curled tip inside the head and loop up over it clockwise."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. without lifting, slant down to the left and round the left lobe, rising into the middle point."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, drop from the point round the right lobe's base."
+            },
+            {
+              "kind": "speech",
+              "text": "4. without lifting, climb the right side to the lower bar."
+            },
+            {
+              "kind": "speech",
+              "text": "5. lift, then draw the lower bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "6. lift, then draw the short link up from the lower bar."
+            },
+            {
+              "kind": "speech",
+              "text": "7. lift, then draw the upper bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "8. without lifting, curl up into the hook."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3, as many as ಕ. The body is one run, drawn as ಬ's is, from the curled tip inside the head to the top of the right side; then come the lower bar, the short link rising from it and the curled bar on top, each one started fresh."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-cha.gif', 52 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0."
             }
           ]
         },

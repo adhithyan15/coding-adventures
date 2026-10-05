@@ -84,6 +84,22 @@ const KANNADA_HA = DUCTUS[ductusKey("kannada", "ಹ")];
 const kannadaHaOutline = kannadaOutline("ಹ");
 const KANNADA_SA = DUCTUS[ductusKey("kannada", "ಸ")];
 const kannadaSaOutline = kannadaOutline("ಸ");
+const KANNADA_CA = DUCTUS[ductusKey("kannada", "ಚ")];
+const kannadaCaOutline = kannadaOutline("ಚ");
+const KANNADA_PA = DUCTUS[ductusKey("kannada", "ಪ")];
+const kannadaPaOutline = kannadaOutline("ಪ");
+const KANNADA_JHA = DUCTUS[ductusKey("kannada", "ಝ")];
+const kannadaJhaOutline = kannadaOutline("ಝ");
+const KANNADA_THA = DUCTUS[ductusKey("kannada", "ಥ")];
+const kannadaThaOutline = kannadaOutline("ಥ");
+const KANNADA_MA = DUCTUS[ductusKey("kannada", "ಮ")];
+const kannadaMaOutline = kannadaOutline("ಮ");
+const KANNADA_LA = DUCTUS[ductusKey("kannada", "ಲ")];
+const kannadaLaOutline = kannadaOutline("ಲ");
+const KANNADA_VA = DUCTUS[ductusKey("kannada", "ವ")];
+const kannadaVaOutline = kannadaOutline("ವ");
+const KANNADA_JA = DUCTUS[ductusKey("kannada", "ಜ")];
+const kannadaJaOutline = kannadaOutline("ಜ");
 
 describe("Kannada ಅ — four movements in one unbroken run", () => {
   const steps = ductusSteps(KANNADA_A);
@@ -621,5 +637,191 @@ describe("Kannada ಸ — body, hooked bar, and dot", () => {
     expect(strip.frames).toHaveLength(6);
     expect(strip.penLifts).toBe(2);
     expect(strip.summary).toBe("3 strokes · 2 pen lifts · 6 movements");
+  });
+});
+
+describe("Kannada ಚ — ಬ's body, lower bar, link, then the hooked bar", () => {
+  const steps = ductusSteps(KANNADA_CA);
+  const strip = ductusFilmstrip(KANNADA_CA, kannadaCaOutline);
+
+  it("starts each new run only after a lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 1, 2, 3, 3]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+    ]);
+  });
+
+  it("reports 8 movements across 4 strokes", () => {
+    expect(strip.frames).toHaveLength(8);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 8 movements");
+  });
+});
+
+describe("Kannada ಪ — body, dot, then the hooked bar", () => {
+  const steps = ductusSteps(KANNADA_PA);
+  const strip = ductusFilmstrip(KANNADA_PA, kannadaPaOutline);
+
+  it("starts each new run only after a lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 2, 2]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+    ]);
+  });
+
+  it("reports 6 movements across 3 strokes", () => {
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 6 movements");
+  });
+});
+
+describe("Kannada ಝ — bowl, hooked bar, two arms, then the tail", () => {
+  const steps = ductusSteps(KANNADA_JHA);
+  const strip = ductusFilmstrip(KANNADA_JHA, kannadaJhaOutline);
+
+  it("starts each new run only after a lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1, 2, 2, 3, 3, 4]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+    ]);
+  });
+
+  it("reports 9 movements across 5 strokes", () => {
+    expect(strip.frames).toHaveLength(9);
+    expect(strip.penLifts).toBe(4);
+    expect(strip.summary).toBe("5 strokes · 4 pen lifts · 9 movements");
+  });
+});
+
+describe("Kannada ಥ — pointed bowl, hooked bar, tail, then the dot", () => {
+  const steps = ductusSteps(KANNADA_THA);
+  const strip = ductusFilmstrip(KANNADA_THA, kannadaThaOutline);
+
+  it("starts each new run only after a lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 1, 2, 3]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+    ]);
+  });
+
+  it("reports 7 movements across 4 strokes", () => {
+    expect(strip.frames).toHaveLength(7);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 7 movements");
+  });
+});
+
+describe("Kannada ಮ — body, hooked bar, then the right bowl", () => {
+  const steps = ductusSteps(KANNADA_MA);
+  const strip = ductusFilmstrip(KANNADA_MA, kannadaMaOutline);
+
+  it("starts each new run only after a lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 1, 2, 2]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+    ]);
+  });
+
+  it("reports 7 movements across 3 strokes", () => {
+    expect(strip.frames).toHaveLength(7);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 7 movements");
+  });
+});
+
+describe("Kannada ಲ — loop, base, and right side in one run", () => {
+  const steps = ductusSteps(KANNADA_LA);
+  const strip = ductusFilmstrip(KANNADA_LA, kannadaLaOutline);
+
+  it("never inserts a pen lift between the 3 movements", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+    ]);
+  });
+
+  it("reports one stroke, zero lifts, and 3 movements", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+});
+
+describe("Kannada ವ — curl, base, and right side, then the hooked bar", () => {
+  const steps = ductusSteps(KANNADA_VA);
+  const strip = ductusFilmstrip(KANNADA_VA, kannadaVaOutline);
+
+  it("starts each new run only after a lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 1]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      true,
+      false,
+    ]);
+  });
+
+  it("reports 5 movements across 2 strokes", () => {
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 5 movements");
+  });
+});
+
+describe("Kannada ಜ — head, lobes, and right side, then the upper arc", () => {
+  const steps = ductusSteps(KANNADA_JA);
+  const strip = ductusFilmstrip(KANNADA_JA, kannadaJaOutline);
+
+  it("starts each new run only after a lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 1]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      false,
+      true,
+    ]);
+  });
+
+  it("reports 5 movements across 2 strokes", () => {
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 5 movements");
   });
 });
