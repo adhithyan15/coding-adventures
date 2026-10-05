@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16730,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16730",
-    "branch": "codex/parity-build-tool-dotnet-20261005",
-    "implementation_revision": "d4696e6b254f4c59bb147aeb5361522a1a5be78f",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-05T15:15:11Z",
+    "observed_at": "2026-10-05T15:46:14Z",
     "pr_number": 16730,
-    "status": "checks-pending",
-    "notes": "The ready-for-review .NET graph/diff PR opened from tested head d4696e6b254f4c59bb147aeb5361522a1a5be78f. GitHub reports MERGEABLE with one initial check queued and no failures; auto-merge stays disabled until every final-head required check is terminal and acceptable."
+    "status": "merged",
+    "notes": "All 53 final-head checks were terminal and acceptable (24 success, 29 skipped) with GitHub reporting MERGEABLE. Guarded squash auto-merge was enabled without manual merging; PR #16730 merged at 15:46:14Z as 2297f5372b04191eb9705faf03476bdc08c5450c."
   },
   "last_inventory": {
-    "revision": "87d1a0cb258309cd0307a85a5e2eafffe628248b",
+    "revision": "a99fb66a572dd807f827eb32e39c28e2a811a565",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1205,11 +1199,13 @@
     {
       "id": "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the shared C# and F# build-tool engine",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": "codex/parity-build-tool-dotnet-20261005",
       "pr_number": 16730,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16730",
+      "merged_at": "2026-10-05T15:46:14Z",
+      "merge_commit": "2297f5372b04191eb9705faf03476bdc08c5450c",
       "opened_at": "2026-10-05T15:15:11Z",
       "opened_revision": "d4696e6b254f4c59bb147aeb5361522a1a5be78f",
       "publication_notes": "Opened a non-draft ready-for-review PR after local tests, coverage, build-file dry validation, state/inventory/diff gates, path-collision audit, and independent security/correctness reviews passed. The initial GitHub check is queued; guarded auto-merge remains disabled until all final-head checks are terminal and acceptable with no merge conflict.",
@@ -3920,7 +3916,7 @@
       "id": "event-loop-haskell-lane-parity",
       "title": "Implement the portable event-loop contract in Haskell",
       "status": "pending",
-      "depends_on": ["haskell-scaffold-capability-schema"],
+      "depends_on": ["haskell-scaffold-capability-schema", "event-loop-language-neutral-mockable-core-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "Split from the stale Haskell tail umbrella after the post-#14615 audit. Implement the existing generic authority-free event-loop contract as its own Haskell package tranche, preserving injected host readiness and clock boundaries rather than absorbing unrelated Brotli, ct-compare, PNG, or native reactor work."
@@ -9633,7 +9629,7 @@
       "id": "build-tool-go-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Go",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-go-native-source-snapshot-stability-hardening", "build-tool-go-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-go-native-source-snapshot-stability-hardening", "build-tool-go-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Go build tool after its exact source-input registry adoption. Keep native Git snapshot acquisition and filesystem safety in their existing owners."
@@ -9642,7 +9638,7 @@
       "id": "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Elixir",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-elixir-native-source-snapshot-stability-hardening", "build-tool-elixir-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-elixir-native-source-snapshot-stability-hardening", "build-tool-elixir-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Elixir build tool after portable source hashing lands."
@@ -9651,7 +9647,7 @@
       "id": "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Haskell",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Haskell build tool after portable source hashing lands."
@@ -9660,7 +9656,7 @@
       "id": "build-tool-lua-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Lua",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-lua-native-source-snapshot-stability-hardening", "build-tool-lua-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-lua-native-source-snapshot-stability-hardening", "build-tool-lua-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Lua build tool after its hashing and cache implementation lands."
@@ -9669,7 +9665,7 @@
       "id": "build-tool-perl-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Perl",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-perl-native-source-snapshot-stability-hardening", "build-tool-perl-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-perl-native-source-snapshot-stability-hardening", "build-tool-perl-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Perl build tool after portable source hashing lands."
@@ -9678,7 +9674,7 @@
       "id": "build-tool-python-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Python",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-python-language-source-input-registry-adoption", "build-tool-python-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-python-language-source-input-registry-adoption", "build-tool-python-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Python build tool after its exact source-input registry adoption."
@@ -9687,7 +9683,7 @@
       "id": "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Ruby",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-ruby-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-ruby-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Ruby build tool after its exact source-input registry adoption."
@@ -9696,7 +9692,7 @@
       "id": "build-tool-rust-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Rust",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-rust-portable-source-hashing-conformance", "build-tool-rust-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-rust-portable-source-hashing-conformance", "build-tool-rust-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Rust build tool after portable source hashing lands."
@@ -9705,7 +9701,7 @@
       "id": "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in TypeScript",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-typescript-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-typescript-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the TypeScript build tool after its exact source-input registry adoption."
@@ -9724,7 +9720,7 @@
       "id": "build-tool-swift-repository-boundary-diff-digest-fixture-adoption",
       "title": "Consume repository-boundary diff and digest fixtures in Swift",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-swift-portable-source-hashing-conformance", "build-tool-swift-repository-source-input-boundary-adoption", "build-tool-swift-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-swift-portable-source-hashing-conformance", "build-tool-swift-repository-source-input-boundary-adoption", "build-tool-swift-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Swift already implements equivalent exact boundary selection and hashing behavior but does not load either new neutral case. Add dynamic fixture consumption so behavior-equivalent bespoke tests cannot drift from the shared contract."
@@ -9733,7 +9729,7 @@
       "id": "build-tool-jvm-current-contract-conformance",
       "title": "Bring Java and Kotlin build tools to the current neutral contract",
       "status": "pending",
-      "depends_on": ["build-tool-jvm", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-jvm", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "Promotion gate for both JVM front doors. Require the current language registry, repository-boundary reverse-diff and digest corpus, CI-gate corpus, and every other established process-free build-tool contract before either lane counts as complete."
@@ -9742,7 +9738,7 @@
       "id": "build-tool-dart-current-contract-conformance",
       "title": "Bring the Dart build tool to the current neutral contract",
       "status": "pending",
-      "depends_on": ["build-tool-dart-tracked-artifact-validation-conformance", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-dart-tracked-artifact-validation-conformance", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "Promotion gate for the Dart build-tool front door. Require all current process-free contracts and language-neutral fixtures before the lane is counted complete."
@@ -9751,7 +9747,7 @@
       "id": "ocaml-build-tool-current-contract-conformance",
       "title": "Bring the OCaml build tool to the current neutral contract",
       "status": "pending",
-      "depends_on": ["ocaml-build-tool-and-promotion", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["ocaml-build-tool-and-promotion", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "The existing OCaml native-build-tool owner predates later shared contracts. Before promotion, require native consumption of every current process-free corpus, including source registry, repository-boundary reverse diff and digest, CI-gate selection, and the remaining universal contract families."
@@ -9865,7 +9861,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "The historical 2026-07-29 audit at d3ff1ec2e recorded 278 high-consensus missing slots: 107 Dart, 58 Java, 58 Kotlin, 51 Swift, three Haskell, and one Python; its canonical sorted language-to-package list has SHA-256 b36dc2dac9cb7ace83fbaf568b7b020ddc5f8cccc8202c96cb135993ac1219c8. Current exact-main 9240d08f6c6af840e9378cdb90420c53b1821e2d instead records 265 missing slots: 97 Dart, 53 Java, 53 Kotlin, 51 Swift, four Haskell, two Perl, and one each Elixir, Lua, Python, Ruby, and Rust, with canonical list SHA-256 d7da6fff66017cf4e1de86f3ea95382d06f23d4ab725d16f22684271325dc7dc. Package-name presence remains structural evidence rather than a semantic owner: continue decomposing exact dependency-shaped families before implementation. Existing SHA-512, barcode, HMAC/HKDF/PBKDF2, font, and Swift hash owners remain authoritative. The post-#16327 audit now exactly owns compiler-source-map, type-checker-protocol, wasm-module-encoder, X25519, AVL-tree, DT03 binary-tree, and the missing Swift hash-family children without duplicating underscore-spelled canonical roots. Point2d still requires contract repair and existing-lane conformance before Java/Kotlin/Dart expansion. Preserve verified spec or manifest edges only and do not encode priority-only sequencing as dependencies."
+      "notes": "The historical 2026-07-29 audit at d3ff1ec2e recorded 278 high-consensus missing slots and canonical sorted language-to-package SHA-256 b36dc2dac9cb7ace83fbaf568b7b020ddc5f8cccc8202c96cb135993ac1219c8. Current exact-main a99fb66a572dd807f827eb32e39c28e2a811a565 records 262 missing slots: 96 Dart, 52 Java, 52 Kotlin, 51 Swift, four Haskell, two Perl, and one each Elixir, Lua, Python, Ruby, and Rust; the canonical compact sorted JSON digest is 18ce8d5274cfc9ed67c7e8a9cc3178c152dbd711b1e295556161dd4d30b9ede8. Package-name presence remains structural evidence rather than semantic parity. Existing SHA-512, barcode, HMAC/HKDF/PBKDF2, font, Swift hash, and exact compiler/map/tree owners remain authoritative. The newly identified SE01 AES and SE02 AES-modes gaps have four dependency-shaped neutral and Java/Kotlin/Dart owners; point2d remains gated on geometry contract repair. Continue decomposing the remaining exact families before implementation. Preserve verified spec or manifest edges only and do not encode priority-only sequencing as dependencies."
     },
     {
       "id": "swift-hash-functions-lane-parity",
@@ -11790,7 +11786,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The post-#16722 collision-clean audit found point2d, affine2d, bezier2d, and arc2d each present in 12 of 15 established lanes but absent in Java, Kotlin, and Dart. First resolve G2D00 near-zero normalization disagreement (<1e-12 to origin in several lanes versus approximately 1e-15 to self in others), freeze deterministic geometry and error vectors, and reconcile existing oracles before ports. Directory presence alone is not semantic parity."
+      "notes": "The post-#16722 collision-clean audit found point2d, affine2d, bezier2d, and arc2d each present in 12 of 15 established lanes but absent in Java, Kotlin, and Dart. Resolve G2D00 near-zero normalization disagreement and G2D03 degenerate SvgArc behavior first: the spec requires line interpolation and ordered bounds while most existing lanes return no value and Haskell follows the spec. Freeze coordinate-wise normalization of arbitrary line endpoints without changing ordered Rect.from_points, absolute-value normalization of SVG radii, near-zero thresholds, finite/error semantics, and deterministic neutral vectors; reconcile existing oracles before Java/Kotlin/Dart ports. Several lanes sample rotated arc bounds despite an analytic-bounds spec, so do not claim that behavior reconciled through initial fixtures. Directory presence alone is not semantic parity."
     },
     {
       "id": "geometry-point2d-java-kotlin-dart-lane-parity",
@@ -11876,11 +11872,59 @@
     {
       "id": "build-tool-shared-input-multiconsumer-digest-evidence-fixture",
       "title": "Prove both shared-input consumers change source and package digests",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-shared-input-multiconsumer-diff-selection-fixture"],
+      "branch": "codex/parity-build-tool-shared-digest-20261005",
+      "pr_number": null,
+      "selected_at": "2026-10-05T16:01:19Z",
+      "selection_revision": "a99fb66a572dd807f827eb32e39c28e2a811a565",
+      "selection_notes": "Selected only after #16730 merged, exact-main schema-3 inventory stayed collision-clean, four AES owners and the distinct .NET digest child were registered, and missing event-loop/digest edges were repaired. Its prerequisite is merged and 14 pending consumers depend directly on this neutral fixture; the ready Swift 20-case engine remains next in the leverage tier. No parity PR is open; implementation starts in a fresh clean origin/main worktree and renamed codex branch.",
+      "notes": "The merged reverse-diff fixture proves both consumers are selected, but does not prove both source and package digests include the same Cargo.toml change. Add bounded before/after source_collection and hashing_cache neutral cases for both Swift consumers, with stable dependency digests and no new engine authority."
+    },
+    {
+      "id": "aes-language-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Freeze SE01 AES neutral and security conformance across existing lanes",
+      "status": "pending",
+      "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The merged reverse-diff fixture proves both consumers are selected, but does not prove both source and package digests include the same Cargo.toml change. Add bounded before/after source_collection and hashing_cache neutral cases for both Swift consumers, with stable dependency digests and no new engine authority."
+      "notes": "Post-#16730 exact-main audit found AES present in 12 established lanes but absent in Java, Kotlin, and Dart, with no exact owner. Reconcile the SE01 spec, its stale nine-language matrix, FIPS key/block vectors, byte ownership, stable errors, bounded work, and the educational non-constant-time security classification before expanding lanes. Directory presence alone does not establish conformance."
+    },
+    {
+      "id": "aes-java-kotlin-dart-lane-parity",
+      "title": "Implement SE01 AES parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["aes-language-neutral-conformance-and-existing-lane-reconciliation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port only the reconciled pure AES contract with exact neutral vectors and native package/build coverage in the three missing established lanes; preserve the reviewed educational security classification and do not imply constant-time production cryptography."
+    },
+    {
+      "id": "aes-modes-language-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Freeze SE02 AES-modes neutral and authentication-failure conformance",
+      "status": "pending",
+      "depends_on": ["aes-language-neutral-conformance-and-existing-lane-reconciliation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "AES-modes also exists in 12 established lanes and lacks Java, Kotlin, and Dart. Reconcile the stale nine-language SE02 matrix; pin CBC PKCS#7 and error precedence, CTR overflow and nonce framing, GCM tag verification without partial plaintext, deterministic vectors, bounded work, and existing-lane behavior before ports."
+    },
+    {
+      "id": "aes-modes-java-kotlin-dart-lane-parity",
+      "title": "Implement SE02 AES-modes parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["aes-java-kotlin-dart-lane-parity", "aes-modes-language-neutral-conformance-and-existing-lane-reconciliation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port the reconciled modes over each native AES foundation, dynamically consume neutral vectors, and preserve fail-closed authenticated decryption and explicit educational security limits."
+    },
+    {
+      "id": "build-tool-csharp-fsharp-shared-input-digest-evidence-adoption",
+      "title": "Consume shared-input digest evidence through both .NET build-tool fronts",
+      "status": "pending",
+      "depends_on": ["build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The merged #16730 graph/diff owner proves multi-consumer selection, not both source and package digest changes. Dynamically consume the neutral before/after digest evidence through the shared C# engine and F# front without re-opening the superseded repository-boundary diff owner."
     }
   ]
 }
