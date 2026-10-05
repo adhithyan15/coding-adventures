@@ -69,7 +69,7 @@ returns canonical prerequisite-first levels, exact dependent and prerequisite
 closures, and stable empty-output diagnostics for graph cycles, unknown paths,
 and match-work exhaustion.
 
-The package-local suite dynamically enumerates the exact eight graph and eleven
+The package-local suite dynamically enumerates the exact eight graph and twelve
 diff-selection cases in the language-neutral v1 corpus. It covers the five
 recursive BUILD fronts, strict character classes, repository-boundary reverse
 selection and digest verification, both unknown-path policies, and the fixed

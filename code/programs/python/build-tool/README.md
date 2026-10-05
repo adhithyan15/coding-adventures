@@ -54,7 +54,7 @@ pattern/path cross product against a fixed 50,000,000 Unicode-scalar work
 ceiling, while exact BUILD fronts cost zero. The core reads no checkout, Git
 state, environment, credentials, clock, process, or network resource. Its
 package-local tests dynamically pin and consume every one of the eight graph
-and eleven diff-selection language-neutral cases.
+and twelve diff-selection language-neutral cases.
 
 The source registry includes OCaml `.ml`, `.mli`, and `.opam` inputs plus the
 exact `.ocamlformat`, `dune`, and `dune-project` metadata names in extension

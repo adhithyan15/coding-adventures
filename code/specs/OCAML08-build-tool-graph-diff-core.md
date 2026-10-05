@@ -91,7 +91,7 @@ authority.
 
 The native Alcotest suite dynamically discovers every shared `graph` and
 `diff_selection` fixture and asserts the exact roster of eight graph plus
-eleven diff cases. It evaluates each case through the production module and
+twelve diff cases. It evaluates each case through the production module and
 checks exact results, error codes, and empty failure output. Focused tests also
 cover malformed UTF-8, Unicode identity collisions, portable path and glob
 rejection, canonical boundary escaping/digests, work-ceiling precedence, and

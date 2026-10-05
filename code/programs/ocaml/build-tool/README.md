@@ -45,7 +45,7 @@ opam exec -- dune build @fmt @all @install
 opam exec -- dune runtest --force
 ```
 
-The native suite discovers and evaluates all eight graph and eleven
+The native suite discovers and evaluates all eight graph and twelve
 diff-selection fixtures under `code/specs/fixtures/build-tool-v1`. Test-only
 filesystem read/list capabilities are declared honestly; production source has
 no filesystem or other ambient authority. The literal `BUILD` and

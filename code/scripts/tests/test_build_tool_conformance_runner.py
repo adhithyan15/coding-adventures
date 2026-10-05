@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 166)
+        self.assertEqual(summary["case_count"], 167)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -3503,6 +3503,29 @@ class PureDomainValidationTests(unittest.TestCase):
             "DIFF_UNKNOWN_PATH",
         )
 
+    def test_shared_repository_input_selects_all_declared_consumers(self) -> None:
+        boundary = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        case = load_case("diff-selection-shared-input-multiconsumer.json")
+        self.assertEqual(
+            runner._expected_diff_selection(
+                case["input"]["options"],
+                case["input"]["changed_paths"],
+                boundary,
+            ),
+            (
+                {"swift/conduit", "swift/sha256-native"},
+                {"swift/app", "swift/conduit", "swift/sha256-native"},
+                {"swift/base"},
+            ),
+        )
+        runner.validate_case_document(
+            case,
+            **self._schema_args(),
+            repository_source_input_boundary=boundary,
+        )
+
     def test_hashing_cache_sorts_local_and_boundary_union_by_raw_utf8(self) -> None:
         case = load_case("hashing-cache-local-boundary-union.json")
         expected = case["expected"]["result"]
@@ -4258,7 +4281,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 166)
+        self.assertEqual(summary["case_count"], 167)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"
