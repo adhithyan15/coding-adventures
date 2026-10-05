@@ -59,6 +59,11 @@ const JAPANESE_SA = DUCTUS[ductusKey("japanese", "さ")];
 const JAPANESE_SU = DUCTUS[ductusKey("japanese", "す")];
 const JAPANESE_CHI = DUCTUS[ductusKey("japanese", "ち")];
 const JAPANESE_TO = DUCTUS[ductusKey("japanese", "と")];
+const JAPANESE_NI = DUCTUS[ductusKey("japanese", "に")];
+const JAPANESE_HA = DUCTUS[ductusKey("japanese", "は")];
+const JAPANESE_MA = DUCTUS[ductusKey("japanese", "ま")];
+const JAPANESE_RI = DUCTUS[ductusKey("japanese", "り")];
+const JAPANESE_N = DUCTUS[ductusKey("japanese", "ん")];
 
 const OWNER_SCRIPTS = new Set(["japanese"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -1215,6 +1220,223 @@ describe("handwriting ductus", () => {
     expect(last(toSweep).y).toBeLessThan(first(toSweep).y - 350);
     expect(nearest(last(toShort), toSweep)).toBeLessThan(40);
     expect(last(toBase).x).toBeGreaterThan(first(toBase).x + 400);
+  });
+
+  // に, は, ま, り and ん have been written since chapters 1 to 4 but had no
+  // cited stroke-order source until now, so their writing lessons printed no
+  // filmstrip. They are fitted the same way as こ to と: KanjiVG's file
+  // supplies the order and direction, the bundled outline supplies the
+  // coordinates.
+  for (const [letter, file, name, labels] of [
+    [
+      JAPANESE_NI,
+      "0306b",
+      "U+306B HIRAGANA LETTER NI",
+      [
+        ["draw the left vertical down", "turn and flick up to the right"],
+        ["draw the upper bar to the right"],
+        ["curve down and run out to the right"],
+      ],
+    ],
+    [
+      JAPANESE_HA,
+      "0306f",
+      "U+306F HIRAGANA LETTER HA",
+      [
+        ["draw the left vertical down", "turn and flick up to the right"],
+        ["draw the bar to the right"],
+        [
+          "draw the vertical down through the bar",
+          "loop round to the left and up",
+          "cross it and run out to the lower right",
+        ],
+      ],
+    ],
+    [
+      JAPANESE_MA,
+      "0307e",
+      "U+307E HIRAGANA LETTER MA",
+      [
+        ["draw the upper bar to the right"],
+        ["draw the lower bar to the right"],
+        [
+          "draw the vertical down through both bars",
+          "loop round to the left and up",
+          "cross it and run out to the lower right",
+        ],
+      ],
+    ],
+    [
+      JAPANESE_RI,
+      "0308a",
+      "U+308A HIRAGANA LETTER RI",
+      [
+        ["draw the left stroke down", "turn and rise into the arch"],
+        ["come down the right side", "sweep to the lower left"],
+      ],
+    ],
+    [
+      JAPANESE_N,
+      "03093",
+      "U+3093 HIRAGANA LETTER N",
+      [
+        [
+          "cut down to the lower left",
+          "climb back up the diagonal",
+          "turn over the hump and down",
+          "swing round and up to the right",
+        ],
+      ],
+    ],
+  ] as const) {
+    it(`Japanese ${letter.glyph} follows KanjiVG's ${labels.length}-path order on its own outline`, () => {
+      expect(letter.strokes).toHaveLength(labels.length);
+      expect(penLifts(letter)).toBe(labels.length - 1);
+      expect(
+        letter.strokes.map((stroke) =>
+          stroke.segments.map((segment) => segment.label),
+        ),
+      ).toEqual(labels);
+      for (const stroke of letter.strokes) {
+        for (const gap of joinGaps(stroke)) expect(gap).toBe(0);
+      }
+      expect(letter.source.url).toBe(
+        `https://github.com/KanjiVG/kanjivg/blob/master/kanji/${file}.svg`,
+      );
+      for (const phrase of [
+        "KanjiVG",
+        name,
+        "Ulrich Apel and contributors, CC BY-SA 3.0",
+      ]) {
+        expect(letter.source.citation, phrase).toContain(phrase);
+      }
+      for (const phrase of [
+        "Only the order and direction",
+        "Noto Sans JP outline's own medial line",
+      ]) {
+        expect(letter.source.variation, phrase).toContain(phrase);
+      }
+    });
+  }
+
+  it("Japanese に, は, ま, り and ん run in the directions their captions claim", () => {
+    const first = (path: readonly Point[]) => path[0];
+    const last = (path: readonly Point[]) => path[path.length - 1];
+    const parts = (letter: LetterDuctus, stroke: number) =>
+      letter.strokes[stroke].segments.map((segment) => segment.path);
+    const nearest = (p: Point, path: readonly Point[]) =>
+      Math.min(...path.map((q) => Math.hypot(p.x - q.x, p.y - q.y)));
+    // に and は: the left vertical runs DOWN to its foot, then turns back up
+    // its own ink and flicks up to the RIGHT.
+    for (const letter of [JAPANESE_NI, JAPANESE_HA]) {
+      const [down, flick] = parts(letter, 0);
+      expect(last(down).y, letter.glyph).toBeLessThan(first(down).y - 600);
+      expect(nearest(flick[1], down), letter.glyph).toBeLessThan(40);
+      expect(last(flick).x, letter.glyph).toBeGreaterThan(first(flick).x + 50);
+      expect(last(flick).y, letter.glyph).toBeGreaterThan(first(flick).y + 200);
+    }
+    // Every bar runs rightward.
+    for (const [letter, stroke] of [
+      [JAPANESE_NI, 1],
+      [JAPANESE_HA, 1],
+      [JAPANESE_MA, 0],
+      [JAPANESE_MA, 1],
+    ] as const) {
+      const bar = penPath(letter.strokes[stroke]);
+      expect(first(bar).x, letter.glyph).toBeLessThan(last(bar).x - 250);
+    }
+    // に's lower stroke begins at the upper left, curves DOWN, then runs out
+    // to the RIGHT along the base, below the upper bar.
+    const niLower = penPath(JAPANESE_NI.strokes[2]);
+    const niLowest = Math.min(...niLower.map((p) => p.y));
+    expect(first(niLower).y).toBeGreaterThan(niLowest + 150);
+    expect(last(niLower).x).toBeGreaterThan(first(niLower).x + 350);
+    expect(Math.max(...niLower.map((p) => p.y))).toBeLessThan(
+      Math.min(...penPath(JAPANESE_NI.strokes[1]).map((p) => p.y)) - 250,
+    );
+    // は and ま: the last stroke starts ABOVE the bars and runs down through
+    // them; the loop swings LEFT round the foot and comes back UP; then it
+    // CROSSES the vertical and runs out to the LOWER RIGHT.
+    expect(
+      Math.min(...penPath(JAPANESE_MA.strokes[1]).map((p) => p.y)),
+    ).toBeLessThan(
+      Math.min(...penPath(JAPANESE_MA.strokes[0]).map((p) => p.y)) - 150,
+    );
+    for (const [letter, top, bottom] of [
+      [JAPANESE_HA, 1, 1],
+      [JAPANESE_MA, 0, 1],
+    ] as const) {
+      const [down, loop, cross] = parts(letter, 2);
+      const topBar = penPath(letter.strokes[top]);
+      const bottomBar = penPath(letter.strokes[bottom]);
+      expect(first(down).y, letter.glyph).toBeGreaterThan(
+        Math.max(...topBar.map((p) => p.y)) + 50,
+      );
+      expect(last(down).y, letter.glyph).toBeLessThan(
+        Math.min(...bottomBar.map((p) => p.y)) - 200,
+      );
+      expect(Math.min(...loop.map((p) => p.x)), letter.glyph).toBeLessThan(
+        first(loop).x - 250,
+      );
+      expect(Math.min(...loop.map((p) => p.y)), letter.glyph).toBeLessThan(
+        first(loop).y - 100,
+      );
+      expect(last(loop).y, letter.glyph).toBeGreaterThan(
+        Math.min(...loop.map((p) => p.y)) + 150,
+      );
+      expect(first(cross).x, letter.glyph).toBeLessThan(last(down).x - 50);
+      expect(last(cross).x, letter.glyph).toBeGreaterThan(last(down).x + 100);
+      expect(last(cross).y, letter.glyph).toBeLessThan(first(cross).y - 100);
+    }
+    // り: the left stroke runs DOWN to its foot, climbs back up its own ink
+    // and rises to the RIGHT over the arch; the right stroke begins where
+    // that rise ends, comes DOWN the right side and sweeps to the LOWER LEFT.
+    const [riDown, riRise] = parts(JAPANESE_RI, 0);
+    expect(last(riDown).y).toBeLessThan(first(riDown).y - 400);
+    expect(nearest(riRise[1], riDown)).toBeLessThan(40);
+    expect(last(riRise).x).toBeGreaterThan(first(riRise).x + 250);
+    expect(last(riRise).y).toBeGreaterThan(first(riRise).y + 350);
+    const [riSide, riSweep] = parts(JAPANESE_RI, 1);
+    expect(first(riSide)).toEqual(last(riRise));
+    expect(last(riSide).y).toBeLessThan(first(riSide).y - 300);
+    expect(last(riSweep).x).toBeLessThan(first(riSweep).x - 250);
+    expect(last(riSweep).y).toBeLessThan(first(riSweep).y - 250);
+    // ん: one stroke. It cuts DOWN to the LOWER LEFT, climbs back up the same
+    // ink, turns over the hump and comes DOWN, then rounds the foot and rises
+    // to the RIGHT.
+    const [nCut, nClimb, nHump, nFinish] = parts(JAPANESE_N, 0);
+    expect(last(nCut).x).toBeLessThan(first(nCut).x - 250);
+    expect(last(nCut).y).toBeLessThan(first(nCut).y - 600);
+    for (const p of nClimb) expect(nearest(p, nCut)).toBeLessThan(40);
+    expect(last(nClimb).y).toBeGreaterThan(first(nClimb).y + 200);
+    expect(Math.max(...nHump.map((p) => p.y))).toBeGreaterThan(first(nHump).y + 30);
+    expect(last(nHump).x).toBeGreaterThan(first(nHump).x + 200);
+    expect(last(nHump).y).toBeLessThan(first(nHump).y - 150);
+    const nLowest = Math.min(...nFinish.map((p) => p.y));
+    expect(nLowest).toBeLessThan(first(nFinish).y - 100);
+    expect(last(nFinish).x).toBeGreaterThan(first(nFinish).x + 250);
+    expect(last(nFinish).y).toBeGreaterThan(nLowest + 150);
+  });
+
+  // With に, は, ま, り and ん, every one of the 46 basic hiragana, あ to ん
+  // with を, has a cited stroke-order source in the canonical inventory and a
+  // ductus drawn from it.
+  it("every basic hiragana has a cited stroke order and a ductus", () => {
+    const basic = [
+      ..."あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん",
+    ];
+    expect(basic).toHaveLength(46);
+    const japanese = SCRIPTS.find((script) => script.script === "japanese")!;
+    const uncited = basic.filter(
+      (glyph) =>
+        japanese.letters.find((letter) => letter.glyph === glyph)
+          ?.strokeOrderSource === undefined,
+    );
+    const undrawn = basic.filter(
+      (glyph) => DUCTUS[ductusKey("japanese", glyph)] === undefined,
+    );
+    expect(uncited).toEqual([]);
+    expect(undrawn).toEqual([]);
   });
 
   it("Japanese counter hiragana preserve the cited stroke and lift counts", () => {

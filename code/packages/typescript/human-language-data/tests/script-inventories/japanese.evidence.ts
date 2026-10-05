@@ -484,5 +484,39 @@ export const scriptInventoryEvidence = {
       expect(missingJapanese.has(glyph)).toBe(false);
       expect(affected.get(glyph) ?? 0).toBe(0);
     }
+    // に, は, ま, り and ん, written since chapters 1 to 4, were the last five
+    // basic hiragana whose rows said only "authoritative". They now cite
+    // KanjiVG the same way: three paths each for に, は and ま, two for り and
+    // one for ん, so the lift counts are 2, 2, 2, 1 and 0. Phrase by phrase
+    // with toContain, as above. After them no Japanese row says only
+    // "authoritative" for any of the 46 basic hiragana, あ to ん with を.
+    for (const [glyph, file, name, lifts] of [
+      ["に", "0306b", "U+306B HIRAGANA LETTER NI", 2],
+      ["は", "0306f", "U+306F HIRAGANA LETTER HA", 2],
+      ["ま", "0307e", "U+307E HIRAGANA LETTER MA", 2],
+      ["り", "0308a", "U+308A HIRAGANA LETTER RI", 1],
+      ["ん", "03093", "U+3093 HIRAGANA LETTER N", 0],
+    ] as const) {
+      const letter = scripts.japanese!.letters.find((entry) => entry.glyph === glyph)!;
+      expect(letter.role).toBe("hiragana");
+      expect(letter.penLifts).toBe(lifts);
+      expect(letter.strokeOrderNote).not.toBe("authoritative");
+      expect(letter.strokeOrderSource?.url).toBe(
+        `https://github.com/KanjiVG/kanjivg/blob/master/kanji/${file}.svg`,
+      );
+      for (const phrase of ["KanjiVG", name, "Ulrich Apel and contributors, CC BY-SA 3.0"]) {
+        expect(letter.strokeOrderSource?.citation, phrase).toContain(phrase);
+      }
+      for (const phrase of ["Only the order and direction", "Noto Sans JP outline's own medial line"]) {
+        expect(letter.strokeOrderSource?.variation, phrase).toContain(phrase);
+      }
+      expect(missingJapanese.has(glyph)).toBe(false);
+      expect(affected.get(glyph) ?? 0).toBe(0);
+    }
+    for (const glyph of "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん") {
+      const letter = scripts.japanese!.letters.find((entry) => entry.glyph === glyph);
+      expect(letter?.strokeOrderSource, glyph).toBeDefined();
+      expect(letter?.strokeOrderNote, glyph).not.toBe("authoritative");
+    }
   },
 };
