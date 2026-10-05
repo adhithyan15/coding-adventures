@@ -75,16 +75,19 @@ export function createOutputProvenance(
 /**
  * Admit provenance received across an untyped plugin boundary.
  *
- * Every property is read from an own data descriptor after proxies, accessors,
- * sparse arrays, symbols, and unknown keys have been rejected. The bounded
- * snapshot is then normalized and hashed through the canonical constructor;
- * callers cannot merely claim the revision of an unordered or forged set.
+ * Every admitted property is read from an own data descriptor after proxies,
+ * accessors, and sparse arrays have been rejected. Unrelated own properties
+ * are never enumerated: they are inert because the returned value is a fresh
+ * canonical snapshot, and ignoring them prevents a hostile key flood from
+ * forcing an unbounded allocation. The bounded snapshot is then normalized
+ * and hashed through the canonical constructor; callers cannot merely claim
+ * the revision of an unordered or forged set.
  */
 export function validateOutputProvenance(
   value: unknown,
   isProxy: (value: object) => boolean,
 ): OutputProvenance {
-  const provenance = exactRecord(value, "provenance", ["contributors", "revision"], isProxy);
+  const provenance = boundedRecord(value, "provenance", ["contributors", "revision"], isProxy);
   const rawContributors = dataProperty(provenance, "contributors", "provenance.contributors");
   const rawRevision = dataProperty(provenance, "revision", "provenance.revision");
   const entries = exactArray(rawContributors, "provenance.contributors", isProxy);
@@ -92,7 +95,7 @@ export function validateOutputProvenance(
 
   entries.forEach((entry, index) => {
     const path = `provenance.contributors[${index}]`;
-    const contributor = exactRecord(entry, path, ["identity", "revision"], isProxy);
+    const contributor = boundedRecord(entry, path, ["identity", "revision"], isProxy);
     const identity = dataProperty(contributor, "identity", `${path}.identity`);
     const revision = dataProperty(contributor, "revision", `${path}.revision`);
     if (typeof identity !== "string" || identity.length > 64) {
@@ -128,7 +131,7 @@ export function validateOutputProvenance(
   return canonical;
 }
 
-function exactRecord(
+function boundedRecord(
   value: unknown,
   path: string,
   expectedKeys: readonly string[],
@@ -137,13 +140,8 @@ function exactRecord(
   if (typeof value !== "object" || value === null || Array.isArray(value) || isProxy(value)) {
     throw new TypeError(`validateOutputProvenance: ${path} must be a non-proxy object`);
   }
-  if (Object.getOwnPropertySymbols(value).length !== 0) {
-    throw new TypeError(`validateOutputProvenance: ${path} must not contain symbol keys`);
-  }
-  const names = Object.getOwnPropertyNames(value).sort();
-  const expected = [...expectedKeys].sort();
-  if (names.length !== expected.length || names.some((name, index) => name !== expected[index])) {
-    throw new TypeError(`validateOutputProvenance: ${path} must contain exactly ${expected.join(", ")}`);
+  for (const key of expectedKeys) {
+    dataProperty(value as Record<string, unknown>, key, `${path}.${key}`);
   }
   return value as Record<string, unknown>;
 }
@@ -169,9 +167,6 @@ function exactArray(
       `validateOutputProvenance: ${path} must be a non-proxy array of at most ${MAX_PROVENANCE_CONTRIBUTORS} entries`,
     );
   }
-  if (Object.getOwnPropertySymbols(value).length !== 0) {
-    throw new TypeError(`validateOutputProvenance: ${path} must not contain symbol keys`);
-  }
   const copy: unknown[] = [];
   for (let index = 0; index < value.length; index++) {
     const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
@@ -182,13 +177,6 @@ function exactArray(
       throw new TypeError(`validateOutputProvenance: ${path}[${index}] must not be an accessor`);
     }
     copy.push(descriptor.value);
-  }
-  for (const key of Object.getOwnPropertyNames(value)) {
-    if (key === "length") continue;
-    const index = Number(key);
-    if (!Number.isInteger(index) || index < 0 || index >= value.length || String(index) !== key) {
-      throw new TypeError(`validateOutputProvenance: ${path} has an unknown property`);
-    }
   }
   return copy;
 }

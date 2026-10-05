@@ -114,15 +114,26 @@ describe("validateOutputProvenance", () => {
     expect(() => validateOutputProvenance(new Proxy(canonical, {}), utilTypes.isProxy)).toThrow(/must be a non-proxy object/);
   });
 
-  it("rejects unknown keys, sparse arrays, and oversized fields", () => {
+  it("ignores inert key floods without enumerating them", () => {
     const canonical = createOutputProvenance([
       { identity: FIRST, revision: REV_A },
     ]);
-    expect(() => validateOutputProvenance({
-      ...canonical,
-      unexpected: true,
-    }, utilTypes.isProxy)).toThrow(/contain exactly/);
+    const flooded: Record<string, unknown> = {
+      contributors: canonical.contributors,
+      revision: canonical.revision,
+    };
+    for (let index = 0; index < 25_000; index++) {
+      Object.defineProperty(flooded, `ignored-${index}`, {
+        get() { throw new Error("must not run"); },
+      });
+    }
+    expect(validateOutputProvenance(flooded, utilTypes.isProxy)).toEqual(canonical);
+  });
 
+  it("rejects sparse arrays and oversized fields", () => {
+    const canonical = createOutputProvenance([
+      { identity: FIRST, revision: REV_A },
+    ]);
     const sparse = new Array(1);
     expect(() => validateOutputProvenance({
       contributors: sparse,

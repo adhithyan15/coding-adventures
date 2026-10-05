@@ -58,8 +58,9 @@ generateLogicalId();                  // → "01952c0d-7e63-7xxx-8xxx-..."
   an empty contributor set is a valid deterministic aggregate.
 - **Boundary provenance fails closed.** Untyped values are admitted through
   own data descriptors only; proxies, accessors, sparse/oversized arrays,
-  unknown keys, non-canonical ordering, duplicates, and forged aggregate
-  revisions are rejected before a sink writes output.
+  non-canonical ordering, duplicates, and forged aggregate revisions are
+  rejected before a sink writes output. Unrelated own keys are ignored without
+  enumeration and cannot enter the returned canonical snapshot.
 
 ## Spec divergences from FM01 §7
 
