@@ -3,15 +3,21 @@
   "sound": "ka",
   "role": "hiragana",
   "components": [
-    "a hooked left stroke",
-    "a short vertical",
-    "a right dot"
+    "a bar that turns down the right side and hooks back to the left",
+    "a long stroke falling to the lower left through the bar",
+    "a short separate dot at the right"
   ],
   "strokeOrder": [
-    "hooked stroke",
-    "vertical",
-    "dot"
+    "draw the bar from left to right, then without lifting turn down the right side and hook back to the left at the foot",
+    "lift, begin above the bar and draw the long stroke down through it to the lower left",
+    "lift, draw the dot at the right down and to the right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 0304b file records か as three stroke paths in this order and direction: the bar with its turn and hook, the long falling stroke, then the dot at the right; so there are two pen lifts.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0304b.svg",
+    "citation": "KanjiVG, kanji/0304b.svg, hiragana か (U+304B HIRAGANA LETTER KA), three stroke paths kvg:0304b-s1 to s3 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 starts at the left of the bar, runs right, turns down the right side without lifting and hooks back to the left at its foot; s2 starts above the bar and falls through it to the lower left; s3 starts at the top of the dot and runs down to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
   "notes": "Base of が; the dakuten voices it."
 }

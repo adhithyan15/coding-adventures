@@ -3,15 +3,21 @@
   "sound": "o",
   "role": "hiragana",
   "components": [
-    "a horizontal",
-    "a hooked vertical",
-    "a right dot"
+    "a short bar",
+    "a long vertical that turns at its foot and loops up across itself into a bowl on the right",
+    "a short separate dot at the upper right"
   ],
   "strokeOrder": [
-    "horizontal",
-    "hooked vertical",
-    "dot"
+    "draw the short bar from left to right",
+    "lift, begin above the bar and run the long vertical down through it, then without lifting turn at the foot, loop up to the left and across the vertical, round the bowl on the right and finish low, heading left",
+    "lift, draw the dot at the upper right down and to the right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 0304a file records お as three stroke paths in this order and direction: the bar, the long vertical with its loop and bowl, then the dot at the upper right; so there are two pen lifts.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0304a.svg",
+    "citation": "KanjiVG, kanji/0304a.svg, hiragana お (U+304A HIRAGANA LETTER O), three stroke paths kvg:0304a-s1 to s3 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the bar drawn left to right; s2 starts above the bar, runs down through it to the foot, turns without lifting, loops up to the left and back across the vertical, rounds the bowl on the right and finishes low, heading left; s3 starts at the upper left of the dot and runs down to the right, ending in a small turn that the print glyph does not show. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
   "notes": "Completes the five-vowel row a-i-u-e-o."
 }

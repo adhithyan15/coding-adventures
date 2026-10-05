@@ -43,9 +43,10 @@ reviews_of: [JA-W03-ri]
 
 Three strokes:
 
-1. a **hooked left stroke** — down, curving right at the foot into a small hook
-2. a **short vertical**, crossing the first stroke near its top and falling to
-   the right of it
+1. a **hooked stroke** — across to the right, down the right side, and a small
+   hook back to the left at the foot
+2. a **long falling stroke**, crossing the first stroke left of its middle and
+   falling away to the lower left
 3. a **short dot**, up at the right, slanting down-right
 
 Read **ka**: a clean *k*, then the short *a* of あ. One beat.
@@ -57,7 +58,7 @@ between them is two small marks rather than a new character to learn.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KA-01] -->
 
-- [YOU WRITE: か — hooked stroke, vertical, then the dot at the right]
+- [YOU WRITE: か — hooked stroke, falling stroke, then the dot at the right]
 - [YOU SAY: **ka**, one beat]
 
 ## Guided Practice — review pulse
@@ -67,7 +68,7 @@ between them is two small marks rather than a new character to learn.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KA-01] -->
-<!-- hl-activity: {"id":"JA-W03-ka-strokes","kind":"text","assesses":["JA-SCRIPT-KA-01"],"prompt":"How many strokes does the hiragana sign read 'ka' have?","answer":"3","accepted":["three","3 strokes","three strokes"],"feedback":{"correct":"Three — hooked stroke, vertical, dot.","incorrect":"Three: the hooked stroke, a short vertical, and a dot."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"JA-W03-ka-strokes","kind":"text","assesses":["JA-SCRIPT-KA-01"],"prompt":"How many strokes does the hiragana sign read 'ka' have?","answer":"3","accepted":["three","3 strokes","three strokes"],"feedback":{"correct":"Three — hooked stroke, falling stroke, dot.","incorrect":"Three: the hooked stroke, a long falling stroke, and a dot."},"response_seconds":8} -->
 
 Which stroke is written last? (The **dot**, at the upper right.)
 

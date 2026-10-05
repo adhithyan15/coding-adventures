@@ -3,13 +3,19 @@
   "sound": "i",
   "role": "hiragana",
   "components": [
-    "a tall left curve",
-    "a short right tick"
+    "a tall left stroke that turns at its foot and flicks up to the right",
+    "a short right stroke"
   ],
   "strokeOrder": [
-    "left curve",
-    "right tick"
+    "begin high on the left and come down, then without lifting curve round at the foot and flick up to the right",
+    "lift, draw the short right stroke from its top down and slightly to the right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 03044 file records い as two stroke paths in this order and direction: the long left stroke with its flick, then the short right stroke; so there is one pen lift.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03044.svg",
+    "citation": "KanjiVG, kanji/03044.svg, hiragana い (U+3044 HIRAGANA LETTER I), two stroke paths kvg:03044-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 starts high on the left, comes down, curves round at its foot and flicks up to the right without lifting; s2 starts at the top of the short right stroke and runs down and slightly to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
   "notes": "Second sign of はい; doubled in いいえ to write a long i."
 }

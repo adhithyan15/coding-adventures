@@ -328,12 +328,19 @@ describe("stroke ownership migration baseline", () => {
       // and ductus. Keys move 418 -> 423 and Japanese 29 -> 34, with the
       // ordered key hash and the non-Tamil data hash; Tamil and both
       // shared-identity values remain unchanged.
+      //
+      // あ (U+3042), い (U+3044), う (U+3046), え (U+3048), お (U+304A) and
+      // か (U+304B), written since chapters 1, 3 and 10 but never given a
+      // cited stroke-order source, now cite KanjiVG and gain a ductus each.
+      // Keys move 423 -> 429 and Japanese 34 -> 40, with the ordered key hash
+      // and the non-Tamil data hash; Tamil and both shared-identity values
+      // remain unchanged.
     }).toEqual({
-      keys: 423,
+      keys: 429,
       keyHash:
-        "5201f51ef4d7b82c5b44ce8ad422b0917a9d1d2d8de626e0b7d53edfc53a10f5",
+        "e2617352b03564f003980b1359eff3acdde449d27d84a4fac84bac79d5deccc9",
       nonTamilDataHash:
-        "d7ab4cd9dd756164d4263be44ae4f6a94e69a617ab81af16ecca5baa0ecff3dd",
+        "a7492c40c977fc8d3d35a5819b3c3f1ee6688e5e8302c557590f4f4b85625aea",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -344,7 +351,7 @@ describe("stroke ownership migration baseline", () => {
         devanagari: 44,
         gujarati: 44,
         hebrew: 22,
-        japanese: 34,
+        japanese: 40,
         kannada: 13,
         malayalam: 14,
         "perso-arabic": 24,

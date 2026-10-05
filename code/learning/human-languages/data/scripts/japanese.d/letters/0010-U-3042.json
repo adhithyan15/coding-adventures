@@ -3,15 +3,21 @@
   "sound": "a",
   "role": "hiragana",
   "components": [
-    "a horizontal",
+    "a short bar",
     "a vertical crossing it",
-    "a looping curve"
+    "a looping stroke that crosses the vertical and opens into a bowl on the right"
   ],
   "strokeOrder": [
-    "horizontal",
-    "vertical",
-    "loop"
+    "draw the short bar from left to right",
+    "lift, begin above the bar and draw the vertical down through it",
+    "lift, begin at the upper right and cut down to the lower left across the vertical, then without lifting loop up and over to the right, round the bowl and finish low, heading left"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 03042 file records あ as three stroke paths in this order and direction: the bar, the vertical, then the looping stroke; so there are two pen lifts.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03042.svg",
+    "citation": "KanjiVG, kanji/03042.svg, hiragana あ (U+3042 HIRAGANA LETTER A), three stroke paths kvg:03042-s1 to s3 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the bar drawn left to right; s2 starts above the bar and runs down through it; s3 starts at the upper right, cuts down and to the left across the vertical, turns at the lower left without lifting, loops back up and over to the right, rounds the right side of the bowl and finishes low, heading left. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
   "notes": "First sign of ありがとう."
 }

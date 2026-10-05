@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Plain Thanks, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cf6a3b25d035f43d",
+  "sourceHash": "fnv1a64:fe5f9e6e2cec7dd1",
   "lessons": [
     {
       "id": "JA-W03-a",
@@ -352,7 +352,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dd39d35f40faff27",
+      "sourceHash": "fnv1a64:f9c7617bd2acdd29",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -398,11 +398,11 @@
             },
             {
               "kind": "speech",
-              "text": "a hooked left stroke — down, curving right at the foot into a small hook."
+              "text": "a hooked stroke — across to the right, down the right side, and a small hook back to the left at the foot."
             },
             {
               "kind": "speech",
-              "text": "a short vertical, crossing the first stroke near its top and falling to the right of it."
+              "text": "a long falling stroke, crossing the first stroke left of its middle and falling away to the lower left."
             },
             {
               "kind": "speech",
@@ -426,11 +426,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "か (ka) — hooked stroke, vertical, then the dot at the right",
+              "instruction": "か (ka) — hooked stroke, falling stroke, then the dot at the right",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: か — hooked stroke, vertical, then the dot at the right]"
+              "source": "[YOU WRITE: か — hooked stroke, falling stroke, then the dot at the right]"
             },
             {
               "kind": "prompt",
@@ -489,8 +489,8 @@
                 "three strokes"
               ],
               "feedback": {
-                "correct": "Three — hooked stroke, vertical, dot.",
-                "incorrect": "Three: the hooked stroke, a short vertical, and a dot."
+                "correct": "Three — hooked stroke, falling stroke, dot.",
+                "incorrect": "Three: the hooked stroke, a long falling stroke, and a dot."
               }
             }
           ]
