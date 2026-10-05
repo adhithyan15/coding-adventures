@@ -35,6 +35,8 @@ const summaryPath = resolve(here, "dist/.forme-web-quality.json");
 const LIGHTHOUSE_VERSION = "13.5.0";
 const AUDIT_TIMEOUT_MS = 90_000;
 const BROWSER_VERSION_TIMEOUT_MS = 10_000;
+const CHROME_CONNECTION_POLL_MS = 250;
+const CHROME_CONNECTION_RETRIES = 120;
 const MAX_SERVED_BYTES = 2 * 1024 * 1024;
 const MAX_ERROR_CHARACTERS = 1_024;
 
@@ -170,6 +172,8 @@ async function main(): Promise<void> {
 async function runLighthouse(url: string, chromePath: string): Promise<unknown> {
   const chrome = await launch({
     chromePath,
+    connectionPollInterval: CHROME_CONNECTION_POLL_MS,
+    maxConnectionRetries: CHROME_CONNECTION_RETRIES,
     chromeFlags: [
       "--headless=new",
       "--no-sandbox",
