@@ -158,8 +158,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "TE-S128-letter-bha",
-      "sourceHash": "fnv1a64:fa1e10fdf1482c65",
-      "svgHash": "fnv1a64:8c7a234c147d1082",
+      "sourceHash": "fnv1a64:ea54efcd65c4c450",
+      "svgHash": "fnv1a64:abe0b774b96b39de",
       "svg": "telugu/book/figures/TE-S128-letter-bha-filmstrip.svg"
     },
     {
@@ -172,15 +172,15 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "TE-S130-letter-tha",
-      "sourceHash": "fnv1a64:e5b00a4328520d54",
-      "svgHash": "fnv1a64:5e804f4f7a9f6b63",
+      "sourceHash": "fnv1a64:95277e6b14c1e76d",
+      "svgHash": "fnv1a64:00528f5f0c9495cb",
       "svg": "telugu/book/figures/TE-S130-letter-tha-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "TE-S132-letter-nya",
-      "sourceHash": "fnv1a64:0f444a06550d60cf",
-      "svgHash": "fnv1a64:087e972f99811d04",
+      "sourceHash": "fnv1a64:9f6c430fc2412457",
+      "svgHash": "fnv1a64:f17d1f666a2aee94",
       "svg": "telugu/book/figures/TE-S132-letter-nya-filmstrip.svg"
     },
     {
@@ -207,29 +207,29 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "TE-S139-letter-ddha",
-      "sourceHash": "fnv1a64:41a6e39611e3a1a2",
-      "svgHash": "fnv1a64:77cda2fe0ef18ce9",
+      "sourceHash": "fnv1a64:f67645d2c9e2e860",
+      "svgHash": "fnv1a64:6aa95e37766cd55d",
       "svg": "telugu/book/figures/TE-S139-letter-ddha-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "TE-S150-letter-ma",
-      "sourceHash": "fnv1a64:7117314627c6edc3",
-      "svgHash": "fnv1a64:d1fd84fd80dffb00",
+      "sourceHash": "fnv1a64:14c46efb1b3cf6fb",
+      "svgHash": "fnv1a64:3645a12c03841e2e",
       "svg": "telugu/book/figures/TE-S150-letter-ma-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "TE-S151-letter-dha",
-      "sourceHash": "fnv1a64:1ffa754e653da17f",
-      "svgHash": "fnv1a64:5c7a5738e6738585",
+      "sourceHash": "fnv1a64:2867a37efa9f1b3b",
+      "svgHash": "fnv1a64:cd9dd5c92da1d259",
       "svg": "telugu/book/figures/TE-S151-letter-dha-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "TE-S152-letter-tta",
-      "sourceHash": "fnv1a64:a7f35348b009149d",
-      "svgHash": "fnv1a64:31e5cb893d047c52",
+      "sourceHash": "fnv1a64:213506927d77717d",
+      "svgHash": "fnv1a64:73f43d143c6d9c17",
       "svg": "telugu/book/figures/TE-S152-letter-tta-filmstrip.svg"
     },
     {

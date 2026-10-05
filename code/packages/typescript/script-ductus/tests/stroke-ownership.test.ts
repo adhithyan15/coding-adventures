@@ -349,12 +349,19 @@ describe("stroke ownership migration baseline", () => {
       // with the ordered key hash and the non-Tamil data hash, measured after
       // the last caption was settled; Tamil and both shared-identity values
       // remain unchanged.
+      //
+      // ఞ, థ, మ, ట, ధ, భ and ఢ keep their source-numbered movements as
+      // segments but now lift only where HP Labs India's native writers do
+      // (2, 2, 1, 1, 1, 1 and 2 lifts, down from 7, 6, 6, 5, 5, 5 and 5).
+      // Only the non-Tamil data hash moves, measured after the last caption
+      // was settled; keys, the key hash, every count, Tamil and both
+      // shared-identity values remain unchanged.
     }).toEqual({
       keys: 439,
       keyHash:
         "952c14e67c27696d414897603004184adb25c58878d6a78cd91d85e6b269918c",
       nonTamilDataHash:
-        "3643e2738adf16417d9c726d0a5ff96304015dcb363562564d75dac5b2cf7279",
+        "b431528250e5017d40450ae9fe4f7a869227aadeac1b7c890a4ec60f68070ae2",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",

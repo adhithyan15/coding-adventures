@@ -445,5 +445,47 @@ export const scriptInventoryEvidence = {
     );
     expect(missingByScript.get("telugu.json")?.has("ఋ") ?? false).toBe(false);
     expect(affected.get("ఋ") ?? 0).toBe(0);
+    // These seven once lifted the pen after every numbered movement of their
+    // tracing guide (7, 6, 6, 5, 5, 5 and 5 lifts), a count 0% of native
+    // writers use. They now lift only where HP Labs India's native writers
+    // do. Each note must cite the movement count, the native stroke count
+    // and its share; each variation must say the data gives counts only.
+    const nativeLifts: ReadonlyArray<
+      readonly [string, number, string, string, string, string]
+    > = [
+      ["ఞ", 2, "eight", "three", "89", "91 of 102"],
+      ["థ", 2, "seven", "three", "78", "83 of 106"],
+      ["మ", 1, "seven", "two", "78", "80 of 103"],
+      ["ట", 1, "six", "two", "94", "96 of 102"],
+      ["ధ", 1, "six", "two", "84", "87 of 104"],
+      ["భ", 1, "six", "two", "85", "88 of 104"],
+      ["ఢ", 2, "six", "three", "79", "80 of 101"],
+    ];
+    for (const [glyph, lifts, movements, strokes, share, samples] of nativeLifts) {
+      const letter = scripts.telugu!.letters.find(
+        (entry) => entry.glyph === glyph,
+      )!;
+      expect(letter.penLifts, glyph).toBe(lifts);
+      expect(letter.strokeOrderNote, glyph).toContain(
+        `The source numbers ${movements} movements; native writers draw ${glyph} as ${strokes} pen-down strokes (${share}% of HP Labs India's native-writer samples, ${samples}).`,
+      );
+      expect(letter.strokeOrderSource?.citation, glyph).toMatch(
+        /Sathish Shanmugam.*Write Telugu Alphabets.*version 2\.6/,
+      );
+      for (const phrase of [
+        "Those numbers mark movements, not pen lifts",
+        "hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm",
+        "MIT-licensed LipiTk 4.0 Telugu recognizer",
+        "Those counts say how many strokes writers use, not where they break",
+      ]) {
+        expect(letter.strokeOrderSource?.variation, glyph).toContain(phrase);
+      }
+      expect(
+        (letter.strokeOrder ?? []).filter((step) => step.startsWith("lift")),
+        glyph,
+      ).toHaveLength(lifts);
+      expect(missingByScript.get("telugu.json")?.has(glyph) ?? false).toBe(false);
+      expect(affected.get(glyph) ?? 0).toBe(0);
+    }
   },
 };
