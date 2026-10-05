@@ -363,6 +363,8 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
             "typescript": "code/packages/typescript/barcode-layout-1d",
         }
         owner_ids = {
+            "elixir": "barcode-layout-1d-elixir-lua-v1-conformance",
+            "lua": "barcode-layout-1d-elixir-lua-v1-conformance",
             "ruby": "barcode-layout-1d-ruby-swift-v1-conformance",
             "swift": "barcode-layout-1d-ruby-swift-v1-conformance",
         }
