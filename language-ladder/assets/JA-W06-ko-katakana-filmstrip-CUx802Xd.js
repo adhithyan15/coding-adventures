@@ -1,0 +1,1 @@
+var e=``+new URL(`JA-W06-ko-katakana-filmstrip-DaQG5UYL.svg`,import.meta.url).href;export{e as default};

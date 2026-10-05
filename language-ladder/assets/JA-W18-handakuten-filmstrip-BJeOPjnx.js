@@ -1,0 +1,1 @@
+var e=``+new URL(`JA-W18-handakuten-filmstrip-CYN2FhVB.svg`,import.meta.url).href;export{e as default};

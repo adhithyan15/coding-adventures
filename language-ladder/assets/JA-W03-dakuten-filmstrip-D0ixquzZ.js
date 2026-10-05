@@ -1,0 +1,1 @@
+var e=``+new URL(`JA-W03-dakuten-filmstrip-CnOQbfuL.svg`,import.meta.url).href;export{e as default};
