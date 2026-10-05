@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   MAX_DIAGNOSTICS,
+  QUALITY_CONTENT_SECURITY_POLICY,
   atomicWriteQualitySummary,
   evaluateLighthouseResult,
   inspectStaticFallback,
@@ -120,6 +121,39 @@ describe("Forme release web-quality gate", () => {
         },
       },
     })).toThrow(/bounded auditRefs/);
+
+    const nearBoundary = evaluateLighthouseResult(target, lighthouse({
+      performance: 0.949,
+      accessibility: 1,
+      resources: { total: 0, image: 0, script: 0 },
+    }));
+    expect(nearBoundary.diagnostics).toContain("performance score 0.949 < 0.95");
+  });
+
+  it("rejects proxy and accessor-backed browser evidence before invoking it", () => {
+    let proxyWasRead = false;
+    const proxy = new Proxy({}, {
+      get() {
+        proxyWasRead = true;
+        throw new Error("untrusted proxy trap ran");
+      },
+    });
+    expect(() => evaluateLighthouseResult(target, proxy)).toThrow(/proxies/);
+    expect(proxyWasRead).toBe(false);
+
+    const accessorBacked = Object.defineProperty({}, "categories", {
+      enumerable: true,
+      get() {
+        throw new Error("untrusted getter ran");
+      },
+    });
+    expect(() => evaluateLighthouseResult(target, accessorBacked)).toThrow(/accessors/);
+  });
+
+  it("keeps audited pages offline except for their own generated resources", () => {
+    expect(QUALITY_CONTENT_SECURITY_POLICY).toContain("default-src 'none'");
+    expect(QUALITY_CONTENT_SECURITY_POLICY).toContain("connect-src 'none'");
+    expect(QUALITY_CONTENT_SECURITY_POLICY).toContain("script-src 'self'");
   });
 
   it("caps hostile diagnostic volume", () => {
