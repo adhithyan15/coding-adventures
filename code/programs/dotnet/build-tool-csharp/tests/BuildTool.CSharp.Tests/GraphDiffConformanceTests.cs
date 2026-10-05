@@ -208,6 +208,26 @@ public sealed class GraphDiffConformanceTests
     }
 
     [Fact]
+    public void OversizedDiffPackageListRejectsBeforeEnumeration()
+    {
+        var input = new DiffSelectionInput(new OversizedPackages(), [], [], "error", [], null, null);
+        var result = GraphDiffCore.EvaluateDiffSelection(input);
+        Assert.Equal("GRAPH_PACKAGE_LIMIT_EXCEEDED", result.ErrorCode);
+        Assert.Empty(result.ChangedPackages);
+        Assert.Empty(result.AffectedPackages);
+        Assert.Empty(result.PrerequisitePackages);
+    }
+
+    private sealed class OversizedPackages : IReadOnlyList<DiffPackage>
+    {
+        public int Count => int.MaxValue;
+        public DiffPackage this[int index] => throw new InvalidOperationException("must not index oversized input");
+        public IEnumerator<DiffPackage> GetEnumerator() =>
+            throw new InvalidOperationException("must not enumerate oversized input");
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    [Fact]
     public void DiffRejectsCyclesAndNestedPackageRootsBeforeSelection()
     {
         var packages = new[]
