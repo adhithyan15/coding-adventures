@@ -37,7 +37,7 @@ import {
 export const SUPPORTED_MANIFEST_VERSIONS = Object.freeze([1] as const);
 
 /** Hard ceiling for `plugin.apiVersion` (== FM01 KERNEL_API_VERSION). */
-export const SUPPORTED_API_VERSIONS = Object.freeze([1] as const);
+export const SUPPORTED_API_VERSIONS = Object.freeze([2] as const);
 
 /** Regex matching the FM02 §3.3 rule 2 plugin-name format. */
 export const PLUGIN_NAME_REGEX =
@@ -125,7 +125,7 @@ function validatePlugin(m: Manifest, add: (e: ManifestErrorEntry) => void): void
   if (typeof p?.apiVersion !== "number" || p.apiVersion <= 0) {
     add({ code: "REQUIRED_FIELD_MISSING", path: "plugin.apiVersion",
       message: "plugin.apiVersion is required and must be a positive integer" });
-  } else if (!SUPPORTED_API_VERSIONS.includes(p.apiVersion as 1)) {
+  } else if (!SUPPORTED_API_VERSIONS.includes(p.apiVersion as 2)) {
     add({ code: "PLUGIN_API_VERSION_INVALID", path: "plugin.apiVersion",
       message: `plugin.apiVersion ${p.apiVersion} is not supported; ` +
                `supported: ${SUPPORTED_API_VERSIONS.join(", ")}` });

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
 ### Added
 
 - `TerminalBuffer` v1.0 and `TerminalDegradation` make ANSI output,
@@ -12,9 +16,9 @@
 - `AssetRef.urlSuffix` preserves authored query strings and fragments across
   fingerprinted emission without folding them into filesystem identity.
 - `ProvenanceContributor` and `OutputProvenance` model every logical/revision
-  input behind a rendered output. `RenderedPage` now accepts revision-aware
-  provenance while preserving the legacy single-source producer shape during
-  migration; the kind descriptor advances compatibly to `1.1`.
+  input behind a rendered output. `RenderedPage.provenance` is required, the
+  temporary `source` producer field is removed, and the kind descriptor
+  advances incompatibly to `2.0` with kernel API v2 refusal at host boundaries.
 - `AssetRole` now includes `script`, and `RenderedPage.islandModules` pairs
   exact `IslandId` usage with reviewed module identity and SHA-256 bindings.
 

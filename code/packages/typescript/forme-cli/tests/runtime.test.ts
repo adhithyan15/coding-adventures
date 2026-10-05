@@ -342,7 +342,7 @@ describe("installed plugin runtime composition", () => {
         const source = {
           name: "@example/source",
           version: "1.0.0",
-          apiVersion: 1,
+          apiVersion: 2,
           description: "direct first-party source",
           consumes: { name: "Void", version: "1.0" },
           produces: contentNode,
@@ -405,7 +405,7 @@ describe("installed plugin runtime composition", () => {
         const source = {
           name: "@example/python-source",
           version: "1.0.0",
-          apiVersion: 1,
+          apiVersion: 2,
           description: "direct source for Python product composition",
           consumes: { name: "Void", version: "1.0" },
           produces: contentNode,
@@ -456,7 +456,7 @@ function pythonManifest(): string {
 [plugin]
 name = "@example/python-product"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "python"
 entry = "./plugin.py"

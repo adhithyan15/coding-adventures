@@ -20,7 +20,7 @@ async function request(probe: string): Promise<SandboxLaunchRequest> {
   const entryBytes = new Uint8Array(await readFile(probePath));
   const manifest: Manifest = {
     manifestVersion: 1,
-    plugin: { name: "@example/linux-probe", version: "1.0.0", apiVersion: 1 },
+    plugin: { name: "@example/linux-probe", version: "1.0.0", apiVersion: 2 },
     runtime: { kind: "binary", entry: "probe" },
     capabilities: { required: [], optional: [] },
     contributes: { stages: [{ id: probe, consumes: "ContentSource", produces: "ContentNode" }], kinds: [] },
@@ -47,7 +47,7 @@ process.stdin.on("end", () => process.stdout.write(input, () => process.exit(0))
 `);
   const manifest: Manifest = {
     manifestVersion: 1,
-    plugin: { name: "@example/linux-node", version: "1.0.0", apiVersion: 1 },
+    plugin: { name: "@example/linux-node", version: "1.0.0", apiVersion: 2 },
     runtime: { kind: "node", entry: "entry.mjs" },
     capabilities: { required: [], optional: [] },
     contributes: { stages: [{ id: "main", consumes: "ContentSource", produces: "ContentNode" }], kinds: [] },

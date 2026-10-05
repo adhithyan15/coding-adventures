@@ -112,7 +112,6 @@ async function runRender(
   return out as Array<{
     route: string;
     html: string;
-    source: string;
     provenance: OutputProvenance;
     meta: { title: string; description: string | null; canonicalUrl: string | null };
     usedStyle: readonly unknown[];
@@ -147,8 +146,8 @@ describe("renderStatic — stage shape", () => {
     expect(proxyReads).toBe(0);
   });
 
-  it("targets apiVersion 1", () => {
-    expect(renderStatic.apiVersion).toBe(1);
+  it("targets apiVersion 2", () => {
+    expect(renderStatic.apiVersion).toBe(2);
   });
 
   it("has a configSchema covering public metadata", () => {
@@ -235,7 +234,7 @@ describe("renderStatic — single-node rendering", () => {
   it("carries the input logical and revision IDs through provenance", async () => {
     const node = makeNode({ sourcePath: "p.md", markdown: "# x\n" });
     const [page] = await runRender([node]);
-    expect(page!.source).toBe(node.identity);
+    expect(page!.provenance.contributors[0]?.identity).toBe(node.identity);
     expect(page!.provenance.contributors).toEqual([{
       identity: node.identity,
       revision: node.revision,

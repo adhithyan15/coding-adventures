@@ -20,7 +20,7 @@ async function request(probe: string): Promise<SandboxLaunchRequest> {
   const entryBytes = new Uint8Array(await readFile(probePath));
   const manifest: Manifest = {
     manifestVersion: 1,
-    plugin: { name: "@example/macos-probe", version: "1.0.0", apiVersion: 1 },
+    plugin: { name: "@example/macos-probe", version: "1.0.0", apiVersion: 2 },
     runtime: { kind: "binary", entry: "probe" },
     capabilities: { required: [], optional: [] },
     contributes: { stages: [{ id: probe, consumes: "ContentSource", produces: "ContentNode" }], kinds: [] },
@@ -42,7 +42,7 @@ async function nodeRequest(): Promise<SandboxLaunchRequest> {
   const entryBytes = new TextEncoder().encode("process.exit(0);\n");
   const manifest: Manifest = {
     manifestVersion: 1,
-    plugin: { name: "@example/macos-node", version: "1.0.0", apiVersion: 1 },
+    plugin: { name: "@example/macos-node", version: "1.0.0", apiVersion: 2 },
     runtime: { kind: "node", entry: "entry.mjs" },
     capabilities: { required: [], optional: [] },
     contributes: { stages: [{ id: "main", consumes: "ContentSource", produces: "ContentNode" }], kinds: [] },

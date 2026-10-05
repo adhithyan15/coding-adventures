@@ -18,7 +18,7 @@ afterEach(async () => {
 function manifest(): Manifest {
   return {
     manifestVersion: 1,
-    plugin: { name: "@example/exact", version: "1.0.0", apiVersion: 1 },
+    plugin: { name: "@example/exact", version: "1.0.0", apiVersion: 2 },
     runtime: { kind: "node", entry: "entry.mjs" },
     capabilities: { required: [], optional: [] },
     contributes: {

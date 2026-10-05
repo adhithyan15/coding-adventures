@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-plugin-runner-ts",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Bounded TypeScript plugin-side runner for the Forme FM02 wire protocol.",
   "type": "module",
   "main": "src/index.ts",

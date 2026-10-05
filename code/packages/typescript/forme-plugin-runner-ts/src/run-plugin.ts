@@ -13,7 +13,7 @@ import { RunnerProtocolError, RunnerRpcPeer, asRecord, encodeWireValue } from ".
 
 const PROTOCOL_VERSION = 1;
 const RUNNER_NAME = "@coding-adventures/forme-plugin-runner-ts";
-const RUNNER_VERSION = "0.1.0";
+const RUNNER_VERSION = "1.0.0";
 
 export interface RunPluginOptions {
   readonly input?: Readable;

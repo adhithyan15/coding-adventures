@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-render-static",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Forme render stage: Stream<ContentNode> → Stream<RenderedPage>. Matches Style IR and selects exact per-page Interactivity IR islands.",
   "type": "module",
   "main": "src/index.ts",

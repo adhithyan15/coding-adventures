@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-authoring-publish",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Exact-revision reviewed publication coordinator for Forme authoring",
   "type": "module",
   "main": "src/index.ts",

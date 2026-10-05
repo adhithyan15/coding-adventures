@@ -3,7 +3,7 @@ manifestVersion = 1
 [plugin]
 name = "@example/echo"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 description = "FM-B014 cross-process contract fixture"
 
 [runtime]

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-cli",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "Forme build, deploy, reviewed plugin install, persistent incremental cache, check, clean, watch/preview, and local-workspace bootstrap CLI.",
   "type": "module",
   "main": "src/index.ts",

@@ -169,8 +169,8 @@ export async function resolveContainedAssetPath(
 
 const loadAssetsFs = defineStage({
   name: "@coding-adventures/forme-load-assets-fs",
-  version: "0.1.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Load resolved filesystem AssetRefs into deterministic immutable Asset IR values.",
   consumes: streamOf(Kinds.ContentNode),
   produces: streamOf(Kinds.Asset),

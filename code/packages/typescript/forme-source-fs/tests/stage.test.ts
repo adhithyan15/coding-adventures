@@ -71,7 +71,7 @@ describe("sourceFs — stage shape", () => {
   });
 
   it("apiVersion targets the kernel", () => {
-    expect(sourceFs.apiVersion).toBe(1);
+    expect(sourceFs.apiVersion).toBe(2);
   });
 
   it("publishes external filesystem state", () => {

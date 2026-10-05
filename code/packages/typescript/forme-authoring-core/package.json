@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-authoring-core",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Bounded immutable authoring project state, autosave, and persistent undo/redo for the Forme authoring shell",
   "type": "module",
   "main": "src/index.ts",

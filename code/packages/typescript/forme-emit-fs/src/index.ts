@@ -241,8 +241,8 @@ function sha256Hex(bytes: Uint8Array): string {
 
 const emitFs = defineStage({
   name: "@coding-adventures/forme-emit-fs",
-  version: "0.2.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Write each RenderedPage to disk under outDir; emit one DeployArtifact summarising the result.",
   consumes: streamOf(Kinds.RenderedPage),
   produces: Kinds.DeployArtifact,

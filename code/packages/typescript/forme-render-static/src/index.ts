@@ -105,8 +105,8 @@ const DEFAULT_SITE_TITLE = "";
 
 const renderStatic = defineStage({
   name: "@coding-adventures/forme-render-static",
-  version: "0.2.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Render ContentNode pages with matched Style IR and AOT-sliced CSS.",
   consumes: streamOf(Kinds.ContentNode),
   produces: streamOf(Kinds.RenderedPage),
@@ -257,7 +257,6 @@ const renderStatic = defineStage({
         ])],
         meta,
         provenance: createOutputProvenance([node]),
-        source: node.identity,
       };
       yield page as never;
     }

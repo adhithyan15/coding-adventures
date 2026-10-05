@@ -6,7 +6,7 @@ manifestVersion = 1
 [plugin]
 name = "@me/x"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./e.js"
@@ -32,7 +32,7 @@ manifestVersion = 1
 version = "1.0.0"
 authors = ["A"]
 name = "@me/x"
-apiVersion = 1
+apiVersion = 2
 description = "d"
 [runtime]
 kind = "node"
@@ -57,7 +57,7 @@ manifestVersion = 1
 [plugin]
 name = "@me/x"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./e.js"
@@ -104,7 +104,7 @@ manifestVersion = 1
 [plugin]
 name = "@me/x"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 description = "tab\\there"
 [runtime]
 kind = "node"
@@ -124,7 +124,7 @@ manifestVersion = 1
 [plugin]
 name = "@me/x"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./e.js"
@@ -163,7 +163,7 @@ manifestVersion = 1
 [plugin]
 name = "@me/x"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "binary"
 entry = "./fallback"
@@ -185,7 +185,7 @@ manifestVersion = 1
 [plugin]
 name = "@me/x"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 authors = ["A", "B"]
 [runtime]
 kind = "node"

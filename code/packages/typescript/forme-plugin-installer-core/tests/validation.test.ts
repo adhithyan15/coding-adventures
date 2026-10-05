@@ -14,7 +14,7 @@ manifestVersion = 1
 [plugin]
 name = "@example/validation"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "plugin.mjs"

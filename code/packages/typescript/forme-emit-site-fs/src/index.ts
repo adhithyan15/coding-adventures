@@ -117,8 +117,8 @@ function rewriteAssetPlaceholdersFromSnapshot(
 
 const emitSiteFs = defineStage({
   name: "@coding-adventures/forme-emit-site-fs",
-  version: "0.2.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Join rendered pages with Asset IR and emit a fingerprinted static site.",
   consumes: streamOf(Kinds.RenderedPage),
   inputPorts: { assets: streamOf(Kinds.Asset) },

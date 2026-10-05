@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
 - Back plugin `storage:read` watches with a live contained filesystem iterator.
   Watch setup reuses storage path containment and reserved-root checks, queues
   are bounded, and iterator return or host teardown closes the native watcher.

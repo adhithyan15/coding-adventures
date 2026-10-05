@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
 - Add optional `Stage.implementationIdentity` so plugin manifest/entry hashes
   participate in cache and revision-ledger identities even when a third-party
   package fails to bump its semantic version.

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-deploy-runner-fs-adapter",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Atomic complete-tree filesystem publication for Forme deploy manifests.",
   "type": "module",
   "main": "src/index.ts",

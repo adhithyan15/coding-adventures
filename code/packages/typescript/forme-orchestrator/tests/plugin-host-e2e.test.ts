@@ -90,7 +90,7 @@ async function fixtureRoot(): Promise<string> {
 [plugin]
 name = "@example/e2e"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./plugin.mjs"

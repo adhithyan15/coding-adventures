@@ -2,7 +2,7 @@ export const CONFORMANCE_STAGE = Object.freeze({
   id: "conformance",
   pluginName: "@forme/conformance",
   pluginVersion: "1.0.0",
-  apiVersion: 1,
+  apiVersion: 2,
   protocolVersion: 1,
   configSchemaHash: "sha256:conformance-schema",
   capabilities: Object.freeze([

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-plugin-runner-conformance",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Language-neutral subprocess conformance harness for Forme FM02 plugin runners.",
   "type": "module",
   "main": "src/index.ts",

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-style-cli",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "CLI for the Forme Style IR family: forme-style <doc.json> --target css|latex|terminal — wraps forme-style-orchestrator with file I/O.  Per FM03 §5 CLI surface.",
   "type": "module",
   "main": "src/index.ts",

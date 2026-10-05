@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-authoring-shell",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Capability-free first-run workspace shell for Forme authoring",
   "type": "module",
   "main": "src/index.tsx",

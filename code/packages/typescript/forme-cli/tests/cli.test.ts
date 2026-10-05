@@ -158,7 +158,7 @@ describe("argument and diagnostic contracts", () => {
 
     const version = makeIO();
     expect(await run(["--version"], version)).toBe(EXIT_OK);
-    expect(version.stdoutText).toBe("0.5.0\n");
+    expect(version.stdoutText).toBe("1.0.0\n");
   });
 
   it("rejects unknown commands, missing flag values, and invalid clean options", async () => {
@@ -639,7 +639,7 @@ describe("clean", () => {
       produces: { name: "DeployArtifact", version: "1.0" },
     };
     const transformStage = {
-      produces: { name: "RenderedPage", version: "1.1" },
+      produces: { name: "RenderedPage", version: "2.0" },
     };
     const loaded = config({
       settings: { ...config().settings, cacheDir: ".forme/cache" },
@@ -764,7 +764,7 @@ function externalConfigSource(): string {
 const emit = {
   name: "@fixture/emit",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: 2,
   description: "self-contained external fixture",
   consumes: { name: "Void", version: "1.0" },
   produces: { name: "DeployArtifact", version: "1.0" },
@@ -800,7 +800,7 @@ function persistentCacheConfigSource(value: string): string {
   return `
 const contentSource = { name: "ContentSource", version: "1.0" };
 const source = {
-  name: "@fixture/cache-source", version: "0.1.0", apiVersion: 1,
+  name: "@fixture/cache-source", version: "0.1.0", apiVersion: 2,
   description: "external cache source", consumes: { name: "Void", version: "1.0" },
   produces: { name: "Stream", version: "1.0", inner: contentSource },
   capabilities: [], configSchema: null,
@@ -814,13 +814,13 @@ const source = {
   },
 };
 const transform = {
-  name: "@fixture/cache-transform", version: "0.1.0", apiVersion: 1,
+  name: "@fixture/cache-transform", version: "0.1.0", apiVersion: 2,
   description: "pure cache transform", consumes: contentSource, produces: contentSource,
   capabilities: [], configSchema: null,
   async run(input) { return { ...input, path: input.path.toUpperCase() }; },
 };
 const emit = {
-  name: "@fixture/cache-emit", version: "0.1.0", apiVersion: 1,
+  name: "@fixture/cache-emit", version: "0.1.0", apiVersion: 2,
   description: "pure in-memory emitter", consumes: contentSource,
   produces: { name: "DeployArtifact", version: "1.0" }, capabilities: [],
   configSchema: { type: "object", required: ["outDir"], properties: { outDir: { type: "string" } } },

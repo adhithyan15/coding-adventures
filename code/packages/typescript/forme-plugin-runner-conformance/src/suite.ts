@@ -183,7 +183,7 @@ async function identityMismatch(command: RunnerCommand): Promise<void> {
     const session = new RunnerSession(command, "single");
     try {
       await expectRemote(session.request("handshake", {
-        hostName: "forme-plugin-runner-conformance", hostVersion: "0.1.0",
+        hostName: "forme-plugin-runner-conformance", hostVersion: "1.0.0",
         apiVersion: CONFORMANCE_STAGE.apiVersion, protocolVersion: CONFORMANCE_STAGE.protocolVersion,
         pluginName: CONFORMANCE_STAGE.pluginName, pluginVersion: CONFORMANCE_STAGE.pluginVersion,
         manifestHash: "sha256:conformance-manifest", instanceId: "conformance-1",
@@ -304,7 +304,7 @@ async function ready(
   produces: string,
 ): Promise<void> {
   equal(await session.request("handshake", {
-    hostName: "forme-plugin-runner-conformance", hostVersion: "0.1.0",
+    hostName: "forme-plugin-runner-conformance", hostVersion: "1.0.0",
     apiVersion: CONFORMANCE_STAGE.apiVersion, protocolVersion: CONFORMANCE_STAGE.protocolVersion,
     pluginName: CONFORMANCE_STAGE.pluginName, pluginVersion: CONFORMANCE_STAGE.pluginVersion,
     manifestHash: "sha256:conformance-manifest", instanceId: "conformance-1",

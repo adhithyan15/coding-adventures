@@ -1,6 +1,6 @@
 {
   "name": "forme-doc-demo",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "End-to-end demo of the DOC00 v0 documentation-site cluster: reads a small Markdown corpus, runs it through all 11 forme-doc-* packages plus the FM00 page-bundle-emitter, writes a static site to dist/.  Run with `npm start`, then serve dist/ with any static HTTP server.",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-aot-page-emitter",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Per-page artefact emitter for the Forme AOT compiler (FM06 §5).  Takes a Map<pageId, CssArtifact> from forme-aot-css-slicer and writes per-page CSS (and optional HTML wrapper) to a distDir.",
   "type": "module",
   "main": "src/index.ts",

@@ -93,7 +93,13 @@ function page(options: {
       structured: [],
       extra: {},
     },
-    source: "01952c0d-7e63-7000-8000-000000000001" as LogicalId,
+    provenance: {
+      contributors: [{
+        identity: "01952c0d-7e63-7000-8000-000000000001" as LogicalId,
+        revision: `blake2b:${"a".repeat(64)}` as never,
+      }],
+      revision: `blake2b:${"a".repeat(64)}` as never,
+    },
   };
 }
 
@@ -489,7 +495,7 @@ describe("orchestrator end-to-end", () => {
     const pages = defineStage({
       name: "@test/rendered-pages",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "fixture pages",
       consumes: Kinds.Void,
       produces: streamOf(Kinds.RenderedPage),
@@ -500,7 +506,7 @@ describe("orchestrator end-to-end", () => {
     const assets = defineStage({
       name: "@test/assets",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "fixture assets",
       consumes: Kinds.Void,
       produces: streamOf(Kinds.Asset),
@@ -547,7 +553,7 @@ describe("orchestrator end-to-end", () => {
     const source = defineStage({
       name: "@test/shared-content",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "shared source large enough to fill both bounded page windows",
       consumes: Kinds.Void,
       produces: streamOf(Kinds.ContentSource),
@@ -570,7 +576,7 @@ describe("orchestrator end-to-end", () => {
     const pages = defineStage({
       name: "@test/shared-pages",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "renders every shared source without assets",
       consumes: streamOf(Kinds.ContentSource),
       produces: streamOf(Kinds.RenderedPage),
@@ -586,7 +592,7 @@ describe("orchestrator end-to-end", () => {
     const assets = defineStage({
       name: "@test/shared-assets",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "drains the same shared source while producing no assets",
       consumes: streamOf(Kinds.ContentSource),
       produces: streamOf(Kinds.Asset),
@@ -653,7 +659,7 @@ describe("orchestrator end-to-end", () => {
     }) => defineStage({
       name: options.name,
       version: "1.0.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "fixed observed fixture source",
       consumes: Kinds.Void,
       produces: streamOf(options.kind),

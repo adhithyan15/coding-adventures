@@ -12,7 +12,7 @@ manifestVersion = 1
 [plugin]
 name = "@me/x"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./e.js"

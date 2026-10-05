@@ -94,8 +94,8 @@ const SENTINEL_DATE = "0000-01-01";
 
 const collectChronological = defineStage({
   name: "@coding-adventures/forme-collect-chronological",
-  version: "0.1.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Collect routed ContentNodes into a chronological Collection (newest first).",
   consumes: streamOf(Kinds.ContentNode),
   produces: Kinds.Collection,

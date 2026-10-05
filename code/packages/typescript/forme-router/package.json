@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-router",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Forme route-derivation stage: Stream<ContentNode> → Stream<ContentNode> with route populated. Replaces the duplicated slug/route logic in forme-collect-chronological and forme-render-static.",
   "type": "module",
   "main": "src/index.ts",

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-sandbox-windows",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Windows AppContainer-derived token and Job Object exact-snapshot launcher for Forme plugins (FM02).",
   "type": "module",
   "main": "src/index.ts",

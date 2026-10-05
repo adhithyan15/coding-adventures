@@ -1,6 +1,6 @@
 {
   "name": "coding-adventures-forme-hello-world",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "End-to-end demo program for the Forme authoring pipeline. Reads a Markdown post, routes it, renders it, and writes static HTML through the FM03 orchestrator.",
   "type": "module",
   "scripts": {

@@ -59,7 +59,8 @@ function makeCtx(overrides: Partial<StageContext> = {}): StageContext {
 let pageSeq = 0;
 function makePage(opts: { route: string; html?: string; title?: string }): RenderedPage {
   pageSeq++;
-  const id = `00000000-0000-7000-8000-${String(pageSeq).padStart(12, "0")}` as RenderedPage["source"];
+  const id = `00000000-0000-7000-8000-${String(pageSeq).padStart(12, "0")}` as RenderedPage["provenance"]["contributors"][number]["identity"];
+  const revision = `blake2b:${String(pageSeq).padStart(64, "0")}` as RenderedPage["provenance"]["revision"];
   return {
     route: opts.route,
     html: opts.html ?? `<!DOCTYPE html>\n<html><head><title>${opts.title ?? "x"}</title></head><body>${opts.title ?? "x"}</body></html>\n`,
@@ -74,7 +75,7 @@ function makePage(opts: { route: string; html?: string; title?: string }): Rende
       structured: [],
       extra: {},
     },
-    source: id,
+    provenance: { contributors: [{ identity: id, revision }], revision },
   };
 }
 
@@ -110,8 +111,8 @@ describe("emitFs — stage shape", () => {
     expect(emitFs.capabilities).toContain("filesystem:write");
   });
 
-  it("targets apiVersion 1", () => {
-    expect(emitFs.apiVersion).toBe(1);
+  it("targets apiVersion 2", () => {
+    expect(emitFs.apiVersion).toBe(2);
   });
 
   it("has a configSchema requiring outDir", () => {

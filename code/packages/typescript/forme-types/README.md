@@ -70,17 +70,18 @@ The implementations of `computeRevisionId`, `canonicalJson`, etc. live in `@codi
 
 ### Rendered output provenance
 
-New `RenderedPage` producers attach an `OutputProvenance`: a canonical list of
+Every `RenderedPage` producer attaches an `OutputProvenance`: a canonical list of
 every contributing `{ identity, revision }` pair plus a revision hash of that
 set. Use `createOutputProvenance` from `@coding-adventures/forme-identity` to
-construct it. Aggregate pages omit the legacy `source` field instead of
-inventing a single source; v1.0 producers that only carry `source` remain valid
-during the v1.1 migration.
+construct it. The v2 shape has no `source` shortcut: a single-source page has
+one contributor, while aggregate pages record the complete normalized set.
+See [MIGRATION-v2.md](MIGRATION-v2.md) for the package, kernel, and kind-version
+migration contract.
 
 Interactive renderers also provide an exact `islandModules` list pairing each
 document-local `IslandId` with its reviewed script `LogicalId`, package/export,
-and exact SHA-256 bytes. The field
-is optional only so legacy static producers remain source-compatible.
+and exact SHA-256 bytes. The field is optional for static pages; interactive
+pages must provide it.
 
 ## Spec divergences (v0)
 

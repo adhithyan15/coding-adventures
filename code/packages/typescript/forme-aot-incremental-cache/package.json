@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-aot-incremental-cache",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Content-addressed incremental rebuild cache wrapping forme-aot-css-slicer (FM06 §4).  Computes a stable cache key from the canonical document + sorted usedRuleIds + sorted activeContexts; consults a caller-supplied storage backend before recomputing.",
   "type": "module",
   "main": "src/index.ts",

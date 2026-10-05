@@ -907,7 +907,7 @@ import { defineStage, Kinds } from "@coding-adventures/forme-types";
 export default defineStage({
   name: "@forme/parse-markdown",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: 2,
   description: "Parses CommonMark + GFM into a ContentNode.",
   consumes: Kinds.ContentSource,
   produces: Kinds.ContentNode,
@@ -2005,7 +2005,7 @@ const configSchema = { /* JSON Schema */ };
 export default defineStage<typeof Kinds.ContentSource, typeof Kinds.ContentNode>({
   name: "@forme/parse-markdown",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: 2,
   description: "Parses CommonMark (+ optional GFM) into a ContentNode.",
   consumes: Kinds.ContentSource,
   produces: Kinds.ContentNode,
@@ -2073,7 +2073,7 @@ interface Config {
 export default defineStage({
   name: "@forme/source-fs",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: 2,
   description: "Reads files from a local directory.",
   consumes: Kinds.Void,
   produces: { ...Kinds.ContentSource, kind: "Stream" },

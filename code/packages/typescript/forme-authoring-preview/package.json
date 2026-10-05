@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-authoring-preview",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Exact-revision pipeline-backed live preview coordinator for Forme authoring",
   "type": "module",
   "main": "src/index.ts",
