@@ -137,15 +137,15 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-S126-letter-oo",
-      "sourceHash": "fnv1a64:930b53380673bb7d",
-      "svgHash": "fnv1a64:14bc841748506037",
+      "sourceHash": "fnv1a64:d7b450e6249b14ea",
+      "svgHash": "fnv1a64:759f48736391d7a8",
       "svg": "tamil/book/figures/TA-S126-letter-oo-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-S127-letter-i",
-      "sourceHash": "fnv1a64:3faeda50e3da1377",
-      "svgHash": "fnv1a64:6752d6eb3e935f90",
+      "sourceHash": "fnv1a64:66712386e143f4b6",
+      "svgHash": "fnv1a64:ddfbf440516eea30",
       "svg": "tamil/book/figures/TA-S127-letter-i-filmstrip.svg"
     },
     {
@@ -165,8 +165,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-S134-letter-ai",
-      "sourceHash": "fnv1a64:e3feb013362f28bf",
-      "svgHash": "fnv1a64:95e69468ac90887c",
+      "sourceHash": "fnv1a64:2f76bc24dccb6661",
+      "svgHash": "fnv1a64:3487b535a3247b0f",
       "svg": "tamil/book/figures/TA-S134-letter-ai-filmstrip.svg"
     },
     {
@@ -186,15 +186,15 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-S138-letter-uu",
-      "sourceHash": "fnv1a64:1b328184d99fbebe",
-      "svgHash": "fnv1a64:fdb91c421dbd4875",
+      "sourceHash": "fnv1a64:da6766d262b0ff92",
+      "svgHash": "fnv1a64:6c3a9b41bb26e287",
       "svg": "tamil/book/figures/TA-S138-letter-uu-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-S139-letter-o",
-      "sourceHash": "fnv1a64:77e2c4f39d98bc8f",
-      "svgHash": "fnv1a64:27dd47d9a971f851",
+      "sourceHash": "fnv1a64:fdcd851bb7f866cb",
+      "svgHash": "fnv1a64:8194e1bccc356bb7",
       "svg": "tamil/book/figures/TA-S139-letter-o-filmstrip.svg"
     },
     {

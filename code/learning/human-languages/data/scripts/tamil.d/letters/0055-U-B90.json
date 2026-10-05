@@ -6,21 +6,21 @@
     "an upper-left spiral",
     "a central upright",
     "an upper-right loop returning left across the middle",
-    "two separate lower bowls"
+    "two lower bowls meeting at a short centre stem"
   ],
   "strokeOrder": [
-    "curl inward around the upper-left spiral — then lift once",
-    "set the pen at the middle and draw the central upright upward — then lift a second time",
-    "start at the top of the upright, sweep around the upper-right loop, and return left across the middle — then lift a third time",
-    "set the pen at the left end of the middle bar and circle the lower-left bowl back toward the centre — then lift a fourth time",
-    "set the pen at the centre, descend, and circle through the lower-right bowl"
+    "start inside the upper-left spiral, curl outward round it, and run down the central upright to its foot",
+    "without lifting, draw the central upright back up",
+    "without lifting, sweep around the upper-right loop and return left across the middle",
+    "without lifting, circle the lower-left bowl back up to the centre",
+    "without lifting, come back down the centre stem and circle through the lower-right bowl — and only now lift"
   ],
-  "strokeOrderNote": "five strokes — the upper-left spiral, central upright, upper-right loop with middle return, lower-left bowl, and lower-right bowl are separate pen-down runs; source-verified against the 13-frame Writing Tamil 10 animation and Radhakrishnan Appendix I Frame 11",
-  "penLifts": 4,
+  "strokeOrderNote": "one stroke — the animation draws five parts and Radhakrishnan's Appendix I Frame 11 numbers seven movements; native writers draw ஐ without lifting, and this ductus follows the five parts in order, running down the central upright before drawing it back up and coming back down the centre stem into the lower-right bowl; source-checked against the 13-frame Writing Tamil 10 animation and Radhakrishnan Appendix I Frame 11",
+  "penLifts": 0,
   "strokeOrderSource": {
     "citation": "Info-farmer, Writing Tamil 10.gif, ஐ stroke-order animation (Wikimedia Commons, CC BY-SA 3.0, 2008), cross-checked with Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I Frame 11 (University of Texas at Austin), p. 194",
     "url": "https://commons.wikimedia.org/wiki/File:Writing_Tamil_10.gif",
-    "variation": "The 13-frame animation writes five separate runs in order: upper-left spiral, upward central upright, upper-right loop returning left across the middle, lower-left bowl, then lower-right bowl. Radhakrishnan's Appendix I Frame 11 independently numbers the same shape as seven movements. This five-run learner path fits those movements to the bundled Noto Sans Tamil outline; Tamil handwriting varies by school."
+    "variation": "Info-farmer's 13-frame animation draws ஐ in five parts in this order: the upper-left spiral, the central upright drawn upward, the upper-right loop returning left across the middle, the lower-left bowl, then the lower-right bowl. The frames sample one movement; they are not evidence of pen lifts. Radhakrishnan's Appendix I Frame 11 independently numbers the same shape as seven movements. Native writers draw ஐ as one continuous stroke, and this ductus follows the five parts in order without lifting. In the bundled Noto Sans Tamil outline the spiral's inner end and the central upright's foot are free ends, so the pen starts inside the spiral and curls outward, runs down the upright to its foot and draws it back up; the lower-left bowl ends at the top of the short centre stem, so the pen comes back down that stem into the lower-right bowl. In HP Labs India's online Tamil handwriting data (the LipiTk 4.0 Tamil isolated-character recognizer, trained on hpl-tamil-iso-char), 99% of the 169 stored prototypes of ஐ are a single pen-down stroke. Tamil handwriting varies by school; this is one attested order fitted to the bundled Noto Sans Tamil outline."
   },
-  "notes": "Independent ai begins words such as ஐந்து (aintu, five). The two lower bowls are written separately after the completed upper body."
+  "notes": "Independent ai begins words such as ஐந்து (aintu, five). Its five parts are one continuous stroke: the spiral, the central upright, the upper-right loop and middle bar, then the two lower bowls, which meet at a short stem in the centre."
 }
