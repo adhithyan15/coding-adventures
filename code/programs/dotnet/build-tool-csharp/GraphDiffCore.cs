@@ -116,6 +116,9 @@ public static class GraphDiffCore
     public static DiffSelectionResult EvaluateDiffSelection(DiffSelectionInput input)
     {
         if (input is null || input.Packages is null) return DiffError("GRAPH_PACKAGE_INVALID");
+        // The caller owns this list. Honor the graph ceiling from Count before
+        // allocating or traversing even a single package record.
+        if (input.Packages.Count > 4096) return DiffError("GRAPH_PACKAGE_LIMIT_EXCEEDED");
         var names = input.Packages.Select(package => package?.Name ?? "").ToArray();
         var graphError = ValidateGraph(names, input.Edges);
         if (graphError is not null) return DiffError(graphError);
