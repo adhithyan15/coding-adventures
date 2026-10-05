@@ -1850,6 +1850,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — forwarding a name formal preserves the original
+    // non-assignable runtime-real actual and its formatter provenance.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; procedure sink(y); real y; output(y); procedure relay(x); real x; sink(x); relay(pick()) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — static integer-valued functions may feed checked snapshots and widen into
     // bounded static real expressions. Copying preserves the destination when
     // the source is reassigned; overflow, control flow, calls, captures,
@@ -12483,6 +12492,30 @@ fn algol_name_formal_runtime_real_output_runs_on_every_available_standard_backen
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but name-formal runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_forwarded_name_formal_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("procedure sink(y); real y; output(y)")
+                && program.src.contains("procedure relay(x); real x; sink(x)")
+        })
+        .expect("the forwarded name-formal runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but forwarded name-formal runtime real output did not complete"
             );
             continue;
         };

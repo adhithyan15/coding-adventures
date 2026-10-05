@@ -1297,7 +1297,7 @@ backend immediately) come before the enabler-dependent items.
   reassignment, differing branches, and captured globals invalidate the tracked value. Direct zero-argument
   real-procedure results, their straight-line bare local copies, and
   specialised read-only real name formals backed by non-assignable
-  runtime-real actual expressions use the
+  runtime-real actual expressions, including direct name-formal forwarding, use the
   portable six-significant-digit IIR formatter
   shared with Dartmouth BASIC on native/LLVM/WASM/JVM/CLR/VM/JIT. Conditional
   statements retain that provenance only when every reachable exit proves the
@@ -1356,7 +1356,9 @@ backend immediately) come before the enabler-dependent items.
   and returns 42 after observing all three loop values. Forwarded scalar name
   formals are substituted and rebound to generated lexical aliases before the
   next direct sibling lowers, preserving the original caller binding across
-  nested calls even when the callee reuses the same spelling. A recursive call
+  nested calls even when the callee reuses the same spelling. This substitution
+  also preserves bounded runtime-real formatter provenance when the original
+  actual is non-assignable. A recursive call
   may forward a scalar name formal unchanged or remap it directly to another
   active same-typed scalar formal. The compiler keys in-flight siblings by
   their captured binding map, so direct and mutual recursion can cycle through
