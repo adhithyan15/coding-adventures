@@ -103,6 +103,23 @@ describe("Forme release web-quality gate", () => {
     ]);
     expect(() => evaluateLighthouseResult(target, { categories: {}, audits: {} }))
       .toThrow(/missing a finite performance score/);
+    expect(() => evaluateLighthouseResult(target, {
+      categories: {
+        performance: { score: 1 },
+        accessibility: { score: 1 },
+      },
+      audits: {
+        "resource-summary": {
+          details: {
+            items: [
+              { resourceType: "total", transferSize: 0 },
+              { resourceType: "image", transferSize: 0 },
+              { resourceType: "script", transferSize: 0 },
+            ],
+          },
+        },
+      },
+    })).toThrow(/bounded auditRefs/);
   });
 
   it("caps hostile diagnostic volume", () => {
