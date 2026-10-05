@@ -1,0 +1,1 @@
+var e=``+new URL(`TE-S01-dictation-filmstrip-XVcSLntv.svg`,import.meta.url).href;export{e as default};
