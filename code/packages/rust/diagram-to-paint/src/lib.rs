@@ -2006,6 +2006,9 @@ fn parse_css_color(css: &str) -> Option<Color> {
     if css.eq_ignore_ascii_case("transparent") {
         return Some(Color { r: 0, g: 0, b: 0, a: 0 });
     }
+    if let Some(color) = parse_css_color_mix_function(css) {
+        return Some(color);
+    }
     if let Some(color) = parse_css_rgb_function(css) {
         return Some(color);
     }
@@ -2054,6 +2057,96 @@ fn parse_css_color(css: &str) -> Option<Color> {
         }),
         _ => None,
     }
+}
+
+fn parse_css_color_mix_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("color-mix(")?.strip_suffix(')')?.trim();
+    let parts = split_css_top_level_commas(inner)?;
+    if parts.len() != 3 || parts[0].split_whitespace().collect::<Vec<_>>() != ["in", "srgb"] {
+        return None;
+    }
+    let (first_source, first_percentage) = parse_css_color_mix_stop(parts[1])?;
+    let (second_source, second_percentage) = parse_css_color_mix_stop(parts[2])?;
+    let first = parse_css_color(first_source)?;
+    let second = parse_css_color(second_source)?;
+    let (first_weight, second_weight, alpha_multiplier) = match (first_percentage, second_percentage) {
+        (None, None) => (0.5, 0.5, 1.0),
+        (Some(first), None) => (first, 1.0 - first, 1.0),
+        (None, Some(second)) => (1.0 - second, second, 1.0),
+        (Some(first), Some(second)) => {
+            let total = first + second;
+            if total <= 0.0 {
+                return None;
+            }
+            (first / total, second / total, total.min(1.0))
+        }
+    };
+    let first_alpha = f64::from(first.a) / 255.0;
+    let second_alpha = f64::from(second.a) / 255.0;
+    let mixed_alpha = first_alpha * first_weight + second_alpha * second_weight;
+    let channel = |first: u8, second: u8| {
+        if mixed_alpha == 0.0 {
+            0
+        } else {
+            ((f64::from(first) * first_alpha * first_weight
+                + f64::from(second) * second_alpha * second_weight) / mixed_alpha)
+                .clamp(0.0, 255.0).round() as u8
+        }
+    };
+    Some(Color {
+        r: channel(first.r, second.r),
+        g: channel(first.g, second.g),
+        b: channel(first.b, second.b),
+        a: (mixed_alpha * alpha_multiplier * 255.0).clamp(0.0, 255.0).round() as u8,
+    })
+}
+
+fn split_css_top_level_commas(source: &str) -> Option<Vec<&str>> {
+    let mut parts = Vec::new();
+    let mut start = 0;
+    let mut depth = 0_u32;
+    for (index, character) in source.char_indices() {
+        match character {
+            '(' => depth += 1,
+            ')' => depth = depth.checked_sub(1)?,
+            ',' if depth == 0 => {
+                parts.push(source[start..index].trim());
+                start = index + 1;
+            }
+            _ => {}
+        }
+    }
+    if depth != 0 {
+        return None;
+    }
+    parts.push(source[start..].trim());
+    Some(parts)
+}
+
+fn parse_css_color_mix_stop(source: &str) -> Option<(&str, Option<f64>)> {
+    let mut depth = 0_u32;
+    let mut split = None;
+    for (index, character) in source.char_indices() {
+        match character {
+            '(' => depth += 1,
+            ')' => depth = depth.checked_sub(1)?,
+            _ if depth == 0 && character.is_whitespace() => split = Some(index),
+            _ => {}
+        }
+    }
+    if depth != 0 {
+        return None;
+    }
+    if let Some(index) = split {
+        let percentage = source[index..].trim();
+        if let Some(value) = percentage.strip_suffix('%').and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && (0.0..=100.0).contains(value))
+        {
+            return Some((source[..index].trim(), Some(value / 100.0)));
+        }
+    }
+    Some((source.trim(), None))
 }
 
 fn parse_css_rgb_function(css: &str) -> Option<Color> {
@@ -7832,6 +7925,21 @@ mod tests {
         );
         assert_eq!(css_to_color("rgb(20% 40% 60% / none)").a, 0);
         assert_eq!(css_to_color("rgb(20% 40% 60%)").a, 255);
+    }
+
+    #[test]
+    fn css_colors_mix_in_srgb() {
+        assert_eq!(css_to_color("color-mix(in srgb, red, blue)"), Color { r: 128, g: 0, b: 128, a: 255 });
+        assert_eq!(css_to_color("color-mix(in srgb, red 25%, blue)"), Color { r: 64, g: 0, b: 191, a: 255 });
+        assert_eq!(
+            css_to_color("color-mix(in srgb, rgb(255, 0, 0) 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in srgb, red 20%, blue 20%)"),
+            Color { r: 128, g: 0, b: 128, a: 102 },
+        );
+        assert_eq!(with_opacity("color-mix(in srgb, red, blue)", 0.5), "rgba(128,0,128,0.5)");
     }
 
     #[test]
