@@ -2063,6 +2063,7 @@ fn parse_css_color(css: &str) -> Option<Color> {
 enum CssColorMixSpace {
     Srgb,
     SrgbLinear,
+    Hsl,
     Oklab,
     Oklch,
 }
@@ -2078,6 +2079,7 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
     let space = match interpolation.as_slice() {
         ["in", "srgb"] => CssColorMixSpace::Srgb,
         ["in", "srgb-linear"] => CssColorMixSpace::SrgbLinear,
+        ["in", "hsl"] => CssColorMixSpace::Hsl,
         ["in", "oklab"] => CssColorMixSpace::Oklab,
         ["in", "oklch"] => CssColorMixSpace::Oklch,
         _ => return None,
@@ -2103,11 +2105,17 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
     let mixed_alpha = first_alpha * first_weight + second_alpha * second_weight;
     let mut first_components = css_color_mix_components(first, space);
     let mut second_components = css_color_mix_components(second, space);
-    if matches!(space, CssColorMixSpace::Oklch) {
-        fixup_css_oklch_hues(&mut first_components, &mut second_components);
+    match space {
+        CssColorMixSpace::Hsl => fixup_css_polar_hues(
+            &mut first_components, &mut second_components, 0, 0.0,
+        ),
+        CssColorMixSpace::Oklch => fixup_css_polar_hues(
+            &mut first_components, &mut second_components, 1, 0.000004,
+        ),
+        _ => {}
     }
     let component = |index: usize| {
-        if matches!(space, CssColorMixSpace::Oklch) && index == 2 {
+        if matches!(space, CssColorMixSpace::Hsl | CssColorMixSpace::Oklch) && index == 2 {
             first_components[index] * first_weight + second_components[index] * second_weight
         } else if mixed_alpha == 0.0 {
             0.0
@@ -2127,6 +2135,9 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         },
         CssColorMixSpace::SrgbLinear => linear_srgb_to_color(
             components[0], components[1], components[2], alpha,
+        ),
+        CssColorMixSpace::Hsl => css_hsl_to_color(
+            components[2].to_degrees(), components[0], components[1], alpha,
         ),
         CssColorMixSpace::Oklab => css_oklab_to_color(
             components[0], components[1], components[2], alpha,
@@ -2149,12 +2160,35 @@ fn css_color_mix_components(color: Color, space: CssColorMixSpace) -> [f64; 3] {
     match space {
         CssColorMixSpace::Srgb => encoded,
         CssColorMixSpace::SrgbLinear => encoded.map(encoded_srgb_to_linear),
+        CssColorMixSpace::Hsl => css_color_to_hsl(encoded),
         CssColorMixSpace::Oklab => css_color_to_oklab(encoded),
         CssColorMixSpace::Oklch => {
             let [lightness, a, b] = css_color_to_oklab(encoded);
             [lightness, a.hypot(b), b.atan2(a)]
         }
     }
+}
+
+fn css_color_to_hsl([r, g, b]: [f64; 3]) -> [f64; 3] {
+    let maximum = r.max(g).max(b);
+    let minimum = r.min(g).min(b);
+    let delta = maximum - minimum;
+    let lightness = (maximum + minimum) / 2.0;
+    let saturation = if delta == 0.0 {
+        0.0
+    } else {
+        delta / (1.0 - (2.0 * lightness - 1.0).abs())
+    };
+    let hue = if delta == 0.0 {
+        0.0
+    } else if maximum == r {
+        ((g - b) / delta).rem_euclid(6.0) * 60.0
+    } else if maximum == g {
+        ((b - r) / delta + 2.0) * 60.0
+    } else {
+        ((r - g) / delta + 4.0) * 60.0
+    };
+    [saturation, lightness, hue.to_radians()]
 }
 
 fn css_color_to_oklab(encoded: [f64; 3]) -> [f64; 3] {
@@ -2169,12 +2203,16 @@ fn css_color_to_oklab(encoded: [f64; 3]) -> [f64; 3] {
     ]
 }
 
-fn fixup_css_oklch_hues(first: &mut [f64; 3], second: &mut [f64; 3]) {
-    const POWERLESS_CHROMA: f64 = 0.000004;
-    if first[1] <= POWERLESS_CHROMA {
+fn fixup_css_polar_hues(
+    first: &mut [f64; 3],
+    second: &mut [f64; 3],
+    colorfulness_index: usize,
+    powerless_epsilon: f64,
+) {
+    if first[colorfulness_index] <= powerless_epsilon {
         first[2] = second[2];
     }
-    if second[1] <= POWERLESS_CHROMA {
+    if second[colorfulness_index] <= powerless_epsilon {
         second[2] = first[2];
     }
     let turn = std::f64::consts::TAU;
@@ -2275,8 +2313,15 @@ fn parse_css_hsl_function(css: &str) -> Option<Color> {
     let hue = parse_css_hue(color_parts[0])?;
     let saturation = parse_css_percentage(color_parts[1])?;
     let lightness = parse_css_percentage(color_parts[2])?;
+    let alpha_source = slash.and_then(|index| parts.get(index + 1).copied())
+        .or_else(|| legacy_alpha.then(|| parts[3]));
+    let alpha = alpha_source.map_or(Some(255), |value| parse_css_byte(value, 255.0))?;
+    Some(css_hsl_to_color(hue, saturation, lightness, alpha))
+}
+
+fn css_hsl_to_color(hue: f64, saturation: f64, lightness: f64, alpha: u8) -> Color {
     let chroma = (1.0 - (2.0 * lightness - 1.0).abs()) * saturation;
-    let sector = hue / 60.0;
+    let sector = hue.rem_euclid(360.0) / 60.0;
     let x = chroma * (1.0 - (sector.rem_euclid(2.0) - 1.0).abs());
     let (r, g, b) = match sector as u8 {
         0 => (chroma, x, 0.0),
@@ -2288,10 +2333,7 @@ fn parse_css_hsl_function(css: &str) -> Option<Color> {
     };
     let m = lightness - chroma / 2.0;
     let channel = |value: f64| ((value + m) * 255.0).clamp(0.0, 255.0).round() as u8;
-    let alpha_source = slash.and_then(|index| parts.get(index + 1).copied())
-        .or_else(|| legacy_alpha.then(|| parts[3]));
-    let alpha = alpha_source.map_or(Some(255), |value| parse_css_byte(value, 255.0))?;
-    Some(Color { r: channel(r), g: channel(g), b: channel(b), a: alpha })
+    Color { r: channel(r), g: channel(g), b: channel(b), a: alpha }
 }
 
 fn parse_css_hwb_function(css: &str) -> Option<Color> {
@@ -8038,6 +8080,23 @@ mod tests {
             Color { r: 255, g: 0, b: 0, a: 51 },
         );
         assert_eq!(with_opacity("color-mix(in srgb-linear, black, white)", 0.5), "rgba(188,188,188,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_hsl() {
+        assert_eq!(
+            css_to_color("color-mix(in hsl, black, white)"),
+            Color { r: 128, g: 128, b: 128, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in hsl, red, blue)"),
+            Color { r: 255, g: 0, b: 255, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in hsl, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in hsl, black, white)", 0.5), "rgba(128,128,128,0.5)");
     }
 
     #[test]
