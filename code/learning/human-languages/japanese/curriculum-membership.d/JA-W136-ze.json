@@ -1,0 +1,11 @@
+{
+  "id": "JA-W136-ze",
+  "pathSegment": "JA-PATH-136-WRITE136",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "JA-EXT-136-WRITE136",
+      "order": 7
+    }
+  ]
+}

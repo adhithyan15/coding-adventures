@@ -1,0 +1,15 @@
+{
+  "glyph": "ぺ",
+  "sound": "pe",
+  "role": "hiragana",
+  "components": [
+    "へ",
+    "the handakuten ゜"
+  ],
+  "strokeOrder": [
+    "へ in full",
+    "a small circle at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "へ with the handakuten, read pe. The first and third signs of ぺらぺら; with it every sign of the p row is written."
+}

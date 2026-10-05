@@ -1,0 +1,11 @@
+{
+  "id": "JA-C137-ippiki",
+  "pathSegment": "JA-PATH-137-WRITE137",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-137-WRITE137",
+      "order": 5
+    }
+  ]
+}

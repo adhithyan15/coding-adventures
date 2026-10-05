@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C136-kaze",
+    "language": "japanese",
+    "chapter": 136,
+    "sequence": 8320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:235a1a46281ca9bd"
+  },
+  "findings": []
+}

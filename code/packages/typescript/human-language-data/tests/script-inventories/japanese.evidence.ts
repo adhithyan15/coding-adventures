@@ -539,5 +539,30 @@ export const scriptInventoryEvidence = {
       expect(missingJapanese.has(glyph)).toBe(false);
       expect(affected.get(glyph) ?? 0).toBe(0);
     }
+    // Chapters 136 and 137: the rest of the z row and the whole p row. ぞ, ず
+    // and ぜ are recorded as ざ is (the base sign plus the dakuten). ぱ, ぴ, ぷ
+    // and ぺ are recorded as ぽ is: the base sign plus the handakuten, written
+    // as the base sign in full and then a small circle at the upper right. As
+    // above, none cites a stroke-order source, and each precomposed glyph must
+    // be covered in its own right.
+    for (const [glyph, base, sound, mark, last] of [
+      ["ぞ", "そ", "zo", "the dakuten ゛", "two short strokes at the upper right"],
+      ["ず", "す", "zu", "the dakuten ゛", "two short strokes at the upper right"],
+      ["ぜ", "せ", "ze", "the dakuten ゛", "two short strokes at the upper right"],
+      ["ぱ", "は", "pa", "the handakuten ゜", "a small circle at the upper right"],
+      ["ぴ", "ひ", "pi", "the handakuten ゜", "a small circle at the upper right"],
+      ["ぷ", "ふ", "pu", "the handakuten ゜", "a small circle at the upper right"],
+      ["ぺ", "へ", "pe", "the handakuten ゜", "a small circle at the upper right"],
+    ] as const) {
+      const letter = scripts.japanese!.letters.find((entry) => entry.glyph === glyph)!;
+      expect(letter.role).toBe("hiragana");
+      expect(letter.sound).toBe(sound);
+      expect(letter.components).toEqual([base, mark]);
+      expect(letter.strokeOrder).toEqual([`${base} in full`, last]);
+      expect(letter.strokeOrderSource).toBeUndefined();
+      expect(scripts.japanese!.letters.some((entry) => entry.glyph === base)).toBe(true);
+      expect(missingJapanese.has(glyph)).toBe(false);
+      expect(affected.get(glyph) ?? 0).toBe(0);
+    }
   },
 };

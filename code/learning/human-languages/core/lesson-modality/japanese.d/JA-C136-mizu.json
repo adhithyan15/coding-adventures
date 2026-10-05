@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C136-mizu",
+    "language": "japanese",
+    "chapter": 136,
+    "sequence": 8290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f5581a3c0f291c6"
+  },
+  "findings": []
+}
