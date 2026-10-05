@@ -2234,6 +2234,18 @@ fn parse_css_color_function(css: &str) -> Option<Color> {
                 alpha,
             ))
         }
+        "prophoto-rgb" => {
+            let decode = |value: f64| if value <= 16.0 / 512.0 { value / 16.0 } else { value.powf(1.8) };
+            let r = decode(r);
+            let g = decode(g);
+            let b = decode(b);
+            Some(xyz_d50_to_color(
+                0.7977666449006423 * r + 0.1351812974005331 * g + 0.0313477341283922 * b,
+                0.2880748288194013 * r + 0.711_835_234_241_873 * g + 0.0000899369387256 * b,
+                0.8251046025104601 * b,
+                alpha,
+            ))
+        }
         _ => None,
     }
 }
@@ -2304,10 +2316,7 @@ fn css_lab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
     let x50 = to_xyz(f0) * 0.96422;
     let y50 = to_xyz(f1);
     let z50 = to_xyz(f2) * 0.82521;
-    let x65 = 0.9554734 * x50 - 0.0230985 * y50 + 0.0632593 * z50;
-    let y65 = -0.0283697 * x50 + 1.0099955 * y50 + 0.0210414 * z50;
-    let z65 = 0.0123140 * x50 - 0.0205077 * y50 + 1.3303659 * z50;
-    xyz_d65_to_color(x65, y65, z65, alpha)
+    xyz_d50_to_color(x50, y50, z50, alpha)
 }
 
 fn css_oklab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
@@ -2348,6 +2357,15 @@ fn xyz_d65_to_color(x: f64, y: f64, z: f64, alpha: u8) -> Color {
         3.2406 * x - 1.5372 * y - 0.4986 * z,
         -0.9689 * x + 1.8758 * y + 0.0415 * z,
         0.0557 * x - 0.2040 * y + 1.0570 * z,
+        alpha,
+    )
+}
+
+fn xyz_d50_to_color(x: f64, y: f64, z: f64, alpha: u8) -> Color {
+    xyz_d65_to_color(
+        0.9554734 * x - 0.0230985 * y + 0.0632593 * z,
+        -0.0283697 * x + 1.0099955 * y + 0.0210414 * z,
+        0.0123140 * x - 0.0205077 * y + 1.3303659 * z,
         alpha,
     )
 }
@@ -7719,6 +7737,15 @@ mod tests {
         assert_eq!(css_to_color("color(a98-rgb 20% 40% 60% / 80%)"), expected);
         assert_eq!(with_opacity("color(a98-rgb 0.2 0.4 0.6 / 80%)", 0.5), "rgba(40,86,157,0.4)");
         assert_eq!(normalize_css_paint("color(a98-rgb 20% 40% 60% / 80%)".into()), "rgba(40,86,157,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_color_prophoto_rgb_profile() {
+        let expected = Color { r: 0, g: 130, b: 176, a: 204 };
+        assert_eq!(css_to_color("color(prophoto-rgb 0.2 0.4 0.6 / 0.8)"), expected);
+        assert_eq!(css_to_color("color(prophoto-rgb 20% 40% 60% / 80%)"), expected);
+        assert_eq!(with_opacity("color(prophoto-rgb 0.2 0.4 0.6 / 80%)", 0.5), "rgba(0,130,176,0.4)");
+        assert_eq!(normalize_css_paint("color(prophoto-rgb 20% 40% 60% / 80%)".into()), "rgba(0,130,176,0.8)");
     }
 
     #[test]
