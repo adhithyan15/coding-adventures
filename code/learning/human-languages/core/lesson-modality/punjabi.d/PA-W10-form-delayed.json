@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W10-form-delayed",
+    "language": "punjabi",
+    "chapter": 154,
+    "sequence": 8410,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3d572f696e10f4bc",
+    "detachableSegments": [
+      "Writing — brief delayed copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

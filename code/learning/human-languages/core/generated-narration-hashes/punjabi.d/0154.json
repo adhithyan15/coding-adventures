@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:73adba5eeee65edd",
+  "lessonIds": [
+    "PA-W10-form-order",
+    "PA-W10-form-select",
+    "PA-W10-form-supported",
+    "PA-W10-form-delayed",
+    "PA-W10-form-repair-values",
+    "PA-W10-form-repair-layout",
+    "PA-W10-form-no-model"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch154.txt",
+  "json": "punjabi/narration/ch154.json",
+  "textHash": "fnv1a64:adc0b6e9fa879b7d",
+  "jsonHash": "fnv1a64:247f1c4b5bd0f35c",
+  "findings": []
+}

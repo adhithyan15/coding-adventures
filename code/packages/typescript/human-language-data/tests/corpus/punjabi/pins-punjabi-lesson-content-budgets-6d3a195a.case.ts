@@ -75,7 +75,9 @@ it("pins Punjabi lesson-content budgets", () =>
     // continuations. No idiom, sense or culture claim.
     // 820 -> 831: the date-field runway, using taught months and digits. No
     // idiom, sense or culture claim.
-    lessons: 831,
+    // 831 -> 838: three-field form integration, using only taught labels and
+    // fictional values. No idiom, sense or culture claim.
+    lessons: 838,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W10-form-order",
+    "language": "punjabi",
+    "chapter": 154,
+    "sequence": 8380,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c7a398d58df438ec",
+    "detachableSegments": [
+      "Writing — first labels, then values"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "PA-W10-form-repair-values",
+    "language": "punjabi",
+    "chapter": 154,
+    "sequence": 8420,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6b1343b33e3fbc4e",
+    "delivery": "script"
+  },
+  "findings": []
+}
