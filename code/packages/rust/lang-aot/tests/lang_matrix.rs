@@ -1805,6 +1805,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("64"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — implemented real-valued standard functions preserve
+    // runtime-real provenance through assignment and nested output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 9.0; real x; x := sqrt(pick()); output(abs(-x)) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — static integer-valued functions may feed checked snapshots and widen into
     // bounded static real expressions. Copying preserves the destination when
     // the source is reassigned; overflow, control flow, calls, captures,
@@ -12322,6 +12331,29 @@ fn algol_power_runtime_real_output_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but power runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_standard_function_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := sqrt(pick()); output(abs(-x))")
+        })
+        .expect("the ALGOL standard-function runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but standard-function runtime real output did not complete"
             );
             continue;
         };

@@ -1303,8 +1303,11 @@ backend immediately) come before the enabler-dependent items.
   procedure call and every reachable branch is independently proven. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
-  is independently runtime-real or a finite static numeric expression; broader
-  computed scalar `f64` formatting remains a follow-up.
+  is independently runtime-real or a finite static numeric expression. The
+  real-valued standard functions `abs`, `sqrt`, `sin`, `cos`, `ln`, `exp`, and
+  `arctan` preserve it for a proven runtime-real operand while user-declared
+  overrides remain conservative; broader computed scalar `f64` formatting
+  remains a follow-up.
   Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across

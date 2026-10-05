@@ -3781,6 +3781,25 @@ impl Compiler {
         if self.is_direct_declared_real_procedure_call(node) {
             return true;
         }
+        if node.rule_name == "proc_call" {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone());
+            if let Some(source_name) = source_name {
+                let target_name = self.resolve_procedure_identity(&source_name);
+                if !self.proc_sigs.contains_key(&target_name)
+                    && matches!(
+                        target_name.as_str(),
+                        "abs" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+                    )
+                {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self.is_runtime_real_assignment_value(actuals[0]);
+                }
+            }
+        }
         if let Some((sign, child)) = single_signed_child(node) {
             return matches!(sign, "+" | "-") && self.is_runtime_real_assignment_value(child);
         }
@@ -12384,6 +12403,42 @@ mod tests {
                         == Some("__basic_print_real")
             }));
         }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_real_standard_functions() {
+        for source in [
+            "begin real procedure pick; pick := 9.0; output(sqrt(pick())) end",
+            "begin real procedure pick; pick := 0.0; output(sin(pick())) end",
+            "begin real procedure pick; pick := 0.0; output(cos(pick())) end",
+            "begin real procedure pick; pick := 1.0; output(ln(pick())) end",
+            "begin real procedure pick; pick := 0.0; output(exp(pick())) end",
+            "begin real procedure pick; pick := 0.0; output(arctan(pick())) end",
+            "begin real procedure pick; pick := -2.25; output(abs(pick())) end",
+            "begin real procedure pick; pick := 9.0; real x; x := sqrt(pick()); output(abs(-x)) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "real standard functions must preserve runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_standard_function_provenance_respects_user_overrides() {
+        let err = compile_source(
+            "begin real procedure pick; pick := 9.0; real procedure sqrt(x); value x; real x; sqrt := x; output(sqrt(pick())) end",
+            "test",
+        )
+        .expect_err("a user-declared standard-function override must not use builtin provenance");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
