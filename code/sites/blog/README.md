@@ -106,9 +106,11 @@ navigation, content, and all thirteen fallback steps before Chrome runs. The
 browser is sandboxed, proxied back to the loopback artifact server, constrained
 by a restrictive response policy, and required to report the exact requested
 and final route. CI pins Node 22.23.2 and Chrome for Testing 154.0.8037.92,
-uses the frozen local bootstrap to enforce every reviewed npm lock without
-dependency lifecycle scripts before explicitly building packages and products,
-and retains only the bounded
+content-authenticates that exact build's SUID helper before making its
+root-owned copy mode 4755 so Ubuntu's AppArmor user-namespace restriction does
+not require disabling Chrome's sandbox, uses the frozen local bootstrap to
+enforce every reviewed npm lock without dependency lifecycle scripts before
+explicitly building packages and products, and retains only the bounded
 `dist/.forme-web-quality.json` summary; browser phases have finite deadlines and
 fresh processes. A failed Chrome launch reports at most 1,024 printable
 characters from a bounded, no-follow read of its startup log so hosted-runner

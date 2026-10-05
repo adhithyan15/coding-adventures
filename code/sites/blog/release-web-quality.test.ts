@@ -65,6 +65,10 @@ describe("Forme release web-quality effects", () => {
       "http://127.0.0.1:4321/coding-adventures/blog/",
     );
     expect(launcher.waitUntilReady).not.toBe(Launcher.prototype.waitUntilReady);
+    const flags = (launcher as unknown as { readonly flags: readonly string[] }).flags;
+    expect(flags).toContain("--disable-extensions");
+    expect(flags).not.toContain("--disable-setuid-sandbox");
+    expect(flags).not.toContain("--no-sandbox");
   });
 
   it("reads only bounded regular single-link files without following symlinks", async () => {

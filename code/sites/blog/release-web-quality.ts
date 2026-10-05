@@ -230,8 +230,9 @@ export function createBoundedChromeLauncher(chromePath: string, url: string): La
     chromePath,
     connectionPollInterval: CHROME_CONNECTION_POLL_MS,
     maxConnectionRetries: CHROME_CONNECTION_RETRIES,
-    chromeFlags: chromeFlagsFor(url),
+    chromeFlags: [...Launcher.defaultFlags(), ...chromeFlagsFor(url)],
     handleSIGINT: false,
+    ignoreDefaultFlags: true,
     logLevel: "silent",
   });
 }

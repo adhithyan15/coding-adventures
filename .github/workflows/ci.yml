@@ -1490,6 +1490,32 @@ jobs:
           chrome-version: 154.0.8037.92
           install-dependencies: true
 
+      - name: Install the reviewed Chrome SUID sandbox
+        shell: bash
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          FORME_CHROME_SANDBOX_SHA256: 24beb85e4149c65db5bf40fa307721143d0883ab8952e60dde1158606f644dee
+        run: |
+          sandbox_source="$(dirname "$CHROME_PATH")/chrome_sandbox"
+          sandbox_target=/usr/local/sbin/forme-chrome-sandbox
+          test -f "$sandbox_source"
+          test ! -L "$sandbox_source"
+          test "$(stat -c '%F %h' "$sandbox_source")" = "regular file 1"
+          test "$(sha256sum "$sandbox_source" | cut -d ' ' -f 1)" = \
+            "$FORME_CHROME_SANDBOX_SHA256"
+          sudo install -o root -g root -m 0755 "$sandbox_source" "$sandbox_target"
+          test -f "$sandbox_target"
+          test ! -L "$sandbox_target"
+          test "$(stat -c '%F %h %U:%G %a' "$sandbox_target")" = \
+            "regular file 1 root:root 755"
+          test "$(sha256sum "$sandbox_target" | cut -d ' ' -f 1)" = \
+            "$FORME_CHROME_SANDBOX_SHA256"
+          sudo chmod 4755 "$sandbox_target"
+          test "$(stat -c '%F %h %U:%G %a' "$sandbox_target")" = \
+            "regular file 1 root:root 4755"
+          test "$(sha256sum "$sandbox_target" | cut -d ' ' -f 1)" = \
+            "$FORME_CHROME_SANDBOX_SHA256"
+
       - name: Build both live Forme sites
         shell: bash
         run: |
@@ -1504,6 +1530,7 @@ jobs:
         working-directory: code/sites/blog
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          CHROME_DEVEL_SANDBOX: /usr/local/sbin/forme-chrome-sandbox
           FORME_EXPECTED_CHROME_VERSION: 154.0.8037.92
         run: npm run quality:release
 
