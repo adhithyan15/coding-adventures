@@ -255,6 +255,28 @@ The CI lane uses an exact Node release and the frozen local bootstrap to enforce
 every reviewed npm lock before explicitly building packages and products; it
 does not run dependency lifecycle scripts.
 
+### FM-B071 public API v2 contract
+
+The first stable Forme package line is `1.0.0`, while the independently
+versioned kernel contract advances to `apiVersion` `2`. Every publishable
+`@coding-adventures/forme-*` package carries the same package version and every
+first-party stage or plugin manifest targets kernel API v2. Package semver and
+kernel API version are intentionally distinct: package `1.0.0` may implement
+kernel API `2`.
+
+`RenderedPage` advances from kind `1.1` to `2.0`. Its `provenance` field is
+required and its temporary `source` compatibility field is removed. A
+single-input renderer records one provenance contributor; aggregate renderers
+record their complete normalized contributor set. The DAG compatibility check
+must refuse v1.x/v2 wiring, and every manifest, direct stage, and runner
+boundary must refuse kernel API v1 rather than silently accepting it.
+
+The release includes one package-level migration guide that names every
+breaking change, shows the single-source and aggregate provenance replacements,
+and explains the distinct package, kind, and kernel version axes. Lockfiles,
+runtime stage metadata, product fixtures, changelogs, and user-facing version
+output are updated together so a clean checkout cannot report a mixed release.
+
 ## Discovery log
 
 Add discoveries here before the next prioritization run. Promote each one to a
