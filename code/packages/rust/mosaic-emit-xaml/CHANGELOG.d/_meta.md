@@ -3,6 +3,8 @@
 
 ## [Unreleased]
 
+- Nested container text styles now derive from their enclosing generated style, preserving foreground and typography when a child changes alignment. Sibling containers and structural table rows keep independent style scopes (#14274).
+
 - Structural table headers now bind the repeated colgroup widths and refresh after width changes, keeping headers aligned with fixed-width data cells (#14274).
 
 - Repeated children of horizontal rows now use a horizontal WinUI `StackLayout`, including structural table headers and cells. Nested columns and boxes retain vertical repeater layout (#14274).
