@@ -1,0 +1,1 @@
+var e=``+new URL(`AR-W04-arbaa-sutur-filmstrip-PD0Nx2_M.svg`,import.meta.url).href;export{e as default};

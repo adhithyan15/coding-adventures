@@ -1,0 +1,1 @@
+var e=``+new URL(`KA-S132-sign-visarga-filmstrip-CUizlJ6w.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`GU-W04-lla-filmstrip-BiHWMmB_.svg`,import.meta.url).href;export{e as default};
