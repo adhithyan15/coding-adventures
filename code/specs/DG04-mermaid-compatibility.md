@@ -547,7 +547,9 @@ and alpha before direct linear-sRGB lowering. CSS `color()` supports both encode
 `srgb` and linear-light `srgb-linear` profiles through the same semantic and
 backend-neutral path, while `display-p3` components convert through D65 XYZ into
 backend-neutral sRGB paint. The wider-gamut `a98-rgb` profile applies its specified
-transfer curve and D65 matrix before the same backend-neutral conversion. The complete CSS named-color set likewise resolves to explicit
+transfer curve and D65 matrix before the same backend-neutral conversion. The
+D50-based `prophoto-rgb` profile applies its piecewise transfer curve and chromatic
+adaptation before backend-neutral sRGB lowering. The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
 The SVG/CSS `none` paint keyword remains distinct from text color semantics and
