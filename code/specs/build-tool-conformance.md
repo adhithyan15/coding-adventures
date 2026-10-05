@@ -969,6 +969,21 @@ languages fail before the package root is inspected or walked. Generated-tree
 pruning remains exact and case-sensitive, and neither a declared glob nor a
 package-specific selector can reopen a pruned directory or inert link boundary.
 
+The Python build tool packages a byte-for-byte snapshot of the checked
+language source-input registry as package data. A deterministic sync command
+refreshes that snapshot from the checked neutral JSON; tests require complete
+structural equality and the same domain-separated digest, and exercise the
+production selector through every package-local neutral case. Runtime hashing
+loads only its installed package data, never searches for a repository fixture.
+Its lookup uses all seven roles with the same extension-versus-declared
+precedence, exact generated-component pruning, and inert link boundaries.
+Unknown languages fail before enumeration. Exact-package selection requires a
+canonical `code/packages|programs/<lane>/<name...>` root agreeing with the
+language, or one of the two exact registered TypeScript site roots; unrelated
+`code/sites` roots do not acquire TypeScript authority. This package-local
+adoption does not include the separate repository-boundary source registry,
+Git-index proof, or boundary reverse-diff selection.
+
 Swift and the shared C#/F# engine complete this package-local projection with
 the repository-relative boundary registry, tracked-regular-file evidence, and
 an exact reverse diff index. Their native readers remain responsible for

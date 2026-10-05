@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16749,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16749",
-    "branch": "codex/parity-ct-compare-fixtures-20261005",
-    "implementation_revision": "d28e2cb09e4ab99e92393d7cd7d985da9eee0c79",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-05T19:52:12Z",
+    "observed_at": "2026-10-05T23:26:18Z",
     "pr_number": 16749,
-    "status": "checks-pending",
-    "notes": "Ready-for-review CT01 neutral conformance PR opened from reviewed head d28e2cb09e4ab99e92393d7cd7d985da9eee0c79. GitHub initially reports MERGEABLE with checks queued; do not enable auto-merge until required final-head gates are terminal and acceptable with no CI failure or merge conflict."
+    "status": "merged",
+    "notes": "Required CI gate and Human Languages Books gate passed, all 49 terminal checks were successful with nine skipped, and GitHub reported CLEAN/MERGEABLE before guarded squash auto-merge. PR #16749 merged as eadd4774e5a8e28a9a25ccdac1c34153e5274db2; no manual merge."
   },
   "last_inventory": {
-    "revision": "bbac63d317db4d311773d71bee0260745e48e73f",
+    "revision": "eadd4774e5a8e28a9a25ccdac1c34153e5274db2",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1352,10 +1346,13 @@
     {
       "id": "build-tool-python-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Python build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-python-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-python-glob-matcher-complexity-hardening"],
-      "branch": null,
+      "branch": "codex/parity-python-source-registry-20261005",
       "pr_number": null,
+      "selected_at": "2026-10-05T23:30:11Z",
+      "selection_revision": "eadd4774e5a8e28a9a25ccdac1c34153e5274db2",
+      "selection_notes": "Selected after registering 25 audited ownership gaps and an exact-main schema-3 collision-checked refresh. All six prerequisites are merged; no open PR touches Python build-tool or neutral source-registry paths. Three direct children depend on this owner. Scope is production Python registry adoption and dynamic equality tests, not a second implementation lane.",
       "notes": "Production Python currently owns only a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including scoped Rust companions, package resources, and exact root metadata, and test production lookup equality rather than a fixture-only copy."
     },
     {
@@ -6712,14 +6709,14 @@
     {
       "id": "ct-compare-language-neutral-conformance",
       "title": "Define language-neutral constant-time comparison conformance",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-ct-compare-fixtures-20261005",
       "pr_number": 16749,
       "selected_at": "2026-10-05T19:25:39Z",
       "selection_revision": "7196f381b006d3c1436c05b67fc08bf71c1637c2",
       "selection_notes": "Selected after reviewed #16744 merged and an exact-main schema-3 collision-checked refresh found 15 established lanes, 1,487 identities, 4,757 slots, 178 high-consensus packages with 262 missing slots, and zero collisions or unknown buckets. This zero-dependency contract has six direct pending children and nine unfinished descendants, more immediate leverage than the ready Python source-registry and Haskell graph/diff owners (three direct children each). The new HF06/KD03 and DT17 owners were registered first. Scope is CT01 plus a versioned neutral fixture corpus and independent validator only; lane adoption and timing assurance remain separate.",
-      "notes": "Discovered by the parallel high-consensus ownership audit after PR #14366. Define CT01 and a closed ct-compare-v1 corpus for byte equality, fixed-size aliases, equal-length byte selection, unsigned 64-bit equality, exact iteration counts, stable validation failures, and data-independent source/control-flow. Treat length as public, encode bytes and u64 values as hex, prohibit content-dependent exits and lookups, require source or optimized-code review where meaningful, and explicitly avoid universal hardware timing claims or noisy wall-clock ratio tests."
+      "notes": "Merged by guarded auto-merge in PR #16749 as eadd4774e5a8e28a9a25ccdac1c34153e5274db2. CT01 defines a closed ct-compare-v1 corpus for byte equality, fixed-size aliases, equal-length byte selection, unsigned 64-bit equality, exact iteration counts, stable validation failures, and data-independent source/control-flow. Length is public; bytes and u64 values are hex; source or optimized-code review remains required where meaningful. No universal hardware timing claim."
     },
     {
       "id": "ct-compare-existing-lane-conformance-adoption",
@@ -11998,6 +11995,156 @@
       "branch": null,
       "pr_number": null,
       "notes": "The TypeScript blog registry and conformance case contain nine exact paths, including data/assets/.pipeline-steps.js.id.json, while current spec, fixture README, and Go README prose say eight. Clarify the prose without changing the registry, digests, or historical changelog text; the .js module itself remains suffix-selected rather than a tenth exact path."
+    },
+    {
+      "id": "toml-parser-f03-neutral-semantic-reconciliation",
+      "title": "Freeze F03 TOML syntax and semantic conformance",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Post-#16749 audit: TOML parser exists in 13/15 established lanes; Dart and Swift are missing. Reconcile newline, simple-key, inline-table, and TOMLDocument-versus-AST behavior before ports."
+    },
+    {
+      "id": "toml-parser-dart-swift-parity",
+      "title": "Port the reconciled TOML parser to Dart and Swift",
+      "status": "pending", "depends_on": ["toml-parser-f03-neutral-semantic-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "Two missing established slots. Split by lane for implementation PRs; consume the F03 neutral corpus and native BUILD tests."
+    },
+    {
+      "id": "json-value-d20-neutral-conformance",
+      "title": "Freeze D20 JSON value and serializer semantics",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Dart, Java, and Kotlin lack JSON value and serializer (six slots). Specify value ownership, number/string round trips, canonical error behavior, and independent neutral cases. Java/Kotlin JSON lexer/parser ping stubs are prerequisites, not evidence of parser readiness."
+    },
+    {
+      "id": "json-value-dart-java-kotlin-parity",
+      "title": "Port D20 JSON value and serializer to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": ["json-value-d20-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Resolve same-lane parser prerequisites first; split into lane-sized reviewable PRs. Dart has a real parser, while Java/Kotlin generic JSON parser/lexer stubs need actual implementation."
+    },
+    {
+      "id": "asciidoc-parser-te03-neutral-conformance",
+      "title": "Freeze TE03 AsciiDoc parser-to-AST conformance",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "AsciiDoc parser is missing Dart, Java, and Kotlin. Constrain this owner to document-ast parsing and neutral fixtures; renderer and facade coverage are separate."
+    },
+    {
+      "id": "asciidoc-parser-dart-java-kotlin-parity",
+      "title": "Port TE03 AsciiDoc parser to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": ["asciidoc-parser-te03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Three missing established parser slots, independently sliced by lane after AST and fixture readiness. Do not conflate with renderer or C#/F#/Haskell facade gaps."
+    },
+    {
+      "id": "ed25519-neutral-rfc8032-conformance",
+      "title": "Freeze Ed25519 RFC 8032 vectors and safety contract",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Ed25519 is absent in Dart, Java, and Kotlin. Pin neutral signing/verification and invalid-input vectors before ports; do not claim general constant-time safety from functional tests."
+    },
+    {
+      "id": "ed25519-dart-java-kotlin-parity",
+      "title": "Port Ed25519 to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": ["ed25519-neutral-rfc8032-conformance"], "branch": null, "pr_number": null,
+      "notes": "Three lane-sized ports require the same-lane SHA-512 foundations and native neutral-vector tests."
+    },
+    {
+      "id": "chacha20-poly1305-se03-neutral-conformance",
+      "title": "Reconcile SE03 ChaCha20-Poly1305 neutral and security semantics",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Missing Dart/Java/Kotlin; correct stale nine-lane spec and inaccurate ARX-only claim. Pin RFC 8439 vectors, nonce/tag/authentication-failure behavior, and educational timing limits."
+    },
+    {
+      "id": "chacha20-poly1305-dart-java-kotlin-parity",
+      "title": "Port SE03 ChaCha20-Poly1305 to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": ["chacha20-poly1305-se03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Three missing established slots; slice JVM and Dart work separately after neutral review, and do not market big-integer educational ports as constant-time."
+    },
+    {
+      "id": "content-addressable-storage-neutral-conformance",
+      "title": "Freeze content-addressable storage neutral behavior",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "CAS exists in 12/15 lanes, missing Dart/Java/Kotlin. Resolve odd-hex prefix, NotFound versus Store error, path/digest, and SHA-1 legacy security semantics."
+    },
+    {
+      "id": "content-addressable-storage-dart-java-kotlin-parity",
+      "title": "Port content-addressable storage to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": ["content-addressable-storage-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "All three lanes already have SHA-1; split by lane and test neutral error/digest behavior without representing SHA-1 as adversarial authentication."
+    },
+    {
+      "id": "dartmouth-basic-neutral-lexer-parser-conformance",
+      "title": "Freeze Dartmouth BASIC lexer and parser conformance",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Lexer and parser each lack Dart/Java/Kotlin (six slots). Pin token/AST fixtures and complete-consumption rules; JVM generic lexer keyword promotion and parser token-consumption bugs must be fixed before language wrappers."
+    },
+    {
+      "id": "dartmouth-basic-dart-java-kotlin-parity",
+      "title": "Port Dartmouth BASIC lexer and parser to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": ["dartmouth-basic-neutral-lexer-parser-conformance"], "branch": null, "pr_number": null,
+      "notes": "Implement same-lane lexer before parser, bounded by lane; normalize Dart wrapper output against the neutral contract."
+    },
+    {
+      "id": "brainfuck-wasm-compiler-dart-swift-parity",
+      "title": "Port Brainfuck-to-Wasm compilation to Dart and Swift",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Thirteen of fifteen lanes present. Dart needs encoder import-section and WASI fd_read support first; Swift can direct-emit its small Wasm subset with LEB128. Define neutral module/runtime cases; no generic IR prerequisite. Split by lane."
+    },
+    {
+      "id": "ml02-gradient-descent-dart-java-kotlin-swift-parity",
+      "title": "Port ML02 gradient descent across four missing lanes",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Ten of fifteen lanes present; Dart, Java, Kotlin, Swift missing. Existing matrix, activation, and loss foundations permit independent lane-sized SGD ports with deterministic neutral cases."
+    },
+    {
+      "id": "perceptron-neutral-conformance-and-four-lane-parity",
+      "title": "Specify perceptron behavior and port four missing lanes",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Eleven of fifteen lanes present; Dart, Java, Kotlin, Swift missing. Freeze independent neutral training/prediction cases, then split lane ports. Perceptron does not require gradient-descent."
+    },
+    {
+      "id": "dart-swift-language-frontends-neutral-fixtures",
+      "title": "Freeze Dart and Swift language-frontend token and AST fixture contract",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Twelve lexer/parser roots in both lanes produce 48 missing slots: C#, Excel, Java, JavaScript, Lattice, Python, Ruby, SQL, Starlark, TypeScript, Verilog, VHDL. Pin grammar embed/drift and neutral token/AST cases; split subsequent vertical lexer-to-parser slices. Contextual generic closer must precede C#/Java semantic ports."
+    },
+    {
+      "id": "dart-swift-lattice-frontend-vertical-parity",
+      "title": "Port Lattice lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "First bounded vertical from the 48-slot wave; same-lane generic graph, state-machine, grammar-tools, lexer, parser foundations exist. Split by lane, lexer before parser."
+    },
+    {
+      "id": "dart-java-kotlin-core-eight-family-parity",
+      "title": "Classify and split eight Dart/JVM core package families",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Twenty-four missing slots across arithmetic, block-ram, Brotli, clock, FPGA, hash-functions, tree, XML lexer. Split by family/lane; FPGA depends block-ram, Brotli neutral owner already pending, DT17 vector correction precedes hash-functions ports, XML requires generic lexer hook support."
+    },
+    {
+      "id": "dart-hash-foundation-and-eleven-storage-families",
+      "title": "Plan Dart hash foundation and eleven missing data/store identities",
+      "status": "pending", "depends_on": ["hash-functions-dt17-vector-and-documentation-correction"], "branch": null, "pr_number": null,
+      "notes": "Dart and Swift each lack 11 identities including bloom-filter, hash-map/set, HyperLogLog, in-memory store/protocol/engine, radix-tree, RESP, skip-list, tree-set; Swift children already owned, Dart not. Dart hash-functions unlocks bloom/hash-map/HLL; hash-set needs hash-map, tree-set needs tree substrate, store engine needs several data structures. Split by DAG; exclude full server/AOF without applicability review."
+    },
+    {
+      "id": "sql-csv-source-neutral-and-dart-swift-parity",
+      "title": "Specify and port SQL CSV source adapters to Dart and Swift",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Both lanes have csv-parser and sql-execution-engine. Pin quoted headers, ragged rows, coercion, and snapshot semantics in neutral fixtures, then port each missing adapter separately."
+    },
+    {
+      "id": "nib-wasm-compiler-dart-swift-dependency-plan",
+      "title": "Plan Dart and Swift Nib Wasm compiler substrate chain",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Both lanes lack Nib frontend, compiler-ir, and ir-to-wasm; Swift also lacks encoder. Record exact dependency DAG and language-neutral module fixtures before attempting missing orchestration packages."
+    },
+    {
+      "id": "net03-http-core-http1-dart-java-kotlin-parity",
+      "title": "Plan NET03 HTTP core and HTTP/1 parity in Dart and JVM lanes",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "http-core 9/15 and http1 12/15; Dart/Java/Kotlin miss both. Pin neutral framing and safe failure behavior, port same-lane core before HTTP/1, and include existing safe-framing backfill. Split lane-sized implementations."
+    },
+    {
+      "id": "json-rpc-dart-java-kotlin-parity",
+      "title": "Specify and port JSON-RPC to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Nine of fifteen lanes present. Freeze neutral request/response/error fixtures and port the three missing lanes independently; JSON-RPC is not inherently gated by an rpc package."
     }
   ]
 }

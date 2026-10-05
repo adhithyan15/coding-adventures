@@ -15696,6 +15696,29 @@ does not claim that functional vectors prove hardware timing or promote any
 particular language lane. The existing-lane reconciliation and five missing
 lane ports remain separate pending children.
 
+After guarded auto-merge of CT01 PR #16749 at `eadd4774e5`, an exact-main
+schema-3 collision-checked inventory still reports 15 established languages,
+1,487 implementation identities, 4,757 package slots, 178 high-consensus
+identities with 262 missing slots, zero canonical collisions, and zero unknown
+language buckets. OCaml remains emerging with five packages and is excluded
+from the denominator until its explicit promotion gates pass. The newly
+registered backlog owners capture F03 TOML, D20 JSON value/serializer, TE03
+AsciiDoc, RFC 8032 Ed25519, SE03 ChaCha20-Poly1305, CAS, Dartmouth BASIC,
+Brainfuck Wasm, ML02 gradient descent, perceptron, Dart/Swift language
+frontends, eight Dart/JVM core families, Dart hash/store foundations, SQL CSV,
+Nib Wasm, NET03 HTTP, and JSON-RPC. Those records are audit findings and
+dependency plans; multi-lane records must be split into coherent lane-sized
+implementation PRs after their neutral contracts are reviewed. They do not
+claim behavioral conformance merely from package-directory presence.
+
+The next single owner is Python build-tool exact source-input registry
+adoption. Its six prerequisites are merged, no open PR owns its production or
+neutral-fixture paths, and adoption unlocks three direct pending children:
+Python repository-boundary reverse-diff/digest, the Python terminal neutral
+adapter, and the hashing completion umbrella. This is a narrower ready change
+than the newly discovered cross-language families and retains one active
+parity PR at a time.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
