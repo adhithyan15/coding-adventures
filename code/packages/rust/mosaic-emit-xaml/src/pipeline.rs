@@ -1189,6 +1189,10 @@ struct EmitContext<'a> {
     horizontal_repeater: bool,
     /// Colgroup source and loop depth for structural header item widths.
     header_width_source: Option<(String, usize)>,
+    /// Nearest generated container text style. Unique keys let nested styles
+    /// inherit without resolving their own implicit TextBlock key recursively.
+    text_style_resource: Option<String>,
+    text_style_resource_count: usize,
 }
 
 impl<'a> EmitContext<'a> {
@@ -1242,6 +1246,8 @@ impl<'a> EmitContext<'a> {
             table_font_size: None,
             horizontal_repeater: false,
             header_width_source: None,
+            text_style_resource: None,
+            text_style_resource_count: 0,
         }
     }
 
@@ -3532,7 +3538,9 @@ fn emit_xaml_node(
             .iter().any(|(name, _)| name == "FontSize") {
         ctx.table_font_size = None;
     }
+    let previous_text_style = ctx.text_style_resource.clone();
     let result = emit_xaml_node_contents(node, indent, part_styles, ctx);
+    ctx.text_style_resource = previous_text_style;
     ctx.table_font_size = previous;
     ctx.horizontal_repeater = previous_flow;
     result
@@ -4072,7 +4080,7 @@ fn emit_stack_panel(
         format!("{pad}<StackPanel Orientation=\"{orientation}\"{stack_attrs}>\n")
     } else {
         let mut wrapped = format!("{pad}<Border{container_attrs}>\n");
-        emit_text_style_resources(&mut wrapped, "Border", indent + 4, &text_setters);
+        emit_text_style_resources(&mut wrapped, "Border", indent + 4, &text_setters, ctx);
         writeln!(
             wrapped,
             "{inner_pad}<StackPanel Orientation=\"{orientation}\"{stack_attrs}>"
@@ -4183,7 +4191,7 @@ fn emit_flex_grid(
         let mut wrapped_out =
             format!("{pad}<Border{state_name_attr}{container_attrs}{shadow_attr}>\n");
         wrapped_out.push_str(&shadow_child);
-        emit_text_style_resources(&mut wrapped_out, "Border", indent + 4, &text_setters);
+        emit_text_style_resources(&mut wrapped_out, "Border", indent + 4, &text_setters, ctx);
         writeln!(wrapped_out, "{inner_pad}<Grid{grid_attrs}>").unwrap();
         wrapped_out
     };
@@ -4360,7 +4368,7 @@ fn emit_container(
             theme_shadow_attr_and_child(elevation, "Border", indent + 4);
         let mut out = format!("{pad}<Border{state_name_attr}{container_attrs}{shadow_attr}>\n");
         out.push_str(&shadow_child);
-        emit_text_style_resources(&mut out, "Border", indent + 4, &text_setters);
+        emit_text_style_resources(&mut out, "Border", indent + 4, &text_setters, ctx);
         writeln!(out, "{inner_pad}<{element}>").unwrap();
         out.push_str(&emit_xaml_children(
             &node.children,
@@ -4377,7 +4385,7 @@ fn emit_container(
     let mut out = format!("{pad}<{element}{state_name_attr}{container_attrs}{shadow_attr}>\n");
     out.push_str(&shadow_child);
 
-    emit_text_style_resources(&mut out, element, indent + 4, &text_setters);
+    emit_text_style_resources(&mut out, element, indent + 4, &text_setters, ctx);
 
     if element == "Border" {
         out.push_str(&emit_xaml_single_content_children(
@@ -4403,13 +4411,19 @@ fn emit_text_style_resources(
     element: &str,
     indent: usize,
     text_setters: &[(String, String)],
+    ctx: &mut EmitContext<'_>,
 ) {
     if text_setters.is_empty() {
         return;
     }
     let pad = " ".repeat(indent);
     writeln!(out, "{pad}<{element}.Resources>").unwrap();
-    writeln!(out, "{pad}    <Style TargetType=\"TextBlock\">").unwrap();
+    ctx.text_style_resource_count += 1;
+    let key = format!("MosaicTextStyle{}", ctx.text_style_resource_count);
+    let based_on = ctx.text_style_resource.as_ref()
+        .map(|parent| format!(" BasedOn=\"{{StaticResource {parent}}}\""))
+        .unwrap_or_default();
+    writeln!(out, "{pad}    <Style x:Key=\"{key}\" TargetType=\"TextBlock\"{based_on}>").unwrap();
     for (setter, value) in text_setters {
         writeln!(
             out,
@@ -4418,7 +4432,11 @@ fn emit_text_style_resources(
         .unwrap();
     }
     writeln!(out, "{pad}    </Style>").unwrap();
+    // The implicit style selects this lexical cascade. BasedOn preserves all
+    // outer setters while allowing this container's authored setters to win.
+    writeln!(out, "{pad}    <Style TargetType=\"TextBlock\" BasedOn=\"{{StaticResource {key}}}\"/>").unwrap();
     writeln!(out, "{pad}</{element}.Resources>").unwrap();
+    ctx.text_style_resource = Some(key);
 }
 
 /// `Text [name] (content: slot: foo)` → `<TextBlock Text="{x:Bind Foo}"/>`.
@@ -13243,7 +13261,7 @@ fn emit_native_host_table(
         escape_xaml_attr(&table_name)
     )
     .unwrap();
-    emit_text_style_resources(&mut out, "Grid", indent + 4, &text_setters);
+    emit_text_style_resources(&mut out, "Grid", indent + 4, &text_setters, ctx);
     writeln!(out, "{pad2}<Grid.RowDefinitions>").unwrap();
     writeln!(out, "{pad2}    <RowDefinition Height=\"Auto\"/>").unwrap();
     writeln!(out, "{pad2}    <RowDefinition Height=\"*\"/>").unwrap();
@@ -13473,7 +13491,7 @@ fn emit_host_table_contents(
     // -- 4. Assemble the XAML. --
     let mut out = String::new();
     writeln!(out, "{pad}<Grid{flow_direction_attr}{style}>").unwrap();
-    emit_text_style_resources(&mut out, "Grid", indent + 4, &text_setters);
+    emit_text_style_resources(&mut out, "Grid", indent + 4, &text_setters, ctx);
     writeln!(out, "{pad2}<Grid.RowDefinitions>").unwrap();
     for r in &row_defs {
         writeln!(out, "{pad2}    <RowDefinition Height=\"{r}\"/>").unwrap();
@@ -13591,13 +13609,14 @@ fn emit_host_table_rows(
     for row in rows {
         match row.tag.as_str() {
             "Row" => {
-                out.push_str(&emit_stack_panel(
-                    row,
-                    indent,
-                    part_styles,
-                    "Horizontal",
-                    ctx,
-                )?);
+                // Structural rows bypass emit_xaml_node, so establish the same
+                // lexical restoration boundary here (including error paths).
+                let previous_text_style = ctx.text_style_resource.clone();
+                let row_result = emit_stack_panel(
+                    row, indent, part_styles, "Horizontal", ctx,
+                );
+                ctx.text_style_resource = previous_text_style;
+                out.push_str(&row_result?);
             }
             "For" => {
                 // Allow a `For` inside a section so authors can iterate
@@ -21887,6 +21906,57 @@ mod tests {
         }
     }
 
+    #[test]
+    fn nested_text_styles_preserve_parent_setters_and_isolate_siblings() {
+        let mut root = styled_box_with_text_child("outer");
+        let mut aligned = styled_box_with_text_child("aligned");
+        aligned.children.push(styled_box_with_text_child("override"));
+        root.children = vec![aligned, styled_box_with_text_child("sibling")];
+        let mut style = style_for_box("outer", vec![("color", "#eeeeee"), ("font-size", "16")]);
+        for (part, props) in [
+            ("aligned", vec![("text-align", "right")]),
+            ("override", vec![("color", "#ff0000")]),
+            ("sibling", vec![("font-weight", "700")]),
+        ] {
+            style.parts.extend(style_for_box(part, props).parts);
+        }
+        let r = compile(&component("Foo", vec![], vec![]), &layout_with_root("Foo", root), &style);
+        // Each branch inherits its lexical parent, not the last emitted style.
+        for (child, parent) in [(2, 1), (3, 2), (4, 1)] {
+            assert!(r.xaml.contains(&format!(
+                "x:Key=\"MosaicTextStyle{child}\" TargetType=\"TextBlock\" BasedOn=\"{{StaticResource MosaicTextStyle{parent}}}\""
+            )), "{}", r.xaml);
+        }
+        assert!(r.xaml.contains("Property=\"Foreground\" Value=\"#eeeeee\""));
+        assert!(r.xaml.contains("Property=\"TextAlignment\" Value=\"Right\""));
+        assert!(r.xaml.contains("Property=\"Foreground\" Value=\"#ff0000\""));
+        assert_eq!(r.xaml.matches("<Style TargetType=\"TextBlock\" BasedOn=").count(), 4);
+    }
+
+    #[test]
+    fn structural_table_row_text_styles_restore_the_table_parent() {
+        let mut first = styled_box_with_text_child("first");
+        first.tag = "Row".into();
+        let mut second = styled_box_with_text_child("second");
+        second.tag = "Row".into();
+        let root = LayoutNode {
+            tag: "HostTable".into(), part_name: Some("table".into()), props: vec![],
+            children: vec![LayoutNode {
+                tag: "HostTableBody".into(), part_name: None, props: vec![],
+                children: vec![first, second],
+            }],
+        };
+        let mut style = style_for_box("table", vec![("color", "#eeeeee")]);
+        style.parts.extend(style_for_box("first", vec![("text-align", "right")]).parts);
+        style.parts.extend(style_for_box("second", vec![("font-weight", "700")]).parts);
+        let r = compile(&component("Foo", vec![], vec![]), &layout_with_root("Foo", root), &style);
+        for child in [2, 3] {
+            assert!(r.xaml.contains(&format!(
+                "x:Key=\"MosaicTextStyle{child}\" TargetType=\"TextBlock\" BasedOn=\"{{StaticResource MosaicTextStyle1}}\""
+            )), "{}", r.xaml);
+        }
+    }
+
     // ── issue #12022: dropped_style_properties ──
 
     /// An `inset` `box-shadow` (the moon/status-dot drawing hack, issue
@@ -22226,7 +22296,7 @@ mod tests {
             r.xaml
         );
         assert!(
-            r.xaml.contains("<Style TargetType=\"TextBlock\">"),
+            r.xaml.contains("<Style TargetType=\"TextBlock\" BasedOn=\"{StaticResource MosaicTextStyle1}\"/>"),
             "got:\n{}",
             r.xaml
         );
