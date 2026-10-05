@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C134-kaban",
+    "language": "japanese",
+    "chapter": 134,
+    "sequence": 8050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88673b5485a78479"
+  },
+  "findings": []
+}

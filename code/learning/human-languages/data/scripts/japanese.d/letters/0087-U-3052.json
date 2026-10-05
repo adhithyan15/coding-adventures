@@ -1,0 +1,15 @@
+{
+  "glyph": "げ",
+  "sound": "ge",
+  "role": "hiragana",
+  "components": [
+    "け",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "け in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "け voiced. Opens げつようび, Monday, and げんき, well."
+}

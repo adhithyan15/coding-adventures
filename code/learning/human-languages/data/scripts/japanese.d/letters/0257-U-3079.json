@@ -1,0 +1,15 @@
+{
+  "glyph": "べ",
+  "sound": "be",
+  "role": "hiragana",
+  "components": [
+    "へ",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "へ in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "へ voiced, read be. The middle of たべる and the start of べんきょう."
+}

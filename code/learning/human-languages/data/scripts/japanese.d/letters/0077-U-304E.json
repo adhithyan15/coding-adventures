@@ -1,0 +1,15 @@
+{
+  "glyph": "ぎ",
+  "sound": "gi",
+  "role": "hiragana",
+  "components": [
+    "き",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "き in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "き voiced. Opens ぎんこう, a bank; with it the book writes the whole voiced k row, が ぎ ぐ げ ご."
+}

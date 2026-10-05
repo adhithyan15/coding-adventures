@@ -1,0 +1,15 @@
+{
+  "glyph": "ば",
+  "sound": "ba",
+  "role": "hiragana",
+  "components": [
+    "は",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "は in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "は voiced, read ba: on an h sign the dakuten makes a b. The middle of かばん and the start of ばしょ."
+}

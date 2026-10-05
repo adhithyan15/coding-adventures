@@ -1,0 +1,15 @@
+{
+  "glyph": "び",
+  "sound": "bi",
+  "role": "hiragana",
+  "components": [
+    "ひ",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "ひ in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "ひ voiced, read bi. Opens びょういん, a hospital, and ends どようび and げつようび."
+}

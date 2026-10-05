@@ -1,0 +1,11 @@
+{
+  "id": "JA-C134-benkyou",
+  "pathSegment": "JA-PATH-134-WRITE134",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "JA-EXT-134-WRITE134",
+      "order": 8
+    }
+  ]
+}

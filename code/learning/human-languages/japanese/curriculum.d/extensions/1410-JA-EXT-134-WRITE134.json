@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-134-WRITE134",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write de, ba, be and bu by adding the voicing mark to signs I already write, and read words that use them, such as denwa, densha and shinbun.",
+  "prerequisites": []
+}

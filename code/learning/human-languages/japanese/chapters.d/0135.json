@@ -1,0 +1,28 @@
+{
+  "chapter": 135,
+  "title": "Hospital and Bank: Bi, Gu, Ge and Gi",
+  "label": "ch:ja-hospital-and-bank-bi-gu-ge-gi",
+  "canDo": "I can write bi, gu, ge and gi by adding the voicing mark to signs I already write, and read words for places and days that use them, such as byouin, deguchi and ginkou.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "JA-R135-hospital-and-bank",
+    "kind": "production",
+    "summary": "Read byouin, doyoubi, iriguchi, deguchi, getsuyoubi, genki and ginkou, write the four new signs beside the signs they voice, write doyoubi and getsuyoubi from memory and say which day comes first, and write ginkou.",
+    "assesses": [
+      "JA-LEX-ANCHOR-BYOUIN",
+      "JA-SCRIPT-BI-01",
+      "JA-LEX-C135-DOYOUBI",
+      "JA-LEX-ANCHOR-IRIGUCHI",
+      "JA-SCRIPT-GU-01",
+      "JA-LEX-C135-DEGUCHI",
+      "JA-LEX-ANCHOR-GETSUYOUBI",
+      "JA-SCRIPT-GE-01",
+      "JA-LEX-C135-GENKI",
+      "JA-LEX-ANCHOR-GINKOU",
+      "JA-SCRIPT-GI-01"
+    ],
+    "note": "Word before sign, every time, as in chapter 134. Each of the four voiced signs is first SEEN inside a word taught one lesson earlier -- byouin for bi, iriguchi for gu, getsuyoubi for ge, ginkou for gi -- and only then written, so every letter lesson is anchored (HL-C443). Two lessons separate each writing lesson from the next, and each new sign is spent at once in a second word (doyoubi, deguchi, genki) or in the review. deguchi also spends de from chapter 134, and getsuyoubi reuses the yoobi of doyoubi. After this chapter the book writes every sign of the g row and of the b row."
+  }
+}

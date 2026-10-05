@@ -1,0 +1,15 @@
+{
+  "glyph": "で",
+  "sound": "de",
+  "role": "hiragana",
+  "components": [
+    "て",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "て in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "て voiced. Opens でんわ, a telephone, でんしゃ, a train, and でぐち, an exit."
+}

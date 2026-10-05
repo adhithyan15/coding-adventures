@@ -518,5 +518,26 @@ export const scriptInventoryEvidence = {
       expect(letter?.strokeOrderSource, glyph).toBeDefined();
       expect(letter?.strokeOrderNote, glyph).not.toBe("authoritative");
     }
+    // Chapters 134 and 135: eight voiced kana, each recorded the way が, ご, ざ
+    // and ぼ already are -- the base sign plus the dakuten, written as the base
+    // sign in full and then the two short strokes at the upper right. None
+    // cites a stroke-order source of its own, so none has a ductus, and the
+    // record does not pretend otherwise (no penLifts, no strokeOrderSource).
+    // The precomposed glyph is what script closure counts, so each must also
+    // be covered, not merely decomposable.
+    for (const [glyph, base, sound] of [
+      ["で", "て", "de"], ["ば", "は", "ba"], ["べ", "へ", "be"], ["ぶ", "ふ", "bu"],
+      ["び", "ひ", "bi"], ["ぐ", "く", "gu"], ["げ", "け", "ge"], ["ぎ", "き", "gi"],
+    ] as const) {
+      const letter = scripts.japanese!.letters.find((entry) => entry.glyph === glyph)!;
+      expect(letter.role).toBe("hiragana");
+      expect(letter.sound).toBe(sound);
+      expect(letter.components).toEqual([base, "the dakuten ゛"]);
+      expect(letter.strokeOrder).toEqual([`${base} in full`, "two short strokes at the upper right"]);
+      expect(letter.strokeOrderSource).toBeUndefined();
+      expect(scripts.japanese!.letters.some((entry) => entry.glyph === base)).toBe(true);
+      expect(missingJapanese.has(glyph)).toBe(false);
+      expect(affected.get(glyph) ?? 0).toBe(0);
+    }
   },
 };

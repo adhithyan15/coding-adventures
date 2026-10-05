@@ -1,0 +1,26 @@
+{
+  "language": "japanese",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:89e3a6b15c68ce22",
+  "lessonIds": [
+    "JA-C134-denwa",
+    "JA-W134-de",
+    "JA-C134-densha",
+    "JA-C134-kaban",
+    "JA-W134-ba",
+    "JA-C134-basho",
+    "JA-C134-taberu",
+    "JA-W134-be",
+    "JA-C134-benkyou",
+    "JA-C134-shinbun",
+    "JA-W134-bu",
+    "JA-R134-phone-and-train"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 1,
+  "text": "japanese/narration/ch134.txt",
+  "json": "japanese/narration/ch134.json",
+  "textHash": "fnv1a64:6d9af4591b43e208",
+  "jsonHash": "fnv1a64:7383120fc46a3d69",
+  "findings": []
+}
