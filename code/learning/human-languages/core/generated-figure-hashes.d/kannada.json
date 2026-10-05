@@ -52,10 +52,24 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "KA-S110-letter-ba",
+      "sourceHash": "fnv1a64:affd3d7dfc40b47a",
+      "svgHash": "fnv1a64:c303ee417e038184",
+      "svg": "kannada/book/figures/KA-S110-letter-ba-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "KA-S112-letter-ga",
       "sourceHash": "fnv1a64:a313df465906e7e9",
       "svgHash": "fnv1a64:571e0927d72f10ed",
       "svg": "kannada/book/figures/KA-S112-letter-ga-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S113-letter-lla",
+      "sourceHash": "fnv1a64:44462a0be4c6ad31",
+      "svgHash": "fnv1a64:16fd2baedaedbdfd",
+      "svg": "kannada/book/figures/KA-S113-letter-lla-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -70,6 +84,34 @@
       "sourceHash": "fnv1a64:dc434218b89f4a51",
       "svgHash": "fnv1a64:67d04395d224166d",
       "svg": "kannada/book/figures/KA-S116-letter-ka-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S117-letter-ya",
+      "sourceHash": "fnv1a64:306cfa43a9bb68d3",
+      "svgHash": "fnv1a64:a9f433b5e9c0573f",
+      "svg": "kannada/book/figures/KA-S117-letter-ya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S118-letter-dda",
+      "sourceHash": "fnv1a64:763ae9939c48f03d",
+      "svgHash": "fnv1a64:ddc4c582c6e934ee",
+      "svg": "kannada/book/figures/KA-S118-letter-dda-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S120-letter-ha",
+      "sourceHash": "fnv1a64:28055a6d2732ad4f",
+      "svgHash": "fnv1a64:058d32c619513ac8",
+      "svg": "kannada/book/figures/KA-S120-letter-ha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S121-letter-sa",
+      "sourceHash": "fnv1a64:da4f241652281bc9",
+      "svgHash": "fnv1a64:2f080d6707a62dee",
+      "svg": "kannada/book/figures/KA-S121-letter-sa-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

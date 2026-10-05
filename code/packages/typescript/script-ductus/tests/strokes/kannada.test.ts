@@ -33,6 +33,12 @@ const KANNADA_DA = DUCTUS[ductusKey("kannada", "ದ")];
 const KANNADA_RA = DUCTUS[ductusKey("kannada", "ರ")];
 const KANNADA_KA = DUCTUS[ductusKey("kannada", "ಕ")];
 const KANNADA_GA = DUCTUS[ductusKey("kannada", "ಗ")];
+const KANNADA_BA = DUCTUS[ductusKey("kannada", "ಬ")];
+const KANNADA_LLA = DUCTUS[ductusKey("kannada", "ಳ")];
+const KANNADA_YA = DUCTUS[ductusKey("kannada", "ಯ")];
+const KANNADA_DDA = DUCTUS[ductusKey("kannada", "ಡ")];
+const KANNADA_HA = DUCTUS[ductusKey("kannada", "ಹ")];
+const KANNADA_SA = DUCTUS[ductusKey("kannada", "ಸ")];
 
 const OWNER_SCRIPTS = new Set(["kannada"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -429,6 +435,171 @@ describe("handwriting ductus", () => {
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ga.gif",
     );
     expect(verifiedLetterFont("ಗ", KANNADA_GA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಬ loops its head, both lobes, and the tall right side in one run", () => {
+    expect(penLifts(KANNADA_BA)).toBe(0);
+    expect(KANNADA_BA.strokes).toHaveLength(1);
+    expect(
+      KANNADA_BA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "loop over the head from its curled tip",
+        "slant round the left lobe to the point",
+        "drop round the right lobe's base",
+        "climb the right side to its tip",
+      ],
+    ]);
+    expect(KANNADA_BA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ba.gif",
+    );
+    expect(verifiedLetterFont("ಬ", KANNADA_BA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಳ carries both loops into the right bowl, then lifts once for the hooked bar", () => {
+    expect(penLifts(KANNADA_LLA)).toBe(1);
+    expect(KANNADA_LLA.strokes).toHaveLength(2);
+    expect(
+      KANNADA_LLA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "close the small loop counterclockwise",
+        "sweep round the left and along the base",
+        "round the lower loop and recross its top",
+        "climb the right bowl to the top bar",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+    ]);
+    expect(KANNADA_LLA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-lla.gif",
+    );
+    expect(verifiedLetterFont("ಳ", KANNADA_LLA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಯ draws bowl, middle arm, hooked bar, and small right bowl in four runs", () => {
+    expect(penLifts(KANNADA_YA)).toBe(3);
+    expect(KANNADA_YA.strokes).toHaveLength(4);
+    expect(
+      KANNADA_YA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "go down the left side and round the base",
+        "close the bowl over the top",
+      ],
+      [
+        "lift, then dip and climb the middle arm",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+      [
+        "lift, then round the small right bowl",
+        "climb its right side and curl in at the top",
+      ],
+    ]);
+    expect(KANNADA_YA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ya.gif",
+    );
+    expect(verifiedLetterFont("ಯ", KANNADA_YA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಡ closes its bowl through the inner loop, then lifts once for the hooked bar", () => {
+    expect(penLifts(KANNADA_DDA)).toBe(1);
+    expect(KANNADA_DDA.strokes).toHaveLength(2);
+    expect(
+      KANNADA_DDA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "go down into the left lobe and the point",
+        "round the right lobe and up the right side",
+        "curl into the small loop and round it",
+        "rise out and close the bowl along the top",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+    ]);
+    expect(KANNADA_DDA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-da.gif",
+    );
+    expect(verifiedLetterFont("ಡ", KANNADA_DDA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಹ carries both rings up the neck, then lifts once for the hooked bar", () => {
+    expect(penLifts(KANNADA_HA)).toBe(1);
+    expect(KANNADA_HA.strokes).toHaveLength(2);
+    expect(
+      KANNADA_HA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "close the left ring counterclockwise",
+        "arch over into the right ring's outer side",
+        "round the right ring and climb to the waist",
+        "rise up the neck to the top bar",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+    ]);
+    expect(KANNADA_HA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ha.gif",
+    );
+    expect(verifiedLetterFont("ಹ", KANNADA_HA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಸ draws body, hooked bar, and dot in three runs", () => {
+    expect(penLifts(KANNADA_SA)).toBe(2);
+    expect(KANNADA_SA.strokes).toHaveLength(3);
+    expect(
+      KANNADA_SA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "climb from the tail round the left curve",
+        "slant down to the right into the base",
+        "climb the right side and curve in at the top",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+      [
+        "lift, then set the dot in the middle",
+      ],
+    ]);
+    expect(KANNADA_SA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-sa.gif",
+    );
+    expect(verifiedLetterFont("ಸ", KANNADA_SA.source.url)).toBe(
       "_fonts/NotoSansKannada-Static.ttf",
     );
   });
