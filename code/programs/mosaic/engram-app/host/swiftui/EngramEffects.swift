@@ -340,8 +340,8 @@ func installEngramEffects(_ host: MosaicRuntimeHost) {
     // No AppKit panels here. On iOS the platform library lends its document
     // picker (UI89 §2.6): its router -- the one that passed this kind on --
     // defers the effect, keeps the one-file-operation rule, reads or writes
-    // off the main queue and answers exactly once. Not deferred here: the
-    // router does that, and a second deferral would be refused.
+    // off the main queue and answers exactly once. So this handler neither
+    // defers nor answers once it has handed a request over.
     switch kind {
     case "importAnki", "exportAnki":
       // No router (the library was never installed on this host) or no
@@ -354,7 +354,8 @@ func installEngramEffects(_ host: MosaicRuntimeHost) {
       if kind == "importAnki" {
         let accept = MosaicAccept(
           mimeTypes: [],
-          extensions: allowedExtensions(payload, "accept", fallback: ["apkg", "colpkg"]))
+          extensions: allowedExtensions(payload, "accept", fallback: ["apkg", "colpkg"])
+            .map { $0.lowercased() })
         // The application decodes and merges; the host's whole job is the
         // bytes, bounded by what the engine will accept.
         router.openForApp(id, accept: accept, limit: maxImportBytes) { _, bytes in
@@ -368,17 +369,24 @@ func installEngramEffects(_ host: MosaicRuntimeHost) {
           _ = host.completeEffect(id, failedOutcome(refusal.message))
           return
         }
-        let extensions = allowedExtensions(payload, "extensions", fallback: ["apkg"])
+        // Always `.apkg` here, not the payload's list: an export IS an Anki
+        // package, and a fixed list leaves nothing for a payload to widen.
         // The picker cannot add an extension the way the macOS panel's
         // `appendingPathExtension` does, and the library refuses a name whose
         // extension is not an accepted one, so supply it here.
         var name = suggestedExportName(payload)
-        if !extensions.contains((name as NSString).pathExtension.lowercased()) {
-          name += ".\(extensions[0])"
+        if (name as NSString).pathExtension.lowercased() != "apkg" {
+          name += ".apkg"
+        }
+        // Only a suggestion: one the library would refuse (`.hidden`, `CON`,
+        // a colon) falls back to the default rather than failing the export,
+        // as the macOS panel would simply show it for editing.
+        if !mosaicIsPlainFileName(name) || mosaicIsReservedDeviceName(name) {
+          name = "engram.apkg"
         }
         router.saveForApp(
           id, suggestedName: name, bytes: package,
-          accept: MosaicAccept(mimeTypes: [], extensions: extensions)
+          accept: MosaicAccept(mimeTypes: [], extensions: ["apkg"])
         ) { _ in [:] }
       }
     default:

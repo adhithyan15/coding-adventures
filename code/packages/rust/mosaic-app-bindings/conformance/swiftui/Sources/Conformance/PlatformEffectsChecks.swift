@@ -612,6 +612,28 @@ private func checkAppEffectsThroughPicker() {
   check(okValue(host.answers[6] ?? [:])?["savedAs"] as? String == "engram (1).apkg", "the app's ok from the name")
   check(target.written == Data("PK\u{3}\u{4}".utf8), "the bytes written")
 
+  // Extensions are compared without case; an executable one is refused even
+  // when the app accepts it, and shows no picker.
+  host.waitingOn = [7, 8]
+  router.saveForApp(
+    7, suggestedName: "deck.apkg", bytes: Data("PK".utf8),
+    accept: MosaicAccept(mimeTypes: [], extensions: ["APKG"])
+  ) { _ in [:] }
+  check(failure(host.answers[7] ?? [:]) == nil && ui.count == 1, "an upper-case extension is accepted")
+  ui.removeFirst()()
+  picker.createDone?(nil)
+  work.removeAll()
+  ui.removeAll()
+  let createsBefore = picker.creates
+  router.saveForApp(
+    8, suggestedName: "run.command", bytes: Data("x".utf8),
+    accept: MosaicAccept(mimeTypes: [], extensions: ["command"])
+  ) { _ in [:] }
+  check(
+    failure(host.answers[8] ?? [:]) == "suggestedName must not end in an executable extension",
+    "an executable extension is refused for an app save")
+  check(picker.creates == createsBefore, "and shows no picker")
+
   // Without a picker on this OS, the app's request fails with a message.
   let bare = FakeHost()
   installMosaicPlatformEffects(bare, appKinds: ["importThing"], picker: LaterPicker(), hasDialogs: false)

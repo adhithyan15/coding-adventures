@@ -8,7 +8,8 @@
   through the library's picker. They keep `files.*`'s rules: one file
   operation at a time, deferred before anything is shown, slow work off the
   main queue, exactly one answer, and the same save-name checks (now
-  `mosaicCheckSaveName`). The app supplies the accepted extensions, the read
+  `mosaicCheckSaveName`, which compares extensions without case). An app save
+  also refuses an executable extension whatever the app accepts. The app supplies the accepted extensions, the read
   limit and the `ok` answer.
 - `files.open` and `files.save` now run on the same two operations
   (`mosaicAnswerOpen`, `mosaicAnswerSave`), so each has one implementation.

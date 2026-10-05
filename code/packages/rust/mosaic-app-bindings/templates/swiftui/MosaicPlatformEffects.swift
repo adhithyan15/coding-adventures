@@ -512,7 +512,10 @@ func mosaicCheckSaveName(_ suggestedName: String, accept: MosaicAccept) throws {
     throw MosaicFileFailure("suggestedName must be a plain file name")
   }
   let suggestedExtension = mosaicFileExtension(suggestedName)
-  if !accept.extensions.isEmpty && !accept.extensions.contains(where: { $0 == suggestedExtension }) {
+  // Compared without case: an app's own list (UI89 §2.6) may say `APKG`.
+  if !accept.extensions.isEmpty
+    && !accept.extensions.contains(where: { $0.lowercased() == suggestedExtension })
+  {
     throw MosaicFileFailure("suggestedName must end in an extension of an accepted type")
   }
   if accept.extensions.isEmpty && mosaicHasExecutableExtension(suggestedName) {
@@ -897,7 +900,8 @@ final class MosaicPlatformRouter {
   /// file operation at a time, deferred before anything is shown, read off
   /// the main queue with `limit` enforced while reading. The app chooses what
   /// is accepted, the limit, and the success answer, built by `ok` from the
-  /// document's name and bytes.
+  /// document's name and bytes. `ok` runs on the background queue (iOS) or
+  /// inline (macOS), so it must only build the answer.
   func openForApp(
     _ id: UInt64,
     accept: MosaicAccept,
@@ -914,8 +918,11 @@ final class MosaicPlatformRouter {
 
   /// Answer the app's own Await `id` by saving `bytes` through this library's
   /// picker (UI89 §2.6). The name is checked by the rules every save meets,
-  /// so a refused name fails before anything is shown; the success answer is
-  /// built by `ok` from the name the picker reports.
+  /// so a refused name fails before anything is shown -- and, since the app
+  /// chooses its own extensions here rather than taking them from the MIME
+  /// table, an executable extension is refused whatever it accepts. The
+  /// success answer is built by `ok` from the name the picker reports, on the
+  /// background queue (iOS) or inline (macOS).
   func saveForApp(
     _ id: UInt64,
     suggestedName: String,
@@ -926,6 +933,9 @@ final class MosaicPlatformRouter {
     let request: MosaicSaveRequest
     do {
       try mosaicCheckSaveName(suggestedName, accept: accept)
+      if mosaicHasExecutableExtension(suggestedName) {
+        throw MosaicFileFailure("suggestedName must not end in an executable extension")
+      }
       request = MosaicSaveRequest(suggestedName: suggestedName, bytes: bytes, accept: accept)
     } catch let failure as MosaicFileFailure {
       _ = host?.completeEffect(id, mosaicFailed(failure.message))
@@ -1012,10 +1022,10 @@ final class MosaicPlatformRouter {
 // Foundation lacks, so the harness compiles this file as it is.)
 private final class MosaicWeakHost {
   weak var host: AnyObject?
-  // The host's router, held strongly here as well as by the host's closure;
-  // the router holds the host weakly, so this keeps nothing alive but the
-  // router itself, and the entry is dropped once its host is gone.
-  var router: MosaicPlatformRouter?
+  // The host's router, held weakly: the host's `effectHandler` closure keeps
+  // it alive for exactly the host's lifetime, and this table must not keep
+  // it -- or the app handler it wraps -- alive any longer.
+  weak var router: MosaicPlatformRouter?
   init(_ host: AnyObject) { self.host = host }
 }
 private var mosaicRoutedHosts: [MosaicWeakHost] = []
@@ -1028,6 +1038,7 @@ private let mosaicRoutedHostsLock = NSLock()
 func mosaicPlatformRouter(for host: AnyObject) -> MosaicPlatformRouter? {
   mosaicRoutedHostsLock.lock()
   defer { mosaicRoutedHostsLock.unlock() }
+  mosaicRoutedHosts.removeAll { $0.host == nil }
   return mosaicRoutedHosts.first(where: { $0.host === host })?.router
 }
 
