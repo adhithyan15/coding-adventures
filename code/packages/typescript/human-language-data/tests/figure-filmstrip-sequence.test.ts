@@ -7,6 +7,7 @@ import {
   scriptSequenceFilmstripFigureSource,
   sequenceUnit,
   shelveLetters,
+  writtenOrderNote,
   type FilmstripEntry,
 } from "../src/figure-filmstrip.js";
 import { renderFigure, type ScriptFilmstripTarget } from "../src/figure.js";
@@ -64,6 +65,27 @@ describe("naming letters by number", () => {
     expect(letterNumbers([1, 3])).toBe("Letters 1 and 3");
     expect(letterNumbers([1, 2, 4])).toBe("Letters 1, 2 and 4");
     expect(letterNumbers([1, 3], "Part")).toBe("Parts 1 and 3");
+  });
+});
+
+describe("what a strip of parts says about written order", () => {
+  // Tamil writes some signs BEFORE their consonant; Gujarati writes every sign
+  // after it (even િ, which sits to the left), so its parts are in typed order
+  // and its description must not claim a reordering.
+  it("tells Tamil readers that a left-hand sign comes first", () => {
+    expect(writtenOrderNote("tamil")).toMatch(/not always the order they are typed: a vowel sign written to the left of its consonant comes before it/);
+  });
+
+  it("tells Gujarati readers that every sign comes after its consonant", () => {
+    const note = writtenOrderNote("gujarati");
+    expect(note).toMatch(/which in Gujarati is the order they are typed: each sign comes after its consonant, even the i sign, which sits to the left of it/);
+    expect(note).not.toMatch(/comes before it/);
+    const figure = renderScriptSequenceFilmstripFigure("GU-C33", "કે", [
+      entry("ક", { script: "gujarati", font: "_fonts/NotoSansGujarati-Static.ttf" }),
+      entry("ે", { script: "gujarati", font: "_fonts/NotoSansGujarati-Static.ttf" }),
+    ]);
+    expect(texts(figure.svg, 15)).toEqual(["How it is written — 2 parts, one after another"]);
+    expect(figure.svg).toContain("<desc>2 parts written one after another: ક, ે (gujarati). The parts are in the order the hand writes them, which in Gujarati is the order they are typed");
   });
 });
 

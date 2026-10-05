@@ -134,6 +134,18 @@ That is about 380 filmstrips that could print today.
   pulli ் (32 lessons) and ு/ூ (17 and more), which need a citable pen path;
   the repository's research could reach no source for them (Info-farmer's
   Commons animations and Radhakrishnan's Appendix I could not be opened).
+- **Gujarati vowel signs, written after the consonant.** ા િ ી ુ ૂ ે ૈ ો ૌ ં
+  and ઃ gained a cited ductus each (order, start, direction and lifts from
+  KanoAI's hand-made barakhadi templates, whose licence is ambiguous, so facts
+  only; paths fitted to Noto), and a `gujarati` written-order table in which
+  every sign comes after its consonant, even િ. 22 Gujarati lessons gained a
+  filmstrip (Gujarati 41 → 63): nine sign lessons, અને, કે, કેમકે, તે, હા
+  (three lessons) and six glyph lists. Still open for Gujarati: the virama ્
+  (GU-W01-virama, નમસ્તે, ક્યાં, રસ્તો and the lists that carry it) and ૃ, which
+  have no Gujarati source; words with a pair the font reshapes (બજાર with જા,
+  જો, and ુ/ૂ under the 22 consonants that take a stem form);
+  and the bucket-b lessons that have no Writing or Script block to land in
+  (GU-C20 to GU-C23, GU-R21, GU-R23-map-ten, GU-W21).
 - **Telugu consonants started with క.** The first base consonant now has the
   five-movement, two-run order from Sathish Shanmugam's packaged tracing guide,
   fitted to the bundled Noto Sans Telugu outline. Its existing `TE-S03` lesson

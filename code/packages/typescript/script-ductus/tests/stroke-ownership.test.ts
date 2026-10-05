@@ -449,12 +449,21 @@ describe("stroke ownership migration baseline", () => {
       // its relative order. Keys move 439 -> 445 and Tamil 29 -> 35, with the
       // ordered key hash, measured after the last caption was settled. No
       // other script changes, so the non-Tamil data hash and both
+      //
+      // Eleven Gujarati signs — ા (U+0ABE), િ (U+0ABF), ી (U+0AC0),
+      // ુ (U+0AC1), ૂ (U+0AC2), ે (U+0AC7), ૈ (U+0AC8), ો (U+0ACB),
+      // ૌ (U+0ACC), the anusvara ં (U+0A82) and the visarga ઃ (U+0A83) —
+      // gain a ductus each, their order, start, direction and lifts cited to
+      // KanoAI's hand-made Gujarati barakhadi templates. They follow હ at the
+      // end of the Gujarati owner, so every existing key keeps its relative
+      // order. Keys move 445 -> 456 and Gujarati 44 -> 55, with the ordered
+      // key hash and the non-Tamil data hash; Tamil and both shared-identity
     }).toEqual({
-      keys: 505,
+      keys: 516,
       keyHash:
-        "82ce632afb100f9d0b41d80a82f79683ed0fd554007f0ef1f7cc75f131ba1e6d",
+        "13b189762d85d09e1e32ff4450aa04a3d935dea39e38cf97696df49c8e2edecf",
       nonTamilDataHash:
-        "5aaa8578256ae13c9331691b4b70480ff1e4f582b3851a5e246bc09e1429d2e4",
+        "e39de9543f1f9c69ea6435e42eac42ddc4e54ab8f98e0cffe04a1946d92e6f96",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -463,7 +472,7 @@ describe("stroke ownership migration baseline", () => {
         chinese: 60,
         cyrillic: 33,
         devanagari: 44,
-        gujarati: 44,
+        gujarati: 55,
         hebrew: 22,
         japanese: 80,
         kannada: 43,

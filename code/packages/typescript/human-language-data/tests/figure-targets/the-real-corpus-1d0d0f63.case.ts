@@ -77,11 +77,67 @@ describe("the real corpus", () => {
     }
   });
 
+  it("draws every Gujarati sign lesson, and every Gujarati word or list whose signs are cited", () => {
+    // Nine lessons teach a sign by itself; seven word lessons (four words, and
+    // હા three times) and six lists carry one: 22 in all. All are drawn
+    // consonant first, sign after: KanoAI's barakhadi templates write every
+    // sign after its consonant, even િ.
+    const gujarati = targets.filter((target) => target.lessonId.startsWith("GU-"));
+    const withSign = gujarati.filter((target) =>
+      (target.letters ?? [target.glyph]).some((piece) => /^\p{M}+$/u.test(piece)),
+    );
+    expect(
+      Object.fromEntries(
+        withSign.map((target) => [target.lessonId, (target.letters ?? [target.glyph]).join(" ")]),
+      ),
+    ).toEqual({
+      "GU-C32-ane-write": "અ ન ે",
+      "GU-C33-ke-write": "ક ે",
+      "GU-C34-kemke-write": "ક ે મ ક ે",
+      "GU-C36-te-write": "ત ે",
+      "GU-R04-doorway-nine-r2": "જ ો ં ી ુ છ ક ણ શ",
+      "GU-R04-first-four-r1": "ળ થ અ િ",
+      "GU-R07-second-four-r1": "ૂ ટ ઈ ઢ",
+      "GU-R13-doorway-nine-r3": "ણ જ ુ શ ં ક ો છ ી",
+      "GU-R15-u-matra-r4": "ુ ી",
+      "GU-R19-doorway-nine-r4": "ો ક ં જ ી ણ છ શ ુ",
+      "GU-W01-aa-matra": "ા",
+      "GU-W01-e-matra": "ે",
+      "GU-W01-haa-delayed-copy": "હ ા",
+      "GU-W01-haa-dictation": "હ ા",
+      "GU-W01-haa-guided-copy": "હ ા",
+      "GU-W03-anusvara": "ં",
+      "GU-W03-ii-matra": "ી",
+      "GU-W03-o-matra": "ો",
+      "GU-W03-u-matra": "ુ",
+      "GU-W04-i-matra": "િ",
+      "GU-W07-uu-matra": "ૂ",
+      "GU-W45-ai-sign": "ૈ",
+    });
+    // The virama ્ and the vocalic-r sign ૃ have no Gujarati source, so their
+    // own lessons and every word that carries one stay undrawn. જો is refused
+    // because the bundled font joins the ā bar of ો to જ.
+    const lessonIds = new Set(targets.map((target) => target.lessonId));
+    for (const id of [
+      "GU-W01-virama",
+      "GU-W02-vocalic-r",
+      "GU-W01-namaste-read",
+      "GU-C37-kyaan-write",
+      "GU-C35-jo-write",
+      "GU-R23-route-three-r1",
+      "GU-R23-shaalaa-rasto-r2",
+    ]) {
+      expect(lessonIds.has(id), id).toBe(false);
+    }
+  });
+
   it("composes words only in scripts whose letters stand apart", () => {
-    // Words whose pieces spell the headword back: three Japanese words, and
-    // the two Tamil words whose only sign is written AFTER its consonant (சரி,
-    // சரியா). A Tamil word with a sign written before its consonant is drawn
-    // in written order, which does not spell it back (see above). Devanagari
+    // Words whose pieces spell the headword back: three Japanese words, the
+    // two Tamil words whose only sign is written AFTER its consonant (சரி,
+    // சரியா), and the Gujarati words, whose signs are all written after their
+    // consonant (અને, કે, કેમકે, તે, and હા three times). A Tamil word
+    // with a sign written before its consonant is drawn in written order,
+    // which does not spell it back (see above). Devanagari
     // (मम), the Arabic family (سلام) and Cyrillic (привет) have
     // fully cited words that are deliberately NOT drawn: see
     // SEPARATE_LETTER_SCRIPTS for why each would draw something false.
@@ -89,6 +145,13 @@ describe("the real corpus", () => {
       (target) => target.letters !== undefined && target.letters.join("") === target.glyph,
     );
     expect(words.map((target) => target.lessonId).sort()).toEqual([
+      "GU-C32-ane-write",
+      "GU-C33-ke-write",
+      "GU-C34-kemke-write",
+      "GU-C36-te-write",
+      "GU-W01-haa-delayed-copy",
+      "GU-W01-haa-dictation",
+      "GU-W01-haa-guided-copy",
       "JA-W01-hai-read",
       "JA-W01-konnichiwa-read",
       "JA-W08-sayounara-read",

@@ -49,10 +49,11 @@ describe("where each Tamil sign is written", () => {
     expect(writtenPiecesOf("௭", "tamil")).toBeUndefined();
   });
 
-  it("keeps every other script's signs refused: only Tamil has a table", () => {
-    expect(Object.keys(WRITTEN_SIGN_SIDES)).toEqual(["tamil"]);
-    expect(Object.keys(FUSED_SIGN_PAIRS)).toEqual(["tamil"]);
-    expect(writtenPiecesOf("કા", "gujarati")).toBeUndefined();
+  it("keeps every other script's signs refused: only Tamil and Gujarati have a table", () => {
+    // Gujarati's table is held to its own records in
+    // gujarati-signs-in-written-order.
+    expect(Object.keys(WRITTEN_SIGN_SIDES)).toEqual(["tamil", "gujarati"]);
+    expect(Object.keys(FUSED_SIGN_PAIRS)).toEqual(["tamil", "gujarati"]);
     expect(writtenPiecesOf("कि", "devanagari")).toBeUndefined();
     expect(writtenPiecesOf("が", "japanese")).toEqual(["が"]);
     expect(writtenPiecesOf("ಕಾ", "kannada")).toBeUndefined();

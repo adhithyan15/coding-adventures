@@ -152,8 +152,8 @@ virama or length mark is refused in every script that has no written-order
 table (below), because some marks are written before the consonant they follow
 in Unicode, so drawing in code-point order would draw strokes in the wrong
 order. These are the open work for combinations: mark ductus with a
-written-order model for scripts other than Tamil, a cited word-level headline,
-and positional or joined forms.
+written-order model for scripts other than Tamil and Gujarati, a cited
+word-level headline, and positional or joined forms.
 
 #### As built — Tamil vowel signs in written order
 
@@ -161,8 +161,8 @@ Six Tamil vowel signs have a cited ductus of their own (ா ி ீ ெ ே ை,
 native-writer pen traces in HP Labs India's LipiTk Tamil recognizer), so a sign
 lesson prints a one-glyph strip of the sign alone. To compose words with them,
 `figure-targets.ts` holds a per-script table of which side of its consonant
-each sign is **written** on (`WRITTEN_SIGN_SIDES`). Tamil is the only script
-with one:
+each sign is **written** on (`WRITTEN_SIGN_SIDES`). Tamil was the first
+script with one (Gujarati follows, below):
 
 | typed | written | source of the side |
 |---|---|---|
@@ -180,6 +180,38 @@ has none), the pairs Unicode fuses into ligatures (டி, டீ, லீ), and 
 in every other script. The pen lift between parts is the same assumption the
 separate-letter word strips already make: the recognizer stores these signs as
 distinct symbols, written left to right.
+
+#### As built — Gujarati vowel signs, written after the consonant
+
+Eleven Gujarati signs have a cited ductus of their own: ા િ ી ુ ૂ ે ૈ ો ૌ, the
+anusvara ં and the visarga ઃ. Their order, start, direction and pen lifts come
+from KanoAI's hand-made barakhadi centre-line templates (one path per pen-down
+run, pinned to commit `9d3e294`). KanoAI's licence is ambiguous (MIT in its
+LICENSE file, GNU GPL in its README), so the mark records cite facts only and
+no template path was copied; each path is fitted to the bundled Noto Sans
+Gujarati outline of the sign by itself. The t30apps records already cited for
+આ એ ઐ ઓ ઔ and HP Labs India's LipiTk Devanagari matra prototypes agree on the
+shared shapes, and each `variation` says so.
+
+Gujarati gets a `WRITTEN_SIGN_SIDES` table too, and every row is "after":
+
+| typed | written | source of the place |
+|---|---|---|
+| C + ા / ી / ુ / ૂ / ે / ૈ / ો / ૌ | C, then sign | KanoAI: consonant group before sign group in every row whose consonant keeps its bare outline |
+| C + િ | C, then િ (although it sits LEFT of C) | KanoAI: 33 of 34 rows (ઢિ lists the sign first) |
+| C + ં / ઃ | C, then the mark | KanoAI: 33 of 33 and 34 of 34 rows |
+
+So a Gujarati word is drawn in typed order, part by part, and its `<desc>` says
+that its parts are in typed order (Tamil's says that a left-hand sign comes
+first). ો and ૌ have no Unicode decomposition, so each is one sign of two or
+three runs (bar first, then the flags). Refused: the virama ્ and the
+vocalic-r sign ૃ (no Gujarati source; a Devanagari analogy is not used), two
+signs on one consonant (ાં: no source orders them against each other; this
+rule leaves Tamil unchanged, since its two-part signs put one half on each
+side), and the consonant-sign pairs the bundled Noto Sans Gujarati reshapes,
+read from its GSUB table: the ligatures ણુ, રુ, રૂ and the "stem" forms 22
+consonants take before ુ and ૂ (`blws`), and જ and ૹ with ા, ી, ો and ૌ, whose
+ā bar joins the consonant (`psts`). So જો and બજાર stay undrawn.
 
 ### Class B — data diagrams (generated)
 

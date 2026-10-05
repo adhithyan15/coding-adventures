@@ -157,6 +157,12 @@ The six Tamil vowel signs written as separate symbols beside their consonant
 (ா ி ீ ெ ே ை) are owners of the same kind, cited to the native-writer pen
 traces in HP Labs India's LipiTk Tamil recognizer; the book decides where each
 is drawn in a word (`human-language-data`'s `WRITTEN_SIGN_SIDES`).
+Gujarati's eleven signs (ા િ ી ુ ૂ ે ૈ ો ૌ ં ઃ) sit at the end of the Gujarati
+owner, keyed `gujarati:<sign>` like its letters, and take their source from the
+sign's mark record (`gujaratiMarkSource`): order, start, direction and lifts
+from KanoAI's hand-made barakhadi templates, paths fitted to Noto Sans
+Gujarati. `tests/strokes/gujarati-marks.test.ts` and
+`tests/ductusview/gujarati-marks.test.ts` hold their evidence.
 
 More than 2,200 tests cover the registry, paths, font fit, provenance, and
 rendering. `jsdom` is a devDependency for exactly two of them: the SVG

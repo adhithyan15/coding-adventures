@@ -754,6 +754,33 @@ export type SequenceUnit = "Letter" | "Part";
 /** A ledger glyph made only of combining signs is a vowel sign drawn alone. */
 const SIGN_GLYPH = /^\p{M}+$/u;
 
+/**
+ * What a strip of parts says about their order, in its `<desc>`.
+ *
+ * Tamil writes three signs to the LEFT of their consonant and writes them
+ * first, so its parts are not in typed order. Gujarati writes every sign after
+ * its consonant, even િ, which sits to the left of it, so its parts are in
+ * typed order. The note must say which, or the description would claim a
+ * reordering the strip does not make.
+ */
+const WRITTEN_ORDER_NOTES: Readonly<Record<string, string>> = {
+  gujarati:
+    `The parts are in the order the hand writes them, which in Gujarati is the order ` +
+    `they are typed: each sign comes after its consonant, even the i sign, which sits ` +
+    `to the left of it. Each sign is drawn on its own, without the consonant it attaches to. `,
+};
+
+/** The note for scripts that write some signs before their consonant (Tamil). */
+const SIGN_FIRST_NOTE =
+  `The parts are in the order the hand writes them, which is not always the order ` +
+  `they are typed: a vowel sign written to the left of its consonant comes before ` +
+  `it. Each vowel sign is drawn on its own, without the consonant it attaches to. `;
+
+/** The `<desc>` sentence on written order for a strip of parts in `script`. */
+export function writtenOrderNote(script: string): string {
+  return WRITTEN_ORDER_NOTES[script] ?? SIGN_FIRST_NOTE;
+}
+
 /** "Part" when any group is a vowel sign, else "Letter". */
 export function sequenceUnit(entries: readonly FilmstripEntry[]): SequenceUnit {
   return entries.some((entry) => SIGN_GLYPH.test(entry.glyph)) ? "Part" : "Letter";
@@ -938,11 +965,7 @@ export function renderScriptSequenceFilmstripFigure(
   parts.push(
     `<desc>${escapeXml(
       `${count} ${units} written one after another: ${letters.join(", ")} (${script}). ` +
-        (unit === "Part"
-          ? `The parts are in the order the hand writes them, which is not always the order ` +
-            `they are typed: a vowel sign written to the left of its consonant comes before ` +
-            `it. Each vowel sign is drawn on its own, without the consonant it attaches to. `
-          : "") +
+        (unit === "Part" ? writtenOrderNote(script) : "") +
         `Each ${unit.toLowerCase()} has its own group of frames; frame N of a group shows movements 1 to N ` +
         `of that ${unit.toLowerCase()}, the movement being added drawn in ink over the finished ${unit.toLowerCase()}, ` +
         `whose outline is read from ${fonts}. Each ${unit.toLowerCase()} is drawn at its own scale from ` +

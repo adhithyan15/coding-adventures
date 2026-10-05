@@ -981,7 +981,13 @@ Two kinds exist:
   its signs are drawn in the order they are WRITTEN, so `மேசை` is ே, ம, ை, ச
   and `சொ` is ெ, ச, ா, each side cited in the sign's mark record; the strip
   then calls its groups "parts". The pulli and ு/ூ have no row and stay
-  refused. Generated book chapters rewrite the lesson's `.svg` image
+  refused. Gujarati has a table too, in which every sign is written AFTER its
+  consonant, even િ, which sits to its left: `કેમકે` is ક, ે, મ, ક, ે, each
+  place cited to KanoAI's barakhadi templates in the sign's mark record. The
+  virama ્ and ૃ have no row, two signs on one consonant (ાં) are refused, and
+  so are the pairs the bundled font reshapes (ણુ, રુ, રૂ; ુ and ૂ under the
+  22 consonants that take a stem form; જ and ૹ with ા, ી, ો, ૌ).
+  Generated book chapters rewrite the lesson's `.svg` image
 destination to `.pdf`; the books workflow creates that PDF with `rsvg-convert`
 before XeLaTeX runs.
 

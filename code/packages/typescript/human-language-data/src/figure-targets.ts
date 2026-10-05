@@ -230,18 +230,61 @@ const SIGNS_ONLY = /^\p{M}+$/u;
 //     plus ா, and each half is placed by its own row. ௌ decomposes into ெ
 //     plus ௗ, which has no row, so it stays refused.
 //
-// Everything without a row is refused: the puḷḷi ் and the signs ு and ூ (no
-// cited ductus, and ு and ூ fuse with their consonant into shapes of their
-// own), and every sign in every other script (Gujarati ા, Devanagari ि, the
-// kana voicing mark ゙), because no other script has a table yet.
+// Gujarati has a table too, and it is simpler: every sign is written AFTER
+// its consonant, even િ, which sits to the consonant's LEFT. So in Gujarati the
+// written order is the typed order, and the table's job is to say which signs
+// have a cited place at all:
+//
+//     typed (code points)      written (by hand)        looks like
+//     ----------------------   ----------------------   ----------
+//     ક + િ                    ક, then િ               કિ   (sign sits left)
+//     ક + ા / ી / ુ / ૂ        ક, then the sign         કા કી કુ કૂ
+//     ક + ે / ૈ / ો / ૌ        ક, then the sign         કે કૈ કો કૌ
+//     ક + ં / ઃ                ક, then the mark         કં કઃ
+//
+//   * The Gujarati mark records (data/scripts/gujarati.json) cite it as their
+//     `compositionSource`: KanoAI's hand-made Gujarati barakhadi templates
+//     draw the consonant's group before the sign's in every consonant row
+//     whose consonant keeps its bare outline (33 of 34 for િ; ઢિ is the
+//     exception). A test holds this table to those records.
+//   * ો and ૌ have no Unicode decomposition: each is one sign, drawn as its
+//     own two or three runs (bar first, then the flags).
+//   * The virama ્ and the vocalic-r sign ૃ have no row: no Gujarati source
+//     gives their pen path or place, so every word with one stays refused.
+//
+// Everything without a row is refused: the Tamil puḷḷi ் and the signs ு and
+// ூ (no cited ductus, and ு and ூ fuse with their consonant into shapes of
+// their own), Gujarati ્ and ૃ, and every sign in every other script
+// (Devanagari ि, the kana voicing mark ゙), because no other script has a
+// table yet.
+//
+// Two signs on the same side of one consonant (Gujarati ાં, a vowel sign and
+// then the anusvara) are refused as well: each sign's own place is cited, but
+// no source orders the two against each other.
 //
 // Some consonant-sign pairs fuse into one ligature even though both halves
-// have rows: Unicode 17.0 §12.6.3 (Ligatures with Vowel i, Figure 12-21)
-// shows ட with ி and ீ, and ல with ீ, joined into new shapes. Drawing the
-// consonant and the sign apart would draw a word nobody writes, so those
-// pairs are refused too.
+// have rows. Drawing the consonant and the sign apart would draw a word
+// nobody writes, so those pairs are refused too:
+//
+//   * Tamil: Unicode 17.0 §12.6.3 (Ligatures with Vowel i, Figure 12-21)
+//     shows ட with ி and ீ, and ல with ீ, joined into new shapes.
+//   * Gujarati: the bundled Noto Sans Gujarati (read from its GSUB table)
+//       - joins ર with ુ and ૂ, and ણ with ુ, into glyphs of their own
+//         ('blws');
+//       - gives 22 consonants a "stem" form of their own before ુ and ૂ
+//         ('blws'): ખ ગ ઘ ચ ઞ ણ ત થ ધ ન પ ફ બ ભ મ ય લ ળ વ શ ષ સ. The printed
+//         consonant then grows a stem that neither its own ductus nor the
+//         sign's draws;
+//       - joins જ and ૹ with ા and ી ('psts'), and, after જ and ૹ, splits ો
+//         and ૌ into ા plus ે or ૈ and joins that ા to the consonant too.
+//     Only the consonant and the sign are refused together; each still
+//     composes with every other partner (રા, જે, નો).
 
-/** Which side of its consonant a sign is WRITTEN on, per script. */
+/**
+ * Whether a sign is WRITTEN before or after its consonant, per script. In
+ * Tamil that is also the side the sign sits on; Gujarati િ sits on the left
+ * but is written after, so the value is the order, not the position.
+ */
 export const WRITTEN_SIGN_SIDES: Readonly<Record<string, Readonly<Record<string, "before" | "after">>>> = {
   tamil: {
     "\u0BC6": "before", // ெ  e
@@ -251,11 +294,37 @@ export const WRITTEN_SIGN_SIDES: Readonly<Record<string, Readonly<Record<string,
     "\u0BBF": "after", //  ி  i
     "\u0BC0": "after", //  ீ  ī
   },
+  gujarati: {
+    "\u0ABE": "after", //  ા  ā
+    "\u0ABF": "after", //  િ  i (sits LEFT of the consonant, written after it)
+    "\u0AC0": "after", //  ી  ī
+    "\u0AC1": "after", //  ુ  u
+    "\u0AC2": "after", //  ૂ  ū
+    "\u0AC7": "after", //  ે  e
+    "\u0AC8": "after", //  ૈ  ai
+    "\u0ACB": "after", //  ો  o
+    "\u0ACC": "after", //  ૌ  au
+    "\u0A82": "after", //  ં  anusvara
+    "\u0A83": "after", //  ઃ  visarga
+  },
 };
 
-/** Consonant + sign pairs that fuse into a ligature, per script (NFD). */
+/** Consonant + sign pairs that fuse into a ligature, or that the font reshapes, per script (NFD). */
 export const FUSED_SIGN_PAIRS: Readonly<Record<string, ReadonlySet<string>>> = {
   tamil: new Set(["\u0B9F\u0BBF", "\u0B9F\u0BC0", "\u0BB2\u0BC0"]), // டி டீ லீ
+  gujarati: new Set([
+    // Stem forms before u and uu (ણુ is also a ligature of its own).
+    ...[..."ખગઘચઞણતથધનપફબભમયલળવશષસ"].flatMap((consonant) => [
+      `${consonant}\u0AC1`, // C + ુ
+      `${consonant}\u0AC2`, // C + ૂ
+    ]),
+    "\u0AB0\u0AC1", // રુ
+    "\u0AB0\u0AC2", // રૂ
+    // જ and ૹ join the ā bar, alone (ા, ી) or inside ો and ૌ.
+    ...["\u0A9C", "\u0AF9"].flatMap((consonant) =>
+      ["\u0ABE", "\u0AC0", "\u0ACB", "\u0ACC"].map((sign) => `${consonant}${sign}`),
+    ),
+  ]),
 };
 
 /**
@@ -267,8 +336,9 @@ export const FUSED_SIGN_PAIRS: Readonly<Record<string, ReadonlySet<string>>> = {
  *     is its before-signs, the letter, then its after-signs ("கை" -> ை, க);
  *     a grapheme of signs alone (a sign lesson's headword, "ோ") is its
  *     before-signs then its after-signs (ே, ா);
- *   * anything else (a sign with no row, a fused pair, a digit, a mark in a
- *     script with no table) is `undefined`.
+ *   * anything else (a sign with no row, two signs on the same side of one
+ *     consonant, a fused pair, a digit, a mark in a script with no table) is
+ *     `undefined`.
  */
 export function writtenPiecesOf(grapheme: string, script: string): string[] | undefined {
   if (BASE_LETTER.test(grapheme)) return [grapheme];
@@ -287,6 +357,8 @@ export function writtenPiecesOf(grapheme: string, script: string): string[] | un
   }
   const before = signs.filter((sign) => sides[sign] === "before");
   const after = signs.filter((sign) => sides[sign] === "after");
+  // No source orders two signs written on the same side of one consonant.
+  if (before.length > 1 || after.length > 1) return undefined;
   return [...before, ...(base === undefined ? [] : [base]), ...after];
 }
 
