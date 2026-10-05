@@ -613,5 +613,41 @@ export const scriptInventoryEvidence = {
       }
       expect(record.strokeOrderSource?.variation).toContain("Only the order and direction");
     }
+    // The katakana and kanji rows the writing lessons teach. コ, ヒ, 日, 本
+    // and 語 said only "authoritative". Each now cites KanjiVG's file for its
+    // own code point, one step per stroke path, so the lift count is the path
+    // count less one. 語 is 言, 五 and 口 in that order. Phrase by phrase with
+    // toContain, as above.
+    for (const [glyph, role, file, name, paths] of [
+      ["コ", "katakana", "030b3", "U+30B3 KATAKANA LETTER KO", 2],
+      ["ヒ", "katakana", "030d2", "U+30D2 KATAKANA LETTER HI", 2],
+      ["日", "logograph", "065e5", "U+65E5 CJK UNIFIED IDEOGRAPH-65E5", 4],
+      ["語", "logograph", "08a9e", "U+8A9E CJK UNIFIED IDEOGRAPH-8A9E", 14],
+      ["本", "logograph", "0672c", "U+672C CJK UNIFIED IDEOGRAPH-672C", 5],
+    ] as const) {
+      const letter = scripts.japanese!.letters.find((entry) => entry.glyph === glyph)!;
+      expect(letter.role, glyph).toBe(role);
+      expect(letter.penLifts, glyph).toBe(paths - 1);
+      expect(letter.strokeOrder, glyph).toHaveLength(paths);
+      expect(letter.strokeOrderNote, glyph).not.toBe("authoritative");
+      expect(letter.strokeOrderSource?.url).toBe(
+        `https://github.com/KanjiVG/kanjivg/blob/master/kanji/${file}.svg`,
+      );
+      for (const phrase of ["KanjiVG", name, "Ulrich Apel and contributors, CC BY-SA 3.0"]) {
+        expect(letter.strokeOrderSource?.citation, phrase).toContain(phrase);
+      }
+      for (const phrase of ["Only the order and direction", "Noto Sans JP outline's own medial line"]) {
+        expect(letter.strokeOrderSource?.variation, phrase).toContain(phrase);
+      }
+      expect(missingJapanese.has(glyph)).toBe(false);
+      expect(affected.get(glyph) ?? 0).toBe(0);
+    }
+    const language = scripts.japanese!.letters.find((entry) => entry.glyph === "語")!;
+    expect(language.strokeOrderSource?.variation).toContain(
+      "s1 to s7 are 言, s8 to s11 五 and s12 to s14 口",
+    );
+    expect(language.strokeOrderSource?.variation).toContain(
+      "the path runs along the bar from left to right",
+    );
   },
 };

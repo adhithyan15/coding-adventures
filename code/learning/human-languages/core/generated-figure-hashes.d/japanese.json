@@ -122,6 +122,41 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "JA-W05-go-kanji",
+      "sourceHash": "fnv1a64:327ee667fef280aa",
+      "svgHash": "fnv1a64:eff8ea183768f694",
+      "svg": "japanese/book/figures/JA-W05-go-kanji-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "JA-W05-hon-kanji",
+      "sourceHash": "fnv1a64:84f6ead31473006d",
+      "svgHash": "fnv1a64:274dd0d2c10f11c8",
+      "svg": "japanese/book/figures/JA-W05-hon-kanji-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "JA-W05-nichi-kanji",
+      "sourceHash": "fnv1a64:c218cc97c9b0c6ea",
+      "svgHash": "fnv1a64:b037608df3867e9d",
+      "svg": "japanese/book/figures/JA-W05-nichi-kanji-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "JA-W06-hi-katakana",
+      "sourceHash": "fnv1a64:53673af0aa4ecc6a",
+      "svgHash": "fnv1a64:9331066f1cfc819e",
+      "svg": "japanese/book/figures/JA-W06-hi-katakana-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "JA-W06-ko-katakana",
+      "sourceHash": "fnv1a64:92a5098f5aabf3d3",
+      "svgHash": "fnv1a64:799ac331ebc66f5e",
+      "svg": "japanese/book/figures/JA-W06-ko-katakana-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "JA-W06-long-mark",
       "sourceHash": "fnv1a64:74e35d7c703fcf78",
       "svgHash": "fnv1a64:fa2366458c5261f7",

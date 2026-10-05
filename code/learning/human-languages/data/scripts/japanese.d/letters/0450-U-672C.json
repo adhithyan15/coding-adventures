@@ -7,9 +7,18 @@
     "a short horizontal across the trunk"
   ],
   "strokeOrder": [
-    "木 in full",
-    "the marking horizontal"
+    "draw the long bar from left to right",
+    "lift, draw the centre stem from top to bottom, through the bar",
+    "lift, begin where the stem crosses the bar and sweep down to the lower left",
+    "lift, begin at the same crossing and sweep down to the lower right",
+    "lift, draw the short bar across the lower stem from left to right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 0672c file records 本 as five stroke paths in this order and direction: the long bar, the centre stem, the left-falling sweep, the right-falling sweep, then the short lower bar; so there are four pen lifts.",
+  "penLifts": 4,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0672c.svg",
+    "citation": "KanjiVG, kanji/0672c.svg, kanji 本 (U+672C CJK UNIFIED IDEOGRAPH-672C), five stroke paths kvg:0672c-s1 to s5 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the long bar drawn left to right (kvg:type ㇐); s2 is the centre stem drawn top to bottom through it (㇑); s3 starts at the crossing and falls to the lower left (㇒); s4 starts at the crossing and falls to the lower right (㇏); s5 is the short bar across the lower stem, drawn left to right (㇐). Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
   "notes": "Origin, root, and by extension book. 日本 is sun-origin: Japan."
 }
