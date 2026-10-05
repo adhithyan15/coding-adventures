@@ -427,6 +427,12 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
             self.assertEqual(
                 entry["verified_revision"], adoption_item["implementation_revision"]
             )
+            subprocess.run(
+                ["git", "merge-base", "--is-ancestor", entry["verified_revision"], "HEAD"],
+                cwd=REPO_ROOT,
+                check=True,
+                capture_output=True,
+            )
             verified_package_tree = subprocess.run(
                 [
                     "git",

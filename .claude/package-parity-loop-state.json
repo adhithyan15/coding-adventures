@@ -11,18 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16717,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16717",
-    "branch": "codex/parity-barcode-layout-jvm-dart-20261005",
-    "implementation_revision": "a83535aa7f70bb40c8a0ae3bf4be4c68de503ec4",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-05T09:54:38Z",
+    "observed_at": "2026-10-05T10:55:32Z",
     "pr_number": 16717,
-    "status": "checks-pending",
-    "notes": "Draft PR #16717 was opened only to bind tested Java, Kotlin, and Dart package trees to the durable adoption number. GitHub reports MERGEABLE with initial checks queued; auto-merge remains disabled. Conformant evidence and pr-open state are being added before marking the same PR ready for review."
+    "status": "merged",
+    "notes": "PR #16717 passed its final-head checks and merged by guarded squash auto-merge at 2026-10-05T10:55:32Z. The durable merge commit is 103296279680459f634c213a1cf3828367e71568; Java, Kotlin, and Dart package trees retain the identities validated before publication."
   },
   "last_inventory": {
     "revision": "9a99df33af2dc2dfe89e0748422e4ba387f97e22",
@@ -10668,8 +10662,11 @@
       "implementation_revision": "103296279680459f634c213a1cf3828367e71568",
       "validation_revision": "103296279680459f634c213a1cf3828367e71568",
       "validation_notes": "All 56 neutral cases execute dynamically in Java, Kotlin, and Dart, with native examples and text-request precedence assertions. Java Gradle check passes 62 tests at 100% JaCoCo line coverage; Kotlin Gradle check passes at 98.71%; Dart native and conformance direct tests pass (+5 and +58), analysis/format pass, and coverage-gated conformance reaches 95.51% lines. The shared registry suite passes nine tests. Three schema-v1 empty-capability manifests, build fronts, exact package-tree evidence, rebase, diff hygiene, and read-only security review are recorded; two reviewer findings on pending path containment and bounded fixture reads were fixed and retested. On this Windows host the Dart aggregate test runner cannot launch its relative frontend-server path, so checked-in Windows BUILD runs the same test files directly; the coverage launcher with an explicit test script passes.",
-      "publication_notes": "PR #16717 squash-merged. Evidence references the durable merge commit with all three package-tree hashes unchanged.",
+      "publication_notes": "PR #16717 promoted all three previously pending targets using package trees tested at a83535aa7f70bb40c8a0ae3bf4be4c68de503ec4. Guarded squash auto-merge completed at 2026-10-05T10:55:32Z and retained the same package-tree identities in durable commit 103296279680459f634c213a1cf3828367e71568.",
+      "merged_head_revision": "b25732079934bca980d8372e5ec16b09a471812f",
+      "merged_at": "2026-10-05T10:55:32Z",
       "merge_revision": "103296279680459f634c213a1cf3828367e71568",
+      "merge_notes": "GitHub reports state MERGED with a durable squash commit. The Java, Kotlin, and Dart package trees at that commit match the previously validated evidence hashes.",
       "selection_notes": "Selected only after #16706 passed all 53 checks and merged by guarded auto-merge. A collision-checked exact-merge Git-tree refresh found 15 established lanes, 1,487 identities, 4,754 occupied slots, five emerging OCaml roots, zero canonical collisions, zero unknown buckets, and no newly unowned gap. All four dependencies are merged; this missing pure geometry foundation unlocks six Java/Kotlin/Dart symbology owners and the barcode-1d facade. A live open-PR path audit found no overlap across prospective barcode, fixture, state, or roadmap paths. The distinct shared-input multi-consumer build-tool fixture was added as a pending owner before this selection.",
       "notes": "Port the pure shared geometry layer into the three missing established lanes using their existing paint-instructions packages. Preserve exact pattern expansion, symbol inference, spans, finite checked geometry, authoritative metadata, immutable outputs, fail-closed text behavior, and empty capability profiles."
     },
