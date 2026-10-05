@@ -3,13 +3,19 @@
   "sound": "chi",
   "role": "hiragana",
   "components": [
-    "a short horizontal",
-    "a body curving left"
+    "a bar",
+    "a body that falls through the bar to the lower left, turns sharply, rises to the right and rounds a wide belly that finishes low on the left"
   ],
   "strokeOrder": [
-    "horizontal",
-    "curving body"
+    "draw the bar from left to right",
+    "lift, begin above the bar and fall through it to the lower left, then without lifting turn sharply and rise to the right, round the right side and finish low, heading left"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 03061 file records ち as two stroke paths in this order and direction: the bar, then the body in one movement; so there is one pen lift.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03061.svg",
+    "citation": "KanjiVG, kanji/03061.svg, hiragana ち (U+3061 HIRAGANA LETTER TI), two stroke paths kvg:03061-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the bar drawn left to right, rising slightly; s2 starts above the bar, falls through it to the lower left, turns sharply back up to the right, rounds the belly on the right and finishes low, heading left. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. The print glyph's descender and rising stroke meet in a sharp point, so the path goes down to that tip and turns back up the same ink."
+  },
   "notes": "Fourth sign of こんにちは. The t-row reads chi, not ti."
 }

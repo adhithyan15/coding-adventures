@@ -3,13 +3,19 @@
   "sound": "su",
   "role": "hiragana",
   "components": [
-    "a horizontal",
-    "a vertical with a loop"
+    "a long bar",
+    "a vertical that runs down through the bar, loops round to the left and back over the top, and sweeps away to the lower left"
   ],
   "strokeOrder": [
-    "horizontal",
-    "looping vertical"
+    "draw the long bar from left to right",
+    "lift, begin above the bar and draw the vertical down through it, then without lifting loop round to the left and back over the top, come down the right side again and sweep away to the lower left"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 03059 file records す as two stroke paths in this order and direction: the bar, then the vertical with its loop and tail; so there is one pen lift.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03059.svg",
+    "citation": "KanjiVG, kanji/03059.svg, hiragana す (U+3059 HIRAGANA LETTER SU), two stroke paths kvg:03059-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the long bar drawn left to right; s2 starts above the bar, runs down through it and on down the right side of the loop, turns left along the bottom, climbs the left side, crosses over the top, comes back down the right side and sweeps away to the lower left. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. In the print glyph the vertical and the loop's right side share one band of ink, so the path comes back down that band before the tail."
+  },
   "notes": "Ends ございます; the u is often barely voiced."
 }

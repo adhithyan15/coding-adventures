@@ -411,6 +411,82 @@
     },
     {
       "script": "japanese",
+      "glyph": "こ",
+      "font": "_fonts/NotoSansJP-Subset.ttf",
+      "source": {
+        "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03053.svg",
+        "citation": "KanjiVG, kanji/03053.svg, hiragana こ (U+3053 HIRAGANA LETTER KO), two stroke paths kvg:03053-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+        "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the upper stroke drawn left to right, ending in a small turn down and back to the left that the print glyph does not show; s2 starts at the left, curves down and runs out to the right along the base, rising slightly at its end. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 2 movements",
+      "viewBox": {
+        "minX": 103,
+        "minY": -773,
+        "width": 802,
+        "height": 1103.3
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the top stroke to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M235 702Q289 695 356.5 692Q424 689 499 689Q547 689 595.5 691Q644 693 688.5 696.5Q733 700 769 703L769 621Q735 619 690 616Q645 613 595.5 611Q546 609 499 609Q424 609 359 612.5Q294 616 235 620L235 702ZM275 299Q265 269 259.5 241Q254 213 254 185Q254 128 313 92Q372 56 492 56Q561 56 625 61Q689 66 742.5 75Q796 84 834 96L835 10Q799 0 746.5 -8Q694 -16 630 -20.5Q566 -25 494 -25Q393 -25 321 -3Q249 19 211 62Q173 105 173 168Q173 207 180 242Q187 277 194 307L275 299Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M273 659 L273 659\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M273 659 L348 655 L424 651 L499 651 L575 651 L650 655 L725 659\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"725\" cy=\"659\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"504\" y=\"229.3\" text-anchor=\"middle\" font-size=\"64.3\" fill=\"#6b7280\"><tspan x=\"504\" y=\"229.3\">1. draw the top stroke</tspan><tspan x=\"504\" y=\"307.7\">to the right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "curve down and run out to the right",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M235 702Q289 695 356.5 692Q424 689 499 689Q547 689 595.5 691Q644 693 688.5 696.5Q733 700 769 703L769 621Q735 619 690 616Q645 613 595.5 611Q546 609 499 609Q424 609 359 612.5Q294 616 235 620L235 702ZM275 299Q265 269 259.5 241Q254 213 254 185Q254 128 313 92Q372 56 492 56Q561 56 625 61Q689 66 742.5 75Q796 84 834 96L835 10Q799 0 746.5 -8Q694 -16 630 -20.5Q566 -25 494 -25Q393 -25 321 -3Q249 19 211 62Q173 105 173 168Q173 207 180 242Q187 277 194 307L275 299Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M273 659 L348 655 L424 651 L499 651 L575 651 L650 655 L725 659\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M225 267 L225 267\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M225 267 L215 200 L222 132 L262 78 L320 43 L386 25 L454 19 L522 19 L590 19 L658 22 L726 31 L793 43\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"793\" cy=\"43\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"504\" y=\"229.3\" text-anchor=\"middle\" font-size=\"64.3\" fill=\"#6b7280\"><tspan x=\"504\" y=\"229.3\">2. curve down and run</tspan><tspan x=\"504\" y=\"307.7\">out to the right</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "japanese",
+      "glyph": "さ",
+      "font": "_fonts/NotoSansJP-Subset.ttf",
+      "source": {
+        "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03055.svg",
+        "citation": "KanjiVG, kanji/03055.svg, hiragana さ (U+3055 HIRAGANA LETTER SA), three stroke paths kvg:03055-s1 to s3 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+        "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the bar drawn left to right, rising slightly; s2 starts above the bar, slants down to the right through it and hooks back to the left at its foot without lifting; s3 starts at the left, curves down and runs out to the right along the base. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+      },
+      "penLifts": 2,
+      "summary": "3 strokes · 2 pen lifts · 4 movements",
+      "viewBox": {
+        "minX": 88,
+        "minY": -868,
+        "width": 844,
+        "height": 1223.7
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the bar to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M524 709Q519 725 512.5 746Q506 767 499 787L584 798Q589 769 598 732.5Q607 696 619 658.5Q631 621 643 589Q666 524 701 459.5Q736 395 767 351Q778 337 789 324Q800 311 811 298L770 242Q752 246 722.5 250Q693 254 658.5 257.5Q624 261 590 264Q556 267 529 269L535 336Q563 334 594.5 331Q626 328 654.5 325.5Q683 323 701 321Q680 353 656 394.5Q632 436 609.5 482.5Q587 529 570 574Q554 618 543 652Q532 686 524 709ZM158 631Q242 621 320.5 617Q399 613 469.5 615Q540 617 597 623Q637 628 681.5 635Q726 642 770 653Q814 664 853 676L862 598Q827 587 785 579Q743 571 701 564Q659 557 622 553Q527 542 409.5 541Q292 540 160 551L158 631ZM312 312Q290 276 277.5 242.5Q265 209 265 173Q265 102 327 69Q389 36 500 35Q577 34 641.5 41Q706 48 758 60L754 -20Q708 -28 644 -35Q580 -42 496 -42Q401 -41 331.5 -18Q262 5 224 50.5Q186 96 186 164Q186 205 199.5 245.5Q213 286 234 330L312 312Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M198 586 L198 586\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M198 586 L267 582 L337 578 L406 578 L476 578 L545 582 L614 587 L682 597 L750 610 L818 626\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"818\" cy=\"626\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"510\" y=\"249.6\" text-anchor=\"middle\" font-size=\"67.6\" fill=\"#6b7280\"><tspan x=\"510\" y=\"249.6\">1. draw the bar to the</tspan><tspan x=\"510\" y=\"332.1\">right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "slant down to the right through the bar",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M524 709Q519 725 512.5 746Q506 767 499 787L584 798Q589 769 598 732.5Q607 696 619 658.5Q631 621 643 589Q666 524 701 459.5Q736 395 767 351Q778 337 789 324Q800 311 811 298L770 242Q752 246 722.5 250Q693 254 658.5 257.5Q624 261 590 264Q556 267 529 269L535 336Q563 334 594.5 331Q626 328 654.5 325.5Q683 323 701 321Q680 353 656 394.5Q632 436 609.5 482.5Q587 529 570 574Q554 618 543 652Q532 686 524 709ZM158 631Q242 621 320.5 617Q399 613 469.5 615Q540 617 597 623Q637 628 681.5 635Q726 642 770 653Q814 664 853 676L862 598Q827 587 785 579Q743 571 701 564Q659 557 622 553Q527 542 409.5 541Q292 540 160 551L158 631ZM312 312Q290 276 277.5 242.5Q265 209 265 173Q265 102 327 69Q389 36 500 35Q577 34 641.5 41Q706 48 758 60L754 -20Q708 -28 644 -35Q580 -42 496 -42Q401 -41 331.5 -18Q262 5 224 50.5Q186 96 186 164Q186 205 199.5 245.5Q213 286 234 330L312 312Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M198 586 L267 582 L337 578 L406 578 L476 578 L545 582 L614 587 L682 597 L750 610 L818 626\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M554 746 L554 746\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M554 746 L574 678 L591 610 L621 547 L649 482 L682 420 L719 359 L754 298\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"754\" cy=\"298\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"510\" y=\"249.6\" text-anchor=\"middle\" font-size=\"67.6\" fill=\"#6b7280\"><tspan x=\"510\" y=\"249.6\">2. slant down to the</tspan><tspan x=\"510\" y=\"332.1\">right through the bar</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "hook back to the left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M524 709Q519 725 512.5 746Q506 767 499 787L584 798Q589 769 598 732.5Q607 696 619 658.5Q631 621 643 589Q666 524 701 459.5Q736 395 767 351Q778 337 789 324Q800 311 811 298L770 242Q752 246 722.5 250Q693 254 658.5 257.5Q624 261 590 264Q556 267 529 269L535 336Q563 334 594.5 331Q626 328 654.5 325.5Q683 323 701 321Q680 353 656 394.5Q632 436 609.5 482.5Q587 529 570 574Q554 618 543 652Q532 686 524 709ZM158 631Q242 621 320.5 617Q399 613 469.5 615Q540 617 597 623Q637 628 681.5 635Q726 642 770 653Q814 664 853 676L862 598Q827 587 785 579Q743 571 701 564Q659 557 622 553Q527 542 409.5 541Q292 540 160 551L158 631ZM312 312Q290 276 277.5 242.5Q265 209 265 173Q265 102 327 69Q389 36 500 35Q577 34 641.5 41Q706 48 758 60L754 -20Q708 -28 644 -35Q580 -42 496 -42Q401 -41 331.5 -18Q262 5 224 50.5Q186 96 186 164Q186 205 199.5 245.5Q213 286 234 330L312 312Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M198 586 L267 582 L337 578 L406 578 L476 578 L545 582 L614 587 L682 597 L750 610 L818 626\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M554 746 L574 678 L591 610 L621 547 L649 482 L682 420 L719 359 L754 298 L754 298\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M754 298 L696 290 L637 293 L578 298\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"578\" cy=\"298\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"510\" y=\"249.6\" text-anchor=\"middle\" font-size=\"67.6\" fill=\"#6b7280\"><tspan x=\"510\" y=\"249.6\">3. hook back to the left</tspan></text>"
+        },
+        {
+          "number": 4,
+          "label": "curve down and run out to the right",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M524 709Q519 725 512.5 746Q506 767 499 787L584 798Q589 769 598 732.5Q607 696 619 658.5Q631 621 643 589Q666 524 701 459.5Q736 395 767 351Q778 337 789 324Q800 311 811 298L770 242Q752 246 722.5 250Q693 254 658.5 257.5Q624 261 590 264Q556 267 529 269L535 336Q563 334 594.5 331Q626 328 654.5 325.5Q683 323 701 321Q680 353 656 394.5Q632 436 609.5 482.5Q587 529 570 574Q554 618 543 652Q532 686 524 709ZM158 631Q242 621 320.5 617Q399 613 469.5 615Q540 617 597 623Q637 628 681.5 635Q726 642 770 653Q814 664 853 676L862 598Q827 587 785 579Q743 571 701 564Q659 557 622 553Q527 542 409.5 541Q292 540 160 551L158 631ZM312 312Q290 276 277.5 242.5Q265 209 265 173Q265 102 327 69Q389 36 500 35Q577 34 641.5 41Q706 48 758 60L754 -20Q708 -28 644 -35Q580 -42 496 -42Q401 -41 331.5 -18Q262 5 224 50.5Q186 96 186 164Q186 205 199.5 245.5Q213 286 234 330L312 312Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M198 586 L267 582 L337 578 L406 578 L476 578 L545 582 L614 587 L682 597 L750 610 L818 626\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M554 746 L574 678 L591 610 L621 547 L649 482 L682 420 L719 359 L754 298 L696 290 L637 293 L578 298\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M254 282 L254 282\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M254 282 L232 216 L230 146 L253 81 L306 36 L371 12 L440 0 L509 -2 L579 -2 L649 4 L718 14\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"718\" cy=\"14\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"510\" y=\"249.6\" text-anchor=\"middle\" font-size=\"67.6\" fill=\"#6b7280\"><tspan x=\"510\" y=\"249.6\">4. curve down and run</tspan><tspan x=\"510\" y=\"332.1\">out to the right</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "japanese",
       "glyph": "し",
       "font": "_fonts/NotoSansJP-Subset.ttf",
       "source": {
@@ -438,6 +514,50 @@
           "label": "turn around the broad lower curve and sweep upward right",
           "startsAfterLift": false,
           "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M340 779Q336 754 334 728.5Q332 703 331 678Q329 636 327 574Q325 512 323 442.5Q321 373 320 304Q319 235 319 180Q319 125 340 92Q361 59 398 45Q435 31 483 31Q551 31 606 48.5Q661 66 704 95.5Q747 125 780.5 162Q814 199 841 238L898 170Q872 134 834.5 95.5Q797 57 746 24Q695 -9 628.5 -30Q562 -51 480 -51Q409 -51 354 -29Q299 -7 268 42Q237 91 237 172Q237 217 238 271.5Q239 326 241 384Q243 442 244 497.5Q245 553 246 600Q247 647 247 678Q247 706 245 732Q243 758 239 780L340 779Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M290 750 L290 650 L290 500 L290 350 L290 180 L290 180\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M290 180 L300 110 L340 50 L410 5 L490 -10 L590 5 L690 55 L770 120 L850 190\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"850\" cy=\"190\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"567.5\" y=\"255.2\" text-anchor=\"middle\" font-size=\"64.2\" fill=\"#6b7280\"><tspan x=\"567.5\" y=\"255.2\">2. turn around the</tspan><tspan x=\"567.5\" y=\"333.5\">broad lower curve and</tspan><tspan x=\"567.5\" y=\"411.8\">sweep upward right</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "japanese",
+      "glyph": "す",
+      "font": "_fonts/NotoSansJP-Subset.ttf",
+      "source": {
+        "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03059.svg",
+        "citation": "KanjiVG, kanji/03059.svg, hiragana す (U+3059 HIRAGANA LETTER SU), two stroke paths kvg:03059-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+        "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the long bar drawn left to right; s2 starts above the bar, runs down through it and on down the right side of the loop, turns left along the bottom, climbs the left side, crosses over the top, comes back down the right side and sweeps away to the lower left. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. In the print glyph the vertical and the loop's right side share one band of ink, so the path comes back down that band before the tail."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 4 movements",
+      "viewBox": {
+        "minX": 26,
+        "minY": -862,
+        "width": 973,
+        "height": 1256.5
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the bar from left to right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M627 792Q627 787 625.5 774Q624 761 623.5 748.5Q623 736 622 729Q621 710 621 677Q621 644 621 605Q621 566 621.5 526Q622 486 622.5 451Q623 416 623 392L546 430Q546 444 546 472.5Q546 501 546 538.5Q546 576 545.5 613Q545 650 544 681Q543 712 542 729Q541 749 539 767.5Q537 786 536 792L627 792ZM96 653Q137 653 189 654.5Q241 656 299.5 658Q358 660 418 661Q478 662 533.5 663Q589 664 636 664Q681 664 726 664Q771 664 810.5 664Q850 664 880.5 663.5Q911 663 929 663L928 589Q886 591 815.5 592.5Q745 594 635 594Q570 594 499.5 592.5Q429 591 358 589Q287 587 220.5 583.5Q154 580 98 576L96 653ZM621 362Q621 296 601.5 251Q582 206 547.5 184Q513 162 467 162Q436 162 406.5 172.5Q377 183 353.5 204.5Q330 226 316.5 257.5Q303 289 303 329Q303 379 327 418Q351 457 391.5 480Q432 503 479 503Q538 503 576.5 476.5Q615 450 635 404.5Q655 359 655 301Q655 251 640.5 199Q626 147 592.5 99Q559 51 501.5 11.5Q444 -28 356 -54L289 12Q357 28 411 53Q465 78 502 114Q539 150 558.5 198Q578 246 578 308Q578 376 549 406Q520 436 479 436Q453 436 430 423.5Q407 411 392.5 387Q378 363 378 330Q378 283 408.5 257Q439 231 480 231Q511 231 533 248.5Q555 266 564.5 301.5Q574 337 566 390L621 362Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M132 614 L132 614\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M132 614 L201 618 L271 622 L340 622 L410 626 L479 626 L549 626 L618 630 L688 630 L757 630 L827 630 L896 626\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"896\" cy=\"626\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"512.5\" y=\"272\" text-anchor=\"middle\" font-size=\"78\" fill=\"#6b7280\"><tspan x=\"512.5\" y=\"272\">1. draw the bar from</tspan><tspan x=\"512.5\" y=\"367.2\">left to right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "draw the vertical down through the bar",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M627 792Q627 787 625.5 774Q624 761 623.5 748.5Q623 736 622 729Q621 710 621 677Q621 644 621 605Q621 566 621.5 526Q622 486 622.5 451Q623 416 623 392L546 430Q546 444 546 472.5Q546 501 546 538.5Q546 576 545.5 613Q545 650 544 681Q543 712 542 729Q541 749 539 767.5Q537 786 536 792L627 792ZM96 653Q137 653 189 654.5Q241 656 299.5 658Q358 660 418 661Q478 662 533.5 663Q589 664 636 664Q681 664 726 664Q771 664 810.5 664Q850 664 880.5 663.5Q911 663 929 663L928 589Q886 591 815.5 592.5Q745 594 635 594Q570 594 499.5 592.5Q429 591 358 589Q287 587 220.5 583.5Q154 580 98 576L96 653ZM621 362Q621 296 601.5 251Q582 206 547.5 184Q513 162 467 162Q436 162 406.5 172.5Q377 183 353.5 204.5Q330 226 316.5 257.5Q303 289 303 329Q303 379 327 418Q351 457 391.5 480Q432 503 479 503Q538 503 576.5 476.5Q615 450 635 404.5Q655 359 655 301Q655 251 640.5 199Q626 147 592.5 99Q559 51 501.5 11.5Q444 -28 356 -54L289 12Q357 28 411 53Q465 78 502 114Q539 150 558.5 198Q578 246 578 308Q578 376 549 406Q520 436 479 436Q453 436 430 423.5Q407 411 392.5 387Q378 363 378 330Q378 283 408.5 257Q439 231 480 231Q511 231 533 248.5Q555 266 564.5 301.5Q574 337 566 390L621 362Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M132 614 L201 618 L271 622 L340 622 L410 626 L479 626 L549 626 L618 630 L688 630 L757 630 L827 630 L896 626\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M584 754 L584 754\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M584 754 L584 688 L584 622 L584 556 L583 491 L585 425 L607 364 L608 298\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"608\" cy=\"298\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"512.5\" y=\"272\" text-anchor=\"middle\" font-size=\"78\" fill=\"#6b7280\"><tspan x=\"512.5\" y=\"272\">2. draw the vertical</tspan><tspan x=\"512.5\" y=\"367.2\">down through the bar</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "loop round to the left and over the top",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M627 792Q627 787 625.5 774Q624 761 623.5 748.5Q623 736 622 729Q621 710 621 677Q621 644 621 605Q621 566 621.5 526Q622 486 622.5 451Q623 416 623 392L546 430Q546 444 546 472.5Q546 501 546 538.5Q546 576 545.5 613Q545 650 544 681Q543 712 542 729Q541 749 539 767.5Q537 786 536 792L627 792ZM96 653Q137 653 189 654.5Q241 656 299.5 658Q358 660 418 661Q478 662 533.5 663Q589 664 636 664Q681 664 726 664Q771 664 810.5 664Q850 664 880.5 663.5Q911 663 929 663L928 589Q886 591 815.5 592.5Q745 594 635 594Q570 594 499.5 592.5Q429 591 358 589Q287 587 220.5 583.5Q154 580 98 576L96 653ZM621 362Q621 296 601.5 251Q582 206 547.5 184Q513 162 467 162Q436 162 406.5 172.5Q377 183 353.5 204.5Q330 226 316.5 257.5Q303 289 303 329Q303 379 327 418Q351 457 391.5 480Q432 503 479 503Q538 503 576.5 476.5Q615 450 635 404.5Q655 359 655 301Q655 251 640.5 199Q626 147 592.5 99Q559 51 501.5 11.5Q444 -28 356 -54L289 12Q357 28 411 53Q465 78 502 114Q539 150 558.5 198Q578 246 578 308Q578 376 549 406Q520 436 479 436Q453 436 430 423.5Q407 411 392.5 387Q378 363 378 330Q378 283 408.5 257Q439 231 480 231Q511 231 533 248.5Q555 266 564.5 301.5Q574 337 566 390L621 362Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M132 614 L201 618 L271 622 L340 622 L410 626 L479 626 L549 626 L618 630 L688 630 L757 630 L827 630 L896 626\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M584 754 L584 688 L584 622 L584 556 L583 491 L585 425 L607 364 L608 298 L608 298\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M608 298 L585 231 L517 205 L446 200 L383 235 L345 295 L345 366 L382 428 L444 464 L515 465 L579 437 L608 370\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"608\" cy=\"370\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"512.5\" y=\"272\" text-anchor=\"middle\" font-size=\"78\" fill=\"#6b7280\"><tspan x=\"512.5\" y=\"272\">3. loop round to the</tspan><tspan x=\"512.5\" y=\"367.2\">left and over the top</tspan></text>"
+        },
+        {
+          "number": 4,
+          "label": "come down and sweep to the lower left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M627 792Q627 787 625.5 774Q624 761 623.5 748.5Q623 736 622 729Q621 710 621 677Q621 644 621 605Q621 566 621.5 526Q622 486 622.5 451Q623 416 623 392L546 430Q546 444 546 472.5Q546 501 546 538.5Q546 576 545.5 613Q545 650 544 681Q543 712 542 729Q541 749 539 767.5Q537 786 536 792L627 792ZM96 653Q137 653 189 654.5Q241 656 299.5 658Q358 660 418 661Q478 662 533.5 663Q589 664 636 664Q681 664 726 664Q771 664 810.5 664Q850 664 880.5 663.5Q911 663 929 663L928 589Q886 591 815.5 592.5Q745 594 635 594Q570 594 499.5 592.5Q429 591 358 589Q287 587 220.5 583.5Q154 580 98 576L96 653ZM621 362Q621 296 601.5 251Q582 206 547.5 184Q513 162 467 162Q436 162 406.5 172.5Q377 183 353.5 204.5Q330 226 316.5 257.5Q303 289 303 329Q303 379 327 418Q351 457 391.5 480Q432 503 479 503Q538 503 576.5 476.5Q615 450 635 404.5Q655 359 655 301Q655 251 640.5 199Q626 147 592.5 99Q559 51 501.5 11.5Q444 -28 356 -54L289 12Q357 28 411 53Q465 78 502 114Q539 150 558.5 198Q578 246 578 308Q578 376 549 406Q520 436 479 436Q453 436 430 423.5Q407 411 392.5 387Q378 363 378 330Q378 283 408.5 257Q439 231 480 231Q511 231 533 248.5Q555 266 564.5 301.5Q574 337 566 390L621 362Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M132 614 L201 618 L271 622 L340 622 L410 626 L479 626 L549 626 L618 630 L688 630 L757 630 L827 630 L896 626\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M584 754 L584 688 L584 622 L584 556 L583 491 L585 425 L607 364 L608 298 L585 231 L517 205 L446 200 L383 235 L345 295 L345 366 L382 428 L444 464 L515 465 L579 437 L608 370 L608 370\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M608 370 L608 297 L593 227 L582 156 L537 99 L484 49 L421 14 L352 -6\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"352\" cy=\"-6\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"512.5\" y=\"272\" text-anchor=\"middle\" font-size=\"78\" fill=\"#6b7280\"><tspan x=\"512.5\" y=\"272\">4. come down and sweep</tspan><tspan x=\"512.5\" y=\"367.2\">to the lower left</tspan></text>"
         }
       ]
     },
@@ -587,6 +707,50 @@
     },
     {
       "script": "japanese",
+      "glyph": "ち",
+      "font": "_fonts/NotoSansJP-Subset.ttf",
+      "source": {
+        "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03061.svg",
+        "citation": "KanjiVG, kanji/03061.svg, hiragana ち (U+3061 HIRAGANA LETTER TI), two stroke paths kvg:03061-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+        "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the bar drawn left to right, rising slightly; s2 starts above the bar, falls through it to the lower left, turns sharply back up to the right, rounds the belly on the right and finishes low, heading left. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. The print glyph's descender and rising stroke meet in a sharp point, so the path goes down to that tip and turns back up the same ink."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 4 movements",
+      "viewBox": {
+        "minX": 42,
+        "minY": -858,
+        "width": 878,
+        "height": 1222.9
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the bar to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M423 783Q417 763 413 741Q409 719 405 699Q400 675 393.5 639.5Q387 604 377.5 562.5Q368 521 358 479Q348 437 337.5 399.5Q327 362 316 334Q382 380 450.5 399.5Q519 419 598 419Q678 419 734 394Q790 369 820 324.5Q850 280 850 221Q850 143 812 89Q774 35 705 4Q636 -27 541.5 -35.5Q447 -44 332 -32L312 47Q399 35 480.5 37.5Q562 40 626.5 59.5Q691 79 729.5 118Q768 157 768 219Q768 275 722.5 313.5Q677 352 589 352Q500 352 422 321.5Q344 291 294 231Q285 220 277.5 209.5Q270 199 263 185L188 212Q217 268 241 337.5Q265 407 283 478Q301 549 313 608.5Q325 668 330 705Q333 729 334 748Q335 767 334 788L423 783ZM112 656Q152 649 204.5 644Q257 639 302 639Q350 639 409 642Q468 645 532 651Q596 657 660.5 666.5Q725 676 784 689L785 612Q732 603 669.5 595Q607 587 542 581Q477 575 415.5 571.5Q354 568 303 568Q252 568 204.5 571Q157 574 113 578L112 656Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M152 612 L152 612\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M152 612 L218 608 L285 604 L351 606 L418 608 L484 611 L550 616 L617 624 L683 632 L748 644\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"748\" cy=\"644\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"481\" y=\"254.4\" text-anchor=\"middle\" font-size=\"70.4\" fill=\"#6b7280\"><tspan x=\"481\" y=\"254.4\">1. draw the bar to the</tspan><tspan x=\"481\" y=\"340.3\">right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "fall through the bar to the lower left",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M423 783Q417 763 413 741Q409 719 405 699Q400 675 393.5 639.5Q387 604 377.5 562.5Q368 521 358 479Q348 437 337.5 399.5Q327 362 316 334Q382 380 450.5 399.5Q519 419 598 419Q678 419 734 394Q790 369 820 324.5Q850 280 850 221Q850 143 812 89Q774 35 705 4Q636 -27 541.5 -35.5Q447 -44 332 -32L312 47Q399 35 480.5 37.5Q562 40 626.5 59.5Q691 79 729.5 118Q768 157 768 219Q768 275 722.5 313.5Q677 352 589 352Q500 352 422 321.5Q344 291 294 231Q285 220 277.5 209.5Q270 199 263 185L188 212Q217 268 241 337.5Q265 407 283 478Q301 549 313 608.5Q325 668 330 705Q333 729 334 748Q335 767 334 788L423 783ZM112 656Q152 649 204.5 644Q257 639 302 639Q350 639 409 642Q468 645 532 651Q596 657 660.5 666.5Q725 676 784 689L785 612Q732 603 669.5 595Q607 587 542 581Q477 575 415.5 571.5Q354 568 303 568Q252 568 204.5 571Q157 574 113 578L112 656Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M152 612 L218 608 L285 604 L351 606 L418 608 L484 611 L550 616 L617 624 L683 632 L748 644\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M376 748 L376 748\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M376 748 L365 682 L353 617 L338 553 L323 488 L306 423 L287 359 L277 294 L244 236\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"244\" cy=\"236\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"481\" y=\"254.4\" text-anchor=\"middle\" font-size=\"70.4\" fill=\"#6b7280\"><tspan x=\"481\" y=\"254.4\">2. fall through the bar</tspan><tspan x=\"481\" y=\"340.3\">to the lower left</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "turn sharply and rise to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M423 783Q417 763 413 741Q409 719 405 699Q400 675 393.5 639.5Q387 604 377.5 562.5Q368 521 358 479Q348 437 337.5 399.5Q327 362 316 334Q382 380 450.5 399.5Q519 419 598 419Q678 419 734 394Q790 369 820 324.5Q850 280 850 221Q850 143 812 89Q774 35 705 4Q636 -27 541.5 -35.5Q447 -44 332 -32L312 47Q399 35 480.5 37.5Q562 40 626.5 59.5Q691 79 729.5 118Q768 157 768 219Q768 275 722.5 313.5Q677 352 589 352Q500 352 422 321.5Q344 291 294 231Q285 220 277.5 209.5Q270 199 263 185L188 212Q217 268 241 337.5Q265 407 283 478Q301 549 313 608.5Q325 668 330 705Q333 729 334 748Q335 767 334 788L423 783ZM112 656Q152 649 204.5 644Q257 639 302 639Q350 639 409 642Q468 645 532 651Q596 657 660.5 666.5Q725 676 784 689L785 612Q732 603 669.5 595Q607 587 542 581Q477 575 415.5 571.5Q354 568 303 568Q252 568 204.5 571Q157 574 113 578L112 656Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M152 612 L218 608 L285 604 L351 606 L418 608 L484 611 L550 616 L617 624 L683 632 L748 644\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M376 748 L365 682 L353 617 L338 553 L323 488 L306 423 L287 359 L277 294 L244 236 L244 236\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M244 236 L281 292 L342 315 L401 346 L464 369 L529 381 L596 384\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"596\" cy=\"384\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"481\" y=\"254.4\" text-anchor=\"middle\" font-size=\"70.4\" fill=\"#6b7280\"><tspan x=\"481\" y=\"254.4\">3. turn sharply and</tspan><tspan x=\"481\" y=\"340.3\">rise to the right</tspan></text>"
+        },
+        {
+          "number": 4,
+          "label": "round the right side and finish low",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M423 783Q417 763 413 741Q409 719 405 699Q400 675 393.5 639.5Q387 604 377.5 562.5Q368 521 358 479Q348 437 337.5 399.5Q327 362 316 334Q382 380 450.5 399.5Q519 419 598 419Q678 419 734 394Q790 369 820 324.5Q850 280 850 221Q850 143 812 89Q774 35 705 4Q636 -27 541.5 -35.5Q447 -44 332 -32L312 47Q399 35 480.5 37.5Q562 40 626.5 59.5Q691 79 729.5 118Q768 157 768 219Q768 275 722.5 313.5Q677 352 589 352Q500 352 422 321.5Q344 291 294 231Q285 220 277.5 209.5Q270 199 263 185L188 212Q217 268 241 337.5Q265 407 283 478Q301 549 313 608.5Q325 668 330 705Q333 729 334 748Q335 767 334 788L423 783ZM112 656Q152 649 204.5 644Q257 639 302 639Q350 639 409 642Q468 645 532 651Q596 657 660.5 666.5Q725 676 784 689L785 612Q732 603 669.5 595Q607 587 542 581Q477 575 415.5 571.5Q354 568 303 568Q252 568 204.5 571Q157 574 113 578L112 656Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M152 612 L218 608 L285 604 L351 606 L418 608 L484 611 L550 616 L617 624 L683 632 L748 644\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M376 748 L365 682 L353 617 L338 553 L323 488 L306 423 L287 359 L277 294 L244 236 L281 292 L342 315 L401 346 L464 369 L529 381 L596 384\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M596 384 L596 384 L668 378 L734 351 L785 300 L804 232 L801 160 L763 99 L708 52 L642 24 L572 7 L500 0 L427 0 L356 8\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"356\" cy=\"8\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"481\" y=\"254.4\" text-anchor=\"middle\" font-size=\"70.4\" fill=\"#6b7280\"><tspan x=\"481\" y=\"254.4\">4. round the right side</tspan><tspan x=\"481\" y=\"340.3\">and finish low</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "japanese",
       "glyph": "っ",
       "font": "_fonts/NotoSansJP-Subset.ttf",
       "source": {
@@ -684,6 +848,44 @@
           "label": "round the broad lower curve and sweep right to the finish",
           "startsAfterLift": false,
           "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 664Q114 665 137 666.5Q160 668 174 669Q198 672 243.5 676.5Q289 681 348 686.5Q407 692 475 698Q543 704 612 710Q667 715 716 718.5Q765 722 807 724.5Q849 727 882 728L882 648Q854 649 818 648Q782 647 747 643.5Q712 640 686 632Q633 615 590.5 580.5Q548 546 518 501.5Q488 457 472.5 408.5Q457 360 457 316Q457 257 477 213.5Q497 170 531.5 140Q566 110 610.5 91Q655 72 704 63Q753 54 802 52L773 -31Q718 -29 661.5 -15.5Q605 -2 554 23.5Q503 49 463 88Q423 127 400 179Q377 231 377 298Q377 376 404.5 442.5Q432 509 475 559Q518 609 564 636Q532 632 485 627Q438 622 383.5 616.5Q329 611 275 604Q221 597 173.5 590.5Q126 584 94 577L85 664Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M110 620 L220 630 L340 642 L470 655 L600 668 L730 680 L845 688 L760 675 L675 645 L600 600 L535 540 L485 470 L450 390 L430 305 L430 305\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M430 305 L430 230 L450 165 L490 110 L550 70 L620 42 L700 22 L770 12\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"770\" cy=\"12\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"483.5\" y=\"246.1\" text-anchor=\"middle\" font-size=\"75.1\" fill=\"#6b7280\"><tspan x=\"483.5\" y=\"246.1\">3. round the broad</tspan><tspan x=\"483.5\" y=\"337.7\">lower curve and sweep</tspan><tspan x=\"483.5\" y=\"429.3\">right to the finish</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "japanese",
+      "glyph": "と",
+      "font": "_fonts/NotoSansJP-Subset.ttf",
+      "source": {
+        "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03068.svg",
+        "citation": "KanjiVG, kanji/03068.svg, hiragana と (U+3068 HIRAGANA LETTER TO), two stroke paths kvg:03068-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+        "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 starts at the top of the short stroke and runs down and to the right, ending on the line s2 will take; s2 starts at the upper right, sweeps down to the left, curves round and runs out to the right along the base. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. In KanjiVG and in the print glyph alike, the short stroke ends on the long one, so the two strokes touch."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 3 movements",
+      "viewBox": {
+        "minX": 131,
+        "minY": -848,
+        "width": 780,
+        "height": 1176.6
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the short stroke down to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M814 597Q797 586 778 576Q759 566 737 555Q712 541 675 523Q638 505 596 483Q554 461 512 437Q470 413 433 389Q363 344 323.5 294Q284 244 284 187Q284 125 343.5 88.5Q403 52 521 52Q576 52 635 56.5Q694 61 748.5 69Q803 77 841 86L841 -3Q804 -10 753.5 -15.5Q703 -21 645 -24.5Q587 -28 525 -28Q454 -28 395 -16.5Q336 -5 292.5 19Q249 43 225 82.5Q201 122 201 178Q201 233 224 279.5Q247 326 290 368Q333 410 392 449Q430 475 473.5 499.5Q517 524 559 547Q601 570 637.5 589Q674 608 699 621Q720 634 737 644.5Q754 655 770 668L814 597ZM308 778Q331 714 357.5 653Q384 592 411.5 539Q439 486 462 445L393 404Q368 445 340 501Q312 557 284 620Q256 683 229 745L308 778Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M285 728 L285 728\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M285 728 L307 668 L332 609 L359 551 L389 495 L421 440\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"421\" cy=\"440\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"521\" y=\"230.5\" text-anchor=\"middle\" font-size=\"62.5\" fill=\"#6b7280\"><tspan x=\"521\" y=\"230.5\">1. draw the short stroke</tspan><tspan x=\"521\" y=\"306.8\">down to the right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "sweep down to the left",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M814 597Q797 586 778 576Q759 566 737 555Q712 541 675 523Q638 505 596 483Q554 461 512 437Q470 413 433 389Q363 344 323.5 294Q284 244 284 187Q284 125 343.5 88.5Q403 52 521 52Q576 52 635 56.5Q694 61 748.5 69Q803 77 841 86L841 -3Q804 -10 753.5 -15.5Q703 -21 645 -24.5Q587 -28 525 -28Q454 -28 395 -16.5Q336 -5 292.5 19Q249 43 225 82.5Q201 122 201 178Q201 233 224 279.5Q247 326 290 368Q333 410 392 449Q430 475 473.5 499.5Q517 524 559 547Q601 570 637.5 589Q674 608 699 621Q720 634 737 644.5Q754 655 770 668L814 597ZM308 778Q331 714 357.5 653Q384 592 411.5 539Q439 486 462 445L393 404Q368 445 340 501Q312 557 284 620Q256 683 229 745L308 778Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M285 728 L307 668 L332 609 L359 551 L389 495 L421 440\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M757 608 L757 608\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M757 608 L693 575 L629 543 L566 509 L503 475 L439 442 L382 401 L330 353 L282 299 L250 235 L245 164\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"245\" cy=\"164\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"521\" y=\"230.5\" text-anchor=\"middle\" font-size=\"62.5\" fill=\"#6b7280\"><tspan x=\"521\" y=\"230.5\">2. sweep down to the</tspan><tspan x=\"521\" y=\"306.8\">left</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "curve round and run out to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M814 597Q797 586 778 576Q759 566 737 555Q712 541 675 523Q638 505 596 483Q554 461 512 437Q470 413 433 389Q363 344 323.5 294Q284 244 284 187Q284 125 343.5 88.5Q403 52 521 52Q576 52 635 56.5Q694 61 748.5 69Q803 77 841 86L841 -3Q804 -10 753.5 -15.5Q703 -21 645 -24.5Q587 -28 525 -28Q454 -28 395 -16.5Q336 -5 292.5 19Q249 43 225 82.5Q201 122 201 178Q201 233 224 279.5Q247 326 290 368Q333 410 392 449Q430 475 473.5 499.5Q517 524 559 547Q601 570 637.5 589Q674 608 699 621Q720 634 737 644.5Q754 655 770 668L814 597ZM308 778Q331 714 357.5 653Q384 592 411.5 539Q439 486 462 445L393 404Q368 445 340 501Q312 557 284 620Q256 683 229 745L308 778Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M285 728 L307 668 L332 609 L359 551 L389 495 L421 440\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M757 608 L693 575 L629 543 L566 509 L503 475 L439 442 L382 401 L330 353 L282 299 L250 235 L245 164 L245 164\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M245 164 L270 100 L321 53 L386 28 L455 17 L525 13 L594 12 L664 17 L734 24 L801 40\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"801\" cy=\"40\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"521\" y=\"230.5\" text-anchor=\"middle\" font-size=\"62.5\" fill=\"#6b7280\"><tspan x=\"521\" y=\"230.5\">3. curve round and run</tspan><tspan x=\"521\" y=\"306.8\">out to the right</tspan></text>"
         }
       ]
     },

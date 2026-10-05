@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "A Daytime Greeting, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5d898462db98090c",
+  "sourceHash": "fnv1a64:37df82f6f6212212",
   "lessons": [
     {
       "id": "JA-W01-ko",
@@ -483,7 +483,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:34105778555f9a1c",
+      "sourceHash": "fnv1a64:1265adf4ce24c54e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -533,7 +533,7 @@
             },
             {
               "kind": "speech",
-              "text": "the body — down from the middle of that bar, curving left, then round into a full belly to the right and up."
+              "text": "the body — down through that bar from above it, falling to the left, then a sharp turn up to the right and round into a full belly that finishes low on the left."
             },
             {
               "kind": "speech",

@@ -8,7 +8,7 @@ chapter: 4
 type: writing
 headword: さ
 romanization: sa
-gloss: the hiragana sign for the mora sa — two strokes, and the base of za
+gloss: the hiragana sign for the mora sa — three strokes, and the base of za
 prerequisites: [JA-C01-arigatou]
 sounds: [mora]
 roots: []
@@ -29,7 +29,7 @@ variety: standard-japanese-tokyo
 reviews_of: [JA-W03-arigatou-read, JA-W03-dakuten]
 ---
 
-# さ — two strokes, and the ticks work here too
+# さ — three strokes, and the ticks work here too
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-ARIGATOU-READ-01] -->
@@ -44,9 +44,10 @@ reviews_of: [JA-W03-arigatou-read, JA-W03-dakuten]
 Three strokes:
 
 1. a short **horizontal**, near the top
-2. a **short curving stroke** below it, falling down and left
-3. a **separate small curve** at the foot, opening left — **not joined** to the
-   stroke above it
+2. a **slanting stroke**, starting above the horizontal and falling down to the
+   right through it, then hooking back to the left
+3. a **separate curve** at the foot, coming down on the left and running out to
+   the right — **not joined** to the stroke above it
 
 Watch that gap. Most printed fonts join the second and third strokes into one
 continuous descender, so the さ you see on a screen looks like two strokes. By
@@ -65,7 +66,7 @@ voiced sign you have got for free. It will return in the polite ending ahead.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-SA-01] -->
 
-- [YOU WRITE: さ — horizontal, the short curve, then the detached foot curve]
+- [YOU WRITE: さ — horizontal, the slanting stroke with its hook, then the detached foot curve]
 - [YOU WRITE: ざ — the same, with two ticks]
 - [YOU SAY: **sa / za**]
 

@@ -12,7 +12,7 @@ gloss: the hiragana sign for the mora to — two strokes, and the fourth sign of
 prerequisites: [JA-W03-dakuten]
 sounds: [mora]
 roots: []
-etymology_hook: と is two strokes that do not touch, and it is where ありがとう turns towards its long final vowel.
+etymology_hook: と is two strokes, the short one ending on the long one, and it is where ありがとう turns towards its long final vowel.
 duration:
   max_seconds: 170
 requires:
@@ -29,7 +29,7 @@ variety: standard-japanese-tokyo
 reviews_of: [JA-W03-dakuten]
 ---
 
-# と — two strokes, and they never meet
+# と — two strokes, and the first ends on the second
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-DAKUTEN-01] -->
@@ -41,12 +41,13 @@ reviews_of: [JA-W03-dakuten]
 
 > と
 
-Two strokes, and like り they stay apart:
+Two strokes, and unlike り they touch:
 
 1. a **short stroke** at the upper left, little more than a tick leaning
    down-right
 2. a **long sweeping stroke** starting above and to the right of it, falling
-   down and left, then curving out to the right at the bottom
+   down and left past the end of the short stroke, then curving out to the right
+   at the bottom
 
 The second stroke does the work. It should look like a single confident sweep,
 not a corner — the change of direction is a curve, not a bend.
@@ -56,7 +57,7 @@ Read **to**: a clean *t*, then the *o* of *more*, shortened. One beat.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-TO-01] -->
 
-- [YOU WRITE: と — the small tick, then the long sweep. Do not join them.]
+- [YOU WRITE: と — the small tick, then the long sweep, passing the tick's end.]
 - [YOU SAY: **a, ri, ga, to** — four beats, and the word is nearly yours]
 
 ## Guided Practice — review pulse
@@ -66,7 +67,7 @@ Read **to**: a clean *t*, then the *o* of *more*, shortened. One beat.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-TO-01] -->
-<!-- hl-activity: {"id":"JA-W03-to-join","kind":"text","assesses":["JA-SCRIPT-TO-01"],"prompt":"Do the two strokes of the sign read 'to' touch each other?","answer":"no","accepted":["they do not touch","no, they stay apart","separate","no they are separate"],"feedback":{"correct":"No — the gap is part of the shape, as it is in ri.","incorrect":"No. They stay apart; the gap is part of the shape."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"JA-W03-to-join","kind":"text","assesses":["JA-SCRIPT-TO-01"],"prompt":"Do the two strokes of the sign read 'to' touch each other?","answer":"yes","accepted":["they touch","yes, they touch","yes they meet","the short one ends on the long one"],"feedback":{"correct":"Yes — the short stroke ends on the long sweep; in ri the strokes stay apart.","incorrect":"Yes. The short stroke ends on the long sweep, so the two strokes touch."},"response_seconds":8} -->
 
 Which stroke is longer? (The **second**, the sweep.)
 
