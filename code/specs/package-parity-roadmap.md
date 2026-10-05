@@ -15488,6 +15488,39 @@ for the line-oriented build tool. Two read-only security-review rounds
 completed; the second
 reported no vulnerabilities after bounded Unicode-scalar ingress fixes.
 
+### Post-#16361 exact-main inventory and Forme ownership refresh
+
+PR #16361 merged by the guarded auto-merge path as
+`02e8b7fc6dc0156808acf3d0395974c13ff6aa75`. At exact `origin/main`
+`91d191d2244b78717c6c24a8f6f2fa185398507c`, a Git-tree schema-3 scan of
+all 56,914 tracked package paths reports 15 established lanes, 1,487
+implementation identities, 4,754 occupied slots, and 1,529 all-reported
+identities. The completion bands are 178/265, 123/934, 181/2,282, and
+1,005/14,070 (packages/missing slots); Rust has 806 singleton identities,
+OCaml remains an emerging lane with five packages, and there are zero canonical
+collisions or unknown language buckets. The stored inventory at its prior
+revision undercounted one root when reconstructed from Git trees; the eleven
+subsequent additions are all TypeScript Forme singletons. Git-tree scanning
+avoids the Windows checkout path-length issue in the local-file report mode.
+
+The existing pending `forme-portable-core-family-classification` owner now
+explicitly includes `forme-authoring-core`, `forme-authoring-editor`,
+`forme-authoring-preview`, `forme-authoring-publish`, `forme-authoring-shell`,
+`forme-interactivity-ir`, `forme-render-terminal`, `forme-sandbox-core`,
+`forme-sandbox-linux`, `forme-sandbox-macos`, and `forme-sandbox-windows`.
+Authoring core, preview/publish coordination, interactivity IR, and terminal
+projection need portable contract and fixture review under FM05/FM09.
+Editor/shell are React UI products; sandbox core and its OS launchers exercise
+native process authority under FM02 and need reviewed applicability exceptions.
+No new singleton is left without an owner.
+
+After registering those discoveries, dependency ranking selects the pending
+`barcode-layout-1d-elixir-lua-v1-conformance` slice. All three prerequisites
+have merged, its 12-target registry currently reports these two established
+implementations as pending, and completing it unblocks 13 downstream owners,
+including Java/Kotlin/Dart layout parity. A live open-PR path audit found no
+overlap with its package, fixture, state, or roadmap files.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

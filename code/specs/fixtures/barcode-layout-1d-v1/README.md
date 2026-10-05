@@ -29,9 +29,8 @@ spec. Compact `repeat`, `repeatRuns`, and `repeatSymbols` inputs are fixture
 transport encodings; their limits are validated before expansion.
 
 `targets.json` records all twelve current implementation lanes and their
-adapter/test hooks. The first eight promoted lanes are conformant; Elixir, Lua,
-Ruby, and Swift remain explicit pending adoptions until their native suites and
-portable adapters are reviewed. A pending target may name only its planned
+adapter/test hooks. All twelve established implementations are now conformant
+with the portable v1 contract. A pending target may name only its planned
 conformance test and known divergences; promotion fields are rejected. A conformant target must
 name an executed package test, carry the exact raw `cases.json` SHA-256, bind a
 tested pre-publication revision, match the checked-out canonical package tree,
