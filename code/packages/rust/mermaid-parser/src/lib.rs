@@ -2321,7 +2321,7 @@ fn apply_block_style(
 
 fn parse_block_style(token: &Token, source: &str) -> Result<DiagramStyle, ParseError> {
     let mut style = DiagramStyle::default();
-    for declaration in source.split(',').map(str::trim).filter(|value| !value.is_empty()) {
+    for declaration in split_style_declarations(source) {
         let (property, value) = declaration.split_once(':')
             .ok_or_else(|| token_error(token, format!("invalid block style {declaration:?}")))?;
         let value = value.trim().trim_matches(['\'', '"']);
@@ -4551,7 +4551,7 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
 
 fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::TreemapStyle, ParseError> {
     let mut style = diagram_ir::TreemapStyle::default();
-    for declaration in split_treemap_style_declarations(source) {
+    for declaration in split_style_declarations(source) {
         let (property, value) = declaration.split_once(':')
             .ok_or_else(|| token_error(token, format!("invalid treemap style {declaration:?}")))?;
         let value = value.trim().trim_matches(['\'', '"']);
@@ -4824,7 +4824,7 @@ fn parse_treemap_border_radius(
     }).ok_or_else(|| token_error(token, "treemap border-radius must be a non-negative pixel or percentage value"))
 }
 
-fn split_treemap_style_declarations(source: &str) -> Vec<&str> {
+fn split_style_declarations(source: &str) -> Vec<&str> {
     let mut declarations = Vec::new();
     let mut start = 0;
     let mut depth = 0_u32;
@@ -15473,6 +15473,16 @@ B//-A: reverse stick top
         assert_eq!(style.node.text_color.as_deref(), Some("oklch(62% 0.1442 none / 80%)"));
         assert_eq!(style.node.fill.as_deref(), Some("color(display-p3 none 40% 60% / 75%)"));
         assert_eq!(style.node.stroke.as_deref(), Some("rgb(none 20% 40%)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in srgb, red 20%, transparent),fill:color-mix(in srgb, rgb(255, 0, 0) 25%, blue)",
+        ).expect("CSS color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in srgb, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in srgb, rgb(255, 0, 0) 25%, blue)"));
     }
 
     #[test]

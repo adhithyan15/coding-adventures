@@ -556,7 +556,9 @@ predefined CSS `color()` spaces on the same backend-neutral path. Across modern
 color functions, the CSS missing-component keyword `none` survives semantic IR
 and resolves to zero when lowered to absolute backend-neutral paint; an omitted
 alpha component remains fully opaque, while an explicit `/ none` resolves to
-transparent alpha.
+transparent alpha. CSS `color-mix()` likewise preserves authored stops through
+semantic IR and supports premultiplied-alpha interpolation in the `srgb` color
+space, including omitted, complementary, and normalized stop percentages.
 The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
