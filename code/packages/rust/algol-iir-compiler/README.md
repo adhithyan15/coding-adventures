@@ -217,7 +217,10 @@ retains the proof when its actual is a runtime-real expression. This includes
 assignable real array elements: reads re-evaluate the stored actual while
 writes continue through the existing specialised caller-storage path. Direct
 forwarding into another name formal preserves that original actual and its
-proof. Ordinary captured real globals remain outside this bounded proof.
+proof. Ordinary real scalars captured through the existing E6 typed-global
+path likewise remain concrete f64 values and retain formatter provenance in
+nested sibling procedures. Broader computed scalar formatting remains outside
+this bounded proof.
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.
