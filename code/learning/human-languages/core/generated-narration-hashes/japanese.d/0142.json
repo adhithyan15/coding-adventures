@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:0c30525e304ad58b",
+  "lessonIds": [
+    "JA-C142-chuui",
+    "JA-C142-kinen",
+    "JA-C142-uketsuke",
+    "JA-C142-eigyouchuu",
+    "JA-C142-junbichuu",
+    "JA-R142-first-pass-my-day-no-and-the-past",
+    "JA-R142-second-pass-the-future-and-notices"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch142.txt",
+  "json": "japanese/narration/ch142.json",
+  "textHash": "fnv1a64:99ea5bc0ca7c4922",
+  "jsonHash": "fnv1a64:556968df433d1ef7",
+  "findings": []
+}

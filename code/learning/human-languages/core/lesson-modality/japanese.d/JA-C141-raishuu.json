@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C141-raishuu",
+    "language": "japanese",
+    "chapter": 141,
+    "sequence": 8630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86e5d55729032ed5"
+  },
+  "findings": []
+}

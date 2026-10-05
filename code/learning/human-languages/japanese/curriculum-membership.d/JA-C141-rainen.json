@@ -1,0 +1,11 @@
+{
+  "id": "JA-C141-rainen",
+  "pathSegment": "JA-PATH-141-FUT141",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-141-FUT141",
+      "order": 2
+    }
+  ]
+}

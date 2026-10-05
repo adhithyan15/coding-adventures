@@ -33,9 +33,14 @@ export const integrationTrackEvidence: IntegrationTrackEvidence = {
     // after the word that holds it (かぞく, みず, かぜ, いっぱい, えんぴつ,
     // きっぷ, ぺらぺら), with five more words (かぞえる, すずしい, しんぱい,
     // いっぴき, てんぷら) and one review per chapter.
-    expect(japanese).toHaveLength(809);
+    // 809 -> 837: chapters 138-142 are the A2 spine, one chapter per A2 node
+    // the track had not realized: what I do (five polite -masu verbs),
+    // negation and questions (six), the past (five), the future (five) and
+    // practical texts (five notices), 26 word and phrase lessons, then a
+    // first-pass and a second-pass review at the end of chapter 142.
+    expect(japanese).toHaveLength(837);
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter)))
-      .toEqual(new Set(Array.from({ length: 137 }, (_, index) => index + 1)));
+      .toEqual(new Set(Array.from({ length: 142 }, (_, index) => index + 1)));
     expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(japanese.map((lesson) => [
       lesson.realization.lessonId,

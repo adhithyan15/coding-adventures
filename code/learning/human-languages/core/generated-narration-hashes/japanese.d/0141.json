@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:681de5c43f10feac",
+  "lessonIds": [
+    "JA-C141-raishuu",
+    "JA-C141-raigetsu",
+    "JA-C141-rainen",
+    "JA-C141-tsumori",
+    "JA-C141-deshou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch141.txt",
+  "json": "japanese/narration/ch141.json",
+  "textHash": "fnv1a64:125560e05f889a1c",
+  "jsonHash": "fnv1a64:234e849a86c3dc57",
+  "findings": []
+}

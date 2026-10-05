@@ -261,7 +261,7 @@ describe("corpus level summary", () => {
       expect(readdirSync(join(root, "core", entry.name)), entry.name).toEqual([]);
     }
   });
-  it("shows twenty-one tracks have reached A2, and every track has now reached A1", () => {
+  it("shows twenty-two tracks have reached A2, and every track has now reached A1", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
@@ -269,6 +269,8 @@ describe("corpus level summary", () => {
     // keeps the assertion as tight as the original. Spanish has now left this list --
     // it reaches B1. Marwadi now joins the A2 list through its first connected
     // writing chapter, so the list is 21 and the ceiling for everyone else is A2.
+    // Japanese joins with chapters 138-142, one chapter per A2 spine node, so
+    // the list is 22: every track but Spanish reaches A2 and stops there.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
     ).toEqual([
@@ -284,6 +286,11 @@ describe("corpus level summary", () => {
       "gujarati",
       "hindi",
       "italian",
+      // Japanese joins with chapters 138-142: what I do, negation and
+      // questions, the past, the future and practical texts, the five A2 spine
+      // nodes. `reach` only TOUCHES A2; attained stays A1 until the A2
+      // vocabulary and verb counts are met.
+      "japanese",
       "kannada",
       "latin",
       "malayalam",

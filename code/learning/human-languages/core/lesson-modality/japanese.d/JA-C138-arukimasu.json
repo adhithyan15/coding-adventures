@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C138-arukimasu",
+    "language": "japanese",
+    "chapter": 138,
+    "sequence": 8490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4e06b42f3739eb1"
+  },
+  "findings": []
+}

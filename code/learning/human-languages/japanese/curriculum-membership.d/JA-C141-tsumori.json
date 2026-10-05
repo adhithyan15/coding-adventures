@@ -1,0 +1,11 @@
+{
+  "id": "JA-C141-tsumori",
+  "pathSegment": "JA-PATH-141-FUT141",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-141-FUT141",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:20524bb6e0fd716d",
+  "lessonIds": [
+    "JA-C140-senshuu",
+    "JA-C140-sengetsu",
+    "JA-C140-kyonen",
+    "JA-C140-sakki",
+    "JA-C140-owarimashita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch140.txt",
+  "json": "japanese/narration/ch140.json",
+  "textHash": "fnv1a64:f871d1498315f283",
+  "jsonHash": "fnv1a64:e165822acd091382",
+  "findings": []
+}

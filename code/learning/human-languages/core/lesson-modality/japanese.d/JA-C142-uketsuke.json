@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C142-uketsuke",
+    "language": "japanese",
+    "chapter": 142,
+    "sequence": 8700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:027c857b0b829d54"
+  },
+  "findings": []
+}
