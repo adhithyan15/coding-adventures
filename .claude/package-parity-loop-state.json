@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16730,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16730",
+    "branch": "codex/parity-build-tool-dotnet-20261005",
+    "implementation_revision": "d4696e6b254f4c59bb147aeb5361522a1a5be78f",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-05T14:03:53Z",
-    "pr_number": 16722,
-    "status": "merged",
-    "notes": "All 64 final-head checks were terminal and acceptable with no conflict; guarded squash auto-merge was enabled, and GitHub merged #16722 as c45a6099e515f4a3183116d777273f4646383ccc without a manual merge command."
+    "observed_at": "2026-10-05T15:15:11Z",
+    "pr_number": 16730,
+    "status": "checks-pending",
+    "notes": "The ready-for-review .NET graph/diff PR opened from tested head d4696e6b254f4c59bb147aeb5361522a1a5be78f. GitHub reports MERGEABLE with one initial check queued and no failures; auto-merge stays disabled until every final-head required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "87d1a0cb258309cd0307a85a5e2eafffe628248b",
@@ -1199,10 +1205,14 @@
     {
       "id": "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the shared C# and F# build-tool engine",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": "codex/parity-build-tool-dotnet-20261005",
-      "pr_number": null,
+      "pr_number": 16730,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16730",
+      "opened_at": "2026-10-05T15:15:11Z",
+      "opened_revision": "d4696e6b254f4c59bb147aeb5361522a1a5be78f",
+      "publication_notes": "Opened a non-draft ready-for-review PR after local tests, coverage, build-file dry validation, state/inventory/diff gates, path-collision audit, and independent security/correctness reviews passed. The initial GitHub check is queued; guarded auto-merge remains disabled until all final-head checks are terminal and acceptable with no merge conflict.",
       "selected_at": "2026-10-05T14:14:27Z",
       "selection_revision": "c45a6099e515f4a3183116d777273f4646383ccc",
       "implementation_revision": "f61337138882e8a0565a12b08326962e2bd65c8e",
