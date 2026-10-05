@@ -92,6 +92,16 @@ class FormeReleaseGateTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "budget"):
             gate._validate_quality(quality)
 
+        quality = self._quality()
+        quality["targets"][1]["performanceSamples"] = [0.95, 0.96]
+        with self.assertRaisesRegex(ValueError, "performance samples"):
+            gate._validate_quality(quality)
+
+        quality = self._quality()
+        quality["targets"][1]["performanceSamples"] = [0.96, 0.94, 0.94]
+        with self.assertRaisesRegex(ValueError, "median"):
+            gate._validate_quality(quality)
+
     def test_evidence_reader_hashes_validated_bytes_and_rejects_hardlinks(self) -> None:
         evidence = self.root / "evidence.json"
         raw = b'{"schemaVersion":1}\n'
@@ -128,10 +138,11 @@ class FormeReleaseGateTests(unittest.TestCase):
                     "resources": resources,
                     "diagnostics": [],
                 },
+                "performanceSamples": [contract["performance"]] * 3,
                 "diagnostics": [],
             })
         return {
-            "schemaVersion": 1,
+            "schemaVersion": 2,
             "lighthouseVersion": "13.5.0",
             "chromeVersion": "154.0.8037.92",
             "targets": targets,

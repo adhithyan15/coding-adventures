@@ -98,8 +98,10 @@ the retained summary is replaced atomically without following a target symlink.
 live sites have been built, it serves only their generated directories on an
 ephemeral loopback port and audits the landing page, blog index, and `Hello,
 Forme` article with Lighthouse 13.5.0 and a reviewed Chrome binary. Every route
-must score at least 0.95 for desktop performance and exactly 1.00 for
-accessibility. Explicit total, image, and script transfer budgets keep the
+uses three fresh browser samples and must retain a median score of at least
+0.95 for desktop performance; every sample must retain exactly 1.00 for
+accessibility and stay within the resource budgets. Explicit total, image, and
+script transfer budgets keep the
 static routes at zero JavaScript while bounding the enhanced article's one
 module. A resource- and navigation-disabled DOM pass separately proves useful
 navigation, content, and all thirteen fallback steps before Chrome runs. The
@@ -114,8 +116,9 @@ root-owned copy mode 4755 so Ubuntu's AppArmor user-namespace restriction does
 not require disabling Chrome's sandbox, uses the frozen local bootstrap to
 enforce every reviewed npm lock without dependency lifecycle scripts before
 explicitly building packages and products, and retains only the bounded
-`dist/.forme-web-quality.json` summary; browser phases have finite deadlines and
-fresh processes. A failed Chrome launch reports at most 1,024 printable
+`dist/.forme-web-quality.json` summary with three performance samples and the
+conservative median/minimum/maximum aggregate; browser phases have finite
+deadlines and fresh processes. A failed Chrome launch reports at most 1,024 printable
 characters from a bounded, no-follow read of its startup log so hosted-runner
 failures remain diagnosable without retaining raw browser traces. The required
 CI gate waits for this lane.

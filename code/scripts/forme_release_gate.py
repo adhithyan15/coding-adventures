@@ -178,7 +178,7 @@ def _validate_benchmark(value: Any) -> None:
 def _validate_quality(value: Any) -> None:
     root = _record(value, "web quality")
     if (
-        root.get("schemaVersion") != 1
+        root.get("schemaVersion") != 2
         or root.get("lighthouseVersion") != "13.5.0"
         or root.get("chromeVersion") != "154.0.8037.92"
     ):
@@ -189,7 +189,11 @@ def _validate_quality(value: Any) -> None:
     ids: list[str] = []
     for target_value in targets:
         target = _record(target_value, "web quality target")
-        _exact_keys(target, {"id", "route", "fallback", "lighthouse", "diagnostics"}, "web quality target")
+        _exact_keys(
+            target,
+            {"id", "route", "fallback", "lighthouse", "performanceSamples", "diagnostics"},
+            "web quality target",
+        )
         target_id = target.get("id")
         if not isinstance(target_id, str) or target_id not in QUALITY_TARGETS:
             raise ValueError("web quality target identity is invalid")
@@ -218,6 +222,19 @@ def _validate_quality(value: Any) -> None:
             raise ValueError("web quality performance score is invalid")
         if not _finite_number(accessibility) or accessibility != 1:
             raise ValueError("web quality accessibility score is invalid")
+        performance_samples = target["performanceSamples"]
+        if (
+            not isinstance(performance_samples, list)
+            or len(performance_samples) != 3
+            or any(
+                not _finite_number(sample) or sample < 0 or sample > 1
+                for sample in performance_samples
+            )
+        ):
+            raise ValueError("web quality performance samples are invalid")
+        median_performance = sorted(performance_samples)[1]
+        if median_performance != performance or median_performance < contract["performance"]:
+            raise ValueError("web quality performance median is invalid")
         resources = _record(lighthouse["resources"], "web quality resources")
         _exact_keys(resources, RESOURCE_KEYS, "web quality resources")
         if any(not _nonnegative_int(amount) for amount in resources.values()):
