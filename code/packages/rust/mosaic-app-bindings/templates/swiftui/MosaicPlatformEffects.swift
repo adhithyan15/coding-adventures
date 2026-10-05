@@ -836,6 +836,9 @@ final class MosaicPlatformRouter {
   // is open is failed, not queued behind it. Guarded by `busyLock` because the
   // handler can run on whichever thread settled the effect.
   private var busy = false
+  // The effect the request in flight is answering, while there is one;
+  // guarded by `busyLock` with `busy`.
+  private var inFlightId: UInt64?
   private let busyLock = NSLock()
 
   /// `runInBackground` is where a chosen document is read or written. Nil
@@ -879,6 +882,20 @@ final class MosaicPlatformRouter {
   private func release() {
     busyLock.lock()
     busy = false
+    inFlightId = nil
+    busyLock.unlock()
+  }
+
+  /// Whether `id` is the effect the request in flight is answering.
+  private func isInFlight(_ id: UInt64) -> Bool {
+    busyLock.lock()
+    defer { busyLock.unlock() }
+    return inFlightId == id
+  }
+
+  private func markInFlight(_ id: UInt64) {
+    busyLock.lock()
+    inFlightId = id
     busyLock.unlock()
   }
 
@@ -972,6 +989,10 @@ final class MosaicPlatformRouter {
       return
     }
     guard claim() else {
+      // The request already in flight, asked for again (a handler that calls
+      // twice): its own picker will answer it, and a "busy" answer now would
+      // make that picker's answer undeliverable.
+      if isInFlight(id) { return }
       _ = host.completeEffect(id, mosaicFailed("another file operation is in progress"))
       return
     }
@@ -981,6 +1002,7 @@ final class MosaicPlatformRouter {
       release()
       return
     }
+    markInFlight(id)
     let picker = self.picker
     let runOnUI = self.runOnUI
     let runInBackground = self.runInBackground

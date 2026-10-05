@@ -622,8 +622,10 @@ private func checkAppEffectsThroughPicker() {
   check(failure(host.answers[7] ?? [:]) == nil && ui.count == 1, "an upper-case extension is accepted")
   ui.removeFirst()()
   picker.createDone?(nil)
-  work.removeAll()
-  ui.removeAll()
+  // Deliver the cancel, which frees the router for what follows.
+  while !work.isEmpty { work.removeFirst()() }
+  while !ui.isEmpty { ui.removeFirst()() }
+  check(isCancelled(host.answers[7] ?? [:]), "the cancelled save is answered")
   let createsBefore = picker.creates
   router.saveForApp(
     8, suggestedName: "run.command", bytes: Data("x".utf8),
@@ -633,6 +635,19 @@ private func checkAppEffectsThroughPicker() {
     failure(host.answers[8] ?? [:]) == "suggestedName must not end in an executable extension",
     "an executable extension is refused for an app save")
   check(picker.creates == createsBefore, "and shows no picker")
+
+  // The request in flight, asked for again, is left to its own picker.
+  host.waitingOn = [10]
+  router.openForApp(10, accept: MosaicAccept(mimeTypes: [], extensions: []), limit: 4) { _, bytes in
+    ["size": bytes.count]
+  }
+  router.openForApp(10, accept: MosaicAccept(mimeTypes: [], extensions: []), limit: 4) { _, _ in [:] }
+  check(host.answers[10] == nil, "no busy answer for the request in flight")
+  ui.removeFirst()()
+  picker.openDone?(LaterDocument(name: "a.apkg", mimeType: nil, bytes: Data("PK".utf8)))
+  work.removeFirst()()
+  ui.removeFirst()()
+  check(okValue(host.answers[10] ?? [:])?["size"] as? Int == 2, "answered by its own picker")
 
   // Without a picker on this OS, the app's request fails with a message.
   let bare = FakeHost()
