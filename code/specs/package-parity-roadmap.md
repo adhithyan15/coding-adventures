@@ -106,43 +106,45 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated from `3467742ee4e6ad3f6fe4fd55c87ca3bcb8cfcecc` after PR #15615 merged and
-the dedicated parity worktree refreshed from exact `origin/main`. The inventory
-contains 1,441 normalized implementation identities across 4,666
+working inventory was regenerated from exact `origin/main` at
+`c45a6099e515f4a3183116d777273f4646383ccc` after PR #16722 merged. It
+contains 1,487 normalized implementation identities across 4,757
 established-lane package slots and found zero canonical collisions or unknown
 language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 175 | 265 |
+| Present in 10-15 languages | 178 | 262 |
 | Present in 5-9 languages | 123 | 934 |
 | Present in 2-4 languages | 181 | 2,282 |
-| Present in one language | 962 | 13,468 |
+| Present in one language | 1,005 | 14,070 |
 
-The loop must not start by attempting 13,468 singleton slots. It should finish
+The loop must not start by attempting 14,070 singleton slots. It should finish
 the broadly established portable core, then classify the sparse majority.
 
-The post-#15615 refresh found no canonical collision or unknown bucket, but it
-did find concrete ownership and fixture gaps that must be recorded before the
-next implementation selection:
+The post-#16722 refresh classified these newly evidenced gaps before the next
+implementation selection:
 
-- `build-tool-dart-process-free-graph-diff-core` is the selected immediate
-  successor. It consumes the complete language-neutral eight-case graph and
-  eleven-case diff-selection corpus and adds a pinned generated Unicode 17
-  policy runtime without claiming a Dart front door or host authority.
-- Alpha AXP and PowerPC 601 simulator and gate-level identities now have four
-  exact Python/Rust classification owners, with each gate-level owner depending
-  on its functional simulator owner.
-- Rust singleton identities `diagram-layout-hierarchy`, `layout-backgrounds`,
-  `layout-effects`, and `oauth-broker` now have exact portable owners. OAuth
-  broker additionally depends on a newly explicit device-authorization and
-  OpenID identity conformance owner; concrete credential and host authority
-  remains in the existing selection-blocked review.
+- Four G2D00-G2D03 geometry identities are each present in 12 of 15 lanes but
+  absent in Java, Kotlin, and Dart. A neutral normalization-contract repair
+  must precede point2d, then affine2d/bezier2d, then arc2d ports.
+- GFM parser is present in 11 lanes but absent in Java, Kotlin, Swift, and
+  Dart. A TE04 fenced-block AST repair and neutral GFM corpus precede Swift;
+  Java, Kotlin, and Dart also need CommonMark parser and renderer foundations.
+- The Swift and Java/Kotlin/Dart event-loop owners now depend on a bounded
+  mockable-core fixture. Native reactors remain separately owned.
+- The merged reverse-diff case proves selection of both consumers of one
+  shared input, but not both consumers' digest changes. A separate neutral
+  source/package-digest evidence owner records that remaining gap.
 
-The next dependency/leverage order is therefore the Dart process-free
-graph/diff core, then its remaining pure-domain and execution contracts. Perl
-`blib` registry repair remains the strongest small independent fallback; OCaml
-representative CI follows Dart once overlapping workflow work clears.
+The next serial implementation is the C#/F# shared-engine adoption of the
+complete 20-case process-free graph/diff suite (eight graph, twelve diff).
+Its prerequisites are merged, including the two-consumer selection fixture.
+This closes an established two-language build-tool contract without introducing
+host authority. The Java/Kotlin/Dart ITF and geometry fronts remain independent
+portable fallback work. OCaml remains emerging until its representative,
+capability, reporter, build-tool, and CI promotion gates have real evidence;
+pending DER TLV/ASN.1 consumers are classified gaps, not promotion blockers.
 
 Recently classified mixed Rust identities include `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,

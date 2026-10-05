@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16722,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16722",
-    "branch": "codex/parity-build-tool-multiconsumer-20261005",
-    "implementation_revision": "99b2bf187730974ea41179612f3d2442d754c464",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-05T11:28:38Z",
+    "observed_at": "2026-10-05T14:03:53Z",
     "pr_number": 16722,
-    "status": "checks-pending",
-    "notes": "The new draft PR head 99b2bf187730974ea41179612f3d2442d754c464 is conflict-free and MERGEABLE; seven live checks were queued or in progress with zero failures. Auto-merge remains disabled until all final-head required checks are terminal and acceptable."
+    "status": "merged",
+    "notes": "All 64 final-head checks were terminal and acceptable with no conflict; guarded squash auto-merge was enabled, and GitHub merged #16722 as c45a6099e515f4a3183116d777273f4646383ccc without a manual merge command."
   },
   "last_inventory": {
-    "revision": "103296279680459f634c213a1cf3828367e71568",
+    "revision": "c45a6099e515f4a3183116d777273f4646383ccc",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1204,12 +1198,15 @@
     },
     {
       "id": "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the shared C# and F# build-tool engine",
-      "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
-      "branch": null,
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the shared C# and F# build-tool engine",
+      "status": "in-progress",
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
+      "branch": "codex/parity-build-tool-dotnet-20261005",
       "pr_number": null,
-      "notes": "Implement the complete eight-graph and eleven-diff contract once in the shared engine and prove dynamic production-code consumption through both native C# and F# fronts, including stable errors, strict bounded matching, and no added host authority."
+      "selected_at": "2026-10-05T14:14:27Z",
+      "selection_revision": "c45a6099e515f4a3183116d777273f4646383ccc",
+      "selection_notes": "Selected after #16722 merged through guarded auto-merge and exact-main schema-3 inventory remained collision-clean at 15 established lanes, 1,487 identities, 4,757 occupied slots, and five emerging OCaml roots. Eleven newly discovered geometry, GFM, event-loop, and shared-input digest owners were registered before selection. All six exact graph/diff dependencies are merged. This two-language shared-engine adoption is the strongest ready build-tool contract leaf; no other parity PR is open, and the dedicated worktree is clean at the merged main revision. Selection does not claim execution-adapter or host authority readiness.",
+      "notes": "Implement the complete eight-graph and twelve-diff contract once in the shared engine and prove dynamic production-code consumption through both native C# and F# fronts, including stable errors, strict bounded matching, shared-input multi-consumer selection, and no added host authority."
     },
     {
       "id": "build-tool-elixir-diff-selection-match-work-ceiling-adoption",
@@ -10650,7 +10647,7 @@
       "id": "event-loop-swift-lane-parity",
       "title": "Implement the portable event-loop contract in Swift",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["event-loop-language-neutral-mockable-core-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "Post-#16717 collision-checked high-consensus audit found Swift has no event-loop package or exact child owner, while code/specs/event-loop.md defines a portable injected-source, authority-free contract. Keep native-reactor backends outside this package; reconcile with the separately owned Haskell event-loop tail."
@@ -10659,7 +10656,7 @@
       "id": "event-loop-java-kotlin-dart-lane-parity",
       "title": "Implement the portable event-loop contract in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["event-loop-language-neutral-mockable-core-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "Post-#16717 high-consensus audit found the generic mockable event-loop contract in code/specs/event-loop.md has no Java, Kotlin, or Dart package root and no exact lane owner. Port injected readiness and handler behavior without native reactor/process authority; coordinate fixtures with the separate Swift and Haskell children."
@@ -10676,11 +10673,15 @@
     {
       "id": "build-tool-shared-input-multiconsumer-diff-selection-fixture",
       "title": "Prove reverse diff selects every declared consumer of one shared input",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus"],
       "branch": "codex/parity-build-tool-multiconsumer-20261005",
       "pr_number": 16722,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16722",
+      "merged_at": "2026-10-05T14:03:53Z",
+      "merged_head_revision": "379253ac7ac1e73a4c1d74ec72f17d048231cc28",
+      "merge_revision": "c45a6099e515f4a3183116d777273f4646383ccc",
+      "merge_notes": "All 64 final-head checks were terminal and acceptable, GitHub reported no conflict, and guarded squash auto-merge completed without a manual merge command.",
       "selected_at": "2026-10-05T10:59:58Z",
       "selection_revision": "103296279680459f634c213a1cf3828367e71568",
       "implementation_revision": "99b2bf187730974ea41179612f3d2442d754c464",
@@ -11766,6 +11767,105 @@
       "branch": null,
       "pr_number": null,
       "notes": "Implement the standalone two-pass Intel 4004 assembler in Lua and consume every neutral case with exact byte, address, label, page-relative branch, diagnostic, limit, and stateless-reuse equality. Keep packaging, compiler lowering, backend integration, and host authority outside."
+    },
+    {
+      "id": "geometry-2d-language-neutral-contract-and-fixture-repair",
+      "title": "Reconcile the G2D00-G2D03 portable geometry contract and neutral fixtures",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The post-#16722 collision-clean audit found point2d, affine2d, bezier2d, and arc2d each present in 12 of 15 established lanes but absent in Java, Kotlin, and Dart. First resolve G2D00 near-zero normalization disagreement (<1e-12 to origin in several lanes versus approximately 1e-15 to self in others), freeze deterministic geometry and error vectors, and reconcile existing oracles before ports. Directory presence alone is not semantic parity."
+    },
+    {
+      "id": "geometry-point2d-java-kotlin-dart-lane-parity",
+      "title": "Implement point2d parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port the pure G2D00 point and rectangle foundation with exact neutral vectors, native tests, package metadata, and no paint or host authority; it unlocks the other three geometry gaps."
+    },
+    {
+      "id": "geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity",
+      "title": "Implement affine2d and bezier2d parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["geometry-point2d-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port the G2D01 and G2D02 pure transform and curve layers as one dependency-shaped tranche, dynamically consuming neutral fixtures and preserving bounded finite arithmetic."
+    },
+    {
+      "id": "geometry-arc2d-java-kotlin-dart-lane-parity",
+      "title": "Implement arc2d parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Complete the G2D03 arc layer after point, affine, and Bezier foundations, using neutral vectors and native coverage without native drawing authority."
+    },
+    {
+      "id": "gfm-fenced-block-ast-and-consumer-contract-repair",
+      "title": "Repair the TE04 fenced-block AST and consumer contract",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "TE04 requires source-preserving fenced_block nodes, but inspected ASTs do not define FencedBlockNode and the TypeScript reference lowers fences to code_block. Reconcile the AST, parser, and downstream rendering contract before using it as a four-lane GFM oracle."
+    },
+    {
+      "id": "gfm-language-neutral-conformance-fixture",
+      "title": "Define the language-neutral GFM parser conformance fixture",
+      "status": "pending",
+      "depends_on": ["gfm-fenced-block-ast-and-consumer-contract-repair"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The existing 652-example corpus covers CommonMark, while GFM strike, task, and table behavior is only separately tested. Freeze those extensions, fenced source retention, stable errors, and AST/rendering vectors for native lane consumers."
+    },
+    {
+      "id": "gfm-swift-lane-parity",
+      "title": "Implement GFM parser parity in Swift",
+      "status": "pending",
+      "depends_on": ["gfm-language-neutral-conformance-fixture"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Swift already has CommonMark parser and HTML renderer packages, though its parser documents subset coverage. Reconcile that prerequisite against the neutral corpus and add GFM extensions with native conformance tests."
+    },
+    {
+      "id": "gfm-java-kotlin-dart-commonmark-renderer-prerequisites",
+      "title": "Establish CommonMark parser and HTML renderer prerequisites in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["gfm-fenced-block-ast-and-consumer-contract-repair"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The three lanes have document AST packages but no CommonMark parser or HTML renderer roots. Establish those portable prerequisites with shared fixtures and native tests before GFM extensions."
+    },
+    {
+      "id": "gfm-java-kotlin-dart-lane-parity",
+      "title": "Implement GFM parser parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["gfm-language-neutral-conformance-fixture", "gfm-java-kotlin-dart-commonmark-renderer-prerequisites"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add pure GFM grammar and AST support over the CommonMark and renderer prerequisites, dynamically consume the neutral suite, and avoid treating a package directory as proof of semantic parity."
+    },
+    {
+      "id": "event-loop-language-neutral-mockable-core-fixture",
+      "title": "Freeze the mockable event-loop core behavior in a neutral fixture",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Cover source/handler registration ordering, collecting readiness before dispatch, Exit suppressing later handlers, empty-poll progression, and stop taking effect on the next iteration. Keep clocks, threads, processes, and native reactor authority outside the portable fixture."
+    },
+    {
+      "id": "build-tool-shared-input-multiconsumer-digest-evidence-fixture",
+      "title": "Prove both shared-input consumers change source and package digests",
+      "status": "pending",
+      "depends_on": ["build-tool-shared-input-multiconsumer-diff-selection-fixture"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The merged reverse-diff fixture proves both consumers are selected, but does not prove both source and package digests include the same Cargo.toml change. Add bounded before/after source_collection and hashing_cache neutral cases for both Swift consumers, with stable dependency digests and no new engine authority."
     }
   ]
 }
