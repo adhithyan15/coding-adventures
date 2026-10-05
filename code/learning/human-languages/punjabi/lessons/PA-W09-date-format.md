@@ -39,7 +39,7 @@ reviews_of: [PA-W09-month-map, PA-W07-digit-five]
 Point to **੦੧** for January and **੦੨** for February. We will put one of these
 in the *middle* of a date, not at the beginning.
 
-## Language focus — the form's printed order
+## Grammar lens — the form's printed order
 <!-- hl-knowledge: introduces=[PA-FORM-DATE-FORMAT-01]; assesses=[] -->
 
 This fictional form explicitly prints **day / month / year**. It has two

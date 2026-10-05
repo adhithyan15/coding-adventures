@@ -39,7 +39,7 @@ reviews_of: [PA-W09-date-a, PA-W09-date-format]
 Draw three empty boxes separated by slashes. Say “day, month, year” while
 pointing. Cover all written date examples.
 
-## Listening — one short fictional prompt
+## You'll want to know — one short fictional prompt
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-A-01, PA-FORM-DATE-MONTH-MAP-01] -->
 
 Have a partner or the narration read: “the fifteenth of January, two thousand

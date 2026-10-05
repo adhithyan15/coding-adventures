@@ -39,7 +39,7 @@ reviews_of: [PA-W09-date-a, PA-W09-date-b]
 Read the closed bank once: A **੧੫/੦੧/੨੦੨੫**; B **੨੫/੦੨/੨੦੨੫**. Point to the
 middle box in each. A is January; B is February.
 
-## Meaning — a symbol, not a copied answer
+## You'll want to know — a symbol, not a copied answer
 <!-- hl-knowledge: introduces=[PA-FORM-DATE-CUE-MAP-01]; assesses=[] -->
 
 The fictional card marked **ਕ** requests A. The card marked **ਖ** requests B.

@@ -38,7 +38,7 @@ reviews_of: [PA-W09-date-label, PA-W09-date-supported, PA-W09-date-dictation]
 
 Read A and B once. A is January; B is February. Their year is the same.
 
-## Language focus — a short repair order
+## Grammar lens — a short repair order
 <!-- hl-knowledge: introduces=[PA-FORM-DATE-REPAIR-01]; assesses=[PA-FORM-DATE-FORMAT-01] -->
 
 Check one dimension at a time: **selector → day → month → year → slash marks

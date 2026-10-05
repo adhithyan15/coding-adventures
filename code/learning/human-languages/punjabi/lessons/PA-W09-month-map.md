@@ -39,7 +39,7 @@ reviews_of: [PA-W09-date-label, PA-C101-janvari, PA-C101-farvari, PA-W08-digit-z
 Say the two month names already met: **ਜਨਵਰੀ** (January), then **ਫ਼ਰਵਰੀ**
 (February). Do not try to memorise a new list of months.
 
-## Language focus — month position
+## Grammar lens — month position
 <!-- hl-knowledge: introduces=[PA-FORM-DATE-MONTH-MAP-01]; assesses=[PA-SCRIPT-DIGIT-ZERO-01, PA-SCRIPT-DIGIT-ONE-01, PA-SCRIPT-DIGIT-TWO-01] -->
 
 In a two-place month box, January is **੦੧** and February is **੦੨**. The first
