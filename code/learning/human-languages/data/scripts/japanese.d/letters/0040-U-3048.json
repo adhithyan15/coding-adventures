@@ -3,13 +3,19 @@
   "sound": "e",
   "role": "hiragana",
   "components": [
-    "a short top tick",
-    "a zigzag body"
+    "a short top stroke",
+    "a body that runs right, cuts down to the lower left, climbs back over a small hump and runs out along the base"
   ],
   "strokeOrder": [
-    "top tick",
-    "body"
+    "draw the short top stroke from left to right",
+    "lift, draw the bar to the right, then without lifting turn sharply and cut down to the lower left, climb back up the diagonal, turn over the small hump and down, and run along the base to the right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 03048 file records え as two stroke paths in this order and direction: the short top stroke, then the body in one movement; so there is one pen lift.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03048.svg",
+    "citation": "KanjiVG, kanji/03048.svg, hiragana え (U+3048 HIRAGANA LETTER E), two stroke paths kvg:03048-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the short top stroke drawn left to right, ending in a small turn down that the print glyph does not show; s2 starts at the left, runs right, turns sharply down to the lower left, turns back and climbs up and to the right to the small hump, comes down over it and runs out to the right along the base. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. The print glyph's hump branches off the diagonal, so where KanjiVG's handwriting climbs back beside the diagonal, the path retraces the diagonal's ink up to that branch."
+  },
   "notes": "Final sign of いいえ."
 }
