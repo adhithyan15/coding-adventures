@@ -1,0 +1,996 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 153,
+  "title": "Write One Fictional Date Field",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:408ed2a6a733a439",
+  "lessons": [
+    {
+      "id": "PA-W09-date-label",
+      "sequence": 8270,
+      "title": "ਤਾਰੀਖ਼ (tārīkh) — find the date line",
+      "headword": "ਤਾਰੀਖ਼",
+      "romanization": "tārīkh",
+      "gloss": "the date label on a fictional form",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:6594a78b25eaeed4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You met ਤਾਰੀਖ਼ as “a date.” Read it aloud once. Its Persian source tārīkh also means a date or history; here the form asks for a date only."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading — one familiar word in a new place",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "On this fictional beginner form, ਤਾਰੀਖ਼ (tārīkh): ______ labels the date line. Point to the label. The blank is where a date goes; it is not a phone or age line. No real personal information is requested."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — copy the label",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy ਤਾਰੀਖ਼ (tārīkh): once, including the colon. Leave its value blank."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Next, we will connect two month names already met to their small numeric positions. There is no full date to write yet."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W09-date-label-check",
+              "prompt": "A fictional form shows ਤਾਰੀਖ਼ (tārīkh). What belongs on that line?",
+              "assesses": [
+                "PA-FORM-LABEL-DATE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "a date",
+                "date"
+              ],
+              "feedback": {
+                "correct": "ਤਾਰੀਖ਼ labels a date field.",
+                "incorrect": "This label asks for a date, not a phone number or age."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W09-month-map",
+      "sequence": 8280,
+      "title": "Two known months, two short codes",
+      "headword": "ਜਨਵਰੀ · ਫ਼ਰਵਰੀ",
+      "romanization": "janvarī · farvarī",
+      "gloss": "January and February as numeric month positions",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:4be1757773939d2f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the two month names already met: ਜਨਵਰੀ (January), then ਫ਼ਰਵਰੀ (February). Do not try to memorise a new list of months."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Language focus — month position",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In a two-place month box, January is ੦੧ and February is ੦੨. The first place is the already-taught zero; the second is one or two. Point to each Gurmukhi digit while saying the month name. These are month positions, not new ways to pronounce the words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — one place at a time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy ੦੧ under ਜਨਵਰੀ and ੦੨ under ਫ਼ਰਵਰੀ. Cover the words; when you hear “February,” uncover and point to ੦੨. Repair only the differing digit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Only these two month positions are in this closed practice bank."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W09-month-map-check",
+              "prompt": "Write the two Gurmukhi digits for the month February.",
+              "assesses": [
+                "PA-FORM-DATE-MONTH-MAP-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "੦੨"
+              ],
+              "feedback": {
+                "correct": "February is the second month: ੦੨.",
+                "incorrect": "Keep the zero first, then write the already-taught digit two."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W09-date-format",
+      "sequence": 8290,
+      "title": "Three small boxes, two slashes",
+      "headword": "__/__/____",
+      "romanization": "day/month/year",
+      "gloss": "two-place day, two-place month, four-place year with separators",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:9a44ee59c5fc17e9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to ੦੧ for January and ੦੨ for February. We will put one of these in the middle of a date, not at the beginning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Language focus — the form's printed order",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This fictional form explicitly prints day / month / year. It has two places for the day, two for the month, and four for the year: __/__/____ (day/month/year). Copy the two slash marks between the boxes. A slash is a separator, never a digit. Other forms may use another order; follow the printed order on this one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — locate the month box",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Fill only the middle box with ੦੧. Leave the day and year boxes empty: __/੦੧/____. Point to the two slash marks. Then cover this model and draw two empty slash-separated boxes again."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The next lessons build two complete fictional examples, one piece at a time."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W09-format-check",
+              "prompt": "On this printed day/month/year form, which box holds the month?",
+              "assesses": [
+                "PA-FORM-DATE-FORMAT-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "middle",
+                "the middle box",
+                "second"
+              ],
+              "feedback": {
+                "correct": "The month is the second, middle box.",
+                "incorrect": "Read the printed order: day, month, year."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W09-date-a",
+      "sequence": 8300,
+      "title": "Fictional date A — one box at a time",
+      "headword": "੧੫/੦੧/੨੦੨੫",
+      "romanization": "fictional January date A",
+      "gloss": "build fictional date A in day/month/year order",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:333eb7d162304e2b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace the three empty boxes with a finger: day / month / year. The slash marks stay in place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading — assemble one safe example",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Practice card A says “the fifteenth of January, two thousand twenty-five.” It is fictional. The day is ੧੫, January is ੦੧, and the four year digits are ੨੦੨੫. Put the pieces together: ੧੫/੦੧/੨੦੨੫ (heard fictional date A) (fictional January date A). Touch and read only one piece at a time; no real birthday is requested."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — copy in three passes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy the day ੧੫, add a slash, copy month ੦੧, add a slash, then copy the year ੨੦੨੫. Check that the two slash marks divide two, two, and four digits."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep A visible for now. Independent recall comes later."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W09-date-a-check",
+              "prompt": "Copy fictional date A, the fifteenth of January 2025, in this form's day/month/year order.",
+              "assesses": [
+                "PA-FORM-DATE-A-01",
+                "PA-FORM-DATE-FORMAT-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "੧੫/੦੧/੨੦੨੫"
+              ],
+              "feedback": {
+                "correct": "A keeps the day first and January in the middle.",
+                "incorrect": "Check the three pieces separately: ੧੫, ੦੧, then ੨੦੨੫."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W09-date-b",
+      "sequence": 8310,
+      "title": "Fictional date B — change two small pieces",
+      "headword": "੨੫/੦੨/੨੦੨੫",
+      "romanization": "fictional February date B",
+      "gloss": "build fictional date B by changing day and month only",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:80633fcc17746e35",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to A, ੧੫/੦੧/੨੦੨੫ (heard fictional date A) (fictional January date A). Its middle box means January."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading — one contrast",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Practice card B says “the twenty-fifth of February, two thousand twenty-five.” The day changes to ੨੫; February changes the middle box to ੦੨; the year stays ੨੦੨੫. The complete fictional date is ੨੫/੦੨/੨੦੨੫ (fictional February date B). Compare one box at a time with A."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — copy, then compare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy B once. Circle only the two boxes that differ from A. Say “day” for the first and “month” for the second; do not change the year or slash marks."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These two examples form a deliberately closed practice bank, not an invitation to write a real personal date."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W09-date-b-check",
+              "prompt": "Copy fictional date B, the twenty-fifth of February 2025.",
+              "assesses": [
+                "PA-FORM-DATE-B-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "੨੫/੦੨/੨੦੨੫"
+              ],
+              "feedback": {
+                "correct": "B changes the day and the month, not the year.",
+                "incorrect": "Keep the three boxes separate: ੨੫, ੦੨, ੨੦੨੫."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W09-date-select",
+      "sequence": 8320,
+      "title": "Select the requested fictional date",
+      "headword": "ਕ · ਖ",
+      "romanization": "two nonverbal selectors",
+      "gloss": "select one of two taught fictional dates from a symbol cue",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b9dfabeea8820187",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the closed bank once: A ੧੫/੦੧/੨੦੨੫ (heard fictional date A) (fictional January date A); B ੨੫/੦੨/੨੦੨੫ (fictional February date B). Point to the middle box in each. A is January; B is February."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Meaning — a symbol, not a copied answer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The fictional card marked ਕ requests A. The card marked ਖ requests B. These single-letter shapes are selectors, not month names or dates. The same two shapes were used in the earlier bounded form-field practice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — decide before writing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to ਖ. Say “B” before you look at the date. Then point to B in the bank; only then copy it. Repeat with ਕ and A. Separate selection from digit writing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The bank remains visible here. It will be hidden only after supported practice."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W09-date-select-kha",
+              "prompt": "The fictional selector is ਖ. Choose A or B, then give its taught date.",
+              "assesses": [
+                "PA-FORM-DATE-CUE-MAP-01",
+                "PA-FORM-DATE-B-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "b — ੨੫/੦੨/੨੦੨੫",
+                "b",
+                "੨੫/੦੨/੨੦੨੫"
+              ],
+              "feedback": {
+                "correct": "ਖ selects B in this closed bank.",
+                "incorrect": "Return to the fixed selector map: ਖ requests B."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W09-date-supported",
+      "sequence": 8330,
+      "title": "Fill one date line with help",
+      "headword": "ਤਾਰੀਖ਼: ੧੫/੦੧/੨੦੨੫",
+      "romanization": "supported fictional date field",
+      "gloss": "fill one date line with the model and bank visible",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:8055f4c4f1af5594",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to the ਤਾਰੀਖ਼ (tārīkh) label. Keep the closed bank in view: A ੧੫/੦੧/੨੦੨੫ (heard fictional date A) (fictional January date A), B ੨੫/੦੨/੨੦੨੫ (fictional February date B)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — supported entry",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For the fictional card ਕ, select A. Copy its day into the first box, January's numeric month into the middle box, and its year into the final box: ਤਾਰੀਖ਼ (tārīkh): ੧੫/੦੧/੨੦੨੫ (heard fictional date A) (fictional January date A) (supported fictional date field). Keep both slash marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — check one dimension",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the line from left to right. Check cue, day, month, year, and separators one at a time. If a piece differs, change only that piece."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is supported copying, not the independent checkpoint."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W09-date-supported-a",
+              "prompt": "With the bank visible, complete the fictional date field for ਕ.",
+              "assesses": [
+                "PA-FORM-LABEL-DATE-01",
+                "PA-FORM-DATE-A-01",
+                "PA-FORM-DATE-CUE-MAP-01",
+                "PA-FORM-DATE-FORMAT-01"
+              ],
+              "responseSeconds": 32,
+              "acceptedResponses": [
+                "ਤਾਰੀਖ਼: ੧੫/੦੧/੨੦੨੫",
+                "੧੫/੦੧/੨੦੨੫",
+                "ਤਾਰੀਖ਼:੧੫/੦੧/੨੦੨੫"
+              ],
+              "feedback": {
+                "correct": "The supported line has A in day/month/year order.",
+                "incorrect": "Select A first; then copy one box at a time."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W09-date-delayed",
+      "sequence": 8340,
+      "title": "Hide the bank, then write",
+      "headword": "ਤਾਰੀਖ਼: ੨੫/੦੨/੨੦੨੫",
+      "romanization": "delayed fictional date field",
+      "gloss": "hide the closed bank, then fill one requested date after a short delay",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:44b2ee5f27517dc4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Study B ੨੫/੦੨/੨੦੨੫ (fictional February date B) for five seconds. Touch day, month, and year, then cover this line and the earlier date lessons."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed entry",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "After the short delay, the fictional card shows ਖ. Fill its ਤਾਰੀਖ਼ (tārīkh) line from memory. Do not uncover the bank before you finish. Write the day, the month, and the year in the printed order, with two slash marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — uncover and repair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover B only after the attempt. Compare one box at a time. If the month is wrong, correct only the middle two digits; keep the other boxes unchanged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is delayed practice. The final no-model checkpoint still comes later."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W09-date-delayed-b",
+              "prompt": "After hiding the bank for five seconds, complete the fictional date field for ਖ.",
+              "assesses": [
+                "PA-FORM-LABEL-DATE-01",
+                "PA-FORM-DATE-B-01",
+                "PA-FORM-DATE-CUE-MAP-01",
+                "PA-FORM-DATE-FORMAT-01"
+              ],
+              "responseSeconds": 36,
+              "acceptedResponses": [
+                "ਤਾਰੀਖ਼: ੨੫/੦੨/੨੦੨੫",
+                "੨੫/੦੨/੨੦੨੫",
+                "ਤਾਰੀਖ਼:੨੫/੦੨/੨੦੨੫"
+              ],
+              "feedback": {
+                "correct": "B was recovered after a short delay in the printed order.",
+                "incorrect": "Finish the attempt, uncover B, and repair only the first mismatched box."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W09-date-dictation",
+      "sequence": 8350,
+      "title": "Hear a date; fill three boxes",
+      "headword": "੧੫/੦੧/੨੦੨੫",
+      "romanization": "heard fictional date A",
+      "gloss": "transcribe one heard fictional date into Gurmukhi digits",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:3f818bba3567bb94",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Draw three empty boxes separated by slashes. Say “day, month, year” while pointing. Cover all written date examples."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Listening — one short fictional prompt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Have a partner or the narration read: “the fifteenth of January, two thousand twenty-five.” Listen once; then listen again. Do not display a digit model while you write."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — transcription",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write only the three heard pieces in Gurmukhi digits. Put the day in the first box, January's taught two-digit month in the middle, and the year last. Then check only the two slash positions."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No real birth date or other personal data is being collected."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W09-date-dictation-a",
+              "prompt": "Write in Gurmukhi digits the heard fictional date: the fifteenth of January, two thousand twenty-five.",
+              "assesses": [
+                "PA-FORM-DATE-A-01",
+                "PA-FORM-DATE-MONTH-MAP-01",
+                "PA-FORM-DATE-FORMAT-01"
+              ],
+              "responseSeconds": 38,
+              "acceptedResponses": [
+                "੧੫/੦੧/੨੦੨੫"
+              ],
+              "feedback": {
+                "correct": "The heard day, month, and year are in the printed order.",
+                "incorrect": "Replay one piece at a time; check the month and slashes separately."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W09-date-repair",
+      "sequence": 8360,
+      "title": "Repair one dimension, not the whole line",
+      "headword": "ਤਾਰੀਖ਼: __/__/____",
+      "romanization": "date field repair",
+      "gloss": "repair date order, separator, label spelling, and spacing one dimension at a time",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:5c8587ceb28db1d2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read A and B once. A is January; B is February. Their year is the same."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Language focus — a short repair order",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check one dimension at a time: selector becomes day becomes month becomes year becomes slash marks becomes label spelling and spacing. On a printed date form, a correct set of digits in the wrong boxes is still wrong. The label is ਤਾਰੀਖ਼ (tārīkh); keep the final dot beneath ਖ਼, and leave a readable space after the colon."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — two tiny repairs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For ਕ, ੧੫/੦੧੨੦੨੫ has the right digits but one missing slash. Add only that slash. Next, ਤਾਰੀਖ: ੧੫/੦੧/੨੦੨੫ (heard fictional date A) (fictional January date A) has the right value but lacks the dot in the label; repair only ਤਾਰੀਖ਼ (tārīkh). Keep the date digits untouched."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "If the value is right but the label or spacing is wrong, repair that later as a separate pass. Do not erase a correct date to fix one mark."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W09-date-repair-separator",
+              "prompt": "For ਕ, repair only the missing separator in ੧੫/੦੧੨੦੨੫.",
+              "assesses": [
+                "PA-FORM-DATE-A-01",
+                "PA-FORM-DATE-FORMAT-01",
+                "PA-FORM-DATE-REPAIR-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "੧੫/੦੧/੨੦੨੫"
+              ],
+              "feedback": {
+                "correct": "Only the missing slash was inserted.",
+                "incorrect": "Keep every digit; add a slash after the month."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W09-date-no-model",
+      "sequence": 8370,
+      "title": "One no-model fictional date field",
+      "headword": "ਤਾਰੀਖ਼: __________",
+      "romanization": "independent fictional date field",
+      "gloss": "choose and write one known fictional date from a nonverbal cue with no model",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:f8c91db14459711c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the earlier lessons. There is no value bank, support-language label, Latin-digit version, or copyable Gurmukhi date below."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — independent controlled choice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete the requested fictional field:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਖ — ਤਾਰੀਖ਼ (tārīkh): __________ (independent fictional date field)."
+            },
+            {
+              "kind": "speech",
+              "text": "Choose the known date attached to the selector. Write its day, month, and year from memory in Gurmukhi digits with the two printed separators. Do not reopen a lesson until the attempt is complete."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — separate repair passes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "After writing, compare selector, day, month, year, separators, label spelling, and spacing separately. Repair only the first differing dimension."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This closes only the untimed date-field ladder. Integration with other form fields, timed writing, two full mocks, and human A1 validation remain separate dependency-linked work."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W09-date-no-model-b",
+              "prompt": "With no bank or copyable answer, complete the fictional date field for ਖ.",
+              "assesses": [
+                "PA-FORM-DATE-B-01",
+                "PA-FORM-DATE-CUE-MAP-01",
+                "PA-FORM-DATE-FORMAT-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "੨੫/੦੨/੨੦੨੫",
+                "ਤਾਰੀਖ਼: ੨੫/੦੨/੨੦੨੫",
+                "ਤਾਰੀਖ਼:੨੫/੦੨/੨੦੨੫"
+              ],
+              "feedback": {
+                "correct": "The selector independently selected B in the printed date order.",
+                "incorrect": "Finish the attempt first; then reopen the bank and repair one dimension."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
