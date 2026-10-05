@@ -54,6 +54,7 @@ my @EXPECTED_DIFF_FIXTURES = qw(
     diff-selection-match-work-over-limit.json
     diff-selection-package-prefix.json
     diff-selection-repository-boundary.json
+    diff-selection-shared-input-multiconsumer.json
     diff-selection-strict-glob-character-classes.json
     diff-selection-transitive.json
     diff-selection-unknown-all.json
@@ -67,6 +68,7 @@ my @EXPECTED_DIFF_IDS = (
     'diff-selection/match-work-over-limit',
     'diff-selection/package-prefix',
     'diff-selection/repository-boundary-reverse-index',
+    'diff-selection/shared-input-multiconsumer',
     'diff-selection/strict-glob-character-classes',
     'diff-selection/transitive-package-change',
     'diff-selection/unknown-path-all',
@@ -137,7 +139,7 @@ subtest 'consumes the exact eight neutral graph fixtures' => sub {
     }
 };
 
-subtest 'consumes the exact eleven neutral diff-selection fixtures' => sub {
+subtest 'consumes the exact twelve neutral diff-selection fixtures' => sub {
     my @found = map { s{.*[\\/]}{}r }
         sort glob(File::Spec->catfile($CASE_ROOT, 'diff-selection-*.json'));
     is(\@found, \@EXPECTED_DIFF_FIXTURES, 'diff fixture roster is exact');

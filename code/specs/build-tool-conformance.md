@@ -175,7 +175,7 @@ fixture-path handling belong only to package-local tests.
 All four native suites MUST discover and independently evaluate the complete
 shared `graph` and `diff_selection` fixture set. They MUST assert the exact case-ID
 roster so a newly added case cannot be skipped silently. The required roster
-contains eight graph cases and eleven diff-selection cases. In addition to
+contains eight graph cases and twelve diff-selection cases. In addition to
 canonical edge ordering, deterministic levels, cycle rejection, transitive
 affected and prerequisite closure, package-prefix and forced-package selection,
 repository-boundary reverse selection, both unknown-path policies, and the
@@ -725,7 +725,7 @@ outcome.
 
 The Go operational reference MUST expose this graph and diff-selection domain
 through one typed, process-free module boundary. Its package-local suite MUST
-discover the exact eight `graph-*.json` and eleven `diff-selection-*.json`
+discover the exact eight `graph-*.json` and twelve `diff-selection-*.json`
 cases in the checked v1 corpus and evaluate every case through that production
 boundary. The boundary accepts only caller-owned immutable values: fixture
 decoding, checkout discovery, Git invocation, filesystem reads, environment

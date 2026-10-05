@@ -26,7 +26,7 @@ test-only.
   tables. Ordering compares Dart runes as numeric Unicode scalar values.
 
 The native Dart suite discovers and evaluates exactly all eight graph and
-eleven diff-selection fixtures. This package is not a CLI, conformance adapter,
+twelve diff-selection fixtures. This package is not a CLI, conformance adapter,
 executor, or complete Dart build-tool implementation.
 
 ## Validation

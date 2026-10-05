@@ -22,7 +22,8 @@ var diffFixtureRoster = []string{
 	"diff-selection-exact-build-fronts.json", "diff-selection-forced-package.json",
 	"diff-selection-known-unmatched-near-build.json", "diff-selection-match-work-at-limit.json",
 	"diff-selection-match-work-over-limit.json", "diff-selection-package-prefix.json",
-	"diff-selection-repository-boundary.json", "diff-selection-strict-glob-character-classes.json",
+	"diff-selection-repository-boundary.json", "diff-selection-shared-input-multiconsumer.json",
+	"diff-selection-strict-glob-character-classes.json",
 	"diff-selection-transitive.json", "diff-selection-unknown-all.json",
 	"diff-selection-unknown-error.json",
 }
@@ -38,6 +39,7 @@ var diffFixtureIDs = []string{
 	"diff-selection/known-unmatched-near-build", "diff-selection/match-work-at-limit",
 	"diff-selection/match-work-over-limit", "diff-selection/package-prefix",
 	"diff-selection/repository-boundary-reverse-index",
+	"diff-selection/shared-input-multiconsumer",
 	"diff-selection/strict-glob-character-classes",
 	"diff-selection/transitive-package-change", "diff-selection/unknown-path-all",
 	"diff-selection/unknown-path-error",

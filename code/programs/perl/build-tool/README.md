@@ -251,7 +251,7 @@ t/11-validator.t       BUILD/CI contracts and shared snapshot validation fixture
 t/12-ci-workflow.t     canonical CI workflow validation
 t/13-resolution-utf8.t shared fixtures — strict Lua rockspec UTF-8 and CLI diagnostics
 t/14-toolchain-detection.t all 11 neutral extra-CI toolchain snapshots and limits
-t/15-graph-diff.t  exact eight graph and eleven diff-selection fixtures plus bounds
+t/15-graph-diff.t  exact eight graph and twelve diff-selection fixtures plus bounds
 ```
 
 Run all tests:

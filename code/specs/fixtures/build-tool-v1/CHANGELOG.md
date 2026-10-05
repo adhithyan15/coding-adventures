@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-05
+
+- Added a digest-pinned, process-free diff-selection case proving one exact
+  Rust workspace manifest change selects both declared Swift consumers but not
+  an unregistered peer, before dependent and prerequisite closure. The neutral
+  corpus now contains 167 cases: eight graph and twelve diff-selection cases.
+- Advanced the shared runner and native Go, Python, Perl, Java, Kotlin, Dart,
+  and OCaml exact-case rosters together; no production host authority changed.
+
 ## 2026-09-30
 
 - Registered `forme-plugin-runner-conformance` as a TypeScript shared-config

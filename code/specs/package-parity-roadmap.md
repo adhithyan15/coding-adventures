@@ -15554,6 +15554,46 @@ open-PR path audit found no overlap with its package, fixture, state, or
 roadmap paths. Work starts on a fresh clean `codex/` branch at the exact merge
 revision; the separate build-tool fixture stays pending.
 
+### Post-#16717 exact-merge inventory and refreshed owners
+
+PR #16717 passed all 52 final-head checks acceptably, was `MERGEABLE` and
+`CLEAN`, and merged through the guarded `--auto` request as
+`103296279680459f634c213a1cf3828367e71568` at 2026-10-05T10:55:32Z.
+The fresh, full-checkout schema-3 reporter finds 15 established lanes, 1,487
+implementation identities, 4,757 occupied slots, and 1,529 all-reported
+identities. Completion bands are 178/262, 123/934, 181/2,282, and
+1,005/14,070 (packages/missing slots). Rust has 806 singleton identities,
+OCaml remains emerging with five package roots, and canonical collisions and
+unknown language buckets are zero. The three new Java/Kotlin/Dart layout
+packages fill high-consensus slots without adding identities.
+
+Read-only lane audits identified three additional exact pending children before
+the next selection: `event-loop-swift-lane-parity`,
+`event-loop-java-kotlin-dart-lane-parity`, and
+`url-parser-java-kotlin-dart-lane-parity`. The first two implement the existing
+generic injected-source event-loop contract, not native-reactor authority; the
+third follows the standard-library-only NET00 parser and unlocks HTTP/1.0
+client and Venture consumers. Haskell's four remaining high-consensus gaps
+already have exact owners. OCaml has scaffolds, representative packages, and
+process-free build-tool core, but not a native build-tool front or the promotion
+gates; it correctly stays outside the denominator. Twelve established lanes
+have executable build-tool fronts, while Java/Kotlin/Dart currently have only
+process-free graph/diff cores. The Swift audit counted 51 high-consensus gaps:
+18 had exact children before this refresh, and this refresh materializes one
+more. The remaining 32 stay under the existing selection-blocked
+high-consensus classifier until their portable contracts and exact children
+are reconciled; they are not silently treated as implemented or exempt.
+
+Dependency and leverage ranking selects the already-pending
+`build-tool-shared-input-multiconsumer-diff-selection-fixture` next. The merged
+repository boundary maps one exact Rust Cargo manifest to both Swift conduit
+and sha256-native; a neutral case will require selecting both, excluding a
+decoy, and preserving dependency closure. It tightens the shared oracle before
+further reverse-diff engine adoption. The fixture count and exact-case rosters
+must advance together from 11 to 12. The 19-case .NET engine adoption is the
+next dependency-ready build-tool implementation tranche; the six newly
+unblocked Java/Kotlin/Dart barcode symbology ports remain separately owned.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -31,6 +31,7 @@ var expectedDiffFixtures = []string{
 	"diff-selection-match-work-over-limit.json",
 	"diff-selection-package-prefix.json",
 	"diff-selection-repository-boundary.json",
+	"diff-selection-shared-input-multiconsumer.json",
 	"diff-selection-strict-glob-character-classes.json",
 	"diff-selection-transitive.json",
 	"diff-selection-unknown-all.json",

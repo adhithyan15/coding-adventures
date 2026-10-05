@@ -11,22 +11,28 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16722,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16722",
+    "branch": "codex/parity-build-tool-multiconsumer-20261005",
+    "implementation_revision": "99b2bf187730974ea41179612f3d2442d754c464",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-05T10:55:32Z",
-    "pr_number": 16717,
-    "status": "merged",
-    "notes": "PR #16717 passed its final-head checks and merged by guarded squash auto-merge at 2026-10-05T10:55:32Z. The durable merge commit is 103296279680459f634c213a1cf3828367e71568; Java, Kotlin, and Dart package trees retain the identities validated before publication."
+    "observed_at": "2026-10-05T11:28:38Z",
+    "pr_number": 16722,
+    "status": "checks-pending",
+    "notes": "The new draft PR head 99b2bf187730974ea41179612f3d2442d754c464 is conflict-free and MERGEABLE; seven live checks were queued or in progress with zero failures. Auto-merge remains disabled until all final-head required checks are terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "9a99df33af2dc2dfe89e0748422e4ba387f97e22",
+    "revision": "103296279680459f634c213a1cf3828367e71568",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
-    "implementation_package_slots": 4754,
+    "implementation_package_slots": 4757,
     "all_reported_identities": 1529,
     "high_consensus_packages": 178,
-    "high_consensus_missing_slots": 265,
+    "high_consensus_missing_slots": 262,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
@@ -10641,13 +10647,48 @@
       "notes": "Ruby and Swift retain their legacy public APIs and now expose strict additive v1 facades, execute all 56 neutral cases dynamically, publish empty capability manifests, preserve zero-authority resolver precedence, and carry native build and downstream evidence. Elixir and Lua remain truthfully pending in the complete 12-target registry."
     },
     {
-      "id": "build-tool-shared-input-multiconsumer-diff-selection-fixture",
-      "title": "Prove reverse diff selects every declared consumer of one shared input",
+      "id": "event-loop-swift-lane-parity",
+      "title": "Implement the portable event-loop contract in Swift",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus"],
+      "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Post-#16706 read-only audit found that the normative repository-boundary reverse-diff contract selects every applicable declared consumer, but the checked-in neutral case exercises only one Swift consumer. Add a process-free corpus case for the registered Haskell cabal.project shared input with arithmetic and clock declared as consumers and an unregistered decoy excluded; pin its boundary digest and focused runner assertion before further engine adoptions. This is separate from the selected Java/Kotlin/Dart barcode-layout foundation."
+      "notes": "Post-#16717 collision-checked high-consensus audit found Swift has no event-loop package or exact child owner, while code/specs/event-loop.md defines a portable injected-source, authority-free contract. Keep native-reactor backends outside this package; reconcile with the separately owned Haskell event-loop tail."
+    },
+    {
+      "id": "event-loop-java-kotlin-dart-lane-parity",
+      "title": "Implement the portable event-loop contract in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16717 high-consensus audit found the generic mockable event-loop contract in code/specs/event-loop.md has no Java, Kotlin, or Dart package root and no exact lane owner. Port injected readiness and handler behavior without native reactor/process authority; coordinate fixtures with the separate Swift and Haskell children."
+    },
+    {
+      "id": "url-parser-java-kotlin-dart-lane-parity",
+      "title": "Implement the portable URL parser in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16717 audit found code/specs/NET00-url-parser.md defines a standard-library-only parser used downstream by HTTP/1.0 client and Venture, but the Java, Kotlin, and Dart roots and exact parity owner are absent. Preserve the pure grammar and error contract before consuming it downstream; no current open PR owns these paths."
+    },
+    {
+      "id": "build-tool-shared-input-multiconsumer-diff-selection-fixture",
+      "title": "Prove reverse diff selects every declared consumer of one shared input",
+      "status": "pr-open",
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus"],
+      "branch": "codex/parity-build-tool-multiconsumer-20261005",
+      "pr_number": 16722,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16722",
+      "selected_at": "2026-10-05T10:59:58Z",
+      "selection_revision": "103296279680459f634c213a1cf3828367e71568",
+      "implementation_revision": "99b2bf187730974ea41179612f3d2442d754c464",
+      "validation_revision": "99b2bf187730974ea41179612f3d2442d754c464",
+      "publication_notes": "Opened draft PR #16722 from the tested, clean fixture head to bind the durable PR number. The PR body contains the local validation matrix and Windows host caveats. Promote it to ready after this state commit; initial checks are pending, and auto-merge is disabled until the final head is fully acceptable and conflict-free.",
+      "selection_notes": "Selected only after #16717 reached 52 terminal acceptable checks and merged at the exact origin/main revision. A full-checkout schema-3 reporter found 15 established lanes, 1,487 identities, 4,757 occupied slots, five emerging OCaml roots, zero canonical collisions, and zero unknown buckets. Three newly discovered Swift/JVM/Dart event-loop and URL-parser children were registered pending before selection. The sole fixture dependency is merged, the existing neutral case covers only one shared-input consumer, and strengthening the oracle precedes nine reverse-diff adoption owners. A live open parity-PR query returned no competing parity PR.",
+      "validation_notes": "The 167-case, 285-file neutral corpus validates with the pinned repository-boundary digest. Shared runner/schema suite: 115 tests and 304 subtests passed. Native exact-fixture consumers: Go root/internal graphdiff, Python (523 passed, four skipped, 91.84% total and 98% graph_diff.py coverage), Perl direct interpreter, Java and Kotlin Gradle check with JaCoCo gates, Dart direct runner with 92.36% line coverage, and OCaml dune runtest (seven tests over all 20 graph/diff cases) pass. Dart analyze/format, Go vet and 91.5% internal graphdiff coverage, Python Ruff with existing test-harness E402 excluded, package-parity tests/report, full-repo BUILD-file dry validation, diff hygiene, and read-only security review pass. Windows Dart aggregate test launcher still cannot start its relative frontend-server path; the direct script and coverage runner pass. The host OCaml native @all/coverage path remains environment-limited by missing x86_64-w64-mingw32-ar and linker symbols, while process-free dune runtest passes; CI must verify the Linux native gate.",
+      "notes": "Post-#16706 read-only audit found that reverse diff must select every declared consumer of one shared input, while the neutral case exercises only one. The registered rust-root-workspace-manifest-cross-consumers boundary maps code/packages/rust/Cargo.toml to both Swift conduit and sha256-native. Add a process-free two-consumer fixture with an unregistered decoy, pin the boundary digest, update exact-case rosters across eight native build-tool tests and the normative count from 11 to 12, and assert the closure in the shared runner before further engine adoptions."
     },
     {
       "id": "barcode-layout-1d-java-kotlin-dart-lane-parity",
