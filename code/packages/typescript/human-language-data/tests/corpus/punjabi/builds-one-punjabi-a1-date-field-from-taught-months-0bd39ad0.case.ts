@@ -35,6 +35,16 @@ it("builds a Punjabi A1 date field from taught months to independent Gurmukhi en
   expect(byId.get("PA-W09-date-dictation")!.blocks.map((block) => block.writingStage).filter(Boolean))
     .toEqual(["dictation-transcription"]);
 
+  for (const id of ["PA-W09-date-delayed", "PA-W09-date-dictation"]) {
+    expect(String(byId.get(id)!.frontmatter.headword)).not.toMatch(/[੦-੯]/);
+  }
+  const [selection] = compileLessonActivities(byId.get("PA-W09-date-select")!.blocks);
+  expect([selection!.answer, ...selection!.accepted].every(
+    (response) => response.includes("B") && response.includes("੨੫/੦੨/੨੦੨੫"),
+  )).toBe(true);
+  const [dictation] = compileLessonActivities(byId.get("PA-W09-date-dictation")!.blocks);
+  expect(dictation!.prompt).not.toMatch(/fifteenth|January|two thousand|[੦-੯]/i);
+
   const independent = byId.get("PA-W09-date-no-model")!;
   expect(independent.blocks.map((block) => block.writingStage).filter(Boolean)).toEqual([
     "controlled-composition",

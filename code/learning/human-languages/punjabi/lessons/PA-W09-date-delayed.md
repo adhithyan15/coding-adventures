@@ -6,7 +6,7 @@ sequence: 8340
 delivery: script
 chapter: 153
 type: writing
-headword: "ਤਾਰੀਖ਼: ੨੫/੦੨/੨੦੨੫"
+headword: "ਤਾਰੀਖ਼"
 romanization: "delayed fictional date field"
 gloss: "hide the closed bank, then fill one requested date after a short delay"
 prerequisites: [PA-W09-date-supported]

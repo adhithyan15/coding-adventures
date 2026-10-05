@@ -55,6 +55,6 @@ digit writing.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-CUE-MAP-01, PA-FORM-DATE-B-01] -->
-<!-- hl-activity: {"id":"PA-W09-date-select-kha","kind":"text","assesses":["PA-FORM-DATE-CUE-MAP-01","PA-FORM-DATE-B-01"],"prompt":"The fictional selector is ਖ. Choose A or B, then give its taught date.","answer":"B — ੨੫/੦੨/੨੦੨੫","accepted":["B","੨੫/੦੨/੨੦੨੫"],"feedback":{"correct":"ਖ selects B in this closed bank.","incorrect":"Return to the fixed selector map: ਖ requests B."},"response_seconds":22} -->
+<!-- hl-activity: {"id":"PA-W09-date-select-kha","kind":"text","assesses":["PA-FORM-DATE-CUE-MAP-01","PA-FORM-DATE-B-01"],"prompt":"The fictional selector is ਖ. Choose A or B, then give its taught date.","answer":"B — ੨੫/੦੨/੨੦੨੫","accepted":["B: ੨੫/੦੨/੨੦੨੫"],"feedback":{"correct":"ਖ selects B in this closed bank.","incorrect":"Return to the fixed selector map: ਖ requests B, then give B's date."},"response_seconds":22} -->
 
 The bank remains visible here. It will be hidden only after supported practice.

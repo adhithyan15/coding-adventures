@@ -6,8 +6,8 @@ sequence: 8350
 delivery: script
 chapter: 153
 type: writing
-headword: "੧੫/੦੧/੨੦੨੫"
-romanization: "heard fictional date A"
+headword: "ਤਾਰੀਖ਼"
+romanization: "heard fictional date"
 gloss: "transcribe one heard fictional date into Gurmukhi digits"
 prerequisites: [PA-W09-date-delayed]
 sounds: []
@@ -42,20 +42,21 @@ pointing. Cover all written date examples.
 ## You'll want to know — one short fictional prompt
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-A-01, PA-FORM-DATE-MONTH-MAP-01] -->
 
-Have a partner or the narration read: “the fifteenth of January, two thousand
-twenty-five.” Listen once; then listen again. Do not display a digit model
-while you write.
+Ask a partner to read fictional date A from the earlier bank while you face
+away from the page. For solo practice, record yourself saying that date aloud,
+close the book, and play the recording back. Listen once; then listen again.
+Keep both the spoken cue's written source and every digit model out of view.
 
 ## Writing — transcription
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-A-01, PA-FORM-DATE-MONTH-MAP-01, PA-FORM-DATE-FORMAT-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Write only the three heard pieces in Gurmukhi digits. Put the day in the
-first box, January's taught two-digit month in the middle, and the year last.
-Then check only the two slash positions.
+Write only the three heard pieces in Gurmukhi digits. Put the heard day in the
+first box, the heard month in the middle, and the heard year last. Then check
+only the two slash positions.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-A-01, PA-FORM-DATE-MONTH-MAP-01, PA-FORM-DATE-FORMAT-01] -->
-<!-- hl-activity: {"id":"PA-W09-date-dictation-a","kind":"text","assesses":["PA-FORM-DATE-A-01","PA-FORM-DATE-MONTH-MAP-01","PA-FORM-DATE-FORMAT-01"],"prompt":"Write in Gurmukhi digits the heard fictional date: the fifteenth of January, two thousand twenty-five.","answer":"੧੫/੦੧/੨੦੨੫","accepted":[],"feedback":{"correct":"The heard day, month, and year are in the printed order.","incorrect":"Replay one piece at a time; check the month and slashes separately."},"response_seconds":38} -->
+<!-- hl-activity: {"id":"PA-W09-date-dictation-a","kind":"text","assesses":["PA-FORM-DATE-A-01","PA-FORM-DATE-MONTH-MAP-01","PA-FORM-DATE-FORMAT-01"],"prompt":"After hearing fictional date A from a partner or your recording, close the source and transcribe it in Gurmukhi digits.","answer":"੧੫/੦੧/੨੦੨੫","accepted":[],"feedback":{"correct":"The heard day, month, and year are in the printed order.","incorrect":"Replay one piece at a time; check the month and slashes separately."},"response_seconds":38} -->
 
 No real birth date or other personal data is being collected.
