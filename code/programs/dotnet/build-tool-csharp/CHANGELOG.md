@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Matched the reference's granular graph/diff diagnostics and validation
+  precedence, rejected diff edge cycles and nested package roots before
+  selection, and counted only consumer roots against the boundary scope limit.
 - Added a process-free typed graph and diff-selection core with deterministic
   prerequisite-first levels, no-partial cycle and diff failures, Unicode 17
   path identity, exact repository-boundary digest/projection, strict portable

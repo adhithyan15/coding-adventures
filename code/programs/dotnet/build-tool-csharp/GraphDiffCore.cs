@@ -73,15 +73,25 @@ public static class GraphDiffCore
 
     public static GraphResult EvaluateGraph(GraphInput input)
     {
-        if (input is null || !ValidGraph(input.Packages, input.Edges))
-            return GraphError("GRAPH_INVALID_INPUT");
+        var validation = ValidateGraph(input?.Packages, input?.Edges);
+        if (validation is not null) return GraphError(validation);
 
         // Kahn's algorithm emits complete levels. No level is published until
         // the whole graph is known to be acyclic, so cycle errors stay empty.
-        var outgoing = input.Packages.ToDictionary(name => name,
+        var levels = TopologicalLevels(input!.Packages, input.Edges);
+        if (levels is null) return GraphError("GRAPH_CYCLE");
+        var edges = input.Edges.OrderBy(edge => edge.Prerequisite, ScalarComparer.Instance)
+            .ThenBy(edge => edge.Dependent, ScalarComparer.Instance).ToArray();
+        return new GraphResult(null, edges, levels);
+    }
+
+    private static IReadOnlyList<IReadOnlyList<string>>? TopologicalLevels(
+        IReadOnlyList<string> packages, IReadOnlyList<GraphEdge> edges)
+    {
+        var outgoing = packages.ToDictionary(name => name,
             _ => new List<string>(), StringComparer.Ordinal);
-        var indegree = input.Packages.ToDictionary(name => name, _ => 0, StringComparer.Ordinal);
-        foreach (var edge in input.Edges)
+        var indegree = packages.ToDictionary(name => name, _ => 0, StringComparer.Ordinal);
+        foreach (var edge in edges)
         {
             outgoing[edge.Prerequisite].Add(edge.Dependent);
             indegree[edge.Dependent]++;
@@ -100,18 +110,21 @@ public static class GraphDiffCore
                     if (--indegree[dependent] == 0) next.Add(dependent);
             ready = next.Order(ScalarComparer.Instance).ToArray();
         }
-        if (emitted != input.Packages.Count) return GraphError("GRAPH_CYCLE");
-        var edges = input.Edges.OrderBy(edge => edge.Prerequisite, ScalarComparer.Instance)
-            .ThenBy(edge => edge.Dependent, ScalarComparer.Instance).ToArray();
-        return new GraphResult(null, edges, levels);
+        return emitted == packages.Count ? levels : null;
     }
 
     public static DiffSelectionResult EvaluateDiffSelection(DiffSelectionInput input)
     {
-        if (input is null || !ValidDiff(input)) return DiffError("DIFF_INVALID_INPUT");
-        if (input.BoundarySha256 is not null &&
+        if (input is null || input.Packages is null) return DiffError("GRAPH_PACKAGE_INVALID");
+        var names = input.Packages.Select(package => package?.Name ?? "").ToArray();
+        var graphError = ValidateGraph(names, input.Edges);
+        if (graphError is not null) return DiffError(graphError);
+        if (TopologicalLevels(names, input.Edges) is null) return DiffError("DIFF_EDGE_CYCLE");
+        var diffError = ValidateDiff(input);
+        if (diffError is not null) return DiffError(diffError);
+        if (input.BoundarySha256 is null ? input.Boundary is not null :
             !ValidBoundaryDigest(input.BoundarySha256, input.Boundary))
-            return DiffError("DIFF_BOUNDARY_INVALID");
+            return DiffError("DIFF_BOUNDARY_DIGEST_MISMATCH");
 
         // Complete Cartesian preflight is deliberately before both matching
         // and unknown-path policy. A quick early match cannot hide later work.
@@ -182,50 +195,71 @@ public static class GraphDiffCore
         return new DiffSelectionResult(null, Sort(seeds), Sort(affected), Sort(prerequisites));
     }
 
-    private static bool ValidGraph(IReadOnlyList<string>? packages, IReadOnlyList<GraphEdge>? edges)
+    private static string? ValidateGraph(IReadOnlyList<string>? packages,
+        IReadOnlyList<GraphEdge>? edges)
     {
-        if (packages is null || edges is null || packages.Count > 4096 || edges.Count > 16384 ||
-            packages.Any(name => !ValidPackageName(name))) return false;
-        var names = new HashSet<string>(packages, StringComparer.Ordinal);
-        if (names.Count != packages.Count) return false;
+        if (packages is null) return "GRAPH_PACKAGE_INVALID";
+        if (edges is null) return "GRAPH_EDGE_UNKNOWN";
+        if (packages.Count > 4096) return "GRAPH_PACKAGE_LIMIT_EXCEEDED";
+        if (edges.Count > 16384) return "GRAPH_EDGE_LIMIT_EXCEEDED";
+        var names = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var name in packages)
+        {
+            if (!ValidPackageName(name)) return "GRAPH_PACKAGE_INVALID";
+            if (!names.Add(name)) return "GRAPH_PACKAGE_DUPLICATE";
+        }
         var pairs = new HashSet<GraphEdge>();
-        return edges.All(edge => edge is not null && names.Contains(edge.Prerequisite) &&
-            names.Contains(edge.Dependent) && pairs.Add(edge));
+        foreach (var edge in edges)
+        {
+            if (edge is null || !names.Contains(edge.Prerequisite) ||
+                !names.Contains(edge.Dependent)) return "GRAPH_EDGE_UNKNOWN";
+            if (edge.Prerequisite == edge.Dependent) return "GRAPH_EDGE_SELF";
+            if (!pairs.Add(edge)) return "GRAPH_EDGE_DUPLICATE";
+        }
+        return null;
     }
 
-    private static bool ValidDiff(DiffSelectionInput input)
+    private static string? ValidateDiff(DiffSelectionInput input)
     {
-        if (input.Packages is null || input.Edges is null || input.ForcedPackages is null ||
-            input.ChangedPaths is null || input.Packages.Count > 4096 ||
-            input.ForcedPackages.Count > 4096 || input.ChangedPaths.Count > 4096 ||
-            input.UnknownPathPolicy is not ("all" or "error") ||
-            (input.BoundarySha256 is null && input.Boundary is not null)) return false;
         var names = new HashSet<string>(StringComparer.Ordinal);
-        var rootIdentities = new HashSet<string>(StringComparer.Ordinal);
+        var rootIdentities = new List<string>();
         foreach (var package in input.Packages)
         {
-            if (package is null || !ValidPackageName(package.Name) ||
-                !names.Add(package.Name) || !ValidPath(package.RelPath) ||
-                !rootIdentities.Add(Identity(package.RelPath))) return false;
+            if (package is null || !ValidPackageName(package.Name)) return "DIFF_PACKAGE_INVALID";
+            if (!ValidPath(package.RelPath)) return "DIFF_PATH_INVALID";
+            var identity = Identity(package.RelPath);
+            if (rootIdentities.Any(prior => identity == prior ||
+                identity.StartsWith(prior + "/", StringComparison.Ordinal) ||
+                prior.StartsWith(identity + "/", StringComparison.Ordinal)))
+                return "DIFF_PATH_INVALID";
+            rootIdentities.Add(identity);
             if (package.SourceMode == "package_prefix")
             {
-                if (package.SourceGlobs is not null) return false;
+                if (package.SourceGlobs is { Count: > 0 }) return "DIFF_GLOB_INVALID";
             }
             else if (package.SourceMode == "strict_globs")
             {
                 if (package.SourceGlobs is null || package.SourceGlobs.Count > 256 ||
                     package.SourceGlobs.Distinct(StringComparer.Ordinal).Count() != package.SourceGlobs.Count ||
-                    package.SourceGlobs.Any(pattern => !ValidGlob(pattern))) return false;
+                    package.SourceGlobs.Any(pattern => !ValidGlob(pattern))) return "DIFF_GLOB_INVALID";
             }
-            else return false;
+            else return "DIFF_SOURCE_MODE_INVALID";
+            if (!names.Add(package.Name)) return "DIFF_PACKAGE_DUPLICATE";
         }
-        if (!ValidGraph(names.ToArray(), input.Edges) ||
-            input.ForcedPackages.Any(name => !names.Contains(name)) ||
-            input.ForcedPackages.Distinct(StringComparer.Ordinal).Count() != input.ForcedPackages.Count ||
-            input.ChangedPaths.Any(path => !ValidPath(path)) ||
-            input.ChangedPaths.Select(Identity).Distinct(StringComparer.Ordinal).Count() != input.ChangedPaths.Count)
-            return false;
-        return true;
+        if (input.UnknownPathPolicy is not ("all" or "error")) return "DIFF_POLICY_INVALID";
+        if (input.ForcedPackages is null || input.ForcedPackages.Count > 4096 ||
+            input.ForcedPackages.Distinct(StringComparer.Ordinal).Count() != input.ForcedPackages.Count)
+            return "DIFF_FORCED_PACKAGE_INVALID";
+        if (input.ChangedPaths is null || input.ChangedPaths.Count > 4096 ||
+            input.ChangedPaths.Distinct(StringComparer.Ordinal).Count() != input.ChangedPaths.Count)
+            return "DIFF_PATH_INVALID";
+        foreach (var path in input.ChangedPaths)
+            if (!ValidPath(path)) return "DIFF_PATH_INVALID";
+        if (input.ChangedPaths.Select(Identity).Distinct(StringComparer.Ordinal).Count() !=
+            input.ChangedPaths.Count) return "DIFF_PATH_INVALID";
+        foreach (var forced in input.ForcedPackages)
+            if (!names.Contains(forced)) return "DIFF_FORCED_PACKAGE_UNKNOWN";
+        return null;
     }
 
     private static bool ValidPackageName(string? name) =>
@@ -313,7 +347,7 @@ public static class GraphDiffCore
             var roots = scope.ExactRoots.Concat(scope.DescendantRoots).Concat(scope.ExcludedRoots).ToArray();
             if (roots.Any(root => !ValidPath(root)) ||
                 roots.Select(Identity).Distinct(StringComparer.Ordinal).Count() != roots.Length) return false;
-            scopes += roots.Length;
+            scopes += scope.ExactRoots.Count + scope.DescendantRoots.Count;
             authorizations += (scope.ExactRoots.Count + scope.DescendantRoots.Count) * rule.Inputs.Count;
             if (scopes > 8192 || authorizations > 32768) return false;
             if (rule.Inputs.Any(item => item is null || !ValidPath(item.Path) ||
