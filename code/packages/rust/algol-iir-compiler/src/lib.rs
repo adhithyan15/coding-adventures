@@ -1899,6 +1899,13 @@ impl Compiler {
                 ProcedureParamType::Scalar(pty) => {
                     // Parameters and the result slot are real registers, never `own`.
                     let slot = self.declare_var(pname, *pty, false)?;
+                    // A non-captured real value formal is already a concrete f64
+                    // in this frame. It can therefore use the same portable
+                    // formatter as other proven runtime-real producers without
+                    // requiring a closure or thunk ABI.
+                    if *pty == ScalarType::Real && !captured_scalar_formals.contains(pname) {
+                        self.runtime_real_slots.insert(slot.clone());
+                    }
                     // A string parameter is initialized by the caller, but can carry
                     // a runtime handle. It is deliberately not literal-backed: only
                     // direct `str_const` producers support ordering comparisons.
@@ -12471,6 +12478,34 @@ mod tests {
                         == Some("__basic_print_real")
             }));
         }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_includes_value_formals() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; procedure show(x); value x; real x; output(x * 2.0); show(pick()) end",
+            "test",
+        )
+        .expect("a real value formal carries runtime-real formatter provenance");
+        let show = module.get_function("show").expect("has show procedure");
+        assert!(show.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+        assert!(module.get_function("__basic_print_real").is_some());
+    }
+
+    #[test]
+    fn al4_runtime_real_value_formals_do_not_cross_capture_globals() {
+        let error = compile_source(
+            "begin procedure show(x); value x; real x; begin procedure nested; output(x); nested() end; show(2.25) end",
+            "test",
+        )
+        .expect_err("captured real formals remain outside the bounded formatter proof");
+        assert!(
+            format!("{error:?}").contains("cannot print a real value"),
+            "unexpected rejection: {error:?}"
+        );
     }
 
     #[test]
