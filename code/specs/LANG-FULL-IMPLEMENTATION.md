@@ -1306,8 +1306,9 @@ backend immediately) come before the enabler-dependent items.
   is independently runtime-real or a finite static numeric expression. The
   real-valued standard functions `abs`, `sqrt`, `sin`, `cos`, `ln`, `exp`, and
   `arctan` preserve it for a proven runtime-real operand while user-declared
-  overrides remain conservative; broader computed scalar `f64` formatting
-  remains a follow-up.
+  overrides remain conservative. Reads from real array elements also carry the
+  proof through assignment and composition; broader computed scalar `f64`
+  formatting remains a follow-up.
   Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across

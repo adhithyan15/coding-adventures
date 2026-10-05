@@ -3781,6 +3781,17 @@ impl Compiler {
         if self.is_direct_declared_real_procedure_call(node) {
             return true;
         }
+        if node.rule_name == "variable" && array_subscripts(node).is_some() {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone());
+            return source_name.is_some_and(|source_name| {
+                self.require_var(&source_name).is_ok_and(|binding| {
+                    binding.ty == ScalarType::Real && binding.array.is_some()
+                })
+            });
+        }
         if node.rule_name == "proc_call" {
             let source_name = direct_tokens(node)
                 .into_iter()
@@ -12439,6 +12450,27 @@ mod tests {
         )
         .expect_err("a user-declared standard-function override must not use builtin provenance");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_includes_real_array_elements() {
+        for source in [
+            "begin real array values[1:2]; values[1] := 2.25; output(values[1]) end",
+            "begin real procedure pick; pick := 2.25; real array values[1:2]; integer i; i := 2; values[2] := pick(); output(values[i] * 2.0) end",
+            "begin real procedure pick; pick := 2.25; real array values[1:2]; real x; values[1] := pick(); x := values[1]; output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "real array elements must carry runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
     }
 
     #[test]

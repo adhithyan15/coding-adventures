@@ -208,7 +208,9 @@ composition, multiplication, division, and exponentiation whose operands are
 proven runtime-real values or finite static numeric expressions preserve the
 same provenance. The real-valued standard functions `abs`, `sqrt`, `sin`,
 `cos`, `ln`, `exp`, and `arctan` preserve runtime-real provenance for a proven
-runtime-real operand while respecting user-declared overrides.
+runtime-real operand while respecting user-declared overrides. Reads from real
+array elements also carry runtime-real provenance through assignment and
+composition.
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.
