@@ -272,9 +272,10 @@ CI also runs Engram on the iPhone and iPad simulators (UI89 §2.5):
   restore it, and quarantine refused state. The same app then runs on an
   iPad simulator.
 - **Anki import and export:** the SwiftUI handler `EngramEffects.swift` is
-  compiled into the iOS app. On iOS it fails these two effects with "file
-  dialogs are not available on this platform", because its panels are
-  AppKit-only.
+  compiled into the iOS app. On iOS it answers these two effects through the
+  platform library's document picker (UI89 §2.6), with the macOS rules:
+  `.apkg`/`.colpkg`, the 256 MiB import limit, and the strict package check
+  on export.
 - **Identity:** the defaults, `dev.codingadventures.engramapp` and
   `EngramApp`.
 

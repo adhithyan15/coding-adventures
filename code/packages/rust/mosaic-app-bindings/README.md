@@ -37,7 +37,11 @@ the same contract through `NSOpenPanel` / `NSSavePanel` on macOS and
 same asynchronous picker seam as Compose. It is tested with a fake host, fake
 panels and fake pickers by
 `conformance/swiftui/Sources/Conformance/PlatformEffectsChecks.swift`
-(`--platform-effects`).
+(`--platform-effects`). A package's `[host_effects]` handler can borrow its
+picker for the app's own kinds: `mosaicPlatformRouter(for: host)` returns
+the router, whose `openForApp` and `saveForApp` keep `files.*`'s rules. The
+app supplies its own accepted extensions, size limit and `ok` answer
+(UI89 §2.6). This is how Engram's Anki import and export work on iOS.
 
 Qt's `MosaicPlatformEffects.{h,cpp}` (`qt_platform_effects()`) answers the same
 contract through `QFileDialog`. The Qt host delivers effects through one

@@ -526,6 +526,104 @@ private func checkAsynchronousPath() {
   check(failure(refusing.offered[1]) == "couldn't deliver the file", "the second answer is small")
 }
 
+/// An app's own kinds answered through the library's picker (UI89 §2.6).
+private func checkAppEffectsThroughPicker() {
+  // No router on a host the library was never installed on.
+  check(mosaicPlatformRouter(for: FakeHost()) == nil, "no router for an uninstalled host")
+
+  let host = FakeHost()
+  let picker = LaterPicker()
+  var ui: [() -> Void] = []
+  var work: [() -> Void] = []
+  var appSaw: [String] = []
+  host.effectHandler = { _, kind, _, _ in appSaw.append(kind) }
+  installMosaicPlatformEffects(
+    host, appKinds: ["importThing", "exportThing"], picker: picker, hasDialogs: true,
+    runOnUI: { ui.append($0) }, runInBackground: { work.append($0) })
+  guard let router = mosaicPlatformRouter(for: host) else {
+    check(false, "an installed host has a router")
+    return
+  }
+  // The app's kinds still reach the app's handler first.
+  host.effectHandler?(9, "importThing", NSNull(), "await")
+  check(appSaw == ["importThing"] && host.deferred.isEmpty, "app kinds go to the app")
+
+  // Open: the app's extensions reach the picker, nothing happens until the
+  // UI queue runs, and the app's `ok` builds the answer.
+  host.waitingOn = [1]
+  router.openForApp(1, accept: MosaicAccept(mimeTypes: [], extensions: ["apkg", "colpkg"]), limit: 4) {
+    name, bytes in ["apkg": bytes.base64EncodedString(), "from": name]
+  }
+  check(host.deferred == [1] && ui.count == 1, "deferred first, then the picker on the UI queue")
+  ui.removeFirst()()
+  check(picker.lastAccept?.extensions == ["apkg", "colpkg"], "the app's extensions")
+  // A second request while this one is open is refused at once.
+  host.waitingOn.insert(2)
+  router.saveForApp(
+    2, suggestedName: "out.apkg", bytes: Data("PK".utf8),
+    accept: MosaicAccept(mimeTypes: [], extensions: ["apkg"])
+  ) { _ in [:] }
+  check(failure(host.answers[2] ?? [:]) == "another file operation is in progress", "one at a time")
+  picker.openDone?(LaterDocument(name: "deck.apkg", mimeType: nil, bytes: Data("PK34".utf8)))
+  work.removeFirst()()
+  ui.removeFirst()()
+  let opened = okValue(host.answers[1] ?? [:])
+  check(opened?["apkg"] as? String == Data("PK34".utf8).base64EncodedString(), "the app's ok shape")
+  check(opened?["from"] as? String == "deck.apkg", "the document's name reaches ok")
+
+  // The app's limit, not files.open's, bounds the read.
+  host.waitingOn = [3]
+  router.openForApp(3, accept: MosaicAccept(mimeTypes: [], extensions: []), limit: 4) { _, _ in [:] }
+  ui.removeFirst()()
+  picker.openDone?(LaterDocument(name: "big.apkg", mimeType: nil, bytes: Data(count: 5)))
+  work.removeFirst()()
+  ui.removeFirst()()
+  check(failure(host.answers[3] ?? [:]) == "the selected file is larger than 4 bytes", "the app's limit")
+
+  // Save: a refused name fails before any picker or deferral; a good one
+  // reaches the picker with the app's bytes, and the app's `ok` answers.
+  let creates = picker.creates
+  host.waitingOn = [4, 5]
+  for (id, name) in [(UInt64(4), "../deck.apkg"), (UInt64(5), "deck.exe")] {
+    router.saveForApp(
+      id, suggestedName: name, bytes: Data("PK".utf8),
+      accept: MosaicAccept(mimeTypes: [], extensions: ["apkg"])
+    ) { _ in [:] }
+  }
+  check(picker.creates == creates && ui.isEmpty, "no picker for a refused name")
+  check(failure(host.answers[4] ?? [:]) == "suggestedName must be a plain file name", "a path is refused")
+  check(
+    failure(host.answers[5] ?? [:]) == "suggestedName must end in an extension of an accepted type",
+    "a wrong extension is refused")
+  check(!host.deferred.contains(4) && !host.deferred.contains(5), "nothing deferred for a refusal")
+
+  host.waitingOn = [6]
+  router.saveForApp(
+    6, suggestedName: "engram.apkg", bytes: Data("PK\u{3}\u{4}".utf8),
+    accept: MosaicAccept(mimeTypes: [], extensions: ["apkg"])
+  ) { name in ["savedAs": name] }
+  ui.removeFirst()()
+  check(picker.lastRequest?.suggestedName == "engram.apkg", "the app's name reaches the picker")
+  check(picker.lastRequest?.bytes == Data("PK\u{3}\u{4}".utf8), "with the app's bytes")
+  let target = LaterTarget("engram (1).apkg")
+  picker.createDone?(target)
+  work.removeFirst()()
+  ui.removeFirst()()
+  check(okValue(host.answers[6] ?? [:])?["savedAs"] as? String == "engram (1).apkg", "the app's ok from the name")
+  check(target.written == Data("PK\u{3}\u{4}".utf8), "the bytes written")
+
+  // Without a picker on this OS, the app's request fails with a message.
+  let bare = FakeHost()
+  installMosaicPlatformEffects(bare, appKinds: ["importThing"], picker: LaterPicker(), hasDialogs: false)
+  bare.waitingOn = [1]
+  mosaicPlatformRouter(for: bare)?.openForApp(
+    1, accept: MosaicAccept(mimeTypes: [], extensions: []), limit: 1
+  ) { _, _ in [:] }
+  check(
+    failure(bare.answers[1] ?? [:]) == "file dialogs are not available on this platform",
+    "no picker, a message")
+}
+
 /// A host whose runtime refuses any `ok` answer.
 private final class RefusingHost: MosaicPlatformEffectHost {
   var effectHandler: ((UInt64, String, Any, String) -> Void)?
@@ -551,6 +649,7 @@ func runPlatformEffectsChecks() {
   checkOpen(in: directory)
   checkRouter(in: directory)
   checkAsynchronousPath()
+  checkAppEffectsThroughPicker()
   print("Mosaic SwiftUI platform effects passed")
 }
 
