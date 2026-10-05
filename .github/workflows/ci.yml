@@ -1607,8 +1607,10 @@ jobs:
           $before = Get-TreeSnapshot (Get-BrowserTree $browserRoot)
           & icacls.exe $browserRoot /remove:g '*S-1-15-2-1' /T /Q
           if ($LASTEXITCODE -ne 0) { throw "icacls removal failed with exit code $LASTEXITCODE" }
-          & icacls.exe $browserRoot /grant:r '*S-1-15-2-1:(OI)(CI)RX' /T /Q
-          if ($LASTEXITCODE -ne 0) { throw "icacls failed with exit code $LASTEXITCODE" }
+          & icacls.exe $browserRoot /grant:r '*S-1-15-2-1:RX' /Q
+          if ($LASTEXITCODE -ne 0) { throw "root icacls failed with exit code $LASTEXITCODE" }
+          & icacls.exe $browserRoot /grant '*S-1-15-2-1:(OI)(CI)RX' /T /Q
+          if ($LASTEXITCODE -ne 0) { throw "tree icacls failed with exit code $LASTEXITCODE" }
 
           $afterEntries = Get-BrowserTree $browserRoot
           $after = Get-TreeSnapshot $afterEntries

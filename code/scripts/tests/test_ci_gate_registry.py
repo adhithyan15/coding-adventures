@@ -249,6 +249,7 @@ class CIGateRegistryTests(unittest.TestCase):
         self.assertIn("fsutil.exe file queryfileid", body)
         self.assertIn("fsutil.exe hardlink list", body)
         self.assertIn("/remove:g", body)
+        self.assertIn("*S-1-15-2-1:RX", body)
         self.assertIn("*S-1-15-2-1:(OI)(CI)RX", body)
         self.assertIn("ReadAndExecute", body)
         self.assertIn("DeleteSubdirectoriesAndFiles", body)
