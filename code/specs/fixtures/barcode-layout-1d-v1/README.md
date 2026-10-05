@@ -36,7 +36,10 @@ conformance test and known divergences; promotion fields are rejected. A conform
 name an executed package test, carry the exact raw `cases.json` SHA-256, bind a
 reachable tested revision, match the checked-out canonical package tree,
 and name the durable adoption PR. Revision and PR evidence are checked against
-the durable backlog owner. A conformant target must use the canonical
+the durable backlog owner. The verified revision must be an ancestor of the
+checked-out commit, so a local-only pre-squash PR object cannot satisfy the
+repository gate when the durable GitHub history cannot resolve it. A conformant
+target must use the canonical
 language/package root and have no remaining divergence. Package evidence paths
 must remain inside that root and be tracked in the adoption commit.
 
