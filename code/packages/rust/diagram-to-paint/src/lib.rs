@@ -2064,6 +2064,7 @@ enum CssColorMixSpace {
     Srgb,
     SrgbLinear,
     Oklab,
+    Oklch,
 }
 
 fn parse_css_color_mix_function(css: &str) -> Option<Color> {
@@ -2078,6 +2079,7 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         ["in", "srgb"] => CssColorMixSpace::Srgb,
         ["in", "srgb-linear"] => CssColorMixSpace::SrgbLinear,
         ["in", "oklab"] => CssColorMixSpace::Oklab,
+        ["in", "oklch"] => CssColorMixSpace::Oklch,
         _ => return None,
     };
     let (first_source, first_percentage) = parse_css_color_mix_stop(parts[1])?;
@@ -2099,10 +2101,15 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
     let first_alpha = f64::from(first.a) / 255.0;
     let second_alpha = f64::from(second.a) / 255.0;
     let mixed_alpha = first_alpha * first_weight + second_alpha * second_weight;
-    let first_components = css_color_mix_components(first, space);
-    let second_components = css_color_mix_components(second, space);
+    let mut first_components = css_color_mix_components(first, space);
+    let mut second_components = css_color_mix_components(second, space);
+    if matches!(space, CssColorMixSpace::Oklch) {
+        fixup_css_oklch_hues(&mut first_components, &mut second_components);
+    }
     let component = |index: usize| {
-        if mixed_alpha == 0.0 {
+        if matches!(space, CssColorMixSpace::Oklch) && index == 2 {
+            first_components[index] * first_weight + second_components[index] * second_weight
+        } else if mixed_alpha == 0.0 {
             0.0
         } else {
             (first_components[index] * first_alpha * first_weight
@@ -2124,6 +2131,12 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         CssColorMixSpace::Oklab => css_oklab_to_color(
             components[0], components[1], components[2], alpha,
         ),
+        CssColorMixSpace::Oklch => css_oklab_to_color(
+            components[0],
+            components[1] * components[2].cos(),
+            components[1] * components[2].sin(),
+            alpha,
+        ),
     })
 }
 
@@ -2136,18 +2149,38 @@ fn css_color_mix_components(color: Color, space: CssColorMixSpace) -> [f64; 3] {
     match space {
         CssColorMixSpace::Srgb => encoded,
         CssColorMixSpace::SrgbLinear => encoded.map(encoded_srgb_to_linear),
-        CssColorMixSpace::Oklab => {
-            let [r, g, b] = encoded.map(encoded_srgb_to_linear);
-            let l = (0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b).cbrt();
-            let m = (0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b).cbrt();
-            let s = (0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b).cbrt();
-            [
-                0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
-                1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
-                0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s,
-            ]
+        CssColorMixSpace::Oklab => css_color_to_oklab(encoded),
+        CssColorMixSpace::Oklch => {
+            let [lightness, a, b] = css_color_to_oklab(encoded);
+            [lightness, a.hypot(b), b.atan2(a)]
         }
     }
+}
+
+fn css_color_to_oklab(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    let l = (0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b).cbrt();
+    let m = (0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b).cbrt();
+    let s = (0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b).cbrt();
+    [
+        0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+        1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+        0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s,
+    ]
+}
+
+fn fixup_css_oklch_hues(first: &mut [f64; 3], second: &mut [f64; 3]) {
+    const POWERLESS_CHROMA: f64 = 0.000004;
+    if first[1] <= POWERLESS_CHROMA {
+        first[2] = second[2];
+    }
+    if second[1] <= POWERLESS_CHROMA {
+        second[2] = first[2];
+    }
+    let turn = std::f64::consts::TAU;
+    let delta = (second[2] - first[2] + std::f64::consts::PI).rem_euclid(turn)
+        - std::f64::consts::PI;
+    second[2] = first[2] + delta;
 }
 
 fn split_css_top_level_commas(source: &str) -> Option<Vec<&str>> {
@@ -8022,6 +8055,23 @@ mod tests {
             Color { r: 255, g: 0, b: 0, a: 51 },
         );
         assert_eq!(with_opacity("color-mix(in oklab, black, white)", 0.5), "rgba(99,99,99,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_oklch() {
+        assert_eq!(
+            css_to_color("color-mix(in oklch, black, white)"),
+            Color { r: 99, g: 99, b: 99, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in oklch, red, blue)"),
+            Color { r: 186, g: 0, b: 194, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in oklch, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in oklch, black, white)", 0.5), "rgba(99,99,99,0.5)");
     }
 
     #[test]

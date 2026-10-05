@@ -563,6 +563,9 @@ space, including omitted, complementary, and normalized stop percentages. The
 same alpha-aware mixing and encodes the result back to backend-neutral sRGB.
 The perceptual `oklab` interpolation space similarly converts sRGB stops into
 OKLab before mixing and lowers the mixed result through linear sRGB paint.
+The cylindrical `oklch` interpolation space preserves the same perceptual
+lightness and chroma while applying shortest-path hue interpolation, including
+powerless achromatic hues, before backend-neutral lowering.
 The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
