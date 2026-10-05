@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Launch npm's JavaScript CLI directly through the active Node executable on
+  Windows, retaining literal argument-vector spawning without a command shell
+  so frozen local bootstraps run safely on all supported release platforms.
+
 ## 1.0.0 — 2026-10-05
 
 - Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.

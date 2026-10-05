@@ -62,8 +62,25 @@ export function runCommand(command, args, cwd) {
   });
 }
 
+export function npmInvocationForPlatform(platform = process.platform, executable = process.execPath) {
+  return platform === "win32"
+    ? {
+        command: executable,
+        argsPrefix: [path.win32.join(
+          path.win32.dirname(executable),
+          "node_modules",
+          "npm",
+          "bin",
+          "npm-cli.js",
+        )],
+      }
+    : { command: "npm", argsPrefix: [] };
+}
+
 export async function bootstrap(projectDirectory, options = {}) {
-  const npm = options.npmCommand ?? (process.platform === "win32" ? "npm.cmd" : "npm");
+  const npm = options.npmCommand === undefined
+    ? npmInvocationForPlatform()
+    : { command: options.npmCommand, argsPrefix: [] };
   const install = options.install ?? runCommand;
   const log = options.log ?? console.log;
   const frozen = options.frozen === true;
@@ -73,8 +90,8 @@ export async function bootstrap(projectDirectory, options = {}) {
     );
     log(`[bootstrap] ${manifest.name ?? directory}`);
     await install(
-      npm,
-      frozen
+      npm.command,
+      [...npm.argsPrefix, ...(frozen
         ? [
             "ci",
             "--silent",
@@ -83,11 +100,15 @@ export async function bootstrap(projectDirectory, options = {}) {
             "--audit=false",
             "--fund=false",
           ]
-        : ["install", "--silent", "--package-lock=false", "--legacy-peer-deps"],
+        : ["install", "--silent", "--package-lock=false", "--legacy-peer-deps"])],
       directory,
     );
     if (frozen) {
-      await install(npm, ["run", "build", "--if-present"], directory);
+      await install(
+        npm.command,
+        [...npm.argsPrefix, "run", "build", "--if-present"],
+        directory,
+      );
     }
   }
 }
