@@ -2586,8 +2586,8 @@ line "Target" [35, 50, 68, 82]"##,
         });
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             paint_instructions::PaintInstruction::Rect(rect)
-                if rect.fill.as_deref() == Some("rgba(40,86,157,0.8)")
-                    && rect.stroke.as_deref() == Some("rgb(237,44,48)"))));
+                if rect.fill.as_deref() == Some("rgba(0,102,156,0.8)")
+                    && rect.stroke.as_deref() == Some("rgb(237,48,48)"))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             paint_instructions::PaintInstruction::GlyphRun(run)
                 if run.fill.as_deref() == Some("rgb(0, 180, 0)"))));
@@ -2945,6 +2945,38 @@ line "Target" [35, 50, 68, 82]"##,
                 if run.fill.as_deref() == Some("rgba(255, 0, 0, 0.2000)"))));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_treemap_color_mix_display_p3_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_treemap_color_mix_a98_rgb_to_png() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"A98 RGB mix\": 1:::mixed\nclassDef mixed fill:color-mix(in a98-rgb, black, white),stroke:color-mix(in a98-rgb, red, blue),color:color-mix(in a98-rgb, red 20%, transparent)",
+        )
+        .expect("A98 RGB color-mix treemap parse failed");
+        let layout = layout_treemap(&diagram, 480.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_treemap(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("rgb(129,129,129)")
+                    && rect.stroke.as_deref() == Some("rgb(129,0,129)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::GlyphRun(run)
+                if run.fill.as_deref() == Some("rgba(255, 0, 0, 0.2000)"))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_treemap_color_mix_a98_rgb_e2e.png")
             .expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
