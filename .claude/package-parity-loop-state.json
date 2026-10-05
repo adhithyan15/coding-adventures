@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 16737,
+  "active_pr": {
+    "number": 16737,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16737",
+    "branch": "codex/parity-build-tool-shared-digest-20261005",
+    "implementation_revision": "d6e4d20629aedba5e2cd65719a4042b9bd3a2a06",
+    "status": "pr-open"
+  },
   "last_ci_action": {
     "observed_at": "2026-10-05T16:51:38Z",
     "pr_number": 16737,
     "status": "pending",
-    "notes": "The sole active parity PR #16737 is OPEN and MERGEABLE at head d6e4d20629aedba5e2cd65719a4042b9bd3a2a06. GitHub checks are queued or in progress; no auto-merge request is enabled while checks remain pending."
+    "notes": "The sole active parity PR #16737 is OPEN and MERGEABLE; the implementation revision is d6e4d20629aedba5e2cd65719a4042b9bd3a2a06, followed by PR-state metadata. GitHub checks are queued or in progress; no auto-merge request is enabled while checks remain pending."
   },
   "last_inventory": {
     "revision": "fdee63c8cc0de3e2a6fc8a545980af730fc10dcd",
