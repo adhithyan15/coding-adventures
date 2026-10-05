@@ -41,6 +41,17 @@ describe("areKindsCompatible — stream wrapping", () => {
 });
 
 describe("areKindsCompatible — version compatibility", () => {
+  it("refuses the legacy RenderedPage v1.1 contract at a v2 edge", () => {
+    expect(areKindsCompatible(
+      { name: "RenderedPage", version: "1.1" },
+      Kinds.RenderedPage,
+    )).toBe(false);
+    expect(areKindsCompatible(
+      Kinds.RenderedPage,
+      { name: "RenderedPage", version: "1.1" },
+    )).toBe(false);
+  });
+
   it("major mismatch fails", () => {
     expect(areKindsCompatible(
       { name: "ContentSource", version: "2.0" },

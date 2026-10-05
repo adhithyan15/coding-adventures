@@ -283,6 +283,22 @@ describe("validateConfig — settings", () => {
 // ─── Stage instance validation ────────────────────────────────────────────
 
 describe("validateConfig — stage instances", () => {
+  it("refuses legacy kernel API v1 stages with upgrade guidance", () => {
+    const stage = makeStage("legacy", Kinds.Void, Kinds.ContentSource, { apiVersion: 1 });
+    try {
+      validateConfig(config([{ stage }]));
+      expect.fail("legacy kernel API v1 stage must be refused");
+    } catch (error) {
+      const configError = error as ConfigError;
+      expect(configError.errors).toEqual(expect.arrayContaining([
+        expect.objectContaining({
+          code: CONFIG_ERROR_CODES.API_VERSION_MISMATCH,
+          message: expect.stringMatching(/apiVersion 1; kernel is 2.*Upgrade/),
+        }),
+      ]));
+    }
+  });
+
   it("rejects API version mismatch", () => {
     const stage = makeStage("s", Kinds.Void, Kinds.ContentSource, { apiVersion: 99 });
     try { validateConfig(config([{ stage }])); }

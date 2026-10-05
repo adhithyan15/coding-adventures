@@ -300,6 +300,12 @@ describe("TypeScript plugin runner", () => {
     expect(new CancellationError("x").reason).toBe("x");
   });
 
+  it("refuses a stage targeting legacy kernel API v1", async () => {
+    const legacy = { ...echoStage, apiVersion: 1 };
+    await expect(runPlugin(legacy as typeof echoStage, { installSignalHandlers: false }))
+      .rejects.toThrow(/apiVersion is unsupported/);
+  });
+
   it("rejects invalid stage metadata, descriptors, argv, and resource limits", async () => {
     const invalidStages = [
       { ...echoStage, name: "" },
