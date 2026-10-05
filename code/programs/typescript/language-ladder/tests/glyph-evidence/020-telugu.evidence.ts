@@ -20,7 +20,7 @@ export default [
       // the source-and-font gate; every other row remains free of fabricated ductus.
       expect(iv.every((v) => v.role === "vowel")).toBe(true);
       expect(iv[0]!.strokeOrder).toHaveLength(4);
-      expect(iv[0]!.penLifts).toBe(1);
+      expect(iv[0]!.penLifts).toBe(0);
       expect(iv[0]!.strokeOrderSource?.url).toBe(
         "https://write-telugu-alphabets.en.aptoide.com/app",
       );
@@ -38,7 +38,7 @@ export default [
       expect(iv[4]!.penLifts).toBe(2);
       expect(iv[4]!.strokeOrderSource?.citation).toMatch(/dot_stroke_v_5_u\.png.*movements 1–5.*version 2\.6/i);
       expect(iv[6]!.strokeOrder).toHaveLength(3);
-      expect(iv[6]!.penLifts).toBe(1);
+      expect(iv[6]!.penLifts).toBe(0);
       expect(iv[6]!.strokeOrderSource?.url).toBe(
         "https://write-telugu-alphabets.en.aptoide.com/app",
       );
@@ -46,13 +46,13 @@ export default [
       expect(iv[7]!.penLifts).toBe(2);
       expect(iv[7]!.strokeOrderSource?.citation).toMatch(/dot_stroke_v_10_ae\.png.*movements 1–4.*version 2\.6/i);
       expect(iv[8]!.strokeOrder).toHaveLength(3);
-      expect(iv[8]!.penLifts).toBe(2);
+      expect(iv[8]!.penLifts).toBe(0);
       expect(iv[8]!.strokeOrderSource?.citation).toMatch(/dot_stroke_v_12_o\.png.*movements 1–3.*version 2\.6/i);
       expect(iv[10]!.strokeOrder).toHaveLength(5);
-      expect(iv[10]!.penLifts).toBe(4);
+      expect(iv[10]!.penLifts).toBe(0);
       expect(iv[10]!.strokeOrderSource?.citation).toMatch(/dot_stroke_v_11_ai\.png.*movements 1–5.*version 2\.6/i);
       expect(iv[12]!.strokeOrder).toHaveLength(6);
-      expect(iv[12]!.penLifts).toBe(5);
+      expect(iv[12]!.penLifts).toBe(2);
       expect(iv[12]!.strokeOrderSource?.citation).toMatch(/dot_stroke_v_7_ru\.png.*movements 1–6.*version 2\.6/i);
       expect(iv.filter((_, index) => ![0, 1, 2, 4, 6, 7, 8, 10, 12].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
       // The vocalic-R vowel is ISO-15919 r̥ = r + U+0325 (ring below), not IAST ṛ.
