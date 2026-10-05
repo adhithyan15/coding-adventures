@@ -401,9 +401,23 @@ describe("stroke ownership migration baseline", () => {
     }).toEqual({
       keys: 469,
       keyHash:
-        "a94dcc62ecb888f6d99cc3af625b2bf9ad784a37b2072f2bea505a0131281b3a",
+        "91a70905663b348566b44730bf2706c94d9163cf2455f89f0aa1732039a31f73",
       nonTamilDataHash:
-        "cff5d940a5f955213201d67e741f96de182fbf4309d36ea0fc98088ed41c77ad",
+        "80e443a1efd9f8f26a42c2a6b939dd3300ad03748c2352fe6b133bf42e4e3502",
+      //
+      // Kannada base consonants ನ (U+0CA8), ತ (U+0CA4), ದ (U+0CA6), ರ (U+0CB0),
+      // ಕ (U+0C95) and ಗ (U+0C97), taught since chapters 1 to 7 but never
+      // given a cited stroke-order source, now cite Gopala Krishna A's Commons
+      // animations and gain a ductus each. Keys move 439 -> 445 and Kannada
+      // 13 -> 19, with the ordered key hash and the non-Tamil data hash,
+      // measured after the last caption was settled; Tamil and both
+      // shared-identity values remain unchanged.
+    }).toEqual({
+      keys: 445,
+      keyHash:
+        "3404f8e3c1964343663b33922f0b4ad8bcc7a48e2782c0733cdefd432f4d4c1f",
+      nonTamilDataHash:
+        "978695b9ff8b5206471abf53cd001033aabc59c9171b64383780633ca301984a",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -414,8 +428,8 @@ describe("stroke ownership migration baseline", () => {
         devanagari: 44,
         gujarati: 44,
         hebrew: 22,
-        japanese: 80,
-        kannada: 13,
+        japanese: 50,
+        kannada: 19,
         malayalam: 14,
         "perso-arabic": 24,
         tamil: 29,

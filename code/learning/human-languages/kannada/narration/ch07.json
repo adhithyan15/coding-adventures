@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Counting One to Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:76f24bef39fedb73",
+  "sourceHash": "fnv1a64:8ed2c777420350e0",
   "lessons": [
     {
       "id": "KA-C07-ondu",
@@ -385,7 +385,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:473d8a0fbceb6962",
+      "sourceHash": "fnv1a64:c1e33ea663b08e90",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -464,15 +464,31 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ರ — copy what you see",
+          "title": "Writing: ರ",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ರ (ra) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. start at the upper left and go down the left side and round the base."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. without lifting, climb the right side and close the bowl leftward along the top."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift, then draw the top bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "4. without lifting, curl up into the hook."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The round bowl is one run that closes along the top; the curled bar comes after the only lift. It is ದ without the point in the base."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-ra.gif', 36 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0."
             }
           ]
         },
@@ -900,7 +916,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f606edb192de362c",
+      "sourceHash": "fnv1a64:24615f244e05f184",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -975,15 +991,39 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ಕ — copy what you see",
+          "title": "Writing: ಕ",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಕ (ka) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. start at the upper left and go down the left side and round the base."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. without lifting, climb the right side and close the bowl leftward along the top."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift, then draw the lower bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift, then draw the short link up from the lower bar."
+            },
+            {
+              "kind": "speech",
+              "text": "5. lift, then draw the upper bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "6. without lifting, curl up into the hook."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. The round bowl comes first, then the lower bar, then the short link that rises from it, then the upper bar with its hook, each one started fresh."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-ka.gif', 44 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0."
             }
           ]
         },

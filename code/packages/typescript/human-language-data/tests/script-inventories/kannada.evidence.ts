@@ -306,5 +306,134 @@ export const scriptInventoryEvidence = {
     );
     expect(missingByScript.get("kannada.json")?.has("ಈ") ?? false).toBe(false);
     expect(affected.get("ಈ") ?? 0).toBe(0);
+    // Base consonants ನ, ತ, ದ, ರ, ಕ and ಗ are bare-consonant letter rows
+    // (role "syllable"). Each cites one Gopala Krishna A animation; ತ and ದ
+    // are filed under the uploader's slugs "tha" and "dha", which the
+    // variation must say so a later edit cannot quietly cite ಟ's or ಡ's file.
+    const kannadaConsonantNa = scripts.kannada!.letters.find(
+      (entry) => entry.glyph === "ನ",
+    )!;
+    expect(kannadaConsonantNa.role).toBe("syllable");
+    expect(kannadaConsonantNa.penLifts).toBe(1);
+    expect(kannadaConsonantNa.strokeOrder).toEqual([
+      "rise from the lower tail around the left bowl",
+      "without lifting, slant down into the right bowl",
+      "without lifting, climb the right side to the top bar",
+      "lift, then draw the top bar from left to right",
+      "without lifting, curl up into the hook",
+    ]);
+    expect(kannadaConsonantNa.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-na.gif",
+    );
+    expect(kannadaConsonantNa.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-na\.gif.*consonant ನ.*34 frames.*3\.4 seconds.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaConsonantNa.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*two pen-down runs.*lower tail.*left bowl.*right bowl.*one lift.*top bar.*hook.*mirror copy.*239×215.*Noto Sans Kannada.*one-lift order/i,
+    );
+    const kannadaConsonantTa = scripts.kannada!.letters.find(
+      (entry) => entry.glyph === "ತ",
+    )!;
+    expect(kannadaConsonantTa.role).toBe("syllable");
+    expect(kannadaConsonantTa.penLifts).toBe(1);
+    expect(kannadaConsonantTa.strokeOrder).toEqual([
+      "start at the upper-left end and sweep down around the broad bowl and up its right side",
+      "without lifting, turn left over the top and curl down into the inner loop",
+      "without lifting, close the small loop and rise to the top bar",
+      "lift, then draw the top bar from left to right",
+      "without lifting, curl up into the hook",
+    ]);
+    expect(kannadaConsonantTa.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-tha.gif",
+    );
+    expect(kannadaConsonantTa.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-tha\.gif.*consonant ತ.*43 frames.*4\.3 seconds.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaConsonantTa.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*slug "tha".*dental ತ \(U\+0CA4\).*ಟ and ಠ.*two pen-down runs.*broad bowl.*inner loop.*one lift.*top bar.*hook.*mirror copy.*209×186.*Noto Sans Kannada.*one-lift order/i,
+    );
+    const kannadaConsonantDa = scripts.kannada!.letters.find(
+      (entry) => entry.glyph === "ದ",
+    )!;
+    expect(kannadaConsonantDa.role).toBe("syllable");
+    expect(kannadaConsonantDa.penLifts).toBe(1);
+    expect(kannadaConsonantDa.strokeOrder).toEqual([
+      "start at the upper left and go down the left side into the left lobe, rising into the middle point",
+      "without lifting, drop from the point around the right lobe and climb the right side",
+      "without lifting, close the bowl leftward along the top",
+      "lift, then draw the top bar from left to right",
+      "without lifting, curl up into the hook",
+    ]);
+    expect(kannadaConsonantDa.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-dha.gif",
+    );
+    expect(kannadaConsonantDa.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-dha\.gif.*consonant ದ.*39 frames.*3\.9 seconds.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaConsonantDa.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*slug "dha".*dental ದ \(U\+0CA6\).*ಡ and ಢ.*two pen-down runs.*left lobe.*middle point.*right lobe.*one lift.*top bar.*hook.*mirror copy.*198×143.*Noto Sans Kannada.*one-lift order/i,
+    );
+    const kannadaConsonantRa = scripts.kannada!.letters.find(
+      (entry) => entry.glyph === "ರ",
+    )!;
+    expect(kannadaConsonantRa.role).toBe("syllable");
+    expect(kannadaConsonantRa.penLifts).toBe(1);
+    expect(kannadaConsonantRa.strokeOrder).toEqual([
+      "start at the upper left and go down the left side and round the base",
+      "without lifting, climb the right side and close the bowl leftward along the top",
+      "lift, then draw the top bar from left to right",
+      "without lifting, curl up into the hook",
+    ]);
+    expect(kannadaConsonantRa.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ra.gif",
+    );
+    expect(kannadaConsonantRa.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-ra\.gif.*consonant ರ.*36 frames.*3\.6 seconds.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaConsonantRa.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*two pen-down runs.*upper left.*base.*right side.*across the top.*one lift.*top bar.*hook.*mirror copy.*230×183.*Noto Sans Kannada.*one-lift order/i,
+    );
+    const kannadaConsonantKa = scripts.kannada!.letters.find(
+      (entry) => entry.glyph === "ಕ",
+    )!;
+    expect(kannadaConsonantKa.role).toBe("syllable");
+    expect(kannadaConsonantKa.penLifts).toBe(3);
+    expect(kannadaConsonantKa.strokeOrder).toEqual([
+      "start at the upper left and go down the left side and round the base",
+      "without lifting, climb the right side and close the bowl leftward along the top",
+      "lift, then draw the lower bar from left to right",
+      "lift, then draw the short link up from the lower bar",
+      "lift, then draw the upper bar from left to right",
+      "without lifting, curl up into the hook",
+    ]);
+    expect(kannadaConsonantKa.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ka.gif",
+    );
+    expect(kannadaConsonantKa.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-ka\.gif.*consonant ಕ.*44 frames.*4\.4 seconds.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaConsonantKa.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*four pen-down runs.*round bowl.*lower bar.*second lift.*short link.*third lift.*upper bar.*hook.*mirror copy.*245×192.*Noto Sans Kannada.*straight waist.*three-lift order/i,
+    );
+    const kannadaConsonantGa = scripts.kannada!.letters.find(
+      (entry) => entry.glyph === "ಗ",
+    )!;
+    expect(kannadaConsonantGa.role).toBe("syllable");
+    expect(kannadaConsonantGa.penLifts).toBe(1);
+    expect(kannadaConsonantGa.strokeOrder).toEqual([
+      "climb the left leg from its foot into the arch",
+      "without lifting, arch over and go down the right leg to its foot",
+      "lift, then draw the top bar from left to right",
+      "without lifting, curl up into the hook",
+    ]);
+    expect(kannadaConsonantGa.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ga.gif",
+    );
+    expect(kannadaConsonantGa.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-ga\.gif.*consonant ಗ.*37 frames.*3\.7 seconds.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaConsonantGa.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*two pen-down runs.*left leg.*arch.*right leg.*one lift.*top bar.*hook.*mirror copy.*227×224.*Noto Sans Kannada.*one-lift order/i,
+    );
   },
 };

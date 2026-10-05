@@ -27,6 +27,12 @@ const KANNADA_OO = DUCTUS[ductusKey("kannada", "ಓ")];
 const KANNADA_AI = DUCTUS[ductusKey("kannada", "ಐ")];
 const KANNADA_VOCALIC_R = DUCTUS[ductusKey("kannada", "ಋ")];
 const KANNADA_VISARGA = DUCTUS[ductusKey("kannada", "ಃ")];
+const KANNADA_NA = DUCTUS[ductusKey("kannada", "ನ")];
+const KANNADA_TA = DUCTUS[ductusKey("kannada", "ತ")];
+const KANNADA_DA = DUCTUS[ductusKey("kannada", "ದ")];
+const KANNADA_RA = DUCTUS[ductusKey("kannada", "ರ")];
+const KANNADA_KA = DUCTUS[ductusKey("kannada", "ಕ")];
+const KANNADA_GA = DUCTUS[ductusKey("kannada", "ಗ")];
 
 const OWNER_SCRIPTS = new Set(["kannada"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -264,6 +270,165 @@ describe("handwriting ductus", () => {
       "https://commons.wikimedia.org/wiki/File:Kannada-Alphabet-Aha.gif",
     );
     expect(verifiedLetterFont("ಃ", KANNADA_VISARGA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ನ climbs from its tail through both bowls, then lifts once for the hooked bar", () => {
+    expect(penLifts(KANNADA_NA)).toBe(1);
+    expect(KANNADA_NA.strokes).toHaveLength(2);
+    expect(
+      KANNADA_NA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "rise from the tail around the left bowl",
+        "slant down into the right bowl",
+        "climb the right side to the top bar",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+    ]);
+    expect(KANNADA_NA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-na.gif",
+    );
+    expect(verifiedLetterFont("ನ", KANNADA_NA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ತ carries the bowl into its inner loop, then lifts once for the hooked bar", () => {
+    expect(penLifts(KANNADA_TA)).toBe(1);
+    expect(KANNADA_TA.strokes).toHaveLength(2);
+    expect(
+      KANNADA_TA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "sweep down and around the broad bowl",
+        "turn left over the top into the inner loop",
+        "close the small loop and rise to the top bar",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+    ]);
+    expect(KANNADA_TA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-tha.gif",
+    );
+    expect(verifiedLetterFont("ತ", KANNADA_TA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ದ closes its pointed bowl in one run, then lifts once for the hooked bar", () => {
+    expect(penLifts(KANNADA_DA)).toBe(1);
+    expect(KANNADA_DA.strokes).toHaveLength(2);
+    expect(
+      KANNADA_DA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "go down the left side into the left lobe",
+        "drop from the point around the right lobe",
+        "close the bowl leftward along the top",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+    ]);
+    expect(KANNADA_DA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-dha.gif",
+    );
+    expect(verifiedLetterFont("ದ", KANNADA_DA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ರ closes its round bowl in one run, then lifts once for the hooked bar", () => {
+    expect(penLifts(KANNADA_RA)).toBe(1);
+    expect(KANNADA_RA.strokes).toHaveLength(2);
+    expect(
+      KANNADA_RA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "go down the left side and round the base",
+        "climb the right side and close leftward",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+    ]);
+    expect(KANNADA_RA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ra.gif",
+    );
+    expect(verifiedLetterFont("ರ", KANNADA_RA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಕ draws bowl, lower bar, link, and hooked upper bar in four runs", () => {
+    expect(penLifts(KANNADA_KA)).toBe(3);
+    expect(KANNADA_KA.strokes).toHaveLength(4);
+    expect(
+      KANNADA_KA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "go down the left side and round the base",
+        "climb the right side and close leftward",
+      ],
+      [
+        "lift, then draw the lower bar rightward",
+      ],
+      [
+        "lift, then draw the short link upward",
+      ],
+      [
+        "lift, then draw the upper bar rightward",
+        "curl up into the hook",
+      ],
+    ]);
+    expect(KANNADA_KA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ka.gif",
+    );
+    expect(verifiedLetterFont("ಕ", KANNADA_KA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಗ carries both legs over the arch, then lifts once for the hooked bar", () => {
+    expect(penLifts(KANNADA_GA)).toBe(1);
+    expect(KANNADA_GA.strokes).toHaveLength(2);
+    expect(
+      KANNADA_GA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "climb the left leg into the arch",
+        "arch over and go down the right leg",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+    ]);
+    expect(KANNADA_GA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ga.gif",
+    );
+    expect(verifiedLetterFont("ಗ", KANNADA_GA.source.url)).toBe(
       "_fonts/NotoSansKannada-Static.ttf",
     );
   });

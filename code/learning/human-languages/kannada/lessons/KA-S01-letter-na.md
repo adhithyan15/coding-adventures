@@ -50,17 +50,22 @@ You already say these, and every one of them has ನ somewhere inside it:
 - **ನಮಸ್ಕಾರ** *namaskāra* — hello / greetings (namaskāra — "a making of a bow")
 - **ಧನ್ಯವಾದ** *dhanyavāda* — thank you (dhanyavāda — "an utterance of 'worthy'")
 
-## Writing: ನ — copy what you see
+## Writing: ನ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-01] -->
 
-Put your pen on ನ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** rise from the lower tail around the left bowl
+- **2.** without lifting, slant down into the right bowl
+- **3.** without lifting, climb the right side to the top bar
+- **4.** lift, then draw the top bar from left to right
+- **5.** without lifting, curl up into the hook
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 1.** The body is one run, from the tail at the bottom up to the
+right side; the curled bar on top comes after the only lift.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-na.gif', 34 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-01] -->
