@@ -3548,6 +3548,7 @@ class PureDomainValidationTests(unittest.TestCase):
             FIXTURE_ROOT / "repository-source-input-boundary.json"
         )
         shared_path = "code/packages/rust/Cargo.toml"
+        evidence = {}
 
         for consumer in ("conduit", "sha256-native"):
             source_cases = {}
@@ -3571,7 +3572,10 @@ class PureDomainValidationTests(unittest.TestCase):
                         source["expected"]["result"]["files"],
                     )
                     self.assertEqual(
-                        [item["path"] for item in source["expected"]["result"]["files"]],
+                        [
+                            item["path"]
+                            for item in source["expected"]["result"]["files"]
+                        ],
                         [shared_path],
                     )
                     runner.validate_case_document(source, **self._schema_args())
@@ -3585,7 +3589,9 @@ class PureDomainValidationTests(unittest.TestCase):
                             hashing["expected"]["result"]["combined_digest"],
                         ),
                     )
-                    self.assertIn(shared_path, hashing["input"]["options"]["include_paths"])
+                    self.assertIn(
+                        shared_path, hashing["input"]["options"]["include_paths"]
+                    )
                     runner.validate_case_document(hashing, **self._schema_args())
                 source_cases[snapshot] = source
                 hash_cases[snapshot] = hashing
@@ -3594,6 +3600,15 @@ class PureDomainValidationTests(unittest.TestCase):
             after_source = source_cases["after"]
             before_hashing = hash_cases["before"]
             after_hashing = hash_cases["after"]
+            local_path = f"code/packages/swift/{consumer}/Package.swift"
+            self.assertEqual(
+                before_hashing["input"]["options"]["include_paths"],
+                after_hashing["input"]["options"]["include_paths"],
+            )
+            self.assertEqual(
+                set(before_hashing["input"]["options"]["include_paths"]),
+                {shared_path, local_path},
+            )
             self.assertEqual(
                 before_source["input"]["options"]["candidates"][0]["path"], shared_path
             )
@@ -3618,8 +3633,16 @@ class PureDomainValidationTests(unittest.TestCase):
                 [path for path in after_files if path != shared_path],
             )
             self.assertEqual(
-                {path: content for path, content in before_files.items() if path != shared_path},
-                {path: content for path, content in after_files.items() if path != shared_path},
+                {
+                    path: content
+                    for path, content in before_files.items()
+                    if path != shared_path
+                },
+                {
+                    path: content
+                    for path, content in after_files.items()
+                    if path != shared_path
+                },
             )
             self.assertNotEqual(before_files[shared_path], after_files[shared_path])
             self.assertEqual(
@@ -3638,10 +3661,50 @@ class PureDomainValidationTests(unittest.TestCase):
                 before_hashing["expected"]["result"]["dependencies_digest"],
                 after_hashing["expected"]["result"]["dependencies_digest"],
             )
+            self.assertEqual(
+                after_hashing["input"]["options"]["prior_cache"],
+                {
+                    "state": "record",
+                    "combined_digest": before_hashing["expected"]["result"][
+                        "combined_digest"
+                    ],
+                    "status": "success",
+                },
+            )
+            self.assertEqual(
+                after_hashing["expected"]["result"]["cache_status"], "miss"
+            )
             for field in ("package_digest", "combined_digest"):
                 self.assertNotEqual(
                     before_hashing["expected"]["result"][field],
                     after_hashing["expected"]["result"][field],
+                )
+            evidence[consumer] = (source_cases, hash_cases)
+
+        conduit_sources, conduit_hashes = evidence["conduit"]
+        sha256_sources, sha256_hashes = evidence["sha256-native"]
+        for snapshot in ("before", "after"):
+            self.assertEqual(
+                conduit_sources[snapshot]["input"]["options"]["candidates"][0],
+                sha256_sources[snapshot]["input"]["options"]["candidates"][0],
+            )
+            self.assertEqual(
+                conduit_sources[snapshot]["expected"]["result"]["files"],
+                sha256_sources[snapshot]["expected"]["result"]["files"],
+            )
+            for hashing in (conduit_hashes[snapshot], sha256_hashes[snapshot]):
+                shared_file = next(
+                    item
+                    for item in hashing["workspace"]["files"]
+                    if item["path"] == shared_path
+                )
+                self.assertEqual(
+                    hashlib.sha256(
+                        shared_file["content_utf8"].encode("utf-8")
+                    ).hexdigest(),
+                    conduit_sources[snapshot]["expected"]["result"]["files"][0][
+                        "digest"
+                    ],
                 )
 
     def test_dependency_cycles_are_rejected_without_recursion(self) -> None:

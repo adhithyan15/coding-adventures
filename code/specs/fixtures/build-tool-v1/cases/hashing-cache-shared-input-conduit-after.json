@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "hashing-cache/shared-input-conduit-after",
+  "domain": "hashing_cache",
+  "summary": "Conduit's unchanged local and dependency inputs cannot hide a changed shared manifest from package hashing.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["hashing_cache"],
+  "workspace": {"files": [
+    {"path": "code/packages/swift/conduit/Package.swift", "content_utf8": "// conduit stable\n"},
+    {"path": "code/packages/rust/Cargo.toml", "content_utf8": "workspace = \"updated\"\n"}
+  ]},
+  "input": {
+    "operation": "hashing_cache",
+    "options": {
+      "algorithm": "sha256-v1",
+      "package": "swift/conduit",
+      "include_paths": ["code/packages/swift/conduit/Package.swift", "code/packages/rust/Cargo.toml"],
+      "dependency_digests": [{"package": "swift/base", "digest": "0000000000000000000000000000000000000000000000000000000000000000"}],
+      "dependents": ["swift/app"],
+      "prior_cache": {"state": "record", "combined_digest": "f862b1a871297ef44bd62a652fbd3ee15f68c34e967663a6a182c9e6167be4f9", "status": "success"}
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "hashing-cache/shared-input-conduit-after",
+    "domain": "hashing_cache",
+    "outcome": "ok",
+    "result": {
+      "package_digest": "84b7e8233229947b6c6783fbb13f92a28faadf4bd204c02f00dcf274fa294e15",
+      "dependencies_digest": "a269dc93b72686de5270ccbbc41982bb681a91e84a8f4e433b6620a23415044b",
+      "combined_digest": "5135765d8eabfa02422dc479f497742d3da2e9502ac94898ba8233bed65dd89a",
+      "cache_status": "miss",
+      "invalidated_packages": ["swift/app", "swift/conduit"]
+    },
+    "diagnostics": []
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

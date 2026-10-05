@@ -2,6 +2,12 @@
 
 ## 2026-10-05
 
+- Added eight process-free before/after source-collection and hashing/cache
+  cases for two independent Swift consumers of one exact Rust workspace
+  manifest. Both source and package digests change with only that shared input;
+  dependency digests stay fixed and the old successful cache records miss.
+  The closed corpus now contains 175 cases, with 14 repository-boundary
+  source-collection cases. No registry, adapter, or host authority changed.
 - Added a digest-pinned, process-free diff-selection case proving one exact
   Rust workspace manifest change selects both declared Swift consumers but not
   an unregistered peer, before dependent and prerequisite closure. The neutral

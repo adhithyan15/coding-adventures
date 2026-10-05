@@ -39,7 +39,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 167-case bootstrap corpus covers every process-free v1 domain:
+The 175-case bootstrap corpus covers every process-free v1 domain:
 
 - validated CI gate selection with exact package intersection, path and
   globstar matching, explicit false verdicts, deterministic output names,
@@ -81,7 +81,12 @@ The 167-case bootstrap corpus covers every process-free v1 domain:
   declared match-work accounting with Unicode-scalar lengths and recursive
   BUILD-front exemptions;
 - framed SHA-256 hashing over the caller-supplied, deduplicated union of local
-  and repository-boundary inputs, plus hit, miss, and corrupt-cache recovery;
+  and repository-boundary inputs, plus hit, miss, and corrupt-cache recovery.
+  Eight paired source-collection and hashing/cache cases additionally prove
+  that an edit to one exact Rust workspace manifest changes the source and
+  package digests of both registered Swift consumers, while their local files
+  and dependency digests stay fixed and their successful prior cache records
+  become stale;
 - case-sensitive source collection across the complete generated-artifact
   registry and the closed 23-language source-input registry, including all
   five BUILD fronts, root-only capability and package metadata, reviewed
@@ -104,7 +109,7 @@ The 167-case bootstrap corpus covers every process-free v1 domain:
   Haskell, Lua, and Python shared inputs; Rust workspace, Cargo, and Windows-
   launcher inputs; exact TypeScript base-config consumers; five shared Starlark
   rules; reviewed human-language, neural-learning, required-capability, and
-  cross-language workspace inputs; and bounded VisiCalc sibling inputs. Ten
+  cross-language workspace inputs; and bounded VisiCalc sibling inputs. Fourteen
   boundary cases prove exact, descendant, exclusion,
   shared-ancestor, generated-pruning, cross-package, cross-language, direct-
   BUILD-input, Starlark-load, and inert symlink/reparse behavior without
