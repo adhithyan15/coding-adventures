@@ -110,7 +110,10 @@ uses the frozen local bootstrap to enforce every reviewed npm lock without
 dependency lifecycle scripts before explicitly building packages and products,
 and retains only the bounded
 `dist/.forme-web-quality.json` summary; browser phases have finite deadlines and
-fresh processes, and the required CI gate waits for this lane.
+fresh processes. A failed Chrome launch reports at most 1,024 printable
+characters from a bounded, no-follow read of its startup log so hosted-runner
+failures remain diagnosable without retaining raw browser traces. The required
+CI gate waits for this lane.
 
 The installed `forme` launcher registers `tsx` for TypeScript-first packages;
 the site uses `tsx` directly only for its post-build verifier and unit tests.

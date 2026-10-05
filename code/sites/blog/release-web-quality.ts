@@ -12,6 +12,7 @@ import { constants as fsConstants } from "node:fs";
 import { createServer, type Server } from "node:http";
 import { lstat, open, readFile, realpath, stat } from "node:fs/promises";
 import { dirname, extname, isAbsolute, relative, resolve, sep } from "node:path";
+import { createConnection } from "node:net";
 import { fileURLToPath } from "node:url";
 import { promisify, types } from "node:util";
 import { Launcher } from "chrome-launcher";
@@ -41,6 +42,7 @@ const BROWSER_VERSION_TIMEOUT_MS = 10_000;
 const BROWSER_RETIREMENT_TIMEOUT_MS = 10_000;
 const CHROME_CONNECTION_POLL_MS = 250;
 const CHROME_CONNECTION_RETRIES = 120;
+const MAX_CHROME_STARTUP_LOG_BYTES = 8 * 1024;
 const MAX_SERVED_BYTES = 2 * 1024 * 1024;
 const MAX_ERROR_CHARACTERS = 1_024;
 
@@ -176,27 +178,24 @@ async function main(): Promise<void> {
 }
 
 async function runLighthouse(url: string, chromePath: string): Promise<unknown> {
-  const chrome = new Launcher({
-    chromePath,
-    connectionPollInterval: CHROME_CONNECTION_POLL_MS,
-    maxConnectionRetries: CHROME_CONNECTION_RETRIES,
-    chromeFlags: chromeFlagsFor(url),
-    handleSIGINT: false,
-    logLevel: "silent",
-  });
+  const chrome = createBoundedChromeLauncher(chromePath, url);
   try {
     await chrome.launch();
     if (chrome.port === undefined || chrome.chromeProcess === undefined) {
       throw new Error("Chrome launcher returned no owned process or debugging port");
     }
   } catch (error) {
+    const startupDiagnostic = await readChromeStartupDiagnostic(chrome.userDataDir);
     try {
       await retireChrome(chrome);
     } catch (retirementError) {
-      throw new AggregateError(
-        [error, retirementError],
-        "Chrome startup failed and its process could not be retired",
+      throw new Error(
+        `Chrome startup failed: ${boundedError(error)}; retirement failed: ${boundedError(retirementError)}` +
+        (startupDiagnostic === null ? "" : `; Chrome stderr: ${startupDiagnostic}`),
       );
+    }
+    if (startupDiagnostic !== null) {
+      throw new Error(`${boundedError(error)}; Chrome stderr: ${startupDiagnostic}`);
     }
     throw error;
   }
@@ -224,6 +223,61 @@ async function runLighthouse(url: string, chromePath: string): Promise<unknown> 
   } finally {
     await retireChrome(chrome);
   }
+}
+
+export function createBoundedChromeLauncher(chromePath: string, url: string): Launcher {
+  return new BoundedChromeLauncher({
+    chromePath,
+    connectionPollInterval: CHROME_CONNECTION_POLL_MS,
+    maxConnectionRetries: CHROME_CONNECTION_RETRIES,
+    chromeFlags: chromeFlagsFor(url),
+    handleSIGINT: false,
+    logLevel: "silent",
+  });
+}
+
+class BoundedChromeLauncher extends Launcher {
+  override async waitUntilReady(): Promise<void> {
+    for (let retry = 0; retry <= CHROME_CONNECTION_RETRIES; retry += 1) {
+      if (this.port === undefined || this.port === 0) {
+        const startupLog = await readChromeStartupLogPrefix(this.userDataDir);
+        const match = startupLog?.match(/DevTools listening on ws:\/\/127\.0\.0\.1:(\d+)\//);
+        const discoveredPort = match?.[1] === undefined ? 0 : Number(match[1]);
+        if (Number.isInteger(discoveredPort) && discoveredPort > 0 && discoveredPort <= 65_535) {
+          this.port = discoveredPort;
+        }
+      }
+      if (this.port !== undefined && this.port > 0 && await debuggerPortReady(this.port)) return;
+      if (
+        this.chromeProcess !== undefined &&
+        (this.chromeProcess.exitCode !== null || this.chromeProcess.signalCode !== null)
+      ) {
+        break;
+      }
+      if (retry < CHROME_CONNECTION_RETRIES) await delay(CHROME_CONNECTION_POLL_MS);
+    }
+    throw new Error("Chrome exited before exposing a reachable debugging port");
+  }
+}
+
+function debuggerPortReady(port: number): Promise<boolean> {
+  return new Promise<boolean>(accept => {
+    const socket = createConnection({ host: "127.0.0.1", port });
+    let settled = false;
+    const finish = (ready: boolean): void => {
+      if (settled) return;
+      settled = true;
+      socket.destroy();
+      accept(ready);
+    };
+    socket.once("connect", () => finish(true));
+    socket.once("error", () => finish(false));
+    socket.setTimeout(CHROME_CONNECTION_POLL_MS, () => finish(false));
+  });
+}
+
+function delay(milliseconds: number): Promise<void> {
+  return new Promise<void>(accept => setTimeout(accept, milliseconds));
 }
 
 export function chromeFlagsFor(url: string): string[] {
@@ -427,6 +481,81 @@ export function boundedError(error: unknown): string {
     return raw;
   }
   return raw.replace(/[^\x20-\x7E]+/g, "?").slice(0, MAX_ERROR_CHARACTERS);
+}
+
+export async function readChromeStartupDiagnostic(
+  userDataDir: string | undefined,
+): Promise<string | null> {
+  const raw = await readChromeStartupLogPrefix(userDataDir);
+  if (raw === null) return null;
+  const diagnostic = boundedError(raw).trim();
+  return diagnostic === "" ? null : diagnostic;
+}
+
+async function readChromeStartupLogPrefix(
+  userDataDir: string | undefined,
+): Promise<string | null> {
+  if (userDataDir === undefined || !isAbsolute(userDataDir)) return null;
+  try {
+    return await readBoundedPrefixUtf8(
+      resolve(userDataDir, "chrome-err.log"),
+      userDataDir,
+      MAX_CHROME_STARTUP_LOG_BYTES,
+    );
+  } catch {
+    return null;
+  }
+}
+
+async function readBoundedPrefixUtf8(
+  path: string,
+  allowedRoot: string,
+  maximumBytes: number,
+): Promise<string> {
+  const canonicalRoot = await realpath(allowedRoot);
+  const lexicalRoot = resolve(allowedRoot);
+  const candidate = resolve(path);
+  if (!contained(lexicalRoot, candidate)) throw new Error("startup log escaped its root");
+  const noFollow = typeof fsConstants.O_NOFOLLOW === "number" ? fsConstants.O_NOFOLLOW : 0;
+  const handle = await open(
+    candidate,
+    fsConstants.O_RDONLY | fsConstants.O_NONBLOCK | noFollow,
+  );
+  try {
+    const before = await handle.stat();
+    const pathInfo = await lstat(candidate);
+    const canonicalPath = await realpath(candidate);
+    if (
+      !contained(canonicalRoot, canonicalPath) ||
+      !before.isFile() ||
+      !pathInfo.isFile() ||
+      before.nlink !== 1 ||
+      pathInfo.nlink !== 1 ||
+      before.dev !== pathInfo.dev ||
+      before.ino !== pathInfo.ino
+    ) {
+      throw new Error("startup log must be a regular single-link file");
+    }
+    const bytes = Buffer.alloc(maximumBytes);
+    let offset = 0;
+    while (offset < bytes.byteLength) {
+      const result = await handle.read(bytes, offset, bytes.byteLength - offset, offset);
+      if (result.bytesRead === 0) break;
+      offset += result.bytesRead;
+    }
+    const after = await handle.stat();
+    if (
+      !after.isFile() ||
+      after.nlink !== 1 ||
+      after.dev !== before.dev ||
+      after.ino !== before.ino
+    ) {
+      throw new Error("startup log changed identity while being read");
+    }
+    return bytes.subarray(0, offset).toString("utf8");
+  } finally {
+    await handle.close();
+  }
 }
 
 function boundDiagnostics(diagnostics: readonly string[]): readonly string[] {
