@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "The People Around You",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8862df20bf81947f",
+  "sourceHash": "fnv1a64:014c154bada4fe81",
   "lessons": [
     {
       "id": "HI-C39-dost",
@@ -671,7 +671,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0c0a05fb8824b328",
+      "sourceHash": "fnv1a64:7238a7531d77d476",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -830,7 +830,7 @@
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 5. As many as ओ, and more than any other — take it slowly."
+              "text": "Pen lifts: 5. One more than ओ, and more than any other — take it slowly."
             },
             {
               "kind": "speech",
@@ -899,7 +899,7 @@
             },
             {
               "kind": "speech",
-              "text": "What sound is औ? (au.) What is its sitting form? (◌ौ.) How many pen lifts does it take? (Five — as many as ओ, the most in the book.)"
+              "text": "What sound is औ? (au.) What is its sitting form? (◌ौ.) How many pen lifts does it take? (Five — one more than ओ, the most in the book.)"
             }
           ]
         }

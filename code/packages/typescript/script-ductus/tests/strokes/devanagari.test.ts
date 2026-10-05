@@ -181,38 +181,50 @@ describe("handwriting ductus", () => {
     );
   });
 
-  it("Devanagari अ joins its left body before the shoulder, stem, and headline", () => {
+  it("Devanagari अ joins its left body, then runs the shoulder into the right stem before the headline", () => {
     expect(DEVANAGARI_A.script).toBe("devanagari");
-    expect(penLifts(DEVANAGARI_A)).toBe(3);
-    expect(DEVANAGARI_A.strokes).toHaveLength(4);
+    expect(penLifts(DEVANAGARI_A)).toBe(2);
+    expect(DEVANAGARI_A.strokes).toHaveLength(3);
     expect(
       DEVANAGARI_A.strokes.map((stroke) => stroke.segments.length),
-    ).toEqual([2, 1, 1, 1]);
+    ).toEqual([2, 3, 1]);
     const upper = DEVANAGARI_A.strokes[0].segments[0].path;
     const lower = DEVANAGARI_A.strokes[0].segments[1].path;
     expect(upper.at(-1)).toEqual(lower[0]);
     expect(Math.min(...lower.map((point) => point.y))).toBeLessThan(lower[0].y);
-    const shoulder = penPath(DEVANAGARI_A.strokes[1]);
-    const stem = penPath(DEVANAGARI_A.strokes[2]);
-    const headline = penPath(DEVANAGARI_A.strokes[3]);
+    const [shoulder, climb, stem] = DEVANAGARI_A.strokes[1].segments.map(
+      (segment) => segment.path,
+    );
     expect(shoulder[0].x).toBeLessThan(shoulder.at(-1)!.x);
+    // The pen climbs the stem it is about to descend: the source's
+    // directions stay, only the lift goes.
+    expect(climb[0]).toEqual(shoulder.at(-1));
+    expect(climb.at(-1)!.y).toBeGreaterThan(climb[0].y);
+    expect(stem[0]).toEqual(climb.at(-1));
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    const headline = penPath(DEVANAGARI_A.strokes[2]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
-  it("Devanagari आ adds its trailing stem before spanning both stems with the headline", () => {
+  it("Devanagari आ runs its shoulder into the inner stem before the trailing stem and headline", () => {
     expect(DEVANAGARI_AA.script).toBe("devanagari");
-    expect(penLifts(DEVANAGARI_AA)).toBe(4);
-    expect(DEVANAGARI_AA.strokes).toHaveLength(5);
+    expect(penLifts(DEVANAGARI_AA)).toBe(3);
+    expect(DEVANAGARI_AA.strokes).toHaveLength(4);
     expect(
       DEVANAGARI_AA.strokes.map((stroke) => stroke.segments.length),
-    ).toEqual([2, 1, 1, 1, 1]);
-    expect(DEVANAGARI_AA.strokes.slice(0, 3).map(penPath)).toEqual(
-      DEVANAGARI_A.strokes.slice(0, 3).map(penPath),
+    ).toEqual([2, 3, 1, 1]);
+    // आ's body, shoulder, climb and inner stem are अ's own runs.
+    expect(DEVANAGARI_AA.strokes.slice(0, 2).map(penPath)).toEqual(
+      DEVANAGARI_A.strokes.slice(0, 2).map(penPath),
     );
-    const innerStem = penPath(DEVANAGARI_AA.strokes[2]);
-    const trailingStem = penPath(DEVANAGARI_AA.strokes[3]);
-    const headline = penPath(DEVANAGARI_AA.strokes[4]);
+    const [shoulder, climb, innerStem] = DEVANAGARI_AA.strokes[1].segments.map(
+      (segment) => segment.path,
+    );
+    expect(climb[0]).toEqual(shoulder.at(-1));
+    expect(climb.at(-1)!.y).toBeGreaterThan(climb[0].y);
+    expect(innerStem[0]).toEqual(climb.at(-1));
+    const trailingStem = penPath(DEVANAGARI_AA.strokes[2]);
+    const headline = penPath(DEVANAGARI_AA.strokes[3]);
     expect(innerStem[0].y).toBeGreaterThan(innerStem.at(-1)!.y);
     expect(trailingStem[0].y).toBeGreaterThan(trailingStem.at(-1)!.y);
     expect(trailingStem[0].x).toBeGreaterThan(innerStem[0].x);
@@ -356,20 +368,20 @@ describe("handwriting ductus", () => {
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
-  it("Devanagari ओ reuses the आ base before its upper arc and headline", () => {
+  it("Devanagari ओ reuses the joined आ base before its upper arc and headline", () => {
     expect(DEVANAGARI_O.script).toBe("devanagari");
-    expect(penLifts(DEVANAGARI_O)).toBe(5);
-    expect(DEVANAGARI_O.strokes).toHaveLength(6);
+    expect(penLifts(DEVANAGARI_O)).toBe(4);
+    expect(DEVANAGARI_O.strokes).toHaveLength(5);
     expect(
       DEVANAGARI_O.strokes.map((stroke) => stroke.segments.length),
-    ).toEqual([2, 1, 1, 1, 1, 1]);
-    expect(DEVANAGARI_O.strokes.slice(0, 4).map(penPath)).toEqual(
-      DEVANAGARI_AA.strokes.slice(0, 4).map(penPath),
+    ).toEqual([2, 3, 1, 1, 1]);
+    expect(DEVANAGARI_O.strokes.slice(0, 3).map(penPath)).toEqual(
+      DEVANAGARI_AA.strokes.slice(0, 3).map(penPath),
     );
-    const arc = penPath(DEVANAGARI_O.strokes[4]);
+    const arc = penPath(DEVANAGARI_O.strokes[3]);
     expect(arc.at(-1)!.x).toBeLessThan(arc[0].x);
     expect(Math.max(...arc.map((point) => point.y))).toBeGreaterThan(arc[0].y);
-    const headline = penPath(DEVANAGARI_O.strokes[5]);
+    const headline = penPath(DEVANAGARI_O.strokes[4]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -380,19 +392,20 @@ describe("handwriting ductus", () => {
     expect(
       DEVANAGARI_AU.strokes.map((stroke) => stroke.segments.length),
     ).toEqual([2, 3, 1, 1, 1, 1]);
-    // The joined left body and the trailing stem are आ's own runs. आ lifts
-    // between the shoulder and the inner stem; औ climbs the stem instead.
+    // The joined left body, the shoulder run and the trailing stem are आ's
+    // own runs: both climb the inner stem from the shoulder.
     expect(penPath(DEVANAGARI_AU.strokes[0])).toEqual(
       penPath(DEVANAGARI_AA.strokes[0]),
     );
     expect(penPath(DEVANAGARI_AU.strokes[2])).toEqual(
-      penPath(DEVANAGARI_AA.strokes[3]),
+      penPath(DEVANAGARI_AA.strokes[2]),
     );
     const [shoulder, climb, stem] = DEVANAGARI_AU.strokes[1].segments.map(
       (segment) => segment.path,
     );
-    expect(shoulder).toEqual(penPath(DEVANAGARI_AA.strokes[1]));
-    expect(stem).toEqual(penPath(DEVANAGARI_AA.strokes[2]));
+    expect(penPath(DEVANAGARI_AU.strokes[1])).toEqual(
+      penPath(DEVANAGARI_AA.strokes[1]),
+    );
     expect(climb[0]).toEqual(shoulder.at(-1));
     expect(climb.at(-1)).toEqual(stem[0]);
     expect(climb.at(-1)!.y).toBeGreaterThan(climb[0].y);
@@ -499,22 +512,28 @@ describe("handwriting ductus", () => {
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
-  it("Devanagari च joins its short bar to the rounded body before the right stem and headline", () => {
+  it("Devanagari च runs its short bar and rounded body into the right stem before the headline", () => {
     expect(DEVANAGARI_CA.script).toBe("devanagari");
-    expect(penLifts(DEVANAGARI_CA)).toBe(2);
-    expect(DEVANAGARI_CA.strokes).toHaveLength(3);
+    expect(penLifts(DEVANAGARI_CA)).toBe(1);
+    expect(DEVANAGARI_CA.strokes).toHaveLength(2);
     expect(
       DEVANAGARI_CA.strokes.map((stroke) => stroke.segments.length),
-    ).toEqual([1, 1, 1]);
-    const body = penPath(DEVANAGARI_CA.strokes[0]);
+    ).toEqual([3, 1]);
+    const [body, climb, stem] = DEVANAGARI_CA.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
     expect(body[0].x).toBeLessThan(body[5].x);
     expect(Math.min(...body.slice(6).map((point) => point.y))).toBeLessThan(
       body[0].y,
     );
     expect(body.at(-1)!.x).toBeGreaterThan(body[6].x);
-    const stem = penPath(DEVANAGARI_CA.strokes[1]);
+    // The pen climbs the stem it is about to descend: the source's
+    // directions stay, only the lift goes.
+    expect(climb[0]).toEqual(body.at(-1));
+    expect(climb.at(-1)!.y).toBeGreaterThan(climb[0].y);
+    expect(stem[0]).toEqual(climb.at(-1));
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
-    const headline = penPath(DEVANAGARI_CA.strokes[2]);
+    const headline = penPath(DEVANAGARI_CA.strokes[1]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -537,22 +556,28 @@ describe("handwriting ductus", () => {
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
-  it("Devanagari झ joins its bowls and tail before the crossbar, stem, and headline", () => {
+  it("Devanagari झ joins its bowls and tail, then runs the crossbar into the right stem before the headline", () => {
     expect(DEVANAGARI_JHA.script).toBe("devanagari");
-    expect(penLifts(DEVANAGARI_JHA)).toBe(3);
-    expect(DEVANAGARI_JHA.strokes).toHaveLength(4);
+    expect(penLifts(DEVANAGARI_JHA)).toBe(2);
+    expect(DEVANAGARI_JHA.strokes).toHaveLength(3);
     expect(
       DEVANAGARI_JHA.strokes.map((stroke) => stroke.segments.length),
-    ).toEqual([1, 1, 1, 1]);
+    ).toEqual([1, 3, 1]);
     const body = penPath(DEVANAGARI_JHA.strokes[0]);
     expect(Math.min(...body.map((point) => point.x))).toBeLessThan(body[0].x);
     expect(Math.min(...body.map((point) => point.y))).toBeLessThan(body[0].y);
     expect(body.at(-1)!.y).toBeLessThan(body[0].y);
-    const crossbar = penPath(DEVANAGARI_JHA.strokes[1]);
+    const [crossbar, climb, stem] = DEVANAGARI_JHA.strokes[1].segments.map(
+      (segment) => segment.path,
+    );
     expect(crossbar[0].x).toBeLessThan(crossbar.at(-1)!.x);
-    const stem = penPath(DEVANAGARI_JHA.strokes[2]);
+    // The pen climbs the stem it is about to descend: the source's
+    // directions stay, only the lift goes.
+    expect(climb[0]).toEqual(crossbar.at(-1));
+    expect(climb.at(-1)!.y).toBeGreaterThan(climb[0].y);
+    expect(stem[0]).toEqual(climb.at(-1));
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
-    const headline = penPath(DEVANAGARI_JHA.strokes[3]);
+    const headline = penPath(DEVANAGARI_JHA.strokes[2]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -721,23 +746,29 @@ describe("handwriting ductus", () => {
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
-  it("Devanagari थ keeps its upper spiral and broad lower bowl joined before the stem and headline", () => {
+  it("Devanagari थ runs its upper spiral and broad lower bowl into the right stem before the headline", () => {
     expect(DEVANAGARI_THA.script).toBe("devanagari");
-    expect(penLifts(DEVANAGARI_THA)).toBe(2);
-    expect(DEVANAGARI_THA.strokes).toHaveLength(3);
+    expect(penLifts(DEVANAGARI_THA)).toBe(1);
+    expect(DEVANAGARI_THA.strokes).toHaveLength(2);
     expect(
       DEVANAGARI_THA.strokes.map((stroke) => stroke.segments.length),
-    ).toEqual([1, 1, 1]);
-    const body = penPath(DEVANAGARI_THA.strokes[0]);
+    ).toEqual([3, 1]);
+    const [body, climb, stem] = DEVANAGARI_THA.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
     expect(Math.max(...body.map((point) => point.y))).toBeGreaterThan(
       body[0].y,
     );
     expect(Math.min(...body.map((point) => point.y))).toBeLessThan(body[0].y);
     expect(Math.min(...body.map((point) => point.x))).toBeLessThan(body[0].x);
     expect(body.at(-1)!.x).toBeGreaterThan(body[0].x);
-    const stem = penPath(DEVANAGARI_THA.strokes[1]);
+    // The pen climbs the stem it is about to descend: the source's
+    // directions stay, only the lift goes.
+    expect(climb[0]).toEqual(body.at(-1));
+    expect(climb.at(-1)!.y).toBeGreaterThan(climb[0].y);
+    expect(stem[0]).toEqual(climb.at(-1));
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
-    const headline = penPath(DEVANAGARI_THA.strokes[2]);
+    const headline = penPath(DEVANAGARI_THA.strokes[1]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -851,14 +882,16 @@ describe("handwriting ductus", () => {
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
-  it("Devanagari ब separates its counterclockwise oval, right stem, inner diagonal, and headline", () => {
+  it("Devanagari ब runs its counterclockwise oval into the right stem before the inner diagonal and headline", () => {
     expect(DEVANAGARI_BA.script).toBe("devanagari");
-    expect(penLifts(DEVANAGARI_BA)).toBe(3);
-    expect(DEVANAGARI_BA.strokes).toHaveLength(4);
+    expect(penLifts(DEVANAGARI_BA)).toBe(2);
+    expect(DEVANAGARI_BA.strokes).toHaveLength(3);
     expect(
       DEVANAGARI_BA.strokes.map((stroke) => stroke.segments.length),
-    ).toEqual([1, 1, 1, 1]);
-    const body = penPath(DEVANAGARI_BA.strokes[0]);
+    ).toEqual([3, 1, 1]);
+    const [body, climb, stem] = DEVANAGARI_BA.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
     expect(Math.max(...body.map((point) => point.y))).toBeGreaterThan(
       body[0].y,
     );
@@ -867,23 +900,29 @@ describe("handwriting ductus", () => {
     expect(body.at(-1)!.x).toBeGreaterThan(
       Math.min(...body.map((point) => point.x)),
     );
-    const stem = penPath(DEVANAGARI_BA.strokes[1]);
+    // The pen climbs the stem it is about to descend: the source's
+    // directions stay, only the lift goes.
+    expect(climb[0]).toEqual(body.at(-1));
+    expect(climb.at(-1)!.y).toBeGreaterThan(climb[0].y);
+    expect(stem[0]).toEqual(climb.at(-1));
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
-    const diagonal = penPath(DEVANAGARI_BA.strokes[2]);
+    const diagonal = penPath(DEVANAGARI_BA.strokes[1]);
     expect(diagonal[0].x).toBeLessThan(diagonal.at(-1)!.x);
     expect(diagonal[0].y).toBeGreaterThan(diagonal.at(-1)!.y);
-    const headline = penPath(DEVANAGARI_BA.strokes[3]);
+    const headline = penPath(DEVANAGARI_BA.strokes[2]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
-  it("Devanagari भ joins both clockwise loops and the crossbar before the lifted right stem", () => {
+  it("Devanagari भ runs both clockwise loops and the crossbar into the right stem before the headline", () => {
     expect(DEVANAGARI_BHA.script).toBe("devanagari");
-    expect(penLifts(DEVANAGARI_BHA)).toBe(2);
-    expect(DEVANAGARI_BHA.strokes).toHaveLength(3);
+    expect(penLifts(DEVANAGARI_BHA)).toBe(1);
+    expect(DEVANAGARI_BHA.strokes).toHaveLength(2);
     expect(
       DEVANAGARI_BHA.strokes.map((stroke) => stroke.segments.length),
-    ).toEqual([1, 1, 1]);
-    const body = penPath(DEVANAGARI_BHA.strokes[0]);
+    ).toEqual([3, 1]);
+    const [body, climb, stem] = DEVANAGARI_BHA.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
     expect(Math.min(...body.slice(0, 14).map((point) => point.x))).toBeLessThan(
       body[0].x,
     );
@@ -895,20 +934,26 @@ describe("handwriting ductus", () => {
     ).toBeGreaterThan(body[0].x);
     expect(body[17].y).toBeLessThan(body[14].y);
     expect(body.at(-1)!.x).toBeGreaterThan(body[17].x);
-    const stem = penPath(DEVANAGARI_BHA.strokes[1]);
+    // The pen climbs the stem it is about to descend: the source's
+    // directions stay, only the lift goes.
+    expect(climb[0]).toEqual(body.at(-1));
+    expect(climb.at(-1)!.y).toBeGreaterThan(climb[0].y);
+    expect(stem[0]).toEqual(climb.at(-1));
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
-    const headline = penPath(DEVANAGARI_BHA.strokes[2]);
+    const headline = penPath(DEVANAGARI_BHA.strokes[1]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
-  it("Devanagari म joins its descending left stem to the clockwise lower loop and crossbar", () => {
+  it("Devanagari म runs its left stem, lower loop, and crossbar into the right stem before the headline", () => {
     expect(DEVANAGARI_MA.script).toBe("devanagari");
-    expect(penLifts(DEVANAGARI_MA)).toBe(2);
-    expect(DEVANAGARI_MA.strokes).toHaveLength(3);
+    expect(penLifts(DEVANAGARI_MA)).toBe(1);
+    expect(DEVANAGARI_MA.strokes).toHaveLength(2);
     expect(
       DEVANAGARI_MA.strokes.map((stroke) => stroke.segments.length),
-    ).toEqual([1, 1, 1]);
-    const body = penPath(DEVANAGARI_MA.strokes[0]);
+    ).toEqual([3, 1]);
+    const [body, climb, stem] = DEVANAGARI_MA.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
     expect(body[0].y).toBeGreaterThan(body[5].y);
     expect(Math.min(...body.slice(5, 15).map((point) => point.x))).toBeLessThan(
       body[5].x,
@@ -917,9 +962,13 @@ describe("handwriting ductus", () => {
       body[5].y,
     );
     expect(body.at(-1)!.x).toBeGreaterThan(body[5].x);
-    const stem = penPath(DEVANAGARI_MA.strokes[1]);
+    // The pen climbs the stem it is about to descend: the source's
+    // directions stay, only the lift goes.
+    expect(climb[0]).toEqual(body.at(-1));
+    expect(climb.at(-1)!.y).toBeGreaterThan(climb[0].y);
+    expect(stem[0]).toEqual(climb.at(-1));
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
-    const headline = penPath(DEVANAGARI_MA.strokes[2]);
+    const headline = penPath(DEVANAGARI_MA.strokes[1]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -1016,22 +1065,28 @@ describe("handwriting ductus", () => {
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
-  it("Devanagari व circles counterclockwise before the right stem", () => {
+  it("Devanagari व circles counterclockwise and runs into the right stem before the headline", () => {
     expect(DEVANAGARI_VA.script).toBe("devanagari");
-    expect(penLifts(DEVANAGARI_VA)).toBe(2);
-    expect(DEVANAGARI_VA.strokes).toHaveLength(3);
+    expect(penLifts(DEVANAGARI_VA)).toBe(1);
+    expect(DEVANAGARI_VA.strokes).toHaveLength(2);
     expect(
       DEVANAGARI_VA.strokes.map((stroke) => stroke.segments.length),
-    ).toEqual([1, 1, 1]);
-    const loop = penPath(DEVANAGARI_VA.strokes[0]);
+    ).toEqual([3, 1]);
+    const [loop, climb, stem] = DEVANAGARI_VA.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
     expect(Math.min(...loop.map((point) => point.x))).toBeLessThan(loop[0].x);
     expect(Math.min(...loop.map((point) => point.y))).toBeLessThan(loop[0].y);
     expect(loop.at(-1)!.x).toBeGreaterThan(
       Math.min(...loop.map((point) => point.x)),
     );
-    const stem = penPath(DEVANAGARI_VA.strokes[1]);
+    // The pen climbs the stem it is about to descend: the source's
+    // directions stay, only the lift goes.
+    expect(climb[0]).toEqual(loop.at(-1));
+    expect(climb.at(-1)!.y).toBeGreaterThan(climb[0].y);
+    expect(stem[0]).toEqual(climb.at(-1));
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
-    const headline = penPath(DEVANAGARI_VA.strokes[2]);
+    const headline = penPath(DEVANAGARI_VA.strokes[1]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -1085,24 +1140,30 @@ describe("handwriting ductus", () => {
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
-  it("Devanagari स joins its hook and tail before the middle crossbar", () => {
+  it("Devanagari स joins its hook and tail, then runs the crossbar into the right stem", () => {
     expect(DEVANAGARI_SA.script).toBe("devanagari");
-    expect(penLifts(DEVANAGARI_SA)).toBe(3);
-    expect(DEVANAGARI_SA.strokes).toHaveLength(4);
+    expect(penLifts(DEVANAGARI_SA)).toBe(2);
+    expect(DEVANAGARI_SA.strokes).toHaveLength(3);
     expect(
       DEVANAGARI_SA.strokes.map((stroke) => stroke.segments.length),
-    ).toEqual([1, 1, 1, 1]);
+    ).toEqual([1, 3, 1]);
     const body = penPath(DEVANAGARI_SA.strokes[0]);
     expect(body[0].y).toBeGreaterThan(body.at(-1)!.y);
     expect(Math.min(...body.map((point) => point.x))).toBeLessThan(body[0].x);
     expect(body.at(-1)!.x).toBeGreaterThan(
       Math.min(...body.map((point) => point.x)),
     );
-    const crossbar = penPath(DEVANAGARI_SA.strokes[1]);
+    const [crossbar, climb, stem] = DEVANAGARI_SA.strokes[1].segments.map(
+      (segment) => segment.path,
+    );
     expect(crossbar[0].x).toBeLessThan(crossbar.at(-1)!.x);
-    const stem = penPath(DEVANAGARI_SA.strokes[2]);
+    // The pen climbs the stem it is about to descend: the source's
+    // directions stay, only the lift goes.
+    expect(climb[0]).toEqual(crossbar.at(-1));
+    expect(climb.at(-1)!.y).toBeGreaterThan(climb[0].y);
+    expect(stem[0]).toEqual(climb.at(-1));
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
-    const headline = penPath(DEVANAGARI_SA.strokes[3]);
+    const headline = penPath(DEVANAGARI_SA.strokes[2]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -1129,7 +1190,7 @@ describe("handwriting ductus", () => {
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
-  it("Devanagari अ traces its four-run modern form and records the six-stroke variant", () => {
+  it("Devanagari अ traces its four-run modern form, joins the shoulder to the stem, and records the six-stroke variant", () => {
     const src = DEVANAGARI_A.source;
     expect(src.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Devanagari_%E0%A4%85_stroke_order.svg",
@@ -1138,11 +1199,11 @@ describe("handwriting ductus", () => {
       /Saurmandal.*Devanagari अ stroke order\.svg.*frames 1–4.*Wikimedia Commons.*5 August 2023/i,
     );
     expect(src.variation).toMatch(
-      /four buildup frames.*four ordered pen-down runs.*frame 1.*upper-left.*upper curve.*lower bowl.*without lifting.*frame 2.*middle junction.*sweeps right.*shoulder.*frame 3.*right stem top-to-bottom.*frame 4.*shirorekhā left-to-right.*three intervening lifts.*Thomas Egenes.*Learning the Sanskrit Alphabet.*p\. 12.*six-stroke traditional Sanskrit form.*Noto Sans Devanagari/i,
+      /four buildup frames.*four ordered pen-down runs.*frame 1.*upper-left.*upper curve.*lower bowl.*without lifting.*frame 2.*middle junction.*sweeps right.*shoulder.*frame 3.*right stem top-to-bottom.*frame 4.*shirorekhā left-to-right.*three intervening lifts.*Thomas Egenes.*Learning the Sanskrit Alphabet.*p\. 12.*six-stroke traditional Sanskrit form.*not a count of native pen lifts.*hpl-dvng-iso-char.*lipitk\.sourceforge\.net\/datasets\/dvngchardata\.htm.*MIT-licensed LipiTk 4\.0 Devanagari recognizer.*how many strokes writers use, not where they break.*order, start and direction as a segment.*joins the middle shoulder and the right stem.*lifts only before the shoulder and the headline.*one औ uses.*Noto Sans Devanagari/i,
     );
   });
 
-  it("Devanagari आ traces its five-run modern form without erasing base-letter variation", () => {
+  it("Devanagari आ traces its five-run modern form, joins the shoulder to the inner stem, and keeps base-letter variation", () => {
     const src = DEVANAGARI_AA.source;
     expect(src.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Devanagari_%E0%A4%86_stroke_order.svg",
@@ -1151,7 +1212,7 @@ describe("handwriting ductus", () => {
       /Saurmandal.*Devanagari आ stroke order\.svg.*frames 1–5.*Wikimedia Commons.*5 August 2023/i,
     );
     expect(src.variation).toMatch(
-      /five buildup frames.*five ordered pen-down runs.*frame 1.*upper-left.*upper curve.*lower bowl.*without lifting.*frame 2.*middle junction.*sweeps right.*shoulder.*frame 3.*inner stem top-to-bottom.*frame 4.*trailing stem top-to-bottom.*frame 5.*shirorekhā left-to-right.*four intervening lifts.*Thomas Egenes.*Learning the Sanskrit Alphabet.*p\. 12.*shared base अ.*six-stroke traditional Sanskrit form.*joined modern body is not universal.*Noto Sans Devanagari/i,
+      /five buildup frames.*five ordered pen-down runs.*frame 1.*upper-left.*upper curve.*lower bowl.*without lifting.*frame 2.*middle junction.*sweeps right.*shoulder.*frame 3.*inner stem top-to-bottom.*frame 4.*trailing stem top-to-bottom.*frame 5.*shirorekhā left-to-right.*four intervening lifts.*Thomas Egenes.*Learning the Sanskrit Alphabet.*p\. 12.*shared base अ.*six-stroke traditional Sanskrit form.*joined modern body is not universal.*not a count of native pen lifts.*hpl-dvng-iso-char.*lipitk\.sourceforge\.net\/datasets\/dvngchardata\.htm.*MIT-licensed LipiTk 4\.0 Devanagari recognizer.*how many strokes writers use, not where they break.*order, start and direction as a segment.*joins the middle shoulder and the inner stem.*lifts three times.*one औ uses.*Noto Sans Devanagari/i,
     );
   });
 
@@ -1233,7 +1294,7 @@ describe("handwriting ductus", () => {
     );
   });
 
-  it("Devanagari ओ traces the shared आ base, upper arc, and final headline", () => {
+  it("Devanagari ओ traces the six-panel form and joins only the shoulder to the inner stem", () => {
     const src = DEVANAGARI_O.source;
     expect(src.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Devanagari_%E0%A4%93_stroke_order.svg",
@@ -1242,7 +1303,7 @@ describe("handwriting ductus", () => {
       /Saurmandal.*Devanagari ओ stroke order\.svg.*panels 1–6.*Wikimedia Commons.*5 August 2023/i,
     );
     expect(src.variation).toMatch(
-      /six-panel diagram.*six ordered pen-down runs.*panel 1.*joined upper-and-lower left body.*अ.*panel 2.*middle.*shoulder right.*panels 3 and 4.*inner and trailing stems.*आ.*panel 5.*trailing stem's headline junction.*upper arc upward and left.*open tip.*panel 6.*headline's left edge.*shirorekhā left-to-right.*five intervening lifts.*modern printed teaching form.*Noto Sans Devanagari.*rather than.*universal standard/i,
+      /six-panel diagram.*six ordered pen-down runs.*panel 1.*joined upper-and-lower left body.*अ.*panel 2.*middle.*shoulder right.*panels 3 and 4.*inner and trailing stems.*आ.*panel 5.*trailing stem's headline junction.*upper arc upward and left.*open tip.*panel 6.*headline's left edge.*shirorekhā left-to-right.*five intervening lifts.*not a count of native pen lifts.*hpl-dvng-iso-char.*lipitk\.sourceforge\.net\/datasets\/dvngchardata\.htm.*MIT-licensed LipiTk 4\.0 Devanagari recognizer.*how many strokes writers use, not where they break.*order, start and direction as a segment.*joins only the middle shoulder and the inner stem.*lifts four times.*one औ uses.*Noto Sans Devanagari/i,
     );
   });
 
@@ -1311,7 +1372,7 @@ describe("handwriting ductus", () => {
     );
   });
 
-  it("Devanagari च traces the animated three-run bar-body, right stem, and headline order", () => {
+  it("Devanagari च traces the animated three-run order and joins it into two strokes", () => {
     const src = DEVANAGARI_CA.source;
     expect(src.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Deva-%E0%A4%9A-order.gif",
@@ -1320,7 +1381,7 @@ describe("handwriting ductus", () => {
       /Opiaterein.*Deva-च-order\.gif.*strokes 1–3.*Wikimedia Commons.*10 May 2009/i,
     );
     expect(src.variation).toMatch(
-      /22-frame animation.*three ordered pen-down runs.*frames 4–14.*upper bar left-to-right.*turn down and left.*shoulder.*rounded body.*open right junction.*without lifting.*frames 15–18.*right stem's headline junction.*top-to-bottom.*frames 19–22.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit IV.*p\. 17.*upper bar.*rounded body.*right stem.*headline order.*staging.*separately.*rather than proving their join.*three-run lift count.*animation.*Noto Sans Devanagari.*everyday handwriting.*join or simplify/i,
+      /22-frame animation.*three ordered pen-down runs.*frames 4–14.*upper bar left-to-right.*turn down and left.*shoulder.*rounded body.*open right junction.*without lifting.*frames 15–18.*right stem's headline junction.*top-to-bottom.*frames 19–22.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit IV.*p\. 17.*upper bar.*rounded body.*right stem.*headline order.*staging.*separately.*rather than proving their join.*not a count of native pen lifts.*hpl-dvng-iso-char.*lipitk\.sourceforge\.net\/datasets\/dvngchardata\.htm.*MIT-licensed LipiTk 4\.0 Devanagari recognizer.*how many strokes writers use, not where they break.*order, start and direction as a segment.*joins the first two in one run.*from the body.*lifts only before the headline.*Noto Sans Devanagari/i,
     );
   });
 
@@ -1337,7 +1398,7 @@ describe("handwriting ductus", () => {
     );
   });
 
-  it("Devanagari झ traces the animated joined body, crossbar, stem, and headline order", () => {
+  it("Devanagari झ traces the animated four-run order and joins it into three strokes", () => {
     const src = DEVANAGARI_JHA.source;
     expect(src.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Deva-%E0%A4%9D-order.gif",
@@ -1346,7 +1407,7 @@ describe("handwriting ductus", () => {
       /Opiaterein.*Deva-झ-order\.gif.*strokes 1–4.*Wikimedia Commons.*10 May 2009/i,
     );
     expect(src.variation).toMatch(
-      /32-frame animation.*four ordered pen-down runs.*gray guide.*frames 2–18.*short upper stem.*clockwise around the upper bowl.*waist.*clockwise around the lower loop.*diagonal tail.*without lifting.*frames 19–21.*central junction.*middle crossbar left-to-right.*frames 22–26.*right stem's headline junction.*top-to-bottom.*frames 27–31.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*250 ms holds.*frames 18, 21, and 26.*one-second completed frame 31.*120–130 ms pauses.*joined body.*do not add lifts.*Noto Sans Devanagari.*everyday handwriting.*divide or simplify/i,
+      /32-frame animation.*four ordered pen-down runs.*gray guide.*frames 2–18.*short upper stem.*clockwise around the upper bowl.*waist.*clockwise around the lower loop.*diagonal tail.*without lifting.*frames 19–21.*central junction.*middle crossbar left-to-right.*frames 22–26.*right stem's headline junction.*top-to-bottom.*frames 27–31.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*250 ms holds.*frames 18, 21, and 26.*one-second completed frame 31.*120–130 ms pauses.*joined body.*do not add lifts.*not a count of native pen lifts.*hpl-dvng-iso-char.*lipitk\.sourceforge\.net\/datasets\/dvngchardata\.htm.*MIT-licensed LipiTk 4\.0 Devanagari recognizer.*how many strokes writers use, not where they break.*order, start and direction as a segment.*joins the crossbar and the right stem in one run.*crossbar ends on the stem.*lifts only before the crossbar and the headline.*Noto Sans Devanagari/i,
     );
   });
 
@@ -1454,7 +1515,7 @@ describe("handwriting ductus", () => {
     );
   });
 
-  it("Devanagari थ traces the animated joined spiral-bowl, right stem, and headline order", () => {
+  it("Devanagari थ traces the animated three-run order and joins it into two strokes", () => {
     const src = DEVANAGARI_THA.source;
     expect(src.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Deva-%E0%A4%A5-order.gif",
@@ -1463,7 +1524,7 @@ describe("handwriting ductus", () => {
       /Opiaterein.*Deva-थ-order\.gif.*strokes 1–3.*Wikimedia Commons.*10 May 2009/i,
     );
     expect(src.variation).toMatch(
-      /27-frame animation.*three ordered pen-down runs.*gray guide.*frames 2–19.*upper spiral's inner-right tip.*clockwise around the small opening.*outward to the left waist.*clockwise around the broad lower bowl.*right-stem junction.*without lifting.*frames 20–22.*right stem's headline junction.*top-to-bottom.*frames 23–25.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*250 ms holds.*frames 19 and 22.*one-second completed frame 26.*Noto Sans Devanagari.*everyday handwriting.*narrow, divide, or simplify/i,
+      /27-frame animation.*three ordered pen-down runs.*gray guide.*frames 2–19.*upper spiral's inner-right tip.*clockwise around the small opening.*outward to the left waist.*clockwise around the broad lower bowl.*right-stem junction.*without lifting.*frames 20–22.*right stem's headline junction.*top-to-bottom.*frames 23–25.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*250 ms holds.*frames 19 and 22.*one-second completed frame 26.*not a count of native pen lifts.*hpl-dvng-iso-char.*lipitk\.sourceforge\.net\/datasets\/dvngchardata\.htm.*MIT-licensed LipiTk 4\.0 Devanagari recognizer.*how many strokes writers use, not where they break.*order, start and direction as a segment.*joins the first two in one run.*from the bowl.*lifts only before the headline.*Noto Sans Devanagari/i,
     );
   });
 
@@ -1532,7 +1593,7 @@ describe("handwriting ductus", () => {
     );
   });
 
-  it("Devanagari ब traces the animated four-run oval, right stem, inner diagonal, and headline order", () => {
+  it("Devanagari ब traces the animated four-run order and joins it into three strokes", () => {
     const src = DEVANAGARI_BA.source;
     expect(src.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Devanagari_b_%E0%A4%AC.gif",
@@ -1541,11 +1602,11 @@ describe("handwriting ductus", () => {
       /JackPotte.*Devanagari b ब\.gif.*strokes 1–4.*Wikimedia Commons.*29 March 2009/i,
     );
     expect(src.variation).toMatch(
-      /13-frame animation.*four ordered pen-down runs.*frames 0–6.*upper-right junction.*counterclockwise around the oval.*lower-right junction.*frames 7–8.*right stem's headline junction.*top-to-bottom.*frame 9.*upper-left interior.*inner diagonal down-right.*frames 10–12.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*spatial restarts.*frames 7, 9, and 10.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VII.*p\. 37.*same oval body.*right stem.*inner diagonal.*headline buildup and directions.*Noto Sans Devanagari.*everyday handwriting.*join or simplify/i,
+      /13-frame animation.*four ordered pen-down runs.*frames 0–6.*upper-right junction.*counterclockwise around the oval.*lower-right junction.*frames 7–8.*right stem's headline junction.*top-to-bottom.*frame 9.*upper-left interior.*inner diagonal down-right.*frames 10–12.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*spatial restarts.*frames 7, 9, and 10.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VII.*p\. 37.*same oval body.*right stem.*inner diagonal.*headline buildup and directions.*not a count of native pen lifts.*hpl-dvng-iso-char.*lipitk\.sourceforge\.net\/datasets\/dvngchardata\.htm.*MIT-licensed LipiTk 4\.0 Devanagari recognizer.*how many strokes writers use, not where they break.*order, start and direction as a segment.*joins the oval and the right stem in one run.*lower-right junction.*lifts only before the diagonal and the headline.*Noto Sans Devanagari/i,
     );
   });
 
-  it("Devanagari भ traces the animated joined-body, right-stem, and headline order", () => {
+  it("Devanagari भ traces the animated three-run order and joins it into two strokes", () => {
     const src = DEVANAGARI_BHA.source;
     expect(src.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Devanagari_b%CA%B0_%E0%A4%AD.gif",
@@ -1554,11 +1615,11 @@ describe("handwriting ductus", () => {
       /JackPotte.*Devanagari bʰ भ\.gif.*strokes 1–3.*Wikimedia Commons.*29 March 2009/i,
     );
     expect(src.variation).toMatch(
-      /15-frame animation.*three ordered pen-down runs.*frames 0–9.*upper loop's lower inner tip.*sweep left and clockwise around the upper loop.*descend the joined trunk.*clockwise around the lower bowl.*continue right through the crossbar.*without lifting.*frames 10–12.*right stem's headline junction.*top-to-bottom.*frames 13–14.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*spatial restarts.*frames 10 and 13.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VII.*p\. 38.*upper loop and trunk.*lower bowl and crossbar.*right stem.*headline order.*staging the upper and lower body parts separately.*rather than proving their join.*three-run lift count from the animation.*Noto Sans Devanagari.*everyday handwriting.*divide or simplify/i,
+      /15-frame animation.*three ordered pen-down runs.*frames 0–9.*upper loop's lower inner tip.*sweep left and clockwise around the upper loop.*descend the joined trunk.*clockwise around the lower bowl.*continue right through the crossbar.*without lifting.*frames 10–12.*right stem's headline junction.*top-to-bottom.*frames 13–14.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*spatial restarts.*frames 10 and 13.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VII.*p\. 38.*upper loop and trunk.*lower bowl and crossbar.*right stem.*headline order.*staging the upper and lower body parts separately.*rather than proving their join.*not a count of native pen lifts.*hpl-dvng-iso-char.*lipitk\.sourceforge\.net\/datasets\/dvngchardata\.htm.*MIT-licensed LipiTk 4\.0 Devanagari recognizer.*how many strokes writers use, not where they break.*order, start and direction as a segment.*joins the first two in one run.*from the crossbar.*lifts only before the headline.*Noto Sans Devanagari/i,
     );
   });
 
-  it("Devanagari म traces the animated joined left-body, right-stem, and headline order", () => {
+  it("Devanagari म traces the animated three-run order and joins it into two strokes", () => {
     const src = DEVANAGARI_MA.source;
     expect(src.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Devanagari_m_%E0%A4%AE.gif",
@@ -1567,7 +1628,7 @@ describe("handwriting ductus", () => {
       /JackPotte.*Devanagari m म\.gif.*strokes 1–3.*Wikimedia Commons.*29 March 2009/i,
     );
     expect(src.variation).toMatch(
-      /12-frame animation.*three ordered pen-down runs.*frames 0–5.*descend the left stem.*curl left and clockwise around the lower loop.*continue right through the crossbar.*without lifting.*frames 6–8.*right stem's headline junction.*top-to-bottom.*frames 9–11.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*spatial restarts.*frames 6 and 9.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VII.*p\. 39.*left stem.*lower loop and crossbar.*right stem.*headline order.*staging the left stem and loop-crossbar separately.*rather than proving their join.*three-run lift count from the animation.*Noto Sans Devanagari.*everyday handwriting.*divide or simplify/i,
+      /12-frame animation.*three ordered pen-down runs.*frames 0–5.*descend the left stem.*curl left and clockwise around the lower loop.*continue right through the crossbar.*without lifting.*frames 6–8.*right stem's headline junction.*top-to-bottom.*frames 9–11.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*spatial restarts.*frames 6 and 9.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VII.*p\. 39.*left stem.*lower loop and crossbar.*right stem.*headline order.*staging the left stem and loop-crossbar separately.*rather than proving their join.*not a count of native pen lifts.*hpl-dvng-iso-char.*lipitk\.sourceforge\.net\/datasets\/dvngchardata\.htm.*MIT-licensed LipiTk 4\.0 Devanagari recognizer.*how many strokes writers use, not where they break.*order, start and direction as a segment.*joins the first two in one run.*from the crossbar.*lifts only before the headline.*Noto Sans Devanagari/i,
     );
   });
 
@@ -1623,7 +1684,7 @@ describe("handwriting ductus", () => {
     );
   });
 
-  it("Devanagari व traces its three-run animation and deskbook buildup", () => {
+  it("Devanagari व traces its three-run animation and joins it into two strokes", () => {
     const src = DEVANAGARI_VA.source;
     expect(src.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Devanagari_v_%E0%A4%B5.gif",
@@ -1632,7 +1693,7 @@ describe("handwriting ductus", () => {
       /JackPotte.*Devanagari v व\.gif.*strokes 1–3.*Wikimedia Commons.*29 March 2009/i,
     );
     expect(src.variation).toMatch(
-      /11-frame animation.*three ordered pen-down runs.*frames 0–5.*upper-right of the body.*travel left around the top.*counterclockwise around the loop.*right-side junction.*frames 6–7.*right stem's headline junction.*descend top-to-bottom.*frames 8–10.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*spatial restarts.*frames 6 and 8.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VIII.*p\. 44.*loop.*right stem.*headline buildup.*animation supplies.*directions and lift evidence.*corroborated three-run form.*Noto Sans Devanagari.*simplify or narrow the loop/i,
+      /11-frame animation.*three ordered pen-down runs.*frames 0–5.*upper-right of the body.*travel left around the top.*counterclockwise around the loop.*right-side junction.*frames 6–7.*right stem's headline junction.*descend top-to-bottom.*frames 8–10.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*spatial restarts.*frames 6 and 8.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VIII.*p\. 44.*loop.*right stem.*headline buildup.*animation supplies.*directions and lift evidence.*not a count of native pen lifts.*hpl-dvng-iso-char.*lipitk\.sourceforge\.net\/datasets\/dvngchardata\.htm.*MIT-licensed LipiTk 4\.0 Devanagari recognizer.*how many strokes writers use, not where they break.*order, start and direction as a segment.*joins the first two in one run.*from the loop.*lifts only before the headline.*Noto Sans Devanagari/i,
     );
   });
 
@@ -1662,7 +1723,7 @@ describe("handwriting ductus", () => {
     );
   });
 
-  it("Devanagari स traces its joined-body animation and staged corroboration", () => {
+  it("Devanagari स traces its four-run animation and joins it into three strokes", () => {
     const src = DEVANAGARI_SA.source;
     expect(src.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Devanagari_s_%E0%A4%B8.gif",
@@ -1671,7 +1732,7 @@ describe("handwriting ductus", () => {
       /JackPotte.*Devanagari s स\.gif.*strokes 1–4.*Wikimedia Commons.*29 March 2009/i,
     );
     expect(src.variation).toMatch(
-      /13-frame animation.*four ordered pen-down runs.*frames 0–4.*just below the headline.*descend the left stem.*curve left around the central hook.*continue diagonally down-right through the tail.*without lifting.*frames 5–6.*central junction.*middle crossbar left-to-right.*frames 7–9.*right stem's headline junction.*descend top-to-bottom.*frames 10–12.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*spatial restarts.*frames 5, 7, and 10.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit IX.*p\. 47.*left curve.*diagonal tail.*middle crossbar.*right stem.*headline order.*stages the left curve and tail separately.*rather than proving their join.*four-run lift count.*animation.*Noto Sans Devanagari.*divide or simplify the joined body/i,
+      /13-frame animation.*four ordered pen-down runs.*frames 0–4.*just below the headline.*descend the left stem.*curve left around the central hook.*continue diagonally down-right through the tail.*without lifting.*frames 5–6.*central junction.*middle crossbar left-to-right.*frames 7–9.*right stem's headline junction.*descend top-to-bottom.*frames 10–12.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*spatial restarts.*frames 5, 7, and 10.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit IX.*p\. 47.*left curve.*diagonal tail.*middle crossbar.*right stem.*headline order.*stages the left curve and tail separately.*rather than proving their join.*not a count of native pen lifts.*hpl-dvng-iso-char.*lipitk\.sourceforge\.net\/datasets\/dvngchardata\.htm.*MIT-licensed LipiTk 4\.0 Devanagari recognizer.*how many strokes writers use, not where they break.*order, start and direction as a segment.*joins the crossbar and the right stem in one run.*crossbar ends on the stem.*lifts only before the crossbar and the headline.*Noto Sans Devanagari/i,
     );
   });
 

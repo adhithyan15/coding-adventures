@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Core Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a722460b3428fa60",
+  "sourceHash": "fnv1a64:84bff14bab67ef3d",
   "lessons": [
     {
       "id": "SA-C07-asti",
@@ -206,7 +206,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0d1f62eb5e78aa4c",
+      "sourceHash": "fnv1a64:da28d23bd17856d2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -297,19 +297,23 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift and draw the right stem top-to-bottom."
+              "text": "2. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the top shirorekhā left-to-right."
+              "text": "3. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "4. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "verified three-stroke teaching form; everyday handwriting may join or simplify the body differently."
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows three movements; most native writers draw च (ca) in two strokes (76% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

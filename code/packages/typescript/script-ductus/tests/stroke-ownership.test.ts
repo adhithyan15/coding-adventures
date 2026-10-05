@@ -392,12 +392,18 @@ describe("stroke ownership migration baseline", () => {
       // data hash moves, measured after the last caption was settled; keys,
       // the key hash, every script count, Tamil and both shared-identity
       // values remain unchanged.
+      //
+      // Devanagari अ, आ, ओ, झ, स, ब, च, थ, भ, म and व follow: each joins one
+      // run into the next by climbing the stem it then descends, so each lifts
+      // once less. Every Devanagari headline caption now reads "rightward" and
+      // every long caption is shortened to fit two lines. Only the non-Tamil
+      // data hash moves, measured after the last caption was settled.
     }).toEqual({
       keys: 469,
       keyHash:
         "a94dcc62ecb888f6d99cc3af625b2bf9ad784a37b2072f2bea505a0131281b3a",
       nonTamilDataHash:
-        "41a1a63c9cf9a3759b097385cbc7afeac9dee14be90d5bc321445e231b5af6e0",
+        "cff5d940a5f955213201d67e741f96de182fbf4309d36ea0fc98088ed41c77ad",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",

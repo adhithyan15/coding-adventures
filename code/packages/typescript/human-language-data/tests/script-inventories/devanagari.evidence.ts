@@ -36,6 +36,10 @@ export const scriptInventoryEvidence = {
     // lift only where those writers do. Each note must cite the source's
     // movement count, the native stroke count and its share; each variation
     // must say the data gives counts only.
+    //
+    // The second eleven (3, 4, 5, 3, 3, 3, 2, 2, 2, 2 and 2 lifts) matched 17%
+    // to 39% of those writers; the native mode is one lift fewer, and each now
+    // climbs the stem it then descends instead of lifting before it.
     const nativeLifts: ReadonlyArray<
       readonly [string, number, string, string, string, string]
     > = [
@@ -50,6 +54,17 @@ export const scriptInventoryEvidence = {
       ["घ", 1, "three", "two", "83", "68 of 82"],
       ["ष", 2, "four", "three", "83", "69 of 83"],
       ["औ", 5, "seven", "six", "60", "49 of 82"],
+      ["अ", 2, "four", "three", "74", "61 of 82"],
+      ["आ", 3, "five", "four", "71", "59 of 83"],
+      ["ओ", 4, "six", "five", "60", "49 of 82"],
+      ["झ", 2, "four", "three", "53", "44 of 83"],
+      ["स", 2, "four", "three", "71", "58 of 82"],
+      ["ब", 2, "four", "three", "71", "58 of 82"],
+      ["च", 1, "three", "two", "76", "63 of 83"],
+      ["थ", 1, "three", "two", "72", "58 of 80"],
+      ["भ", 1, "three", "two", "72", "59 of 82"],
+      ["म", 1, "three", "two", "80", "67 of 84"],
+      ["व", 1, "three", "two", "69", "57 of 83"],
     ];
     for (const [
       glyph,
@@ -67,7 +82,7 @@ export const scriptInventoryEvidence = {
         `The source shows ${movements} movements; native writers draw ${glyph} as ${strokes} pen-down strokes (${share}% of HP Labs India's native-writer samples, ${samples}).`,
       );
       expect(letter.strokeOrderSource?.citation, glyph).toMatch(
-        /^(Opiaterein|Saurmandal), ‘De/,
+        /^(Opiaterein|Saurmandal|JackPotte), ‘De/,
       );
       for (const phrase of [
         "they are not a count of native pen lifts",

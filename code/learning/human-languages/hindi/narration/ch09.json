@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f6c25210a93939a0",
+  "sourceHash": "fnv1a64:287de8a471728e74",
   "lessons": [
     {
       "id": "HI-C09-maaf-kijiye",
@@ -147,7 +147,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:271785cc3009a6fa",
+      "sourceHash": "fnv1a64:f011725eb6dc6ea2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -211,7 +211,7 @@
             },
             {
               "kind": "speech",
-              "text": "a middle shoulder."
+              "text": "a middle shoulder running into the inner stem."
             },
             {
               "kind": "speech",
@@ -262,23 +262,27 @@
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the inner stem top-to-bottom."
+              "text": "3. without lifting, climb up the inner stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the trailing stem top-to-bottom."
+              "text": "4. descend the inner stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "5. lift and draw the top shirorekhā left-to-right."
+              "text": "5. lift and draw the trailing stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 4. The pen comes up 4 times and no more."
+              "text": "6. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "Verified modern printed teaching form; other Devanagari traditions split the shared अ body into more strokes."
+              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows five movements; most native writers draw आ (ā) in four strokes (71% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts three times: the shoulder runs on up the inner stem and back down it."
             },
             {
               "kind": "speech",

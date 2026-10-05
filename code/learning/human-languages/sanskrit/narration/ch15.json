@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Describing Things",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7ad8bba8a62d9fe5",
+  "sourceHash": "fnv1a64:44c7455c5f66fb74",
   "lessons": [
     {
       "id": "SA-C15-big",
@@ -229,7 +229,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e3dbe183b7f1685d",
+      "sourceHash": "fnv1a64:fda2da53798e2a43",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -324,23 +324,27 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift and draw the right stem top-to-bottom."
+              "text": "2. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "3. lift at the body's upper-left interior and draw the inner diagonal down-right."
+              "text": "3. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. lift at the body's upper-left interior and draw the inner diagonal down-right."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "5. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "verified four-stroke teaching form; everyday handwriting may join or simplify the oval differently."
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw ब (ba) in three strokes (71% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the diagonal and the headline."
             },
             {
               "kind": "speech",

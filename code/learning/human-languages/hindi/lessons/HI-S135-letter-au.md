@@ -86,7 +86,7 @@ one idea, two shapes, and a count that decides it.
 - **7.** lift at the same junction and sweep the taller upper arc upward and left
 - **8.** lift and draw the top shirorekhā left-to-right
 
-**Pen lifts: 5.** As many as **ओ**, and more than any other — take it slowly.
+**Pen lifts: 5.** One more than **ओ**, and more than any other — take it slowly.
 
 > The source shows seven movements; most native writers draw औ in six strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and lifts five times; only the shoulder runs on, up the inner stem.
 
@@ -108,4 +108,4 @@ one idea, two shapes, and a count that decides it.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-135, HI-SCRIPT-RECOG-134] -->
 
 [PAUSE 3s] What sound is **औ**? (*au*.) What is its sitting form? (**◌ौ**.) How
-many pen lifts does it take? (Five — as many as **ओ**, the most in the book.)
+many pen lifts does it take? (Five — one more than **ओ**, the most in the book.)

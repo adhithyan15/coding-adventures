@@ -4,64 +4,64 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S01-letter-ma",
-      "sourceHash": "fnv1a64:e1331ae7e27b0733",
-      "svgHash": "fnv1a64:4507a2a0b3bb2cb0",
+      "sourceHash": "fnv1a64:bc6b6b634d04d361",
+      "svgHash": "fnv1a64:e6fd17fd82083bc1",
       "svg": "sanskrit/book/figures/SA-S01-letter-ma-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S02-copy-the-three-strokes",
-      "sourceHash": "fnv1a64:953a1eade3b02d87",
-      "svgHash": "fnv1a64:e6220d8d2b425914",
+      "sourceHash": "fnv1a64:b7f64e28943cb6ba",
+      "svgHash": "fnv1a64:677884c6a47ec9f2",
       "svg": "sanskrit/book/figures/SA-S02-copy-the-three-strokes-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S02-delayed-copy",
-      "sourceHash": "fnv1a64:b29c4b3d2a71c7bd",
-      "svgHash": "fnv1a64:e6220d8d2b425914",
+      "sourceHash": "fnv1a64:2fda8d8a23446544",
+      "svgHash": "fnv1a64:677884c6a47ec9f2",
       "svg": "sanskrit/book/figures/SA-S02-delayed-copy-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S02-dictation",
-      "sourceHash": "fnv1a64:484759e24dc17db0",
-      "svgHash": "fnv1a64:e6220d8d2b425914",
+      "sourceHash": "fnv1a64:aac8b5894fbebc9f",
+      "svgHash": "fnv1a64:677884c6a47ec9f2",
       "svg": "sanskrit/book/figures/SA-S02-dictation-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S02-letter-na",
-      "sourceHash": "fnv1a64:e3c03e0b3764c053",
-      "svgHash": "fnv1a64:e6220d8d2b425914",
+      "sourceHash": "fnv1a64:37ec1312f735db26",
+      "svgHash": "fnv1a64:677884c6a47ec9f2",
       "svg": "sanskrit/book/figures/SA-S02-letter-na-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S03-letter-a",
-      "sourceHash": "fnv1a64:82ac9636cb9a0e0b",
-      "svgHash": "fnv1a64:761e0abe1e706d0d",
+      "sourceHash": "fnv1a64:fddaf0e5766c33cb",
+      "svgHash": "fnv1a64:e07bc90c1d679ff4",
       "svg": "sanskrit/book/figures/SA-S03-letter-a-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S04-letter-aa",
-      "sourceHash": "fnv1a64:adf5eb018ae4c24c",
-      "svgHash": "fnv1a64:49c6eba32dd15841",
+      "sourceHash": "fnv1a64:5841a8e8620c830c",
+      "svgHash": "fnv1a64:feefdf6ef9b98be7",
       "svg": "sanskrit/book/figures/SA-S04-letter-aa-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S107-letter-ta",
-      "sourceHash": "fnv1a64:9a6b7eefc485a8be",
-      "svgHash": "fnv1a64:48b17816105f19f2",
+      "sourceHash": "fnv1a64:a84a27cecedb9e19",
+      "svgHash": "fnv1a64:8092566e5078aa4a",
       "svg": "sanskrit/book/figures/SA-S107-letter-ta-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S108-letter-sa",
-      "sourceHash": "fnv1a64:47316e7bff934cee",
-      "svgHash": "fnv1a64:748c3fc8be8e135b",
+      "sourceHash": "fnv1a64:d18c4576d8aa02ec",
+      "svgHash": "fnv1a64:d82b78f59e3eabb2",
       "svg": "sanskrit/book/figures/SA-S108-letter-sa-filmstrip.svg"
     },
     {
@@ -88,15 +88,15 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S114-letter-ha",
-      "sourceHash": "fnv1a64:aee7897920c161ce",
-      "svgHash": "fnv1a64:e5ea38624efa2e1f",
+      "sourceHash": "fnv1a64:9960898b6998dc48",
+      "svgHash": "fnv1a64:0012d542243408f0",
       "svg": "sanskrit/book/figures/SA-S114-letter-ha-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S116-letter-tta",
-      "sourceHash": "fnv1a64:6121b26afd483a5d",
-      "svgHash": "fnv1a64:0f10498f26818f92",
+      "sourceHash": "fnv1a64:b30a097b2ffb2414",
+      "svgHash": "fnv1a64:5c0b68171794a6f3",
       "svg": "sanskrit/book/figures/SA-S116-letter-tta-filmstrip.svg"
     },
     {
@@ -116,36 +116,36 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S119-letter-kha",
-      "sourceHash": "fnv1a64:5e78d828a04efe46",
-      "svgHash": "fnv1a64:e369ceee36886404",
+      "sourceHash": "fnv1a64:24aa0bd45ffcbb90",
+      "svgHash": "fnv1a64:07956d0037f48b3a",
       "svg": "sanskrit/book/figures/SA-S119-letter-kha-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S120-letter-ja",
-      "sourceHash": "fnv1a64:0adab1a269e39b84",
-      "svgHash": "fnv1a64:4bb6bb071e9a444e",
+      "sourceHash": "fnv1a64:08faad469d3011fb",
+      "svgHash": "fnv1a64:021e80fe7f4304a9",
       "svg": "sanskrit/book/figures/SA-S120-letter-ja-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S121-letter-u",
-      "sourceHash": "fnv1a64:14b4cf561b14d836",
-      "svgHash": "fnv1a64:a4f8c2948c51c5bb",
+      "sourceHash": "fnv1a64:dbc5ec4822bc9d6b",
+      "svgHash": "fnv1a64:38d5314c8c07c2f2",
       "svg": "sanskrit/book/figures/SA-S121-letter-u-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S122-letter-pha",
-      "sourceHash": "fnv1a64:a0e6e2527fb88fed",
-      "svgHash": "fnv1a64:40c11ac8f4645cfc",
+      "sourceHash": "fnv1a64:8850ca08bb88363e",
+      "svgHash": "fnv1a64:b15295de035a8639",
       "svg": "sanskrit/book/figures/SA-S122-letter-pha-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S123-letter-o",
-      "sourceHash": "fnv1a64:8c37d2bf87e3b1be",
-      "svgHash": "fnv1a64:ab50b5106dd7f3bf",
+      "sourceHash": "fnv1a64:bb6b8c90ccd15307",
+      "svgHash": "fnv1a64:6c6318b37f0a8323",
       "svg": "sanskrit/book/figures/SA-S123-letter-o-filmstrip.svg"
     },
     {
@@ -158,8 +158,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S202-letter-bha",
-      "sourceHash": "fnv1a64:da6e8ae99ade8857",
-      "svgHash": "fnv1a64:04b72ee03485209b",
+      "sourceHash": "fnv1a64:c7562e68368edaf2",
+      "svgHash": "fnv1a64:32d1bd67a576841a",
       "svg": "sanskrit/book/figures/SA-S202-letter-bha-filmstrip.svg"
     },
     {
@@ -172,29 +172,29 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S206-letter-nya",
-      "sourceHash": "fnv1a64:76e08f279febd7cc",
-      "svgHash": "fnv1a64:08937ec66960ed69",
+      "sourceHash": "fnv1a64:26b6e44377f5768a",
+      "svgHash": "fnv1a64:7cfcd3f0709bdfd6",
       "svg": "sanskrit/book/figures/SA-S206-letter-nya-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S207-letter-ca",
-      "sourceHash": "fnv1a64:d7791df3f60daf43",
-      "svgHash": "fnv1a64:82881181639f43ca",
+      "sourceHash": "fnv1a64:1e98ba6a088cd396",
+      "svgHash": "fnv1a64:bfe71184f436c558",
       "svg": "sanskrit/book/figures/SA-S207-letter-ca-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S208-letter-va",
-      "sourceHash": "fnv1a64:c8d3ca6f5ca3777f",
-      "svgHash": "fnv1a64:fef7f3a98a7a9ef4",
+      "sourceHash": "fnv1a64:47c7258a213a49a5",
+      "svgHash": "fnv1a64:15e1342eb448aee5",
       "svg": "sanskrit/book/figures/SA-S208-letter-va-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S211-letter-e",
-      "sourceHash": "fnv1a64:98f43ccc4929fd69",
-      "svgHash": "fnv1a64:d8f9c88f516b36bc",
+      "sourceHash": "fnv1a64:6c72fa2876ab852b",
+      "svgHash": "fnv1a64:42e5526dec5e9e77",
       "svg": "sanskrit/book/figures/SA-S211-letter-e-filmstrip.svg"
     },
     {
@@ -214,64 +214,64 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S215-letter-tha",
-      "sourceHash": "fnv1a64:5f844e70a46339fc",
-      "svgHash": "fnv1a64:dd9410549e4ed2c1",
+      "sourceHash": "fnv1a64:b804d186e9720f93",
+      "svgHash": "fnv1a64:fddb7c279859c7e4",
       "svg": "sanskrit/book/figures/SA-S215-letter-tha-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S216-letter-ba",
-      "sourceHash": "fnv1a64:c161561c511ff103",
-      "svgHash": "fnv1a64:0619fb9d392539e3",
+      "sourceHash": "fnv1a64:ed9de874bbd2bcce",
+      "svgHash": "fnv1a64:aa2666a52b5c38ac",
       "svg": "sanskrit/book/figures/SA-S216-letter-ba-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S217-letter-nna",
-      "sourceHash": "fnv1a64:456a0e3bd8f3b1f8",
-      "svgHash": "fnv1a64:44b61b02c27dc360",
+      "sourceHash": "fnv1a64:a9b0c16372bea70e",
+      "svgHash": "fnv1a64:17fb052a6c884987",
       "svg": "sanskrit/book/figures/SA-S217-letter-nna-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S218-letter-ga",
-      "sourceHash": "fnv1a64:9922dea4ca13a4e3",
-      "svgHash": "fnv1a64:dab40168a9b2dac7",
+      "sourceHash": "fnv1a64:c72f2648aabb76b0",
+      "svgHash": "fnv1a64:f80817edc8f8e5be",
       "svg": "sanskrit/book/figures/SA-S218-letter-ga-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S219-letter-sha",
-      "sourceHash": "fnv1a64:8371807ae873ee32",
-      "svgHash": "fnv1a64:4b75e0601c28ee4c",
+      "sourceHash": "fnv1a64:2dad9ddce9935d48",
+      "svgHash": "fnv1a64:9e40b8dba02dd9dd",
       "svg": "sanskrit/book/figures/SA-S219-letter-sha-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S220-letter-cha",
-      "sourceHash": "fnv1a64:72e73f98b41876cd",
-      "svgHash": "fnv1a64:974f9e98ebafd92e",
+      "sourceHash": "fnv1a64:37c41e513b823da5",
+      "svgHash": "fnv1a64:1d173b38410917ec",
       "svg": "sanskrit/book/figures/SA-S220-letter-cha-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S221-letter-dda",
-      "sourceHash": "fnv1a64:319573d96eeaba4a",
-      "svgHash": "fnv1a64:a95ebe66084ff876",
+      "sourceHash": "fnv1a64:465b98ed2442274c",
+      "svgHash": "fnv1a64:b442e101a6ec96bd",
       "svg": "sanskrit/book/figures/SA-S221-letter-dda-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S224-letter-i",
-      "sourceHash": "fnv1a64:6f98fffb741e77da",
-      "svgHash": "fnv1a64:a7656f8c223c4a53",
+      "sourceHash": "fnv1a64:2210c60e46560a9f",
+      "svgHash": "fnv1a64:7eb244f3142c9450",
       "svg": "sanskrit/book/figures/SA-S224-letter-i-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S225-letter-vocalic-r",
-      "sourceHash": "fnv1a64:fc8ee25c6134d350",
-      "svgHash": "fnv1a64:35bd7965fad41d2d",
+      "sourceHash": "fnv1a64:773aee3190d0b763",
+      "svgHash": "fnv1a64:1705eb2212ce2097",
       "svg": "sanskrit/book/figures/SA-S225-letter-vocalic-r-filmstrip.svg"
     }
   ]

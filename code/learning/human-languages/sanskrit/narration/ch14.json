@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Pointing, and Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2f5f816000bf30d3",
+  "sourceHash": "fnv1a64:4062a1baf3b0b5e0",
   "lessons": [
     {
       "id": "SA-C14-this",
@@ -1327,7 +1327,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6b6df413fa7b22dc",
+      "sourceHash": "fnv1a64:0264c6682c037622",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1422,19 +1422,23 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift and draw the right stem top-to-bottom."
+              "text": "2. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the top shirorekhā left-to-right."
+              "text": "3. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "4. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "verified three-stroke teaching form fitted to the bundled printed outline."
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows three movements; most native writers draw थ (tha) in two strokes (72% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",
