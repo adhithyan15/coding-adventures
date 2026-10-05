@@ -26,3 +26,24 @@ nested input guards, then a fresh generated Windows build and actual Tab/arrow
 interaction. Verify cell highlight, selection summary and subsequent formula
 commit refer to the same logical cell. Record any limits of UIA inspection and
 keep full accessibility acceptance open until verified.
+
+## Implementation and validation, 2026-10-05
+
+The native wrapper exposes a keyboard navigation event wired to the unique
+authored container tap action. Its handler reads the wrapper's current typed
+row VM Tag using the same lowered payload expressions as pointer dispatch.
+Multiple candidate actions produce a compiler error. Arrow handling checks that
+the wrapper itself owns focus and reacquires the target after adapter updates.
+
+368 emitter unit/integration tests passed; one doctest is ignored. The generated
+VisiCalc x64 WinUI project built with zero errors and 20 binding warnings.
+Security review passed. Standard Rust runtime DLL and isolated fixture retained
+at C:/Users/adhit/worktrees/visicalc-keyboard-20261005-output/.
+
+Native keyboard acceptance is NOT complete: the app launched and UIA reported
+the restored B2 formula state, but activation failed and the captured screen
+showed the Windows lock screen. Do not treat the background UIA tree as keyboard
+interaction proof. After the desktop is unlocked, verify Tab into the grid,
+arrow selection/highlight/summary synchronization, repeated navigation after
+row VM replacement, editor caret behavior and a formula commit to the selected
+cell. Keep the PR draft until that validation passes.
