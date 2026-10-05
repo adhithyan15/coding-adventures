@@ -64,51 +64,22 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  // The sourced క, ఙ, ఛ, ఝ, ఞ, ట, డ, ఢ, ణ, త and థ routes and five-run pedagogical ఐ route cross
-  // narrow printed counter transitions while still covering their complete
-  // outlines. ట's six separately numbered source movements cut across the
-  // broad printed bowl most strongly. డ's separately numbered arcs likewise
-  // cross the printed joins between the broad body sections.
+  // The sourced క, ఙ, ఛ and ఝ routes cross narrow printed counter
+  // transitions while still covering their complete outlines. ఞ, ట, ఢ, డ, ఐ,
+  // ఋ, త, అ and ఒ no longer need a bound: their native-lift refits run every
+  // stroke along Noto's own ink, so they meet the default 0.97 on-ink floor.
   registerStrokeHonestyTests(
     letters,
     {
-      అ: 0.96,
       క: 0.93,
       ఖ: 0.93,
       ఙ: 0.9,
-      ఞ: 0.86,
-      ట: 0.55,
       ఛ: 0.92,
-      డ: 0.32,
-      ఢ: 0.32,
-      // The packaged త route follows the full paired-bowl contour in one
-      // connected run, crossing Noto's narrow printed joins between turns.
-      త: 0.83,
       ఝ: 0.75,
-      ఐ: 0.59,
-      ఒ: 0.84,
-      ఋ: 0.84,
     },
     {
-      // The packaged ణ guide has five curves but no counterpart for Noto
-      // Sans Telugu's short horizontal shelf inside the left bowl. Keep the
-      // source-faithful filmstrip and bound that known font-only remainder.
-      ణ: 0.05,
-      // The packaged బ guide deliberately teaches four separated outer arcs;
-      // Noto joins the two left arcs with a broad printed diagonal. Preserve
-      // the attested movement boundaries and bound that font-only join.
-      బ: 0.07,
-      // The source-faithful paired-bowl route leaves a small font-only wedge
-      // at Noto's upper-right join outside the centerline envelope.
-      త: 0.05,
-      // AppChant's four sourced centerlines preserve the separate upper
-      // chevron and three-part lower body, while Noto's broad joins leave a
-      // small font-only shoulder outside that teaching route.
-      హ: 0.05,
-      // AppChant's four sourced centerlines preserve the two bowls, broad
-      // body, and separate chevron, while Noto's rounded joins leave a small
-      // font-only shoulder outside that teaching route.
-      ళ: 0.07,
+      // ణ, బ, ళ, త and హ no longer need a bound: their native-lift refits
+      // run through Noto's printed joins, so they meet the default 2% ceiling.
     },
   );
 
@@ -254,7 +225,7 @@ describe("handwriting ductus", () => {
     ).toEqual([
       [
         "turn down and left around the upper bowl",
-        "continue right through the middle shoulder",
+        "continue right over the middle shoulder",
         "curve down and left around the lower bowl",
         "finish upward along the left tail",
       ],
@@ -274,7 +245,7 @@ describe("handwriting ductus", () => {
         "circle up around the upper-left bowl",
         "descend through the central curve",
         "turn up around the left shoulder",
-        "sweep right and up around the broad outer bowl",
+        "sweep right and up the broad outer bowl",
         "return left along the crown",
       ],
       ["draw the separate downward stem"],
@@ -304,18 +275,20 @@ describe("handwriting ductus", () => {
     ).toEqual([
       [
         "sweep left around the upper-left shoulder",
-        "continue down and right around the lower-left bowl",
+        "continue down round the lower-left bowl",
         "turn upward around the broad middle arch",
       ],
       ["sweep right and up around the outer arch"],
-      ["restart and cup through the upper flourish"],
+      ["restart and cup the upper flourish"],
       ["restart and draw the separate downward stem"],
     ]);
   });
 
-  it("Telugu చ groups four source-verified movements into two pen-down runs", () => {
-    expect(penLifts(TELUGU_CA)).toBe(1);
-    expect(TELUGU_CA.strokes).toHaveLength(2);
+  it("Telugu చ groups four source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 93% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_CA)).toBe(0);
+    expect(TELUGU_CA.strokes).toHaveLength(1);
     expect(
       TELUGU_CA.strokes.map((stroke) =>
         stroke.segments.map((segment) => segment.label),
@@ -325,8 +298,9 @@ describe("handwriting ductus", () => {
         "draw the upper bar from left to right",
         "continue down and around the left bowl",
         "sweep right and up around the outer bowl",
+        "climb up the flourish's left arm",
+        "cup the upper flourish",
       ],
-      ["restart and cup through the upper flourish"],
     ]);
   });
 
@@ -358,24 +332,32 @@ describe("handwriting ductus", () => {
     ).toEqual([
       [
         "turn around the compact upper-left lobe",
-        "continue down and around the broad lower bowl",
+        "continue down round the broad lower bowl",
         "curl upward around the rounded right lobe",
       ],
-      ["lift and draw the inner horizontal bar from left to right"],
-      ["lift again and draw the short upper headstroke downward"],
+      ["lift and draw the inner bar left to right"],
+      ["lift again, draw the upper headstroke down"],
     ]);
   });
 
-  it("Telugu జ preserves all four source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_JA)).toBe(3);
-    expect(TELUGU_JA.strokes).toHaveLength(4);
+  it("Telugu జ groups four source-verified movements into two pen-down runs", () => {
+    // HP Labs India: two strokes for 97% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_JA)).toBe(1);
+    expect(TELUGU_JA.strokes).toHaveLength(2);
     expect(
-      TELUGU_JA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_JA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep right across the rounded upper-left arch",
-      "curve down and right around the lower-left bowl",
-      "sweep right and up around the lower-right bowl",
-      "restart and curl through the upper-right flourish",
+      [
+        "sweep right across the upper-left arch",
+        "curve down and right round the left bowl",
+        "sweep right and up the lower-right bowl",
+      ],
+      [
+        "curl the upper-right flourish",
+      ],
     ]);
   });
 
@@ -388,101 +370,142 @@ describe("handwriting ductus", () => {
       "circle around the broad left bowl",
       "restart and circle around the middle bowl",
       "restart and circle around the right bowl",
-      "restart and sweep through the upper flourish",
+      "restart and sweep the upper flourish",
       "restart and draw the separate downward stem",
     ]);
   });
 
-  it("Telugu ఞ preserves all eight source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_NYA)).toBe(7);
-    expect(TELUGU_NYA.strokes).toHaveLength(8);
+  it("Telugu ఞ groups eight source-verified movements into three pen-down runs", () => {
+    // HP Labs India: three strokes for 89% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_NYA)).toBe(2);
+    expect(TELUGU_NYA.strokes).toHaveLength(3);
     expect(
-      TELUGU_NYA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_NYA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep up around the upper-left loop",
-      "sweep right around the upper-right loop",
-      "curve down and left around the broad lower bowl",
-      "curl upward around the inner-left loop",
-      "curl down and right around the inner bowl",
-      "draw the short downward tail",
-      "draw the right horizontal bar",
-      "draw the separate upper vertical stem downward",
+      [
+        "sweep up around the upper-left loop",
+        "sweep right around the upper-right loop",
+        "curve down and left around the lower bowl",
+        "curl upward around the inner-left loop",
+        "curl down and right around the inner bowl",
+        "draw the short downward tail",
+      ],
+      ["draw the right horizontal bar"],
+      ["draw the separate upper stem downward"],
     ]);
   });
 
-  it("Telugu ట preserves all six source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_TTA)).toBe(5);
-    expect(TELUGU_TTA.strokes).toHaveLength(6);
+  it("Telugu ట groups six source-verified movements into two pen-down runs", () => {
+    // HP Labs India: two strokes for 94% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_TTA)).toBe(1);
+    expect(TELUGU_TTA.strokes).toHaveLength(2);
     expect(
-      TELUGU_TTA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_TTA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "curl upward along the inner shoulder",
-      "sweep down around the upper-left curve",
-      "turn right around the lower-left bowl",
-      "sweep right and upward around the lower-right bowl",
-      "curve upward and left around the outer shoulder",
-      "draw the separate upper stem downward",
+      [
+        "curl upward along the inner shoulder",
+        "sweep down around the upper-left curve",
+        "turn right around the lower-left bowl",
+        "sweep right and up the lower-right bowl",
+        "curve up and left over the outer shoulder",
+      ],
+      ["draw the separate upper stem downward"],
     ]);
   });
 
-  it("Telugu ఠ preserves all three source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_TTHA)).toBe(2);
-    expect(TELUGU_TTHA.strokes).toHaveLength(3);
+  it("Telugu ఠ groups three source-verified movements into two pen-down runs", () => {
+    // HP Labs India: two strokes for 71% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_TTHA)).toBe(1);
+    expect(TELUGU_TTHA.strokes).toHaveLength(2);
     expect(
-      TELUGU_TTHA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_TTHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep left and around the broad circular body",
-      "curl upward through the separate top flourish",
-      "place the separate inner dot",
+      [
+        "sweep left round the broad circular body",
+        "climb up the flourish's left arm",
+        "curl upward through the top flourish",
+      ],
+      [
+        "place the separate inner dot",
+      ],
     ]);
   });
 
-  it("Telugu డ preserves all five source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_DDA)).toBe(4);
-    expect(TELUGU_DDA.strokes).toHaveLength(5);
+  it("Telugu డ groups five source-verified movements into two pen-down runs", () => {
+    // HP Labs India: two strokes for 75% of native writers; the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_DDA)).toBe(1);
+    expect(TELUGU_DDA.strokes).toHaveLength(2);
     expect(
-      TELUGU_DDA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_DDA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep down around the upper-left curve",
-      "turn right around the lower-left bowl",
-      "sweep right and upward around the lower-right bowl",
-      "curve left around the upper-right shoulder",
-      "curl upward through the separate top flourish",
+      [
+        "sweep down around the upper-left curve",
+        "turn right around the lower-left bowl",
+        "sweep right and up the lower-right bowl",
+        "curve left round the upper-right shoulder",
+      ],
+      [
+        "curl up through the separate top flourish",
+      ],
     ]);
   });
 
-  it("Telugu ఢ preserves all six source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_DDHA)).toBe(5);
-    expect(TELUGU_DDHA.strokes).toHaveLength(6);
+  it("Telugu ఢ groups six source-verified movements into three pen-down runs", () => {
+    // HP Labs India: three strokes for 79% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_DDHA)).toBe(2);
+    expect(TELUGU_DDHA.strokes).toHaveLength(3);
     expect(
-      TELUGU_DDHA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_DDHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep down around the upper-left curve",
-      "turn right around the lower-left bowl",
-      "sweep right and upward around the lower-right bowl",
-      "curve left around the upper-right shoulder",
-      "curl upward through the separate top flourish",
-      "draw the separate lower stem downward",
+      [
+        "sweep down around the upper-left curve",
+        "turn right around the lower-left bowl",
+        "sweep right and up the lower-right bowl",
+        "curve left round the upper-right shoulder",
+      ],
+      ["curl up through the separate top flourish"],
+      ["draw the separate lower stem downward"],
     ]);
   });
 
-  it("Telugu ణ preserves all five source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_NNA)).toBe(4);
-    expect(TELUGU_NNA.strokes).toHaveLength(5);
+  it("Telugu ణ groups five source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 79% of native writers; the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_NNA)).toBe(0);
+    expect(TELUGU_NNA.strokes).toHaveLength(1);
     expect(
-      TELUGU_NNA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_NNA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep left and upward around the lower-left bowl",
-      "curve right across the upper-left bowl",
-      "arch right and downward over the upper-right bowl",
-      "turn left around the lower-right bowl",
-      "sweep upward along the inner curve",
+      [
+        "sweep left and up the lower-left bowl",
+        "curve right across the upper-left bowl",
+        "arch right and down the upper-right bowl",
+        "turn left around the lower-right bowl",
+        "sweep upward along the inner curve",
+      ],
     ]);
   });
 
-  it("Telugu త groups seven source-verified movements into two pen-down runs", () => {
-    expect(penLifts(TELUGU_TA)).toBe(1);
-    expect(TELUGU_TA.strokes).toHaveLength(2);
+  it("Telugu త groups seven source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 51% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_TA)).toBe(0);
+    expect(TELUGU_TA.strokes).toHaveLength(1);
     expect(
       TELUGU_TA.strokes.map((stroke) =>
         stroke.segments.map((segment) => segment.label),
@@ -493,223 +516,345 @@ describe("handwriting ductus", () => {
         "turn downward around the outer-left bowl",
         "sweep right around the broad lower bowl",
         "curve upward around the outer-right bowl",
-        "turn downward along the inner-right shoulder",
-        "return upward and curve left across the upper shoulder",
+        "turn down the inner-right shoulder",
+        "curve up and left over the upper shoulder",
+        "climb up the flourish's left arm",
+        "curl upward through the top flourish",
       ],
-      ["sweep up through the separate top flourish"],
     ]);
   });
 
-  it("Telugu థ preserves all seven source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_THA)).toBe(6);
-    expect(TELUGU_THA.strokes).toHaveLength(7);
+  it("Telugu థ groups seven source-verified movements into three pen-down runs", () => {
+    // HP Labs India: three strokes for 78% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_THA)).toBe(2);
+    expect(TELUGU_THA.strokes).toHaveLength(3);
     expect(
-      TELUGU_THA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_THA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep down around the upper-left curve",
-      "turn right around the lower-left bowl",
-      "sweep right and upward around the lower-right bowl",
-      "curve left around the upper-right shoulder",
-      "curl upward through the separate top flourish",
-      "draw the separate lower stem downward",
-      "place the separate inner dot",
+      [
+        "sweep down around the upper-left curve",
+        "turn right around the lower-left bowl",
+        "sweep right and up the lower-right bowl",
+        "curve left round the upper-right shoulder",
+        "climb up the flourish's left arm",
+        "curl upward through the top flourish",
+      ],
+      ["draw the separate lower stem downward"],
+      ["place the separate inner dot"],
     ]);
   });
 
-  it("Telugu ద preserves all five source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_DA)).toBe(4);
-    expect(TELUGU_DA.strokes).toHaveLength(5);
+  it("Telugu ద groups five source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 81% of native writers; the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_DA)).toBe(0);
+    expect(TELUGU_DA.strokes).toHaveLength(1);
     expect(
-      TELUGU_DA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_DA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep down around the upper-left curve",
-      "turn right around the lower-left bowl",
-      "sweep right and upward around the lower-right bowl",
-      "curve left around the upper-right shoulder",
-      "curl upward through the separate top flourish",
+      [
+        "sweep down around the upper-left curve",
+        "turn right around the lower-left bowl",
+        "sweep right and up the lower-right bowl",
+        "curve left round the upper-right shoulder",
+        "climb up the flourish's left arm",
+        "curl upward through the top flourish",
+      ],
     ]);
   });
 
-  it("Telugu ధ preserves all six source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_DHA)).toBe(5);
-    expect(TELUGU_DHA.strokes).toHaveLength(6);
+  it("Telugu ధ groups six source-verified movements into two pen-down runs", () => {
+    // HP Labs India: two strokes for 84% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_DHA)).toBe(1);
+    expect(TELUGU_DHA.strokes).toHaveLength(2);
     expect(
-      TELUGU_DHA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_DHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep down around the upper-left curve",
-      "turn right around the lower-left bowl",
-      "sweep right and upward around the lower-right bowl",
-      "curve left around the upper-right shoulder",
-      "curl upward through the separate top flourish",
-      "draw the separate lower stem downward",
+      [
+        "sweep down around the upper-left curve",
+        "turn right around the lower-left bowl",
+        "sweep right and up the lower-right bowl",
+        "curve left round the upper-right shoulder",
+        "climb up the flourish's left arm",
+        "curl upward through the top flourish",
+      ],
+      ["draw the separate lower stem downward"],
     ]);
   });
 
-  it("Telugu న preserves all three source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_NA)).toBe(2);
-    expect(TELUGU_NA.strokes).toHaveLength(3);
+  it("Telugu న groups three source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 92% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_NA)).toBe(0);
+    expect(TELUGU_NA.strokes).toHaveLength(1);
     expect(
-      TELUGU_NA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_NA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep upward around the left bowl and into the middle",
-      "sweep right and upward around the broad lower bowl",
-      "curl upward through the separate top flourish",
+      [
+        "sweep up the left bowl into the middle",
+        "sweep right and up the broad lower bowl",
+        "climb up the flourish's left arm",
+        "curl upward through the top flourish",
+      ],
     ]);
   });
 
-  it("Telugu ప preserves all four source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_PA)).toBe(3);
-    expect(TELUGU_PA.strokes).toHaveLength(4);
+  it("Telugu ప groups four source-verified movements into two pen-down runs", () => {
+    // HP Labs India: two strokes for 76% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_PA)).toBe(1);
+    expect(TELUGU_PA.strokes).toHaveLength(2);
     expect(
-      TELUGU_PA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_PA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep left across the upper-left curve",
-      "turn right around the lower-left bowl",
-      "sweep upward around the broad right bowl",
-      "curl upward through the separate top flourish",
+      [
+        "sweep left across the upper-left curve",
+        "turn right around the lower-left bowl",
+        "sweep upward around the broad right bowl",
+      ],
+      [
+        "curl up through the separate top flourish",
+      ],
     ]);
   });
 
-  it("Telugu ఫ preserves all five source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_PHA)).toBe(4);
-    expect(TELUGU_PHA.strokes).toHaveLength(5);
+  it("Telugu ఫ groups five source-verified movements into three pen-down runs", () => {
+    // HP Labs India: three strokes for 78% of native writers; the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_PHA)).toBe(2);
+    expect(TELUGU_PHA.strokes).toHaveLength(3);
     expect(
-      TELUGU_PHA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_PHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep left across the upper-left curve",
-      "turn right around the lower-left bowl",
-      "sweep upward around the broad right bowl",
-      "curl upward through the separate top flourish",
-      "draw the lower stem downward",
+      [
+        "sweep left across the upper-left curve",
+        "turn right around the lower-left bowl",
+        "sweep upward around the broad right bowl",
+      ],
+      [
+        "curl up through the separate top flourish",
+      ],
+      [
+        "draw the lower stem downward",
+      ],
     ]);
   });
 
-  it("Telugu బ preserves all four source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_BA)).toBe(3);
-    expect(TELUGU_BA.strokes).toHaveLength(4);
+  it("Telugu బ groups four source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 97% of native writers; the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_BA)).toBe(0);
+    expect(TELUGU_BA.strokes).toHaveLength(1);
     expect(
-      TELUGU_BA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_BA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep right around the upper-left curve",
-      "turn right around the lower-left bowl",
-      "sweep right and upward around the lower-right bowl",
-      "curve left around the upper-right shoulder",
+      [
+        "sweep right around the upper-left curve",
+        "curve down and left through the shoulder",
+        "turn right around the lower-left bowl",
+        "sweep right and up the lower-right bowl",
+        "curve left round the upper-right shoulder",
+      ],
     ]);
   });
 
-  it("Telugu భ preserves all six source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_BHA)).toBe(5);
-    expect(TELUGU_BHA.strokes).toHaveLength(6);
+  it("Telugu భ groups six source-verified movements into two pen-down runs", () => {
+    // HP Labs India: two strokes for 85% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_BHA)).toBe(1);
+    expect(TELUGU_BHA.strokes).toHaveLength(2);
     expect(
-      TELUGU_BHA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_BHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep right around the upper-left curve",
-      "curve down and left through the inner shoulder",
-      "turn right around the lower-left bowl",
-      "sweep right and upward around the lower-right bowl",
-      "curl upward through the separate top flourish",
-      "draw the lower stem downward",
+      [
+        "sweep right around the upper-left curve",
+        "curve down and left through the shoulder",
+        "turn right around the lower-left bowl",
+        "sweep right and up the lower-right bowl",
+        "climb up the flourish's left arm",
+        "curl upward through the top flourish",
+      ],
+      ["draw the lower stem downward"],
     ]);
   });
 
-  it("Telugu మ preserves all seven source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_MA)).toBe(6);
-    expect(TELUGU_MA.strokes).toHaveLength(7);
+  it("Telugu మ groups seven source-verified movements into two pen-down runs", () => {
+    // HP Labs India: two strokes for 78% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_MA)).toBe(1);
+    expect(TELUGU_MA.strokes).toHaveLength(2);
     expect(
-      TELUGU_MA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_MA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep left around the upper-left arch",
-      "turn right around the lower-left bowl",
-      "turn right around the lower-middle bowl",
-      "curve upward and left around the central shoulder",
-      "sweep right and upward through the separate top flourish",
-      "sweep right and upward around the lower-right bowl",
-      "curve upward and left around the outer-right shoulder",
+      [
+        "sweep left around the upper-left arch",
+        "turn right around the lower-left bowl",
+        "turn right around the lower-middle bowl",
+        "arc up and left over the central shoulder",
+        "climb up the flourish's left arm",
+        "sweep right and up into the top flourish",
+      ],
+      [
+        "sweep right and up the lower-right bowl",
+        "curve up and left over the right shoulder",
+      ],
     ]);
   });
 
-  it("Telugu య preserves all four source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_YA)).toBe(3);
-    expect(TELUGU_YA.strokes).toHaveLength(4);
+  it("Telugu య groups four source-verified movements into three pen-down runs", () => {
+    // HP Labs India: three strokes for 48% of native writers, the
+    // most common count;
+    // the source's ordered movements stay as segments.
+    expect(penLifts(TELUGU_YA)).toBe(2);
+    expect(TELUGU_YA.strokes).toHaveLength(3);
     expect(
-      TELUGU_YA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_YA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "loop counterclockwise around the left bowl",
-      "loop counterclockwise around the centre bowl",
-      "draw down and up through the lower angled join",
-      "loop counterclockwise around the right bowl",
+      [
+        "loop the left bowl counterclockwise",
+        "loop the centre bowl counterclockwise",
+      ],
+      [
+        "draw down and up the lower angled join",
+      ],
+      [
+        "loop the right bowl counterclockwise",
+      ],
     ]);
   });
 
-  it("Telugu ర preserves both source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_RA)).toBe(1);
-    expect(TELUGU_RA.strokes).toHaveLength(2);
+  it("Telugu ర groups two source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 81% of native writers;
+    // the source's ordered movements stay as segments.
+    expect(penLifts(TELUGU_RA)).toBe(0);
+    expect(TELUGU_RA.strokes).toHaveLength(1);
     expect(
-      TELUGU_RA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_RA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "loop counterclockwise around the main bowl",
-      "draw down and up through the separate upper chevron",
+      [
+        "loop the main bowl counterclockwise",
+        "climb up the chevron's left arm",
+        "draw the upper chevron down and up",
+      ],
     ]);
   });
 
-  it("Telugu ల preserves both source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_LA)).toBe(1);
-    expect(TELUGU_LA.strokes).toHaveLength(2);
+  it("Telugu ల groups two source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 99% of native writers;
+    // the source's ordered movements stay as segments.
+    expect(penLifts(TELUGU_LA)).toBe(0);
+    expect(TELUGU_LA.strokes).toHaveLength(1);
     expect(
-      TELUGU_LA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_LA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "loop counterclockwise around the small upper bowl",
-      "sweep down and around the broad lower bowl",
+      [
+        "loop the small upper bowl counterclockwise",
+        "sweep down round the broad lower bowl",
+      ],
     ]);
   });
 
-  it("Telugu ళ preserves all four source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_LLA)).toBe(3);
-    expect(TELUGU_LLA.strokes).toHaveLength(4);
+  it("Telugu ళ groups four source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 87% of native writers; the source's ordered movements stay as segments.
+    expect(penLifts(TELUGU_LLA)).toBe(0);
+    expect(TELUGU_LLA.strokes).toHaveLength(1);
     expect(
-      TELUGU_LLA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_LLA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "loop counterclockwise around the small inner bowl",
-      "sweep down around the broad left body and loop the lower bowl",
-      "sweep right and up around the broad outer body",
-      "draw down and up through the separate upper chevron",
+      [
+        "loop the small inner bowl counterclockwise",
+        "sweep down the body, loop the lower bowl",
+        "sweep right and up the broad outer body",
+        "climb up the chevron's left arm",
+        "draw the upper chevron down and up",
+      ],
     ]);
   });
 
-  it("Telugu వ preserves all three source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_VA)).toBe(2);
-    expect(TELUGU_VA.strokes).toHaveLength(3);
+  it("Telugu వ groups three source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 75% of native writers;
+    // the source's ordered movements stay as segments.
+    expect(penLifts(TELUGU_VA)).toBe(0);
+    expect(TELUGU_VA.strokes).toHaveLength(1);
     expect(
-      TELUGU_VA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_VA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "loop counterclockwise around the small lower-left bowl",
-      "sweep around the broad lower and right body",
-      "draw down and up through the separate upper chevron",
+      [
+        "loop the lower-left bowl counterclockwise",
+        "sweep round the lower and right body",
+        "climb up the chevron's left arm",
+        "draw the upper chevron down and up",
+      ],
     ]);
   });
 
-  it("Telugu శ preserves all three source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_SHA)).toBe(2);
-    expect(TELUGU_SHA.strokes).toHaveLength(3);
+  it("Telugu శ groups three source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 93% of native writers;
+    // the source's ordered movements stay as segments.
+    expect(penLifts(TELUGU_SHA)).toBe(0);
+    expect(TELUGU_SHA.strokes).toHaveLength(1);
     expect(
-      TELUGU_SHA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_SHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "loop around the broad lower-left bowl",
-      "sweep around the tall lower and right body",
-      "draw down and up through the separate upper chevron",
+      [
+        "loop around the broad lower-left bowl",
+        "sweep round the tall lower and right body",
+        "climb up the chevron's left arm",
+        "draw the upper chevron down and up",
+      ],
     ]);
   });
 
-  it("Telugu ష preserves all four source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_SSA)).toBe(3);
-    expect(TELUGU_SSA.strokes).toHaveLength(4);
+  it("Telugu ష groups four source-verified movements into three pen-down runs", () => {
+    // HP Labs India: three strokes for 27% of native writers (two
+    // for 69%, but the tail cannot join the body in source order);
+    // the source's ordered movements stay as segments.
+    expect(penLifts(TELUGU_SSA)).toBe(2);
+    expect(TELUGU_SSA.strokes).toHaveLength(3);
     expect(
-      TELUGU_SSA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_SSA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "loop around the lower-left bowl",
-      "sweep around the broad lower and right body",
-      "add the short lower-right tail",
-      "draw down and up through the separate upper chevron",
+      [
+        "loop around the lower-left bowl",
+        "sweep round the lower and right body",
+      ],
+      [
+        "add the short lower-right tail",
+      ],
+      [
+        "draw the separate chevron down and up",
+      ],
     ]);
   });
 
@@ -719,34 +864,48 @@ describe("handwriting ductus", () => {
     expect(
       TELUGU_SA.strokes.map((stroke) => stroke.segments[0]!.label),
     ).toEqual([
-      "loop around the left bowl and sweep around the right body",
-      "draw down and up through the separate upper chevron",
+      "loop the left bowl, sweep the right body",
+      "draw the separate chevron down and up",
     ]);
   });
 
-  it("Telugu హ preserves all four source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_HA)).toBe(3);
-    expect(TELUGU_HA.strokes).toHaveLength(4);
+  it("Telugu హ groups four source-verified movements into two pen-down runs", () => {
+    // HP Labs India: two strokes for 74% of native writers;
+    // the source's ordered movements stay as segments.
+    expect(penLifts(TELUGU_HA)).toBe(1);
+    expect(TELUGU_HA.strokes).toHaveLength(2);
     expect(
-      TELUGU_HA.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_HA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "loop around the lower-left bowl",
-      "sweep around the broad lower and right body",
-      "draw right across the middle bar and curl around its end",
-      "draw down and up through the separate upper chevron",
+      [
+        "loop around the lower-left bowl",
+        "sweep round the lower and right body",
+        "draw the middle bar right and curl its end",
+      ],
+      [
+        "draw the separate chevron down and up",
+      ],
     ]);
   });
 
-  it("Telugu అ groups four source-verified movements into two pen-down runs", () => {
-    expect(penLifts(TELUGU_A)).toBe(1);
-    expect(TELUGU_A.strokes).toHaveLength(2);
+  it("Telugu అ groups four source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 97% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_A)).toBe(0);
+    expect(TELUGU_A.strokes).toHaveLength(1);
     expect(
       TELUGU_A.strokes.map((stroke) =>
         stroke.segments.map((segment) => segment.label),
       ),
     ).toEqual([
-      ["turn around the left lobe", "sweep around the broad lower bowl"],
-      ["turn around the right lobe", "return left along the inner bar"],
+      [
+        "turn around the left lobe",
+        "sweep around the broad lower bowl",
+        "turn around the right lobe",
+        "return left along the inner bar",
+      ],
     ]);
   });
 
@@ -759,10 +918,10 @@ describe("handwriting ductus", () => {
       ),
     ).toEqual([
       [
-        "turn around the hooked left lobe and sweep through the broad lower bowl",
+        "turn round the left lobe and lower bowl",
       ],
       [
-        "turn around the rounded right lobe and return left along the inner bar",
+        "turn the right lobe, then left along the bar",
       ],
     ]);
   });
@@ -791,27 +950,29 @@ describe("handwriting ductus", () => {
     ).toEqual([
       [
         "sweep left across the rounded upper arch",
-        "continue down and around the broad lower bowl",
-        "curl upward around the rounded right lobe without lifting",
+        "continue down round the broad lower bowl",
+        "curl up round the right lobe, no lift",
       ],
-      ["lift and draw the inner horizontal bar from left to right"],
-      ["lift again and draw the short upper headstroke downward"],
+      ["lift and draw the inner bar left to right"],
+      ["lift again, draw the upper headstroke down"],
     ]);
   });
 
-  it("Telugu ఎ groups three source-verified movements into two pen-down runs", () => {
-    expect(penLifts(TELUGU_E)).toBe(1);
-    expect(TELUGU_E.strokes).toHaveLength(2);
+  it("Telugu ఎ groups three source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 86% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_E)).toBe(0);
+    expect(TELUGU_E.strokes).toHaveLength(1);
     expect(
       TELUGU_E.strokes.map((stroke) =>
         stroke.segments.map((segment) => segment.label),
       ),
     ).toEqual([
       [
-        "turn down and left around the compact lower loop",
-        "continue around its base and return to the central junction",
+        "turn down and left round the lower loop",
+        "round its base and back to the junction",
+        "sweep up the broad outer arch",
       ],
-      ["restart at the junction and sweep up through the broad outer arch"],
     ]);
   });
 
@@ -824,54 +985,75 @@ describe("handwriting ductus", () => {
       ),
     ).toEqual([
       [
-        "turn down and left around the compact lower loop",
-        "continue around its base and return to the central junction",
+        "turn down and left round the lower loop",
+        "round its base and back to the junction",
       ],
       [
-        "restart at the lower-right tail and sweep up through the broad outer arch",
+        "restart at the tail, sweep up the outer arch",
       ],
-      ["restart below the upper-left hook and sweep upward to its tip"],
+      ["restart and sweep up the upper-left hook"],
     ]);
   });
 
-  it("Telugu ఋ preserves all six source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_VOCALIC_R)).toBe(5);
-    expect(TELUGU_VOCALIC_R.strokes).toHaveLength(6);
+  it("Telugu ఋ groups six source-verified movements into three pen-down runs", () => {
+    // HP Labs India: three strokes for 48% of native writers, the
+    // most common count; the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_VOCALIC_R)).toBe(2);
+    expect(TELUGU_VOCALIC_R.strokes).toHaveLength(3);
     expect(
-      TELUGU_VOCALIC_R.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_VOCALIC_R.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep right across the upper shoulder",
-      "curve down around the left bowl",
-      "sweep right around the lower bowl",
-      "curl up around the first right lobe",
-      "curl up around the middle lobe",
-      "curl up around the final lobe",
+      [
+        "sweep right across the upper shoulder",
+        "curve down around the left bowl",
+        "sweep right around the lower bowl",
+        "curl up around the first right lobe",
+      ],
+      [
+        "curl up around the middle lobe",
+      ],
+      [
+        "curl up around the final lobe",
+      ],
     ]);
   });
 
-  it("Telugu ఐ preserves all five source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_AI)).toBe(4);
-    expect(TELUGU_AI.strokes).toHaveLength(5);
+  it("Telugu ఐ groups five source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 70% of native writers; the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_AI)).toBe(0);
+    expect(TELUGU_AI.strokes).toHaveLength(1);
     expect(
-      TELUGU_AI.strokes.map((stroke) => stroke.segments[0]!.label),
+      TELUGU_AI.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
     ).toEqual([
-      "sweep left across the compact upper arch",
-      "curve down around the left bowl",
-      "sweep right around the broad lower bowl",
-      "sweep left across the upper-right arch",
-      "sweep left across the upper-left arch",
+      [
+        "sweep left across the compact upper arch",
+        "curve down around the left bowl",
+        "sweep right around the broad lower bowl",
+        "sweep left across the upper-right arch",
+        "sweep left across the upper-left arch",
+      ],
     ]);
   });
 
-  it("Telugu ఒ preserves all three source-verified pen-down runs", () => {
-    expect(penLifts(TELUGU_O)).toBe(2);
-    expect(TELUGU_O.strokes).toHaveLength(3);
-    expect(TELUGU_O.strokes.map((stroke) => stroke.segments[0]!.label)).toEqual(
+  it("Telugu ఒ groups three source-verified movements into one pen-down run", () => {
+    // HP Labs India: one stroke for 99% of native writers;
+    // the source's numbered movements stay as segments.
+    expect(penLifts(TELUGU_O)).toBe(0);
+    expect(TELUGU_O.strokes).toHaveLength(1);
+    expect(
+      TELUGU_O.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
       [
         "sweep right across the upper arch",
         "curve down around the left bowl",
         "sweep right around the broad lower bowl",
       ],
-    );
+    ]);
   });
 });

@@ -43,27 +43,29 @@ const teluguIOutline = teluguOutline("ఇ");
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
 const teluguUOutline = teluguOutline("ఉ");
 
-describe("Telugu అ — two joined movement pairs", () => {
+describe("Telugu అ — four movements in one unbroken run", () => {
+  // HP Labs India: one stroke for 97% of native writers, so the right lobe
+  // continues up from the lower bowl instead of restarting at the bar.
   const steps = ductusSteps(TELUGU_A);
   const strip = ductusFilmstrip(TELUGU_A, teluguAOutline);
 
-  it("places one lift between movements 2 and 3", () => {
+  it("places no lift between the four movements", () => {
     expect(steps.map((step) => step.startsAfterLift)).toEqual([
       false,
       false,
-      true,
+      false,
       false,
     ]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
   });
 
-  it("reports four movements in two strokes", () => {
+  it("reports four movements in one unbroken stroke", () => {
     expect(strip.frames).toHaveLength(4);
-    expect(strip.penLifts).toBe(1);
-    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
   });
 
-  it("keeps the first run visible while the inner bar returns left", () => {
+  it("inks the whole run by the time the inner bar returns left", () => {
     const last = strip.frames[3];
     const done = byTag(last, "path").filter(
       (path) => path.attrs.class === "ductus__done",
@@ -71,9 +73,8 @@ describe("Telugu అ — two joined movement pairs", () => {
     const pen = byTag(last, "path").find(
       (path) => path.attrs.class === "ductus__pen",
     )!;
-    expect(done).toHaveLength(1);
-    expect(done[0].attrs.d).toBe(penPathD(TELUGU_A.strokes[0], 1));
-    expect(pen.attrs.d).toBe(penPathD(TELUGU_A.strokes[1], 1));
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(TELUGU_A.strokes[0], 1));
   });
 });
 
