@@ -1517,6 +1517,166 @@ jobs:
           chrome-version: 154.0.8037.92
           install-dependencies: true
 
+      - name: Grant pinned Chrome read/execute to Windows AppContainers
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          $chrome = Get-Item -LiteralPath $env:CHROME_PATH -ErrorAction Stop
+          if (-not $chrome.PSIsContainer -and $chrome.Name -ceq 'chrome.exe') {
+            $chromePath = [IO.Path]::GetFullPath($chrome.FullName)
+          } else {
+            throw 'reviewed Windows Chrome output is not chrome.exe'
+          }
+          $toolCache = [IO.Path]::GetFullPath($env:RUNNER_TOOL_CACHE).TrimEnd('\') + '\'
+          if (-not $chromePath.StartsWith($toolCache, [StringComparison]::OrdinalIgnoreCase)) {
+            throw 'reviewed Windows Chrome is outside RUNNER_TOOL_CACHE'
+          }
+          $browserRoot = $chrome.Directory.FullName
+
+          function Get-OpaqueFileId {
+            param([string] $Path)
+            $fileId = (& fsutil.exe file queryfileid $Path 2>&1 | Out-String).Trim()
+            if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($fileId)) {
+              throw "could not bind Windows Chrome file identity: $Path"
+            }
+            return $fileId
+          }
+          function Get-AncestorSnapshot {
+            param([string] $Root, [string] $TrustedRoot)
+            $snapshot = @{}
+            $cursor = Get-Item -LiteralPath $Root -Force -ErrorAction Stop
+            while ($true) {
+              if (($cursor.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+                throw "reviewed Windows Chrome ancestor is a reparse point: $($cursor.FullName)"
+              }
+              $snapshot[$cursor.FullName] = Get-OpaqueFileId $cursor.FullName
+              if ($cursor.FullName.TrimEnd('\') -ieq $TrustedRoot.TrimEnd('\')) { break }
+              if ($null -eq $cursor.Parent) {
+                throw 'reviewed Windows Chrome ancestry escaped RUNNER_TOOL_CACHE'
+              }
+              $cursor = Get-Item -LiteralPath $cursor.Parent.FullName -Force -ErrorAction Stop
+            }
+            return $snapshot
+          }
+
+          function Get-BrowserTree {
+            param([string] $Root)
+            $rootItem = Get-Item -LiteralPath $Root -Force -ErrorAction Stop
+            $children = @(Get-ChildItem -LiteralPath $Root -Force -Recurse -ErrorAction Stop)
+            return @($rootItem) + $children
+          }
+          function Get-TreeSnapshot {
+            param([System.IO.FileSystemInfo[]] $Entries)
+            $snapshot = @{}
+            foreach ($entry in $Entries) {
+              if (($entry.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+                throw "reviewed Windows Chrome tree contains a reparse point: $($entry.FullName)"
+              }
+              $fileId = Get-OpaqueFileId $entry.FullName
+              if (-not $entry.PSIsContainer) {
+                $rawLinks = @(& fsutil.exe hardlink list $entry.FullName 2>&1)
+                if ($LASTEXITCODE -ne 0) {
+                  throw "could not enumerate Windows Chrome hardlinks: $($entry.FullName)"
+                }
+                $renderedLinks = ($rawLinks | Out-String)
+                $links = @($rawLinks | ForEach-Object { ([string]$_).Trim() } |
+                  Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+                if ($renderedLinks.Length -gt 32768 -or $links.Count -ne 1) {
+                  throw "Windows Chrome file has an unexpected hardlink identity: $($entry.FullName)"
+                }
+                $listed = $links[0]
+                if ($listed -match '[\x00-\x1f]' -or -not $listed.StartsWith('\')) {
+                  throw "Windows Chrome file has an unexpected hardlink identity: $($entry.FullName)"
+                }
+                $listedPath = [IO.Path]::GetFullPath(
+                  [IO.Path]::Combine([IO.Path]::GetPathRoot($entry.FullName), $listed.TrimStart('\'))
+                )
+                if ($listedPath -ine $entry.FullName) {
+                  throw "Windows Chrome file has an unexpected hardlink identity: $($entry.FullName)"
+                }
+              }
+              $length = if ($entry.PSIsContainer) { '-' } else { [string]$entry.Length }
+              $snapshot[$entry.FullName] = "$fileId|$($entry.PSIsContainer)|$length"
+            }
+            return $snapshot
+          }
+
+          $ancestorBefore = Get-AncestorSnapshot $browserRoot $toolCache
+          $before = Get-TreeSnapshot (Get-BrowserTree $browserRoot)
+          & icacls.exe $browserRoot /remove:g '*S-1-15-2-1' /T /Q
+          if ($LASTEXITCODE -ne 0) { throw "icacls removal failed with exit code $LASTEXITCODE" }
+          & icacls.exe $browserRoot /grant:r '*S-1-15-2-1:(OI)(CI)RX' /T /Q
+          if ($LASTEXITCODE -ne 0) { throw "icacls failed with exit code $LASTEXITCODE" }
+
+          $afterEntries = Get-BrowserTree $browserRoot
+          $after = Get-TreeSnapshot $afterEntries
+          if ($before.Count -ne $after.Count) {
+            throw 'Windows Chrome tree identity changed during ACL preparation'
+          }
+          foreach ($name in $before.Keys) {
+            if (-not $after.ContainsKey($name) -or $before[$name] -cne $after[$name]) {
+              throw 'Windows Chrome tree identity changed during ACL preparation'
+            }
+          }
+
+          $appPackages = 'S-1-15-2-1'
+          $writeMask = [Security.AccessControl.FileSystemRights]::Write -bor
+            [Security.AccessControl.FileSystemRights]::Modify -bor
+            [Security.AccessControl.FileSystemRights]::FullControl -bor
+            [Security.AccessControl.FileSystemRights]::Delete -bor
+            [Security.AccessControl.FileSystemRights]::DeleteSubdirectoriesAndFiles -bor
+            [Security.AccessControl.FileSystemRights]::ChangePermissions -bor
+            [Security.AccessControl.FileSystemRights]::TakeOwnership
+          $readExecute = [Security.AccessControl.FileSystemRights]::ReadAndExecute
+          foreach ($entry in $afterEntries) {
+            $combined = [Security.AccessControl.FileSystemRights]0
+            foreach ($rule in (Get-Acl -LiteralPath $entry.FullName -ErrorAction Stop).Access) {
+              try {
+                $identity = $rule.IdentityReference.Translate(
+                  [Security.Principal.SecurityIdentifier]
+                ).Value
+              } catch {
+                continue
+              }
+              if (
+                $identity -eq $appPackages -and
+                $rule.AccessControlType -eq [Security.AccessControl.AccessControlType]::Allow
+              ) {
+                if (($rule.FileSystemRights -band $writeMask) -ne 0) {
+                  throw "dangerous Windows Chrome AppContainer ACE: $($entry.FullName)"
+                }
+                $combined = $combined -bor $rule.FileSystemRights
+              }
+            }
+            if (($combined -band $readExecute) -ne $readExecute) {
+              throw "Windows Chrome AppContainer ACL lacks read/execute: $($entry.FullName)"
+            }
+          }
+
+          $final = Get-TreeSnapshot (Get-BrowserTree $browserRoot)
+          if ($before.Count -ne $final.Count) {
+            throw 'Windows Chrome tree identity changed during ACL preparation'
+          }
+          foreach ($name in $before.Keys) {
+            if (-not $final.ContainsKey($name) -or $before[$name] -cne $final[$name]) {
+              throw 'Windows Chrome tree identity changed during ACL preparation'
+            }
+          }
+          $ancestorAfter = Get-AncestorSnapshot $browserRoot $toolCache
+          if ($ancestorBefore.Count -ne $ancestorAfter.Count) {
+            throw 'Windows Chrome ancestor identity changed during ACL preparation'
+          }
+          foreach ($name in $ancestorBefore.Keys) {
+            if (
+              -not $ancestorAfter.ContainsKey($name) -or
+              $ancestorBefore[$name] -cne $ancestorAfter[$name]
+            ) {
+              throw 'Windows Chrome ancestor identity changed during ACL preparation'
+            }
+          }
+
       - name: Install the reviewed Chrome SUID sandbox
         if: runner.os == 'Linux'
         shell: bash
