@@ -1,6 +1,6 @@
 # Forme Completion Roadmap
 
-> **Status:** Living delivery backlog, last prioritized 2026-10-04.
+> **Status:** Living delivery backlog, last prioritized 2026-10-05.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -45,7 +45,7 @@ stays visible so a local optimization cannot quietly close the project early.
 
 The implementation now forms a complete headless v0 product:
 
-- 79 TypeScript `forme-*` packages and 237 package test files cover the kernel,
+- 81 TypeScript `forme-*` packages and 239 package test files cover the kernel,
   stage contracts, a bounded concurrent orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
 - The plugin runtime boundary also includes Python and Rust SDK packages. All
@@ -191,8 +191,8 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 65 | FM-B017 | done | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
 | 66 | FM-B069 | done | Prove 1,000-page clean and incremental scale | Run the live blog's complete HTML/terminal product DAG over exactly 1,000 generated pages, then edit one page and run it again through the persistent cache. A portable benchmark report records both elapsed times and deterministic per-stage work. The gate rejects missing outputs, incomplete clean work, or an incremental run that fails to reuse the unaffected page work; wall-clock values remain evidence rather than host-specific pass/fail thresholds. |
 | 67 | FM-B070 | done | Enforce web performance and accessibility budgets | Depends on FM-B069. Run the built live sites through pinned browser tooling with explicit Lighthouse and automated accessibility budgets, retain useful static fallbacks, and publish bounded diagnostics for every regression. |
-| 68 | FM-B071 | active | Version the public package and kernel APIs | Remove the legacy `RenderedPage.source` producer branch, advance its kind/API contract with a tested compatibility refusal, align publishable Forme package versions, and ship a migration guide for every breaking change. |
-| 69 | FM-B072 | blocked | Compose the supported-platform release gate | Depends on FM-B069–FM-B071. Run the release benchmark, web budgets, package/API compatibility checks, complete product builds, and mandatory security review on every supported host with one documented release verdict. |
+| 68 | FM-B071 | done | Version the public package and kernel APIs | Remove the legacy `RenderedPage.source` producer branch, advance its kind/API contract with a tested compatibility refusal, align publishable Forme package versions, and ship a migration guide for every breaking change. |
+| 69 | FM-B072 | active | Compose the supported-platform release gate | Depends on FM-B069–FM-B071. Run the release benchmark, web budgets, package/API compatibility checks, complete product builds, and mandatory security review on every supported host with one documented release verdict. |
 | 70 | FM-B018 | blocked | Close release-quality gates | Completion milestone depending on FM-B069–FM-B072. The 1,000-page benchmark, Lighthouse/accessibility budgets, versioned package/API migration, security review, and supported-platform CI all pass on the same release contract. |
 | 71 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
@@ -212,8 +212,8 @@ FM-B056 → FM-B057 → FM-B058 → FM-B015. Interactivity is complete through
 FM-B059 → FM-B060 → FM-B061 → FM-B013. The authoring path is complete through
 FM-B062 → FM-B063 → FM-B064 → FM-B065 → FM-B067 → FM-B068 → FM-B066 →
 FM-B016. FM-B017 completes the backend proof, FM-B069 closes the scale gate,
-and FM-B070 closes browser quality. The remaining Authoring-v1 path is
-FM-B071, then FM-B072 → FM-B018.
+and FM-B070 closes browser quality. FM-B071 closes the public API migration;
+the remaining Authoring-v1 path is FM-B072 → FM-B018.
 
 ### FM-B070 web-quality contract
 
@@ -392,6 +392,7 @@ work.
 | 2026-10-04 | The live HTML branch stalled at exactly 128 generated pages while 127 completed: the default page and named asset streams shared an upstream source, each 64-value window filled, and the join's permit wrapper serialized the two pending reads. Package-scale examples had never crossed both windows. | Keep the scale discovery inside FM-B069. Batch same-turn named-input reads under one yielded scheduler permit, drain the emitter's page and asset streams concurrently with an explicit page cap, and pin both a multi-window liveness regression and the full 1,000-page product benchmark. |
 | 2026-10-04 | The repaired live 13-stage product completed clean and single-edit incremental runs over exactly 1,000 generated pages, emitted 1,000 HTML plus 1,000 terminal routes on both runs, and recorded 999 parser cache hits with one miss after the edit. Timings remain same-run evidence, not machine-speed gates. | Close FM-B069 and activate FM-B070 as the sole active release-quality item. Keep FM-B071 ready in parallel priority order, while FM-B072 and FM-B018 remain blocked on those independent gates. |
 | 2026-10-04 | Both generated Forme sites pass one required browser lane over the real Pages routes: the landing page, blog index, and enhanced article retain useful static fallbacks, score at least 0.98 for desktop performance and exactly 1.00 for accessibility locally, and remain far below their explicit transfer budgets. The lane uses exact Lighthouse and Chrome-for-Testing pins, loopback-only contained serving, fresh bounded browser phases, and a small atomic evidence summary. | Close FM-B070 and activate FM-B071 as the only ready release-quality item. Keep FM-B072 and FM-B018 blocked until the public API migration also lands. |
+| 2026-10-05 | FM-B071 aligned all 81 publishable TypeScript Forme packages and locks at `1.0.0`, advanced the kernel contract to API v2 with exact v1 refusal in manifests, stages, and all three runners, made `RenderedPage` v2 provenance required and canonically validated at both filesystem sinks, aligned npm/Tauri package metadata, and shipped the breaking-change migration guide. Proportional package, conformance, product-contract, coverage, and mandatory security review gates passed. | Close FM-B071 and activate FM-B072 as the sole remaining implementation gate before the FM-B018 release-quality milestone. |
 
 ## Loop protocol
 
