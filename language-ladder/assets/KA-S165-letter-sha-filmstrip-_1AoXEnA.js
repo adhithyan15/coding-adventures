@@ -1,0 +1,1 @@
+var e=``+new URL(`KA-S165-letter-sha-filmstrip-DUWiLD-O.svg`,import.meta.url).href;export{e as default};

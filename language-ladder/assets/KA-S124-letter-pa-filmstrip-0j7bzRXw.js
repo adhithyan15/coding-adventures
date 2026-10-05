@@ -1,0 +1,1 @@
+var e=``+new URL(`KA-S124-letter-pa-filmstrip-BjPASiP2.svg`,import.meta.url).href;export{e as default};

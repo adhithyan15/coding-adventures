@@ -1,0 +1,1 @@
+var e=``+new URL(`HI-W128-letter-nya-filmstrip-CUDEWKFC.svg`,import.meta.url).href;export{e as default};

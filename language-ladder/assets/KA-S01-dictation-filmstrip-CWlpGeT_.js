@@ -1,0 +1,1 @@
+var e=``+new URL(`KA-S01-dictation-filmstrip-B9cPBprr.svg`,import.meta.url).href;export{e as default};

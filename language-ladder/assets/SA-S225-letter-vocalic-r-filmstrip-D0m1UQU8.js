@@ -1,0 +1,1 @@
+var e=``+new URL(`HI-S125-letter-vocalic-r-filmstrip-CrS72Civ.svg`,import.meta.url).href;export{e as default};

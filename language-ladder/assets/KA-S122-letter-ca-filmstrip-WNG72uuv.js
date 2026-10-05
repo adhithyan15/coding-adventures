@@ -1,0 +1,1 @@
+var e=``+new URL(`KA-S122-letter-ca-filmstrip-CwQ58L5k.svg`,import.meta.url).href;export{e as default};
