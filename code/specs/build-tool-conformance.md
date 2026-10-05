@@ -1423,6 +1423,18 @@ digest and `success` or `failed` status. A matching successful record is a
 corrupt records are `recovered`. Every non-hit invalidates the package and its
 declared dependent closure.
 
+The shared-input multi-consumer digest fixture MUST pair two exact Swift
+consumers of `code/packages/rust/Cargo.toml` with before/after snapshots of
+that one registered input. For each consumer, process-free repository-boundary
+`source_collection` MUST select the same exact path and produce the SHA-256 of
+the corresponding bytes; it MUST exclude unregistered same-shaped candidates.
+Separate `hashing_cache` cases MUST hash the package-local input together with
+that shared path. Between snapshots, each consumer's local input and dependency
+digest remain unchanged, while its `package_digest` and `combined_digest`
+change. The two consumers MUST be asserted independently; diff selection of
+both consumers alone is not digest evidence. These cases add no Git,
+filesystem, process, credential, or execution authority.
+
 Toolchain detection v1 treats extra-CI declarations as inert BUILD metadata.
 Each package supplies a required generic `BUILD` string plus optional
 `BUILD_windows`, `BUILD_mac`, `BUILD_linux`, and `BUILD_mac_and_linux` strings.

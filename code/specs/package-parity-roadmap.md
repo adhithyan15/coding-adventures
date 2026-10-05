@@ -15601,6 +15601,49 @@ must advance together from 11 to 12. The 19-case .NET engine adoption is the
 next dependency-ready build-tool implementation tranche; the six newly
 unblocked Java/Kotlin/Dart barcode symbology ports remain separately owned.
 
+### Post-#16730 exact-main refresh and next contract owner
+
+PR #16730 completed 53 final-head checks acceptably (24 success, 29 expected
+skips), GitHub reported it mergeable, and guarded squash auto-merge produced
+`2297f5372b04191eb9705faf03476bdc08c5450c` at
+2026-10-05T15:46:14Z. The fresh full-checkout schema-3 report at
+`a99fb66a572dd807f827eb32e39c28e2a811a565` still has 15 established
+lanes, 1,487 implementation identities, 4,757 occupied slots, and 1,529
+all-reported identities. Completion bands are 178/262, 123/934, 181/2,282,
+and 1,005/14,070 (packages/missing slots); Rust has 806 singleton identities.
+OCaml remains emerging with five package roots. Canonical collisions and
+unknown language buckets are zero. This is directory coverage, not a claim of
+behavioral parity.
+
+The post-merge read-only audits registered four exact SE01/SE02 AES owners
+before selection: neutral AES vectors and existing-lane security
+reconciliation, Java/Kotlin/Dart AES ports, neutral AES-modes/authentication
+failure reconciliation, and Java/Kotlin/Dart modes ports. AES and AES-modes
+each exist in 12 established lanes and are missing exactly those three. The
+G2D00-G2D03 geometry fixture owner now records the degenerate-arc, radius,
+threshold, and bounds disagreements found across existing lanes; the three
+geometry port owners remain gated on that reconciliation. The Haskell
+event-loop port now depends on the neutral mockable-core fixture.
+
+The shared-input digest-evidence fixture now precedes all ten pending
+established-engine repository-boundary digest adopters and the JVM, Dart, and
+OCaml current-contract gates. A distinct C#/F# digest-consumer owner avoids
+reopening the superseded .NET reverse-diff owner: #16730 proves both consumers
+are selected, not that both digests change. The refreshed state has 992 unique
+owners, zero missing dependency IDs, zero dependency cycles, and no active
+parity PR. Its high-consensus classifier now uses the 262-slot exact-main
+snapshot and canonical compact JSON digest
+`18ce8d5274cfc9ed67c7e8a9cc3178c152dbd711b1e295556161dd4d30b9ede8`.
+
+A quick dependency/leverage pass ranks the ready shared-input digest-evidence
+fixture first: its one prerequisite is merged and 14 pending owners consume it
+directly. The Swift 20-case graph/diff engine is also ready and remains the
+next high-leverage implementation candidate, with a native Swift validation
+plan prepared; its boundary-digest child must also wait for the shared fixture.
+Select only the digest-evidence fixture on the next fresh clean `codex/`
+branch. The portable evidence is process-free and does not broaden host or
+credential authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
