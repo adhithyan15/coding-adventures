@@ -234,6 +234,10 @@ class CIGateRegistryTests(unittest.TestCase):
         self.assertIn("test_forme_spec_map.py", body)
         self.assertIn("build-products", body)
         self.assertIn("quality:release", body)
+        self.assertIn(
+            "FORME_INSTALLED_CHROME_VERSION: ${{ steps.chrome.outputs.chrome-version }}",
+            body,
+        )
         self.assertIn("forme_release_gate.py attest", body)
         self.assertNotIn("forme-release-security-review.json", body)
         self.assertIn("actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97", body)

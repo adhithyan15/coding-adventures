@@ -1832,6 +1832,7 @@ jobs:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
           CHROME_DEVEL_SANDBOX: ${{ runner.os == 'Linux' && '/usr/local/sbin/forme-chrome-sandbox' || '' }}
           FORME_EXPECTED_CHROME_VERSION: 154.0.8037.92
+          FORME_INSTALLED_CHROME_VERSION: ${{ steps.chrome.outputs.chrome-version }}
         run: npm run quality:release
 
       - name: Emit reviewed host attestation

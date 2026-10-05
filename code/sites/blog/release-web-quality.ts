@@ -406,6 +406,11 @@ function requireChromePath(): string {
 }
 
 async function readChromeVersion(chromePath: string): Promise<string> {
+  const reportedVersion = reportedChromeVersionForPlatform(
+    process.platform,
+    process.env.FORME_INSTALLED_CHROME_VERSION,
+  );
+  if (reportedVersion !== null) return reportedVersion;
   const result = await execFileAsync(chromePath, ["--version"], {
     timeout: BROWSER_VERSION_TIMEOUT_MS,
     maxBuffer: 4_096,
@@ -414,6 +419,20 @@ async function readChromeVersion(chromePath: string): Promise<string> {
   const match = /\b(\d+\.\d+\.\d+\.\d+)\b/.exec(result.stdout);
   if (match?.[1] === undefined) throw new Error("Chrome did not report a four-part version");
   return match[1];
+}
+
+export function reportedChromeVersionForPlatform(
+  platform: NodeJS.Platform,
+  reportedVersion: string | undefined,
+): string | null {
+  if (platform !== "win32") return null;
+  if (reportedVersion === undefined) {
+    throw new Error("the pinned Chrome setup action reported no Windows version");
+  }
+  if (!/^\d+\.\d+\.\d+\.\d+$/.test(reportedVersion)) {
+    throw new Error("the pinned Chrome setup action did not report a four-part Windows version");
+  }
+  return reportedVersion;
 }
 
 async function readLighthouseVersion(): Promise<string> {

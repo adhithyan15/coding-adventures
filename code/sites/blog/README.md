@@ -106,7 +106,10 @@ navigation, content, and all thirteen fallback steps before Chrome runs. The
 browser is sandboxed, proxied back to the loopback artifact server, constrained
 by a restrictive response policy, and required to report the exact requested
 and final route. CI pins Node 22.23.2 and Chrome for Testing 154.0.8037.92,
-content-authenticates that exact build's SUID helper before making its
+binds Windows version evidence to the pinned setup action's PE-file metadata
+output because the Windows GUI binary does not implement a terminating
+`--version` query, content-authenticates that exact build's SUID helper before
+making its
 root-owned copy mode 4755 so Ubuntu's AppArmor user-namespace restriction does
 not require disabling Chrome's sandbox, uses the frozen local bootstrap to
 enforce every reviewed npm lock without dependency lifecycle scripts before
