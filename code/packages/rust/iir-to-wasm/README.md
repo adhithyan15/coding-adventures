@@ -213,6 +213,10 @@ tests/
 | `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` |
 | `UnsupportedOp` | op is `io_in`, `cast`, or `safepoint` (and `call_builtin` with a non-whitelisted name). Note: `alloc`/`field_load`/`field_store`/`is_null` are accepted for `ref<LispyPair>`; `box`/`unbox` are accepted and lower to WasmGC `ref.i31`/`i31.get_s` (LANG77 L3b-3a); `io_out`/`global_*`/`load_mem`/`store_mem` and the byte-tape ops `alloc_bytes`/`load_byte`/`store_byte` (v0.13.0) are supported |
 
+Mutable globals preserve their IIR scalar representation: strings use `i32`
+linear-memory handles, floating-point globals use `f32` or `f64`, and integer
+and array-handle globals use `i64`.
+
 > **LANG35 note**: `alloc_closure` and `call_closure` (LANG34/LANG35 first-class
 > closure opcodes) are BEAM-only.  Using them in a WASM module returns a clear
 > `ClosureOpcode` error rather than the generic `UntypedInstruction` message.

@@ -11,8 +11,8 @@ composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The
 real-valued standard functions preserve that provenance for a runtime-real
 operand while respecting user-declared overrides. Real array-element reads and
-non-captured real value formals also carry runtime-real provenance through
-assignment and composition.
+real value formals, including nested-procedure captures, also carry runtime-real
+provenance through assignment and composition.
 
 The opt-in CLR integration suite `tests/clr_strict_flow.rs` executes forward-only
 conditional control, nested Bool branches and wide values through joins,

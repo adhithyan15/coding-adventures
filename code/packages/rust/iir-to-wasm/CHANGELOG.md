@@ -1,5 +1,12 @@
 # Changelog — iir-to-wasm
 
+## [0.48.7] — 2026-10-05
+
+Preserve `f32` and `f64` types for mutable IIR globals and emit matching
+floating-point zero initializers. This allows captured real values to round-trip
+through `global_store` and `global_load` without producing an invalid WASM type
+mismatch.
+
 ## Unreleased — FLOW-MATIC WASM EOF (VM-039b)
 
 Add the `input_more` builtin as `env.__input_more() -> i64` and connect

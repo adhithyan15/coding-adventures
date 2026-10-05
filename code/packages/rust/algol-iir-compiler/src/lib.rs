@@ -540,6 +540,10 @@ struct Compiler {
     /// Local real slots whose latest straight-line assignment is a direct
     /// zero-argument real-procedure result or a copy of another such slot.
     runtime_real_slots: HashSet<String>,
+    /// Module-global slots created specifically for captured real value
+    /// formals. Their concrete f64 representation remains formatter-safe in
+    /// both the outer procedure and its nested sibling functions.
+    runtime_real_global_slots: HashSet<String>,
     /// Canonical text for local real scalars assigned a finite compile-time
     /// expression along a straight-line path. This deliberately stops tracking
     /// at control flow or procedure calls; direct runtime real values use the
@@ -591,6 +595,7 @@ impl Default for Compiler {
             block_captured: HashSet::new(),
             initialized_string_slots: HashSet::new(),
             runtime_real_slots: HashSet::new(),
+            runtime_real_global_slots: HashSet::new(),
             static_real_slots: HashMap::new(),
             static_integer_slots: HashMap::new(),
             static_boolean_slots: HashMap::new(),
@@ -2119,6 +2124,9 @@ impl Compiler {
         }
         binding.slot = capture_slot.clone();
         binding.is_global = true;
+        if ty == ScalarType::Real {
+            self.runtime_real_global_slots.insert(capture_slot.clone());
+        }
 
         self.emit(IIRInstr::new(
             "global_store",
@@ -2302,7 +2310,9 @@ impl Compiler {
                         "standard output procedure {name:?} requires initialized string variable {var_name:?}"
                     )));
                 }
-                let allow_runtime_real = self.runtime_real_slots.contains(&binding.slot);
+                let allow_runtime_real = self.runtime_real_slots.contains(&binding.slot)
+                    || (binding.is_global
+                        && self.runtime_real_global_slots.contains(&binding.slot));
                 let value = self.read_scalar(binding);
                 self.emit_standard_output_value(name, value, allow_runtime_real)?;
                 continue;
@@ -3926,8 +3936,11 @@ impl Compiler {
         }
         self.require_var(&source_name).is_ok_and(|binding| {
             binding.ty == ScalarType::Real
-                && !binding.is_global
-                && self.runtime_real_slots.contains(&binding.slot)
+                && if binding.is_global {
+                    self.runtime_real_global_slots.contains(&binding.slot)
+                } else {
+                    self.runtime_real_slots.contains(&binding.slot)
+                }
         })
     }
 
@@ -12496,16 +12509,31 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_value_formals_do_not_cross_capture_globals() {
-        let error = compile_source(
-            "begin procedure show(x); value x; real x; begin procedure nested; output(x); nested() end; show(2.25) end",
+    fn al4_runtime_real_provenance_includes_captured_value_formals() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; procedure show(x); value x; real x; begin procedure nested; output(x * 2.0); nested() end; show(pick()) end",
             "test",
         )
-        .expect_err("captured real formals remain outside the bounded formatter proof");
-        assert!(
-            format!("{error:?}").contains("cannot print a real value"),
-            "unexpected rejection: {error:?}"
-        );
+        .expect("a captured real value formal carries runtime-real formatter provenance");
+        let nested = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("nested"))
+            .expect("has nested procedure");
+        assert!(nested.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_capture_provenance_is_limited_to_value_formals() {
+        let error = compile_source(
+            "begin real x; procedure show; output(x); x := 2.25; show() end",
+            "test",
+        )
+        .expect_err("ordinary captured real globals remain outside the bounded proof");
+        assert!(format!("{error:?}").contains("cannot print a real value"));
     }
 
     #[test]

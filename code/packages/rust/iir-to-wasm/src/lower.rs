@@ -639,6 +639,18 @@ fn encode_i32_global_init(value: i32) -> Vec<u8> {
     bytes
 }
 
+fn encode_f32_global_init(value: f32) -> Vec<u8> {
+    let mut bytes = encode_f32_const(value);
+    bytes.push(END);
+    bytes
+}
+
+fn encode_f64_global_init(value: f64) -> Vec<u8> {
+    let mut bytes = encode_f64_const(value);
+    bytes.push(END);
+    bytes
+}
+
 /// Emit `i32.wrap_i64` (0xA7) — truncate an i64 to i32 (drop the high 32 bits).
 ///
 /// The Brainfuck value model is uniformly `i64` after `lower_brainfuck_for_aot`
@@ -4434,7 +4446,7 @@ fn make_lispy_pair_struct_type() -> StructType {
 ///
 /// | Field              | Trigger                                | What it injects |
 /// |--------------------|----------------------------------------|-----------------|
-/// | `global_names`     | `global_load` / `global_store`          | Mutable globals, i64 except `str` handles (i32) |
+/// | `global_names`     | `global_load` / `global_store`          | Mutable globals matching the IIR scalar type |
 /// | `uses_io_out`      | `io_out`                                | `env.__print_i64` import |
 /// | `uses_print_str`   | `print_str`                             | `env.__print_str` import + linear memory |
 /// | `uses_putchar`     | `call_builtin` with name `"putchar"`    | `env.putchar` import   |
@@ -4452,6 +4464,10 @@ struct ModuleFeatures {
     /// string handles are linear-memory offsets, so their global value type is
     /// i32 rather than the historical i64 scalar default.
     global_string_names: HashSet<String>,
+    /// Globals carrying native floating-point values. Keeping these distinct
+    /// avoids emitting an i64 global for an f32/f64 local.
+    global_f32_names: HashSet<String>,
+    global_f64_names: HashSet<String>,
     uses_io_out: bool,
     uses_print_str: bool,
     uses_putchar: bool,
@@ -4889,6 +4905,8 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     let mut global_names: Vec<String> = Vec::new();
     let mut global_names_seen: HashSet<String> = HashSet::new();
     let mut global_string_names: HashSet<String> = HashSet::new();
+    let mut global_f32_names: HashSet<String> = HashSet::new();
+    let mut global_f64_names: HashSet<String> = HashSet::new();
     let mut uses_io_out = false;
     let mut uses_print_str = false;
     let mut uses_putchar = false;
@@ -4930,15 +4948,29 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         if global_names_seen.insert(name.clone()) {
                             global_names.push(name.clone());
                         }
-                        let is_string = instr.type_hint == "str" || matches!(
-                            instr.srcs.get(1),
-                            Some(Operand::Var(value)) if reg_map
+                        let stored_hint = instr.srcs.get(1).and_then(|operand| match operand {
+                            Operand::Var(value) => reg_map
                                 .get(value)
                                 .and_then(|index| local_type_hints.get(index))
-                                .is_some_and(|hint| hint == "str")
-                        );
-                        if is_string {
-                            global_string_names.insert(name.clone());
+                                .map(String::as_str),
+                            _ => None,
+                        });
+                        let global_hint = if instr.type_hint == "void" {
+                            stored_hint.unwrap_or("i64")
+                        } else {
+                            instr.type_hint.as_str()
+                        };
+                        match global_hint {
+                            "str" => {
+                                global_string_names.insert(name.clone());
+                            }
+                            "f32" => {
+                                global_f32_names.insert(name.clone());
+                            }
+                            "f64" => {
+                                global_f64_names.insert(name.clone());
+                            }
+                            _ => {}
                         }
                     }
                 }
@@ -5353,6 +5385,8 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     ModuleFeatures {
         global_names,
         global_string_names,
+        global_f32_names,
+        global_f64_names,
         uses_io_out,
         uses_print_str,
         uses_putchar,
@@ -5439,6 +5473,8 @@ pub fn lower_iir_to_wasm(
     let features = collect_module_features(module);
     let global_names = features.global_names.clone();
     let global_string_names = features.global_string_names;
+    let global_f32_names = features.global_f32_names;
+    let global_f64_names = features.global_f64_names;
     let uses_io_out  = features.uses_io_out;
     let uses_print_str = features.uses_print_str;
     let uses_putchar = features.uses_putchar;
@@ -5834,8 +5870,8 @@ pub fn lower_iir_to_wasm(
         });
     }
 
-    // Build WASM Global entries. Numeric/array globals keep the historical
-    // mutable i64 representation; `str` globals are i32 linear-memory handles.
+    // Build WASM Global entries. Integer/array globals keep the historical
+    // mutable i64 representation; strings and floats retain their native type.
     //
     // Binary init_expr for `i64.const 0; end`: `[0x42, 0x00, 0x0B]`
     //   0x42 = i64.const opcode
@@ -5847,6 +5883,10 @@ pub fn lower_iir_to_wasm(
             global_type: GlobalType {
                 value_type: if global_string_names.contains(name) {
                     ValueType::I32
+                } else if global_f32_names.contains(name) {
+                    ValueType::F32
+                } else if global_f64_names.contains(name) {
+                    ValueType::F64
                 } else {
                     ValueType::I64
                 },
@@ -5854,6 +5894,10 @@ pub fn lower_iir_to_wasm(
             },
             init_expr: if global_string_names.contains(name) {
                 encode_i32_global_init(0)
+            } else if global_f32_names.contains(name) {
+                encode_f32_global_init(0.0)
+            } else if global_f64_names.contains(name) {
+                encode_f64_global_init(0.0)
             } else if name == ARRAY_BUMP_GLOBAL {
                 encode_i64_global_init(string_data.len() as i64)
             } else {

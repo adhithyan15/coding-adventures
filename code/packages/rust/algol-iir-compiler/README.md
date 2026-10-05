@@ -209,8 +209,10 @@ proven runtime-real values or finite static numeric expressions preserve the
 same provenance. The real-valued standard functions `abs`, `sqrt`, `sin`,
 `cos`, `ln`, `exp`, and `arctan` preserve runtime-real provenance for a proven
 runtime-real operand while respecting user-declared overrides. Reads from real
-array elements and non-captured real value formals also carry runtime-real
-provenance through assignment and composition.
+array elements and real value formals, including formals promoted into the
+existing nested-procedure capture globals, also carry runtime-real provenance
+through assignment and composition. Ordinary captured real globals remain
+outside this bounded proof.
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.
