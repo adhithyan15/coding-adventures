@@ -2059,6 +2059,13 @@ fn parse_css_color(css: &str) -> Option<Color> {
     }
 }
 
+#[derive(Clone, Copy)]
+enum CssColorMixSpace {
+    Srgb,
+    SrgbLinear,
+    Oklab,
+}
+
 fn parse_css_color_mix_function(css: &str) -> Option<Color> {
     let source = css.trim().to_ascii_lowercase();
     let inner = source.strip_prefix("color-mix(")?.strip_suffix(')')?.trim();
@@ -2067,9 +2074,10 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         return None;
     }
     let interpolation = parts[0].split_whitespace().collect::<Vec<_>>();
-    let linear_light = match interpolation.as_slice() {
-        ["in", "srgb"] => false,
-        ["in", "srgb-linear"] => true,
+    let space = match interpolation.as_slice() {
+        ["in", "srgb"] => CssColorMixSpace::Srgb,
+        ["in", "srgb-linear"] => CssColorMixSpace::SrgbLinear,
+        ["in", "oklab"] => CssColorMixSpace::Oklab,
         _ => return None,
     };
     let (first_source, first_percentage) = parse_css_color_mix_stop(parts[1])?;
@@ -2091,32 +2099,54 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
     let first_alpha = f64::from(first.a) / 255.0;
     let second_alpha = f64::from(second.a) / 255.0;
     let mixed_alpha = first_alpha * first_weight + second_alpha * second_weight;
-    let channel = |first: u8, second: u8| {
+    let first_components = css_color_mix_components(first, space);
+    let second_components = css_color_mix_components(second, space);
+    let component = |index: usize| {
         if mixed_alpha == 0.0 {
             0.0
         } else {
-            let decode = |value: u8| {
-                let encoded = f64::from(value) / 255.0;
-                if linear_light { encoded_srgb_to_linear(encoded) } else { encoded }
-            };
-            ((decode(first) * first_alpha * first_weight
-                + decode(second) * second_alpha * second_weight) / mixed_alpha)
-                .clamp(0.0, 1.0)
+            (first_components[index] * first_alpha * first_weight
+                + second_components[index] * second_alpha * second_weight) / mixed_alpha
         }
     };
-    let r = channel(first.r, second.r);
-    let g = channel(first.g, second.g);
-    let b = channel(first.b, second.b);
+    let components = [component(0), component(1), component(2)];
     let alpha = (mixed_alpha * alpha_multiplier * 255.0).clamp(0.0, 255.0).round() as u8;
-    if linear_light {
-        Some(linear_srgb_to_color(r, g, b, alpha))
-    } else {
-        Some(Color {
-            r: (r * 255.0).round() as u8,
-            g: (g * 255.0).round() as u8,
-            b: (b * 255.0).round() as u8,
+    Some(match space {
+        CssColorMixSpace::Srgb => Color {
+            r: (components[0].clamp(0.0, 1.0) * 255.0).round() as u8,
+            g: (components[1].clamp(0.0, 1.0) * 255.0).round() as u8,
+            b: (components[2].clamp(0.0, 1.0) * 255.0).round() as u8,
             a: alpha,
-        })
+        },
+        CssColorMixSpace::SrgbLinear => linear_srgb_to_color(
+            components[0], components[1], components[2], alpha,
+        ),
+        CssColorMixSpace::Oklab => css_oklab_to_color(
+            components[0], components[1], components[2], alpha,
+        ),
+    })
+}
+
+fn css_color_mix_components(color: Color, space: CssColorMixSpace) -> [f64; 3] {
+    let encoded = [
+        f64::from(color.r) / 255.0,
+        f64::from(color.g) / 255.0,
+        f64::from(color.b) / 255.0,
+    ];
+    match space {
+        CssColorMixSpace::Srgb => encoded,
+        CssColorMixSpace::SrgbLinear => encoded.map(encoded_srgb_to_linear),
+        CssColorMixSpace::Oklab => {
+            let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+            let l = (0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b).cbrt();
+            let m = (0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b).cbrt();
+            let s = (0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b).cbrt();
+            [
+                0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+                1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+                0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s,
+            ]
+        }
     }
 }
 
@@ -7975,6 +8005,23 @@ mod tests {
             Color { r: 255, g: 0, b: 0, a: 51 },
         );
         assert_eq!(with_opacity("color-mix(in srgb-linear, black, white)", 0.5), "rgba(188,188,188,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_oklab() {
+        assert_eq!(
+            css_to_color("color-mix(in oklab, black, white)"),
+            Color { r: 99, g: 99, b: 99, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in oklab, red, blue)"),
+            Color { r: 140, g: 83, b: 162, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in oklab, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in oklab, black, white)", 0.5), "rgba(99,99,99,0.5)");
     }
 
     #[test]
