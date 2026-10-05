@@ -8,11 +8,26 @@
 import { randomUUID } from "node:crypto";
 import { lstat, mkdir, open, realpath, rename, unlink } from "node:fs/promises";
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
+import { types } from "node:util";
 import { Window } from "happy-dom";
 
 export const MAX_DIAGNOSTICS = 20;
+export const QUALITY_CONTENT_SECURITY_POLICY = [
+  "default-src 'none'",
+  "base-uri 'none'",
+  "connect-src 'none'",
+  "font-src 'self' data:",
+  "form-action 'none'",
+  "frame-src 'none'",
+  "img-src 'self' data:",
+  "media-src 'self'",
+  "object-src 'none'",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline'",
+].join("; ");
 const MAX_HTML_BYTES = 1_048_576;
 const MAX_AUDIT_REFS = 256;
+const MAX_RECORD_KEYS = 512;
 
 export interface QualityTarget {
   readonly id: string;
@@ -122,10 +137,11 @@ export function evaluateLighthouseResult(target: QualityTarget, raw: unknown): L
       `accessibility score ${accessibility} < ${target.accessibilityMinimum}`,
     );
   }
-  const auditRefs = accessibilityCategory?.auditRefs;
-  if (!Array.isArray(auditRefs) || auditRefs.length > MAX_AUDIT_REFS) {
-    throw new Error("Lighthouse accessibility category is missing bounded auditRefs");
-  }
+  const auditRefs = boundedArray(
+    accessibilityCategory?.auditRefs,
+    "Lighthouse accessibility category bounded auditRefs",
+    MAX_AUDIT_REFS,
+  );
   const failedAuditIds = new Set<string>();
   for (const candidate of auditRefs) {
     const ref = nullableRecord(candidate);
@@ -290,11 +306,9 @@ function validateTarget(target: QualityTarget): void {
 function resourceSummary(audits: Record<string, unknown>): Readonly<Record<string, number>> {
   const audit = record(audits["resource-summary"], "Lighthouse resource-summary audit");
   const details = record(audit.details, "Lighthouse resource-summary details");
-  if (!Array.isArray(details.items) || details.items.length > 64) {
-    throw new Error("Lighthouse resource-summary is missing bounded items");
-  }
+  const items = boundedArray(details.items, "Lighthouse resource-summary items", 64);
   const resources: Record<string, number> = {};
-  for (const candidate of details.items) {
+  for (const candidate of items) {
     const item = record(candidate, "Lighthouse resource-summary item");
     if (typeof item.resourceType !== "string" || !/^[a-z-]{1,32}$/.test(item.resourceType)) {
       throw new Error("Lighthouse resource-summary has an invalid resource type");
@@ -314,7 +328,7 @@ function score(value: unknown, label: string): number {
   if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 1) {
     throw new Error(`Lighthouse is missing a finite ${label} score between zero and one`);
   }
-  return Math.round(value * 100) / 100;
+  return value;
 }
 
 function normalizeText(value: string): string {
@@ -336,9 +350,50 @@ function record(value: unknown, label: string): Record<string, unknown> {
 }
 
 function nullableRecord(value: unknown): Record<string, unknown> | null {
-  return typeof value === "object" && value !== null && !Array.isArray(value)
-    ? value as Record<string, unknown>
-    : null;
+  if (typeof value !== "object" || value === null) return null;
+  if (types.isProxy(value)) throw new Error("Lighthouse evidence must not contain proxies");
+  if (Array.isArray(value)) return null;
+  const prototype = Object.getPrototypeOf(value);
+  if (prototype !== Object.prototype && prototype !== null) return null;
+  const descriptors = Object.getOwnPropertyDescriptors(value);
+  const names = Object.keys(descriptors);
+  if (names.length > MAX_RECORD_KEYS || Object.getOwnPropertySymbols(value).length > 0) {
+    throw new Error("Lighthouse evidence object exceeds its bounded string-key shape");
+  }
+  const snapshot: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
+  for (const name of names) {
+    const descriptor = descriptors[name];
+    if (descriptor === undefined || !("value" in descriptor)) {
+      throw new Error("Lighthouse evidence must not contain accessors");
+    }
+    snapshot[name] = descriptor.value;
+  }
+  return snapshot;
+}
+
+function boundedArray(value: unknown, label: string, maximum: number): readonly unknown[] {
+  if (typeof value !== "object" || value === null) {
+    throw new Error(`${label} must be a bounded array`);
+  }
+  if (types.isProxy(value)) throw new Error("Lighthouse evidence must not contain proxies");
+  if (!Array.isArray(value)) throw new Error(`${label} must be a bounded array`);
+  const descriptors = Object.getOwnPropertyDescriptors(value);
+  const length = (descriptors as unknown as Record<string, PropertyDescriptor>)["length"]?.value;
+  if (!Number.isSafeInteger(length) || length < 0 || length > maximum) {
+    throw new Error(`${label} must be a bounded array`);
+  }
+  if (Object.getOwnPropertySymbols(value).length > 0) {
+    throw new Error(`${label} must not contain symbol properties`);
+  }
+  const snapshot: unknown[] = [];
+  for (let index = 0; index < length; index += 1) {
+    const descriptor = descriptors[String(index)];
+    if (descriptor === undefined || !("value" in descriptor)) {
+      throw new Error(`${label} must be dense and accessor-free`);
+    }
+    snapshot.push(descriptor.value);
+  }
+  return snapshot;
 }
 
 function requireContainedPath(parent: string, candidate: string, message: string): void {

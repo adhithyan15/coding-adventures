@@ -17,6 +17,7 @@ import { Launcher, launch } from "chrome-launcher";
 import lighthouse from "lighthouse";
 import {
   MAX_DIAGNOSTICS,
+  QUALITY_CONTENT_SECURITY_POLICY,
   atomicWriteQualitySummary,
   evaluateLighthouseResult,
   inspectStaticFallback,
@@ -176,7 +177,6 @@ async function runLighthouse(url: string, chromePath: string): Promise<unknown> 
     maxConnectionRetries: CHROME_CONNECTION_RETRIES,
     chromeFlags: [
       "--headless=new",
-      "--no-sandbox",
       "--disable-dev-shm-usage",
       "--disable-gpu",
     ],
@@ -226,6 +226,7 @@ function createStaticServer(mounts: readonly StaticMount[]): Server {
       const bytes = await readFile(canonicalPath);
       response.writeHead(200, {
         "cache-control": "no-store",
+        "content-security-policy": QUALITY_CONTENT_SECURITY_POLICY,
         "content-length": String(bytes.byteLength),
         "content-type": contentType(canonicalPath),
         "x-content-type-options": "nosniff",
