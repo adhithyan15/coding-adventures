@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16744,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16744",
-    "branch": "codex/parity-build-tool-swift-graph-diff-20261005",
-    "implementation_revision": "e41ff9eb4163c93339ed12392d548af17644d131",
+    "number": 16749,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16749",
+    "branch": "codex/parity-ct-compare-fixtures-20261005",
+    "implementation_revision": "d28e2cb09e4ab99e92393d7cd7d985da9eee0c79",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-05T18:21:35Z",
-    "pr_number": 16744,
+    "observed_at": "2026-10-05T19:52:12Z",
+    "pr_number": 16749,
     "status": "checks-pending",
-    "notes": "Ready-for-review Swift graph/diff PR opened from tested head e41ff9eb4163c93339ed12392d548af17644d131. Initial GitHub checks are queued, with no failures yet; GitHub reports MERGEABLE but auto-merge stays disabled until every final-head required check is terminal and acceptable."
+    "notes": "Ready-for-review CT01 neutral conformance PR opened from reviewed head d28e2cb09e4ab99e92393d7cd7d985da9eee0c79. GitHub initially reports MERGEABLE with checks queued; do not enable auto-merge until required final-head gates are terminal and acceptable with no CI failure or merge conflict."
   },
   "last_inventory": {
-    "revision": "0eb0f3f560b8336ecdd5181ea2d9ef3b5c636b24",
+    "revision": "bbac63d317db4d311773d71bee0260745e48e73f",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1311,7 +1311,7 @@
     {
       "id": "build-tool-swift-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Swift build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": "codex/parity-build-tool-swift-graph-diff-20261005",
       "pr_number": 16744,
@@ -6712,10 +6712,13 @@
     {
       "id": "ct-compare-language-neutral-conformance",
       "title": "Define language-neutral constant-time comparison conformance",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-ct-compare-fixtures-20261005",
+      "pr_number": 16749,
+      "selected_at": "2026-10-05T19:25:39Z",
+      "selection_revision": "7196f381b006d3c1436c05b67fc08bf71c1637c2",
+      "selection_notes": "Selected after reviewed #16744 merged and an exact-main schema-3 collision-checked refresh found 15 established lanes, 1,487 identities, 4,757 slots, 178 high-consensus packages with 262 missing slots, and zero collisions or unknown buckets. This zero-dependency contract has six direct pending children and nine unfinished descendants, more immediate leverage than the ready Python source-registry and Haskell graph/diff owners (three direct children each). The new HF06/KD03 and DT17 owners were registered first. Scope is CT01 plus a versioned neutral fixture corpus and independent validator only; lane adoption and timing assurance remain separate.",
       "notes": "Discovered by the parallel high-consensus ownership audit after PR #14366. Define CT01 and a closed ct-compare-v1 corpus for byte equality, fixed-size aliases, equal-length byte selection, unsigned 64-bit equality, exact iteration counts, stable validation failures, and data-independent source/control-flow. Treat length as public, encode bytes and u64 values as hex, prohibit content-dependent exits and lookups, require source or optimized-code review where meaningful, and explicitly avoid universal hardware timing claims or noisy wall-clock ratio tests."
     },
     {
@@ -9876,7 +9879,7 @@
       "id": "swift-hash-functions-lane-parity",
       "title": "Implement the portable hash-functions package in Swift",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["hash-functions-dt17-vector-and-documentation-correction"],
       "branch": null,
       "pr_number": null,
       "notes": "First exact Swift high-consensus child materialized by the post-#14615 lane audit. Implement the existing deterministic hash-functions contract with package-native tests, empty capabilities, and no host authority. This dependency-shaped root unlocks the explicit Swift bloom-filter, hash-map, hash-set, and HyperLogLog children. The store engine remains separately gated on hash-map, hash-set, HyperLogLog, skip-list, protocol IR, and the neutral injected-clock contract. The remaining non-CT Swift high-consensus gaps stay owned by the selection-blocked classifier until decomposed into exact children."
@@ -11941,6 +11944,60 @@
       "branch": null,
       "pr_number": null,
       "notes": "The merged #16730 graph/diff owner proves multi-consumer selection, not both source and package digest changes. Dynamically consume the neutral before/after digest evidence through the shared C# engine and F# front without re-opening the superseded repository-boundary diff owner."
+    },
+    {
+      "id": "blake2b-language-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Freeze HF06 BLAKE2b byte-level conformance and reconcile 12 established lanes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16744 audit found blake2b in 12/15 established lanes; Java, Kotlin, and Dart are missing. Correct HF06's stale matrix and clarify parameterized digest size (BLAKE2b-256 is not a truncation of BLAKE2b-512). Define closed keyed/unkeyed, length, ownership, error, and official RFC 7693/Blake2 KAT vectors; reconcile existing lanes before new ports. C/C++ are emerging, not denominator lanes."
+    },
+    {
+      "id": "blake2b-java-kotlin-dart-lane-parity",
+      "title": "Implement HF06 BLAKE2b parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["blake2b-language-neutral-conformance-and-existing-lane-reconciliation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the reviewed neutral byte-level vectors through real package build/test entry points in the three missing established lanes; keep capability metadata empty and do not overclaim timing or key-custody assurance."
+    },
+    {
+      "id": "argon2-language-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Freeze KD03 Argon2d/i/id conformance and reconcile 12 established lanes",
+      "status": "pending",
+      "depends_on": ["blake2b-language-neutral-conformance-and-existing-lane-reconciliation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Argon2d/i/id each exist in 12/15 established lanes and depend on BLAKE2b. Correct KD03's wrong Argon2d RFC 9106 tag and nonexistent KAT path; review slice-index pseudocode against the PHC reference. Pin RFC tags plus independently sourced parameter-boundary vectors, bounded resource/error behavior, and raw-tag scope before Java/Kotlin/Dart adoption."
+    },
+    {
+      "id": "argon2-java-kotlin-dart-lane-parity",
+      "title": "Implement KD03 Argon2d/i/id parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["argon2-language-neutral-conformance-and-existing-lane-reconciliation", "blake2b-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Twelve missing slots across four related cryptographic families include three Argon2 variants in each JVM/Dart lane. Split this family owner by lane or variant if a single PR cannot remain reviewable. Portable raw-tag API only; host RNG, PHC serialization, secret custody, production constant-time, and zeroization require separate review rather than a blanket crypto exception."
+    },
+    {
+      "id": "hash-functions-dt17-vector-and-documentation-correction",
+      "title": "Correct governing DT17 hash-function vectors and stale package prose",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16744 audit found stale FNV-1a32 and Murmur3_32 examples in DT17 and package documentation while existing tests agree with the algorithms. Correct FNV-1a32(a)=3826002220, FNV-1a32(foobar)=3214735720, Murmur3_32(a,seed=0)=0x3C2569B2, and trace/decimal errors before Swift hash-functions copies the contract. Preserve semantic tests and avoid unrelated implementation churn."
+    },
+    {
+      "id": "build-tool-typescript-blog-exact-input-prose-correction",
+      "title": "Reconcile blog exact-input prose with the nine-path registry",
+      "status": "pending",
+      "depends_on": ["build-tool-site-authored-resource-source-input-extension"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The TypeScript blog registry and conformance case contain nine exact paths, including data/assets/.pipeline-steps.js.id.json, while current spec, fixture README, and Go README prose say eight. Clarify the prose without changing the registry, digests, or historical changelog text; the .js module itself remains suffix-selected rather than a tenth exact path."
     }
   ]
 }
