@@ -2432,6 +2432,39 @@ fn e6_global_emits_internal_global_and_load_store() {
     assert!(validate_for_llvm(&e6_module()).is_empty(), "global ops should validate");
 }
 
+#[test]
+fn e6_real_global_uses_a_valid_floating_initializer() {
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "f64",
+        vec![
+            IIRInstr::new("const", Some("x".into()), vec![Operand::Float(2.25)], "f64"),
+            IIRInstr::new(
+                "global_store",
+                None,
+                vec![Operand::Str("real_capture".into()), Operand::Var("x".into())],
+                "void",
+            ),
+            IIRInstr::new(
+                "global_load",
+                Some("result".into()),
+                vec![Operand::Str("real_capture".into())],
+                "f64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("result".into())], "f64"),
+        ],
+    );
+    let mut module = IIRModule::new("real_global", "test");
+    module.add_or_replace(main);
+
+    let ll = lower_iir_to_llvm(&module, &IIRLlvmConfig::default()).expect("lower");
+    assert!(
+        ll.contains("@__twig_global_0 = internal global double 0.000000e+00"),
+        "real globals need LLVM floating-point zero syntax:\n{ll}"
+    );
+}
+
 /// End-to-end: compile the global program with real `clang` and run it — the
 /// cross-function global must yield exit code 42. Skipped if clang is absent.
 #[test]

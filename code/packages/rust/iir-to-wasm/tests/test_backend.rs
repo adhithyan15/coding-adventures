@@ -172,6 +172,27 @@ fn validate_f32_type_accepted() {
     assert!(errs.is_empty(), "f32 type should be valid; got: {:?}", errs);
 }
 
+#[test]
+fn floating_globals_retain_their_wasm_value_types() {
+    let m = module_one("f", vec![], "void", vec![
+        IIRInstr::new("const", Some("x32".into()), vec![Operand::Float(1.25)], "f32"),
+        IIRInstr::new("global_store", None, vec![Operand::Str("g32".into()), Operand::Var("x32".into())], "void"),
+        IIRInstr::new("global_load", Some("y32".into()), vec![Operand::Str("g32".into())], "f32"),
+        IIRInstr::new("const", Some("x64".into()), vec![Operand::Float(2.5)], "f64"),
+        IIRInstr::new("global_store", None, vec![Operand::Str("g64".into()), Operand::Var("x64".into())], "void"),
+        IIRInstr::new("global_load", Some("y64".into()), vec![Operand::Str("g64".into())], "f64"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let wasm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
+    assert_eq!(wasm.globals.len(), 2);
+    assert_eq!(wasm.globals[0].global_type.value_type, ValueType::F32);
+    assert_eq!(wasm.globals[0].init_expr, vec![0x43, 0, 0, 0, 0, 0x0B]);
+    assert_eq!(wasm.globals[1].global_type.value_type, ValueType::F64);
+    assert_eq!(wasm.globals[1].init_expr, vec![0x44, 0, 0, 0, 0, 0, 0, 0, 0, 0x0B]);
+    encode_module(&wasm).expect("encoding failed");
+}
+
 // Test 1.9
 #[test]
 fn validate_call_builtin_rejected() {
