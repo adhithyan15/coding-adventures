@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.79.0";
+pub const VERSION: &str = "0.80.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -418,6 +418,19 @@ pub struct BoardColumn {
 pub struct BoardDiagram {
     pub columns: Vec<BoardColumn>,
     pub ticket_base_url: Option<String>,
+    pub config: BoardConfig,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct BoardConfig {
+    pub section_width: f64,
+    pub padding: f64,
+}
+
+impl Default for BoardConfig {
+    fn default() -> Self {
+        Self { section_width: 260.0, padding: 24.0 }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -2707,7 +2720,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.79.0");
+        assert_eq!(VERSION, "0.80.0");
     }
     #[test]
     fn default_direction_is_tb() {

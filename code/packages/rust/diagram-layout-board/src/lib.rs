@@ -1,20 +1,20 @@
 //! Deterministic column/card layout for board diagrams.
 
-pub const VERSION: &str = "0.5.0";
+pub const VERSION: &str = "0.6.0";
 
 use diagram_ir::{
     BoardDiagram, DiagramStyle, LayoutedBoardCard, LayoutedBoardColumn, LayoutedBoardDiagram,
     ResolvedDiagramStyle,
 };
 
-const PADDING: f64 = 24.0;
-const COLUMN_WIDTH: f64 = 260.0;
 const COLUMN_GAP: f64 = 20.0;
 const HEADER_HEIGHT: f64 = 52.0;
 const CARD_HEIGHT: f64 = 72.0;
 const CARD_GAP: f64 = 12.0;
 
 pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
+    let padding = board.config.padding;
+    let column_width = board.config.section_width;
     let max_cards_height = board
         .columns
         .iter()
@@ -23,14 +23,14 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
                 + column.cards.len().saturating_sub(1) as f64 * CARD_GAP
         })
         .fold(0.0, f64::max);
-    let column_height = HEADER_HEIGHT + PADDING + max_cards_height;
+    let column_height = HEADER_HEIGHT + padding + max_cards_height;
     let columns = board
         .columns
         .iter()
         .enumerate()
         .map(|(column_index, column)| {
-            let x = PADDING + column_index as f64 * (COLUMN_WIDTH + COLUMN_GAP);
-            let mut next_card_y = PADDING + HEADER_HEIGHT + 12.0;
+            let x = padding + column_index as f64 * (column_width + COLUMN_GAP);
+            let mut next_card_y = padding + HEADER_HEIGHT + 12.0;
             let cards = column
                 .cards
                 .iter()
@@ -41,7 +41,7 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
                         label: card.label.clone(),
                         x: x + 12.0,
                         y: next_card_y,
-                        width: COLUMN_WIDTH - 24.0,
+                        width: column_width - 24.0,
                         height,
                         style: card_style(column_index),
                         ticket: card.ticket.clone(),
@@ -61,8 +61,8 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
                 id: column.id.clone(),
                 label: column.label.clone(),
                 x,
-                y: PADDING,
-                width: COLUMN_WIDTH,
+                y: padding,
+                width: column_width,
                 height: column_height,
                 cards,
                 style: column_style(column_index),
@@ -72,10 +72,10 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
         .collect();
     LayoutedBoardDiagram {
         columns,
-        width: PADDING * 2.0
-            + board.columns.len() as f64 * COLUMN_WIDTH
+        width: padding * 2.0
+            + board.columns.len() as f64 * column_width
             + board.columns.len().saturating_sub(1) as f64 * COLUMN_GAP,
-        height: PADDING * 2.0 + column_height,
+        height: padding * 2.0 + column_height,
     }
 }
 
@@ -122,6 +122,7 @@ mod tests {
     fn lays_out_columns_and_cards() {
         let board = BoardDiagram {
             ticket_base_url: None,
+            config: diagram_ir::BoardConfig::default(),
             columns: vec![BoardColumn {
                 id: "todo".into(),
                 label: DiagramLabel::new("Todo"),
@@ -147,6 +148,7 @@ mod tests {
     fn metadata_reserves_card_footer_geometry() {
         let board = BoardDiagram {
             ticket_base_url: Some("https://tracker.example/issues/#TICKET#".into()),
+            config: diagram_ir::BoardConfig { section_width: 300.0, padding: 32.0 },
             columns: vec![BoardColumn {
                 id: "todo".into(),
                 label: DiagramLabel::new("Todo"),
@@ -171,5 +173,8 @@ mod tests {
         );
         assert_eq!(layout.columns[0].classes, ["backlog"]);
         assert_eq!(layout.columns[0].cards[0].classes, ["urgent", "blocked"]);
+        assert_eq!(layout.columns[0].x, 32.0);
+        assert_eq!(layout.columns[0].width, 300.0);
+        assert_eq!(layout.width, 364.0);
     }
 }
