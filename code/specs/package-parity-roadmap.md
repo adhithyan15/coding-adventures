@@ -15958,6 +15958,31 @@ Select the neutral dependency-hashing adversarial corpus as the sole next
 delivery item in a fresh clean merged-main worktree. Its two prerequisites are
 merged and its fixture/schema/runner paths do not overlap a live PR.
 
+## Post-#16787 inventory and source-hashing priority (2026-10-06)
+
+Guarded squash auto-merge landed the adversarial dependency-hashing corpus at
+`2ec42cd3e0` after all final-head checks passed or skipped as expected and
+GitHub reported no conflict. The exact merged-main collision report still has
+15 established lanes, 1,487 implementation identities, 4,757 slots, 1,529
+all-reported identities, 178 high-consensus packages with 262 missing slots,
+five emerging OCaml packages, and zero collisions or unknown language buckets.
+No package identity or lane classification changed. The state graph has 1,077
+owners with unique exact and punctuation-normalized IDs and no missing
+prerequisites; the neutral fixture owner is now merged. Read-only package,
+build-tool, and OCaml promotion audits found no newly unowned gap to register.
+
+The fixture merge makes Lua, shared C#/F#, Swift, Ruby, and TypeScript native
+dependency-hashing leaves prerequisite-clear. Go, Elixir, Perl, Haskell, and
+Rust retain explicit preceding source/snapshot owners; Python's dependency
+hashing is already merged. The remaining OCaml promotion chain is owned but
+still gated by native front-door, adapter, current-contract, and three-platform
+execution work. Among ready items, Elixir portable source hashing has seven
+unfinished descendants, Lua dependency hashing has five, and TypeScript diff
+selection has five. Select only the process-free Elixir source-hashing tranche
+next, after verifying no open PR overlaps its engine paths. Keep dependency
+hashing, native retained-handle snapshot authority, cache persistence, and
+adapter activation in their separate owners.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
