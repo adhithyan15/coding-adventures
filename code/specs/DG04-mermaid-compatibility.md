@@ -589,6 +589,9 @@ function around D50 XYZ conversion, including chromatic adaptation to and from
 the backend-neutral sRGB paint space.
 The encoded `rec2020` interpolation space applies its sign-preserving transfer
 function around D65 XYZ conversion before backend-neutral paint lowering.
+The rectangular `xyz` and `xyz-d65` interpolation aliases mix directly in D65
+XYZ, while `xyz-d50` applies chromatic adaptation before interpolation; all
+three retain premultiplied-alpha and backend-neutral lowering semantics.
 The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.

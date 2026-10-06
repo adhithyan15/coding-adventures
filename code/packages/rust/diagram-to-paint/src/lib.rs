@@ -2067,6 +2067,8 @@ enum CssColorMixSpace {
     A98Rgb,
     ProPhotoRgb,
     Rec2020,
+    XyzD65,
+    XyzD50,
     Hsl,
     Hwb,
     Lab,
@@ -2090,6 +2092,8 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         ["in", "a98-rgb"] => CssColorMixSpace::A98Rgb,
         ["in", "prophoto-rgb"] => CssColorMixSpace::ProPhotoRgb,
         ["in", "rec2020"] => CssColorMixSpace::Rec2020,
+        ["in", "xyz"] | ["in", "xyz-d65"] => CssColorMixSpace::XyzD65,
+        ["in", "xyz-d50"] => CssColorMixSpace::XyzD50,
         ["in", "hsl"] => CssColorMixSpace::Hsl,
         ["in", "hwb"] => CssColorMixSpace::Hwb,
         ["in", "lab"] => CssColorMixSpace::Lab,
@@ -2181,6 +2185,12 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         CssColorMixSpace::A98Rgb => css_a98_rgb_to_color(components, alpha),
         CssColorMixSpace::ProPhotoRgb => css_prophoto_rgb_to_color(components, alpha),
         CssColorMixSpace::Rec2020 => css_rec2020_to_color(components, alpha),
+        CssColorMixSpace::XyzD65 => xyz_d65_to_color(
+            components[0], components[1], components[2], alpha,
+        ),
+        CssColorMixSpace::XyzD50 => xyz_d50_to_color(
+            components[0], components[1], components[2], alpha,
+        ),
         CssColorMixSpace::Hsl => css_hsl_to_color(
             components[2].to_degrees(), components[0], components[1], alpha,
         ),
@@ -2221,6 +2231,11 @@ fn css_color_mix_components(color: Color, space: CssColorMixSpace) -> [f64; 3] {
         CssColorMixSpace::A98Rgb => css_color_to_a98_rgb(encoded),
         CssColorMixSpace::ProPhotoRgb => css_color_to_prophoto_rgb(encoded),
         CssColorMixSpace::Rec2020 => css_color_to_rec2020(encoded),
+        CssColorMixSpace::XyzD65 => css_color_to_xyz_d65(encoded),
+        CssColorMixSpace::XyzD50 => {
+            let [x, y, z] = css_color_to_xyz_d65(encoded);
+            xyz_d65_to_d50(x, y, z)
+        }
         CssColorMixSpace::Hsl => css_color_to_hsl(encoded),
         CssColorMixSpace::Hwb => css_color_to_hwb(encoded),
         CssColorMixSpace::Lab => css_color_to_lab(encoded),
@@ -2833,6 +2848,23 @@ fn css_color_to_rec2020(encoded: [f64; 3]) -> [f64; 3] {
             encoded
         }
     })
+}
+
+fn css_color_to_xyz_d65(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    [
+        0.4123907992659595 * r + 0.357_584_339_383_878 * g + 0.1804807884018343 * b,
+        0.2126390058715104 * r + 0.715_168_678_767_756 * g + 0.0721923153607337 * b,
+        0.0193308187155918 * r + 0.119_194_779_794_626 * g + 0.9505321522496607 * b,
+    ]
+}
+
+fn xyz_d65_to_d50(x: f64, y: f64, z: f64) -> [f64; 3] {
+    [
+        1.0479298 * x + 0.0229468 * y - 0.0501922 * z,
+        0.0296278 * x + 0.9904345 * y - 0.0170738 * z,
+        -0.0092430 * x + 0.0150552 * y + 0.7518743 * z,
+    ]
 }
 
 fn xyz_d65_to_color(x: f64, y: f64, z: f64, alpha: u8) -> Color {
@@ -8375,6 +8407,27 @@ mod tests {
             Color { r: 255, g: 0, b: 0, a: 51 },
         );
         assert_eq!(with_opacity("color-mix(in rec2020, black, white)", 0.5), "rgba(139,139,139,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_xyz_spaces() {
+        assert_eq!(
+            css_to_color("color-mix(in xyz, black, white)"),
+            Color { r: 188, g: 188, b: 188, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in xyz-d65, red, blue)"),
+            Color { r: 188, g: 0, b: 188, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in xyz-d50, red, blue)"),
+            Color { r: 188, g: 0, b: 188, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in xyz-d50, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in xyz-d65, black, white)", 0.5), "rgba(188,188,188,0.5)");
     }
 
     #[test]
