@@ -72,7 +72,7 @@ word spelling, colon spacing, digit order and phone grouping, then field
 placement in separate passes. Repair one differing dimension at a time.
 
 ## Wrap-up recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-SIX-NO-MODEL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-SIX-NO-MODEL-01, PA-FORM-SIX-CUE-01, PA-FORM-SIX-ORDER-01] -->
 <!-- hl-activity: {"id":"PA-W11-form-six-no-model-b","kind":"text","assesses":["PA-FORM-SIX-NO-MODEL-01","PA-FORM-SIX-CUE-01","PA-FORM-SIX-ORDER-01"],"prompt":"With no value bank, romanization, or copyable answer, complete all six familiar fictional form fields for B · ਖ.","answer":"ਨਾਂ: ਮਨਨ\nਭਾਸ਼ਾ: ਹਿੰਦੀ\nਰਿਹਾਇਸ਼: ਸ਼ਹਿਰ\nਕੰਮ: ਨੌਕਰੀ\nਉਮਰ: ੨੫\nਫ਼ੋਨ: ੦੨੫ ੧੨੫","accepted":[],"feedback":{"correct":"Six remembered selections were written beside their taught labels.","incorrect":"Finish all six attempts first; then reopen one old bank at a time and repair one dimension."},"response_seconds":80} -->
 
 This is an untimed minimum-size form rehearsal, not a timed A1 paper.

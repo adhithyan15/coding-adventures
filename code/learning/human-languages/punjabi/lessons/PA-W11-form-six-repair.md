@@ -63,7 +63,7 @@ For B · ਖ, repair only the last two digit positions in
 other form lines as they were.
 
 ## Wrap-up recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-SIX-REPAIR-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-SIX-REPAIR-01, PA-FORM-PHONE-DIGIT-ORDER-01] -->
 <!-- hl-activity: {"id":"PA-W11-form-six-repair-phone","kind":"text","assesses":["PA-FORM-SIX-REPAIR-01","PA-FORM-PHONE-DIGIT-ORDER-01"],"prompt":"For B · ਖ, repair only the wrong digit order in ਫ਼ੋਨ: ੦੨੫ ੧੫੨.","answer":"ਫ਼ੋਨ: ੦੨੫ ੧੨੫","accepted":[],"feedback":{"correct":"Only the final digit positions changed.","incorrect":"Keep the correct label and first group; compare the last two positions left to right."},"response_seconds":30} -->
 
 The next lesson asks for an untimed six-line attempt without the bank.
