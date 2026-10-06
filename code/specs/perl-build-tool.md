@@ -256,6 +256,28 @@ all portable glob grammar, native stable-snapshot authority, dependency
 digests, cache persistence, or executable CLI cache integration; those remain
 separate parity owners under `build-tool-conformance.md`.
 
+### 5.6 Portable package-local source hashing
+
+The Hasher's extension-mode selectors come from a byte-identical, packaged
+snapshot of the v1 language source-input registry, not a merged list of all
+languages' extensions. The snapshot is refreshed by a deterministic sync
+command, checked for complete structural equality with the neutral registry,
+and identified by its domain-separated canonical-JSON SHA-256. The runtime
+reads package data only. It applies all seven roles, universal BUILD fronts,
+root-only `required_capabilities.json`, exact generated-component pruning,
+and fixed inputs in both extension and declared-source modes. Unknown
+languages fail closed before walking. Exact-package rules require a canonical
+language-matched repository root; only the two registered TypeScript site
+roots may use the reviewed `unknown/*` graph identities.
+
+The selected files are ordered by normalized UTF-8 package-relative path.
+Each file contributes an unsigned 64-bit big-endian path-byte length, its UTF-8
+path bytes, an unsigned 64-bit big-endian content-byte length, and the exact
+content bytes to SHA-256. An empty selection hashes the empty byte string.
+Read failures are errors, not omissions. This package-local tranche does not
+assert native atomic snapshot or no-follow authority, repository-boundary
+inputs, dependency hashing, cache persistence, or CLI hash-mode activation.
+
 ---
 
 ## 6. CLI Interface

@@ -1036,6 +1036,21 @@ language; only the two registered TypeScript `code/sites/<site>` roots are
 also valid. This package-local adoption does not claim the separately owned
 repository-boundary reverse diff, tracked-index snapshot, or digest work.
 
+The Perl build tool packages a byte-for-byte JSON snapshot of the checked
+language source-input registry alongside its production hasher. A deterministic
+sync command refreshes that package data; tests compare the complete decoded
+projection and domain-separated digest with the neutral registry, then drive
+each package-local source-collection case through the production selector.
+Runtime collection must never search for the repository fixture. Universal
+BUILD and root-only capability inputs, all seven registry roles, exact
+generated-component pruning, and extension-versus-declared precedence apply.
+Unknown languages fail before enumeration. Package-exact inputs require an
+anchored canonical lane-matched package root, except the two registered
+TypeScript site roots; isolated unit packages may use global selectors but
+never acquire package-exact authority. This package-local adoption does not
+claim repository-boundary inputs, stable native snapshots, dependency digests,
+cache persistence, or front-door hash-mode activation.
+
 Swift and the shared C#/F# engine complete this package-local projection with
 the repository-relative boundary registry, tracked-regular-file evidence, and
 an exact reverse diff index. Their native readers remain responsible for

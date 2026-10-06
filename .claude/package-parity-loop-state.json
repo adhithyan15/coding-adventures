@@ -1512,9 +1512,9 @@
     {
       "id": "build-tool-perl-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Perl build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-perl-blib-generated-directory-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-perl-diff-selection-match-work-ceiling-adoption", "build-tool-perl-declared-source-metadata-plumbing"],
-      "branch": null,
+      "branch": "codex/parity-perl-portable-source-20261006",
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. Perl has only a partial artifact skip registry, uses platform-native relative paths, and lacks OCaml source recognition. Adopt the complete checked language source-input registry and normalized framing contract in one engine-scoped tranche, proving exact production lookup equality."
     },
