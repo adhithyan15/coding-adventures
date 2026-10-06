@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { parseLesson } from "../src/parse.js";
-import { validate, hasErrors, summarize } from "../src/validate.js";
+import { validate, hasErrors, isSingleDecimalDigit, summarize } from "../src/validate.js";
 import type { SoundTagRegistry } from "../src/sound-tags.js";
 import type { ScriptData, Taxonomy } from "../src/types.js";
 
@@ -298,6 +298,57 @@ describe("validate", () => {
     const issues = validate({ taxonomy, lessons: [], scripts: { test: verified } });
     expect(issues.some((i) => i.code === "invalid-pen-lifts")).toBe(true);
     expect(issues.filter((i) => i.code === "invalid-stroke-order-source")).toHaveLength(2);
+  });
+
+  describe("digit rows", () => {
+    // A Bengali-shaped inventory: no letters, only the digit rows under test.
+    const bengali = (digits: string[], complete = true): ScriptData => ({
+      script: "bengali", name: "Bengali", font: "f", direction: "ltr", system: "abugida",
+      letters: [],
+      marks: [],
+      digits: digits.map((glyph) => ({
+        glyph, sound: "digit", role: "digit", components: [], strokeOrder: [], strokeOrderNote: "",
+      })),
+      complete,
+    });
+
+    it("accepts single decimal digits and lets them cover a headword", () => {
+      const l = good("bengali", "BN-NUM", "GREETING-HELLO", { headword: "৭ ১০", romanization: "sat dosh" });
+      const issues = validate({ taxonomy, lessons: [l], scripts: { bengali: bengali(["০", "১", "৭"]) } });
+      expect(issues.some((i) => i.code === "invalid-digit-row")).toBe(false);
+      expect(issues.some((i) => i.code === "uncovered-glyphs")).toBe(false);
+      expect(hasErrors(issues)).toBe(false);
+    });
+
+    it("rejects a digit row that is not exactly one Nd code point", () => {
+      // two digits, a letter, a letter-number (Nl), and the empty string
+      const bad = ["১০", "ক", "Ⅶ", ""];
+      const issues = validate({ taxonomy, lessons: [], scripts: { bengali: bengali(bad) } });
+      const digitIssues = issues.filter((i) => i.code === "invalid-digit-row");
+      expect(digitIssues).toHaveLength(bad.length);
+      expect(digitIssues.every((i) => i.level === "error")).toBe(true);
+      expect(digitIssues[0].message).toBe(
+        'bengali digit "১০": a digit row must be exactly one code point of Unicode category Nd (decimal digit)',
+      );
+      expect(hasErrors(issues)).toBe(true);
+    });
+
+    it("does not let a malformed digit row cover headword characters", () => {
+      // ক arrives only through a bogus digit row, so it stays uncovered.
+      const l = good("bengali", "BN-KA", "GREETING-HELLO", { headword: "ক", romanization: "ka" });
+      const issues = validate({ taxonomy, lessons: [l], scripts: { bengali: bengali(["ক"]) } });
+      expect(issues.some((i) => i.code === "uncovered-glyphs" && i.message.includes("ক"))).toBe(true);
+    });
+
+    it("counts code points, not UTF-16 units", () => {
+      expect(isSingleDecimalDigit("৭")).toBe(true);
+      expect(isSingleDecimalDigit("7")).toBe(true);
+      expect(isSingleDecimalDigit("\u{1D7CE}")).toBe(true); // MATHEMATICAL BOLD DIGIT ZERO, astral
+      expect(isSingleDecimalDigit("৭৭")).toBe(false);
+      expect(isSingleDecimalDigit("৭\u0301")).toBe(false); // digit + combining mark
+      expect(isSingleDecimalDigit("ঌ")).toBe(false);
+      expect(isSingleDecimalDigit("")).toBe(false);
+    });
   });
 
   it("summarize counts levels", () => {
