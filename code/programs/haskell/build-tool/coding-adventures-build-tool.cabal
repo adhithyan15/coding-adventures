@@ -45,6 +45,7 @@ test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
     other-modules:    BuildToolSpec
+                    , GraphDiffSpec
                     , HashingSpec
                     , ResolutionUtf8Spec
                     , ToolchainDetectionSpec
