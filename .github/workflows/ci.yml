@@ -718,6 +718,18 @@ jobs:
           (cd code/packages/go/capability-cage && go test ./...)
           cargo test -p capability-cage --manifest-path code/packages/rust/Cargo.toml
 
+      - name: Set up Python for language frontend oracle replay
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+
+      - name: Verify language frontend neutral fixtures
+        run: |
+          python -c 'import sys; assert sys.version_info >= (3, 13)'
+          python -m pip install --disable-pip-version-check --quiet jsonschema==4.26.0
+          python code/scripts/language_frontend_fixtures.py
+          python -m unittest discover -s code/scripts/tests -p 'test_language_frontend_fixtures.py'
+
   # This gate is independent of package BUILD files. A package cannot silence
   # capability enforcement by editing its own build recipe.
   ocaml-capability-gate:
