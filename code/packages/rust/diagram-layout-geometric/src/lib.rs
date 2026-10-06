@@ -139,12 +139,29 @@ pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
         items: diagram.domains.iter().find(|domain| domain.name == "confusion").map_or_else(Vec::new, |domain| domain.items.clone()),
         x: width / 2.0 - 90.0, y: top + (height - top - 28.0) / 2.0 - 58.0, width: 180.0, height: 116.0,
         center: Point { x: width / 2.0, y: top + (height - top - 28.0) / 2.0 }, confusion: true });
-    let centers: HashMap<_, _> = domains.iter().map(|domain| (domain.name.as_str(), domain.center.clone())).collect();
-    let transitions = diagram.transitions.iter().filter_map(|transition| Some(LayoutedCynefinTransition {
-        from: centers.get(transition.from.as_str())?.clone(), to: centers.get(transition.to.as_str())?.clone(), label: transition.label.clone(),
-    })).collect();
+    let domain_by_name: HashMap<_, _> = domains.iter().map(|domain| (domain.name.as_str(), domain)).collect();
+    let transitions = diagram.transitions.iter().filter_map(|transition| {
+        let from = domain_by_name.get(transition.from.as_str())?;
+        let to = domain_by_name.get(transition.to.as_str())?;
+        Some(LayoutedCynefinTransition { from: cynefin_boundary_point(from, &to.center),
+            to: cynefin_boundary_point(to, &from.center), label: transition.label.clone() })
+    }).collect();
     LayoutedCynefinDiagram { width, height, title: diagram.title.clone(), accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(), domains, transitions }
+}
+
+fn cynefin_boundary_point(domain: &LayoutedCynefinDomain, toward: &Point) -> Point {
+    let dx = toward.x - domain.center.x;
+    let dy = toward.y - domain.center.y;
+    if dx.abs() < f64::EPSILON && dy.abs() < f64::EPSILON { return domain.center.clone(); }
+    let scale = if domain.confusion {
+        1.0 / ((dx / (domain.width / 2.0)).powi(2) + (dy / (domain.height / 2.0)).powi(2)).sqrt()
+    } else {
+        let horizontal = if dx.abs() < f64::EPSILON { f64::INFINITY } else { domain.width / 2.0 / dx.abs() };
+        let vertical = if dy.abs() < f64::EPSILON { f64::INFINITY } else { domain.height / 2.0 / dy.abs() };
+        horizontal.min(vertical)
+    };
+    Point { x: domain.center.x + dx * scale, y: domain.center.y + dy * scale }
 }
 
 /// Resolve canvas size and produce a `LayoutedGeometricDiagram`.
@@ -329,11 +346,14 @@ mod tests {
 
     #[test]
     fn cynefin_layout_places_domains_in_fixed_semantic_quadrants() {
-        let layout = layout_cynefin(&CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None, domains: vec![], transitions: vec![] });
+        let layout = layout_cynefin(&CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None, domains: vec![],
+            transitions: vec![diagram_ir::CynefinTransition { from: "complex".into(), to: "clear".into(), label: None }] });
         let complex = layout.domains.iter().find(|domain| domain.name == "complex").unwrap();
         let clear = layout.domains.iter().find(|domain| domain.name == "clear").unwrap();
         assert!(complex.center.x < clear.center.x && complex.center.y < clear.center.y);
         assert!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().confusion);
+        assert!(layout.transitions[0].from.x > complex.center.x);
+        assert!(layout.transitions[0].to.x < clear.center.x);
     }
 
     #[test]
