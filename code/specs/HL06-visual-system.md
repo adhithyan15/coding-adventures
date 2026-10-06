@@ -213,6 +213,15 @@ read from its GSUB table: the ligatures ણુ, રુ, રૂ and the "stem" fo
 consonants take before ુ and ૂ (`blws`), and જ and ૹ with ા, ી, ો and ૌ, whose
 ā bar joins the consonant (`psts`). So જો and બજાર stay undrawn.
 
+Every fused pair, Tamil's and Gujarati's, stands on a cited source:
+`FUSED_SIGN_PAIRS` is built only from `FUSED_SIGN_PAIR_SOURCES`, which groups
+the pairs under a citation (Unicode 17.0 §12.6.3, Figure 12-21 for Tamil; Noto
+Sans Gujarati 2.106's GSUB lookups by feature and number for Gujarati) and an
+HTTPS URL. A test holds each citation to its pairs both ways (it names every
+pair's letter and sign, and every letter it names has a pair), pins each
+source's pair count, and checks that the bundled Gujarati font is still the
+cited version.
+
 #### As built — Devanagari signs drawn alone
 
 Eight Devanagari signs have a cited ductus of their own: ु ू े, the anusvara ं,

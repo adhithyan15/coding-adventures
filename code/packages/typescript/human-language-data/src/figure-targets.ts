@@ -270,6 +270,8 @@ const SIGNS_ONLY = /^\p{M}+$/u;
 // have rows. Drawing the consonant and the sign apart would draw a word
 // nobody writes, so those pairs are refused too:
 //
+// Each group of pairs carries its citation in `FUSED_SIGN_PAIR_SOURCES`:
+//
 //   * Tamil: Unicode 17.0 §12.6.3 (Ligatures with Vowel i, Figure 12-21)
 //     shows ட with ி and ீ, and ல with ீ, joined into new shapes.
 //   * Gujarati: the bundled Noto Sans Gujarati (read from its GSUB table)
@@ -313,23 +315,85 @@ export const WRITTEN_SIGN_SIDES: Readonly<Record<string, Readonly<Record<string,
   },
 };
 
-/** Consonant + sign pairs that fuse into a ligature, or that the font reshapes, per script (NFD). */
-export const FUSED_SIGN_PAIRS: Readonly<Record<string, ReadonlySet<string>>> = {
-  tamil: new Set(["\u0B9F\u0BBF", "\u0B9F\u0BC0", "\u0BB2\u0BC0"]), // டி டீ லீ
-  gujarati: new Set([
-    // Stem forms before u and uu (ણુ is also a ligature of its own).
-    ...[..."ખગઘચઞણતથધનપફબભમયલળવશષસ"].flatMap((consonant) => [
-      `${consonant}\u0AC1`, // C + ુ
-      `${consonant}\u0AC2`, // C + ૂ
-    ]),
-    "\u0AB0\u0AC1", // રુ
-    "\u0AB0\u0AC2", // રૂ
-    // જ and ૹ join the ā bar, alone (ા, ી) or inside ો and ૌ.
-    ...["\u0A9C", "\u0AF9"].flatMap((consonant) =>
-      ["\u0ABE", "\u0AC0", "\u0ACB", "\u0ACC"].map((sign) => `${consonant}${sign}`),
-    ),
-  ]),
+/**
+ * One cited reason that some consonant + sign pairs fuse.
+ *
+ * The citation names the source closely enough to look up (section and
+ * figure, or font version and GSUB lookup), and it names every base letter
+ * and every sign of its `pairs`: a test holds the two to each other, so a
+ * pair cannot be added to or dropped from this table without its source
+ * being edited in the same change.
+ */
+export interface FusedSignPairSource {
+  /** Where the fusion is shown, specific enough to check. */
+  readonly citation: string;
+  /** An HTTPS URL for the source. */
+  readonly url: string;
+  /** The NFD consonant + sign pairs this source shows fused or reshaped. */
+  readonly pairs: readonly string[];
+}
+
+/** The bundled Gujarati font the GSUB citations below were read from. */
+const NOTO_SANS_GUJARATI =
+  "Noto Sans Gujarati Version 2.106, bundled as learning/human-languages/_fonts/NotoSansGujarati-Static.ttf";
+const NOTO_SANS_GUJARATI_URL = "https://github.com/notofonts/gujarati";
+
+/**
+ * Every fused pair, grouped under the source that shows it. A pair may stand
+ * under two sources when both show it (Gujarati ણુ is a stem form AND a
+ * ligature of its own); `FUSED_SIGN_PAIRS` is built from this table and
+ * nothing else, so there is no fused pair without a citation.
+ */
+export const FUSED_SIGN_PAIR_SOURCES: Readonly<Record<string, readonly FusedSignPairSource[]>> = {
+  tamil: [
+    {
+      citation:
+        "The Unicode Standard, Version 17.0, §12.6.3 Tamil Ligatures, Ligatures with Vowel i and " +
+        "Figure 12-21: ட with ி and ீ, and ல with ீ, join into ligatures of their own (2025)",
+      url: "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+      pairs: ["\u0B9F\u0BBF", "\u0B9F\u0BC0", "\u0BB2\u0BC0"], // டி டீ லீ
+    },
+  ],
+  gujarati: [
+    {
+      // Stem forms before u and uu.
+      citation:
+        `${NOTO_SANS_GUJARATI}, GSUB 'blws' contextual lookup 90: before ુ or ૂ the consonants ` +
+        "ખ ગ ઘ ચ ઞ ણ ત થ ધ ન પ ફ બ ભ મ ય લ ળ વ શ ષ સ take a stem form that neither the " +
+        "letter's ductus nor the sign's draws",
+      url: NOTO_SANS_GUJARATI_URL,
+      pairs: [..."ખગઘચઞણતથધનપફબભમયલળવશષસ"].flatMap((consonant) => [
+        `${consonant}\u0AC1`, // C + ુ
+        `${consonant}\u0AC2`, // C + ૂ
+      ]),
+    },
+    {
+      citation:
+        `${NOTO_SANS_GUJARATI}, GSUB 'blws' ligature lookup 89: ર with ુ, ર with ૂ, and ણ with ુ ` +
+        "each become one glyph of their own",
+      url: NOTO_SANS_GUJARATI_URL,
+      pairs: ["\u0AB0\u0AC1", "\u0AB0\u0AC2", "\u0AA3\u0AC1"], // રુ રૂ ણુ
+    },
+    {
+      // જ and ૹ join the ā bar, alone (ા, ી) or inside ો and ૌ.
+      citation:
+        `${NOTO_SANS_GUJARATI}, GSUB 'psts' lookups 94 to 96 and 106: after જ or ૹ, ો and ૌ ` +
+        "are split into ા plus ે or ૈ, and ા and ી then join the consonant into one glyph",
+      url: NOTO_SANS_GUJARATI_URL,
+      pairs: ["\u0A9C", "\u0AF9"].flatMap((consonant) =>
+        ["\u0ABE", "\u0AC0", "\u0ACB", "\u0ACC"].map((sign) => `${consonant}${sign}`),
+      ),
+    },
+  ],
 };
+
+/** Consonant + sign pairs that fuse into a ligature, or that the font reshapes, per script (NFD). */
+export const FUSED_SIGN_PAIRS: Readonly<Record<string, ReadonlySet<string>>> = Object.fromEntries(
+  Object.entries(FUSED_SIGN_PAIR_SOURCES).map(([script, sources]) => [
+    script,
+    new Set(sources.flatMap((source) => source.pairs)),
+  ]),
+);
 
 /**
  * The pieces one grapheme is written as, in written order, or `undefined`

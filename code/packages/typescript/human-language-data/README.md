@@ -986,7 +986,9 @@ Two kinds exist:
   place cited to KanoAI's barakhadi templates in the sign's mark record. The
   virama ્ and ૃ have no row, two signs on one consonant (ાં) are refused, and
   so are the pairs the bundled font reshapes (ણુ, રુ, રૂ; ુ and ૂ under the
-  22 consonants that take a stem form; જ and ૹ with ા, ી, ો, ૌ).
+  22 consonants that take a stem form; જ and ૹ with ા, ી, ો, ૌ). Each group
+  of fused pairs carries its citation in `FUSED_SIGN_PAIR_SOURCES`, and a
+  test fails if a pair is added or dropped without its source.
   Devanagari has no table on purpose: its eight cited signs (ु ू े ं ़ ् ृ ँ)
   come from native writers who wrote each sign alone, which says nothing about
   its order against a consonant or the headline, so only a lesson whose
