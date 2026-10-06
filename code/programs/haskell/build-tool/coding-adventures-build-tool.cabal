@@ -15,6 +15,7 @@ extra-source-files: tools/generate-language-source-input-registry.ps1
 
 library
     exposed-modules:  BuildTool
+                    , GraphDiffCore
                     , LanguageSourceInputRegistry
                     , ToolchainDetection
     other-modules:    LanguageSourceInputRegistryData
@@ -45,6 +46,7 @@ test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
     other-modules:    BuildToolSpec
+                    , GraphDiffSpec
                     , HashingSpec
                     , ResolutionUtf8Spec
                     , ToolchainDetectionSpec
