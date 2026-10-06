@@ -255,6 +255,41 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertLess(block.index(uninstall), block.index(test))
         self.assertLess(block.index(test), block.rindex('xcrun simctl shutdown "$ipad"'))
 
+    def test_engram_runs_its_picker_xcuitest_on_the_ipad(self) -> None:
+        """UI89 §4.4: Engram's XCUITest goes into its iOS project, selects the
+        build's fake document picker with its launch argument, and runs on the
+        iPad from a fresh install; the step checks one test ran and passed."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# ---- Engram on iOS and iPadOS (UI89 §2.5, step 7).")
+        block = workflow[start : workflow.index("\n\n", start)]
+        source = "code/programs/mosaic/engram-app/conformance/swiftui-ios/EngramUiTests.swift"
+        self.assertIn(f"--ios-ui-test {source}", block)
+        test_source = Path(__file__).resolve().parents[3] / source
+        swift = test_source.read_text(encoding="utf-8")
+        self.assertIn("final class EngramUiTests: XCTestCase", swift)
+        self.assertIn('private let pickerArgument = "-MosaicUITestPicker"', swift)
+        self.assertIn("app.launchArguments = [pickerArgument]", swift)
+        self.assertIn("app.terminate()", swift)
+        # The argument the test passes is the one the fake listens for.
+        picker = (
+            Path(__file__).resolve().parents[2]
+            / "packages/rust/mosaic-app-bindings/templates/swiftui/ios-ui-test/MosaicUITestPicker.swift"
+        ).read_text(encoding="utf-8")
+        self.assertIn('let mosaicUITestPickerArgument = "-MosaicUITestPicker"', picker)
+
+        uninstall = 'xcrun simctl uninstall "$ipad" dev.codingadventures.engramapp'
+        test = (
+            "xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator "
+            '-destination "platform=iOS Simulator,id=$ipad"'
+        )
+        self.assertIn(uninstall, block)
+        self.assertIn(test, block)
+        self.assertIn("grep -q 'Executed 1 test, with 0 failures' \"$engram_ui_test_log\"", block)
+        self.assertLess(block.index('xcrun simctl launch "$ipad" dev.codingadventures.engramapp'), block.index(uninstall))
+        self.assertLess(block.index(uninstall), block.index(test))
+        self.assertLess(block.index(test), block.rindex('xcrun simctl shutdown "$ipad"'))
+
     def test_engram_runs_and_keeps_its_state_on_ios(self) -> None:
         """UI89 §2.5 (step 7): Engram follows Journal's iOS recipe, after
         Journal, and its iOS target compiles the [host_effects] handler."""
@@ -404,11 +439,11 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn(
             "Round-trip Rust engine through standard SwiftUI binding", workflow
         )
-        # 90: since UI89 §2.2 the step boots iOS simulators and launches the
+        # 105: since UI89 §2.2 the step boots iOS simulators and launches the
         # generated apps, §2.4/§2.5 add Journal's and Engram's engines, app
-        # builds and simulator gates, and §4.3/§4.4 Journal's and Trestle's
-        # XCUITests.
-        self.assertIn("timeout-minutes: 90", swift_runtime_step)
+        # builds and simulator gates, and §4.3/§4.4 Journal's, Trestle's and
+        # Engram's XCUITests.
+        self.assertIn("timeout-minutes: 105", swift_runtime_step)
         self.assertIn(
             "mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app",
             workflow,

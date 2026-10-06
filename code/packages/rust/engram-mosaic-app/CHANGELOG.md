@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Added — the device UI tests' round trip, pinned (UI89 §4.4)
+
+`a_fresh_collection_exports_a_zip_whose_import_lists_the_default_deck` pins
+what Engram's phone UI tests rely on:
+- a fresh collection lists no decks, and no prop says `Default`;
+- its export is a zip;
+- importing that package back lists the `Default` deck;
+- a snapshot restored into a new app still lists it.
+
+If the engine changes any of this, this test fails and names the cause,
+rather than a test on an emulator.
+
 ### Fixed — `snapshot()` no longer materialises the whole collection (#14523)
 
 **The problem.** The adapter has one field of its own to persist — which deck

@@ -88,6 +88,13 @@ pub struct IosApp {
     /// UI test bundle that tests the app, and [`shared_scheme`] then
     /// describes the scheme `xcodebuild test` needs.
     pub ui_test_sources: Vec<String>,
+    /// Swift compilation conditions defined for the app target's Debug
+    /// configuration only, after `$(inherited)` (which brings the
+    /// project's `DEBUG`). Release never gets them. Empty — the default —
+    /// leaves the app target's settings as they were. The Mosaic builder
+    /// passes `MOSAIC_UI_TEST_PICKER` for a build with XCUITests (UI89 §4.4),
+    /// so the UI tests' fake document picker is compiled in Debug only.
+    pub debug_compilation_conditions: Vec<String>,
 }
 
 /// The UI test target's name for an app product: `<product>UITests`.
@@ -198,6 +205,21 @@ fn validate(app: &IosApp) -> Result<(), ProjectError> {
     }
     for definition in &app.preprocessor_definitions {
         check_text("preprocessor_definitions", definition)?;
+    }
+    // A Swift compilation condition is an identifier; anything else would
+    // be a different setting, or none, by the time Xcode splits the list.
+    for condition in &app.debug_compilation_conditions {
+        let mut characters = condition.chars();
+        let identifier = characters
+            .next()
+            .is_some_and(|first| first.is_ascii_alphabetic() || first == '_')
+            && characters.all(|rest| rest.is_ascii_alphanumeric() || rest == '_');
+        if !identifier {
+            return Err(ProjectError::InvalidText {
+                field: "debug_compilation_conditions",
+                value: condition.clone(),
+            });
+        }
     }
     let mut seen = std::collections::BTreeSet::new();
     for (field, paths) in [
@@ -596,8 +618,8 @@ impl<'a> Builder<'a> {
         let project_release =
             self.configuration("project", "Release", &project_settings(app, false));
         let project_list = self.configuration_list("project", &project_debug, &project_release);
-        let target_debug = self.configuration("target", "Debug", &target_settings(app));
-        let target_release = self.configuration("target", "Release", &target_settings(app));
+        let target_debug = self.configuration("target", "Debug", &target_settings(app, true));
+        let target_release = self.configuration("target", "Release", &target_settings(app, false));
         let target_list = self.configuration_list("target", &target_debug, &target_release);
 
         let target = object_id("target:app");
@@ -701,7 +723,7 @@ fn project_settings(app: &IosApp, debug: bool) -> Vec<(&'static str, Setting)> {
     settings
 }
 
-fn target_settings(app: &IosApp) -> Vec<(&'static str, Setting)> {
+fn target_settings(app: &IosApp, debug: bool) -> Vec<(&'static str, Setting)> {
     let every_orientation = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
     let mut definitions = vec!["$(inherited)".to_string()];
     definitions.extend(app.preprocessor_definitions.iter().cloned());
@@ -710,7 +732,7 @@ fn target_settings(app: &IosApp) -> Vec<(&'static str, Setting)> {
         all.extend(paths.iter().map(|path| format!("$(SRCROOT)/{path}")));
         Setting::List(all)
     };
-    vec![
+    let mut settings = vec![
         ("CODE_SIGN_STYLE", text("Automatic")),
         ("CURRENT_PROJECT_VERSION", text("1")),
         ("GCC_PREPROCESSOR_DEFINITIONS", Setting::List(definitions)),
@@ -764,7 +786,25 @@ fn target_settings(app: &IosApp) -> Vec<(&'static str, Setting)> {
             with_inherited(&app.swift_include_paths),
         ),
         ("TARGETED_DEVICE_FAMILY", text("1,2")),
-    ]
+    ];
+    // Debug only, and only when asked for: the setting is absent otherwise,
+    // so the app target inherits the project's `DEBUG` exactly as before.
+    if debug && !app.debug_compilation_conditions.is_empty() {
+        let mut conditions = vec!["$(inherited)".to_string()];
+        conditions.extend(app.debug_compilation_conditions.iter().cloned());
+        let at = settings
+            .iter()
+            .position(|(key, _)| *key > "SWIFT_ACTIVE_COMPILATION_CONDITIONS")
+            .unwrap_or(settings.len());
+        settings.insert(
+            at,
+            (
+                "SWIFT_ACTIVE_COMPILATION_CONDITIONS",
+                Setting::List(conditions),
+            ),
+        );
+    }
+    settings
 }
 
 /// The UI test bundle's settings. It has its own bundle identifier (the
@@ -934,6 +974,7 @@ mod tests {
             xcframeworks: vec!["Runtime/MosaicAppRuntime.xcframework".into()],
             source_root: String::new(),
             ui_test_sources: Vec::new(),
+            debug_compilation_conditions: Vec::new(),
         }
     }
 
@@ -1057,6 +1098,62 @@ mod tests {
             .unwrap()
             .contains("group:A&amp;B.xcodeproj"));
         assert!(workspace_contents("").is_err());
+    }
+
+    /// The XCBuildConfiguration lines of the app target (the ones naming its
+    /// bundle identifier), as (name, line).
+    fn app_configurations(project: &str) -> Vec<(&str, &str)> {
+        project
+            .lines()
+            .filter(|line| {
+                line.contains("isa = XCBuildConfiguration")
+                    && line.contains("PRODUCT_BUNDLE_IDENTIFIER = \"dev.codingadventures.taskapp\"")
+            })
+            .map(|line| {
+                let name = if line.contains("name = \"Debug\"") {
+                    "Debug"
+                } else {
+                    "Release"
+                };
+                (name, line)
+            })
+            .collect()
+    }
+
+    #[test]
+    fn debug_compilation_conditions_reach_the_app_target_in_debug_only() {
+        // None by default: the app target has no setting of its own and
+        // inherits the project's DEBUG, exactly as before.
+        let plain = project_pbxproj(&trestle()).unwrap();
+        for (_, line) in app_configurations(&plain) {
+            assert!(
+                !line.contains("SWIFT_ACTIVE_COMPILATION_CONDITIONS"),
+                "{line}"
+            );
+        }
+
+        let mut app = trestle();
+        app.debug_compilation_conditions = vec!["MOSAIC_UI_TEST_PICKER".to_string()];
+        let project = project_pbxproj(&app).unwrap();
+        let configurations = app_configurations(&project);
+        assert_eq!(configurations.len(), 2, "{project}");
+        for (name, line) in configurations {
+            if name == "Debug" {
+                assert!(
+                    line.contains(
+                        "SWIFT_ACTIVE_COMPILATION_CONDITIONS = (\"$(inherited)\", \"MOSAIC_UI_TEST_PICKER\");"
+                    ),
+                    "{line}"
+                );
+            } else {
+                assert!(!line.contains("MOSAIC_UI_TEST_PICKER"), "{line}");
+            }
+        }
+
+        for bad in ["", "1ST", "A B", "A;B", "A=1", "$(X)"] {
+            app.debug_compilation_conditions = vec![bad.to_string()];
+            assert!(project_pbxproj(&app).is_err(), "{bad:?} was accepted");
+        }
     }
 
     #[test]

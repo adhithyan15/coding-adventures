@@ -2,6 +2,13 @@
 
 ## 0.1.0 — unreleased
 
+- **Debug-only compilation conditions (UI89 §4.4).**
+  `IosApp.debug_compilation_conditions` (empty by default) adds
+  `SWIFT_ACTIVE_COMPILATION_CONDITIONS = ($(inherited), …)` to the app
+  target's Debug configuration only. Release never gets them, and an empty
+  list leaves the settings as they were. Each condition must be a Swift
+  identifier. The Mosaic builder passes `MOSAIC_UI_TEST_PICKER` for a build
+  with XCUITests, so their fake document picker compiles in Debug only.
 - **UI test bundle and shared scheme (UI89 §4.3).** `IosApp.ui_test_sources`
   (empty by default) adds a `com.apple.product-type.bundle.ui-testing` target.
   It is named `<product>UITests`, its bundle identifier is the app's plus

@@ -348,6 +348,41 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         # After the gate, whose launches leave state that the test clears.
         self.assertLess(gate.index("dev.codingadventures.journalapp journal-app"), gate.index(run))
 
+    def test_engram_runs_its_picker_ui_test_on_the_emulator(self) -> None:
+        """UI89 §4.4: Engram's instrumented test is built beside its APK and
+        run after the Engram gate. It answers the document picker with
+        Espresso-Intents and a file in the app's cache, so no provider ships."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Engram for Android with its Rust runtime (UI89 step 7)")
+        build = workflow[start : workflow.index("\n      - name:", start)]
+        copy = (
+            "cp code/programs/mosaic/engram-app/conformance/compose-android/"
+            'EngramAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"'
+        )
+        assemble = 'bash code/scripts/assemble-mosaic-android-debug.sh "$android_project" --with-android-test'
+        self.assertIn(copy, build)
+        self.assertIn(assemble, build)
+        self.assertLess(build.index(copy), build.index(assemble))
+        source = (
+            Path(__file__).resolve().parents[2]
+            / "programs/mosaic/engram-app/conformance/compose-android/EngramAndroidUiTest.kt"
+        ).read_text(encoding="utf-8")
+        self.assertIn("package dev.codingadventures.engramapp.uitest", source)
+        self.assertIn("intending(hasAction(Intent.ACTION_CREATE_DOCUMENT)).respondWith(chosen)", source)
+        self.assertIn("intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(chosen)", source)
+        self.assertIn("Uri.fromFile(document)", source)
+        self.assertIn("Intents.release()", source)
+
+        emulator = workflow.index("- name: Launch Trestle, Journal and Engram on an Android emulator")
+        gate = workflow[emulator : workflow.index("\n      - name:", emulator)]
+        run = (
+            'bash code/scripts/mosaic-android-ui-test.sh "$engram_apk" "$engram_test_apk" '
+            "dev.codingadventures.engramapp dev.codingadventures.engramapp.uitest.EngramAndroidUiTest"
+        )
+        self.assertIn(run, gate)
+        self.assertLess(gate.index("dev.codingadventures.engramapp engram-app"), gate.index(run))
+
     def test_trestle_runs_its_instrumented_ui_test_on_the_emulator(self) -> None:
         """UI89 §4.4: Trestle's instrumented test is compiled with its APK,
         through the same verified wrapper jar, and run on the emulator after

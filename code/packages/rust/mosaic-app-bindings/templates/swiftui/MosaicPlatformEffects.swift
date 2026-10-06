@@ -1066,8 +1066,17 @@ func mosaicPlatformRouter(for host: AnyObject) -> MosaicPlatformRouter? {
 
 /// This platform's picker: the panels (through `dialogs`) on macOS, the
 /// document picker on iOS and iPadOS, where `dialogs` is not used.
+///
+/// `MOSAIC_UI_TEST_PICKER` is defined only in the Debug configuration of an
+/// iOS app built for its XCUITests (`mosaic-compile pkg --ios-ui-test`),
+/// which also compiles `MosaicUITestPicker.swift`. There, a test that
+/// launches the app with `-MosaicUITestPicker` gets that file's fake instead
+/// of the system's picker (UI89 §4.4). Every other build compiles none of it.
 func mosaicSystemPicker(dialogs: MosaicFileDialogs) -> MosaicDocumentPicker {
   #if os(iOS)
+  #if MOSAIC_UI_TEST_PICKER
+  if let fake = mosaicUITestPicker() { return fake }
+  #endif
   return MosaicUIKitDocumentPicker()
   #else
   return MosaicDialogPicker(dialogs: dialogs)

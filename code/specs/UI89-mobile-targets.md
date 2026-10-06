@@ -1104,6 +1104,37 @@ the OS. Both platforms answer the picker for the test instead:
   fixture names inside the app's own container. The rest of the seam is
   designed in that PR.
 
+*As built (Engram).* The round trip needs no fixture. A fresh collection
+lists no decks. Its export is a whole Anki package, and importing that
+package back lists its `Default` deck, which a relaunch restores.
+`engram-mosaic-app` pins that sequence in a unit test. Both device tests
+export, import what they exported, wait for the `Default` row in the deck
+list (`deck-option-button`), and on a second launch find it restored.
+
+- *Android: no provider.* The test answers both picker intents with a
+  `file://` URI in the app's cache. The router opens it through
+  `ContentResolver`, which serves `file://` itself. It never requires a
+  chosen document's `DISPLAY_NAME`: open checks no name, and save checks
+  only the suggested one. The app is told "document", which Engram does
+  not use. Espresso-Intents (3.6.1, the runner's release) is the one new
+  `androidTestImplementation`. The builder test asserts that the app
+  manifest has no `<provider>` and the project has no `src/androidTest`
+  or debug manifest of its own.
+- *iOS: the seam.* `--ios-ui-test` writes
+  `UITestSupport/MosaicUITestPicker.swift` (from `mosaic-app-bindings`),
+  outside `Sources/App`, and lists it in the Xcode app target. All of the
+  file is inside `#if MOSAIC_UI_TEST_PICKER`, which only the app target's
+  Debug configuration defines (`IosApp.debug_compilation_conditions`).
+  The platform library's `mosaicSystemPicker` returns the fake only under
+  that condition, and only when the process was launched with
+  `-MosaicUITestPicker`. The fake saves to and opens
+  `tmp/mosaic-ui-test-picker/document` in the app's container.
+- *One file operation at a time.* Nothing on screen says when the
+  export's answer has reached the main thread, and an Import tapped
+  before then is refused. So Android waits for a whole zip (local header
+  first, end-of-central-directory record last), and both tests tap Import
+  at most three times until the deck appears.
+
 ### 4.5 Order and gates
 
 1. This design (spec only).
