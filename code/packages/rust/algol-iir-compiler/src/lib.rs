@@ -3836,6 +3836,44 @@ impl Compiler {
         children.len() == 1 && self.is_direct_formatter_safe_real_procedure_call(children[0])
     }
 
+    fn is_selector_call_safe_real_procedure_result(&self, node: &GrammarASTNode) -> bool {
+        if node.rule_name == "proc_call" {
+            let Some(source_name) = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone())
+            else {
+                return false;
+            };
+            let target_name = self.resolve_procedure_identity(&source_name);
+            let Some(sig) = self.proc_sigs.get(&target_name) else {
+                return false;
+            };
+            if sig.ret != Some(ScalarType::Real) {
+                return false;
+            }
+            let actuals = self.standard_fn_actuals(node);
+            return actuals.len() == sig.params.len()
+                && sig.params.iter().all(|param| {
+                    !matches!(
+                        (param.mode, &param.ty),
+                        (
+                            ProcedureParamMode::Name,
+                            ProcedureParamType::Scalar(ScalarType::Real)
+                        )
+                    )
+                });
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_real_procedure_result(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1 && self.is_selector_call_safe_real_procedure_result(children[0])
+    }
+
     fn is_runtime_real_assignment_value(&self, node: &GrammarASTNode) -> bool {
         if self.is_direct_formatter_safe_real_procedure_call(node) {
             return true;
@@ -3953,7 +3991,8 @@ impl Compiler {
         }
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
             if self.contains_procedure_call(condition) {
-                return false;
+                return self.is_selector_call_safe_real_procedure_result(then_node)
+                    && self.is_selector_call_safe_real_procedure_result(else_node);
             }
             return match self.static_boolean_value(condition) {
                 Some(true) => self.is_runtime_real_assignment_value(then_node),
@@ -12423,6 +12462,33 @@ mod tests {
                 && instr.srcs.first().and_then(Operand::as_var)
                     == Some("__basic_print_real")
         }));
+    }
+
+    #[test]
+    fn al4_runtime_real_conditional_values_allow_calling_selectors_for_direct_results() {
+        let module = compile_source(
+            "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real x; x := if choose() then left() else right(); output(x) end",
+            "test",
+        )
+        .expect("a calling selector may choose between direct formatter-safe real results");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_conditional_selector_calls_do_not_trust_local_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real x; x := pick(); output(if choose() then x else x) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x) else echo(x)) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("a calling selector must not reuse pre-call local provenance");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
     }
 
     #[test]
