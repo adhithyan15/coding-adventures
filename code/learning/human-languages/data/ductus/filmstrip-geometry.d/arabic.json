@@ -3,6 +3,240 @@
   "entries": [
     {
       "script": "arabic",
+      "glyph": "ة",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "Arabic Language Learning Notes (アラビア語学習メモ), Learn How to Write Arabic Letters — Basic Naskh: Taa Marbuta ة, isolated form and stroke order (updated 2022-03-31; accessed 2026-08-23)",
+        "url": "https://alarabiyah.sakura.ne.jp/arabic/alphabets/naskh/taabarbuutah/",
+        "variation": "The lesson identifies ة as a word-final-only form with isolated ة and connected final ـة shapes. For the isolated form it explicitly starts at the body's upper point, circles clockwise through a compact triangular o-shape resting on the baseline, and adds the two upper dots afterward. It notes that instructional traditions differ on whether the right or left dot comes first; this learner path follows the left-then-right order already used by the source-backed Arabic ت record. The Open University's introductory Arabic course independently confirms that ة occurs only word-finally, distinguishes its isolated and connected-final shapes, and explains its pause h versus linked t behavior. The path fits the course's vendored Noto Naskh outline without treating this ending as a base letter."
+      },
+      "penLifts": 2,
+      "summary": "3 strokes · 2 pen lifts · 3 movements",
+      "viewBox": {
+        "minX": -24,
+        "minY": -667,
+        "width": 451,
+        "height": 987.9
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "circle clockwise through the compact body and close it on the baseline",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M190 0Q135 0 101.5 33Q68 66 68 126Q68 173 91.5 220Q115 267 167 316Q151 325 146.5 337Q142 349 142 360Q142 376 149.5 390Q157 404 168 408Q213 392 256 355Q299 318 328 267Q357 217 357 176Q357 161 350.5 139Q344 117 333.5 94Q323 71 311.5 53Q300 35 289 28Q268 14 243.5 7Q219 0 190 0ZM201 80Q228 80 260 94.5Q292 109 308 124Q298 174 269.5 216.5Q241 259 195 294Q158 260 136 222Q114 184 114 155Q114 120 137 100Q160 80 201 80ZM263 468Q241 485 224.5 500.5Q208 516 197 530Q202 535 218 552Q234 569 261 597Q267 591 282.5 576Q298 561 323 537Q304 507 263 468ZM113 454Q91 472 74 487.5Q57 503 46 515Q60 528 76 544.5Q92 561 111 583Q117 576 132 561Q147 546 172 523Q163 508 148 491Q133 474 113 454Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M181 351 L181 351\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M181 351 L225 325 L270 285 L300 240 L325 185 L310 130 L275 85 L225 40 L190 40 L145 65 L91 140 L92 185 L136 264 L175 315 L181 351\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"181\" cy=\"351\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"201.5\" y=\"176.1\" text-anchor=\"middle\" font-size=\"36.1\" fill=\"#6b7280\"><tspan x=\"201.5\" y=\"176.1\">1. circle clockwise</tspan><tspan x=\"201.5\" y=\"220.1\">through the compact body</tspan><tspan x=\"201.5\" y=\"264.2\">and close it on the</tspan><tspan x=\"201.5\" y=\"308.2\">baseline</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "lift, then place the upper-left dot",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M190 0Q135 0 101.5 33Q68 66 68 126Q68 173 91.5 220Q115 267 167 316Q151 325 146.5 337Q142 349 142 360Q142 376 149.5 390Q157 404 168 408Q213 392 256 355Q299 318 328 267Q357 217 357 176Q357 161 350.5 139Q344 117 333.5 94Q323 71 311.5 53Q300 35 289 28Q268 14 243.5 7Q219 0 190 0ZM201 80Q228 80 260 94.5Q292 109 308 124Q298 174 269.5 216.5Q241 259 195 294Q158 260 136 222Q114 184 114 155Q114 120 137 100Q160 80 201 80ZM263 468Q241 485 224.5 500.5Q208 516 197 530Q202 535 218 552Q234 569 261 597Q267 591 282.5 576Q298 561 323 537Q304 507 263 468ZM113 454Q91 472 74 487.5Q57 503 46 515Q60 528 76 544.5Q92 561 111 583Q117 576 132 561Q147 546 172 523Q163 508 148 491Q133 474 113 454Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M181 351 L225 325 L270 285 L300 240 L325 185 L310 130 L275 85 L225 40 L190 40 L145 65 L91 140 L92 185 L136 264 L175 315 L181 351\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M75 500 L75 500\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M75 500 L109 545 L145 500\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"145\" cy=\"500\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"201.5\" y=\"176.1\" text-anchor=\"middle\" font-size=\"36.1\" fill=\"#6b7280\"><tspan x=\"201.5\" y=\"176.1\">2. lift, then place the</tspan><tspan x=\"201.5\" y=\"220.1\">upper-left dot</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "lift again, then place the upper-right dot",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M190 0Q135 0 101.5 33Q68 66 68 126Q68 173 91.5 220Q115 267 167 316Q151 325 146.5 337Q142 349 142 360Q142 376 149.5 390Q157 404 168 408Q213 392 256 355Q299 318 328 267Q357 217 357 176Q357 161 350.5 139Q344 117 333.5 94Q323 71 311.5 53Q300 35 289 28Q268 14 243.5 7Q219 0 190 0ZM201 80Q228 80 260 94.5Q292 109 308 124Q298 174 269.5 216.5Q241 259 195 294Q158 260 136 222Q114 184 114 155Q114 120 137 100Q160 80 201 80ZM263 468Q241 485 224.5 500.5Q208 516 197 530Q202 535 218 552Q234 569 261 597Q267 591 282.5 576Q298 561 323 537Q304 507 263 468ZM113 454Q91 472 74 487.5Q57 503 46 515Q60 528 76 544.5Q92 561 111 583Q117 576 132 561Q147 546 172 523Q163 508 148 491Q133 474 113 454Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M181 351 L225 325 L270 285 L300 240 L325 185 L310 130 L275 85 L225 40 L190 40 L145 65 L91 140 L92 185 L136 264 L175 315 L181 351\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M75 500 L109 545 L145 500\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M220 515 L220 515\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M220 515 L260 560 L300 515\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"300\" cy=\"515\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"201.5\" y=\"176.1\" text-anchor=\"middle\" font-size=\"36.1\" fill=\"#6b7280\"><tspan x=\"201.5\" y=\"176.1\">3. lift again, then</tspan><tspan x=\"201.5\" y=\"220.1\">place the upper-right</tspan><tspan x=\"201.5\" y=\"264.2\">dot</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "arabic",
+      "glyph": "ت",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "Introduction to Arabic: Egyptian Arabic for first-year students, Alphabet: ب ت ث, independent Baa at 00:02–00:04 and Taa at 00:00–00:01 (University of Oregon Libraries Open Textbook, 2023)",
+        "url": "https://opentext.uoregon.edu/introarabic/chapter/two-way-connectors-%D8%A8-%D8%AA-%D8%AB-%D9%86-%D9%8A/",
+        "variation": "The page's Baa demonstration verifies the shared independent bowl from its upper-right tip continuously right-to-left to the turned-up left tip. The Taa demonstration opens on that complete bowl, places the left dot above at 00:00.45–00:00.70, then lifts again and places the right dot at 00:00.75–00:01.00. Because the Taa clip does not redraw the bowl, this learner path uses the separately demonstrated Arabic Baa body rather than inferring its direction from a still. The adjacent lesson identifies taa as a two-way connector and separately prints its contextual shapes. The path fits the course's vendored Noto Naskh outline; its Arabic provenance remains separate from the Persian record for the same Unicode glyph."
+      },
+      "penLifts": 2,
+      "summary": "3 strokes · 2 pen lifts · 3 movements",
+      "viewBox": {
+        "minX": 0,
+        "minY": -527,
+        "width": 793,
+        "height": 830.2
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "sweep the shallow bowl from right to left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M314 0Q196 0 133 42.5Q70 85 70 170Q70 234 83 280L119 280Q118 276 117 259.5Q116 243 116 231Q116 173 138 141.5Q160 110 208 93Q232 85 263.5 80.5Q295 76 335 76Q428 76 517 95Q606 114 675 147Q670 168 661 195.5Q652 223 639 257Q629 283 624.5 299.5Q620 316 620 324Q620 345 637 367.5Q654 390 686 408Q697 359 705 318.5Q713 278 718 246.5Q723 215 723 191Q723 174 714 148.5Q705 123 688 89Q644 61 587 41Q530 21 461.5 10.5Q393 0 314 0ZM436 328Q414 345 397.5 360.5Q381 376 370 390Q375 395 391 412Q407 429 434 457Q440 451 455.5 436Q471 421 496 397Q477 367 436 328ZM286 314Q264 332 247 347.5Q230 363 219 375Q233 388 249 404.5Q265 421 284 443Q290 436 305 421Q320 406 345 383Q336 368 321 351Q306 334 286 314Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M678 382 L678 382\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M678 382 L663 345 L650 305 L654 260 L672 215 L688 170 L686 126 L620 94 L530 65 L430 42 L335 38 L245 51 L170 83 L120 135 L96 205 L100 255\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"100\" cy=\"255\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"396.5\" y=\"203.5\" text-anchor=\"middle\" font-size=\"63.5\" fill=\"#6b7280\"><tspan x=\"396.5\" y=\"203.5\">1. sweep the shallow</tspan><tspan x=\"396.5\" y=\"281\">bowl from right to left</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "lift, then place the left dot above",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M314 0Q196 0 133 42.5Q70 85 70 170Q70 234 83 280L119 280Q118 276 117 259.5Q116 243 116 231Q116 173 138 141.5Q160 110 208 93Q232 85 263.5 80.5Q295 76 335 76Q428 76 517 95Q606 114 675 147Q670 168 661 195.5Q652 223 639 257Q629 283 624.5 299.5Q620 316 620 324Q620 345 637 367.5Q654 390 686 408Q697 359 705 318.5Q713 278 718 246.5Q723 215 723 191Q723 174 714 148.5Q705 123 688 89Q644 61 587 41Q530 21 461.5 10.5Q393 0 314 0ZM436 328Q414 345 397.5 360.5Q381 376 370 390Q375 395 391 412Q407 429 434 457Q440 451 455.5 436Q471 421 496 397Q477 367 436 328ZM286 314Q264 332 247 347.5Q230 363 219 375Q233 388 249 404.5Q265 421 284 443Q290 436 305 421Q320 406 345 383Q336 368 321 351Q306 334 286 314Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M678 382 L663 345 L650 305 L654 260 L672 215 L688 170 L686 126 L620 94 L530 65 L430 42 L335 38 L245 51 L170 83 L120 135 L96 205 L100 255\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M247 374 L247 374\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M247 374 L284 412 L319 379\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"319\" cy=\"379\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"396.5\" y=\"203.5\" text-anchor=\"middle\" font-size=\"63.5\" fill=\"#6b7280\"><tspan x=\"396.5\" y=\"203.5\">2. lift, then place the</tspan><tspan x=\"396.5\" y=\"281\">left dot above</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "lift again and place the right dot",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M314 0Q196 0 133 42.5Q70 85 70 170Q70 234 83 280L119 280Q118 276 117 259.5Q116 243 116 231Q116 173 138 141.5Q160 110 208 93Q232 85 263.5 80.5Q295 76 335 76Q428 76 517 95Q606 114 675 147Q670 168 661 195.5Q652 223 639 257Q629 283 624.5 299.5Q620 316 620 324Q620 345 637 367.5Q654 390 686 408Q697 359 705 318.5Q713 278 718 246.5Q723 215 723 191Q723 174 714 148.5Q705 123 688 89Q644 61 587 41Q530 21 461.5 10.5Q393 0 314 0ZM436 328Q414 345 397.5 360.5Q381 376 370 390Q375 395 391 412Q407 429 434 457Q440 451 455.5 436Q471 421 496 397Q477 367 436 328ZM286 314Q264 332 247 347.5Q230 363 219 375Q233 388 249 404.5Q265 421 284 443Q290 436 305 421Q320 406 345 383Q336 368 321 351Q306 334 286 314Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M678 382 L663 345 L650 305 L654 260 L672 215 L688 170 L686 126 L620 94 L530 65 L430 42 L335 38 L245 51 L170 83 L120 135 L96 205 L100 255\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M247 374 L284 412 L319 379\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M395 389 L395 389\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M395 389 L434 430 L470 395\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"470\" cy=\"395\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"396.5\" y=\"203.5\" text-anchor=\"middle\" font-size=\"63.5\" fill=\"#6b7280\"><tspan x=\"396.5\" y=\"203.5\">3. lift again and place</tspan><tspan x=\"396.5\" y=\"281\">the right dot</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "arabic",
+      "glyph": "ث",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "Introduction to Arabic: Egyptian Arabic for first-year students, Alphabet: ب ت ث, independent Thaa demonstration (University of Oregon Libraries Open Textbook, 2023)",
+        "url": "https://opentext.uoregon.edu/introarabic/chapter/two-way-connectors-%D8%A8-%D8%AA-%D8%AB-%D9%86-%D9%8A/",
+        "variation": "The page's dedicated Thaa video demonstrates independent ث body-first. It sweeps the shared shallow bowl from the upper-right tip continuously right-to-left to the turned-up left tip, then adds the three upper dots as separate marks in the visible two-lower-and-one-centred-upper arrangement. This learner path places those dots lower-left, lower-right, then centred upper, for four pen-down runs separated by three lifts. The adjacent lesson identifies thaa as a two-way connector, gives its th sound, and prints its contextual shapes. The path fits the course's vendored Noto Naskh outline; its Arabic provenance remains separate from any cross-script reuse of the shared bowl geometry."
+      },
+      "penLifts": 3,
+      "summary": "4 strokes · 3 pen lifts · 4 movements",
+      "viewBox": {
+        "minX": 0,
+        "minY": -584,
+        "width": 793,
+        "height": 964.7
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "sweep the shallow bowl from right to left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M314 0Q196 0 133 42.5Q70 85 70 170Q70 234 83 280L119 280Q118 276 117 259.5Q116 243 116 231Q116 173 138 141.5Q160 110 208 93Q232 85 263.5 80.5Q295 76 335 76Q428 76 517 95Q606 114 675 147Q670 168 661 195.5Q652 223 639 257Q629 283 624.5 299.5Q620 316 620 324Q620 345 637 367.5Q654 390 686 408Q697 359 705 318.5Q713 278 718 246.5Q723 215 723 191Q723 174 714 148.5Q705 123 688 89Q644 61 587 41Q530 21 461.5 10.5Q393 0 314 0ZM297 314Q278 329 263 343Q248 357 237 369Q249 380 263.5 395.5Q278 411 295 430Q300 424 314 410.5Q328 397 350 375Q341 362 328 346.5Q315 331 297 314ZM439 327Q422 341 407.5 354.5Q393 368 380 382Q389 390 404 405.5Q419 421 438 443Q452 429 465.5 415Q479 401 493 388Q483 374 470 358.5Q457 343 439 327ZM368 409Q355 417 340.5 429.5Q326 442 312 458Q327 473 340.5 487Q354 501 365 514Q375 501 388.5 487.5Q402 474 420 458Q406 442 392.5 429.5Q379 417 368 409Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M678 382 L678 382\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M678 382 L663 345 L650 305 L654 260 L672 215 L688 170 L686 126 L620 94 L530 65 L430 42 L335 38 L245 51 L170 83 L120 135 L96 205 L100 255\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"100\" cy=\"255\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"396.5\" y=\"203.5\" text-anchor=\"middle\" font-size=\"63.5\" fill=\"#6b7280\"><tspan x=\"396.5\" y=\"203.5\">1. sweep the shallow</tspan><tspan x=\"396.5\" y=\"281\">bowl from right to left</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "lift, then place the lower-left dot above",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M314 0Q196 0 133 42.5Q70 85 70 170Q70 234 83 280L119 280Q118 276 117 259.5Q116 243 116 231Q116 173 138 141.5Q160 110 208 93Q232 85 263.5 80.5Q295 76 335 76Q428 76 517 95Q606 114 675 147Q670 168 661 195.5Q652 223 639 257Q629 283 624.5 299.5Q620 316 620 324Q620 345 637 367.5Q654 390 686 408Q697 359 705 318.5Q713 278 718 246.5Q723 215 723 191Q723 174 714 148.5Q705 123 688 89Q644 61 587 41Q530 21 461.5 10.5Q393 0 314 0ZM297 314Q278 329 263 343Q248 357 237 369Q249 380 263.5 395.5Q278 411 295 430Q300 424 314 410.5Q328 397 350 375Q341 362 328 346.5Q315 331 297 314ZM439 327Q422 341 407.5 354.5Q393 368 380 382Q389 390 404 405.5Q419 421 438 443Q452 429 465.5 415Q479 401 493 388Q483 374 470 358.5Q457 343 439 327ZM368 409Q355 417 340.5 429.5Q326 442 312 458Q327 473 340.5 487Q354 501 365 514Q375 501 388.5 487.5Q402 474 420 458Q406 442 392.5 429.5Q379 417 368 409Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M678 382 L663 345 L650 305 L654 260 L672 215 L688 170 L686 126 L620 94 L530 65 L430 42 L335 38 L245 51 L170 83 L120 135 L96 205 L100 255\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M247 369 L247 369\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M247 369 L295 420 L340 375\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"340\" cy=\"375\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"396.5\" y=\"203.5\" text-anchor=\"middle\" font-size=\"63.5\" fill=\"#6b7280\"><tspan x=\"396.5\" y=\"203.5\">2. lift, then place the</tspan><tspan x=\"396.5\" y=\"281\">lower-left dot above</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "lift again and place the lower-right dot",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M314 0Q196 0 133 42.5Q70 85 70 170Q70 234 83 280L119 280Q118 276 117 259.5Q116 243 116 231Q116 173 138 141.5Q160 110 208 93Q232 85 263.5 80.5Q295 76 335 76Q428 76 517 95Q606 114 675 147Q670 168 661 195.5Q652 223 639 257Q629 283 624.5 299.5Q620 316 620 324Q620 345 637 367.5Q654 390 686 408Q697 359 705 318.5Q713 278 718 246.5Q723 215 723 191Q723 174 714 148.5Q705 123 688 89Q644 61 587 41Q530 21 461.5 10.5Q393 0 314 0ZM297 314Q278 329 263 343Q248 357 237 369Q249 380 263.5 395.5Q278 411 295 430Q300 424 314 410.5Q328 397 350 375Q341 362 328 346.5Q315 331 297 314ZM439 327Q422 341 407.5 354.5Q393 368 380 382Q389 390 404 405.5Q419 421 438 443Q452 429 465.5 415Q479 401 493 388Q483 374 470 358.5Q457 343 439 327ZM368 409Q355 417 340.5 429.5Q326 442 312 458Q327 473 340.5 487Q354 501 365 514Q375 501 388.5 487.5Q402 474 420 458Q406 442 392.5 429.5Q379 417 368 409Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M678 382 L663 345 L650 305 L654 260 L672 215 L688 170 L686 126 L620 94 L530 65 L430 42 L335 38 L245 51 L170 83 L120 135 L96 205 L100 255\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M247 369 L295 420 L340 375\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M390 382 L390 382\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M390 382 L438 433 L483 388\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"483\" cy=\"388\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"396.5\" y=\"203.5\" text-anchor=\"middle\" font-size=\"63.5\" fill=\"#6b7280\"><tspan x=\"396.5\" y=\"203.5\">3. lift again and place</tspan><tspan x=\"396.5\" y=\"281\">the lower-right dot</tspan></text>"
+        },
+        {
+          "number": 4,
+          "label": "lift a third time and place the centred upper dot",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M314 0Q196 0 133 42.5Q70 85 70 170Q70 234 83 280L119 280Q118 276 117 259.5Q116 243 116 231Q116 173 138 141.5Q160 110 208 93Q232 85 263.5 80.5Q295 76 335 76Q428 76 517 95Q606 114 675 147Q670 168 661 195.5Q652 223 639 257Q629 283 624.5 299.5Q620 316 620 324Q620 345 637 367.5Q654 390 686 408Q697 359 705 318.5Q713 278 718 246.5Q723 215 723 191Q723 174 714 148.5Q705 123 688 89Q644 61 587 41Q530 21 461.5 10.5Q393 0 314 0ZM297 314Q278 329 263 343Q248 357 237 369Q249 380 263.5 395.5Q278 411 295 430Q300 424 314 410.5Q328 397 350 375Q341 362 328 346.5Q315 331 297 314ZM439 327Q422 341 407.5 354.5Q393 368 380 382Q389 390 404 405.5Q419 421 438 443Q452 429 465.5 415Q479 401 493 388Q483 374 470 358.5Q457 343 439 327ZM368 409Q355 417 340.5 429.5Q326 442 312 458Q327 473 340.5 487Q354 501 365 514Q375 501 388.5 487.5Q402 474 420 458Q406 442 392.5 429.5Q379 417 368 409Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M678 382 L663 345 L650 305 L654 260 L672 215 L688 170 L686 126 L620 94 L530 65 L430 42 L335 38 L245 51 L170 83 L120 135 L96 205 L100 255\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M247 369 L295 420 L340 375\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M390 382 L438 433 L483 388\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M320 458 L320 458\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M320 458 L365 504 L410 458\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"410\" cy=\"458\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"396.5\" y=\"203.5\" text-anchor=\"middle\" font-size=\"63.5\" fill=\"#6b7280\"><tspan x=\"396.5\" y=\"203.5\">4. lift a third time and</tspan><tspan x=\"396.5\" y=\"281\">place the centred upper</tspan><tspan x=\"396.5\" y=\"358.4\">dot</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "arabic",
+      "glyph": "ج",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "Introduction to Arabic: Egyptian Arabic for first-year students, Alphabet: ج ح خ, independent Jeem at 00:05–00:06 (University of Oregon Libraries Open Textbook, 2023)",
+        "url": "https://opentext.uoregon.edu/introarabic/chapter/%D8%AC-%D8%AD-%D8%AE/",
+        "variation": "The cited Jeem demonstration draws the independent body first at 00:05.1–00:05.8: a short upper head travels left-to-right, turns downward at the right, and curls back left into the rounded bowl without lifting. After the body is complete, the pen lifts once and places the dot below at 00:06.3–00:06.5. The adjacent lesson identifies jeem as a two-way connector and separately prints its contextual shapes. This independent learner path fits the course's vendored Noto Naskh outline; its Arabic body-first provenance remains separate from the Urdu dot-first record for the same Unicode glyph."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 3 movements",
+      "viewBox": {
+        "minX": -2,
+        "minY": -451,
+        "width": 691,
+        "height": 1020.4
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the short upper head from left to right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M360 -287Q236 -287 168.5 -224Q101 -161 101 -42Q101 20 131.5 81.5Q162 143 216 190Q243 213 272.5 231Q302 249 333 261Q321 266 295.5 274.5Q270 283 242 290Q214 297 192 297Q162 297 140.5 289.5Q119 282 83 259Q77 264 72.5 274.5Q68 285 68 297Q68 335 101.5 358Q135 381 189 381Q232 381 273.5 370Q315 359 357 346Q399 333 442 322Q485 311 531 311L597 313L568 236Q559 235 549.5 234Q540 233 530.5 232.5Q521 232 512 232Q471 229 424 216.5Q377 204 332.5 184Q288 164 251 138Q196 100 166 54Q136 8 136 -42Q136 -94 161 -130.5Q186 -167 236.5 -186Q287 -205 363 -205Q425 -205 486 -197.5Q547 -190 607 -177L619 -210Q570 -237 525.5 -254Q481 -271 440 -279Q399 -287 360 -287ZM376 -74Q332 -41 304 -9Q330 17 347 35Q364 53 374 64Q390 47 406.5 30.5Q423 14 440 -1Q429 -17 412.5 -35.5Q396 -54 376 -74Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M110 315 L110 315\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M110 315 L150 335 L210 340 L280 325 L350 305 L420 285 L490 270 L540 270\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"540\" cy=\"270\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"343.5\" y=\"482.4\" text-anchor=\"middle\" font-size=\"55.4\" fill=\"#6b7280\"><tspan x=\"343.5\" y=\"482.4\">1. draw the short upper</tspan><tspan x=\"343.5\" y=\"550\">head from left to right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "continue down and around the bowl",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M360 -287Q236 -287 168.5 -224Q101 -161 101 -42Q101 20 131.5 81.5Q162 143 216 190Q243 213 272.5 231Q302 249 333 261Q321 266 295.5 274.5Q270 283 242 290Q214 297 192 297Q162 297 140.5 289.5Q119 282 83 259Q77 264 72.5 274.5Q68 285 68 297Q68 335 101.5 358Q135 381 189 381Q232 381 273.5 370Q315 359 357 346Q399 333 442 322Q485 311 531 311L597 313L568 236Q559 235 549.5 234Q540 233 530.5 232.5Q521 232 512 232Q471 229 424 216.5Q377 204 332.5 184Q288 164 251 138Q196 100 166 54Q136 8 136 -42Q136 -94 161 -130.5Q186 -167 236.5 -186Q287 -205 363 -205Q425 -205 486 -197.5Q547 -190 607 -177L619 -210Q570 -237 525.5 -254Q481 -271 440 -279Q399 -287 360 -287ZM376 -74Q332 -41 304 -9Q330 17 347 35Q364 53 374 64Q390 47 406.5 30.5Q423 14 440 -1Q429 -17 412.5 -35.5Q396 -54 376 -74Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M110 315 L150 335 L210 340 L280 325 L350 305 L420 285 L490 270 L540 270 L540 270\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M540 270 L490 270 L420 285 L350 305 L280 325 L210 340 L150 335 L110 315 L100 290 L130 305 L170 310 L220 305 L270 285 L320 265 L300 245 L260 220 L216 190 L180 130 L145 65 L118 -42 L130 -110 L180 -175 L225 -200 L300 -245 L400 -245 L500 -230 L575 -210 L608 -195\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"608\" cy=\"-195\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"343.5\" y=\"482.4\" text-anchor=\"middle\" font-size=\"55.4\" fill=\"#6b7280\"><tspan x=\"343.5\" y=\"482.4\">2. continue down and</tspan><tspan x=\"343.5\" y=\"550\">around the bowl</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "lift once, then place the dot below",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M360 -287Q236 -287 168.5 -224Q101 -161 101 -42Q101 20 131.5 81.5Q162 143 216 190Q243 213 272.5 231Q302 249 333 261Q321 266 295.5 274.5Q270 283 242 290Q214 297 192 297Q162 297 140.5 289.5Q119 282 83 259Q77 264 72.5 274.5Q68 285 68 297Q68 335 101.5 358Q135 381 189 381Q232 381 273.5 370Q315 359 357 346Q399 333 442 322Q485 311 531 311L597 313L568 236Q559 235 549.5 234Q540 233 530.5 232.5Q521 232 512 232Q471 229 424 216.5Q377 204 332.5 184Q288 164 251 138Q196 100 166 54Q136 8 136 -42Q136 -94 161 -130.5Q186 -167 236.5 -186Q287 -205 363 -205Q425 -205 486 -197.5Q547 -190 607 -177L619 -210Q570 -237 525.5 -254Q481 -271 440 -279Q399 -287 360 -287ZM376 -74Q332 -41 304 -9Q330 17 347 35Q364 53 374 64Q390 47 406.5 30.5Q423 14 440 -1Q429 -17 412.5 -35.5Q396 -54 376 -74Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M110 315 L150 335 L210 340 L280 325 L350 305 L420 285 L490 270 L540 270 L490 270 L420 285 L350 305 L280 325 L210 340 L150 335 L110 315 L100 290 L130 305 L170 310 L220 305 L270 285 L320 265 L300 245 L260 220 L216 190 L180 130 L145 65 L118 -42 L130 -110 L180 -175 L225 -200 L300 -245 L400 -245 L500 -230 L575 -210 L608 -195\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M415 -1 L415 -1\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M415 -1 L374 38 L330 -9\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"330\" cy=\"-9\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"343.5\" y=\"482.4\" text-anchor=\"middle\" font-size=\"55.4\" fill=\"#6b7280\"><tspan x=\"343.5\" y=\"482.4\">3. lift once, then</tspan><tspan x=\"343.5\" y=\"550\">place the dot below</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "arabic",
+      "glyph": "ح",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "Introduction to Arabic: Egyptian Arabic for first-year students, Alphabet: ج ح خ, independent Haa at 00:00–00:01 (University of Oregon Libraries Open Textbook, 2023)",
+        "url": "https://opentext.uoregon.edu/introarabic/chapter/%D8%AC-%D8%AD-%D8%AE/",
+        "variation": "The page's Haa attachment demonstrates independent ح in two pen-down runs. The clip opens with the first mark already underway: visible motion lengthens the short left stem downward from 00:00.00–00:00.15. After a pause, the pen lifts once and restarts near the stem's upper portion at 00:00.32, sweeping down-right and around the bowl without another lift through 00:00.82. The adjacent lesson identifies haa as a two-way connector and separately prints its contextual shapes. Unlike the adjacent Jeem demonstration, there is no dot stroke; this stem-first order is source-specific rather than inherited from ج. The learner path fits the course's vendored Noto Naskh outline while preserving Arabic provenance."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 3 movements",
+      "viewBox": {
+        "minX": -2,
+        "minY": -451,
+        "width": 691,
+        "height": 1088
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the short left stem downward",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M360 -287Q236 -287 168.5 -224Q101 -161 101 -42Q101 20 131.5 81.5Q162 143 216 190Q243 213 272.5 231Q302 249 333 261Q321 266 295.5 274.5Q270 283 242 290Q214 297 192 297Q162 297 140.5 289.5Q119 282 83 259Q77 264 72.5 274.5Q68 285 68 297Q68 335 101.5 358Q135 381 189 381Q232 381 273.5 370Q315 359 357 346Q399 333 442 322Q485 311 531 311L597 313L568 236Q559 235 549.5 234Q540 233 530.5 232.5Q521 232 512 232Q471 229 424 216.5Q377 204 332.5 184Q288 164 251 138Q196 100 166 54Q136 8 136 -42Q136 -94 161 -130.5Q186 -167 236.5 -186Q287 -205 363 -205Q425 -205 486 -197.5Q547 -190 607 -177L619 -210Q570 -237 525.5 -254Q481 -271 440 -279Q399 -287 360 -287Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M110 315 L110 315\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M110 315 L105 302 L100 290\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"100\" cy=\"290\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"343.5\" y=\"482.4\" text-anchor=\"middle\" font-size=\"55.4\" fill=\"#6b7280\"><tspan x=\"343.5\" y=\"482.4\">1. draw the short left</tspan><tspan x=\"343.5\" y=\"550\">stem downward</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "lift once and restart near the stem's top",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M360 -287Q236 -287 168.5 -224Q101 -161 101 -42Q101 20 131.5 81.5Q162 143 216 190Q243 213 272.5 231Q302 249 333 261Q321 266 295.5 274.5Q270 283 242 290Q214 297 192 297Q162 297 140.5 289.5Q119 282 83 259Q77 264 72.5 274.5Q68 285 68 297Q68 335 101.5 358Q135 381 189 381Q232 381 273.5 370Q315 359 357 346Q399 333 442 322Q485 311 531 311L597 313L568 236Q559 235 549.5 234Q540 233 530.5 232.5Q521 232 512 232Q471 229 424 216.5Q377 204 332.5 184Q288 164 251 138Q196 100 166 54Q136 8 136 -42Q136 -94 161 -130.5Q186 -167 236.5 -186Q287 -205 363 -205Q425 -205 486 -197.5Q547 -190 607 -177L619 -210Q570 -237 525.5 -254Q481 -271 440 -279Q399 -287 360 -287Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M110 315 L105 302 L100 290\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M110 315 L110 315\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M110 315 L150 335 L210 340 L280 325 L350 305 L420 285 L490 270 L540 270\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"540\" cy=\"270\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"343.5\" y=\"482.4\" text-anchor=\"middle\" font-size=\"55.4\" fill=\"#6b7280\"><tspan x=\"343.5\" y=\"482.4\">2. lift once and</tspan><tspan x=\"343.5\" y=\"550\">restart near the stem&apos;s</tspan><tspan x=\"343.5\" y=\"617.6\">top</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "continue down and around the bowl",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M360 -287Q236 -287 168.5 -224Q101 -161 101 -42Q101 20 131.5 81.5Q162 143 216 190Q243 213 272.5 231Q302 249 333 261Q321 266 295.5 274.5Q270 283 242 290Q214 297 192 297Q162 297 140.5 289.5Q119 282 83 259Q77 264 72.5 274.5Q68 285 68 297Q68 335 101.5 358Q135 381 189 381Q232 381 273.5 370Q315 359 357 346Q399 333 442 322Q485 311 531 311L597 313L568 236Q559 235 549.5 234Q540 233 530.5 232.5Q521 232 512 232Q471 229 424 216.5Q377 204 332.5 184Q288 164 251 138Q196 100 166 54Q136 8 136 -42Q136 -94 161 -130.5Q186 -167 236.5 -186Q287 -205 363 -205Q425 -205 486 -197.5Q547 -190 607 -177L619 -210Q570 -237 525.5 -254Q481 -271 440 -279Q399 -287 360 -287Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M110 315 L105 302 L100 290\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M110 315 L150 335 L210 340 L280 325 L350 305 L420 285 L490 270 L540 270 L540 270\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M540 270 L490 270 L420 285 L350 305 L280 325 L210 340 L150 335 L110 315 L100 290 L130 305 L170 310 L220 305 L270 285 L320 265 L300 245 L260 220 L216 190 L180 130 L145 65 L118 -42 L130 -110 L180 -175 L225 -200 L300 -245 L400 -245 L500 -230 L575 -210 L608 -195\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"608\" cy=\"-195\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"343.5\" y=\"482.4\" text-anchor=\"middle\" font-size=\"55.4\" fill=\"#6b7280\"><tspan x=\"343.5\" y=\"482.4\">3. continue down and</tspan><tspan x=\"343.5\" y=\"550\">around the bowl</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "arabic",
+      "glyph": "خ",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "Introduction to Arabic: Egyptian Arabic for first-year students, Alphabet: ج ح خ, independent Khaa at 00:02–00:04 (University of Oregon Libraries Open Textbook, 2023)",
+        "url": "https://opentext.uoregon.edu/introarabic/chapter/%D8%AC-%D8%AD-%D8%AE/",
+        "variation": "The page's Khaa QuickTime clip demonstrates independent خ body-first at 00:02.8–00:03.9: the short upper head travels left-to-right, then the same pen-down run turns downward and curls around the bowl. The pen lifts once and places the single dot above at 00:04.2–00:04.4. The adjacent lesson identifies khaa as a two-way connector and separately prints its contextual shapes. Although the body resembles ج and ح, this order comes from Khaa's own clip: it matches adjacent Jeem's body-first run rather than Haa's separately demonstrated stem-first restart. The learner path fits the course's vendored Noto Naskh outline while preserving Arabic provenance."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 3 movements",
+      "viewBox": {
+        "minX": -2,
+        "minY": -651,
+        "width": 691,
+        "height": 1220.4
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the short upper head from left to right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M360 -287Q236 -287 168.5 -224Q101 -161 101 -42Q101 20 131.5 81.5Q162 143 216 190Q243 213 272.5 231Q302 249 333 261Q321 266 295.5 274.5Q270 283 242 290Q214 297 192 297Q162 297 140.5 289.5Q119 282 83 259Q77 264 72.5 274.5Q68 285 68 297Q68 335 101.5 358Q135 381 189 381Q232 381 273.5 370Q315 359 357 346Q399 333 442 322Q485 311 531 311L597 313L568 236Q559 235 549.5 234Q540 233 530.5 232.5Q521 232 512 232Q471 229 424 216.5Q377 204 332.5 184Q288 164 251 138Q196 100 166 54Q136 8 136 -42Q136 -94 161 -130.5Q186 -167 236.5 -186Q287 -205 363 -205Q425 -205 486 -197.5Q547 -190 607 -177L619 -210Q570 -237 525.5 -254Q481 -271 440 -279Q399 -287 360 -287ZM340 443Q296 476 268 508Q294 534 311 552Q328 570 338 581Q354 564 370.5 547.5Q387 531 404 516Q393 500 376.5 481.5Q360 463 340 443Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M110 315 L110 315\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M110 315 L150 335 L210 340 L280 325 L350 305 L420 285 L490 270 L540 270\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"540\" cy=\"270\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"343.5\" y=\"482.4\" text-anchor=\"middle\" font-size=\"55.4\" fill=\"#6b7280\"><tspan x=\"343.5\" y=\"482.4\">1. draw the short upper</tspan><tspan x=\"343.5\" y=\"550\">head from left to right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "continue down and around the bowl",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M360 -287Q236 -287 168.5 -224Q101 -161 101 -42Q101 20 131.5 81.5Q162 143 216 190Q243 213 272.5 231Q302 249 333 261Q321 266 295.5 274.5Q270 283 242 290Q214 297 192 297Q162 297 140.5 289.5Q119 282 83 259Q77 264 72.5 274.5Q68 285 68 297Q68 335 101.5 358Q135 381 189 381Q232 381 273.5 370Q315 359 357 346Q399 333 442 322Q485 311 531 311L597 313L568 236Q559 235 549.5 234Q540 233 530.5 232.5Q521 232 512 232Q471 229 424 216.5Q377 204 332.5 184Q288 164 251 138Q196 100 166 54Q136 8 136 -42Q136 -94 161 -130.5Q186 -167 236.5 -186Q287 -205 363 -205Q425 -205 486 -197.5Q547 -190 607 -177L619 -210Q570 -237 525.5 -254Q481 -271 440 -279Q399 -287 360 -287ZM340 443Q296 476 268 508Q294 534 311 552Q328 570 338 581Q354 564 370.5 547.5Q387 531 404 516Q393 500 376.5 481.5Q360 463 340 443Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M110 315 L150 335 L210 340 L280 325 L350 305 L420 285 L490 270 L540 270 L540 270\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M540 270 L490 270 L420 285 L350 305 L280 325 L210 340 L150 335 L110 315 L100 290 L130 305 L170 310 L220 305 L270 285 L320 265 L300 245 L260 220 L216 190 L180 130 L145 65 L118 -42 L130 -110 L180 -175 L225 -200 L300 -245 L400 -245 L500 -230 L575 -210 L608 -195\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"608\" cy=\"-195\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"343.5\" y=\"482.4\" text-anchor=\"middle\" font-size=\"55.4\" fill=\"#6b7280\"><tspan x=\"343.5\" y=\"482.4\">2. continue down and</tspan><tspan x=\"343.5\" y=\"550\">around the bowl</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "lift once, then place the dot above",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M360 -287Q236 -287 168.5 -224Q101 -161 101 -42Q101 20 131.5 81.5Q162 143 216 190Q243 213 272.5 231Q302 249 333 261Q321 266 295.5 274.5Q270 283 242 290Q214 297 192 297Q162 297 140.5 289.5Q119 282 83 259Q77 264 72.5 274.5Q68 285 68 297Q68 335 101.5 358Q135 381 189 381Q232 381 273.5 370Q315 359 357 346Q399 333 442 322Q485 311 531 311L597 313L568 236Q559 235 549.5 234Q540 233 530.5 232.5Q521 232 512 232Q471 229 424 216.5Q377 204 332.5 184Q288 164 251 138Q196 100 166 54Q136 8 136 -42Q136 -94 161 -130.5Q186 -167 236.5 -186Q287 -205 363 -205Q425 -205 486 -197.5Q547 -190 607 -177L619 -210Q570 -237 525.5 -254Q481 -271 440 -279Q399 -287 360 -287ZM340 443Q296 476 268 508Q294 534 311 552Q328 570 338 581Q354 564 370.5 547.5Q387 531 404 516Q393 500 376.5 481.5Q360 463 340 443Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M110 315 L150 335 L210 340 L280 325 L350 305 L420 285 L490 270 L540 270 L490 270 L420 285 L350 305 L280 325 L210 340 L150 335 L110 315 L100 290 L130 305 L170 310 L220 305 L270 285 L320 265 L300 245 L260 220 L216 190 L180 130 L145 65 L118 -42 L130 -110 L180 -175 L225 -200 L300 -245 L400 -245 L500 -230 L575 -210 L608 -195\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M340 460 L340 460\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M340 460 L285 510 L338 565 L390 515 L340 460\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"340\" cy=\"460\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"343.5\" y=\"482.4\" text-anchor=\"middle\" font-size=\"55.4\" fill=\"#6b7280\"><tspan x=\"343.5\" y=\"482.4\">3. lift once, then</tspan><tspan x=\"343.5\" y=\"550\">place the dot above</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "arabic",
       "glyph": "د",
       "font": "_fonts/NotoNaskhArabic-Static.ttf",
       "source": {
@@ -73,6 +307,38 @@
     },
     {
       "script": "arabic",
+      "glyph": "ر",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "Introduction to Arabic: Egyptian Arabic for first-year students, Alphabet: د ذ ر, independent Raa at 00:08.8–00:09.3 (University of Oregon Libraries Open Textbook, 2023)",
+        "url": "https://opentext.uoregon.edu/introarabic/chapter/chapter-1/",
+        "variation": "The cited Raa demonstration draws independent ر in one continuous pen-down run at 00:08.8–00:09.3: it begins at the upper tip, descends through the short stroke, then sweeps left through the lower curve without lifting. The adjacent lesson identifies raa as a one-way connector and separately prints its independent and final forms. This independent learner path fits the course's vendored Noto Naskh outline while keeping its provenance scoped to Arabic rather than inheriting the already-authored Urdu ر source for the same Unicode glyph."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": -90,
+        "minY": -411,
+        "width": 495,
+        "height": 905.5
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "begin at the upper tip and descend through the short stroke",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M111 -204Q95 -204 70.5 -195Q46 -186 21 -173Q-4 -160 -20 -148L-7 -115Q21 -120 44.5 -123Q68 -126 88 -126Q163 -126 216.5 -81Q270 -36 298 49Q291 65 283.5 80.5Q276 96 267 112Q233 173 217 209.5Q201 246 201 271Q201 297 216 312.5Q231 328 259 341Q263 325 271 302Q279 279 288 255.5Q297 232 304 212Q317 177 326 143Q335 109 335 81Q335 3 305.5 -63.5Q276 -130 225 -167Q173 -204 111 -204Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M250 320 L250 320\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M250 320 L248 280 L255 235 L270 190 L287 145 L300 95 L304 48\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"304\" cy=\"48\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"157.5\" y=\"383.7\" text-anchor=\"middle\" font-size=\"39.7\" fill=\"#6b7280\"><tspan x=\"157.5\" y=\"383.7\">1. begin at the upper</tspan><tspan x=\"157.5\" y=\"432.1\">tip and descend through</tspan><tspan x=\"157.5\" y=\"480.6\">the short stroke</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "sweep left through the lower curve without lifting",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M111 -204Q95 -204 70.5 -195Q46 -186 21 -173Q-4 -160 -20 -148L-7 -115Q21 -120 44.5 -123Q68 -126 88 -126Q163 -126 216.5 -81Q270 -36 298 49Q291 65 283.5 80.5Q276 96 267 112Q233 173 217 209.5Q201 246 201 271Q201 297 216 312.5Q231 328 259 341Q263 325 271 302Q279 279 288 255.5Q297 232 304 212Q317 177 326 143Q335 109 335 81Q335 3 305.5 -63.5Q276 -130 225 -167Q173 -204 111 -204Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M250 320 L248 280 L255 235 L270 190 L287 145 L300 95 L304 48 L304 48\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M304 48 L298 8 L284 -30 L260 -68 L226 -103 L185 -130 L140 -146 L95 -151 L52 -147 L10 -136\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"10\" cy=\"-136\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"157.5\" y=\"383.7\" text-anchor=\"middle\" font-size=\"39.7\" fill=\"#6b7280\"><tspan x=\"157.5\" y=\"383.7\">2. sweep left through</tspan><tspan x=\"157.5\" y=\"432.1\">the lower curve without</tspan><tspan x=\"157.5\" y=\"480.6\">lifting</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "arabic",
       "glyph": "ز",
       "font": "_fonts/NotoNaskhArabic-Static.ttf",
       "source": {
@@ -106,6 +372,38 @@
           "label": "lift once, then place the dot above",
           "startsAfterLift": true,
           "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M111 -204Q95 -204 70.5 -195Q46 -186 21 -173Q-4 -160 -20 -148L-7 -115Q21 -120 44.5 -123Q68 -126 88 -126Q163 -126 216.5 -81Q270 -36 298 49Q291 65 283.5 80.5Q276 96 267 112Q233 173 217 209.5Q201 246 201 271Q201 297 216 312.5Q231 328 259 341Q263 325 271 302Q279 279 288 255.5Q297 232 304 212Q317 177 326 143Q335 109 335 81Q335 3 305.5 -63.5Q276 -130 225 -167Q173 -204 111 -204ZM203 398Q159 431 131 463Q157 489 174 507Q191 525 201 536Q217 519 233.5 502.5Q250 486 267 471Q256 455 239.5 436.5Q223 418 203 398Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M250 320 L248 280 L255 235 L270 190 L287 145 L300 95 L304 48 L298 8 L284 -30 L260 -68 L226 -103 L185 -130 L140 -146 L95 -151 L52 -147 L10 -136\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M200 405 L200 405\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M200 405 L140 465 L200 525 L260 465 L200 405\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"200\" cy=\"405\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"157.5\" y=\"383.7\" text-anchor=\"middle\" font-size=\"39.7\" fill=\"#6b7280\"><tspan x=\"157.5\" y=\"383.7\">3. lift once, then</tspan><tspan x=\"157.5\" y=\"432.1\">place the dot above</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "arabic",
+      "glyph": "س",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "Introduction to Arabic: Egyptian Arabic for first-year students, Alphabet: س ش ص ض, independent Seen at 00:01.6–00:02.8 (University of Oregon Libraries Open Textbook, 2023)",
+        "url": "https://opentext.uoregon.edu/introarabic/chapter/%D8%B3-%D8%B4-%D8%B5-%D8%B6/",
+        "variation": "The page's directly linked FullSizeRender-8.mov demonstrates independent س in one continuous pen-down run at 00:01.6–00:02.8: it starts at the upper right, shapes three close teeth from right to left, then flows directly into the final bowl without lifting. The adjacent lesson identifies seen as a two-way connector and separately prints its contextual shapes. This independent learner path fits the course's vendored Noto Naskh outline while keeping its provenance scoped to Arabic rather than inheriting the already-authored Persian or Urdu س sources for the same Unicode glyph."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": -2,
+        "minY": -410,
+        "width": 1034,
+        "height": 1126.2
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "form the three close teeth from right to left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M249 -262Q164 -262 116 -213Q68 -164 68 -74Q68 -54 69.5 -37Q71 -20 75 1.5Q79 23 87 56L124 47Q113 1 113 -24Q113 -97 149.5 -138Q186 -179 251 -179Q301 -179 351.5 -162.5Q402 -146 442 -117.5Q482 -89 498 -54Q465 17 449 65Q433 113 433 137Q433 163 447.5 183.5Q462 204 498 226Q500 212 502.5 195.5Q505 179 510 153.5Q515 128 523 85Q538 81 553 78.5Q568 76 583 76Q611 76 633 79Q655 82 671 86Q678 98 683 115Q695 156 704 182.5Q713 209 718 219Q726 239 734 245.5Q742 252 758 252Q772 252 782 245Q775 230 764 198.5Q753 167 739 118Q789 96 829 87.5Q869 79 915 79Q909 99 900 126.5Q891 154 877 188Q867 214 862 231.5Q857 249 857 256Q857 278 874.5 300.5Q892 323 923 340Q927 316 934.5 282Q942 248 947 225Q953 198 957.5 172Q962 146 962 123Q962 113 956.5 90.5Q951 68 942.5 43.5Q934 19 924 0Q860 0 813 9Q766 18 712 43L703 27Q696 15 658 7Q640 3 618.5 1.5Q597 0 571 0Q562 0 553 0.5Q544 1 535 2L535 -17Q535 -78 496 -134.5Q457 -191 389 -226Q355 -244 320 -253Q285 -262 249 -262Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M923 310 L923 310\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M923 310 L935 120 L925 70 L870 45 L770 75 L748 110 L748 230 L690 65 L640 45 L540 55 L478 190 L515 20\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"515\" cy=\"20\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"515\" y=\"484.9\" text-anchor=\"middle\" font-size=\"82.9\" fill=\"#6b7280\"><tspan x=\"515\" y=\"484.9\">1. form the three close</tspan><tspan x=\"515\" y=\"586\">teeth from right to</tspan><tspan x=\"515\" y=\"687.2\">left</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "flow directly into the final bowl without lifting",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M249 -262Q164 -262 116 -213Q68 -164 68 -74Q68 -54 69.5 -37Q71 -20 75 1.5Q79 23 87 56L124 47Q113 1 113 -24Q113 -97 149.5 -138Q186 -179 251 -179Q301 -179 351.5 -162.5Q402 -146 442 -117.5Q482 -89 498 -54Q465 17 449 65Q433 113 433 137Q433 163 447.5 183.5Q462 204 498 226Q500 212 502.5 195.5Q505 179 510 153.5Q515 128 523 85Q538 81 553 78.5Q568 76 583 76Q611 76 633 79Q655 82 671 86Q678 98 683 115Q695 156 704 182.5Q713 209 718 219Q726 239 734 245.5Q742 252 758 252Q772 252 782 245Q775 230 764 198.5Q753 167 739 118Q789 96 829 87.5Q869 79 915 79Q909 99 900 126.5Q891 154 877 188Q867 214 862 231.5Q857 249 857 256Q857 278 874.5 300.5Q892 323 923 340Q927 316 934.5 282Q942 248 947 225Q953 198 957.5 172Q962 146 962 123Q962 113 956.5 90.5Q951 68 942.5 43.5Q934 19 924 0Q860 0 813 9Q766 18 712 43L703 27Q696 15 658 7Q640 3 618.5 1.5Q597 0 571 0Q562 0 553 0.5Q544 1 535 2L535 -17Q535 -78 496 -134.5Q457 -191 389 -226Q355 -244 320 -253Q285 -262 249 -262Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M923 310 L935 120 L925 70 L870 45 L770 75 L748 110 L748 230 L690 65 L640 45 L540 55 L478 190 L515 20 L515 20\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M515 20 L515 -25 L470 -125 L370 -205 L250 -230 L145 -180 L92 -95 L110 35\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"110\" cy=\"35\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"515\" y=\"484.9\" text-anchor=\"middle\" font-size=\"82.9\" fill=\"#6b7280\"><tspan x=\"515\" y=\"484.9\">2. flow directly into</tspan><tspan x=\"515\" y=\"586\">the final bowl without</tspan><tspan x=\"515\" y=\"687.2\">lifting</tspan></text>"
         }
       ]
     },
@@ -472,6 +770,146 @@
           "label": "lift again, then place the upper-left dot",
           "startsAfterLift": true,
           "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M266 -262Q172 -262 120 -212.5Q68 -163 68 -74Q68 -54 69.5 -37Q71 -20 75 1.5Q79 23 87 56L124 47Q113 1 113 -24Q113 -100 153 -139.5Q193 -179 269 -179Q321 -179 376.5 -163Q432 -147 476 -118Q499 -104 516 -87Q533 -70 545 -51Q544 -19 541.5 8.5Q539 36 534 60Q502 30 468.5 15Q435 0 397 0Q340 0 306 35.5Q272 71 272 129Q272 180 292.5 229.5Q313 279 346 310Q379 340 413 340Q460 340 503.5 297.5Q547 255 572 186Q596 119 596 41Q596 -22 571 -76Q546 -130 499 -171Q468 -198 428.5 -218.5Q389 -239 347 -250.5Q305 -262 266 -262ZM421 82Q447 82 472.5 87.5Q498 93 523 105Q510 149 489 184.5Q468 220 444 237Q419 255 397 255Q377 255 357 239Q337 223 323 200Q311 178 311 157Q311 121 340 101.5Q369 82 421 82ZM479 395Q457 412 440.5 427.5Q424 443 413 457Q418 462 434 479Q450 496 477 524Q483 518 498.5 503Q514 488 539 464Q520 434 479 395ZM329 381Q307 399 290 414.5Q273 430 262 442Q276 455 292 471.5Q308 488 327 510Q333 503 348 488Q363 473 388 450Q379 435 364 418Q349 401 329 381Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M545 160 L520 235 L470 285 L410 300 L350 270 L305 220 L290 165 L305 105 L345 55 L405 40 L475 55 L525 100 L545 160 L575 105 L570 35 L545 -55 L500 -130 L430 -185 L345 -220 L260 -225 L180 -205 L120 -155 L90 -95 L90 -35 L90 35\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M475 405 L425 457 L475 510 L525 457 L475 405\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M325 390 L325 390\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M325 390 L275 442 L325 495 L375 442 L325 390\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"325\" cy=\"390\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"332\" y=\"455.5\" text-anchor=\"middle\" font-size=\"53.5\" fill=\"#6b7280\"><tspan x=\"332\" y=\"455.5\">4. lift again, then</tspan><tspan x=\"332\" y=\"520.8\">place the upper-left dot</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "arabic",
+      "glyph": "ك",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "Introduction to Arabic: Egyptian Arabic for first-year students, Alphabet ي ك ل, independent Kaf at 00:11.8–00:13.4 (University of Oregon Libraries Open Textbook, 2023)",
+        "url": "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%d9%82-%d9%84-%d9%85/",
+        "variation": "The page's directly linked kaf.mov demonstrates independent ك in two pen-down runs. The first run at 00:11.8–00:12.9 descends the main upright and turns left along the baseline without lifting. After one lift, the second run at 00:13.2–00:13.4 begins at the upper right and draws the inner arm down-left. The adjacent lesson identifies Kaf as a two-way connector and separately prints its contextual shapes. This two-stroke, one-lift learner path fits the course's vendored Noto Naskh outline. Its Arabic-scoped ك identity and provenance remain distinct from Urdu ک, which uses a different Unicode glyph and a separate source-backed fallback order."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 3 movements",
+      "viewBox": {
+        "minX": -53,
+        "minY": -741,
+        "width": 621,
+        "height": 1069.7
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "descend the main upright",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M226 0Q162 0 90 6Q17 12 17 20Q17 37 22 62Q27 87 33 97Q59 91 95 86Q131 81 170 78.5Q209 76 245 76Q298 76 352 81Q406 86 460 96Q450 155 440 214.5Q430 274 419 333Q413 365 406.5 403.5Q400 442 395 479.5Q390 517 387 547Q384 577 384 592Q384 625 399 644Q414 663 450 671Q455 652 465.5 617Q476 582 485 552L459 530Q479 348 488.5 242.5Q498 137 498 108Q498 80 488 58.5Q478 37 462 17Q407 9 347.5 4.5Q288 0 226 0ZM180 194Q167 194 162 200Q157 206 157 214Q183 216 207.5 225Q232 234 249 246Q257 251 262.5 256.5Q268 262 271 268Q224 269 198 277.5Q172 286 172 316Q172 332 184 350Q196 368 214 381Q232 394 250 394Q276 394 284 366L268 359Q263 364 256 364Q248 364 237 356Q226 348 216.5 337Q207 326 205 315Q222 307 248 304.5Q274 302 287 293Q296 287 296 274Q296 261 277 242Q258 223 231 208.5Q204 194 180 194Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M430 630 L430 630\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M430 630 L435 550 L440 450 L450 350 L465 250 L475 150 L470 80\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"470\" cy=\"80\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"257.5\" y=\"189.8\" text-anchor=\"middle\" font-size=\"49.8\" fill=\"#6b7280\"><tspan x=\"257.5\" y=\"189.8\">1. descend the main</tspan><tspan x=\"257.5\" y=\"250.6\">upright</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "turn left along the baseline without lifting",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M226 0Q162 0 90 6Q17 12 17 20Q17 37 22 62Q27 87 33 97Q59 91 95 86Q131 81 170 78.5Q209 76 245 76Q298 76 352 81Q406 86 460 96Q450 155 440 214.5Q430 274 419 333Q413 365 406.5 403.5Q400 442 395 479.5Q390 517 387 547Q384 577 384 592Q384 625 399 644Q414 663 450 671Q455 652 465.5 617Q476 582 485 552L459 530Q479 348 488.5 242.5Q498 137 498 108Q498 80 488 58.5Q478 37 462 17Q407 9 347.5 4.5Q288 0 226 0ZM180 194Q167 194 162 200Q157 206 157 214Q183 216 207.5 225Q232 234 249 246Q257 251 262.5 256.5Q268 262 271 268Q224 269 198 277.5Q172 286 172 316Q172 332 184 350Q196 368 214 381Q232 394 250 394Q276 394 284 366L268 359Q263 364 256 364Q248 364 237 356Q226 348 216.5 337Q207 326 205 315Q222 307 248 304.5Q274 302 287 293Q296 287 296 274Q296 261 277 242Q258 223 231 208.5Q204 194 180 194Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M430 630 L435 550 L440 450 L450 350 L465 250 L475 150 L470 80 L470 80\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M470 80 L410 52 L320 40 L220 38 L120 42 L45 58\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"45\" cy=\"58\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"257.5\" y=\"189.8\" text-anchor=\"middle\" font-size=\"49.8\" fill=\"#6b7280\"><tspan x=\"257.5\" y=\"189.8\">2. turn left along the</tspan><tspan x=\"257.5\" y=\"250.6\">baseline without</tspan><tspan x=\"257.5\" y=\"311.3\">lifting</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "lift, then draw the inner arm from upper right down-left",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M226 0Q162 0 90 6Q17 12 17 20Q17 37 22 62Q27 87 33 97Q59 91 95 86Q131 81 170 78.5Q209 76 245 76Q298 76 352 81Q406 86 460 96Q450 155 440 214.5Q430 274 419 333Q413 365 406.5 403.5Q400 442 395 479.5Q390 517 387 547Q384 577 384 592Q384 625 399 644Q414 663 450 671Q455 652 465.5 617Q476 582 485 552L459 530Q479 348 488.5 242.5Q498 137 498 108Q498 80 488 58.5Q478 37 462 17Q407 9 347.5 4.5Q288 0 226 0ZM180 194Q167 194 162 200Q157 206 157 214Q183 216 207.5 225Q232 234 249 246Q257 251 262.5 256.5Q268 262 271 268Q224 269 198 277.5Q172 286 172 316Q172 332 184 350Q196 368 214 381Q232 394 250 394Q276 394 284 366L268 359Q263 364 256 364Q248 364 237 356Q226 348 216.5 337Q207 326 205 315Q222 307 248 304.5Q274 302 287 293Q296 287 296 274Q296 261 277 242Q258 223 231 208.5Q204 194 180 194Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M430 630 L435 550 L440 450 L450 350 L465 250 L475 150 L470 80 L410 52 L320 40 L220 38 L120 42 L45 58\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M255 385 L255 385\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M255 385 L235 375 L215 360 L195 340 L185 320 L185 305 L215 295 L245 292 L275 285 L282 273 L270 258 L250 240 L225 222 L180 207\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"180\" cy=\"207\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"257.5\" y=\"189.8\" text-anchor=\"middle\" font-size=\"49.8\" fill=\"#6b7280\"><tspan x=\"257.5\" y=\"189.8\">3. lift, then draw the</tspan><tspan x=\"257.5\" y=\"250.6\">inner arm from upper</tspan><tspan x=\"257.5\" y=\"311.3\">right down-left</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "arabic",
+      "glyph": "ل",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "Introduction to Arabic: Egyptian Arabic for first-year students, Alphabet ي ك ل, independent Lam at 00:01.9–00:02.4 (University of Oregon Libraries Open Textbook, 2023)",
+        "url": "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%d9%82-%d9%84-%d9%85/",
+        "variation": "The page's directly linked lam.mov demonstrates independent ل in one continuous pen-down run at 00:01.9–00:02.4: it descends the tall upright, turns left through the base bowl without lifting, and rises at the bowl's outer edge. The adjacent lesson identifies Lam as a two-way connector and separately prints its contextual shapes. This one-stroke, zero-lift learner path fits the course's vendored Noto Naskh outline. Its Arabic-scoped ل identity and provenance remain distinct from the existing Persian and Urdu records for the same Unicode glyph, which retain their own source-backed orders."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": -2,
+        "minY": -741,
+        "width": 605,
+        "height": 1326.8
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "descend the tall upright",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M249 -262Q164 -262 116 -213Q68 -164 68 -74Q68 -54 69.5 -37Q71 -20 75 1.5Q79 23 87 56L124 47Q113 1 113 -24Q113 -97 149.5 -138Q186 -179 251 -179Q299 -179 350 -162.5Q401 -146 440 -117Q460 -103 474 -87Q488 -71 496 -54L470 107Q462 158 452.5 216.5Q443 275 434 333Q425 391 417.5 443Q410 495 405.5 534Q401 573 401 593Q401 627 416.5 645.5Q432 664 466 671Q473 649 483 615Q493 581 502 552L479 532L513 220Q519 170 523.5 127Q528 84 530.5 48.5Q533 13 533 -17Q533 -78 494.5 -134.5Q456 -191 388 -226Q354 -244 319.5 -253Q285 -262 249 -262Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M458 640 L458 640\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M458 640 L445 500 L440 420 L450 240 L475 80 L510 -20\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"510\" cy=\"-20\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"300.5\" y=\"450.5\" text-anchor=\"middle\" font-size=\"48.5\" fill=\"#6b7280\"><tspan x=\"300.5\" y=\"450.5\">1. descend the tall</tspan><tspan x=\"300.5\" y=\"509.7\">upright</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "continue left through the base bowl without lifting",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M249 -262Q164 -262 116 -213Q68 -164 68 -74Q68 -54 69.5 -37Q71 -20 75 1.5Q79 23 87 56L124 47Q113 1 113 -24Q113 -97 149.5 -138Q186 -179 251 -179Q299 -179 350 -162.5Q401 -146 440 -117Q460 -103 474 -87Q488 -71 496 -54L470 107Q462 158 452.5 216.5Q443 275 434 333Q425 391 417.5 443Q410 495 405.5 534Q401 573 401 593Q401 627 416.5 645.5Q432 664 466 671Q473 649 483 615Q493 581 502 552L479 532L513 220Q519 170 523.5 127Q528 84 530.5 48.5Q533 13 533 -17Q533 -78 494.5 -134.5Q456 -191 388 -226Q354 -244 319.5 -253Q285 -262 249 -262Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M458 640 L445 500 L440 420 L450 240 L475 80 L510 -20 L510 -20\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M510 -20 L465 -120 L350 -205 L205 -215 L105 -135 L90 -75 L100 25\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"100\" cy=\"25\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"300.5\" y=\"450.5\" text-anchor=\"middle\" font-size=\"48.5\" fill=\"#6b7280\"><tspan x=\"300.5\" y=\"450.5\">2. continue left</tspan><tspan x=\"300.5\" y=\"509.7\">through the base bowl</tspan><tspan x=\"300.5\" y=\"568.8\">without lifting</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "arabic",
+      "glyph": "ن",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "Waraqa Institute, The Letter Noon in Arabic — Writing Noon: The Bowl Shape and Its Single Dot, Step 4 (accessed 2026-08-21)",
+        "url": "https://www.waraqaweb.com/lessons/letter-noon-in-arabic",
+        "variation": "The cited beginner lesson explicitly orders isolated ن body-first: begin at the curve's top right, sweep down and around in one smooth motion through the deep below-baseline bowl, then add the single centred upper dot last. It distinguishes this deep isolated/final bowl from the shallow forms of ب, ت, and ث and separately identifies the initial/medial form as a small tooth. The same lesson identifies Noon as a two-way connector. This two-stroke, one-lift independent learner path fits the course's vendored Noto Naskh outline while retaining Arabic-scoped provenance separately from the existing Persian and Urdu records for the same Unicode glyph."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 2 movements",
+      "viewBox": {
+        "minX": -2,
+        "minY": -441,
+        "width": 607,
+        "height": 1027.2
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "sweep down and around the deep bowl from right to left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M249 -262Q164 -262 116 -213Q68 -164 68 -74Q68 -54 69.5 -37Q71 -20 75 1.5Q79 23 87 56L124 47Q113 1 113 -24Q113 -97 149.5 -138Q186 -179 251 -179Q301 -179 351.5 -162.5Q402 -146 442 -117.5Q482 -89 498 -54Q465 17 449 65Q433 113 433 137Q433 163 447.5 183.5Q462 204 498 226Q500 215 503 196.5Q506 178 510.5 153.5Q515 129 521 97Q528 61 531.5 32.5Q535 4 535 -17Q535 -78 496 -134.5Q457 -191 389 -226Q355 -244 320 -253Q285 -262 249 -262ZM276 233Q232 266 204 298Q230 324 247 342Q264 360 274 371Q290 354 306.5 337.5Q323 321 340 306Q329 290 312.5 271.5Q296 253 276 233Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M495 210 L495 210\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M495 210 L475 160 L480 100 L500 40 L510 -20 L485 -80 L430 -140 L360 -190 L280 -220 L210 -215 L150 -170 L105 -110 L90 -60 L95 0 L105 45\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"105\" cy=\"45\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"301.5\" y=\"450.6\" text-anchor=\"middle\" font-size=\"48.6\" fill=\"#6b7280\"><tspan x=\"301.5\" y=\"450.6\">1. sweep down and around</tspan><tspan x=\"301.5\" y=\"509.9\">the deep bowl from right</tspan><tspan x=\"301.5\" y=\"569.2\">to left</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "lift, then place the dot above the bowl's midpoint",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M249 -262Q164 -262 116 -213Q68 -164 68 -74Q68 -54 69.5 -37Q71 -20 75 1.5Q79 23 87 56L124 47Q113 1 113 -24Q113 -97 149.5 -138Q186 -179 251 -179Q301 -179 351.5 -162.5Q402 -146 442 -117.5Q482 -89 498 -54Q465 17 449 65Q433 113 433 137Q433 163 447.5 183.5Q462 204 498 226Q500 215 503 196.5Q506 178 510.5 153.5Q515 129 521 97Q528 61 531.5 32.5Q535 4 535 -17Q535 -78 496 -134.5Q457 -191 389 -226Q355 -244 320 -253Q285 -262 249 -262ZM276 233Q232 266 204 298Q230 324 247 342Q264 360 274 371Q290 354 306.5 337.5Q323 321 340 306Q329 290 312.5 271.5Q296 253 276 233Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M495 210 L475 160 L480 100 L500 40 L510 -20 L485 -80 L430 -140 L360 -190 L280 -220 L210 -215 L150 -170 L105 -110 L90 -60 L95 0 L105 45\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M235 305 L235 305\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M235 305 L275 345 L315 305\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"315\" cy=\"305\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"301.5\" y=\"450.6\" text-anchor=\"middle\" font-size=\"48.6\" fill=\"#6b7280\"><tspan x=\"301.5\" y=\"450.6\">2. lift, then place the</tspan><tspan x=\"301.5\" y=\"509.9\">dot above the bowl&apos;s</tspan><tspan x=\"301.5\" y=\"569.2\">midpoint</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "arabic",
+      "glyph": "ه",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "Introduction to Arabic: Egyptian Arabic for first-year students, Alphabet ه و ي, independent Heh at 00:04.9–00:06.0 (University of Oregon Libraries Open Textbook, 2023)",
+        "url": "https://opentext.uoregon.edu/introarabic/chapter/%d9%87-%d9%88-%d9%8a/",
+        "variation": "The page's directly linked letter-haa.mov demonstrates independent ه in one continuous pen-down run at 00:04.9–00:06.0. From the upper right at 00:04.9–00:05.4, the pen curves down-left and closes the lower counter. Without lifting, it threads through the centre and closes the upper-right counter at 00:05.4–00:05.7, then sweeps left along the baseline through 00:06.0. The adjacent lesson identifies Heh as a two-way connector and separately prints its contextual shapes. This one-stroke, zero-lift learner path reconciles the compact handwritten demonstration with the course's wider isolated two-counter Noto Naskh outline. Arabic ه retains its own script-scoped provenance independently of the existing Persian record for the same Unicode glyph and source-backed geometry."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": -53,
+        "minY": -503,
+        "width": 703,
+        "height": 943.1
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "curve down-left and close the lower counter",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M529 -18Q464 -10 408.5 5.5Q353 21 307 44Q233 0 151 0Q137 0 117 5.5Q97 11 72 22.5Q47 34 17 50L26 84Q47 80 75 78Q103 76 137 76Q163 76 188 79.5Q213 83 238 90Q176 142 176 207Q176 238 187.5 270.5Q199 303 219 329.5Q239 356 264 368L287 433Q370 410 437.5 361.5Q505 313 542 248Q580 183 580 116Q580 68 529 -18ZM312 125Q338 145 350.5 171.5Q363 198 363 231Q363 260 344.5 284.5Q326 309 304 309Q288 309 269.5 296Q251 283 235 260Q227 249 221.5 235.5Q216 222 211 208Q233 183 258.5 162.5Q284 142 312 125ZM526 55Q526 99 510 145Q494 191 466 233.5Q438 276 400 308Q422 271 422 228Q422 153 370 95Q408 80 447 70Q486 60 526 55Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M315 400 L315 400\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M315 400 L285 375 L255 350 L230 325 L205 300 L190 260 L190 210 L205 165 L235 125 L275 105 L320 110 L355 135 L380 175 L390 225 L380 275 L355 320 L315 355\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"315\" cy=\"355\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"298.5\" y=\"214.3\" text-anchor=\"middle\" font-size=\"56.3\" fill=\"#6b7280\"><tspan x=\"298.5\" y=\"214.3\">1. curve down-left and</tspan><tspan x=\"298.5\" y=\"283\">close the lower counter</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "thread through the centre and close the upper-right counter without lifting",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M529 -18Q464 -10 408.5 5.5Q353 21 307 44Q233 0 151 0Q137 0 117 5.5Q97 11 72 22.5Q47 34 17 50L26 84Q47 80 75 78Q103 76 137 76Q163 76 188 79.5Q213 83 238 90Q176 142 176 207Q176 238 187.5 270.5Q199 303 219 329.5Q239 356 264 368L287 433Q370 410 437.5 361.5Q505 313 542 248Q580 183 580 116Q580 68 529 -18ZM312 125Q338 145 350.5 171.5Q363 198 363 231Q363 260 344.5 284.5Q326 309 304 309Q288 309 269.5 296Q251 283 235 260Q227 249 221.5 235.5Q216 222 211 208Q233 183 258.5 162.5Q284 142 312 125ZM526 55Q526 99 510 145Q494 191 466 233.5Q438 276 400 308Q422 271 422 228Q422 153 370 95Q408 80 447 70Q486 60 526 55Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M315 400 L285 375 L255 350 L230 325 L205 300 L190 260 L190 210 L205 165 L235 125 L275 105 L320 110 L355 135 L380 175 L390 225 L380 275 L355 320 L315 355 L315 355\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M315 355 L360 355 L410 340 L455 315 L500 275 L535 225 L555 170 L555 115 L535 70 L535 50 L500 40 L455 30 L415 45 L385 75 L365 100\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"365\" cy=\"100\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"298.5\" y=\"214.3\" text-anchor=\"middle\" font-size=\"56.3\" fill=\"#6b7280\"><tspan x=\"298.5\" y=\"214.3\">2. thread through the</tspan><tspan x=\"298.5\" y=\"283\">centre and close the</tspan><tspan x=\"298.5\" y=\"351.7\">upper-right counter</tspan><tspan x=\"298.5\" y=\"420.4\">without lifting</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "sweep left along the baseline without lifting",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M529 -18Q464 -10 408.5 5.5Q353 21 307 44Q233 0 151 0Q137 0 117 5.5Q97 11 72 22.5Q47 34 17 50L26 84Q47 80 75 78Q103 76 137 76Q163 76 188 79.5Q213 83 238 90Q176 142 176 207Q176 238 187.5 270.5Q199 303 219 329.5Q239 356 264 368L287 433Q370 410 437.5 361.5Q505 313 542 248Q580 183 580 116Q580 68 529 -18ZM312 125Q338 145 350.5 171.5Q363 198 363 231Q363 260 344.5 284.5Q326 309 304 309Q288 309 269.5 296Q251 283 235 260Q227 249 221.5 235.5Q216 222 211 208Q233 183 258.5 162.5Q284 142 312 125ZM526 55Q526 99 510 145Q494 191 466 233.5Q438 276 400 308Q422 271 422 228Q422 153 370 95Q408 80 447 70Q486 60 526 55Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M315 400 L285 375 L255 350 L230 325 L205 300 L190 260 L190 210 L205 165 L235 125 L275 105 L320 110 L355 135 L380 175 L390 225 L380 275 L355 320 L315 355 L360 355 L410 340 L455 315 L500 275 L535 225 L555 170 L555 115 L535 70 L535 50 L500 40 L455 30 L415 45 L385 75 L365 100 L365 100\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M365 100 L345 75 L310 65 L270 65 L225 70 L175 65 L120 65 L70 65 L25 65\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"25\" cy=\"65\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"298.5\" y=\"214.3\" text-anchor=\"middle\" font-size=\"56.3\" fill=\"#6b7280\"><tspan x=\"298.5\" y=\"214.3\">3. sweep left along the</tspan><tspan x=\"298.5\" y=\"283\">baseline without lifting</tspan></text>"
         }
       ]
     },

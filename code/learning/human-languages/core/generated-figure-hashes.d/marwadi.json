@@ -31,6 +31,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "MW-W03-anusvara",
+      "sourceHash": "fnv1a64:25d92fd11f968e0f",
+      "svgHash": "fnv1a64:14eca191576a3a0a",
+      "svg": "marwadi/book/figures/MW-W03-anusvara-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "MW-W03-ha",
       "sourceHash": "fnv1a64:21aaacd49572ba80",
       "svgHash": "fnv1a64:0012d542243408f0",
@@ -80,6 +87,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "MW-W05-virama",
+      "sourceHash": "fnv1a64:32334d07fab36f37",
+      "svgHash": "fnv1a64:dae49f2d60712dbf",
+      "svg": "marwadi/book/figures/MW-W05-virama-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "MW-W06-ttha",
       "sourceHash": "fnv1a64:409f5905b939d0db",
       "svgHash": "fnv1a64:a59cd97c9bf6cf41",
@@ -87,10 +101,24 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "MW-W06-uu-matra",
+      "sourceHash": "fnv1a64:ae2f78dc82cedbe1",
+      "svgHash": "fnv1a64:46e3b957a3caaf99",
+      "svg": "marwadi/book/figures/MW-W06-uu-matra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "MW-W07-chha",
       "sourceHash": "fnv1a64:d8c9221324da2247",
       "svgHash": "fnv1a64:1d173b38410917ec",
       "svg": "marwadi/book/figures/MW-W07-chha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MW-W07-e-matra",
+      "sourceHash": "fnv1a64:2a4bf9815e35f69d",
+      "svgHash": "fnv1a64:fec51e0cc9ef5761",
+      "svg": "marwadi/book/figures/MW-W07-e-matra-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -161,6 +189,20 @@
       "sourceHash": "fnv1a64:ef70ab7263272bab",
       "svgHash": "fnv1a64:f80817edc8f8e5be",
       "svg": "marwadi/book/figures/MW-W12-ga-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MW-W13-u-matra",
+      "sourceHash": "fnv1a64:a16bc9b15de7139c",
+      "svgHash": "fnv1a64:e0420c51914dbcf7",
+      "svg": "marwadi/book/figures/MW-W13-u-matra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MW-W15-nukta",
+      "sourceHash": "fnv1a64:587692a575441429",
+      "svgHash": "fnv1a64:cd3ba1aea6488aec",
+      "svg": "marwadi/book/figures/MW-W15-nukta-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

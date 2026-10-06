@@ -18,6 +18,21 @@ const gujaratiAlphabetSource = (glyph: string): StrokeSource => {
   return letter.strokeOrderSource;
 };
 
+// A vowel sign, the anusvara or the visarga has no letter record: its cited
+// stroke order lives on its mark record (gujarati.json `marks`), beside the
+// written order relative to its consonant (`compositionOrder`).
+const gujaratiMarkSource = (mark: string): StrokeSource => {
+  const record = gujarati.marks.find((candidate) => candidate.mark === mark);
+  if (
+    !record ||
+    !("strokeOrderSource" in record) ||
+    !record.strokeOrderSource
+  ) {
+    throw new Error(`Gujarati mark ${mark} has no verified source`);
+  }
+  return record.strokeOrderSource;
+};
+
 export const entries: DuctusEntry[] = [
   // t30apps animates Gujarati અ as a joined body first, then a separately
   // descending right stem. The fitted medians preserve that one-lift order
@@ -3178,6 +3193,603 @@ export const entries: DuctusEntry[] = [
         },
       ],
       source: gujaratiAlphabetSource("હ"),
+    },
+  ],
+  // ---------------------------------------------------------------------
+  // Vowel signs, anusvara and visarga, drawn alone (no consonant). Their
+  // start, direction and pen lifts follow the hand-made centre-line
+  // templates in KanoAI's Gujarati barakhadi (cited on each mark record);
+  // no template path was copied. Each path is fitted to the bundled Noto
+  // Sans Gujarati outline of the sign by itself. The book places each sign
+  // AFTER its consonant (human-language-data's WRITTEN_SIGN_SIDES).
+  // ---------------------------------------------------------------------
+  // KanoAI's barakhadi templates write ા after the consonant as one pen-down
+  // run: down the bar from the top, then a short foot to the right.
+  [
+    "gujarati:ા",
+    {
+      script: "gujarati",
+      glyph: "ા",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the bar down",
+              path: [
+                { x: 130, y: 595 },
+                { x: 130, y: 500 },
+                { x: 130, y: 400 },
+                { x: 130, y: 300 },
+                { x: 130, y: 200 },
+                { x: 131, y: 140 },
+              ],
+            },
+            {
+              label: "turn into the foot to the right",
+              path: [
+                { x: 131, y: 140 },
+                { x: 136, y: 95 },
+                { x: 155, y: 62 },
+                { x: 185, y: 44 },
+                { x: 215, y: 38 },
+                { x: 248, y: 37 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: gujaratiMarkSource("ા"),
+    },
+  ],
+  // િ sits LEFT of its consonant but KanoAI writes it AFTER the consonant
+  // (33 of 34 rows), as one run from the hook's right tip, up and over to the
+  // left, down the stem and into the foot.
+  [
+    "gujarati:િ",
+    {
+      script: "gujarati",
+      glyph: "િ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "curl up and over to the left from the hook's tip",
+              path: [
+                { x: 582, y: 688 },
+                { x: 530, y: 740 },
+                { x: 460, y: 800 },
+                { x: 380, y: 843 },
+                { x: 295, y: 860 },
+                { x: 230, y: 850 },
+                { x: 176, y: 815 },
+                { x: 142, y: 760 },
+                { x: 131, y: 690 },
+              ],
+            },
+            {
+              label: "draw the stem down",
+              path: [
+                { x: 131, y: 690 },
+                { x: 130, y: 600 },
+                { x: 130, y: 500 },
+                { x: 130, y: 400 },
+                { x: 130, y: 300 },
+                { x: 130, y: 200 },
+                { x: 131, y: 140 },
+              ],
+            },
+            {
+              label: "turn into the foot to the right",
+              path: [
+                { x: 131, y: 140 },
+                { x: 136, y: 95 },
+                { x: 155, y: 62 },
+                { x: 185, y: 44 },
+                { x: 215, y: 38 },
+                { x: 248, y: 37 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: gujaratiMarkSource("િ"),
+    },
+  ],
+  // ી: one run from the hook's left tip, arching over to the right and down
+  // the stem into the foot, after the consonant.
+  [
+    "gujarati:ી",
+    {
+      script: "gujarati",
+      glyph: "ી",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "rise from the hook's tip and arch over to the right",
+              path: [
+                { x: -148, y: 672 },
+                { x: -148, y: 740 },
+                { x: -132, y: 800 },
+                { x: -92, y: 845 },
+                { x: -41, y: 860 },
+                { x: 10, y: 850 },
+                { x: 60, y: 810 },
+                { x: 98, y: 745 },
+                { x: 120, y: 670 },
+                { x: 130, y: 600 },
+              ],
+            },
+            {
+              label: "draw the stem down",
+              path: [
+                { x: 130, y: 600 },
+                { x: 130, y: 500 },
+                { x: 130, y: 400 },
+                { x: 130, y: 300 },
+                { x: 130, y: 200 },
+                { x: 131, y: 140 },
+              ],
+            },
+            {
+              label: "turn into the foot to the right",
+              path: [
+                { x: 131, y: 140 },
+                { x: 136, y: 95 },
+                { x: 155, y: 62 },
+                { x: 185, y: 44 },
+                { x: 215, y: 38 },
+                { x: 248, y: 37 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: gujaratiMarkSource("ી"),
+    },
+  ],
+  // ુ: one run from directly under the consonant, swinging right, round the
+  // bowl, and up to the left tip.
+  [
+    "gujarati:ુ",
+    {
+      script: "gujarati",
+      glyph: "ુ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start under the consonant and swing to the right",
+              path: [
+                { x: -232, y: -55 },
+                { x: -195, y: -42 },
+                { x: -142, y: -33 },
+                { x: -90, y: -42 },
+                { x: -45, y: -75 },
+                { x: -22, y: -130 },
+              ],
+            },
+            {
+              label: "round the bowl and back to the left",
+              path: [
+                { x: -22, y: -130 },
+                { x: -36, y: -185 },
+                { x: -80, y: -222 },
+                { x: -162, y: -232 },
+                { x: -240, y: -218 },
+              ],
+            },
+            {
+              label: "sweep up to the left tip",
+              path: [
+                { x: -240, y: -218 },
+                { x: -310, y: -184 },
+                { x: -365, y: -138 },
+                { x: -418, y: -88 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: gujaratiMarkSource("ુ"),
+    },
+  ],
+  // ૂ: one run from the low inner tip, curling left and up over the top, then
+  // sweeping down to the right.
+  [
+    "gujarati:ૂ",
+    {
+      script: "gujarati",
+      glyph: "ૂ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start low and curl to the left",
+              path: [
+                { x: -88, y: -208 },
+                { x: -130, y: -226 },
+                { x: -184, y: -232 },
+                { x: -240, y: -222 },
+                { x: -285, y: -185 },
+                { x: -301, y: -133 },
+              ],
+            },
+            {
+              label: "climb and arch over the top",
+              path: [
+                { x: -301, y: -133 },
+                { x: -285, y: -80 },
+                { x: -232, y: -42 },
+                { x: -167, y: -33 },
+                { x: -95, y: -42 },
+              ],
+            },
+            {
+              label: "sweep down to the right",
+              path: [
+                { x: -95, y: -42 },
+                { x: -25, y: -78 },
+                { x: 35, y: -125 },
+                { x: 80, y: -178 },
+                { x: 100, y: -203 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: gujaratiMarkSource("ૂ"),
+    },
+  ],
+  // ે: one run from the upper-left tip, arcing right and down.
+  [
+    "gujarati:ે",
+    {
+      script: "gujarati",
+      glyph: "ે",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "arc to the right along the top",
+              path: [
+                { x: -378, y: 850 },
+                { x: -340, y: 858 },
+                { x: -309, y: 860 },
+                { x: -262, y: 850 },
+                { x: -222, y: 822 },
+              ],
+            },
+            {
+              label: "curve down to the right",
+              path: [
+                { x: -222, y: 822 },
+                { x: -188, y: 775 },
+                { x: -162, y: 712 },
+                { x: -138, y: 641 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: gujaratiMarkSource("ે"),
+    },
+  ],
+  // ૈ: the lower flag first, then the upper one, each from its upper-left tip.
+  [
+    "gujarati:ૈ",
+    {
+      script: "gujarati",
+      glyph: "ૈ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "arc the lower flag to the right",
+              path: [
+                { x: -458, y: 736 },
+                { x: -420, y: 744 },
+                { x: -390, y: 746 },
+                { x: -335, y: 740 },
+                { x: -285, y: 715 },
+              ],
+            },
+            {
+              label: "curve it down to the right",
+              path: [
+                { x: -285, y: 715 },
+                { x: -235, y: 680 },
+                { x: -190, y: 646 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "arc the upper flag to the right",
+              path: [
+                { x: -358, y: 850 },
+                { x: -320, y: 858 },
+                { x: -290, y: 861 },
+                { x: -245, y: 850 },
+                { x: -205, y: 820 },
+              ],
+            },
+            {
+              label: "curve it down to the right",
+              path: [
+                { x: -205, y: 820 },
+                { x: -172, y: 770 },
+                { x: -150, y: 710 },
+                { x: -133, y: 641 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: gujaratiMarkSource("ૈ"),
+    },
+  ],
+  // ો: the ા bar first, then the flag above it.
+  [
+    "gujarati:ો",
+    {
+      script: "gujarati",
+      glyph: "ો",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the bar down",
+              path: [
+                { x: 130, y: 595 },
+                { x: 130, y: 500 },
+                { x: 130, y: 400 },
+                { x: 130, y: 300 },
+                { x: 130, y: 200 },
+                { x: 131, y: 140 },
+              ],
+            },
+            {
+              label: "turn into the foot to the right",
+              path: [
+                { x: 131, y: 140 },
+                { x: 136, y: 95 },
+                { x: 155, y: 62 },
+                { x: 185, y: 44 },
+                { x: 215, y: 38 },
+                { x: 248, y: 37 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "arc the flag to the right",
+              path: [
+                { x: -113, y: 850 },
+                { x: -75, y: 858 },
+                { x: -44, y: 860 },
+                { x: 3, y: 850 },
+                { x: 43, y: 822 },
+              ],
+            },
+            {
+              label: "curve it down to the right",
+              path: [
+                { x: 43, y: 822 },
+                { x: 78, y: 772 },
+                { x: 104, y: 712 },
+                { x: 127, y: 641 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: gujaratiMarkSource("ો"),
+    },
+  ],
+  // ૌ: the ા bar, then the lower flag, then the upper flag.
+  [
+    "gujarati:ૌ",
+    {
+      script: "gujarati",
+      glyph: "ૌ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the bar down",
+              path: [
+                { x: 130, y: 595 },
+                { x: 130, y: 500 },
+                { x: 130, y: 400 },
+                { x: 130, y: 300 },
+                { x: 130, y: 200 },
+                { x: 131, y: 140 },
+              ],
+            },
+            {
+              label: "turn into the foot to the right",
+              path: [
+                { x: 131, y: 140 },
+                { x: 136, y: 95 },
+                { x: 155, y: 62 },
+                { x: 185, y: 44 },
+                { x: 215, y: 38 },
+                { x: 248, y: 37 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "arc the lower flag to the right",
+              path: [
+                { x: -193, y: 736 },
+                { x: -155, y: 744 },
+                { x: -125, y: 746 },
+                { x: -70, y: 740 },
+                { x: -20, y: 715 },
+              ],
+            },
+            {
+              label: "curve it down to the right",
+              path: [
+                { x: -20, y: 715 },
+                { x: 30, y: 680 },
+                { x: 75, y: 646 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "arc the upper flag to the right",
+              path: [
+                { x: -93, y: 850 },
+                { x: -55, y: 858 },
+                { x: -25, y: 861 },
+                { x: 20, y: 850 },
+                { x: 60, y: 820 },
+              ],
+            },
+            {
+              label: "curve it down to the right",
+              path: [
+                { x: 60, y: 820 },
+                { x: 93, y: 770 },
+                { x: 115, y: 710 },
+                { x: 132, y: 641 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: gujaratiMarkSource("ૌ"),
+    },
+  ],
+  // ં: one small loop from its top, anticlockwise.
+  [
+    "gujarati:ં",
+    {
+      script: "gujarati",
+      glyph: "ં",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the top and curve down the left side",
+              path: [
+                { x: -133, y: 792 },
+                { x: -144, y: 790 },
+                { x: -154, y: 783 },
+                { x: -161, y: 773 },
+                { x: -163, y: 762 },
+                { x: -161, y: 751 },
+                { x: -154, y: 741 },
+                { x: -144, y: 734 },
+                { x: -133, y: 732 },
+              ],
+            },
+            {
+              label: "round the bottom and up the right side to close the loop",
+              path: [
+                { x: -133, y: 732 },
+                { x: -122, y: 734 },
+                { x: -112, y: 741 },
+                { x: -105, y: 751 },
+                { x: -103, y: 762 },
+                { x: -105, y: 773 },
+                { x: -112, y: 783 },
+                { x: -122, y: 790 },
+                { x: -133, y: 792 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: gujaratiMarkSource("ં"),
+    },
+  ],
+  // ઃ: the upper dot first, then the lower; each a small loop from its top,
+  // anticlockwise.
+  [
+    "gujarati:ઃ",
+    {
+      script: "gujarati",
+      glyph: "ઃ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the upper dot's top and curve down its left side",
+              path: [
+                { x: 124, y: 451 },
+                { x: 113, y: 449 },
+                { x: 103, y: 442 },
+                { x: 96, y: 432 },
+                { x: 94, y: 421 },
+                { x: 96, y: 410 },
+                { x: 103, y: 400 },
+                { x: 113, y: 393 },
+                { x: 124, y: 391 },
+              ],
+            },
+            {
+              label: "round its bottom and up its right side to close it",
+              path: [
+                { x: 124, y: 391 },
+                { x: 135, y: 393 },
+                { x: 145, y: 400 },
+                { x: 152, y: 410 },
+                { x: 154, y: 421 },
+                { x: 152, y: 432 },
+                { x: 145, y: 442 },
+                { x: 135, y: 449 },
+                { x: 124, y: 451 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "start at the lower dot's top and curve down its left side",
+              path: [
+                { x: 124, y: 144 },
+                { x: 113, y: 142 },
+                { x: 103, y: 135 },
+                { x: 96, y: 125 },
+                { x: 94, y: 114 },
+                { x: 96, y: 103 },
+                { x: 103, y: 93 },
+                { x: 113, y: 86 },
+                { x: 124, y: 84 },
+              ],
+            },
+            {
+              label: "round its bottom and up its right side to close it",
+              path: [
+                { x: 124, y: 84 },
+                { x: 135, y: 86 },
+                { x: 145, y: 93 },
+                { x: 152, y: 103 },
+                { x: 154, y: 114 },
+                { x: 152, y: 125 },
+                { x: 145, y: 135 },
+                { x: 135, y: 142 },
+                { x: 124, y: 144 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: gujaratiMarkSource("ઃ"),
     },
   ],
 ];

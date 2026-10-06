@@ -7,5 +7,31 @@
     "base": "ல",
     "combined": "லை",
     "sound": "lai"
+  },
+  "compositionOrder": [
+    "in handwriting, write the ai sign to the left before the primary consonant",
+    "write the Tamil consonant carrier after it; read the result as consonant plus ai"
+  ],
+  "compositionSource": {
+    "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0 User Manual, sections 4 and 4-3 and Table 3: vowel signs that occur as distinct characters to the left or right of the base consonant are recognizer symbols of their own, and syllabic units are written from left to right",
+    "url": "https://lipitk.sourceforge.net/docs/LipiRecognizers/lipi-indic-character-recognizers_4_0_user_manual.pdf",
+    "variation": "Table 3 lists U+0BBE, U+0BBF, U+0BC0, U+0BC6, U+0BC7 and U+0BC8 as symbols of their own, and HP Labs India's notes on the hpl-tamil-iso-char dataset add that these signs leave Tamil 'written linearly as a sequence of visually discrete symbols'. So a sign placed left of its consonant is written before it, and a sign placed right of it is written after it. The manual gives no path for the consonant and no order for a sign fused with its consonant, such as u or the ligature ti."
+  },
+  "components": [
+    "a small left loop",
+    "a first arch",
+    "a second arch with a falling tail"
+  ],
+  "strokeOrder": [
+    "start at the small left loop and circle it",
+    "without lifting, climb and arch over to the right",
+    "without lifting, rise through the middle and over the second arch — and only now lift"
+  ],
+  "strokeOrderNote": "one continuous stroke — three joined movements, no pen lift; cited to native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 43",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Tamil recognizer, class 43 (ை, ai sign): stored online-handwriting prototypes from native Tamil writers (MIT licence, 2012)",
+    "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+    "variation": "The recognizer stores native Tamil writers' tablet pen traces, each resampled to 60 points. 189 of the 190 stored prototypes of the ai sign are one pen-down stroke. All 189 turn clockwise: the pen starts on the left (181 of 189), circles the small left loop, arches over to the right, rises through the middle into the second arch, and comes down on the right, where 146 end. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Tamil outline. Handwriting varies by writer."
   }
 }

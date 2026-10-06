@@ -440,12 +440,38 @@ describe("stroke ownership migration baseline", () => {
       // Kannada 33 -> 43, with the ordered key hash and the non-Tamil data
       // hash, measured after the last caption was settled; Tamil and both
       // shared-identity values remain unchanged.
+      //
+      // The six Tamil vowel signs written as separate symbols beside their
+      // consonant — ா (U+0BBE), ி (U+0BBF), ீ (U+0BC0), ெ (U+0BC6),
+      // ே (U+0BC7) and ை (U+0BC8) — gain a ductus each, cited to native
+      // writers' pen traces in HP Labs India's LipiTk Tamil recognizer. They
+      // join the Tamil tail owner after எ, ஏ and ஓ, so every existing key keeps
+      // its relative order. Keys move 439 -> 445 and Tamil 29 -> 35, with the
+      // ordered key hash, measured after the last caption was settled. No
+      // other script changes, so the non-Tamil data hash and both
+      //
+      // Eleven Gujarati signs — ા (U+0ABE), િ (U+0ABF), ી (U+0AC0),
+      // ુ (U+0AC1), ૂ (U+0AC2), ે (U+0AC7), ૈ (U+0AC8), ો (U+0ACB),
+      // ૌ (U+0ACC), the anusvara ં (U+0A82) and the visarga ઃ (U+0A83) —
+      // gain a ductus each, their order, start, direction and lifts cited to
+      // KanoAI's hand-made Gujarati barakhadi templates. They follow હ at the
+      // end of the Gujarati owner, so every existing key keeps its relative
+      // order. Keys move 445 -> 456 and Gujarati 44 -> 55, with the ordered
+      // key hash and the non-Tamil data hash; Tamil and both shared-identity
+      //
+      // Eight Devanagari signs — ु (U+0941), ू (U+0942), े (U+0947), the
+      // anusvara ं (U+0902), the nukta ़ (U+093C), the virama ् (U+094D),
+      // ृ (U+0943) and the candrabindu ँ (U+0901) — gain a ductus each, drawn
+      // alone, their lifts, start and direction cited to native writers' pen
+      // traces in HP Labs India's LipiTk Devanagari recognizer. They follow ह
+      // at the end of the Devanagari owner, so every existing key keeps its
+      // relative order. Keys move 456 -> 464 and Devanagari 44 -> 52, with the
     }).toEqual({
-      keys: 499,
+      keys: 524,
       keyHash:
-        "723742960210e323f16c1a55602b970f3b0a1bedc4b60afc4e132d9bc02d1a11",
+        "2f95f4f0638bfd1c71a13f058046cec3df4f79ca4bff54c3ba895eaaf1332b9d",
       nonTamilDataHash:
-        "5aaa8578256ae13c9331691b4b70480ff1e4f582b3851a5e246bc09e1429d2e4",
+        "d4edb42a3b9a45eed007cbdd854b6a9262d667a126043029edf4819b796c862a",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -453,14 +479,14 @@ describe("stroke ownership migration baseline", () => {
         arabic: 32,
         chinese: 60,
         cyrillic: 33,
-        devanagari: 44,
-        gujarati: 44,
+        devanagari: 52,
+        gujarati: 55,
         hebrew: 22,
         japanese: 80,
         kannada: 43,
         malayalam: 14,
         "perso-arabic": 24,
-        tamil: 29,
+        tamil: 35,
         telugu: 43,
         "urdu-nastaliq": 31,
       },

@@ -3,6 +3,13 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "UR-W01-shukriya-first-three",
+      "sourceHash": "fnv1a64:2a5849016137a80c",
+      "svgHash": "fnv1a64:9871d2e4b1bbd63c",
+      "svg": "urdu/book/figures/UR-W01-shukriya-first-three-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "UR-W01-sin",
       "sourceHash": "fnv1a64:95f7fa87635900f5",
       "svgHash": "fnv1a64:bb8e8086149f0eb9",
