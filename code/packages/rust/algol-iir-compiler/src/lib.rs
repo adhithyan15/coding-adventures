@@ -3810,13 +3810,12 @@ impl Compiler {
                         (
                             ProcedureParamMode::Name,
                             ProcedureParamType::Scalar(
-                                ScalarType::Integer | ScalarType::Boolean,
+                                ScalarType::Integer | ScalarType::Boolean | ScalarType::String,
                             ),
                         ) => true,
                         (ProcedureParamMode::Name, ProcedureParamType::Scalar(ScalarType::Real)) => {
                             self.is_runtime_real_assignment_value(actual)
                         }
-                        _ => false,
                     }
                 });
         }
@@ -10872,6 +10871,13 @@ fn literal_nonnegative_integral_arithmetic_power_chain(
 }
 
 fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
+    // A procedure call may have a single string-literal actual, but its value is
+    // the procedure result. Do not let the wrapper walk mistake that actual for
+    // the value of the whole call.
+    if node.rule_name == "proc_call" {
+        return None;
+    }
+
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "STRING_LIT" {
         return Some(unquote_algol_string(&tokens[0].value));
@@ -12632,6 +12638,10 @@ mod tests {
             (
                 "boolean",
                 "begin real procedure fromboolean(b); boolean b; fromboolean := if b then 2.25 else 0.0; output(fromboolean(true)) end",
+            ),
+            (
+                "string",
+                "begin real procedure fromstring(s); string s; fromstring := if s = 'OK' then 2.25 else 0.0; output(fromstring('OK')) end",
             ),
         ] {
             let module = compile_source(source, "test")
@@ -20528,6 +20538,15 @@ mod tests {
         assert!(err
             .to_string()
             .contains("requires an assignable variable actual"));
+    }
+
+    #[test]
+    fn procedure_call_with_string_literal_actual_is_not_a_string_literal_expression() {
+        let src = "begin integer result; \
+                   integer procedure isok(s); value s; string s; \
+                     isok := if s = 'OK' then 42 else 0; \
+                   result := isok('OK') end";
+        assert_eq!(run_i64(src), 42);
     }
 
     #[test]
