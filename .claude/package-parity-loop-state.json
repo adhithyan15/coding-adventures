@@ -19,7 +19,7 @@
     "notes": "All 33 final-head checks were terminal and acceptable (14 success, 18 expected skips, one neutral); GitHub reported MERGEABLE and the loop enabled guarded squash auto-merge. GitHub merged PR #16770 as 3054917763cf0bc2921398f59cc2d57a15fd4b33 without manual merge."
   },
   "last_inventory": {
-    "revision": "3054917763cf0bc2921398f59cc2d57a15fd4b33",
+    "revision": "317de0ca9c9dc852a58fdbe75e9aeb538a570fcb",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
