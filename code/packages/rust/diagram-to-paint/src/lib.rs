@@ -26,12 +26,12 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.72.0";
+pub const VERSION: &str = "0.73.0";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
-    ChartTextAnchor, ChartTextBaseline, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
+    ChartTextAnchor, ChartTextBaseline, DiagramLabel, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
     LayoutedChartDiagram, LayoutedChartItem,
     EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
@@ -3187,8 +3187,18 @@ fn text_node_no_wrap(
     node
 }
 
+struct MarkdownLabelBox {
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+}
+
 fn markdown_label_instructions<S, M, R>(
-    node: &LayoutedGraphNode,
+    label: &DiagramLabel,
+    bounds: MarkdownLabelBox,
+    font: &FontSpec,
+    color: &str,
     options: &DiagramToPaintOptions<'_, S, M, R>,
 ) -> Vec<PaintInstruction>
 where
@@ -3197,7 +3207,7 @@ where
     R: FontResolver<Handle = S::Handle>,
 {
     let mut lines = vec![Vec::<(String, bool, bool)>::new()];
-    for span in &node.label.spans {
+    for span in &label.spans {
         for (index, part) in span.text.split('\n').enumerate() {
             if index > 0 {
                 lines.push(Vec::new());
@@ -3211,27 +3221,24 @@ where
         }
     }
 
-    let icon_width = node.icon_glyph.as_ref().map(|_| node.style.font_size * 1.5).unwrap_or(0.0);
-    let content_x = node.x + icon_width;
-    let content_width = node.width - icon_width;
-    let size = node.style.font_size as f32;
-    let line_height = node.style.font_size * 1.2;
+    let size = font.size as f32;
+    let line_height = font.size * 1.2;
     let text_height = lines.len().max(1) as f64 * line_height;
-    let top = node.y + (node.height - text_height) / 2.0;
+    let top = bounds.y + (bounds.height - text_height) / 2.0;
     let mut output = Vec::new();
 
     for (line_index, line) in lines.into_iter().enumerate() {
         let mut shaped_chunks = Vec::new();
         let mut line_advance = 0.0;
-        let mut ascent = node.style.font_size * 0.8;
+        let mut ascent = font.size * 0.8;
         for (text, bold, italic) in line {
-            let query = FontQuery::named(node.style.font_family.clone())
+            let query = FontQuery::named(font.family.clone())
                 .with_weight(FontWeight(if bold {
-                    node.style.font_weight.max(700)
+                    font.weight.max(700)
                 } else {
-                    node.style.font_weight
+                    font.weight
                 }))
-                .with_style(if italic || node.style.font_italic {
+                .with_style(if italic || font.italic {
                     FontStyle::Italic
                 } else {
                     FontStyle::Normal
@@ -3241,7 +3248,7 @@ where
             };
             let units_per_em = options.metrics.units_per_em(&handle).max(1) as f64;
             ascent = ascent.max(
-                options.metrics.ascent(&handle) as f64 * node.style.font_size / units_per_em,
+                options.metrics.ascent(&handle) as f64 * font.size / units_per_em,
             );
             let Ok(shaped) = options
                 .shaper
@@ -3254,7 +3261,7 @@ where
         }
 
         let baseline_y = top + line_index as f64 * line_height + ascent;
-        let mut pen_x = content_x + (content_width - line_advance) / 2.0;
+        let mut pen_x = bounds.x + (bounds.width - line_advance) / 2.0;
         for shaped in shaped_chunks {
             for run in shaped.runs {
                 let mut segment_pen = 0.0;
@@ -3275,8 +3282,8 @@ where
                     base: PaintBase::default(),
                     glyphs,
                     font_ref: run.font_ref,
-                    font_size: node.style.font_size,
-                    fill: Some(node.style.text_color.clone()),
+                    font_size: font.size,
+                    fill: Some(color.to_string()),
                 }));
                 pen_x += run.x_advance_total as f64;
             }
@@ -3454,7 +3461,26 @@ where
             ));
         }
         if !node.label.spans.is_empty() {
-            instructions.extend(markdown_label_instructions(node, options));
+            let icon_width = node.icon_glyph.as_ref().map(|_| node.style.font_size * 1.5).unwrap_or(0.0);
+            let font = FontSpec {
+                family: node.style.font_family.clone(),
+                size: node.style.font_size,
+                weight: node.style.font_weight,
+                italic: node.style.font_italic,
+                ..label_font.clone()
+            };
+            instructions.extend(markdown_label_instructions(
+                &node.label,
+                MarkdownLabelBox {
+                    x: node.x + icon_width,
+                    y: node.y,
+                    width: node.width - icon_width,
+                    height: node.height,
+                },
+                &font,
+                &node.style.text_color,
+                options,
+            ));
             continue;
         }
         let line_count = node.label.text.lines().count().max(1) as f64;
@@ -3694,11 +3720,26 @@ where
         }));
         let mut heading_font = options.title_font.clone();
         heading_font.size = 16.0;
-        text_children.push(text_node_no_wrap(
-            &column.label.text, column.x + 12.0, column.y + 14.0,
-            column.width - 24.0, 22.0, heading_font,
-            css_to_color(&column.style.text_color),
-        ));
+        if column.label.spans.is_empty() {
+            text_children.push(text_node_no_wrap(
+                &column.label.text, column.x + 12.0, column.y + 14.0,
+                column.width - 24.0, 22.0, heading_font,
+                css_to_color(&column.style.text_color),
+            ));
+        } else {
+            instructions.extend(markdown_label_instructions(
+                &column.label,
+                MarkdownLabelBox {
+                    x: column.x + 12.0,
+                    y: column.y + 14.0,
+                    width: column.width - 24.0,
+                    height: 22.0,
+                },
+                &heading_font,
+                &column.style.text_color,
+                options,
+            ));
+        }
         for card in &column.cards {
             let metadata = kanban_card_metadata(card);
             instructions.push(PaintInstruction::Rect(PaintRect {
@@ -3738,11 +3779,27 @@ where
             } else {
                 (card.x + 10.0, card.width - 20.0)
             };
-            text_children.push(text_node(
-                &card.label.text, label_x, card.y + 18.0,
-                label_width, card.height - if metadata.is_some() { 46.0 } else { 24.0 },
-                options.label_font.clone(), css_to_color(&card.style.text_color),
-            ));
+            let label_height = card.height - if metadata.is_some() { 46.0 } else { 24.0 };
+            if card.label.spans.is_empty() {
+                text_children.push(text_node(
+                    &card.label.text, label_x, card.y + 18.0,
+                    label_width, label_height,
+                    options.label_font.clone(), css_to_color(&card.style.text_color),
+                ));
+            } else {
+                instructions.extend(markdown_label_instructions(
+                    &card.label,
+                    MarkdownLabelBox {
+                        x: label_x,
+                        y: card.y + 18.0,
+                        width: label_width,
+                        height: label_height,
+                    },
+                    &options.label_font,
+                    &card.style.text_color,
+                    options,
+                ));
+            }
             if let Some(metadata) = metadata {
                 let mut metadata_font = options.label_font.clone();
                 metadata_font.size = 11.0;
@@ -7342,7 +7399,73 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.72.0");
+        assert_eq!(crate::VERSION, "0.73.0");
+    }
+
+    #[test]
+    fn kanban_markdown_labels_lower_to_backend_neutral_glyph_runs() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let rich_label = |text: &str, source: &str, spans| {
+            DiagramLabel::markdown(text, source, spans)
+        };
+        let layout = LayoutedBoardDiagram {
+            width: 300.0,
+            height: 180.0,
+            columns: vec![diagram_ir::LayoutedBoardColumn {
+                id: "todo".into(),
+                label: rich_label(
+                    "Todo queue",
+                    "**Todo** queue",
+                    vec![
+                        diagram_ir::DiagramTextSpan { text: "Todo".into(), bold: true, italic: false },
+                        diagram_ir::DiagramTextSpan { text: " queue".into(), bold: false, italic: false },
+                    ],
+                ),
+                x: 20.0,
+                y: 20.0,
+                width: 260.0,
+                height: 140.0,
+                cards: vec![diagram_ir::LayoutedBoardCard {
+                    id: "card".into(),
+                    label: rich_label(
+                        "Quoted card",
+                        "Quoted *card*",
+                        vec![
+                            diagram_ir::DiagramTextSpan { text: "Quoted ".into(), bold: false, italic: false },
+                            diagram_ir::DiagramTextSpan { text: "card".into(), bold: false, italic: true },
+                        ],
+                    ),
+                    x: 32.0,
+                    y: 84.0,
+                    width: 236.0,
+                    height: 72.0,
+                    style: default_style(),
+                    ticket: None,
+                    ticket_url: None,
+                    assigned: None,
+                    priority: None,
+                    icon: None,
+                    classes: Vec::new(),
+                }],
+                style: default_style(),
+                ticket: None,
+                ticket_url: None,
+                classes: Vec::new(),
+            }],
+        };
+
+        let scene = diagram_to_paint_board(&layout, &opts);
+        let runs = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some(run),
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(runs.len(), 4);
+        assert!(runs.iter().all(|run| run.glyphs.iter().all(|glyph| {
+            glyph.glyph_id != '*' as u32 && glyph.glyph_id != '`' as u32
+        })));
     }
 
     #[test]
