@@ -1,0 +1,8 @@
+# @version 1
+document = HEADER { TITLE | ACC_TITLE | ACC_DESCR | ACC_DESCR_BLOCK } { rule } EOF ;
+rule = RULENAME EQUAL alternation SEMICOLON ;
+alternation = concatenation { SLASH concatenation } ;
+concatenation = element { element } ;
+element = [ repeat ] primary ;
+repeat = REPEAT | STAR | EXACT_REPEAT ;
+primary = STRING | NUMVAL | RULENAME | LPAREN alternation RPAREN | LBRACKET alternation RBRACKET ;

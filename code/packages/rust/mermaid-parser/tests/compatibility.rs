@@ -71,6 +71,7 @@ const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/
 const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"));
 const RAILROAD_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-corpus.json"));
 const RAILROAD_EBNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-ebnf-11.16.1-corpus.json"));
+const RAILROAD_ABNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-abnf-11.16.1-corpus.json"));
 const INFO_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/info-11.16.1-corpus.json"));
 const ZENUML_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/zenuml-11.16.1-corpus.json"));
 
@@ -123,6 +124,17 @@ fn pinned_railroad_ebnf_corpus_parses_to_recursive_ir() {
             assert_eq!(diagram.title.as_deref(), Some("Expression grammar"));
             assert_eq!(diagram.accessibility_description.as_deref(), Some("EBNF grammar"));
         }
+    }
+}
+
+#[test]
+fn pinned_railroad_abnf_corpus_parses_to_recursive_ir() {
+    let corpus: Value = serde_json::from_str(RAILROAD_ABNF_CORPUS).expect("railroad ABNF corpus must be JSON");
+    for fixture in corpus["fixtures"].as_array().expect("fixtures must be an array") {
+        let name = fixture["name"].as_str().expect("fixture name");
+        let diagram = parse_railroad(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("railroad ABNF fixture {name} failed: {error}"));
+        assert!(!diagram.rules.is_empty());
     }
 }
 
@@ -1149,6 +1161,12 @@ fn railroad_dispatches_constructor_and_ebnf_notation_to_recursive_ir() {
         .expect("railroad EBNF notation should parse");
     assert!(matches!(ebnf.rules[0].definition, diagram_ir::RailroadExpression::Choice(_)));
     assert!(matches!(ebnf.rules[1].definition, diagram_ir::RailroadExpression::Repetition { min: 1, .. }));
+    let abnf = parse_railroad("railroad-abnf-beta\ndigits = 2*4DIGIT;")
+        .expect("railroad ABNF notation should parse");
+    assert!(matches!(
+        abnf.rules[0].definition,
+        diagram_ir::RailroadExpression::Repetition { min: 2, max: Some(4), .. }
+    ));
     assert!(parse_railroad("railroad-beta\nvalue = optional(terminal(\"x\"), terminal(\"y\"));").is_err());
 }
 

@@ -1,0 +1,23 @@
+# @version 1
+skip:
+  COMMENT = /;[ \t]+[^ \t\r\n][^\r\n]*/
+  WHITESPACE = /[ \t\r\n]+/
+  MERMAID_COMMENT = /%%[^\r\n]*/
+HEADER = "railroad-abnf-beta"
+ACC_TITLE = /accTitle[ \t]*:[^\r\n]*/
+ACC_DESCR_BLOCK = /accDescr[ \t]*\{[^}]*\}/
+ACC_DESCR = /accDescr[ \t]*:[^\r\n]*/
+TITLE = /title(?:[ \t]+[^\r\n]*)?/
+NUMVAL = /%[xXdDbB][0-9A-Fa-f]+(?:-[0-9A-Fa-f]+|\.[0-9A-Fa-f]+)*/
+REPEAT = /[0-9]+\*[0-9]*|\*[0-9]+/
+EXACT_REPEAT = /[0-9]+/
+STRING = /"[^"]*"/
+EQUAL = "="
+SEMICOLON = ";"
+SLASH = "/"
+STAR = "*"
+LPAREN = "("
+RPAREN = ")"
+LBRACKET = "["
+RBRACKET = "]"
+RULENAME = /[A-Za-z][A-Za-z0-9-]*/
