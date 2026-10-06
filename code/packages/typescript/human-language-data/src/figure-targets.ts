@@ -83,6 +83,11 @@ export const DERIVED_FILMSTRIP_SCRIPTS: Readonly<Record<string, string>> = {
   // native writers' pen traces (HP Labs India's LipiTk Bangla recognizer). As
   // with kannada, only the letters that carry a cited ductus are drawn.
   bengali: "bengali",
+  // HL-C443 fifth rollout: Punjabi, whose first cited letters follow the
+  // Apache-2.0 Alphabet Tracing lesson of GNPS's Gurmukhi Sikho app. Only the
+  // letters with a cited ductus are drawn, and a Gurmukhi WORD is still never
+  // composed (one headline runs across it; see SEPARATE_LETTER_SCRIPTS).
+  punjabi: "gurmukhi",
 };
 
 const GRAPHEMES = new Intl.Segmenter("und", { granularity: "grapheme" });
@@ -176,7 +181,8 @@ export function writingLetterOf(lesson: ParsedLesson): string | undefined {
  * letters, is honestly drawn as its letters one after another.
  *
  * Bengali and Gurmukhi are absent for the Devanagari reason above (a shared
- * headline), as well as for having no ductus at all yet.
+ * headline). Both now have cited letters, so a LIST of them is drawn, but a
+ * word never is.
  */
 export const SEPARATE_LETTER_SCRIPTS: ReadonlySet<string> = new Set([
   "chinese",

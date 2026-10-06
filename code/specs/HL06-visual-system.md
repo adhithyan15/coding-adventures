@@ -308,6 +308,44 @@ stays empty only if digits count, so `validate.ts` now counts a script's
 remain undrawn: there is no composer on this branch, and a Bengali word shares
 one headline across its letters.
 
+#### As built — Punjabi (Gurmukhi), cited to a tracing lesson
+
+Punjabi joins the derived filmstrips (`DERIVED_FILMSTRIP_SCRIPTS.punjabi =
+"gurmukhi"`) with 27 letters: the vowel bearer ਅ and the consonants ਸ ਹ ਕ ਖ ਗ ਘ
+ਚ ਛ ਜ ਟ ਠ ਡ ਣ ਤ ਥ ਦ ਨ ਪ ਫ ਬ ਭ ਮ ਰ ਲ ਵ ੜ. These are every letter a Punjabi
+writing lesson prints alone or in a list of letters, so 29 lessons now print a
+strip. The order comes from the Alphabet Tracing lesson of GNPS's Gurmukhi Sikho
+app (`codemanxdev/gnps_learning_hub`, Apache-2.0, `lesson_tracing.dart` at a
+pinned commit, cited line by line). It is cited the way the Telugu owner cites a
+tracing app: one attested teaching order. Only facts are taken from it (order,
+start, direction, lifts); no checkpoint coordinate is copied, and every path is
+fitted to Noto Sans Gurmukhi at the default tolerances. Omniglot's copyist
+counts and shares go into each `variation` as corroboration of the body strokes.
+
+**The headline.** The source draws it first, left to right, and so do the paths.
+That is the source's teaching order, and each record says so. Fluent writers are
+often described as adding the headline last, as native Devanagari writers do in
+HP Labs India's data. Omniglot is not cited for the headline, because its
+copyists draw the Devanagari headline first too, where natives draw it last.
+Noto prints a split headline in ਅ ਖ ਘ ਪ ਮ. The source draws no separate bar for
+these letters, so the outline and the source agree: the bar's left part opens
+the first stroke, and its right part, drawn right to left, opens the stem stroke.
+
+**Divergence: lifts.** ਛ, ਨ and ਬ lift once less than the source. Omniglot's
+copyists most often use one stroke fewer, and copyist counts are an upper bound
+on native lifts (as for Kannada ಚ and ಯ). Each keeps the source's order and
+joins one restart on the ink. **Divergence: printed loops.** Where Noto fills a
+loop as a solid knob or tail (ਅ ਸ ਚ ਜ ਡ ਤ ਦ ਮ ੜ, and ਘ's middle upright), the
+path loops inside it, turning the way the source's stroke turns.
+
+**Left out.** The vowel signs (laga matra), bindi, tippi, addak, halant and the
+dot below have no source, so they stay undrawn, and so does every list that
+holds one. Gurmukhi words share one headline, so they are refused, exactly as
+Devanagari words are. ਝ and ਧ, which the source covers, appear only in lists
+with an uncited sign and are left for a later batch. The new
+`data/scripts/gurmukhi.json` holds exactly what the track reads (33 letters, 14
+signs, 4 digits), with `complete` false, the same way `bengali.json` does.
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams

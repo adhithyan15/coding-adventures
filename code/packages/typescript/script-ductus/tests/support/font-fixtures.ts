@@ -54,3 +54,5 @@ export const malayalamOutline = (character: string) =>
   outline("NotoSansMalayalam-Static.ttf", character);
 export const bengaliOutline = (character: string) =>
   outline("NotoSansBengali-Static.ttf", character);
+export const gurmukhiOutline = (character: string) =>
+  outline("NotoSansGurmukhi-Static.ttf", character);

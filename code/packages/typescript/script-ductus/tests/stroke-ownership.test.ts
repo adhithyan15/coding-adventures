@@ -19,6 +19,8 @@ const ownerNames = [
   "cyrillic",
   "devanagari",
   "gujarati",
+  // Gurmukhi joins the same way, as one owner module after Bengali.
+  "gurmukhi",
   "hebrew",
   "japanese",
   "kannada",
@@ -494,12 +496,20 @@ describe("stroke ownership migration baseline", () => {
       // 537 and Japanese 80 -> 83, with the ordered key hash and the
       // non-Tamil data hash, measured after the three filmstrips' captions
       // were settled; Tamil and both shared-identity values are unchanged.
+      //
+      // Gurmukhi joins as a new last owner with 27 letters (ਅ and 26
+      // consonants) whose order is cited to the Apache-2.0 Alphabet Tracing
+      // lesson of GNPS's Gurmukhi Sikho app, keyed `gurmukhi:<glyph>`.
+      // Appending the owner keeps every existing key in place. Keys move
+      // 537 -> 564 with a new `gurmukhi: 27` count, and the ordered key hash
+      // and the non-Tamil data hash move, measured after the last caption was
+      // settled; Tamil and both shared-identity values remain unchanged.
     }).toEqual({
-      keys: 537,
+      keys: 564,
       keyHash:
-        "2e6cbbc2ad28d14550bd6ad3b660a3f5b4143f0020671af91301e3c4085fc0b1",
+        "80d0aed62b9324f85dedecc2796357d7c43aa0f3886ca4a10a05b1db89b098e2",
       nonTamilDataHash:
-        "154a12c43ffa554e2c9b172dc0eff62ec83ccac48a2cad72458d7e7a08e47af9",
+        "1dd51666afd3337a9bc6210ac502e13cc2bfce6ded470ee7282e68356c9f5449",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -510,6 +520,7 @@ describe("stroke ownership migration baseline", () => {
         cyrillic: 33,
         devanagari: 52,
         gujarati: 55,
+        gurmukhi: 27,
         hebrew: 22,
         japanese: 83,
         kannada: 44,

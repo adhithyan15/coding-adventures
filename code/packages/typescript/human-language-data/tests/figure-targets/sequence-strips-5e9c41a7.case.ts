@@ -30,6 +30,8 @@ describe("which headwords are sequences", () => {
     // the per-letter ductus draws.
     expect(writingSequenceOf(lesson("HI-W1", { headword: "न, म" }), "devanagari")).toEqual(["न", "म"]);
     expect(writingSequenceOf(lesson("RU-W1", { headword: "в, р" }), "cyrillic")).toEqual(["в", "р"]);
+    // Gurmukhi letters listed one by one likewise each carry their own headline.
+    expect(writingSequenceOf(lesson("PA-W1", { headword: "ਟ · ਠ · ਡ" }), "gurmukhi")).toEqual(["ਟ", "ਠ", "ਡ"]);
   });
 
   it("reads a word letter by letter only in a script whose letters stand apart", () => {
@@ -51,7 +53,10 @@ describe("which headwords are sequences", () => {
     expect(writingSequenceOf(lesson("SA-W1", { headword: "मम" }), "devanagari")).toBeUndefined();
     expect(writingSequenceOf(lesson("UR-W1", { headword: "سلام" }), "urdu-nastaliq")).toBeUndefined();
     expect(writingSequenceOf(lesson("RU-W2", { headword: "привет" }), "cyrillic")).toBeUndefined();
-    for (const script of ["devanagari", "arabic", "perso-arabic", "urdu-nastaliq", "cyrillic"]) {
+    // ਕਰ (kar) is two cited Gurmukhi letters, but one headline runs across
+    // the word, exactly as in मम, so it is refused too.
+    expect(writingSequenceOf(lesson("PA-W2", { headword: "ਕਰ" }), "gurmukhi")).toBeUndefined();
+    for (const script of ["devanagari", "arabic", "perso-arabic", "urdu-nastaliq", "cyrillic", "gurmukhi"]) {
       expect(SEPARATE_LETTER_SCRIPTS.has(script), script).toBe(false);
     }
   });
