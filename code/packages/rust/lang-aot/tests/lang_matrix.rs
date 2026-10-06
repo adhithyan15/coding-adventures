@@ -3180,13 +3180,13 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // ALGOL 60 — statically empty step and while elements preserve runtime-real
-    // formatter provenance for an unrelated caller-frame local.
+    // ALGOL 60 — executing step, single-value, and while elements preserve
+    // runtime-real formatter provenance for an unmodified caller-frame local.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin real procedure pick; pick := 2.25; integer i; real x; x := pick(); for i := 2 step 1 until 1 do x := 1.5; output(x); for i := 1 while false do x := 1.5; output(x) end",
-        expect: Expect::Stdout("2.252.25"),
+        src: "begin real procedure pick; pick := 2.25; integer i; real x; x := pick(); for i := 1 step 1 until 3 do output(''); output(x); for i := 1, 2, 3 do output(''); output(x); for i := i + 1 while i < 6 do output(''); output(x) end",
+        expect: Expect::Stdout("2.252.252.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — even a zero-trip step element assigns its controlled variable
@@ -15000,7 +15000,7 @@ fn algol_static_zero_trip_snapshot_runs_on_every_available_standard_backend() {
 }
 
 #[test]
-fn algol_zero_trip_runtime_real_provenance_runs_on_every_available_standard_backend() {
+fn algol_loop_invariant_runtime_real_provenance_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
         .find(|program| {
@@ -15008,17 +15008,20 @@ fn algol_zero_trip_runtime_real_provenance_runs_on_every_available_standard_back
                 && program.src.contains("real procedure pick; pick := 2.25")
                 && program
                     .src
-                    .contains("for i := 2 step 1 until 1 do x := 1.5")
-                && program.src.contains("for i := 1 while false do x := 1.5")
+                    .contains("for i := 1 step 1 until 3 do output('')")
+                && program.src.contains("for i := 1, 2, 3 do output('')")
+                && program
+                    .src
+                    .contains("for i := i + 1 while i < 6 do output('')")
         })
-        .expect("the ALGOL zero-trip runtime-real program must remain in the matrix");
+        .expect("the ALGOL loop-invariant runtime-real program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
         let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
-                "{backend:?} toolchain is present but zero-trip runtime-real output did not run"
+                "{backend:?} toolchain is present but loop-invariant runtime-real output did not run"
             );
             continue;
         };
