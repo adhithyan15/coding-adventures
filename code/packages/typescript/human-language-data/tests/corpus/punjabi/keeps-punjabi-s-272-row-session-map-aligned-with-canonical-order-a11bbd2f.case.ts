@@ -43,8 +43,9 @@ it("keeps Punjabi's session map aligned with canonical order", () => {
   // 820 -> 831: chapter 153 appends the 11-step fictional date-field runway.
   // 831 -> 838: chapter 154 joins age, phone, and date in seven short steps.
   // 838 -> 844: chapter 155 joins six taught fields in six bounded steps.
-  expect(rows).toHaveLength(844);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 844 }, (_, index) => index + 1));
+  // 844 -> 863: chapter 156 builds an untimed named-reader message in 19 short steps.
+  expect(rows).toHaveLength(863);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 863 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );

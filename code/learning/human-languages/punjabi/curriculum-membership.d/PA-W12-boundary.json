@@ -1,0 +1,11 @@
+{
+  "id": "PA-W12-boundary",
+  "pathSegment": "PA-PATH-156-NAMED-READER-MESSAGE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-156-A1-NAMED-READER-MESSAGE",
+      "order": 4
+    }
+  ]
+}

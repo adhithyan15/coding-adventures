@@ -6,7 +6,7 @@ sequence: 8660
 delivery: script
 chapter: 156
 type: writing
-headword: ਮੇਰਾ ਨਾਂ · ਮੈਨੂੰ · ਅਸੀਂ
+headword: "(delayed message body blocks)"
 romanization: "name · interests · meeting cues"
 gloss: "retrieve three separately copied message blocks after a delay"
 prerequisites: [PA-W12-two-sentence-delayed, PA-W12-wellbeing-supported, PA-W12-interests-supported, PA-W12-meeting-supported]

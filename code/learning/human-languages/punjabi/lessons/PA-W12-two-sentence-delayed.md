@@ -6,7 +6,7 @@ sequence: 8580
 delivery: script
 chapter: 156
 type: writing
-headword: ਮੇਰਾ ਨਾਂ · ਮੈਂ ਪੰਜਾਬੀ
+headword: "(delayed name and language pair)"
 romanization: "name · language cues"
 gloss: "retrieve the separately copied name and language sentences after a delay"
 prerequisites: [PA-W12-two-sentence-supported]

@@ -152,5 +152,27 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "controlled-composition",
     "controlled-composition",
     "controlled-composition",
+    // Chapter 156 isolates opening, closing, sentence order, and repairs
+    // before supported, delayed, and no-model named-reader messages.
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "delayed-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "delayed-copy",
+    "guided-copy",
+    "delayed-copy",
+    "controlled-composition",
+    "controlled-composition",
   ]);
 });

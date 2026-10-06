@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W12-spelling-repair",
+    "language": "punjabi",
+    "chapter": 156,
+    "sequence": 8610,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:02eb84f9134bb9bf",
+    "detachableSegments": [
+      "Writing — repair one spelling"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

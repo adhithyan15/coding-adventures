@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W12-meeting-supported",
+    "language": "punjabi",
+    "chapter": 156,
+    "sequence": 8650,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:196c8691df34532a",
+    "detachableSegments": [
+      "Writing — supported meeting line"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

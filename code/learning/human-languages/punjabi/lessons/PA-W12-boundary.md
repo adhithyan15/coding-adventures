@@ -9,35 +9,40 @@ type: writing
 headword: ਨਮਸਤੇ ਮਨਨ। · ਧੰਨਵਾਦ। ਫਿਰ ਮਿਲਾਂਗੇ।
 romanization: "opening · closing"
 gloss: "keep the named-reader opening and closing in their own places"
-prerequisites: [PA-W12-greeting-supported, PA-W12-closing-supported]
+prerequisites: [PA-W12-greeting-supported, PA-W12-closing-supported, PA-W11-form-six-no-model]
 sounds: []
 roots: []
 duration:
-  max_seconds: 150
+  max_seconds: 260
 requires:
-  knowledge: [PA-LEX-NAMASTE-01, PA-PHRASE-SEE-YOU-AGAIN-04]
+  knowledge: [PA-LEX-NAMASTE-01, PA-PHRASE-SEE-YOU-AGAIN-04, PA-FORM-SIX-NO-MODEL-01, PA-FORM-SIX-REPAIR-01]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-NAMASTE-01, PA-PHRASE-SEE-YOU-AGAIN-04]
+  knowledge: [PA-LEX-NAMASTE-01, PA-PHRASE-SEE-YOU-AGAIN-04, PA-FORM-SIX-NO-MODEL-01, PA-FORM-SIX-REPAIR-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W12-greeting-supported, PA-W12-closing-supported]
+reviews_of: [PA-W12-greeting-supported, PA-W12-closing-supported, PA-W11-form-six-no-model, PA-W11-form-six-repair]
 ---
 
 # Leave room for the message
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NAMASTE-01, PA-PHRASE-SEE-YOU-AGAIN-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NAMASTE-01, PA-PHRASE-SEE-YOU-AGAIN-04, PA-FORM-SIX-NO-MODEL-01, PA-FORM-SIX-REPAIR-01] -->
 
-The opening names the reader. The closing thanks that reader and promises
-another meeting. Say which comes first before you write anything.
+Once more, close the old form bank and fill all six lines for fictional card
+B · ਖ from memory. Reopen the old page only after the attempt; compare one
+dimension at a time and repair one difference. The form holds facts; do not
+paste its six labelled lines into the message.
+
+The opening names the reader from that card. The closing thanks that reader
+and promises another meeting. Say which comes first before you write either.
 
 ## Writing — two ends, one empty middle
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NAMASTE-01, PA-PHRASE-SEE-YOU-AGAIN-04] -->

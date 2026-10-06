@@ -36,6 +36,9 @@ it("builds a gentle Punjabi named-reader message from separately practised parts
     .toContain("guided-copy");
   expect(byId.get("PA-W12-message-delayed")!.blocks.map((block) => block.writingStage).filter(Boolean))
     .toContain("delayed-copy");
+  for (const id of ["PA-W12-two-sentence-delayed", "PA-W12-body-blocks-delayed"]) {
+    expect(String(byId.get(id)!.realization.headword)).not.toMatch(/[\u0A00-\u0A7F]/u);
+  }
 
   const independent = byId.get("PA-W12-message-no-model")!;
   expect(independent.blocks.map((block) => block.writingStage).filter(Boolean))
@@ -45,6 +48,9 @@ it("builds a gentle Punjabi named-reader message from separately practised parts
   expect(finalPrompt).not.toMatch(/romaniz|transliterat/i);
   expect(finalPrompt).toMatch(/30.{0,3}40.word/iu);
   expect(finalPrompt).toMatch(/reader|Manan/iu);
+  expect(finalPrompt).toMatch(/As Manan, write Aman/iu);
+  expect(finalPrompt).toMatch(/liking\s+for water/iu);
+  expect(finalPrompt).toMatch(/wellbeing\s+reply\s+\*after\*/iu);
   expect(finalPrompt).toMatch(/agreement|spelling|spacing/iu);
   // Free composition has many valid outputs. An exact-answer activity would
   // incorrectly mark a different valid 30–40-word message wrong.

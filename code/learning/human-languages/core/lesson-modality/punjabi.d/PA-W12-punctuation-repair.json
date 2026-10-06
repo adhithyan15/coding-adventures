@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W12-punctuation-repair",
+    "language": "punjabi",
+    "chapter": 156,
+    "sequence": 8620,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cd23d96c1beb1f19",
+    "detachableSegments": [
+      "Writing — repair only punctuation"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

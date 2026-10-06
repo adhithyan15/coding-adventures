@@ -9,35 +9,41 @@ type: writing
 headword: ਨਮਸਤੇ ਮਨਨ।
 romanization: "namaste manan"
 gloss: "place a taught reader name after a chosen greeting"
-prerequisites: [PA-W12-greeting-choice, PA-C45-pehla-paath]
+prerequisites: [PA-W12-greeting-choice, PA-C45-pehla-paath, PA-W11-form-six-no-model]
 sounds: []
 roots: []
 duration:
-  max_seconds: 160
+  max_seconds: 260
 requires:
-  knowledge: [PA-LEX-NAMASTE-01, PA-SKILL-CONNECTED-READING]
+  knowledge: [PA-LEX-NAMASTE-01, PA-SKILL-CONNECTED-READING, PA-FORM-SIX-NO-MODEL-01, PA-FORM-SIX-REPAIR-01]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-NAMASTE-01, PA-SKILL-CONNECTED-READING]
+  knowledge: [PA-LEX-NAMASTE-01, PA-FORM-SIX-NO-MODEL-01, PA-FORM-SIX-REPAIR-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: respectful
 variety: standard-punjabi
-reviews_of: [PA-W12-greeting-choice, PA-C45-pehla-paath]
+reviews_of: [PA-W12-greeting-choice, PA-C45-pehla-paath, PA-W11-form-six-no-model, PA-W11-form-six-repair]
 ---
 
 # Greet one named reader
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NAMASTE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NAMASTE-01, PA-FORM-SIX-NO-MODEL-01, PA-FORM-SIX-REPAIR-01] -->
 
-Say the greeting selected for a reader whose community is not specified.
-Now add only the already-read name **ਮਨਨ**.
+Close the old six-field form and its value bank. For fictional card B · ਖ,
+fill all six familiar labels from memory before opening the old page. Then
+compare one dimension at a time: selection, spelling, spaces, digits, and
+placement. Repair the first difference you find. This is a short recall of
+the form, not a new form lesson or a model for the message.
+
+The name you just retrieved is **ਮਨਨ**. Say the greeting selected for a
+reader whose community is not specified. Now add that already-read name.
 
 ## Writing — a supported opening
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NAMASTE-01] -->

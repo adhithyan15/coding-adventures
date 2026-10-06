@@ -79,7 +79,9 @@ it("pins Punjabi lesson-content budgets", () =>
     // fictional values. No idiom, sense or culture claim.
     // 838 -> 844: six-field form integration, again with only taught values.
     // No new idiom, sense or culture claim.
-    lessons: 844,
+    // 844 -> 863: named-reader message assembly and separate repair dimensions,
+    // again reusing taught language without new idioms, senses, or culture claims.
+    lessons: 863,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

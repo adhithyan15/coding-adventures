@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W12-message-no-model",
+    "language": "punjabi",
+    "chapter": 156,
+    "sequence": 8690,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:aec325b3ba47a21c",
+    "detachableSegments": [
+      "Writing — independent named-reader message"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

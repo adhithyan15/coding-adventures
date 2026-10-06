@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-156-A1-NAMED-READER-MESSAGE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can independently choose and order taught Gurmukhi chunks into an untimed 30–40-word note for a named reader and repair tone, meaning, agreement, spacing, spelling, and punctuation in separate passes.",
+  "prerequisites": [
+    "PA-EXT-047-CONNECTED"
+  ]
+}
