@@ -1537,6 +1537,19 @@ digest and `success` or `failed` status. A matching successful record is a
 corrupt records are `recovered`. Every non-hit invalidates the package and its
 declared dependent closure.
 
+The neutral `hashing_cache` corpus MUST include a paired dependency-only
+change with the same package-local file bytes and `include_paths` in both
+snapshots. Each snapshot supplies at least two distinct dependency package
+identities in deliberately reverse lexical input order; the oracle sorts by
+package name before length-framing the decoded 32-byte digests. The first
+snapshot has a matching successful prior combined digest and is a hit. The
+second changes only one dependency digest, retains the first snapshot's prior
+combined digest, and is a miss that invalidates the package and every declared
+dependent. A separate case with identical current package and dependency
+bytes but a matching `failed` prior record is also a miss. These are pure
+fixture records, not evidence of native cache persistence or filesystem
+authority.
+
 The shared-input multi-consumer digest fixture MUST pair two exact Swift
 consumers of `code/packages/rust/Cargo.toml` with before/after snapshots of
 that one registered input. For each consumer, process-free repository-boundary

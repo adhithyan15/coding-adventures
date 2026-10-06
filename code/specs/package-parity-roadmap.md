@@ -15931,6 +15931,33 @@ separately blocked. Select only the Perl source-hashing slice in a fresh clean
 main-based branch. Keep native filesystem authority, dependency hashing, cache,
 CLI, and adapter activation outside it.
 
+## Post-#16785 inventory and dependency-fixture priority (2026-10-06)
+
+Guarded squash auto-merge merged the Perl portable source-hashing PR after all
+32 final-head checks completed acceptably (13 success, 19 expected skips) and
+GitHub reported no conflict. The exact merged-main collision report remains
+15 established lanes, 1,487 implementation identities, 4,757 slots, 1,529
+all-reported identities, 178 high-consensus packages with 262 missing slots,
+five emerging OCaml packages, and zero canonical collisions or unknown
+buckets. Intervening main commits changed existing roots only; no package
+identity was added or removed.
+
+Parallel read-only audits ranked Elixir source hashing (seven unfinished
+descendants), Lua dependency hashing (five), and TypeScript diff selection
+(five) among the previously owned ready leaves. The neutral `hashing_cache`
+corpus, however, has only zero- and one-dependency cases. It lacks an
+out-of-order two-dependency case, a dependency-only invalidation pair with
+unchanged package bytes, and a failed-prior-record miss. Register one pending
+process-free neutral fixture owner before choosing another native adopter;
+its cases become prerequisites of the pending dependency-hashing leaves.
+This shared owner has higher leverage across implementation lanes than any
+single ready leaf. Keep native cache persistence and filesystem authority
+separate. An OCaml promotion review found the remaining gates already owned;
+its opam archive-mirroring path currently overlaps open Dependabot PR #15723.
+Select the neutral dependency-hashing adversarial corpus as the sole next
+delivery item in a fresh clean merged-main worktree. Its two prerequisites are
+merged and its fixture/schema/runner paths do not overlap a live PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
