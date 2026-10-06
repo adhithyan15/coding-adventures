@@ -388,5 +388,44 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ഒ") ?? 0).toBe(0);
     expect(missingByScript.get("malayalam.json")?.has("ഓ") ?? false).toBe(false);
     expect(affected.get("ഓ") ?? 0).toBe(0);
+    // Seventeen base consonants cite SPACE Kerala's Thooval formation arrows
+    // (facts only: GPL-3.0, nothing copied) and are written in one run each;
+    // ക and യ, where the sources disagree on the start, stay unverified.
+    const thooval: Record<string, readonly [string, number]> = {
+      "ന": ["NA", 4], "മ": ["MA", 4], "സ": ["SA", 5], "ര": ["RA", 3],
+      "ത": ["TA", 4], "ഷ": ["SSA", 6], "പ": ["PA", 3], "വ": ["VA", 3],
+      "ണ": ["NNA", 6], "ട": ["TTA", 3], "ദ": ["DA", 3], "ഹ": ["HA", 4],
+      "ഗ": ["GA", 3], "റ": ["RRA", 2], "ല": ["LA", 5], "ശ": ["SHA", 4],
+      "ബ": ["BA", 6],
+    };
+    for (const [glyph, [slug, movements]] of Object.entries(thooval)) {
+      const row = scripts.malayalam!.letters.find(
+        (entry) => entry.glyph === glyph,
+      )!;
+      expect(row.role).toBe("syllable");
+      expect(row.penLifts).toBe(0);
+      expect(row.strokeOrder).toHaveLength(movements);
+      expect(row.strokeOrder.slice(1).every((s) => s.startsWith("without lifting, "))).toBe(true);
+      expect(row.strokeOrderNote).toMatch(
+        /visible movements in one continuous pen-down run.*Thooval keeps the pen down by design/i,
+      );
+      expect(row.strokeOrderSource?.url).toBe(
+        `https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/${slug}.png`,
+      );
+      expect(row.strokeOrderSource?.citation).toMatch(
+        new RegExp(`SPACE Kerala.*Thooval.*formation arrows for ${glyph} in data/${slug}\\.png.*GPL-3\\.0, 2013`),
+      );
+      expect(row.strokeOrderSource?.variation).toMatch(
+        /only these facts are cited.*santhoshtr\/hand, MIT.*one stroke.*grahyam.*counts only.*none of the \d+ unique samples jumps.*Noto Sans Malayalam/,
+      );
+    }
+    for (const glyph of ["ക", "യ"]) {
+      const row = scripts.malayalam!.letters.find(
+        (entry) => entry.glyph === glyph,
+      )!;
+      expect(row.strokeOrder).toEqual([]);
+      expect(row.penLifts).toBeUndefined();
+      expect(row.strokeOrderSource).toBeUndefined();
+    }
   },
 };

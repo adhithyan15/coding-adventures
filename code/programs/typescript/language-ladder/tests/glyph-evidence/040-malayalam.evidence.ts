@@ -152,4 +152,35 @@ export default [
       ]);
     },
   },
+  {
+    suite: "source-verified base consonants",
+    suiteOrder: 30,
+    caseOrder: 20,
+    name: "keeps the seventeen Thooval-cited Malayalam consonants as one unbroken run each",
+    verify: ({ SCRIPTS }) => {
+      const malayalam = SCRIPTS.find((script) => script.script === "malayalam")!;
+      // glyph -> [Thooval formation-image slug, movements]
+      const cited: Record<string, readonly [string, number]> = {
+        "ന": ["NA", 4], "മ": ["MA", 4], "സ": ["SA", 5], "ര": ["RA", 3],
+        "ത": ["TA", 4], "ഷ": ["SSA", 6], "പ": ["PA", 3], "വ": ["VA", 3],
+        "ണ": ["NNA", 6], "ട": ["TTA", 3], "ദ": ["DA", 3], "ഹ": ["HA", 4],
+        "ഗ": ["GA", 3], "റ": ["RRA", 2], "ല": ["LA", 5], "ശ": ["SHA", 4],
+        "ബ": ["BA", 6],
+      };
+      for (const [glyph, [slug, movements]] of Object.entries(cited)) {
+        const row = malayalam.letters.find((entry) => entry.glyph === glyph)!;
+        expect(row.penLifts).toBe(0);
+        expect(row.strokeOrder).toHaveLength(movements);
+        expect(row.strokeOrderSource?.url).toBe(
+          `https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/${slug}.png`,
+        );
+      }
+      // The consonants the sources disagree on stay unverified.
+      for (const glyph of ["ക", "യ"]) {
+        const row = malayalam.letters.find((entry) => entry.glyph === glyph)!;
+        expect(row.strokeOrder).toEqual([]);
+        expect(row.penLifts).toBeUndefined();
+      }
+    },
+  },
 ] satisfies readonly GlyphEvidence[];

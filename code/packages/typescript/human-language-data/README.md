@@ -1005,6 +1005,10 @@ before XeLaTeX runs.
   is drawn when its letter has a cited ledger entry. Bengali is the latest
   track switched on; nine of its letter lessons print a strip, cited to native
   writers' pen traces in HP Labs India's LipiTk Bangla recognizer.
+  Malayalam's seventeen cited consonants (ന മ സ ര ത ഷ പ വ ണ ട ദ ഹ ഗ റ ല ശ ബ)
+  draw 21 strips: their letter lessons and the four chapter-1 നമ lessons,
+  drawn letter by letter. Their order cites SPACE Kerala's Thooval formation
+  arrows (GPL-3.0, cited as facts only).
 
   Script inventories (`data/scripts/<script>.json`) close a track's headwords:
   `validate` warns about any script character no row covers. Letters, marks,
