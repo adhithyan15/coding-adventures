@@ -10,4 +10,5 @@ NEWLINE        = /\r?\n/
 HEADER         = /kanban[ \t]*/
 NODE_WITH_DATA = /[ \t]*[^ \t\r\n][^\r\n]*@\{[\s\S]*?\}/
 ICON_LINE      = /[ \t]*::icon\([^)]+\)[ \t]*/
+CLASS_LINE     = /[ \t]*:::[^\r\n]+/
 STATEMENT_LINE = /[ \t]*[^ \t\r\n][^\r\n]*/

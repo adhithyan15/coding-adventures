@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.134.0";
+pub const VERSION: &str = "0.135.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -1413,10 +1413,10 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
         })?;
 
     let lines = tokens.iter()
-        .filter(|token| matches!(token.type_name.as_deref(), Some("STATEMENT_LINE" | "NODE_WITH_DATA" | "ICON_LINE")))
+        .filter(|token| matches!(token.type_name.as_deref(), Some("STATEMENT_LINE" | "NODE_WITH_DATA" | "ICON_LINE" | "CLASS_LINE")))
         .collect::<Vec<_>>();
     let column_indent = lines.iter()
-        .filter(|token| token.type_name.as_deref() != Some("ICON_LINE"))
+        .filter(|token| !matches!(token.type_name.as_deref(), Some("ICON_LINE" | "CLASS_LINE")))
         .map(|token| token.value.len() - token.value.trim_start().len())
         .min()
         .ok_or_else(|| ParseError {
@@ -1440,6 +1440,23 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
             diagram.columns[column_index].cards[card_index].icon = Some(icon.to_string());
             continue;
         }
+        if token.type_name.as_deref() == Some("CLASS_LINE") {
+            let classes = token.value.trim().strip_prefix(":::")
+                .map(str::trim)
+                .filter(|value| !value.is_empty())
+                .ok_or_else(|| token_error(token, "kanban class name cannot be empty"))?
+                .split_whitespace()
+                .map(str::to_string)
+                .collect::<Vec<_>>();
+            if let Some((column_index, card_index)) = last_card {
+                diagram.columns[column_index].cards[card_index].classes.extend(classes);
+            } else if let Some(column) = diagram.columns.last_mut() {
+                column.classes.extend(classes);
+            } else {
+                return Err(token_error(token, "kanban class must follow a column or card"));
+            }
+            continue;
+        }
         let indent = token.value.len() - token.value.trim_start().len();
         let value = token.value.trim();
         if value.starts_with("::") || value.starts_with("style ") {
@@ -1456,7 +1473,7 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
                 return Err(token_error(token, "kanban card metadata requires a card"));
             }
             diagram.columns.push(BoardColumn {
-                id, label: DiagramLabel::new(label), cards: Vec::new(),
+                id, label: DiagramLabel::new(label), cards: Vec::new(), classes: Vec::new(),
             });
             last_card = None;
         } else if indent > column_indent {
@@ -1478,6 +1495,7 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
                 assigned: metadata.assigned,
                 priority: metadata.priority,
                 icon: metadata.icon,
+                classes: Vec::new(),
             });
             last_card = Some((column_index, column.cards.len() - 1));
         } else {
@@ -12332,6 +12350,16 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn kanban_preserves_column_and_card_classes() {
+        let board = parse_kanban(
+            "kanban\n  todo[Todo]\n    :::backlog\n    parser[Write grammar]\n      :::urgent blocked",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].classes, ["backlog"]);
+        assert_eq!(board.columns[0].cards[0].classes, ["urgent", "blocked"]);
+    }
+
+    #[test]
     fn dispatch_kanban_to_board_ir() {
         match parse_any_mermaid("kanban\nTodo\n  task1[Task]").unwrap() {
             MermaidDiagram::Board(board) => assert_eq!(board.columns.len(), 1),
@@ -16323,7 +16351,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.134.0");
+        assert_eq!(crate::VERSION, "0.135.0");
     }
 
     #[test]

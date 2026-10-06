@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.69.0";
+pub const VERSION: &str = "0.70.0";
 
 use std::collections::HashMap;
 
@@ -3685,7 +3685,7 @@ where
     let mut text_children = Vec::new();
     for column in &board.columns {
         instructions.push(PaintInstruction::Rect(PaintRect {
-            base: PaintBase::default(), x: column.x, y: column.y,
+            base: kanban_paint_base(&column.id, &column.classes), x: column.x, y: column.y,
             width: column.width, height: column.height,
             fill: Some(column.style.fill.clone()), stroke: Some(column.style.stroke.clone()),
             stroke_width: Some(column.style.stroke_width),
@@ -3702,7 +3702,7 @@ where
         for card in &column.cards {
             let metadata = kanban_card_metadata(card);
             instructions.push(PaintInstruction::Rect(PaintRect {
-                base: PaintBase::default(), x: card.x, y: card.y,
+                base: kanban_paint_base(&card.id, &card.classes), x: card.x, y: card.y,
                 width: card.width, height: card.height,
                 fill: Some(card.style.fill.clone()), stroke: Some(card.style.stroke.clone()),
                 stroke_width: Some(card.style.stroke_width),
@@ -3788,6 +3788,13 @@ fn kanban_card_metadata(card: &LayoutedBoardCard) -> Option<String> {
         fields.push(format!("priority: {priority}"));
     }
     (!fields.is_empty()).then(|| fields.join("  "))
+}
+
+fn kanban_paint_base(id: &str, classes: &[String]) -> PaintBase {
+    let metadata = (!classes.is_empty()).then(|| HashMap::from([
+        ("diagram.classes".into(), classes.join(" ")),
+    ]));
+    PaintBase { id: Some(id.into()), metadata }
 }
 
 // ============================================================================
@@ -7330,7 +7337,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.69.0");
+        assert_eq!(crate::VERSION, "0.70.0");
     }
 
     #[test]
