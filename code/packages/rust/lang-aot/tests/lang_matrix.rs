@@ -1756,7 +1756,7 @@ fn main() { out(1, VALUE); }\n",
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin real procedure pick; pick := 2.25; boolean flag; real x; x := if flag then pick() else pick(); output(x) end",
+        src: "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real x; x := if choose() then left() else right(); output(x) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -12338,21 +12338,23 @@ fn algol_conditional_runtime_real_output_runs_on_every_available_standard_backen
 }
 
 #[test]
-fn algol_conditional_value_runtime_real_output_runs_on_every_available_standard_backend() {
+fn algol_call_selected_runtime_real_output_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
         .find(|program| {
             program.lang == Language::Algol60
-                && program.src.contains("x := if flag then pick() else pick()")
+                && program
+                    .src
+                    .contains("x := if choose() then left() else right()")
         })
-        .expect("the ALGOL conditional-value runtime-real program must remain in the matrix");
+        .expect("the ALGOL call-selected runtime-real program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
         let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
-                "{backend:?} toolchain is present but conditional-value runtime real output did not complete"
+                "{backend:?} toolchain is present but call-selected runtime real output did not complete"
             );
             continue;
         };

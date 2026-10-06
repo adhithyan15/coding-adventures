@@ -8,8 +8,10 @@ locals before the shared portable formatter prints it on all seven standard back
 Unknown
 statement conditions may also merge that provenance
 when both exits establish it for the same slot, and side-effect-free conditional
-value selectors may choose between proven runtime-real branches. One-sided
-reassignment and selector calls remain gated. Unary signs, additive
+value selectors may choose between proven runtime-real branches. Calling
+selectors may choose between direct formatter-safe real procedure results that
+do not depend on pre-call local or real name-actual provenance. One-sided reassignment remains
+gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The
 real-valued standard functions preserve that provenance for a runtime-real
