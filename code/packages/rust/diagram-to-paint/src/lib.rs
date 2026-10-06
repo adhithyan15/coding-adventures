@@ -1167,8 +1167,12 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
         shaper: options.shaper, metrics: options.metrics, resolver: options.resolver });
     instructions.extend(text_scene.instructions);
+    let mut metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title { metadata.insert("accessibility.title".into(), title.clone()); }
+    if let Some(description) = &diagram.accessibility_description { metadata.insert("accessibility.description".into(), description.clone()); }
     PaintScene { width: diagram.width, height: diagram.height,
-        background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b), instructions, id: None, metadata: None }
+        background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b), instructions, id: None,
+        metadata: (!metadata.is_empty()).then_some(metadata) }
 }
 
 fn capitalize(value: &str) -> String {
@@ -9312,7 +9316,8 @@ mod tests {
     #[test]
     fn cynefin_lowers_to_backend_neutral_rects_ellipse_and_glyphs() {
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver; let opts = make_opts(&shaper, &metrics, &resolver);
-        let layout = LayoutedCynefinDiagram { width: 400.0, height: 300.0, title: None,
+        let layout = LayoutedCynefinDiagram { width: 400.0, height: 300.0, title: None, accessibility_title: Some("Cynefin framework".into()),
+            accessibility_description: Some("Practices by domain".into()),
             domains: vec![diagram_ir::LayoutedCynefinDomain { name: "complex".into(), items: vec!["Probe".into()], x: 10.0, y: 10.0,
                 width: 180.0, height: 130.0, center: Point { x: 100.0, y: 75.0 }, confusion: false },
                 diagram_ir::LayoutedCynefinDomain { name: "confusion".into(), items: vec![], x: 150.0, y: 110.0,
@@ -9321,6 +9326,7 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")).map(String::as_str), Some("Cynefin framework"));
     }
 
     #[test]

@@ -143,7 +143,8 @@ pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
     let transitions = diagram.transitions.iter().filter_map(|transition| Some(LayoutedCynefinTransition {
         from: centers.get(transition.from.as_str())?.clone(), to: centers.get(transition.to.as_str())?.clone(), label: transition.label.clone(),
     })).collect();
-    LayoutedCynefinDiagram { width, height, title: diagram.title.clone(), domains, transitions }
+    LayoutedCynefinDiagram { width, height, title: diagram.title.clone(), accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(), domains, transitions }
 }
 
 /// Resolve canvas size and produce a `LayoutedGeometricDiagram`.
@@ -328,7 +329,7 @@ mod tests {
 
     #[test]
     fn cynefin_layout_places_domains_in_fixed_semantic_quadrants() {
-        let layout = layout_cynefin(&CynefinDiagram { title: None, domains: vec![], transitions: vec![] });
+        let layout = layout_cynefin(&CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None, domains: vec![], transitions: vec![] });
         let complex = layout.domains.iter().find(|domain| domain.name == "complex").unwrap();
         let clear = layout.domains.iter().find(|domain| domain.name == "clear").unwrap();
         assert!(complex.center.x < clear.center.x && complex.center.y < clear.center.y);
