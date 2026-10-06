@@ -1581,6 +1581,16 @@ change. The two consumers MUST be asserted independently; diff selection of
 both consumers alone is not digest evidence. These cases add no Git,
 filesystem, process, credential, or execution authority.
 
+The Lua build-tool dependency-hashing adoption is a process-free child of its
+existing package-source digest. It MUST expose separate dependency and combined
+digests and a pure `hashing_cache` operation over caller-supplied file bytes,
+dependency records, dependent identities, and a prior-cache record. It MUST
+consume all eleven checked `hashing-cache-*` cases through those production
+functions, including reverse-ordered two-dependency framing, the paired
+dependency-only invalidation, failed-record miss, and shared-input consumers.
+The prior record remains inert data; this child does not read a cache file,
+activate CLI hashing, or claim native snapshot authority.
+
 Toolchain detection v1 treats extra-CI declarations as inert BUILD metadata.
 Each package supplies a required generic `BUILD` string plus optional
 `BUILD_windows`, `BUILD_mac`, `BUILD_linux`, and `BUILD_mac_and_linux` strings.

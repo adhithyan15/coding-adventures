@@ -15983,6 +15983,30 @@ next, after verifying no open PR overlaps its engine paths. Keep dependency
 hashing, native retained-handle snapshot authority, cache persistence, and
 adapter activation in their separate owners.
 
+## Post-#16794 inventory and dependency-hashing priority (2026-10-06)
+
+Guarded squash auto-merge landed the Elixir Source Inputs and Hashing v1 PR at
+`79e4605cda43` after all 33 final-head checks completed acceptably (14
+successes, 19 expected skips) and GitHub reported no conflict. The exact
+merged-main collision report remains schema 3 with 15 established lanes,
+1,487 implementation identities, 4,757 slots, 1,529 all-reported identities,
+178 high-consensus packages and 262 missing high-consensus slots, five emerging
+OCaml packages, and zero canonical collisions or unknown buckets. The state
+graph retains 1,077 exact and punctuation-unique owners with no missing
+prerequisites. Parallel read-only audits found no newly unowned package,
+build-tool, Dart/JVM front-door, or OCaml promotion gap to add.
+
+The next eligible dependency-shaped leaf is process-free Lua portable
+dependency hashing: its Lua source-hashing and shared adversarial fixture
+prerequisites are merged, it reaches five unfinished descendants, and the
+eleven neutral `hashing-cache-*` cases provide the behavioral oracle. Keep
+native source snapshots, cache persistence, CLI activation, and adapters in
+their separate owners. Dart/Java/Kotlin front doors remain owned but blocked
+by the execution-semantics corpus; Elixir native source-snapshot hardening is
+explicitly selection-blocked by the loop's native-authority boundary. Select
+only the Lua dependency-hashing tranche in a fresh main-based worktree after
+confirming no live PR overlaps its implementation paths.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16794,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16794",
-    "branch": "codex/parity-elixir-source-hashing-20261006",
-    "implementation_revision": "3f78744158b26dcf0a60eb817f3e9514d136935b",
+    "number": 16796,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16796",
+    "branch": "codex/parity-lua-dependency-hashing-20261006",
+    "implementation_revision": "71975e4dacac7d40c020a785de29eae4944bcdf3",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-06T09:58:50Z",
-    "pr_number": 16794,
+    "observed_at": "2026-10-06T10:42:00Z",
+    "pr_number": 16796,
     "status": "checks-pending",
-    "notes": "Ready-for-review Elixir Source Inputs and Hashing v1 PR opened at 3f78744158b26dcf0a60eb817f3e9514d136935b after local native/dependency tests, neutral corpus, build-file dry run, scoped format/lint/diff, and round-2 security review. GitHub reports MERGEABLE but BLOCKED while CI is being reported; do not enable auto-merge until final-head checks are terminal and acceptable."
+    "notes": "Ready-for-review Lua dependency-hashing PR opened at 71975e4dacac7d40c020a785de29eae4944bcdf3 after 39 focused tests, 34 SHA-256 downstream tests, neutral corpus, build-file dry run, scoped syntax/lint/diff, targeted coverage, and round-2 security approval. Full local Lua suite has one pre-existing Windows shell CLI failure; GitHub reports MERGEABLE but BLOCKED while CI is queued."
   },
   "last_inventory": {
-    "revision": "2ec42cd3e02a2ec98bf4c9f1d8121524a6cccdc9",
+    "revision": "79e4605cda43f5a282d1f773f7d89ca92fac724b",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1476,11 +1476,14 @@
     {
       "id": "build-tool-elixir-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Elixir build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-elixir-glob-matcher-complexity-hardening"],
       "branch": "codex/parity-elixir-source-hashing-20261006",
       "pr_number": 16794,
       "opened_at": "2026-10-06T09:58:50Z",
+      "merged_at": "2026-10-06T10:16:06Z",
+      "merge_commit": "79e4605cda43f5a282d1f773f7d89ca92fac724b",
+      "merge_notes": "All 33 final-head checks were terminal and acceptable and GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge merged the exact final head 16e7737a76af9d4b8be23995d68cbeb2c969c2a3 without manual merge. Native suite, two dependency package suites, neutral corpus, build-file dry run, scoped format/lint, diff, and security review were recorded in the PR; aggregate Elixir coverage below its inherited threshold remains explicitly disclosed.",
       "selected_at": "2026-10-06T09:04:00Z",
       "selection_revision": "2ec42cd3e02a2ec98bf4c9f1d8121524a6cccdc9",
       "selection_notes": "Selected after #16787 merged through guarded auto-merge and the exact-main 15-lane inventory stayed collision-clean with unchanged 1,487 package identities and 4,757 slots. Parallel read-only audits found no new unowned package, build-tool, or OCaml promotion gap. All six prerequisites are merged, no live PR touches Elixir build-tool files, and this process-free source collector unblocks seven unfinished descendants. Use the fresh clean main-based Elixir worktree; keep dependency hashing, native retained-handle snapshot authority, cache persistence, and adapter activation separate.",
@@ -1792,10 +1795,16 @@
     {
       "id": "build-tool-lua-portable-dependency-hashing-conformance",
       "title": "Implement portable dependency hashing in the Lua build tool",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-lua-portable-source-hashing-conformance", "build-tool-neutral-dependency-hashing-adversarial-corpus"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-lua-dependency-hashing-20261006",
+      "pr_number": 16796,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16796",
+      "opened_at": "2026-10-06T10:41:44Z",
+      "opened_revision": "71975e4dacac7d40c020a785de29eae4944bcdf3",
+      "selected_at": "2026-10-06T10:20:00Z",
+      "selection_revision": "79e4605cda43f5a282d1f773f7d89ca92fac724b",
+      "selection_notes": "Selected after #16794 auto-merged at exact main, the full 15-lane collision report remained unchanged with 1,487 identities, 4,757 slots, and no collisions/unknown buckets, and parallel audits found no new unowned package, build-tool, or OCaml promotion gap. Both prerequisites are merged; no live PR overlaps the Lua engine path; this process-free leaf reaches five unfinished descendants and consumes the eleven neutral hashing-cache cases. Use the fresh clean main-based Lua worktree, keeping native snapshot, persistence, and adapter authority separate.",
       "notes": "Consume the neutral hashing-v1 dependency and combined-digest oracle after Lua package hashing lands. Keep the work process-free and limited to package-identity framing, decoded dependency digests, deterministic invalidation, and cache-result classification over inert inputs."
     },
     {

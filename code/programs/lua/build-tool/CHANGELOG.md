@@ -4,6 +4,10 @@
 
 ### Added
 
+- Process-free dependency and combined SHA-256 digests plus inert cache-hit,
+  miss, and corrupt-recovery decisions now consume all 11 neutral
+  `hashing-cache-*` fixtures, including dependency-only changes and shared
+  input consumers; native persistence and CLI activation remain separate.
 - A process-free portable source selector and package-digest API consumes the
   complete checked 23-language, seven-role source-input registry from generated
   package data. The native Busted suite exercises all seven package-local
