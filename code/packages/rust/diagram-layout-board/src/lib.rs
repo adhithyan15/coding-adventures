@@ -1,6 +1,6 @@
 //! Deterministic column/card layout for board diagrams.
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 use diagram_ir::{
     BoardDiagram, DiagramStyle, LayoutedBoardCard, LayoutedBoardColumn, LayoutedBoardDiagram,
@@ -15,34 +15,41 @@ const CARD_HEIGHT: f64 = 72.0;
 const CARD_GAP: f64 = 12.0;
 
 pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
-    let max_cards = board
+    let max_cards_height = board
         .columns
         .iter()
-        .map(|column| column.cards.len())
-        .max()
-        .unwrap_or(0);
-    let column_height = HEADER_HEIGHT + PADDING + max_cards as f64 * (CARD_HEIGHT + CARD_GAP);
+        .map(|column| {
+            column.cards.iter().map(card_height).sum::<f64>()
+                + column.cards.len().saturating_sub(1) as f64 * CARD_GAP
+        })
+        .fold(0.0, f64::max);
+    let column_height = HEADER_HEIGHT + PADDING + max_cards_height;
     let columns = board
         .columns
         .iter()
         .enumerate()
         .map(|(column_index, column)| {
             let x = PADDING + column_index as f64 * (COLUMN_WIDTH + COLUMN_GAP);
+            let mut next_card_y = PADDING + HEADER_HEIGHT + 12.0;
             let cards = column
                 .cards
                 .iter()
-                .enumerate()
-                .map(|(card_index, card)| LayoutedBoardCard {
-                    id: card.id.clone(),
-                    label: card.label.clone(),
-                    x: x + 12.0,
-                    y: PADDING
-                        + HEADER_HEIGHT
-                        + 12.0
-                        + card_index as f64 * (CARD_HEIGHT + CARD_GAP),
-                    width: COLUMN_WIDTH - 24.0,
-                    height: CARD_HEIGHT,
-                    style: card_style(column_index),
+                .map(|card| {
+                    let height = card_height(card);
+                    let layouted = LayoutedBoardCard {
+                        id: card.id.clone(),
+                        label: card.label.clone(),
+                        x: x + 12.0,
+                        y: next_card_y,
+                        width: COLUMN_WIDTH - 24.0,
+                        height,
+                        style: card_style(column_index),
+                        ticket: card.ticket.clone(),
+                        assigned: card.assigned.clone(),
+                        priority: card.priority.clone(),
+                    };
+                    next_card_y += height + CARD_GAP;
+                    layouted
                 })
                 .collect();
             LayoutedBoardColumn {
@@ -63,6 +70,14 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
             + board.columns.len() as f64 * COLUMN_WIDTH
             + board.columns.len().saturating_sub(1) as f64 * COLUMN_GAP,
         height: PADDING * 2.0 + column_height,
+    }
+}
+
+fn card_height(card: &diagram_ir::BoardCard) -> f64 {
+    if card.ticket.is_some() || card.assigned.is_some() || card.priority.is_some() {
+        CARD_HEIGHT + 24.0
+    } else {
+        CARD_HEIGHT
     }
 }
 
@@ -106,6 +121,9 @@ mod tests {
                 cards: vec![BoardCard {
                     id: "one".into(),
                     label: DiagramLabel::new("One"),
+                    ticket: None,
+                    assigned: None,
+                    priority: None,
                 }],
             }],
         };
@@ -113,5 +131,25 @@ mod tests {
         assert_eq!(layout.columns.len(), 1);
         assert!(layout.columns[0].cards[0].y > layout.columns[0].y);
         assert!(layout.width > 0.0 && layout.height > 0.0);
+    }
+
+    #[test]
+    fn metadata_reserves_card_footer_geometry() {
+        let board = BoardDiagram {
+            columns: vec![BoardColumn {
+                id: "todo".into(),
+                label: DiagramLabel::new("Todo"),
+                cards: vec![BoardCard {
+                    id: "one".into(),
+                    label: DiagramLabel::new("One"),
+                    ticket: Some("MC-42".into()),
+                    assigned: Some("Ada".into()),
+                    priority: Some("high".into()),
+                }],
+            }],
+        };
+        let layout = layout_board_diagram(&board);
+        assert_eq!(layout.columns[0].cards[0].height, CARD_HEIGHT + 24.0);
+        assert_eq!(layout.columns[0].cards[0].ticket.as_deref(), Some("MC-42"));
     }
 }

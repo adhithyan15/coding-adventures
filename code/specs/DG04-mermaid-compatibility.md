@@ -417,11 +417,15 @@ Packet at the full compatibility level.
 
 The initial Mermaid 11.16.1 Kanban slice uses dedicated portable grammars and
 preserves indentation-defined columns and cards, with plain labels and explicit
-`id[label]` forms, in typed board semantic IR. `diagram-layout-board` resolves
+`id[label]` forms, in typed board semantic IR. Inline or multiline `@{...}`
+card metadata preserves label overrides, ticket identifiers, assignees, and
+priorities in semantic IR. Board layout reserves a compact metadata footer and
+PaintScene lowering emits it as backend-neutral shaped text.
+`diagram-layout-board` resolves
 deterministic column/card geometry and dedicated PaintScene lowering emits
 backend-neutral rectangles and shaped text. A native Metal-to-PNG fixture gates
-this slice; icons, classes, shape-data metadata, styles, links, assignments,
-priorities, and configurable fields remain unsupported at the partial level.
+this slice; icons, classes, styles, links, description fields, section metadata,
+and configurable field arrangements remain unsupported at the partial level.
 
 ### Architecture Native Slice
 

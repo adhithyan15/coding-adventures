@@ -8,4 +8,5 @@ skip:
 
 NEWLINE        = /\r?\n/
 HEADER         = /kanban[ \t]*/
+NODE_WITH_DATA = /[ \t]*[^ \t\r\n][^\r\n]*@\{[\s\S]*?\}/
 STATEMENT_LINE = /[ \t]*[^ \t\r\n][^\r\n]*/
