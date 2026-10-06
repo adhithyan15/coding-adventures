@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16785,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16785",
+    "branch": "codex/parity-perl-portable-source-20261006",
+    "implementation_revision": "dc432cb4b0dbe61fd922e478c856e1d5b80a7f54",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-06T06:06:14Z",
-    "pr_number": 16778,
-    "status": "merged",
-    "notes": "All 32 final-head checks were terminal and acceptable (13 success, 19 expected skips), and GitHub reported MERGEABLE. The loop enabled guarded squash auto-merge; GitHub merged PR #16778 as 0456d5d170a4a837f99092c9de4586eead165f04 without manual merge."
+    "observed_at": "2026-10-06T07:16:29Z",
+    "pr_number": 16785,
+    "status": "checks-pending",
+    "notes": "Ready-for-review Perl source hashing PR opened at dc432cb4b0dbe61fd922e478c856e1d5b80a7f54. GitHub reports MERGEABLE; the first checks are queued or in progress. Keep the implementation unchanged while checks run, and enable auto-merge only after every required final-head check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "0456d5d170a4a837f99092c9de4586eead165f04",
@@ -1512,10 +1518,10 @@
     {
       "id": "build-tool-perl-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Perl build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-perl-blib-generated-directory-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-perl-diff-selection-match-work-ceiling-adoption", "build-tool-perl-declared-source-metadata-plumbing"],
       "branch": "codex/parity-perl-portable-source-20261006",
-      "pr_number": null,
+      "pr_number": 16785,
       "notes": "Discovered by the post-#13544 source-hashing audit. Perl has only a partial artifact skip registry, uses platform-native relative paths, and lacks OCaml source recognition. Adopt the complete checked language source-input registry and normalized framing contract in one engine-scoped tranche, proving exact production lookup equality."
     },
     {
