@@ -2792,8 +2792,9 @@ jobs:
         shell: bash
         # 16 minutes before Journal's iOS gate (UI89 §2.4) joined it, about 25
         # after; Engram's (§2.5) adds a second engine and app build, and
-        # Journal's XCUITest (§4.3) a test build and run on the iPad.
-        timeout-minutes: 75
+        # Journal's XCUITest (§4.3) and Trestle's (§4.4) each a test build and
+        # run on the iPad.
+        timeout-minutes: 90
         run: |
           set -euo pipefail
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
@@ -3024,7 +3025,9 @@ jobs:
           ios_runtime="$RUNNER_TEMP/TaskAppRuntime.xcframework"
           bash code/scripts/build-mosaic-xcframework.sh task-mosaic-app "$ios_runtime"
           ios_linked_output="$RUNNER_TEMP/mosaic-swift-taskapp-ios-linked"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_linked_output" --emit-project --profile native-complete --runtime-library "$ios_runtime"
+          # Trestle's XCUITest (UI89 §4.4) goes into the iOS project as a UI
+          # test bundle with a shared scheme; it runs on the iPad below.
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_linked_output" --emit-project --profile native-complete --runtime-library "$ios_runtime" --ios-ui-test code/packages/rust/task-mosaic-app/conformance/swiftui-ios/TrestleUiTests.swift
           jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$ios_linked_output/swiftui/mosaic-degradations.json"
           grep -q 'cSettings: \[.define("MOSAIC_RUNTIME_STATIC")\]' "$ios_linked_output/swiftui/Package.swift"
           ios_linked_data="$RUNNER_TEMP/mosaic-swift-taskapp-ios-linked-dd"
@@ -3111,6 +3114,18 @@ jobs:
           xcrun simctl launch "$ipad" dev.codingadventures.trestle
           sleep 10
           xcrun simctl spawn "$ipad" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+          # A person's use of it (UI89 §4.4): add, complete, reopen and delete
+          # a task through the generated controls, and find a saved task after
+          # a relaunch. Uninstalled first, so launch 1 starts without the state
+          # the launch above left; `xcodebuild test` installs the app fresh.
+          xcrun simctl uninstall "$ipad" dev.codingadventures.trestle
+          trestle_ui_test_log="$RUNNER_TEMP/mosaic-trestle-ios-ui-test.log"
+          (
+            cd "$ios_linked_output/swiftui/iOS"
+            xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator -destination "platform=iOS Simulator,id=$ipad" -derivedDataPath "$RUNNER_TEMP/mosaic-trestle-ios-ui-test" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$trestle_ui_test_log"
+          )
+          # The count, not just the exit status, as for Journal below.
+          grep -q 'Executed 1 test, with 0 failures' "$trestle_ui_test_log"
           xcrun simctl shutdown "$ipad"
 
           # ---- Journal on iOS and iPadOS (UI89 §2.4, step 7). ---------------
@@ -4207,6 +4222,10 @@ jobs:
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend compose --output "$output" --emit-project --profile native-complete --runtime-library "$jni_libs"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
           android_project="$output/compose/android"
+          # Trestle's instrumented UI test (UI89 §4.4) lives with the app, as
+          # the desktop TaskAppUiTest does; the emulator step runs it.
+          mkdir -p "$android_project/src/androidTest/kotlin"
+          cp code/packages/rust/task-mosaic-app/conformance/compose-android/TrestleAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"
 
           # The wrapper, written outside the project as in the step above.
           gradle_version="$(sed -n 's|^distributionUrl=.*/gradle-\(.*\)-bin\.zip$|\1|p' "$android_project/gradle/wrapper/gradle-wrapper.properties")"
@@ -4228,8 +4247,10 @@ jobs:
             cd "$android_project"
             "${JAVA_HOME:+$JAVA_HOME/bin/}java" -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew \
               -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain \
-              --no-daemon --stacktrace assembleDebug
+              --no-daemon --stacktrace assembleDebug assembleDebugAndroidTest
           )
+          test_apk="$(find "$android_project/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$test_apk"
 
           apk="$(find "$android_project/build/outputs/apk/debug" -name '*.apk' -print -quit)"
           test -n "$apk"
@@ -4491,6 +4512,12 @@ jobs:
           trap finish EXIT
           bash code/scripts/start-mosaic-android-emulator.sh "$emulator_log"
           bash code/scripts/mosaic-android-emulator-gate.sh "$apk" dev.codingadventures.trestle task-app
+          # Then a person's use of it (UI89 §4.4): add, complete, reopen and
+          # delete a task through the generated controls, and find a saved
+          # task again after a cold relaunch.
+          trestle_test_apk="$(find "$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime/compose/android/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$trestle_test_apk"
+          bash code/scripts/mosaic-android-ui-test.sh "$apk" "$trestle_test_apk" dev.codingadventures.trestle dev.codingadventures.trestle.uitest.TrestleAndroidUiTest
 
           journal_apk="$(find "$RUNNER_TEMP/mosaic-compose-journal-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
           test -n "$journal_apk"

@@ -1115,6 +1115,18 @@ the OS. Both platforms answer the picker for the test instead:
    scheme's test action), `--ios-ui-test`, and `JournalUiTests.swift` run in
    the simulator step.
 4. Trestle on both, then Engram's round trip (§4.4).
+   *As built for Trestle:* `TrestleAndroidUiTest.kt` and
+   `TrestleUiTests.swift` live in `task-mosaic-app/conformance/`. They follow
+   the desktop `TaskAppUiTest` and do not carry over its window-size checks,
+   which are about the desktop window. In launch 1 they add a task to an
+   empty Inbox, complete it, reopen it and delete it. Each step is read back
+   from the toggle's engine-provided accessible name ("Complete task: …" /
+   "Reopen task: …"). Launch 1 then adds the task that launch 2 must find
+   restored and delete. The task name field is matched as `name-input` or
+   `name-input-corrected`, because the engine's post-add focus marker swaps
+   the field. Trestle's Android build keeps its own verified-wrapper Gradle
+   call, which now also runs `assembleDebugAndroidTest`. The macOS step's
+   timeout rises from 75 to 90 minutes for the second XCUITest run.
 
 Neither lane can be run in this repository's Linux sandbox (no `/dev/kvm`,
 no Xcode), so each PR is proven in CI. A green run must show it drove the

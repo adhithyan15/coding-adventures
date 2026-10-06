@@ -1,5 +1,21 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — Trestle's phone UI tests (UI89 §4.4)
+
+- `conformance/compose-android/TrestleAndroidUiTest.kt` is an instrumented
+  Compose test of the real `MosaicActivity`. It runs on the CI x86_64
+  emulator through `mosaic-android-ui-test.sh`, across two cold launches.
+  Launch 1 adds a task in an empty Inbox, completes and reopens it (the
+  toggle's glyph and accessible name both come back from the engine),
+  deletes it, and adds the task launch 2 must find. Launch 2 finds that task
+  restored and deletes it.
+- `conformance/swiftui-ios/TrestleUiTests.swift` is the same test as an
+  XCUITest on a landscape iPad simulator. It is compiled into the generated
+  iOS project with `--ios-ui-test`.
+- Both match the task name field as `name-input` or `name-input-corrected`,
+  because after a successful add the engine's focus marker swaps the field so
+  it keeps keyboard focus.
+
 ## [Unreleased] — native style losses can only shrink (#16182)
 
 - The shared emitted-control contract now ratchets TaskApp's measured

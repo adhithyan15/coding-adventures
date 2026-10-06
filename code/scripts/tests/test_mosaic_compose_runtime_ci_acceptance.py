@@ -348,6 +348,46 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         # After the gate, whose launches leave state that the test clears.
         self.assertLess(gate.index("dev.codingadventures.journalapp journal-app"), gate.index(run))
 
+    def test_trestle_runs_its_instrumented_ui_test_on_the_emulator(self) -> None:
+        """UI89 §4.4: Trestle's instrumented test is compiled with its APK,
+        through the same verified wrapper jar, and run on the emulator after
+        the Trestle gate, across two cold launches."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Trestle for Android with its Rust runtime (UI89 step 5)")
+        build = workflow[start : workflow.index("\n      - name:", start)]
+        copy = (
+            "cp code/packages/rust/task-mosaic-app/conformance/compose-android/"
+            'TrestleAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"'
+        )
+        assemble = "--no-daemon --stacktrace assembleDebug assembleDebugAndroidTest"
+        self.assertIn(copy, build)
+        self.assertIn(assemble, build)
+        self.assertLess(build.index(copy), build.index(assemble))
+        # Still the verified jar, never the unverifiable gradlew script.
+        self.assertLess(build.index("verify-gradle-wrapper-jar.sh"), build.index(assemble))
+        self.assertIn("build/outputs/apk/androidTest/debug", build)
+        test_source = (
+            Path(__file__).resolve().parents[2]
+            / "packages/rust/task-mosaic-app/conformance/compose-android/TrestleAndroidUiTest.kt"
+        )
+        self.assertTrue(test_source.is_file(), test_source)
+        source = test_source.read_text(encoding="utf-8")
+        self.assertIn("package dev.codingadventures.trestle.uitest", source)
+        self.assertIn("createAndroidComposeRule<MosaicActivity>()", source)
+        self.assertIn('getString("mosaicLaunch")', source)
+
+        emulator = workflow.index("- name: Launch Trestle, Journal and Engram on an Android emulator")
+        gate = workflow[emulator : workflow.index("\n      - name:", emulator)]
+        run = (
+            'bash code/scripts/mosaic-android-ui-test.sh "$apk" "$trestle_test_apk" '
+            "dev.codingadventures.trestle dev.codingadventures.trestle.uitest.TrestleAndroidUiTest"
+        )
+        self.assertIn(run, gate)
+        self.assertLess(gate.index("dev.codingadventures.trestle task-app"), gate.index(run))
+        # Before Journal's gate: the step stays in app order.
+        self.assertLess(gate.index(run), gate.index("dev.codingadventures.journalapp journal-app"))
+
         script = (SCRIPT.parent / "mosaic-android-ui-test.sh").read_text(encoding="utf-8")
         self.assertIn('runner="$package.test/androidx.test.runner.AndroidJUnitRunner"', script)
         self.assertLess(script.index('adb shell pm clear "$package"'), script.index("run_launch 1\n"))
