@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "hashing-cache/failed-prior-record",
+  "domain": "hashing_cache",
+  "summary": "A matching combined digest in a failed prior record is still a miss and invalidates the declared dependent closure.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "hashing_cache"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/python/demo/src/data.bin",
+        "content_utf8": "abc"
+      }
+    ]
+  },
+  "input": {
+    "operation": "hashing_cache",
+    "options": {
+      "algorithm": "sha256-v1",
+      "package": "python/demo",
+      "include_paths": [
+        "code/packages/python/demo/src/data.bin"
+      ],
+      "dependency_digests": [
+        {
+          "package": "python/zeta",
+          "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "package": "python/alpha",
+          "digest": "1111111111111111111111111111111111111111111111111111111111111111"
+        }
+      ],
+      "dependents": [
+        "python/app"
+      ],
+      "prior_cache": {
+        "state": "record",
+        "combined_digest": "a184dff38b8e907c48628246a49321a0c67b9f8f7bfd949d8ec0cac60f445da0",
+        "status": "failed"
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "hashing-cache/failed-prior-record",
+    "domain": "hashing_cache",
+    "outcome": "ok",
+    "result": {
+      "package_digest": "6a2dc6b1e5428211f6f19387deb1c84836e61384745e7e0e5986fe49b17ff24f",
+      "dependencies_digest": "a36589848fbef18a0822631253f0da8db499ea66317fb8a2b4c624b36e263638",
+      "combined_digest": "a184dff38b8e907c48628246a49321a0c67b9f8f7bfd949d8ec0cac60f445da0",
+      "cache_status": "miss",
+      "invalidated_packages": [
+        "python/app",
+        "python/demo"
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

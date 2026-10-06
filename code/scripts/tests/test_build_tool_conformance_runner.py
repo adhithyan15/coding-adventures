@@ -3541,7 +3541,9 @@ class PureDomainValidationTests(unittest.TestCase):
         self.assertEqual(combined_digest, expected["combined_digest"])
         runner.validate_case_document(case, **self._schema_args())
 
-    def test_dependency_only_change_and_failed_prior_are_neutral_hash_cases(self) -> None:
+    def test_dependency_only_change_and_failed_prior_are_neutral_hash_cases(
+        self,
+    ) -> None:
         before = load_case("hashing-cache-dependency-order-before.json")
         after = load_case("hashing-cache-dependency-change-after.json")
         failed = load_case("hashing-cache-failed-prior-record.json")
@@ -3569,34 +3571,81 @@ class PureDomainValidationTests(unittest.TestCase):
 
         self.assertEqual(before["workspace"], after["workspace"])
         self.assertEqual(before["workspace"], failed["workspace"])
-        self.assertEqual(before_options["include_paths"], after_options["include_paths"])
-        self.assertEqual(before_options["dependency_digests"], failed_options["dependency_digests"])
+        self.assertEqual(
+            before_options["include_paths"], after_options["include_paths"]
+        )
+        self.assertEqual(
+            before_options["dependency_digests"], failed_options["dependency_digests"]
+        )
         self.assertEqual(
             [entry["package"] for entry in before_options["dependency_digests"]],
             ["python/zeta", "python/alpha"],
             "fixture order must challenge package-name sorting",
         )
         self.assertEqual(len(after_options["dependency_digests"]), 2)
-        self.assertEqual(before_result["package_digest"], after_result["package_digest"])
-        self.assertNotEqual(before_result["dependencies_digest"], after_result["dependencies_digest"])
-        self.assertNotEqual(before_result["combined_digest"], after_result["combined_digest"])
-        self.assertEqual(before_options["prior_cache"]["combined_digest"], before_result["combined_digest"])
-        self.assertEqual(after_options["prior_cache"]["combined_digest"], before_result["combined_digest"])
+        self.assertEqual(
+            [entry["package"] for entry in after_options["dependency_digests"]],
+            ["python/zeta", "python/alpha"],
+        )
+        self.assertEqual(
+            before_options["dependency_digests"][1],
+            after_options["dependency_digests"][1],
+        )
+        self.assertNotEqual(
+            before_options["dependency_digests"][0]["digest"],
+            after_options["dependency_digests"][0]["digest"],
+        )
+        reordered = copy.deepcopy(before_options)
+        reordered["dependency_digests"].reverse()
+        self.assertEqual(
+            runner._expected_hashes(reordered, runner.preflight_workspace(before)),
+            (
+                before_result["package_digest"],
+                before_result["dependencies_digest"],
+                before_result["combined_digest"],
+            ),
+        )
+        self.assertEqual(
+            before_result["package_digest"], after_result["package_digest"]
+        )
+        self.assertNotEqual(
+            before_result["dependencies_digest"], after_result["dependencies_digest"]
+        )
+        self.assertNotEqual(
+            before_result["combined_digest"], after_result["combined_digest"]
+        )
+        self.assertEqual(
+            before_options["prior_cache"]["combined_digest"],
+            before_result["combined_digest"],
+        )
+        self.assertEqual(
+            after_options["prior_cache"]["combined_digest"],
+            before_result["combined_digest"],
+        )
         self.assertEqual(before_result["cache_status"], "hit")
         self.assertEqual(before_result["invalidated_packages"], [])
         self.assertEqual(after_result["cache_status"], "miss")
-        self.assertEqual(after_result["invalidated_packages"], ["python/app", "python/demo"])
+        self.assertEqual(
+            after_result["invalidated_packages"], ["python/app", "python/demo"]
+        )
         self.assertEqual(failed_options["prior_cache"]["status"], "failed")
-        self.assertEqual(failed_options["prior_cache"]["combined_digest"], before_result["combined_digest"])
-        self.assertEqual(failed_result["combined_digest"], before_result["combined_digest"])
+        self.assertEqual(
+            failed_options["prior_cache"]["combined_digest"],
+            before_result["combined_digest"],
+        )
+        self.assertEqual(
+            failed_result["combined_digest"], before_result["combined_digest"]
+        )
         self.assertEqual(failed_result["cache_status"], "miss")
-        self.assertEqual(failed_result["invalidated_packages"], ["python/app", "python/demo"])
+        self.assertEqual(
+            failed_result["invalidated_packages"], ["python/app", "python/demo"]
+        )
 
         bad = copy.deepcopy(before)
         bad["expected"]["result"]["dependencies_digest"] = "0" * 64
         with self.assertRaises(runner.ConformanceError) as raised:
             runner.validate_case_document(bad, **self._schema_args())
-        self.assertEqual(raised.exception.code, "CASE_HASH_MISMATCH")
+        self.assertEqual(raised.exception.code, "EXPECTED_HASH_MISMATCH")
 
     def test_shared_input_changes_both_consumers_source_and_package_digests(
         self,
