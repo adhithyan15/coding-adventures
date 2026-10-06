@@ -199,7 +199,7 @@ class FormeSpecMapTests(unittest.TestCase):
             with self.subTest(spec=number):
                 self.assertIn(f"[{number}]({filename})", roadmap)
 
-    def test_roadmap_has_one_unique_active_item(self) -> None:
+    def test_roadmap_has_one_unique_active_item_until_completion(self) -> None:
         roadmap = (SPECS / "FM00-forme-completion-roadmap.md").read_text(
             encoding="utf-8"
         )
@@ -221,6 +221,9 @@ class FormeSpecMapTests(unittest.TestCase):
         priorities = [int(row.group("priority")) for row in rows]
         identifiers = [row.group("id") for row in rows]
         active = [row.group("id") for row in rows if row.group("status") == "active"]
+        unfinished = [
+            row.group("id") for row in rows if row.group("status") != "done"
+        ]
         self.assertEqual(
             priorities,
             list(range(len(rows))),
@@ -229,7 +232,11 @@ class FormeSpecMapTests(unittest.TestCase):
         self.assertEqual(
             len(identifiers), len(set(identifiers)), "backlog IDs must be unique"
         )
-        self.assertEqual(len(active), 1, "exactly one backlog item must be active")
+        self.assertEqual(
+            len(active),
+            1 if unfinished else 0,
+            "an unfinished roadmap must have exactly one active item; a completed roadmap must have none",
+        )
 
     def test_release_quality_milestone_is_closed(self) -> None:
         roadmap = (SPECS / "FM00-forme-completion-roadmap.md").read_text(
@@ -243,10 +250,17 @@ class FormeSpecMapTests(unittest.TestCase):
             "| 70 | FM-B018 | done | Close release-quality gates |", roadmap
         )
         self.assertIn(
-            "| 71 | FM-B029 | active | Make duplicate PR CI cancellation and merge state unambiguous |",
+            "| 71 | FM-B029 | done | Make duplicate PR CI cancellation and merge state unambiguous |",
             roadmap,
         )
         self.assertIn("Authoring v1 is complete.", roadmap)
+        self.assertRegex(
+            roadmap, r"No actionable Forme completion\s+backlog remains\."
+        )
+        backlog = roadmap.split("## Prioritized backlog\n", 1)[1].split(
+            "## Dependency path\n", 1
+        )[0]
+        self.assertNotRegex(backlog, r"\| (?:active|ready|blocked|later) \|")
 
     def test_forme_spec_markdown_links_resolve(self) -> None:
         for path in sorted(SPECS.glob("FM[0-9][0-9]-*.md")):
