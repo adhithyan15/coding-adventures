@@ -525,7 +525,7 @@ mod apple {
     #[test]
     fn render_mermaid_kanban_to_png() {
         let board = parse_kanban(
-            "kanban\n  todo[Todo]\n    grammar[Write grammar]@{ ticket: MC-42, assigned: Ada, priority: high, icon: code }\n    ir[Lower semantic IR]\n  doing[In progress]\n    layout[Build board layout]@{ ticket: MC-43, assigned: Grace, priority: medium }\n      ::icon(layout)\n  done[Done]\n    paint[Render native paint]",
+            "kanban\n  todo[Todo]\n    :::backlog\n    grammar[Write grammar]@{ ticket: MC-42, assigned: Ada, priority: high, icon: code }\n      :::urgent blocked\n    ir[Lower semantic IR]\n  doing[In progress]\n    layout[Build board layout]@{ ticket: MC-43, assigned: Grace, priority: medium }\n      ::icon(layout)\n  done[Done]\n    paint[Render native paint]",
         )
         .expect("kanban parse failed");
         let layout = layout_board_diagram(&board);
@@ -546,6 +546,12 @@ mod apple {
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.base.metadata.as_ref().and_then(|metadata| metadata.get("diagram.classes"))
+                    == Some(&"urgent blocked".to_string())
+        )));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_kanban_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);

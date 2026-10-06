@@ -469,6 +469,10 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
         if id == "card-icon-decoration" {
             assert_eq!(board.columns[0].cards[0].icon.as_deref(), Some("heart"));
         }
+        if id == "class-decorations" {
+            assert_eq!(board.columns[0].classes, ["backlog"]);
+            assert_eq!(board.columns[0].cards[0].classes, ["urgent", "blocked"]);
+        }
     }
 }
 

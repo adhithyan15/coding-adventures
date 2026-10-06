@@ -1,6 +1,6 @@
 //! Deterministic column/card layout for board diagrams.
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 
 use diagram_ir::{
     BoardDiagram, DiagramStyle, LayoutedBoardCard, LayoutedBoardColumn, LayoutedBoardDiagram,
@@ -48,6 +48,7 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
                         assigned: card.assigned.clone(),
                         priority: card.priority.clone(),
                         icon: card.icon.clone(),
+                        classes: card.classes.clone(),
                     };
                     next_card_y += height + CARD_GAP;
                     layouted
@@ -62,6 +63,7 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
                 height: column_height,
                 cards,
                 style: column_style(column_index),
+                classes: column.classes.clone(),
             }
         })
         .collect();
@@ -119,6 +121,7 @@ mod tests {
             columns: vec![BoardColumn {
                 id: "todo".into(),
                 label: DiagramLabel::new("Todo"),
+                classes: Vec::new(),
                 cards: vec![BoardCard {
                     id: "one".into(),
                     label: DiagramLabel::new("One"),
@@ -126,6 +129,7 @@ mod tests {
                     assigned: None,
                     priority: None,
                     icon: None,
+                    classes: Vec::new(),
                 }],
             }],
         };
@@ -141,6 +145,7 @@ mod tests {
             columns: vec![BoardColumn {
                 id: "todo".into(),
                 label: DiagramLabel::new("Todo"),
+                classes: vec!["backlog".into()],
                 cards: vec![BoardCard {
                     id: "one".into(),
                     label: DiagramLabel::new("One"),
@@ -148,11 +153,14 @@ mod tests {
                     assigned: Some("Ada".into()),
                     priority: Some("high".into()),
                     icon: Some("heart".into()),
+                    classes: vec!["urgent".into(), "blocked".into()],
                 }],
             }],
         };
         let layout = layout_board_diagram(&board);
         assert_eq!(layout.columns[0].cards[0].height, CARD_HEIGHT + 24.0);
         assert_eq!(layout.columns[0].cards[0].ticket.as_deref(), Some("MC-42"));
+        assert_eq!(layout.columns[0].classes, ["backlog"]);
+        assert_eq!(layout.columns[0].cards[0].classes, ["urgent", "blocked"]);
     }
 }

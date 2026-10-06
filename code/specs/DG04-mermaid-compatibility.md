@@ -424,10 +424,13 @@ priorities in semantic IR. Icon identifiers from either metadata or following
 backend-neutral shaped badge geometry without coupling the board IR to an icon
 provider. Board layout reserves a compact metadata footer and PaintScene
 lowering emits it as backend-neutral shaped text.
+Following `:::class` decorators preserve ordered column or card class names
+through board semantic IR and layout, then lower them as `diagram.classes`
+PaintInstruction metadata without coupling native renderers to CSS.
 `diagram-layout-board` resolves
 deterministic column/card geometry and dedicated PaintScene lowering emits
 backend-neutral rectangles and shaped text. A native Metal-to-PNG fixture gates
-this slice; external icon-pack artwork, classes, styles, links, description
+this slice; external icon-pack artwork, class-driven styles, links, description
 fields, section metadata, and configurable field arrangements remain
 unsupported at the partial level.
 
