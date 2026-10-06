@@ -759,10 +759,16 @@ and accessibility metadata survive deterministic branch-and-loop layout and
 backend-neutral path, ellipse, rectangle, and glyph PaintInstructions with
 native Metal-to-PNG validation.
 
-This is intentionally partial. The textual `railroad-ebnf-beta`,
-`railroad-abnf-beta`, and `railroad-peg-beta` dialects, separator-bearing
-repetition constructors, upstream curve geometry, theme/config overrides, and
-exact typography remain unsupported and fail explicitly rather than being
+The textual `railroad-ebnf-beta` dialect now has its own portable token and
+parser grammars. W3C and ISO choices, sequences, groups, optional elements,
+zero-or-more and one-or-more repetition, special sequences, exceptions, both
+rule-assignment spellings, comments, titles, and accessibility metadata lower
+to the same recursive semantic IR, deterministic layout, and backend-neutral
+PaintScene path as constructor notation, with native Metal-to-PNG validation.
+
+This is intentionally partial. The textual `railroad-abnf-beta` and
+`railroad-peg-beta` dialects, upstream curve geometry, theme/config overrides,
+and exact typography remain unsupported and fail explicitly rather than being
 counted as compatible.
 
 ### Info Full Compatibility

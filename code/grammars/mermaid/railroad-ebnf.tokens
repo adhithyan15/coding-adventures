@@ -1,0 +1,29 @@
+# @version 1
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+  COMMENT = /%%[^\r\n]*/
+  BLOCK_COMMENT = /\/\*[\s\S]*?\*\//
+  ISO_COMMENT = /\(\*[\s\S]*?\*\)/
+HEADER = "railroad-ebnf-beta"
+ACC_TITLE = /accTitle[ \t]*:[^\r\n]*/
+ACC_DESCR_BLOCK = /accDescr[ \t]*\{[^}]*\}/
+ACC_DESCR = /accDescr[ \t]*:[^\r\n]*/
+TITLE = /title(?:[ \t]+[^\r\n]*)?/
+SPECIAL = /\?[^?;\r\n]*[^?;\s\r\n][^?;\r\n]*\?/
+STRING = /"([^"\\]|\\.)*"|'([^'\\]|\\.)*'/
+DEFINE = "::="
+EQUAL = "="
+SEMICOLON = ";"
+LPAREN = "("
+RPAREN = ")"
+LBRACKET = "["
+RBRACKET = "]"
+LBRACE = "{"
+RBRACE = "}"
+PIPE = "|"
+COMMA = ","
+QUESTION = "?"
+STAR = "*"
+PLUS = "+"
+MINUS = "-"
+IDENT = /[A-Z_a-z][A-Za-z0-9_-]*/

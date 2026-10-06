@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.74.0";
+pub const VERSION: &str = "0.75.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -44,6 +44,8 @@ const CYNEFIN_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/me
 const TREEVIEW_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/treeview.tokens");
 const SWIMLANE_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/swimlane.tokens");
 const RAILROAD_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/railroad.tokens");
+const RAILROAD_EBNF_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/railroad-ebnf.tokens");
 const INFO_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/info.tokens");
 const ZENUML_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/zenuml.tokens");
 const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
@@ -161,6 +163,14 @@ pub fn create_mermaid_swimlane_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_railroad_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, RAILROAD_TOKEN_GRAMMAR_SOURCE, "railroad.tokens")
+}
+
+pub fn create_mermaid_railroad_ebnf_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(
+        source,
+        RAILROAD_EBNF_TOKEN_GRAMMAR_SOURCE,
+        "railroad-ebnf.tokens",
+    )
 }
 
 pub fn create_mermaid_info_lexer(source: &str) -> GrammarLexer<'_> {
@@ -459,6 +469,11 @@ pub fn try_tokenize_mermaid_railroad(source: &str) -> Result<Vec<Token>, String>
     lexer.tokenize().map_err(|error| error.to_string())
 }
 
+pub fn try_tokenize_mermaid_railroad_ebnf(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_railroad_ebnf_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
 pub fn try_tokenize_mermaid_info(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_info_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
@@ -714,7 +729,18 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.74.0");
+        assert_eq!(VERSION, "0.75.0");
+    }
+
+    #[test]
+    fn tokenizes_railroad_ebnf_expressions() {
+        let tokens = try_tokenize_mermaid_railroad_ebnf(
+            "railroad-ebnf-beta\nexpression = term, (\"+\" term)*;",
+        )
+        .expect("railroad EBNF should tokenize");
+        assert!(tokens.iter().any(|token| custom_name(token) == Some("HEADER")));
+        assert!(tokens.iter().any(|token| token.type_ == TokenType::Star));
+        assert!(tokens.iter().any(|token| token.type_ == TokenType::Semicolon));
     }
 
     #[test]

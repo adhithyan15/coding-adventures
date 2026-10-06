@@ -1,0 +1,12 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "fixtures": [
+    {"name":"terminal-and-reference","source":"railroad-ebnf-beta\nexpression = term;\nterm = 'value';"},
+    {"name":"choice-sequence-and-group","source":"railroad-ebnf-beta\nexpression = term, ( '+' term | '-' term )*;"},
+    {"name":"iso-optional-and-repetition","source":"railroad-ebnf-beta\nvalue ::= [ '-' ], { digit };"},
+    {"name":"postfixes-and-special","source":"railroad-ebnf-beta\nvalue = prefix? digit+ suffix* ? implementation defined ?;"},
+    {"name":"exception","source":"railroad-ebnf-beta\nletter = alpha - 'x';"},
+    {"name":"metadata-and-comments","source":"railroad-ebnf-beta\ntitle 'Expression grammar'\naccTitle: Grammar\naccDescr {\n  EBNF grammar\n}\n(* ISO comment *)\nexpression = term; %% trailing comment"}
+  ]
+}

@@ -70,6 +70,7 @@ const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/
 const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"));
 const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"));
 const RAILROAD_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-corpus.json"));
+const RAILROAD_EBNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-ebnf-11.16.1-corpus.json"));
 const INFO_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/info-11.16.1-corpus.json"));
 const ZENUML_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/zenuml-11.16.1-corpus.json"));
 
@@ -107,6 +108,21 @@ fn pinned_railroad_subset_corpus_parses_to_recursive_ir() {
         let diagram = parse_railroad(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("railroad fixture {name} failed: {error}"));
         assert!(!diagram.rules.is_empty());
+    }
+}
+
+#[test]
+fn pinned_railroad_ebnf_corpus_parses_to_recursive_ir() {
+    let corpus: Value = serde_json::from_str(RAILROAD_EBNF_CORPUS).expect("railroad EBNF corpus must be JSON");
+    for fixture in corpus["fixtures"].as_array().expect("fixtures must be an array") {
+        let name = fixture["name"].as_str().expect("fixture name");
+        let diagram = parse_railroad(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("railroad EBNF fixture {name} failed: {error}"));
+        assert!(!diagram.rules.is_empty());
+        if name == "metadata-and-comments" {
+            assert_eq!(diagram.title.as_deref(), Some("Expression grammar"));
+            assert_eq!(diagram.accessibility_description.as_deref(), Some("EBNF grammar"));
+        }
     }
 }
 
@@ -1118,7 +1134,7 @@ fn pinned_swimlane_subset_corpus_parses_to_ownership_ir() {
 }
 
 #[test]
-fn railroad_dispatches_to_dedicated_recursive_ir_and_rejects_textual_dialects() {
+fn railroad_dispatches_constructor_and_ebnf_notation_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");
     match diagram {
@@ -1129,7 +1145,10 @@ fn railroad_dispatches_to_dedicated_recursive_ir_and_rejects_textual_dialects() 
         }
         _ => panic!("railroad should lower to dedicated recursive IR"),
     }
-    assert!(parse_railroad("railroad-ebnf-beta\ndigit = '0' | '1';").is_err());
+    let ebnf = parse_railroad("railroad-ebnf-beta\ndigit = '0' | '1';\nnumber = digit+;")
+        .expect("railroad EBNF notation should parse");
+    assert!(matches!(ebnf.rules[0].definition, diagram_ir::RailroadExpression::Choice(_)));
+    assert!(matches!(ebnf.rules[1].definition, diagram_ir::RailroadExpression::Repetition { min: 1, .. }));
     assert!(parse_railroad("railroad-beta\nvalue = optional(terminal(\"x\"), terminal(\"y\"));").is_err());
 }
 
