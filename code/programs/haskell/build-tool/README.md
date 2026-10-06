@@ -2,6 +2,17 @@
 
 Haskell implementation of the monorepo build tool.
 
+The `GraphDiffCore` library module is a typed, process-free graph and
+changed-path selection boundary. Callers provide declared packages, edges,
+changed paths, and an optional repository source-input boundary as values;
+it neither discovers a checkout nor invokes Git. It validates declared graph
+and portable path/glob limits, emits deterministic prerequisite-first levels
+and closure sets, checks the versioned boundary SHA-256, and preflights the
+operation-wide 50,000,000-unit strict-glob match budget before matching.
+The Hspec suite loads and pins all eight graph and twelve diff-selection
+neutral cases, including their case IDs. This native core does not yet make
+the Haskell neutral execution adapter ready.
+
 ## What it does
 
 This version discovers packages by walking `code/`, resolves internal
