@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.74.0";
+pub const VERSION: &str = "0.75.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -1817,7 +1817,9 @@ pub struct LayoutedSwimlaneDiagram {
 #[derive(Clone, Debug, PartialEq)]
 pub enum RailroadExpression {
     Terminal(String), NonTerminal(String), Sequence(Vec<RailroadExpression>), Choice(Vec<RailroadExpression>),
-    Optional(Box<RailroadExpression>), Repetition { element: Box<RailroadExpression>, min: usize }, Special(String),
+    Optional(Box<RailroadExpression>),
+    Repetition { element: Box<RailroadExpression>, min: usize, max: Option<usize> },
+    Special(String),
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct RailroadRule { pub name: String, pub definition: RailroadExpression }
@@ -2691,7 +2693,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.74.0");
+        assert_eq!(VERSION, "0.75.0");
     }
     #[test]
     fn default_direction_is_tb() {
