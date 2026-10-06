@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16761,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16761",
+    "branch": "codex/parity-haskell-graphdiff-20261006",
+    "implementation_revision": "f1536fc214dc4cf5da4f926413b51f4445dec36c",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-06T00:28:33Z",
-    "pr_number": 16756,
-    "status": "merged",
-    "notes": "All final-head CI and Human Languages Books gates passed, optional CodeQL ended neutral, and GitHub reported CLEAN/MERGEABLE before guarded squash auto-merge. PR #16756 merged as d843a420ec191e88235f372aad764636ae60bffa; no manual merge."
+    "observed_at": "2026-10-06T01:00:45Z",
+    "pr_number": 16761,
+    "status": "checks-pending",
+    "notes": "Ready-for-review Haskell graph/diff core PR opened from reviewed head f1536fc214dc4cf5da4f926413b51f4445dec36c. GitHub reports MERGEABLE but CI and CodeQL checks are queued. Do not enable auto-merge until required final-head checks are terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
     "revision": "d843a420ec191e88235f372aad764636ae60bffa",
@@ -1231,10 +1237,11 @@
     {
       "id": "build-tool-haskell-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Haskell build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": "codex/parity-haskell-graphdiff-20261006",
-      "pr_number": null,
+      "pr_number": 16761,
+      "opened_at": "2026-10-06T01:00:45Z",
       "selected_at": "2026-10-06T00:30:11Z",
       "selection_revision": "d843a420ec191e88235f372aad764636ae60bffa",
       "selection_notes": "Selected only after registering two newly audited Dart/Swift frontend children and exact-main collision-free schema-3 refresh. All six prerequisites are merged; no open PR touches Haskell build-tool paths. This process-free 20-case core has three direct pending consumers and five unfinished descendants, ahead of Ruby source-registry adoption's four descendants. Adapter execution and boundary-digest activation remain separate.",
