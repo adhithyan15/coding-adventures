@@ -1,0 +1,1 @@
+var e=``+new URL(`MR-W02-anusvara-filmstrip-DOr3nYV8.svg`,import.meta.url).href;export{e as default};
