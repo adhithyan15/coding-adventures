@@ -31,7 +31,8 @@ use mermaid_lexer::{
     try_tokenize_mermaid_eventmodeling, try_tokenize_mermaid_radar, try_tokenize_mermaid_xychart,
     try_tokenize_mermaid_treemap, try_tokenize_mermaid_venn, try_tokenize_mermaid_ishikawa,
     try_tokenize_mermaid_wardley, try_tokenize_mermaid_cynefin, try_tokenize_mermaid_treeview,
-    try_tokenize_mermaid_swimlane, try_tokenize_mermaid_railroad, try_tokenize_mermaid_info,
+    try_tokenize_mermaid_swimlane, try_tokenize_mermaid_railroad,
+    try_tokenize_mermaid_railroad_ebnf, try_tokenize_mermaid_info,
     try_tokenize_mermaid_zenuml,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
@@ -77,6 +78,8 @@ const CYNEFIN_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/m
 const TREEVIEW_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/treeview.grammar");
 const SWIMLANE_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/swimlane.grammar");
 const RAILROAD_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/railroad.grammar");
+const RAILROAD_EBNF_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/railroad-ebnf.grammar");
 const INFO_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/info.grammar");
 const ZENUML_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/zenuml.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
@@ -547,6 +550,7 @@ fn token_name(token: &Token) -> &str {
         TokenType::Keyword => "KEYWORD",
         TokenType::Plus => "PLUS",
         TokenType::Minus => "MINUS",
+        TokenType::Star => "STAR",
         TokenType::Colon => "COLON",
         TokenType::Comma => "COMMA",
         TokenType::Equals => "EQUALS",
@@ -5871,6 +5875,9 @@ fn swimlane_error(line: usize, message: impl Into<String>) -> ParseError {
 /// Parse Mermaid's explicit Railroad IR constructor notation.
 pub fn parse_railroad(source: &str) -> Result<RailroadDiagram, ParseError> {
     let family = detect_mermaid_type(source)?; let prepared = prepare_line_grammar_source(source)?;
+    if prepared.trim_start().starts_with("railroad-ebnf-beta") {
+        return parse_railroad_ebnf_prepared(&prepared);
+    }
     if !prepared.trim_start().starts_with("railroad-beta") {
         return Err(ParseError { message: format!("Mermaid {} Railroad {:?} notation is recognized but not implemented", MERMAID_COMPATIBILITY_BASELINE, family.canonical_id()), line: 1, col: 1 });
     }
@@ -5899,6 +5906,176 @@ pub fn parse_railroad(source: &str) -> Result<RailroadDiagram, ParseError> {
     Ok(diagram)
 }
 
+fn parse_railroad_ebnf_prepared(source: &str) -> Result<RailroadDiagram, ParseError> {
+    let tokens = try_tokenize_mermaid_railroad_ebnf(source)
+        .map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let grammar = parse_parser_grammar(RAILROAD_EBNF_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse railroad-ebnf.grammar: {error}"));
+    GrammarParser::new(tokens.clone(), grammar)
+        .with_max_depth(MAX_RULE_DEPTH)
+        .parse()
+        .map_err(|error| ParseError {
+            message: error.message,
+            line: error.token.line,
+            col: error.token.column,
+        })?;
+    let mut cursor = RailroadCursor { tokens: &tokens, index: 1 };
+    let mut diagram = RailroadDiagram {
+        title: None,
+        accessibility_title: None,
+        accessibility_description: None,
+        rules: Vec::new(),
+    };
+    while !cursor.at("EOF") {
+        match cursor.name() {
+            "TITLE" => {
+                let value = cursor.take_value();
+                diagram.title = Some(unquote_railroad_string(value["title".len()..].trim()));
+            }
+            "ACC_TITLE" => {
+                diagram.accessibility_title = Some(
+                    cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string(),
+                );
+            }
+            "ACC_DESCR" => {
+                diagram.accessibility_description = Some(
+                    cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string(),
+                );
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.take_value();
+                let description = value
+                    .split_once('{')
+                    .and_then(|(_, body)| body.rsplit_once('}').map(|(body, _)| body))
+                    .unwrap_or("")
+                    .trim();
+                diagram.accessibility_description = Some(description.to_string());
+            }
+            "IDENT" => {
+                let name = cursor.take_value();
+                if cursor.at("EQUAL") || cursor.at("DEFINE") {
+                    cursor.index += 1;
+                } else {
+                    return Err(cursor.error("expected EBNF rule assignment"));
+                }
+                let definition = parse_railroad_ebnf_choice(&mut cursor)?;
+                cursor.expect("SEMICOLON")?;
+                if diagram.rules.iter().any(|rule| rule.name == name) {
+                    return Err(cursor.error(format!("duplicate Railroad rule {name:?}")));
+                }
+                diagram.rules.push(RailroadRule { name, definition });
+            }
+            other => return Err(cursor.error(format!("unexpected Railroad EBNF token {other}"))),
+        }
+    }
+    if diagram.rules.is_empty() {
+        return Err(ParseError {
+            message: "Railroad diagrams require at least one rule".into(),
+            line: 1,
+            col: 1,
+        });
+    }
+    Ok(diagram)
+}
+
+fn parse_railroad_ebnf_choice(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut alternatives = vec![parse_railroad_ebnf_sequence(cursor)?];
+    while cursor.at("PIPE") {
+        cursor.index += 1;
+        alternatives.push(parse_railroad_ebnf_sequence(cursor)?);
+    }
+    if alternatives.len() == 1 {
+        Ok(alternatives.remove(0))
+    } else {
+        Ok(RailroadExpression::Choice(alternatives))
+    }
+}
+
+fn parse_railroad_ebnf_sequence(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut elements = vec![parse_railroad_ebnf_term(cursor)?];
+    while cursor.at("COMMA") || railroad_ebnf_primary_starts(cursor.name()) {
+        if cursor.at("COMMA") {
+            cursor.index += 1;
+        }
+        elements.push(parse_railroad_ebnf_term(cursor)?);
+    }
+    if elements.len() == 1 {
+        Ok(elements.remove(0))
+    } else {
+        Ok(RailroadExpression::Sequence(elements))
+    }
+}
+
+fn parse_railroad_ebnf_term(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut expression = parse_railroad_ebnf_primary(cursor)?;
+    loop {
+        expression = match cursor.name() {
+            "QUESTION" => {
+                cursor.index += 1;
+                RailroadExpression::Optional(Box::new(expression))
+            }
+            "STAR" => {
+                cursor.index += 1;
+                RailroadExpression::Repetition { element: Box::new(expression), min: 0 }
+            }
+            "PLUS" => {
+                cursor.index += 1;
+                RailroadExpression::Repetition { element: Box::new(expression), min: 1 }
+            }
+            "MINUS" => {
+                cursor.index += 1;
+                let except = parse_railroad_ebnf_primary(cursor)?;
+                RailroadExpression::Sequence(vec![
+                    expression,
+                    RailroadExpression::Terminal("-".into()),
+                    except,
+                ])
+            }
+            _ => break,
+        };
+    }
+    Ok(expression)
+}
+
+fn parse_railroad_ebnf_primary(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    match cursor.name() {
+        "STRING" => Ok(RailroadExpression::Terminal(unquote_railroad_string(&cursor.take_value()))),
+        "IDENT" => Ok(RailroadExpression::NonTerminal(cursor.take_value())),
+        "SPECIAL" => {
+            let value = cursor.take_value();
+            Ok(RailroadExpression::Special(value[1..value.len() - 1].trim().to_string()))
+        }
+        "LPAREN" | "LBRACKET" | "LBRACE" => {
+            let (close, kind) = match cursor.name() {
+                "LPAREN" => ("RPAREN", 0),
+                "LBRACKET" => ("RBRACKET", 1),
+                _ => ("RBRACE", 2),
+            };
+            cursor.index += 1;
+            let expression = parse_railroad_ebnf_choice(cursor)?;
+            cursor.expect(close)?;
+            Ok(match kind {
+                1 => RailroadExpression::Optional(Box::new(expression)),
+                2 => RailroadExpression::Repetition { element: Box::new(expression), min: 0 },
+                _ => expression,
+            })
+        }
+        _ => Err(cursor.error("expected Railroad EBNF expression")),
+    }
+}
+
+fn railroad_ebnf_primary_starts(name: &str) -> bool {
+    matches!(name, "STRING" | "IDENT" | "SPECIAL" | "LPAREN" | "LBRACKET" | "LBRACE")
+}
+
+fn unquote_railroad_string(raw: &str) -> String {
+    let inner = raw
+        .strip_prefix('\'')
+        .and_then(|value| value.strip_suffix('\''))
+        .unwrap_or(raw);
+    unquote_mermaid_string(inner)
+}
+
 struct RailroadCursor<'a> { tokens: &'a [Token], index: usize }
 impl RailroadCursor<'_> {
     fn token(&self) -> &Token { &self.tokens[self.index.min(self.tokens.len() - 1)] }
@@ -5914,7 +6091,7 @@ fn parse_railroad_expression(cursor: &mut RailroadCursor<'_>) -> Result<Railroad
     let constructor = cursor.take_value(); cursor.expect("LPAREN")?;
     if matches!(constructor.as_str(), "terminal" | "nonterminal" | "special") {
         if !cursor.at("STRING") { return Err(cursor.error(format!("{constructor} requires one string argument"))); }
-        let value = unquote_mermaid_string(&cursor.take_value()); cursor.expect("RPAREN")?;
+        let value = unquote_railroad_string(&cursor.take_value()); cursor.expect("RPAREN")?;
         return Ok(match constructor.as_str() { "terminal" => RailroadExpression::Terminal(value),
             "nonterminal" => RailroadExpression::NonTerminal(value), "special" => RailroadExpression::Special(value), _ => unreachable!() });
     }

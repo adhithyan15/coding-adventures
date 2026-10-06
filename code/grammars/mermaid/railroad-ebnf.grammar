@@ -1,0 +1,8 @@
+# @version 1
+document = HEADER { TITLE | ACC_TITLE | ACC_DESCR | ACC_DESCR_BLOCK } { rule } EOF ;
+rule = IDENT ( EQUAL | DEFINE ) choice SEMICOLON ;
+choice = sequence { PIPE sequence } ;
+sequence = term { [ COMMA ] term } ;
+term = primary { postfix } ;
+postfix = QUESTION | STAR | PLUS | MINUS primary ;
+primary = STRING | IDENT | SPECIAL | LPAREN choice RPAREN | LBRACKET choice RBRACKET | LBRACE choice RBRACE ;
