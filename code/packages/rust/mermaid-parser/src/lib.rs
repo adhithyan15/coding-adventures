@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.143.0";
+pub const VERSION: &str = "0.144.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -1675,13 +1675,15 @@ fn parse_kanban_label(source: &str) -> DiagramLabel {
     if label.markdown.is_some() {
         return label;
     }
-    let marker_count = label.text.chars().filter(|character| *character == '*').count();
-    if marker_count < 2 || !marker_count.is_multiple_of(2) {
+    let markdown = label.text.replace("\\n", "\n");
+    let marker_count = markdown.chars().filter(|character| *character == '*').count();
+    let has_emphasis = marker_count >= 2 && marker_count.is_multiple_of(2);
+    if !has_emphasis && !markdown.contains('\n') {
         return label;
     }
-    let (text, spans) = parse_mindmap_markdown_spans(&label.text);
-    if spans.iter().any(|span| span.bold || span.italic) {
-        DiagramLabel::markdown(text, label.text, spans)
+    let (text, spans) = parse_mindmap_markdown_spans(&markdown);
+    if markdown.contains('\n') || spans.iter().any(|span| span.bold || span.italic) {
+        DiagramLabel::markdown(text, markdown, spans)
     } else {
         label
     }
@@ -12553,6 +12555,17 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn kanban_normalizes_escaped_multiline_labels() {
+        let board = parse_kanban(
+            "kanban\n  todo[Todo\\nqueue]\n    card[Line 1\\nLine 2\\nLine 3]",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].label.text, "Todo\nqueue");
+        assert_eq!(board.columns[0].cards[0].label.text, "Line 1\nLine 2\nLine 3");
+        assert!(board.columns[0].label.markdown.is_some());
+    }
+
+    #[test]
     fn dispatch_kanban_to_board_ir() {
         match parse_any_mermaid("kanban\nTodo\n  task1[Task]").unwrap() {
             MermaidDiagram::Board(board) => assert_eq!(board.columns.len(), 1),
@@ -16544,7 +16557,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.143.0");
+        assert_eq!(crate::VERSION, "0.144.0");
     }
 
     #[test]

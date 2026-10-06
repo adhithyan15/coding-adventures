@@ -1,6 +1,6 @@
 //! Deterministic column/card layout for board diagrams.
 
-pub const VERSION: &str = "0.7.0";
+pub const VERSION: &str = "0.8.0";
 
 use diagram_ir::{
     BoardDiagram, DiagramStyle, LayoutedBoardCard, LayoutedBoardColumn, LayoutedBoardDiagram,
@@ -15,6 +15,11 @@ const CARD_GAP: f64 = 12.0;
 pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
     let padding = board.config.padding;
     let column_width = board.config.section_width;
+    let header_height = board
+        .columns
+        .iter()
+        .map(|column| label_box_height(&column.label, 20.0, 28.0))
+        .fold(HEADER_HEIGHT, f64::max);
     let max_cards_height = board
         .columns
         .iter()
@@ -23,14 +28,14 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
                 + column.cards.len().saturating_sub(1) as f64 * CARD_GAP
         })
         .fold(0.0, f64::max);
-    let column_height = HEADER_HEIGHT + padding + max_cards_height;
+    let column_height = header_height + padding + max_cards_height;
     let columns = board
         .columns
         .iter()
         .enumerate()
         .map(|(column_index, column)| {
             let x = padding + column_index as f64 * (column_width + COLUMN_GAP);
-            let mut next_card_y = padding + HEADER_HEIGHT + 12.0;
+            let mut next_card_y = padding + header_height + 12.0;
             let cards = column
                 .cards
                 .iter()
@@ -64,6 +69,7 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
                 y: padding,
                 width: column_width,
                 height: column_height,
+                header_height,
                 cards,
                 style: column_style(column_index),
                 ticket: column.ticket.clone(),
@@ -84,11 +90,17 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
 }
 
 fn card_height(card: &diagram_ir::BoardCard) -> f64 {
-    if card.ticket.is_some() || card.assigned.is_some() || card.priority.is_some() {
-        CARD_HEIGHT + 24.0
-    } else {
-        CARD_HEIGHT
-    }
+    let content_height = label_box_height(&card.label, 18.0, 44.0).max(CARD_HEIGHT);
+    content_height
+        + if card.ticket.is_some() || card.assigned.is_some() || card.priority.is_some() {
+            24.0
+        } else {
+            0.0
+        }
+}
+
+fn label_box_height(label: &diagram_ir::DiagramLabel, line_height: f64, padding: f64) -> f64 {
+    label.text.lines().count().max(1) as f64 * line_height + padding
 }
 
 fn column_style(index: usize) -> ResolvedDiagramStyle {
@@ -187,5 +199,32 @@ mod tests {
         assert_eq!(layout.columns[0].x, 32.0);
         assert_eq!(layout.columns[0].width, 300.0);
         assert_eq!(layout.width, 364.0);
+    }
+
+    #[test]
+    fn multiline_labels_expand_headers_and_cards() {
+        let board = BoardDiagram {
+            ticket_base_url: None,
+            config: diagram_ir::BoardConfig::default(),
+            columns: vec![BoardColumn {
+                id: "todo".into(),
+                label: DiagramLabel::new("Todo\nqueue"),
+                ticket: None,
+                classes: Vec::new(),
+                cards: vec![BoardCard {
+                    id: "one".into(),
+                    label: DiagramLabel::new("Line 1\nLine 2\nLine 3"),
+                    ticket: None,
+                    assigned: None,
+                    priority: None,
+                    icon: None,
+                    classes: Vec::new(),
+                }],
+            }],
+        };
+        let layout = layout_board_diagram(&board);
+        assert_eq!(layout.columns[0].header_height, 68.0);
+        assert_eq!(layout.columns[0].cards[0].height, 98.0);
+        assert_eq!(layout.columns[0].cards[0].y, 104.0);
     }
 }

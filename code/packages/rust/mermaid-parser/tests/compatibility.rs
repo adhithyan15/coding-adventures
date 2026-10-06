@@ -517,6 +517,10 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
             assert!(board.columns[0].cards[0].label.spans.iter().any(|span| span.italic));
         }
+        if id == "multiline-labels" {
+            assert_eq!(board.columns[0].label.text, "Todo\nqueue");
+            assert_eq!(board.columns[0].cards[0].label.text, "Line 1\nLine 2\nLine 3");
+        }
     }
 }
 
