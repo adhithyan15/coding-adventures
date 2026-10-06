@@ -3807,6 +3807,12 @@ impl Compiler {
                         (ProcedureParamMode::Value, ProcedureParamType::Scalar(_)) => true,
                         (_, ProcedureParamType::Array { .. }) => true,
                         (_, ProcedureParamType::Procedure { .. }) => true,
+                        (
+                            ProcedureParamMode::Name,
+                            ProcedureParamType::Scalar(
+                                ScalarType::Integer | ScalarType::Boolean,
+                            ),
+                        ) => true,
                         (ProcedureParamMode::Name, ProcedureParamType::Scalar(ScalarType::Real)) => {
                             self.is_runtime_real_assignment_value(actual)
                         }
@@ -12614,6 +12620,32 @@ mod tests {
                 && instr.srcs.first().and_then(Operand::as_var)
                     == Some("__basic_print_real")
         }));
+    }
+
+    #[test]
+    fn al4_runtime_real_procedure_result_provenance_includes_nonreal_name_formals() {
+        for (kind, source) in [
+            (
+                "integer",
+                "begin real procedure frominteger(n); integer n; frominteger := n + 0.25; output(frominteger(2)) end",
+            ),
+            (
+                "boolean",
+                "begin real procedure fromboolean(b); boolean b; fromboolean := if b then 2.25 else 0.0; output(fromboolean(true)) end",
+            ),
+        ] {
+            let module = compile_source(source, "test")
+                .expect("non-real scalar name formals retain result formatter provenance");
+            let main = module.get_function("main").expect("has main procedure");
+            assert!(
+                main.instructions.iter().any(|instr| {
+                    instr.op == "call"
+                        && instr.srcs.first().and_then(Operand::as_var)
+                            == Some("__basic_print_real")
+                }),
+                "{kind} name-formal results must use the formatter"
+            );
+        }
     }
 
     #[test]
