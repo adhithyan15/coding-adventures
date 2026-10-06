@@ -3882,6 +3882,31 @@ impl Compiler {
             return matches!(sign, "+" | "-")
                 && self.is_selector_call_safe_runtime_real_value(child);
         }
+        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut saw_runtime_real = false;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_selector_call_safe_runtime_real_value(operand) {
+                            saw_runtime_real = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                        return false;
+                    }
+                }
+                if saw_runtime_real {
+                    return true;
+                }
+            }
+        }
         if node.rule_name == "proc_call" {
             let source_name = direct_tokens(node)
                 .into_iter()
@@ -12562,10 +12587,26 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_calling_selectors_allow_additive_name_actuals() {
+        let module = compile_source(
+            "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(left() + 1.25) else relay(10.0 - right()); output(result) end",
+            "test",
+        )
+        .expect("a calling selector may choose additive real name-actual results");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
     fn al4_runtime_real_conditional_selector_calls_do_not_trust_local_branches() {
         for source in [
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real x; x := pick(); output(if choose() then x else x) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x) else echo(x)) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x + 1.0) else echo(x + 1.0)) end",
         ] {
             let err = compile_source(source, "test")
                 .expect_err("a calling selector must not reuse pre-call local provenance");
