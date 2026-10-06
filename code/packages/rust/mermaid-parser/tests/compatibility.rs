@@ -456,6 +456,19 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
         let board = parse_kanban(source)
             .unwrap_or_else(|error| panic!("kanban fixture {id} failed: {error}"));
         assert!(!board.columns.is_empty());
+        if id == "inline-card-metadata" {
+            let card = &board.columns[0].cards[0];
+            assert_eq!(card.ticket.as_deref(), Some("MC-42"));
+            assert_eq!(card.assigned.as_deref(), Some("Ada"));
+            assert_eq!(card.priority.as_deref(), Some("high"));
+        }
+        if id == "multiline-card-metadata" {
+            assert_eq!(board.columns[0].cards[0].label.text, "Grammar parser");
+            assert_eq!(board.columns[0].cards[0].icon.as_deref(), Some("heart"));
+        }
+        if id == "card-icon-decoration" {
+            assert_eq!(board.columns[0].cards[0].icon.as_deref(), Some("heart"));
+        }
     }
 }
 

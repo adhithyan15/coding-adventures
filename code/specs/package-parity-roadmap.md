@@ -15887,9 +15887,10 @@ claim the entire neutral case. The new ID has no exact or normalized collision.
 
 A subsequent exact-main audit also found that the shared Dart/Swift language-
 frontend fixture owner lists Python among twelve roots, but no implementation
-child owned the Python lexer/parser vertical. Both identities are 13/15,
-missing those two lanes only (four slots). Register a pending vertical owner
-after the neutral fixture, then split lane and lexer/parser implementation;
+child owned the Python lexer/parser vertical. The lexer is 13/15 (missing Dart
+and Swift); the parser is 12/15 (missing Dart, Swift, and separately owned
+Python self-hosting). Register a pending vertical owner for the four Dart/Swift
+slots after the neutral fixture, then split lane and lexer/parser implementation;
 the new ID has no collision or open-PR file overlap.
 
 With Perl Dune merged, Perl declared-source metadata plumbing is the highest
@@ -15899,6 +15900,36 @@ seven and Lua dependency hashing five. No open PR overlaps the expected
 Perl, Elixir, or Lua build-tool implementation paths. Select the Perl metadata
 owner in a fresh clean main-based worktree, keeping full source hashing and
 native filesystem authority outside that bounded plumbing tranche.
+
+## Post-#16778 inventory and next dependency pass (2026-10-06)
+
+GitHub auto-merged the Perl declared-source metadata PR after all 32 final-head
+checks completed acceptably (13 success, 19 expected skips), with no merge
+conflict. The exact merged-main collision report still records 15 established
+lanes, 1,487 implementation identities, 4,757 package slots, 178
+high-consensus identities with 262 missing slots, five emerging OCaml packages,
+and zero canonical collisions or unknown buckets. A subsequent unrelated
+Mermaid merge changed `main` but did not touch parity state or implementation
+paths; refresh this branch onto that newer main before delivery.
+
+Parallel source and owner audits registered ten additional pending owners:
+Haskell duplicate-identity discovery conformance; Dart generic lexer
+indentation-mode conformance; the language-neutral correlation-vector CV00
+fixture; six missing CV00 lane ports (C#, Dart, F#, Haskell, Java, Kotlin);
+and Swift CV00 existing-lane reconciliation. Swift already has a package but
+its ID and merge conventions diverge. CV00 children depend on the neutral
+fixture; the Haskell case feeds adapter closure. Dart indentation is a
+prerequisite for Dart Python/Starlark lexer work, while Swift siblings may
+proceed independently. Exact and punctuation-normalized owner IDs and live
+open-PR file lists had no overlap.
+
+Perl full portable source hashing now has all eight prerequisite owners
+merged and reaches eight unfinished descendants. Elixir source hashing reaches
+seven, then Lua dependency hashing five; those counts are structural leverage,
+not immediate runnable unlocks because native snapshot/cache work remains
+separately blocked. Select only the Perl source-hashing slice in a fresh clean
+main-based branch. Keep native filesystem authority, dependency hashing, cache,
+CLI, and adapter activation outside it.
 
 ## Autonomous Loop Protocol
 

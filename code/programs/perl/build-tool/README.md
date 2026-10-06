@@ -37,8 +37,17 @@ code/programs/perl/build-tool/
   Declared mode hashes matching retained files, even non-source extensions,
   plus the selected BUILD; `srcs = []` never falls back to extension mode.
   Shell BUILD files retain extension mode. Invalid detected Starlark targets
-  fail closed. This is a bounded bridge, not full portable source-registry or
-  glob conformance, nor a claim that the CLI now uses hash caching.
+  fail closed.
+- **Portable package-local source hashing**: An installed, byte-identical
+  language-source-input registry selects all seven reviewed input roles by
+  lane, with exact generated-directory pruning, fixed inputs in both modes,
+  bounded segment-aware declared globs, and canonical repository-relative,
+  length-framed SHA-256 bytes. The package
+  tests consume all seven language-neutral source-collection cases and pin
+  the registry digest. Refresh the packaged snapshot with
+  `perl tools/sync_language_source_input_registry.pl`. This does not claim
+  repository-boundary inputs, atomic native snapshots, dependency/cache
+  hashing, or CLI hash-mode activation.
 - **Zero CPAN deps at runtime**: Uses only Perl core modules (5.26+). Only `Test2::V0` is required for tests.
 
 ## Installation

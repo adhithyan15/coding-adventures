@@ -235,6 +235,10 @@ retain real-result provenance because their actual expressions are substituted
 by that same finite specialisation; unproven real name actuals remain excluded.
 Procedure calls with string-literal actuals are kept distinct from literal
 expressions, so their typed result is lowered instead of the argument literal.
+Direct value and statement calls also preserve runtime-real provenance for
+caller-frame scalar slots that remain ordinary locals after call lowering. A
+captured or call-by-name actual promoted to shared storage is not restored by
+this rule, so the optimization introduces no new aliasing or thunk ABI.
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.

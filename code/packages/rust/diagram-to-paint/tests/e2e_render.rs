@@ -525,7 +525,7 @@ mod apple {
     #[test]
     fn render_mermaid_kanban_to_png() {
         let board = parse_kanban(
-            "kanban\n  todo[Todo]\n    grammar[Write grammar]\n    ir[Lower semantic IR]\n  doing[In progress]\n    layout[Build board layout]\n  done[Done]\n    paint[Render native paint]",
+            "kanban\n  todo[Todo]\n    grammar[Write grammar]@{ ticket: MC-42, assigned: Ada, priority: high, icon: code }\n    ir[Lower semantic IR]\n  doing[In progress]\n    layout[Build board layout]@{ ticket: MC-43, assigned: Grace, priority: medium }\n      ::icon(layout)\n  done[Done]\n    paint[Render native paint]",
         )
         .expect("kanban parse failed");
         let layout = layout_board_diagram(&board);

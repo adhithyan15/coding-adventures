@@ -22,7 +22,7 @@ use CodingAdventures::BuildTool::Discovery;
 
 my $h = CodingAdventures::BuildTool::Hasher->new();
 
-sub make_pkg { my ($path) = @_; return { name => 'test/pkg', path => $path } }
+sub make_pkg { my ($path) = @_; return { name => 'perl/demo', language => 'perl', path => $path } }
 
 sub write_file {
     my ($path, $content) = @_;
@@ -93,9 +93,9 @@ subtest 'hash includes BUILD file' => sub {
 # Test 4: Python extensions included
 # ---------------------------------------------------------------------------
 subtest 'python extensions are included' => sub {
-    ok($h->is_source_extension('.py'),   '.py included');
-    ok($h->is_source_extension('.toml'), '.toml included');
-    ok(!$h->is_source_extension('.log'), '.log excluded');
+    ok($h->is_source_extension('.py', 'python'),   '.py included for Python');
+    ok(!$h->is_source_extension('.py', 'perl'),    '.py excluded for Perl');
+    ok(!$h->is_source_extension('.log', 'python'), '.log excluded');
 };
 
 # ---------------------------------------------------------------------------
@@ -125,7 +125,7 @@ subtest 'special filenames are included' => sub {
     ok($h->is_special_filename('cpanfile'),   'cpanfile included');
     ok($h->is_special_filename('Makefile.PL'), 'Makefile.PL included');
     ok($h->is_special_filename('BUILD'),       'BUILD included');
-    ok($h->is_special_filename('go.mod'),      'go.mod included');
+    ok($h->is_special_filename('go.mod', 'go'), 'go.mod included for Go');
     ok(!$h->is_special_filename('random.txt'), 'random.txt not special');
 };
 
@@ -261,7 +261,7 @@ subtest 'explicit empty declaration does not fall back to extension mode' => sub
     my $dir = tempdir(CLEANUP => 1);
     write_file("$dir/BUILD", "perl_library(name = \"empty\", srcs = [])\n");
     write_file("$dir/ignored.pm", "original\n");
-    my $pkg = { path => $dir, source_mode => 'declared_sources', declared_srcs => [], build_file => 'BUILD' };
+    my $pkg = { name => 'perl/demo', path => $dir, language => 'perl', source_mode => 'declared_sources', declared_srcs => [], build_file => 'BUILD' };
     my @relative = map { File::Spec->abs2rel($_, $dir) } $h->collect_source_files($pkg);
     is(\@relative, ['BUILD'], 'only selected BUILD is retained');
     my $first = $h->hash_package($pkg);
@@ -272,8 +272,8 @@ subtest 'explicit empty declaration does not fall back to extension mode' => sub
 subtest 'declared globs are validated before traversal' => sub {
     my $dir = tempdir(CLEANUP => 1);
     write_file("$dir/BUILD", "perl_library(name = \"bad\", srcs = [])\n");
-    for my $invalid ('../outside.pm', '/absolute.pm', 'lib\\*.pm', 'lib/[bad.pm') {
-        my $pkg = { path => $dir, source_mode => 'declared_sources', declared_srcs => ['safe/*.pm', $invalid], build_file => 'BUILD' };
+    for my $invalid ('../outside.pm', '/absolute.pm', 'lib\\*.pm', 'lib/[z-a].pm') {
+        my $pkg = { path => $dir, language => 'perl', source_mode => 'declared_sources', declared_srcs => ['safe/*.pm', $invalid], build_file => 'BUILD' };
         like(dies { $h->collect_source_files($pkg) }, qr/DECLARED_GLOB_INVALID/, "$invalid rejected");
     }
 };

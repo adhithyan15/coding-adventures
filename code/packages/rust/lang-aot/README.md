@@ -29,6 +29,9 @@ that substitutes a statically known target without an IIR procedure descriptor.
 Integer, boolean, and string name formals use that same finite substitution;
 string-literal actuals remain call arguments rather than being mistaken for the
 whole expression, while unproven real name actuals remain conservative.
+Direct value and statement calls preserve runtime-real provenance for
+caller-frame real scalar slots that remain unaliased locals after call lowering;
+captured or name-promoted storage stays on the conservative shared path.
 
 The opt-in CLR integration suite `tests/clr_strict_flow.rs` executes forward-only
 conditional control, nested Bool branches and wide values through joins,

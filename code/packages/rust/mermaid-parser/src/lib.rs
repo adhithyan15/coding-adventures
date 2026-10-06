@@ -1413,9 +1413,10 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
         })?;
 
     let lines = tokens.iter()
-        .filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE"))
+        .filter(|token| matches!(token.type_name.as_deref(), Some("STATEMENT_LINE" | "NODE_WITH_DATA" | "ICON_LINE")))
         .collect::<Vec<_>>();
     let column_indent = lines.iter()
+        .filter(|token| token.type_name.as_deref() != Some("ICON_LINE"))
         .map(|token| token.value.len() - token.value.trim_start().len())
         .min()
         .ok_or_else(|| ParseError {
@@ -1424,18 +1425,40 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
     let mut diagram = BoardDiagram::default();
     let mut ids = HashSet::new();
     let mut card_indent = None;
+    let mut last_card: Option<(usize, usize)> = None;
     for token in lines {
+        if token.type_name.as_deref() == Some("ICON_LINE") {
+            let (column_index, card_index) = last_card
+                .ok_or_else(|| token_error(token, "kanban icon must follow a card"))?;
+            let value = token.value.trim();
+            let icon = value
+                .strip_prefix("::icon(")
+                .and_then(|value| value.strip_suffix(')'))
+                .map(str::trim)
+                .filter(|value| !value.is_empty())
+                .ok_or_else(|| token_error(token, "kanban icon name cannot be empty"))?;
+            diagram.columns[column_index].cards[card_index].icon = Some(icon.to_string());
+            continue;
+        }
         let indent = token.value.len() - token.value.trim_start().len();
         let value = token.value.trim();
-        if value.contains("@{") || value.starts_with("::") || value.starts_with("style ") {
+        if value.starts_with("::") || value.starts_with("style ") {
             return Err(token_error(token, "kanban decorations are outside the supported subset"));
         }
-        let (explicit_id, label) = parse_board_node(value);
+        let (node_source, metadata) = parse_kanban_node_metadata(value, token)?;
+        let (explicit_id, mut label) = parse_board_node(node_source);
+        if let Some(metadata_label) = &metadata.label {
+            label = normalize_mermaid_line_breaks(metadata_label);
+        }
         let id = unique_mindmap_id(explicit_id.unwrap_or_else(|| mindmap_slug(&label)), &mut ids);
         if indent == column_indent {
+            if metadata.has_card_fields() {
+                return Err(token_error(token, "kanban card metadata requires a card"));
+            }
             diagram.columns.push(BoardColumn {
                 id, label: DiagramLabel::new(label), cards: Vec::new(),
             });
+            last_card = None;
         } else if indent > column_indent {
             match card_indent {
                 Some(expected) if indent != expected => {
@@ -1444,14 +1467,111 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
                 None => card_indent = Some(indent),
                 Some(_) => {}
             }
-            let column = diagram.columns.last_mut()
+            let column_index = diagram.columns.len().checked_sub(1)
                 .ok_or_else(|| token_error(token, "kanban card must follow a column"))?;
-            column.cards.push(BoardCard { id, label: DiagramLabel::new(label) });
+            let column = diagram.columns.get_mut(column_index)
+                .ok_or_else(|| token_error(token, "kanban card must follow a column"))?;
+            column.cards.push(BoardCard {
+                id,
+                label: DiagramLabel::new(label),
+                ticket: metadata.ticket,
+                assigned: metadata.assigned,
+                priority: metadata.priority,
+                icon: metadata.icon,
+            });
+            last_card = Some((column_index, column.cards.len() - 1));
         } else {
             return Err(token_error(token, "invalid kanban indentation"));
         }
     }
     Ok(diagram)
+}
+
+#[derive(Default)]
+struct KanbanNodeMetadata {
+    label: Option<String>,
+    ticket: Option<String>,
+    assigned: Option<String>,
+    priority: Option<String>,
+    icon: Option<String>,
+}
+
+impl KanbanNodeMetadata {
+    fn has_card_fields(&self) -> bool {
+        self.ticket.is_some() || self.assigned.is_some() || self.priority.is_some() || self.icon.is_some()
+    }
+}
+
+fn parse_kanban_node_metadata<'a>(
+    source: &'a str,
+    token: &Token,
+) -> Result<(&'a str, KanbanNodeMetadata), ParseError> {
+    let Some(open) = source.find("@{") else {
+        return Ok((source, KanbanNodeMetadata::default()));
+    };
+    let body = source[open + 2..]
+        .strip_suffix('}')
+        .ok_or_else(|| token_error(token, "unterminated kanban metadata"))?;
+    let mut metadata = KanbanNodeMetadata::default();
+    for field in split_kanban_metadata_fields(body) {
+        let (key, value) = field
+            .split_once(':')
+            .ok_or_else(|| token_error(token, "kanban metadata fields require key: value"))?;
+        let value = parse_kanban_metadata_scalar(value.trim());
+        match key.trim() {
+            "label" => metadata.label = Some(value),
+            "ticket" => metadata.ticket = Some(value),
+            "assigned" => metadata.assigned = Some(value),
+            "priority" => metadata.priority = Some(value),
+            "icon" => metadata.icon = Some(value),
+            _ => {}
+        }
+    }
+    Ok((source[..open].trim_end(), metadata))
+}
+
+fn split_kanban_metadata_fields(source: &str) -> Vec<&str> {
+    let mut fields = Vec::new();
+    let mut start = 0;
+    let mut quote = None;
+    let mut escaped = false;
+    for (index, character) in source.char_indices() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        if character == '\\' && quote.is_some() {
+            escaped = true;
+            continue;
+        }
+        if matches!(character, '\'' | '"') {
+            if quote == Some(character) {
+                quote = None;
+            } else if quote.is_none() {
+                quote = Some(character);
+            }
+            continue;
+        }
+        if quote.is_none() && matches!(character, ',' | '\n' | '\r') {
+            let field = source[start..index].trim();
+            if !field.is_empty() {
+                fields.push(field);
+            }
+            start = index + character.len_utf8();
+        }
+    }
+    let field = source[start..].trim();
+    if !field.is_empty() {
+        fields.push(field);
+    }
+    fields
+}
+
+fn parse_kanban_metadata_scalar(source: &str) -> String {
+    source
+        .strip_prefix('\'')
+        .and_then(|value| value.strip_suffix('\''))
+        .map_or_else(|| unquote_mermaid_string(source), |value| value.replace("''", "'"))
 }
 
 fn parse_board_node(source: &str) -> (Option<String>, String) {
@@ -12192,6 +12312,23 @@ mod tests_dg04 {
         assert_eq!(board.columns[0].id, "todo");
         assert_eq!(board.columns[0].cards.len(), 2);
         assert_eq!(board.columns[1].cards[0].label.text, "Ship");
+    }
+
+    #[test]
+    fn kanban_preserves_inline_and_multiline_card_metadata() {
+        let board = parse_kanban(
+            "kanban\n  todo[Todo]\n    parser[Write grammar]@{ ticket: MC-42, assigned: 'Ada Lovelace', priority: high, icon: heart }\n    tests@{\n      label: \"Add parser tests\"\n      ticket: MC-43\n      assigned: Grace\n      priority: low\n    }\n      ::icon(test-tube)",
+        )
+        .unwrap();
+        let parser = &board.columns[0].cards[0];
+        assert_eq!(parser.ticket.as_deref(), Some("MC-42"));
+        assert_eq!(parser.assigned.as_deref(), Some("Ada Lovelace"));
+        assert_eq!(parser.priority.as_deref(), Some("high"));
+        assert_eq!(parser.icon.as_deref(), Some("heart"));
+        let tests = &board.columns[0].cards[1];
+        assert_eq!(tests.label.text, "Add parser tests");
+        assert_eq!(tests.ticket.as_deref(), Some("MC-43"));
+        assert_eq!(tests.icon.as_deref(), Some("test-tube"));
     }
 
     #[test]
