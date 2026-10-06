@@ -209,7 +209,7 @@ class TestHasher < Minitest::Test
     )
 
     actual = BuildTool::Hasher.collect_source_files(pkg).map { |path| portable_relative(path, dir) }
-    expected = [".ocamlformat", *BuildTool::Hasher::BUILD_FILENAMES, "demo.opam", "dune", "src/main.ml"].sort
+    expected = [".ocamlformat", *BuildTool::Hasher::BUILD_FILENAMES, "demo.opam", "src/main.ml"].sort
     assert_equal expected, actual
     refute_includes actual, "BUILD_custom"
     refute_includes actual, "nested/dependency.opam"
@@ -217,7 +217,7 @@ class TestHasher < Minitest::Test
     FileUtils.rm_rf(dir) if dir
   end
 
-  def test_ocaml_extension_mode_includes_nested_opam_sources
+  def test_ocaml_extension_mode_keeps_variable_opam_manifests_root_only
     dir = create_temp_dir
     write_file(dir / "demo.opam", "root")
     write_file(dir / "nested" / "dependency.opam", "nested")
@@ -227,7 +227,7 @@ class TestHasher < Minitest::Test
     )
 
     actual = BuildTool::Hasher.collect_source_files(pkg).map { |path| portable_relative(path, dir) }
-    assert_equal ["demo.opam", "nested/dependency.opam"], actual
+    assert_equal ["demo.opam"], actual
   ensure
     FileUtils.rm_rf(dir) if dir
   end
@@ -415,8 +415,8 @@ class TestHasher < Minitest::Test
   def test_hash_package_empty_returns_hash
     dir = create_temp_dir
     pkg = BuildTool::Package.new(
-      name: "unknown/empty", path: dir,
-      build_commands: [], language: "unknown"
+      name: "ruby/empty", path: dir,
+      build_commands: [], language: "ruby"
     )
 
     hash = BuildTool::Hasher.hash_package(pkg)
