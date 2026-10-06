@@ -1439,3 +1439,39 @@ PR is proven in CI.
 3. **iOS:** `build-mosaic-ios-dylibs.sh`, the `ios/` half, the per-SDK hook,
    and the CI simulator build and gate.
 4. Journal and Engram on both, then file effects (§7.6).
+
+### 7.8 Android, as built (step 2)
+
+What differs from the design, or what the design left open:
+
+- **No `ios/` yet.** `ios/` in a runtime directory is refused with a message
+  naming step 3, rather than read early. The README's command is
+  `flutter create --platforms=android …`; step 3 adds `ios`.
+- **Phone builds only.** `path_provider` and the state-root `main()` are
+  added to phone builds only. A desktop Flutter build's `pubspec.yaml` and
+  `main.dart` are byte-for-byte what they were. `main()` becomes
+  `Future<void> main() async`, which finds the root before `runApp`. If the
+  generated `main()` is not the plain one, the build fails rather than
+  editing something else.
+- **The host template does change for every build**, but nothing changes on
+  desktop:
+  - `mosaicStateRoot` and `_isPhone` are new.
+  - `_statePath` gives phones a branch of their own.
+  - iOS no longer shares macOS's `HOME` root. No iOS Flutter build existed
+    before this step.
+  - On a phone, `MOSAIC_APP_LIBRARY` is ignored, and a missing root sets
+    the persistence warning: "Mosaic state is not saved: this phone has no
+    app-support directory for it".
+- **`runtime/` is cleared on every Flutter runtime install**, desktop as
+  well as phone, so neither kind of build leaves files for the other's hook.
+- **Bare jniLibs are refused.** Compose's bare jniLibs layout passed as a
+  Flutter runtime is refused (`x86_64 is not part of a Flutter phone
+  runtime`): the `android/` level is what tells the two apart.
+- **The pin.** `path_provider` is 2.1.6, whose floor (Dart 3.10, Flutter
+  3.38) is the bundled-runtime floor. Locally, `flutter pub get` and
+  `flutter analyze` of a generated Trestle phone project (Flutter 3.44)
+  report no issues.
+- **CI** follows §7.5. The Flutter APK step runs when both the Compose and
+  Flutter lanes do. The emulator step gates it last, after the Compose
+  apps, with its timeout raised to 55 minutes.
+

@@ -161,6 +161,26 @@ pub fn flutter_pubspec_with_platform_effects(pubspec_yaml: &str) -> String {
     )
 }
 
+/// The `path_provider` release a Flutter phone build depends on (UI89 §7.4),
+/// pinned exactly, as `file_selector` is. Its `main()` asks it for the
+/// app-support directory, which is where state goes on Android and iOS.
+/// `path_provider` and its endorsed implementations (`path_provider_android`,
+/// `path_provider_foundation`, and on desktop `path_provider_linux`,
+/// `path_provider_windows`, `xdg_directories`) are published by flutter.dev.
+/// The implementations resolve with `pub get` within the ranges it declares,
+/// and CI prints the resolved versions. 2.1.6 needs Dart 3.10 and Flutter
+/// 3.38, the floor a bundled-runtime project already declares.
+pub const FLUTTER_PATH_PROVIDER_VERSION: &str = "2.1.6";
+
+/// Add `path_provider` (pinned) to a Flutter phone build's package manifest.
+pub fn flutter_pubspec_with_path_provider(pubspec_yaml: &str) -> String {
+    pubspec_yaml.replacen(
+        "dependencies:\n",
+        &format!("dependencies:\n  path_provider: {FLUTTER_PATH_PROVIDER_VERSION}\n"),
+        1,
+    )
+}
+
 /// Files that make the fixed Mosaic application C ABI available to SwiftUI.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SwiftRuntimeBinding {
@@ -1620,6 +1640,39 @@ mod tests {
         assert!(pubspec.contains("code_assets: '>=1.0.0 <2.0.0'"));
         assert!(pubspec.contains("hooks: '>=1.0.0 <3.0.0'"));
         assert!(pubspec.contains("ffi: '>=2.1.0 <3.0.0'"));
+    }
+
+    /// A phone build's `path_provider` (UI89 §7.4): pinned exactly, in the
+    /// runtime dependencies.
+    #[test]
+    fn flutter_pubspec_pins_path_provider_for_phone_builds() {
+        let base = "dependencies:\n  flutter:\n    sdk: flutter\n\ndev_dependencies:\n  flutter_test:\n    sdk: flutter\n";
+        let pubspec = flutter_pubspec_with_path_provider(base);
+        assert!(pubspec.starts_with("dependencies:\n  path_provider: 2.1.6\n  flutter:\n"), "{pubspec}");
+        assert_eq!(pubspec.matches("path_provider").count(), 1);
+        assert!(FLUTTER_PATH_PROVIDER_VERSION
+            .chars()
+            .all(|c| c.is_ascii_digit() || c == '.'));
+    }
+
+    /// The host's phone rules (UI89 §7.4): the state root only from
+    /// `mosaicStateRoot`, never `HOME` or `XDG_DATA_HOME`; the bundled
+    /// runtime only; a warning when there is no root.
+    #[test]
+    fn the_flutter_host_keeps_phone_state_where_main_put_it() {
+        let host = flutter_runtime_binding_for_application("probe", true);
+        assert!(host.contains("\nString? mosaicStateRoot;\n"));
+        assert!(host.contains("bool get _isPhone => Platform.isAndroid || Platform.isIOS;"));
+        assert!(host.contains(
+            "    if (_isPhone) {\n      // Only what `main()` found through `path_provider` (UI89 §7.4).\n      root = mosaicStateRoot ?? '';\n    } else if (Platform.isWindows) {"
+        ));
+        // iOS no longer shares macOS's HOME root.
+        assert!(host.contains("} else if (Platform.isMacOS) {\n      final home = environment['HOME']"));
+        assert!(!host.contains("Platform.isMacOS || Platform.isIOS) {\n      final home"));
+        assert!(host.contains(
+            "final requested = _isPhone ? null : Platform.environment['MOSAIC_APP_LIBRARY'];"
+        ));
+        assert!(host.contains("Mosaic state is not saved: this phone has no app-support directory for it."));
     }
 
     /// The platform library's one pub dependency, pinned exactly, in the

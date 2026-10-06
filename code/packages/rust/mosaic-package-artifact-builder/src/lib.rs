@@ -1341,11 +1341,22 @@ fn validate_runtime_library_selection(
         }
         return Ok(());
     }
+    if is_android_jni_libs(path) && opts.backend == Backend::Flutter {
+        // A Flutter phone runtime (UI89 §7.2): android/ (and, with step 3,
+        // ios/) around the libraries, rather than Compose's bare jniLibs.
+        if !opts.emit_project {
+            return Err(BuildError::InvalidRuntimeLibrary {
+                path: path.to_path_buf(),
+                reason: "--runtime-library requires --emit-project".to_string(),
+            });
+        }
+        return flutter_phone_runtime(path).map(|_| ());
+    }
     if is_android_jni_libs(path) {
         if opts.backend != Backend::Compose {
             return Err(BuildError::InvalidRuntimeLibrary {
                 path: path.to_path_buf(),
-                reason: "a directory of per-ABI libraries is the Android runtime, which only the Compose backend packages"
+                reason: "a runtime directory is the phones' runtime, which only the Compose and Flutter backends package"
                     .to_string(),
             });
         }
@@ -1434,6 +1445,9 @@ fn install_flutter_runtime_library(
     source: &Path,
     backend_dir: &Path,
 ) -> Result<PathBuf, BuildError> {
+    // Only this build's runtime: a phone build's runtime/android/ left in a
+    // reused output must not ride along (UI89 §7.2).
+    clear_flutter_runtime_dir(backend_dir)?;
     let target = backend_dir.join("runtime").join(runtime_file_name(source)?);
     let bytes = fs::read(source).map_err(|error| BuildError::InvalidRuntimeLibrary {
         path: source.to_path_buf(),
@@ -1441,6 +1455,102 @@ fn install_flutter_runtime_library(
     })?;
     write_file(&target, &bytes)?;
     Ok(target)
+}
+
+/// A Flutter phone runtime directory (UI89 §7.2), as read: the Android
+/// libraries by ABI. The iOS half joins with step 3 (§7.7).
+struct FlutterPhoneRuntime {
+    android: Vec<(&'static str, PathBuf)>,
+}
+
+/// Read a Flutter phone runtime directory, strictly.
+///
+/// Nothing is walked recursively. The top level may hold only `android/`,
+/// a real directory (not a link), which is read by `android_jni_libs` --
+/// Compose's reader, so the same rules hold: known ABI directories, each
+/// with exactly one regular `libmosaic_app.so`. Anything else is refused,
+/// never ignored, because whatever is accepted here is packaged into an app
+/// that runs it.
+///
+/// | entry      | today                                      |
+/// |------------|--------------------------------------------|
+/// | `android/` | the jniLibs layout                         |
+/// | `ios/`     | refused until UI89 §7.7 step 3 reads it    |
+/// | other      | refused                                    |
+fn flutter_phone_runtime(path: &Path) -> Result<FlutterPhoneRuntime, BuildError> {
+    let refuse = |reason: String| BuildError::InvalidRuntimeLibrary {
+        path: path.to_path_buf(),
+        reason,
+    };
+    let entries = fs::read_dir(path).map_err(|error| refuse(format!("cannot read the directory: {error}")))?;
+    let mut android = None;
+    for entry in entries {
+        let entry = entry.map_err(|error| refuse(format!("cannot read the directory: {error}")))?;
+        let name = entry.file_name();
+        match name.to_str() {
+            Some("android") => {
+                let dir = entry.path();
+                if !fs::symlink_metadata(&dir).is_ok_and(|meta| meta.is_dir()) {
+                    return Err(refuse("android must be a directory, not a link or a file".to_string()));
+                }
+                android = Some(android_jni_libs(&dir)?);
+            }
+            Some("ios") => {
+                return Err(refuse(
+                    "ios/ is not read yet: Flutter on iPhone and iPad arrives with UI89 §7.7 step 3. Pass android/ alone"
+                        .to_string(),
+                ))
+            }
+            _ => {
+                return Err(refuse(format!(
+                    "{} is not part of a Flutter phone runtime (expected android/<abi>/libmosaic_app.so)",
+                    name.to_string_lossy()
+                )))
+            }
+        }
+    }
+    let Some(android) = android else {
+        return Err(refuse(
+            "no android/ directory (expected android/<abi>/libmosaic_app.so, UI89 §7.2)".to_string(),
+        ));
+    };
+    Ok(FlutterPhoneRuntime { android })
+}
+
+/// Remove the Flutter project's `runtime/` before a runtime is installed, so
+/// only this build's files are there for `hook/build.dart` to bundle. A link
+/// at `runtime/` is removed, never followed.
+fn clear_flutter_runtime_dir(backend_dir: &Path) -> Result<(), BuildError> {
+    let dir = backend_dir.join("runtime");
+    let Ok(meta) = fs::symlink_metadata(&dir) else {
+        return Ok(());
+    };
+    let removed = if meta.is_dir() {
+        fs::remove_dir_all(&dir)
+    } else {
+        fs::remove_file(&dir)
+    };
+    removed.map_err(|error| BuildError::Io(format!("cannot clear {}: {error}", dir.display())))
+}
+
+/// Install a Flutter phone runtime (UI89 §7.2): each Android library, read
+/// without following a link and checked to be ELF, at
+/// `runtime/android/<abi>/libmosaic_app.so`, where the phone hook looks.
+fn install_flutter_phone_runtime(source: &Path, backend_dir: &Path) -> Result<PathBuf, BuildError> {
+    let runtime = flutter_phone_runtime(source)?;
+    clear_flutter_runtime_dir(backend_dir)?;
+    let dir = backend_dir.join("runtime");
+    for (abi, library) in runtime.android {
+        let bytes = read_regular_file_without_links(&library)?;
+        if !bytes.starts_with(b"\x7fELF") {
+            return Err(BuildError::InvalidRuntimeLibrary {
+                path: library,
+                reason: format!("the {abi} library is not an ELF shared library"),
+            });
+        }
+        write_file(&dir.join("android").join(abi).join("libmosaic_app.so"), &bytes)?;
+    }
+    Ok(dir)
 }
 
 /// What the emitted Flutter README says about the bundled runtime.
@@ -1737,6 +1847,221 @@ const ELF_VERIFY_HELPER: &str = concat!(
     "  }\n",
     "}\n",
 );
+
+/// `hook/build.dart` for a Flutter phone build (UI89 §7.3).
+///
+/// Android builds one ABI at a time, so the hook chooses that ABI's library
+/// from the runtime directory and verifies it, strictly:
+///
+/// | `targetArchitecture` | library                                      |
+/// |----------------------|----------------------------------------------|
+/// | arm64                | `runtime/android/arm64-v8a/libmosaic_app.so`   |
+/// | arm                  | `runtime/android/armeabi-v7a/libmosaic_app.so` |
+/// | x64                  | `runtime/android/x86_64/libmosaic_app.so`      |
+/// | ia32                 | `runtime/android/x86/libmosaic_app.so`         |
+///
+/// It never falls back to another ABI's library. An ABI with no file, an
+/// architecture outside the table, a file that is not ELF, or an ELF for the
+/// wrong machine each fails the build, naming what was asked for. The
+/// CodeAsset is the desktop hook's, so `mosaic_host.dart`'s `@Native`
+/// bindings are unchanged.
+fn build_flutter_phone_runtime_hook() -> String {
+    format!(
+        concat!(
+            "// AUTO-GENERATED by Mosaic. Edits will be overwritten on next emit.\n",
+            "import 'dart:io';\n\n",
+            "import 'package:code_assets/code_assets.dart';\n",
+            "import 'package:hooks/hooks.dart';\n\n",
+            "/// Android's ABI directory for each architecture Flutter builds (UI89 §7.3).\n",
+            "const _androidAbis = <Architecture, String>{{\n",
+            "  Architecture.arm64: 'arm64-v8a',\n",
+            "  Architecture.arm: 'armeabi-v7a',\n",
+            "  Architecture.x64: 'x86_64',\n",
+            "  Architecture.ia32: 'x86',\n",
+            "}};\n\n",
+            "void main(List<String> args) async {{\n",
+            "  await build(args, (input, output) async {{\n",
+            "    if (!input.config.buildCodeAssets) return;\n",
+            "    final targetOS = input.config.code.targetOS;\n",
+            "    if (targetOS != OS.android) {{\n",
+            "      throw UnsupportedError(\n",
+            "        'The selected Mosaic runtime is for phones (Android), not ${{targetOS.name}}.',\n",
+            "      );\n",
+            "    }}\n",
+            "    final architecture = input.config.code.targetArchitecture;\n",
+            "    final abi = _androidAbis[architecture];\n",
+            "    if (abi == null) {{\n",
+            "      throw UnsupportedError(\n",
+            "        'This build asked for ${{architecture.name}}, which has no Android ABI '\n",
+            "        'directory in a Mosaic runtime (${{_androidAbis.values.join(', ')}}).',\n",
+            "      );\n",
+            "    }}\n",
+            "    final source = input.packageRoot.resolve('runtime/android/$abi/libmosaic_app.so');\n",
+            "    if (!File.fromUri(source).existsSync()) {{\n",
+            "      throw UnsupportedError(\n",
+            "        'This build asked for $abi, and the Mosaic runtime has no '\n",
+            "        '${{source.toFilePath()}}. Build that ABI (build-mosaic-android-libs.sh) '\n",
+            "        'and pass the runtime directory with --runtime-library.',\n",
+            "      );\n",
+            "    }}\n",
+            "    await _requireElf(source);\n",
+            "    await _verifyElfArchitecture(source, architecture);\n",
+            "    final runtime = input.outputDirectory.resolve('libmosaic_app.so');\n",
+            "    await File.fromUri(source).copy(runtime.toFilePath());\n",
+            "    output.dependencies.add(source);\n",
+            "    output.assets.code.add(\n",
+            "      CodeAsset(\n",
+            "        package: input.packageName,\n",
+            "        name: 'mosaic_host.dart',\n",
+            "        linkMode: DynamicLoadingBundled(),\n",
+            "        file: runtime,\n",
+            "      ),\n",
+            "    );\n",
+            "  }});\n",
+            "}}\n",
+            "\n",
+            "/// Refuse a phone runtime that is not ELF at all. The desktop verifier\n",
+            "/// leaves such a file alone; a phone build does not (UI89 §7.3).\n",
+            "Future<void> _requireElf(Uri source) async {{\n",
+            "  final handle = await File.fromUri(source).open();\n",
+            "  final List<int> header;\n",
+            "  try {{\n",
+            "    header = await handle.read(20);\n",
+            "  }} finally {{\n",
+            "    await handle.close();\n",
+            "  }}\n",
+            "  final isElf =\n",
+            "      header.length >= 20 &&\n",
+            "      header[0] == 0x7F &&\n",
+            "      header[1] == 0x45 &&\n",
+            "      header[2] == 0x4C &&\n",
+            "      header[3] == 0x46;\n",
+            "  if (!isElf) {{\n",
+            "    throw UnsupportedError(\n",
+            "      '${{source.toFilePath()}} is not an ELF shared library.',\n",
+            "    );\n",
+            "  }}\n",
+            "}}\n",
+            "{helper}",
+        ),
+        helper = ELF_VERIFY_HELPER,
+    )
+}
+
+/// Java and Kotlin keywords, which an Android package segment may not be.
+const JVM_KEYWORDS: &[&str] = &[
+    "abstract", "as", "assert", "boolean", "break", "byte", "case", "catch", "char", "class",
+    "const", "continue", "default", "do", "double", "else", "enum", "extends", "false", "final",
+    "finally", "float", "for", "fun", "goto", "if", "implements", "import", "in", "instanceof",
+    "int", "interface", "is", "long", "native", "new", "null", "object", "package", "private",
+    "protected", "public", "return", "short", "static", "strictfp", "super", "switch",
+    "synchronized", "this", "throw", "throws", "transient", "true", "try", "typealias", "typeof",
+    "val", "var", "void", "volatile", "when", "while",
+];
+
+/// Dart's reserved words, which a package name may not be.
+const DART_RESERVED_WORDS: &[&str] = &[
+    "assert", "break", "case", "catch", "class", "const", "continue", "default", "do", "else",
+    "enum", "extends", "false", "final", "finally", "for", "if", "in", "is", "new", "null",
+    "rethrow", "return", "super", "switch", "this", "throw", "true", "try", "var", "void",
+    "while", "with",
+];
+
+/// `^[a-z][a-z0-9_]*$`: a Dart package name's shape, and the shape every part
+/// of the org is held to as well.
+fn is_lower_identifier(part: &str) -> bool {
+    let mut chars = part.chars();
+    chars.next().is_some_and(|first| first.is_ascii_lowercase())
+        && chars.all(|rest| rest.is_ascii_lowercase() || rest.is_ascii_digit() || rest == '_')
+}
+
+/// The `flutter create` command for a phone build (UI89 §7.1), or why there
+/// is none.
+///
+/// `dev.codingadventures.trestle` splits at its last dot into
+/// `--org dev.codingadventures --project-name trestle`, which makes Android's
+/// `applicationId` and iOS's bundle identifier the manifest's own. Every part
+/// must be `^[a-z][a-z0-9_]*$`: the name must not be a Dart reserved word,
+/// and no org part may be a Java or Kotlin keyword. If any part fails there
+/// is no command, rather than a made-up identity. The command then needs no
+/// quoting, because no token can hold a shell metacharacter.
+fn flutter_phone_create_command(bundle_identifier: &str) -> Result<String, String> {
+    let Some((org, name)) = bundle_identifier.rsplit_once('.') else {
+        return Err(format!(
+            "`{bundle_identifier}` has no org part; set `[app] bundle_identifier` to a reverse-DNS name such as `dev.example.app`"
+        ));
+    };
+    // The name is also the last segment of the Kotlin package `flutter
+    // create` writes, so it may be neither a Dart nor a JVM keyword.
+    if !is_lower_identifier(name) || DART_RESERVED_WORDS.contains(&name) || JVM_KEYWORDS.contains(&name) {
+        return Err(format!(
+            "`{name}`, the last part of `{bundle_identifier}`, is not a Dart package name that is also a valid Android package segment (lowercase letters, digits and `_`, starting with a letter, and not a Dart, Java or Kotlin keyword)"
+        ));
+    }
+    for part in org.split('.') {
+        if !is_lower_identifier(part) || JVM_KEYWORDS.contains(&part) {
+            return Err(format!(
+                "`{part}` in `{bundle_identifier}` is not a valid Android package segment (lowercase letters, digits and `_`, starting with a letter, and not a Java or Kotlin keyword)"
+            ));
+        }
+    }
+    Ok(format!(
+        "flutter create --platforms=android --org {org} --project-name {name} ."
+    ))
+}
+
+/// What a phone build's README says (UI89 §7.1, §7.2).
+fn flutter_phone_runtime_note(bundle_identifier: &str) -> String {
+    let create = match flutter_phone_create_command(bundle_identifier) {
+        Ok(command) => format!(
+            "Create the Android runner here, with the app's own identity:\n\n    {command}\n\nThen set `android:allowBackup=\"false\"` on `<application>` in `android/app/src/main/AndroidManifest.xml`, as Mosaic's Compose app does, so the app's state stays on the device. Build with `flutter build apk`."
+        ),
+        Err(reason) => format!(
+            "No `flutter create` command is given, because {reason}. Android's `applicationId` would not be the app's identity."
+        ),
+    };
+    format!(
+        "This is a phone build (UI89 §7). The Rust engine for each Android ABI is copied to `runtime/android/<abi>/libmosaic_app.so`, and `hook/build.dart` bundles the one each ABI's build asks for, refusing a missing or mismatched one. State is kept in the app's support directory (`path_provider`). Bundled-runtime projects require Flutter 3.38+, Dart 3.10+, and `flutter config --enable-native-assets`.\n\n{create}"
+    )
+}
+
+/// A phone build's `main()` finds the app-support directory before the
+/// host loads (UI89 §7.4). On desktop the same code does nothing.
+fn flutter_main_with_phone_state_root(main_dart: &str) -> Result<String, BuildError> {
+    const MAIN: &str = "void main() {\n  runApp(MosaicApp());\n}\n";
+    const MATERIAL: &str = "import 'package:flutter/material.dart';\n";
+    if !main_dart.contains(MAIN) || !main_dart.contains(MATERIAL) {
+        return Err(BuildError::Io(
+            "a Flutter phone build needs the generated `main()` to set the state root, but `lib/main.dart` has no plain `void main() { runApp(MosaicApp()); }`"
+                .to_string(),
+        ));
+    }
+    let main_dart = main_dart.replacen(
+        MATERIAL,
+        "import 'dart:io' show Platform;\nimport 'package:flutter/material.dart';\nimport 'package:path_provider/path_provider.dart';\n",
+        1,
+    );
+    Ok(main_dart.replacen(
+        MAIN,
+        concat!(
+            "Future<void> main() async {\n",
+            "  // UI89 §7.4: on a phone, state lives in the app-support directory,\n",
+            "  // which only the platform knows. Found before the host loads; if it\n",
+            "  // cannot be, the host says state is not saved.\n",
+            "  WidgetsFlutterBinding.ensureInitialized();\n",
+            "  if (Platform.isAndroid || Platform.isIOS) {\n",
+            "    try {\n",
+            "      mosaicStateRoot = (await getApplicationSupportDirectory()).path;\n",
+            "    } on Object {\n",
+            "      mosaicStateRoot = null;\n",
+            "    }\n",
+            "  }\n",
+            "  runApp(MosaicApp());\n",
+            "}\n",
+        ),
+        1,
+    ))
+}
 
 fn install_xaml_runtime_library(source: &Path, backend_dir: &Path) -> Result<PathBuf, BuildError> {
     if runtime_file_name(source)? != "mosaic_app.dll" {
@@ -2986,6 +3311,9 @@ fn build_package_inner(
 
     if opts.emit_project {
         if let Some(first_component) = components_built.first() {
+            let bundle_identifier = manifest.app.bundle_identifier.clone().unwrap_or_else(|| {
+                mosaic_ios_project::default_bundle_identifier(&manifest.package.name)
+            });
             let shell_artifacts = emit_project_shell(ProjectShellOptions {
                 component: first_component,
                 components: &components_built,
@@ -3002,6 +3330,7 @@ fn build_package_inner(
                 host_effects: &manifest.host_effects,
                 initial_window_size: manifest.app.initial_window_size.as_ref(),
                 layouts: &manifest.app.layouts,
+                bundle_identifier: &bundle_identifier,
                 replaces_qt_host: manifest.host_assets.files.iter().any(|asset| {
                     asset.backend == "qt"
                         && matches!(asset.target.as_str(), "MosaicHost.h" | "MosaicHost.cpp")
@@ -3058,6 +3387,9 @@ fn build_package_inner(
             // Android's libraries go into the Android project, written below.
             Backend::Compose if is_android_jni_libs(source) => source.to_path_buf(),
             Backend::Compose => install_compose_runtime_library(source, &backend_dir)?,
+            Backend::Flutter if is_android_jni_libs(source) => {
+                install_flutter_phone_runtime(source, &backend_dir)?
+            }
             Backend::Flutter => install_flutter_runtime_library(source, &backend_dir)?,
             Backend::Qt => install_qt_runtime_library(source, &backend_dir)?,
             Backend::SwiftUI if is_xcframework(source) => {
@@ -4723,6 +5055,10 @@ struct ProjectShellOptions<'a> {
     initial_window_size: Option<&'a WindowSize>,
     /// `[[app.layouts]]` (UI48 §7.2).
     layouts: &'a [mosaic_package_manifest::layouts::LayoutRule],
+    /// The app's identity, `[app] bundle_identifier` or the package's
+    /// default. A Flutter phone build derives its `flutter create` command
+    /// from it (UI89 §7.1).
+    bundle_identifier: &'a str,
     /// Whether `[host_assets]` replaces the Qt host (`MosaicHost.h/.cpp`).
     /// Mosaic's Qt platform library is written against the standard host's
     /// routed handler (UI87 §7.4a), so a package that brings its own host
@@ -4747,6 +5083,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         host_effects,
         initial_window_size,
         layouts,
+        bundle_identifier,
         replaces_qt_host,
     } = options;
     // Re-read the triple. This duplicates `compile_one_component`'s
@@ -4947,6 +5284,8 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         }
         Backend::Flutter => {
             let bundle_runtime = runtime_library.is_some();
+            // A runtime directory makes this a phone build (UI89 §7).
+            let phone_runtime = runtime_library.is_some_and(is_android_jni_libs);
             // UI48 §7.9 (ENV3): the root's layout variants the shell switches
             // between, by the same rules as SwiftUI and Compose.
             let layout_variants = flutter_layout_choices(src_dir, component, layouts)?;
@@ -4980,7 +5319,16 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     &pubspec,
                     &host_asset_dependencies_for(host_asset_dependencies, "flutter"),
                 );
-                let runtime_distribution = if let Some(source) = runtime_library {
+                // A phone build finds its state root through `path_provider`
+                // (UI89 §7.4); a desktop build's dependencies are unchanged.
+                let pubspec = if phone_runtime {
+                    mosaic_app_bindings::flutter_pubspec_with_path_provider(&pubspec)
+                } else {
+                    pubspec
+                };
+                let runtime_distribution = if phone_runtime {
+                    flutter_phone_runtime_note(bundle_identifier)
+                } else if let Some(source) = runtime_library {
                     flutter_runtime_distribution_note(runtime_file_name(source)?)
                 } else {
                     "No Rust engine was bundled. For development, set `MOSAIC_APP_LIBRARY` to the Rust application library path, or rely on the platform's conventional `mosaic_app` library name. Strict installable builds should be regenerated with `--runtime-library <target cdylib>`.".to_string()
@@ -5004,6 +5352,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     create_dir_all(parent)?;
                 }
                 let main_dart = flutter_main_with_host_effects(&proj.main_dart, host_effects)?;
+                let main_dart = if phone_runtime {
+                    flutter_main_with_phone_state_root(&main_dart)?
+                } else {
+                    main_dart
+                };
                 write_file(&nested, main_dart.as_bytes())?;
                 written.push(nested);
                 let widget_test = backend_dir.join("test/widget_test.dart");
@@ -5087,7 +5440,12 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 }
                 if let Some(source) = runtime_library {
                     let hook = backend_dir.join("hook/build.dart");
-                    write_file(&hook, build_flutter_runtime_hook(source)?.as_bytes())?;
+                    let body = if phone_runtime {
+                        build_flutter_phone_runtime_hook()
+                    } else {
+                        build_flutter_runtime_hook(source)?
+                    };
+                    write_file(&hook, body.as_bytes())?;
                     written.push(hook);
                 }
             }
@@ -15533,7 +15891,7 @@ layout NativeEvents {
         }
 
         let good = android_runtime_dir(&pkg.path().join("g"), &["x86_64"]);
-        assert!(build(&pkg, &good, Backend::Qt).contains("only the Compose backend"));
+        assert!(build(&pkg, &good, Backend::Qt).contains("only the Compose and Flutter backends"));
         let out = TempDir::new().unwrap();
         let mut opts = swiftui_options(&pkg, &out, Backend::Compose);
         opts.emit_project = false;
@@ -15541,6 +15899,177 @@ layout NativeEvents {
             .expect_err("needs a project")
             .to_string();
         assert!(error.contains("requires --emit-project"), "{error}");
+    }
+
+    /// A Flutter phone runtime (UI89 §7.2): `android/` around per-ABI ELF
+    /// libraries, with each file as `ELF` bytes.
+    fn flutter_phone_runtime_dir(root: &Path, abis: &[&str]) -> PathBuf {
+        let dir = root.join("phone-runtime");
+        for abi in abis {
+            let abi_dir = dir.join("android").join(abi);
+            fs::create_dir_all(&abi_dir).unwrap();
+            fs::write(abi_dir.join("libmosaic_app.so"), format!("\x7fELF-{abi}")).unwrap();
+        }
+        dir
+    }
+
+    fn flutter_phone_build(pkg: &TempDir, out: &TempDir, runtime: &Path) -> Result<BuildResult, BuildError> {
+        build_package_with_profile_and_runtime(
+            &swiftui_options(pkg, out, Backend::Flutter),
+            BuildProfile::NativeComplete,
+            Some(runtime),
+        )
+    }
+
+    #[test]
+    fn a_flutter_phone_build_bundles_each_abi_and_keeps_state_where_the_platform_says() {
+        let pkg = card_package();
+        let runtime = flutter_phone_runtime_dir(pkg.path(), &["arm64-v8a", "x86_64"]);
+        let out = TempDir::new().unwrap();
+        // A reused output: last time's x86 library and a desktop runtime
+        // must not survive into this build (UI89 §7.2).
+        let stale = out.path().join("flutter/runtime");
+        fs::create_dir_all(stale.join("android/x86")).unwrap();
+        fs::write(stale.join("android/x86/libmosaic_app.so"), "\x7fELF-stale").unwrap();
+        fs::write(stale.join("libmosaic_app.so"), "\x7fELF-desktop").unwrap();
+
+        let result = flutter_phone_build(&pkg, &out, &runtime).expect("phone build");
+        let flutter = out.path().join("flutter");
+        let mut installed: Vec<String> = Vec::new();
+        for abi in ANDROID_ABIS {
+            let library = flutter.join("runtime/android").join(abi).join("libmosaic_app.so");
+            if library.exists() {
+                assert_eq!(fs::read_to_string(&library).unwrap(), format!("\x7fELF-{abi}"));
+                installed.push(abi.to_string());
+            }
+        }
+        assert_eq!(installed, ["arm64-v8a", "x86_64"]);
+        assert!(!flutter.join("runtime/libmosaic_app.so").exists());
+        assert!(result.artifacts.contains(&flutter.join("runtime")));
+
+        let hook = fs::read_to_string(flutter.join("hook/build.dart")).unwrap();
+        assert!(hook.contains("    if (targetOS != OS.android) {\n"));
+        for (architecture, abi) in [("arm64", "arm64-v8a"), ("arm", "armeabi-v7a"), ("x64", "x86_64"), ("ia32", "x86")] {
+            assert!(hook.contains(&format!("  Architecture.{architecture}: '{abi}',\n")), "{hook}");
+        }
+        assert!(hook.contains("input.packageRoot.resolve('runtime/android/$abi/libmosaic_app.so')"));
+        assert!(hook.contains("    if (!File.fromUri(source).existsSync()) {\n"));
+        assert!(hook.contains("    await _requireElf(source);\n    await _verifyElfArchitecture(source, architecture);\n"));
+        assert!(hook.contains("name: 'mosaic_host.dart',\n        linkMode: DynamicLoadingBundled(),"));
+        // Never another ABI's library, nor the desktop one: the only path to
+        // a library is built from the ABI the build asked for.
+        assert_eq!(hook.matches("runtime/").count(), 1, "{hook}");
+        assert!(!hook.contains("runtime/libmosaic_app.so"), "{hook}");
+
+        let pubspec = fs::read_to_string(flutter.join("pubspec.yaml")).unwrap();
+        assert!(pubspec.contains("  path_provider: 2.1.6\n"), "{pubspec}");
+        let main = fs::read_to_string(flutter.join("lib/main.dart")).unwrap();
+        assert!(main.contains("import 'package:path_provider/path_provider.dart';\n"));
+        assert!(main.contains("Future<void> main() async {\n"));
+        assert!(main.contains("      mosaicStateRoot = (await getApplicationSupportDirectory()).path;\n"));
+        assert!(main.find("getApplicationSupportDirectory").unwrap() < main.find("  runApp(MosaicApp());").unwrap());
+        assert!(!main.contains("void main() {\n"));
+
+        let readme = fs::read_to_string(flutter.join("README.md")).unwrap();
+        assert!(readme.contains("android:allowBackup=\"false\""), "{readme}");
+
+        // A desktop build into the same output: its own runtime only, and
+        // none of a phone build's additions.
+        let desktop = pkg.path().join("libmosaic_app_x.so");
+        fs::write(&desktop, "\x7fELF-desktop").unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Flutter),
+            BuildProfile::NativeComplete,
+            Some(&desktop),
+        )
+        .expect("desktop build");
+        assert!(flutter.join("runtime/libmosaic_app.so").is_file());
+        assert!(!flutter.join("runtime/android").exists());
+        assert!(!fs::read_to_string(flutter.join("pubspec.yaml")).unwrap().contains("path_provider"));
+        let main = fs::read_to_string(flutter.join("lib/main.dart")).unwrap();
+        assert!(main.contains("void main() {\n  runApp(MosaicApp());\n}\n"));
+    }
+
+    #[test]
+    fn a_flutter_phone_runtime_is_refused_unless_it_is_exactly_android_libraries() {
+        let pkg = card_package();
+        let refused = |runtime: &Path| {
+            let out = TempDir::new().unwrap();
+            flutter_phone_build(&pkg, &out, runtime).expect_err("refused").to_string()
+        };
+        let empty = pkg.path().join("empty");
+        fs::create_dir_all(&empty).unwrap();
+        assert!(refused(&empty).contains("no android/ directory"));
+
+        let with_ios = flutter_phone_runtime_dir(&pkg.path().join("i"), &["x86_64"]);
+        fs::create_dir_all(with_ios.join("ios/iphoneos")).unwrap();
+        assert!(refused(&with_ios).contains("ios/ is not read yet"));
+
+        let extra = flutter_phone_runtime_dir(&pkg.path().join("e"), &["x86_64"]);
+        fs::write(extra.join("notes.txt"), "x").unwrap();
+        assert!(refused(&extra).contains("notes.txt is not part of a Flutter phone runtime"));
+
+        // Compose's bare jniLibs layout is not a Flutter phone runtime.
+        let bare = android_runtime_dir(&pkg.path().join("b"), &["x86_64"]);
+        assert!(refused(&bare).contains("x86_64 is not part of a Flutter phone runtime"));
+
+        let unknown = flutter_phone_runtime_dir(&pkg.path().join("u"), &["x86_64"]);
+        fs::create_dir_all(unknown.join("android/mips")).unwrap();
+        assert!(refused(&unknown).contains("mips is not an Android ABI directory"));
+
+        let not_elf = flutter_phone_runtime_dir(&pkg.path().join("n"), &["x86_64"]);
+        fs::write(not_elf.join("android/x86_64/libmosaic_app.so"), "MZ not elf").unwrap();
+        assert!(refused(&not_elf).contains("x86_64 library is not an ELF shared library"));
+
+        #[cfg(unix)]
+        {
+            let elsewhere = flutter_phone_runtime_dir(&pkg.path().join("elsewhere"), &["x86_64"]);
+            let linked = pkg.path().join("l/phone-runtime");
+            fs::create_dir_all(&linked).unwrap();
+            std::os::unix::fs::symlink(elsewhere.join("android"), linked.join("android")).unwrap();
+            assert!(refused(&linked).contains("android must be a directory, not a link"));
+        }
+
+        let good = flutter_phone_runtime_dir(&pkg.path().join("g"), &["x86_64"]);
+        let out = TempDir::new().unwrap();
+        let mut opts = swiftui_options(&pkg, &out, Backend::Flutter);
+        opts.emit_project = false;
+        let error = build_package_with_profile_and_runtime(&opts, BuildProfile::NativeComplete, Some(&good))
+            .expect_err("needs a project")
+            .to_string();
+        assert!(error.contains("requires --emit-project"), "{error}");
+    }
+
+    #[test]
+    fn the_flutter_create_command_keeps_the_apps_identity_or_is_not_given() {
+        assert_eq!(
+            flutter_phone_create_command("dev.codingadventures.trestle").unwrap(),
+            "flutter create --platforms=android --org dev.codingadventures --project-name trestle ."
+        );
+        assert_eq!(
+            flutter_phone_create_command("dev.codingadventures.journalapp").unwrap(),
+            "flutter create --platforms=android --org dev.codingadventures --project-name journalapp ."
+        );
+        for (identifier, why) in [
+            ("solo", "no org part"),
+            ("dev.example.task-app", "is not a Dart package name"),
+            ("dev.example.2048", "is not a Dart package name"),
+            ("dev.example.Trestle", "is not a Dart package name"),
+            ("dev.example.class", "is not a Dart package name"),
+            ("dev.example.native", "is not a Dart package name"),
+            ("dev.example.fun", "is not a Dart package name"),
+            ("dev.new.app", "`new` in `dev.new.app` is not a valid Android package segment"),
+            ("dev.-x.app", "`-x`"),
+            ("2d.example.app", "`2d`"),
+            ("dev.fun.app", "`fun`"),
+        ] {
+            let error = flutter_phone_create_command(identifier).expect_err(identifier);
+            assert!(error.contains(why), "{identifier}: {error}");
+        }
+        // No command at all, rather than a made-up identity.
+        let note = flutter_phone_runtime_note("dev.example.task-app");
+        assert!(!note.contains("--project-name"), "{note}");
+        assert!(note.contains("No `flutter create` command is given"), "{note}");
     }
 
     #[test]
