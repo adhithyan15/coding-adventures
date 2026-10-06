@@ -18,6 +18,7 @@ use File::Spec ();
 use JSON::PP qw(decode_json);
 
 use CodingAdventures::BuildTool::Hasher;
+use CodingAdventures::BuildTool::Discovery;
 
 my $h = CodingAdventures::BuildTool::Hasher->new();
 
@@ -223,6 +224,57 @@ subtest 'neutral source fixtures project exact Dune pruning to Perl files' => su
             [qw(case/_Build/generated.pm near/_build-example/generated.pm)],
             "$name prunes only the exact lowercase Dune directory",
         );
+    }
+};
+
+subtest 'discovered declarations select non-source files and the selected BUILD' => sub {
+    my $dir = tempdir(CLEANUP => 1);
+    make_path("$dir/code/packages/perl/demo/assets", "$dir/code/packages/perl/demo/lib", "$dir/code/packages/perl/demo/_build");
+    my $pkg_dir = "$dir/code/packages/perl/demo";
+    write_file("$pkg_dir/BUILD", "perl_library(name = \"demo\", srcs = glob([\"assets/*.bin\"]))\n");
+    write_file("$pkg_dir/assets/data.bin", "original\n");
+    write_file("$pkg_dir/lib/undeclared.pm", "original\n");
+    write_file("$pkg_dir/_build/decoy.bin", "original\n");
+    my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $dir);
+    $discovery->discover();
+    my ($pkg) = @{ $discovery->packages };
+    my @relative = map {
+        my $path = File::Spec->abs2rel($_, $pkg_dir);
+        $path =~ s{\\}{/}g;
+        $path;
+    } $h->collect_source_files($pkg);
+    is(\@relative, [qw(BUILD assets/data.bin)], 'declared mode includes only BUILD and matching retained files');
+
+    my $first = $h->hash_package($pkg);
+    write_file("$pkg_dir/lib/undeclared.pm", "changed\n");
+    is($h->hash_package($pkg), $first, 'undeclared source does not change digest');
+    write_file("$pkg_dir/_build/decoy.bin", "changed\n");
+    is($h->hash_package($pkg), $first, 'generated tree does not change digest');
+    write_file("$pkg_dir/assets/data.bin", "changed\n");
+    isnt($h->hash_package($pkg), $first, 'declared non-source bytes change digest');
+    my $second = $h->hash_package($pkg);
+    write_file("$pkg_dir/BUILD", "perl_library(name = \"demo\", srcs = glob([\"assets/*.bin\"])) # changed\n");
+    isnt($h->hash_package($pkg), $second, 'selected BUILD bytes change digest');
+};
+
+subtest 'explicit empty declaration does not fall back to extension mode' => sub {
+    my $dir = tempdir(CLEANUP => 1);
+    write_file("$dir/BUILD", "perl_library(name = \"empty\", srcs = [])\n");
+    write_file("$dir/ignored.pm", "original\n");
+    my $pkg = { path => $dir, source_mode => 'declared_sources', declared_srcs => [], build_file => 'BUILD' };
+    my @relative = map { File::Spec->abs2rel($_, $dir) } $h->collect_source_files($pkg);
+    is(\@relative, ['BUILD'], 'only selected BUILD is retained');
+    my $first = $h->hash_package($pkg);
+    write_file("$dir/ignored.pm", "changed\n");
+    is($h->hash_package($pkg), $first, 'ignored extension does not change digest');
+};
+
+subtest 'declared globs are validated before traversal' => sub {
+    my $dir = tempdir(CLEANUP => 1);
+    write_file("$dir/BUILD", "perl_library(name = \"bad\", srcs = [])\n");
+    for my $invalid ('../outside.pm', '/absolute.pm', 'lib\\*.pm', 'lib/[bad.pm') {
+        my $pkg = { path => $dir, source_mode => 'declared_sources', declared_srcs => ['safe/*.pm', $invalid], build_file => 'BUILD' };
+        like(dies { $h->collect_source_files($pkg) }, qr/DECLARED_GLOB_INVALID/, "$invalid rejected");
     }
 };
 

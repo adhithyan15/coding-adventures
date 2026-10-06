@@ -15867,6 +15867,39 @@ hashing and TypeScript diff selection each reach six. The Perl tranche must
 prove exact `_build` pruning without erasing `_Build` or `_build-example`, and
 must not claim full OCaml source hashing or native filesystem authority.
 
+## Post-#16776 inventory and next dependency pass (2026-10-06)
+
+GitHub auto-merged the Perl Dune fixture PR after all 32 final-head checks
+completed acceptably (13 success, 19 expected skips) and the branch was
+conflict-free. The exact merged `origin/main` collision report still records
+15 established lanes, 1,487 implementation identities, 4,757 package slots,
+178 high-consensus identities with 262 missing slots, five emerging OCaml
+packages, and no canonical collision or unknown bucket. OCaml's native
+build-tool, neutral adapter, three-platform execution, and denominator gates
+remain separately owned and pending; no new OCaml promotion owner is needed.
+
+The parallel discovery audit found one additional unowned Haskell build-tool
+gap. Its hard-coded discovery skip list misses seven generated components,
+and language inference can select an incidental nested language name. Add a
+pending full language-registry discovery owner after the narrow Haskell Dune
+owner; the latter remains a focused exact `_build` predecessor and must not
+claim the entire neutral case. The new ID has no exact or normalized collision.
+
+A subsequent exact-main audit also found that the shared Dart/Swift language-
+frontend fixture owner lists Python among twelve roots, but no implementation
+child owned the Python lexer/parser vertical. Both identities are 13/15,
+missing those two lanes only (four slots). Register a pending vertical owner
+after the neutral fixture, then split lane and lexer/parser implementation;
+the new ID has no collision or open-PR file overlap.
+
+With Perl Dune merged, Perl declared-source metadata plumbing is the highest
+leverage eligible next slice: it directly unlocks Perl source hashing and
+reaches nine unfinished descendants. Elixir portable source hashing reaches
+seven and Lua dependency hashing five. No open PR overlaps the expected
+Perl, Elixir, or Lua build-tool implementation paths. Select the Perl metadata
+owner in a fresh clean main-based worktree, keeping full source hashing and
+native filesystem authority outside that bounded plumbing tranche.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

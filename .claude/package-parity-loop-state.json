@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16776,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16776",
-    "branch": "codex/parity-perl-dune-20261006",
-    "implementation_revision": "59f643ac25f95d70d7ace6964a48eb5e03979ab6",
+    "number": 16778,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16778",
+    "branch": "codex/parity-perl-declared-source-20261006",
+    "implementation_revision": "599b2193edd6f9e195bcdd762c292f0d83eb1d69",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-06T04:58:37Z",
-    "pr_number": 16776,
+    "observed_at": "2026-10-06T05:38:37Z",
+    "pr_number": 16778,
     "status": "checks-pending",
-    "notes": "Ready-for-review Perl Dune fixture PR opened at 59f643ac25f95d70d7ace6964a48eb5e03979ab6. GitHub reports MERGEABLE; CI detect, CodeQL detect, and human-language detection are queued. Do not enable auto-merge until every required final-head check is terminal and acceptable and GitHub reports no conflict."
+    "notes": "Ready-for-review Perl declared-source metadata bridge PR opened at 599b2193edd6f9e195bcdd762c292f0d83eb1d69. GitHub reports MERGEABLE; CI detect, CodeQL detect, and human-language detection are queued. Do not enable auto-merge until every required final-head check is terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
-    "revision": "2ec4adb9b14f20e958eee0f9340e9fe3d84ad8f7",
+    "revision": "a8966b6591f23fab05838be84169d5490087d344",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -731,6 +731,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Haskell does not consume the shared language-registry fixture and mentions _build only in orphan validation. Add the exact discovery rule and language-neutral fixture consumption in one bounded Haskell tranche."
+    },
+    {
+      "id": "build-tool-haskell-discovery-language-registry-conformance",
+      "title": "Make Haskell discovery consume the complete language registry fixture",
+      "status": "pending",
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-haskell-dune-build-discovery-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Read-only post-#16776 audit found that Haskell discovery omits seven exact generated components (.cargo, .dart_tool, .gradle, _build, blib, dist-newstyle, gradle-build), infers language from any path component, and can include specification fixtures. After the narrow Dune predecessor, consume the complete shared discovery/language-registry case: exact package/program bucket classification and identity, generated-directory and fixture-tree exclusions, and any remaining full-case divergences. The proposed ID has no exact or punctuation-insensitive collision in the state graph."
     },
     {
       "id": "build-tool-python-dune-build-discovery-conformance",
@@ -1945,10 +1954,11 @@
     {
       "id": "build-tool-perl-dune-build-discovery-fixture-adoption",
       "title": "Make Perl consume the Dune discovery fixture",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-generated-directory-hashing-conformance-corpus"],
       "branch": "codex/parity-perl-dune-20261006",
       "pr_number": 16776,
+      "merged_revision": "a8966b6591f23fab05838be84169d5490087d344",
       "selected_at": "2026-10-06T04:32:09Z",
       "selection_revision": "5bce810b2aad798b5be2d2035142cb65db7cf832",
       "selection_notes": "Selected after #16774 auto-merged, exact-main collision report confirmed 15 lanes, 1,487 identities, 4,757 slots, five emerging OCaml packages, and zero collisions. Both prerequisites are merged; this narrow fixture owner reaches 12 unfinished downstream owners and does not overlap any open PR. Register the newly discovered stack-VM neutral owner before selection. Keep full OCaml source hashing, declared-source plumbing, and native snapshot authority outside this slice.",
@@ -1957,10 +1967,13 @@
     {
       "id": "build-tool-perl-declared-source-metadata-plumbing",
       "title": "Plumb declared-source metadata through the Perl build tool",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-perl-dune-build-discovery-fixture-adoption"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-perl-declared-source-20261006",
+      "pr_number": 16778,
+      "selected_at": "2026-10-06T05:11:42Z",
+      "selection_revision": "a8966b6591f23fab05838be84169d5490087d344",
+      "selection_notes": "Selected after #16776 auto-merged with 32 terminal acceptable checks. The exact merged-main collision inventory remains 15 established lanes, 1,487 identities, 4,757 slots, five emerging OCaml packages, and zero collisions or unknown buckets. The newly discovered Haskell full-discovery owner was registered before selection. The sole prerequisite is merged, no active parity PR remains, and this narrow metadata-plumbing owner reaches nine unfinished descendants, ahead of Elixir source hashing (seven) and Lua dependency hashing (five). Use this fresh clean main-based branch; full source hashing, native filesystem authority, and unrelated Haskell discovery remain separate owners.",
       "notes": "Carry declared-source metadata from Perl discovery into hashing after the Dune fixture owner proves exact generated-directory behavior."
     },
     {
@@ -12155,6 +12168,12 @@
       "title": "Port SQL lexer and parser verticals to Dart and Swift",
       "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
       "notes": "Collision-checked after PR #16756. SQL lexer and parser each exist in 13/15 established lanes, missing only Dart and Swift; shared SQL grammar and same-lane foundations exist. Preserve case-insensitive keywords, <> aliasing, comments, quoted identifiers, PEG precedence, and stable ASTs. Do not invent a dependency on the independent SQL CSV adapter owner. Split by lane and lexer before parser."
+    },
+    {
+      "id": "dart-swift-python-frontend-vertical-parity",
+      "title": "Port Python lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Read-only post-#16776 audit found Python lexer and parser each present in 13/15 established lanes, missing Dart and Swift only (four slots). The neutral frontend fixture owner lists Python among twelve roots, but no Python implementation child owned these four slots. Split by lane and lexer before parser after the shared token/AST fixture; Python self-hosting and C#/Java contextual parsing are separate concerns. Exact and punctuation-insensitive owner-ID collision checks found no match, and live open-PR file lists had no overlap."
     },
     {
       "id": "dart-java-kotlin-core-eight-family-parity",

@@ -32,6 +32,13 @@ code/programs/perl/build-tool/
   this slice does not claim full discovery-registry or OCaml source-extension
   conformance.
 - **Hash-based cache**: Optional content-hash cache as a fallback when git diff is unavailable.
+- **Declared-source metadata bridge**: A supported Starlark BUILD target carries
+  its ordered `srcs` globs from the selected platform BUILD into hashing.
+  Declared mode hashes matching retained files, even non-source extensions,
+  plus the selected BUILD; `srcs = []` never falls back to extension mode.
+  Shell BUILD files retain extension mode. Invalid detected Starlark targets
+  fail closed. This is a bounded bridge, not full portable source-registry or
+  glob conformance, nor a claim that the CLI now uses hash caching.
 - **Zero CPAN deps at runtime**: Uses only Perl core modules (5.26+). Only `Test2::V0` is required for tests.
 
 ## Installation
@@ -178,9 +185,9 @@ python code/scripts/generate_tracked_artifact_unicode17.py \
 | Module | Responsibility |
 |--------|---------------|
 | `BuildTool.pm` | Orchestrator: wires all sub-modules together |
-| `Discovery.pm` | Recursive BUILD file walk; language inference |
+| `Discovery.pm` | Recursive BUILD file walk; language inference and selected-front source metadata |
 | `Resolver.pm` | Metadata parsing; dependency graph construction |
-| `Hasher.pm` | SHA256 content fingerprinting |
+| `Hasher.pm` | SHA256 content fingerprinting with bounded declared-source filtering |
 | `Executor.pm` | `fork()`-based parallel build execution |
 | `Cache.pm` | JSON hash cache for incremental builds |
 | `GitDiff.pm` | `git diff` change detection |
