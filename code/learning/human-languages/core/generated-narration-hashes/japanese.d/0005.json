@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 5,
-  "sourceHash": "fnv1a64:903f2466f7b5acba",
+  "sourceHash": "fnv1a64:c82891f8e89c9b65",
   "lessonIds": [
     "JA-W05-nichi-kanji",
     "JA-W05-hon-kanji",
@@ -15,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "japanese/narration/ch05.txt",
   "json": "japanese/narration/ch05.json",
-  "textHash": "fnv1a64:91d8c69d8d574fb2",
-  "jsonHash": "fnv1a64:49200cc62c7aaf10",
+  "textHash": "fnv1a64:b4e3ab201fd207be",
+  "jsonHash": "fnv1a64:ccea63290026a02a",
   "findings": []
 }

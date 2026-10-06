@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.73.0";
+pub const VERSION: &str = "0.75.0";
 
 use std::collections::HashMap;
 
@@ -3187,6 +3187,16 @@ fn text_node_no_wrap(
     node
 }
 
+fn align_text_node(
+    mut node: PositionedNode,
+    text_align: TextAlign,
+) -> PositionedNode {
+    if let Some(Content::Text(text)) = &mut node.content {
+        text.text_align = text_align;
+    }
+    node
+}
+
 struct MarkdownLabelBox {
     x: f64,
     y: f64,
@@ -3731,9 +3741,9 @@ where
                 &column.label,
                 MarkdownLabelBox {
                     x: column.x + 12.0,
-                y: column.y + 14.0,
-                width: column.width - 24.0,
-                height: column.header_height - 28.0,
+                    y: column.y + 14.0,
+                    width: column.width - 24.0,
+                    height: column.header_height - 28.0,
                 },
                 &heading_font,
                 &column.style.text_color,
@@ -3741,7 +3751,7 @@ where
             ));
         }
         for card in &column.cards {
-            let metadata = kanban_card_metadata(card);
+            let has_footer = card.ticket.is_some() || card.assigned.is_some();
             instructions.push(PaintInstruction::Rect(PaintRect {
                 base: kanban_paint_base(&card.id, &card.classes, card.ticket_url.as_deref()), x: card.x, y: card.y,
                 width: card.width, height: card.height,
@@ -3750,6 +3760,9 @@ where
                 corner_radius: Some(card.style.corner_radius),
                 stroke_dash: None, stroke_dash_offset: None,
             }));
+            if let Some(marker) = kanban_priority_marker(card) {
+                instructions.push(marker);
+            }
             let (label_x, label_width) = if let Some(icon) = &card.icon {
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase::default(),
@@ -3779,7 +3792,7 @@ where
             } else {
                 (card.x + 10.0, card.width - 20.0)
             };
-            let label_height = card.height - if metadata.is_some() { 46.0 } else { 24.0 };
+            let label_height = card.height - if has_footer { 46.0 } else { 24.0 };
             if card.label.spans.is_empty() {
                 text_children.push(text_node(
                     &card.label.text, label_x, card.y + 18.0,
@@ -3800,18 +3813,37 @@ where
                     options,
                 ));
             }
-            if let Some(metadata) = metadata {
+            if has_footer {
                 let mut metadata_font = options.label_font.clone();
                 metadata_font.size = 11.0;
-                text_children.push(text_node_no_wrap(
-                    &metadata,
-                    card.x + 10.0,
-                    card.y + card.height - 24.0,
-                    card.width - 20.0,
-                    16.0,
-                    metadata_font,
-                    css_to_color(&card.style.text_color),
-                ));
+                if let Some(ticket) = &card.ticket {
+                    text_children.push(align_text_node(
+                        text_node_no_wrap(
+                            ticket,
+                            card.x + 10.0,
+                            card.y + card.height - 24.0,
+                            card.width / 2.0 - 10.0,
+                            16.0,
+                            metadata_font.clone(),
+                            css_to_color(&card.style.text_color),
+                        ),
+                        TextAlign::Start,
+                    ));
+                }
+                if let Some(assigned) = &card.assigned {
+                    text_children.push(align_text_node(
+                        text_node_no_wrap(
+                            assigned,
+                            card.x + card.width / 2.0,
+                            card.y + card.height - 24.0,
+                            card.width / 2.0 - 10.0,
+                            16.0,
+                            metadata_font,
+                            css_to_color(&card.style.text_color),
+                        ),
+                        TextAlign::End,
+                    ));
+                }
             }
         }
     }
@@ -3833,18 +3865,35 @@ where
     }
 }
 
-fn kanban_card_metadata(card: &LayoutedBoardCard) -> Option<String> {
-    let mut fields = Vec::new();
-    if let Some(ticket) = &card.ticket {
-        fields.push(format!("#{ticket}"));
+fn kanban_priority_marker(card: &LayoutedBoardCard) -> Option<PaintInstruction> {
+    let color = kanban_priority_color(card.priority.as_deref()?)?;
+    let inset = card.style.corner_radius / 2.0;
+    Some(PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x: card.x + 2.0, y: card.y + inset },
+            PathCommand::LineTo { x: card.x + 2.0, y: card.y + card.height - inset },
+        ],
+        fill: None,
+        fill_rule: None,
+        stroke: Some(color.into()),
+        stroke_width: Some(4.0),
+        stroke_cap: Some(StrokeCap::Round),
+        stroke_join: None,
+        stroke_dash: None,
+        stroke_dash_offset: None,
+    }))
+}
+
+fn kanban_priority_color(priority: &str) -> Option<&'static str> {
+    match priority.to_ascii_lowercase().as_str() {
+        "very high" => "#ff0000",
+        "high" => "#ffa500",
+        "low" => "#0000ff",
+        "very low" => "#add8e6",
+        _ => return None,
     }
-    if let Some(assigned) = &card.assigned {
-        fields.push(format!("@{assigned}"));
-    }
-    if let Some(priority) = &card.priority {
-        fields.push(format!("priority: {priority}"));
-    }
-    (!fields.is_empty()).then(|| fields.join("  "))
+    .into()
 }
 
 fn kanban_paint_base(id: &str, classes: &[String], ticket_url: Option<&str>) -> PaintBase {
@@ -7399,7 +7448,16 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.73.0");
+        assert_eq!(crate::VERSION, "0.75.0");
+    }
+
+    #[test]
+    fn kanban_priorities_resolve_to_mermaid_marker_colors() {
+        assert_eq!(kanban_priority_color("Very High"), Some("#ff0000"));
+        assert_eq!(kanban_priority_color("high"), Some("#ffa500"));
+        assert_eq!(kanban_priority_color("Medium"), None);
+        assert_eq!(kanban_priority_color("Low"), Some("#0000ff"));
+        assert_eq!(kanban_priority_color("Very Low"), Some("#add8e6"));
     }
 
     #[test]

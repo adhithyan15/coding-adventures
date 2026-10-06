@@ -199,6 +199,9 @@ fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
             .unwrap_or_else(|error| panic!("ishikawa fixture {name} failed: {error}"));
         assert!(!diagram.effect.is_empty());
         assert!(!diagram.causes.is_empty());
+        if name == "diagram-padding-config" {
+            assert_eq!(diagram.diagram_padding, 64.0);
+        }
     }
 }
 
@@ -443,6 +446,17 @@ fn pinned_architecture_subset_corpus_parses_to_structural_ir() {
         let diagram = parse_architecture(source)
             .unwrap_or_else(|error| panic!("architecture fixture {id} failed: {error}"));
         assert!(!diagram.nodes.is_empty());
+        if id == "edge-elasticity-config" {
+            assert_eq!(
+                diagram.architecture_config.as_ref().unwrap().edge_elasticity,
+                0.8
+            );
+        }
+        if id == "seeded-random-layout-config" {
+            let config = diagram.architecture_config.as_ref().unwrap();
+            assert!(config.randomize);
+            assert_eq!(config.seed, 17);
+        }
     }
 }
 
@@ -520,6 +534,10 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
         if id == "multiline-labels" {
             assert_eq!(board.columns[0].label.text, "Todo\nqueue");
             assert_eq!(board.columns[0].cards[0].label.text, "Line 1\nLine 2\nLine 3");
+        }
+        if id == "priority-markers" {
+            assert_eq!(board.columns[0].cards[0].priority.as_deref(), Some("Very High"));
+            assert_eq!(board.columns[0].cards[1].priority.as_deref(), Some("Very Low"));
         }
     }
 }
@@ -1155,6 +1173,12 @@ fn ishikawa_dispatches_to_dedicated_causal_tree_ir() {
     let indented_effect = parse_ishikawa("ishikawa-beta\n    Failure\nPeople\n  Training").unwrap();
     assert_eq!(indented_effect.causes[0].parent_id, None);
     assert_eq!(indented_effect.causes[1].parent_id.as_deref(), Some("cause-1"));
+
+    let configured = parse_ishikawa(
+        "---\nconfig:\n  ishikawa:\n    diagramPadding: 52\n---\nishikawa\nFailure\n  People",
+    )
+    .unwrap();
+    assert_eq!(configured.diagram_padding, 52.0);
 }
 
 #[test]

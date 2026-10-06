@@ -427,8 +427,10 @@ card metadata preserves label overrides, ticket identifiers, assignees, and
 priorities in semantic IR. Icon identifiers from either metadata or following
 `::icon(...)` decorators survive the same pipeline and lower to generic,
 backend-neutral shaped badge geometry without coupling the board IR to an icon
-provider. Board layout reserves a compact metadata footer and PaintScene
-lowering emits it as backend-neutral shaped text.
+provider. High and low priority values lower to Mermaid-compatible colored edge
+markers without reserving footer space. Board layout reserves a compact metadata
+footer for ticket and assignee fields, which PaintScene lowering aligns to the
+left and right as backend-neutral shaped text.
 Following `:::class` decorators preserve ordered column or card class names
 through board semantic IR and layout, then lower them as `diagram.classes`
 PaintInstruction metadata without coupling native renderers to CSS.
@@ -480,7 +482,13 @@ artwork remains unsupported at the partial level. Architecture `iconSize`, `font
 `idealEdgeLengthMultiplier` values from Mermaid init directives or YAML front matter
 survive as typed semantic configuration and resolve into backend-neutral node geometry,
 service typography, deterministic spacing, alignment-hint distances, group insets,
-and outer canvas margins. Randomized layout and the remaining fcose-specific tuning controls remain
+and outer canvas margins. Bounded `edgeElasticity` values survive the same configuration
+paths and deterministically tighten or loosen connected sibling spacing before relationship
+routing and backend-neutral PaintScene lowering. `randomize` and signed `seed` values also
+survive semantic configuration and select a repeatable seeded permutation of sibling layout
+slots while preserving authored IR order, containment, routing, and backend-neutral PaintScene
+lowering. Unlike Mermaid's nondeterministic `seed: 0` escape hatch, the native pipeline keeps
+zero deterministic. Iteration limits and the remaining fcose-specific tuning controls remain
 unsupported at the partial level.
 
 ### Radar Compatibility
@@ -731,8 +739,11 @@ The initial Mermaid 11.16.1 Ishikawa slice recognizes `ishikawa` and
 `ishikawa-beta`, takes the first content line as the effect, and preserves
 subsequent indentation as dedicated causal-tree IR. Deterministic alternating
 fishbone layout lowers through backend-neutral paths, a rounded effect box,
-and glyph runs, with native Metal-to-PNG validation. Exact upstream theme and
-configuration parity, adaptive collision avoidance for very wide or deeply
+and glyph runs, with native Metal-to-PNG validation. Non-negative `diagramPadding`
+values from Mermaid init directives or YAML front matter survive causal IR and
+resolve outer spine, effect-box, and bone geometry before backend-neutral Paint
+lowering. Exact upstream theme and remaining configuration parity, adaptive
+collision avoidance for very wide or deeply
 nested trees, and interactive behavior remain unsupported at the partial
 level.
 

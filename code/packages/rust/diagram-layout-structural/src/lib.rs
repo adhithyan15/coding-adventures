@@ -15,7 +15,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.25.0";
+pub const VERSION: &str = "0.27.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -29,6 +29,7 @@ const GROUP_HEADER_H: f64 = 32.0;
 const TITLE_H: f64 = 44.0;
 const ROUTE_CLEARANCE: f64 = 12.0;
 const ROUTE_BEND_COST: f64 = 8.0;
+const DEFAULT_EDGE_ELASTICITY: f64 = 0.45;
 
 fn horizontal_gap(config: Option<&ArchitectureConfig>) -> f64 {
     config.map_or(COL_GAP, |config| config.node_separation)
@@ -53,6 +54,75 @@ fn alignment_gap(config: Option<&ArchitectureConfig>, fallback: f64) -> f64 {
     config.map_or(fallback, |config| {
         config.icon_size * config.ideal_edge_length_multiplier
     })
+}
+
+fn connected_node_gap(
+    previous: &StructuralNode,
+    current: &StructuralNode,
+    diagram: &StructuralDiagram,
+    fallback: f64,
+) -> f64 {
+    let Some(config) = diagram.architecture_config.as_ref() else {
+        return fallback;
+    };
+    let connected = diagram.relationships.iter().any(|relationship| {
+        !relationship.from_group
+            && !relationship.to_group
+            && ((relationship.from == previous.id && relationship.to == current.id)
+                || (relationship.from == current.id && relationship.to == previous.id))
+    });
+    if previous.parent_group != current.parent_group || !connected {
+        return fallback;
+    }
+    if config.edge_elasticity == DEFAULT_EDGE_ELASTICITY {
+        fallback
+    } else {
+        // Preserve Mermaid's default spacing while giving stronger springs a shorter target gap.
+        fallback * (1.0 + DEFAULT_EDGE_ELASTICITY - config.edge_elasticity)
+    }
+}
+
+fn seeded_placement_order(
+    nodes: &[StructuralNode],
+    config: Option<&ArchitectureConfig>,
+) -> Vec<usize> {
+    let mut order = (0..nodes.len()).collect::<Vec<_>>();
+    let Some(config) = config.filter(|config| config.randomize) else {
+        return order;
+    };
+    let mut sibling_slots: HashMap<Option<&str>, Vec<usize>> = HashMap::new();
+    for (index, node) in nodes.iter().enumerate() {
+        sibling_slots
+            .entry(node.parent_group.as_deref())
+            .or_default()
+            .push(index);
+    }
+    for (parent, slots) in sibling_slots {
+        let mut values = slots.clone();
+        let mut state = (config.seed as u32) ^ stable_group_hash(parent);
+        for index in (1..values.len()).rev() {
+            let swap_index = seeded_random(&mut state) as usize % (index + 1);
+            values.swap(index, swap_index);
+        }
+        for (slot, value) in slots.into_iter().zip(values) {
+            order[slot] = value;
+        }
+    }
+    order
+}
+
+fn stable_group_hash(parent: Option<&str>) -> u32 {
+    parent.unwrap_or("").bytes().fold(2_166_136_261, |hash, byte| {
+        (hash ^ u32::from(byte)).wrapping_mul(16_777_619)
+    })
+}
+
+fn seeded_random(state: &mut u32) -> u32 {
+    *state = state.wrapping_add(0x6d2b_79f5);
+    let mut value = *state;
+    value = (value ^ (value >> 15)).wrapping_mul(value | 1);
+    value ^= value.wrapping_add((value ^ (value >> 7)).wrapping_mul(value | 61));
+    value ^ (value >> 14)
 }
 
 fn structural_style(
@@ -80,17 +150,8 @@ fn structural_style(
 /// Lay out a `StructuralDiagram` using an explicit axis or the legacy grid.
 pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructuralDiagram {
     let mut nodes = match diagram.direction.as_ref() {
-        Some(direction) => layout_directional_nodes(
-            &diagram.nodes,
-            &diagram.groups,
-            direction,
-            diagram.architecture_config.as_ref(),
-        ),
-        None => layout_nodes(
-            &diagram.nodes,
-            &diagram.groups,
-            diagram.architecture_config.as_ref(),
-        ),
+        Some(direction) => layout_directional_nodes(diagram, direction),
+        None => layout_nodes(diagram),
     };
     apply_alignments(&mut nodes, diagram);
     if diagram.title.is_some() {
@@ -231,19 +292,22 @@ fn architecture_icon_text(node: &StructuralNode) -> Option<&str> {
     }
 }
 
-fn layout_nodes(
-    nodes: &[StructuralNode],
-    groups: &[diagram_ir::StructuralGroup],
-    architecture_config: Option<&ArchitectureConfig>,
-) -> Vec<LayoutedStructuralNode> {
-    let mut out: Vec<LayoutedStructuralNode> = Vec::with_capacity(nodes.len());
+fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
+    let nodes = &diagram.nodes;
+    let groups = &diagram.groups;
+    let architecture_config = diagram.architecture_config.as_ref();
+    let mut positioned: Vec<(usize, LayoutedStructuralNode)> = Vec::with_capacity(nodes.len());
+    let placement_order = seeded_placement_order(nodes, architecture_config);
     // Track max height per row so rows don't overlap.
     let padding = outer_padding(architecture_config);
     let mut row_y: Vec<f64> = vec![padding];
+    let mut row_adjustments: Vec<f64> = vec![0.0];
 
-    for (idx, node) in nodes.iter().enumerate() {
-        let col = idx % COLS;
-        let row = idx / COLS;
+    let mut previous_index = None;
+    for (slot, node_index) in placement_order.into_iter().enumerate() {
+        let node = &nodes[node_index];
+        let col = slot % COLS;
+        let row = slot / COLS;
         let nw = node_width(node, architecture_config);
         let nh = node_height(node, architecture_config);
 
@@ -251,11 +315,23 @@ fn layout_nodes(
         while row_y.len() <= row {
             row_y.push(*row_y.last().unwrap_or(&padding));
         }
+        while row_adjustments.len() <= row {
+            row_adjustments.push(0.0);
+        }
+
+        if col > 0 {
+            let fallback = horizontal_gap(architecture_config);
+            row_adjustments[row] += previous_index.map_or(0.0, |previous| {
+                connected_node_gap(&nodes[previous], node, diagram, fallback) - fallback
+            });
+        }
 
         let minimum_width = architecture_config.map_or(MIN_NODE_W, |config| {
             MIN_NODE_W * config.icon_size / 80.0
         });
-        let x = padding + col as f64 * (minimum_width + horizontal_gap(architecture_config));
+        let x = padding
+            + col as f64 * (minimum_width + horizontal_gap(architecture_config))
+            + row_adjustments[row];
         let y =
             row_y[row] + group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
 
@@ -287,30 +363,36 @@ fn layout_nodes(
             y_off += ch;
         }
 
-        out.push(LayoutedStructuralNode {
-            id: node.id.clone(),
-            node_kind: node.node_kind.clone(),
-            x,
-            y,
-            width: nw,
-            height: nh,
-            header: node.label.clone(),
-            stereotype: node.stereotype.clone(),
-            icon_name: architecture_icon_name(node).map(str::to_string),
-            icon_text: architecture_icon_text(node).map(str::to_string),
-            style: structural_style(node, architecture_config),
-            compartments: comps,
-        });
+        positioned.push((
+            node_index,
+            LayoutedStructuralNode {
+                id: node.id.clone(),
+                node_kind: node.node_kind.clone(),
+                x,
+                y,
+                width: nw,
+                height: nh,
+                header: node.label.clone(),
+                stereotype: node.stereotype.clone(),
+                icon_name: architecture_icon_name(node).map(str::to_string),
+                icon_text: architecture_icon_text(node).map(str::to_string),
+                style: structural_style(node, architecture_config),
+                compartments: comps,
+            },
+        ));
+        previous_index = Some(node_index);
     }
-    out
+    positioned.sort_by_key(|(index, _)| *index);
+    positioned.into_iter().map(|(_, node)| node).collect()
 }
 
 fn layout_directional_nodes(
-    nodes: &[StructuralNode],
-    groups: &[diagram_ir::StructuralGroup],
+    diagram: &StructuralDiagram,
     direction: &DiagramDirection,
-    architecture_config: Option<&ArchitectureConfig>,
 ) -> Vec<LayoutedStructuralNode> {
+    let nodes = &diagram.nodes;
+    let groups = &diagram.groups;
+    let architecture_config = diagram.architecture_config.as_ref();
     let reverse = matches!(direction, DiagramDirection::Bt | DiagramDirection::Rl);
     let vertical = matches!(direction, DiagramDirection::Tb | DiagramDirection::Bt);
     let mut indices = (0..nodes.len()).collect::<Vec<_>>();
@@ -320,6 +402,7 @@ fn layout_directional_nodes(
 
     let padding = outer_padding(architecture_config);
     let mut cursor = padding;
+    let mut previous_index: Option<usize> = None;
     let mut positioned = Vec::with_capacity(nodes.len());
     for index in indices {
         let node = &nodes[index];
@@ -327,15 +410,24 @@ fn layout_directional_nodes(
         let height = node_height(node, architecture_config);
         let group_offset =
             group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
+        let fallback_gap = if vertical {
+            vertical_gap(architecture_config)
+        } else {
+            horizontal_gap(architecture_config)
+        };
+        if let Some(previous) = previous_index {
+            cursor += connected_node_gap(&nodes[previous], node, diagram, fallback_gap);
+        }
         let (x, y) = if vertical {
             let position = (padding, cursor + group_offset);
-            cursor = position.1 + height + vertical_gap(architecture_config);
+            cursor = position.1 + height;
             position
         } else {
             let position = (cursor, padding + group_offset);
-            cursor = position.0 + width + horizontal_gap(architecture_config);
+            cursor = position.0 + width;
             position
         };
+        previous_index = Some(index);
 
         let style = structural_style(node, architecture_config);
         let row_height = ROW_H.max(style.font_size * 1.4);
@@ -1054,7 +1146,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.25.0");
+        assert_eq!(crate::VERSION, "0.27.0");
     }
 
     #[test]
@@ -1373,6 +1465,9 @@ mod tests {
             node_separation: 110.0,
             padding: 48.0,
             ideal_edge_length_multiplier: 1.25,
+            edge_elasticity: 0.45,
+            randomize: false,
+            seed: 1,
         });
         diagram.nodes[0].metadata = Some(StructuralNodeMetadata::ArchitectureService(
             ArchitectureServiceMetadata {
@@ -1436,5 +1531,67 @@ mod tests {
         let layout = layout_structural_diagram(&diagram);
         assert!(layout.nodes.windows(2).all(|nodes| nodes[0].y == nodes[1].y));
         assert!(layout.nodes.windows(2).all(|nodes| nodes[0].x < nodes[1].x));
+    }
+
+    #[test]
+    fn architecture_edge_elasticity_controls_connected_sibling_spacing() {
+        let mut loose = two_class_diagram();
+        loose.kind = StructuralKind::Architecture;
+        loose.architecture_config = Some(ArchitectureConfig {
+            edge_elasticity: 0.1,
+            ..ArchitectureConfig::default()
+        });
+        let mut tight = loose.clone();
+        tight.architecture_config.as_mut().unwrap().edge_elasticity = 0.9;
+
+        let loose_layout = layout_structural_diagram(&loose);
+        let tight_layout = layout_structural_diagram(&tight);
+        let loose_gap = loose_layout.nodes[1].x
+            - (loose_layout.nodes[0].x + loose_layout.nodes[0].width);
+        let tight_gap = tight_layout.nodes[1].x
+            - (tight_layout.nodes[0].x + tight_layout.nodes[0].width);
+        assert!(tight_gap < loose_gap);
+        assert_eq!(loose_gap, 101.25);
+        assert_eq!(tight_gap, 41.25);
+    }
+
+    #[test]
+    fn architecture_randomize_uses_repeatable_seeded_sibling_placement() {
+        let mut diagram = two_class_diagram();
+        diagram.kind = StructuralKind::Architecture;
+        for id in ["Cat", "Bird", "Fish", "Horse"] {
+            let mut node = diagram.nodes[0].clone();
+            node.id = id.into();
+            node.label = id.into();
+            diagram.nodes.push(node);
+        }
+        diagram.architecture_config = Some(ArchitectureConfig {
+            randomize: true,
+            seed: 7,
+            ..ArchitectureConfig::default()
+        });
+
+        let first = layout_structural_diagram(&diagram);
+        let repeated = layout_structural_diagram(&diagram);
+        let first_positions = first
+            .nodes
+            .iter()
+            .map(|node| (node.x, node.y))
+            .collect::<Vec<_>>();
+        let repeated_positions = repeated
+            .nodes
+            .iter()
+            .map(|node| (node.x, node.y))
+            .collect::<Vec<_>>();
+        assert_eq!(first_positions, repeated_positions);
+
+        diagram.architecture_config.as_mut().unwrap().seed = 11;
+        let alternate = layout_structural_diagram(&diagram);
+        let alternate_positions = alternate
+            .nodes
+            .iter()
+            .map(|node| (node.x, node.y))
+            .collect::<Vec<_>>();
+        assert_ne!(first_positions, alternate_positions);
     }
 }

@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.144.0";
+pub const VERSION: &str = "0.147.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -1126,6 +1126,19 @@ fn parse_architecture_config(source: &str) -> ArchitectureConfig {
             .and_then(|value| value.parse::<f64>().ok())
             .filter(|value| value.is_finite() && *value > 0.0)
     };
+    let bounded_number = |key, minimum: f64, maximum: f64| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value >= minimum && *value <= maximum)
+    };
+    let boolean = |key| {
+        value(key).and_then(|value| match value.to_ascii_lowercase().as_str() {
+            "true" => Some(true),
+            "false" => Some(false),
+            _ => None,
+        })
+    };
+    let integer = |key| value(key).and_then(|value| value.parse::<i64>().ok());
     let defaults = ArchitectureConfig::default();
     ArchitectureConfig {
         icon_size: positive_number("iconSize").unwrap_or(defaults.icon_size),
@@ -1135,6 +1148,10 @@ fn parse_architecture_config(source: &str) -> ArchitectureConfig {
         padding: positive_number("padding").unwrap_or(defaults.padding),
         ideal_edge_length_multiplier: positive_number("idealEdgeLengthMultiplier")
             .unwrap_or(defaults.ideal_edge_length_multiplier),
+        edge_elasticity: bounded_number("edgeElasticity", 0.0, 1.0)
+            .unwrap_or(defaults.edge_elasticity),
+        randomize: boolean("randomize").unwrap_or(defaults.randomize),
+        seed: integer("seed").unwrap_or(defaults.seed),
     }
 }
 
@@ -5528,6 +5545,7 @@ fn venn_error(line: usize, message: impl Into<String>) -> ParseError { ParseErro
 
 /// Parse Mermaid 11.16.1 indentation-based Ishikawa diagrams into causal IR.
 pub fn parse_ishikawa(source: &str) -> Result<IshikawaDiagram, ParseError> {
+    let diagram_padding = parse_ishikawa_padding(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_ishikawa(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(ISHIKAWA_PARSER_GRAMMAR_SOURCE)
@@ -5553,7 +5571,25 @@ pub fn parse_ishikawa(source: &str) -> Result<IshikawaDiagram, ParseError> {
         causes.push(IshikawaCause { id: id.clone(), label: label.clone(), parent_id, depth });
         stack.push((effective_indent, id));
     }
-    Ok(IshikawaDiagram { effect: effect.clone(), causes })
+    Ok(IshikawaDiagram { effect: effect.clone(), causes, diagram_padding })
+}
+
+fn parse_ishikawa_padding(source: &str) -> f64 {
+    let front_matter = mermaid_front_matter_section(source, &["config", "ishikawa"]);
+    let config = mermaid_directive_object(source, "ishikawa")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    quadrant_directive_value(config, "diagramPadding")
+        .or_else(|| {
+            config.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == "diagramPadding")
+                    .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+        .and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0)
+        .unwrap_or(20.0)
 }
 
 fn indentation_width(line: &str) -> usize {
@@ -12694,7 +12730,7 @@ mod tests_dg04 {
     #[test]
     fn architecture_preserves_size_and_separation_configuration() {
         let diagram = parse_architecture(
-            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25}}}%%\narchitecture-beta\nservice api(server)[API]",
+            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25, \"edgeElasticity\": 0.8, \"randomize\": true, \"seed\": 17}}}%%\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         assert_eq!(
@@ -12705,11 +12741,14 @@ mod tests_dg04 {
                 node_separation: 112.0,
                 padding: 48.0,
                 ideal_edge_length_multiplier: 1.25,
+                edge_elasticity: 0.8,
+                randomize: true,
+                seed: 17,
             })
         );
 
         let diagram = parse_architecture(
-            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n    idealEdgeLengthMultiplier: 1.75\n---\narchitecture-beta\nservice api(server)[API]",
+            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n    idealEdgeLengthMultiplier: 1.75\n    edgeElasticity: 0.2\n    randomize: false\n    seed: -9\n---\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         let config = diagram.architecture_config.unwrap();
@@ -12718,6 +12757,18 @@ mod tests_dg04 {
         assert_eq!(config.node_separation, 104.0);
         assert_eq!(config.padding, 52.0);
         assert_eq!(config.ideal_edge_length_multiplier, 1.75);
+        assert_eq!(config.edge_elasticity, 0.2);
+        assert!(!config.randomize);
+        assert_eq!(config.seed, -9);
+
+        let diagram = parse_architecture(
+            "%%{init: {\"architecture\": {\"edgeElasticity\": 1.5}}}%%\narchitecture-beta\nservice api(server)[API]",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.architecture_config.unwrap().edge_elasticity,
+            ArchitectureConfig::default().edge_elasticity
+        );
     }
 
     #[test]
@@ -16557,7 +16608,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.144.0");
+        assert_eq!(crate::VERSION, "0.147.0");
     }
 
     #[test]

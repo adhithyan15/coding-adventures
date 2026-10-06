@@ -5,31 +5,31 @@ spine_node: SPINE-CHECK-WELLBEING
 sequence: 750
 chapter: 11
 type: word
-headword: くち
+headword: 口
 romanization: kuchi
 gloss: mouth
 concept_tag: JA-BODY-MOUTH
 prerequisites: [JA-C11-mimi]
 sounds: [mora]
 roots: []
-etymology_hook: Two previously written signs now carry a concrete body meaning together.
+etymology_hook: The box written since chapter five is the word itself, and two previously written signs spell its reading.
 duration:
   max_seconds: 150
 requires:
-  knowledge: [JA-SCRIPT-KU-01, JA-SCRIPT-CHI-01, JA-LEX-MIMI]
+  knowledge: [JA-SCRIPT-KU-01, JA-SCRIPT-CHI-01, JA-LEX-MIMI, JA-SCRIPT-KANJI-MOUTH-COMPONENT-01]
 introduces:
   knowledge: [JA-LEX-KUCHI]
 practises:
-  knowledge: [JA-LEX-KUCHI, JA-SCRIPT-KU-01, JA-SCRIPT-CHI-01, JA-LEX-MIMI]
+  knowledge: [JA-LEX-KUCHI, JA-SCRIPT-KU-01, JA-SCRIPT-CHI-01, JA-LEX-MIMI, JA-SCRIPT-KANJI-MOUTH-COMPONENT-01]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral-across-levels
 variety: standard-japanese-tokyo
-reviews_of: [JA-W09-ku, JA-W01-chi, JA-C11-mimi]
+reviews_of: [JA-W09-ku, JA-W01-chi, JA-C11-mimi, JA-W05-mouth-component]
 ---
 
-# くち — mouth
+# 口 — mouth
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KU-01, JA-SCRIPT-CHI-01, JA-LEX-MIMI] -->
@@ -39,21 +39,23 @@ reviews_of: [JA-W09-ku, JA-W01-chi, JA-C11-mimi]
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-KUCHI]; assesses=[] -->
 
-> **くち** — *kuchi* — mouth
+> **口** (くち) — *kuchi* — mouth
 
-Join two earned signs; keep two even morae.
+The three-stroke box you have written since chapter five is the word: **口**
+is *kuchi*. Its reading joins two earned signs, **く** and **ち**; keep two even
+morae.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KUCHI, JA-SCRIPT-KU-01, JA-SCRIPT-CHI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KUCHI, JA-SCRIPT-KU-01, JA-SCRIPT-CHI-01, JA-SCRIPT-KANJI-MOUTH-COMPONENT-01] -->
 
 1. Hear *kuchi*; point to the mouth.
-2. Read **く | ち**.
-3. Hide it and write the two signs in order.
+2. Read **口**, then its reading **く | ち**.
+3. Hide it and write **口**, then the two signs in order.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KUCHI] -->
-<!-- hl-activity: {"id":"JA-C11-kuchi-meaning","kind":"text","assesses":["JA-LEX-KUCHI"],"prompt":"Write the Japanese word for mouth.","answer":"くち","accepted":["kuchi"],"feedback":{"correct":"Right: くち is mouth.","incorrect":"Join known く and ち: くち — kuchi."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"JA-C11-kuchi-meaning","kind":"text","assesses":["JA-LEX-KUCHI"],"prompt":"Write the Japanese word for mouth.","answer":"口","accepted":["くち","kuchi"],"feedback":{"correct":"Right: 口, read くち, is mouth.","incorrect":"Write the box 口, read く and ち: くち — kuchi."},"response_seconds":10} -->
 
 Contrast *mimi* and *kuchi* once.
 
-Source: [Japan Foundation Marugoto A1 vocabulary database](https://words.marugotoweb.jp/).
+Sources: [Japan Foundation Marugoto A1 vocabulary database](https://words.marugotoweb.jp/); [KanjiVG stroke-order data](https://kanjivg.tagaini.net/kanjivg/kanji/053e3.html).
