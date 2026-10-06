@@ -997,6 +997,19 @@ language, or one of the two exact registered TypeScript site roots; unrelated
 adoption does not include the separate repository-boundary source registry,
 Git-index proof, or boundary reverse-diff selection.
 
+The Ruby build tool likewise packages a byte-for-byte snapshot of the checked
+language registry beside its production hasher. A deterministic sync command
+copies the checked neutral JSON; the native suite compares the whole snapshot,
+recomputes its domain-separated digest, and drives every package-local neutral
+case through the production collector. Runtime collection loads only installed
+package data, never a repository fixture. Its exact lookup implements all seven
+roles, universal BUILD and root-only capability inputs, extension/declared
+precedence, and generated-component pruning. Unknown languages fail before
+enumeration. Package-exact inputs require a canonical language-matched
+`code/packages|programs/<lane>/<name...>` root, except that TypeScript may use
+only the two registered exact `code/sites/<site>` roots. This adoption does not
+claim the separately owned repository-boundary or atomic native-snapshot work.
+
 Swift and the shared C#/F# engine complete this package-local projection with
 the repository-relative boundary registry, tracked-regular-file evidence, and
 an exact reverse diff index. Their native readers remain responsible for
