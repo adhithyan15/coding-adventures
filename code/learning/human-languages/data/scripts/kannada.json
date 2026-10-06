@@ -1831,8 +1831,21 @@
       "components": [
         "ಠ  ṭha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the upper left of the bowl and go down the left side and round the base",
+        "without lifting, climb the right side",
+        "without lifting, close the bowl leftward along the top",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook",
+        "lift, then set the dot in the middle"
+      ],
+      "strokeOrderNote": "Six visible movements in three pen-down runs: the round bowl (the left side, the base, the right side and the closing top); the top bar with its hook; and the dot, separated by two lifts.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-tta.gif, animation of Kannada consonant ಠ, 41 frames, 4.1 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-tta.gif",
+        "variation": "The CC BY-SA 4.0 animation is filed under the slug \"tta\" and draws retroflex ಠ (U+0CA0); in this series \"ta\" animates retroflex ಟ and \"thha\" dental ಥ, so the glyph was checked frame by frame rather than taken from the file name. It writes ಠ in three pen-down runs: from the upper left of the round bowl the pen goes counterclockwise down the left side, round the base, up the right side and back left across the top, closing the bowl where it began (frames 0–12; the pencil rests there to frame 14); after a lift, the top bar from left to right curling up into the hook (frames 15–22); after a second lift, the dot in the middle (frames 26–27). The frames were read from a mirror copy that matches the Commons file's listed size (231×208, 105 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the bowl's top is fused into the bar, as in ದ, so the closing movement runs along the lower part of the bar's ink and the bar retraces it, and the dot is a filled disc, drawn as a small closed loop inside it. The two-lift order remains the same."
+      }
     },
     {
       "glyph": "ಠಾ",

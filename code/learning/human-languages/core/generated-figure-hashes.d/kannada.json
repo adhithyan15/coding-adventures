@@ -322,6 +322,13 @@
       "sourceHash": "fnv1a64:f7a0bdfcdebfd928",
       "svgHash": "fnv1a64:afd41114f6990970",
       "svg": "kannada/book/figures/KA-S172-letter-ddha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S173-letter-ttha",
+      "sourceHash": "fnv1a64:8e4f0c3152bdb30d",
+      "svgHash": "fnv1a64:de0b990bb178d7b3",
+      "svg": "kannada/book/figures/KA-S173-letter-ttha-filmstrip.svg"
     }
   ]
 }

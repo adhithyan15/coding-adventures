@@ -74,6 +74,24 @@ the printed shape, with the gap recorded rather than filled. Inventing a
 plausible order would be worse than shipping nothing: a learner cannot tell an
 invented order from an attested one and will drill it for years.
 
+### Native writers' pen traces as a source (Bengali)
+
+Most owners cite a teaching animation or a tracing guide. Bengali
+(`strokes/bengali.ts`) cites something different: the tablet pen traces of
+native Bengali writers that HP Labs India's LipiTk 4.0 Bangla recognizer keeps
+as its prototypes (MIT licence). A trace records where the pen went down, which
+way it moved and where it lifted, so counting traces gives the modal stroke
+count, the part order, the start and the turning direction, each as a share of
+the writers. It does not give proportions: the recognizer scales every trace to
+a square. So the counts go into the citation's `variation`, no coordinate is
+copied, and the path itself is fitted to the bundled Noto Sans Bengali outline
+and checked against it at the default tolerances.
+
+A letter is authored only where one order clearly wins. Bengali's headline is
+the hard case: in isolated letters writers draw it first, last, partly or not
+at all, depending on the letter, so ন, ক, ম and others whose traces split are
+left out with the reason recorded in `data/scripts/bengali.json`.
+
 ## Usage
 
 ```ts

@@ -1,0 +1,383 @@
+{
+  "script": "bengali",
+  "entries": [
+    {
+      "script": "bengali",
+      "glyph": "ঁ",
+      "font": "_fonts/NotoSansBengali-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 48 (ঁ, chandrabindu; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 190 of the 194 stored prototypes of the chandrabindu are two pen-down strokes: the bowl first, then the dot. 178 of those 190 start the bowl on the left, 182 turn it counterclockwise (down, round and up), and 173 end it on the right; 180 place the dot within the bowl's width. The traces do not settle which way the dot is turned, so the path makes no claim about it and draws it as a short touch. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 2 movements",
+      "viewBox": {
+        "minX": -245,
+        "minY": -946,
+        "width": 492,
+        "height": 550.3
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the bowl from its left tip, down, round and up",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M0 790Q-22 790 -33 803.5Q-44 817 -44 833Q-44 849 -33 862.5Q-22 876 0 876Q23 876 33.5 862.5Q44 849 44 833Q44 817 33.5 803.5Q23 790 0 790ZM4 685Q-83 685 -125 735Q-167 785 -175 860L-106 869Q-101 814 -77 782.5Q-53 751 0 751Q96 751 107 870L177 861Q170 785 129.5 735Q89 685 4 685Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-140 862 L-140 862\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-140 862 L-132 800 L-90 745 L-30 720 L30 720 L90 745 L132 800 L142 862\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"142\" cy=\"862\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"1\" y=\"-505.6\" text-anchor=\"middle\" font-size=\"39.4\" fill=\"#6b7280\"><tspan x=\"1\" y=\"-505.6\">1. draw the bowl from</tspan><tspan x=\"1\" y=\"-457.5\">its left tip, down,</tspan><tspan x=\"1\" y=\"-409.5\">round and up</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "lift, then place the dot",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M0 790Q-22 790 -33 803.5Q-44 817 -44 833Q-44 849 -33 862.5Q-22 876 0 876Q23 876 33.5 862.5Q44 849 44 833Q44 817 33.5 803.5Q23 790 0 790ZM4 685Q-83 685 -125 735Q-167 785 -175 860L-106 869Q-101 814 -77 782.5Q-53 751 0 751Q96 751 107 870L177 861Q170 785 129.5 735Q89 685 4 685Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M-140 862 L-132 800 L-90 745 L-30 720 L30 720 L90 745 L132 800 L142 862\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M-12 850 L-12 850\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M-12 850 L0 833 L12 816\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"12\" cy=\"816\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"1\" y=\"-505.6\" text-anchor=\"middle\" font-size=\"39.4\" fill=\"#6b7280\"><tspan x=\"1\" y=\"-505.6\">2. lift, then place the</tspan><tspan x=\"1\" y=\"-457.5\">dot</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "bengali",
+      "glyph": "ঃ",
+      "font": "_fonts/NotoSansBengali-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 47 (ঃ, bisarga; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. All 195 stored prototypes of the bisarga are two pen-down strokes: the upper loop first (193) and the lower loop second (193). 171 begin the upper loop near its top. 151 of the upper loops and 152 of the lower ones turn counterclockwise, the rest clockwise, so the path takes the majority direction for both. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 2 movements",
+      "viewBox": {
+        "minX": 8,
+        "minY": -692,
+        "width": 422,
+        "height": 960.1
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the upper loop counterclockwise from its top",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M219 349Q159 349 118.5 386.5Q78 424 78 486Q78 548 118.5 585Q159 622 219 622Q279 622 319.5 585Q360 548 360 486Q360 424 319.5 386.5Q279 349 219 349ZM219 414Q251 414 271 433.5Q291 453 291 486Q291 519 271 538Q251 557 219 557Q188 557 167.5 537.5Q147 518 147 486Q147 453 167.5 433.5Q188 414 219 414ZM219 0Q159 0 118.5 37.5Q78 75 78 137Q78 199 118.5 236Q159 273 219 273Q279 273 319.5 236Q360 199 360 137Q360 75 319.5 37.5Q279 0 219 0ZM219 65Q251 65 271 84.5Q291 104 291 137Q291 170 271 189Q251 208 219 208Q188 208 167.5 188.5Q147 169 147 137Q147 104 167.5 84.5Q188 65 219 65Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M219 591 L219 591\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M219 591 L167 577 L128 538 L114 486 L128 434 L166 395 L219 381 L272 395 L310 433 L324 486 L310 538 L272 577 L219 591\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"219\" cy=\"591\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"219\" y=\"173.8\" text-anchor=\"middle\" font-size=\"33.8\" fill=\"#6b7280\"><tspan x=\"219\" y=\"173.8\">1. draw the upper loop</tspan><tspan x=\"219\" y=\"215\">counterclockwise from</tspan><tspan x=\"219\" y=\"256.3\">its top</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "lift, then draw the lower loop the same way",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M219 349Q159 349 118.5 386.5Q78 424 78 486Q78 548 118.5 585Q159 622 219 622Q279 622 319.5 585Q360 548 360 486Q360 424 319.5 386.5Q279 349 219 349ZM219 414Q251 414 271 433.5Q291 453 291 486Q291 519 271 538Q251 557 219 557Q188 557 167.5 537.5Q147 518 147 486Q147 453 167.5 433.5Q188 414 219 414ZM219 0Q159 0 118.5 37.5Q78 75 78 137Q78 199 118.5 236Q159 273 219 273Q279 273 319.5 236Q360 199 360 137Q360 75 319.5 37.5Q279 0 219 0ZM219 65Q251 65 271 84.5Q291 104 291 137Q291 170 271 189Q251 208 219 208Q188 208 167.5 188.5Q147 169 147 137Q147 104 167.5 84.5Q188 65 219 65Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M219 591 L167 577 L128 538 L114 486 L128 434 L166 395 L219 381 L272 395 L310 433 L324 486 L310 538 L272 577 L219 591\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M219 242 L219 242\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M219 242 L167 228 L128 190 L114 137 L128 84 L166 46 L219 32 L272 46 L310 84 L324 137 L310 190 L272 228 L219 242\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"219\" cy=\"242\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"219\" y=\"173.8\" text-anchor=\"middle\" font-size=\"33.8\" fill=\"#6b7280\"><tspan x=\"219\" y=\"173.8\">2. lift, then draw the</tspan><tspan x=\"219\" y=\"215\">lower loop the same way</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "bengali",
+      "glyph": "এ",
+      "font": "_fonts/NotoSansBengali-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 7 (এ, e; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 194 of the 226 stored prototypes of the independent e are one pen-down stroke. 189 of those 194 start in the upper half, inside the small curl, and all 194 turn clockwise: round the curl, over the arch and down the right side. 190 end on the left, at the top of the hook, so the base is swept from right to left. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": -24,
+        "minY": -702,
+        "width": 735,
+        "height": 1065.2
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "start inside the curl and turn clockwise over the arch",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M564 0Q551 45 528.5 66Q506 87 465 87Q429 87 398 83Q367 79 333 74.5Q299 70 255 70Q227 70 191 77.5Q155 85 122 106Q89 127 67.5 168.5Q46 210 46 278Q46 302 50 328.5Q54 355 58 377L135 366Q131 351 127.5 330Q124 309 124 280Q124 221 145.5 192Q167 163 198 153.5Q229 144 259 144Q293 144 322 148.5Q351 153 380.5 157Q410 161 445 161Q484 161 513 148.5Q542 136 564 105L564 482Q564 520 550 540.5Q536 561 498 561Q452 561 417 536Q382 511 361 475Q340 439 337 406Q353 415 373 415Q401 415 421.5 396.5Q442 378 442 347Q442 312 418 293Q394 274 359 274Q335 274 311.5 286.5Q288 299 273 326Q258 353 258 396Q258 437 275.5 478.5Q293 520 324.5 554.5Q356 589 398.5 610.5Q441 632 490 632Q556 632 598.5 594.5Q641 557 641 474L641 0L564 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M345 410 L345 410\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M345 410 L395 408 L425 375 L420 320 L380 292 L330 292 L290 320 L270 380 L285 460 L330 535 L400 585 L490 597 L570 580 L600 530 L602 470\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"602\" cy=\"470\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"343.5\" y=\"198.9\" text-anchor=\"middle\" font-size=\"58.9\" fill=\"#6b7280\"><tspan x=\"343.5\" y=\"198.9\">1. start inside the</tspan><tspan x=\"343.5\" y=\"270.8\">curl and turn clockwise</tspan><tspan x=\"343.5\" y=\"342.6\">over the arch</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "come down the right side to its foot",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M564 0Q551 45 528.5 66Q506 87 465 87Q429 87 398 83Q367 79 333 74.5Q299 70 255 70Q227 70 191 77.5Q155 85 122 106Q89 127 67.5 168.5Q46 210 46 278Q46 302 50 328.5Q54 355 58 377L135 366Q131 351 127.5 330Q124 309 124 280Q124 221 145.5 192Q167 163 198 153.5Q229 144 259 144Q293 144 322 148.5Q351 153 380.5 157Q410 161 445 161Q484 161 513 148.5Q542 136 564 105L564 482Q564 520 550 540.5Q536 561 498 561Q452 561 417 536Q382 511 361 475Q340 439 337 406Q353 415 373 415Q401 415 421.5 396.5Q442 378 442 347Q442 312 418 293Q394 274 359 274Q335 274 311.5 286.5Q288 299 273 326Q258 353 258 396Q258 437 275.5 478.5Q293 520 324.5 554.5Q356 589 398.5 610.5Q441 632 490 632Q556 632 598.5 594.5Q641 557 641 474L641 0L564 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M345 410 L395 408 L425 375 L420 320 L380 292 L330 292 L290 320 L270 380 L285 460 L330 535 L400 585 L490 597 L570 580 L600 530 L602 470 L602 470\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M602 470 L602 300 L602 150 L600 40\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"600\" cy=\"40\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"343.5\" y=\"198.9\" text-anchor=\"middle\" font-size=\"58.9\" fill=\"#6b7280\"><tspan x=\"343.5\" y=\"198.9\">2. come down the right</tspan><tspan x=\"343.5\" y=\"270.8\">side to its foot</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "sweep left along the base and up the left hook",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M564 0Q551 45 528.5 66Q506 87 465 87Q429 87 398 83Q367 79 333 74.5Q299 70 255 70Q227 70 191 77.5Q155 85 122 106Q89 127 67.5 168.5Q46 210 46 278Q46 302 50 328.5Q54 355 58 377L135 366Q131 351 127.5 330Q124 309 124 280Q124 221 145.5 192Q167 163 198 153.5Q229 144 259 144Q293 144 322 148.5Q351 153 380.5 157Q410 161 445 161Q484 161 513 148.5Q542 136 564 105L564 482Q564 520 550 540.5Q536 561 498 561Q452 561 417 536Q382 511 361 475Q340 439 337 406Q353 415 373 415Q401 415 421.5 396.5Q442 378 442 347Q442 312 418 293Q394 274 359 274Q335 274 311.5 286.5Q288 299 273 326Q258 353 258 396Q258 437 275.5 478.5Q293 520 324.5 554.5Q356 589 398.5 610.5Q441 632 490 632Q556 632 598.5 594.5Q641 557 641 474L641 0L564 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M345 410 L395 408 L425 375 L420 320 L380 292 L330 292 L290 320 L270 380 L285 460 L330 535 L400 585 L490 597 L570 580 L600 530 L602 470 L602 300 L602 150 L600 40 L600 40\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M600 40 L560 95 L480 124 L360 115 L255 107 L170 125 L110 180 L85 270 L95 365\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"95\" cy=\"365\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"343.5\" y=\"198.9\" text-anchor=\"middle\" font-size=\"58.9\" fill=\"#6b7280\"><tspan x=\"343.5\" y=\"198.9\">3. sweep left along the</tspan><tspan x=\"343.5\" y=\"270.8\">base and up the left</tspan><tspan x=\"343.5\" y=\"342.6\">hook</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "bengali",
+      "glyph": "ও",
+      "font": "_fonts/NotoSansBengali-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 9 (ও, o; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 231 of the 239 stored prototypes of the independent o are one pen-down stroke. 222 of those 231 start in the upper half, in the top curl, and all 231 turn clockwise overall: round the top curl and the upper bowl, into the middle, and round the lower bowl. 218 end on the left, at the top of the left arm. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": -37,
+        "minY": -702,
+        "width": 793,
+        "height": 1040.7
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "start inside the top curl and turn clockwise round the upper bowl",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M468 42Q376 42 293 88Q210 134 143.5 236Q77 338 33 507L108 529Q167 315 255.5 216.5Q344 118 465 118Q524 118 564.5 144Q605 170 605 227Q605 267 587 294Q556 273 522 273Q485 273 465.5 293Q446 313 446 338Q446 359 464 380.5Q482 402 526 402Q551 402 573 395Q582 413 586.5 434.5Q591 456 591 480Q591 561 508 561Q471 561 437.5 547.5Q404 534 378.5 512.5Q353 491 340 468Q372 465 386 446Q400 427 400 404Q400 373 380.5 356Q361 339 332 339Q291 339 272 365.5Q253 392 253 425Q253 463 273.5 499.5Q294 536 329 566Q364 596 410 614Q456 632 507 632Q585 632 628 591.5Q671 551 671 477Q671 442 662.5 410.5Q654 379 639 352Q662 326 674 291.5Q686 257 686 221Q686 135 626 88.5Q566 42 468 42Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M345 462 L345 462\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M345 462 L385 440 L392 395 L362 358 L318 355 L285 385 L278 440 L305 505 L370 565 L450 595 L510 597 L585 585 L625 530 L632 470 L628 420\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"628\" cy=\"420\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"359.5\" y=\"161.5\" text-anchor=\"middle\" font-size=\"63.5\" fill=\"#6b7280\"><tspan x=\"359.5\" y=\"161.5\">1. start inside the top</tspan><tspan x=\"359.5\" y=\"239\">curl and turn clockwise</tspan><tspan x=\"359.5\" y=\"316.4\">round the upper bowl</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "dip into the middle",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M468 42Q376 42 293 88Q210 134 143.5 236Q77 338 33 507L108 529Q167 315 255.5 216.5Q344 118 465 118Q524 118 564.5 144Q605 170 605 227Q605 267 587 294Q556 273 522 273Q485 273 465.5 293Q446 313 446 338Q446 359 464 380.5Q482 402 526 402Q551 402 573 395Q582 413 586.5 434.5Q591 456 591 480Q591 561 508 561Q471 561 437.5 547.5Q404 534 378.5 512.5Q353 491 340 468Q372 465 386 446Q400 427 400 404Q400 373 380.5 356Q361 339 332 339Q291 339 272 365.5Q253 392 253 425Q253 463 273.5 499.5Q294 536 329 566Q364 596 410 614Q456 632 507 632Q585 632 628 591.5Q671 551 671 477Q671 442 662.5 410.5Q654 379 639 352Q662 326 674 291.5Q686 257 686 221Q686 135 626 88.5Q566 42 468 42Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M345 462 L385 440 L392 395 L362 358 L318 355 L285 385 L278 440 L305 505 L370 565 L450 595 L510 597 L585 585 L625 530 L632 470 L628 420 L628 420\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M628 420 L600 380 L545 362 L490 345 L505 305 L560 300 L612 300 L640 262\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"640\" cy=\"262\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"359.5\" y=\"161.5\" text-anchor=\"middle\" font-size=\"63.5\" fill=\"#6b7280\"><tspan x=\"359.5\" y=\"161.5\">2. dip into the middle</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "round the lower bowl clockwise and up the left arm",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M468 42Q376 42 293 88Q210 134 143.5 236Q77 338 33 507L108 529Q167 315 255.5 216.5Q344 118 465 118Q524 118 564.5 144Q605 170 605 227Q605 267 587 294Q556 273 522 273Q485 273 465.5 293Q446 313 446 338Q446 359 464 380.5Q482 402 526 402Q551 402 573 395Q582 413 586.5 434.5Q591 456 591 480Q591 561 508 561Q471 561 437.5 547.5Q404 534 378.5 512.5Q353 491 340 468Q372 465 386 446Q400 427 400 404Q400 373 380.5 356Q361 339 332 339Q291 339 272 365.5Q253 392 253 425Q253 463 273.5 499.5Q294 536 329 566Q364 596 410 614Q456 632 507 632Q585 632 628 591.5Q671 551 671 477Q671 442 662.5 410.5Q654 379 639 352Q662 326 674 291.5Q686 257 686 221Q686 135 626 88.5Q566 42 468 42Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M345 462 L385 440 L392 395 L362 358 L318 355 L285 385 L278 440 L305 505 L370 565 L450 595 L510 597 L585 585 L625 530 L632 470 L628 420 L600 380 L545 362 L490 345 L505 305 L560 300 L612 300 L640 262 L640 262\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M640 262 L648 215 L640 160 L590 105 L480 80 L360 95 L255 165 L175 290 L110 420 L72 515\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"72\" cy=\"515\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"359.5\" y=\"161.5\" text-anchor=\"middle\" font-size=\"63.5\" fill=\"#6b7280\"><tspan x=\"359.5\" y=\"161.5\">3. round the lower bowl</tspan><tspan x=\"359.5\" y=\"239\">clockwise and up the</tspan><tspan x=\"359.5\" y=\"316.4\">left arm</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "bengali",
+      "glyph": "খ",
+      "font": "_fonts/NotoSansBengali-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 12 (খ, kha; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 189 of the 212 stored prototypes of kha are one pen-down stroke. 179 of those 189 start on the left, in the curl, and in 169 the curl turns counterclockwise. The stroke then crosses the middle, comes down to the pointed left tip, rounds the lower curve and climbs the stem: 185 end at the top right, and 128 finish with a short move to the right, the flag beside the top of the stem. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 4 movements",
+      "viewBox": {
+        "minX": -20,
+        "minY": -758,
+        "width": 761,
+        "height": 1129.2
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "start inside the curl and turn it counterclockwise",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M489 0Q437 90 349 153Q261 216 141 232L103 331Q234 349 287 384Q340 419 340 473Q340 498 332 519Q307 473 267.5 451.5Q228 430 179 430Q121 430 85.5 463Q50 496 50 550Q50 582 68.5 607Q87 632 124 632Q156 632 170.5 613Q185 594 185 569Q185 546 175.5 531Q166 516 153 507Q165 501 181 501Q205 501 237.5 523Q270 545 299 612L361 625Q382 594 398.5 554.5Q415 515 415 470Q415 393 360.5 347Q306 301 221 284Q327 255 391.5 204Q456 153 492 97Q490 120 489.5 143Q489 166 489 193L489 688L542 688L565 622L671 622L671 551L566 551L566 0L489 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M160 505 L160 505\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M160 505 L180 555 L165 605 L120 625 L78 605 L57 555 L70 495 L115 458 L180 445 L250 470 L295 520 L325 590\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"325\" cy=\"590\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"360.5\" y=\"201\" text-anchor=\"middle\" font-size=\"61\" fill=\"#6b7280\"><tspan x=\"360.5\" y=\"201\">1. start inside the</tspan><tspan x=\"360.5\" y=\"275.4\">curl and turn it</tspan><tspan x=\"360.5\" y=\"349.8\">counterclockwise</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "cross the middle bend and come down to the pointed left tip",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M489 0Q437 90 349 153Q261 216 141 232L103 331Q234 349 287 384Q340 419 340 473Q340 498 332 519Q307 473 267.5 451.5Q228 430 179 430Q121 430 85.5 463Q50 496 50 550Q50 582 68.5 607Q87 632 124 632Q156 632 170.5 613Q185 594 185 569Q185 546 175.5 531Q166 516 153 507Q165 501 181 501Q205 501 237.5 523Q270 545 299 612L361 625Q382 594 398.5 554.5Q415 515 415 470Q415 393 360.5 347Q306 301 221 284Q327 255 391.5 204Q456 153 492 97Q490 120 489.5 143Q489 166 489 193L489 688L542 688L565 622L671 622L671 551L566 551L566 0L489 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M160 505 L180 555 L165 605 L120 625 L78 605 L57 555 L70 495 L115 458 L180 445 L250 470 L295 520 L325 590 L325 590\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M325 590 L360 560 L378 500 L375 440 L345 385 L285 345 L200 315 L120 300\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"120\" cy=\"300\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"360.5\" y=\"201\" text-anchor=\"middle\" font-size=\"61\" fill=\"#6b7280\"><tspan x=\"360.5\" y=\"201\">2. cross the middle</tspan><tspan x=\"360.5\" y=\"275.4\">bend and come down to</tspan><tspan x=\"360.5\" y=\"349.8\">the pointed left tip</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "round the lower curve to the foot of the stem",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M489 0Q437 90 349 153Q261 216 141 232L103 331Q234 349 287 384Q340 419 340 473Q340 498 332 519Q307 473 267.5 451.5Q228 430 179 430Q121 430 85.5 463Q50 496 50 550Q50 582 68.5 607Q87 632 124 632Q156 632 170.5 613Q185 594 185 569Q185 546 175.5 531Q166 516 153 507Q165 501 181 501Q205 501 237.5 523Q270 545 299 612L361 625Q382 594 398.5 554.5Q415 515 415 470Q415 393 360.5 347Q306 301 221 284Q327 255 391.5 204Q456 153 492 97Q490 120 489.5 143Q489 166 489 193L489 688L542 688L565 622L671 622L671 551L566 551L566 0L489 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M160 505 L180 555 L165 605 L120 625 L78 605 L57 555 L70 495 L115 458 L180 445 L250 470 L295 520 L325 590 L360 560 L378 500 L375 440 L345 385 L285 345 L200 315 L120 300 L120 300\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M120 300 L150 255 L250 235 L340 190 L420 115 L480 40 L527 12\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"527\" cy=\"12\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"360.5\" y=\"201\" text-anchor=\"middle\" font-size=\"61\" fill=\"#6b7280\"><tspan x=\"360.5\" y=\"201\">3. round the lower</tspan><tspan x=\"360.5\" y=\"275.4\">curve to the foot of</tspan><tspan x=\"360.5\" y=\"349.8\">the stem</tspan></text>"
+        },
+        {
+          "number": 4,
+          "label": "climb the stem and turn right into the flag",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M489 0Q437 90 349 153Q261 216 141 232L103 331Q234 349 287 384Q340 419 340 473Q340 498 332 519Q307 473 267.5 451.5Q228 430 179 430Q121 430 85.5 463Q50 496 50 550Q50 582 68.5 607Q87 632 124 632Q156 632 170.5 613Q185 594 185 569Q185 546 175.5 531Q166 516 153 507Q165 501 181 501Q205 501 237.5 523Q270 545 299 612L361 625Q382 594 398.5 554.5Q415 515 415 470Q415 393 360.5 347Q306 301 221 284Q327 255 391.5 204Q456 153 492 97Q490 120 489.5 143Q489 166 489 193L489 688L542 688L565 622L671 622L671 551L566 551L566 0L489 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M160 505 L180 555 L165 605 L120 625 L78 605 L57 555 L70 495 L115 458 L180 445 L250 470 L295 520 L325 590 L360 560 L378 500 L375 440 L345 385 L285 345 L200 315 L120 300 L150 255 L250 235 L340 190 L420 115 L480 40 L527 12 L527 12\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M527 12 L527 200 L527 400 L527 600 L527 650 L570 600 L660 586\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"660\" cy=\"586\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"360.5\" y=\"201\" text-anchor=\"middle\" font-size=\"61\" fill=\"#6b7280\"><tspan x=\"360.5\" y=\"201\">4. climb the stem and</tspan><tspan x=\"360.5\" y=\"275.4\">turn right into the</tspan><tspan x=\"360.5\" y=\"349.8\">flag</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "bengali",
+      "glyph": "ঞ",
+      "font": "_fonts/NotoSansBengali-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 20 (ঞ, nya; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 172 of the 191 stored prototypes of nya are two pen-down strokes. The first is the left part, written like the independent e: 163 of those 172 start in the upper half, 169 turn clockwise and 170 end on the left. The second is the right part: 160 start to the right of where the first began, 171 turn clockwise, and 145 end in the lower half. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 6 movements",
+      "viewBox": {
+        "minX": -24,
+        "minY": -702,
+        "width": 1023,
+        "height": 1152.8
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "start inside the curl and turn clockwise over the arch",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M564 0Q551 45 528.5 66Q506 87 465 87Q429 87 398 83Q367 79 333 74.5Q299 70 255 70Q227 70 191 77.5Q155 85 122 106Q89 127 67.5 168.5Q46 210 46 278Q46 302 50 328.5Q54 355 58 377L135 366Q131 351 127.5 330Q124 309 124 280Q124 221 145.5 192Q167 163 198 153.5Q229 144 259 144Q293 144 322 148.5Q351 153 380.5 157Q410 161 445 161Q484 161 513 148.5Q542 136 564 105L564 482Q564 520 550 540.5Q536 561 498 561Q452 561 417 536Q382 511 361 475Q340 439 337 406Q353 415 373 415Q401 415 421.5 396.5Q442 378 442 347Q442 312 418 293Q394 274 359 274Q335 274 311.5 286.5Q288 299 273 326Q258 353 258 396Q258 437 275.5 478.5Q293 520 324.5 554.5Q356 589 398.5 610.5Q441 632 490 632Q547 632 587 604Q627 576 638 516Q669 559 708.5 578Q748 597 784 597Q849 597 886 562.5Q923 528 923 469Q923 442 914.5 415Q906 388 892 366Q911 342 920 311.5Q929 281 929 251Q929 191 894 152Q859 113 788 113Q735 113 699 136Q663 159 641 194L641 0L564 0ZM781 528Q743 528 704.5 494Q666 460 641 390L641 328Q663 257 700 219.5Q737 182 788 182Q815 182 834 198Q853 214 853 254Q853 287 839 309Q808 287 779 287Q749 287 731 307Q713 327 713 352Q713 373 730.5 394.5Q748 416 788 416Q810 416 829 410Q847 438 847 469Q847 500 829 514Q811 528 781 528Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M345 410 L345 410\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M345 410 L395 408 L425 375 L420 320 L380 292 L330 292 L290 320 L270 380 L285 460 L330 535 L400 585 L490 597 L570 580 L600 530 L602 470\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"602\" cy=\"470\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"487.5\" y=\"222\" text-anchor=\"middle\" font-size=\"82\" fill=\"#6b7280\"><tspan x=\"487.5\" y=\"222\">1. start inside the</tspan><tspan x=\"487.5\" y=\"322\">curl and turn clockwise</tspan><tspan x=\"487.5\" y=\"422.1\">over the arch</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "come down the right side to its foot",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M564 0Q551 45 528.5 66Q506 87 465 87Q429 87 398 83Q367 79 333 74.5Q299 70 255 70Q227 70 191 77.5Q155 85 122 106Q89 127 67.5 168.5Q46 210 46 278Q46 302 50 328.5Q54 355 58 377L135 366Q131 351 127.5 330Q124 309 124 280Q124 221 145.5 192Q167 163 198 153.5Q229 144 259 144Q293 144 322 148.5Q351 153 380.5 157Q410 161 445 161Q484 161 513 148.5Q542 136 564 105L564 482Q564 520 550 540.5Q536 561 498 561Q452 561 417 536Q382 511 361 475Q340 439 337 406Q353 415 373 415Q401 415 421.5 396.5Q442 378 442 347Q442 312 418 293Q394 274 359 274Q335 274 311.5 286.5Q288 299 273 326Q258 353 258 396Q258 437 275.5 478.5Q293 520 324.5 554.5Q356 589 398.5 610.5Q441 632 490 632Q547 632 587 604Q627 576 638 516Q669 559 708.5 578Q748 597 784 597Q849 597 886 562.5Q923 528 923 469Q923 442 914.5 415Q906 388 892 366Q911 342 920 311.5Q929 281 929 251Q929 191 894 152Q859 113 788 113Q735 113 699 136Q663 159 641 194L641 0L564 0ZM781 528Q743 528 704.5 494Q666 460 641 390L641 328Q663 257 700 219.5Q737 182 788 182Q815 182 834 198Q853 214 853 254Q853 287 839 309Q808 287 779 287Q749 287 731 307Q713 327 713 352Q713 373 730.5 394.5Q748 416 788 416Q810 416 829 410Q847 438 847 469Q847 500 829 514Q811 528 781 528Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M345 410 L395 408 L425 375 L420 320 L380 292 L330 292 L290 320 L270 380 L285 460 L330 535 L400 585 L490 597 L570 580 L600 530 L602 470 L602 470\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M602 470 L602 300 L602 150 L600 40\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"600\" cy=\"40\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"487.5\" y=\"222\" text-anchor=\"middle\" font-size=\"82\" fill=\"#6b7280\"><tspan x=\"487.5\" y=\"222\">2. come down the right</tspan><tspan x=\"487.5\" y=\"322\">side to its foot</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "sweep left along the base and up the left hook",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M564 0Q551 45 528.5 66Q506 87 465 87Q429 87 398 83Q367 79 333 74.5Q299 70 255 70Q227 70 191 77.5Q155 85 122 106Q89 127 67.5 168.5Q46 210 46 278Q46 302 50 328.5Q54 355 58 377L135 366Q131 351 127.5 330Q124 309 124 280Q124 221 145.5 192Q167 163 198 153.5Q229 144 259 144Q293 144 322 148.5Q351 153 380.5 157Q410 161 445 161Q484 161 513 148.5Q542 136 564 105L564 482Q564 520 550 540.5Q536 561 498 561Q452 561 417 536Q382 511 361 475Q340 439 337 406Q353 415 373 415Q401 415 421.5 396.5Q442 378 442 347Q442 312 418 293Q394 274 359 274Q335 274 311.5 286.5Q288 299 273 326Q258 353 258 396Q258 437 275.5 478.5Q293 520 324.5 554.5Q356 589 398.5 610.5Q441 632 490 632Q547 632 587 604Q627 576 638 516Q669 559 708.5 578Q748 597 784 597Q849 597 886 562.5Q923 528 923 469Q923 442 914.5 415Q906 388 892 366Q911 342 920 311.5Q929 281 929 251Q929 191 894 152Q859 113 788 113Q735 113 699 136Q663 159 641 194L641 0L564 0ZM781 528Q743 528 704.5 494Q666 460 641 390L641 328Q663 257 700 219.5Q737 182 788 182Q815 182 834 198Q853 214 853 254Q853 287 839 309Q808 287 779 287Q749 287 731 307Q713 327 713 352Q713 373 730.5 394.5Q748 416 788 416Q810 416 829 410Q847 438 847 469Q847 500 829 514Q811 528 781 528Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M345 410 L395 408 L425 375 L420 320 L380 292 L330 292 L290 320 L270 380 L285 460 L330 535 L400 585 L490 597 L570 580 L600 530 L602 470 L602 300 L602 150 L600 40 L600 40\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M600 40 L560 95 L480 124 L360 115 L255 107 L170 125 L110 180 L85 270 L95 365\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"95\" cy=\"365\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"487.5\" y=\"222\" text-anchor=\"middle\" font-size=\"82\" fill=\"#6b7280\"><tspan x=\"487.5\" y=\"222\">3. sweep left along the</tspan><tspan x=\"487.5\" y=\"322\">base and up the left</tspan><tspan x=\"487.5\" y=\"422.1\">hook</tspan></text>"
+        },
+        {
+          "number": 4,
+          "label": "lift, then arch from the stem over the upper right lobe",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M564 0Q551 45 528.5 66Q506 87 465 87Q429 87 398 83Q367 79 333 74.5Q299 70 255 70Q227 70 191 77.5Q155 85 122 106Q89 127 67.5 168.5Q46 210 46 278Q46 302 50 328.5Q54 355 58 377L135 366Q131 351 127.5 330Q124 309 124 280Q124 221 145.5 192Q167 163 198 153.5Q229 144 259 144Q293 144 322 148.5Q351 153 380.5 157Q410 161 445 161Q484 161 513 148.5Q542 136 564 105L564 482Q564 520 550 540.5Q536 561 498 561Q452 561 417 536Q382 511 361 475Q340 439 337 406Q353 415 373 415Q401 415 421.5 396.5Q442 378 442 347Q442 312 418 293Q394 274 359 274Q335 274 311.5 286.5Q288 299 273 326Q258 353 258 396Q258 437 275.5 478.5Q293 520 324.5 554.5Q356 589 398.5 610.5Q441 632 490 632Q547 632 587 604Q627 576 638 516Q669 559 708.5 578Q748 597 784 597Q849 597 886 562.5Q923 528 923 469Q923 442 914.5 415Q906 388 892 366Q911 342 920 311.5Q929 281 929 251Q929 191 894 152Q859 113 788 113Q735 113 699 136Q663 159 641 194L641 0L564 0ZM781 528Q743 528 704.5 494Q666 460 641 390L641 328Q663 257 700 219.5Q737 182 788 182Q815 182 834 198Q853 214 853 254Q853 287 839 309Q808 287 779 287Q749 287 731 307Q713 327 713 352Q713 373 730.5 394.5Q748 416 788 416Q810 416 829 410Q847 438 847 469Q847 500 829 514Q811 528 781 528Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M345 410 L395 408 L425 375 L420 320 L380 292 L330 292 L290 320 L270 380 L285 460 L330 535 L400 585 L490 597 L570 580 L600 530 L602 470 L602 300 L602 150 L600 40 L560 95 L480 124 L360 115 L255 107 L170 125 L110 180 L85 270 L95 365\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M650 430 L650 430\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M650 430 L690 495 L745 545 L800 562 L860 535 L885 470 L880 415\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"880\" cy=\"415\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"487.5\" y=\"222\" text-anchor=\"middle\" font-size=\"82\" fill=\"#6b7280\"><tspan x=\"487.5\" y=\"222\">4. lift, then arch from</tspan><tspan x=\"487.5\" y=\"322\">the stem over the upper</tspan><tspan x=\"487.5\" y=\"422.1\">right lobe</tspan></text>"
+        },
+        {
+          "number": 5,
+          "label": "dip into the middle",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M564 0Q551 45 528.5 66Q506 87 465 87Q429 87 398 83Q367 79 333 74.5Q299 70 255 70Q227 70 191 77.5Q155 85 122 106Q89 127 67.5 168.5Q46 210 46 278Q46 302 50 328.5Q54 355 58 377L135 366Q131 351 127.5 330Q124 309 124 280Q124 221 145.5 192Q167 163 198 153.5Q229 144 259 144Q293 144 322 148.5Q351 153 380.5 157Q410 161 445 161Q484 161 513 148.5Q542 136 564 105L564 482Q564 520 550 540.5Q536 561 498 561Q452 561 417 536Q382 511 361 475Q340 439 337 406Q353 415 373 415Q401 415 421.5 396.5Q442 378 442 347Q442 312 418 293Q394 274 359 274Q335 274 311.5 286.5Q288 299 273 326Q258 353 258 396Q258 437 275.5 478.5Q293 520 324.5 554.5Q356 589 398.5 610.5Q441 632 490 632Q547 632 587 604Q627 576 638 516Q669 559 708.5 578Q748 597 784 597Q849 597 886 562.5Q923 528 923 469Q923 442 914.5 415Q906 388 892 366Q911 342 920 311.5Q929 281 929 251Q929 191 894 152Q859 113 788 113Q735 113 699 136Q663 159 641 194L641 0L564 0ZM781 528Q743 528 704.5 494Q666 460 641 390L641 328Q663 257 700 219.5Q737 182 788 182Q815 182 834 198Q853 214 853 254Q853 287 839 309Q808 287 779 287Q749 287 731 307Q713 327 713 352Q713 373 730.5 394.5Q748 416 788 416Q810 416 829 410Q847 438 847 469Q847 500 829 514Q811 528 781 528Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M345 410 L395 408 L425 375 L420 320 L380 292 L330 292 L290 320 L270 380 L285 460 L330 535 L400 585 L490 597 L570 580 L600 530 L602 470 L602 300 L602 150 L600 40 L560 95 L480 124 L360 115 L255 107 L170 125 L110 180 L85 270 L95 365\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M650 430 L690 495 L745 545 L800 562 L860 535 L885 470 L880 415 L880 415\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M880 415 L845 378 L790 368 L748 350 L778 318 L840 322 L878 300 L892 262\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"892\" cy=\"262\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"487.5\" y=\"222\" text-anchor=\"middle\" font-size=\"82\" fill=\"#6b7280\"><tspan x=\"487.5\" y=\"222\">5. dip into the middle</tspan></text>"
+        },
+        {
+          "number": 6,
+          "label": "round the lower lobe clockwise back to the stem",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M564 0Q551 45 528.5 66Q506 87 465 87Q429 87 398 83Q367 79 333 74.5Q299 70 255 70Q227 70 191 77.5Q155 85 122 106Q89 127 67.5 168.5Q46 210 46 278Q46 302 50 328.5Q54 355 58 377L135 366Q131 351 127.5 330Q124 309 124 280Q124 221 145.5 192Q167 163 198 153.5Q229 144 259 144Q293 144 322 148.5Q351 153 380.5 157Q410 161 445 161Q484 161 513 148.5Q542 136 564 105L564 482Q564 520 550 540.5Q536 561 498 561Q452 561 417 536Q382 511 361 475Q340 439 337 406Q353 415 373 415Q401 415 421.5 396.5Q442 378 442 347Q442 312 418 293Q394 274 359 274Q335 274 311.5 286.5Q288 299 273 326Q258 353 258 396Q258 437 275.5 478.5Q293 520 324.5 554.5Q356 589 398.5 610.5Q441 632 490 632Q547 632 587 604Q627 576 638 516Q669 559 708.5 578Q748 597 784 597Q849 597 886 562.5Q923 528 923 469Q923 442 914.5 415Q906 388 892 366Q911 342 920 311.5Q929 281 929 251Q929 191 894 152Q859 113 788 113Q735 113 699 136Q663 159 641 194L641 0L564 0ZM781 528Q743 528 704.5 494Q666 460 641 390L641 328Q663 257 700 219.5Q737 182 788 182Q815 182 834 198Q853 214 853 254Q853 287 839 309Q808 287 779 287Q749 287 731 307Q713 327 713 352Q713 373 730.5 394.5Q748 416 788 416Q810 416 829 410Q847 438 847 469Q847 500 829 514Q811 528 781 528Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M345 410 L395 408 L425 375 L420 320 L380 292 L330 292 L290 320 L270 380 L285 460 L330 535 L400 585 L490 597 L570 580 L600 530 L602 470 L602 300 L602 150 L600 40 L560 95 L480 124 L360 115 L255 107 L170 125 L110 180 L85 270 L95 365\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M650 430 L690 495 L745 545 L800 562 L860 535 L885 470 L880 415 L845 378 L790 368 L748 350 L778 318 L840 322 L878 300 L892 262 L892 262\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M892 262 L892 215 L870 165 L820 145 L750 150 L690 180 L650 230\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"650\" cy=\"230\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"487.5\" y=\"222\" text-anchor=\"middle\" font-size=\"82\" fill=\"#6b7280\"><tspan x=\"487.5\" y=\"222\">6. round the lower lobe</tspan><tspan x=\"487.5\" y=\"322\">clockwise back to the</tspan><tspan x=\"487.5\" y=\"422.1\">stem</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "bengali",
+      "glyph": "থ",
+      "font": "_fonts/NotoSansBengali-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 27 (থ, tha; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 192 of the 220 stored prototypes of tha are one pen-down stroke. 186 of those 192 start on the left, in the curl, which turns clockwise in all 192. The stroke then runs over the top of the bowl, down to the pointed left tip, round the lower curve and up the stem: 188 end at the top right, and 135 finish with a short move to the right, the flag beside the top of the stem. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 4 movements",
+      "viewBox": {
+        "minX": -26,
+        "minY": -758,
+        "width": 751,
+        "height": 1126.2
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "start inside the curl and turn it clockwise",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M473 0Q421 90 333 153Q245 216 125 232L87 331Q174 341 224.5 359.5Q275 378 297 406.5Q319 435 319 474Q319 513 295.5 537.5Q272 562 220 562Q187 562 164.5 550.5Q142 539 132 520Q158 519 173.5 504.5Q189 490 189 464Q189 439 173 421.5Q157 404 124 404Q84 404 64 431Q44 458 44 489Q44 548 89.5 590Q135 632 215 632Q277 632 317.5 610Q358 588 378.5 551.5Q399 515 399 471Q399 397 351 351Q303 305 211 282Q315 253 377.5 202.5Q440 152 476 97Q474 120 473.5 143Q473 166 473 193L473 688L526 688L549 622L655 622L655 551L550 551L550 0L473 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M140 515 L140 515\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M140 515 L178 492 L182 450 L152 420 L105 416 L70 445 L60 495 L85 560 L150 605 L215 598 L290 590 L345 550 L360 490\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"360\" cy=\"490\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"349.5\" y=\"200.2\" text-anchor=\"middle\" font-size=\"60.2\" fill=\"#6b7280\"><tspan x=\"349.5\" y=\"200.2\">1. start inside the</tspan><tspan x=\"349.5\" y=\"273.6\">curl and turn it</tspan><tspan x=\"349.5\" y=\"347.1\">clockwise</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "run over the top of the bowl and down to the pointed left tip",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M473 0Q421 90 333 153Q245 216 125 232L87 331Q174 341 224.5 359.5Q275 378 297 406.5Q319 435 319 474Q319 513 295.5 537.5Q272 562 220 562Q187 562 164.5 550.5Q142 539 132 520Q158 519 173.5 504.5Q189 490 189 464Q189 439 173 421.5Q157 404 124 404Q84 404 64 431Q44 458 44 489Q44 548 89.5 590Q135 632 215 632Q277 632 317.5 610Q358 588 378.5 551.5Q399 515 399 471Q399 397 351 351Q303 305 211 282Q315 253 377.5 202.5Q440 152 476 97Q474 120 473.5 143Q473 166 473 193L473 688L526 688L549 622L655 622L655 551L550 551L550 0L473 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M140 515 L178 492 L182 450 L152 420 L105 416 L70 445 L60 495 L85 560 L150 605 L215 598 L290 590 L345 550 L360 490 L360 490\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M360 490 L350 420 L300 360 L200 318 L105 300\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"105\" cy=\"300\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"349.5\" y=\"200.2\" text-anchor=\"middle\" font-size=\"60.2\" fill=\"#6b7280\"><tspan x=\"349.5\" y=\"200.2\">2. run over the top of</tspan><tspan x=\"349.5\" y=\"273.6\">the bowl and down to</tspan><tspan x=\"349.5\" y=\"347.1\">the pointed left tip</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "round the lower curve to the foot of the stem",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M473 0Q421 90 333 153Q245 216 125 232L87 331Q174 341 224.5 359.5Q275 378 297 406.5Q319 435 319 474Q319 513 295.5 537.5Q272 562 220 562Q187 562 164.5 550.5Q142 539 132 520Q158 519 173.5 504.5Q189 490 189 464Q189 439 173 421.5Q157 404 124 404Q84 404 64 431Q44 458 44 489Q44 548 89.5 590Q135 632 215 632Q277 632 317.5 610Q358 588 378.5 551.5Q399 515 399 471Q399 397 351 351Q303 305 211 282Q315 253 377.5 202.5Q440 152 476 97Q474 120 473.5 143Q473 166 473 193L473 688L526 688L549 622L655 622L655 551L550 551L550 0L473 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M140 515 L178 492 L182 450 L152 420 L105 416 L70 445 L60 495 L85 560 L150 605 L215 598 L290 590 L345 550 L360 490 L350 420 L300 360 L200 318 L105 300 L105 300\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M105 300 L140 255 L240 238 L330 190 L405 120 L465 40 L511 12\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"511\" cy=\"12\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"349.5\" y=\"200.2\" text-anchor=\"middle\" font-size=\"60.2\" fill=\"#6b7280\"><tspan x=\"349.5\" y=\"200.2\">3. round the lower</tspan><tspan x=\"349.5\" y=\"273.6\">curve to the foot of</tspan><tspan x=\"349.5\" y=\"347.1\">the stem</tspan></text>"
+        },
+        {
+          "number": 4,
+          "label": "climb the stem and turn right into the flag",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M473 0Q421 90 333 153Q245 216 125 232L87 331Q174 341 224.5 359.5Q275 378 297 406.5Q319 435 319 474Q319 513 295.5 537.5Q272 562 220 562Q187 562 164.5 550.5Q142 539 132 520Q158 519 173.5 504.5Q189 490 189 464Q189 439 173 421.5Q157 404 124 404Q84 404 64 431Q44 458 44 489Q44 548 89.5 590Q135 632 215 632Q277 632 317.5 610Q358 588 378.5 551.5Q399 515 399 471Q399 397 351 351Q303 305 211 282Q315 253 377.5 202.5Q440 152 476 97Q474 120 473.5 143Q473 166 473 193L473 688L526 688L549 622L655 622L655 551L550 551L550 0L473 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M140 515 L178 492 L182 450 L152 420 L105 416 L70 445 L60 495 L85 560 L150 605 L215 598 L290 590 L345 550 L360 490 L350 420 L300 360 L200 318 L105 300 L140 255 L240 238 L330 190 L405 120 L465 40 L511 12 L511 12\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M511 12 L511 200 L511 400 L511 600 L511 640 L555 600 L645 586\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"645\" cy=\"586\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"349.5\" y=\"200.2\" text-anchor=\"middle\" font-size=\"60.2\" fill=\"#6b7280\"><tspan x=\"349.5\" y=\"200.2\">4. climb the stem and</tspan><tspan x=\"349.5\" y=\"273.6\">turn right into the</tspan><tspan x=\"349.5\" y=\"347.1\">flag</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "bengali",
+      "glyph": "ব",
+      "font": "_fonts/NotoSansBengali-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 33 (ব, ba; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 433 of the 477 stored prototypes of ba are one pen-down stroke. 258 of those 433 open with the headline, drawn left to right; most of the rest (86) draw no headline run at all. 308 start at the upper left, 350 finish by climbing the stem, and 393 end at the top right. The path keeps that order: the headline left to right, the turn into the stem and down the diagonal to the pointed left tip, the lower curve to the stem's foot, and the climb back up the stem. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 4 movements",
+      "viewBox": {
+        "minX": -80,
+        "minY": -692,
+        "width": 756,
+        "height": 1135.6
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the headline from left to right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M424 0Q394 58 341.5 107.5Q289 157 221 192Q153 227 76 239L37 335Q128 390 224.5 437Q321 484 424 517L424 551L-10 551L-10 622L606 622L606 551L501 551L501 0L424 0ZM424 189L424 439Q352 414 274.5 377.5Q197 341 130 300Q181 289 238.5 263Q296 237 346 197.5Q396 158 427 108Q426 125 425 144.5Q424 164 424 189Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M0 586 L0 586\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M0 586 L150 586 L300 586 L450 586 L590 586\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"590\" cy=\"586\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"298\" y=\"200.6\" text-anchor=\"middle\" font-size=\"60.6\" fill=\"#6b7280\"><tspan x=\"298\" y=\"200.6\">1. draw the headline</tspan><tspan x=\"298\" y=\"274.5\">from left to right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "turn into the stem and run down the diagonal to the pointed left tip",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M424 0Q394 58 341.5 107.5Q289 157 221 192Q153 227 76 239L37 335Q128 390 224.5 437Q321 484 424 517L424 551L-10 551L-10 622L606 622L606 551L501 551L501 0L424 0ZM424 189L424 439Q352 414 274.5 377.5Q197 341 130 300Q181 289 238.5 263Q296 237 346 197.5Q396 158 427 108Q426 125 425 144.5Q424 164 424 189Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M0 586 L150 586 L300 586 L450 586 L590 586 L590 586\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M590 586 L501 562 L462 505 L400 465 L300 420 L200 370 L95 315 L95 315\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"95\" cy=\"315\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"298\" y=\"200.6\" text-anchor=\"middle\" font-size=\"60.6\" fill=\"#6b7280\"><tspan x=\"298\" y=\"200.6\">2. turn into the stem</tspan><tspan x=\"298\" y=\"274.5\">and run down the</tspan><tspan x=\"298\" y=\"348.5\">diagonal to the pointed</tspan><tspan x=\"298\" y=\"422.4\">left tip</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "round the lower curve to the foot of the stem",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M424 0Q394 58 341.5 107.5Q289 157 221 192Q153 227 76 239L37 335Q128 390 224.5 437Q321 484 424 517L424 551L-10 551L-10 622L606 622L606 551L501 551L501 0L424 0ZM424 189L424 439Q352 414 274.5 377.5Q197 341 130 300Q181 289 238.5 263Q296 237 346 197.5Q396 158 427 108Q426 125 425 144.5Q424 164 424 189Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M0 586 L150 586 L300 586 L450 586 L590 586 L501 562 L462 505 L400 465 L300 420 L200 370 L95 315 L95 315\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M95 315 L110 270 L200 250 L290 210 L370 150 L425 80 L462 15\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"462\" cy=\"15\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"298\" y=\"200.6\" text-anchor=\"middle\" font-size=\"60.6\" fill=\"#6b7280\"><tspan x=\"298\" y=\"200.6\">3. round the lower</tspan><tspan x=\"298\" y=\"274.5\">curve to the foot of</tspan><tspan x=\"298\" y=\"348.5\">the stem</tspan></text>"
+        },
+        {
+          "number": 4,
+          "label": "climb the stem to the headline",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M424 0Q394 58 341.5 107.5Q289 157 221 192Q153 227 76 239L37 335Q128 390 224.5 437Q321 484 424 517L424 551L-10 551L-10 622L606 622L606 551L501 551L501 0L424 0ZM424 189L424 439Q352 414 274.5 377.5Q197 341 130 300Q181 289 238.5 263Q296 237 346 197.5Q396 158 427 108Q426 125 425 144.5Q424 164 424 189Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M0 586 L150 586 L300 586 L450 586 L590 586 L501 562 L462 505 L400 465 L300 420 L200 370 L95 315 L110 270 L200 250 L290 210 L370 150 L425 80 L462 15 L462 15\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M462 15 L462 150 L462 300 L462 450 L462 600\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"462\" cy=\"600\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"298\" y=\"200.6\" text-anchor=\"middle\" font-size=\"60.6\" fill=\"#6b7280\"><tspan x=\"298\" y=\"200.6\">4. climb the stem to</tspan><tspan x=\"298\" y=\"274.5\">the headline</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "bengali",
+      "glyph": "র",
+      "font": "_fonts/NotoSansBengali-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 37 (র, ra; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 198 of the 312 stored prototypes of ra are two pen-down strokes (98 are three, 8 one). In all 198 two-stroke prototypes the body comes first and the dot second, below it (157 in its left half). The body is written like ba: 147 open with the headline left to right, 154 finish by climbing the stem, and 189 end at the top right. The traces do not settle which way the dot is turned, so the path makes no claim about it and draws it as a short touch. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 5 movements",
+      "viewBox": {
+        "minX": -80,
+        "minY": -692,
+        "width": 756,
+        "height": 1141.6
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the headline from left to right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M424 0Q394 58 341.5 107.5Q289 157 221 192Q153 227 76 239L37 335Q128 390 224.5 437Q321 484 424 517L424 551L-10 551L-10 622L606 622L606 551L501 551L501 0L424 0ZM424 189L424 439Q352 414 274.5 377.5Q197 341 130 300Q181 289 238.5 263Q296 237 346 197.5Q396 158 427 108Q426 125 425 144.5Q424 164 424 189ZM195 -6Q170 -6 152.5 11Q135 28 135 54Q135 80 152.5 97Q170 114 195 114Q220 114 237.5 97Q255 80 255 54Q255 28 237.5 11Q220 -6 195 -6Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M0 586 L0 586\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M0 586 L150 586 L300 586 L450 586 L590 586\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"590\" cy=\"586\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"298\" y=\"206.6\" text-anchor=\"middle\" font-size=\"60.6\" fill=\"#6b7280\"><tspan x=\"298\" y=\"206.6\">1. draw the headline</tspan><tspan x=\"298\" y=\"280.5\">from left to right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "turn into the stem and run down the diagonal to the pointed left tip",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M424 0Q394 58 341.5 107.5Q289 157 221 192Q153 227 76 239L37 335Q128 390 224.5 437Q321 484 424 517L424 551L-10 551L-10 622L606 622L606 551L501 551L501 0L424 0ZM424 189L424 439Q352 414 274.5 377.5Q197 341 130 300Q181 289 238.5 263Q296 237 346 197.5Q396 158 427 108Q426 125 425 144.5Q424 164 424 189ZM195 -6Q170 -6 152.5 11Q135 28 135 54Q135 80 152.5 97Q170 114 195 114Q220 114 237.5 97Q255 80 255 54Q255 28 237.5 11Q220 -6 195 -6Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M0 586 L150 586 L300 586 L450 586 L590 586 L590 586\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M590 586 L501 562 L462 505 L400 465 L300 420 L200 370 L95 315 L95 315\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"95\" cy=\"315\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"298\" y=\"206.6\" text-anchor=\"middle\" font-size=\"60.6\" fill=\"#6b7280\"><tspan x=\"298\" y=\"206.6\">2. turn into the stem</tspan><tspan x=\"298\" y=\"280.5\">and run down the</tspan><tspan x=\"298\" y=\"354.5\">diagonal to the pointed</tspan><tspan x=\"298\" y=\"428.4\">left tip</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "round the lower curve to the foot of the stem",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M424 0Q394 58 341.5 107.5Q289 157 221 192Q153 227 76 239L37 335Q128 390 224.5 437Q321 484 424 517L424 551L-10 551L-10 622L606 622L606 551L501 551L501 0L424 0ZM424 189L424 439Q352 414 274.5 377.5Q197 341 130 300Q181 289 238.5 263Q296 237 346 197.5Q396 158 427 108Q426 125 425 144.5Q424 164 424 189ZM195 -6Q170 -6 152.5 11Q135 28 135 54Q135 80 152.5 97Q170 114 195 114Q220 114 237.5 97Q255 80 255 54Q255 28 237.5 11Q220 -6 195 -6Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M0 586 L150 586 L300 586 L450 586 L590 586 L501 562 L462 505 L400 465 L300 420 L200 370 L95 315 L95 315\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M95 315 L110 270 L200 250 L290 210 L370 150 L425 80 L462 15\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"462\" cy=\"15\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"298\" y=\"206.6\" text-anchor=\"middle\" font-size=\"60.6\" fill=\"#6b7280\"><tspan x=\"298\" y=\"206.6\">3. round the lower</tspan><tspan x=\"298\" y=\"280.5\">curve to the foot of</tspan><tspan x=\"298\" y=\"354.5\">the stem</tspan></text>"
+        },
+        {
+          "number": 4,
+          "label": "climb the stem to the headline",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M424 0Q394 58 341.5 107.5Q289 157 221 192Q153 227 76 239L37 335Q128 390 224.5 437Q321 484 424 517L424 551L-10 551L-10 622L606 622L606 551L501 551L501 0L424 0ZM424 189L424 439Q352 414 274.5 377.5Q197 341 130 300Q181 289 238.5 263Q296 237 346 197.5Q396 158 427 108Q426 125 425 144.5Q424 164 424 189ZM195 -6Q170 -6 152.5 11Q135 28 135 54Q135 80 152.5 97Q170 114 195 114Q220 114 237.5 97Q255 80 255 54Q255 28 237.5 11Q220 -6 195 -6Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M0 586 L150 586 L300 586 L450 586 L590 586 L501 562 L462 505 L400 465 L300 420 L200 370 L95 315 L110 270 L200 250 L290 210 L370 150 L425 80 L462 15 L462 15\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M462 15 L462 150 L462 300 L462 450 L462 600\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"462\" cy=\"600\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"298\" y=\"206.6\" text-anchor=\"middle\" font-size=\"60.6\" fill=\"#6b7280\"><tspan x=\"298\" y=\"206.6\">4. climb the stem to</tspan><tspan x=\"298\" y=\"280.5\">the headline</tspan></text>"
+        },
+        {
+          "number": 5,
+          "label": "lift, then place the dot below",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M424 0Q394 58 341.5 107.5Q289 157 221 192Q153 227 76 239L37 335Q128 390 224.5 437Q321 484 424 517L424 551L-10 551L-10 622L606 622L606 551L501 551L501 0L424 0ZM424 189L424 439Q352 414 274.5 377.5Q197 341 130 300Q181 289 238.5 263Q296 237 346 197.5Q396 158 427 108Q426 125 425 144.5Q424 164 424 189ZM195 -6Q170 -6 152.5 11Q135 28 135 54Q135 80 152.5 97Q170 114 195 114Q220 114 237.5 97Q255 80 255 54Q255 28 237.5 11Q220 -6 195 -6Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M0 586 L150 586 L300 586 L450 586 L590 586 L501 562 L462 505 L400 465 L300 420 L200 370 L95 315 L110 270 L200 250 L290 210 L370 150 L425 80 L462 15 L462 150 L462 300 L462 450 L462 600\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M180 75 L180 75\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M180 75 L195 54 L212 35\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"212\" cy=\"35\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"298\" y=\"206.6\" text-anchor=\"middle\" font-size=\"60.6\" fill=\"#6b7280\"><tspan x=\"298\" y=\"206.6\">5. lift, then place the</tspan><tspan x=\"298\" y=\"280.5\">dot below</tspan></text>"
+        }
+      ]
+    }
+  ]
+}
