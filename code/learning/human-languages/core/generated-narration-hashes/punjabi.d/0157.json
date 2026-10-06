@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:89542c54e9b882ea",
+  "lessonIds": [
+    "PA-W13-form-mixed-cues",
+    "PA-W13-form-timed",
+    "PA-W13-message-pacing",
+    "PA-W13-message-timed",
+    "PA-W13-timed-repair"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch157.txt",
+  "json": "punjabi/narration/ch157.json",
+  "textHash": "fnv1a64:0b53a3a29d222861",
+  "jsonHash": "fnv1a64:156c9a5ad719f09b",
+  "findings": []
+}

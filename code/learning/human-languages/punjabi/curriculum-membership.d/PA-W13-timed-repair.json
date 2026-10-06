@@ -1,0 +1,11 @@
+{
+  "id": "PA-W13-timed-repair",
+  "pathSegment": "PA-PATH-157-SHORT-WRITING-CLOCKS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-157-A1-SHORT-WRITING-CLOCKS",
+      "order": 4
+    }
+  ]
+}

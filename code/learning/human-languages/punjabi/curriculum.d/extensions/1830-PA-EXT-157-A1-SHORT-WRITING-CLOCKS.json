@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-157-A1-SHORT-WRITING-CLOCKS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can write a six-field Gurmukhi form and a 30–40-word named-reader message in separate short timed checkpoints, then repair them without changing the original timed evidence.",
+  "prerequisites": [
+    "PA-EXT-156-A1-NAMED-READER-MESSAGE",
+    "PA-EXT-155-A1-SIX-FIELD-FORM"
+  ]
+}

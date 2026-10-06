@@ -1,26 +1,24 @@
 {
   "lesson": {
-    "id": "PA-W10-a1-con-reloj",
+    "id": "PA-W13-message-pacing",
     "language": "punjabi",
-    "chapter": 46,
-    "sequence": 2610,
+    "chapter": 157,
+    "sequence": 8720,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
-      "writing-block",
-      "sight-cue"
+      "writing-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type",
-      "sight-cue"
+      "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:6fe7172c6caa2768",
+    "sourceHash": "fnv1a64:6afad102e8900002",
     "detachableSegments": [
-      "Writing — the published paper envelope"
+      "Writing — one small timed opening"
     ],
     "delivery": "script"
   },

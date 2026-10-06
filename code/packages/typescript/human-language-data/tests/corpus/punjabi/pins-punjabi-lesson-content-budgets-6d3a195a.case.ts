@@ -81,7 +81,9 @@ it("pins Punjabi lesson-content budgets", () =>
     // No new idiom, sense or culture claim.
     // 844 -> 863: named-reader message assembly and separate repair dimensions,
     // again reusing taught language without new idioms, senses, or culture claims.
-    lessons: 863,
+    // 863 -> 868: two short timed checkpoints, two scaffolds, and one repair;
+    // all reuse familiar language without new idioms, senses, or culture claims.
+    lessons: 868,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,
