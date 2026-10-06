@@ -169,5 +169,11 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // Chapter 156 extends the measurable tail by 19 short, no-new-atom writing
   // sessions. Two genuine six-field form recalls close one R1 and two R2
   // windows; the remaining newly measurable debt is retained, not suppressed.
-  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 572 });
+  // Chapter 157 adds five short timed-writing and repair sessions. A direct
+  // before/after (atom, window) diff shows two R3 closures on the six-field
+  // cue and repair atoms. Five Chapter 146 quality-word R4 windows become
+  // measurable at the new tail; #16793 owns their later retrieval. The test
+  // pins the measured debt rather than calling these unrelated words taught
+  // by the timed form or message.
+  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 513, R4: 577 });
 });

@@ -1,0 +1,18 @@
+{
+  "chapter": 157,
+  "title": "Try the A1 Writing Tasks with Short Clocks",
+  "label": "ch:pa-a1-writing-short-clocks",
+  "canDo": "I can complete a six-field Gurmukhi form and a 30–40-word named-reader message in separate short timed checkpoints, then repair content and script in bounded passes without mistaking these drills for a complete A1 mock.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-W13-message-timed",
+    "kind": "production",
+    "summary": "After a timed six-field mixed-cue form and a short message pacing rehearsal, the learner independently writes a 30–40-word Gurmukhi message for a named reader under a short clock; the full twenty-minute paper remains for the mocks.",
+    "assesses": [
+      "PA-A1-FORM-TIMED-01",
+      "PA-A1-MESSAGE-TIMED-01"
+    ]
+  }
+}

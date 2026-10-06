@@ -1,26 +1,24 @@
 {
   "lesson": {
-    "id": "PA-W10-a1-con-reloj",
+    "id": "PA-W13-form-timed",
     "language": "punjabi",
-    "chapter": 46,
-    "sequence": 2610,
+    "chapter": 157,
+    "sequence": 8710,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
-      "writing-block",
-      "sight-cue"
+      "writing-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type",
-      "sight-cue"
+      "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:6fe7172c6caa2768",
+    "sourceHash": "fnv1a64:8ab34684da1db5f0",
     "detachableSegments": [
-      "Writing — the published paper envelope"
+      "Writing — independent timed form"
     ],
     "delivery": "script"
   },

@@ -114,12 +114,9 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "guided-copy",
     "observe-trace",
     "guided-copy",
-    // 59 -> 60, and the list stops growing sideways here. Everything above is a
-    // pre-A1 stage repeated across the script runways; this one entry is the
-    // A1 timed paper, the seventh and last stage in the ramp. Punjabi proved
-    // the other six long ago and failed A1 through C2 on this one alone, so a
-    // single lesson closes six level-debts.
-    "timed-assessment-production",
+    // Chapter 46 introduces the published paper envelope but does not run
+    // an impossible twenty-minute assessment inside one short lesson. The
+    // first real timed production follows the independent runways below.
     "connected-composition",
     // Chapter 153 adds six supported copies, then one delayed entry and one
     // dictation before three controlled-composition repair/choice prompts.
@@ -173,6 +170,13 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "guided-copy",
     "delayed-copy",
     "controlled-composition",
+    "controlled-composition",
+    // Chapter 157 practises mixed form cues and message pacing before two
+    // separate three-minute no-model checkpoints and an untimed repair.
+    "guided-copy",
+    "timed-assessment-production",
+    "controlled-composition",
+    "timed-assessment-production",
     "controlled-composition",
   ]);
 });
