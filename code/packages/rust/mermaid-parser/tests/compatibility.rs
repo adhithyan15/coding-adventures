@@ -492,6 +492,12 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.columns[0].cards[1].label.text, "Hex card");
             assert_eq!(board.columns[1].cards[0].label.text, "Circle card");
         }
+        if id == "cloud-and-bang-labels" {
+            assert_eq!(board.columns[0].label.text, "Cloud section");
+            assert_eq!(board.columns[0].cards[0].label.text, "Bang card");
+            assert_eq!(board.columns[0].cards[1].label.text, "Cloud card");
+            assert_eq!(board.columns[0].cards[2].label.text, "Burst card");
+        }
     }
 }
 

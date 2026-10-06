@@ -417,8 +417,8 @@ Packet at the full compatibility level.
 
 The initial Mermaid 11.16.1 Kanban slice uses dedicated portable grammars and
 preserves indentation-defined columns and cards, with plain labels and explicit
-`id[label]` forms, in typed board semantic IR. Rounded, circular, and hexagonal
-node delimiters normalize to Mermaid's fixed Kanban section/card semantics while
+`id[label]` forms, in typed board semantic IR. Rounded, circular, hexagonal,
+cloud, bang, and alternate node delimiters normalize to Mermaid's fixed Kanban semantics while
 preserving their authored labels through layout and Paint lowering. Inline or multiline `@{...}`
 card metadata preserves label overrides, ticket identifiers, assignees, and
 priorities in semantic IR. Icon identifiers from either metadata or following

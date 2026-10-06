@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.139.0";
+pub const VERSION: &str = "0.140.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -1639,7 +1639,16 @@ fn parse_kanban_layout_config(source: &str) -> BoardConfig {
 
 fn parse_board_node(source: &str) -> (Option<String>, String) {
     let source = source.trim();
-    for (open, close) in [("((", "))"), ("{{", "}}"), ("[", "]"), ("(", ")")] {
+    for (open, close) in [
+        ("-)", "(-"),
+        ("(-", "-)"),
+        ("))", "(("),
+        (")", "("),
+        ("((", "))"),
+        ("{{", "}}"),
+        ("[", "]"),
+        ("(", ")"),
+    ] {
         if let Some(open_index) = source.find(open) {
             if !source.ends_with(close) {
                 continue;
@@ -12475,6 +12484,19 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn kanban_normalizes_cloud_and_bang_labels() {
+        let board = parse_kanban(
+            "kanban\n  todo)Cloud section(\n    bang))Bang card((\n    cloud(-Cloud card-)\n    burst-)Burst card(-",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].id, "todo");
+        assert_eq!(board.columns[0].label.text, "Cloud section");
+        assert_eq!(board.columns[0].cards[0].label.text, "Bang card");
+        assert_eq!(board.columns[0].cards[1].label.text, "Cloud card");
+        assert_eq!(board.columns[0].cards[2].label.text, "Burst card");
+    }
+
+    #[test]
     fn dispatch_kanban_to_board_ir() {
         match parse_any_mermaid("kanban\nTodo\n  task1[Task]").unwrap() {
             MermaidDiagram::Board(board) => assert_eq!(board.columns.len(), 1),
@@ -16466,7 +16488,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.139.0");
+        assert_eq!(crate::VERSION, "0.140.0");
     }
 
     #[test]
