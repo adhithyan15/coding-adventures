@@ -8,6 +8,7 @@ import {
   loadChapterPolicy,
   loadCurriculumSpine,
   loadLanguageCurricula,
+  loadTrackLanguageCurriculum,
   loadTrackLessons,
 } from "../../src/loader.js";
 import { measureLessonBudgets } from "../../src/lesson-budgets.js";
@@ -132,9 +133,8 @@ export function expectLanguageLessonBudgets(
 export function languageWritingStages(language: string): TrackWritingStageCoverage {
   const root = defaultCurriculumRoot();
   const lessons = loadTrackLessons(language, root);
-  const curricula = loadLanguageCurricula(root).filter(
-    (curriculum) => curriculum.language === language,
-  );
+  const curriculum = loadTrackLanguageCurriculum(language, root);
+  const curricula = curriculum ? [curriculum] : [];
   return measureWritingStages(
     loadAssessmentPolicy(root),
     [language],
