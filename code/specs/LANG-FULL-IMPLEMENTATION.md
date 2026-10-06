@@ -1312,8 +1312,10 @@ backend immediately) come before the enabler-dependent items.
   formals also carry the proof through assignment and composition, including
   value formals promoted into the existing nested-procedure capture globals.
   Ordinary real scalars captured through E6 typed globals likewise carry the
-  proof into nested sibling procedures. Broader computed scalar `f64`
-  formatting remains a follow-up.
+  proof into nested sibling procedures. Real procedure results preserve the
+  proof when finite call-by-name specialisation binds each real scalar name
+  formal to a proven runtime-real actual; no dynamic thunk ABI is introduced.
+  Broader computed scalar `f64` formatting remains a follow-up.
   Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across

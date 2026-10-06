@@ -541,9 +541,8 @@ struct Compiler {
     /// a literal-only model, this also covers runtime results such as a string
     /// procedure call copied into a scalar local.
     initialized_string_slots: HashSet<String>,
-    /// Local real slots whose latest straight-line assignment is a direct
-    /// real-procedure result with zero parameters or only value-mode scalar
-    /// parameters, or a copy of another such slot.
+    /// Local real slots whose latest straight-line assignment is a
+    /// formatter-safe real-procedure result, or a copy of another such slot.
     runtime_real_slots: HashSet<String>,
     /// Module-global slots for captured real scalars and captured real value
     /// formals. Their concrete f64 representation remains formatter-safe in
@@ -2344,9 +2343,9 @@ impl Compiler {
             // the literal/variable fast paths above — no literal-backing is
             // required. Integer expressions use the shared numeric stdout
             // builtin, booleans select typed string literals, and direct
-            // zero-argument or value-scalar-parameter real-procedure results
-            // and path-independent conditional values over proven runtime-real
-            // branches use the portable formatter.
+            // Formatter-safe real-procedure results and path-independent
+            // conditional values over proven runtime-real branches use the
+            // portable formatter.
             // Provenance-backed real scalar variables take the bounded path
             // above; composed dynamic real expressions still fail closed here.
             let allow_runtime_real = self.is_runtime_real_assignment_value(actual);
@@ -3785,7 +3784,7 @@ impl Compiler {
         self.emit_label(&end_label);
     }
 
-    fn is_direct_value_scalar_real_procedure_call(&self, node: &GrammarASTNode) -> bool {
+    fn is_direct_formatter_safe_real_procedure_call(&self, node: &GrammarASTNode) -> bool {
         if node.rule_name == "proc_call" {
             let Some(source_name) = direct_tokens(node)
                 .into_iter()
@@ -3795,29 +3794,36 @@ impl Compiler {
                 return false;
             };
             let target_name = self.resolve_procedure_identity(&source_name);
-            return self
-                .proc_sigs
-                .get(&target_name)
-                .is_some_and(|sig| {
-                    sig.ret == Some(ScalarType::Real)
-                        && sig.params.iter().all(|param| {
-                            param.mode == ProcedureParamMode::Value
-                                && matches!(param.ty, ProcedureParamType::Scalar(_))
-                        })
+            let Some(sig) = self.proc_sigs.get(&target_name) else {
+                return false;
+            };
+            if sig.ret != Some(ScalarType::Real) {
+                return false;
+            }
+            let actuals = self.standard_fn_actuals(node);
+            return actuals.len() == sig.params.len()
+                && sig.params.iter().zip(actuals).all(|(param, actual)| {
+                    match (param.mode, &param.ty) {
+                        (ProcedureParamMode::Value, ProcedureParamType::Scalar(_)) => true,
+                        (ProcedureParamMode::Name, ProcedureParamType::Scalar(ScalarType::Real)) => {
+                            self.is_runtime_real_assignment_value(actual)
+                        }
+                        _ => false,
+                    }
                 });
         }
         if let Some(child) = single_parenthesized_child(node) {
-            return self.is_direct_value_scalar_real_procedure_call(child);
+            return self.is_direct_formatter_safe_real_procedure_call(child);
         }
         if !direct_tokens(node).is_empty() {
             return false;
         }
         let children = direct_nodes(node);
-        children.len() == 1 && self.is_direct_value_scalar_real_procedure_call(children[0])
+        children.len() == 1 && self.is_direct_formatter_safe_real_procedure_call(children[0])
     }
 
     fn is_runtime_real_assignment_value(&self, node: &GrammarASTNode) -> bool {
-        if self.is_direct_value_scalar_real_procedure_call(node) {
+        if self.is_direct_formatter_safe_real_procedure_call(node) {
             return true;
         }
         if node.rule_name == "variable" && array_subscripts(node).is_some() {
@@ -12558,12 +12564,26 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_procedure_result_provenance_excludes_name_formals() {
-        let error = compile_source(
+    fn al4_runtime_real_procedure_result_provenance_includes_real_name_formals() {
+        let module = compile_source(
             "begin real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; output(relay(pick())) end",
             "test",
         )
-        .expect_err("name-formal results remain outside the bounded formatter proof");
+        .expect("a specialised real name-formal result retains formatter provenance");
+        let main = module.get_function("main").expect("has main procedure");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_procedure_result_provenance_rejects_unproven_name_actuals() {
+        let error = compile_source(
+            "begin real procedure relay(x); real x; relay := x; output(relay(sin(1.0))) end",
+            "test",
+        )
+        .expect_err("an unproven real name actual remains outside the bounded formatter proof");
         assert!(
             format!("{error:?}").contains("cannot print a real value"),
             "unexpected rejection: {error:?}"
