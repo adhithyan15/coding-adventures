@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.135.0";
+pub const VERSION: &str = "0.136.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -1399,6 +1399,7 @@ fn parse_architecture_labeled_edge_operator(
 
 /// Parse a core indentation-defined Mermaid Kanban board.
 pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
+    let ticket_base_url = parse_kanban_ticket_base_url(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_kanban(&prepared).map_err(|message| ParseError {
         message, line: 1, col: 1,
@@ -1422,7 +1423,7 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
         .ok_or_else(|| ParseError {
             message: "kanban diagram requires a column".into(), line: 1, col: 1,
         })?;
-    let mut diagram = BoardDiagram::default();
+    let mut diagram = BoardDiagram { ticket_base_url, ..BoardDiagram::default() };
     let mut ids = HashSet::new();
     let mut card_indent = None;
     let mut last_card: Option<(usize, usize)> = None;
@@ -1590,6 +1591,20 @@ fn parse_kanban_metadata_scalar(source: &str) -> String {
         .strip_prefix('\'')
         .and_then(|value| value.strip_suffix('\''))
         .map_or_else(|| unquote_mermaid_string(source), |value| value.replace("''", "'"))
+}
+
+fn parse_kanban_ticket_base_url(source: &str) -> Option<String> {
+    let front_matter = mermaid_front_matter_section(source, &["config", "kanban"]);
+    let kanban_source = mermaid_directive_object(source, "kanban")
+        .or(front_matter.as_deref())?;
+    quadrant_directive_value(kanban_source, "ticketBaseUrl").or_else(|| {
+        kanban_source.lines().find_map(|line| {
+            let (name, value) = line.trim().split_once(':')?;
+            (name.trim() == "ticketBaseUrl").then(|| {
+                value.trim().trim_matches(['"', '\'']).to_string()
+            })
+        })
+    }).filter(|value| !value.is_empty())
 }
 
 fn parse_board_node(source: &str) -> (Option<String>, String) {
@@ -12360,6 +12375,26 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn kanban_preserves_ticket_base_url_configuration() {
+        let board = parse_kanban(
+            "%%{init: {'kanban': {'ticketBaseUrl': 'https://tracker.example/issues/#TICKET#'}}}%%\nkanban\n  todo[Todo]\n    parser[Write grammar]@{ ticket: MC-42 }",
+        )
+        .unwrap();
+        assert_eq!(
+            board.ticket_base_url.as_deref(),
+            Some("https://tracker.example/issues/#TICKET#")
+        );
+        let front_matter = parse_kanban(
+            "---\nconfig:\n  kanban:\n    ticketBaseUrl: https://frontmatter.example/#TICKET#\n---\nkanban\n  todo[Todo]\n    parser[Write grammar]@{ ticket: MC-42 }",
+        )
+        .unwrap();
+        assert_eq!(
+            front_matter.ticket_base_url.as_deref(),
+            Some("https://frontmatter.example/#TICKET#")
+        );
+    }
+
+    #[test]
     fn dispatch_kanban_to_board_ir() {
         match parse_any_mermaid("kanban\nTodo\n  task1[Task]").unwrap() {
             MermaidDiagram::Board(board) => assert_eq!(board.columns.len(), 1),
@@ -16351,7 +16386,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.135.0");
+        assert_eq!(crate::VERSION, "0.136.0");
     }
 
     #[test]

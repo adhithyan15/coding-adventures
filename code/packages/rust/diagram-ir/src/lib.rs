@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.78.0";
+pub const VERSION: &str = "0.79.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -417,6 +417,7 @@ pub struct BoardColumn {
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct BoardDiagram {
     pub columns: Vec<BoardColumn>,
+    pub ticket_base_url: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -429,6 +430,7 @@ pub struct LayoutedBoardCard {
     pub height: f64,
     pub style: ResolvedDiagramStyle,
     pub ticket: Option<String>,
+    pub ticket_url: Option<String>,
     pub assigned: Option<String>,
     pub priority: Option<String>,
     pub icon: Option<String>,
@@ -2705,7 +2707,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.78.0");
+        assert_eq!(VERSION, "0.79.0");
     }
     #[test]
     fn default_direction_is_tb() {

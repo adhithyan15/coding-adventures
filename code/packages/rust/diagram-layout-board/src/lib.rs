@@ -1,6 +1,6 @@
 //! Deterministic column/card layout for board diagrams.
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 use diagram_ir::{
     BoardDiagram, DiagramStyle, LayoutedBoardCard, LayoutedBoardColumn, LayoutedBoardDiagram,
@@ -45,6 +45,9 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
                         height,
                         style: card_style(column_index),
                         ticket: card.ticket.clone(),
+                        ticket_url: board.ticket_base_url.as_ref().and_then(|base| {
+                            card.ticket.as_ref().map(|ticket| base.replace("#TICKET#", ticket))
+                        }),
                         assigned: card.assigned.clone(),
                         priority: card.priority.clone(),
                         icon: card.icon.clone(),
@@ -118,6 +121,7 @@ mod tests {
     #[test]
     fn lays_out_columns_and_cards() {
         let board = BoardDiagram {
+            ticket_base_url: None,
             columns: vec![BoardColumn {
                 id: "todo".into(),
                 label: DiagramLabel::new("Todo"),
@@ -142,6 +146,7 @@ mod tests {
     #[test]
     fn metadata_reserves_card_footer_geometry() {
         let board = BoardDiagram {
+            ticket_base_url: Some("https://tracker.example/issues/#TICKET#".into()),
             columns: vec![BoardColumn {
                 id: "todo".into(),
                 label: DiagramLabel::new("Todo"),
@@ -160,6 +165,10 @@ mod tests {
         let layout = layout_board_diagram(&board);
         assert_eq!(layout.columns[0].cards[0].height, CARD_HEIGHT + 24.0);
         assert_eq!(layout.columns[0].cards[0].ticket.as_deref(), Some("MC-42"));
+        assert_eq!(
+            layout.columns[0].cards[0].ticket_url.as_deref(),
+            Some("https://tracker.example/issues/MC-42")
+        );
         assert_eq!(layout.columns[0].classes, ["backlog"]);
         assert_eq!(layout.columns[0].cards[0].classes, ["urgent", "blocked"]);
     }
