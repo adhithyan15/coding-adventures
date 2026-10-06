@@ -482,7 +482,10 @@ artwork remains unsupported at the partial level. Architecture `iconSize`, `font
 `idealEdgeLengthMultiplier` values from Mermaid init directives or YAML front matter
 survive as typed semantic configuration and resolve into backend-neutral node geometry,
 service typography, deterministic spacing, alignment-hint distances, group insets,
-and outer canvas margins. Randomized layout and the remaining fcose-specific tuning controls remain
+and outer canvas margins. Bounded `edgeElasticity` values survive the same configuration
+paths and deterministically tighten or loosen connected sibling spacing before relationship
+routing and backend-neutral PaintScene lowering. Randomized layout, seeds, iteration limits,
+and the remaining fcose-specific tuning controls remain
 unsupported at the partial level.
 
 ### Radar Compatibility

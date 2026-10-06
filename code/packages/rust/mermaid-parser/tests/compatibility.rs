@@ -443,6 +443,12 @@ fn pinned_architecture_subset_corpus_parses_to_structural_ir() {
         let diagram = parse_architecture(source)
             .unwrap_or_else(|error| panic!("architecture fixture {id} failed: {error}"));
         assert!(!diagram.nodes.is_empty());
+        if id == "edge-elasticity-config" {
+            assert_eq!(
+                diagram.architecture_config.unwrap().edge_elasticity,
+                0.8
+            );
+        }
     }
 }
 
