@@ -20,8 +20,6 @@ import {
   hashFile,
   collectSourceFiles,
   collectSourceFilesGlob,
-  SOURCE_EXTENSIONS,
-  SPECIAL_FILENAMES,
   sourceInputRegistry,
   sourceInputRegistryDigest,
 } from "../src/hasher.js";
@@ -267,6 +265,8 @@ describe("collectSourceFiles", () => {
       ),
     ) as unknown;
     expect(sourceInputRegistry()).toEqual(checked);
+    expect(Object.isFrozen(sourceInputRegistry())).toBe(true);
+    expect(Object.isFrozen(sourceInputRegistry().languages[0].scoped_inputs)).toBe(true);
     expect(sourceInputRegistryDigest()).toBe(
       "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621",
     );
@@ -587,35 +587,6 @@ describe("hashDeps", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Tests: Constants
-// ---------------------------------------------------------------------------
-
-describe("SOURCE_EXTENSIONS", () => {
-  it("should include Python extensions", () => {
-    expect(SOURCE_EXTENSIONS.python.has(".py")).toBe(true);
-    expect(SOURCE_EXTENSIONS.python.has(".toml")).toBe(true);
-  });
-
-  it("should include Go extensions", () => {
-    expect(SOURCE_EXTENSIONS.go.has(".go")).toBe(true);
-  });
-
-  it("should include TypeScript extensions", () => {
-    expect(SOURCE_EXTENSIONS.typescript.has(".ts")).toBe(true);
-    expect(SOURCE_EXTENSIONS.typescript.has(".json")).toBe(true);
-  });
-
-  it("should include Rust extensions", () => {
-    expect(SOURCE_EXTENSIONS.rust.has(".rs")).toBe(true);
-  });
-
-  it("should include Elixir extensions", () => {
-    expect(SOURCE_EXTENSIONS.elixir.has(".ex")).toBe(true);
-    expect(SOURCE_EXTENSIONS.elixir.has(".exs")).toBe(true);
-  });
-});
-
-// ---------------------------------------------------------------------------
 // Tests: collectSourceFilesGlob
 // ---------------------------------------------------------------------------
 
@@ -748,17 +719,6 @@ describe("collectSourceFilesGlob", () => {
     } finally {
       rmDir(outside);
     }
-  });
-});
-
-describe("SPECIAL_FILENAMES", () => {
-  it("should include Go special files", () => {
-    expect(SPECIAL_FILENAMES.go.has("go.mod")).toBe(true);
-    expect(SPECIAL_FILENAMES.go.has("go.sum")).toBe(true);
-  });
-
-  it("should include Ruby special files", () => {
-    expect(SPECIAL_FILENAMES.ruby.has("Gemfile")).toBe(true);
   });
 });
 

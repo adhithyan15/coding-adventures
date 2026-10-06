@@ -6,12 +6,21 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Changed
 
+- Replace the nine-language hard-coded source suffix/metadata allowlists with
+  the complete checked 23-language, seven-role package-data registry. Production
+  selection now honors root-only manifests and capability metadata, scoped
+  resources/native companions, exact TypeScript site inputs, and fail-closed
+  unknown languages in extension and declared-source modes.
 - Source hashing now follows the 27-component neutral generated-directory
   registry, pruning exact lowercase `blib` while retaining `Blib` and
   `blib-example` in both extension and declared-source modes.
 
 ### Added
 
+- Add an atomic snapshot sync/check command and native tests comparing every
+  registry field and domain-separated digest to the checked neutral fixture.
+  All seven package-local source-collection cases run through the production
+  selector; repository-boundary adoption remains separate.
 - Add a pure bounded `evaluateToolchainSnapshot()` API and a package-local
   suite that dynamically discovers all 11 language-neutral declaration
   fixtures and evaluates them through it. The adapter preserves exact CRLF and
