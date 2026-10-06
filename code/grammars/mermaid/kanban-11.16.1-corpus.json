@@ -17,6 +17,7 @@
     { "id": "cloud-and-bang-labels", "source": "kanban\n  todo)Cloud section(\n    bang))Bang card((\n    cloud(-Cloud card-)\n    burst-)Burst card(-" },
     { "id": "quoted-labels", "source": "kanban\n  todo[\"Todo queue\"]\n    card[\"Quoted card\"]" },
     { "id": "markdown-labels", "source": "kanban\n  todo[\"`**Todo** queue`\"]\n    card[\"`Quoted *card*`\"]" },
-    { "id": "inline-markdown-labels", "source": "kanban\n  todo[**Todo** queue]\n    card[Quoted *card*]" }
+    { "id": "inline-markdown-labels", "source": "kanban\n  todo[**Todo** queue]\n    card[Quoted *card*]" },
+    { "id": "multiline-labels", "source": "kanban\n  todo[Todo\\nqueue]\n    card[Line 1\\nLine 2\\nLine 3]" }
   ]
 }

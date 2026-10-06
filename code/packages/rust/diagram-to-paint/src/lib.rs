@@ -3731,9 +3731,9 @@ where
                 &column.label,
                 MarkdownLabelBox {
                     x: column.x + 12.0,
-                    y: column.y + 14.0,
-                    width: column.width - 24.0,
-                    height: 22.0,
+                y: column.y + 14.0,
+                width: column.width - 24.0,
+                height: column.header_height - 28.0,
                 },
                 &heading_font,
                 &column.style.text_color,
@@ -7428,6 +7428,7 @@ mod tests {
                 y: 20.0,
                 width: 260.0,
                 height: 140.0,
+                header_height: 52.0,
                 cards: vec![diagram_ir::LayoutedBoardCard {
                     id: "card".into(),
                     label: rich_label(
