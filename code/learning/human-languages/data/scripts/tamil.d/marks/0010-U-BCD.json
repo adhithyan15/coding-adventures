@@ -7,5 +7,27 @@
     "base": "க",
     "combined": "க்",
     "sound": "k"
+  },
+  "compositionOrder": [
+    "write the Tamil consonant carrier first",
+    "write the pulli sign after it, as a dot above the consonant, once the consonant is complete"
+  ],
+  "compositionSource": {
+    "citation": "Abhinaya Rajarajan, Varai (Swift Student Challenge 2026), reference drawings recorded by hand for the 18 Tamil consonants with pulli, க் to ன் (repository commit 952294fa, no licence: facts only)",
+    "url": "https://github.com/abhinayaRajarajan/varai",
+    "variation": "In all 18 recorded drawings, stored in the order they were drawn, the consonant body is drawn first as one stroke and the puḷḷi second, as a separate stroke above the body, so the pen lifts once between them. An earlier reading of Info-farmer's Writing Tamil animations of the consonants on Wikimedia Commons agrees that the dot follows the body. One writer: confidence medium. The Unicode Standard (§12.6) places the puḷḷi above its consonant; it says nothing about when it is written."
+  },
+  "components": [
+    "a dot"
+  ],
+  "strokeOrder": [
+    "once the consonant is complete, lift the pen and touch down the dot above it — one touch, then lift"
+  ],
+  "strokeOrderNote": "one touch of the pen, a dot drawn by itself; the pen lifts after the consonant body to make it. Cited to Varai's recorded drawings of the 18 consonants with puḷḷi (one writer, confidence medium)",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Abhinaya Rajarajan, Varai (Swift Student Challenge 2026), reference drawings recorded by hand for the 18 Tamil consonants with pulli, க் to ன் (repository commit 952294fa, no licence: facts only)",
+    "url": "https://github.com/abhinayaRajarajan/varai",
+    "variation": "One writer's recorded reference drawings, stored in the order they were drawn. In all 18 the consonant body is one stroke and the puḷḷi is a separate second stroke, made after the body is complete, so it costs one pen lift. Its centre sits above the body at 0.47 to 0.65 of the body's width (0.54 for க்). An earlier reading of Info-farmer's Writing Tamil animations of the consonants on Wikimedia Commons, which show each consonant with its puḷḷi, also places the dot after the body. Confidence is medium: one recorded writer, and only stroke count, order and the dot's bounding box were read; the dot is about 10 by 13 canvas units, too small to say which way the pen moved, so the short downward dab drawn here is not a claim. The path is fitted to the bundled Noto Sans Tamil disc, which the font centres at 0.43 to 0.60 of the consonant's width, a little left of where this writer put it. Handwriting varies by writer."
   }
 }

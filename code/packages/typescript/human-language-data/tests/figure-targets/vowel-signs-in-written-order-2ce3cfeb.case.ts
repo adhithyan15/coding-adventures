@@ -1,13 +1,18 @@
 // Tamil vowel signs in a filmstrip — a sign is drawn where the hand WRITES it,
 // which is not always where Unicode TYPES it. ெ, ே and ை are typed after their
 // consonant and written before it; ொ and ோ are written in two halves around
-// it. Every side is cited in the Tamil mark records, and this file holds the
-// composer's table to them.
+// it. The puḷḷi ் is written after its consonant, as a dot once the body is
+// complete. Every side is cited in the Tamil mark records, and this file holds
+// the composer's table to them.
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   filmstripCandidates,
   filmstripImageMarkdown,
+  FUSED_LETTER_SEQUENCE_SOURCES,
   FUSED_SIGN_PAIRS,
+  hasFusedLetterSequence,
   WRITTEN_SIGN_SIDES,
   writingLetterOf,
   writingSequenceOf,
@@ -27,6 +32,12 @@ describe("where each Tamil sign is written", () => {
     expect(writtenPiecesOf("க", "tamil")).toEqual(["க"]);
   });
 
+  it("puts the puḷḷi after its consonant: the body first, then the dot", () => {
+    expect(writtenPiecesOf("க்", "tamil")).toEqual(["க", "்"]);
+    expect(writtenPiecesOf("ன்", "tamil")).toEqual(["ன", "்"]);
+    expect(writtenPiecesOf("்", "tamil")).toEqual(["்"]);
+  });
+
   it("splits a two-part sign around its consonant, typed whole or in halves", () => {
     // U+0BCA and U+0BCB decompose (NFD) into a left half and ா.
     expect(writtenPiecesOf("கொ", "tamil")).toEqual(["ெ", "க", "ா"]);
@@ -37,8 +48,8 @@ describe("where each Tamil sign is written", () => {
   });
 
   it("refuses every sign whose written place is not cited, and the fused pairs", () => {
-    // ் and ு/ூ have no row; ௌ's right half ௗ has none either.
-    for (const grapheme of ["க்", "கு", "கூ", "கௌ", "்", "ு"]) {
+    // ு and ூ have no row; ௌ's right half ௗ has none either.
+    for (const grapheme of ["கு", "கூ", "கௌ", "ு"]) {
       expect(writtenPiecesOf(grapheme, "tamil"), grapheme).toBeUndefined();
     }
     // Unicode joins these pairs into ligatures of their own.
@@ -94,9 +105,44 @@ describe("Tamil words and signs as strips", () => {
 
   it("refuses a word with any sign that has no cited place", () => {
     expect(writingSequenceOf(lesson("TA-W4", { headword: "பேசு" }), "tamil")).toBeUndefined();
-    expect(writingSequenceOf(lesson("TA-W5", { headword: "சொல்" }), "tamil")).toBeUndefined();
     expect(writingSequenceOf(lesson("TA-W6", { headword: "குடி" }), "tamil")).toBeUndefined();
     expect(writingSequenceOf(lesson("TA-W7", { headword: "வண்டி" }), "tamil")).toBeUndefined();
+  });
+
+  it("draws a word with puḷḷi letter by letter, each dot after its consonant", () => {
+    expect(writingSequenceOf(lesson("TA-W03", { headword: "வணக்கம்" }), "tamil")).toEqual([
+      "வ", "ண", "க", "்", "க", "ம", "்",
+    ]);
+    // A left-hand sign still comes first; the dot still follows its own letter.
+    expect(writingSequenceOf(lesson("TA-W06", { headword: "இல்லை" }), "tamil")).toEqual(["இ", "ல", "்", "ை", "ல"]);
+    expect(writingSequenceOf(lesson("TA-W32", { headword: "சொல்" }), "tamil")).toEqual(["ெ", "ச", "ா", "ல", "்"]);
+  });
+
+  it("refuses a word in which the font joins letters across the puḷḷi", () => {
+    // Noto Sans Tamil prints க்ஷ and ஸ்ரீ as one glyph each, so drawing their
+    // parts would draw letters the page does not show.
+    expect(hasFusedLetterSequence("லக்ஷ்மி", "tamil")).toBe(true);
+    expect(hasFusedLetterSequence("ஸ்ரீ", "tamil")).toBe(true);
+    expect(hasFusedLetterSequence("வணக்கம்", "tamil")).toBe(false);
+    expect(hasFusedLetterSequence("க்ஷ", "gujarati")).toBe(false);
+    expect(writingSequenceOf(lesson("TA-W10", { headword: "லக்ஷ்மி" }), "tamil")).toBeUndefined();
+    // Listed apart, the same letters are each written by themselves.
+    expect(writingSequenceOf(lesson("TA-W11", { headword: "க், ஷ" }), "tamil")).toEqual(["க", "்", "ஷ"]);
+    for (const source of FUSED_LETTER_SEQUENCE_SOURCES.tamil!) {
+      expect(source.url).toMatch(/^https:\/\//);
+      for (const sequence of source.sequences) {
+        expect(sequence.normalize("NFD")).toBe(sequence);
+        for (const letter of [...sequence].filter((ch) => /\p{L}/u.test(ch))) {
+          expect(source.citation, `${sequence}: ${letter}`).toContain(letter);
+        }
+      }
+    }
+    // The lookups were read from the bundled font; if it is replaced, its
+    // version string changes and the citation must be read again. The
+    // OpenType name table stores the version string as UTF-16BE.
+    const font = readFileSync(join(defaultCurriculumRoot(), "_fonts", "NotoSansTamil-Static.ttf"));
+    expect(FUSED_LETTER_SEQUENCE_SOURCES.tamil![0]!.citation).toContain("Noto Sans Tamil Version 2.004");
+    expect(font.includes(Buffer.from("Version 2.004", "utf16le").swap16())).toBe(true);
   });
 
   it("keeps a list's digits as they are, and places a list's signs", () => {
