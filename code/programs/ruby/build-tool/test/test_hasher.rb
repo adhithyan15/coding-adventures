@@ -15,9 +15,64 @@ class TestHasher < Minitest::Test
     source-collection-extension.json
     source-collection-declared.json
   ].freeze
+  REGISTRY_SOURCE_COLLECTION_FIXTURES = %w[
+    source-collection-extension.json
+    source-collection-declared.json
+    source-collection-registry-roles.json
+    source-collection-engram-wasm-exact-inputs.json
+    source-collection-typescript-blog-exact-inputs.json
+    source-collection-typescript-landing-page-exact-inputs.json
+    source-collection-typescript-site-foreign-package.json
+  ].freeze
   SOURCE_COLLECTION_CASES = Pathname(__dir__).expand_path
     .join("../../../../specs/fixtures/build-tool-v1/cases")
   HASHING_FIXTURE = "hashing-cache-missing.json"
+
+  def test_production_registry_equals_checked_neutral_registry
+    checked = SOURCE_COLLECTION_CASES.parent / "language-source-input-registry.json"
+    packaged = Pathname(__dir__).expand_path / "../lib/build_tool/language_source_input_registry.json"
+    assert_equal checked.binread, packaged.binread
+    assert_equal JSON.parse(checked.read), BuildTool::Hasher.source_input_registry
+    assert_equal "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621",
+      BuildTool::Hasher.source_input_registry_digest
+  end
+
+  def test_collectors_consume_all_package_local_registry_cases
+    REGISTRY_SOURCE_COLLECTION_FIXTURES.each do |filename|
+      fixture = read_source_collection_fixture(filename)
+      options = fixture.dig("input", "options")
+      assert_equal BuildTool::Hasher.source_input_registry_digest, options.fetch("registry_sha256")
+      temp = create_temp_dir
+      package_root = temp / options.fetch("package_root")
+      materialize_complete_fixture(package_root, fixture)
+      language = options.fetch("language")
+      package_name = if options.fetch("package_root").start_with?("code/sites/")
+        "unknown/#{package_root.basename}"
+      else
+        "#{language}/#{package_root.basename}"
+      end
+      pkg = BuildTool::Package.new(
+        name: package_name, path: package_root,
+        build_commands: [], language: language,
+        declared_srcs: options.fetch("declared_srcs")
+      )
+      actual = BuildTool::Hasher.collect_source_files(pkg).map do |path|
+        {"path" => portable_relative(path, package_root), "digest" => BuildTool::Hasher.hash_file(path)}
+      end
+      assert_equal fixture.dig("expected", "result", "files"), actual, filename
+    ensure
+      FileUtils.rm_rf(temp) if temp
+    end
+  end
+
+  def test_unknown_language_fails_before_walking_package
+    missing = create_temp_dir / "missing"
+    pkg = BuildTool::Package.new(name: "unknown/missing", path: missing,
+      build_commands: [], language: "unknown")
+    assert_raises(ArgumentError) { BuildTool::Hasher.collect_source_files(pkg) }
+  ensure
+    FileUtils.rm_rf(missing.parent) if missing
+  end
 
   # -- collect_source_files tests ----------------------------------------------
 
