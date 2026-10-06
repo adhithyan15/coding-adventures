@@ -1470,10 +1470,13 @@
     {
       "id": "build-tool-elixir-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Elixir build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-elixir-glob-matcher-complexity-hardening"],
-      "branch": null,
+      "branch": "codex/parity-elixir-source-hashing-20261006",
       "pr_number": null,
+      "selected_at": "2026-10-06T09:04:00Z",
+      "selection_revision": "2ec42cd3e02a2ec98bf4c9f1d8121524a6cccdc9",
+      "selection_notes": "Selected after #16787 merged through guarded auto-merge and the exact-main 15-lane inventory stayed collision-clean with unchanged 1,487 package identities and 4,757 slots. Parallel read-only audits found no new unowned package, build-tool, or OCaml promotion gap. All six prerequisites are merged, no live PR touches Elixir build-tool files, and this process-free source collector unblocks seven unfinished descendants. Use the fresh clean main-based Elixir worktree; keep dependency hashing, native retained-handle snapshot authority, cache persistence, and adapter activation separate.",
       "notes": "Discovered by the post-#13544 source-hashing audit. Elixir recursively hashes without the exact generated-component registry and lacks portable path framing and OCaml source recognition. Repair those bounded collector semantics, consume the complete checked language source-input registry in production, and prove exact projection equality with no undeclared selector."
     },
     {
