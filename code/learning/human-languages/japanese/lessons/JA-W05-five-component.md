@@ -41,9 +41,9 @@ reviews_of: [JA-W05-gen-component, JA-W05-nichi-kanji]
 
 > 五
 
-Write four strokes: top horizontal; a short stroke down, leaning left; a
-second horizontal that turns down at its right end; then the long bottom
-horizontal. Keep the shape wider than tall.
+Write four strokes: top horizontal; a stroke from it down to the bottom
+line, leaning left; a second horizontal that turns down at its right end; then
+the long bottom horizontal. Keep the shape wider than tall.
 
 This sign means **five** on its own. Here, you only need its second job: it helps
 cue the sound *go* inside the larger kanji that is coming.
@@ -57,7 +57,7 @@ cue the sound *go* inside the larger kanji that is coming.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KANJI-FIVE-COMPONENT-01] -->
-<!-- hl-activity: {"id":"JA-W05-five-component-four-strokes","kind":"text","assesses":["JA-SCRIPT-KANJI-FIVE-COMPONENT-01"],"prompt":"Write the four-stroke component that cues go in the kanji for language.","answer":"五","accepted":["五 (go)","go","five"],"feedback":{"correct":"Right: 五 supplies the go sound clue.","incorrect":"Use 五: top, short down stroke, middle and turn, long bottom."},"response_seconds":15} -->
+<!-- hl-activity: {"id":"JA-W05-five-component-four-strokes","kind":"text","assesses":["JA-SCRIPT-KANJI-FIVE-COMPONENT-01"],"prompt":"Write the four-stroke component that cues go in the kanji for language.","answer":"五","accepted":["五 (go)","go","five"],"feedback":{"correct":"Right: 五 supplies the go sound clue.","incorrect":"Use 五: top, down stroke, middle and turn, long bottom."},"response_seconds":15} -->
 
 Which line is longest? (The **bottom** line.)
 

@@ -616,14 +616,19 @@ export const scriptInventoryEvidence = {
     // The katakana and kanji rows the writing lessons teach. コ, ヒ, 日, 本
     // and 語 said only "authoritative". Each now cites KanjiVG's file for its
     // own code point, one step per stroke path, so the lift count is the path
-    // count less one. 語 is 言, 五 and 口 in that order. Phrase by phrase with
-    // toContain, as above.
+    // count less one. 語 is 言, 五 and 口 in that order. 言, 五 and 口 get
+    // rows of their own once a word headword reads each (言う, 五, 口), with
+    // the same order and directions as their places in 語. Phrase by phrase
+    // with toContain, as above.
     for (const [glyph, role, file, name, paths] of [
       ["コ", "katakana", "030b3", "U+30B3 KATAKANA LETTER KO", 2],
       ["ヒ", "katakana", "030d2", "U+30D2 KATAKANA LETTER HI", 2],
       ["日", "logograph", "065e5", "U+65E5 CJK UNIFIED IDEOGRAPH-65E5", 4],
       ["語", "logograph", "08a9e", "U+8A9E CJK UNIFIED IDEOGRAPH-8A9E", 14],
       ["本", "logograph", "0672c", "U+672C CJK UNIFIED IDEOGRAPH-672C", 5],
+      ["言", "logograph", "08a00", "U+8A00 CJK UNIFIED IDEOGRAPH-8A00", 7],
+      ["五", "logograph", "04e94", "U+4E94 CJK UNIFIED IDEOGRAPH-4E94", 4],
+      ["口", "logograph", "053e3", "U+53E3 CJK UNIFIED IDEOGRAPH-53E3", 3],
     ] as const) {
       const letter = scripts.japanese!.letters.find((entry) => entry.glyph === glyph)!;
       expect(letter.role, glyph).toBe(role);
@@ -647,6 +652,12 @@ export const scriptInventoryEvidence = {
       "s1 to s7 are 言, s8 to s11 五 and s12 to s14 口",
     );
     expect(language.strokeOrderSource?.variation).toContain(
+      "the path runs along the bar from left to right",
+    );
+    // 言 on its own carries the same note about its top mark as 語 does.
+    const speech = scripts.japanese!.letters.find((entry) => entry.glyph === "言")!;
+    expect(speech.strokeOrderSource?.variation).toContain("a dot drawn down to the right");
+    expect(speech.strokeOrderSource?.variation).toContain(
       "the path runs along the bar from left to right",
     );
   },

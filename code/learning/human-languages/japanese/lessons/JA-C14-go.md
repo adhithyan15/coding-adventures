@@ -5,7 +5,7 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 1190
 chapter: 14
 type: word
-headword: ご
+headword: 五
 romanization: go
 gloss: five — the second job of a kanji you have been writing since chapter five
 concept_tag: JA-NUMBER-FIVE
@@ -29,7 +29,7 @@ variety: standard-japanese-tokyo
 reviews_of: [JA-C14-ichi, JA-W05-five-component, JA-C08-hear-sayounara]
 ---
 
-# ご — five, and the sign that was holding it
+# 五 — five, and the sign that was holding it
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ICHI, JA-LEX-SAYOUNARA, JA-SAYOUNARA-HEARD-01] -->
@@ -42,24 +42,24 @@ reviews_of: [JA-C14-ichi, JA-W05-five-component, JA-C08-hear-sayounara]
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-GO]; assesses=[JA-SCRIPT-KANJI-FIVE-COMPONENT-01, JA-SCRIPT-KANJI-GO-01, JA-SCRIPT-KO-01, JA-SCRIPT-DAKUTEN-01] -->
 
-> **ご** — *go* — **five**
+> **五** (ご) — *go* — **five**
 
 Write **五** once. Chapter five taught you those four strokes, gave you the
 sound *go*, said on the page that **the sign means five on its own**, and then
 asked you for nothing but the sound, because it was only there to cue the *go*
 inside **語**.
 
-That was the whole of the deferral. **五** is **five**, and you have been able to
-write it for nine chapters.
+That was the whole of the deferral. **五** is **five**, read *go*, and you have
+been able to write it for nine chapters.
 
-In hiragana it is **こ** with the dakuten: **ご**. Both marks are yours.
+Its reading in hiragana is **こ** with the dakuten: **ご**. Both marks are yours.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-GO, JA-LEX-ICHI, JA-SCRIPT-KANJI-FIVE-COMPONENT-01, JA-SCRIPT-DAKUTEN-01] -->
 
 Write **五** from memory: top, down, middle and turn, long bottom. Then
-write **ご** and say *go*. Say **いち**, then **ご** — the two numbers you
-owned before this chapter opened.
+write its reading **ご** and say *go*. Say **いち**, then **五** — the two numbers
+you owned before this chapter opened.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-GO, JA-LEX-ICHI, JA-SCRIPT-KANJI-FIVE-COMPONENT-01] -->
@@ -67,4 +67,4 @@ owned before this chapter opened.
 
 How many new signs did this lesson need? (**None.**)
 
-Sources: [Wiktionary: ご](https://en.wiktionary.org/wiki/%E3%81%94); [KanjiVG stroke-order data](https://kanjivg.tagaini.net/kanjivg/kanji/04e94.html).
+Sources: [Wiktionary: 五](https://en.wiktionary.org/wiki/%E4%BA%94); [KanjiVG stroke-order data](https://kanjivg.tagaini.net/kanjivg/kanji/04e94.html).

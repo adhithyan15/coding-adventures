@@ -486,12 +486,20 @@ describe("stroke ownership migration baseline", () => {
       // Omniglot copyists' most common count. Keys move 499 -> 500 and Kannada
       // 43 -> 44, with the ordered key hash and the non-Tamil data hash,
       // measured after the captions were settled; Tamil and both
+      //
+      // The kanji 言, 五 and 口, which chapter 5 writes on their own before
+      // assembling 語, get inventory rows citing KanjiVG (08a00, 04e94,
+      // 053e3) once each is read in a word headword (言う, 五, 口), and a
+      // ductus each, appended to the Japanese owner module. Keys move 534 ->
+      // 537 and Japanese 80 -> 83, with the ordered key hash and the
+      // non-Tamil data hash, measured after the three filmstrips' captions
+      // were settled; Tamil and both shared-identity values are unchanged.
     }).toEqual({
-      keys: 534,
+      keys: 537,
       keyHash:
-        "507e26694474b2f503ad4c94223d905424a7dfc5d8e467b7d7f478bcf5f296d5",
+        "2e6cbbc2ad28d14550bd6ad3b660a3f5b4143f0020671af91301e3c4085fc0b1",
       nonTamilDataHash:
-        "f6c9dcc5ed1af7aa8286e172414fc3c2b852b6eaab4de09fa477abc7d6b8ea36",
+        "154a12c43ffa554e2c9b172dc0eff62ec83ccac48a2cad72458d7e7a08e47af9",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -503,7 +511,7 @@ describe("stroke ownership migration baseline", () => {
         devanagari: 52,
         gujarati: 55,
         hebrew: 22,
-        japanese: 80,
+        japanese: 83,
         kannada: 44,
         malayalam: 14,
         "perso-arabic": 24,
