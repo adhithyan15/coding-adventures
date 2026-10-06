@@ -13,6 +13,7 @@ import { Window } from "happy-dom";
 
 export const MAX_DIAGNOSTICS = 20;
 export const MAX_FALLBACK_HTML_BYTES = 1_048_576;
+export const LIGHTHOUSE_SAMPLE_COUNT = 3;
 export const QUALITY_CONTENT_SECURITY_POLICY = [
   "default-src 'none'",
   "base-uri 'none'",
@@ -58,6 +59,11 @@ export interface LighthouseReport {
   readonly accessibility: number;
   readonly resources: Readonly<Record<string, number>>;
   readonly diagnostics: readonly string[];
+}
+
+export interface AggregatedLighthouseEvidence {
+  readonly aggregate: LighthouseReport;
+  readonly performanceSamples: readonly number[];
 }
 
 export interface StaticMount {
@@ -213,6 +219,80 @@ export function evaluateLighthouseResult(
     accessibility,
     resources,
     diagnostics: boundDiagnostics(diagnostics),
+  };
+}
+
+/** Reduce exactly three independent audits to conservative release evidence. */
+export function aggregateLighthouseReports(
+  target: QualityTarget,
+  reports: readonly LighthouseReport[],
+): AggregatedLighthouseEvidence {
+  validateTarget(target);
+  if (reports.length !== LIGHTHOUSE_SAMPLE_COUNT) {
+    throw new Error(`Lighthouse evidence must contain exactly ${LIGHTHOUSE_SAMPLE_COUNT} samples`);
+  }
+
+  const performanceSamples: number[] = [];
+  const accessibilitySamples: number[] = [];
+  const resources: Record<string, number> = Object.create(null) as Record<string, number>;
+  const diagnostics = new Set<string>();
+
+  for (const [index, report] of reports.entries()) {
+    const performance = score(report.performance, `sample ${index + 1} performance`);
+    const accessibility = score(report.accessibility, `sample ${index + 1} accessibility`);
+    performanceSamples.push(performance);
+    accessibilitySamples.push(accessibility);
+
+    const entries = Object.entries(report.resources);
+    if (entries.length === 0 || entries.length > 64) {
+      throw new Error("Lighthouse sample resources must contain one to sixty-four entries");
+    }
+    for (const [kind, amount] of entries) {
+      if (!/^[a-z-]{1,32}$/.test(kind) || !Number.isSafeInteger(amount) || amount < 0) {
+        throw new Error("Lighthouse sample resource evidence is invalid");
+      }
+      resources[kind] = Math.max(resources[kind] ?? 0, amount);
+    }
+    if (report.diagnostics.length > MAX_DIAGNOSTICS) {
+      throw new Error("Lighthouse sample retained too many diagnostics");
+    }
+    for (const diagnostic of report.diagnostics) {
+      if (typeof diagnostic !== "string" || diagnostic.length === 0 || diagnostic.length > 1_024) {
+        throw new Error("Lighthouse sample diagnostic is invalid");
+      }
+      diagnostics.add(diagnostic);
+    }
+  }
+
+  const orderedPerformance = [...performanceSamples].sort((left, right) => left - right);
+  const performance = orderedPerformance[1];
+  if (performance === undefined) throw new Error("Lighthouse median performance is unavailable");
+  const accessibility = Math.min(...accessibilitySamples);
+  if (performance < target.performanceMinimum) {
+    diagnostics.add(
+      `performance median score ${performance} < ${target.performanceMinimum}`,
+    );
+  }
+  if (accessibility < target.accessibilityMinimum) {
+    diagnostics.add(`accessibility score ${accessibility} < ${target.accessibilityMinimum}`);
+  }
+  for (const [resourceType, maximum] of Object.entries(target.resources)) {
+    const actual = resources[resourceType];
+    if (actual === undefined) {
+      diagnostics.add(`resource ${resourceType} is missing from Lighthouse evidence`);
+    } else if (actual > maximum) {
+      diagnostics.add(`resource ${resourceType} ${actual} > ${maximum} bytes`);
+    }
+  }
+
+  return {
+    aggregate: {
+      performance,
+      accessibility,
+      resources: Object.fromEntries(Object.entries(resources).sort(([a], [b]) => a.localeCompare(b))),
+      diagnostics: boundDiagnostics([...diagnostics].sort()),
+    },
+    performanceSamples,
   };
 }
 

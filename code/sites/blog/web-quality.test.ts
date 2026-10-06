@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import {
   MAX_DIAGNOSTICS,
   QUALITY_CONTENT_SECURITY_POLICY,
+  aggregateLighthouseReports,
   atomicWriteQualitySummary,
   evaluateLighthouseResult,
   inspectStaticFallback,
@@ -111,6 +112,75 @@ describe("Forme release web-quality gate", () => {
       resources: { image: 20_000, script: 4_000, total: 120_000 },
       diagnostics: [],
     });
+  });
+
+  it("uses three-sample median performance with conservative accessibility and resources", () => {
+    const report = aggregateLighthouseReports(target, [
+      {
+        performance: 0.85,
+        accessibility: 1,
+        resources: { image: 20_000, script: 4_000, total: 120_000 },
+        diagnostics: [],
+      },
+      {
+        performance: 0.97,
+        accessibility: 1,
+        resources: { image: 21_000, script: 3_000, total: 121_000 },
+        diagnostics: [],
+      },
+      {
+        performance: 0.99,
+        accessibility: 1,
+        resources: { image: 19_000, script: 5_000, total: 119_000 },
+        diagnostics: [],
+      },
+    ]);
+
+    expect(report).toEqual({
+      aggregate: {
+        performance: 0.97,
+        accessibility: 1,
+        resources: { image: 21_000, script: 5_000, total: 121_000 },
+        diagnostics: [],
+      },
+      performanceSamples: [0.85, 0.97, 0.99],
+    });
+  });
+
+  it("fails closed across malformed sample sets and every non-performance diagnostic", () => {
+    const passing = {
+      performance: 0.98,
+      accessibility: 1,
+      resources: { image: 0, script: 0, total: 0 },
+      diagnostics: [],
+    } as const;
+
+    expect(() => aggregateLighthouseReports(target, [passing, passing])).toThrow(/exactly 3/);
+    expect(() => aggregateLighthouseReports(target, [
+      passing,
+      { ...passing, performance: Number.NaN },
+      passing,
+    ])).toThrow(/finite sample 2 performance/);
+
+    const report = aggregateLighthouseReports(target, [
+      { ...passing, performance: 0.91 },
+      { ...passing, performance: 0.92 },
+      {
+        ...passing,
+        performance: 0.99,
+        accessibility: 0.99,
+        resources: { image: 70_000, script: 0, total: 70_000 },
+        diagnostics: [
+          "accessibility score 0.99 < 1",
+          "resource image 70000 > 65536 bytes",
+        ],
+      },
+    ]);
+    expect(report.aggregate.diagnostics).toEqual([
+      "accessibility score 0.99 < 1",
+      "performance median score 0.92 < 0.95",
+      "resource image 70000 > 65536 bytes",
+    ]);
   });
 
   it("fails closed on scores, resource budgets, malformed evidence, and audit failures", () => {

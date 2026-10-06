@@ -234,6 +234,16 @@ images, the blog index to 160 KiB total transfer, and the enhanced article to
 256 KiB total transfer, 64 KiB of images, and 32 KiB of JavaScript. The landing
 page and blog index admit no script bytes at all.
 
+Because a single hosted-runner Lighthouse observation is noisy, each route is
+audited by exactly three fresh browser processes and the performance contract
+applies to their median score. This changes neither the `0.95` budget nor the
+audited bytes. Accessibility and resource evidence remain fail-closed across
+every sample: the retained aggregate uses the lowest accessibility score and
+the largest observed transfer count for each resource type, while preserving
+the bounded union of sample diagnostics. The summary records the three bounded
+performance samples alongside that conservative aggregate; no raw trace is
+retained.
+
 Browser scores do not replace the static contract. Before Chrome starts, the
 gate parses each size-bounded emitted HTML document with script, stylesheet,
 frame, image, and navigation loading disabled, and proves that it still
@@ -276,6 +286,31 @@ breaking change, shows the single-source and aggregate provenance replacements,
 and explains the distinct package, kind, and kernel version axes. Lockfiles,
 runtime stage metadata, product fixtures, changelogs, and user-facing version
 output are updated together so a clean checkout cannot report a mixed release.
+
+### FM-B072 supported-platform release contract
+
+The release gate runs one unchanged contract on `ubuntu-latest`,
+`macos-latest`, and `windows-latest`. Each host checks the package/API v2 map,
+executes the platform-appropriate checked-in build front for the landing page,
+blog, and desktop authoring product, runs the 1,000-page benchmark, and audits
+the generated live sites with the exact browser pins and budgets defined by
+FM-B070. The macOS product build additionally produces and tests the native
+Tauri application; Linux and Windows run the portable desktop product gate
+because FM09 deliberately exposes no native host on those platforms.
+
+Every host emits one bounded JSON attestation for the same commit. Attestations
+contain only contract identities, content digests for the benchmark and browser
+summaries, and pass/fail state; they do not copy raw build logs or timing
+thresholds. A final fail-closed job accepts exactly the three supported host
+identities, rejects duplicate, missing, mixed-commit, malformed, or failing
+evidence, and emits one documented technical release verdict.
+
+Security approval is deliberately not self-asserted by a mutable file in the
+reviewed change. Every host records the `mandatory-exact-head-external` policy,
+and the technical verdict is valid only together with the separately
+authenticated mandatory review of that exact head. Any head change invalidates
+that review and requires another one; the cross-platform attestations cannot
+mint, impersonate, or reuse an approval themselves.
 
 ## Discovery log
 
@@ -394,6 +429,15 @@ work.
 | 2026-10-04 | Both generated Forme sites pass one required browser lane over the real Pages routes: the landing page, blog index, and enhanced article retain useful static fallbacks, score at least 0.98 for desktop performance and exactly 1.00 for accessibility locally, and remain far below their explicit transfer budgets. The lane uses exact Lighthouse and Chrome-for-Testing pins, loopback-only contained serving, fresh bounded browser phases, and a small atomic evidence summary. | Close FM-B070 and activate FM-B071 as the only ready release-quality item. Keep FM-B072 and FM-B018 blocked until the public API migration also lands. |
 | 2026-10-05 | FM-B071 aligned all 81 publishable TypeScript Forme packages and locks at `1.0.0`, advanced the kernel contract to API v2 with exact v1 refusal in manifests, stages, and all three runners, made `RenderedPage` v2 provenance required and canonically validated at both filesystem sinks, aligned npm/Tauri package metadata, and shipped the breaking-change migration guide. Proportional package, conformance, product-contract, coverage, and mandatory security review gates passed. | Close FM-B071 and activate FM-B072 as the sole remaining implementation gate before the FM-B018 release-quality milestone. |
 | 2026-10-05 | The first clean-checkout PR builds found four product-local stages outside the publishable package inventory still targeting kernel API v1; the landing renderer also retained the removed `RenderedPage.source` field. Package and runner checks could not exercise those direct site adapters. | Keep the repair inside FM-B071: migrate all four live adapters to the shared API-v2 constant, remove the final source shortcut, add a durable live-stage contract to the spec-map suite, and rerun both complete product builds and tests before updating the PR. |
+| 2026-10-05 | FM-B072's first checked-in product-front run found that the two live-site lockfiles still snapshotted pre-v1 metadata for local Forme dependencies even though package manifests and package-local locks were aligned. The earlier API gate did not inspect consumer lock snapshots. | Keep the repair in FM-B072: refresh both live-site locks from the reviewed v1 package graph and extend the spec-map contract so either site fails if any local `@coding-adventures/forme-*` entry regresses from `1.0.0`. |
+| 2026-10-05 | FM-B072's first Windows release-lane run reached the shared frozen bootstrap but Node rejected direct spawning of the `npm.cmd` batch launcher with `EINVAL`; routing generic caller-controlled commands through `cmd.exe` would restore function by weakening literal argument boundaries. | Keep the repair in FM-B072: execute npm's JavaScript CLI directly with the exact active Node binary on Windows, retain shell-free argument-vector spawning on every host, and lock the platform-specific invocation plus metacharacter-bearing path behavior with unit coverage. |
+| 2026-10-05 | Once the shell-free npm launcher exposed the complete Windows dependency graph, the release lane reached `forme-sandbox-windows` but had not imported the hosted image's MSVC developer environment, so its native launcher build could not resolve `cl.exe`. | Keep the repair in FM-B072: invoke the already reviewed repository-owned MSVC environment bootstrap only on the Windows release host before running the checked-in product fronts, and pin that prerequisite in the release-job contract test. |
+| 2026-10-05 | The pinned Chrome-for-Testing archive on the Windows hosted tool cache denied the browser sandbox access to its own executable even after every product build passed. Disabling the sandbox would invalidate FM-B070. | Keep the repair in FM-B072: identity-bind every non-reparse ancestor and single-link member of the exact browser tree below the hosted tool cache before and after mutation; replace existing Windows `ALL APPLICATION PACKAGES` grants with read/execute only; verify no dangerous effective grant across the complete tree; and retain the global prohibition on no-sandbox flags. |
+| 2026-10-05 | Windows `icacls` applied the recursive object/container-inherit grant to all 314 Chrome descendants but left the browser root itself without an effective read/execute ACE, and the release lane's complete-tree verifier rejected that incomplete repair before launching Chrome. | Keep the fail-closed verifier and add a separate replacement read/execute grant on the identity-bound browser root before propagating the same read/execute-only grant through the tree. Continue rejecting any write/delete/ownership authority and revalidate every identity after both ACL operations. |
+| 2026-10-05 | After the explicit root grant, `icacls` reported success for the root and all descendants, but the verifier's projected `FileSystemAccessRule` identity translation still produced no matching effective root grant. Friendly-name translation is an unnecessary and image-sensitive layer over the security descriptor. | Parse each identity-bound entry's binary descriptor without normalization, accept only unconditional common allow ACEs effective on the current object, require their raw masks to be a subset of exact read/execute plus synchronize, reject matching effective denies and unsupported callback/object ACEs, and retain the final complete-tree identity pass. Execute synthetic inherit-only, inherited-effective, callback, object, and generic-all descriptor regressions in the Windows lane before trusting the live tree. |
+| 2026-10-05 | The synthetic raw-descriptor policy tests passed on the Windows host, but the live `FileSystemSecurity` object exposes its binary descriptor through the zero-argument PowerShell/.NET method rather than the buffer-writing overload used by `RawSecurityDescriptor`. The lane failed closed before examining the first live tree entry. | Use `GetSecurityDescriptorBinaryForm()`'s returned byte array directly as the raw descriptor input, keep the same policy self-tests and final identity revalidation, and pin the exact invocation in the CI contract test. |
+| 2026-10-05 | With the browser ACL repaired and verified, every Windows product build and coverage gate passed, but Chrome for Testing's Windows GUI binary treated `--version` as a normal browser launch, emitted background-service diagnostics, and did not terminate within the bounded query. The pinned setup action had already read the same binary's PE product version successfully. | On Windows only, consume the pinned setup action's exact four-part file-metadata output as installed-version evidence and compare it with the independently reviewed version constant; retain the bounded binary `--version` query on Linux and macOS, where it is supported. Pin the workflow wiring and platform-selection behavior with tests. |
+| 2026-10-05 | The first exact-browser supported-host rerun produced isolated landing-page Lighthouse performance samples of `0.85` on Windows and `0.92` on macOS after the same generated bytes, resource budgets, accessibility checks, and earlier local audits passed. A single noisy observation made the `0.95` release threshold depend on hosted-runner scheduling rather than the retained site contract. | Keep the `0.95` threshold and exact browser pins, but take exactly three fresh-process samples per route and gate their median. Continue failing closed across every sample by aggregating the minimum accessibility score, maximum resource counts, and bounded diagnostic union; record the three performance samples in the validated summary without retaining raw traces. |
 | 2026-10-05 | Concurrent squash merges on main left repo-wide barcode registry entries pointing at deleted PR-head commits, so authoritative and duplicate metadata gates could fail even after every Forme-specific check passed. | Repair the shared CI prerequisite in the same babysitting cycle: bind all affected verified package trees to their reachable squash revisions and require every future verified revision to be an ancestor of the tested checkout. This is an external gate repair, not a new Forme backlog item. |
 | 2026-10-05 | The API-v2 PR's Windows lane exposed that the document demo's lexical write-containment helper resolved its target but compared it with the caller's unnormalized base spelling. Mandatory security review then found that lexical containment alone still followed existing output symlinks, Windows junctions/reparse points, and multiply-linked files. | Keep the repair inside FM-B071: resolve the base before joining or comparing targets; reject linked path components; open targets without following their final component; verify the opened and named identities before truncation; reject multiply-linked files; exercise relative-base, POSIX-link, Windows-junction, and hard-link regressions; and rerun the complete document-demo gate. |
 | 2026-10-05 | Follow-up security review found that starting the link walk at an already redirected output root missed a linked ancestor, while portable Node lacks descriptor-relative `openat` writes that could close every same-identity rename race. | Anchor the walk at the canonical working directory and enforce an explicit portable single-writer contract: require a fresh private output root, hold an exclusive lock for the complete write, refuse unowned or multiply-linked files, and fail closed on observable authority, directory, lock, path, or handle identity changes. Document that concurrent mutation by another process running as the same OS identity is outside this contract, and cover linked-ancestor, injected child-link, injected hard-link, and pre-existing-root regressions. |

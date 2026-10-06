@@ -207,8 +207,8 @@ class CIGateRegistryTests(unittest.TestCase):
             self.assertIn(artifact, body)
         self.assertIn("exit 1", body)
 
-    def test_forme_web_quality_installs_browser_runtime_without_disabling_sandbox(self) -> None:
-        body = self._job_body("forme-web-quality")
+    def test_forme_release_installs_browser_runtime_without_disabling_sandbox(self) -> None:
+        body = self._job_body("forme-release-platform")
         self.assertIn("install-dependencies: true", body)
         self.assertIn("chrome_sandbox", body)
         self.assertIn("24beb85e4149c65db5bf40fa307721143d0883ab8952e60dde1158606f644dee", body)
@@ -216,10 +216,70 @@ class CIGateRegistryTests(unittest.TestCase):
         self.assertIn("sha256sum", body)
         self.assertIn("install -o root -g root -m 0755", body)
         self.assertIn("chmod 4755", body)
-        self.assertIn("CHROME_DEVEL_SANDBOX: /usr/local/sbin/forme-chrome-sandbox", body)
+        self.assertIn("CHROME_DEVEL_SANDBOX:", body)
+        self.assertIn("/usr/local/sbin/forme-chrome-sandbox", body)
         self.assertNotIn("--no-sandbox", body)
         self.assertNotIn("--disable-setuid-sandbox", body)
         self.assertNotIn("apparmor_restrict_unprivileged_userns", body)
+
+    def test_forme_release_runs_every_supported_host_and_composes_one_verdict(self) -> None:
+        body = self._job_body("forme-release-platform")
+        for host, runner in (
+            ("linux", "ubuntu-latest"),
+            ("macos", "macos-latest"),
+            ("windows", "windows-latest"),
+        ):
+            self.assertIn(f"host: {host}", body)
+            self.assertIn(f"os: {runner}", body)
+        self.assertIn("test_forme_spec_map.py", body)
+        self.assertIn("build-products", body)
+        self.assertIn("quality:release", body)
+        self.assertIn(
+            "FORME_INSTALLED_CHROME_VERSION: ${{ steps.chrome.outputs.chrome-version }}",
+            body,
+        )
+        self.assertIn("forme_release_gate.py attest", body)
+        self.assertNotIn("forme-release-security-review.json", body)
+        self.assertIn("actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97", body)
+        self.assertIn("python-version: '3.13.7'", body)
+        self.assertIn("toolchain: '1.95.0'", body)
+        self.assertIn("Set up MSVC for the native Windows product", body)
+        self.assertIn("if: runner.os == 'Windows'", body)
+        self.assertIn("python code/scripts/setup_msvc_dev_cmd.py --arch x64", body)
+        self.assertIn("Grant pinned Chrome read/execute to Windows AppContainers", body)
+        self.assertIn("RUNNER_TOOL_CACHE", body)
+        self.assertIn("ReparsePoint", body)
+        self.assertIn("-ErrorAction Stop", body)
+        self.assertIn("fsutil.exe file queryfileid", body)
+        self.assertIn("fsutil.exe hardlink list", body)
+        self.assertIn("/remove:g", body)
+        self.assertIn("*S-1-15-2-1:RX", body)
+        self.assertIn("*S-1-15-2-1:(OI)(CI)RX", body)
+        self.assertIn("RawSecurityDescriptor", body)
+        self.assertIn("CommonAce", body)
+        self.assertIn("GetSecurityDescriptorBinaryForm()", body)
+        self.assertIn("InheritOnly", body)
+        self.assertIn("IsCallback", body)
+        self.assertIn("CompoundAce", body)
+        self.assertIn("unexpected Windows Chrome AppContainer ACE form", body)
+        self.assertIn("unexpected Windows Chrome AppContainer rights", body)
+        self.assertIn("D:(A;OICIIO;0x1200a9;;;S-1-15-2-1)", body)
+        self.assertIn("D:(A;ID;0x1200a9;;;S-1-15-2-1)", body)
+        self.assertIn("D:(A;;GA;;;S-1-15-2-1)", body)
+        self.assertIn("ReadAndExecute", body)
+        self.assertIn("Windows Chrome tree identity changed during ACL preparation", body)
+        self.assertIn("Windows Chrome ancestor identity changed during ACL preparation", body)
+        self.assertIn("Windows Chrome file has an unexpected hardlink identity", body)
+        release_paths = self.gates["forme-release-platform"]["paths"]
+        self.assertIn("code/scripts/setup_msvc_dev_cmd.py", release_paths)
+        self.assertIn("code/scripts/tests/test_setup_msvc_dev_cmd.py", release_paths)
+        verdict = self._job_body("forme-release-verdict")
+        self.assertIn("pattern: forme-release-*", verdict)
+        self.assertIn("forme_release_gate.py verdict", verdict)
+        self.assertIn("actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c", verdict)
+        final_gate = self._job_body("ci-gate")
+        self.assertIn("forme-release-platform", final_gate)
+        self.assertIn("forme-release-verdict", final_gate)
 
     def _job_body(self, job_id: str) -> str:
         """Return the ci.yml text of one job, from its key to the next job key."""
