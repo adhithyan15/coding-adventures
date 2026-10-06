@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.74.0";
+pub const VERSION: &str = "0.75.0";
 
 use std::collections::HashMap;
 
@@ -3187,6 +3187,16 @@ fn text_node_no_wrap(
     node
 }
 
+fn align_text_node(
+    mut node: PositionedNode,
+    text_align: TextAlign,
+) -> PositionedNode {
+    if let Some(Content::Text(text)) = &mut node.content {
+        text.text_align = text_align;
+    }
+    node
+}
+
 struct MarkdownLabelBox {
     x: f64,
     y: f64,
@@ -3741,7 +3751,7 @@ where
             ));
         }
         for card in &column.cards {
-            let metadata = kanban_card_metadata(card);
+            let has_footer = card.ticket.is_some() || card.assigned.is_some();
             instructions.push(PaintInstruction::Rect(PaintRect {
                 base: kanban_paint_base(&card.id, &card.classes, card.ticket_url.as_deref()), x: card.x, y: card.y,
                 width: card.width, height: card.height,
@@ -3782,7 +3792,7 @@ where
             } else {
                 (card.x + 10.0, card.width - 20.0)
             };
-            let label_height = card.height - if metadata.is_some() { 46.0 } else { 24.0 };
+            let label_height = card.height - if has_footer { 46.0 } else { 24.0 };
             if card.label.spans.is_empty() {
                 text_children.push(text_node(
                     &card.label.text, label_x, card.y + 18.0,
@@ -3803,18 +3813,37 @@ where
                     options,
                 ));
             }
-            if let Some(metadata) = metadata {
+            if has_footer {
                 let mut metadata_font = options.label_font.clone();
                 metadata_font.size = 11.0;
-                text_children.push(text_node_no_wrap(
-                    &metadata,
-                    card.x + 10.0,
-                    card.y + card.height - 24.0,
-                    card.width - 20.0,
-                    16.0,
-                    metadata_font,
-                    css_to_color(&card.style.text_color),
-                ));
+                if let Some(ticket) = &card.ticket {
+                    text_children.push(align_text_node(
+                        text_node_no_wrap(
+                            ticket,
+                            card.x + 10.0,
+                            card.y + card.height - 24.0,
+                            card.width / 2.0 - 10.0,
+                            16.0,
+                            metadata_font.clone(),
+                            css_to_color(&card.style.text_color),
+                        ),
+                        TextAlign::Start,
+                    ));
+                }
+                if let Some(assigned) = &card.assigned {
+                    text_children.push(align_text_node(
+                        text_node_no_wrap(
+                            assigned,
+                            card.x + card.width / 2.0,
+                            card.y + card.height - 24.0,
+                            card.width / 2.0 - 10.0,
+                            16.0,
+                            metadata_font,
+                            css_to_color(&card.style.text_color),
+                        ),
+                        TextAlign::End,
+                    ));
+                }
             }
         }
     }
@@ -3834,20 +3863,6 @@ where
         background: format!("rgba({}, {}, {}, {:.4})", bg.r, bg.g, bg.b, f64::from(bg.a) / 255.0),
         instructions, id: None, metadata: None,
     }
-}
-
-fn kanban_card_metadata(card: &LayoutedBoardCard) -> Option<String> {
-    let mut fields = Vec::new();
-    if let Some(ticket) = &card.ticket {
-        fields.push(format!("#{ticket}"));
-    }
-    if let Some(assigned) = &card.assigned {
-        fields.push(format!("@{assigned}"));
-    }
-    if let Some(priority) = &card.priority {
-        fields.push(format!("priority: {priority}"));
-    }
-    (!fields.is_empty()).then(|| fields.join("  "))
 }
 
 fn kanban_priority_marker(card: &LayoutedBoardCard) -> Option<PaintInstruction> {
@@ -7433,7 +7448,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.74.0");
+        assert_eq!(crate::VERSION, "0.75.0");
     }
 
     #[test]
