@@ -1,0 +1,1 @@
+var e=``+new URL(`PA-W10-thatha-filmstrip-BA8MPdZA.svg`,import.meta.url).href;export{e as default};

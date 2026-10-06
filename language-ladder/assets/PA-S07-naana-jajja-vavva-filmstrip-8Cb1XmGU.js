@@ -1,0 +1,1 @@
+var e=``+new URL(`PA-S07-naana-jajja-vavva-filmstrip-BCtXAcRq.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`PA-S02-sassa-tatta-sihari-filmstrip-CsKSucBJ.svg`,import.meta.url).href;export{e as default};

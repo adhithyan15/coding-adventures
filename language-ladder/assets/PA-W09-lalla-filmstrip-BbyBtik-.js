@@ -1,0 +1,1 @@
+var e=``+new URL(`PA-W09-lalla-filmstrip-Blx3LJfh.svg`,import.meta.url).href;export{e as default};
