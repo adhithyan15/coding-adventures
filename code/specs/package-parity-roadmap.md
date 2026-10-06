@@ -15737,6 +15737,54 @@ no open PR in either candidate's production paths. Select only the Haskell
 core next; keep adapter execution, shared-boundary digest activation, and
 other language ports as separate owners.
 
+After guarded auto-merge of Haskell graph/diff PR #16761 at
+`cec7a1deb62b`, the exact merged-main schema-3 collision-checked report is
+unchanged: 15 established languages, 1,487 implementation identities, 4,757
+package slots, 178 high-consensus identities with 262 missing slots, zero
+canonical collisions, and zero unknown buckets. OCaml remains emerging; its
+scaffold, resolver substrate, capability analyzer, reporter, representative
+packages, and package CI are merged, while its native build-tool, adapter,
+denominator consumers, and atomic promotion have existing pending owners.
+The opam archive-mirror prerequisite remains selection-blocked by the open
+Dependabot workflow PR #15723, so no duplicate OCaml owner was added.
+
+Read-only cross-lane audits materialized twelve exact neutral and lane-sized
+children under the existing Dart/JVM eight-family classifier: 09 arithmetic,
+F00 block-RAM, and F01 FPGA each have a neutral reconciliation owner and
+separate Dart, Java, and Kotlin ports. These nine missing package slots are
+structurally absent while same-lane logic-gates exist. F01 ports depend on
+their same-lane F00 ports. The 09 neutral owner must resolve a real subtraction
+carry disagreement: Go/Python and Rust differ for width-four `5 - 0`.
+Directory presence and an unresolved oracle disagreement do not establish
+behavioral parity; the remaining five eight-family fronts still need exact
+children or reviewed exceptions. The original classifier stays
+selection-blocked rather than masquerading as an implementation PR.
+
+A follow-up exact-main audit on `be52215294` classified the remaining fifteen
+Dart/JVM slots: Brotli, clock, hash-functions, tree, and XML lexer each miss
+Dart, Java, and Kotlin. Haskell Brotli and Swift hash-functions have separate
+existing owners. Five pending family classifiers now retain these slots, with
+three new neutral prerequisites for clock, DT02 tree, and F04/XML lexer; split
+each family classifier into lane-sized owners before selection. Brotli must
+wait on the existing CMP06 neutral owner, whose educational wire format and
+malformed/output ceilings are not RFC interoperability. Hash-functions must
+wait on the existing DT17 vector correction. Clock has no governing package
+spec and a divider/phase disagreement; DT02 conflicts with implementations on
+root and ordering semantics; the target generic lexers lack F04 token hooks,
+and XML01 documents entity-adjacent whitespace loss. These are contract
+questions, not reasons to copy an arbitrary existing lane as the oracle.
+
+The post-merge dependency/leverage pass ranks Ruby's checked source-input
+registry adoption first: its six prerequisites are merged, it directly
+unblocks three owners, and existing production lookup still has only a
+10-language global allowlist against the checked 23-language, seven-role
+registry. TypeScript registry adoption ranks second with the same direct
+leverage; Lua pure source hashing ranks third but is a larger from-scratch
+slice. Ruby's seven package-local neutral cases and full native test route
+have been audited; repository-boundary reverse diff and native snapshot safety
+remain separate. No open PR owns the Ruby production or fixture paths. Select
+only Ruby registry adoption next, from a fresh clean main-based worktree.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

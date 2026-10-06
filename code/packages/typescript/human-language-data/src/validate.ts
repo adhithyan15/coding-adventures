@@ -222,6 +222,12 @@ function uncoveredGlyphs(headword: string, sd: ScriptData): string[] {
   for (const consonant of sd.finalConsonants ?? []) {
     if (consonant.strokeOrderSource) add(consonant.glyph);
   }
+  // A script's own digits are part of its inventory: a reader meets ৭ the way
+  // they meet ক, and a numbers lesson teaches both. Digit rows carry no ductus,
+  // so they are covered as identity only, like a plain letter row. Only the
+  // Bengali track has digit headwords today; the other inventories that list
+  // `digits` (Kannada, Malayalam, Telugu) have no headword these rows change.
+  for (const digit of sd.digits ?? []) add(digit.glyph);
   for (const m of sd.marks ?? []) {
     add(m.mark);
     // A source-backed composition owns the encoded carrier as well as the

@@ -905,6 +905,11 @@ describe("corpus regression", () => {
     const lessons = realLessons;
     const manifest = realManifest;
     expect(manifest.summary.totalLessons).toBe(manifest.lessons.length);
+    // Index the manifest once. Looking each drivable id up with
+    // `manifest.lessons.find` scanned all ~1,400 entries per id, which made this
+    // check quadratic in the corpus and pushed it past the 30s budget under
+    // full-suite load on CI; a Map keeps it linear without changing what it checks.
+    const byId = new Map(manifest.lessons.map((entry) => [entry.id, entry]));
     let trackLessons = 0;
     for (const track of manifest.tracks) {
       expect(track.voice + track.sight + track.pen).toBe(track.lessonCount);
@@ -915,7 +920,7 @@ describe("corpus regression", () => {
         expect(chapter.drivablePrefix).toBeLessThanOrEqual(chapter.lessonCount);
         expect(chapter.drivable).toBe(chapter.drivablePrefix === chapter.lessonCount);
         for (const id of chapter.drivableLessonIds) {
-          expect(manifest.lessons.find((entry) => entry.id === id)?.drivable).toBe(true);
+          expect(byId.get(id)?.drivable).toBe(true);
         }
       }
     }

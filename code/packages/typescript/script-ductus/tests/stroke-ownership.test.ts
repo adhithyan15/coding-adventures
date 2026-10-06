@@ -13,6 +13,8 @@ const sha256 = (value: string): string =>
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ownerNames = [
   "arabic-family",
+  // Bengali joins as one owner module, like Malayalam and Gujarati.
+  "bengali",
   "chinese",
   "cyrillic",
   "devanagari",
@@ -466,24 +468,43 @@ describe("stroke ownership migration baseline", () => {
       // traces in HP Labs India's LipiTk Devanagari recognizer. They follow ह
       // at the end of the Devanagari owner, so every existing key keeps its
       // relative order. Keys move 456 -> 464 and Devanagari 44 -> 52, with the
+      //
+  // Bengali joins as one owner module, like Malayalam and Gujarati.
+  // Bengali joins as one owner module, like Malayalam and Gujarati.
+      // Bengali joins as a new last owner with nine glyphs cited to native
+      // writers' pen traces in HP Labs India's LipiTk Bangla recognizer:
+      // এ ও খ থ ঞ ব র and the signs ঃ ঁ, keyed `bengali:<glyph>`. Appending
+      // the owner keeps every existing key in place. Keys move 439 -> 448 with
+      // a new `bengali: 9` count, and the ordered key hash and the non-Tamil
+      // data hash move, measured after the last caption was settled; Tamil
+      // and both shared-identity values remain unchanged.
+      //
+      // Kannada base consonant ಠ (U+0CA0), taught in chapter 80 and the last
+      // Kannada consonant without a cited stroke-order source, now cites Gopala
+      // Krishna A's Commons animation (filed as "tta") and gains a ductus: the
+      // round bowl, the hooked bar and the dot, two lifts, which is also the
+      // Omniglot copyists' most common count. Keys move 499 -> 500 and Kannada
+      // 43 -> 44, with the ordered key hash and the non-Tamil data hash,
+      // measured after the captions were settled; Tamil and both
     }).toEqual({
-      keys: 524,
+      keys: 534,
       keyHash:
-        "2f95f4f0638bfd1c71a13f058046cec3df4f79ca4bff54c3ba895eaaf1332b9d",
+        "507e26694474b2f503ad4c94223d905424a7dfc5d8e467b7d7f478bcf5f296d5",
       nonTamilDataHash:
-        "d4edb42a3b9a45eed007cbdd854b6a9262d667a126043029edf4819b796c862a",
+        "f6c9dcc5ed1af7aa8286e172414fc3c2b852b6eaab4de09fa477abc7d6b8ea36",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
       counts: {
         arabic: 32,
+        bengali: 9,
         chinese: 60,
         cyrillic: 33,
         devanagari: 52,
         gujarati: 55,
         hebrew: 22,
         japanese: 80,
-        kannada: 43,
+        kannada: 44,
         malayalam: 14,
         "perso-arabic": 24,
         tamil: 35,

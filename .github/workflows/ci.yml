@@ -41,15 +41,17 @@
 #
 # Parallelism: independent packages run concurrently via goroutines.
 #
-# Tiered strategy:
-# - Every push: Linux only (fast feedback)
-# - PRs to main: Linux + macOS + Windows (thorough validation)
+# Event strategy:
+# - Feature branches: one authoritative pull-request suite. A second push event
+#   for the same commit used to duplicate Linux work and pollute the PR rollup.
+# - Main pushes: repeat the committed squash with the full forced build.
+# - PRs to main: Linux + macOS + Windows (thorough validation).
 
 name: CI
 
 on:
   push:
-    branches: ['**']
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -5015,15 +5017,28 @@ jobs:
   # branch push satisfy protection while the pull-request macOS/Windows matrix
   # is still running. `if: always()` makes the gate itself run even when a
   # dependency failed, so it can report the failure rather than being skipped.
+  # A cancelled dependency is accepted only when a fresh API read proves this
+  # run's PR head was superseded. A cancellation on the current head remains a
+  # failure; merely skipping this required job would fail open because GitHub
+  # accepts skipped required checks.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
     needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build]
     if: always()
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
       - name: Verify required jobs succeeded
+        if: always()
         shell: bash
         env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          EVENT_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           DETECT_RESULT: ${{ needs.detect.result }}
           CONTRACTS_RESULT: ${{ needs.contracts.result }}
           OCAML_CAPABILITY_RESULT: ${{ needs['ocaml-capability-gate'].result }}
@@ -5046,6 +5061,32 @@ jobs:
           FORME_RELEASE_VERDICT_RESULT: ${{ needs['forme-release-verdict'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
         run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            if [[ ! "$REPOSITORY" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]]; then
+              echo "::error::Invalid repository identity."
+              exit 1
+            fi
+            if [[ ! "$PR_NUMBER" =~ ^[1-9][0-9]*$ ]]; then
+              echo "::error::Invalid pull-request number."
+              exit 1
+            fi
+            if [[ ! "$EVENT_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+              echo "::error::Invalid event pull-request head."
+              exit 1
+            fi
+
+            current_head="$(gh api "repos/$REPOSITORY/pulls/$PR_NUMBER" --jq '.head.sha')"
+            if [[ ! "$current_head" =~ ^[0-9a-f]{40}$ ]]; then
+              echo "::error::GitHub returned an invalid current pull-request head."
+              exit 1
+            fi
+            if [ "$current_head" != "$EVENT_HEAD_SHA" ]; then
+              echo "::notice::This workflow head was superseded; its cancelled dependencies are obsolete."
+              exit 0
+            fi
+          fi
+
           echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT"
           fail=0
           for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT"; do

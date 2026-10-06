@@ -79,6 +79,10 @@ export const DERIVED_FILMSTRIP_SCRIPTS: Readonly<Record<string, string>> = {
   kannada: "kannada",
   malayalam: "malayalam",
   telugu: "telugu",
+  // HL-C443 fourth rollout: Bengali, whose first cited letters come from
+  // native writers' pen traces (HP Labs India's LipiTk Bangla recognizer). As
+  // with kannada, only the letters that carry a cited ductus are drawn.
+  bengali: "bengali",
 };
 
 const GRAPHEMES = new Intl.Segmenter("und", { granularity: "grapheme" });

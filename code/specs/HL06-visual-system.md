@@ -257,6 +257,36 @@ Left out:
   of 83 (34%) draw both from upper left to lower right. ौ's commonest count
   is three strokes in 35 of 83 (42%).
 
+#### As built — Bengali, cited to native writers' pen traces
+
+Bengali joins the derived filmstrips (`DERIVED_FILMSTRIP_SCRIPTS.bengali`) with
+nine glyphs: এ ও খ থ ঞ ব র and the signs ঃ ঁ. Their order is not taken from a
+teaching animation (Wikimedia Commons cannot be reached from the authoring
+environment) but from the native writers' tablet pen traces stored in HP Labs
+India's LipiTk 4.0 Bangla recognizer: the modal stroke count, the part order,
+the start and the turn, each cited as counts and shares, never as copied
+coordinates. The recognizer scales traces to a square, so proportions come from
+the font: every path is fitted to Noto Sans Bengali at the default tolerances.
+
+**The headline (mātrā).** The traces do not treat it one way. Across the
+recognizer classes whose printed form has a full-width bar, 40% of one-stroke
+prototypes draw no bar run, 27% draw it first and 16% last; multi-stroke writers
+lift it out as the last stroke (20%) more often than the first (7%). The rule
+that follows: a letter is drawn only where one placement wins a majority AND
+covers the printed bar. ব and র qualify (bar first, left to right); খ and থ end
+with a short move right into the flag beside the stem; এ ও ঞ ঃ ঁ have no bar.
+ন (five lessons), ক, ম, ল, য, ত and others are left undrawn with the reason in
+`data/scripts/bengali.json`.
+
+**Divergence: the script inventory.** Bengali had no `data/scripts/` file. The
+new `bengali.json` holds exactly what the track reads (30 letters, 11 signs, 10
+digits) rather than the whole alphabet, because the letter-anchoring ceiling
+pins unread inventory letters at zero; `complete` is false. The glyph-gap queue
+stays empty only if digits count, so `validate.ts` now counts a script's
+`digits` rows as covered (no other track has digit headwords). Bengali words
+remain undrawn: there is no composer on this branch, and a Bengali word shares
+one headline across its letters.
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams

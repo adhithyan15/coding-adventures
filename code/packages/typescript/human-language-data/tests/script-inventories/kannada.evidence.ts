@@ -1080,5 +1080,32 @@ export const scriptInventoryEvidence = {
         glyph,
       ).toHaveLength(lifts);
     }
+    // ಠ, the last Kannada consonant to gain a stroke order, follows the same
+    // pattern. Its animation is filed under the slug "tta" ("ta" is ಟ and
+    // "thha" is ಥ), which its variation must say so a later edit cannot
+    // quietly cite another letter's file. Its two lifts equal the Omniglot
+    // copyists' most common count, so no ceiling wording is needed.
+    const kannadaConsonantTtha = scripts.kannada!.letters.find(
+      (entry) => entry.glyph === "ಠ",
+    )!;
+    expect(kannadaConsonantTtha.role).toBe("syllable");
+    expect(kannadaConsonantTtha.penLifts).toBe(2);
+    expect(kannadaConsonantTtha.strokeOrder).toEqual([
+      "start at the upper left of the bowl and go down the left side and round the base",
+      "without lifting, climb the right side",
+      "without lifting, close the bowl leftward along the top",
+      "lift, then draw the top bar from left to right",
+      "without lifting, curl up into the hook",
+      "lift, then set the dot in the middle",
+    ]);
+    expect(kannadaConsonantTtha.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-tta.gif",
+    );
+    expect(kannadaConsonantTtha.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-tta\.gif.*consonant ಠ.*41 frames.*4\.1 seconds.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaConsonantTtha.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*slug "tta".*retroflex ಠ \(U\+0CA0\).*"ta" animates retroflex ಟ.*"thha" dental ಥ.*three pen-down runs.*round bowl.*left side.*base.*right side.*after a lift.*top bar.*hook.*second lift.*dot.*mirror copy.*231×208, 105 KB.*Noto Sans Kannada.*two-lift order/i,
+    );
   },
 };

@@ -75,19 +75,26 @@ discovery-only `specs` directories remain eligible source. Top-down pruning avoi
 generated descendants, and lexical `lstat` checks keep stable file and
 directory links outside collection and package hashing.
 
-The portable source registry includes OCaml `.ml`, `.mli`, and `.opam` inputs
-plus exact `.ocamlformat`, `dune`, and `dune-project` metadata. Declared source
-mode retains a root `.opam` manifest when its globs omit it; nested manifests
-still require an explicit match. It also retains only the five exact supported
-BUILD fronts rather than accepting arbitrary `BUILD_*` lookalikes. Package digests sort normalized
+The production collector reads the checked 23-language source-input registry
+from installed package data. It applies all seven roles, including root-only
+manifests, reviewed native-companion/resource subtrees, and exact package-bound
+inputs for Engram WASM and the two TypeScript sites. The five exact BUILD
+fronts and root `required_capabilities.json` always remain inputs. In declared
+mode, explicit globs replace recursive and scoped language selectors but do
+not erase fixed-path or root metadata inputs. OCaml's `.opam` manifests are
+root-only unless an explicit declared glob selects a nested file; `dune` is a
+recursive input in extension mode. Unknown languages fail closed. The snapshot
+can be refreshed with `ruby tools/sync_language_source_input_registry.rb` and
+verified with its `--check` mode. Package digests sort normalized
 repository-relative paths by UTF-8 bytes, then frame each path and exact raw
 file body with unsigned 64-bit big-endian lengths. Same-content renames thus
 change the cache identity without incorporating absolute checkout prefixes,
 host locale, decoded source text, or host metadata.
 
-The native hasher tests consume both complete language-neutral OCaml source-
-collection fixtures and derive the exact generated-directory registry from
-them. They also pin the hashing-v1 package oracle, raw and boundary bytes,
+The native hasher tests compare the complete packaged registry to the checked
+neutral JSON, recompute its domain-separated digest, and consume all seven
+package-local source-collection cases through the production selector. They
+also pin the hashing-v1 package oracle, raw and boundary bytes,
 UTF-8 ordering, exact BUILD and manifest scope, repository anchors, rename
 invalidation, and the stable no-follow boundary. Ruby does not expose the
 descriptor-relative primitives needed to claim an atomic adversarial TOCTOU

@@ -31,95 +31,50 @@
 
 require "digest/sha2"
 require "find"
+require "json"
 require "pathname"
 require_relative "glob_match"
 
 module BuildTool
   module Hasher
-    # SOURCE_EXTENSIONS -- File extensions that matter for each language.
-    #
-    # If any file with one of these extensions changes, the package needs
-    # rebuilding. We use a frozen hash of frozen sets for safety.
-    SOURCE_EXTENSIONS = {
-      "python" => %w[.py .toml .cfg].freeze,
-      "ruby" => %w[.rb .gemspec].freeze,
-      "go" => %w[.go].freeze,
-      "typescript" => %w[.ts .tsx .json].freeze,
-      "rust" => %w[.rs .toml].freeze,
-      "elixir" => %w[.ex .exs].freeze,
-      "starlark" => %w[.star].freeze,
-      "perl" => %w[.pl .pm .t .xs].freeze,
-      "haskell" => %w[.hs .cabal].freeze,
-      "ocaml" => %w[.ml .mli .opam].freeze
-    }.freeze
-
-    # SPECIAL_FILENAMES -- Files to always include regardless of extension.
-    #
-    # These are ecosystem-specific config files that affect the build but
-    # don't have a standard source extension.
-    SPECIAL_FILENAMES = {
-      "python" => [].freeze,
-      "ruby" => %w[Gemfile Rakefile].freeze,
-      "go" => %w[go.mod go.sum].freeze,
-      "typescript" => %w[package.json tsconfig.json vitest.config.ts].freeze,
-      "rust" => %w[Cargo.toml Cargo.lock].freeze,
-      "elixir" => %w[mix.exs mix.lock].freeze,
-      "starlark" => [].freeze,
-      "perl" => %w[Makefile.PL Build.PL cpanfile MANIFEST META.json META.yml].freeze,
-      "haskell" => [].freeze,
-      "ocaml" => %w[.ocamlformat dune dune-project].freeze
-    }.freeze
-
-    # Exact BUILD fronts supported by package discovery. Arbitrary BUILD_*
-    # lookalikes are ordinary files and must not silently widen a digest.
-    BUILD_FILENAMES = %w[
-      BUILD BUILD_mac BUILD_linux BUILD_windows BUILD_mac_and_linux
-    ].freeze
-
-    # Manifest extensions included independently of declared source globs.
-    # These manifests are package-root metadata, not nested dependency inputs.
-    DECLARED_MANIFEST_EXTENSIONS = {
-      "ocaml" => %w[.opam].freeze
-    }.freeze
-
-    # GENERATED_DIRECTORY_COMPONENTS -- Exact directories that are not source.
-    #
-    # This registry is deliberately case-sensitive and component-based. A
-    # directory named `_build` is generated Dune output, while `_Build` and
-    # `_build-example` may be authored source. Pruning happens before either
-    # extension or declared-source matching so a broad glob cannot pull build
-    # artifacts back into a package digest.
-    GENERATED_DIRECTORY_COMPONENTS = %w[
-      .build
-      .cargo
-      .claude
-      .dart_tool
-      .git
-      .gradle
-      .hg
-      .mypy_cache
-      .pytest_cache
-      .ruff_cache
-      .stack-work
-      .svn
-      .tox
-      .venv
-      Pods
-      __pycache__
-      _build
-      blib
-      build
-      cover
-      deps
-      dist
-      dist-newstyle
-      gradle-build
-      node_modules
-      target
-      vendor
-    ].freeze
+    # The checked fixture is copied into package data at review time. Runtime
+    # hashing never searches for a repository fixture or host configuration.
+    SOURCE_INPUT_REGISTRY_PATH = Pathname(__dir__) / "language_source_input_registry.json"
+    SOURCE_INPUT_REGISTRY = JSON.parse(SOURCE_INPUT_REGISTRY_PATH.binread, freeze: true)
+    LANGUAGE_INPUTS = SOURCE_INPUT_REGISTRY.fetch("languages").to_h do |entry|
+      [entry.fetch("language"), entry]
+    end.freeze
+    UNIVERSAL_INPUTS = SOURCE_INPUT_REGISTRY.fetch("universal_inputs").freeze
+    BUILD_FILENAMES = UNIVERSAL_INPUTS.fetch("build_filenames").freeze
+    GENERATED_DIRECTORY_COMPONENTS = UNIVERSAL_INPUTS.fetch("generated_directory_components").freeze
 
     module_function
+
+    def source_input_registry
+      SOURCE_INPUT_REGISTRY
+    end
+
+    # Canonical JSON sorts object keys while preserving semantically ordered
+    # registry arrays. The domain and length prevent a digest from being
+    # confused with another JSON document or a different registry version.
+    def source_input_registry_digest
+      canonical = canonical_json(SOURCE_INPUT_REGISTRY).b
+      Digest::SHA256.hexdigest(
+        "coding-adventures/build-tool-language-source-input-registry/v1\0".b +
+        [canonical.bytesize].pack("Q>") + canonical
+      )
+    end
+
+    def canonical_json(value)
+      case value
+      when Hash
+        "{" + value.keys.sort.map { |key| "#{JSON.generate(key)}:#{canonical_json(value.fetch(key))}" }.join(",") + "}"
+      when Array
+        "[" + value.map { |item| canonical_json(item) }.join(",") + "]"
+      else
+        JSON.generate(value)
+      end
+    end
 
     # collect_source_files -- Gather all source files in a package directory.
     #
@@ -141,6 +96,7 @@ module BuildTool
     # @param package [Package] The package to scan.
     # @return [Array<Pathname>] Sorted absolute paths to source files.
     def collect_source_files(package)
+      language_inputs(package.language)
       # Check if this package has declared_srcs (Starlark metadata).
       # The Package struct might not have this field (older code), so we
       # use respond_to? for safety.
@@ -166,31 +122,13 @@ module BuildTool
     # @param package [Package] The package to scan.
     # @return [Array<Pathname>] Sorted absolute paths to source files.
     def collect_source_files_extension(package)
-      extensions = SOURCE_EXTENSIONS.fetch(package.language, [])
-      special_names = SPECIAL_FILENAMES.fetch(package.language, [])
-
+      entry = language_inputs(package.language)
+      exact_inputs = package_exact_paths(package, entry)
       files = []
 
       each_source_file(package.path) do |filepath|
-        basename = filepath.basename.to_s
-
-        # Always include exact BUILD fronts.
-        if BUILD_FILENAMES.include?(basename)
-          files << filepath
-          next
-        end
-
-        # Check extension.
-        if extensions.include?(filepath.extname)
-          files << filepath
-          next
-        end
-
-        # Check special filenames.
-        if special_names.include?(basename)
-          files << filepath
-          next
-        end
+        relative = portable_relative_path(package.path, filepath)
+        files << filepath if registry_input?(relative, entry, exact_inputs, declared: false)
       end
 
       # Sort by relative path for determinism, matching the Python behavior.
@@ -210,36 +148,82 @@ module BuildTool
     # @param declared_srcs [Array<String>] Glob patterns from Starlark srcs.
     # @return [Array<Pathname>] Sorted absolute paths to source files.
     def collect_source_files_glob(package, declared_srcs)
+      entry = language_inputs(package.language)
       compiled_patterns = GlobMatch.compile_patterns(declared_srcs)
+      exact_inputs = package_exact_paths(package, entry)
       files = []
-      special_names = SPECIAL_FILENAMES.fetch(package.language, [])
-      manifest_extensions = DECLARED_MANIFEST_EXTENSIONS.fetch(package.language, [])
 
       each_source_file(package.path) do |filepath|
-        basename = filepath.basename.to_s
-
-        # Always include exact BUILD fronts.
-        if BUILD_FILENAMES.include?(basename)
-          files << filepath
-          next
-        end
-
-        # Exact package metadata remains a hashing input even when declared
-        # source globs omit it. Extension manifests are root-scoped.
-        if special_names.include?(basename) ||
-            (filepath.dirname == package.path && manifest_extensions.include?(filepath.extname))
-          files << filepath
-          next
-        end
-
-        # Match against declared source patterns.
         rel = portable_relative_path(package.path, filepath)
-        if compiled_patterns.any? { |pattern| GlobMatch.match_compiled_path?(pattern, rel) }
+        if registry_input?(rel, entry, exact_inputs, declared: true) ||
+            compiled_patterns.any? { |pattern| GlobMatch.match_compiled_path?(pattern, rel) }
           files << filepath
         end
       end
 
       sort_portable_paths(files, package.path)
+    end
+
+    def language_inputs(language)
+      LANGUAGE_INPUTS.fetch(language) { raise ArgumentError, "unknown source language: #{language}" }
+    end
+
+    def registry_input?(relative, entry, exact_inputs, declared:)
+      basename = relative.split("/").last
+      root = !relative.include?("/")
+      return true if BUILD_FILENAMES.include?(basename)
+      return true if root && UNIVERSAL_INPUTS.fetch("root_exact_basenames").include?(basename)
+      return true if root && entry.fetch("root_exact_basenames").include?(basename)
+      return true if root && entry.fetch("root_variable_suffixes").any? { |suffix| basename.end_with?(suffix) }
+      return true if entry.fetch("root_exact_relative_paths").include?(relative)
+      return true if exact_inputs.include?(relative)
+      return false if declared
+
+      return true if entry.fetch("recursive_suffixes").any? { |suffix| basename.end_with?(suffix) }
+      return true if entry.fetch("recursive_exact_basenames").include?(basename)
+
+      entry.fetch("scoped_inputs").any? do |rule|
+        in_scope = if rule.fetch("scope") == "root"
+          root
+        else
+          relative.start_with?("#{rule.fetch("path_prefix")}/")
+        end
+        in_scope && (rule.fetch("suffixes").any? { |suffix| basename.end_with?(suffix) } ||
+          rule.fetch("exact_basenames").include?(basename))
+      end
+    end
+
+    # Package-exact rules require a real canonical root in the checkout path.
+    # The name-only fallback used by isolated hashing tests cannot grant a
+    # checked-in native or site companion to an unrelated temporary package.
+    def package_exact_paths(package, entry)
+      root = canonical_source_root(package, entry)
+      return [] unless root
+
+      entry.fetch("package_exact_inputs")
+        .select { |rule| rule.fetch("package_root") == root }
+        .flat_map { |rule| rule.fetch("paths") }
+    end
+
+    def canonical_source_root(package, entry)
+      parts = package.path.expand_path.each_filename.to_a
+      (0...parts.length).reverse_each do |index|
+        next unless parts[index] == "code"
+
+        section = parts[index + 1]
+        if %w[packages programs].include?(section)
+          return nil unless parts.length >= index + 4 && parts[index + 2] == package.language
+          return validate_repository_path(parts[index..].join("/"))
+        end
+        if section == "sites"
+          root = parts[index..].join("/")
+          registered = entry.fetch("package_exact_inputs")
+            .any? { |rule| rule.fetch("package_root") == root }
+          return validate_repository_path(root) if package.language == "typescript" && registered
+          return nil
+        end
+      end
+      nil
     end
 
     # each_source_file -- Walk one package without entering generated trees.

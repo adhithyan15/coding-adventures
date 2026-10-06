@@ -1,6 +1,6 @@
 # Forme Completion Roadmap
 
-> **Status:** Living delivery backlog, last prioritized 2026-10-05.
+> **Status:** Completion record, freshly audited 2026-10-05.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -9,7 +9,7 @@
 
 | Surface | Status | Canonical specification |
 |---|---|---|
-| Vision and delivery backlog | Active | [FM00 vision](FM00-forme-vision.md) and this roadmap |
+| Vision and delivery backlog | Complete; reopen when new actionable evidence is recorded | [FM00 vision](FM00-forme-vision.md) and this roadmap |
 | Kernel | Implemented | [FM01](FM01-forme-kernel.md) |
 | Plugin host | Extensible v1 implemented: installation, authority, runners, native sandboxes, product composition, and live storage watches | [FM02](FM02-forme-plugin-host.md) |
 | Orchestrator | Headless v0 implemented | [FM03](FM03-forme-orchestrator.md) |
@@ -117,8 +117,9 @@ order:
 4. **Smallest independently verifiable slice.** Split work until one PR has a
    crisp acceptance test and can auto-merge safely.
 
-Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
-`active`. A blocked item names its dependency.
+Statuses are `done`, `active`, `ready`, `blocked`, and `later`. While unfinished
+work exists, exactly one item is `active`; a completed roadmap has none. A
+blocked item names its dependency.
 
 ## Prioritized backlog
 
@@ -195,7 +196,7 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 68 | FM-B071 | done | Version the public package and kernel APIs | Remove the legacy `RenderedPage.source` producer branch, advance its kind/API contract with a tested compatibility refusal, align publishable Forme package versions, and ship a migration guide for every breaking change. |
 | 69 | FM-B072 | done | Compose the supported-platform release gate | Depends on FM-B069–FM-B071. Run the release benchmark, web budgets, package/API compatibility checks, complete product builds, and mandatory security review on every supported host with one documented release verdict. |
 | 70 | FM-B018 | done | Close release-quality gates | Completion milestone depending on FM-B069–FM-B072. The 1,000-page benchmark, Lighthouse/accessibility budgets, versioned package/API migration, security review, and supported-platform CI all pass on the same release contract. |
-| 71 | FM-B029 | active | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
+| 71 | FM-B029 | done | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
 ## Dependency path
 
@@ -215,8 +216,9 @@ FM-B062 → FM-B063 → FM-B064 → FM-B065 → FM-B067 → FM-B068 → FM-B066 
 FM-B016. FM-B017 completes the backend proof, FM-B069 closes the scale gate,
 FM-B070 closes browser quality, FM-B071 closes the public API migration, and
 FM-B072 → FM-B018 closes the supported-platform release-quality milestone.
-Authoring v1 is complete. FM-B029 is now the sole active operational
-improvement and does not reopen the shipped release horizon.
+FM-B029 closes the remaining CI-state clarity gap without reopening the shipped
+release horizon. Authoring v1 is complete. No actionable Forme completion
+backlog remains.
 
 ### FM-B070 web-quality contract
 
@@ -314,6 +316,25 @@ and the technical verdict is valid only together with the separately
 authenticated mandatory review of that exact head. Any head change invalidates
 that review and requires another one; the cross-platform attestations cannot
 mint, impersonate, or reuse an approval themselves.
+
+### FM-B029 authoritative pull-request CI contract
+
+Feature-branch commits have one authoritative CI event: `pull_request`.
+The broad Linux-only `push` duplicate is removed from feature branches and is
+retained only on `main`, where it validates the committed squash. A new head on
+the same pull request cancels its obsolete run. The final gate compares its
+event head with a fresh authenticated PR read: superseded cancellations close
+cleanly, while a cancelled dependency on the current head still fails closed.
+Cancellation therefore cannot turn obsolete evidence into a fresh-looking
+failed roll-up or let missing current-head evidence pass as a skipped gate.
+
+The protected `CI gate` context remains exclusive to pull requests; the
+post-merge `CI push gate` remains distinct. Repository babysitting instructions
+must read the pull request's current `headRefOid`, query only required checks,
+classify every result against that exact head, and confirm the expected head is
+still the one GitHub merged. Superseded or redundant runs are evidence to
+ignore, not workflows to rerun or cancel; failures on the current required
+head remain actionable.
 
 ## Discovery log
 
@@ -445,6 +466,7 @@ work.
 | 2026-10-05 | The API-v2 PR's Windows lane exposed that the document demo's lexical write-containment helper resolved its target but compared it with the caller's unnormalized base spelling. Mandatory security review then found that lexical containment alone still followed existing output symlinks, Windows junctions/reparse points, and multiply-linked files. | Keep the repair inside FM-B071: resolve the base before joining or comparing targets; reject linked path components; open targets without following their final component; verify the opened and named identities before truncation; reject multiply-linked files; exercise relative-base, POSIX-link, Windows-junction, and hard-link regressions; and rerun the complete document-demo gate. |
 | 2026-10-05 | Follow-up security review found that starting the link walk at an already redirected output root missed a linked ancestor, while portable Node lacks descriptor-relative `openat` writes that could close every same-identity rename race. | Anchor the walk at the canonical working directory and enforce an explicit portable single-writer contract: require a fresh private output root, hold an exclusive lock for the complete write, refuse unowned or multiply-linked files, and fail closed on observable authority, directory, lock, path, or handle identity changes. Document that concurrent mutation by another process running as the same OS identity is outside this contract, and cover linked-ancestor, injected child-link, injected hard-link, and pre-existing-root regressions. |
 | 2026-10-05 | PR #16729 passed the unchanged FM-B072 contract on Linux, macOS, and Windows at one exact head: all three host attestations and the aggregate verdict passed, the exact-head mandatory security review approved, and authoritative CI, duplicate push CI, and CodeQL all passed before squash merge. The release evidence included the 1,000-page benchmark, three-sample Lighthouse medians with fail-closed accessibility/resource aggregation, API-v2 compatibility, and every supported product build. | Close FM-B072 and its FM-B018 completion milestone. Authoring v1 is complete. Activate FM-B029 as the highest-priority remaining operational gap so duplicate workflow cancellation and merge-state reporting become unambiguous without weakening the completed release contract. |
+| 2026-10-05 | The final FM-B029 audit confirmed that `ci.yml` still started a Linux push suite and a full pull-request suite for the same feature-branch commit. Superseding a run could then let the `always()` final gate reinterpret cancelled dependencies as a new failure, while the repository babysitter read every attached check without binding its conclusion to the PR's current head or protected contexts. | Restrict feature-branch CI to the authoritative pull-request event while retaining post-merge `main` validation; make the final gate compare the event head with a fresh authenticated PR read so only truly superseded cancellation closes cleanly; and make the babysitter pin `headRefOid`, query `gh pr checks --required`, ignore superseded/duplicate evidence, and verify the expected head merged. Close FM-B029. A fresh audit finds all 72 roadmap items done and no actionable Forme completion backlog. |
 
 ## Loop protocol
 
@@ -452,8 +474,9 @@ For every Forme delivery loop:
 
 1. Re-read the discovery log and current implementation, then reprioritize this
    table.
-2. Mark exactly one unblocked item `active` and define its PR-sized acceptance
-   gate before editing code.
+2. If actionable work remains, mark exactly one unblocked item `active` and
+   define its PR-sized acceptance gate before editing code. If none remains,
+   record the fresh audit and leave no item active.
 3. Implement and validate locally, update this roadmap with discoveries, and
    open a focused PR.
 4. Enable auto-merge, babysit every required check, and fix CI failures or merge
