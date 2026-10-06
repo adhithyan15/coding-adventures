@@ -6528,7 +6528,7 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label:
-                "draw a short stroke down and left",
+                "draw the stroke down and left",
               path: [
                 { x: 630, y: 756 },
                 { x: 622, y: 684 },

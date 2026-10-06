@@ -538,12 +538,18 @@ describe("stroke ownership migration baseline", () => {
       // and Malayalam 31 -> 53, with the ordered key hash and the non-Tamil
       // data hash, measured after the last caption was settled; Tamil and
       // both shared-identity values remain unchanged.
+      //
+      // 語's tenth frame, 五's second stroke, is now captioned as in 五 itself
+      // ("draw the stroke down and left"). It runs from the top bar to the
+      // base (KanjiVG 04e94), so "a short stroke" was wrong. Only the label
+      // moves: keys, the ordered key hash and Tamil stay; the non-Tamil data
+      // hash moves.
     }).toEqual({
       keys: 604,
       keyHash:
         "a2b2c7cb41da0b5f18f4730b9befe6c3f591023f94311c48915e5b341c2b54f5",
       nonTamilDataHash:
-        "ee314747bb3df8467f78ef30e8950307a4bc6fe71c30d4fe191dff1621979c06",
+        "0d9338b405d9cb6c7d51bbe641d4daed7a9d92934de0ab6fe85c3d454117a33e",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",

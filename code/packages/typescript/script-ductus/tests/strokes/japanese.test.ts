@@ -1843,9 +1843,10 @@ describe("handwriting ductus", () => {
       [
         ...SPEECH,
         ["draw the top bar to the right"],
-        // Frame 10: "10. draw the short stroke down, leaning left" needed
-        // three lines, so 五's second stroke is captioned more briefly here.
-        ["draw a short stroke down and left"],
+        // Frame 10: 五's second stroke, captioned as in 五 itself. It runs
+        // from the top bar to the base, so it is not "short" (KanjiVG 04e94);
+        // "draw the short stroke down, leaning left" also needed three lines.
+        ["draw the stroke down and left"],
         ["draw the middle bar to the right", "turn down"],
         ["draw the long base bar to the right"],
         ...BOX,
