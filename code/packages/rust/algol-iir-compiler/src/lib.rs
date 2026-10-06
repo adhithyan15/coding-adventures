@@ -2232,7 +2232,7 @@ impl Compiler {
         }
         let result = self.emit_call_common(node, true)?;
         if !is_pure_standard_function {
-            self.restore_call_invariant_runtime_real_slots(call_invariant_runtime_real_slots);
+            self.restore_unaliased_runtime_real_slots(call_invariant_runtime_real_slots);
         }
         result.ok_or_else(|| {
             CompileError::Type("proper procedure call has no return value".into())
@@ -2259,7 +2259,7 @@ impl Compiler {
         let call_invariant_runtime_real_slots = self.runtime_real_slots.clone();
         self.disable_static_tracking();
         self.emit_call_common(node, false)?;
-        self.restore_call_invariant_runtime_real_slots(call_invariant_runtime_real_slots);
+        self.restore_unaliased_runtime_real_slots(call_invariant_runtime_real_slots);
         Ok(())
     }
 
@@ -3994,11 +3994,10 @@ impl Compiler {
         self.static_real_tracking_disabled = true;
     }
 
-    /// A direct call cannot mutate a caller-frame scalar unless capture or a
-    /// name actual promotes that binding to shared global storage. Restore the
-    /// runtime-real formatter proof for slots that remain ordinary locals after
-    /// call lowering; promoted aliases stay invalidated.
-    fn restore_call_invariant_runtime_real_slots(&mut self, candidates: HashSet<String>) {
+    /// Restore runtime-real formatter proof only for candidate slots that still
+    /// belong to ordinary local scalars. Capture and name-actual lowering
+    /// promote aliases to shared global storage, so they remain invalidated.
+    fn restore_unaliased_runtime_real_slots(&mut self, candidates: HashSet<String>) {
         let local_real_slots = self
             .scopes
             .iter()
@@ -6090,6 +6089,7 @@ impl Compiler {
 
     fn emit_for(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
+        let mut zero_trip_runtime_real_slots = self.runtime_real_slots.clone();
         self.runtime_real_slots.clear();
         let target = first_direct_node(node, "variable")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
@@ -6099,6 +6099,13 @@ impl Compiler {
                 "for controlled variable must be arithmetic, got {}",
                 var_ty.name()
             )));
+        }
+        if array_subscripts(target).is_none() {
+            let target_name = self.simple_variable_name(target)?;
+            if self.active_by_name_binding(&target_name).is_none() {
+                let target_binding = self.require_var(&target_name)?;
+                zero_trip_runtime_real_slots.remove(&target_binding.slot);
+            }
         }
 
         let for_list = first_direct_node(node, "for_list")
@@ -6115,6 +6122,7 @@ impl Compiler {
             .find(|n| n.rule_name == "statement")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
 
+        let mut all_elements_are_zero_trip = true;
         for elem in elems {
             let entry_initialized_string_slots = self.initialized_string_slots.clone();
             let entry_real_slots = self.static_real_slots.clone();
@@ -6122,6 +6130,7 @@ impl Compiler {
             let entry_boolean_slots = self.static_boolean_slots.clone();
             let entry_tracking_disabled = self.static_real_tracking_disabled;
             let executes = self.for_element_execution(target, var_ty, elem);
+            all_elements_are_zero_trip &= executes == Some(false);
             let tokens = direct_tokens(elem);
             let is_step_element = tokens.iter().any(|token| token.value == "step");
             let is_while_element = tokens.iter().any(|token| token.value == "while");
@@ -6245,6 +6254,9 @@ impl Compiler {
             }
         }
         self.runtime_real_slots.clear();
+        if all_elements_are_zero_trip {
+            self.restore_unaliased_runtime_real_slots(zero_trip_runtime_real_slots);
+        }
         Ok(())
     }
 
@@ -18304,6 +18316,42 @@ mod tests {
             "test",
         )
         .expect("a proven zero-trip loop preserves entry scalar snapshots");
+    }
+
+    #[test]
+    fn al4_zero_trip_loops_preserve_unrelated_runtime_real_provenance() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; integer i; real x; x := pick(); for i := 2 step 1 until 1 do x := 1.5; output(x); for i := 1 while false do x := 1.5; output(x) end",
+            "test",
+        )
+        .expect("proven zero-trip loops preserve an unrelated local real's provenance");
+        let main = module.get_function("main").expect("has main");
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| {
+                    instr.op == "call"
+                        && instr.srcs.first().and_then(Operand::as_var)
+                            == Some("__basic_print_real")
+                })
+                .count(),
+            2
+        );
+    }
+
+    #[test]
+    fn al4_non_zero_trip_loops_still_invalidate_runtime_real_provenance() {
+        for source in [
+            "begin real procedure pick; pick := 2.25; integer i; boolean flag; real x; x := pick(); for i := 1 while flag do x := 1.5; output(x) end",
+            "begin real procedure pick; pick := 2.25; integer i; real x; x := pick(); for i := 2 step 1 until 1, 1 do x := 1.5; output(x) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("dynamic and executable loop elements must remain conservative");
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "unexpected rejection for {source:?}: {err:?}"
+            );
+        }
     }
 
     #[test]

@@ -206,8 +206,9 @@ Conditional statements preserve that runtime provenance only for slots proven
 on every reachable exit. Conditional value expressions likewise preserve it
 when the selector contains no procedure call and every reachable value branch
 is a direct runtime real result or a provenance-backed local. One-sided
-reassignment, selector calls, intervening calls without a subsequent proven
-assignment and loops remain conservative. Unary plus, unary minus, additive
+reassignment and selector calls remain conservative. General loops also fail
+closed, but a statically proven zero-trip `step` or `while` loop preserves
+runtime-real provenance for unrelated caller-frame locals. Unary plus, unary minus, additive
 composition, multiplication, division, and exponentiation whose operands are
 proven runtime-real values or finite static numeric expressions preserve the
 same provenance. The real-valued standard functions `abs`, `sqrt`, `sin`,
