@@ -200,7 +200,10 @@ describe("the real corpus", () => {
     // joined once が gained its ductus), the
     // two Tamil words whose only sign is written AFTER its consonant (சரி,
     // சரியா), and the Gujarati words, whose signs are all written after their
-    // consonant (અને, કે, કેમકે, તે, and હા three times). A Tamil word
+    // consonant (અને, કે, કેમકે, તે, and હા three times), and the Malayalam
+    // word നമ three times, once ന and മ gained their Thooval-cited ductus
+    // (its fourth lesson, ML-W01-na-ma-trace, lists "ന മ" and is not a
+    // word). A Tamil word
     // with a sign written before its consonant is drawn in written order,
     // which does not spell it back (see above). Devanagari
     // (मम), the Arabic family (سلام) and Cyrillic (привет) have
@@ -221,6 +224,9 @@ describe("the real corpus", () => {
       "JA-W01-konnichiwa-read",
       "JA-W03-arigatou-read",
       "JA-W08-sayounara-read",
+      "ML-W01-na-ma-delayed-copy",
+      "ML-W01-na-ma-dictation",
+      "ML-W01-na-ma-guided-copy",
       "TA-W07-write-sari",
       "TA-W30-read-sariyaa",
     ]);

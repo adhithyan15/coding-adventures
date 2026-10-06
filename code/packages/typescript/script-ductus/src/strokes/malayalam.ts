@@ -1271,4 +1271,1326 @@ export const entries: DuctusEntry[] = [
       source: malayalamAlphabetSource("ഴ"),
     },
   ],
+  // Base consonants. Each bare consonant row (role "syllable", inherent a)
+  // cites SPACE's Thooval, a Malayalam alphabet teaching tool whose formation
+  // image for each letter marks the start (green), every turn where the pen
+  // runs back along its own ink (blue) and the end (red), with arrows between.
+  // Thooval is GPL-3.0, so it is cited for those FACTS only: no image, path or
+  // template point is copied. Thooval asks the learner to keep the pen down to
+  // the end of the letter, so its "no lift" is not evidence by itself; the lift
+  // count rests on two recorded sources that could have shown a lift and did
+  // not (Santhosh Thottingal's hand, MIT, and grahyam's samples, counts only).
+  // Every path follows the skeleton of the bundled Noto Sans Malayalam outline
+  // between the turning points Thooval marks; where Thooval turns back at a
+  // stem's foot the path retraces the stem.
+  // Thooval's NA.png writes ന in one movement: from the foot of the left
+  // arch the pen climbs clockwise over it and runs down the stem to the
+  // line (blue), climbs the stem again, and sweeps over the right arch to
+  // finish at its foot (red).
+  [
+    "malayalam:ന",
+    {
+      script: "malayalam",
+      glyph: "ന",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb clockwise over the left arch",
+              path: [
+                { x: 203, y: 52 },
+                { x: 150, y: 97 },
+                { x: 111, y: 154 },
+                { x: 90, y: 222 },
+                { x: 87, y: 292 },
+                { x: 90, y: 362 },
+                { x: 115, y: 427 },
+                { x: 158, y: 482 },
+                { x: 217, y: 518 },
+                { x: 287, y: 528 },
+                { x: 355, y: 516 },
+                { x: 410, y: 473 },
+                { x: 455, y: 420 },
+              ],
+            },
+            {
+              label: "descend the stem to the line",
+              path: [
+                { x: 455, y: 420 },
+                { x: 455, y: 344 },
+                { x: 455, y: 268 },
+                { x: 455, y: 192 },
+                { x: 455, y: 116 },
+                { x: 455, y: 40 },
+              ],
+            },
+            {
+              label: "retrace the stem upward",
+              path: [
+                { x: 455, y: 40 },
+                { x: 455, y: 114 },
+                { x: 455, y: 189 },
+                { x: 455, y: 263 },
+                { x: 455, y: 338 },
+                { x: 455, y: 412 },
+              ],
+            },
+            {
+              label: "sweep over the right arch to its foot",
+              path: [
+                { x: 455, y: 412 },
+                { x: 498, y: 467 },
+                { x: 550, y: 513 },
+                { x: 618, y: 528 },
+                { x: 688, y: 521 },
+                { x: 749, y: 488 },
+                { x: 793, y: 434 },
+                { x: 818, y: 369 },
+                { x: 827, y: 299 },
+                { x: 824, y: 229 },
+                { x: 803, y: 162 },
+                { x: 769, y: 101 },
+                { x: 723, y: 48 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ന"),
+    },
+  ],
+  // Thooval's MA.png starts at the bottom left, climbs the left side and
+  // arches clockwise over the top, curves down the inner stroke to the
+  // bottom-left corner, runs right along the base and climbs the right side
+  // to finish at the top, where it meets the arch.
+  [
+    "malayalam:മ",
+    {
+      script: "malayalam",
+      glyph: "മ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb the left side and arch over",
+              path: [
+                { x: 108, y: 48 },
+                { x: 104, y: 116 },
+                { x: 104, y: 185 },
+                { x: 104, y: 253 },
+                { x: 105, y: 322 },
+                { x: 121, y: 388 },
+                { x: 153, y: 448 },
+                { x: 203, y: 496 },
+                { x: 265, y: 523 },
+                { x: 334, y: 528 },
+                { x: 400, y: 512 },
+              ],
+            },
+            {
+              label: "curve down the inner stroke",
+              path: [
+                { x: 400, y: 512 },
+                { x: 428, y: 447 },
+                { x: 435, y: 378 },
+                { x: 412, y: 309 },
+                { x: 379, y: 244 },
+                { x: 336, y: 186 },
+                { x: 285, y: 133 },
+                { x: 236, y: 80 },
+                { x: 179, y: 41 },
+                { x: 108, y: 48 },
+              ],
+            },
+            {
+              label: "run right along the base",
+              path: [
+                { x: 108, y: 48 },
+                { x: 171, y: 36 },
+                { x: 237, y: 36 },
+                { x: 303, y: 36 },
+                { x: 369, y: 36 },
+                { x: 434, y: 36 },
+                { x: 500, y: 36 },
+                { x: 566, y: 36 },
+                { x: 632, y: 40 },
+              ],
+            },
+            {
+              label: "climb the right side to the top",
+              path: [
+                { x: 632, y: 40 },
+                { x: 620, y: 104 },
+                { x: 620, y: 171 },
+                { x: 620, y: 237 },
+                { x: 620, y: 304 },
+                { x: 612, y: 369 },
+                { x: 601, y: 434 },
+                { x: 551, y: 478 },
+                { x: 492, y: 508 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("മ"),
+    },
+  ],
+  // Thooval's SA.png begins like ന: up and over the left arch, down the
+  // stem to the line (blue) and back up it. Then the pen sweeps over the
+  // middle arch, down and round the bowl, and up to the top-right tip (red).
+  [
+    "malayalam:സ",
+    {
+      script: "malayalam",
+      glyph: "സ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb clockwise over the left arch",
+              path: [
+                { x: 203, y: 52 },
+                { x: 150, y: 97 },
+                { x: 111, y: 154 },
+                { x: 91, y: 221 },
+                { x: 87, y: 290 },
+                { x: 90, y: 360 },
+                { x: 114, y: 425 },
+                { x: 156, y: 480 },
+                { x: 215, y: 517 },
+                { x: 284, y: 528 },
+                { x: 353, y: 517 },
+                { x: 407, y: 475 },
+                { x: 455, y: 424 },
+              ],
+            },
+            {
+              label: "descend the stem to the line",
+              path: [
+                { x: 455, y: 424 },
+                { x: 455, y: 347 },
+                { x: 455, y: 270 },
+                { x: 455, y: 194 },
+                { x: 455, y: 117 },
+                { x: 455, y: 40 },
+              ],
+            },
+            {
+              label: "retrace the stem upward",
+              path: [
+                { x: 455, y: 40 },
+                { x: 455, y: 114 },
+                { x: 455, y: 189 },
+                { x: 455, y: 263 },
+                { x: 455, y: 338 },
+                { x: 455, y: 412 },
+              ],
+            },
+            {
+              label: "sweep over the middle arch and down",
+              path: [
+                { x: 455, y: 412 },
+                { x: 498, y: 467 },
+                { x: 550, y: 513 },
+                { x: 618, y: 528 },
+                { x: 687, y: 517 },
+                { x: 739, y: 471 },
+                { x: 769, y: 408 },
+                { x: 775, y: 338 },
+                { x: 783, y: 269 },
+                { x: 791, y: 200 },
+              ],
+            },
+            {
+              label: "round the bowl and up to the top",
+              path: [
+                { x: 791, y: 200 },
+                { x: 793, y: 131 },
+                { x: 833, y: 74 },
+                { x: 887, y: 32 },
+                { x: 957, y: 28 },
+                { x: 1025, y: 40 },
+                { x: 1078, y: 83 },
+                { x: 1117, y: 140 },
+                { x: 1139, y: 206 },
+                { x: 1148, y: 274 },
+                { x: 1135, y: 341 },
+                { x: 1129, y: 409 },
+                { x: 1085, y: 462 },
+                { x: 1035, y: 508 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("സ"),
+    },
+  ],
+  // Thooval's RA.png climbs from the left foot clockwise over the top,
+  // descends the right side, runs left along the bottom and curls up the
+  // inner loop, finishing where it meets the right side.
+  [
+    "malayalam:ര",
+    {
+      script: "malayalam",
+      glyph: "ര",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb clockwise over the top",
+              path: [
+                { x: 219, y: 48 },
+                { x: 161, y: 82 },
+                { x: 116, y: 136 },
+                { x: 92, y: 202 },
+                { x: 87, y: 272 },
+                { x: 91, y: 342 },
+                { x: 116, y: 408 },
+                { x: 161, y: 461 },
+                { x: 219, y: 500 },
+                { x: 286, y: 522 },
+                { x: 356, y: 528 },
+                { x: 426, y: 527 },
+                { x: 493, y: 508 },
+                { x: 555, y: 475 },
+                { x: 604, y: 425 },
+                { x: 639, y: 364 },
+              ],
+            },
+            {
+              label: "descend the right side",
+              path: [
+                { x: 639, y: 364 },
+                { x: 653, y: 290 },
+                { x: 655, y: 214 },
+                { x: 643, y: 140 },
+                { x: 607, y: 73 },
+                { x: 543, y: 32 },
+              ],
+            },
+            {
+              label: "curl up around the inner loop",
+              path: [
+                { x: 543, y: 32 },
+                { x: 471, y: 28 },
+                { x: 404, y: 51 },
+                { x: 357, y: 106 },
+                { x: 339, y: 174 },
+                { x: 351, y: 245 },
+                { x: 368, y: 314 },
+                { x: 425, y: 357 },
+                { x: 497, y: 368 },
+                { x: 566, y: 347 },
+                { x: 635, y: 328 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ര"),
+    },
+  ],
+  // Thooval's TA.png climbs from the left foot over the left arch, crosses
+  // down the right side of the middle loop, rounds its base and climbs its
+  // left side back through the crossing, then sweeps over the right arch to
+  // finish at the right foot.
+  [
+    "malayalam:ത",
+    {
+      script: "malayalam",
+      glyph: "ത",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb clockwise over the left arch",
+              path: [
+                { x: 215, y: 48 },
+                { x: 158, y: 85 },
+                { x: 114, y: 140 },
+                { x: 92, y: 206 },
+                { x: 87, y: 276 },
+                { x: 92, y: 345 },
+                { x: 117, y: 410 },
+                { x: 161, y: 465 },
+                { x: 220, y: 503 },
+                { x: 286, y: 524 },
+                { x: 356, y: 528 },
+                { x: 426, y: 525 },
+                { x: 487, y: 492 },
+              ],
+            },
+            {
+              label: "cross down the middle loop",
+              path: [
+                { x: 487, y: 492 },
+                { x: 550, y: 465 },
+                { x: 600, y: 414 },
+                { x: 637, y: 353 },
+                { x: 660, y: 285 },
+                { x: 671, y: 214 },
+                { x: 665, y: 143 },
+                { x: 630, y: 81 },
+                { x: 575, y: 36 },
+              ],
+            },
+            {
+              label: "round its base and climb back up",
+              path: [
+                { x: 575, y: 36 },
+                { x: 505, y: 28 },
+                { x: 436, y: 38 },
+                { x: 385, y: 85 },
+                { x: 359, y: 150 },
+                { x: 360, y: 220 },
+                { x: 359, y: 291 },
+                { x: 386, y: 354 },
+                { x: 418, y: 415 },
+                { x: 470, y: 463 },
+                { x: 531, y: 492 },
+              ],
+            },
+            {
+              label: "sweep over the right arch to its foot",
+              path: [
+                { x: 531, y: 492 },
+                { x: 589, y: 524 },
+                { x: 657, y: 532 },
+                { x: 724, y: 528 },
+                { x: 789, y: 511 },
+                { x: 847, y: 476 },
+                { x: 890, y: 424 },
+                { x: 918, y: 363 },
+                { x: 932, y: 299 },
+                { x: 927, y: 232 },
+                { x: 912, y: 166 },
+                { x: 880, y: 106 },
+                { x: 835, y: 56 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ത"),
+    },
+  ],
+  // Thooval's SSA.png climbs over the small arch to the line, runs right
+  // along the base, climbs the right upright, slants down to the left into
+  // the loop, circles it and runs straight down the stem to the line (red).
+  [
+    "malayalam:ഷ",
+    {
+      script: "malayalam",
+      glyph: "ഷ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb over the small arch",
+              path: [
+                { x: 144, y: 41 },
+                { x: 96, y: 88 },
+                { x: 80, y: 152 },
+                { x: 84, y: 219 },
+                { x: 123, y: 273 },
+                { x: 183, y: 304 },
+                { x: 250, y: 310 },
+                { x: 313, y: 290 },
+                { x: 361, y: 242 },
+                { x: 385, y: 180 },
+                { x: 377, y: 114 },
+                { x: 360, y: 49 },
+              ],
+            },
+            {
+              label: "run right along the base",
+              path: [
+                { x: 360, y: 49 },
+                { x: 427, y: 37 },
+                { x: 497, y: 37 },
+                { x: 566, y: 37 },
+                { x: 635, y: 37 },
+                { x: 705, y: 37 },
+                { x: 774, y: 37 },
+                { x: 844, y: 37 },
+                { x: 913, y: 37 },
+                { x: 983, y: 37 },
+                { x: 1052, y: 37 },
+              ],
+            },
+            {
+              label: "climb the right upright",
+              path: [
+                { x: 1052, y: 37 },
+                { x: 1036, y: 104 },
+                { x: 1036, y: 176 },
+                { x: 1036, y: 248 },
+                { x: 1039, y: 318 },
+                { x: 1036, y: 390 },
+                { x: 1036, y: 462 },
+                { x: 1052, y: 529 },
+              ],
+            },
+            {
+              label: "slant down to the left",
+              path: [
+                { x: 1052, y: 529 },
+                { x: 1005, y: 471 },
+                { x: 952, y: 418 },
+                { x: 904, y: 361 },
+                { x: 845, y: 314 },
+                { x: 775, y: 289 },
+                { x: 712, y: 321 },
+              ],
+            },
+            {
+              label: "circle the loop",
+              path: [
+                { x: 712, y: 321 },
+                { x: 660, y: 275 },
+                { x: 589, y: 277 },
+                { x: 527, y: 310 },
+                { x: 485, y: 367 },
+                { x: 480, y: 438 },
+                { x: 511, y: 499 },
+                { x: 574, y: 525 },
+                { x: 645, y: 518 },
+                { x: 694, y: 468 },
+                { x: 712, y: 401 },
+              ],
+            },
+            {
+              label: "descend the stem to the line",
+              path: [
+                { x: 712, y: 401 },
+                { x: 700, y: 330 },
+                { x: 700, y: 257 },
+                { x: 702, y: 184 },
+                { x: 700, y: 110 },
+                { x: 716, y: 41 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ഷ"),
+    },
+  ],
+  // Thooval's PA.png climbs from the left foot over the small arch, comes
+  // down to the line, runs right along the base and climbs the upright to
+  // finish at its top.
+  [
+    "malayalam:പ",
+    {
+      script: "malayalam",
+      glyph: "പ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb over the small arch",
+              path: [
+                { x: 124, y: 45 },
+                { x: 85, y: 106 },
+                { x: 76, y: 178 },
+                { x: 100, y: 244 },
+                { x: 154, y: 293 },
+                { x: 224, y: 311 },
+                { x: 295, y: 300 },
+                { x: 351, y: 254 },
+                { x: 383, y: 190 },
+                { x: 378, y: 118 },
+                { x: 356, y: 49 },
+              ],
+            },
+            {
+              label: "run right along the base",
+              path: [
+                { x: 356, y: 49 },
+                { x: 425, y: 37 },
+                { x: 496, y: 37 },
+                { x: 566, y: 37 },
+                { x: 637, y: 37 },
+                { x: 708, y: 37 },
+                { x: 776, y: 49 },
+              ],
+            },
+            {
+              label: "climb the upright to the top",
+              path: [
+                { x: 776, y: 49 },
+                { x: 780, y: 115 },
+                { x: 780, y: 181 },
+                { x: 780, y: 248 },
+                { x: 780, y: 314 },
+                { x: 780, y: 380 },
+                { x: 780, y: 447 },
+                { x: 780, y: 513 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("പ"),
+    },
+  ],
+  // Thooval's VA.png is പ with a taller arch: from the left foot clockwise
+  // over the arch, down to the line, right along the base and up the
+  // upright to its top.
+  [
+    "malayalam:വ",
+    {
+      script: "malayalam",
+      glyph: "വ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb clockwise over the arch",
+              path: [
+                { x: 191, y: 47 },
+                { x: 143, y: 96 },
+                { x: 107, y: 155 },
+                { x: 89, y: 221 },
+                { x: 87, y: 290 },
+                { x: 95, y: 358 },
+                { x: 122, y: 420 },
+                { x: 168, y: 471 },
+                { x: 226, y: 508 },
+                { x: 292, y: 525 },
+                { x: 361, y: 527 },
+                { x: 429, y: 518 },
+                { x: 491, y: 488 },
+                { x: 540, y: 440 },
+                { x: 573, y: 380 },
+                { x: 587, y: 313 },
+                { x: 587, y: 244 },
+                { x: 574, y: 177 },
+                { x: 542, y: 116 },
+                { x: 511, y: 55 },
+              ],
+            },
+            {
+              label: "run right along the base",
+              path: [
+                { x: 511, y: 55 },
+                { x: 573, y: 35 },
+                { x: 640, y: 35 },
+                { x: 707, y: 35 },
+                { x: 774, y: 35 },
+                { x: 839, y: 47 },
+              ],
+            },
+            {
+              label: "climb the upright to the top",
+              path: [
+                { x: 839, y: 47 },
+                { x: 843, y: 113 },
+                { x: 843, y: 179 },
+                { x: 843, y: 246 },
+                { x: 843, y: 312 },
+                { x: 843, y: 378 },
+                { x: 843, y: 445 },
+                { x: 843, y: 511 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("വ"),
+    },
+  ],
+  // Thooval's NNA.png starts inside the small loop (green), circles it
+  // clockwise into the big left arch, and then writes the two stems as ന
+  // writes its one: down to the line (blue), back up and over the next arch,
+  // finishing at the foot of the right arch.
+  [
+    "malayalam:ണ",
+    {
+      script: "malayalam",
+      glyph: "ണ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "circle the small inner loop",
+              path: [
+                { x: 186, y: 284 },
+                { x: 255, y: 288 },
+                { x: 320, y: 268 },
+                { x: 359, y: 212 },
+                { x: 362, y: 143 },
+                { x: 346, y: 78 },
+                { x: 293, y: 34 },
+                { x: 225, y: 24 },
+                { x: 160, y: 47 },
+                { x: 114, y: 98 },
+                { x: 91, y: 163 },
+                { x: 90, y: 232 },
+              ],
+            },
+            {
+              label: "climb over the big left arch",
+              path: [
+                { x: 90, y: 232 },
+                { x: 90, y: 300 },
+                { x: 105, y: 366 },
+                { x: 138, y: 425 },
+                { x: 185, y: 474 },
+                { x: 244, y: 508 },
+                { x: 309, y: 525 },
+                { x: 377, y: 528 },
+                { x: 444, y: 518 },
+                { x: 502, y: 484 },
+                { x: 550, y: 436 },
+              ],
+            },
+            {
+              label: "descend the first stem",
+              path: [
+                { x: 550, y: 436 },
+                { x: 566, y: 374 },
+                { x: 566, y: 307 },
+                { x: 566, y: 240 },
+                { x: 566, y: 174 },
+                { x: 566, y: 107 },
+                { x: 566, y: 40 },
+              ],
+            },
+            {
+              label: "climb back up over the middle arch",
+              path: [
+                { x: 566, y: 40 },
+                { x: 566, y: 112 },
+                { x: 566, y: 184 },
+                { x: 566, y: 255 },
+                { x: 566, y: 327 },
+                { x: 566, y: 399 },
+                { x: 601, y: 459 },
+                { x: 654, y: 507 },
+                { x: 722, y: 528 },
+                { x: 793, y: 524 },
+                { x: 854, y: 488 },
+              ],
+            },
+            {
+              label: "descend the second stem",
+              path: [
+                { x: 854, y: 488 },
+                { x: 899, y: 438 },
+                { x: 914, y: 375 },
+                { x: 914, y: 308 },
+                { x: 914, y: 241 },
+                { x: 910, y: 174 },
+                { x: 910, y: 107 },
+                { x: 910, y: 40 },
+              ],
+            },
+            {
+              label: "climb back up and round the right arch",
+              path: [
+                { x: 910, y: 40 },
+                { x: 910, y: 111 },
+                { x: 910, y: 183 },
+                { x: 910, y: 254 },
+                { x: 910, y: 326 },
+                { x: 914, y: 397 },
+                { x: 946, y: 458 },
+                { x: 998, y: 508 },
+                { x: 1065, y: 527 },
+                { x: 1137, y: 524 },
+                { x: 1200, y: 493 },
+                { x: 1247, y: 439 },
+                { x: 1274, y: 373 },
+                { x: 1282, y: 303 },
+                { x: 1281, y: 231 },
+                { x: 1261, y: 163 },
+                { x: 1227, y: 100 },
+                { x: 1178, y: 48 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ണ"),
+    },
+  ],
+  // Thooval's TTA.png starts at the top-right tip and curves left over
+  // the top and down, swings right through the middle, and rounds the
+  // lower bowl to finish at the lower-left tail.
+  [
+    "malayalam:ട",
+    {
+      script: "malayalam",
+      glyph: "ട",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "curve left over the top and down",
+              path: [
+                { x: 476, y: 484 },
+                { x: 415, y: 508 },
+                { x: 351, y: 523 },
+                { x: 286, y: 528 },
+                { x: 220, y: 528 },
+                { x: 157, y: 511 },
+                { x: 104, y: 473 },
+                { x: 84, y: 412 },
+                { x: 92, y: 348 },
+              ],
+            },
+            {
+              label: "swing right through the middle",
+              path: [
+                { x: 92, y: 348 },
+                { x: 145, y: 301 },
+                { x: 214, y: 285 },
+                { x: 286, y: 280 },
+                { x: 357, y: 278 },
+                { x: 424, y: 257 },
+                { x: 476, y: 208 },
+              ],
+            },
+            {
+              label: "round the lower bowl to the left",
+              path: [
+                { x: 476, y: 208 },
+                { x: 483, y: 142 },
+                { x: 455, y: 83 },
+                { x: 403, y: 43 },
+                { x: 339, y: 28 },
+                { x: 272, y: 24 },
+                { x: 206, y: 30 },
+                { x: 142, y: 47 },
+                { x: 80, y: 72 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ട"),
+    },
+  ],
+  // Thooval's DA.png climbs from the left foot clockwise over the top and
+  // curves in to the middle tip (blue), then runs back right and round
+  // the lower bowl to finish at its lower-left end. In the Noto outline the
+  // two bowls share one band in the middle, so the path retraces it.
+  [
+    "malayalam:ദ",
+    {
+      script: "malayalam",
+      glyph: "ദ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb clockwise over the top",
+              path: [
+                { x: 112, y: 49 },
+                { x: 102, y: 118 },
+                { x: 100, y: 188 },
+                { x: 100, y: 257 },
+                { x: 108, y: 326 },
+                { x: 132, y: 392 },
+                { x: 174, y: 447 },
+                { x: 226, y: 493 },
+                { x: 290, y: 520 },
+                { x: 359, y: 525 },
+                { x: 429, y: 524 },
+                { x: 494, y: 501 },
+                { x: 540, y: 449 },
+              ],
+            },
+            {
+              label: "curve in to the middle tip",
+              path: [
+                { x: 540, y: 449 },
+                { x: 542, y: 374 },
+                { x: 496, y: 315 },
+                { x: 432, y: 277 },
+                { x: 356, y: 277 },
+              ],
+            },
+            {
+              label: "retrace and round the lower bowl",
+              path: [
+                { x: 356, y: 277 },
+                { x: 424, y: 277 },
+                { x: 485, y: 248 },
+                { x: 537, y: 205 },
+                { x: 556, y: 141 },
+                { x: 536, y: 78 },
+                { x: 483, y: 36 },
+                { x: 416, y: 25 },
+                { x: 348, y: 29 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ദ"),
+    },
+  ],
+  // Thooval's HA.png climbs over the small arch to the line, runs right
+  // along the base, climbs the left side of the big loop and sweeps
+  // clockwise over it to finish at its right foot.
+  [
+    "malayalam:ഹ",
+    {
+      script: "malayalam",
+      glyph: "ഹ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb over the small arch",
+              path: [
+                { x: 124, y: 47 },
+                { x: 85, y: 107 },
+                { x: 76, y: 177 },
+                { x: 98, y: 244 },
+                { x: 151, y: 292 },
+                { x: 220, y: 307 },
+                { x: 291, y: 302 },
+                { x: 349, y: 261 },
+                { x: 381, y: 198 },
+                { x: 381, y: 127 },
+                { x: 360, y: 59 },
+              ],
+            },
+            {
+              label: "run right along the base",
+              path: [
+                { x: 360, y: 59 },
+                { x: 417, y: 35 },
+                { x: 484, y: 35 },
+                { x: 551, y: 35 },
+                { x: 618, y: 35 },
+                { x: 680, y: 55 },
+              ],
+            },
+            {
+              label: "climb the left side of the loop",
+              path: [
+                { x: 680, y: 55 },
+                { x: 648, y: 116 },
+                { x: 617, y: 177 },
+                { x: 603, y: 244 },
+                { x: 601, y: 313 },
+                { x: 618, y: 379 },
+                { x: 652, y: 439 },
+              ],
+            },
+            {
+              label: "sweep over and down to the foot",
+              path: [
+                { x: 652, y: 439 },
+                { x: 702, y: 486 },
+                { x: 764, y: 516 },
+                { x: 832, y: 527 },
+                { x: 900, y: 528 },
+                { x: 966, y: 510 },
+                { x: 1025, y: 474 },
+                { x: 1068, y: 421 },
+                { x: 1096, y: 358 },
+                { x: 1104, y: 290 },
+                { x: 1103, y: 221 },
+                { x: 1083, y: 155 },
+                { x: 1048, y: 96 },
+                { x: 1000, y: 47 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ഹ"),
+    },
+  ],
+  // Thooval's GA.png starts at the top of the left bowl and curves
+  // counterclockwise down round it, climbs the middle stem and sweeps
+  // clockwise over the right arch to its foot.
+  [
+    "malayalam:ഗ",
+    {
+      script: "malayalam",
+      glyph: "ഗ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "curve down around the left bowl",
+              path: [
+                { x: 183, y: 504 },
+                { x: 140, y: 453 },
+                { x: 107, y: 394 },
+                { x: 90, y: 329 },
+                { x: 86, y: 262 },
+                { x: 88, y: 195 },
+                { x: 109, y: 131 },
+                { x: 149, y: 78 },
+                { x: 203, y: 38 },
+                { x: 269, y: 28 },
+                { x: 336, y: 32 },
+                { x: 395, y: 64 },
+              ],
+            },
+            {
+              label: "climb the middle stem",
+              path: [
+                { x: 395, y: 64 },
+                { x: 429, y: 118 },
+                { x: 443, y: 181 },
+                { x: 447, y: 245 },
+                { x: 447, y: 309 },
+                { x: 452, y: 374 },
+                { x: 467, y: 436 },
+              ],
+            },
+            {
+              label: "sweep over the right arch to its foot",
+              path: [
+                { x: 467, y: 436 },
+                { x: 506, y: 490 },
+                { x: 564, y: 522 },
+                { x: 631, y: 528 },
+                { x: 697, y: 515 },
+                { x: 748, y: 471 },
+                { x: 789, y: 418 },
+                { x: 808, y: 353 },
+                { x: 811, y: 286 },
+                { x: 808, y: 219 },
+                { x: 787, y: 155 },
+                { x: 753, y: 97 },
+                { x: 707, y: 48 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ഗ"),
+    },
+  ],
+  // Thooval's RRA.png is one arch: from the left foot up the left side and
+  // clockwise over the top, down to the right foot.
+  [
+    "malayalam:റ",
+    {
+      script: "malayalam",
+      glyph: "റ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb the left side",
+              path: [
+                { x: 191, y: 47 },
+                { x: 138, y: 102 },
+                { x: 102, y: 168 },
+                { x: 87, y: 242 },
+                { x: 87, y: 318 },
+                { x: 107, y: 391 },
+              ],
+            },
+            {
+              label: "arch over and down to the foot",
+              path: [
+                { x: 107, y: 391 },
+                { x: 144, y: 447 },
+                { x: 195, y: 492 },
+                { x: 257, y: 519 },
+                { x: 324, y: 527 },
+                { x: 392, y: 526 },
+                { x: 457, y: 507 },
+                { x: 513, y: 469 },
+                { x: 556, y: 416 },
+                { x: 581, y: 353 },
+                { x: 587, y: 286 },
+                { x: 585, y: 218 },
+                { x: 566, y: 153 },
+                { x: 531, y: 96 },
+                { x: 483, y: 47 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("റ"),
+    },
+  ],
+  // Thooval's LA.png starts on the middle bar (green), draws it to the
+  // right, climbs and arches back counterclockwise over the top, descends
+  // the left side, runs right along the base and climbs the upright.
+  [
+    "malayalam:ല",
+    {
+      script: "malayalam",
+      glyph: "ല",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the middle bar to the right",
+              path: [
+                { x: 123, y: 256 },
+                { x: 198, y: 256 },
+                { x: 273, y: 256 },
+                { x: 348, y: 256 },
+                { x: 423, y: 256 },
+                { x: 495, y: 272 },
+              ],
+            },
+            {
+              label: "climb and arch back over the top",
+              path: [
+                { x: 495, y: 272 },
+                { x: 499, y: 340 },
+                { x: 491, y: 407 },
+                { x: 460, y: 467 },
+                { x: 409, y: 511 },
+                { x: 343, y: 528 },
+                { x: 275, y: 530 },
+                { x: 209, y: 514 },
+                { x: 156, y: 473 },
+                { x: 119, y: 416 },
+              ],
+            },
+            {
+              label: "descend the left side",
+              path: [
+                { x: 119, y: 416 },
+                { x: 107, y: 343 },
+                { x: 109, y: 269 },
+                { x: 107, y: 196 },
+                { x: 107, y: 122 },
+                { x: 111, y: 48 },
+              ],
+            },
+            {
+              label: "run right along the base",
+              path: [
+                { x: 111, y: 48 },
+                { x: 179, y: 36 },
+                { x: 249, y: 36 },
+                { x: 320, y: 36 },
+                { x: 390, y: 36 },
+                { x: 460, y: 36 },
+                { x: 531, y: 36 },
+                { x: 601, y: 36 },
+                { x: 671, y: 36 },
+                { x: 739, y: 48 },
+              ],
+            },
+            {
+              label: "climb the upright to the top",
+              path: [
+                { x: 739, y: 48 },
+                { x: 743, y: 114 },
+                { x: 743, y: 180 },
+                { x: 743, y: 247 },
+                { x: 747, y: 313 },
+                { x: 747, y: 379 },
+                { x: 747, y: 446 },
+                { x: 747, y: 512 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ല"),
+    },
+  ],
+  // Thooval's SHA.png begins like ഗ, down round the left bowl and up the
+  // middle stem, then sweeps over the top and down the right side, rounds
+  // the base and curls up inside the right loop to finish (red).
+  [
+    "malayalam:ശ",
+    {
+      script: "malayalam",
+      glyph: "ശ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "curve down around the left bowl",
+              path: [
+                { x: 183, y: 504 },
+                { x: 140, y: 453 },
+                { x: 107, y: 394 },
+                { x: 90, y: 329 },
+                { x: 86, y: 262 },
+                { x: 88, y: 195 },
+                { x: 109, y: 131 },
+                { x: 149, y: 78 },
+                { x: 203, y: 38 },
+                { x: 269, y: 28 },
+                { x: 336, y: 32 },
+                { x: 395, y: 64 },
+              ],
+            },
+            {
+              label: "climb the middle stem",
+              path: [
+                { x: 395, y: 64 },
+                { x: 433, y: 129 },
+                { x: 445, y: 204 },
+                { x: 447, y: 280 },
+                { x: 455, y: 356 },
+                { x: 479, y: 428 },
+              ],
+            },
+            {
+              label: "sweep over and down the right side",
+              path: [
+                { x: 479, y: 428 },
+                { x: 524, y: 480 },
+                { x: 584, y: 515 },
+                { x: 652, y: 527 },
+                { x: 722, y: 528 },
+                { x: 790, y: 514 },
+                { x: 852, y: 483 },
+                { x: 902, y: 435 },
+                { x: 936, y: 375 },
+                { x: 948, y: 307 },
+                { x: 959, y: 239 },
+                { x: 953, y: 170 },
+                { x: 931, y: 104 },
+              ],
+            },
+            {
+              label: "round the base and curl up inside",
+              path: [
+                { x: 931, y: 104 },
+                { x: 885, y: 55 },
+                { x: 824, y: 27 },
+                { x: 756, y: 26 },
+                { x: 696, y: 55 },
+                { x: 655, y: 108 },
+                { x: 639, y: 173 },
+                { x: 641, y: 241 },
+                { x: 665, y: 304 },
+                { x: 714, y: 350 },
+                { x: 779, y: 367 },
+                { x: 845, y: 359 },
+                { x: 907, y: 332 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ശ"),
+    },
+  ],
+  // Thooval's BA.png begins like ണ, round the small loop and over the big
+  // left arch, down the stem to the line (blue) and back up it; then it
+  // rounds the right arch down into the base, runs right and climbs the
+  // upright to its top.
+  [
+    "malayalam:ബ",
+    {
+      script: "malayalam",
+      glyph: "ബ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "circle the small inner loop",
+              path: [
+                { x: 186, y: 284 },
+                { x: 255, y: 288 },
+                { x: 320, y: 268 },
+                { x: 359, y: 212 },
+                { x: 362, y: 143 },
+                { x: 346, y: 78 },
+                { x: 293, y: 34 },
+                { x: 225, y: 24 },
+                { x: 160, y: 47 },
+                { x: 114, y: 98 },
+                { x: 91, y: 163 },
+                { x: 90, y: 232 },
+              ],
+            },
+            {
+              label: "climb over the big left arch",
+              path: [
+                { x: 90, y: 232 },
+                { x: 90, y: 300 },
+                { x: 105, y: 366 },
+                { x: 138, y: 425 },
+                { x: 185, y: 474 },
+                { x: 244, y: 508 },
+                { x: 309, y: 525 },
+                { x: 377, y: 528 },
+                { x: 444, y: 518 },
+                { x: 502, y: 484 },
+                { x: 550, y: 436 },
+              ],
+            },
+            {
+              label: "descend the stem to the line",
+              path: [
+                { x: 550, y: 436 },
+                { x: 566, y: 373 },
+                { x: 566, y: 307 },
+                { x: 566, y: 240 },
+                { x: 566, y: 173 },
+                { x: 566, y: 107 },
+                { x: 566, y: 40 },
+              ],
+            },
+            {
+              label: "climb back up over the right arch",
+              path: [
+                { x: 566, y: 40 },
+                { x: 566, y: 110 },
+                { x: 566, y: 181 },
+                { x: 566, y: 251 },
+                { x: 566, y: 322 },
+                { x: 566, y: 392 },
+                { x: 592, y: 454 },
+                { x: 643, y: 502 },
+                { x: 708, y: 526 },
+                { x: 778, y: 526 },
+                { x: 843, y: 501 },
+                { x: 892, y: 450 },
+                { x: 923, y: 387 },
+                { x: 934, y: 318 },
+                { x: 938, y: 248 },
+              ],
+            },
+            {
+              label: "curve down and run along the base",
+              path: [
+                { x: 938, y: 248 },
+                { x: 922, y: 183 },
+                { x: 893, y: 122 },
+                { x: 864, y: 62 },
+                { x: 919, y: 36 },
+                { x: 986, y: 36 },
+                { x: 1054, y: 36 },
+                { x: 1121, y: 36 },
+                { x: 1186, y: 48 },
+              ],
+            },
+            {
+              label: "climb the upright to the top",
+              path: [
+                { x: 1186, y: 48 },
+                { x: 1190, y: 114 },
+                { x: 1190, y: 180 },
+                { x: 1190, y: 247 },
+                { x: 1190, y: 313 },
+                { x: 1190, y: 379 },
+                { x: 1190, y: 446 },
+                { x: 1190, y: 512 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ബ"),
+    },
+  ],
 ];

@@ -774,6 +774,9 @@ domain boundaries instead of crossing domain labels. Theme/config overrides,
 organic seeded boundary waviness, and exact cliff styling remain unsupported at
 the partial level. Confusion domains follow Mermaid's three-item display cap
 and lower any hidden count to a backend-neutral `+N more` badge.
+Positive `width` and `height` plus non-negative `padding` values from Mermaid
+init directives or YAML front matter survive semantic IR and control the inner
+framework and outer canvas dimensions during deterministic layout.
 
 ### TreeView Native Slice
 

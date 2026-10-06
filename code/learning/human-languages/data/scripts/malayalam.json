@@ -326,8 +326,18 @@
       "components": [
         "ഗ  ga — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "curve down around the left bowl",
+        "without lifting, climb the middle stem",
+        "without lifting, sweep over the right arch to its foot"
+      ],
+      "strokeOrderNote": "Three visible movements in one continuous pen-down run: down round the left bowl, up the middle stem, and over the right arch to its foot. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for ഗ in data/GA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/GA.png",
+        "variation": "Thooval's GA.png starts at the top of the left bowl (green), curves counterclockwise down round it, climbs the middle stem and sweeps clockwise over the right arch to finish at its foot (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record ഗ as one stroke from the upper left to the lower right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 107 unique samples jumps between consecutive points the way a lift would; they most often start at the upper left (86 of 107) and end at the lower right (85 of 107). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms."
+      }
     },
     {
       "glyph": "ഗാ",
@@ -1566,8 +1576,18 @@
       "components": [
         "ട  ṭa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "curve left over the top and down",
+        "without lifting, swing right through the middle",
+        "without lifting, round the lower bowl to the left"
+      ],
+      "strokeOrderNote": "Three visible movements in one continuous pen-down run: left over the top, right through the middle, and round the lower bowl to the left. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for ട in data/TTA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/TTA.png",
+        "variation": "Thooval's TTA.png starts at the top-right tip (green), curves left over the top and down, swings right through the middle and rounds the lower bowl to finish at the lower-left tail (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record ട as one stroke from the upper right to the lower left. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 34 unique samples jumps between consecutive points the way a lift would; they most often start at the upper right (30 of 34) and end at the lower left (32 of 34). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms."
+      }
     },
     {
       "glyph": "ടാ",
@@ -2186,8 +2206,21 @@
       "components": [
         "ണ  ṇa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "circle the small inner loop",
+        "without lifting, climb over the big left arch",
+        "without lifting, descend the first stem",
+        "without lifting, climb back up over the middle arch",
+        "without lifting, descend the second stem",
+        "without lifting, climb back up and round the right arch"
+      ],
+      "strokeOrderNote": "Six visible movements in one continuous pen-down run: round the small loop, over the big arch, down and back up each stem in turn, and over the right arch to its foot. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for ണ in data/NNA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/NNA.png",
+        "variation": "Thooval's NNA.png starts inside the small loop (green) and circles it clockwise into the big left arch, runs down the first stem to the line (blue turn), climbs it again and arches over to the second stem, down to the line (blue turn) and back up, and sweeps over the right arch to finish at its foot (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record ണ as one stroke from the middle left to the lower right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 34 unique samples jumps between consecutive points the way a lift would; they most often start at the middle left (24 of 34) and end at the lower right (33 of 34). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms; each climb back up a stem retraces the ink just drawn."
+      }
     },
     {
       "glyph": "ണാ",
@@ -2341,8 +2374,19 @@
       "components": [
         "ത  ta — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb clockwise over the left arch",
+        "without lifting, cross down the middle loop",
+        "without lifting, round its base and climb back up",
+        "without lifting, sweep over the right arch to its foot"
+      ],
+      "strokeOrderNote": "Four visible movements in one continuous pen-down run: the left arch, down and round the middle loop, and over the right arch to its foot. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for ത in data/TA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/TA.png",
+        "variation": "Thooval's TA.png starts at the left foot (green), climbs clockwise over the left arch, crosses down the right side of the middle loop, rounds its base, climbs its left side back through the crossing and sweeps over the right arch to finish at the right foot (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record ത as one stroke from the lower left to the lower right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 34 unique samples jumps between consecutive points the way a lift would; they most often start at the lower left (21 of 34) and end at the lower right (34 of 34). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms."
+      }
     },
     {
       "glyph": "താ",
@@ -2651,8 +2695,18 @@
       "components": [
         "ദ  da — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb clockwise over the top",
+        "without lifting, curve in to the middle tip",
+        "without lifting, retrace and round the lower bowl"
+      ],
+      "strokeOrderNote": "Three visible movements in one continuous pen-down run: over the top, in to the middle tip, and back round the lower bowl. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for ദ in data/DA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/DA.png",
+        "variation": "Thooval's DA.png starts at the left foot (green), climbs clockwise over the top and curves in to the middle tip (blue turn), then runs back right and round the lower bowl to finish at its lower-left end (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record ദ as one stroke from the lower left to the lower centre. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 34 unique samples jumps between consecutive points the way a lift would; they most often start at the lower left (33 of 34) and end at the lower centre (30 of 34). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms; in that outline the two bowls share one band in the middle, so the turn at the tip retraces it."
+      }
     },
     {
       "glyph": "ദാ",
@@ -2961,8 +3015,19 @@
       "components": [
         "ന  na — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb clockwise over the left arch",
+        "without lifting, descend the stem to the line",
+        "without lifting, retrace the stem upward",
+        "without lifting, sweep over the right arch to its foot"
+      ],
+      "strokeOrderNote": "Four visible movements in one continuous pen-down run: the left arch, down the stem, back up it, and over the right arch to its foot. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for ന in data/NA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/NA.png",
+        "variation": "Thooval's NA.png starts at the foot of the left arch (green), climbs clockwise over it and runs down the stem to the line, where a blue dot marks the turn; the pen climbs the stem again and sweeps clockwise over the right arch to finish at its foot (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record ന as one stroke from the lower left to the lower right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 34 unique samples jumps between consecutive points the way a lift would; they most often start at the lower left (32 of 34) and end at the lower right (34 of 34). Sriveenkat's Commons animation of the chillu ൻ lifts once at the foot of its stem; for the full consonant both recorded sources run on, and Thooval turns back up the stem there. The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms; the climb back up the stem retraces the ink just drawn."
+      }
     },
     {
       "glyph": "നാ",
@@ -3116,8 +3181,18 @@
       "components": [
         "പ  pa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb over the small arch",
+        "without lifting, run right along the base",
+        "without lifting, climb the upright to the top"
+      ],
+      "strokeOrderNote": "Three visible movements in one continuous pen-down run: over the small arch, along the base and up the upright. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for പ in data/PA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/PA.png",
+        "variation": "Thooval's PA.png starts at the left foot (green), climbs over the small arch, comes down to the line, runs right along the base and climbs the upright to finish at its top (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record പ as one stroke from the lower left to the upper right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 37 unique samples jumps between consecutive points the way a lift would; they most often start at the lower left (34 of 37) and end at the upper right (37 of 37). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms."
+      }
     },
     {
       "glyph": "പാ",
@@ -3426,8 +3501,21 @@
       "components": [
         "ബ  ba — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "circle the small inner loop",
+        "without lifting, climb over the big left arch",
+        "without lifting, descend the stem to the line",
+        "without lifting, climb back up over the right arch",
+        "without lifting, curve down and run along the base",
+        "without lifting, climb the upright to the top"
+      ],
+      "strokeOrderNote": "Six visible movements in one continuous pen-down run: round the small loop, over the big arch, down the stem and back up, round the right arch into the base, and up the upright. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for ബ in data/BA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/BA.png",
+        "variation": "Thooval's BA.png starts inside the small loop (green) and circles it clockwise into the big left arch, runs down the stem to the line (blue turn), climbs it again, rounds the right arch down into the base, runs right along it and climbs the upright to finish at its top (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record ബ as one stroke from the middle left to the upper right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 37 unique samples jumps between consecutive points the way a lift would; they most often start at the middle left (28 of 37) and end at the upper right (36 of 37). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms; the climb back up the stem retraces the ink just drawn."
+      }
     },
     {
       "glyph": "ബാ",
@@ -3736,8 +3824,19 @@
       "components": [
         "മ  ma — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left side and arch over",
+        "without lifting, curve down the inner stroke",
+        "without lifting, run right along the base",
+        "without lifting, climb the right side to the top"
+      ],
+      "strokeOrderNote": "Four visible movements in one continuous pen-down run: up the left side and over the top, down the inner stroke, along the base and up the right side. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for മ in data/MA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/MA.png",
+        "variation": "Thooval's MA.png starts at the bottom left (green), climbs the left side and arches clockwise over the top, curves down the inner stroke to the bottom-left corner, runs right along the base and climbs the right side to finish at the top (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record മ as one stroke from the middle left to the upper right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 37 unique samples jumps between consecutive points the way a lift would; they most often start at the lower left (30 of 37) and end at the upper right (30 of 37). Omniglot's 20 non-native copyists most often used two strokes (8 of 20; one stroke 4, three 7). Copyists over-count, and both recordings run on, so one run is kept. The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms; the last climb ends on the arch's ink where the right side meets it."
+      }
     },
     {
       "glyph": "മാ",
@@ -4046,8 +4145,18 @@
       "components": [
         "ര  ra — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb clockwise over the top",
+        "without lifting, descend the right side",
+        "without lifting, curl up around the inner loop"
+      ],
+      "strokeOrderNote": "Three visible movements in one continuous pen-down run: over the top, down the right side, and round and up the inner loop. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for ര in data/RA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/RA.png",
+        "variation": "Thooval's RA.png starts at the left foot (green), climbs clockwise over the top, descends the right side, runs left along the bottom and curls up the inner loop to finish at its top (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record ര as one stroke from the lower left to the upper right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 31 unique samples jumps between consecutive points the way a lift would; they most often start at the lower left (28 of 31) and end at the upper right (18 of 31). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms; in that outline the inner loop's top runs into the right side, so the path ends where they meet."
+      }
     },
     {
       "glyph": "രാ",
@@ -4201,8 +4310,20 @@
       "components": [
         "ല  la — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "draw the middle bar to the right",
+        "without lifting, climb and arch back over the top",
+        "without lifting, descend the left side",
+        "without lifting, run right along the base",
+        "without lifting, climb the upright to the top"
+      ],
+      "strokeOrderNote": "Five visible movements in one continuous pen-down run: the middle bar, back over the top, down the left side, along the base and up the upright. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for ല in data/LA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/LA.png",
+        "variation": "Thooval's LA.png starts on the middle bar (green), draws it to the right, climbs and arches back counterclockwise over the top, descends the left side, runs right along the base and climbs the upright to finish at its top (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record ല as one stroke from the middle left to the upper right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 31 unique samples jumps between consecutive points the way a lift would; they most often start at the middle left (28 of 31) and end at the upper right (30 of 31). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms; the descent of the left side passes the bar's start."
+      }
     },
     {
       "glyph": "ലാ",
@@ -4356,8 +4477,18 @@
       "components": [
         "വ  va — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb clockwise over the arch",
+        "without lifting, run right along the base",
+        "without lifting, climb the upright to the top"
+      ],
+      "strokeOrderNote": "Three visible movements in one continuous pen-down run: over the arch, along the base and up the upright. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for വ in data/VA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/VA.png",
+        "variation": "Thooval's VA.png starts at the left foot (green), climbs clockwise over the tall arch, comes down to the line, runs right along the base and climbs the upright to finish at its top (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record വ as one stroke from the lower left to the upper right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 31 unique samples jumps between consecutive points the way a lift would; they most often start at the lower left (28 of 31) and end at the upper right (31 of 31). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms."
+      }
     },
     {
       "glyph": "വാ",
@@ -4511,8 +4642,19 @@
       "components": [
         "ശ  śa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "curve down around the left bowl",
+        "without lifting, climb the middle stem",
+        "without lifting, sweep over and down the right side",
+        "without lifting, round the base and curl up inside"
+      ],
+      "strokeOrderNote": "Four visible movements in one continuous pen-down run: down round the left bowl, up the middle stem, over and down the right side, and round and up inside the right loop. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for ശ in data/SHA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/SHA.png",
+        "variation": "Thooval's SHA.png starts at the top of the left bowl (green), curves counterclockwise down round it, climbs the middle stem, sweeps over the top and down the right side, rounds the base and curls up inside the right loop to finish (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record ശ as one stroke from the upper left to the upper right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 31 unique samples jumps between consecutive points the way a lift would; they most often start at the upper left (23 of 31) and end at the upper right (27 of 31). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms; in that outline the inner loop's top runs into the right side, so the path ends where they meet."
+      }
     },
     {
       "glyph": "ശാ",
@@ -4666,8 +4808,21 @@
       "components": [
         "ഷ  ṣa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb over the small arch",
+        "without lifting, run right along the base",
+        "without lifting, climb the right upright",
+        "without lifting, slant down to the left",
+        "without lifting, circle the loop",
+        "without lifting, descend the stem to the line"
+      ],
+      "strokeOrderNote": "Six visible movements in one continuous pen-down run: over the small arch, along the base, up the upright, down the slant, round the loop and down the stem. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for ഷ in data/SSA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/SSA.png",
+        "variation": "Thooval's SSA.png starts at the foot of the small arch (green), climbs over it to the line, runs right along the base, climbs the right upright, slants down to the left into the loop, circles it and runs straight down the stem to finish on the line (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record ഷ as one stroke from the lower left to the lower centre. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 31 unique samples jumps between consecutive points the way a lift would; they most often start at the lower left (21 of 31) and end at the lower right (16 of 31). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms; the slant meets the loop at the stem, and the stem's descent finishes the letter."
+      }
     },
     {
       "glyph": "ഷാ",
@@ -4821,8 +4976,20 @@
       "components": [
         "സ  sa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb clockwise over the left arch",
+        "without lifting, descend the stem to the line",
+        "without lifting, retrace the stem upward",
+        "without lifting, sweep over the middle arch and down",
+        "without lifting, round the bowl and up to the top"
+      ],
+      "strokeOrderNote": "Five visible movements in one continuous pen-down run: the left arch, down the stem and back up it, then over the middle arch, round the bowl and up to the top-right tip. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for സ in data/SA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/SA.png",
+        "variation": "Thooval's SA.png starts at the foot of the left arch (green), climbs clockwise over it and runs down the stem to the line (blue turn), climbs the stem again, sweeps over the middle arch, down and round the bowl, and up to the top-right tip (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record സ as one stroke from the lower left to the upper right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 31 unique samples jumps between consecutive points the way a lift would; they most often start at the lower left (26 of 31) and end at the upper right (31 of 31). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms; the climb back up the stem retraces the ink just drawn."
+      }
     },
     {
       "glyph": "സാ",
@@ -4976,8 +5143,19 @@
       "components": [
         "ഹ  ha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb over the small arch",
+        "without lifting, run right along the base",
+        "without lifting, climb the left side of the loop",
+        "without lifting, sweep over and down to the foot"
+      ],
+      "strokeOrderNote": "Four visible movements in one continuous pen-down run: over the small arch, along the base, and up and over the big loop to its foot. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for ഹ in data/HA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/HA.png",
+        "variation": "Thooval's HA.png starts at the left foot (green), climbs over the small arch to the line, runs right along the base, climbs the left side of the big loop and sweeps clockwise over it to finish at its right foot (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record ഹ as one stroke from the lower left to the lower right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 31 unique samples jumps between consecutive points the way a lift would; they most often start at the lower left (27 of 31) and end at the lower right (31 of 31). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms."
+      }
     },
     {
       "glyph": "ഹാ",
@@ -5286,8 +5464,17 @@
       "components": [
         "റ  ṟa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left side",
+        "without lifting, arch over and down to the foot"
+      ],
+      "strokeOrderNote": "Two visible movements in one continuous pen-down run: up the left side and over the arch to the right foot. Thooval keeps the pen down by design; two recorded sources that could show a lift show none.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "SPACE Kerala (Melwin Sunny and Shaiju T), Thooval Malayalam alphabet learning tool, formation arrows for റ in data/RRA.png: green start, blue turn, red end (GPL-3.0, 2013)",
+        "url": "https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/RRA.png",
+        "variation": "Thooval's RRA.png starts at the left foot (green), climbs the left side and arches clockwise over the top, down to finish at the right foot (red). Thooval is a GPL-3.0 teaching tool, so only these facts are cited; no image, path or template point is copied. It asks the learner to keep the pen down to the end of every letter, so its single run is checked against two recorded sources that could have shown a lift. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record റ as one stroke from the lower left to the lower right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 31 unique samples jumps between consecutive points the way a lift would; they most often start at the lower left (30 of 31) and end at the lower right (28 of 31). The path is fitted to the bundled Noto Sans Malayalam outline rather than to Thooval's letterforms."
+      }
     },
     {
       "glyph": "റാ",

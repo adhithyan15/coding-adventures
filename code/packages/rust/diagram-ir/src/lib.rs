@@ -1807,8 +1807,13 @@ pub struct LayoutedWardleyDiagram { pub width: f64, pub height: f64, pub title: 
 pub struct CynefinDomain { pub name: String, pub items: Vec<String> }
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct CynefinTransition { pub from: String, pub to: String, pub label: Option<String> }
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct CynefinDiagram { pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub domains: Vec<CynefinDomain>, pub transitions: Vec<CynefinTransition> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct CynefinConfig { pub width: f64, pub height: f64, pub padding: f64 }
+impl Default for CynefinConfig {
+    fn default() -> Self { Self { width: 800.0, height: 600.0, padding: 40.0 } }
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct CynefinDiagram { pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub config: CynefinConfig, pub domains: Vec<CynefinDomain>, pub transitions: Vec<CynefinTransition> }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedCynefinDomain { pub name: String, pub items: Vec<String>, pub overflow_count: usize, pub x: f64, pub y: f64, pub width: f64, pub height: f64, pub center: Point, pub confusion: bool }
 #[derive(Clone, Debug, PartialEq)]
