@@ -1306,9 +1306,9 @@ backend immediately) come before the enabler-dependent items.
   selector may choose direct formatter-safe real procedure results, including a
   result specialised through a real name formal when its actual is itself a
   selector-call-safe direct real procedure result, including through unary
-  signs, additive composition with finite static operands, or a real-valued
-  standard function. Provenance-backed local and other real-name branches
-  remain conservative across selector calls. Unary plus
+  signs, additive or multiplicative composition with finite static operands,
+  or a real-valued standard function. Provenance-backed local and other
+  real-name branches remain conservative across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The
