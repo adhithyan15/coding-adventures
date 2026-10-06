@@ -1303,12 +1303,12 @@ backend immediately) come before the enabler-dependent items.
   statements retain that provenance only when every reachable exit proves the
   same slot; conditional value expressions retain it when their selector has no
   procedure call and every reachable branch is independently proven. A calling
-  selector may choose direct formatter-safe real procedure results, including a
-  result specialised through a real name formal when its actual is itself a
-  selector-call-safe direct real procedure result, including through unary
-  signs, arithmetic composition with finite static operands, or a real-valued
-  standard function. Provenance-backed local and other real-name branches
-  remain conservative across selector calls. Unary plus
+  selector may choose selector-safe runtime-real expressions rooted in direct
+  formatter-safe real procedure results, including a result specialised through
+  a real name formal when its actual has the same proof. Unary signs, arithmetic
+  composition with finite static operands, and real-valued standard functions
+  preserve it. Provenance-backed local and other real-name branches remain
+  conservative across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The
