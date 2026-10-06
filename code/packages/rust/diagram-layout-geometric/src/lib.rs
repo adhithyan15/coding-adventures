@@ -9,7 +9,7 @@
 use std::collections::HashMap;
 use diagram_ir::{CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 const MARGIN: f64 = 20.0;
 
@@ -76,8 +76,9 @@ fn centroid(sets: &[String], centers: &HashMap<&str, (f64, f64)>) -> Option<(f64
 /// Lay out an Ishikawa causal tree as an alternating fishbone.
 pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> LayoutedIshikawaDiagram {
     let width = canvas_width.max(560.0); let height = (width * 0.58).max(360.0);
-    let spine_y = height / 2.0; let spine_from = Point { x: 36.0, y: spine_y };
-    let effect_width = 150.0; let effect_height = 58.0; let effect_x = width - effect_width - 20.0;
+    let padding = diagram.diagram_padding.min(width / 4.0).min(height / 4.0);
+    let spine_y = height / 2.0; let spine_from = Point { x: padding + 16.0, y: spine_y };
+    let effect_width = 150.0; let effect_height = 58.0; let effect_x = width - effect_width - padding;
     let spine_to = Point { x: effect_x, y: spine_y };
     let roots: Vec<_> = diagram.causes.iter().filter(|cause| cause.parent_id.is_none()).collect();
     let spacing = (spine_to.x - spine_from.x) / (roots.len() + 1).max(2) as f64;
@@ -85,7 +86,8 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
     for (index, cause) in roots.iter().enumerate() {
         let attach = Point { x: spine_from.x + spacing * (index + 1) as f64, y: spine_y };
         let sign = if index.is_multiple_of(2) { -1.0 } else { 1.0 };
-        let tip = Point { x: attach.x - spacing * 0.48, y: spine_y + sign * height * 0.32 };
+        let vertical_reach = ((height / 2.0 - padding) * 0.72).max(40.0);
+        let tip = Point { x: attach.x - spacing * 0.48, y: spine_y + sign * vertical_reach };
         bones.push(LayoutedIshikawaBone { from: tip.clone(), to: attach, label: cause.label.clone(),
             label_position: Point { x: tip.x + spacing * 0.24, y: (tip.y + spine_y) / 2.0 + sign * 42.0 }, depth: 1 });
         anchors.insert(&cause.id, tip);
@@ -221,7 +223,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.1.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.2.0"); }
 
     #[test]
     fn auto_size_includes_all_elements() {
@@ -295,10 +297,20 @@ mod tests {
         let diagram = IshikawaDiagram { effect: "Problem".into(), causes: vec![
             IshikawaCause { id: "a".into(), label: "A".into(), parent_id: None, depth: 1 },
             IshikawaCause { id: "b".into(), label: "B".into(), parent_id: None, depth: 1 },
-        ] };
+        ], diagram_padding: 20.0 };
         let layout = layout_ishikawa(&diagram, 640.0);
         assert!(layout.bones[0].from.y < layout.spine_from.y);
         assert!(layout.bones[1].from.y > layout.spine_from.y);
+
+        let mut padded = diagram.clone();
+        padded.diagram_padding = 64.0;
+        let padded_layout = layout_ishikawa(&padded, 640.0);
+        assert_eq!(padded_layout.spine_from.x, 80.0);
+        assert_eq!(padded_layout.width - (padded_layout.effect_x + padded_layout.effect_width), 64.0);
+        assert!(
+            (padded_layout.bones[0].from.y - padded_layout.spine_from.y).abs()
+                < (layout.bones[0].from.y - layout.spine_from.y).abs()
+        );
     }
 
 
