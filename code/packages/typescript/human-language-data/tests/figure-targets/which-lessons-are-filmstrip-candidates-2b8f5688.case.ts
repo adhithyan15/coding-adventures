@@ -25,9 +25,11 @@ describe("which lessons are filmstrip candidates", () => {
   it("only draws candidates from switched-on tracks, into that track's own book", () => {
     const candidates = filmstripCandidates([
       lesson("TA-S1"),
-      // Punjabi stands in for a track that is still switched off. (This was
-      // Bengali until Bengali's first cited letters switched it on.)
-      lesson("PA-S1", { language: "punjabi", headword: "ਅ" }),
+      // Spanish stands in for a track that is switched off: every track with
+      // a script of its own is now on, so a Latin-script track is the example.
+      // (This was Bengali, then Punjabi, until each one's first cited letters
+      // switched it on.)
+      lesson("ES-S1", { language: "spanish", headword: "ñ" }),
     ]);
     expect(candidates).toEqual([
       {
@@ -39,5 +41,6 @@ describe("which lessons are filmstrip candidates", () => {
       },
     ]);
     expect(Object.keys(DERIVED_FILMSTRIP_SCRIPTS)).toContain("tamil");
+    expect(Object.keys(DERIVED_FILMSTRIP_SCRIPTS)).not.toContain("spanish");
   });
 });

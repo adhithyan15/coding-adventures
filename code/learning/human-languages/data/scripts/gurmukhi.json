@@ -1,0 +1,945 @@
+{
+  "script": "gurmukhi",
+  "name": "Gurmukhi",
+  "font": "_fonts/NotoSansGurmukhi-Static.ttf",
+  "direction": "ltr",
+  "system": "abugida",
+  "signature": "A headline runs along the top of most letters, as in Devanagari, but the letters are rounder and simpler, with no conjunct stacks; three vowel bearers (ੳ ਅ ੲ) carry the independent vowels.",
+  "complete": false,
+  "combination": "A consonant carries an inherent vowel a (ਕ = ka). A vowel sign replaces it (ਨ + ਾ → ਨਾ = nā); ਿ is written in front of the consonant it follows in speech. Vowels with no consonant ride on a bearer (ਅ + ਾ → ਆ ā). Bindi and tippi nasalize a vowel, addak doubles the next consonant, and the dot below (਼) marks borrowed sounds (ਸ਼ sha). A headline runs along the top of a word, joining its letters.",
+  "notes": "The Punjabi track's own inventory: exactly the letters, signs and digits its lessons read (33 letters, 14 signs, 4 digits), each `sound` taken from that letter's own lesson romanization. It is not the whole alphabet (ੳ ੲ ਙ ਞ ਢ ਯ, the other six digits and the other nukta letters are not yet read), so `complete` is false. Stroke order is source-gated: only rows with `penLifts` and `strokeOrderSource` carry a cited order, from the Apache-2.0 tracing lesson of GNPS's Gurmukhi Sikho app (order, start, direction and lifts only; no checkpoint is copied), with Omniglot copyists' counts and shares as corroboration. Rows without them are recognition-only: `strokeOrder: []` means NOT VERIFIED, never none. The vowel signs, bindi, tippi, addak, halant and the dot below have no stroke-order source yet, so they stay undrawn; ਝ and ਧ, which the source covers, are left for a later batch because no lesson would print them yet.",
+  "letters": [
+    {
+      "glyph": "ਅ",
+      "sound": "a",
+      "role": "independent-vowel",
+      "components": [
+        "the left part of the top bar, turning down",
+        "a loop on the left",
+        "a peak and a middle stroke",
+        "a lower loop",
+        "a bar across to the stem",
+        "the right part of the top bar and the stem"
+      ],
+      "strokeOrder": [
+        "start at the top left and curve down",
+        "loop round the left tail",
+        "rise to the peak",
+        "come down the middle",
+        "loop round the lower tail",
+        "run right to the stem",
+        "lift, then run left along the top",
+        "turn down the stem"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਅ (airhaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 62, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L62",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਅ in two pen-down strokes. The first starts at the top left, runs right along the left part of the bar and turns down, then turns clockwise through about two full turns as it crosses the letter, ending where the body meets the stem; the second starts at the top right, runs left along the bar's right part and turns down the stem to its foot. In the bundled Noto Sans Gurmukhi outline this letter's top bar is split, with a gap above the body, and the source draws no separate headline: the first stroke opens along the bar's left part and the last stroke opens by running right to left along its right part before turning down the stem. The outline and the source agree, so there is no headline stroke to place first or last. The outline prints both loops as solid tails, so the path loops clockwise inside each. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਅ, each by a different non-native copyist; only counts and shares are cited. 65% (13 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 90% (18 of 20) start in the same part of the letter as the source and 55% (11 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਆ",
+      "sound": "ā",
+      "role": "independent-vowel",
+      "components": [
+        "ਆ  ā — independent vowel (no consonant to ride)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ਇ",
+      "sound": "i",
+      "role": "independent-vowel",
+      "components": [
+        "ਇ  i — independent vowel (no consonant to ride)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ਈ",
+      "sound": "ī",
+      "role": "independent-vowel",
+      "components": [
+        "ਈ  ī — independent vowel (no consonant to ride)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ਉ",
+      "sound": "u",
+      "role": "independent-vowel",
+      "components": [
+        "ਉ  u — independent vowel (no consonant to ride)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ਸ",
+      "sound": "sa",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a left arm with a loop at its foot",
+        "a bar to the stem",
+        "the stem on the right"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the left arm",
+        "loop round the tail",
+        "draw the bar to the stem",
+        "lift, then come down the stem"
+      ],
+      "strokeOrderNote": "Three pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਸ (sassaa) checkpoints, strokes 1–3 (lib/data/lessons/lesson_tracing.dart line 127, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L127",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਸ in three pen-down strokes: the headline from left to right; then from the top left down the left arm, clockwise round the loop and on to the right, ending where the bar meets the stem; then the stem from the top down. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. The outline prints the loop as a solid tail, so the path loops clockwise inside it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਸ, each by a different non-native copyist; only counts and shares are cited. 45% (9 of 20) draw it in three strokes, the source's count and their most common one. For the first stroke of the body, 50% (10 of 20) start in the same part of the letter as the source and 90% (18 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਹ",
+      "sound": "ha",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "the stem on the right",
+        "a round base",
+        "a left side curving over to an open end"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the stem",
+        "round the base and up the left side",
+        "curve over to the right"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਹ (haahaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 157, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L157",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਹ in two pen-down strokes: the headline from left to right; then from the top right down the stem, clockwise round the base and up the left side, ending in the upper middle at the open end. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਹ, each by a different non-native copyist; only counts and shares are cited. 85% (17 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 70% (14 of 20) start in the same part of the letter as the source and 95% (19 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਕ",
+      "sound": "ka",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a stem hanging from the right",
+        "a round loop on the left",
+        "a foot running down to the right"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the stem",
+        "loop round the bowl clockwise",
+        "run down to the foot"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਕ (kakkaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 190, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L190",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਕ in two pen-down strokes: the headline from left to right; then from the top right down the stem, clockwise round the loop, and down to the foot at the bottom right. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਕ, each by a different non-native copyist; only counts and shares are cited. 95% (19 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 75% (15 of 20) start in the same part of the letter as the source and 100% (20 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਖ",
+      "sound": "kha",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the left part of the top bar, turning down the left side",
+        "a bowl round to the stem",
+        "a middle bar",
+        "the right part of the top bar and the stem"
+      ],
+      "strokeOrder": [
+        "start at the top left and curve down",
+        "round the bowl to the stem",
+        "lift, then draw the bar from left to right",
+        "lift, then run left along the top",
+        "turn down the stem"
+      ],
+      "strokeOrderNote": "Three pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਖ (khakhaa) checkpoints, strokes 1–3 (lib/data/lessons/lesson_tracing.dart line 218, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L218",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਖ in three pen-down strokes: from the top left along the bar's left part, down the left side and round the bowl to the stem; then the middle bar from left to right; then from the top right, left along the bar's right part and down the stem. In the bundled Noto Sans Gurmukhi outline this letter's top bar is split, with a gap above the body, and the source draws no separate headline: the first stroke opens along the bar's left part and the last stroke opens by running right to left along its right part before turning down the stem. The outline and the source agree, so there is no headline stroke to place first or last. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਖ, each by a different non-native copyist; only counts and shares are cited. 50% (10 of 20) draw it in three strokes, the source's count and their most common one. For the first stroke of the body, 85% (17 of 20) start in the same part of the letter as the source and 70% (14 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਗ",
+      "sound": "ga",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a middle stem",
+        "a bowl closed by a bar",
+        "the right stem"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the middle stem",
+        "round the bowl clockwise",
+        "close it along the bar to the stem",
+        "lift, then come down the right stem"
+      ],
+      "strokeOrderNote": "Three pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਗ (gaggaa) checkpoints, strokes 1–3 (lib/data/lessons/lesson_tracing.dart line 247, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L247",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਗ in three pen-down strokes: the headline from left to right; then from the top of the middle stem down, clockwise round the bowl and along its bar back to the stem, ending in the upper middle; then the right stem from the top down. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਗ, each by a different non-native copyist; only counts and shares are cited. 90% (18 of 20) draw it in three strokes, the source's count and their most common one. For the first stroke of the body, 50% (10 of 20) start in the same part of the letter as the source and 95% (19 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਘ",
+      "sound": "gha",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the left part of the top bar, turning down the left side",
+        "a left bowl",
+        "an upright in the middle",
+        "a right bowl",
+        "the right part of the top bar and the stem"
+      ],
+      "strokeOrder": [
+        "start at the top left and curve down",
+        "round the left bowl up to the middle",
+        "loop up the middle stroke and back",
+        "round the right bowl to the stem",
+        "lift, then run left along the top",
+        "turn down the stem"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਘ (ghaggaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 276, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L276",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਘ in two pen-down strokes: from the top left along the bar's left part, down and counterclockwise through the left bowl, the middle upright and the right bowl, ending on the right where the body meets the stem; then from the top right, left along the bar's right part and down the stem. In the bundled Noto Sans Gurmukhi outline this letter's top bar is split, with a gap above the body, and the source draws no separate headline: the first stroke opens along the bar's left part and the last stroke opens by running right to left along its right part before turning down the stem. The outline and the source agree, so there is no headline stroke to place first or last. The outline prints the middle upright as one solid shape, so the path loops up inside it counterclockwise and comes back down. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਘ, each by a different non-native copyist; only counts and shares are cited. 50% (10 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 90% (18 of 20) start in the same part of the letter as the source and 50% (10 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਚ",
+      "sound": "cha",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a stem on the right",
+        "a bowl",
+        "a knob on the left",
+        "a bar back to the stem"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the stem",
+        "round the bowl clockwise to the knob",
+        "loop round the knob",
+        "run right along the bar to the stem"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਚ (chachaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 346, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L346",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਚ in two pen-down strokes: the headline from left to right; then from the top right down the stem, clockwise round the bowl and the knob, and right along the bar, ending where the bar meets the stem. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. The outline prints the knob as a solid teardrop, so the path loops clockwise inside it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਚ, each by a different non-native copyist; only counts and shares are cited. 75% (15 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 75% (15 of 20) start in the same part of the letter as the source and 90% (18 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਛ",
+      "sound": "chha",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a short stem on the right",
+        "an upper bar curving down on the left",
+        "a lower bowl",
+        "a middle stroke inside the bowl"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the stem",
+        "run left along the bar and curve down",
+        "round the lower bowl clockwise",
+        "run back along the bowl's top",
+        "draw the middle stroke down"
+      ],
+      "strokeOrderNote": "Two pen-down strokes: the GNPS tracing lesson's order, with its three strokes joined on the ink to the Omniglot copyists' most common count, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਛ (chhachhaa) checkpoints, strokes 1–3 (lib/data/lessons/lesson_tracing.dart line 373, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L373",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਛ in three pen-down strokes: the headline from left to right; then from the top right down the short stem, left along the upper bar, down and clockwise round the lower bowl, ending on its left; then the middle stroke from the bowl's top down. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਛ, each by a different non-native copyist copying a printed letter; where the same dataset can be set beside native writers' pen data (HP Labs India's Devanagari and Bangla sets), the copyists use more strokes than those writers, so their counts are read here only as a ceiling on native lifts, and only counts and shares are cited. Even under that ceiling, 55% (11 of 20) draw ਛ in two strokes, their most common count; 30% (6 of 20) use the source's three. Those counts say how many strokes, not where they break, so this path keeps every stroke's order, start and direction and joins the last two strokes: after closing the bowl the pen runs back along its top to the head of the middle stroke and draws it down without a lift. For the first stroke of the body, 90% (18 of 20) of the copyists start in the same part of the letter as the source and 70% (14 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਜ",
+      "sound": "ja",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "the right stem",
+        "a bar with a knob on the left",
+        "the left stem"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the right stem",
+        "lift, then run left along the bar",
+        "loop round the knob",
+        "come down the left stem"
+      ],
+      "strokeOrderNote": "Three pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਜ (jajjaa) checkpoints, strokes 1–3 (lib/data/lessons/lesson_tracing.dart line 408, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L408",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਜ in three pen-down strokes: the headline from left to right; then the right stem from the top down; then from the stem, left along the bar, clockwise round the knob and down the left stem to the bottom left. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. The outline prints the knob as a solid teardrop, so the path loops clockwise inside it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਜ, each by a different non-native copyist; only counts and shares are cited. 55% (11 of 20) draw it in three strokes, the source's count and their most common one. For the first stroke of the body, 85% (17 of 20) start in the same part of the letter as the source and 90% (18 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਝ",
+      "sound": "jha",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "ਝ  jha — consonant (inherent “a”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ਟ",
+      "sound": "ṭa",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a short stem on the right",
+        "a curve to the left and down",
+        "a base swept to the right"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the stem",
+        "curve left and down the left side",
+        "round the base to the right"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਟ (tainkaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 509, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L509",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਟ in two pen-down strokes: the headline from left to right; then from the top right down the short stem, left and down the left side, and round the base to the bottom right. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਟ, each by a different non-native copyist; only counts and shares are cited. 90% (18 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 65% (13 of 20) start in the same part of the letter as the source and 100% (20 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਠ",
+      "sound": "ṭha",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a short stem in the middle",
+        "a round bowl hanging from it"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the stem",
+        "round the left side counterclockwise",
+        "climb the right side back to the stem"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਠ (thathaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 535, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L535",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਠ in two pen-down strokes: the headline from left to right; then from the top of the short stem down, counterclockwise round the bowl and back to where it began. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਠ, each by a different non-native copyist; only counts and shares are cited. 70% (14 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 100% (20 of 20) start in the same part of the letter as the source and 100% (20 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਡ",
+      "sound": "ḍa",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a stem curving down to the left",
+        "a knob on the left",
+        "a right side round to the base",
+        "a lower loop"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down and curve left",
+        "loop round the knob",
+        "round the right side down to the base",
+        "loop round the lower bowl"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਡ (daddaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 564, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L564",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਡ in two pen-down strokes: the headline from left to right; then from the top right down and to the left, clockwise through about two full turns, round the knob and then the lower loop, ending near the bottom right. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. The outline prints the knob as a solid teardrop, so the path loops clockwise inside it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਡ, each by a different non-native copyist; only counts and shares are cited. 80% (16 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 70% (14 of 20) start in the same part of the letter as the source and 100% (20 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਣ",
+      "sound": "ṇa",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a slant down to a right arm",
+        "a bowl below, open to the right"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then slant down to the right",
+        "run out along the right arm",
+        "lift, then come down to the left",
+        "round the bowl counterclockwise"
+      ],
+      "strokeOrderNote": "Three pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਣ (nhaanhaa) checkpoints, strokes 1–3 (lib/data/lessons/lesson_tracing.dart line 629, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L629",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਣ in three pen-down strokes: the headline from left to right; then from the headline, slanting down to the right and out along the right arm; then from the upper right, down to the left and counterclockwise round the bowl to the bottom right. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਣ, each by a different non-native copyist; only counts and shares are cited. 80% (16 of 20) draw it in three strokes, the source's count and their most common one. For the first stroke of the body, 5% (1 of 20) start in the same part of the letter as the source and 95% (19 of 20) set off in the same direction, within 45 degrees. Most of them (19 of 20) begin it further left, at the top left, and still head the same way. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਤ",
+      "sound": "ta",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a stem on the right",
+        "a knob on the left",
+        "a right side and a base ending in a tail on the left"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the stem",
+        "loop round the knob",
+        "round the right side and the base"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਤ (tattaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 665, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L665",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਤ in two pen-down strokes: the headline from left to right; then from the top right down the stem, clockwise round the knob, the right side and the base, ending at the bottom left. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. The outline prints the knob as a solid teardrop, so the path loops clockwise inside it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਤ, each by a different non-native copyist; only counts and shares are cited. 90% (18 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 60% (12 of 20) start in the same part of the letter as the source and 100% (20 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਥ",
+      "sound": "tha",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a left side curving round a bowl to the stem",
+        "a middle bar",
+        "the stem on the right"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the left side",
+        "round the bowl to the stem",
+        "lift, then draw the bar from left to right",
+        "lift, then come down the stem"
+      ],
+      "strokeOrderNote": "Four pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਥ (thathaa) checkpoints, strokes 1–4 (lib/data/lessons/lesson_tracing.dart line 696, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L696",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਥ in four pen-down strokes: the headline from left to right; then from the top left down the left side and round the bowl to the stem; then the middle bar from left to right; then the stem from the top down. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਥ, each by a different non-native copyist; only counts and shares are cited. 40% (8 of 20) draw it in four strokes, the source's count and their most common one. For the first stroke of the body, 65% (13 of 20) start in the same part of the letter as the source and 95% (19 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਦ",
+      "sound": "da",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a stem on the right",
+        "a bar with a knob on the left",
+        "a curve down and round to the right"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the stem",
+        "run left along the bar",
+        "loop round the knob",
+        "come down and round to the right"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਦ (daddaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 730, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L730",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਦ in two pen-down strokes: the headline from left to right; then from the top right down the stem, left along the bar, clockwise round the knob, and down and round to the bottom right. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. The outline prints the knob as a solid teardrop, so the path loops clockwise inside it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਦ, each by a different non-native copyist; only counts and shares are cited. 65% (13 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 70% (14 of 20) start in the same part of the letter as the source and 90% (18 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਧ",
+      "sound": "dha",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "ਧ  dha — consonant (inherent “a”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ਨ",
+      "sound": "na",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a short stem in the middle",
+        "a left leg",
+        "a right leg"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the stem",
+        "curve down the left leg",
+        "lift, then curve down the right leg"
+      ],
+      "strokeOrderNote": "Three pen-down strokes: the GNPS tracing lesson's order, with its four strokes joined on the ink to the Omniglot copyists' most common count, fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਨ (nannaa) checkpoints, strokes 1–4 (lib/data/lessons/lesson_tracing.dart line 785, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L785",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਨ in four pen-down strokes: the headline from left to right; then the short stem from the top down; then from its foot, the left leg down to the bottom; then from the same point, the right leg. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਨ, each by a different non-native copyist copying a printed letter; where the same dataset can be set beside native writers' pen data (HP Labs India's Devanagari and Bangla sets), the copyists use more strokes than those writers, so their counts are read here only as a ceiling on native lifts, and only counts and shares are cited. Even under that ceiling, 70% (14 of 20) draw ਨ in three strokes, their most common count; 25% (5 of 20) use the source's four. Those counts say how many strokes, not where they break, so this path keeps every stroke's order, start and direction and joins the stem and the left leg, since the left leg starts where the stem ends; the right leg still starts again from that point. For the first stroke of the body, 90% (18 of 20) of the copyists start in the same part of the letter as the source and 90% (18 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਪ",
+      "sound": "pa",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the left part of the top bar, turning down the left side",
+        "a bowl round to the stem",
+        "the right part of the top bar and the stem"
+      ],
+      "strokeOrder": [
+        "start at the top left and curve down",
+        "round the bowl to the stem",
+        "lift, then run left along the top",
+        "turn down the stem"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਪ (pappaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 826, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L826",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਪ in two pen-down strokes: from the top left along the bar's left part, down the left side and round the bowl to the stem; then from the top right, left along the bar's right part and down the stem. In the bundled Noto Sans Gurmukhi outline this letter's top bar is split, with a gap above the body, and the source draws no separate headline: the first stroke opens along the bar's left part and the last stroke opens by running right to left along its right part before turning down the stem. The outline and the source agree, so there is no headline stroke to place first or last. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਪ, each by a different non-native copyist; only counts and shares are cited. 75% (15 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 95% (19 of 20) start in the same part of the letter as the source and 90% (18 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਫ",
+      "sound": "pha",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a stem on the right",
+        "a bar curving down the left side",
+        "a lower loop"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the stem",
+        "run left along the bar",
+        "curve down the left side",
+        "loop round the lower bowl"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਫ (phaphaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 854, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L854",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਫ in two pen-down strokes: the headline from left to right; then from the top right down the stem, left along the bar, down the left side and counterclockwise round the lower loop, ending at the bottom left where the loop began. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਫ, each by a different non-native copyist; only counts and shares are cited. 90% (18 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 70% (14 of 20) start in the same part of the letter as the source and 95% (19 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਬ",
+      "sound": "ba",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a left side down to a bar",
+        "a bar to the stem",
+        "a lower bowl round to the stem",
+        "the stem on the right"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the left side",
+        "draw the bar to the stem",
+        "run back left along the bar",
+        "round the lower bowl to the stem",
+        "lift, then come down the stem"
+      ],
+      "strokeOrderNote": "Three pen-down strokes: the GNPS tracing lesson's order, with its four strokes joined on the ink to the Omniglot copyists' most common count, fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਬ (babbaa) checkpoints, strokes 1–4 (lib/data/lessons/lesson_tracing.dart line 885, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L885",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਬ in four pen-down strokes: the headline from left to right; then from the top left down the left side and right along the bar to the stem; then from the bar's left end, round the lower bowl to the stem; then the stem from the top down. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਬ, each by a different non-native copyist copying a printed letter; where the same dataset can be set beside native writers' pen data (HP Labs India's Devanagari and Bangla sets), the copyists use more strokes than those writers, so their counts are read here only as a ceiling on native lifts, and only counts and shares are cited. Even under that ceiling, 50% (10 of 20) draw ਬ in three strokes, their most common count; 30% (6 of 20) use the source's four. Those counts say how many strokes, not where they break, so this path keeps every stroke's order, start and direction and joins the second and third strokes: the pen runs back along the bar to its left end instead of lifting, then rounds the lower bowl. For the first stroke of the body, 45% (9 of 20) of the copyists start in the same part of the letter as the source and 95% (19 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਭ",
+      "sound": "bha",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a stem on the right",
+        "an upper bowl on the left",
+        "a right side and a base ending on the left"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the stem",
+        "loop round the upper bowl clockwise",
+        "round the right side and the base"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਭ (bhabbaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 920, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L920",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਭ in two pen-down strokes: the headline from left to right; then from the top right down the stem, clockwise round the upper bowl, the right side and the base, ending at the bottom left. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਭ, each by a different non-native copyist; only counts and shares are cited. 95% (19 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 75% (15 of 20) start in the same part of the letter as the source and 90% (18 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਮ",
+      "sound": "ma",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the left part of the top bar, turning down the left side",
+        "a loop at its foot",
+        "a bar to the stem",
+        "the right part of the top bar and the stem"
+      ],
+      "strokeOrder": [
+        "start at the top left and curve down",
+        "loop round the tail",
+        "draw the bar to the stem",
+        "lift, then run left along the top",
+        "turn down the stem"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਮ (mammaa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 952, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L952",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਮ in two pen-down strokes: from the top left along the bar's left part, down the left side, clockwise round the loop and right along the bar to the stem; then from the top right, left along the bar's right part and down the stem. In the bundled Noto Sans Gurmukhi outline this letter's top bar is split, with a gap above the body, and the source draws no separate headline: the first stroke opens along the bar's left part and the last stroke opens by running right to left along its right part before turning down the stem. The outline and the source agree, so there is no headline stroke to place first or last. The outline prints the loop as a solid tail, so the path loops clockwise inside it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਮ, each by a different non-native copyist; only counts and shares are cited. 40% (8 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 85% (17 of 20) start in the same part of the letter as the source and 85% (17 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਰ",
+      "sound": "ra",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a stem on the right",
+        "a round bowl",
+        "a bar back to the stem"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the stem",
+        "round the bowl clockwise",
+        "run right along the bar to the stem"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਰ (raaraa) checkpoints, strokes 1–2 (lib/data/lessons/lesson_tracing.dart line 1014, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L1014",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਰ in two pen-down strokes: the headline from left to right; then from the top right down the stem, clockwise round the bowl and right along the bar, ending at the stem. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਰ, each by a different non-native copyist; only counts and shares are cited. 100% (20 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 65% (13 of 20) start in the same part of the letter as the source and 100% (20 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਲ",
+      "sound": "la",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "two arms joined by a dip",
+        "a left bowl",
+        "a right bowl"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down the left arm",
+        "dip through the middle",
+        "climb the right arm to the headline",
+        "lift, then round the left bowl",
+        "lift, then round the right bowl"
+      ],
+      "strokeOrderNote": "Four pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਲ (lallaa) checkpoints, strokes 1–4 (lib/data/lessons/lesson_tracing.dart line 1040, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L1040",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਲ in four pen-down strokes: the headline from left to right; then from the top left down the left arm, through the dip and up the right arm to the headline; then the left bowl, from where the left arm meets the dip down to the bottom; then the right bowl, the same way on the right. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਲ, each by a different non-native copyist; only counts and shares are cited. 75% (15 of 20) draw it in four strokes, the source's count and their most common one. For the first stroke of the body, 85% (17 of 20) start in the same part of the letter as the source and 100% (20 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ਵ",
+      "sound": "va",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a stem curving into an upper bar",
+        "a left curve",
+        "a lower bar",
+        "a base swept to the right"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down and curve left",
+        "round the left curve to the middle",
+        "draw the lower bar to the right",
+        "lift, then round the base from the middle"
+      ],
+      "strokeOrderNote": "Three pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ਵ (vavvaa) checkpoints, strokes 1–3 (lib/data/lessons/lesson_tracing.dart line 1076, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L1076",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਵ in three pen-down strokes: the headline from left to right; then from the top right down and left along the upper bar, round the left curve and right along the lower bar; then from near the left of the lower bar, down to the left and round the base to the bottom right. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਵ, each by a different non-native copyist; only counts and shares are cited. 60% (12 of 20) draw it in three strokes, the source's count and their most common one. For the first stroke of the body, 70% (14 of 20) start in the same part of the letter as the source and 95% (19 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ੜ",
+      "sound": "ṛa",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "the headline",
+        "a stem curving down to the left",
+        "a knob on the left",
+        "a right side and a base ending in a foot on the left",
+        "a short right leg"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "lift, then come down and curve left",
+        "loop round the knob",
+        "round the right side",
+        "run left along the base",
+        "turn down to the foot",
+        "lift, then draw the right leg down"
+      ],
+      "strokeOrderNote": "Three pen-down strokes, the teaching order of the GNPS tracing lesson, fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "GNPS, Gurmukhi Sikho (GNPS Learning Hub), Alphabet Tracing lesson, ੜ (rhaarhaa) checkpoints, strokes 1–3 (lib/data/lessons/lesson_tracing.dart line 1108, commit de1e560; Apache-2.0)",
+        "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L1108",
+        "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ੜ in three pen-down strokes: the headline from left to right; then from the top right down to the left, clockwise round the knob and the right side, and left along the base to the bottom left; then the short right leg, down to the right. The headline first is the source's teaching order. Fluent writers are often described as adding the headline last (Alfaazo's general guidance on Gurmukhi; native Devanagari writers do so in HP Labs India's pen data), so the path shows how this lesson teaches the letter, not how every fluent hand writes it. The outline prints the knob as a solid teardrop, so the path loops clockwise inside it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ੜ, each by a different non-native copyist; only counts and shares are cited. 65% (13 of 20) draw it in three strokes, the source's count and their most common one. For the first stroke of the body, 70% (14 of 20) start in the same part of the letter as the source and 85% (17 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
+      }
+    }
+  ],
+  "marks": [
+    {
+      "mark": "ਾ",
+      "sound": "-ā",
+      "role": "vowel-sign",
+      "attachesAs": "kanna: an upright stroke standing to the right of its consonant, hanging from the headline",
+      "example": {
+        "base": "ਨ",
+        "combined": "ਨਾ",
+        "sound": "nā"
+      }
+    },
+    {
+      "mark": "ਿ",
+      "sound": "-i",
+      "role": "vowel-sign",
+      "attachesAs": "sihari: an upright with a hook over the top, written to the LEFT of its consonant though spoken after it",
+      "example": {
+        "base": "ਕ",
+        "combined": "ਕਿ",
+        "sound": "ki"
+      }
+    },
+    {
+      "mark": "ੀ",
+      "sound": "-ī",
+      "role": "vowel-sign",
+      "attachesAs": "bihari: an upright with a hook over the top, written to the right of its consonant",
+      "example": {
+        "base": "ਠ",
+        "combined": "ਠੀ",
+        "sound": "ṭhī"
+      }
+    },
+    {
+      "mark": "ੁ",
+      "sound": "-u",
+      "role": "vowel-sign",
+      "attachesAs": "aunkar: a small hook hanging under its consonant",
+      "example": {
+        "base": "ਤ",
+        "combined": "ਤੁ",
+        "sound": "tu"
+      }
+    },
+    {
+      "mark": "ੂ",
+      "sound": "-ū",
+      "role": "vowel-sign",
+      "attachesAs": "dulainkar: a double hook hanging under its consonant"
+    },
+    {
+      "mark": "ੇ",
+      "sound": "-e",
+      "role": "vowel-sign",
+      "attachesAs": "lavan: one slanting stroke above the headline",
+      "example": {
+        "base": "ਜ",
+        "combined": "ਜੇ",
+        "sound": "je"
+      }
+    },
+    {
+      "mark": "ੈ",
+      "sound": "-ai",
+      "role": "vowel-sign",
+      "attachesAs": "dulavan: two slanting strokes above the headline",
+      "example": {
+        "base": "ਹ",
+        "combined": "ਹੈ",
+        "sound": "hai"
+      }
+    },
+    {
+      "mark": "ੋ",
+      "sound": "-o",
+      "role": "vowel-sign",
+      "attachesAs": "hora: a curl above the headline"
+    },
+    {
+      "mark": "ੌ",
+      "sound": "-au",
+      "role": "vowel-sign",
+      "attachesAs": "kanaura: a curl and a slanting stroke above the headline"
+    },
+    {
+      "mark": "ਂ",
+      "sound": "(nasal)",
+      "role": "nasal",
+      "attachesAs": "bindi: a dot above the headline, to the right, that sends the vowel through the nose",
+      "example": {
+        "base": "ਹਾ",
+        "combined": "ਹਾਂ",
+        "sound": "hā̃"
+      }
+    },
+    {
+      "mark": "ੰ",
+      "sound": "(nasal)",
+      "role": "nasal",
+      "attachesAs": "tippi: a small open curve above the headline that nasalizes the vowel"
+    },
+    {
+      "mark": "ੱ",
+      "sound": "(doubled)",
+      "role": "gemination",
+      "attachesAs": "addak: a small crescent above the headline before the consonant it doubles"
+    },
+    {
+      "mark": "੍",
+      "sound": "(no vowel)",
+      "role": "virama",
+      "attachesAs": "halant (pairin): marks a consonant written under or beside the next with no vowel of its own"
+    },
+    {
+      "mark": "਼",
+      "sound": "(borrowed)",
+      "role": "diacritic",
+      "attachesAs": "pairin bindi: one dot under a letter, making a sound borrowed from Persian or English (ਸ + ਼ → ਸ਼ sha, ਫ + ਼ → ਫ਼ fa)"
+    }
+  ],
+  "digits": [
+    {
+      "glyph": "੦",
+      "sound": "0",
+      "role": "digit",
+      "components": [
+        "੦  0 — Gurmukhi digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "੧",
+      "sound": "1",
+      "role": "digit",
+      "components": [
+        "੧  1 — Gurmukhi digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "੨",
+      "sound": "2",
+      "role": "digit",
+      "components": [
+        "੨  2 — Gurmukhi digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "੫",
+      "sound": "5",
+      "role": "digit",
+      "components": [
+        "੫  5 — Gurmukhi digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    }
+  ]
+}
