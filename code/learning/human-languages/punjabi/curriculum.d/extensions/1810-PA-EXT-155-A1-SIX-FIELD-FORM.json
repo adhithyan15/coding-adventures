@@ -1,0 +1,12 @@
+{
+  "id": "PA-EXT-155-A1-SIX-FIELD-FORM",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can independently complete a six-field fictional Gurmukhi form for already taught name, language, residence, work, age, and phone values without a visible value model, then repair each error dimension separately.",
+  "prerequisites": [
+    "PA-EXT-023-A1-NAME-FIELD",
+    "PA-EXT-027-A1-THREE-FIELD-INTEGRATION",
+    "PA-EXT-154-A1-AGE-PHONE-DATE-FORM"
+  ]
+}

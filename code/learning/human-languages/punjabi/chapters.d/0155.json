@@ -1,0 +1,20 @@
+{
+  "chapter": 155,
+  "title": "Join Six Fictional Form Fields",
+  "label": "ch:pa-form-six-field-checkpoint",
+  "canDo": "I can select six already taught fictional values from familiar nonverbal cues, write a six-line Gurmukhi form without a visible answer model, and repair selection, spelling, spacing, digit order, and placement separately.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W11-form-six-no-model",
+    "kind": "production",
+    "summary": "The learner fills name, language, residence, work, age, and phone lines from remembered cues without romanization or copyable answers, then repairs one error dimension at a time.",
+    "assesses": [
+      "PA-FORM-SIX-ORDER-01",
+      "PA-FORM-SIX-CUE-01",
+      "PA-FORM-SIX-REPAIR-01",
+      "PA-FORM-SIX-NO-MODEL-01"
+    ]
+  }
+}

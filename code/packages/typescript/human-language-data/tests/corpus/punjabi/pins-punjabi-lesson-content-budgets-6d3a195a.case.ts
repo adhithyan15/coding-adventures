@@ -77,7 +77,9 @@ it("pins Punjabi lesson-content budgets", () =>
     // idiom, sense or culture claim.
     // 831 -> 838: three-field form integration, using only taught labels and
     // fictional values. No idiom, sense or culture claim.
-    lessons: 838,
+    // 838 -> 844: six-field form integration, again with only taught values.
+    // No new idiom, sense or culture claim.
+    lessons: 844,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

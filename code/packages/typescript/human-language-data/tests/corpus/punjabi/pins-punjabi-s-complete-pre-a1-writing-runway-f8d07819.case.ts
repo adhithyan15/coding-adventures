@@ -143,5 +143,14 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "controlled-composition",
     "controlled-composition",
     "controlled-composition",
+    // Chapter 155 joins six taught fields: label copying and supported entry,
+    // one delay, separate repair, then a no-model six-line attempt.
+    "guided-copy",
+    "guided-copy",
+    "delayed-copy",
+    "controlled-composition",
+    "controlled-composition",
+    "controlled-composition",
+    "controlled-composition",
   ]);
 });
