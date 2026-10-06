@@ -1436,10 +1436,13 @@
     {
       "id": "build-tool-typescript-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the TypeScript build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-typescript-glob-matcher-complexity-hardening"],
-      "branch": null,
+      "branch": "codex/parity-ts-source-registry-20261006",
       "pr_number": null,
+      "selected_at": "2026-10-06T02:43:49Z",
+      "selection_revision": "8816976e430215645095aeddf7ae33fbcaa06881",
+      "selection_notes": "Selected after #16764 merged, refreshing collision-checked exact main, and registering 13 additional audited owners. All six prerequisites merged, no active parity PR, no overlapping TypeScript build-tool PR, and three direct pending children. Use one clean fresh main-based TypeScript worktree; keep repository-boundary reverse diff and native snapshot concerns separate.",
       "notes": "Production TypeScript currently owns a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including path-scoped CSS, native Rust companions, exact metadata scope, and universal capability input without blanket JSON, YAML, or TOML inclusion."
     },
     {
