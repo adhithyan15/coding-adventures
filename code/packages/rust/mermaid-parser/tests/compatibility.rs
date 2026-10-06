@@ -445,9 +445,14 @@ fn pinned_architecture_subset_corpus_parses_to_structural_ir() {
         assert!(!diagram.nodes.is_empty());
         if id == "edge-elasticity-config" {
             assert_eq!(
-                diagram.architecture_config.unwrap().edge_elasticity,
+                diagram.architecture_config.as_ref().unwrap().edge_elasticity,
                 0.8
             );
+        }
+        if id == "seeded-random-layout-config" {
+            let config = diagram.architecture_config.as_ref().unwrap();
+            assert!(config.randomize);
+            assert_eq!(config.seed, 17);
         }
     }
 }
