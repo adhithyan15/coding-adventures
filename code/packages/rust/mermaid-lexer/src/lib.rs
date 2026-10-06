@@ -729,7 +729,18 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.74.0");
+        assert_eq!(VERSION, "0.75.0");
+    }
+
+    #[test]
+    fn tokenizes_railroad_ebnf_expressions() {
+        let tokens = try_tokenize_mermaid_railroad_ebnf(
+            "railroad-ebnf-beta\nexpression = term, (\"+\" term)*;",
+        )
+        .expect("railroad EBNF should tokenize");
+        assert!(tokens.iter().any(|token| custom_name(token) == Some("HEADER")));
+        assert!(tokens.iter().any(|token| token.type_ == TokenType::Star));
+        assert!(tokens.iter().any(|token| token.type_ == TokenType::Semicolon));
     }
 
     #[test]
