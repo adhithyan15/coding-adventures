@@ -285,7 +285,10 @@ It asserts:
 3. **Required realization fields present** — `headword`, `gloss`, `chapter`.
 4. **Script references resolve** — every glyph a non-Latin headword uses appears
    in that script's `data/scripts/*.json` (warning while scripts are being
-   authored; error once the script file declares itself complete).
+   authored; error once the script file declares itself complete). A script's
+   own `digits` rows count as covered, so each one must be exactly one code
+   point of Unicode category Nd (decimal digit); any other digit row is an
+   **error** (`invalid-digit-row`) and covers nothing.
 5. **Core-concept coverage** — for each track whose `README.md` declares
    `parity: complete`, every `core: true` concept has a realization (error);
    otherwise reported as an informational coverage table.

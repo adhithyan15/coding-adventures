@@ -965,7 +965,9 @@ Two kinds exist:
   two steps**: declare it here, then run `npm run generate:filmstrip-ledger` in
   `script-ductus` before `npm run generate:figures` here. A missing entry fails
   with the command to run. Stroke order is never invented — an uncited letter has
-  no ledger entry and therefore no figure.
+  no ledger entry and therefore no figure. A one-frame strip (़, ्, ا) wraps its
+  heading and citation at the width of a two-frame strip, not at its single
+  150-unit panel, so it is not a tall column of text; its panel is unchanged.
 
   Most filmstrip targets are not declared at all: `figure-targets.ts` derives one
   for each `type: writing` lesson on a switched-on track whose headword is one
@@ -986,7 +988,9 @@ Two kinds exist:
   place cited to KanoAI's barakhadi templates in the sign's mark record. The
   virama ્ and ૃ have no row, two signs on one consonant (ાં) are refused, and
   so are the pairs the bundled font reshapes (ણુ, રુ, રૂ; ુ and ૂ under the
-  22 consonants that take a stem form; જ and ૹ with ા, ી, ો, ૌ).
+  22 consonants that take a stem form; જ and ૹ with ા, ી, ો, ૌ). Each group
+  of fused pairs carries its citation in `FUSED_SIGN_PAIR_SOURCES`, and a
+  test fails if a pair is added or dropped without its source.
   Devanagari has no table on purpose: its eight cited signs (ु ू े ं ़ ् ृ ँ)
   come from native writers who wrote each sign alone, which says nothing about
   its order against a consonant or the headline, so only a lesson whose

@@ -47,7 +47,7 @@
       "kind": "script-filmstrip",
       "lessonId": "MR-W01-virama",
       "sourceHash": "fnv1a64:84b3dcb5a217de08",
-      "svgHash": "fnv1a64:dae49f2d60712dbf",
+      "svgHash": "fnv1a64:731bfa15ed79fa57",
       "svg": "marathi/book/figures/MR-W01-virama-filmstrip.svg"
     },
     {
@@ -60,8 +60,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "MR-W02-anusvara",
-      "sourceHash": "fnv1a64:a6d6db70f39e973f",
-      "svgHash": "fnv1a64:14eca191576a3a0a",
+      "sourceHash": "fnv1a64:0d5478fdab92e42f",
+      "svgHash": "fnv1a64:8833acbb719ebc5a",
       "svg": "marathi/book/figures/MR-W02-anusvara-filmstrip.svg"
     },
     {

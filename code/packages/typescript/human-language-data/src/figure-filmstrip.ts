@@ -364,6 +364,16 @@ const MAX_COLUMNS = 6;
 const FRAME_GAP = 10;
 const ROW_GAP = 12;
 const MARGIN = 16;
+/**
+ * The narrowest a one-letter strip's heading and footer may wrap: the width
+ * of a two-frame strip. A ONE-frame strip (a dab such as the nukta ़, the
+ * virama ्, Perso-Arabic ا) would otherwise be a single 150 px panel with its
+ * heading broken over three lines and its citation over ten, a figure taller
+ * than it is useful. The panel keeps its size and its place at the left
+ * margin; only the text gets the room. Two or more frames are already at
+ * least this wide, so their strips do not change.
+ */
+const MIN_TEXT_WIDTH = 2 * FRAME_WIDTH + FRAME_GAP;
 /** Space above the frames for the heading. */
 const HEADING_BAND = 26;
 /** Space below the frames for the citation. */
@@ -457,6 +467,7 @@ export function renderScriptFilmstripFigure(
   const columns = Math.min(entry.frames.length, MAX_COLUMNS);
   const rows = Math.ceil(entry.frames.length / columns);
   const gridWidth = columns * FRAME_WIDTH + (columns - 1) * FRAME_GAP;
+  const textWidth = Math.max(gridWidth, MIN_TEXT_WIDTH);
 
   // The heading WRAPS, like the citation below. It used to be one `<text>` line,
   // which is fine for a strip of three or more frames — but a one-stroke letter
@@ -465,7 +476,7 @@ export function renderScriptFilmstripFigure(
   // edge, clipped mid-word on the printed page. Each extra line pushes the
   // frames down by one line height, so a heading that fits on one line (every
   // strip of three or more frames today) lays out byte-for-byte as before.
-  const headingLines = wrapHeading(`How it is written — ${entry.summary}`, gridWidth);
+  const headingLines = wrapHeading(`How it is written — ${entry.summary}`, textWidth);
   const headingBand = HEADING_BAND + (headingLines.length - 1) * HEADING_SIZE * 1.25;
 
   // The footer prints the CITATION and, when the source records that the order
@@ -478,15 +489,15 @@ export function renderScriptFilmstripFigure(
   const varies = sourceVaries(entry);
   const citationLines = wrapFigureText(
     `Stroke order after ${entry.source.citation}`,
-    gridWidth,
+    textWidth,
     CITATION_SIZE,
   );
-  if (varies) citationLines.push(...wrapFigureText(VARIATION_SENTENCE, gridWidth, CITATION_SIZE));
+  if (varies) citationLines.push(...wrapFigureText(VARIATION_SENTENCE, textWidth, CITATION_SIZE));
 
   const gridTop = round(MARGIN + headingBand);
   const gridHeight = rows * frameHeight + (rows - 1) * ROW_GAP;
   const citationTop = gridTop + gridHeight + CITATION_LEADING;
-  const width = MARGIN * 2 + gridWidth;
+  const width = MARGIN * 2 + textWidth;
   const height = round(
     citationTop + CITATION_SIZE * citationLines.length * 1.25 + MARGIN - CITATION_SIZE * 0.25,
   );

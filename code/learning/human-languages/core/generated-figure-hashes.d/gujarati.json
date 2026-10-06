@@ -39,8 +39,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "GU-R04-doorway-nine-r2",
-      "sourceHash": "fnv1a64:f3bf51a9ece8cc8e",
-      "svgHash": "fnv1a64:2f72a3e2a9266b46",
+      "sourceHash": "fnv1a64:d6e075a8f5bf63e0",
+      "svgHash": "fnv1a64:50d50449a343f920",
       "svg": "gujarati/book/figures/GU-R04-doorway-nine-r2-filmstrip.svg"
     },
     {
@@ -74,8 +74,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "GU-R13-doorway-nine-r3",
-      "sourceHash": "fnv1a64:e9dca3327944203b",
-      "svgHash": "fnv1a64:f3694ba3aa1f6ee4",
+      "sourceHash": "fnv1a64:8534dddd1b8c6f21",
+      "svgHash": "fnv1a64:06db0461b261321e",
       "svg": "gujarati/book/figures/GU-R13-doorway-nine-r3-filmstrip.svg"
     },
     {
@@ -116,8 +116,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "GU-R19-doorway-nine-r4",
-      "sourceHash": "fnv1a64:1185e8a444ed3c70",
-      "svgHash": "fnv1a64:c370be8960048bd4",
+      "sourceHash": "fnv1a64:64f2e170bdf09c16",
+      "svgHash": "fnv1a64:7ee32c5eb74bb712",
       "svg": "gujarati/book/figures/GU-R19-doorway-nine-r4-filmstrip.svg"
     },
     {
@@ -145,7 +145,7 @@
       "kind": "script-filmstrip",
       "lessonId": "GU-W01-ha",
       "sourceHash": "fnv1a64:42d8895350ac44c9",
-      "svgHash": "fnv1a64:b7afb197a9155832",
+      "svgHash": "fnv1a64:bfd78ec2ccb73125",
       "svg": "gujarati/book/figures/GU-W01-ha-filmstrip.svg"
     },
     {
@@ -208,7 +208,7 @@
       "kind": "script-filmstrip",
       "lessonId": "GU-W02-da",
       "sourceHash": "fnv1a64:00f46e768afa10c3",
-      "svgHash": "fnv1a64:290c135e80e05f34",
+      "svgHash": "fnv1a64:3a108b4848226e4d",
       "svg": "gujarati/book/figures/GU-W02-da-filmstrip.svg"
     },
     {
@@ -222,7 +222,7 @@
       "kind": "script-filmstrip",
       "lessonId": "GU-W02-ra",
       "sourceHash": "fnv1a64:cf74739c45ffa596",
-      "svgHash": "fnv1a64:b2d996e043241136",
+      "svgHash": "fnv1a64:be3356697721a5b5",
       "svg": "gujarati/book/figures/GU-W02-ra-filmstrip.svg"
     },
     {
@@ -242,8 +242,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "GU-W03-anusvara",
-      "sourceHash": "fnv1a64:59ce4cba793dc8bf",
-      "svgHash": "fnv1a64:a2d69fb166a20823",
+      "sourceHash": "fnv1a64:30f0881ac6c77891",
+      "svgHash": "fnv1a64:6fe409d9982c4135",
       "svg": "gujarati/book/figures/GU-W03-anusvara-filmstrip.svg"
     },
     {
@@ -320,7 +320,7 @@
       "kind": "script-filmstrip",
       "lessonId": "GU-W04-lla",
       "sourceHash": "fnv1a64:e870fe048055cb87",
-      "svgHash": "fnv1a64:0f00cdb6f3a56c96",
+      "svgHash": "fnv1a64:962fb6d5744c5f6b",
       "svg": "gujarati/book/figures/GU-W04-lla-filmstrip.svg"
     },
     {
@@ -390,7 +390,7 @@
       "kind": "script-filmstrip",
       "lessonId": "GU-W07-ddha",
       "sourceHash": "fnv1a64:8f463a1bbcbe5b35",
-      "svgHash": "fnv1a64:a34a40c489c291ab",
+      "svgHash": "fnv1a64:e59358cbd08cba27",
       "svg": "gujarati/book/figures/GU-W07-ddha-filmstrip.svg"
     },
     {
@@ -404,7 +404,7 @@
       "kind": "script-filmstrip",
       "lessonId": "GU-W07-tta",
       "sourceHash": "fnv1a64:3ce4c50f9ddabc02",
-      "svgHash": "fnv1a64:af543593d7b50137",
+      "svgHash": "fnv1a64:40ec374df5558e5c",
       "svg": "gujarati/book/figures/GU-W07-tta-filmstrip.svg"
     },
     {
@@ -425,7 +425,7 @@
       "kind": "script-filmstrip",
       "lessonId": "GU-W22-ttha",
       "sourceHash": "fnv1a64:1d72d79ea6be2590",
-      "svgHash": "fnv1a64:0f0085f1299d51a5",
+      "svgHash": "fnv1a64:fb2ac0c2c0a042cb",
       "svg": "gujarati/book/figures/GU-W22-ttha-filmstrip.svg"
     },
     {

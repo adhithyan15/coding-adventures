@@ -54,7 +54,7 @@
       "kind": "script-filmstrip",
       "lessonId": "SA-S05-sign-virama",
       "sourceHash": "fnv1a64:8add23af6c9357ed",
-      "svgHash": "fnv1a64:dae49f2d60712dbf",
+      "svgHash": "fnv1a64:731bfa15ed79fa57",
       "svg": "sanskrit/book/figures/SA-S05-sign-virama-filmstrip.svg"
     },
     {
@@ -221,8 +221,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "SA-S209-sign-anusvara",
-      "sourceHash": "fnv1a64:f77e8d73a30ece8b",
-      "svgHash": "fnv1a64:14eca191576a3a0a",
+      "sourceHash": "fnv1a64:0b61df822b26ffdb",
+      "svgHash": "fnv1a64:8833acbb719ebc5a",
       "svg": "sanskrit/book/figures/SA-S209-sign-anusvara-filmstrip.svg"
     },
     {
