@@ -25,7 +25,12 @@ code/programs/perl/build-tool/
 
 - **Incremental builds**: Uses `git diff` to find changed packages; only rebuilds what changed plus their transitive dependents.
 - **Parallel execution**: Forks up to `--jobs` child processes per independent dependency group.
-- **All 9 languages**: Discovers and resolves dependencies for Python, Ruby, Go, TypeScript, Rust, Elixir, Lua, Perl, and Starlark packages.
+- **Multi-language discovery**: Classifies recognized language directories,
+  including OCaml packages, and excludes exact lowercase Dune `_build`
+  output from discovery and content hashing. The shared OCaml package and
+  generated-directory fixtures are projected through the Perl walkers;
+  this slice does not claim full discovery-registry or OCaml source-extension
+  conformance.
 - **Hash-based cache**: Optional content-hash cache as a fallback when git diff is unavailable.
 - **Zero CPAN deps at runtime**: Uses only Perl core modules (5.26+). Only `Test2::V0` is required for tests.
 

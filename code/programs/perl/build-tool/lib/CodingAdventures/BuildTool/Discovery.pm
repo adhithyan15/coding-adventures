@@ -46,7 +46,7 @@ our $VERSION = '0.01';
 # correctness but we list them alphabetically for readability.
 my @KNOWN_LANGUAGES = qw(
     python ruby go rust typescript elixir lua perl swift wasm haskell starlark
-    java kotlin csharp fsharp dotnet
+    java kotlin csharp fsharp dotnet ocaml
 );
 
 # SKIP_DIRS -- directory names that we never descend into during the walk.

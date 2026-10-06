@@ -10,6 +10,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+- Discovery now classifies OCaml package BUILD files; fixture-projected tests
+  verify exact lowercase Dune `_build` pruning in both discovery and source
+  collection while retaining `_Build` and `_build-example` directories.
 - Pinned the existing exact lowercase `blib` pruning behavior with direct
   case-variant and near-name evidence now that the neutral generated-directory
   authority includes that Perl artifact.
