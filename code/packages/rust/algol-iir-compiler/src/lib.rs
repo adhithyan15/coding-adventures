@@ -4106,8 +4106,8 @@ impl Compiler {
         }
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
             if self.contains_procedure_call(condition) {
-                return self.is_selector_call_safe_real_procedure_result(then_node)
-                    && self.is_selector_call_safe_real_procedure_result(else_node);
+                return self.is_selector_call_safe_runtime_real_value(then_node)
+                    && self.is_selector_call_safe_runtime_real_value(else_node);
             }
             return match self.static_boolean_value(condition) {
                 Some(true) => self.is_runtime_real_assignment_value(then_node),
@@ -12595,6 +12595,21 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_conditional_values_allow_calling_selectors_for_transformed_results() {
+        let module = compile_source(
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := -3.5; real result; result := if choose() then abs(left()) else abs(right()); output(result) end",
+            "test",
+        )
+        .expect("a calling selector may choose transformed direct real results");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
     fn al4_runtime_real_calling_selectors_allow_nested_direct_name_actuals() {
         let module = compile_source(
             "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(left()) else relay(right()); output(result) end",
@@ -12688,6 +12703,7 @@ mod tests {
     fn al4_runtime_real_conditional_selector_calls_do_not_trust_local_branches() {
         for source in [
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real x; x := pick(); output(if choose() then x else x) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real x; x := pick(); output(if choose() then abs(x) else abs(x)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x) else echo(x)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x + 1.0) else echo(x + 1.0)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x * 2.0) else echo(x * 2.0)) end",
