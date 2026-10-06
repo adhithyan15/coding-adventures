@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.145.0";
+pub const VERSION: &str = "0.146.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -1131,6 +1131,14 @@ fn parse_architecture_config(source: &str) -> ArchitectureConfig {
             .and_then(|value| value.parse::<f64>().ok())
             .filter(|value| value.is_finite() && *value >= minimum && *value <= maximum)
     };
+    let boolean = |key| {
+        value(key).and_then(|value| match value.to_ascii_lowercase().as_str() {
+            "true" => Some(true),
+            "false" => Some(false),
+            _ => None,
+        })
+    };
+    let integer = |key| value(key).and_then(|value| value.parse::<i64>().ok());
     let defaults = ArchitectureConfig::default();
     ArchitectureConfig {
         icon_size: positive_number("iconSize").unwrap_or(defaults.icon_size),
@@ -1142,6 +1150,8 @@ fn parse_architecture_config(source: &str) -> ArchitectureConfig {
             .unwrap_or(defaults.ideal_edge_length_multiplier),
         edge_elasticity: bounded_number("edgeElasticity", 0.0, 1.0)
             .unwrap_or(defaults.edge_elasticity),
+        randomize: boolean("randomize").unwrap_or(defaults.randomize),
+        seed: integer("seed").unwrap_or(defaults.seed),
     }
 }
 
@@ -12701,7 +12711,7 @@ mod tests_dg04 {
     #[test]
     fn architecture_preserves_size_and_separation_configuration() {
         let diagram = parse_architecture(
-            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25, \"edgeElasticity\": 0.8}}}%%\narchitecture-beta\nservice api(server)[API]",
+            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25, \"edgeElasticity\": 0.8, \"randomize\": true, \"seed\": 17}}}%%\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         assert_eq!(
@@ -12713,11 +12723,13 @@ mod tests_dg04 {
                 padding: 48.0,
                 ideal_edge_length_multiplier: 1.25,
                 edge_elasticity: 0.8,
+                randomize: true,
+                seed: 17,
             })
         );
 
         let diagram = parse_architecture(
-            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n    idealEdgeLengthMultiplier: 1.75\n    edgeElasticity: 0.2\n---\narchitecture-beta\nservice api(server)[API]",
+            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n    idealEdgeLengthMultiplier: 1.75\n    edgeElasticity: 0.2\n    randomize: false\n    seed: -9\n---\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         let config = diagram.architecture_config.unwrap();
@@ -12727,6 +12739,8 @@ mod tests_dg04 {
         assert_eq!(config.padding, 52.0);
         assert_eq!(config.ideal_edge_length_multiplier, 1.75);
         assert_eq!(config.edge_elasticity, 0.2);
+        assert!(!config.randomize);
+        assert_eq!(config.seed, -9);
 
         let diagram = parse_architecture(
             "%%{init: {\"architecture\": {\"edgeElasticity\": 1.5}}}%%\narchitecture-beta\nservice api(server)[API]",
@@ -16575,7 +16589,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.145.0");
+        assert_eq!(crate::VERSION, "0.146.0");
     }
 
     #[test]

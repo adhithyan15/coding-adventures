@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.83.0";
+pub const VERSION: &str = "0.84.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -1965,6 +1965,8 @@ pub struct ArchitectureConfig {
     pub padding: f64,
     pub ideal_edge_length_multiplier: f64,
     pub edge_elasticity: f64,
+    pub randomize: bool,
+    pub seed: i64,
 }
 
 impl Default for ArchitectureConfig {
@@ -1976,6 +1978,8 @@ impl Default for ArchitectureConfig {
             padding: 40.0,
             ideal_edge_length_multiplier: 1.5,
             edge_elasticity: 0.45,
+            randomize: false,
+            seed: 1,
         }
     }
 }
@@ -2726,7 +2730,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.83.0");
+        assert_eq!(VERSION, "0.84.0");
     }
     #[test]
     fn default_direction_is_tb() {

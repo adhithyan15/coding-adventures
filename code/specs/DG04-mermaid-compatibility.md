@@ -484,8 +484,11 @@ survive as typed semantic configuration and resolve into backend-neutral node ge
 service typography, deterministic spacing, alignment-hint distances, group insets,
 and outer canvas margins. Bounded `edgeElasticity` values survive the same configuration
 paths and deterministically tighten or loosen connected sibling spacing before relationship
-routing and backend-neutral PaintScene lowering. Randomized layout, seeds, iteration limits,
-and the remaining fcose-specific tuning controls remain
+routing and backend-neutral PaintScene lowering. `randomize` and signed `seed` values also
+survive semantic configuration and select a repeatable seeded permutation of sibling layout
+slots while preserving authored IR order, containment, routing, and backend-neutral PaintScene
+lowering. Unlike Mermaid's nondeterministic `seed: 0` escape hatch, the native pipeline keeps
+zero deterministic. Iteration limits and the remaining fcose-specific tuning controls remain
 unsupported at the partial level.
 
 ### Radar Compatibility

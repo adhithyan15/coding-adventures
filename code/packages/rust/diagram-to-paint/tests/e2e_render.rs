@@ -1800,11 +1800,13 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_architecture_to_png() {
         let diagram = parse_architecture(
-            "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25, \"edgeElasticity\": 0.8}}}%%\narchitecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\ngroup cachegroup(disk)[Cache Layer]\nservice api \"API\"[Gateway]\nservice cache(disk)[Cache] in cachegroup\njunction split\nservice db(database)[Database] in platform\nservice worker(aws:lambda)[Worker] in platform\nalign row api cache split db worker\napi:R -[reads and writes]-> T:split\nsplit:R <--> L:db{group}\napi:R -[dispatches]-> L:worker",
+            "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25, \"edgeElasticity\": 0.8, \"randomize\": true, \"seed\": 17}}}%%\narchitecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\ngroup cachegroup(disk)[Cache Layer]\nservice api \"API\"[Gateway]\nservice cache(disk)[Cache] in cachegroup\njunction split\nservice db(database)[Database] in platform\nservice worker(aws:lambda)[Worker] in platform\nalign row api cache split db worker\napi:R -[reads and writes]-> T:split\nsplit:R <--> L:db{group}\napi:R -[dispatches]-> L:worker",
         )
         .expect("Mermaid architecture parse failed");
         let layout = layout_structural_diagram(&diagram);
         assert_eq!(diagram.architecture_config.as_ref().unwrap().edge_elasticity, 0.8);
+        assert!(diagram.architecture_config.as_ref().unwrap().randomize);
+        assert_eq!(diagram.architecture_config.as_ref().unwrap().seed, 17);
         assert_eq!(layout.groups.len(), 2);
         assert!(layout.groups.iter().any(|group| group.icon_name.as_deref() == Some("cloud")));
         let cache_group = layout.groups.iter().find(|group| group.id == "cachegroup").unwrap();
@@ -1895,6 +1897,38 @@ line "Target" [35, 50, 68, 82]"##,
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_architecture_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_architecture_seeded_layout_to_png() {
+        let diagram = parse_architecture(
+            "%%{init: {\"architecture\": {\"randomize\": true, \"seed\": 17}}}%%\narchitecture-beta\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\nservice queue(disk)[Queue] in platform\nservice db(database)[Database] in platform\nservice cache(disk)[Cache] in platform\nservice worker(server)[Worker] in platform\nservice metrics(server)[Metrics] in platform\napi:R --> L:queue\nqueue:R --> L:db\ndb:B --> T:cache\ncache:R --> L:worker\nworker:R --> L:metrics",
+        )
+        .expect("seeded Mermaid architecture parse failed");
+        let layout = layout_structural_diagram(&diagram);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 248, g: 250, b: 252, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_architecture_seeded_e2e.png")
+            .expect("seeded architecture PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+        assert_eq!(layout.nodes[0].id, "api");
+        assert!(layout.nodes.iter().enumerate().any(|(index, node)| {
+            node.x != 40.0 + (index % 3) as f64 * 235.0
+        }));
     }
 
     #[test]
