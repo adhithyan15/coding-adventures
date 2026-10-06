@@ -1,0 +1,11 @@
+{
+  "id": "PA-W12-punctuation-repair",
+  "pathSegment": "PA-PATH-156-NAMED-READER-MESSAGE",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "PA-EXT-156-A1-NAMED-READER-MESSAGE",
+      "order": 11
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-W12-message-no-model",
+  "pathSegment": "PA-PATH-156-NAMED-READER-MESSAGE",
+  "pathOrder": 18,
+  "extensions": [
+    {
+      "id": "PA-EXT-156-A1-NAMED-READER-MESSAGE",
+      "order": 18
+    }
+  ]
+}

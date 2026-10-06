@@ -1,0 +1,33 @@
+{
+  "language": "punjabi",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:aaf9694cd84918d5",
+  "lessonIds": [
+    "PA-W12-greeting-choice",
+    "PA-W12-greeting-supported",
+    "PA-W12-closing-choice",
+    "PA-W12-closing-supported",
+    "PA-W12-boundary",
+    "PA-W12-two-sentence-order",
+    "PA-W12-two-sentence-supported",
+    "PA-W12-two-sentence-delayed",
+    "PA-W12-agreement-repair",
+    "PA-W12-spacing-repair",
+    "PA-W12-spelling-repair",
+    "PA-W12-punctuation-repair",
+    "PA-W12-wellbeing-supported",
+    "PA-W12-interests-supported",
+    "PA-W12-meeting-supported",
+    "PA-W12-body-blocks-delayed",
+    "PA-W12-message-supported",
+    "PA-W12-message-delayed",
+    "PA-W12-message-no-model"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch156.txt",
+  "json": "punjabi/narration/ch156.json",
+  "textHash": "fnv1a64:eddeacb1fe247b82",
+  "jsonHash": "fnv1a64:d034a0eaacfde969",
+  "findings": []
+}

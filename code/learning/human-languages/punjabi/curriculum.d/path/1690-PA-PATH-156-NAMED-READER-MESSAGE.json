@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-156-NAMED-READER-MESSAGE",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "PA-EXT-156-A1-NAMED-READER-MESSAGE"
+  ],
+  "after": []
+}

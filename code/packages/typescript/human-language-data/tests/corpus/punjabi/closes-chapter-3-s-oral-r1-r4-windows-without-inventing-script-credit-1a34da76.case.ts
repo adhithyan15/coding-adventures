@@ -166,5 +166,8 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // Chapter 155 adds six short form sessions at the tail. The supported
   // and delayed six-field skills are genuinely revisited twice, closing two
   // R1 misses; one R2, four R3, and six R4 misses remain measurable debt.
-  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 563, R3: 504, R4: 555 });
+  // Chapter 156 extends the measurable tail by 19 short, no-new-atom writing
+  // sessions. Two genuine six-field form recalls close one R1 and two R2
+  // windows; the remaining newly measurable debt is retained, not suppressed.
+  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 572 });
 });

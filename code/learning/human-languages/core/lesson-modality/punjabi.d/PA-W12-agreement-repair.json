@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W12-agreement-repair",
+    "language": "punjabi",
+    "chapter": 156,
+    "sequence": 8590,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6922948019c3c70b",
+    "detachableSegments": [
+      "Writing — repair the endings"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
