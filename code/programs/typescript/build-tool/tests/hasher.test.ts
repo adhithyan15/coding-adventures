@@ -22,6 +22,8 @@ import {
   collectSourceFilesGlob,
   SOURCE_EXTENSIONS,
   SPECIAL_FILENAMES,
+  sourceInputRegistry,
+  sourceInputRegistryDigest,
 } from "../src/hasher.js";
 import { DirectedGraph } from "../src/resolver.js";
 import { GlobPatternError } from "../src/glob-match.js";
@@ -30,6 +32,9 @@ import type { Package } from "../src/discovery.js";
 type SourceCollectionFixture = {
   input: {
     options: {
+      language: string;
+      package_root: string;
+      registry_sha256: string;
       candidates: Array<{
         path: string;
         kind: "file" | "symlink" | "reparse_point";
@@ -49,6 +54,16 @@ type SourceCollectionFixture = {
 const SOURCE_COLLECTION_FIXTURES = [
   "source-collection-extension.json",
   "source-collection-declared.json",
+] as const;
+
+const REGISTRY_COLLECTION_FIXTURES = [
+  "source-collection-extension.json",
+  "source-collection-declared.json",
+  "source-collection-registry-roles.json",
+  "source-collection-engram-wasm-exact-inputs.json",
+  "source-collection-typescript-blog-exact-inputs.json",
+  "source-collection-typescript-landing-page-exact-inputs.json",
+  "source-collection-typescript-site-foreign-package.json",
 ] as const;
 
 const EXPECTED_EXCLUDED_COMPONENTS = [
@@ -113,7 +128,7 @@ function makePkg(pkgPath: string, language: string, name?: string): Package {
 }
 
 function readSourceCollectionFixture(
-  filename: (typeof SOURCE_COLLECTION_FIXTURES)[number],
+  filename: (typeof REGISTRY_COLLECTION_FIXTURES)[number],
 ): SourceCollectionFixture {
   const fixtureUrl = new URL(
     `../../../../specs/fixtures/build-tool-v1/cases/${filename}`,
@@ -239,6 +254,47 @@ describe("collectSourceFiles", () => {
 
   afterEach(() => {
     rmDir(tmpDir);
+  });
+
+  it("uses the complete checked source-input registry as packaged production data", () => {
+    const checked = JSON.parse(
+      fs.readFileSync(
+        new URL(
+          "../../../../specs/fixtures/build-tool-v1/language-source-input-registry.json",
+          import.meta.url,
+        ),
+        "utf-8",
+      ),
+    ) as unknown;
+    expect(sourceInputRegistry()).toEqual(checked);
+    expect(sourceInputRegistryDigest()).toBe(
+      "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621",
+    );
+  });
+
+  it.each(REGISTRY_COLLECTION_FIXTURES)(
+    "collects exact package-local neutral case %s through the production lookup",
+    (filename) => {
+      const fixture = readSourceCollectionFixture(filename);
+      const root = path.join(tmpDir, ...fixture.input.options.package_root.split("/"));
+      materializeCompleteFixture(root, fixture);
+      const pkg = makePkg(root, fixture.input.options.language);
+      const files = fixture.input.options.mode === "extension"
+        ? collectSourceFiles(pkg)
+        : collectSourceFilesGlob(pkg, fixture.input.options.declared_srcs);
+      const actual = files.map((filepath) => ({
+        path: path.relative(root, filepath).split(path.sep).join("/"),
+        digest: hashFile(filepath),
+      }));
+      expect(sourceInputRegistryDigest()).toBe(fixture.input.options.registry_sha256);
+      expect(actual).toEqual(fixture.expected.result.files);
+    },
+  );
+
+  it("rejects unknown languages before walking a missing package root", () => {
+    expect(() => collectSourceFiles(makePkg(path.join(tmpDir, "missing"), "unknown"))).toThrow(
+      /unknown source language/,
+    );
   });
 
   it("should collect Python source files", () => {
