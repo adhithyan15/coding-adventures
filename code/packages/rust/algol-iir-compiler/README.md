@@ -191,9 +191,12 @@ Integer literals also enter that real evaluator when their magnitude is within
 binary64's exact integer range; larger widenings remain unsupported.
 Labels, branches, loops,
 gotos, calls, dynamic reassignment, and captured globals invalidate that shortcut.
-Direct real-procedure results with zero parameters or only value-mode scalar
-parameters, and local real scalar variables whose latest straight-line assignment
-is such a result or a bare copy of another
+Direct real-procedure results with zero parameters, value-mode scalar
+parameters, array descriptor formals, direct procedure formals,
+integer/boolean/string name formals, or a finitely specialised real scalar name formal bound to a
+proven runtime-real actual, and local real scalar variables whose latest
+straight-line
+assignment is such a result or a bare copy of another
 provenance-backed local call the portable six-significant-digit
 IIR formatter shared with Dartmouth BASIC; its helper
 functions use only typed arithmetic, control flow, calls, conversions, and
@@ -202,9 +205,17 @@ result may therefore migrate through local real copies and be printed later.
 Conditional statements preserve that runtime provenance only for slots proven
 on every reachable exit. Conditional value expressions likewise preserve it
 when the selector contains no procedure call and every reachable value branch
-is a direct runtime real result or a provenance-backed local. One-sided
-reassignment, selector calls, intervening calls without a subsequent proven
-assignment and loops remain conservative. Unary plus, unary minus, additive
+is a direct runtime real result or a provenance-backed local. A selector may
+call a procedure when both value branches are direct formatter-safe real
+procedure calls. Those calls may nest through a real name formal only when its
+actual is itself a selector-call-safe direct real procedure result, optionally
+wrapped by unary signs or a real-valued standard function; selector calls
+paired with provenance-backed local or other real-name branches remain
+conservative.
+One-sided reassignment remains conservative. `for` loops preserve
+runtime-real provenance for caller-frame locals whose values their bodies leave
+invariant; controlled, changed, captured, and name-promoted storage remains
+conservative. Unary plus, unary minus, additive
 composition, multiplication, division, and exponentiation whose operands are
 proven runtime-real values or finite static numeric expressions preserve the
 same provenance. The real-valued standard functions `abs`, `sqrt`, `sin`,
@@ -219,8 +230,23 @@ writes continue through the existing specialised caller-storage path. Direct
 forwarding into another name formal preserves that original actual and its
 proof. Ordinary real scalars captured through the existing E6 typed-global
 path likewise remain concrete f64 values and retain formatter provenance in
-nested sibling procedures. Broader computed scalar formatting remains outside
-this bounded proof.
+nested sibling procedures. A real procedure specialised for a proven
+runtime-real scalar name actual also retains formatter provenance on its result;
+the existing finite specialisation supplies the caller expression directly, so
+no runtime thunk ABI is introduced. Real procedure calls with value or name
+array formals likewise retain result provenance because both supported paths
+use the existing concrete typed descriptor ABI. Direct procedure formals retain
+it as well: finite specialisation substitutes the statically known target, so
+no procedure descriptor crosses the IIR ABI. Broader computed scalar formatting
+remains outside this bounded proof. Integer, boolean, and string name formals also
+retain real-result provenance because their actual expressions are substituted
+by that same finite specialisation; unproven real name actuals remain excluded.
+Procedure calls with string-literal actuals are kept distinct from literal
+expressions, so their typed result is lowered instead of the argument literal.
+Direct value and statement calls also preserve runtime-real provenance for
+caller-frame scalar slots that remain ordinary locals after call lowering. A
+captured or call-by-name actual promoted to shared storage is not restored by
+this rule, so the optimization introduces no new aliasing or thunk ABI.
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.

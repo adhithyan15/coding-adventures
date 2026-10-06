@@ -84,9 +84,17 @@ Same step as last time, on a letter you have read since the beginning: ತ (ta) 
 Eight pairs, one step between each, drawn the same way every time. The eighth cost you almost nothing, because you learned the pattern at the first.
 A warning worth having. Do not read ಥ (tha) as the English th of think. There is no such sound here. It is a ತ with breath after it, nothing more.
 
-Writing: ಥ — copy what you see.
-Put your pen on ಥ and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
-This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+Writing: ಥ.
+1. start at the upper left and go down the left side into the left lobe, rising into the middle point.
+2. without lifting, drop from the point around the right lobe and climb the right side.
+3. without lifting, close the bowl leftward along the top.
+4. lift, then draw the top bar from left to right.
+5. without lifting, curl up into the hook.
+6. lift, then draw the tail downward.
+7. lift, then set the dot in the middle.
+Pen lifts: 3. The body is drawn as in ದ; the bar, the tail and the dot each start fresh.
+This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-thha.gif', 43 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0.
+Filed as 'thha': that series spells ತ as 'tha'.
 
 Guided Practice.
 [pause 1 second]

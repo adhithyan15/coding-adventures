@@ -15,18 +15,30 @@ use Test2::V0;
 use File::Temp qw(tempdir);
 use File::Path qw(make_path);
 use File::Spec ();
+use JSON::PP qw(decode_json);
 
 use CodingAdventures::BuildTool::Hasher;
+use CodingAdventures::BuildTool::Discovery;
 
 my $h = CodingAdventures::BuildTool::Hasher->new();
 
-sub make_pkg { my ($path) = @_; return { name => 'test/pkg', path => $path } }
+sub make_pkg { my ($path) = @_; return { name => 'perl/demo', language => 'perl', path => $path } }
 
 sub write_file {
     my ($path, $content) = @_;
     open(my $fh, '>', $path) or die "Cannot write $path: $!";
     print $fh $content;
     close $fh;
+}
+
+sub load_source_fixture {
+    my ($name) = @_;
+    my $path = "$Bin/../../../../specs/fixtures/build-tool-v1/cases/$name.json";
+    open(my $fh, '<:raw', $path) or die "Cannot read $path: $!";
+    local $/;
+    my $fixture = decode_json(<$fh>);
+    close $fh;
+    return $fixture;
 }
 
 # ---------------------------------------------------------------------------
@@ -81,9 +93,9 @@ subtest 'hash includes BUILD file' => sub {
 # Test 4: Python extensions included
 # ---------------------------------------------------------------------------
 subtest 'python extensions are included' => sub {
-    ok($h->is_source_extension('.py'),   '.py included');
-    ok($h->is_source_extension('.toml'), '.toml included');
-    ok(!$h->is_source_extension('.log'), '.log excluded');
+    ok($h->is_source_extension('.py', 'python'),   '.py included for Python');
+    ok(!$h->is_source_extension('.py', 'perl'),    '.py excluded for Perl');
+    ok(!$h->is_source_extension('.log', 'python'), '.log excluded');
 };
 
 # ---------------------------------------------------------------------------
@@ -113,7 +125,7 @@ subtest 'special filenames are included' => sub {
     ok($h->is_special_filename('cpanfile'),   'cpanfile included');
     ok($h->is_special_filename('Makefile.PL'), 'Makefile.PL included');
     ok($h->is_special_filename('BUILD'),       'BUILD included');
-    ok($h->is_special_filename('go.mod'),      'go.mod included');
+    ok($h->is_special_filename('go.mod', 'go'), 'go.mod included for Go');
     ok(!$h->is_special_filename('random.txt'), 'random.txt not special');
 };
 
@@ -184,6 +196,86 @@ subtest 'blib pruning is exact and case-sensitive' => sub {
         [qw(near-case/Blib/source.pm near-name/blib-example/source.pm)],
         'only exact lowercase blib is pruned',
     );
+};
+
+subtest 'neutral source fixtures project exact Dune pruning to Perl files' => sub {
+    for my $name (qw(source-collection-extension source-collection-declared)) {
+        my $fixture = load_source_fixture($name);
+        my $dir = tempdir(CLEANUP => 1);
+        my @dune = grep {
+            $_->{kind} eq 'file' &&
+            $_->{path} =~ m{(?:^|/)(?:_build|_Build|_build-example)/}
+        } @{ $fixture->{input}{options}{candidates} };
+        is(scalar @dune, 3, "$name has three Dune path components");
+        for my $candidate (@dune) {
+            (my $relative = $candidate->{path}) =~ s/\.ml$/.pm/;
+            my $path = "$dir/$relative";
+            (my $parent = $path) =~ s{/[^/]+$}{};
+            make_path($parent);
+            write_file($path, pack('H*', $candidate->{content_hex}));
+        }
+        my @relative = map {
+            my $path = File::Spec->abs2rel($_, $dir);
+            $path =~ s{\\}{/}g;
+            $path;
+        } $h->collect_source_files(make_pkg($dir));
+        is(
+            \@relative,
+            [qw(case/_Build/generated.pm near/_build-example/generated.pm)],
+            "$name prunes only the exact lowercase Dune directory",
+        );
+    }
+};
+
+subtest 'discovered declarations select non-source files and the selected BUILD' => sub {
+    my $dir = tempdir(CLEANUP => 1);
+    make_path("$dir/code/packages/perl/demo/assets", "$dir/code/packages/perl/demo/lib", "$dir/code/packages/perl/demo/_build");
+    my $pkg_dir = "$dir/code/packages/perl/demo";
+    write_file("$pkg_dir/BUILD", "perl_library(name = \"demo\", srcs = glob([\"assets/*.bin\"]))\n");
+    write_file("$pkg_dir/assets/data.bin", "original\n");
+    write_file("$pkg_dir/lib/undeclared.pm", "original\n");
+    write_file("$pkg_dir/_build/decoy.bin", "original\n");
+    my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $dir);
+    $discovery->discover();
+    my ($pkg) = @{ $discovery->packages };
+    my @relative = map {
+        my $path = File::Spec->abs2rel($_, $pkg_dir);
+        $path =~ s{\\}{/}g;
+        $path;
+    } $h->collect_source_files($pkg);
+    is(\@relative, [qw(BUILD assets/data.bin)], 'declared mode includes only BUILD and matching retained files');
+
+    my $first = $h->hash_package($pkg);
+    write_file("$pkg_dir/lib/undeclared.pm", "changed\n");
+    is($h->hash_package($pkg), $first, 'undeclared source does not change digest');
+    write_file("$pkg_dir/_build/decoy.bin", "changed\n");
+    is($h->hash_package($pkg), $first, 'generated tree does not change digest');
+    write_file("$pkg_dir/assets/data.bin", "changed\n");
+    isnt($h->hash_package($pkg), $first, 'declared non-source bytes change digest');
+    my $second = $h->hash_package($pkg);
+    write_file("$pkg_dir/BUILD", "perl_library(name = \"demo\", srcs = glob([\"assets/*.bin\"])) # changed\n");
+    isnt($h->hash_package($pkg), $second, 'selected BUILD bytes change digest');
+};
+
+subtest 'explicit empty declaration does not fall back to extension mode' => sub {
+    my $dir = tempdir(CLEANUP => 1);
+    write_file("$dir/BUILD", "perl_library(name = \"empty\", srcs = [])\n");
+    write_file("$dir/ignored.pm", "original\n");
+    my $pkg = { name => 'perl/demo', path => $dir, language => 'perl', source_mode => 'declared_sources', declared_srcs => [], build_file => 'BUILD' };
+    my @relative = map { File::Spec->abs2rel($_, $dir) } $h->collect_source_files($pkg);
+    is(\@relative, ['BUILD'], 'only selected BUILD is retained');
+    my $first = $h->hash_package($pkg);
+    write_file("$dir/ignored.pm", "changed\n");
+    is($h->hash_package($pkg), $first, 'ignored extension does not change digest');
+};
+
+subtest 'declared globs are validated before traversal' => sub {
+    my $dir = tempdir(CLEANUP => 1);
+    write_file("$dir/BUILD", "perl_library(name = \"bad\", srcs = [])\n");
+    for my $invalid ('../outside.pm', '/absolute.pm', 'lib\\*.pm', 'lib/[z-a].pm') {
+        my $pkg = { path => $dir, language => 'perl', source_mode => 'declared_sources', declared_srcs => ['safe/*.pm', $invalid], build_file => 'BUILD' };
+        like(dies { $h->collect_source_files($pkg) }, qr/DECLARED_GLOB_INVALID/, "$invalid rejected");
+    }
 };
 
 done_testing();

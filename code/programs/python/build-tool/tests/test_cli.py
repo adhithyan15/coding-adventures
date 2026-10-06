@@ -41,9 +41,9 @@ class TestMainCli:
         # Create a minimal repo structure
         code_dir = tmp_path / "code"
         code_dir.mkdir()
-        pkg_dir = code_dir / "pkg"
-        pkg_dir.mkdir()
-        (code_dir / "DIRS").write_text("pkg\n")
+        pkg_dir = code_dir / "packages" / "python" / "pkg"
+        pkg_dir.mkdir(parents=True)
+        (code_dir / "DIRS").write_text("packages\n")
         (pkg_dir / "BUILD").write_text('echo "hi"\n')
         (pkg_dir / "main.py").write_text("x = 1\n")
         (pkg_dir / "pyproject.toml").write_text(
@@ -60,9 +60,9 @@ class TestMainCli:
         """Test force build with minimal repo."""
         code_dir = tmp_path / "code"
         code_dir.mkdir()
-        pkg_dir = code_dir / "pkg"
-        pkg_dir.mkdir()
-        (code_dir / "DIRS").write_text("pkg\n")
+        pkg_dir = code_dir / "packages" / "python" / "pkg"
+        pkg_dir.mkdir(parents=True)
+        (code_dir / "DIRS").write_text("packages\n")
         (pkg_dir / "BUILD").write_text('echo "hi"\n')
         (pkg_dir / "main.py").write_text("x = 1\n")
         (pkg_dir / "pyproject.toml").write_text(
@@ -177,9 +177,9 @@ class TestMainCli:
     def test_failed_build_returns_1(self, tmp_path):
         """Test that a failed build returns exit code 1."""
         code_dir = tmp_path / "code"
-        pkg_dir = code_dir / "pkg"
+        pkg_dir = code_dir / "packages" / "python" / "pkg"
         pkg_dir.mkdir(parents=True)
-        (code_dir / "DIRS").write_text("pkg\n")
+        (code_dir / "DIRS").write_text("packages\n")
         (pkg_dir / "BUILD").write_text("exit 1\n")
         (pkg_dir / "main.py").write_text("x = 1\n")
 

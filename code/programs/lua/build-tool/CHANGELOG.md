@@ -4,6 +4,15 @@
 
 ### Added
 
+- Process-free dependency and combined SHA-256 digests plus inert cache-hit,
+  miss, and corrupt-recovery decisions now consume all 11 neutral
+  `hashing-cache-*` fixtures, including dependency-only changes and shared
+  input consumers; native persistence and CLI activation remain separate.
+- A process-free portable source selector and package-digest API consumes the
+  complete checked 23-language, seven-role source-input registry from generated
+  package data. The native Busted suite exercises all seven package-local
+  neutral cases, SHA-256 v1 path/content framing, generated and link pruning,
+  invalid glob rejection, path aliases, and raw-byte/rename sensitivity.
 - Native discovery tests now project the shared language-registry fixture's
   OCaml package and exact Dune `_build` decoy, with direct case-variant and
   near-name coverage.

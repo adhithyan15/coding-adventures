@@ -10,12 +10,34 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+- Source hashing now consults a complete installed language-specific input
+  registry instead of a cross-language merged suffix list. Universal BUILD
+  and root capability inputs, all seven registry roles, fixed-path precedence,
+  exact generated-component pruning, and declared-source selection are tested
+  against the seven package-local neutral cases. Source digests now frame
+  canonical repository-relative UTF-8 paths and raw bytes with unsigned
+  64-bit lengths; empty packages use the standard empty SHA-256 digest and
+  unreadable selected files fail instead of disappearing from the hash.
+  Declared-source matching now uses bounded segment-aware dynamic programming
+  instead of a backtracking regex, and the native walk caps directories and
+  inert links as well as regular files.
+- `Makefile.PL` installs the byte-identical registry JSON beside the runtime
+  modules; the deterministic sync command and registry digest test detect
+  stale package data.
+- Discovery now classifies OCaml package BUILD files; fixture-projected tests
+  verify exact lowercase Dune `_build` pruning in both discovery and source
+  collection while retaining `_Build` and `_build-example` directories.
 - Pinned the existing exact lowercase `blib` pruning behavior with direct
   case-variant and near-name evidence now that the neutral generated-directory
   authority includes that Perl artifact.
 
 ### Added
 
+- Supported Starlark targets now carry selected-BUILD `srcs` into an explicit
+  declared-source hashing mode. Matching non-source files and the selected
+  BUILD affect the fingerprint; empty declarations remain empty. Shell BUILD
+  files retain extension mode, and malformed detected Starlark fails closed.
+  This is a metadata bridge, not full source-registry or CLI-cache conformance.
 - A pure graph and diff-selection core now consumes the exact eight graph and
   eleven diff-selection conformance fixtures. It provides canonical levels and
   closures, repository-boundary reverse indexing, exact BUILD-front handling,

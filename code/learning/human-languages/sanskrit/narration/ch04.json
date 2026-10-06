@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cfdb21fc442d9793",
+  "sourceHash": "fnv1a64:cf0e5cfcff46516a",
   "lessons": [
     {
       "id": "SA-C04-gacchami",
@@ -240,7 +240,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6138c457f6e98d84",
+      "sourceHash": "fnv1a64:3f13da2433df2094",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -331,7 +331,7 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift at that junction and draw the diagonal tail down-right."
+              "text": "2. without lifting, draw the diagonal tail down-right."
             },
             {
               "kind": "speech",
@@ -339,11 +339,11 @@
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "Pen lifts: 1. The pen comes up once."
             },
             {
               "kind": "speech",
-              "text": "verified three-stroke teaching form; another animated learner source joins the loop and diagonal tail."
+              "text": "The source shows three movements; most native writers draw र in two strokes (96% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",
@@ -679,7 +679,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6999be6ccb847268",
+      "sourceHash": "fnv1a64:72e4be61538a04e2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -766,23 +766,27 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. descend the left stem, then curve right around the lower bowl and rise to its upper-right junction without lifting."
+              "text": "1. descend the left stem, then curve right around the lower bowl and rise to its upper-right junction."
             },
             {
               "kind": "speech",
-              "text": "2. lift and draw the right stem top-to-bottom."
+              "text": "2. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the top shirorekhā left-to-right."
+              "text": "3. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "4. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "verified three-stroke teaching form; everyday handwriting may join or simplify the bowl differently."
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows three movements; most native writers draw प in two strokes (98% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

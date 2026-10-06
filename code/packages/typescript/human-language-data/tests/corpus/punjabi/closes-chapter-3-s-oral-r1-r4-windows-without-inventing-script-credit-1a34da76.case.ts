@@ -155,5 +155,25 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // clue, both closed because the insertions move a later retrieval into the
   // window; 0 lost, because the two panj atoms the hona insertion pushed past R1
   // are retrieved by name in PA-C07-hona-two-roots' warm-up.
-  expect(report.summary.missedByWindow).toEqual({ R1: 55, R2: 559, R3: 482, R4: 531 });
+  // Chapter 153 extends the tail by 11 short date-writing sessions. One R1
+  // and three R2 windows newly become measurable; all 11 create R3/R4 windows
+  // for earlier atoms in the measured report.
+  // Chapter 154 adds seven short integration sessions after the date runway.
+  // Their new tail makes one R2 and seven R3/R4 windows measurable. The
+  // independent form also revisits date-format repair within its R2 window,
+  // closing that one missed retrieval; the chapter-3 assertions still guard
+  // the original debt.
+  // Chapter 155 adds six short form sessions at the tail. The supported
+  // and delayed six-field skills are genuinely revisited twice, closing two
+  // R1 misses; one R2, four R3, and six R4 misses remain measurable debt.
+  // Chapter 156 extends the measurable tail by 19 short, no-new-atom writing
+  // sessions. Two genuine six-field form recalls close one R1 and two R2
+  // windows; the remaining newly measurable debt is retained, not suppressed.
+  // Chapter 157 adds five short timed-writing and repair sessions. A direct
+  // before/after (atom, window) diff shows two R3 closures on the six-field
+  // cue and repair atoms. Five Chapter 146 quality-word R4 windows become
+  // measurable at the new tail; #16793 owns their later retrieval. The test
+  // pins the measured debt rather than calling these unrelated words taught
+  // by the timed form or message.
+  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 513, R4: 577 });
 });

@@ -4020,7 +4020,45 @@ fn emit_box(
     part_styles: &PartStyleMap,
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
-    emit_container(node, indent, part_styles, "Border", ctx)
+    // Keep the authored visual and place its semantic row label on a native
+    // header peer. A row header is outside the inner data-cell loop.
+    let body = emit_container(node, indent, part_styles, "Border", ctx)?;
+    if ctx
+        .native_table
+        .as_ref()
+        .is_some_and(|table| matches!(table.role, NativeTableRole::Body) && table.for_depth == 1)
+        && find_prop_keyword(node, "table-cell-role") == Some("row-header")
+    {
+        let text = node.children.first().ok_or_else(|| {
+            PipelineEmitError::UnsupportedExpression("row-header requires label content".into())
+        })?;
+        let value = find_prop_value(text, "content").ok_or_else(|| {
+            PipelineEmitError::UnsupportedExpression("row-header requires label content".into())
+        })?;
+        let label = match value {
+            LayoutPropValue::Expr(src) => match lower_expr_for_xbind(src, ctx) {
+                ExprLowering::Bindable(path) => format!("{{x:Bind {path}, Mode=OneWay}}"),
+                _ => {
+                    return Err(PipelineEmitError::UnsupportedExpression(
+                        "unsupported row-header label".into(),
+                    ))
+                }
+            },
+            LayoutPropValue::SlotRef(slot) => {
+                format!("{{x:Bind {}, Mode=OneWay}}", ctx.slot_xbind_path(slot))
+            }
+            LayoutPropValue::String(value) => value.clone(),
+            _ => {
+                return Err(PipelineEmitError::UnsupportedExpression(
+                    "unsupported row-header label".into(),
+                ))
+            }
+        };
+        let pad = " ".repeat(indent);
+        let name = ctx.component_name;
+        return Ok(format!("{pad}<local:{name}MosaicTableHeaderCell Row=\"{{x:Bind Index, Mode=OneWay}}\" Header=\"{}\" HorizontalContentAlignment=\"Stretch\" VerticalContentAlignment=\"Stretch\">\n{}{pad}</local:{name}MosaicTableHeaderCell>\n", escape_xaml_attr(&label), indent_xaml_fragment(&body, 4)));
+    }
+    Ok(body)
 }
 
 /// Mount a host-supplied `UIElement` node slot inside a styled native
@@ -5490,7 +5528,17 @@ public sealed class __COMPONENT__MosaicTable : Grid
     {
         var headers = new List<__COMPONENT__MosaicTableHeaderCell>();
         CollectDescendants(this, headers);
+        headers.RemoveAll(header => header.Row >= 0);
         headers.Sort((left, right) => left.Column.CompareTo(right.Column));
+        return headers;
+    }
+
+    internal IReadOnlyList<__COMPONENT__MosaicTableHeaderCell> RowHeaders()
+    {
+        var headers = new List<__COMPONENT__MosaicTableHeaderCell>();
+        CollectDescendants(this, headers);
+        headers.RemoveAll(header => header.Row < 0);
+        headers.Sort((left, right) => left.Row.CompareTo(right.Row));
         return headers;
     }
 
@@ -5510,6 +5558,16 @@ public sealed class __COMPONENT__MosaicTable : Grid
 public sealed class __COMPONENT__MosaicTableHeaderCell : ContentControl
 {
     public __COMPONENT__MosaicTableHeaderCell() => IsTabStop = false;
+
+    // A negative row denotes a column header. Row headers retain their own
+    // logical index and do not consume a data column in IGridProvider.
+    public int Row
+    {
+        get => (int)GetValue(RowProperty);
+        set => SetValue(RowProperty, value);
+    }
+    public static readonly DependencyProperty RowProperty =
+        DependencyProperty.Register(nameof(Row), typeof(int), typeof(__COMPONENT__MosaicTableHeaderCell), new PropertyMetadata(-1));
 
     public int Column
     {
@@ -5632,7 +5690,13 @@ internal sealed class __COMPONENT__MosaicTableAutomationPeer : FrameworkElementA
         return providers;
     }
 
-    public IRawElementProviderSimple[] GetRowHeaders() => Array.Empty<IRawElementProviderSimple>();
+    public IRawElementProviderSimple[] GetRowHeaders()
+    {
+        var headers = Table.RowHeaders();
+        var providers = new IRawElementProviderSimple[headers.Count];
+        for (var index = 0; index < headers.Count; index++) providers[index] = ProviderFor(headers[index]);
+        return providers;
+    }
 
     private IRawElementProviderSimple ProviderFor(UIElement element)
     {
@@ -5702,7 +5766,20 @@ internal sealed class __COMPONENT__MosaicTableCellAutomationPeer : FrameworkElem
         return Array.Empty<IRawElementProviderSimple>();
     }
 
-    public IRawElementProviderSimple[] GetRowHeaderItems() => Array.Empty<IRawElementProviderSimple>();
+    public IRawElementProviderSimple[] GetRowHeaderItems()
+    {
+        var table = Cell.FindTable();
+        if (table is null) return Array.Empty<IRawElementProviderSimple>();
+        foreach (var header in table.RowHeaders())
+        {
+            if (header.Row != Cell.Row) continue;
+            var peer = FrameworkElementAutomationPeer.CreatePeerForElement(header);
+            return peer is null
+                ? Array.Empty<IRawElementProviderSimple>()
+                : new[] { ProviderFromPeer(peer) };
+        }
+        return Array.Empty<IRawElementProviderSimple>();
+    }
 }
 "#
     .replace("__COMPONENT__", component)
@@ -13207,8 +13284,15 @@ fn xaml_native_table_shape(host_table: &LayoutNode) -> Option<XamlNativeTableSha
     if header_row.tag != "Row" {
         return None;
     }
-    let [header_cells] = header_row.children.as_slice() else {
-        return None;
+    let (header_cells, has_row_headers) = match header_row.children.as_slice() {
+        [cells] => (cells, false),
+        [corner, cells]
+            if corner.tag == "Box"
+                && find_prop_keyword(corner, "table-cell-role") == Some("corner") =>
+        {
+            (cells, true)
+        }
+        _ => return None,
     };
     if header_cells.tag != "For" || header_cells.children.len() != 1 {
         return None;
@@ -13226,8 +13310,18 @@ fn xaml_native_table_shape(host_table: &LayoutNode) -> Option<XamlNativeTableSha
     if body_row.tag != "Row" {
         return None;
     }
-    let [body_cells] = body_row.children.as_slice() else {
-        return None;
+    let body_cells = match body_row.children.as_slice() {
+        [cells] if !has_row_headers => cells,
+        [header, cells]
+            if has_row_headers
+                && header.tag == "Box"
+                && find_prop_keyword(header, "table-cell-role") == Some("row-header")
+                && header.children.len() == 1
+                && header.children[0].tag == "Text" =>
+        {
+            cells
+        }
+        _ => return None,
     };
     if body_cells.tag != "For" || body_cells.children.len() != 1 {
         return None;
@@ -13381,14 +13475,12 @@ fn emit_native_host_table(
         cell_name_helper: cell_name_helper.clone(),
         for_depth: 0,
     });
-    out.push_str(&emit_host_table_section(
-        shape.head,
-        0,
-        indent + 4,
-        part_styles,
-        ctx,
-        false,
-    )?);
+    let previous_width_source = ctx.header_width_source.take();
+    ctx.header_width_source =
+        table_header_width_source(node, ctx).map(|source| (source, ctx.for_scope.len()));
+    let header_result = emit_host_table_section(shape.head, 0, indent + 4, part_styles, ctx, false);
+    ctx.header_width_source = previous_width_source;
+    out.push_str(&header_result?);
 
     ctx.native_table = Some(NativeTableEmission {
         role: NativeTableRole::Body,
@@ -13408,6 +13500,43 @@ fn emit_native_host_table(
 
     writeln!(out, "{pad}</local:{table_type}>").unwrap();
     Ok(out)
+}
+
+fn table_header_width_source(node: &LayoutNode, ctx: &EmitContext<'_>) -> Option<String> {
+    let colgroup = node
+        .children
+        .iter()
+        .find(|child| child.tag == "HostTableColGroup");
+    // A single repeated Col defines the data-column widths. Fixed leading
+    // columns retain their authored geometry. Do not guess among groups.
+    let repeated_columns = colgroup
+        .map(|group| {
+            group
+                .children
+                .iter()
+                .filter(|child| child.tag == "For")
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    match repeated_columns.as_slice() {
+        [columns] if columns.children.len() == 1 && columns.children[0].tag == "Col" => {
+            match (
+                find_prop_value(columns, "each"),
+                find_prop_value(&columns.children[0], "width"),
+                find_prop_keyword(columns, "as"),
+            ) {
+                (
+                    Some(LayoutPropValue::SlotRef(slot)),
+                    Some(LayoutPropValue::Expr(value)),
+                    Some(binding),
+                ) if strip_balanced_outer_parens(value.trim()) == binding => {
+                    Some(ctx.slot_property_name(slot))
+                }
+                _ => None,
+            }
+        }
+        _ => None,
+    }
 }
 
 /// `HostTable [name] { section sub-tags... }` per spec §5.
@@ -13561,22 +13690,7 @@ fn emit_host_table_contents(
         }
     }
 
-    // A single repeated Col defines the data-column widths. Fixed leading
-    // columns retain their authored geometry. Do not guess among groups.
-    let repeated_columns = colgroup.map(|group| group.children.iter()
-        .filter(|child| child.tag == "For").collect::<Vec<_>>()).unwrap_or_default();
-    let header_width_source = match repeated_columns.as_slice() {
-        [columns] if columns.children.len() == 1 && columns.children[0].tag == "Col" => {
-            match (find_prop_value(columns, "each"),
-                find_prop_value(&columns.children[0], "width"),
-                find_prop_keyword(columns, "as")) {
-                (Some(LayoutPropValue::SlotRef(slot)), Some(LayoutPropValue::Expr(value)), Some(binding))
-                    if strip_balanced_outer_parens(value.trim()) == binding => Some(ctx.slot_property_name(slot)),
-                _ => None,
-            }
-        }
-        _ => None,
-    };
+    let header_width_source = table_header_width_source(node, ctx);
 
     // -- 2. Empty HostTable → empty `<Grid/>`. Preserves part style. --
     if head.is_none() && body.is_none() && foot.is_none() {
@@ -16451,6 +16565,26 @@ mod tests {
         assert!(r
             .code_behind
             .contains("IGridItemProvider, ITableItemProvider"));
+
+        let mut numbered = canonical.clone();
+        let prefix = |role: &str| LayoutNode {
+            tag: "Box".into(), part_name: None,
+            props: vec![LayoutProp { name: "table-cell-role".into(), value: LayoutPropValue::Keyword(role.into()) }],
+            children: vec![LayoutNode {
+                tag: "Text".into(), part_name: None, children: vec![],
+                props: vec![LayoutProp { name: "content".into(), value: LayoutPropValue::String("authored header".into()) }],
+            }],
+        };
+        numbered.children[0].children[0].children.insert(0, prefix("corner"));
+        assert!(!host_table_has_native_semantics(&numbered), "asymmetric prefixes are not a native table");
+        numbered.children[1].children[0].children[0].children.insert(0, prefix("row-header"));
+        assert!(host_table_has_native_semantics(&numbered));
+        let numbered_result = compile(&c, &layout_with_root("Sheet", numbered.clone()), &empty_style("Sheet"));
+        assert!(numbered_result.xaml.contains("MosaicTableHeaderCell Row=\"{x:Bind Index, Mode=OneWay}\" Header=\"authored header\""));
+        assert!(numbered_result.xaml.contains("ColumnCount=\"{x:Bind Headers.Count, Mode=OneWay}\""));
+        assert!(numbered_result.code_behind.contains("if (header.Row != Cell.Row) continue;"));
+        numbered.children[0].children[0].children[0].props.clear();
+        assert!(!host_table_has_native_semantics(&numbered), "unmarked leading content remains unsupported");
 
         let mut with_foot = canonical.clone();
         with_foot

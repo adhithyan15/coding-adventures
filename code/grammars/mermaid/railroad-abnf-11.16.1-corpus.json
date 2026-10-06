@@ -1,0 +1,13 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "fixtures": [
+    {"name":"terminal-numval-and-reference","source":"railroad-abnf-beta\nrule = other-rule \"value\" %x41;"},
+    {"name":"alternation-and-group","source":"railroad-abnf-beta\nrule = prefix (ALPHA / DIGIT / \"-\");"},
+    {"name":"optional-group","source":"railroad-abnf-beta\nrule = [ \"optional\" ];"},
+    {"name":"unbounded-repetition","source":"railroad-abnf-beta\nzero = *DIGIT;\none = 1*DIGIT;"},
+    {"name":"bounded-and-exact-repetition","source":"railroad-abnf-beta\nbounded = 2*4DIGIT;\nexact = 3ALPHA;\noptional = *1\"x\";"},
+    {"name":"numeric-ranges-and-sequences","source":"railroad-abnf-beta\nhex = %x41-5A;\ndecimal = %d48.49.50;\nbinary = %b0.1;"},
+    {"name":"metadata-and-comments","source":"railroad-abnf-beta\ntitle \"URI grammar\"\naccTitle: URI\naccDescr {\n  ABNF grammar\n}\n; ABNF comment\nURI = scheme \":\" hier-part;\nscheme = ALPHA *(ALPHA / DIGIT / \"+\" / \"-\" / \".\");"}
+  ]
+}

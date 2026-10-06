@@ -26,6 +26,7 @@ component VentureChrome {
   slot history-disabled   : bool ;
   slot history-open       : bool ;
   slot history-position   : text ;
+  slot history-title      : text ;
   slot history-address    : text ;
   slot history-previous-disabled : bool ;
   slot history-next-disabled : bool ;

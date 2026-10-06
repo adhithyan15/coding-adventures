@@ -1,0 +1,650 @@
+{
+  "script": "bengali",
+  "name": "Bengali",
+  "font": "_fonts/NotoSansBengali-Static.ttf",
+  "direction": "ltr",
+  "system": "abugida",
+  "signature": "A headline (mātrā) runs along the top of most letters, as in Devanagari, but many letters hang a pointed, triangular body from it (ক ব র), and the signs ি and ে stand in front of their consonant.",
+  "complete": false,
+  "combination": "A consonant carries an inherent vowel, the open ô of awe (ক = kô). A vowel sign replaces it (ন + া → না = na); ি and ে are written in front of the consonant they follow in speech. The hasanta ্ deletes the vowel, and the bare consonant fuses with the next into a conjunct (স + ্ + ক → স্ক). Most letters hang from a headline that runs along the top of a word.",
+  "notes": "The Bengali track's own inventory: exactly the letters, signs and digits its lessons read (30 letters, 11 signs, 10 digits), each `sound` copied from that letter's own writing-lesson romanization. It is not the whole alphabet, so `complete` is false. Stroke order is source-gated: only rows with `penLifts` and `strokeOrderSource` carry a cited order, from native writers' pen traces stored in HP Labs India's LipiTk Bangla recognizer (counts and shares only; no trace is copied). Rows without them are recognition-only: `strokeOrder: []` means NOT VERIFIED, never none. Many letters are left out on purpose: in those traces the headline is drawn first, last, partly or not at all with no majority, or the stroke count is a near tie.",
+  "letters": [
+    {
+      "glyph": "আ",
+      "sound": "a",
+      "role": "independent-vowel",
+      "components": [
+        "আ  a — independent vowel (no consonant to ride)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ই",
+      "sound": "i",
+      "role": "independent-vowel",
+      "components": [
+        "ই  i — independent vowel (no consonant to ride)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "এ",
+      "sound": "e",
+      "role": "independent-vowel",
+      "components": [
+        "a small curl inside an arch",
+        "the right side, down to a foot",
+        "a base and a short hook rising on the left"
+      ],
+      "strokeOrder": [
+        "start inside the curl and turn clockwise over the arch",
+        "come down the right side to its foot",
+        "sweep left along the base and up the hook"
+      ],
+      "strokeOrderNote": "one pen-down stroke, the majority order in HP Labs India's native-writer traces, fitted to the bundled printed outline",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 7 (এ, e; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 194 of the 226 stored prototypes of the independent e are one pen-down stroke. 189 of those 194 start in the upper half, inside the small curl, and all 194 turn clockwise: round the curl, over the arch and down the right side. 190 end on the left, at the top of the hook, so the base is swept from right to left. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ও",
+      "sound": "o",
+      "role": "independent-vowel",
+      "components": [
+        "a top curl inside the upper bowl",
+        "a turn into the middle",
+        "the lower bowl and the long left arm"
+      ],
+      "strokeOrder": [
+        "start inside the top curl and turn clockwise round the upper bowl",
+        "dip into the middle",
+        "round the lower bowl clockwise and up the left arm"
+      ],
+      "strokeOrderNote": "one pen-down stroke, the majority order in HP Labs India's native-writer traces, fitted to the bundled printed outline",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 9 (ও, o; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 231 of the 239 stored prototypes of the independent o are one pen-down stroke. 222 of those 231 start in the upper half, in the top curl, and all 231 turn clockwise overall: round the top curl and the upper bowl, into the middle, and round the lower bowl. 218 end on the left, at the top of the left arm. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ক",
+      "sound": "kô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ক  kô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "খ",
+      "sound": "khô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "a small curl at the upper left",
+        "a bend through the middle down to a pointed left tip",
+        "a lower curve to the foot of the stem",
+        "the stem on the right, with a short flag at its top"
+      ],
+      "strokeOrder": [
+        "start inside the curl and turn it counterclockwise",
+        "cross the middle bend and come down to the pointed left tip",
+        "round the lower curve to the foot of the stem",
+        "climb the stem and turn right into the flag"
+      ],
+      "strokeOrderNote": "one pen-down stroke, the majority order in HP Labs India's native-writer traces, fitted to the bundled printed outline",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 12 (খ, kha; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 189 of the 212 stored prototypes of kha are one pen-down stroke. 179 of those 189 start on the left, in the curl, and in 169 the curl turns counterclockwise. The stroke then crosses the middle, comes down to the pointed left tip, rounds the lower curve and climbs the stem: 185 end at the top right, and 128 finish with a short move to the right, the flag beside the top of the stem. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "গ",
+      "sound": "gô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "গ  gô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "চ",
+      "sound": "chô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "চ  chô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ছ",
+      "sound": "chhô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ছ  chhô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "জ",
+      "sound": "jô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "জ  jô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ঝ",
+      "sound": "jha",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ঝ  jha — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ঞ",
+      "sound": "nyô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "a left part shaped like the independent e (এ)",
+        "a right part of two lobes joined to the stem"
+      ],
+      "strokeOrder": [
+        "draw the left part as এ: curl, arch, right side, base and hook",
+        "lift, then arch from the stem over the upper right lobe",
+        "dip into the middle",
+        "round the lower lobe clockwise back to the stem"
+      ],
+      "strokeOrderNote": "two pen-down strokes, the majority order in HP Labs India's native-writer traces, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 20 (ঞ, nya; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 172 of the 191 stored prototypes of nya are two pen-down strokes. The first is the left part, written like the independent e: 163 of those 172 start in the upper half, 169 turn clockwise and 170 end on the left. The second is the right part: 160 start to the right of where the first began, 171 turn clockwise, and 145 end in the lower half. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ট",
+      "sound": "ṭô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ট  ṭô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ড",
+      "sound": "ḍô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ড  ḍô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ত",
+      "sound": "tô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ত  tô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "থ",
+      "sound": "thô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "a curl at the upper left",
+        "a bowl over the top, coming down to a pointed left tip",
+        "a lower curve to the foot of the stem",
+        "the stem on the right, with a short flag at its top"
+      ],
+      "strokeOrder": [
+        "start inside the curl and turn it clockwise",
+        "run over the top of the bowl and down to the pointed left tip",
+        "round the lower curve to the foot of the stem",
+        "climb the stem and turn right into the flag"
+      ],
+      "strokeOrderNote": "one pen-down stroke, the majority order in HP Labs India's native-writer traces, fitted to the bundled printed outline",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 27 (থ, tha; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 192 of the 220 stored prototypes of tha are one pen-down stroke. 186 of those 192 start on the left, in the curl, which turns clockwise in all 192. The stroke then runs over the top of the bowl, down to the pointed left tip, round the lower curve and up the stem: 188 end at the top right, and 135 finish with a short move to the right, the flag beside the top of the stem. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "দ",
+      "sound": "dô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "দ  dô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ধ",
+      "sound": "dhô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ধ  dhô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ন",
+      "sound": "nô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ন  nô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "প",
+      "sound": "pô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "প  pô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ফ",
+      "sound": "pha",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ফ  pha — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ব",
+      "sound": "bô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "the headline",
+        "a diagonal from the stem down to a pointed left tip",
+        "a lower curve back to the foot of the stem",
+        "the upright stem on the right"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "turn into the stem and run down the diagonal to the pointed left tip",
+        "round the lower curve to the foot of the stem",
+        "climb the stem to the headline"
+      ],
+      "strokeOrderNote": "one pen-down stroke, the majority order in HP Labs India's native-writer traces, fitted to the bundled printed outline",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 33 (ব, ba; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 433 of the 477 stored prototypes of ba are one pen-down stroke. 258 of those 433 open with the headline, drawn left to right; most of the rest (86) draw no headline run at all. 308 start at the upper left, 350 finish by climbing the stem, and 393 end at the top right. The path keeps that order: the headline left to right, the turn into the stem and down the diagonal to the pointed left tip, the lower curve to the stem's foot, and the climb back up the stem. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ভ",
+      "sound": "bhô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ভ  bhô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ম",
+      "sound": "mô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ম  mô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "য",
+      "sound": "jô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "য  jô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "র",
+      "sound": "rô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "the body of ব: headline, diagonal, lower curve and stem",
+        "a dot below, under the left tip"
+      ],
+      "strokeOrder": [
+        "draw the headline from left to right",
+        "turn into the stem and run down the diagonal to the pointed left tip",
+        "round the lower curve to the foot of the stem",
+        "climb the stem to the headline",
+        "lift, then place the dot below"
+      ],
+      "strokeOrderNote": "two pen-down strokes, the majority order in HP Labs India's native-writer traces, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 37 (র, ra; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 198 of the 312 stored prototypes of ra are two pen-down strokes (98 are three, 8 one). In all 198 two-stroke prototypes the body comes first and the dot second, below it (157 in its left half). The body is written like ba: 147 open with the headline left to right, 154 finish by climbing the stem, and 189 end at the top right. The traces do not settle which way the dot is turned, so the path makes no claim about it and draws it as a short touch. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ল",
+      "sound": "lô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "ল  lô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "শ",
+      "sound": "sha",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "শ  sha — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "স",
+      "sound": "shô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "স  shô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "হ",
+      "sound": "hô",
+      "role": "consonant",
+      "inherentVowel": "ô",
+      "components": [
+        "হ  hô — consonant (inherent “ô”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    }
+  ],
+  "marks": [
+    {
+      "mark": "া",
+      "sound": "-a",
+      "role": "vowel-sign",
+      "attachesAs": "a single upright stroke standing to the right of its consonant, dropping from the headline",
+      "example": {
+        "base": "ন",
+        "combined": "না",
+        "sound": "na"
+      }
+    },
+    {
+      "mark": "ি",
+      "sound": "-i",
+      "role": "vowel-sign",
+      "attachesAs": "a hooked sign written to the LEFT of its consonant, though spoken after it",
+      "example": {
+        "base": "ম",
+        "combined": "মি",
+        "sound": "mi"
+      }
+    },
+    {
+      "mark": "ী",
+      "sound": "-i (long)",
+      "role": "vowel-sign",
+      "attachesAs": "a hooked sign written to the right of its consonant, like া"
+    },
+    {
+      "mark": "ু",
+      "sound": "-u",
+      "role": "vowel-sign",
+      "attachesAs": "a small hook written underneath its consonant",
+      "example": {
+        "base": "ত",
+        "combined": "তু",
+        "sound": "tu"
+      }
+    },
+    {
+      "mark": "ৃ",
+      "sound": "-ri",
+      "role": "vowel-sign",
+      "attachesAs": "a hook hanging under its consonant"
+    },
+    {
+      "mark": "ে",
+      "sound": "-e",
+      "role": "vowel-sign",
+      "attachesAs": "an upright stroke with a small hook written in FRONT of its consonant, though spoken after it",
+      "example": {
+        "base": "ক",
+        "combined": "কে",
+        "sound": "ke"
+      }
+    },
+    {
+      "mark": "্",
+      "sound": "(hasanta)",
+      "role": "virama",
+      "attachesAs": "a mark under a consonant meaning no vowel here; the bare consonant fuses with the next into a conjunct"
+    },
+    {
+      "mark": "়",
+      "sound": "(the dot below)",
+      "role": "diacritic",
+      "attachesAs": "one dot tucked under a letter, turning it into a different letter (য + ় → য়)"
+    },
+    {
+      "mark": "ং",
+      "sound": "anusvar",
+      "role": "anusvara",
+      "attachesAs": "written after the syllable it closes with ng, as in বাংলা"
+    },
+    {
+      "mark": "ঃ",
+      "sound": "bisarga",
+      "role": "visarga",
+      "attachesAs": "two small circles one above the other, written after the syllable",
+      "components": [
+        "an upper loop",
+        "a lower loop"
+      ],
+      "strokeOrder": [
+        "draw the upper loop counterclockwise from its top",
+        "lift, then draw the lower loop the same way"
+      ],
+      "strokeOrderNote": "two pen-down strokes, the majority order in HP Labs India's native-writer traces, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 47 (ঃ, bisarga; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. All 195 stored prototypes of the bisarga are two pen-down strokes: the upper loop first (193) and the lower loop second (193). 171 begin the upper loop near its top. 151 of the upper loops and 152 of the lower ones turn counterclockwise, the rest clockwise, so the path takes the majority direction for both. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
+    },
+    {
+      "mark": "ঁ",
+      "sound": "(chôndrobindu)",
+      "role": "nasal",
+      "attachesAs": "a crescent with a dot, riding above the headline; it sends the vowel through the nose",
+      "components": [
+        "a bowl open at the top",
+        "a dot inside it"
+      ],
+      "strokeOrder": [
+        "draw the bowl from its left tip, down, round and up",
+        "lift, then place the dot"
+      ],
+      "strokeOrderNote": "two pen-down strokes, the majority order in HP Labs India's native-writer traces, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 48 (ঁ, chandrabindu; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 190 of the 194 stored prototypes of the chandrabindu are two pen-down strokes: the bowl first, then the dot. 178 of those 190 start the bowl on the left, 182 turn it counterclockwise (down, round and up), and 173 end it on the right; 180 place the dot within the bowl's width. The traces do not settle which way the dot is turned, so the path makes no claim about it and draws it as a short touch. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
+    }
+  ],
+  "digits": [
+    {
+      "glyph": "০",
+      "sound": "0",
+      "role": "digit",
+      "components": [
+        "০  0 — Bengali digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "১",
+      "sound": "1",
+      "role": "digit",
+      "components": [
+        "১  1 — Bengali digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "২",
+      "sound": "2",
+      "role": "digit",
+      "components": [
+        "২  2 — Bengali digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "৩",
+      "sound": "3",
+      "role": "digit",
+      "components": [
+        "৩  3 — Bengali digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "৪",
+      "sound": "4",
+      "role": "digit",
+      "components": [
+        "৪  4 — Bengali digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "৫",
+      "sound": "5",
+      "role": "digit",
+      "components": [
+        "৫  5 — Bengali digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "৬",
+      "sound": "6",
+      "role": "digit",
+      "components": [
+        "৬  6 — Bengali digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "৭",
+      "sound": "7",
+      "role": "digit",
+      "components": [
+        "৭  7 — Bengali digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "৮",
+      "sound": "8",
+      "role": "digit",
+      "components": [
+        "৮  8 — Bengali digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "৯",
+      "sound": "9",
+      "role": "digit",
+      "components": [
+        "৯  9 — Bengali digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    }
+  ]
+}

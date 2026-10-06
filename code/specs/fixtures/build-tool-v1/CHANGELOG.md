@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-06
+
+- Added three process-free Hashing v1 cache cases: deliberately reverse-ordered
+  two-dependency frames, a paired dependency-only change with unchanged local
+  source bytes and stale successful prior digest, and a matching failed prior
+  record that still misses. The closed corpus now has 178 cases. Native cache
+  persistence and filesystem authority are not claimed.
+
 ## 2026-10-05
 
 - Added eight process-free before/after source-collection and hashing/cache

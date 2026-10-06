@@ -7,5 +7,20 @@
     "base": "か",
     "combined": "が",
     "sound": "ka to ga"
+  },
+  "components": [
+    "a left tick",
+    "a right tick, a little higher"
+  ],
+  "strokeOrder": [
+    "draw the left tick down to the right",
+    "lift, draw the right tick down to the right"
+  ],
+  "strokeOrderNote": "KanjiVG's 0309b file records ゛ as two stroke paths in this order and direction: the left tick, then the right tick, each drawn down to the right; so there is one pen lift.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0309b.svg",
+    "citation": "KanjiVG, kanji/0309b.svg, the spacing dakuten ゛ (U+309B), two stroke paths kvg:0309b-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the left tick, s2 the right one, which starts a little higher; both run down to the right. They are the same two paths KanjiVG gives the dakuten inside every voiced kana, such as が (kanji/0304c.svg, s4 and s5). Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
   }
 }

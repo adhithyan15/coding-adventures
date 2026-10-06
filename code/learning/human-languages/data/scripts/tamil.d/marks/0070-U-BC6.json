@@ -15,6 +15,23 @@
   "compositionSource": {
     "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Module 6, Frame 6: the secondary symbol for short e is always placed before the primary letter (University of Texas at Austin, 2009)",
     "url": "https://sites.la.utexas.edu/tamilscript/category/3-moduals/module-06",
-    "variation": "Module 6 verifies the handwritten sign-before-carrier order and the sign's left-side placement. It does not supply a standalone directional path or pen-lift count, so no ductus is inferred."
+    "variation": "Module 6 verifies the handwritten sign-before-carrier order and the sign's left-side placement. It does not supply a standalone directional path or pen-lift count, so no ductus is inferred from it; the sign's own path is cited in strokeOrderSource."
+  },
+  "components": [
+    "a small curl",
+    "an outer curve",
+    "a right upright"
+  ],
+  "strokeOrder": [
+    "start inside the small curl and circle it",
+    "without lifting, climb the outer curve over the top",
+    "without lifting, draw the right upright down — and only now lift"
+  ],
+  "strokeOrderNote": "one continuous stroke — three joined movements, no pen lift; cited to native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 41",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Tamil recognizer, class 41 (ெ, e sign): stored online-handwriting prototypes from native Tamil writers (MIT licence, 2012)",
+    "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+    "variation": "The recognizer stores native Tamil writers' tablet pen traces, each resampled to 60 points. 131 of the 132 stored prototypes of the e sign are one pen-down stroke. All 131 turn clockwise: the pen starts inside the small curl (110 of 131), circles it, climbs the outer curve and comes down the right upright, where 115 end. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Tamil outline, which tucks the end of the small curl into the bottom of the outer curve, so the fitted path starts at that tucked end. Handwriting varies by writer."
   }
 }

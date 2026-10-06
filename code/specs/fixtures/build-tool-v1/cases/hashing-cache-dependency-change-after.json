@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "hashing-cache/dependency-change-after",
+  "domain": "hashing_cache",
+  "summary": "Changing only one of two dependency digests invalidates the unchanged package and its dependent against the prior successful record.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "hashing_cache"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/python/demo/src/data.bin",
+        "content_utf8": "abc"
+      }
+    ]
+  },
+  "input": {
+    "operation": "hashing_cache",
+    "options": {
+      "algorithm": "sha256-v1",
+      "package": "python/demo",
+      "include_paths": [
+        "code/packages/python/demo/src/data.bin"
+      ],
+      "dependency_digests": [
+        {
+          "package": "python/zeta",
+          "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        {
+          "package": "python/alpha",
+          "digest": "1111111111111111111111111111111111111111111111111111111111111111"
+        }
+      ],
+      "dependents": [
+        "python/app"
+      ],
+      "prior_cache": {
+        "state": "record",
+        "combined_digest": "a184dff38b8e907c48628246a49321a0c67b9f8f7bfd949d8ec0cac60f445da0",
+        "status": "success"
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "hashing-cache/dependency-change-after",
+    "domain": "hashing_cache",
+    "outcome": "ok",
+    "result": {
+      "package_digest": "6a2dc6b1e5428211f6f19387deb1c84836e61384745e7e0e5986fe49b17ff24f",
+      "dependencies_digest": "37bcaaa30f0edea0bcdbca34e5661240183011715b4955bca66ca7bfcb47c931",
+      "combined_digest": "200bdf1c383d5438107c0fb8e07b5bca63e4c39d58b417f20596df56d0153e14",
+      "cache_status": "miss",
+      "invalidated_packages": [
+        "python/app",
+        "python/demo"
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

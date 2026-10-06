@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 79,
-  "sourceHash": "fnv1a64:645cce14f52d377e",
+  "sourceHash": "fnv1a64:8c7397f4bf93ca04",
   "lessonIds": [
     "KA-S161-vowel-sign-ii",
     "KA-S162-vowel-sign-ai",
@@ -15,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "kannada/narration/ch79.txt",
   "json": "kannada/narration/ch79.json",
-  "textHash": "fnv1a64:7d240bcef50cff85",
-  "jsonHash": "fnv1a64:e8112631bd157042",
+  "textHash": "fnv1a64:85282d0aa9524e5e",
+  "jsonHash": "fnv1a64:92b48dae4a3d1c5c",
   "findings": []
 }

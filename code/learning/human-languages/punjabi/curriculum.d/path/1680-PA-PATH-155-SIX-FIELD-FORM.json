@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-155-SIX-FIELD-FORM",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "PA-EXT-155-A1-SIX-FIELD-FORM"
+  ],
+  "after": []
+}

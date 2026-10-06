@@ -97,6 +97,7 @@ class Package:
         is_starlark: Whether the BUILD file uses Starlark syntax.
         declared_srcs: Glob patterns from the Starlark srcs field.
         declared_deps: Qualified dependency names from the Starlark deps field.
+        repository_root: Root supplied by discovery for exact source scoping.
     """
 
     name: str
@@ -107,6 +108,7 @@ class Package:
     is_starlark: bool = False
     declared_srcs: list[str] = field(default_factory=list)
     declared_deps: list[str] = field(default_factory=list)
+    repository_root: Path | None = None
 
 
 def _read_lines(filepath: Path) -> list[str]:
@@ -218,6 +220,8 @@ def discover_packages(root: Path) -> list[Package]:
     """
     packages: list[Package] = []
     _walk_dirs(root, packages)
+    for package in packages:
+        package.repository_root = root.parent if root.name == "code" else None
     packages.sort(key=lambda p: p.name)
     return packages
 

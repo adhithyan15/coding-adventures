@@ -12,28 +12,28 @@
       "kind": "script-filmstrip",
       "lessonId": "FA-W00-alef-delayed-copy",
       "sourceHash": "fnv1a64:671dc623ee2faa16",
-      "svgHash": "fnv1a64:fa20daa09ab5fdef",
+      "svgHash": "fnv1a64:5ca9b11e137ad127",
       "svg": "persian/book/figures/FA-W00-alef-delayed-copy-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "FA-W00-alef-dictation",
       "sourceHash": "fnv1a64:ca622818176f7767",
-      "svgHash": "fnv1a64:fa20daa09ab5fdef",
+      "svgHash": "fnv1a64:5ca9b11e137ad127",
       "svg": "persian/book/figures/FA-W00-alef-dictation-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "FA-W00-alef-guided-copy",
       "sourceHash": "fnv1a64:c043d5435cc2d1d4",
-      "svgHash": "fnv1a64:fa20daa09ab5fdef",
+      "svgHash": "fnv1a64:5ca9b11e137ad127",
       "svg": "persian/book/figures/FA-W00-alef-guided-copy-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "FA-W15-alef",
       "sourceHash": "fnv1a64:70b6723b54019019",
-      "svgHash": "fnv1a64:fa20daa09ab5fdef",
+      "svgHash": "fnv1a64:5ca9b11e137ad127",
       "svg": "persian/book/figures/FA-W15-alef-filmstrip.svg"
     },
     {
@@ -47,7 +47,7 @@
       "kind": "script-filmstrip",
       "lessonId": "FA-W15-he",
       "sourceHash": "fnv1a64:ec6a6d30535e2909",
-      "svgHash": "fnv1a64:2e48675a880084e9",
+      "svgHash": "fnv1a64:111052efcbcf0bc4",
       "svg": "persian/book/figures/FA-W15-he-filmstrip.svg"
     },
     {
@@ -70,6 +70,13 @@
       "sourceHash": "fnv1a64:5d7e934883c249bf",
       "svgHash": "fnv1a64:3f4a44b7ce26cff6",
       "svg": "persian/book/figures/FA-W15-sin-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "FA-W15-te-nun",
+      "sourceHash": "fnv1a64:985d6f0a88bfe43a",
+      "svgHash": "fnv1a64:5e133b29fac55646",
+      "svg": "persian/book/figures/FA-W15-te-nun-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

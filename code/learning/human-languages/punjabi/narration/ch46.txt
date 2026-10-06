@@ -3,17 +3,17 @@ Punjabi, chapter 46: Writing --- With A Clock.
 
 
 Lesson 1 of 1.
-The same fields, with a clock — the A1 writing paper's own clock, its own two tasks, and its own published lengths.
+See the A1 writing clock — orient to the A1 writing paper's clock, two tasks, and published lengths.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-You have filled these fields with as long as you liked.
+You have filled some familiar fields with as long as you liked.
 [pause 1 second]
-A task you can only do untimed is not yet a task you can do. Here are the conditions the assessment actually publishes.
+Read the later paper's conditions now. This short lesson only explains them; it does not attempt or score either task under a clock.
 
-Writing — timed production.
+Writing — the published paper envelope.
 What the contract publishes. This track's A1 writing paper runs 20 minutes and holds two tasks:
 a practical form asking for six to eight completed fields, worth 40 of the paper's 100 points;
 a message for a named reader and a stated purpose, 30 to 40 words, worth the other 60.
@@ -21,18 +21,18 @@ Those numbers are read out of task-shapes/a1.json, the same file the assessment 
 [pause 2 seconds]
 Notice what the split says before you write a word: the message is worth more than the form, and it is the shorter of the two. Time spent perfecting a field is time taken from the part that scores.
 [pause 2 seconds]
-Give the form its share and no more: seven minutes, starting now. Fill every field. A blank field scores nothing and cannot be argued with.
+One possible whole-paper plan gives the form about seven minutes, but that is a planning example, not a timer starting in this lesson. First, learn every field and practise all six together without a model.
 [pause 2 seconds]
 The phone field is the one to watch under a clock. You have practised grouping its digits; grouping is what makes a number readable back, and it is the first thing a hurried hand drops.
 [pause 3 seconds]
-Now the message: thirteen minutes, thirty to forty words, to one named reader.
+The remaining thirteen minutes would be for the 30–40-word message to one named reader. That message also needs its own untimed runway first.
 [pause 2 seconds]
-When the time is up, stop even if a line is unfinished. An unfinished paper is information. An untimed one is not.
+Later short timed checkpoints will train each task separately. Two complete mocks will test the full twenty-minute paper after that.
 
 Wrap-up recall.
 [pause 2 seconds]
-Count the words in your message. Under thirty and the task is half done; well past forty and you spent time the paper did not give you.
+Recall the message's word band: 30–40 words. You are not writing that message yet.
 [pause 2 seconds]
-Then check the form, and check it for blanks before mistakes. A field with a wrong answer can still earn something; a field left empty cannot.
+Recall the form's size: six to eight fields. Those fields must be taught before they can be scored.
 [pause 2 seconds]
-This is the last of the seven writing stages. Everything before it asked you to produce the language. This one asks whether you can produce it when the conditions are not yours to choose — which is the only version of the question an assessment ever asks.
+This orientation awards no timed-writing credit. Timed production comes only after independent form and named-reader message writing are both secure without a visible answer model.

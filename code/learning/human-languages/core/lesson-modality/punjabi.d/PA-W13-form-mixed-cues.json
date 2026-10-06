@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W13-form-mixed-cues",
+    "language": "punjabi",
+    "chapter": 157,
+    "sequence": 8700,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8e6663c88f4f5216",
+    "detachableSegments": [
+      "Writing — supported mixed selection"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

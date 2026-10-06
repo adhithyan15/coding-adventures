@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W12-body-blocks-delayed",
+    "language": "punjabi",
+    "chapter": 156,
+    "sequence": 8660,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ac95759094401191",
+    "detachableSegments": [
+      "Writing — delayed blocks, not a whole letter"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

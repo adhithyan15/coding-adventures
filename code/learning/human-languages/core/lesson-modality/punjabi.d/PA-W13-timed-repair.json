@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "PA-W13-timed-repair",
+    "language": "punjabi",
+    "chapter": 157,
+    "sequence": 8740,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:354bcd917ac71e97",
+    "delivery": "script"
+  },
+  "findings": []
+}

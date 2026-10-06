@@ -20,7 +20,8 @@
 //
 // WHICH letters get an entry is decided by the book, not by this package: the
 // generator reads the curriculum's `core/figure-generation.json` and emits an
-// entry for every `script-filmstrip` target declared there. That keeps the
+// entry for every letter a `script-filmstrip` target declared there draws, and
+// for every letter of the derived lesson candidates (HL-C443). That keeps the
 // generated file the size of what is actually printed instead of all 352
 // authored glyphs, and it means adding a filmstrip to a lesson is one target
 // plus one regeneration rather than an edit here.
@@ -40,7 +41,10 @@ import {
   buildFilmstripEntry,
   buildFilmstripLedger,
   captionSizeFor,
+  MIN_TINY_PEN_SCALE,
+  penSizeFor,
   serialiseFilmstripLedger,
+  TINY_STROKE_EXTENT,
   FILMSTRIP_LEDGER_PATH,
   FILMSTRIP_LEDGER_DIRECTORY,
   type FilmstripEntry,
@@ -56,6 +60,8 @@ interface FigureTarget {
   kind: string;
   script?: string;
   glyph?: string;
+  /** A sequence target's letters, in writing order; `glyph` is then the headword. */
+  letters?: string[];
 }
 
 // Loading every lesson is the slow part of building the ledger (seconds, not
@@ -78,22 +84,27 @@ function filmstripTargets(): Array<{ script: string; glyph: string }> {
       throw new Error("script-filmstrip targets need a script and a glyph");
     }
     // Two lessons may legitimately print the same letter; the ledger holds it
-    // once, and `buildFilmstripLedger` rejects an accidental second copy.
-    wanted.set(`${target.script}:${target.glyph}`, {
-      script: target.script,
-      glyph: target.glyph,
-    });
+    // once, and `buildFilmstripLedger` rejects an accidental second copy. A
+    // sequence target asks for each of its letters, never for its headword.
+    for (const glyph of target.letters ?? [target.glyph]) {
+      wanted.set(`${target.script}:${glyph}`, { script: target.script, glyph });
+    }
   }
   // HL-C443: single-letter writing lessons on switched-on tracks are candidates
   // too. A DECLARED target without a cited ductus is an authoring error and
   // throws below; a derived candidate without one is simply not drawn, because
   // the candidate list is every letter lesson, cited or not.
+  //
+  // A SEQUENCE candidate (a list of letters, or a word whose letters stand
+  // apart) contributes its letters only when every one of them is cited — the
+  // same all-or-nothing rule `withDerivedFilmstrips` applies, so the ledger
+  // never carries a letter for a strip the book will not print.
   for (const candidate of letterLessonCandidates()) {
-    if (ductusFor(candidate.glyph, candidate.script) === undefined) continue;
-    wanted.set(`${candidate.script}:${candidate.glyph}`, {
-      script: candidate.script,
-      glyph: candidate.glyph,
-    });
+    const letters = candidate.letters ?? [candidate.glyph];
+    if (letters.some((glyph) => ductusFor(glyph, candidate.script) === undefined)) continue;
+    for (const glyph of letters) {
+      wanted.set(`${candidate.script}:${glyph}`, { script: candidate.script, glyph });
+    }
   }
   return [...wanted.values()];
 }
@@ -279,6 +290,82 @@ describe("building one entry", () => {
     expect(() =>
       buildFilmstripEntry({ ...letter, strokes: [] }, tamil.outline, tamil.font),
     ).toThrow(/no filmstrip frames/);
+  });
+});
+
+describe("the pen and its tip on a tiny mark", () => {
+  // A dot-sized mark's whole pen path spans tens of font units, and its frame
+  // zooms in on it, so the default 26-unit line and 34-unit tip covered the
+  // movement they were meant to show. `penSizeFor` scales both down below
+  // TINY_STROKE_EXTENT and leaves every other letter alone.
+  const tamilLetter = ductusFor("\u0b85", "tamil")!;
+  const tamil = outlineFor("tamil", "\u0b85");
+  const nukta = ductusFor("\u093c", "devanagari")!;
+  const nuktaOutline = outlineFor("devanagari", "\u093c");
+  const anusvara = ductusFor("\u0a82", "gujarati")!;
+  const anusvaraOutline = outlineFor("gujarati", "\u0a82");
+  const tips = (entry: FilmstripEntry) =>
+    entry.frames.map((frame) => /class="ductus__tip"[^>]* r="([\d.]+)"/.exec(frame.markup)?.[1]);
+  const penWidths = (entry: FilmstripEntry) =>
+    entry.frames.map((frame) => /class="ductus__pen"[^>]* stroke-width="([\d.]+)"/.exec(frame.markup)?.[1]);
+
+  /** A one-stroke letter whose pen path is a straight line `extent` units long. */
+  const line = (extent: number) => ({
+    ...tamilLetter,
+    strokes: [{ segments: [{ label: "across", path: [{ x: 0, y: 0 }, { x: extent, y: 0 }] }] }],
+  });
+
+  it("leaves a letter of ordinary size exactly as it was", () => {
+    expect(penSizeFor(tamilLetter, {})).toEqual({});
+    const built = buildFilmstripEntry(tamilLetter, tamil.outline, tamil.font);
+    expect(new Set(tips(built))).toEqual(new Set(["34"]));
+    expect(penSizeFor(line(TINY_STROKE_EXTENT), {})).toEqual({});
+  });
+
+  it("scales the pen down in proportion below the threshold, with no jump", () => {
+    expect(penSizeFor(line(75), {})).toEqual({ penWidth: 13, tipRadius: 17 });
+    const justUnder = penSizeFor(line(TINY_STROKE_EXTENT - 1), {});
+    expect(justUnder.tipRadius).toBeCloseTo(34 * (149 / 150), 1);
+    expect(justUnder.penWidth).toBeCloseTo(26 * (149 / 150), 1);
+  });
+
+  it("never goes below the minimum, so the pen stays visible", () => {
+    expect(MIN_TINY_PEN_SCALE).toBe(0.3);
+    expect(penSizeFor(line(10), {})).toEqual({ penWidth: 7.8, tipRadius: 10.2 });
+    expect(penSizeFor(line(0), {})).toEqual({ penWidth: 7.8, tipRadius: 10.2 });
+  });
+
+  it("draws the nukta and the Gujarati anusvara with a pen their own size", () => {
+    // ़ spans 44 units (clamped to the minimum); ં spans 60 (scale 0.4).
+    const dab = buildFilmstripEntry(nukta, nuktaOutline.outline, nuktaOutline.font);
+    expect(tips(dab)).toEqual(["10.2"]);
+    expect(penWidths(dab)).toEqual(["7.8"]);
+    const dot = buildFilmstripEntry(anusvara, anusvaraOutline.outline, anusvaraOutline.font);
+    expect(new Set(tips(dot))).toEqual(new Set(["13.6"]));
+    expect(new Set(penWidths(dot))).toEqual(new Set(["10.4"]));
+    // The box does not depend on the pen, so the panels are the same size.
+    const fullPen = buildFilmstripEntry(anusvara, anusvaraOutline.outline, anusvaraOutline.font, {
+      highlightSegment: true,
+      penWidth: 26,
+      tipRadius: 34,
+    });
+    expect(fullPen.viewBox).toEqual(dot.viewBox);
+  });
+
+  it("lets an explicit pen width or tip radius win", () => {
+    expect(penSizeFor(nukta, { tipRadius: 20 })).toEqual({ penWidth: 7.8 });
+    expect(penSizeFor(nukta, { penWidth: 5 })).toEqual({ tipRadius: 10.2 });
+    expect(penSizeFor(nukta, { penWidth: 5, tipRadius: 20 })).toEqual({});
+    const forced = buildFilmstripEntry(nukta, nuktaOutline.outline, nuktaOutline.font, {
+      highlightSegment: true,
+      tipRadius: 20,
+    });
+    expect(tips(forced)).toEqual(["20"]);
+    expect(penWidths(forced)).toEqual(["7.8"]);
+  });
+
+  it("has nothing to scale on a letter with no pen path", () => {
+    expect(penSizeFor({ ...tamilLetter, strokes: [] }, {})).toEqual({});
   });
 });
 

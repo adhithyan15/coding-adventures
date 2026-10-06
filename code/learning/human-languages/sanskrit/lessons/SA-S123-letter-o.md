@@ -51,7 +51,7 @@ It is an **independent vowel**: the full-size letter a vowel wears when it opens
 What it is made of:
 
 - the joined upper and lower bowls of अ
-- a separately swept middle shoulder
+- a middle shoulder running into the inner stem
 - the inner stem
 - the trailing stem
 - a separate upper arc
@@ -66,14 +66,15 @@ You already say these, and every one of them has ओ somewhere inside it:
 
 - **1.** curve right around the upper bowl and continue down and around the lower bowl without lifting
 - **2.** lift and sweep the middle shoulder right
-- **3.** lift and descend the inner stem
-- **4.** lift and descend the trailing stem
-- **5.** lift at the trailing stem's headline junction and sweep the upper arc upward and left
-- **6.** lift and draw the top shirorekhā left-to-right
+- **3.** without lifting, climb up the inner stem to the headline
+- **4.** descend the inner stem
+- **5.** lift and descend the trailing stem
+- **6.** lift at the trailing stem's headline junction and sweep the upper arc upward and left
+- **7.** lift and draw the top shirorekhā left-to-right
 
-**Pen lifts: 5.** The pen comes up 5 times and no more.
+**Pen lifts: 4.** The pen comes up 4 times and no more.
 
-> verified modern printed teaching form; traditional and everyday handwriting may divide or simplify the curves differently
+> The source shows six movements; most native writers draw ओ in five strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts four times: the shoulder runs on up the inner stem and back down it.
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ओ stroke order.svg’, panels 1–6, Wikimedia Commons, 5 August 2023.

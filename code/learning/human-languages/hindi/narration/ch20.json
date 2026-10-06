@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Weather",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:da536cff6f02a2a6",
+  "sourceHash": "fnv1a64:4fc02d9f2b9fb181",
   "lessons": [
     {
       "id": "HI-C20-mausam",
@@ -162,7 +162,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e4d41895fa0d03dc",
+      "sourceHash": "fnv1a64:700bff6dcb05fb8c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -226,7 +226,7 @@
             },
             {
               "kind": "speech",
-              "text": "a separate lower bowl."
+              "text": "a lower bowl."
             },
             {
               "kind": "speech",
@@ -261,27 +261,35 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start at the upper spiral's inner crossing, curl around the small opening, widen left and down around the outer loop, then sweep right through the shoulder without lifting."
+              "text": "1. start at the upper spiral's inner crossing, curl around the small opening, widen left and down around the outer loop, then sweep right through the shoulder."
             },
             {
               "kind": "speech",
-              "text": "2. lift at the left waist and sweep down and around the lower bowl to its right junction."
+              "text": "2. without lifting, turn back left along the shoulder to the left waist."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the right stem top-to-bottom."
+              "text": "3. sweep down and around the lower bowl to its right junction."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "5. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Verified four-stroke teaching form; everyday handwriting may join or simplify the loops differently."
+              "text": "6. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw ध (dha) in two strokes (81% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",
@@ -367,7 +375,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:222ee866c4676642",
+      "sourceHash": "fnv1a64:f50dd4187d3a28de",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -490,19 +498,23 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift and draw the right stem top-to-bottom."
+              "text": "2. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the top shirorekhā left-to-right."
+              "text": "3. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "4. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "Verified three-stroke teaching form fitted to the bundled printed outline; everyday handwriting may narrow, divide, or simplify the loops differently."
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows three movements; most native writers draw थ (tha) in two strokes (72% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

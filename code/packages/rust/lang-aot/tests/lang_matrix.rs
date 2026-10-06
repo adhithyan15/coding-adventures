@@ -1756,8 +1756,35 @@ fn main() { out(1, VALUE); }\n",
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin real procedure pick; pick := 2.25; boolean flag; real x; x := if flag then pick() else pick(); output(x) end",
+        src: "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real x; x := if choose() then left() else right(); output(x) end",
         expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — the same calling selector remains formatter-safe when each
+    // branch nests its direct result through finite real name specialisation.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(left()) else relay(right()); output(result) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a real standard function can transform each direct producer
+    // before finite real name specialisation without reviving local provenance.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := -3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(abs(left())) else relay(abs(right())); output(result) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — unary signs can transform each direct producer before finite
+    // real name specialisation without reviving local provenance.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(-left()) else relay(+right()); output(result) end",
+        expect: Expect::Stdout("-2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — unary plus is an identity and may preserve runtime-real
@@ -1857,6 +1884,61 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin real shared; procedure show; output(shared); shared := 2.25; show() end",
         expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a real procedure specialised for a proven runtime-real name
+    // actual returns a concrete f64 without requiring a runtime thunk ABI.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; output(relay(pick())) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — real procedure results remain concrete f64 values when the
+    // direct call carries either a copied value-array descriptor or the
+    // existing specialised name-array descriptor.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real array values[1:2]; real procedure copied(a); value a; real array a; copied := a[1] + a[2]; real procedure shared(a); real array a; shared := a[1] + a[2]; values[1] := 1.125; values[2] := 1.125; output(copied(values), shared(values)) end",
+        expect: Expect::Stdout("2.252.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a direct typed procedure actual is substituted into the
+    // specialised sibling, so no dynamic procedure descriptor crosses the ABI.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real procedure apply(p); real procedure p; apply := p(); output(apply(pick)) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — finite specialisation substitutes integer and boolean name
+    // actuals directly while the result remains a concrete f64.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure frominteger(n); integer n; frominteger := n + 0.25; real procedure fromboolean(b); boolean b; fromboolean := if b then 2.25 else 0.0; output(frominteger(2), fromboolean(true)) end",
+        expect: Expect::Stdout("2.252.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a string literal actual remains an argument to the specialised
+    // call, and the real result retains formatter provenance through a local.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x; real procedure fromstring(s); string s; fromstring := if s = 'OK' then 2.25 else 0.0; x := fromstring('OK'); output(x, fromstring('OK')) end",
+        expect: Expect::Stdout("2.252.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — calls preserve formatter provenance for caller-frame real
+    // locals that remain unaliased after call lowering.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; procedure touch; begin end; real x; x := pick(); output(pick(), x); touch(); output(x) end",
+        expect: Expect::Stdout("2.252.252.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a specialised read-only name formal retains the bounded
@@ -3123,6 +3205,15 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin integer i; real r; r := 42.0; for i := 2 step 1 until 1 do r := 1.5; print(r) end",
         expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — executing step, single-value, and while elements preserve
+    // runtime-real formatter provenance for an unmodified caller-frame local.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; integer i; real x; x := pick(); for i := 1 step 1 until 3 do output(''); output(x); for i := 1, 2, 3 do output(''); output(x); for i := i + 1 while i < 6 do output(''); output(x) end",
+        expect: Expect::Stdout("2.252.252.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — even a zero-trip step element assigns its controlled variable
@@ -12274,21 +12365,98 @@ fn algol_conditional_runtime_real_output_runs_on_every_available_standard_backen
 }
 
 #[test]
-fn algol_conditional_value_runtime_real_output_runs_on_every_available_standard_backend() {
+fn algol_call_selected_runtime_real_output_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
         .find(|program| {
             program.lang == Language::Algol60
-                && program.src.contains("x := if flag then pick() else pick()")
+                && program
+                    .src
+                    .contains("x := if choose() then left() else right()")
         })
-        .expect("the ALGOL conditional-value runtime-real program must remain in the matrix");
+        .expect("the ALGOL call-selected runtime-real program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
         let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
-                "{backend:?} toolchain is present but conditional-value runtime real output did not complete"
+                "{backend:?} toolchain is present but call-selected runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_name_result_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("if choose() then relay(left()) else relay(right())")
+        })
+        .expect("the ALGOL call-selected real name-result program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but call-selected real name-result output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_standard_name_result_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("if choose() then relay(abs(left())) else relay(abs(right()))")
+        })
+        .expect("the ALGOL call-selected standard real name-result program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but call-selected standard real name-result output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_signed_name_result_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("if choose() then relay(-left()) else relay(+right())")
+        })
+        .expect("the ALGOL call-selected signed real name-result program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but call-selected signed real name-result output did not complete"
             );
             continue;
         };
@@ -12542,6 +12710,158 @@ fn algol_captured_global_runtime_real_output_runs_on_every_available_standard_ba
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but captured-global runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_name_formal_procedure_result_runtime_real_output_runs_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("real procedure relay(x); real x; relay := x")
+                && program.src.contains("output(relay(pick()))")
+        })
+        .expect("the name-formal procedure-result program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but name-formal procedure-result output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_array_formal_procedure_result_runtime_real_output_runs_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real procedure copied(a); value a; real array a")
+                && program.src.contains("real procedure shared(a); real array a")
+        })
+        .expect("the array-formal procedure-result program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but array-formal procedure-result output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_procedure_formal_result_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("real procedure apply(p); real procedure p")
+                && program.src.contains("output(apply(pick))")
+        })
+        .expect("the procedure-formal result program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but procedure-formal result output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nonreal_name_formal_result_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real procedure frominteger(n)")
+                && program.src.contains("real procedure fromboolean(b)")
+        })
+        .expect("the non-real name-formal result program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but non-real name-formal result output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_string_name_formal_result_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real procedure fromstring(s)")
+                && program.src.contains("x := fromstring('OK')")
+        })
+        .expect("the string name-formal result program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but string name-formal result output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_invariant_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("procedure touch; begin end")
+                && program.src.contains("output(pick(), x); touch(); output(x)")
+        })
+        .expect("the call-invariant runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but call-invariant runtime-real output did not complete"
             );
             continue;
         };
@@ -14776,6 +15096,36 @@ fn algol_static_zero_trip_snapshot_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the static zero-trip snapshot did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_loop_invariant_runtime_real_provenance_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real procedure pick; pick := 2.25")
+                && program
+                    .src
+                    .contains("for i := 1 step 1 until 3 do output('')")
+                && program.src.contains("for i := 1, 2, 3 do output('')")
+                && program
+                    .src
+                    .contains("for i := i + 1 while i < 6 do output('')")
+        })
+        .expect("the ALGOL loop-invariant runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but loop-invariant runtime-real output did not run"
             );
             continue;
         };

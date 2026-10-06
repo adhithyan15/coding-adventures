@@ -7,9 +7,18 @@
     "the dakuten ゛"
   ],
   "strokeOrder": [
-    "せ in full",
-    "two short strokes at the upper right"
+    "draw the long bar from left to right",
+    "lift, begin above the bar on the right and draw the right stem down through it, then without lifting hook back to the left",
+    "lift, begin above the bar on the left and draw the left stem down through it, then without lifting curve right along the base",
+    "lift, draw the left tick of the dakuten down to the right",
+    "lift, draw the right tick down to the right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 0305c file records ぜ as five stroke paths in this order and direction: せ's three strokes (the long bar, the right stem with its hook and the left stem that curves right along the base), then the dakuten's two ticks, the left one first, each drawn down to the right; so there are four pen lifts.",
+  "penLifts": 4,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0305c.svg",
+    "citation": "KanjiVG, kanji/0305c.svg, hiragana ぜ (U+305C HIRAGANA LETTER ZE), five stroke paths kvg:0305c-s1 to s5 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 to s3 are せ's strokes, the same paths as in its file for せ, kanji/0305b.svg; s4 and s5 are the dakuten, the left tick first and then the right one, each drawn down to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. KanjiVG draws the right stem second and the left stem third, as its file for せ, kanji/0305b.svg, does. This inventory's せ row, which cites Sirgazil's animation, has those two the other way round; this path follows KanjiVG."
+  },
   "notes": "せ voiced, read ze. The end of かぜ; with it every sign of the z row is written."
 }

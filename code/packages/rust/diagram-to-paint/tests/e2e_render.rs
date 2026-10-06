@@ -525,7 +525,7 @@ mod apple {
     #[test]
     fn render_mermaid_kanban_to_png() {
         let board = parse_kanban(
-            "kanban\n  todo[Todo]\n    grammar[Write grammar]\n    ir[Lower semantic IR]\n  doing[In progress]\n    layout[Build board layout]\n  done[Done]\n    paint[Render native paint]",
+            "%%{init: {'kanban': {'ticketBaseUrl': 'https://tracker.example/issues/#TICKET#', 'sectionWidth': 280, 'padding': 30}}}%%\nkanban\n  todo[\"`**Todo** queue`\"]@{ ticket: KB-7 }\n    :::backlog\n    grammar[\"`Write *grammar*`\"]@{ ticket: MC-42, assigned: Ada, priority: high, icon: code }\n      :::urgent blocked\n    ir{{Lower **semantic**\\nIR}}\n  doing[\"In progress\"]\n    layout(Build board layout)@{ ticket: MC-43, assigned: Grace, priority: medium }\n      ::icon(layout)\n  done)Done(\n    paint))Render native paint((",
         )
         .expect("kanban parse failed");
         let layout = layout_board_diagram(&board);
@@ -546,6 +546,26 @@ mod apple {
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert_eq!((scene.width, scene.height), (940.0, 330.0));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.base.metadata.as_ref().and_then(|metadata| metadata.get("diagram.classes"))
+                    == Some(&"urgent blocked".to_string())
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.base.metadata.as_ref().and_then(|metadata| metadata.get("diagram.link.url"))
+                    == Some(&"https://tracker.example/issues/MC-42".to_string())
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.base.id.as_deref() == Some("todo")
+                    && rect.base.metadata.as_ref().and_then(|metadata| metadata.get("diagram.link.url"))
+                        == Some(&"https://tracker.example/issues/KB-7".to_string())
+        )));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_kanban_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
@@ -2586,8 +2606,8 @@ line "Target" [35, 50, 68, 82]"##,
         });
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             paint_instructions::PaintInstruction::Rect(rect)
-                if rect.fill.as_deref() == Some("rgba(40,86,157,0.8)")
-                    && rect.stroke.as_deref() == Some("rgb(237,44,48)"))));
+                if rect.fill.as_deref() == Some("rgba(0,102,156,0.8)")
+                    && rect.stroke.as_deref() == Some("rgb(237,48,48)"))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             paint_instructions::PaintInstruction::GlyphRun(run)
                 if run.fill.as_deref() == Some("rgb(0, 180, 0)"))));
@@ -2822,6 +2842,38 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_mermaid_treemap_color_mix_hue_methods_to_png() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Hue method\": 1:::mixed\nclassDef mixed fill:color-mix(in hsl longer hue, red, blue),stroke:color-mix(in hsl shorter hue, red, blue),color:color-mix(in hsl increasing hue, red 20%, transparent)",
+        )
+        .expect("color-mix hue methods treemap parse failed");
+        let layout = layout_treemap(&diagram, 480.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_treemap(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("rgb(0,255,0)")
+                    && rect.stroke.as_deref() == Some("rgb(255,0,255)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::GlyphRun(run)
+                if run.fill.as_deref() == Some("rgba(255, 0, 0, 0.2000)"))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_treemap_color_mix_hue_methods_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
     fn render_mermaid_treemap_color_mix_hwb_to_png() {
         let diagram = parse_treemap(
             "treemap\n\"Root\"\n  \"HWB mix\": 1:::mixed\nclassDef mixed fill:color-mix(in hwb, black, white),stroke:color-mix(in hwb, red, blue),color:color-mix(in hwb, red 20%, transparent)",
@@ -2881,6 +2933,198 @@ line "Target" [35, 50, 68, 82]"##,
                 if run.fill.as_deref() == Some("rgba(255, 0, 0, 0.2000)"))));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_treemap_color_mix_lab_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_treemap_color_mix_lch_to_png() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"LCH mix\": 1:::mixed\nclassDef mixed fill:color-mix(in lch, black, white),stroke:color-mix(in lch, red, blue),color:color-mix(in lch, red 20%, transparent)",
+        )
+        .expect("LCH color-mix treemap parse failed");
+        let layout = layout_treemap(&diagram, 480.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_treemap(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("rgb(119,119,119)")
+                    && rect.stroke.as_deref() == Some("rgb(245,0,134)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::GlyphRun(run)
+                if run.fill.as_deref() == Some("rgba(255, 0, 0, 0.2000)"))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_treemap_color_mix_lch_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_treemap_color_mix_display_p3_to_png() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Display P3 mix\": 1:::mixed\nclassDef mixed fill:color-mix(in display-p3, black, white),stroke:color-mix(in display-p3, red, blue),color:color-mix(in display-p3, red 20%, transparent)",
+        )
+        .expect("Display P3 color-mix treemap parse failed");
+        let layout = layout_treemap(&diagram, 480.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_treemap(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("rgb(128,128,128)")
+                    && rect.stroke.as_deref() == Some("rgb(128,10,145)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::GlyphRun(run)
+                if run.fill.as_deref() == Some("rgba(255, 0, 0, 0.2000)"))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_treemap_color_mix_display_p3_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_treemap_color_mix_a98_rgb_to_png() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"A98 RGB mix\": 1:::mixed\nclassDef mixed fill:color-mix(in a98-rgb, black, white),stroke:color-mix(in a98-rgb, red, blue),color:color-mix(in a98-rgb, red 20%, transparent)",
+        )
+        .expect("A98 RGB color-mix treemap parse failed");
+        let layout = layout_treemap(&diagram, 480.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_treemap(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("rgb(129,129,129)")
+                    && rect.stroke.as_deref() == Some("rgb(129,0,129)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::GlyphRun(run)
+                if run.fill.as_deref() == Some("rgba(255, 0, 0, 0.2000)"))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_treemap_color_mix_a98_rgb_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_treemap_color_mix_prophoto_rgb_to_png() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"ProPhoto RGB mix\": 1:::mixed\nclassDef mixed fill:color-mix(in prophoto-rgb, black, white),stroke:color-mix(in prophoto-rgb, red, blue),color:color-mix(in prophoto-rgb, red 20%, transparent)",
+        )
+        .expect("ProPhoto RGB color-mix treemap parse failed");
+        let layout = layout_treemap(&diagram, 480.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_treemap(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("rgb(146,146,146)")
+                    && rect.stroke.as_deref() == Some("rgb(186,3,157)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::GlyphRun(run)
+                if run.fill.as_deref() == Some("rgba(255, 0, 0, 0.2000)"))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_treemap_color_mix_prophoto_rgb_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_treemap_color_mix_rec2020_to_png() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Rec. 2020 mix\": 1:::mixed\nclassDef mixed fill:color-mix(in rec2020, black, white),stroke:color-mix(in rec2020, red, blue),color:color-mix(in rec2020, red 20%, transparent)",
+        )
+        .expect("Rec. 2020 color-mix treemap parse failed");
+        let layout = layout_treemap(&diagram, 480.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_treemap(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("rgb(139,139,139)")
+                    && rect.stroke.as_deref() == Some("rgb(162,19,148)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::GlyphRun(run)
+                if run.fill.as_deref() == Some("rgba(255, 0, 0, 0.2000)"))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_treemap_color_mix_rec2020_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_treemap_color_mix_xyz_to_png() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"XYZ mix\": 1:::mixed\nclassDef mixed fill:color-mix(in xyz-d50, black, white),stroke:color-mix(in xyz-d65, red, blue),color:color-mix(in xyz, red 20%, transparent)",
+        )
+        .expect("XYZ color-mix treemap parse failed");
+        let layout = layout_treemap(&diagram, 480.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_treemap(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("rgb(188,188,188)")
+                    && rect.stroke.as_deref() == Some("rgb(188,0,188)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::GlyphRun(run)
+                if run.fill.as_deref() == Some("rgba(255, 0, 0, 0.2000)"))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_treemap_color_mix_xyz_e2e.png")
             .expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
@@ -2994,6 +3238,54 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_railroad_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_railroad_ebnf_to_png() {
+        let diagram = parse_railroad("railroad-ebnf-beta\ntitle 'Expression grammar'\nexpression = term, ( '+' term | '-' term )*;\nterm = factor, ( '*' factor | '/' factor )*;\nfactor = number | '(', expression, ')';")
+            .expect("railroad EBNF parse failed");
+        let layout = layout_railroad(&diagram);
+        let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_railroad(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_railroad_ebnf_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_railroad_abnf_to_png() {
+        let diagram = parse_railroad("railroad-abnf-beta\ntitle \"URI grammar\"\nURI = scheme \":\" hier-part;\nscheme = ALPHA *(ALPHA / DIGIT / \"+\" / \"-\" / \".\");\nhier-part = \"//\" authority path-abempty;")
+            .expect("railroad ABNF parse failed");
+        let layout = layout_railroad(&diagram);
+        let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_railroad(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_railroad_abnf_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_railroad_peg_to_png() {
+        let diagram = parse_railroad("railroad-peg-beta\ntitle \"Path grammar\"\npath <- segment (\"/\" segment)*;\nsegment <- !\"/\" .+;")
+            .expect("railroad PEG parse failed");
+        let layout = layout_railroad(&diagram);
+        let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_railroad(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_railroad_peg_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 

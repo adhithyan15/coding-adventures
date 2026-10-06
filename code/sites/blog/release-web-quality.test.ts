@@ -7,11 +7,19 @@ import {
   boundedError,
   chromeFlagsFor,
   createBoundedChromeLauncher,
+  reportedChromeVersionForPlatform,
   readChromeStartupDiagnostic,
   readBoundedUtf8,
 } from "./release-web-quality.js";
 
 describe("Forme release web-quality effects", () => {
+  it("uses the pinned setup action's file-metadata version on Windows", () => {
+    expect(reportedChromeVersionForPlatform("win32", "154.0.8037.92")).toBe("154.0.8037.92");
+    expect(() => reportedChromeVersionForPlatform("win32", undefined)).toThrow(/reported/);
+    expect(() => reportedChromeVersionForPlatform("win32", "154.0")).toThrow(/four-part/);
+    expect(reportedChromeVersionForPlatform("linux", undefined)).toBeNull();
+  });
+
   it("allows browser traffic to bypass the proxy only for the exact artifact origin", () => {
     const flags = chromeFlagsFor("http://127.0.0.1:4321/coding-adventures/blog/");
     expect(flags).toContain("--proxy-server=http://127.0.0.1:4321");

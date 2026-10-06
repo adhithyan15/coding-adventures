@@ -38,78 +38,33 @@ from __future__ import annotations
 import hashlib
 import os
 import stat
+import unicodedata
 from pathlib import Path
 from typing import Protocol
 
 from build_tool.discovery import Package
 from build_tool.glob_match import match_path, validate_pattern
 from build_tool.resolver import DirectedGraph
-
-# Source file extensions that matter for each language.
-# If any of these files change, the package needs rebuilding.
-SOURCE_EXTENSIONS: dict[str, set[str]] = {
-    "python": {".py", ".toml", ".cfg"},
-    "ruby": {".rb", ".gemspec"},
-    "go": {".go"},
-    "perl": {".pl", ".pm", ".t", ".xs"},
-    "ocaml": {".ml", ".mli", ".opam"},
-}
-
-# Special filenames to always include regardless of extension.
-SPECIAL_FILENAMES: dict[str, set[str]] = {
-    "python": set(),
-    "ruby": {"Gemfile", "Rakefile"},
-    "go": {"go.mod", "go.sum"},
-    "perl": {
-        "Makefile.PL",
-        "Build.PL",
-        "cpanfile",
-        "MANIFEST",
-        "META.json",
-        "META.yml",
-    },
-    "ocaml": {".ocamlformat", "dune", "dune-project"},
-}
-
-# Manifest extensions that affect the package independently of a Starlark
-# target's declared source globs. Source extensions such as ``.ml`` remain
-# governed by ``declared_srcs``; package manifests such as ``.opam`` do not.
-DECLARED_MANIFEST_EXTENSIONS: dict[str, set[str]] = {
-    "ocaml": {".opam"},
-}
+from build_tool.source_input_registry import (
+    generated_components,
+    package_registry_identity,
+    source_input_selected,
+)
 
 # Exact, case-sensitive generated, dependency, VCS, cache, and temporary
-# directory components excluded by the shared source-collection contract.
-GENERATED_DIRECTORY_COMPONENTS: frozenset[str] = frozenset(
-    {
-        ".git",
-        ".hg",
-        ".svn",
-        ".venv",
-        ".tox",
-        ".mypy_cache",
-        ".pytest_cache",
-        ".ruff_cache",
-        ".stack-work",
-        "__pycache__",
-        "node_modules",
-        "vendor",
-        "dist",
-        "dist-newstyle",
-        "_build",
-        "blib",
-        "build",
-        "target",
-        ".claude",
-        "Pods",
-        ".gradle",
-        ".dart_tool",
-        "gradle-build",
-        "deps",
-        ".build",
-        ".cargo",
-        "cover",
-    }
+# directory components come from the same production projection as selectors.
+GENERATED_DIRECTORY_COMPONENTS: frozenset[str] = generated_components()
+_MAX_CANDIDATES = 100_000
+_MAX_SELECTED = 50_000
+_MAX_FILE_BYTES = 64 * 1024 * 1024
+_MAX_PACKAGE_BYTES = 1024 * 1024 * 1024
+_MAX_GLOB_WORK = 50_000_000
+_WINDOWS_RESERVED = frozenset(
+    {"CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$", "CLOCK$"}
+    | {f"COM{number}" for number in range(1, 10)}
+    | {f"LPT{number}" for number in range(1, 10)}
+    | {f"COM{number}" for number in "¹²³"}
+    | {f"LPT{number}" for number in "¹²³"}
 )
 
 
@@ -138,125 +93,106 @@ def _is_link_or_reparse(path: Path) -> bool:
     return False
 
 
-def _prune_generated_directories(dirpath: str, dirnames: list[str]) -> None:
-    """Prevent ``os.walk`` from descending into generated or linked components."""
-    dirnames[:] = [
-        dirname
-        for dirname in dirnames
-        if dirname not in GENERATED_DIRECTORY_COMPONENTS
-        and not _is_link_or_reparse(Path(dirpath) / dirname)
-    ]
+def _validate_candidate_path(relative: str, seen: dict[str, str]) -> None:
+    """Reject unsafe names and portable-identity aliases before selection."""
+    if len(relative.encode("utf-8")) > 512:
+        raise OSError("SOURCE_HASH_LIMIT_EXCEEDED")
+    if unicodedata.normalize("NFC", relative) != relative:
+        raise OSError("source path has a noncanonical Unicode spelling")
+    prefix: list[str] = []
+    for component in relative.split("/"):
+        if (
+            not component
+            or component in {".", ".."}
+            or component.endswith((".", " "))
+            or any(char in '\\<>:"|?*' for char in component)
+            or any(unicodedata.category(char).startswith("C") for char in component)
+            or component.split(".", 1)[0].upper() in _WINDOWS_RESERVED
+        ):
+            raise OSError("source path has an unsafe component")
+        prefix.append(component)
+        spelling = "/".join(prefix)
+        identity = spelling.casefold()
+        previous = seen.setdefault(identity, spelling)
+        if previous != spelling:
+            raise OSError("source paths have a portable identity alias")
+
+
+def _charge_glob_work(pattern: str, path: str, previous: int) -> int:
+    """Bound the complete pattern/path product before an attempted match."""
+    total = previous + (len(pattern) + 1) * (len(path) + 1)
+    if total > _MAX_GLOB_WORK:
+        raise OSError("SOURCE_HASH_LIMIT_EXCEEDED")
+    return total
 
 
 def _collect_source_files(package: Package) -> list[Path]:
     """Collect all source files in a package directory.
 
-    There are two collection modes:
-
-    1. **Starlark mode** (``package.is_starlark`` and ``package.declared_srcs``):
-       Walk the directory tree with ``os.walk()`` and test each file against
-       the declared source patterns using ``glob_match.match_path()``. BUILD
-       files are always included.
-
-       This fixes a bug with Python's ``pathlib.Path.glob("**/*.py")`` which
-       does NOT match files in the immediate directory (only subdirectories).
-       By using ``os.walk()`` + ``match_path()``, we correctly handle ``**``
-       as "zero or more directory levels", matching the Bazel/Go semantics.
-
-    2. **Extension mode** (shell BUILD files or no declared_srcs):
-       Walk the directory tree and filter by the language's relevant file
-       extensions and special filenames. This is the original behavior.
-
-    In both modes, BUILD files are always included, and the result is sorted
-    by relative path for deterministic hashing.
-
-    Returns a sorted list of absolute paths.
+    Fixed BUILD, root, and exact-path inputs apply in both modes. Recursive
+    suffix/name and scoped inputs apply only in extension mode; declared mode
+    additionally admits target-declared portable globs. Pruning and inert link
+    boundaries precede all selectors. Return absolute paths in UTF-8 order.
     """
     files: list[Path] = []
-    pkg_root = str(package.path)
-    extensions = SOURCE_EXTENSIONS.get(package.language, set())
-    special_names = SPECIAL_FILENAMES.get(package.language, set())
-    manifest_extensions = DECLARED_MANIFEST_EXTENSIONS.get(
-        package.language, set()
+    language, canonical_root = package_registry_identity(
+        package.path, package.language, package.repository_root
     )
-
-    if package.is_starlark and package.declared_srcs:
+    # Refuse every lexical ancestor before opening the root for enumeration.
+    if any(
+        _is_link_or_reparse(component)
+        for component in (package.path, *package.path.parents)
+    ):
+        raise OSError("source package root contains a linked directory")
+    declared = package.is_starlark
+    if declared:
         for pattern in package.declared_srcs:
             validate_pattern(pattern)
 
-        # Starlark mode: use os.walk + glob_match for precise source matching.
-        #
-        # os.walk gives us (dirpath, dirnames, filenames) tuples. We compute
-        # each file's path relative to the package root and test it against
-        # every declared source pattern.
-        #
-        # This replaces pathlib.glob/rglob which has inconsistent behavior
-        # with ** patterns across Python versions and platforms.
-        for dirpath, dirnames, filenames in os.walk(pkg_root, followlinks=False):
-            _prune_generated_directories(dirpath, dirnames)
-            for filename in filenames:
-                abs_path = Path(dirpath) / filename
+    seen: dict[str, str] = {}
+    candidate_count = 0
+    glob_work = 0
+    pending = [package.path]
+    while pending:
+        directory = pending.pop()
+        # scandir yields incrementally. A single huge directory cannot make
+        # os.walk materialize an unbounded pair of entry lists before the cap.
+        with os.scandir(directory) as entries:
+            for entry in entries:
+                candidate_count += 1
+                if candidate_count > _MAX_CANDIDATES:
+                    raise OSError("SOURCE_HASH_LIMIT_EXCEEDED")
+                abs_path = Path(entry.path)
+                rel_path = abs_path.relative_to(package.path).as_posix()
+                _validate_candidate_path(rel_path, seen)
                 if _is_link_or_reparse(abs_path):
                     continue
-
-                # Always include BUILD files (a change to the build definition
-                # itself should always trigger a rebuild).
-                if filename in ("BUILD", "BUILD_mac", "BUILD_linux",
-                                "BUILD_windows", "BUILD_mac_and_linux"):
-                    files.append(abs_path)
+                if entry.is_dir(follow_symlinks=False):
+                    if entry.name not in GENERATED_DIRECTORY_COMPONENTS:
+                        pending.append(abs_path)
                     continue
-
-                # Manifests affect the package even when a Starlark target's
-                # declared source globs omit them. This is especially visible
-                # for OCaml's exact ``dune-project`` and ``.ocamlformat`` names.
-                if filename in special_names or (
-                    abs_path.parent == package.path
-                    and Path(filename).suffix in manifest_extensions
-                ):
-                    files.append(abs_path)
-                    continue
-
-                # Compute the file's path relative to the package root.
-                # os.path.relpath gives us a platform-native path, but we
-                # need forward slashes for glob matching consistency.
-                rel_path = os.path.relpath(abs_path, pkg_root).replace(
-                    os.sep, "/"
+                selected = source_input_selected(
+                    language, canonical_root, rel_path, declared=declared
                 )
-
-                # Test against each declared source pattern.
-                for pattern in package.declared_srcs:
-                    if match_path(pattern, rel_path):
-                        files.append(abs_path)
-                        break
-    else:
-        # Extension mode: filter by language-specific extensions.
-        for dirpath, dirnames, filenames in os.walk(pkg_root, followlinks=False):
-            _prune_generated_directories(dirpath, dirnames)
-            for filename in filenames:
-                abs_path = Path(dirpath) / filename
-                if _is_link_or_reparse(abs_path):
-                    continue
-
-                # Always include BUILD files
-                if filename in ("BUILD", "BUILD_mac", "BUILD_linux",
-                                "BUILD_windows", "BUILD_mac_and_linux"):
+                if declared and not selected:
+                    for pattern in package.declared_srcs:
+                        glob_work = _charge_glob_work(pattern, rel_path, glob_work)
+                        if match_path(pattern, rel_path):
+                            selected = True
+                            break
+                if selected:
+                    if not entry.is_file(follow_symlinks=False):
+                        raise OSError("source path is not a regular file")
+                    if len(files) >= _MAX_SELECTED:
+                        raise OSError("SOURCE_HASH_LIMIT_EXCEEDED")
                     files.append(abs_path)
-                    continue
-
-                # Check extension
-                if Path(filename).suffix in extensions:
-                    files.append(abs_path)
-                    continue
-
-                # Check special filenames
-                if filename in special_names:
-                    files.append(abs_path)
-                    continue
 
     # ``Path`` renders separators according to the host. Hash ordering is part
     # of the portable contract, so normalize before sorting rather than merely
     # replacing separators later in ``hash_package``.
-    files.sort(key=lambda path: path.relative_to(package.path).as_posix())
+    files.sort(
+        key=lambda path: path.relative_to(package.path).as_posix().encode("utf-8")
+    )
     return files
 
 
@@ -272,11 +208,12 @@ def _hash_file(filepath: Path) -> str:
 def _repository_relative_package_path(package: Package) -> str:
     """Return the package root in normalized repository-relative form.
 
-    Production packages live below the canonical ``code/packages`` or
-    ``code/programs`` buckets. Locating that bucket in the absolute checkout
-    path removes machine-specific prefixes while preserving any nested package
-    path. The identity fallback keeps isolated unit fixtures deterministic.
+    Production discovery supplies a repository root, including for reviewed
+    ``code/sites`` graph nodes. The fallback keeps isolated unit fixtures
+    deterministic without granting exact-package selector authority.
     """
+    if package.repository_root is not None:
+        return package.path.relative_to(package.repository_root).as_posix()
     parts = package.path.parts
     for index in range(len(parts) - 2, -1, -1):
         if parts[index] == "code" and parts[index + 1] in {
@@ -313,6 +250,8 @@ def _validate_open_source(filepath: Path, source_stat: os.stat_result) -> None:
     if (
         not stat.S_ISREG(source_stat.st_mode)
         or not stat.S_ISREG(path_stat.st_mode)
+        or source_stat.st_nlink != 1
+        or path_stat.st_nlink != 1
         or is_reparse
         or not os.path.samestat(source_stat, path_stat)
     ):
@@ -474,6 +413,9 @@ def _open_source_no_follow(package_root: Path, filepath: Path) -> int:
     no_follow = getattr(os, "O_NOFOLLOW", None)
     if not isinstance(no_follow, int) or no_follow == 0:
         raise OSError("source no-follow support is unavailable")
+    nonblocking = getattr(os, "O_NONBLOCK", None)
+    if not isinstance(nonblocking, int) or nonblocking == 0:
+        raise OSError("source nonblocking open support is unavailable")
     directory_flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | no_follow
     directory = os.open(parts[0], directory_flags)
     try:
@@ -487,7 +429,7 @@ def _open_source_no_follow(package_root: Path, filepath: Path) -> int:
             directory = child
         return os.open(
             parts[-1],
-            os.O_RDONLY | no_follow,
+            os.O_RDONLY | no_follow | nonblocking,
             dir_fd=directory,
         )
     finally:
@@ -499,7 +441,8 @@ def _update_file_frame(
     repository_path: str,
     filepath: Path,
     package_root: Path,
-) -> None:
+    remaining_bytes: int = _MAX_PACKAGE_BYTES,
+) -> int:
     """Append one hashing-v1 path/content frame without decoding file bytes."""
     path_bytes = repository_path.encode("utf-8")
     package_hash.update(len(path_bytes).to_bytes(8, "big"))
@@ -511,6 +454,8 @@ def _update_file_frame(
         _validate_open_source(filepath, before)
         before_signature = _source_signature(before)
         content_length = before.st_size
+        if content_length > _MAX_FILE_BYTES or content_length > remaining_bytes:
+            raise OSError("SOURCE_HASH_LIMIT_EXCEEDED")
         package_hash.update(content_length.to_bytes(8, "big"))
 
         bytes_read = 0
@@ -523,6 +468,7 @@ def _update_file_frame(
 
     if bytes_read != content_length or _source_signature(after) != before_signature:
         raise OSError("source changed while hashing")
+    return bytes_read
 
 
 def hash_package(package: Package) -> str:
@@ -549,13 +495,15 @@ def hash_package(package: Package) -> str:
     # checkout locations.
     package_hash = hashlib.sha256()
     package_root = _repository_relative_package_path(package)
+    remaining_bytes = _MAX_PACKAGE_BYTES
     for filepath in files:
         relative_path = filepath.relative_to(package.path).as_posix()
-        _update_file_frame(
+        remaining_bytes -= _update_file_frame(
             package_hash,
             f"{package_root}/{relative_path}",
             filepath,
             package.path,
+            remaining_bytes,
         )
     return package_hash.hexdigest()
 

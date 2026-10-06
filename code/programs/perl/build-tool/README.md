@@ -25,8 +25,29 @@ code/programs/perl/build-tool/
 
 - **Incremental builds**: Uses `git diff` to find changed packages; only rebuilds what changed plus their transitive dependents.
 - **Parallel execution**: Forks up to `--jobs` child processes per independent dependency group.
-- **All 9 languages**: Discovers and resolves dependencies for Python, Ruby, Go, TypeScript, Rust, Elixir, Lua, Perl, and Starlark packages.
+- **Multi-language discovery**: Classifies recognized language directories,
+  including OCaml packages, and excludes exact lowercase Dune `_build`
+  output from discovery and content hashing. The shared OCaml package and
+  generated-directory fixtures are projected through the Perl walkers;
+  this slice does not claim full discovery-registry or OCaml source-extension
+  conformance.
 - **Hash-based cache**: Optional content-hash cache as a fallback when git diff is unavailable.
+- **Declared-source metadata bridge**: A supported Starlark BUILD target carries
+  its ordered `srcs` globs from the selected platform BUILD into hashing.
+  Declared mode hashes matching retained files, even non-source extensions,
+  plus the selected BUILD; `srcs = []` never falls back to extension mode.
+  Shell BUILD files retain extension mode. Invalid detected Starlark targets
+  fail closed.
+- **Portable package-local source hashing**: An installed, byte-identical
+  language-source-input registry selects all seven reviewed input roles by
+  lane, with exact generated-directory pruning, fixed inputs in both modes,
+  bounded segment-aware declared globs, and canonical repository-relative,
+  length-framed SHA-256 bytes. The package
+  tests consume all seven language-neutral source-collection cases and pin
+  the registry digest. Refresh the packaged snapshot with
+  `perl tools/sync_language_source_input_registry.pl`. This does not claim
+  repository-boundary inputs, atomic native snapshots, dependency/cache
+  hashing, or CLI hash-mode activation.
 - **Zero CPAN deps at runtime**: Uses only Perl core modules (5.26+). Only `Test2::V0` is required for tests.
 
 ## Installation
@@ -173,9 +194,9 @@ python code/scripts/generate_tracked_artifact_unicode17.py \
 | Module | Responsibility |
 |--------|---------------|
 | `BuildTool.pm` | Orchestrator: wires all sub-modules together |
-| `Discovery.pm` | Recursive BUILD file walk; language inference |
+| `Discovery.pm` | Recursive BUILD file walk; language inference and selected-front source metadata |
 | `Resolver.pm` | Metadata parsing; dependency graph construction |
-| `Hasher.pm` | SHA256 content fingerprinting |
+| `Hasher.pm` | SHA256 content fingerprinting with bounded declared-source filtering |
 | `Executor.pm` | `fork()`-based parallel build execution |
 | `Cache.pm` | JSON hash cache for incremental builds |
 | `GitDiff.pm` | `git diff` change detection |

@@ -1,0 +1,68 @@
+{
+  "track": "bengali",
+  "figures": [
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "BN-W01-ra",
+      "sourceHash": "fnv1a64:831e5c774a6046dd",
+      "svgHash": "fnv1a64:ba7f4c4990f47365",
+      "svg": "bengali/book/figures/BN-W01-ra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "BN-W02-chandrabindu",
+      "sourceHash": "fnv1a64:2a4b051971b959e3",
+      "svgHash": "fnv1a64:6f09ac3c53350909",
+      "svg": "bengali/book/figures/BN-W02-chandrabindu-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "BN-W03-ba",
+      "sourceHash": "fnv1a64:028eb9c1e8dea99b",
+      "svgHash": "fnv1a64:1797e37abbe54d00",
+      "svg": "bengali/book/figures/BN-W03-ba-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "BN-W03-kha",
+      "sourceHash": "fnv1a64:248a2a6dd759b7b6",
+      "svgHash": "fnv1a64:0683e98058d632e7",
+      "svg": "bengali/book/figures/BN-W03-kha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "BN-W04-e-indep",
+      "sourceHash": "fnv1a64:485365aefbbb2103",
+      "svgHash": "fnv1a64:7131bd634daf00df",
+      "svg": "bengali/book/figures/BN-W04-e-indep-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "BN-W04-o-indep",
+      "sourceHash": "fnv1a64:77c36f58f1e6c46e",
+      "svgHash": "fnv1a64:06639d26d9ae06f6",
+      "svg": "bengali/book/figures/BN-W04-o-indep-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "BN-W05-tha",
+      "sourceHash": "fnv1a64:5ddb55915a27dc1f",
+      "svgHash": "fnv1a64:8235cfb4411bb82e",
+      "svg": "bengali/book/figures/BN-W05-tha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "BN-W06-nya",
+      "sourceHash": "fnv1a64:dd73a0543c209acc",
+      "svgHash": "fnv1a64:85d13f782b178689",
+      "svg": "bengali/book/figures/BN-W06-nya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "BN-W41-bisarga",
+      "sourceHash": "fnv1a64:3662ab55d18d6d37",
+      "svgHash": "fnv1a64:c0384074c1387c38",
+      "svg": "bengali/book/figures/BN-W41-bisarga-filmstrip.svg"
+    }
+  ]
+}

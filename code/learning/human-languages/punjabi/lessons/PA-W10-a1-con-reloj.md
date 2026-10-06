@@ -7,12 +7,12 @@ chapter: 46
 delivery: script
 type: writing
 headword: "(timed)"
-gloss: the A1 writing paper's own clock, its own two tasks, and its own published lengths
+gloss: orient to the A1 writing paper's clock, two tasks, and published lengths
 concept_tag: PA-WRITE-TIMED
 prerequisites: [PA-W08-phone-no-model, PA-W06-three-field-no-model]
 sounds: []
 roots: []
-etymology_hook: "a task you can only do untimed is not yet a task you can do -- the clock is not extra difficulty added on top of the writing, it is part of what the writing IS"
+etymology_hook: "a short lesson can explain the paper's clock without pretending to execute a twenty-minute paper"
 duration:
   max_seconds: 280
 requires:
@@ -32,19 +32,18 @@ variety: standard-punjabi
 reviews_of: [PA-W08-phone-no-model, PA-W06-three-field-no-model]
 ---
 
-# The same fields, with a clock
+# See the A1 writing clock
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-PHONE-01] -->
 
-[PAUSE 2s] You have filled these fields with as long as you liked.
+[PAUSE 2s] You have filled some familiar fields with as long as you liked.
 
-[PAUSE 1s] A task you can only do untimed is not yet a task you can do. Here are
-the conditions the assessment actually publishes.
+[PAUSE 1s] Read the later paper's conditions now. This short lesson only
+explains them; it does not attempt or score either task under a clock.
 
-## Writing — timed production
+## Writing — the published paper envelope
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-PHONE-01, PA-FORM-PHONE-CUE-MAP-01, PA-FORM-PHONE-DIGIT-ORDER-01, PA-FORM-PHONE-GROUPING-01, PA-FORM-PHONE-REPAIR-01] -->
-<!-- hl-writing-stage: timed-assessment-production -->
 
 **What the contract publishes.** This track's A1 writing paper runs **20
 minutes** and holds **two** tasks:
@@ -61,29 +60,29 @@ assessment contract points at. They are not invented here.
 worth more than the form**, and it is the shorter of the two. Time spent
 perfecting a field is time taken from the part that scores.
 
-[PAUSE 2s] Give the form its share and no more: **seven minutes**, starting now.
-Fill every field. A blank field scores nothing and cannot be argued with.
+[PAUSE 2s] One possible whole-paper plan gives the form about seven minutes,
+but that is a planning example, not a timer starting in this lesson. First,
+learn every field and practise all six together without a model.
 
 [PAUSE 2s] The phone field is the one to watch under a clock. You have practised
 grouping its digits; grouping is what makes a number readable back, and it is
 the first thing a hurried hand drops.
 
-[PAUSE 3s] Now the message: **thirteen minutes**, thirty to forty words, to one
-named reader.
+[PAUSE 3s] The remaining thirteen minutes would be for the 30–40-word message
+to one named reader. That message also needs its own untimed runway first.
 
-[PAUSE 2s] When the time is up, stop even if a line is unfinished. An unfinished
-paper is information. An untimed one is not.
+[PAUSE 2s] Later short timed checkpoints will train each task separately.
+Two complete mocks will test the full twenty-minute paper after that.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-PHONE-01, PA-FORM-PHONE-GROUPING-01] -->
 
-[PAUSE 2s] Count the words in your message. **Under thirty** and the task is
-half done; **well past forty** and you spent time the paper did not give you.
+[PAUSE 2s] Recall the message's word band: **30–40 words**. You are not
+writing that message yet.
 
-[PAUSE 2s] Then check the form, and check it for **blanks before mistakes**. A
-field with a wrong answer can still earn something; a field left empty cannot.
+[PAUSE 2s] Recall the form's size: **six to eight fields**. Those fields must
+be taught before they can be scored.
 
-[PAUSE 2s] This is the last of the seven writing stages. Everything before it
-asked you to produce the language. This one asks whether you can produce it
-**when the conditions are not yours to choose** — which is the only version of
-the question an assessment ever asks.
+[PAUSE 2s] This orientation awards no timed-writing credit. Timed production
+comes only after independent form and named-reader message writing are both
+secure without a visible answer model.

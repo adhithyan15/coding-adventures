@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Face, Part Two",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2ad68367084cafc8",
+  "sourceHash": "fnv1a64:3c72319d8ef77953",
   "lessons": [
     {
       "id": "SA-C13-nasika",
@@ -173,7 +173,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:be88d9538bf48935",
+      "sourceHash": "fnv1a64:0b11c297de4e2179",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -237,7 +237,7 @@
             },
             {
               "kind": "speech",
-              "text": "a separate lower bowl."
+              "text": "a lower bowl."
             },
             {
               "kind": "speech",
@@ -264,27 +264,35 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start at the upper spiral's inner crossing, curl around the small opening, widen left and down around the outer loop, then sweep right through the shoulder without lifting."
+              "text": "1. start at the upper spiral's inner crossing, curl around the small opening, widen left and down around the outer loop, then sweep right through the shoulder."
             },
             {
               "kind": "speech",
-              "text": "2. lift at the left waist and sweep down and around the lower bowl to its right junction."
+              "text": "2. without lifting, turn back left along the shoulder to the left waist."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the right stem top-to-bottom."
+              "text": "3. sweep down and around the lower bowl to its right junction."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "5. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "verified four-stroke teaching form; everyday handwriting may join or simplify the loops differently."
+              "text": "6. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw ध (dha) in two strokes (81% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

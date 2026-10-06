@@ -139,8 +139,12 @@ You already say these:
 ಖಂಡಿತ khaṇḍita — certainly.
 
 Writing: ಣ.
-Put your pen on ಣ (ṇa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
-This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+1. start at the foot of the lower curl and round it up to the short tick at the waist.
+2. without lifting, come back and round the upper curl into the middle point.
+3. without lifting, arch over to the right and come down the right side.
+4. without lifting, round the base and spiral in to the centre.
+Pen lifts: 0. The whole letter is one run, from the foot of the lower curl over the arch to the end of the spiral. There is no curled bar on top.
+This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-nna.gif', 45 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0.
 
 Guided Practice.
 [pause 1 second]
@@ -176,8 +180,13 @@ You already say these:
 ಶುಭ ಸಂಜೆ śubha sañje — good evening.
 
 Writing: ಶ.
-Put your pen on ಶ (śa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
-This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+1. start at the head and rise to run right along the top.
+2. without lifting, curve down and sweep across to the lower left.
+3. without lifting, round the base and climb the right side to the top bar.
+4. lift, then draw the top bar from left to right.
+5. without lifting, curl up into the hook.
+Pen lifts: 1. The body is one run, from the head along the top and round the base up to the bar; the curled bar comes after the only lift, as in ದ.
+This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-sha.gif', 31 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0.
 
 Guided Practice.
 [pause 1 second]
@@ -218,8 +227,15 @@ You already say these:
 ಕ್ಷಮಿಸಿ kṣamisi — sorry, excuse me.
 
 Writing: ಷ.
-Put your pen on ಷ (ṣa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
-This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+1. start at the inner tip of the curl and wind up and round it to the left.
+2. without lifting, run along the base and rise into the middle point.
+3. without lifting, drop round the right lobe and climb the right side to its tip.
+4. lift, then set the dot in the middle.
+5. lift, then draw the top bar from left to right.
+6. without lifting, curl up into the hook.
+7. lift, then draw the slanting stroke down to the right.
+Pen lifts: 3. The body is ಪ's run; then come the dot, the curled bar and last the slanting stroke, each after a lift.
+This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-shha.gif', 40 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0.
 
 Guided Practice.
 [pause 1 second]

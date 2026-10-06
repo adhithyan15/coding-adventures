@@ -437,6 +437,24 @@ export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageC
   );
 }
 
+/** Read one track's curriculum without scanning every other track's owners. */
+export function loadTrackLanguageCurriculum(
+  language: string,
+  root = defaultCurriculumRoot(),
+): LanguageCurriculum | undefined {
+  if (!TRACK_ID.test(language)) throw new Error(`unsafe language id '${language}'`);
+  const path = join(root, language, "curriculum.json");
+  if (!existsSync(path) && !isSharded(path)) return undefined;
+  const authored = readMaybeSharded<AuthoredLanguageCurriculum>(
+    path,
+    (shards) => mergeCurriculumShards(shards) as unknown as AuthoredLanguageCurriculum,
+  );
+  return attachCurriculumLessonMemberships(
+    authored,
+    readCurriculumMembershipOwners(root, language).owners,
+  );
+}
+
 /**
  * Read each track's authored chapter capability ledger (HL05).
  *

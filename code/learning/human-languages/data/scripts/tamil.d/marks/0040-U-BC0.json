@@ -10,11 +10,27 @@
   },
   "compositionOrder": [
     "write the Tamil consonant carrier first",
-    "add the ī vowel sign to replace its inherent vowel"
+    "write the ii sign after it, as a symbol of its own at the right"
   ],
   "compositionSource": {
-    "citation": "The Unicode Standard, Version 17.0, §12.6.3 Tamil Ligatures, Ligatures with Vowel i and Figure 12-21: U+0BC0 TAMIL VOWEL SIGN II forms consonant-vowel ligatures; ட + ீ → டீ and ல + ீ → லீ (2025)",
-    "url": "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
-    "variation": "Unicode verifies encoded carrier-first composition and shows that the ii sign can change shape or position to join cursively with its consonant. This is not a universal handwriting direction, and the source supports no standalone ductus claim or pen-lift count."
+    "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0 User Manual, sections 4 and 4-3 and Table 3: vowel signs that occur as distinct characters to the left or right of the base consonant are recognizer symbols of their own, and syllabic units are written from left to right",
+    "url": "https://lipitk.sourceforge.net/docs/LipiRecognizers/lipi-indic-character-recognizers_4_0_user_manual.pdf",
+    "variation": "Table 3 lists U+0BBE, U+0BBF, U+0BC0, U+0BC6, U+0BC7 and U+0BC8 as symbols of their own, and HP Labs India's notes on the hpl-tamil-iso-char dataset add that these signs leave Tamil 'written linearly as a sequence of visually discrete symbols'. So a sign placed left of its consonant is written before it, and a sign placed right of it is written after it. The manual gives no path for the consonant and no order for a sign fused with its consonant, such as u or the ligature ti."
+  },
+  "components": [
+    "a hook curling to the left",
+    "a small closing loop"
+  ],
+  "strokeOrder": [
+    "start at the foot of the tail and curl up to the left",
+    "without lifting, arch over the top to the right",
+    "without lifting, curl down and back into the small loop — and only now lift"
+  ],
+  "strokeOrderNote": "one continuous stroke — three joined movements, no pen lift; cited to native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 38",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Tamil recognizer, class 38 (ீ, ii sign): stored online-handwriting prototypes from native Tamil writers (MIT licence, 2012)",
+    "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+    "variation": "The recognizer stores native Tamil writers' tablet pen traces, each resampled to 60 points. 225 of the 229 stored prototypes of the ii sign (98%) are one pen-down stroke. In 213 of those 225 the pen starts low, at the foot of the tail, and 168 first move up; 224 turn clockwise, over the top to the right, and 190 end in the upper half, inside the closing curl. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Tamil outline of the sign on its own. Handwriting varies by writer."
   }
 }

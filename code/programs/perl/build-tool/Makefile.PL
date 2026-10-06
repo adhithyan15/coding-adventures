@@ -1,6 +1,25 @@
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
+use File::Find ();
+
+# MakeMaker's default PM scan installs .pm files only. The source registry is
+# runtime package data, so enumerate both modules and that one reviewed JSON
+# snapshot into the installed library tree deterministically.
+my %package_files;
+File::Find::find({
+    no_chdir => 1,
+    wanted => sub {
+        return unless -f $File::Find::name;
+        my $source = $File::Find::name;
+        $source =~ s{\\}{/}g;
+        return unless $source =~ m{\A(?:\./)?lib/(.+)\z};
+        my $relative = $1;
+        return unless $relative =~ /\.pm\z/
+            || $relative eq 'CodingAdventures/BuildTool/language-source-input-registry.json';
+        $package_files{$source} = "\$(INST_LIB)/$relative";
+    },
+}, 'lib');
 
 # Makefile.PL -- Build configuration for the Perl build tool
 # ===========================================================
@@ -35,6 +54,7 @@ WriteMakefile(
     # EXE_FILES lists scripts that should be installed into the user's $PATH.
     # We install `build-tool` from the bin/ directory.
     EXE_FILES => ['bin/build-tool'],
+    PM => \%package_files,
 
     # PREREQ_PM lists runtime dependencies. All core modules are listed
     # explicitly for documentation purposes, even though they do not need

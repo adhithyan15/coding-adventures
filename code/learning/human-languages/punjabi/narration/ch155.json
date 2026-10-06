@@ -1,0 +1,556 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 155,
+  "title": "Join Six Fictional Form Fields",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:88ee61885ce93064",
+  "lessons": [
+    {
+      "id": "PA-W11-form-six-order",
+      "sequence": 8450,
+      "title": "Six old labels, one gentle order",
+      "headword": "ਨਾਂ: · ਭਾਸ਼ਾ: · ਰਿਹਾਇਸ਼: · ਕੰਮ: · ਉਮਰ: · ਫ਼ੋਨ:",
+      "romanization": "six familiar fictional form labels",
+      "gloss": "join six previously taught labels in one fixed order",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:9c036c773041fff5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to each familiar label. The first four were practised with names and words; the last two with Gurmukhi digits. Date is an already practised seventh field, but it is not part of this six-line rehearsal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — labels before values",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy only the labels in this order. Leave every value blank. The order is name, language, residence, work, age, phone. Pause after line three."
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਾਂ: ______ ਭਾਸ਼ਾ: ______ ਰਿਹਾਇਸ਼: ______ ਕੰਮ: ______ ਉਮਰ: ______ ਫ਼ੋਨ: ______."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — cover and point",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the labels. Point to six empty lines and recall only which label belongs on each. Uncover them and repair one misplaced label, if needed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Today was an order lesson, not a new vocabulary or exam lesson."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W11-form-six-order-labels",
+              "prompt": "Write only the six familiar labels in their new fixed order; leave values blank.",
+              "assesses": [
+                "PA-FORM-SIX-ORDER-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "ਨਾਂ: ਭਾਸ਼ਾ: ਰਿਹਾਇਸ਼: ਕੰਮ: ਉਮਰ: ਫ਼ੋਨ:"
+              ],
+              "feedback": {
+                "correct": "The six old labels have their new fixed places.",
+                "incorrect": "Check the first four word fields, then age and phone; leave every value blank."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W11-form-six-select",
+      "sequence": 8460,
+      "title": "Reuse the two old card marks",
+      "headword": "A · B · ਕ · ਖ",
+      "romanization": "old fictional card marks",
+      "gloss": "select six old values without writing a form yet",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:738c15f45f304fe9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The old word cards use A and B. The old digit cards use ਕ and ਖ. No new name, word, digit, or field is introduced here."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know — point before writing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look once at the familiar banks. A chooses ਅਮਨ, ਪੰਜਾਬੀ, ਪਿੰਡ, ਖੇਤੀ; ਕ chooses ੧੫ and ੦੧੨ ੨੫੧. B chooses ਮਨਨ, ਹਿੰਦੀ, ਸ਼ਹਿਰ, ਨੌਕਰੀ; ਖ chooses ੨੫ and ੦੨੫ ੧੨੫. Point to the matching value in each bank, one line at a time. The paired marks A, ਕ or B, ਖ choose one fictional person's six old values; they are not a new sound or spelling rule."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — one card, six choices",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Choose B, ਖ. Without writing a form, say which bank side belongs on the first four lines and which side on the final two. Check the mapping above."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The next lesson keeps these banks visible while the six lines are written."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W11-form-six-select-b",
+              "prompt": "For B, ਖ, which old bank side is selected for the four word fields and the two digit fields?",
+              "assesses": [
+                "PA-FORM-SIX-CUE-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "b, b, b, b; ਖ, ਖ",
+                "b b b b ਖ ਖ"
+              ],
+              "feedback": {
+                "correct": "Each old mark selects only its already taught bank side.",
+                "incorrect": "Use B for the four word banks and ਖ for the two digit banks."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W11-form-six-supported",
+      "sequence": 8470,
+      "title": "Six lines with the old banks visible",
+      "headword": "ਨਾਂ: ਅਮਨ · ਭਾਸ਼ਾ: ਪੰਜਾਬੀ",
+      "romanization": "supported six-field fictional form",
+      "gloss": "write six old values while the banks are visible",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:e444da375f06ee38",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Return to the six blank labels. Point to the first three lines, pause, then point to the last three. Today the old A and ਕ values stay visible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — supported entry",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For A, ਕ, use the old visible word bank: ਅਮਨ, ਪੰਜਾਬੀ, ਪਿੰਡ, ਖੇਤੀ. Use the old visible digit bank: ੧੫, ੦੧੨ ੨੫੧. Copy one selected value beside each familiar label in the fixed order. Stop after the first three lines and check only which value belongs to which label; then do the rest."
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਾਂ: ______ ਭਾਸ਼ਾ: ______ ਰਿਹਾਇਸ਼: ______ ਕੰਮ: ______ ਉਮਰ: ______ ਫ਼ੋਨ: ______."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — one boundary at a time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check each colon has one readable space after it. The phone number also keeps its old single group space. This is visible-bank practice, not independent writing evidence."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Next time the banks will be covered before writing."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W11-form-six-supported-a",
+              "prompt": "With the old A, ਕ banks visible, fill the six familiar labelled lines in order.",
+              "assesses": [
+                "PA-FORM-SIX-SUPPORTED-01"
+              ],
+              "responseSeconds": 65,
+              "acceptedResponses": [
+                "ਨਾਂ: ਅਮਨ ਭਾਸ਼ਾ: ਪੰਜਾਬੀ ਰਿਹਾਇਸ਼: ਪਿੰਡ ਕੰਮ: ਖੇਤੀ ਉਮਰ: ੧੫ ਫ਼ੋਨ: ੦੧੨ ੨੫੧"
+              ],
+              "feedback": {
+                "correct": "The visible banks supported all six fields in order.",
+                "incorrect": "Read one label, select one value from the old visible bank, then check its space."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W11-form-six-delayed",
+      "sequence": 8480,
+      "title": "Cover the six old values",
+      "headword": "ਨਾਂ: · ਭਾਸ਼ਾ: · ਰਿਹਾਇਸ਼:",
+      "romanization": "delayed six-field fictional form",
+      "gloss": "cover the familiar banks before a six-line recall attempt",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:86ffc3ea4f857a3e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look once at the old B and ਖ values: ਮਨਨ, ਹਿੰਦੀ, ਸ਼ਹਿਰ, ਨੌਕਰੀ, then ੨੫, ੦੨੫ ੧੨੫. With this bank visible, fill the six labelled lines once as a supported review. Then cover the bank and wait ten seconds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed entry",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With the bank still hidden, fill the six lines for B, ਖ. Recall one value at a time. Pause after the residence line. Do not uncover the bank until all six attempts are complete."
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਾਂ: ______ ਭਾਸ਼ਾ: ______ ਰਿਹਾਇਸ਼: ______ ਕੰਮ: ______ ਉਮਰ: ______ ਫ਼ੋਨ: ______."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — compare after the attempt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover the old bank. Compare only the first differing line. Check its selection, then spelling or digit order, then the space after the colon. Correct that line without erasing lines that were already right."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is delayed practice. The later checkpoint will remove the bank entirely."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W11-form-six-delayed-b",
+              "prompt": "After covering the old B, ਖ bank for ten seconds, fill the six labelled lines from memory.",
+              "assesses": [
+                "PA-FORM-SIX-DELAYED-01"
+              ],
+              "responseSeconds": 70,
+              "acceptedResponses": [
+                "ਨਾਂ: ਮਨਨ ਭਾਸ਼ਾ: ਹਿੰਦੀ ਰਿਹਾਇਸ਼: ਸ਼ਹਿਰ ਕੰਮ: ਨੌਕਰੀ ਉਮਰ: ੨੫ ਫ਼ੋਨ: ੦੨੫ ੧੨੫"
+              ],
+              "feedback": {
+                "correct": "The six previously taught values returned after the bank was covered.",
+                "incorrect": "Finish the attempt before uncovering the bank; repair the first differing line only."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W11-form-six-repair",
+      "sequence": 8490,
+      "title": "Repair one dimension at a time",
+      "headword": "ਰਿਹਾਇਸ਼: ਸ਼ਹਿਰ · ਫ਼ੋਨ: ੦੨੫ ੧੨੫",
+      "romanization": "repair six already taught form lines",
+      "gloss": "check selection, spelling, spaces, digits, and placement in separate passes",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:a2ce9724083bcfa9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the six old labels in their new order. Cover the old B, ਖ bank for ten seconds, then fill the six lines from memory. Keep this draft for the repair passes. Today we repair old forms, not learn a seventh field or a new sentence pattern."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — six small repair passes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Reopen the old B, ਖ bank. With the bank visible, rewrite the corrected six-line form as a supported pass. First check that each line has the selected B or ਖ value. Next check spelling in the four word lines; ਸ਼ਹਰ needs the old vowel mark to become ਸ਼ਹਿਰ. Next check one space after every colon. Then check the two Gurmukhi digit lines left to right and the phone's one group space. Last, check that each whole value sits beside its own label. Change only the first wrong dimension you find on each pass."
+            },
+            {
+              "kind": "speech",
+              "text": "The work values here are the already taught nouns ਖੇਤੀ and ਨੌਕਰੀ; there is no agreement-bearing sentence to score in this form. Agreement remains a separate task when a sentence actually requires it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — one visible error",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For B, ਖ, repair only the last two digit positions in ਫ਼ੋਨ: ੦੨੫ ੧੫੨. Keep the label, colon, space, first digit group, and other form lines as they were."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The next lesson asks for an untimed six-line attempt without the bank."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W11-form-six-repair-phone",
+              "prompt": "For B, ਖ, repair only the wrong digit order in ਫ਼ੋਨ: ੦੨੫ ੧੫੨.",
+              "assesses": [
+                "PA-FORM-SIX-REPAIR-01",
+                "PA-FORM-PHONE-DIGIT-ORDER-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "ਫ਼ੋਨ: ੦੨੫ ੧੨੫"
+              ],
+              "feedback": {
+                "correct": "Only the final digit positions changed.",
+                "incorrect": "Keep the correct label and first group; compare the last two positions left to right."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W11-form-six-no-model",
+      "sequence": 8500,
+      "title": "One untimed six-field form",
+      "headword": "ਨਾਂ: · ਭਾਸ਼ਾ: · ਰਿਹਾਇਸ਼: · ਕੰਮ: · ਉਮਰ: · ਫ਼ੋਨ:",
+      "romanization": "independent fictional six-field form",
+      "gloss": "fill six known Gurmukhi form fields without a value model",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:040d628d7f558824",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the earlier lessons. No value bank, support-language value label, romanization, Latin-digit version, or copyable Gurmukhi answer appears below. Use only the old fictional card marks B, ਖ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — independent controlled choice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write all six requested values from memory. Pause after the third line. Keep the last two values in Gurmukhi digits. Do not reopen an earlier lesson or use a dictionary, translator, or spell-checker until the attempt is complete."
+            },
+            {
+              "kind": "speech",
+              "text": "B, ਖ ਨਾਂ: ______ ਭਾਸ਼ਾ: ______ ਰਿਹਾਇਸ਼: ______ ਕੰਮ: ______ ਉਮਰ: ______ ਫ਼ੋਨ: ______."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — repair after the attempt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Only after all six lines are filled, reopen the old banks. Check selection, word spelling, colon spacing, digit order and phone grouping, then field placement in separate passes. Repair one differing dimension at a time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is an untimed minimum-size form rehearsal, not a timed A1 paper. Date remains a separately practised seventh field. A named-reader message, timed production, full mocks, and human A1 validation remain separate work."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W11-form-six-no-model-b",
+              "prompt": "With no value bank, romanization, or copyable answer, complete all six familiar fictional form fields for B, ਖ.",
+              "assesses": [
+                "PA-FORM-SIX-NO-MODEL-01",
+                "PA-FORM-SIX-CUE-01",
+                "PA-FORM-SIX-ORDER-01"
+              ],
+              "responseSeconds": 80,
+              "acceptedResponses": [
+                "ਨਾਂ: ਮਨਨ ਭਾਸ਼ਾ: ਹਿੰਦੀ ਰਿਹਾਇਸ਼: ਸ਼ਹਿਰ ਕੰਮ: ਨੌਕਰੀ ਉਮਰ: ੨੫ ਫ਼ੋਨ: ੦੨੫ ੧੨੫"
+              ],
+              "feedback": {
+                "correct": "Six remembered selections were written beside their taught labels.",
+                "incorrect": "Finish all six attempts first; then reopen one old bank at a time and repair one dimension."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

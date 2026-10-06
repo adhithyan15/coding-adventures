@@ -3,6 +3,41 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "RU-W01-false-friends-v-r",
+      "sourceHash": "fnv1a64:f1c23b0309ceb207",
+      "svgHash": "fnv1a64:3a58c83ada96a997",
+      "svg": "russian/book/figures/RU-W01-false-friends-v-r-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W02-false-friends-s-n",
+      "sourceHash": "fnv1a64:de56ecae7719103a",
+      "svgHash": "fnv1a64:6281da2e63fbf173",
+      "svg": "russian/book/figures/RU-W02-false-friends-s-n-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W03-new-shapes-b-d",
+      "sourceHash": "fnv1a64:cf1e4d60940ccbc0",
+      "svgHash": "fnv1a64:1f4b12ba8fec1dbb",
+      "svg": "russian/book/figures/RU-W03-new-shapes-b-d-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W04-privet-letters-p-i",
+      "sourceHash": "fnv1a64:905aa5de3b6dad33",
+      "svgHash": "fnv1a64:1c0d9c324d39a6df",
+      "svg": "russian/book/figures/RU-W04-privet-letters-p-i-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W05-privet-letters-e-t",
+      "sourceHash": "fnv1a64:efeab42dd821040e",
+      "svgHash": "fnv1a64:1c7577218844e4e5",
+      "svg": "russian/book/figures/RU-W05-privet-letters-e-t-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "RU-W06-ch",
       "sourceHash": "fnv1a64:64f77c69a7465450",
       "svgHash": "fnv1a64:8a973425d3ba3450",

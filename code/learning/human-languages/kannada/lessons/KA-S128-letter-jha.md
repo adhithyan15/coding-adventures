@@ -63,17 +63,25 @@ Two of those sit inside words you say daily — the **ಧ** of **ಧನ್ಯವ
 letter. It writes words Kannada took in from elsewhere — and one of those is
 coming shortly, which is why you meet it here first.
 
-## Writing: ಝ — copy what you see
+## Writing: ಝ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-128] -->
 
-Put your pen on ಝ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** start at the upper left and go down the left side and round the base
+- **2.** without lifting, climb the right side and close the bowl leftward along the top
+- **3.** lift, then draw the top bar from left to right
+- **4.** without lifting, curl up into the hook
+- **5.** lift, then round the middle arm from its foot
+- **6.** without lifting, climb its right side and curl in
+- **7.** lift, then round the right arm from its foot
+- **8.** without lifting, climb its right side and curl in
+- **9.** lift, then draw the tail downward
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 4**, one before each part that follows the bowl.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-jha.gif', 53 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-128] -->

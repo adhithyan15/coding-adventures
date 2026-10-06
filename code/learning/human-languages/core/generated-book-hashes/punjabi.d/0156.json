@@ -1,0 +1,27 @@
+{
+  "language": "punjabi",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:bc0633c2438a339c",
+  "lessonIds": [
+    "PA-W12-greeting-choice",
+    "PA-W12-greeting-supported",
+    "PA-W12-closing-choice",
+    "PA-W12-closing-supported",
+    "PA-W12-boundary",
+    "PA-W12-two-sentence-order",
+    "PA-W12-two-sentence-supported",
+    "PA-W12-two-sentence-delayed",
+    "PA-W12-agreement-repair",
+    "PA-W12-spacing-repair",
+    "PA-W12-spelling-repair",
+    "PA-W12-punctuation-repair",
+    "PA-W12-wellbeing-supported",
+    "PA-W12-interests-supported",
+    "PA-W12-meeting-supported",
+    "PA-W12-body-blocks-delayed",
+    "PA-W12-message-supported",
+    "PA-W12-message-delayed",
+    "PA-W12-message-no-model"
+  ],
+  "tex": "punjabi/book/chapters/ch156-write-to-one-named-reader.tex"
+}

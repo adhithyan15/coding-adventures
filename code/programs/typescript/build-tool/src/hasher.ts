@@ -8,8 +8,8 @@
  *
  * ## How hashing works
  *
- * 1. Collect all source files in the package directory, filtered by the
- *    language's relevant extensions. Always include the BUILD file.
+ * 1. Collect package-local inputs through the checked language registry.
+ *    Universal BUILD fronts and root capability metadata are always inputs.
  * 2. Normalize repository-relative paths to forward-slash form and sort them.
  * 3. Frame each UTF-8 path with its unsigned 64-bit byte length.
  * 4. Append each file's unsigned 64-bit content length and exact raw bytes.
@@ -46,59 +46,79 @@ import { compilePatterns, matchCompiledPath } from "./glob-match.js";
 // Constants
 // ---------------------------------------------------------------------------
 
-/**
- * Source file extensions that matter for each language.
- *
- * If any file with these extensions changes, the package needs rebuilding.
- * We only track extensions that contain actual source code or configuration
- * that affects the build output.
- */
-export const SOURCE_EXTENSIONS: Record<string, Set<string>> = {
-  python: new Set([".py", ".toml", ".cfg"]),
-  ruby: new Set([".rb", ".gemspec"]),
-  go: new Set([".go"]),
-  rust: new Set([".rs", ".toml"]),
-  typescript: new Set([".ts", ".json"]),
-  elixir: new Set([".ex", ".exs"]),
-  perl: new Set([".pl", ".pm", ".t", ".xs"]),
-  haskell: new Set([".hs", ".cabal"]),
-  ocaml: new Set([".ml", ".mli", ".opam"]),
+/** The installed JSON snapshot is the executable's sole selector authority. */
+type ScopedInput = {
+  scope: "root" | "subtree";
+  path_prefix?: string;
+  suffixes: string[];
+  exact_basenames: string[];
+};
+type PackageExactInput = { package_root: string; paths: string[] };
+type LanguageInput = {
+  language: string;
+  recursive_suffixes: string[];
+  recursive_exact_basenames: string[];
+  root_exact_basenames: string[];
+  root_variable_suffixes: string[];
+  root_exact_relative_paths: string[];
+  package_exact_inputs: PackageExactInput[];
+  scoped_inputs: ScopedInput[];
+};
+type SourceInputRegistry = {
+  schema_version: number;
+  universal_inputs: {
+    build_filenames: string[];
+    generated_directory_components: string[];
+    root_exact_basenames: string[];
+  };
+  languages: LanguageInput[];
 };
 
-/**
- * Special filenames to always include regardless of extension.
- *
- * Some files don't have standard extensions but are still important
- * for builds (like Makefiles or lock files).
- */
-export const SPECIAL_FILENAMES: Record<string, Set<string>> = {
-  python: new Set(),
-  ruby: new Set(["Gemfile", "Rakefile"]),
-  go: new Set(["go.mod", "go.sum"]),
-  rust: new Set(["Cargo.lock"]),
-  typescript: new Set(["package-lock.json"]),
-  elixir: new Set(["mix.lock"]),
-  perl: new Set([
-    "Makefile.PL",
-    "Build.PL",
-    "cpanfile",
-    "MANIFEST",
-    "META.json",
-    "META.yml",
-  ]),
-  haskell: new Set(),
-  ocaml: new Set([".ocamlformat", "dune", "dune-project"]),
-};
+function deepFreeze<T>(value: T): T {
+  if (value !== null && typeof value === "object") {
+    for (const nested of Object.values(value)) deepFreeze(nested);
+    Object.freeze(value);
+  }
+  return value;
+}
 
-/**
- * Manifest extensions that affect a package independently of declared globs.
- *
- * OCaml package manifests live at the package root. Source extensions such as
- * `.ml` and `.mli` remain governed by the caller's declared source patterns.
- */
-const DECLARED_MANIFEST_EXTENSIONS: Record<string, Set<string>> = {
-  ocaml: new Set([".opam"]),
-};
+const SOURCE_INPUT_REGISTRY = deepFreeze(JSON.parse(
+  fs.readFileSync(new URL("./language-source-input-registry.json", import.meta.url), "utf-8"),
+) as SourceInputRegistry);
+const LANGUAGE_INPUTS = new Map(
+  SOURCE_INPUT_REGISTRY.languages.map((entry) => [entry.language, entry]),
+);
+const BUILD_FILENAMES = new Set(SOURCE_INPUT_REGISTRY.universal_inputs.build_filenames);
+
+/** Expose the actual runtime projection for complete checked-fixture equality. */
+export function sourceInputRegistry(): SourceInputRegistry {
+  return SOURCE_INPUT_REGISTRY;
+}
+
+/** Canonical JSON sorts object keys; registry arrays retain their reviewed order. */
+function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  if (value !== null && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    return `{${Object.keys(record).sort().map((key) =>
+      `${JSON.stringify(key)}:${canonicalJson(record[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+export function sourceInputRegistryDigest(): string {
+  const canonical = Buffer.from(canonicalJson(SOURCE_INPUT_REGISTRY), "utf-8");
+  const domain = Buffer.from("coding-adventures/build-tool-language-source-input-registry/v1\0", "ascii");
+  const size = Buffer.alloc(8);
+  size.writeBigUInt64BE(BigInt(canonical.length));
+  return crypto.createHash("sha256").update(domain).update(size).update(canonical).digest("hex");
+}
+
+function languageInputs(language: string): LanguageInput {
+  const entry = LANGUAGE_INPUTS.get(language);
+  if (!entry) throw new Error(`unknown source language: ${language}`);
+  return entry;
+}
 
 /**
  * Exact directory components that never contain package source.
@@ -114,35 +134,9 @@ const DECLARED_MANIFEST_EXTENSIONS: Record<string, Set<string>> = {
  * directories. Testing `Dirent.name` before recursion also means we never need
  * to open or resolve anything below an excluded component.
  */
-const SOURCE_HASH_EXCLUDED_DIRECTORIES = new Set([
-  ".git",
-  ".hg",
-  ".svn",
-  ".venv",
-  ".tox",
-  ".mypy_cache",
-  ".pytest_cache",
-  ".ruff_cache",
-  ".stack-work",
-  "__pycache__",
-  "node_modules",
-  "vendor",
-  "dist",
-  "dist-newstyle",
-  "_build",
-  "blib",
-  "build",
-  "target",
-  ".claude",
-  "Pods",
-  ".gradle",
-  ".dart_tool",
-  "gradle-build",
-  "deps",
-  ".build",
-  ".cargo",
-  "cover",
-]);
+const SOURCE_HASH_EXCLUDED_DIRECTORIES = new Set(
+  SOURCE_INPUT_REGISTRY.universal_inputs.generated_directory_components,
+);
 
 // ---------------------------------------------------------------------------
 // Internal helpers
@@ -218,6 +212,60 @@ function repositoryRelativePackagePath(pkg: Package): string {
   throw new Error("cannot derive repository-relative package path");
 }
 
+/**
+ * Fixed package paths are never granted by a name-only fixture fallback.
+ * A real conventional root must agree with the caller's language; site roots
+ * are limited to the two exact reviewed TypeScript registrations.
+ */
+function packageExactPaths(pkg: Package, entry: LanguageInput): Set<string> {
+  const parts = path.resolve(pkg.path).split(/[\\/]+/u);
+  for (let index = parts.length - 2; index >= 0; index -= 1) {
+    if (parts[index] !== "code") continue;
+    const section = parts[index + 1];
+    const root = parts.slice(index).join("/");
+    if (section === "packages" || section === "programs") {
+      if (parts.length < index + 4 || parts[index + 2] !== pkg.language) return new Set();
+    } else if (section === "sites") {
+      if (pkg.language !== "typescript" || parts.length !== index + 3) return new Set();
+      if (!entry.package_exact_inputs.some((rule) => rule.package_root === root)) return new Set();
+    } else {
+      return new Set();
+    }
+    return new Set(entry.package_exact_inputs
+      .filter((rule) => rule.package_root === root)
+      .flatMap((rule) => rule.paths));
+  }
+  return new Set();
+}
+
+/** Resolve all seven registry roles without treating a scoped selector as global. */
+function registryInput(
+  relative: string,
+  entry: LanguageInput,
+  exactPaths: ReadonlySet<string>,
+  declared: boolean,
+): boolean {
+  const basename = relative.split("/").at(-1)!;
+  const root = !relative.includes("/");
+  if (BUILD_FILENAMES.has(basename)) return true;
+  if (root && SOURCE_INPUT_REGISTRY.universal_inputs.root_exact_basenames.includes(basename)) return true;
+  if (root && entry.root_exact_basenames.includes(basename)) return true;
+  if (root && entry.root_variable_suffixes.some((suffix) => basename.endsWith(suffix))) return true;
+  if (entry.root_exact_relative_paths.includes(relative) || exactPaths.has(relative)) return true;
+  if (declared) return false;
+  if (entry.recursive_suffixes.some((suffix) => basename.endsWith(suffix))) return true;
+  if (entry.recursive_exact_basenames.includes(basename)) return true;
+  return entry.scoped_inputs.some((rule) => {
+    const inScope = rule.scope === "root"
+      ? root
+      : relative.startsWith(`${rule.path_prefix}/`);
+    return inScope && (
+      rule.suffixes.some((suffix) => basename.endsWith(suffix)) ||
+      rule.exact_basenames.includes(basename)
+    );
+  });
+}
+
 /** Append one unsigned 64-bit big-endian length to a SHA-256 stream. */
 function updateUnsigned64(hash: crypto.Hash, value: number): void {
   const encoded = Buffer.alloc(8);
@@ -228,44 +276,21 @@ function updateUnsigned64(hash: crypto.Hash, value: number): void {
 /**
  * Collect all source files in a package directory.
  *
- * Files are filtered by the language's relevant extensions and special
- * filenames. BUILD files are always included.
+ * In extension mode the checked registry's recursive, root, fixed, and scoped
+ * roles select inputs. Exact generated components are pruned before matching.
  *
  * @param pkg - The package to collect files for.
  * @returns A sorted list of absolute paths.
  */
 export function collectSourceFiles(pkg: Package): string[] {
-  const extensions = SOURCE_EXTENSIONS[pkg.language] ?? new Set<string>();
-  const specialNames = SPECIAL_FILENAMES[pkg.language] ?? new Set<string>();
-
+  const entry = languageInputs(pkg.language);
+  const exactPaths = packageExactPaths(pkg, entry);
   const files: string[] = [];
 
   for (const filepath of walkFiles(pkg.path)) {
-    const basename = path.basename(filepath);
-    const ext = path.extname(filepath);
-
-    // Always include BUILD files (any variant).
-    if (
-      basename === "BUILD" ||
-      basename === "BUILD_mac" ||
-      basename === "BUILD_linux" ||
-      basename === "BUILD_windows" ||
-      basename === "BUILD_mac_and_linux"
-    ) {
+    const relative = portableRelativePath(pkg.path, filepath);
+    if (registryInput(relative, entry, exactPaths, false)) {
       files.push(filepath);
-      continue;
-    }
-
-    // Check extension.
-    if (extensions.has(ext)) {
-      files.push(filepath);
-      continue;
-    }
-
-    // Check special filenames.
-    if (specialNames.has(basename)) {
-      files.push(filepath);
-      continue;
     }
   }
 
@@ -295,8 +320,8 @@ export function collectSourceFiles(pkg: Package): string[] {
  * from glob-match.ts, which correctly handles `*`, `?`, and multi-segment
  * wildcard patterns.
  *
- * BUILD files are always included regardless of the patterns, because a
- * change to the BUILD file itself should always trigger a rebuild.
+ * The checked registry's universal and fixed inputs remain selected regardless
+ * of patterns. Recursive and scoped roles yield to the declared globs.
  *
  * @param pkg - The package to collect files for.
  * @param patterns - Glob patterns relative to the package directory
@@ -310,51 +335,17 @@ export function collectSourceFilesGlob(
   // Validate the complete declaration before walking the filesystem. A bad
   // later pattern must not be hidden by an earlier match or an empty tree.
   const compiledPatterns = compilePatterns(patterns);
+  const entry = languageInputs(pkg.language);
+  const exactPaths = packageExactPaths(pkg, entry);
   const files: string[] = [];
-  const specialNames = SPECIAL_FILENAMES[pkg.language] ?? new Set<string>();
-  const manifestExtensions =
-    DECLARED_MANIFEST_EXTENSIONS[pkg.language] ?? new Set<string>();
-  const packageRoot = path.resolve(pkg.path);
 
   for (const filepath of walkFiles(pkg.path)) {
-    const basename = path.basename(filepath);
-
-    // Always include BUILD files.
-    if (
-      basename === "BUILD" ||
-      basename === "BUILD_mac" ||
-      basename === "BUILD_linux" ||
-      basename === "BUILD_windows" ||
-      basename === "BUILD_mac_and_linux"
-    ) {
-      files.push(filepath);
-      continue;
-    }
-
-    // Exact package metadata remains a hashing input even when the declared
-    // source patterns omit it. Extension manifests are root-scoped so nested
-    // dependency/example metadata does not silently widen the target.
-    if (
-      specialNames.has(basename) ||
-      (path.resolve(path.dirname(filepath)) === packageRoot &&
-        manifestExtensions.has(path.extname(filepath)))
-    ) {
-      files.push(filepath);
-      continue;
-    }
-
-    // Compute the path relative to the package directory and match
-    // against each declared source pattern.
-    //
-    // We use forward slashes for consistency, since glob patterns
-    // always use forward slashes regardless of platform.
     const relPath = portableRelativePath(pkg.path, filepath);
-
-    for (const pattern of compiledPatterns) {
-      if (matchCompiledPath(pattern, relPath)) {
-        files.push(filepath);
-        break; // No need to check more patterns once we have a match.
-      }
+    if (
+      registryInput(relPath, entry, exactPaths, true) ||
+      compiledPatterns.some((pattern) => matchCompiledPath(pattern, relPath))
+    ) {
+      files.push(filepath);
     }
   }
 

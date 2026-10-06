@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3017c22aa85b06ba",
+  "sourceHash": "fnv1a64:08487149d810cbef",
   "lessons": [
     {
       "id": "HI-S127-letter-u",
@@ -618,7 +618,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a86a346edd24040b",
+      "sourceHash": "fnv1a64:f52cd9d2f483687f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -728,27 +728,31 @@
             },
             {
               "kind": "speech",
-              "text": "3. lift and descend the inner stem."
+              "text": "3. without lifting, climb up the inner stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and descend the trailing stem."
+              "text": "4. descend the inner stem."
             },
             {
               "kind": "speech",
-              "text": "5. lift at the trailing stem's headline junction and sweep the upper arc upward and left."
+              "text": "5. lift and descend the trailing stem."
             },
             {
               "kind": "speech",
-              "text": "6. lift and draw the top shirorekhā left-to-right."
+              "text": "6. lift at the trailing stem's headline junction and sweep the upper arc upward and left."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 5. The pen comes up 5 times and no more."
+              "text": "7. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "Verified modern printed teaching form; traditional and everyday handwriting may divide or simplify the curves differently."
+              "text": "Pen lifts: 4. The pen comes up 4 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows six movements; most native writers draw ओ in five strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts four times: the shoulder runs on up the inner stem and back down it."
             },
             {
               "kind": "speech",

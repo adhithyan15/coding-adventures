@@ -64,14 +64,18 @@ You already say these:
 ## Writing: ಣ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-164] -->
 
-Put your pen on ಣ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** start at the foot of the lower curl and round it up to the short tick at the waist
+- **2.** without lifting, come back and round the upper curl into the middle point
+- **3.** without lifting, arch over to the right and come down the right side
+- **4.** without lifting, round the base and spiral in to the centre
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 0.** The whole letter is one run, from the foot of the lower
+curl over the arch to the end of the spiral. There is no curled bar on top.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-nna.gif', 45 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-164, KA-SCRIPT-RECOG-163] -->

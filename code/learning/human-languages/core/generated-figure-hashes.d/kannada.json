@@ -3,10 +3,129 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "KA-S01-copy-in-a-word",
+      "sourceHash": "fnv1a64:9bdc2262de5fc1aa",
+      "svgHash": "fnv1a64:1cdc142971f07a37",
+      "svg": "kannada/book/figures/KA-S01-copy-in-a-word-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S01-delayed-copy",
+      "sourceHash": "fnv1a64:cf5524ece8d875d6",
+      "svgHash": "fnv1a64:1cdc142971f07a37",
+      "svg": "kannada/book/figures/KA-S01-delayed-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S01-dictation",
+      "sourceHash": "fnv1a64:9fbd732991563403",
+      "svgHash": "fnv1a64:1cdc142971f07a37",
+      "svg": "kannada/book/figures/KA-S01-dictation-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S01-letter-na",
+      "sourceHash": "fnv1a64:88f14b895750d57a",
+      "svgHash": "fnv1a64:1cdc142971f07a37",
+      "svg": "kannada/book/figures/KA-S01-letter-na-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S05-letter-ta",
+      "sourceHash": "fnv1a64:4875c19897dcf619",
+      "svgHash": "fnv1a64:2a4caf72abd450da",
+      "svg": "kannada/book/figures/KA-S05-letter-ta-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S06-letter-da",
+      "sourceHash": "fnv1a64:7c3ed778dbabdae7",
+      "svgHash": "fnv1a64:8b81c4285002ba65",
+      "svg": "kannada/book/figures/KA-S06-letter-da-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S07-letter-ra",
+      "sourceHash": "fnv1a64:1f3b4f0a6fe909cd",
+      "svgHash": "fnv1a64:5d50f234e94e866c",
+      "svg": "kannada/book/figures/KA-S07-letter-ra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S110-letter-ba",
+      "sourceHash": "fnv1a64:affd3d7dfc40b47a",
+      "svgHash": "fnv1a64:c303ee417e038184",
+      "svg": "kannada/book/figures/KA-S110-letter-ba-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S112-letter-ga",
+      "sourceHash": "fnv1a64:a313df465906e7e9",
+      "svgHash": "fnv1a64:571e0927d72f10ed",
+      "svg": "kannada/book/figures/KA-S112-letter-ga-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S113-letter-lla",
+      "sourceHash": "fnv1a64:44462a0be4c6ad31",
+      "svgHash": "fnv1a64:16fd2baedaedbdfd",
+      "svg": "kannada/book/figures/KA-S113-letter-lla-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "KA-S115-letter-i",
       "sourceHash": "fnv1a64:7a86d8bc832bb72c",
       "svgHash": "fnv1a64:3709fc5a2ebec413",
       "svg": "kannada/book/figures/KA-S115-letter-i-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S116-letter-ka",
+      "sourceHash": "fnv1a64:dc434218b89f4a51",
+      "svgHash": "fnv1a64:67d04395d224166d",
+      "svg": "kannada/book/figures/KA-S116-letter-ka-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S117-letter-ya",
+      "sourceHash": "fnv1a64:119a876d95a60748",
+      "svgHash": "fnv1a64:1debecd8a4073578",
+      "svg": "kannada/book/figures/KA-S117-letter-ya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S118-letter-dda",
+      "sourceHash": "fnv1a64:763ae9939c48f03d",
+      "svgHash": "fnv1a64:ddc4c582c6e934ee",
+      "svg": "kannada/book/figures/KA-S118-letter-dda-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S120-letter-ha",
+      "sourceHash": "fnv1a64:28055a6d2732ad4f",
+      "svgHash": "fnv1a64:058d32c619513ac8",
+      "svg": "kannada/book/figures/KA-S120-letter-ha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S121-letter-sa",
+      "sourceHash": "fnv1a64:da4f241652281bc9",
+      "svgHash": "fnv1a64:2f080d6707a62dee",
+      "svg": "kannada/book/figures/KA-S121-letter-sa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S122-letter-ca",
+      "sourceHash": "fnv1a64:6f9b90a04e58ea8d",
+      "svgHash": "fnv1a64:66e8faf950bddcdd",
+      "svg": "kannada/book/figures/KA-S122-letter-ca-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S124-letter-pa",
+      "sourceHash": "fnv1a64:4dad963dcd827585",
+      "svgHash": "fnv1a64:5b9275ecb7b02195",
+      "svg": "kannada/book/figures/KA-S124-letter-pa-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -31,6 +150,20 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "KA-S128-letter-jha",
+      "sourceHash": "fnv1a64:134fe0f6ead67579",
+      "svgHash": "fnv1a64:213eff038b8d5b1d",
+      "svg": "kannada/book/figures/KA-S128-letter-jha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S129-letter-tha",
+      "sourceHash": "fnv1a64:62eb0581f1d78c07",
+      "svgHash": "fnv1a64:507f9cb1e4058fda",
+      "svg": "kannada/book/figures/KA-S129-letter-tha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "KA-S130-letter-ii",
       "sourceHash": "fnv1a64:f773d28dc039127c",
       "svgHash": "fnv1a64:f8a15a8b95e7e184",
@@ -45,10 +178,45 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "KA-S134-letter-ma",
+      "sourceHash": "fnv1a64:f5b0a5d63639bdf9",
+      "svgHash": "fnv1a64:c9849857e6d0d0e1",
+      "svg": "kannada/book/figures/KA-S134-letter-ma-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "KA-S135-letter-a",
       "sourceHash": "fnv1a64:718c9d9ed4d41cab",
       "svgHash": "fnv1a64:6abb275feff6d80f",
       "svg": "kannada/book/figures/KA-S135-letter-a-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S137-letter-la",
+      "sourceHash": "fnv1a64:d4ac061664225a55",
+      "svgHash": "fnv1a64:cc1464f8eb084449",
+      "svg": "kannada/book/figures/KA-S137-letter-la-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S139-letter-va",
+      "sourceHash": "fnv1a64:4d1a671e6c7fb1c2",
+      "svgHash": "fnv1a64:0abd8ddd7a008bcd",
+      "svg": "kannada/book/figures/KA-S139-letter-va-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S150-letter-ja",
+      "sourceHash": "fnv1a64:bf47f0cebf570d9d",
+      "svgHash": "fnv1a64:fcf56fe79e8d03b6",
+      "svg": "kannada/book/figures/KA-S150-letter-ja-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S151-letter-tta",
+      "sourceHash": "fnv1a64:c38896a78a2d9470",
+      "svgHash": "fnv1a64:48e3eb096ce07e54",
+      "svg": "kannada/book/figures/KA-S151-letter-tta-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -91,6 +259,76 @@
       "sourceHash": "fnv1a64:75fa1297c2ce8e2b",
       "svgHash": "fnv1a64:b1eacc83a696f616",
       "svg": "kannada/book/figures/KA-S160-letter-vocalic-r-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S164-letter-nna",
+      "sourceHash": "fnv1a64:cc037f35b0fe19df",
+      "svgHash": "fnv1a64:ad1a10bfd37ce585",
+      "svg": "kannada/book/figures/KA-S164-letter-nna-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S165-letter-sha",
+      "sourceHash": "fnv1a64:51eb90f273d61897",
+      "svgHash": "fnv1a64:719afd6854f64ab2",
+      "svg": "kannada/book/figures/KA-S165-letter-sha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S166-letter-ssa",
+      "sourceHash": "fnv1a64:1367a85c95bccf65",
+      "svgHash": "fnv1a64:e107b3bf98382fdd",
+      "svg": "kannada/book/figures/KA-S166-letter-ssa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S167-letter-dha",
+      "sourceHash": "fnv1a64:f6d14c0dd04bdaf8",
+      "svgHash": "fnv1a64:62e0766aca2445c8",
+      "svg": "kannada/book/figures/KA-S167-letter-dha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S168-letter-bha",
+      "sourceHash": "fnv1a64:097243c566110c1c",
+      "svgHash": "fnv1a64:0e740c4cbe52ada1",
+      "svg": "kannada/book/figures/KA-S168-letter-bha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S169-letter-pha",
+      "sourceHash": "fnv1a64:bc6d7f72b3ac92c8",
+      "svgHash": "fnv1a64:9bf8c7b62beaf136",
+      "svg": "kannada/book/figures/KA-S169-letter-pha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S170-letter-kha",
+      "sourceHash": "fnv1a64:c955da3685009c5f",
+      "svgHash": "fnv1a64:34ffa46ab23151bd",
+      "svg": "kannada/book/figures/KA-S170-letter-kha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S171-letter-gha",
+      "sourceHash": "fnv1a64:719312920296e5aa",
+      "svgHash": "fnv1a64:ade7b3cb4648bc27",
+      "svg": "kannada/book/figures/KA-S171-letter-gha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S172-letter-ddha",
+      "sourceHash": "fnv1a64:f7a0bdfcdebfd928",
+      "svgHash": "fnv1a64:afd41114f6990970",
+      "svg": "kannada/book/figures/KA-S172-letter-ddha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S173-letter-ttha",
+      "sourceHash": "fnv1a64:8e4f0c3152bdb30d",
+      "svgHash": "fnv1a64:de0b990bb178d7b3",
+      "svg": "kannada/book/figures/KA-S173-letter-ttha-filmstrip.svg"
     }
   ]
 }

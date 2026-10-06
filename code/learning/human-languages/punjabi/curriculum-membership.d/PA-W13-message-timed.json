@@ -1,0 +1,11 @@
+{
+  "id": "PA-W13-message-timed",
+  "pathSegment": "PA-PATH-157-SHORT-WRITING-CLOCKS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-157-A1-SHORT-WRITING-CLOCKS",
+      "order": 3
+    }
+  ]
+}

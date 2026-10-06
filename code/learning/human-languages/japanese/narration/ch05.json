@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Nihongo, Built in Small Blocks",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0e00d97dd15baa40",
+  "sourceHash": "fnv1a64:903f2466f7b5acba",
   "lessons": [
     {
       "id": "JA-W05-nichi-kanji",
@@ -515,7 +515,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4106b4605705810f",
+      "sourceHash": "fnv1a64:49a843e5ef039755",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -557,7 +557,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write four strokes: top horizontal; a short vertical and turn; a second horizontal; then the long bottom horizontal. Keep the shape wider than tall."
+              "text": "Write four strokes: top horizontal; a short stroke down, leaning left; a second horizontal that turns down at its right end; then the long bottom horizontal. Keep the shape wider than tall."
             },
             {
               "kind": "speech",
@@ -573,11 +573,11 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "五 (go) — top, turn, middle, bottom",
+              "instruction": "五 (go) — top, down, middle and turn, bottom",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: 五 — top, turn, middle, bottom]"
+              "source": "[YOU TRACE: 五 — top, down, middle and turn, bottom]"
             },
             {
               "kind": "prompt",
@@ -629,7 +629,7 @@
               ],
               "feedback": {
                 "correct": "Right: 五 supplies the go sound clue.",
-                "incorrect": "Use 五: top, turn, middle, long bottom."
+                "incorrect": "Use 五: top, short down stroke, middle and turn, long bottom."
               }
             }
           ]

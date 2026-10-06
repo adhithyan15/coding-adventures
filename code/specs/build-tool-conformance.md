@@ -423,6 +423,16 @@ components such as `_Build` and `_build-example` remain discoverable. The same
 shared language-registry fixture makes this exact-component rule normative for
 every discovery implementation.
 
+The Perl Dune-discovery adopter MUST independently project the checked OCaml
+package and `_build` decoy records from that fixture through its production
+Discovery walk. It MUST also prove that `_Build` and `_build-example` remain
+discoverable. Its production Hasher MUST consume the shared generated-directory
+source cases by projecting those exact path components to Perl-eligible source
+files; the projection proves pruning behavior, not OCaml `.ml` recognition or
+full source-input registry adoption. The OCaml program identity and complete
+multi-lane discovery registry remain governed by the broader discovery
+contract and are not evidence furnished by this Perl-specific slice.
+
 If two discovered directories still produce one qualified name, discovery
 fails with `DUPLICATE_PACKAGE_IDENTITY`. The diagnostic includes the duplicate
 package identity and every repository-relative package path in sorted order;
@@ -766,6 +776,19 @@ pure operations to gain filesystem, process, environment, network, clock,
 randomness, or credential authority. Native case coverage alone does not
 claim a ready neutral execution adapter.
 
+The Haskell build-tool engine MUST expose a typed, process-free graph and
+diff-selection core with the same input limits, prerequisite-first levels,
+cycle no-partial-output, exact BUILD fronts, strict portable globs,
+repository-boundary digest and shared-input fanout, sorted closure sets, and
+50,000,000-unit Unicode-scalar match-work preflight. Its native Hspec suite
+MUST discover and evaluate the exact eight `graph-*.json` and twelve
+`diff-selection-*.json` cases through those production operations and pin the
+case-ID roster. Structural and boundary failures precede match-work failures;
+match-work failures precede unknown-path policy. Fixture decoding and all
+checkout, Git, filesystem, process, environment, network, clock, randomness,
+and credential access remain outside the pure core. Native package tests are
+not a neutral adapter and do not change Haskell adapter readiness.
+
 ### 5. Hashing and cache
 
 Required behavior:
@@ -969,6 +992,84 @@ languages fail before the package root is inspected or walked. Generated-tree
 pruning remains exact and case-sensitive, and neither a declared glob nor a
 package-specific selector can reopen a pruned directory or inert link boundary.
 
+The Python build tool packages a byte-for-byte snapshot of the checked
+language source-input registry as package data. A deterministic sync command
+refreshes that snapshot from the checked neutral JSON; tests require complete
+structural equality and the same domain-separated digest, and exercise the
+production selector through every package-local neutral case. Runtime hashing
+loads only its installed package data, never searches for a repository fixture.
+Its lookup uses all seven roles with the same extension-versus-declared
+precedence, exact generated-component pruning, and inert link boundaries.
+Unknown languages fail before enumeration. Exact-package selection requires a
+canonical `code/packages|programs/<lane>/<name...>` root agreeing with the
+language, or one of the two exact registered TypeScript site roots; unrelated
+`code/sites` roots do not acquire TypeScript authority. This package-local
+adoption does not include the separate repository-boundary source registry,
+Git-index proof, or boundary reverse-diff selection.
+
+The Ruby build tool likewise packages a byte-for-byte snapshot of the checked
+language registry beside its production hasher. A deterministic sync command
+copies the checked neutral JSON; the native suite compares the whole snapshot,
+recomputes its domain-separated digest, and drives every package-local neutral
+case through the production collector. Runtime collection loads only installed
+package data, never a repository fixture. Its exact lookup implements all seven
+roles, universal BUILD and root-only capability inputs, extension/declared
+precedence, and generated-component pruning. Unknown languages fail before
+enumeration. Package-exact inputs require a canonical language-matched
+`code/packages|programs/<lane>/<name...>` root, except that TypeScript may use
+only the two registered exact `code/sites/<site>` roots. This adoption does not
+claim the separately owned repository-boundary or atomic native-snapshot work.
+
+The TypeScript build tool packages a byte-for-byte JSON snapshot of the same
+checked language registry beside its production hasher. A deterministic sync
+command refreshes only this package-data snapshot from the neutral fixture;
+the native suite compares complete structural equality, recomputes the
+domain-separated canonical digest, and drives every package-local neutral
+source-collection case through the production selector. Runtime collection
+loads installed package data only, never searches for the repository fixture.
+It resolves all seven roles with universal BUILD names, root-only capability
+and language metadata, exact package-root inputs, extension/declared
+precedence, and exact generated-component pruning. Unknown languages fail
+before enumeration. Exact package paths require a canonical
+`code/packages|programs/<lane>/<name...>` root matching the declared
+language; only the two registered TypeScript `code/sites/<site>` roots are
+also valid. This package-local adoption does not claim the separately owned
+repository-boundary reverse diff, tracked-index snapshot, or digest work.
+
+The Perl build tool packages a byte-for-byte JSON snapshot of the checked
+language source-input registry alongside its production hasher. A deterministic
+sync command refreshes that package data; tests compare the complete decoded
+projection and domain-separated digest with the neutral registry, then drive
+each package-local source-collection case through the production selector.
+Runtime collection must never search for the repository fixture. Universal
+BUILD and root-only capability inputs, all seven registry roles, exact
+generated-component pruning, and extension-versus-declared precedence apply.
+Unknown languages fail before enumeration. Package-exact inputs require an
+anchored canonical lane-matched package root, except the two registered
+TypeScript site roots; isolated unit packages may use global selectors but
+never acquire package-exact authority. This package-local adoption does not
+claim repository-boundary inputs, stable native snapshots, dependency digests,
+cache persistence, or front-door hash-mode activation.
+
+The Elixir build tool keeps the same complete immutable package-local registry
+projection as generated Elixir source in its own build-tool package. This shape
+ensures that changing the projection itself changes the build tool's own source
+digest without broadening the global language selector. A deterministic sync
+command and native tests compare its embedded JSON bytes and decoded structure
+with the checked neutral registry, recompute the domain-separated digest, and
+exercise every package-local neutral source-collection case through the
+production selector.
+The runtime hasher never locates a repository fixture. Its pure selector applies
+all seven roles, universal BUILD fronts, root-only capability inputs, exact
+generated-component and inert-link pruning, and extension-versus-declared
+precedence; unknown languages fail before any native directory walk. Its
+package-root binding follows the canonical lane-matched roots and only the two
+registered TypeScript site exceptions. Native package hashing then sorts
+normalized relative UTF-8 paths by raw bytes and hashes path-length, path,
+content-length, and raw-content frames under Hashing v1. Dependency digest
+framing, repository-boundary inputs, cache persistence, and stable retained-
+handle native snapshots remain separate owners and are not claimed here.
+
 Swift and the shared C#/F# engine complete this package-local projection with
 the repository-relative boundary registry, tracked-regular-file evidence, and
 an exact reverse diff index. Their native readers remain responsible for
@@ -1155,6 +1256,22 @@ diagnostic on failure. Repository-boundary union, tracked-index proof, and exact
 reverse diff selection remain owned by the separate Haskell repository-boundary
 adoption child. Dependency hashing and cache classification remain owned by the
 separate Haskell dependency-hashing child.
+
+The Lua portable source-hashing core consumes the checked language source-input
+registry as package data and accepts only caller-supplied inert candidate and
+byte snapshots. It rejects unknown lanes and malformed candidate identities,
+prunes exact generated components before every selector, applies all seven
+registry roles with their package-root and mode scopes, deduplicates selected
+paths, sorts normalized repository-relative UTF-8 path bytes, and computes only
+the Hashing v1 `package_digest` from unsigned 64-bit big-endian path/content
+frames. Its neutral conformance tests must compare the complete packaged
+registry projection and domain-separated digest against the checked corpus,
+then exercise the production selector on every package-local case. The pure
+module neither walks the host filesystem nor invokes Git, shell tools, or
+environment probes. Repository-boundary union/reverse diff, native no-follow
+and stable-identity reads, dependency digests, cache persistence, and cache
+classification are separate owners; this portable core cannot claim their
+authority or completion.
 
 ### 6. Starlark
 
@@ -1439,6 +1556,19 @@ digest and `success` or `failed` status. A matching successful record is a
 corrupt records are `recovered`. Every non-hit invalidates the package and its
 declared dependent closure.
 
+The neutral `hashing_cache` corpus MUST include a paired dependency-only
+change with the same package-local file bytes and `include_paths` in both
+snapshots. Each snapshot supplies at least two distinct dependency package
+identities in deliberately reverse lexical input order; the oracle sorts by
+package name before length-framing the decoded 32-byte digests. The first
+snapshot has a matching successful prior combined digest and is a hit. The
+second changes only one dependency digest, retains the first snapshot's prior
+combined digest, and is a miss that invalidates the package and every declared
+dependent. A separate case with identical current package and dependency
+bytes but a matching `failed` prior record is also a miss. These are pure
+fixture records, not evidence of native cache persistence or filesystem
+authority.
+
 The shared-input multi-consumer digest fixture MUST pair two exact Swift
 consumers of `code/packages/rust/Cargo.toml` with before/after snapshots of
 that one registered input. For each consumer, process-free repository-boundary
@@ -1450,6 +1580,16 @@ digest remain unchanged, while its `package_digest` and `combined_digest`
 change. The two consumers MUST be asserted independently; diff selection of
 both consumers alone is not digest evidence. These cases add no Git,
 filesystem, process, credential, or execution authority.
+
+The Lua build-tool dependency-hashing adoption is a process-free child of its
+existing package-source digest. It MUST expose separate dependency and combined
+digests and a pure `hashing_cache` operation over caller-supplied file bytes,
+dependency records, dependent identities, and a prior-cache record. It MUST
+consume all eleven checked `hashing-cache-*` cases through those production
+functions, including reverse-ordered two-dependency framing, the paired
+dependency-only invalidation, failed-record miss, and shared-input consumers.
+The prior record remains inert data; this child does not read a cache file,
+activate CLI hashing, or claim native snapshot authority.
 
 Toolchain detection v1 treats extra-CI declarations as inert BUILD metadata.
 Each package supplies a required generic `BUILD` string plus optional

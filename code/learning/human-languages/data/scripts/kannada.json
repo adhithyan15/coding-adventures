@@ -16,8 +16,21 @@
       "components": [
         "ಕ  ka — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the upper left and go down the left side and round the base",
+        "without lifting, climb the right side and close the bowl leftward along the top",
+        "lift, then draw the lower bar from left to right",
+        "lift, then draw the short link up from the lower bar",
+        "lift, then draw the upper bar from left to right",
+        "without lifting, curl up into the hook"
+      ],
+      "strokeOrderNote": "Six visible movements in four pen-down runs: the round bowl, the lower bar, the short link rising from it, and the upper bar with its hook, separated by three lifts.",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-ka.gif, animation of Kannada consonant ಕ, 44 frames, 4.4 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ka.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಕ in four pen-down runs: the round bowl from its upper left, counterclockwise (frames 0–14); after a lift, the lower bar from left to right (frames 15–18); after a second lift, the short link rising from that bar (frames 19–20); after a third lift, the upper bar from left to right curling up into the hook (frames 21–29). The frames were read from a mirror copy that matches the Commons file's listed size (245×192) and frame count. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; the animation's link bulges a little to the right, while that outline draws it as a straight waist, which the path follows, and the bowl's top is fused into the lower bar, so the closing movement runs along the lower part of that ink. The three-lift order remains the same."
+      }
     },
     {
       "glyph": "ಕಾ",
@@ -171,8 +184,19 @@
       "components": [
         "ಖ  kha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the inner tip of the curl and wind out of it, up and over to the right",
+        "without lifting, come down through the waist to the base",
+        "without lifting, round the lower loop and cross back through the waist",
+        "without lifting, run along the base and climb the right side, curving over to its tip"
+      ],
+      "strokeOrderNote": "Four visible movements in one pen-down run: the curl, the descent through the waist, the lower loop and the long right side follow without a lift; ಖ has no top bar.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-kha.gif, animation of Kannada consonant ಖ, 37 frames, 3.7 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-kha.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಖ in one pen-down run (frames 0–23): from the inner tip of the curl the pen winds out of it, up and over to the right, comes down through the waist to the base, rounds the lower loop up its left side and back across its top through the waist, then runs along the base and climbs the right side, curving over to its tip. ಖ has no top bar, so nothing follows a lift. The frames were read from a mirror copy that matches the Commons file's listed pixel size (209×192); the listing gives no byte size or frame count to compare. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the two strokes cross at the waist, so the path passes through the crossing twice, but the one-run order remains the same."
+      }
     },
     {
       "glyph": "ಖಾ",
@@ -326,8 +350,19 @@
       "components": [
         "ಗ  ga — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left leg from its foot into the arch",
+        "without lifting, arch over and go down the right leg to its foot",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook"
+      ],
+      "strokeOrderNote": "Four visible movements in two pen-down runs: the left leg, the arch and the right leg are one run; after one lift, the top bar runs left to right into the hook.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-ga.gif, animation of Kannada consonant ಗ, 37 frames, 3.7 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ga.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಗ in two pen-down runs: from the foot of the left leg the pen climbs into the arch, goes over it and comes down the right leg to its foot (frames 0–11); after one lift it draws the top bar from left to right and curls up into the hook (frames 12–21). The frames were read from a mirror copy that matches the Commons file's listed size (227×224) and frame count. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the arch's top is fused into the bar, so the arch runs along the lower part of the bar's ink and the bar retraces it, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ಗಾ",
@@ -481,8 +516,25 @@
       "components": [
         "ಘ  gha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the inner tip of the curl and wind up and round it to the left",
+        "without lifting, run along the base and rise into the middle point",
+        "without lifting, drop round the right lobe and climb the right side",
+        "without lifting, carry on up the middle arm to its tip",
+        "without lifting, come back down the middle arm to its foot",
+        "without lifting, round the right arm and curl in at its top",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook",
+        "lift, then set the dot in the middle",
+        "lift, then draw the tail downward"
+      ],
+      "strokeOrderNote": "The source shows nine movements in five pen-down runs; Omniglot's non-native copyists most often draw ಘ in four strokes (65%, 13 of 20). This ductus follows the nine movements in order and direction, lifting three times: after the middle arm the pen comes back down it to start the right arm, ten movements in four runs.",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-gha.gif, animation of Kannada consonant ಘ, 61 frames, 6.1 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-gha.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಘ in five pen-down runs: from the inner tip of the curl the pen winds up and round to the left, runs along the base, rises into the middle point, drops round the right lobe, climbs the right side and carries on up the middle arm to its tip (frames 0–16); after a lift it starts again at the foot of the middle arm and rounds the right arm, curling in at its top (frames 19–24); after a second lift, the top bar from left to right curling up into the hook (frames 28–38); after a third lift, the dot in the middle (frames 43–44); after a fourth lift, the tail below the point, drawn downward (frames 48–49). The frames were read from a mirror copy that matches the Commons file's listed pixel size (225×210); the listing gives no byte size or frame count to compare. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the dot is a filled disc, drawn as a small closed loop inside it, and the tail is a short tapered bar. These runs stage the letter one part at a time; they are not a count of how often fluent writers lift the pen, and no native writers' pen data for Kannada was available. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ಘ, each by a different Amazon Mechanical Turk worker copying a printed exemplar online. They are non-native copyists, not native writers; where the same dataset can be set beside native writers' pen data (HP Labs India's Devanagari and Bangla sets), the copyists use more strokes than those writers, so their counts are read here only as a ceiling on native lifts, and only counts and shares are cited. Even under that ceiling, 65% of them (13 of 20) draw ಘ in four strokes; 15% (3 of 20) use the animation's five. Those counts say how many strokes, not where they break, so this learner path keeps every run's order, start and direction as a segment and joins only the middle arm to the right arm, coming back down the middle arm to its foot, so the pen lifts three times."
+      }
     },
     {
       "glyph": "ಘಾ",
@@ -791,8 +843,25 @@
       "components": [
         "ಚ  ca — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the curled tip inside the head and loop up over it clockwise",
+        "without lifting, slant down to the left and round the left lobe, rising into the middle point",
+        "without lifting, drop from the point round the right lobe's base",
+        "without lifting, climb the right side to the lower bar",
+        "without lifting, run back left along the lower bar",
+        "without lifting, draw the lower bar from left to right",
+        "without lifting, come back along the bar to the short link",
+        "without lifting, draw the short link up from the lower bar",
+        "lift, then draw the upper bar from left to right",
+        "without lifting, curl up into the hook"
+      ],
+      "strokeOrderNote": "The source shows eight movements in four pen-down runs; Omniglot's non-native copyists most often draw ಚ in two strokes (55%, 11 of 20). This ductus follows the eight movements in order and direction, lifting only before the upper bar: after the body the pen runs back along the lower bar, draws it, and comes back to climb the short link, ten movements in two runs.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-cha.gif, animation of Kannada consonant ಚ, 52 frames, 5.2 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-cha.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಚ in four pen-down runs: from the curled tip inside the head the pen loops up over the head clockwise, slants down to the left, rounds the left lobe and rises into the middle point, drops round the right lobe and climbs the right side, curving over at the top (frames 0–20); after a lift, the lower bar from left to right (frames 24–28); after a second lift, the short link rising from that bar (frame 31); after a third lift, the upper bar from left to right curling up into the hook (frames 34–39). Its body is ಬ's and its bars are ಕ's. The frames were read from a mirror copy (206×180, 52 frames); no listed size for the Commons file was available to compare it with, so only the slug and the frames were checked. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the head's curled tip is a short wedge, where the path starts, and the right side runs up into the lower bar instead of curving over, so the climb ends at the bar. These runs stage the letter one part at a time; they are not a count of how often fluent writers lift the pen, and no native writers' pen data for Kannada was available. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ಚ, each by a different Amazon Mechanical Turk worker copying a printed exemplar online. They are non-native copyists, not native writers; where the same dataset can be set beside native writers' pen data (HP Labs India's Devanagari and Bangla sets), the copyists use more strokes than those writers, so their counts are read here only as a ceiling on native lifts, and only counts and shares are cited. Even under that ceiling, 55% of them (11 of 20) draw ಚ in two strokes and 15% (3 of 20) in one; 10% (2 of 20) use the animation's four. Those counts say how many strokes, not where they break, so this learner path keeps every run's order, start and direction as a segment and joins the first three runs, running back along the lower bar before drawing it and coming back to the link's foot after it, so the pen lifts once, before the upper bar."
+      }
     },
     {
       "glyph": "ಚಾ",
@@ -1101,8 +1170,20 @@
       "components": [
         "ಜ  ja — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the curled tip inside the head and loop up over it clockwise",
+        "without lifting, slant down to the left and round the left lobe, rising into the middle point",
+        "without lifting, drop from the point round the right lobe's base",
+        "without lifting, climb the right side and curl in to its tip",
+        "lift, then sweep the upper arc from the head out to its upturned tip"
+      ],
+      "strokeOrderNote": "Five visible movements in two pen-down runs: the head, the left lobe, the middle point and the right lobe are one run; after one lift, the upper arc sweeps out from the head.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-ja.gif, animation of Kannada consonant ಜ, 37 frames, 3.7 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ja.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಜ in two pen-down runs: from the curled tip inside the head the pen loops up over the head clockwise, slants down to the left, rounds the left lobe and rises into the middle point, drops round the right lobe and climbs the right side, curling in at its tip (frames 0–16); after one lift it starts again at the right side of the head and sweeps the upper arc down and out to its upturned tip (frames 19–23). The frames were read from a mirror copy that matches the Commons file's listed size (234×195, 104 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the head's curled tip is a short wedge, where the path starts, and the arc begins inside the head's ink, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ಜಾ",
@@ -1256,8 +1337,24 @@
       "components": [
         "ಝ  jha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the upper left and go down the left side and round the base",
+        "without lifting, climb the right side and close the bowl leftward along the top",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook",
+        "lift, then round the middle arm from its foot",
+        "without lifting, climb its right side and curl in",
+        "lift, then round the right arm from its foot",
+        "without lifting, climb its right side and curl in",
+        "lift, then draw the tail downward"
+      ],
+      "strokeOrderNote": "Nine visible movements in five pen-down runs: the round bowl; the top bar with its hook; the middle arm; the right arm; and the tail below, separated by four lifts.",
+      "penLifts": 4,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-jha.gif, animation of Kannada consonant ಝ, 53 frames, 5.3 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-jha.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಝ in five pen-down runs: the round bowl, counterclockwise from its upper left (frames 0–10); after a lift, the top bar from left to right curling up into the hook (frames 13–21); after a second lift, the middle arm from its foot, round its base and up its right side, curling in at the top (frames 24–29); after a third lift, the right arm drawn the same way (frames 33–38); after a fourth lift, the tail below, drawn downward (frames 42–43). The frames were read from a mirror copy (225×196, 53 frames); no listed size for the Commons file was available to compare it with, so only the slug and the frames were checked. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the bowl's top is fused into the bar, as in ರ, so the closing movement runs along the lower part of the bar's ink and the bar retraces it, and the tail is a straight tapered bar, but the four-lift order remains the same."
+      }
     },
     {
       "glyph": "ಝಾ",
@@ -1566,8 +1663,21 @@
       "components": [
         "ಟ  ṭa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the tip of the top curl and curve round to the left and down into the waist",
+        "without lifting, go round the small loop counterclockwise and close it at the waist",
+        "without lifting, go down the left side and round the left lobe, rising into the middle point",
+        "without lifting, drop round the right lobe and climb the right side",
+        "without lifting, curl in to the short tick in the middle",
+        "without lifting, come back and round the upper bowl to its tip"
+      ],
+      "strokeOrderNote": "Six visible movements in one pen-down run: the top curve, the small loop, the left lobe, the right lobe, the middle tick and the upper bowl follow without a lift; ಟ has no top bar.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-ta.gif, animation of Kannada consonant ಟ, 34 frames, 3.4 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ta.gif",
+        "variation": "The CC BY-SA 4.0 animation is filed under the slug \"ta\" and draws retroflex ಟ (U+0C9F); in this series dental ತ is \"tha\" and \"tta\" animates ಠ, so the glyph was checked frame by frame rather than taken from the file name. It writes ಟ in one pen-down run (frames 0–16): from the tip of the top curl the pen curves round to the left and down into the waist, goes round the small loop counterclockwise and closes it, goes down the left side, round the left lobe and up into the middle point, drops round the right lobe and climbs the right side, curls in to a short tick in the middle, then rises round the upper bowl to its tip. ಟ has no top bar, so nothing follows a lift. The frames were read from a mirror copy that matches the Commons file's listed size (229×199, 80 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the small loop's left side is shared with the outer curve, so that stretch is drawn twice, and the tick is retraced on the way out, but the one-run order remains the same."
+      }
     },
     {
       "glyph": "ಟಾ",
@@ -1721,8 +1831,21 @@
       "components": [
         "ಠ  ṭha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the upper left of the bowl and go down the left side and round the base",
+        "without lifting, climb the right side",
+        "without lifting, close the bowl leftward along the top",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook",
+        "lift, then set the dot in the middle"
+      ],
+      "strokeOrderNote": "Six visible movements in three pen-down runs: the round bowl (the left side, the base, the right side and the closing top); the top bar with its hook; and the dot, separated by two lifts.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-tta.gif, animation of Kannada consonant ಠ, 41 frames, 4.1 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-tta.gif",
+        "variation": "The CC BY-SA 4.0 animation is filed under the slug \"tta\" and draws retroflex ಠ (U+0CA0); in this series \"ta\" animates retroflex ಟ and \"thha\" dental ಥ, so the glyph was checked frame by frame rather than taken from the file name. It writes ಠ in three pen-down runs: from the upper left of the round bowl the pen goes counterclockwise down the left side, round the base, up the right side and back left across the top, closing the bowl where it began (frames 0–12; the pencil rests there to frame 14); after a lift, the top bar from left to right curling up into the hook (frames 15–22); after a second lift, the dot in the middle (frames 26–27). The frames were read from a mirror copy that matches the Commons file's listed size (231×208, 105 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the bowl's top is fused into the bar, as in ದ, so the closing movement runs along the lower part of the bar's ink and the bar retraces it, and the dot is a filled disc, drawn as a small closed loop inside it. The two-lift order remains the same."
+      }
     },
     {
       "glyph": "ಠಾ",
@@ -1876,8 +1999,21 @@
       "components": [
         "ಡ  ḍa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the upper left and go down the left side into the left lobe, rising into the middle point",
+        "without lifting, drop from the point around the right lobe and climb the right side",
+        "without lifting, curl left into the small inner loop and go round it counterclockwise",
+        "without lifting, rise out of the loop and close the bowl leftward along the top",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook"
+      ],
+      "strokeOrderNote": "Six visible movements in two pen-down runs: the left lobe, the middle point, the right lobe, the small inner loop and the closing top are one run; after one lift, the top bar runs left to right into the hook.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-da.gif, animation of Kannada consonant ಡ, 49 frames, 4.9 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-da.gif",
+        "variation": "The CC BY-SA 4.0 animation is filed under the slug \"da\" and draws retroflex ಡ (U+0CA1); in this series dental ದ is \"dha\" and \"dda\" animates ಢ, so the glyph was checked frame by frame rather than taken from the file name. It writes ಡ in two pen-down runs: from the upper left the pen goes down around the left lobe, up into the middle point, down around the right lobe and up the right side, curls left into the small inner loop and round it, then rises out of it and arcs back left across the top (frames 0–29); after one lift it draws the top bar from left to right and curls up into the hook (frames 30–36). The frames were read from a mirror copy that matches the Commons file's listed size (230×164, 171 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the arc across the top is fused into the bar and the loop's right side is shared with the rise to the bar, so the closing movement runs along the lower part of the bar's ink, the bar retraces it and the shared stretch is drawn twice, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ಡಾ",
@@ -2031,8 +2167,22 @@
       "components": [
         "ಢ  ḍha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the upper left and go down the left side into the left lobe, rising into the middle point",
+        "without lifting, drop from the point around the right lobe and climb the right side",
+        "without lifting, curl left into the small inner loop and go round it counterclockwise",
+        "without lifting, rise out of the loop and close the bowl leftward along the top",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook",
+        "lift, then draw the tail downward"
+      ],
+      "strokeOrderNote": "Seven visible movements in three pen-down runs: the body (the left lobe, the middle point, the right lobe, the small inner loop and the closing top); the top bar with its hook; and the tail, separated by two lifts.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-dda.gif, animation of Kannada consonant ಢ, 52 frames, 5.2 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-dda.gif",
+        "variation": "The CC BY-SA 4.0 animation is filed under the slug \"dda\" and draws retroflex ಢ (U+0CA2); in this series \"da\" animates ಡ and dental ದ is \"dha\", so the glyph was checked frame by frame rather than taken from the file name. It writes ಢ in three pen-down runs: from the upper left the pen goes down around the left lobe, up into the middle point, down around the right lobe and up the right side, curls left into the small inner loop and round it, then rises out of it and arcs back left across the top (frames 0–29); after a lift, the top bar from left to right curling up into the hook (frames 30–35); after a second lift, the tail below the point, drawn downward (frames 39–40). Its body is ಡ's. The frames were read from a mirror copy that matches the Commons file's listed size (244×173, 165 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the arc across the top is fused into the bar and the loop's right side is shared with the rise to the bar, so the closing movement runs along the lower part of the bar's ink, the bar retraces it and the shared stretch is drawn twice, and the tail is a short tapered bar. The two-lift order remains the same."
+      }
     },
     {
       "glyph": "ಢಾ",
@@ -2186,8 +2336,19 @@
       "components": [
         "ಣ  ṇa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the foot of the lower curl and round it up to the short tick at the waist",
+        "without lifting, come back and round the upper curl into the middle point",
+        "without lifting, arch over to the right and come down the right side",
+        "without lifting, round the base and spiral in to the centre"
+      ],
+      "strokeOrderNote": "Four visible movements in one pen-down run: the lower curl, the upper curl, the arch down the right side and the spiral follow without a lift; ಣ has no top bar.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-nna.gif, animation of Kannada consonant ಣ, 45 frames, 4.5 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-nna.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಣ in one pen-down run (frames 0–26): from the foot of the lower curl the pen runs left along its base and rounds it up to the waist, rounds the upper curl over the top and dips into the middle point, arches over to the right and comes down the right side, then rounds the base and spirals in to the centre. ಣ has no top bar, so nothing follows a lift. The frames were read from a mirror copy that matches the Commons file's listed size (252×200, 137 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the waist ends in a short tick, which the path runs out to and back from, but the one-run order remains the same."
+      }
     },
     {
       "glyph": "ಣಾ",
@@ -2341,8 +2502,20 @@
       "components": [
         "ತ  ta — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the upper-left end and sweep down around the broad bowl and up its right side",
+        "without lifting, turn left over the top and curl down into the inner loop",
+        "without lifting, close the small loop and rise to the top bar",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook"
+      ],
+      "strokeOrderNote": "Five visible movements in two pen-down runs: the broad bowl, the arc over the top, and the small inner loop rising to the bar are one run; after one lift, the top bar runs left to right into the hook.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-tha.gif, animation of Kannada consonant ತ, 43 frames, 4.3 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-tha.gif",
+        "variation": "The CC BY-SA 4.0 animation is filed under the slug \"tha\" but draws dental ತ (U+0CA4); in this series \"ta\" and \"tta\" animate ಟ and ಠ, so the glyph was checked frame by frame rather than taken from the file name. It writes ತ in two pen-down runs: from the upper-left end the pen sweeps down around the broad bowl and up its right side, turns left over the top, curls down into the small inner loop and rises out of it to the top (frames 0–21); after one lift it draws the top bar from left to right and curls up into the hook (frames 22–29). The frames were read from a mirror copy that matches the Commons file's listed size (209×186) and frame count. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the arc over the top is the inner loop's upper edge, so the loop's right side is retraced on the way up, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ತಾ",
@@ -2496,8 +2669,22 @@
       "components": [
         "ಥ  tha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the upper left and go down the left side into the left lobe, rising into the middle point",
+        "without lifting, drop from the point around the right lobe and climb the right side",
+        "without lifting, close the bowl leftward along the top",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook",
+        "lift, then draw the tail downward",
+        "lift, then set the dot in the middle"
+      ],
+      "strokeOrderNote": "Seven visible movements in four pen-down runs: the body (the left lobe, the middle point, the right lobe and the closing top); the top bar with its hook; the tail; and the dot, separated by three lifts.",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-thha.gif, animation of Kannada consonant ಥ, 43 frames, 4.3 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-thha.gif",
+        "variation": "The CC BY-SA 4.0 animation is filed under the slug \"thha\" and draws dental ಥ (U+0CA5); in this series \"tha\" animates dental ತ and \"tta\" retroflex ಠ, so the glyph was checked frame by frame rather than taken from the file name. It writes ಥ in four pen-down runs: from the upper left the pen goes down around the left lobe, up into the middle point, down around the right lobe, up the right side and back left across the top (frames 0–16); after a lift, the top bar from left to right curling up into the hook (frames 19–26); after a second lift, the tail below the point, drawn downward (frames 28–29); after a third lift, the dot in the middle (frame 31). The frames were read from a mirror copy that matches the Commons file's listed size (215×174, 123 KB), byte size and frame count. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the bowl's top is fused into the bar, as in ದ, so the closing movement runs along the lower part of the bar's ink and the bar retraces it, and the dot is a filled disc, drawn as a small closed loop inside it. The three-lift order remains the same."
+      }
     },
     {
       "glyph": "ಥಾ",
@@ -2651,8 +2838,20 @@
       "components": [
         "ದ  da — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the upper left and go down the left side into the left lobe, rising into the middle point",
+        "without lifting, drop from the point around the right lobe and climb the right side",
+        "without lifting, close the bowl leftward along the top",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook"
+      ],
+      "strokeOrderNote": "Five visible movements in two pen-down runs: the left lobe, the middle point, the right lobe and the closing top are one run; after one lift, the top bar runs left to right into the hook.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-dha.gif, animation of Kannada consonant ದ, 39 frames, 3.9 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-dha.gif",
+        "variation": "The CC BY-SA 4.0 animation is filed under the slug \"dha\" but draws dental ದ (U+0CA6); in this series \"da\" and \"dda\" animate ಡ and ಢ, so the glyph was checked frame by frame rather than taken from the file name. It writes ದ in two pen-down runs: from the upper left the pen goes down around the left lobe, up into the middle point, down around the right lobe, up the right side and back left across the top (frames 0–18); after one lift it draws the top bar from left to right and curls up into the hook (frames 19–24). The frames were read from a mirror copy that matches the Commons file's listed size (198×143) and frame count. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the bowl's top is fused into the bar, so the closing movement runs along the lower part of the bar's ink and the bar retraces it, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ದಾ",
@@ -2806,8 +3005,21 @@
       "components": [
         "ಧ  dha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the upper left and go down the left side into the left lobe, rising into the middle point",
+        "without lifting, drop from the point around the right lobe and climb the right side",
+        "without lifting, close the bowl leftward along the top",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook",
+        "lift, then draw the tail downward"
+      ],
+      "strokeOrderNote": "Six visible movements in three pen-down runs: the body (the left lobe, the middle point, the right lobe and the closing top); the top bar with its hook; and the tail, separated by two lifts.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-dhha.gif, animation of Kannada consonant ಧ, 42 frames, 4.2 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-dhha.gif",
+        "variation": "The CC BY-SA 4.0 animation is filed under the slug \"dhha\" and draws dental ಧ (U+0CA7); in this series \"dha\" animates dental ದ and \"dda\" retroflex ಢ, so the glyph was checked frame by frame rather than taken from the file name. It writes ಧ in three pen-down runs: from the upper left the pen goes down around the left lobe, up into the middle point, down around the right lobe, up the right side and back left across the top (frames 0–16); after a lift, the top bar from left to right curling up into the hook (frames 19–24); after a second lift, the tail below the point, drawn downward (frames 28–29). Its body is ದ's. The frames were read from a mirror copy that matches the Commons file's listed size (211×193, 109 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the bowl's top is fused into the bar, as in ದ, so the closing movement runs along the lower part of the bar's ink and the bar retraces it, and the tail is a short tapered bar. The two-lift order remains the same."
+      }
     },
     {
       "glyph": "ಧಾ",
@@ -2961,8 +3173,20 @@
       "components": [
         "ನ  na — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "rise from the lower tail around the left bowl",
+        "without lifting, slant down into the right bowl",
+        "without lifting, climb the right side to the top bar",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook"
+      ],
+      "strokeOrderNote": "Five visible movements in two pen-down runs: the body rises from the lower tail around the left bowl, slants down into the right bowl and climbs its right side; after one lift, the top bar runs left to right and curls up into the hook.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-na.gif, animation of Kannada consonant ನ, 34 frames, 3.4 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-na.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ನ in two pen-down runs: from the lower tail the pen climbs around the left bowl, slants down into the right bowl and climbs its right side, curving over to finish under the top (frames 0–13); after one lift it draws the top bar from left to right and curls up into the hook (frames 14–20). The frames were read from a mirror copy that matches the Commons file's listed size (239×215) and frame count. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the right side runs straight into the bar instead of arching over, so the first run ends where the two meet, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ನಾ",
@@ -3116,8 +3340,21 @@
       "components": [
         "ಪ  pa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the inner tip of the curl and wind up and round it to the left",
+        "without lifting, run along the base and rise into the middle point",
+        "without lifting, drop round the right lobe and climb the right side to its tip",
+        "lift, then set the dot in the middle",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook"
+      ],
+      "strokeOrderNote": "Six visible movements in three pen-down runs: the body from the curl's inner tip to the tip of the right side; the dot; and the top bar with its hook, separated by two lifts.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-pa.gif, animation of Kannada consonant ಪ, 32 frames, 3.2 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-pa.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಪ in three pen-down runs: from the inner tip of the curl the pen winds up and round to the left, runs along the base, rises into the middle point, drops round the right lobe and climbs the right side, curving over at the top (frames 0–12); after a lift, the dot in the middle (frame 13); after a second lift, the top bar from left to right curling up into the hook (frames 14–19). The frames were read from a mirror copy that matches the Commons file's listed size (277×184, 91 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the dot is a filled disc, so the path draws it as a small closed loop inside it. The two-lift order remains the same."
+      }
     },
     {
       "glyph": "ಪಾ",
@@ -3271,8 +3508,22 @@
       "components": [
         "ಫ  pha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the inner tip of the curl and wind up and round it to the left",
+        "without lifting, run along the base and rise into the middle point",
+        "without lifting, drop round the right lobe and climb the right side to its tip",
+        "lift, then set the dot in the middle",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook",
+        "lift, then draw the tail downward"
+      ],
+      "strokeOrderNote": "Seven visible movements in four pen-down runs: the body from the curl's inner tip to the tip of the right side; the dot; the top bar with its hook; and the tail, separated by three lifts.",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-pha.gif, animation of Kannada consonant ಫ, 43 frames, 4.3 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-pha.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಫ in four pen-down runs: from the inner tip of the curl the pen winds up and round to the left, runs along the base, rises into the middle point, drops round the right lobe and climbs the right side, curving over at the top (frames 0–12); after a lift, the dot in the middle (frame 13); after a second lift, the top bar from left to right curling up into the hook (frames 14–19); after a third lift, the tail below the point, drawn downward (frames 23–24). Its body is ಪ's. The frames were read from a mirror copy that matches the Commons file's listed size (240×177, 131 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the dot is a filled disc, drawn as a small closed loop inside it, and the tail is a short tapered bar. The three-lift order remains the same."
+      }
     },
     {
       "glyph": "ಫಾ",
@@ -3426,8 +3677,19 @@
       "components": [
         "ಬ  ba — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the curled tip inside the head and loop up over it clockwise",
+        "without lifting, slant down to the left and round the left lobe, rising into the middle point",
+        "without lifting, drop from the point round the right lobe's base",
+        "without lifting, climb the right side to its tip"
+      ],
+      "strokeOrderNote": "Four visible movements in one pen-down run: the head, the left lobe, the middle point, the right lobe and the tall right side follow without a lift; ಬ has no top bar.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-ba.gif, animation of Kannada consonant ಬ, 29 frames, 2.9 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ba.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಬ in one pen-down run (frames 0–17): from the curled tip inside the head the pen loops up over the head clockwise, slants down to the left, rounds the left lobe and rises into the middle point, drops round the right lobe and climbs the right side to its tip. ಬ has no top bar, so nothing follows a lift. The frames were read from a mirror copy that matches the Commons file's listed size (214×177, 75 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the head's curled tip is a short wedge, so the path starts on that wedge, but the one-run order remains the same."
+      }
     },
     {
       "glyph": "ಬಾ",
@@ -3581,8 +3843,22 @@
       "components": [
         "ಭ  bha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the curled tip inside the head and loop up over it clockwise",
+        "without lifting, slant down to the left and round the left lobe, rising into the middle point",
+        "without lifting, drop round the right lobe and climb the right side to the bar",
+        "without lifting, run back left along the bar",
+        "without lifting, draw the bar from left to right",
+        "without lifting, curl up into the hook",
+        "lift, then draw the tail downward"
+      ],
+      "strokeOrderNote": "The source shows six movements in three pen-down runs; Omniglot's non-native copyists most often draw ಭ in two strokes (55%, 11 of 20). This ductus follows the six movements in order and direction, lifting only before the tail: after the body the pen runs back along the bar and draws it into the hook, seven movements in two runs.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-bha.gif, animation of Kannada consonant ಭ, 33 frames, 3.3 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-bha.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಭ in three pen-down runs: from the curled tip inside the head the pen loops up over the head clockwise, slants down to the left, rounds the left lobe and rises into the middle point, drops round the right lobe and climbs the right side, curving over at the top (frames 0–11); after a lift, the short top bar from left to right curling up into the hook (frames 14–17); after a second lift, the tail below the point, drawn downward (frames 20–21). Its body is ಬ's. The frames were read from a mirror copy (234×189, 33 frames); no listed size for the Commons file was available to compare it with, so only the slug and the frames were checked. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the head's curled tip is a short wedge, where the path starts, and the right side runs up into the bar instead of curving over, so the climb ends at the bar. These runs stage the letter one part at a time; they are not a count of how often fluent writers lift the pen, and no native writers' pen data for Kannada was available. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ಭ, each by a different Amazon Mechanical Turk worker copying a printed exemplar online. They are non-native copyists, not native writers; where the same dataset can be set beside native writers' pen data (HP Labs India's Devanagari and Bangla sets), the copyists use more strokes than those writers, so their counts are read here only as a ceiling on native lifts, and only counts and shares are cited. Even under that ceiling, 55% of them (11 of 20) draw ಭ in two strokes; 30% (6 of 20) use the animation's three. Those counts say how many strokes, not where they break, so this learner path keeps every run's order, start and direction as a segment and joins the body to the bar, running back left along the bar before drawing it into the hook, so the pen lifts once, before the tail."
+      }
     },
     {
       "glyph": "ಭಾ",
@@ -3736,8 +4012,22 @@
       "components": [
         "ಮ  ma — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the inner tip of the curl and wind up and round it to the left",
+        "without lifting, run along the base and rise into the middle point",
+        "without lifting, drop round the right lobe and climb the right side to the top bar",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook",
+        "lift, then round the right bowl from its foot",
+        "without lifting, climb its right side and curl in at the top"
+      ],
+      "strokeOrderNote": "Seven visible movements in three pen-down runs: the body from the curl's inner tip up the right side; the top bar with its hook; and the right bowl, separated by two lifts.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-ma.gif, animation of Kannada consonant ಮ, 42 frames, 4.2 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ma.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಮ in three pen-down runs: from the inner tip of the curl the pen winds up and round to the left, runs along the base, rises into the middle point, drops round the right lobe and climbs the right side, curving over at the top (frames 0–11); after a lift, the top bar from left to right curling up into the hook (frames 15–19); after a second lift, the right bowl from its foot, round its base and up its right side, curling in at the top (frames 22–27). The frames were read from a mirror copy that matches the Commons file's listed size (244×236, 141 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the right side of the body runs up into the bar instead of curving over, so the climb ends at the bar, but the two-lift order remains the same."
+      }
     },
     {
       "glyph": "ಮಾ",
@@ -3891,8 +4181,23 @@
       "components": [
         "ಯ  ya — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the upper left and go down the left side and round the base",
+        "without lifting, climb the right side and close the bowl over the top",
+        "lift, then dip from the foot of the bowl and climb the middle arm to the top bar",
+        "without lifting, run back left along the top bar",
+        "without lifting, draw the top bar from left to right",
+        "without lifting, curl up into the hook",
+        "lift, then round the small right bowl from its foot",
+        "without lifting, climb its right side and curl in at the top"
+      ],
+      "strokeOrderNote": "The source shows seven movements in four pen-down runs; Omniglot's non-native copyists draw ಯ in three strokes (45%, 9 of 20) or two (40%, 8 of 20). This ductus follows the seven movements in order and direction, lifting twice: the middle arm runs back along the top bar and draws it into the hook, eight movements in three runs. The bowl ends at its top left and the hook high above the right bowl's foot, so joining either would retrace most of a curve.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-ya.gif, animation of Kannada consonant ಯ, 35 frames, 3.5 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ya.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಯ in four pen-down runs: the round bowl, counterclockwise from its upper left (frames 0–8); after a lift, a fresh stroke from the foot of the bowl that dips and climbs the middle arm to the top (frames 9–14); after a second lift, the top bar from left to right curling up into the hook (frames 15–18); after a third lift, the small right bowl from its foot, round its base and up its right side, curling in at the top (frames 19–24). The frames were read from a mirror copy that matches the Commons file's listed size (260×189, 116 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the middle arm runs into the bar instead of curling over, so the arm ends at the bar. These runs stage the letter one part at a time; they are not a count of how often fluent writers lift the pen, and no native writers' pen data for Kannada was available. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ಯ, each by a different Amazon Mechanical Turk worker copying a printed exemplar online. They are non-native copyists, not native writers; where the same dataset can be set beside native writers' pen data (HP Labs India's Devanagari and Bangla sets), the copyists use more strokes than those writers, so their counts are read here only as a ceiling on native lifts, and only counts and shares are cited. Even under that ceiling, 45% of them (9 of 20) draw ಯ in three strokes and 40% (8 of 20) in two; 10% (2 of 20) use the animation's four. Those counts say how many strokes, not where they break, so this learner path keeps every run's order, start and direction as a segment and joins only the middle arm to the top bar, running back along the bar before drawing it into the hook, so the pen lifts twice. One lift would mean retracing more than half the round bowl to reach the arm's foot, or the hook and the arm's whole right side to reach the right bowl's foot, so this path keeps two."
+      }
     },
     {
       "glyph": "ಯಾ",
@@ -4046,8 +4351,19 @@
       "components": [
         "ರ  ra — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the upper left and go down the left side and round the base",
+        "without lifting, climb the right side and close the bowl leftward along the top",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook"
+      ],
+      "strokeOrderNote": "Four visible movements in two pen-down runs: the round bowl is closed counterclockwise in one run; after one lift, the top bar runs left to right into the hook.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-ra.gif, animation of Kannada consonant ರ, 36 frames, 3.6 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ra.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ರ in two pen-down runs: from the upper left the pen goes down the left side, round the base, up the right side and back left across the top (frames 0–14); after one lift it draws the top bar from left to right and curls up into the hook (frames 15–22). The frames were read from a mirror copy that matches the Commons file's listed size (230×183) and frame count. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the bowl's top is fused into the bar, so the closing movement runs along the lower part of the bar's ink and the bar retraces it, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ರಾ",
@@ -4201,8 +4517,18 @@
       "components": [
         "ಲ  la — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the left of the small loop and close it counterclockwise",
+        "without lifting, sweep down the outer left side and round the base",
+        "without lifting, climb the right side and curl in to its tip"
+      ],
+      "strokeOrderNote": "Three visible movements in one pen-down run: the small loop, the sweep round the left side and the base, and the climb up the right side follow without a lift; ಲ has no top bar.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-la.gif, animation of Kannada consonant ಲ, 30 frames, 3.0 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-la.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಲ in one pen-down run (frames 0–13): the pen closes the small upper-left loop counterclockwise, sweeps down round the outer left side and along the base, and climbs the right side, curling in at its tip. ಲ has no top bar, so nothing follows a lift. The frames were read from a mirror copy that matches the Commons file's listed size (230×210, 78 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the small loop's left side is also the outer curve, so the path starts at the loop's lower left, where the two meet, but the one-run order remains the same."
+      }
     },
     {
       "glyph": "ಲಾ",
@@ -4356,8 +4682,20 @@
       "components": [
         "ವ  va — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the inner tip of the curl and wind up and round it to the left",
+        "without lifting, run along the base and rise into the middle point",
+        "without lifting, drop round the right lobe and climb the right side to the top bar",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook"
+      ],
+      "strokeOrderNote": "Five visible movements in two pen-down runs: the curl, the base, the middle point, the right lobe and the right side are one run; after one lift, the top bar runs left to right into the hook.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-va.gif, animation of Kannada consonant ವ, 32 frames, 3.2 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-va.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ವ in two pen-down runs: from the inner tip of the curl the pen winds up and round to the left, runs along the base, rises into the middle point, drops round the right lobe and climbs the right side, curving over at the top (frames 0–11); after one lift it draws the top bar from left to right and curls up into the hook (frames 15–19). The frames were read from a mirror copy that matches the Commons file's listed size (191×183, 82 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the right side runs up into the bar instead of curving over, so the climb ends at the bar, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ವಾ",
@@ -4511,8 +4849,20 @@
       "components": [
         "ಶ  śa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the head and rise to run right along the top",
+        "without lifting, curve down and sweep across to the lower left",
+        "without lifting, round the base and climb the right side to the top bar",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook"
+      ],
+      "strokeOrderNote": "Five visible movements in two pen-down runs: the head, the top, the sweep to the lower left, the base and the right side are one run; after one lift, the top bar runs left to right into the hook.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-sha.gif, animation of Kannada consonant ಶ, 31 frames, 3.1 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-sha.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಶ in two pen-down runs: from the round head at the upper left the pen runs right along the top, curves down and sweeps across to the lower left, rounds the base and climbs the right side to the top (frames 0–12); after one lift it draws the top bar from left to right and curls up into the hook (frames 14–19). The frames were read from a mirror copy that matches the Commons file's listed size (259×211, 80 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the head is a short wedge, where the path starts, and the top of the body is fused into the bar, so the first movement runs along the lower part of the bar's ink and the bar retraces it, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ಶಾ",
@@ -4666,8 +5016,22 @@
       "components": [
         "ಷ  ṣa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the inner tip of the curl and wind up and round it to the left",
+        "without lifting, run along the base and rise into the middle point",
+        "without lifting, drop round the right lobe and climb the right side to its tip",
+        "lift, then set the dot in the middle",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook",
+        "lift, then draw the slanting stroke down to the right"
+      ],
+      "strokeOrderNote": "Seven visible movements in four pen-down runs: the body from the curl's inner tip to the tip of the right side; the dot; the top bar with its hook; and the slanting stroke, separated by three lifts.",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-shha.gif, animation of Kannada consonant ಷ, 40 frames, 4.0 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-shha.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಷ in four pen-down runs: from the inner tip of the curl the pen winds up and round to the left, runs along the base, rises into the middle point, drops round the right lobe and climbs the right side, curving over at the top (frames 0–12); after a lift, the dot in the middle (frame 13); after a second lift, the top bar from left to right curling up into the hook (frames 14–20); after a third lift, the slanting stroke from above the right lobe down across it to the lower right (frames 21–24). Its body is ಪ's. The frames were read from a mirror copy that matches the Commons file's listed size (268×227, 119 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the dot is a filled disc, drawn as a small closed loop inside it, and the slanting stroke is a straight bar, which the path follows, but the three-lift order remains the same."
+      }
     },
     {
       "glyph": "ಷಾ",
@@ -4821,8 +5185,21 @@
       "components": [
         "ಸ  sa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the tail and climb round the left curve",
+        "without lifting, slant down to the right into the base",
+        "without lifting, climb the right side and curve in at the top",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook",
+        "lift, then set the dot in the middle"
+      ],
+      "strokeOrderNote": "Six visible movements in three pen-down runs: the body from the tail to the curl at the top right; the top bar with its hook; and the dot, separated by two lifts.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-sa.gif, animation of Kannada consonant ಸ, 40 frames, 4.0 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-sa.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಸ in three pen-down runs: from the tail at the lower left the pen climbs round the left curve, slants down to the right into the base and climbs the right side, curving in at the top (frames 0–13); after a lift, the top bar from left to right curling up into the hook (frames 14–22); after a second lift, the dot in the middle (frames 23–24). The frames were read from a mirror copy that matches the Commons file's listed size (234×190, 111 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the dot is a filled disc, so the path draws it as a small closed loop inside it. The two-lift order remains the same."
+      }
     },
     {
       "glyph": "ಸಾ",
@@ -4976,8 +5353,21 @@
       "components": [
         "ಹ  ha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the upper right of the left ring and close it counterclockwise",
+        "without lifting, arch over to the right and go down the right ring's outer side",
+        "without lifting, round the right ring's base and climb its inner side to the waist",
+        "without lifting, rise up the neck to the top bar",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook"
+      ],
+      "strokeOrderNote": "Six visible movements in two pen-down runs: the left ring, the arch into the right ring and the rise up the neck are one run; after one lift, the top bar runs left to right into the hook.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-ha.gif, animation of Kannada consonant ಹ, 40 frames, 4.0 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ha.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಹ in two pen-down runs: from the upper right of the left ring the pen arches over leftward and closes the ring counterclockwise, arches over to the right and down the right ring's outer side, rounds its base, climbs its inner side to the waist and rises up the neck (frames 0–20); after one lift it draws the top bar from left to right and curls up into the hook (frames 21–29). The frames were read from a mirror copy that matches the Commons file's listed size (235×217, 115 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the two rings share one upright between them, so the path starts at the top of that upright and runs down it once for each ring, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ಹಾ",
@@ -5131,8 +5521,21 @@
       "components": [
         "ಳ  ḷa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start at the left of the small loop and close it counterclockwise",
+        "without lifting, sweep down the outer left side and along the base",
+        "without lifting, go clockwise round the lower loop and back across its top",
+        "without lifting, climb the right bowl to the top bar",
+        "lift, then draw the top bar from left to right",
+        "without lifting, curl up into the hook"
+      ],
+      "strokeOrderNote": "Six visible movements in two pen-down runs: the small loop, the outer sweep, the lower loop and the climb up the right bowl are one run; after one lift, the top bar runs left to right into the hook.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-lla.gif, animation of Kannada consonant ಳ, 35 frames, 3.5 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-lla.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಳ in two pen-down runs: the pen closes the small upper-left loop counterclockwise, sweeps down round the outer left side and along the base, goes clockwise round the lower loop, crosses back over its top and climbs the right bowl, curving over towards the middle (frames 0–18); after one lift it draws the top bar from left to right and curls up into the hook (frames 19–23). The frames were read from a mirror copy that matches the Commons file's listed size (271×224, 92 KB) and byte size. The path is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions; in that outline the small loop's left side is also the outer curve and the right bowl runs straight into the bar instead of curving over, so the path starts at the loop's lower left, where the two meet, and the climb ends at the bar, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ಳಾ",

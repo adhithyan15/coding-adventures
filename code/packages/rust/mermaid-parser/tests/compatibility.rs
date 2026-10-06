@@ -70,6 +70,9 @@ const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/
 const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"));
 const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"));
 const RAILROAD_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-corpus.json"));
+const RAILROAD_EBNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-ebnf-11.16.1-corpus.json"));
+const RAILROAD_ABNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-abnf-11.16.1-corpus.json"));
+const RAILROAD_PEG_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-peg-11.16.1-corpus.json"));
 const INFO_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/info-11.16.1-corpus.json"));
 const ZENUML_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/zenuml-11.16.1-corpus.json"));
 
@@ -107,6 +110,47 @@ fn pinned_railroad_subset_corpus_parses_to_recursive_ir() {
         let diagram = parse_railroad(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("railroad fixture {name} failed: {error}"));
         assert!(!diagram.rules.is_empty());
+    }
+}
+
+#[test]
+fn pinned_railroad_ebnf_corpus_parses_to_recursive_ir() {
+    let corpus: Value = serde_json::from_str(RAILROAD_EBNF_CORPUS).expect("railroad EBNF corpus must be JSON");
+    for fixture in corpus["fixtures"].as_array().expect("fixtures must be an array") {
+        let name = fixture["name"].as_str().expect("fixture name");
+        let diagram = parse_railroad(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("railroad EBNF fixture {name} failed: {error}"));
+        assert!(!diagram.rules.is_empty());
+        if name == "metadata-and-comments" {
+            assert_eq!(diagram.title.as_deref(), Some("Expression grammar"));
+            assert_eq!(diagram.accessibility_description.as_deref(), Some("EBNF grammar"));
+        }
+    }
+}
+
+#[test]
+fn pinned_railroad_abnf_corpus_parses_to_recursive_ir() {
+    let corpus: Value = serde_json::from_str(RAILROAD_ABNF_CORPUS).expect("railroad ABNF corpus must be JSON");
+    for fixture in corpus["fixtures"].as_array().expect("fixtures must be an array") {
+        let name = fixture["name"].as_str().expect("fixture name");
+        let diagram = parse_railroad(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("railroad ABNF fixture {name} failed: {error}"));
+        assert!(!diagram.rules.is_empty());
+    }
+}
+
+#[test]
+fn pinned_railroad_peg_corpus_parses_to_recursive_ir() {
+    let corpus: Value = serde_json::from_str(RAILROAD_PEG_CORPUS).expect("railroad PEG corpus must be JSON");
+    for fixture in corpus["fixtures"].as_array().expect("fixtures must be an array") {
+        let name = fixture["name"].as_str().expect("fixture name");
+        let diagram = parse_railroad(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("railroad PEG fixture {name} failed: {error}"));
+        assert!(!diagram.rules.is_empty());
+        if name == "metadata-and-comments" {
+            assert_eq!(diagram.title.as_deref(), Some("Path grammar"));
+            assert_eq!(diagram.accessibility_description.as_deref(), Some("PEG grammar"));
+        }
     }
 }
 
@@ -412,6 +456,71 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
         let board = parse_kanban(source)
             .unwrap_or_else(|error| panic!("kanban fixture {id} failed: {error}"));
         assert!(!board.columns.is_empty());
+        if id == "inline-card-metadata" {
+            let card = &board.columns[0].cards[0];
+            assert_eq!(card.ticket.as_deref(), Some("MC-42"));
+            assert_eq!(card.assigned.as_deref(), Some("Ada"));
+            assert_eq!(card.priority.as_deref(), Some("high"));
+        }
+        if id == "multiline-card-metadata" {
+            assert_eq!(board.columns[0].cards[0].label.text, "Grammar parser");
+            assert_eq!(board.columns[0].cards[0].icon.as_deref(), Some("heart"));
+        }
+        if id == "card-icon-decoration" {
+            assert_eq!(board.columns[0].cards[0].icon.as_deref(), Some("heart"));
+        }
+        if id == "class-decorations" {
+            assert_eq!(board.columns[0].classes, ["backlog"]);
+            assert_eq!(board.columns[0].cards[0].classes, ["urgent", "blocked"]);
+        }
+        if id == "ticket-base-url" {
+            assert_eq!(
+                board.ticket_base_url.as_deref(),
+                Some("https://tracker.example/issues/#TICKET#")
+            );
+        }
+        if id == "layout-config" {
+            assert_eq!(board.config.section_width, 300.0);
+            assert_eq!(board.config.padding, 32.0);
+        }
+        if id == "section-ticket-metadata" {
+            assert_eq!(board.columns[0].ticket.as_deref(), Some("KB-7"));
+        }
+        if id == "shape-delimited-labels" {
+            assert_eq!(board.columns[0].label.text, "Todo");
+            assert_eq!(board.columns[0].cards[0].label.text, "Rounded card");
+            assert_eq!(board.columns[0].cards[1].label.text, "Hex card");
+            assert_eq!(board.columns[1].cards[0].label.text, "Circle card");
+        }
+        if id == "cloud-and-bang-labels" {
+            assert_eq!(board.columns[0].label.text, "Cloud section");
+            assert_eq!(board.columns[0].cards[0].label.text, "Bang card");
+            assert_eq!(board.columns[0].cards[1].label.text, "Cloud card");
+            assert_eq!(board.columns[0].cards[2].label.text, "Burst card");
+        }
+        if id == "quoted-labels" {
+            assert_eq!(board.columns[0].label.text, "Todo queue");
+            assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
+        }
+        if id == "markdown-labels" {
+            let column = &board.columns[0];
+            let card = &column.cards[0];
+            assert_eq!(column.label.text, "Todo queue");
+            assert_eq!(column.label.markdown.as_deref(), Some("**Todo** queue"));
+            assert!(column.label.spans[0].bold);
+            assert_eq!(card.label.text, "Quoted card");
+            assert!(card.label.spans.iter().any(|span| span.italic));
+        }
+        if id == "inline-markdown-labels" {
+            assert_eq!(board.columns[0].label.text, "Todo queue");
+            assert!(board.columns[0].label.spans[0].bold);
+            assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
+            assert!(board.columns[0].cards[0].label.spans.iter().any(|span| span.italic));
+        }
+        if id == "multiline-labels" {
+            assert_eq!(board.columns[0].label.text, "Todo\nqueue");
+            assert_eq!(board.columns[0].cards[0].label.text, "Line 1\nLine 2\nLine 3");
+        }
     }
 }
 
@@ -1118,7 +1227,7 @@ fn pinned_swimlane_subset_corpus_parses_to_ownership_ir() {
 }
 
 #[test]
-fn railroad_dispatches_to_dedicated_recursive_ir_and_rejects_textual_dialects() {
+fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");
     match diagram {
@@ -1129,7 +1238,23 @@ fn railroad_dispatches_to_dedicated_recursive_ir_and_rejects_textual_dialects() 
         }
         _ => panic!("railroad should lower to dedicated recursive IR"),
     }
-    assert!(parse_railroad("railroad-ebnf-beta\ndigit = '0' | '1';").is_err());
+    let ebnf = parse_railroad("railroad-ebnf-beta\ndigit = '0' | '1';\nnumber = digit+;")
+        .expect("railroad EBNF notation should parse");
+    assert!(matches!(ebnf.rules[0].definition, diagram_ir::RailroadExpression::Choice(_)));
+    assert!(matches!(ebnf.rules[1].definition, diagram_ir::RailroadExpression::Repetition { min: 1, .. }));
+    let abnf = parse_railroad("railroad-abnf-beta\ndigits = 2*4DIGIT;")
+        .expect("railroad ABNF notation should parse");
+    assert!(matches!(
+        abnf.rules[0].definition,
+        diagram_ir::RailroadExpression::Repetition { min: 2, max: Some(4), .. }
+    ));
+    let peg = parse_railroad("railroad-peg-beta\nvalue <- !\"x\" item+;")
+        .expect("railroad PEG notation should parse");
+    let diagram_ir::RailroadExpression::Sequence(elements) = &peg.rules[0].definition else {
+        panic!("PEG prefix and suffix should lower to a sequence");
+    };
+    assert!(matches!(&elements[0], diagram_ir::RailroadExpression::Special(label) if label == "!\"x\""));
+    assert!(matches!(elements[1], diagram_ir::RailroadExpression::Repetition { min: 1, max: None, .. }));
     assert!(parse_railroad("railroad-beta\nvalue = optional(terminal(\"x\"), terminal(\"y\"));").is_err());
 }
 

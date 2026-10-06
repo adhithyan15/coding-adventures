@@ -135,6 +135,23 @@ class FormeSpecMapTests(unittest.TestCase):
                     "stable package releases must be recorded in every changelog",
                 )
 
+    def test_live_site_locks_do_not_retain_pre_v1_forme_snapshots(self) -> None:
+        for site_name in ("landing-page", "blog"):
+            lock = json.loads(
+                (TYPESCRIPT_SITES / site_name / "package-lock.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            for entry_path, entry in lock["packages"].items():
+                name = entry.get("name", "")
+                if name.startswith("@coding-adventures/forme-"):
+                    with self.subTest(site=site_name, dependency=entry_path):
+                        self.assertEqual(
+                            entry.get("version"),
+                            FORME_STABLE_PACKAGE_VERSION,
+                            f"{site_name}:{entry_path} carries {name} at a mixed version",
+                        )
+
     def test_kernel_api_v2_contract_and_migration_guide_are_pinned(self) -> None:
         kinds = (
             TYPESCRIPT_PACKAGES / "forme-types" / "src" / "kinds.ts"
@@ -182,7 +199,7 @@ class FormeSpecMapTests(unittest.TestCase):
             with self.subTest(spec=number):
                 self.assertIn(f"[{number}]({filename})", roadmap)
 
-    def test_roadmap_has_one_unique_active_item(self) -> None:
+    def test_roadmap_has_one_unique_active_item_until_completion(self) -> None:
         roadmap = (SPECS / "FM00-forme-completion-roadmap.md").read_text(
             encoding="utf-8"
         )
@@ -204,6 +221,9 @@ class FormeSpecMapTests(unittest.TestCase):
         priorities = [int(row.group("priority")) for row in rows]
         identifiers = [row.group("id") for row in rows]
         active = [row.group("id") for row in rows if row.group("status") == "active"]
+        unfinished = [
+            row.group("id") for row in rows if row.group("status") != "done"
+        ]
         self.assertEqual(
             priorities,
             list(range(len(rows))),
@@ -212,7 +232,35 @@ class FormeSpecMapTests(unittest.TestCase):
         self.assertEqual(
             len(identifiers), len(set(identifiers)), "backlog IDs must be unique"
         )
-        self.assertEqual(len(active), 1, "exactly one backlog item must be active")
+        self.assertEqual(
+            len(active),
+            1 if unfinished else 0,
+            "an unfinished roadmap must have exactly one active item; a completed roadmap must have none",
+        )
+
+    def test_release_quality_milestone_is_closed(self) -> None:
+        roadmap = (SPECS / "FM00-forme-completion-roadmap.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            "| 69 | FM-B072 | done | Compose the supported-platform release gate |",
+            roadmap,
+        )
+        self.assertIn(
+            "| 70 | FM-B018 | done | Close release-quality gates |", roadmap
+        )
+        self.assertIn(
+            "| 71 | FM-B029 | done | Make duplicate PR CI cancellation and merge state unambiguous |",
+            roadmap,
+        )
+        self.assertIn("Authoring v1 is complete.", roadmap)
+        self.assertRegex(
+            roadmap, r"No actionable Forme completion\s+backlog remains\."
+        )
+        backlog = roadmap.split("## Prioritized backlog\n", 1)[1].split(
+            "## Dependency path\n", 1
+        )[0]
+        self.assertNotRegex(backlog, r"\| (?:active|ready|blocked|later) \|")
 
     def test_forme_spec_markdown_links_resolve(self) -> None:
         for path in sorted(SPECS.glob("FM[0-9][0-9]-*.md")):

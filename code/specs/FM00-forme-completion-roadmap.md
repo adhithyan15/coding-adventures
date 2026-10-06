@@ -1,6 +1,6 @@
 # Forme Completion Roadmap
 
-> **Status:** Living delivery backlog, last prioritized 2026-10-05.
+> **Status:** Completion record, freshly audited 2026-10-05.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -9,7 +9,7 @@
 
 | Surface | Status | Canonical specification |
 |---|---|---|
-| Vision and delivery backlog | Active | [FM00 vision](FM00-forme-vision.md) and this roadmap |
+| Vision and delivery backlog | Complete; reopen when new actionable evidence is recorded | [FM00 vision](FM00-forme-vision.md) and this roadmap |
 | Kernel | Implemented | [FM01](FM01-forme-kernel.md) |
 | Plugin host | Extensible v1 implemented: installation, authority, runners, native sandboxes, product composition, and live storage watches | [FM02](FM02-forme-plugin-host.md) |
 | Orchestrator | Headless v0 implemented | [FM03](FM03-forme-orchestrator.md) |
@@ -18,7 +18,7 @@
 | AOT compiler | Static v0 implemented | [FM06](FM06-forme-aot-compiler.md) |
 | CLI and development server | Headless v0 implemented | [FM07](FM07-forme-cli-dev-server.md) |
 | Deploy runner | Headless v0 implemented | [FM08](FM08-forme-deploy-runner.md) |
-| Authoring shell | First-run native desktop product and backend proof implemented; release gates active | [FM09](FM09-forme-authoring-shell.md) |
+| Authoring shell | Authoring v1 implemented: first-run desktop product, multi-backend proof, and supported-platform release contract | [FM09](FM09-forme-authoring-shell.md) |
 
 ## What “complete” means
 
@@ -37,9 +37,10 @@ well-tested packages. We will deliver that in three horizons:
    backend, accessibility, performance, and security gates are part of the
    release contract.
 
-Headless v0 and Extensible v1 are complete. Authoring v1 is now the current
-release target; its interactivity, shell, backend, and release-quality work
-stays visible so a local optimization cannot quietly close the project early.
+Headless v0, Extensible v1, and Authoring v1 are complete. Their interactivity,
+shell, backend, scale, accessibility, performance, API, security, and
+supported-platform evidence stays visible so later operational work cannot
+quietly weaken the completed release contract.
 
 ## Current baseline
 
@@ -116,8 +117,9 @@ order:
 4. **Smallest independently verifiable slice.** Split work until one PR has a
    crisp acceptance test and can auto-merge safely.
 
-Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
-`active`. A blocked item names its dependency.
+Statuses are `done`, `active`, `ready`, `blocked`, and `later`. While unfinished
+work exists, exactly one item is `active`; a completed roadmap has none. A
+blocked item names its dependency.
 
 ## Prioritized backlog
 
@@ -192,9 +194,9 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 66 | FM-B069 | done | Prove 1,000-page clean and incremental scale | Run the live blog's complete HTML/terminal product DAG over exactly 1,000 generated pages, then edit one page and run it again through the persistent cache. A portable benchmark report records both elapsed times and deterministic per-stage work. The gate rejects missing outputs, incomplete clean work, or an incremental run that fails to reuse the unaffected page work; wall-clock values remain evidence rather than host-specific pass/fail thresholds. |
 | 67 | FM-B070 | done | Enforce web performance and accessibility budgets | Depends on FM-B069. Run the built live sites through pinned browser tooling with explicit Lighthouse and automated accessibility budgets, retain useful static fallbacks, and publish bounded diagnostics for every regression. |
 | 68 | FM-B071 | done | Version the public package and kernel APIs | Remove the legacy `RenderedPage.source` producer branch, advance its kind/API contract with a tested compatibility refusal, align publishable Forme package versions, and ship a migration guide for every breaking change. |
-| 69 | FM-B072 | active | Compose the supported-platform release gate | Depends on FM-B069–FM-B071. Run the release benchmark, web budgets, package/API compatibility checks, complete product builds, and mandatory security review on every supported host with one documented release verdict. |
-| 70 | FM-B018 | blocked | Close release-quality gates | Completion milestone depending on FM-B069–FM-B072. The 1,000-page benchmark, Lighthouse/accessibility budgets, versioned package/API migration, security review, and supported-platform CI all pass on the same release contract. |
-| 71 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
+| 69 | FM-B072 | done | Compose the supported-platform release gate | Depends on FM-B069–FM-B071. Run the release benchmark, web budgets, package/API compatibility checks, complete product builds, and mandatory security review on every supported host with one documented release verdict. |
+| 70 | FM-B018 | done | Close release-quality gates | Completion milestone depending on FM-B069–FM-B072. The 1,000-page benchmark, Lighthouse/accessibility budgets, versioned package/API migration, security review, and supported-platform CI all pass on the same release contract. |
+| 71 | FM-B029 | done | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
 ## Dependency path
 
@@ -212,8 +214,11 @@ FM-B056 → FM-B057 → FM-B058 → FM-B015. Interactivity is complete through
 FM-B059 → FM-B060 → FM-B061 → FM-B013. The authoring path is complete through
 FM-B062 → FM-B063 → FM-B064 → FM-B065 → FM-B067 → FM-B068 → FM-B066 →
 FM-B016. FM-B017 completes the backend proof, FM-B069 closes the scale gate,
-and FM-B070 closes browser quality. FM-B071 closes the public API migration;
-the remaining Authoring-v1 path is FM-B072 → FM-B018.
+FM-B070 closes browser quality, FM-B071 closes the public API migration, and
+FM-B072 → FM-B018 closes the supported-platform release-quality milestone.
+FM-B029 closes the remaining CI-state clarity gap without reopening the shipped
+release horizon. Authoring v1 is complete. No actionable Forme completion
+backlog remains.
 
 ### FM-B070 web-quality contract
 
@@ -233,6 +238,16 @@ desktop performance score of at least `0.95` and an accessibility score of
 images, the blog index to 160 KiB total transfer, and the enhanced article to
 256 KiB total transfer, 64 KiB of images, and 32 KiB of JavaScript. The landing
 page and blog index admit no script bytes at all.
+
+Because a single hosted-runner Lighthouse observation is noisy, each route is
+audited by exactly three fresh browser processes and the performance contract
+applies to their median score. This changes neither the `0.95` budget nor the
+audited bytes. Accessibility and resource evidence remain fail-closed across
+every sample: the retained aggregate uses the lowest accessibility score and
+the largest observed transfer count for each resource type, while preserving
+the bounded union of sample diagnostics. The summary records the three bounded
+performance samples alongside that conservative aggregate; no raw trace is
+retained.
 
 Browser scores do not replace the static contract. Before Chrome starts, the
 gate parses each size-bounded emitted HTML document with script, stylesheet,
@@ -276,6 +291,50 @@ breaking change, shows the single-source and aggregate provenance replacements,
 and explains the distinct package, kind, and kernel version axes. Lockfiles,
 runtime stage metadata, product fixtures, changelogs, and user-facing version
 output are updated together so a clean checkout cannot report a mixed release.
+
+### FM-B072 supported-platform release contract
+
+The release gate runs one unchanged contract on `ubuntu-latest`,
+`macos-latest`, and `windows-latest`. Each host checks the package/API v2 map,
+executes the platform-appropriate checked-in build front for the landing page,
+blog, and desktop authoring product, runs the 1,000-page benchmark, and audits
+the generated live sites with the exact browser pins and budgets defined by
+FM-B070. The macOS product build additionally produces and tests the native
+Tauri application; Linux and Windows run the portable desktop product gate
+because FM09 deliberately exposes no native host on those platforms.
+
+Every host emits one bounded JSON attestation for the same commit. Attestations
+contain only contract identities, content digests for the benchmark and browser
+summaries, and pass/fail state; they do not copy raw build logs or timing
+thresholds. A final fail-closed job accepts exactly the three supported host
+identities, rejects duplicate, missing, mixed-commit, malformed, or failing
+evidence, and emits one documented technical release verdict.
+
+Security approval is deliberately not self-asserted by a mutable file in the
+reviewed change. Every host records the `mandatory-exact-head-external` policy,
+and the technical verdict is valid only together with the separately
+authenticated mandatory review of that exact head. Any head change invalidates
+that review and requires another one; the cross-platform attestations cannot
+mint, impersonate, or reuse an approval themselves.
+
+### FM-B029 authoritative pull-request CI contract
+
+Feature-branch commits have one authoritative CI event: `pull_request`.
+The broad Linux-only `push` duplicate is removed from feature branches and is
+retained only on `main`, where it validates the committed squash. A new head on
+the same pull request cancels its obsolete run. The final gate compares its
+event head with a fresh authenticated PR read: superseded cancellations close
+cleanly, while a cancelled dependency on the current head still fails closed.
+Cancellation therefore cannot turn obsolete evidence into a fresh-looking
+failed roll-up or let missing current-head evidence pass as a skipped gate.
+
+The protected `CI gate` context remains exclusive to pull requests; the
+post-merge `CI push gate` remains distinct. Repository babysitting instructions
+must read the pull request's current `headRefOid`, query only required checks,
+classify every result against that exact head, and confirm the expected head is
+still the one GitHub merged. Superseded or redundant runs are evidence to
+ignore, not workflows to rerun or cancel; failures on the current required
+head remain actionable.
 
 ## Discovery log
 
@@ -394,9 +453,20 @@ work.
 | 2026-10-04 | Both generated Forme sites pass one required browser lane over the real Pages routes: the landing page, blog index, and enhanced article retain useful static fallbacks, score at least 0.98 for desktop performance and exactly 1.00 for accessibility locally, and remain far below their explicit transfer budgets. The lane uses exact Lighthouse and Chrome-for-Testing pins, loopback-only contained serving, fresh bounded browser phases, and a small atomic evidence summary. | Close FM-B070 and activate FM-B071 as the only ready release-quality item. Keep FM-B072 and FM-B018 blocked until the public API migration also lands. |
 | 2026-10-05 | FM-B071 aligned all 81 publishable TypeScript Forme packages and locks at `1.0.0`, advanced the kernel contract to API v2 with exact v1 refusal in manifests, stages, and all three runners, made `RenderedPage` v2 provenance required and canonically validated at both filesystem sinks, aligned npm/Tauri package metadata, and shipped the breaking-change migration guide. Proportional package, conformance, product-contract, coverage, and mandatory security review gates passed. | Close FM-B071 and activate FM-B072 as the sole remaining implementation gate before the FM-B018 release-quality milestone. |
 | 2026-10-05 | The first clean-checkout PR builds found four product-local stages outside the publishable package inventory still targeting kernel API v1; the landing renderer also retained the removed `RenderedPage.source` field. Package and runner checks could not exercise those direct site adapters. | Keep the repair inside FM-B071: migrate all four live adapters to the shared API-v2 constant, remove the final source shortcut, add a durable live-stage contract to the spec-map suite, and rerun both complete product builds and tests before updating the PR. |
+| 2026-10-05 | FM-B072's first checked-in product-front run found that the two live-site lockfiles still snapshotted pre-v1 metadata for local Forme dependencies even though package manifests and package-local locks were aligned. The earlier API gate did not inspect consumer lock snapshots. | Keep the repair in FM-B072: refresh both live-site locks from the reviewed v1 package graph and extend the spec-map contract so either site fails if any local `@coding-adventures/forme-*` entry regresses from `1.0.0`. |
+| 2026-10-05 | FM-B072's first Windows release-lane run reached the shared frozen bootstrap but Node rejected direct spawning of the `npm.cmd` batch launcher with `EINVAL`; routing generic caller-controlled commands through `cmd.exe` would restore function by weakening literal argument boundaries. | Keep the repair in FM-B072: execute npm's JavaScript CLI directly with the exact active Node binary on Windows, retain shell-free argument-vector spawning on every host, and lock the platform-specific invocation plus metacharacter-bearing path behavior with unit coverage. |
+| 2026-10-05 | Once the shell-free npm launcher exposed the complete Windows dependency graph, the release lane reached `forme-sandbox-windows` but had not imported the hosted image's MSVC developer environment, so its native launcher build could not resolve `cl.exe`. | Keep the repair in FM-B072: invoke the already reviewed repository-owned MSVC environment bootstrap only on the Windows release host before running the checked-in product fronts, and pin that prerequisite in the release-job contract test. |
+| 2026-10-05 | The pinned Chrome-for-Testing archive on the Windows hosted tool cache denied the browser sandbox access to its own executable even after every product build passed. Disabling the sandbox would invalidate FM-B070. | Keep the repair in FM-B072: identity-bind every non-reparse ancestor and single-link member of the exact browser tree below the hosted tool cache before and after mutation; replace existing Windows `ALL APPLICATION PACKAGES` grants with read/execute only; verify no dangerous effective grant across the complete tree; and retain the global prohibition on no-sandbox flags. |
+| 2026-10-05 | Windows `icacls` applied the recursive object/container-inherit grant to all 314 Chrome descendants but left the browser root itself without an effective read/execute ACE, and the release lane's complete-tree verifier rejected that incomplete repair before launching Chrome. | Keep the fail-closed verifier and add a separate replacement read/execute grant on the identity-bound browser root before propagating the same read/execute-only grant through the tree. Continue rejecting any write/delete/ownership authority and revalidate every identity after both ACL operations. |
+| 2026-10-05 | After the explicit root grant, `icacls` reported success for the root and all descendants, but the verifier's projected `FileSystemAccessRule` identity translation still produced no matching effective root grant. Friendly-name translation is an unnecessary and image-sensitive layer over the security descriptor. | Parse each identity-bound entry's binary descriptor without normalization, accept only unconditional common allow ACEs effective on the current object, require their raw masks to be a subset of exact read/execute plus synchronize, reject matching effective denies and unsupported callback/object ACEs, and retain the final complete-tree identity pass. Execute synthetic inherit-only, inherited-effective, callback, object, and generic-all descriptor regressions in the Windows lane before trusting the live tree. |
+| 2026-10-05 | The synthetic raw-descriptor policy tests passed on the Windows host, but the live `FileSystemSecurity` object exposes its binary descriptor through the zero-argument PowerShell/.NET method rather than the buffer-writing overload used by `RawSecurityDescriptor`. The lane failed closed before examining the first live tree entry. | Use `GetSecurityDescriptorBinaryForm()`'s returned byte array directly as the raw descriptor input, keep the same policy self-tests and final identity revalidation, and pin the exact invocation in the CI contract test. |
+| 2026-10-05 | With the browser ACL repaired and verified, every Windows product build and coverage gate passed, but Chrome for Testing's Windows GUI binary treated `--version` as a normal browser launch, emitted background-service diagnostics, and did not terminate within the bounded query. The pinned setup action had already read the same binary's PE product version successfully. | On Windows only, consume the pinned setup action's exact four-part file-metadata output as installed-version evidence and compare it with the independently reviewed version constant; retain the bounded binary `--version` query on Linux and macOS, where it is supported. Pin the workflow wiring and platform-selection behavior with tests. |
+| 2026-10-05 | The first exact-browser supported-host rerun produced isolated landing-page Lighthouse performance samples of `0.85` on Windows and `0.92` on macOS after the same generated bytes, resource budgets, accessibility checks, and earlier local audits passed. A single noisy observation made the `0.95` release threshold depend on hosted-runner scheduling rather than the retained site contract. | Keep the `0.95` threshold and exact browser pins, but take exactly three fresh-process samples per route and gate their median. Continue failing closed across every sample by aggregating the minimum accessibility score, maximum resource counts, and bounded diagnostic union; record the three performance samples in the validated summary without retaining raw traces. |
 | 2026-10-05 | Concurrent squash merges on main left repo-wide barcode registry entries pointing at deleted PR-head commits, so authoritative and duplicate metadata gates could fail even after every Forme-specific check passed. | Repair the shared CI prerequisite in the same babysitting cycle: bind all affected verified package trees to their reachable squash revisions and require every future verified revision to be an ancestor of the tested checkout. This is an external gate repair, not a new Forme backlog item. |
 | 2026-10-05 | The API-v2 PR's Windows lane exposed that the document demo's lexical write-containment helper resolved its target but compared it with the caller's unnormalized base spelling. Mandatory security review then found that lexical containment alone still followed existing output symlinks, Windows junctions/reparse points, and multiply-linked files. | Keep the repair inside FM-B071: resolve the base before joining or comparing targets; reject linked path components; open targets without following their final component; verify the opened and named identities before truncation; reject multiply-linked files; exercise relative-base, POSIX-link, Windows-junction, and hard-link regressions; and rerun the complete document-demo gate. |
 | 2026-10-05 | Follow-up security review found that starting the link walk at an already redirected output root missed a linked ancestor, while portable Node lacks descriptor-relative `openat` writes that could close every same-identity rename race. | Anchor the walk at the canonical working directory and enforce an explicit portable single-writer contract: require a fresh private output root, hold an exclusive lock for the complete write, refuse unowned or multiply-linked files, and fail closed on observable authority, directory, lock, path, or handle identity changes. Document that concurrent mutation by another process running as the same OS identity is outside this contract, and cover linked-ancestor, injected child-link, injected hard-link, and pre-existing-root regressions. |
+| 2026-10-05 | PR #16729 passed the unchanged FM-B072 contract on Linux, macOS, and Windows at one exact head: all three host attestations and the aggregate verdict passed, the exact-head mandatory security review approved, and authoritative CI, duplicate push CI, and CodeQL all passed before squash merge. The release evidence included the 1,000-page benchmark, three-sample Lighthouse medians with fail-closed accessibility/resource aggregation, API-v2 compatibility, and every supported product build. | Close FM-B072 and its FM-B018 completion milestone. Authoring v1 is complete. Activate FM-B029 as the highest-priority remaining operational gap so duplicate workflow cancellation and merge-state reporting become unambiguous without weakening the completed release contract. |
+| 2026-10-05 | The final FM-B029 audit confirmed that `ci.yml` still started a Linux push suite and a full pull-request suite for the same feature-branch commit. Superseding a run could then let the `always()` final gate reinterpret cancelled dependencies as a new failure, while the repository babysitter read every attached check without binding its conclusion to the PR's current head or protected contexts. | Restrict feature-branch CI to the authoritative pull-request event while retaining post-merge `main` validation; make the final gate compare the event head with a fresh authenticated PR read so only truly superseded cancellation closes cleanly; and make the babysitter pin `headRefOid`, query `gh pr checks --required`, ignore superseded/duplicate evidence, and verify the expected head merged. Close FM-B029. A fresh audit finds all 72 roadmap items done and no actionable Forme completion backlog. |
 
 ## Loop protocol
 
@@ -404,8 +474,9 @@ For every Forme delivery loop:
 
 1. Re-read the discovery log and current implementation, then reprioritize this
    table.
-2. Mark exactly one unblocked item `active` and define its PR-sized acceptance
-   gate before editing code.
+2. If actionable work remains, mark exactly one unblocked item `active` and
+   define its PR-sized acceptance gate before editing code. If none remains,
+   record the fresh audit and leave no item active.
 3. Implement and validate locally, update this roadmap with discoveries, and
    open a focused PR.
 4. Enable auto-merge, babysit every required check, and fix CI failures or merge

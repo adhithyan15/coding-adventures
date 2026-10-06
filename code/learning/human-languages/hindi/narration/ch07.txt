@@ -129,7 +129,7 @@ It is a consonant, and in this script a consonant is never bare: it comes with a
 What it is made of:
 a counterclockwise left bowl.
 a top-to-bottom central stem.
-a separate right-hand arch.
+a right-hand arch.
 the top shirorekhā.
 You already say these, and every one of them has क (ka) somewhere inside it:
 नमस्कार — hello (namaskār — more formal).
@@ -139,11 +139,13 @@ You already say these, and every one of them has क (ka) somewhere inside it:
 
 Writing: क.
 1. start at the bowl's upper-right junction and sweep left over the top, down around the left side, and back to the lower-right junction.
-2. lift and draw the central stem top-to-bottom.
-3. lift at the upper junction and sweep the right-hand arch clockwise down to its open lower tip.
-4. lift and draw the top shirorekhā left-to-right.
-Pen lifts: 3. The pen comes up 3 times and no more.
-Verified four-stroke teaching form; everyday handwriting may join or simplify the body differently.
+2. without lifting, climb up the central stem to the headline.
+3. descend the central stem top-to-bottom.
+4. climb back up the stem to the upper junction.
+5. sweep the right-hand arch clockwise down to its open lower tip.
+6. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 1. The pen comes up once.
+The source shows four movements; most native writers draw क (ka) in two strokes (74% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-क (ka)-order.gif’, strokes 1–4, Wikimedia Commons, 8 May 2009.
 
 Guided Practice.

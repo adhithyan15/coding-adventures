@@ -7,9 +7,18 @@
     "the dakuten ゛"
   ],
   "strokeOrder": [
-    "は in full",
-    "two short strokes at the upper right"
+    "draw the left vertical from top to bottom, then without lifting turn and flick up to the right",
+    "lift, draw the bar from left to right",
+    "lift, begin above the bar and draw the vertical down through it, then without lifting loop round to the left and back up, cross the vertical and run out to the lower right",
+    "lift, draw the left tick of the dakuten down to the right",
+    "lift, draw the right tick down to the right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 03070 file records ば as five stroke paths in this order and direction: は's three strokes (the left vertical with its flick, the bar and the vertical with its loop), then the dakuten's two ticks, the left one first, each drawn down to the right; so there are four pen lifts.",
+  "penLifts": 4,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03070.svg",
+    "citation": "KanjiVG, kanji/03070.svg, hiragana ば (U+3070 HIRAGANA LETTER BA), five stroke paths kvg:03070-s1 to s5 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 to s3 are は's strokes, the same paths as in its file for は, kanji/0306f.svg; s4 and s5 are the dakuten, the left tick first and then the right one, each drawn down to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. Where the print glyph's left vertical runs on below the point the flick leaves it, the path goes down to the foot of that ink and climbs back a short way before the flick."
+  },
   "notes": "は voiced, read ba: on an h sign the dakuten makes a b. The middle of かばん and the start of ばしょ."
 }

@@ -20,7 +20,9 @@ import lighthouse from "lighthouse";
 import {
   MAX_DIAGNOSTICS,
   MAX_FALLBACK_HTML_BYTES,
+  LIGHTHOUSE_SAMPLE_COUNT,
   QUALITY_CONTENT_SECURITY_POLICY,
+  aggregateLighthouseReports,
   atomicWriteQualitySummary,
   evaluateLighthouseResult,
   inspectStaticFallback,
@@ -99,11 +101,12 @@ interface TargetSummary {
   readonly route: string;
   readonly fallback: StaticFallbackReport;
   readonly lighthouse: LighthouseReport | null;
+  readonly performanceSamples: readonly number[];
   readonly diagnostics: readonly string[];
 }
 
 interface QualitySummary {
-  readonly schemaVersion: 1;
+  readonly schemaVersion: 2;
   readonly lighthouseVersion: string;
   readonly chromeVersion: string;
   readonly targets: readonly TargetSummary[];
@@ -136,11 +139,19 @@ async function main(): Promise<void> {
       );
       const fallback = inspectStaticFallback(html, target);
       let browser: LighthouseReport | null = null;
+      let performanceSamples: readonly number[] = [];
       let browserDiagnostics: readonly string[] = [];
       try {
         const url = `http://127.0.0.1:${port}${target.route}`;
-        const raw = await runLighthouse(url, chromePath);
-        browser = evaluateLighthouseResult(target, raw, url);
+        const reports: LighthouseReport[] = [];
+        const sampleTarget = { ...target, performanceMinimum: 0 };
+        for (let sample = 0; sample < LIGHTHOUSE_SAMPLE_COUNT; sample += 1) {
+          const raw = await runLighthouse(url, chromePath);
+          reports.push(evaluateLighthouseResult(sampleTarget, raw, url));
+        }
+        const evidence = aggregateLighthouseReports(target, reports);
+        browser = evidence.aggregate;
+        performanceSamples = evidence.performanceSamples;
         browserDiagnostics = browser.diagnostics;
       } catch (error) {
         browserDiagnostics = [`browser audit failed: ${boundedError(error)}`];
@@ -150,6 +161,7 @@ async function main(): Promise<void> {
         route: target.route,
         fallback,
         lighthouse: browser,
+        performanceSamples,
         diagnostics: boundDiagnostics([...fallback.diagnostics, ...browserDiagnostics]),
       });
     }
@@ -158,7 +170,7 @@ async function main(): Promise<void> {
   }
 
   const summary: QualitySummary = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     lighthouseVersion: installedLighthouseVersion,
     chromeVersion,
     targets: summaries,
@@ -172,7 +184,9 @@ async function main(): Promise<void> {
   }
   process.stdout.write(
     `web quality: ${summaries.map(target =>
-      `${target.id} p=${target.lighthouse?.performance.toFixed(2)} a=${target.lighthouse?.accessibility.toFixed(2)}`)
+      `${target.id} p=${target.lighthouse?.performance.toFixed(2)}` +
+      ` samples=${target.performanceSamples.map(score => score.toFixed(2)).join("/")}` +
+      ` a=${target.lighthouse?.accessibility.toFixed(2)}`)
       .join(", ")}\n`,
   );
 }
@@ -406,6 +420,11 @@ function requireChromePath(): string {
 }
 
 async function readChromeVersion(chromePath: string): Promise<string> {
+  const reportedVersion = reportedChromeVersionForPlatform(
+    process.platform,
+    process.env.FORME_INSTALLED_CHROME_VERSION,
+  );
+  if (reportedVersion !== null) return reportedVersion;
   const result = await execFileAsync(chromePath, ["--version"], {
     timeout: BROWSER_VERSION_TIMEOUT_MS,
     maxBuffer: 4_096,
@@ -414,6 +433,20 @@ async function readChromeVersion(chromePath: string): Promise<string> {
   const match = /\b(\d+\.\d+\.\d+\.\d+)\b/.exec(result.stdout);
   if (match?.[1] === undefined) throw new Error("Chrome did not report a four-part version");
   return match[1];
+}
+
+export function reportedChromeVersionForPlatform(
+  platform: NodeJS.Platform,
+  reportedVersion: string | undefined,
+): string | null {
+  if (platform !== "win32") return null;
+  if (reportedVersion === undefined) {
+    throw new Error("the pinned Chrome setup action reported no Windows version");
+  }
+  if (!/^\d+\.\d+\.\d+\.\d+$/.test(reportedVersion)) {
+    throw new Error("the pinned Chrome setup action did not report a four-part Windows version");
+  }
+  return reportedVersion;
 }
 
 async function readLighthouseVersion(): Promise<string> {

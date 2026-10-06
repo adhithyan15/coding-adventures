@@ -3,6 +3,13 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "UR-W01-shukriya-first-three",
+      "sourceHash": "fnv1a64:2a5849016137a80c",
+      "svgHash": "fnv1a64:9871d2e4b1bbd63c",
+      "svg": "urdu/book/figures/UR-W01-shukriya-first-three-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "UR-W01-sin",
       "sourceHash": "fnv1a64:95f7fa87635900f5",
       "svgHash": "fnv1a64:bb8e8086149f0eb9",
@@ -12,7 +19,7 @@
       "kind": "script-filmstrip",
       "lessonId": "UR-W02-alef",
       "sourceHash": "fnv1a64:962a1f632adf4e37",
-      "svgHash": "fnv1a64:c5711976f9abca52",
+      "svgHash": "fnv1a64:da3573aef7fbd5fd",
       "svg": "urdu/book/figures/UR-W02-alef-filmstrip.svg"
     },
     {
@@ -47,7 +54,7 @@
       "kind": "script-filmstrip",
       "lessonId": "UR-W05-he",
       "sourceHash": "fnv1a64:cecb78fe6c997aeb",
-      "svgHash": "fnv1a64:3ed7ca40bda41023",
+      "svgHash": "fnv1a64:ebe42208bcabaeba",
       "svg": "urdu/book/figures/UR-W05-he-filmstrip.svg"
     },
     {
@@ -68,7 +75,7 @@
       "kind": "script-filmstrip",
       "lessonId": "UR-W06-nun-ghunna",
       "sourceHash": "fnv1a64:d40b671177b83169",
-      "svgHash": "fnv1a64:4b2337a38268b6f9",
+      "svgHash": "fnv1a64:a2975534da06a10d",
       "svg": "urdu/book/figures/UR-W06-nun-ghunna-filmstrip.svg"
     },
     {

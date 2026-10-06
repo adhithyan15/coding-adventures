@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7329a15cc6afe24d",
+  "sourceHash": "fnv1a64:483c0a5b09eb87e7",
   "lessons": [
     {
       "id": "KA-C12-kutumba",
@@ -164,7 +164,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ae256210bfbc1176",
+      "sourceHash": "fnv1a64:9492a356133071d2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -243,15 +243,39 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ಸ — copy what you see",
+          "title": "Writing: ಸ",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಸ (sa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. start at the tail and climb round the left curve."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. without lifting, slant down to the right into the base."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, climb the right side and curve in at the top."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift, then draw the top bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "5. without lifting, curl up into the hook."
+            },
+            {
+              "kind": "speech",
+              "text": "6. lift, then set the dot in the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2. The body is one run, from the tail at the bottom left to the curl at the top right; then comes the curled bar, and last the dot in the middle, each after a lift."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-sa.gif', 40 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0."
             }
           ]
         },

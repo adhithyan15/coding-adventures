@@ -134,6 +134,18 @@ instructional supports, not pass evidence.
 | writing | 20 | complete a practical form, then write a 30–40 word Gurmukhi message for a named reader and purpose |
 | speaking | 10 | personal interview, 1-minute prepared description, and a simple transactional role-play; 5 minutes preparation |
 
+The first untimed, no-model form rehearsal joins six previously taught fields:
+name, language, residence, work, age, and phone. It is a minimum-size
+rehearsal for the published 6–8-field form, not a timed A1 paper or a claim of
+A1 attainment. Date remains an independently practised seventh field and may
+appear on a later 7–8-field form; no new date dependency is scored by this
+six-field checkpoint. Teach the joined order, cue selection, supported entry,
+delayed entry, and separate spelling, spacing, value-selection, digit-order,
+and placement repairs in lessons of no more than five minutes before the
+independent attempt. The attempt shows only already taught Gurmukhi labels and
+nonverbal cues, never a value bank, romanization, dictionary, translator,
+spell-checker, or copyable answer.
+
 ### A2
 
 | paper | minutes | required task envelope |

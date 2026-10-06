@@ -7,9 +7,18 @@
     "the dakuten ゛"
   ],
   "strokeOrder": [
-    "て in full",
-    "two short strokes at the upper right"
+    "draw the high horizontal from left to right",
+    "without lifting, turn back down and left through the diagonal",
+    "without lifting, round the broad lower curve and sweep right to the finish",
+    "lift, draw the left tick of the dakuten down to the right",
+    "lift, draw the right tick down to the right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 03067 file records で as three stroke paths in this order and direction: て's stroke (the one stroke), then the dakuten's two ticks, the left one first, each drawn down to the right; so there are two pen lifts.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03067.svg",
+    "citation": "KanjiVG, kanji/03067.svg, hiragana で (U+3067 HIRAGANA LETTER DE), three stroke paths kvg:03067-s1 to s3 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is て's stroke, the same paths as in its file for て, kanji/03066.svg; s2 and s3 are the dakuten, the left tick first and then the right one, each drawn down to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
   "notes": "て voiced. Opens でんわ, a telephone, でんしゃ, a train, and でぐち, an exit."
 }

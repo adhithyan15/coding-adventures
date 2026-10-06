@@ -51,17 +51,22 @@ You already say these, and every one of them has ಗ somewhere inside it:
 - **ನೀವು ಹೇಗಿದ್ದೀರಾ?** *nīvu hēgiddīrā* — how are you? (respectful)
 - **ಚೆನ್ನಾಗಿ** *cennāgi* — well, nicely — and the reply "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ"
 
-## Writing: ಗ — copy what you see
+## Writing: ಗ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-112] -->
 
-Put your pen on ಗ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** climb the left leg from its foot into the arch
+- **2.** without lifting, arch over and go down the right leg to its foot
+- **3.** lift, then draw the top bar from left to right
+- **4.** without lifting, curl up into the hook
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 1.** Both legs and the arch between them are one run, starting
+from the foot of the left leg; the curled bar on top comes after the only
+lift, as it does for ನ.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-ga.gif', 37 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-112] -->

@@ -74,6 +74,24 @@ the printed shape, with the gap recorded rather than filled. Inventing a
 plausible order would be worse than shipping nothing: a learner cannot tell an
 invented order from an attested one and will drill it for years.
 
+### Native writers' pen traces as a source (Bengali)
+
+Most owners cite a teaching animation or a tracing guide. Bengali
+(`strokes/bengali.ts`) cites something different: the tablet pen traces of
+native Bengali writers that HP Labs India's LipiTk 4.0 Bangla recognizer keeps
+as its prototypes (MIT licence). A trace records where the pen went down, which
+way it moved and where it lifted, so counting traces gives the modal stroke
+count, the part order, the start and the turning direction, each as a share of
+the writers. It does not give proportions: the recognizer scales every trace to
+a square. So the counts go into the citation's `variation`, no coordinate is
+copied, and the path itself is fitted to the bundled Noto Sans Bengali outline
+and checked against it at the default tolerances.
+
+A letter is authored only where one order clearly wins. Bengali's headline is
+the hard case: in isolated letters writers draw it first, last, partly or not
+at all, depending on the letter, so ন, ক, ম and others whose traces split are
+left out with the reason recorded in `data/scripts/bengali.json`.
+
 ## Usage
 
 ```ts
@@ -115,13 +133,26 @@ npm run check:filmstrip-ledger      # fail if it is stale
 
 The check also runs as part of `npm test`, so a stroke edited here and not
 regenerated fails this package rather than the book. Which letters get an entry is
-decided by the curriculum's `core/figure-generation.json`, not here: the generator
-emits one entry per `script-filmstrip` target declared there.
+decided by the curriculum, not here: the generator emits one entry per letter a
+`script-filmstrip` target in `core/figure-generation.json` draws, plus every letter
+of the lesson targets `human-language-data` derives. A sequence target (a list of
+letters, or a word whose letters stand apart) contributes each of its `letters`,
+and only when all of them are cited.
 
 `DuctusOptions.highlightSegment` is what the printed strip turns on. Frames sit
 side by side and nothing animates, so the part of the current stroke travelled
 before this frame drops back to the muted tone and only the movement the caption
 names is in ink. The live app keeps the default whole-stroke shading.
+
+The ledger also sizes two things per letter instead of using one default.
+`captionSizeFor` scales the caption type to the letter's own box, and
+`penSizeFor` shrinks the pen line and the dot marking where the pen is on a
+TINY mark. Below `TINY_STROKE_EXTENT` (150 font units of pen path; today only
+the nukta ़, Devanagari ं and Gujarati ં, at 44 to 60 units) both are scaled by
+`extent / 150`, with a floor of `MIN_TINY_PEN_SCALE` (0.3). Without it, the
+34-unit dot was wider than the mark's whole movement. Every letter whose pen
+path is 150 units or more keeps the defaults. An explicit `penWidth` or
+`tipRadius` overrides the scaling, as an explicit `captionSize` does.
 
 ## No DOM, no filesystem
 
@@ -150,6 +181,24 @@ one level deeper: every existing record and both evidence suites use the same
 ASCII `U-<CODEPOINT>` owner below `tamil/`, while `tamil.ts` remains assembly
 only. Adding an ordinary glyph changes only its owner files; `strokes.ts`
 remains the bounded public facade and duplicate-rejecting assembly point.
+The six Tamil vowel signs written as separate symbols beside their consonant
+(ா ி ீ ெ ே ை) are owners of the same kind, cited to the native-writer pen
+traces in HP Labs India's LipiTk Tamil recognizer; the book decides where each
+is drawn in a word (`human-language-data`'s `WRITTEN_SIGN_SIDES`).
+Gujarati's eleven signs (ા િ ી ુ ૂ ે ૈ ો ૌ ં ઃ) sit at the end of the Gujarati
+owner, keyed `gujarati:<sign>` like its letters, and take their source from the
+sign's mark record (`gujaratiMarkSource`): order, start, direction and lifts
+from KanoAI's hand-made barakhadi templates, paths fitted to Noto Sans
+Gujarati. `tests/strokes/gujarati-marks.test.ts` and
+`tests/ductusview/gujarati-marks.test.ts` hold their evidence.
+Eight Devanagari signs (ु ू े ं ़ ् ृ ँ) sit at the end of the Devanagari
+owner the same way, sourced through `devanagariMarkSource` to native writers'
+pen traces in HP Labs India's LipiTk Devanagari recognizer (counts and shares
+only). Those writers wrote each sign alone, so the entries draw the sign by
+itself and say nothing about its order against a consonant or the headline;
+ा ि ी ो ौ ै and ः are left out because Noto prints a headline piece the traces
+never draw, or the traces split. `tests/strokes/devanagari-marks.test.ts` and
+`tests/ductusview/devanagari-marks.test.ts` hold their evidence.
 
 More than 2,200 tests cover the registry, paths, font fit, provenance, and
 rendering. `jsdom` is a devDependency for exactly two of them: the SVG

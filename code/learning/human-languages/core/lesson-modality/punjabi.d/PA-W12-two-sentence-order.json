@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W12-two-sentence-order",
+    "language": "punjabi",
+    "chapter": 156,
+    "sequence": 8560,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:742be0585339a3ac",
+    "detachableSegments": [
+      "Writing — order before composing"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

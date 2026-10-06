@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16744,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16744",
-    "branch": "codex/parity-build-tool-swift-graph-diff-20261005",
-    "implementation_revision": "e41ff9eb4163c93339ed12392d548af17644d131",
+    "number": 16798,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16798",
+    "branch": "codex/parity-dart-swift-frontend-fixtures-20261006",
+    "implementation_revision": "fdc3d4e088d137fcbde9a00371756634c7a09d95",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-05T18:21:35Z",
-    "pr_number": 16744,
+    "observed_at": "2026-10-06T11:30:16Z",
+    "pr_number": 16798,
     "status": "checks-pending",
-    "notes": "Ready-for-review Swift graph/diff PR opened from tested head e41ff9eb4163c93339ed12392d548af17644d131. Initial GitHub checks are queued, with no failures yet; GitHub reports MERGEABLE but auto-merge stays disabled until every final-head required check is terminal and acceptable."
+    "notes": "Ready-for-review fixture PR #16798 opened from validated implementation fdc3d4e088d137fcbde9a00371756634c7a09d95 after 11 Python 3.13 contract/oracle tests, 586 Python grammar substrate tests, three passing Dart and Swift substrate suites, Swift embedded-grammar regeneration and lexer coverage BUILD, Ruff, schema-3 collision inventory, diff checks, and independent security re-review. GitHub reports MERGEABLE but BLOCKED while checks are queued; no auto-merge is enabled."
   },
   "last_inventory": {
-    "revision": "0eb0f3f560b8336ecdd5181ea2d9ef3b5c636b24",
+    "revision": "d702210f2fe8180761a384c153e5645b188e975b",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -733,6 +733,24 @@
       "notes": "Haskell does not consume the shared language-registry fixture and mentions _build only in orphan validation. Add the exact discovery rule and language-neutral fixture consumption in one bounded Haskell tranche."
     },
     {
+      "id": "build-tool-haskell-discovery-language-registry-conformance",
+      "title": "Make Haskell discovery consume the complete language registry fixture",
+      "status": "pending",
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-haskell-dune-build-discovery-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Read-only post-#16776 audit found that Haskell discovery omits seven exact generated components (.cargo, .dart_tool, .gradle, _build, blib, dist-newstyle, gradle-build), infers language from any path component, and can include specification fixtures. After the narrow Dune predecessor, consume the complete shared discovery/language-registry case: exact package/program bucket classification and identity, generated-directory and fixture-tree exclusions, and any remaining full-case divergences. The proposed ID has no exact or punctuation-insensitive collision in the state graph."
+    },
+    {
+      "id": "build-tool-haskell-discovery-duplicate-identity-conformance",
+      "title": "Reject duplicate Haskell build-tool package identities",
+      "status": "pending",
+      "depends_on": ["build-tool-haskell-discovery-language-registry-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The separate discovery/duplicate-identity neutral case is unowned after the Haskell language-registry case. Discover both unknown/demo roots, reject before resolution or hashing with stable DUPLICATE_PACKAGE_IDENTITY, sorted repository-relative paths and no host-root leak, and return CLI exit 2. Add this owner to Haskell adapter closure; do not fold the separate case into the narrow Dune or full language-registry owner. The ID has no exact or punctuation-insensitive collision."
+    },
+    {
       "id": "build-tool-python-dune-build-discovery-conformance",
       "title": "Prove Dune _build discovery exclusion in the Python build tool",
       "status": "merged",
@@ -1237,11 +1255,17 @@
     {
       "id": "build-tool-haskell-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Haskell build tool",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Implement and dynamically consume the complete eight-graph and twelve-diff process-free contract, including shared-input multi-consumer selection, canonical topology, no-partial cycle failures, closures, boundary selection, strict bounded matching, and stable diagnostics."
+      "branch": "codex/parity-haskell-graphdiff-20261006",
+      "pr_number": 16761,
+      "opened_at": "2026-10-06T01:00:45Z",
+      "merged_at": "2026-10-06T01:34:06Z",
+      "merge_commit": "cec7a1deb62b8facbdd02f8f8c9275ecbd7b8f17",
+      "selected_at": "2026-10-06T00:30:11Z",
+      "selection_revision": "d843a420ec191e88235f372aad764636ae60bffa",
+      "selection_notes": "Selected only after registering two newly audited Dart/Swift frontend children and exact-main collision-free schema-3 refresh. All six prerequisites are merged; no open PR touches Haskell build-tool paths. This process-free 20-case core has three direct pending consumers and five unfinished descendants, ahead of Ruby source-registry adoption's four descendants. Adapter execution and boundary-digest activation remain separate.",
+      "notes": "Merged by guarded auto-merge in PR #16761. The typed process-free Haskell core dynamically consumes the exact eight graph and twelve diff-selection neutral cases, pins case IDs, enforces canonical topology and closures, checked repository-boundary digest, strict bounded matching, and stable no-partial diagnostics. Local optimized package/downstream tests, -Wall -Werror, 94% expression coverage, neutral corpus validation, and collision checks passed; adapter execution remains separately owned."
     },
     {
       "id": "build-tool-lua-diff-selection-match-work-ceiling-adoption",
@@ -1311,7 +1335,7 @@
     {
       "id": "build-tool-swift-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Swift build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": "codex/parity-build-tool-swift-graph-diff-20261005",
       "pr_number": 16744,
@@ -1352,20 +1376,29 @@
     {
       "id": "build-tool-python-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Python build tool",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-python-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-python-glob-matcher-complexity-hardening"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Production Python currently owns only a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including scoped Rust companions, package resources, and exact root metadata, and test production lookup equality rather than a fixture-only copy."
+      "branch": "codex/parity-python-source-registry-20261005",
+      "pr_number": 16756,
+      "selected_at": "2026-10-05T23:30:11Z",
+      "selection_revision": "eadd4774e5a8e28a9a25ccdac1c34153e5274db2",
+      "selection_notes": "Selected after registering 25 audited ownership gaps and an exact-main schema-3 collision-checked refresh. All six prerequisites are merged; no open PR touches Python build-tool or neutral source-registry paths. Three direct children depend on this owner. Scope is production Python registry adoption and dynamic equality tests, not a second implementation lane.",
+      "notes": "Merged by guarded auto-merge in PR #16756 as d843a420ec. Production Python now consumes a byte-identical checked 23-language, seven-role registry with site/path scoping, dynamic neutral source-collection tests, resource bounds, and link/nonregular safety; shared ancestor and generated-pruning exception owners remain separate."
     },
     {
       "id": "build-tool-ruby-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Ruby build tool",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-ruby-glob-matcher-complexity-hardening"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Production Ruby currently owns a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including path-scoped native companions and resources, with exact production lookup equality and no selector widening."
+      "branch": "codex/parity-ruby-source-registry-20261006",
+      "pr_number": 16764,
+      "merged_at": "2026-10-06T02:40:12Z",
+      "merge_commit": "8816976e430215645095aeddf7ae33fbcaa06881",
+      "opened_at": "2026-10-06T02:04:18Z",
+      "selected_at": "2026-10-06T01:41:10Z",
+      "selection_revision": "cec7a1deb62b8facbdd02f8f8c9275ecbd7b8f17",
+      "selection_notes": "Selected after merging #16761, collision-checking exact merged main, registering twelve audited 09/F00/F01 children, and confirming no active parity PR or overlapping Ruby registry work. Six prerequisites merged; exact 23-language registry adoption directly unblocks three pending owners. Use one fresh clean main-based Ruby worktree and keep repository-boundary reverse diff and native snapshot safety separate.",
+      "notes": "Merged via guarded auto-merge. Production Ruby now consumes the exact checked 23-language, seven-role registry, including scoped native companions and resources. All seven package-local neutral cases, complete registry projection equality, 379 Ruby tests, coverage, build-file, parity, diff, and security checks validated. Repository-boundary reverse diff and native snapshot safety remain separate owners."
     },
     {
       "id": "build-tool-swift-language-source-input-registry-adoption",
@@ -1427,19 +1460,33 @@
     {
       "id": "build-tool-typescript-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the TypeScript build tool",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-typescript-glob-matcher-complexity-hardening"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Production TypeScript currently owns a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including path-scoped CSS, native Rust companions, exact metadata scope, and universal capability input without blanket JSON, YAML, or TOML inclusion."
+      "branch": "codex/parity-ts-source-registry-20261006",
+      "pr_number": 16770,
+      "opened_at": "2026-10-06T03:02:27Z",
+      "selected_at": "2026-10-06T02:43:49Z",
+      "selection_revision": "8816976e430215645095aeddf7ae33fbcaa06881",
+      "selection_notes": "Selected after #16764 merged, refreshing collision-checked exact main, and registering 13 additional audited owners. All six prerequisites merged, no active parity PR, no overlapping TypeScript build-tool PR, and three direct pending children. Use one clean fresh main-based TypeScript worktree; keep repository-boundary reverse diff and native snapshot concerns separate.",
+      "merged_at": "2026-10-06T03:24:15Z",
+      "merge_commit": "3054917763cf0bc2921398f59cc2d57a15fd4b33",
+      "merge_notes": "All 33 final-head checks were terminal and acceptable: 14 successes, 18 expected skips, and one neutral. GitHub reported the final head mergeable; guarded squash auto-merge was enabled and GitHub merged the PR without a manual merge command.",
+      "notes": "PR #16770 adopts the checked 23-language, seven-role registry as immutable package data; production extension and declared-source lookup passes all seven package-local neutral cases, complete equality and digest tests, TypeScript typecheck, focused coverage, shared conformance, Go BUILD dry run, diff, and read-only security review. Two unrelated Windows-only package tests also fail unchanged on pre-change main and are explicitly documented in the PR. Repository-boundary reverse diff and native snapshot safety remain separate owners."
     },
     {
       "id": "build-tool-elixir-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Elixir build tool",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-elixir-glob-matcher-complexity-hardening"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-elixir-source-hashing-20261006",
+      "pr_number": 16794,
+      "opened_at": "2026-10-06T09:58:50Z",
+      "merged_at": "2026-10-06T10:16:06Z",
+      "merge_commit": "79e4605cda43f5a282d1f773f7d89ca92fac724b",
+      "merge_notes": "All 33 final-head checks were terminal and acceptable and GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge merged the exact final head 16e7737a76af9d4b8be23995d68cbeb2c969c2a3 without manual merge. Native suite, two dependency package suites, neutral corpus, build-file dry run, scoped format/lint, diff, and security review were recorded in the PR; aggregate Elixir coverage below its inherited threshold remains explicitly disclosed.",
+      "selected_at": "2026-10-06T09:04:00Z",
+      "selection_revision": "2ec42cd3e02a2ec98bf4c9f1d8121524a6cccdc9",
+      "selection_notes": "Selected after #16787 merged through guarded auto-merge and the exact-main 15-lane inventory stayed collision-clean with unchanged 1,487 package identities and 4,757 slots. Parallel read-only audits found no new unowned package, build-tool, or OCaml promotion gap. All six prerequisites are merged, no live PR touches Elixir build-tool files, and this process-free source collector unblocks seven unfinished descendants. Use the fresh clean main-based Elixir worktree; keep dependency hashing, native retained-handle snapshot authority, cache persistence, and adapter activation separate.",
       "notes": "Discovered by the post-#13544 source-hashing audit. Elixir recursively hashes without the exact generated-component registry and lacks portable path framing and OCaml source recognition. Repair those bounded collector semantics, consume the complete checked language source-input registry in production, and prove exact projection equality with no undeclared selector."
     },
     {
@@ -1478,10 +1525,11 @@
     {
       "id": "build-tool-perl-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Perl build tool",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-perl-blib-generated-directory-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-perl-diff-selection-match-work-ceiling-adoption", "build-tool-perl-declared-source-metadata-plumbing"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-perl-portable-source-20261006",
+      "pr_number": 16785,
+      "merged_revision": "deffa7f4837dc36835b1b23426e43eabd2ac8ee4",
       "notes": "Discovered by the post-#13544 source-hashing audit. Perl has only a partial artifact skip registry, uses platform-native relative paths, and lacks OCaml source recognition. Adopt the complete checked language source-input registry and normalized framing contract in one engine-scoped tranche, proving exact production lookup equality."
     },
     {
@@ -1721,19 +1769,46 @@
     {
       "id": "build-tool-lua-portable-source-hashing-conformance",
       "title": "Implement portable source hashing in the Lua build tool",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-lua-dune-build-discovery-fixture-adoption", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-lua-source-hashing-20261006",
+      "pr_number": 16774,
+      "selected_at": "2026-10-06T03:26:43Z",
+      "selection_revision": "3054917763cf0bc2921398f59cc2d57a15fd4b33",
+      "merged_revision": "5bce810b2aad798b5be2d2035142cb65db7cf832",
+      "selection_notes": "Selected after #16770 auto-merged, exact-main schema-3 collision check confirmed 15 lanes, 1,487 identities, 4,757 slots, 262 high-consensus missing slots, and no package topology changes; five additional neutral-contract owners were registered before selection. All six prerequisites are merged and no live PR overlaps the Lua build-tool, neutral fixture, ledger, or roadmap paths. The process-free source hashing core directly unlocks dependency hashing and several downstream Lua owners; native snapshot and persistence authority remain separate and selection-blocked. Use the fresh clean main-based Lua worktree, not the prior merged TypeScript branch.",
       "notes": "Split from the older combined Lua hashing/cache owner after the native-authority audit. Implement only the process-free registry projection, deterministic source selection, normalized path framing, and package digest contract over caller-supplied inert snapshots. Do not claim native no-follow, retained-handle, stable-identity, filesystem, process, environment, or cache-persistence authority."
+    },
+    {
+      "id": "build-tool-neutral-dependency-hashing-adversarial-corpus",
+      "title": "Complete adversarial neutral dependency-hashing fixtures",
+      "status": "merged",
+      "depends_on": ["build-tool-contract", "build-tool-fixtures"],
+      "branch": "codex/parity-neutral-dependency-fixtures-20261006",
+      "pr_number": 16787,
+      "selected_at": "2026-10-06T07:42:02Z",
+      "selection_revision": "deffa7f4837dc36835b1b23426e43eabd2ac8ee4",
+      "selection_notes": "Selected after PR #16785 merged through guarded auto-merge, exact-main inventory stayed collision-clean with unchanged 1,487 identities and 4,757 slots, and read-only audits found no other unowned package or OCaml promotion gap. This process-free neutral fixture tranche governs ten pending native dependency-hashing leaves; it outranks one-lane Elixir source hashing, Lua dependency hashing, and TypeScript diff selection by reusable contract leverage. Both prerequisites are merged, a fresh clean worktree and codex branch start at exact merged main, and no open PR overlaps the neutral hashing fixtures or schema/runner paths.",
+      "merged_revision": "2ec42cd3e02a2ec98bf4c9f1d8121524a6cccdc9",
+      "notes": "Discovered in the post-#16785 read-only fixture audit. The eight hashing_cache cases have at most one dependency and do not prove multi-dependency name sorting, dependency-only invalidation with unchanged package bytes, or failed-prior-record miss behavior. Add bounded language-neutral cases and schema/oracle tests before the pending native dependency-hashing adopters consume them. Keep filesystem cache persistence and native authority outside this process-free fixture owner."
     },
     {
       "id": "build-tool-lua-portable-dependency-hashing-conformance",
       "title": "Implement portable dependency hashing in the Lua build tool",
-      "status": "pending",
-      "depends_on": ["build-tool-lua-portable-source-hashing-conformance"],
-      "branch": null,
-      "pr_number": null,
+      "status": "merged",
+      "depends_on": ["build-tool-lua-portable-source-hashing-conformance", "build-tool-neutral-dependency-hashing-adversarial-corpus"],
+      "branch": "codex/parity-lua-dependency-hashing-20261006",
+      "pr_number": 16796,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16796",
+      "opened_at": "2026-10-06T10:41:44Z",
+      "opened_revision": "71975e4dacac7d40c020a785de29eae4944bcdf3",
+      "merged_head_revision": "b07754448e4cff74407672cb4c9d6a0999a7ab5e",
+      "merged_revision": "2547600e9636d1dfd2ad5df9e2cfdf14963d556a",
+      "merged_at": "2026-10-06T10:53:41Z",
+      "merge_notes": "The final head passed 13 checks with 19 expected skips, including both required gates; GitHub was MERGEABLE/CLEAN. Auto-merge completed without a manual merge. The process-free Lua API consumes all 11 hashing-cache cases and a security-review DoS finding was repaired before publication.",
+      "selected_at": "2026-10-06T10:20:00Z",
+      "selection_revision": "79e4605cda43f5a282d1f773f7d89ca92fac724b",
+      "selection_notes": "Selected after #16794 auto-merged at exact main, the full 15-lane collision report remained unchanged with 1,487 identities, 4,757 slots, and no collisions/unknown buckets, and parallel audits found no new unowned package, build-tool, or OCaml promotion gap. Both prerequisites are merged; no live PR overlaps the Lua engine path; this process-free leaf reaches five unfinished descendants and consumes the eleven neutral hashing-cache cases. Use the fresh clean main-based Lua worktree, keeping native snapshot, persistence, and adapter authority separate.",
       "notes": "Consume the neutral hashing-v1 dependency and combined-digest oracle after Lua package hashing lands. Keep the work process-free and limited to package-identity framing, decoded dependency digests, deterministic invalidation, and cache-result classification over inert inputs."
     },
     {
@@ -1780,7 +1855,7 @@
       "id": "build-tool-go-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Go build tool",
       "status": "pending",
-      "depends_on": ["build-tool-go-native-source-snapshot-stability-hardening"],
+      "depends_on": ["build-tool-go-native-source-snapshot-stability-hardening", "build-tool-neutral-dependency-hashing-adversarial-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. Go concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
@@ -1789,7 +1864,7 @@
       "id": "build-tool-elixir-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Elixir build tool",
       "status": "pending",
-      "depends_on": ["build-tool-elixir-native-source-snapshot-stability-hardening"],
+      "depends_on": ["build-tool-elixir-native-source-snapshot-stability-hardening", "build-tool-neutral-dependency-hashing-adversarial-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. Elixir concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
@@ -1798,7 +1873,7 @@
       "id": "build-tool-perl-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Perl build tool",
       "status": "pending",
-      "depends_on": ["build-tool-perl-native-source-snapshot-stability-hardening"],
+      "depends_on": ["build-tool-perl-native-source-snapshot-stability-hardening", "build-tool-neutral-dependency-hashing-adversarial-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. Perl concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
@@ -1816,7 +1891,7 @@
       "id": "build-tool-haskell-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Haskell build tool",
       "status": "pending",
-      "depends_on": ["build-tool-haskell-native-source-snapshot-stability-hardening"],
+      "depends_on": ["build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-neutral-dependency-hashing-adversarial-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. Haskell includes dependency names but uses a non-SHA fallback framing rather than the hashing-v1 named/raw-digest stream. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
@@ -1825,7 +1900,7 @@
       "id": "build-tool-csharp-fsharp-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the shared C# and F# build tools",
       "status": "pending",
-      "depends_on": ["build-tool-csharp-fsharp-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-neutral-dependency-hashing-adversarial-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. The shared .NET engine concatenates dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, repair the shared dependency and combined digest path once for both front doors."
@@ -1834,7 +1909,7 @@
       "id": "build-tool-swift-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Swift build tool",
       "status": "pending",
-      "depends_on": ["build-tool-swift-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-swift-portable-source-hashing-conformance", "build-tool-neutral-dependency-hashing-adversarial-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. Swift concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
@@ -1843,7 +1918,7 @@
       "id": "build-tool-ruby-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Ruby build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ruby-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-ruby-portable-source-hashing-conformance", "build-tool-neutral-dependency-hashing-adversarial-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. Ruby concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
@@ -1852,7 +1927,7 @@
       "id": "build-tool-rust-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Rust build tool",
       "status": "pending",
-      "depends_on": ["build-tool-rust-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-rust-portable-source-hashing-conformance", "build-tool-neutral-dependency-hashing-adversarial-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. Rust concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
@@ -1861,7 +1936,7 @@
       "id": "build-tool-typescript-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the TypeScript build tool",
       "status": "pending",
-      "depends_on": ["build-tool-typescript-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-typescript-portable-source-hashing-conformance", "build-tool-neutral-dependency-hashing-adversarial-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. TypeScript concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
@@ -1919,19 +1994,27 @@
     {
       "id": "build-tool-perl-dune-build-discovery-fixture-adoption",
       "title": "Make Perl consume the Dune discovery fixture",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-generated-directory-hashing-conformance-corpus"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-perl-dune-20261006",
+      "pr_number": 16776,
+      "merged_revision": "a8966b6591f23fab05838be84169d5490087d344",
+      "selected_at": "2026-10-06T04:32:09Z",
+      "selection_revision": "5bce810b2aad798b5be2d2035142cb65db7cf832",
+      "selection_notes": "Selected after #16774 auto-merged, exact-main collision report confirmed 15 lanes, 1,487 identities, 4,757 slots, five emerging OCaml packages, and zero collisions. Both prerequisites are merged; this narrow fixture owner reaches 12 unfinished downstream owners and does not overlap any open PR. Register the newly discovered stack-VM neutral owner before selection. Keep full OCaml source hashing, declared-source plumbing, and native snapshot authority outside this slice.",
       "notes": "Perl already prunes exact _build but does not consume the shared language-registry fixture. Add independent exact _build evidence through both Discovery and Hasher, consuming the shared generated-directory hashing corpus, and change behavior only if that evidence exposes a real divergence."
     },
     {
       "id": "build-tool-perl-declared-source-metadata-plumbing",
       "title": "Plumb declared-source metadata through the Perl build tool",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["build-tool-perl-dune-build-discovery-fixture-adoption"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-perl-declared-source-20261006",
+      "pr_number": 16778,
+      "merged_revision": "0456d5d170a4a837f99092c9de4586eead165f04",
+      "selected_at": "2026-10-06T05:11:42Z",
+      "selection_revision": "a8966b6591f23fab05838be84169d5490087d344",
+      "selection_notes": "Selected after #16776 auto-merged with 32 terminal acceptable checks. The exact merged-main collision inventory remains 15 established lanes, 1,487 identities, 4,757 slots, five emerging OCaml packages, and zero collisions or unknown buckets. The newly discovered Haskell full-discovery owner was registered before selection. The sole prerequisite is merged, no active parity PR remains, and this narrow metadata-plumbing owner reaches nine unfinished descendants, ahead of Elixir source hashing (seven) and Lua dependency hashing (five). Use this fresh clean main-based branch; full source hashing, native filesystem authority, and unrelated Haskell discovery remain separate owners.",
       "notes": "Carry declared-source metadata from Perl discovery into hashing after the Dune fixture owner proves exact generated-directory behavior."
     },
     {
@@ -3126,7 +3209,7 @@
       "title": "Close Haskell native build-tool adapter conformance",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-execution-semantics-corpus", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-extra-ci-toolchain-declaration-conformance", "build-tool-haskell-dune-build-discovery-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-haskell-orphan-crate-validation-conformance", "build-tool-haskell-tracked-artifact-validation-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-cli-parser-adoption", "build-tool-haskell-starlark-metering-adoption", "build-tool-haskell-validation-oracle-adoption"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-execution-semantics-corpus", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-extra-ci-toolchain-declaration-conformance", "build-tool-haskell-dune-build-discovery-conformance", "build-tool-haskell-discovery-language-registry-conformance", "build-tool-haskell-discovery-duplicate-identity-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-haskell-orphan-crate-validation-conformance", "build-tool-haskell-tracked-artifact-validation-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-cli-parser-adoption", "build-tool-haskell-starlark-metering-adoption", "build-tool-haskell-validation-oracle-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Haskell build-tool lane gate materialized by the post-#14615 audit. After every native correctness child lands, add a real adapter and run the entire versioned neutral corpus, including the completed graph/diff cases, through the Haskell front door with no undeclared expected failures. Keep this owner selection-blocked until the native retained-handle snapshot design and all listed children are complete."
@@ -4025,7 +4108,9 @@
         "swift-in-memory-data-store-engine-lane-parity",
         "swift-in-memory-data-store-lane-parity",
         "swift-tree-set-lane-parity",
-        "swift-radix-tree-lane-parity"
+        "swift-radix-tree-lane-parity",
+        "dart-swift-starlark-frontend-vertical-parity",
+        "dart-swift-sql-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -6712,11 +6797,14 @@
     {
       "id": "ct-compare-language-neutral-conformance",
       "title": "Define language-neutral constant-time comparison conformance",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Discovered by the parallel high-consensus ownership audit after PR #14366. Define CT01 and a closed ct-compare-v1 corpus for byte equality, fixed-size aliases, equal-length byte selection, unsigned 64-bit equality, exact iteration counts, stable validation failures, and data-independent source/control-flow. Treat length as public, encode bytes and u64 values as hex, prohibit content-dependent exits and lookups, require source or optimized-code review where meaningful, and explicitly avoid universal hardware timing claims or noisy wall-clock ratio tests."
+      "branch": "codex/parity-ct-compare-fixtures-20261005",
+      "pr_number": 16749,
+      "selected_at": "2026-10-05T19:25:39Z",
+      "selection_revision": "7196f381b006d3c1436c05b67fc08bf71c1637c2",
+      "selection_notes": "Selected after reviewed #16744 merged and an exact-main schema-3 collision-checked refresh found 15 established lanes, 1,487 identities, 4,757 slots, 178 high-consensus packages with 262 missing slots, and zero collisions or unknown buckets. This zero-dependency contract has six direct pending children and nine unfinished descendants, more immediate leverage than the ready Python source-registry and Haskell graph/diff owners (three direct children each). The new HF06/KD03 and DT17 owners were registered first. Scope is CT01 plus a versioned neutral fixture corpus and independent validator only; lane adoption and timing assurance remain separate.",
+      "notes": "Merged by guarded auto-merge in PR #16749 as eadd4774e5a8e28a9a25ccdac1c34153e5274db2. CT01 defines a closed ct-compare-v1 corpus for byte equality, fixed-size aliases, equal-length byte selection, unsigned 64-bit equality, exact iteration counts, stable validation failures, and data-independent source/control-flow. Length is public; bytes and u64 values are hex; source or optimized-code review remains required where meaningful. No universal hardware timing claim."
     },
     {
       "id": "ct-compare-existing-lane-conformance-adoption",
@@ -9876,7 +9964,7 @@
       "id": "swift-hash-functions-lane-parity",
       "title": "Implement the portable hash-functions package in Swift",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["hash-functions-dt17-vector-and-documentation-correction"],
       "branch": null,
       "pr_number": null,
       "notes": "First exact Swift high-consensus child materialized by the post-#14615 lane audit. Implement the existing deterministic hash-functions contract with package-native tests, empty capabilities, and no host authority. This dependency-shaped root unlocks the explicit Swift bloom-filter, hash-map, hash-set, and HyperLogLog children. The store engine remains separately gated on hash-map, hash-set, HyperLogLog, skip-list, protocol IR, and the neutral injected-clock contract. The remaining non-CT Swift high-consensus gaps stay owned by the selection-blocked classifier until decomposed into exact children."
@@ -11032,6 +11120,54 @@
       "notes": "The exact-main audit found 117 of 123 identities in the five-to-nine-language band without exact owners. Prioritize dependency foundations led by transistors and cache, then create bounded family or package owners before any implementation selection."
     },
     {
+      "id": "correlation-vector-cv00-neutral-conformance",
+      "title": "Freeze CV00 correlation-vector portable behavior",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "CV00 defines a generic domain-agnostic identity and lineage structure, present in 9/15 established lanes with six missing. Add language-neutral vectors for root/derive/merge/contribute/delete/passthrough, deterministic SHA-256-derived IDs, disabled tracing, ancestry and pass ordering, canonical JSON roundtrip and counter continuity, and stable malformed/unknown-ID outcomes. Freeze edge behavior before copying an existing lane; Swift currently diverges from CV00 and must not serve as oracle. The ID is collision-checked; no live open PR overlaps CV00 or package paths."
+    },
+    {
+      "id": "correlation-vector-csharp-lane-parity",
+      "title": "Port CV00 correlation-vector to C#",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "One of six missing established correlation-vector lanes. Implement the neutral CV00 fixture through the C# package and real native tests; preserve F# as a separate front-door child if sharing an engine."
+    },
+    {
+      "id": "correlation-vector-dart-lane-parity",
+      "title": "Port CV00 correlation-vector to Dart",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance", "json-value-dart-java-kotlin-parity"], "branch": null, "pr_number": null,
+      "notes": "One of six missing established correlation-vector lanes. Wait for same-lane D20 JSON value and serializer readiness, then consume the neutral CV00 vectors in Dart tests and BUILD fronts."
+    },
+    {
+      "id": "correlation-vector-fsharp-lane-parity",
+      "title": "Port CV00 correlation-vector to F#",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "One of six missing established correlation-vector lanes. Prove F#-native fixture entry and package front door even if a reviewed shared C# engine is reused."
+    },
+    {
+      "id": "correlation-vector-haskell-lane-parity",
+      "title": "Port CV00 correlation-vector to Haskell",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "One of six missing established correlation-vector lanes. Implement deterministic IDs, lineage and canonical interchange through Haskell-native tests without borrowing Swift's divergent schema."
+    },
+    {
+      "id": "correlation-vector-java-lane-parity",
+      "title": "Port CV00 correlation-vector to Java",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance", "json-value-dart-java-kotlin-parity"], "branch": null, "pr_number": null,
+      "notes": "One of six missing established correlation-vector lanes. Wait for real same-lane D20 JSON value/serializer behavior; current Java JSON lexer/parser ping stubs are not readiness evidence."
+    },
+    {
+      "id": "correlation-vector-kotlin-lane-parity",
+      "title": "Port CV00 correlation-vector to Kotlin",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance", "json-value-dart-java-kotlin-parity"], "branch": null, "pr_number": null,
+      "notes": "One of six missing established correlation-vector lanes. Wait for real same-lane D20 JSON value/serializer behavior; current Kotlin JSON lexer/parser ping stubs are not readiness evidence."
+    },
+    {
+      "id": "correlation-vector-swift-cv00-existing-lane-reconciliation",
+      "title": "Reconcile existing Swift correlation-vector with CV00",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Swift already has the package identity, but its global counter, merge ID derivation, timestamped contributions, per-entry pass order, and JSON schema diverge from CV00. Run the neutral vectors through Swift and repair only the observed portable differences; do not use Swift as the reference oracle."
+    },
+    {
       "id": "two-to-four-unowned-gap-classification-20260905",
       "title": "Classify the unowned two-to-four-language package band",
       "status": "pending",
@@ -11941,6 +12077,481 @@
       "branch": null,
       "pr_number": null,
       "notes": "The merged #16730 graph/diff owner proves multi-consumer selection, not both source and package digest changes. Dynamically consume the neutral before/after digest evidence through the shared C# engine and F# front without re-opening the superseded repository-boundary diff owner."
+    },
+    {
+      "id": "blake2b-language-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Freeze HF06 BLAKE2b byte-level conformance and reconcile 12 established lanes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16744 audit found blake2b in 12/15 established lanes; Java, Kotlin, and Dart are missing. Correct HF06's stale matrix and clarify parameterized digest size (BLAKE2b-256 is not a truncation of BLAKE2b-512). Define closed keyed/unkeyed, length, ownership, error, and official RFC 7693/Blake2 KAT vectors; reconcile existing lanes before new ports. C/C++ are emerging, not denominator lanes."
+    },
+    {
+      "id": "blake2b-java-kotlin-dart-lane-parity",
+      "title": "Implement HF06 BLAKE2b parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["blake2b-language-neutral-conformance-and-existing-lane-reconciliation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the reviewed neutral byte-level vectors through real package build/test entry points in the three missing established lanes; keep capability metadata empty and do not overclaim timing or key-custody assurance."
+    },
+    {
+      "id": "argon2-language-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Freeze KD03 Argon2d/i/id conformance and reconcile 12 established lanes",
+      "status": "pending",
+      "depends_on": ["blake2b-language-neutral-conformance-and-existing-lane-reconciliation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Argon2d/i/id each exist in 12/15 established lanes and depend on BLAKE2b. Correct KD03's wrong Argon2d RFC 9106 tag and nonexistent KAT path; review slice-index pseudocode against the PHC reference. Pin RFC tags plus independently sourced parameter-boundary vectors, bounded resource/error behavior, and raw-tag scope before Java/Kotlin/Dart adoption."
+    },
+    {
+      "id": "argon2-java-kotlin-dart-lane-parity",
+      "title": "Implement KD03 Argon2d/i/id parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["argon2-language-neutral-conformance-and-existing-lane-reconciliation", "blake2b-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Twelve missing slots across four related cryptographic families include three Argon2 variants in each JVM/Dart lane. Split this family owner by lane or variant if a single PR cannot remain reviewable. Portable raw-tag API only; host RNG, PHC serialization, secret custody, production constant-time, and zeroization require separate review rather than a blanket crypto exception."
+    },
+    {
+      "id": "hash-functions-dt17-vector-and-documentation-correction",
+      "title": "Correct governing DT17 hash-function vectors and stale package prose",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16744 audit found stale FNV-1a32 and Murmur3_32 examples in DT17 and package documentation while existing tests agree with the algorithms. Correct FNV-1a32(a)=3826002220, FNV-1a32(foobar)=3214735720, Murmur3_32(a,seed=0)=0x3C2569B2, and trace/decimal errors before Swift hash-functions copies the contract. Preserve semantic tests and avoid unrelated implementation churn."
+    },
+    {
+      "id": "build-tool-typescript-blog-exact-input-prose-correction",
+      "title": "Reconcile blog exact-input prose with the nine-path registry",
+      "status": "pending",
+      "depends_on": ["build-tool-site-authored-resource-source-input-extension"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The TypeScript blog registry and conformance case contain nine exact paths, including data/assets/.pipeline-steps.js.id.json, while current spec, fixture README, and Go README prose say eight. Clarify the prose without changing the registry, digests, or historical changelog text; the .js module itself remains suffix-selected rather than a tenth exact path."
+    },
+    {
+      "id": "toml-parser-f03-neutral-semantic-reconciliation",
+      "title": "Freeze F03 TOML syntax and semantic conformance",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Post-#16749 audit: TOML parser exists in 13/15 established lanes; Dart and Swift are missing. Reconcile newline, simple-key, inline-table, and TOMLDocument-versus-AST behavior before ports."
+    },
+    {
+      "id": "toml-parser-dart-swift-parity",
+      "title": "Port the reconciled TOML parser to Dart and Swift",
+      "status": "pending", "depends_on": ["toml-parser-f03-neutral-semantic-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "Two missing established slots. Split by lane for implementation PRs; consume the F03 neutral corpus and native BUILD tests."
+    },
+    {
+      "id": "json-value-d20-neutral-conformance",
+      "title": "Freeze D20 JSON value and serializer semantics",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Dart, Java, and Kotlin lack JSON value and serializer (six slots). Specify value ownership, number/string round trips, canonical error behavior, and independent neutral cases. Java/Kotlin JSON lexer/parser ping stubs are prerequisites, not evidence of parser readiness."
+    },
+    {
+      "id": "json-value-dart-java-kotlin-parity",
+      "title": "Port D20 JSON value and serializer to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": ["json-value-d20-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Resolve same-lane parser prerequisites first; split into lane-sized reviewable PRs. Dart has a real parser, while Java/Kotlin generic JSON parser/lexer stubs need actual implementation."
+    },
+    {
+      "id": "asciidoc-parser-te03-neutral-conformance",
+      "title": "Freeze TE03 AsciiDoc parser-to-AST conformance",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "AsciiDoc parser is missing Dart, Java, and Kotlin. Constrain this owner to document-ast parsing and neutral fixtures; renderer and facade coverage are separate."
+    },
+    {
+      "id": "asciidoc-parser-dart-java-kotlin-parity",
+      "title": "Port TE03 AsciiDoc parser to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": ["asciidoc-parser-te03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Three missing established parser slots, independently sliced by lane after AST and fixture readiness. Do not conflate with renderer or C#/F#/Haskell facade gaps."
+    },
+    {
+      "id": "ed25519-neutral-rfc8032-conformance",
+      "title": "Freeze Ed25519 RFC 8032 vectors and safety contract",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Ed25519 is absent in Dart, Java, and Kotlin. Pin neutral signing/verification and invalid-input vectors before ports; do not claim general constant-time safety from functional tests."
+    },
+    {
+      "id": "ed25519-dart-java-kotlin-parity",
+      "title": "Port Ed25519 to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": ["ed25519-neutral-rfc8032-conformance"], "branch": null, "pr_number": null,
+      "notes": "Three lane-sized ports require the same-lane SHA-512 foundations and native neutral-vector tests."
+    },
+    {
+      "id": "chacha20-poly1305-se03-neutral-conformance",
+      "title": "Reconcile SE03 ChaCha20-Poly1305 neutral and security semantics",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Missing Dart/Java/Kotlin; correct stale nine-lane spec and inaccurate ARX-only claim. Pin RFC 8439 vectors, nonce/tag/authentication-failure behavior, and educational timing limits."
+    },
+    {
+      "id": "chacha20-poly1305-dart-java-kotlin-parity",
+      "title": "Port SE03 ChaCha20-Poly1305 to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": ["chacha20-poly1305-se03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Three missing established slots; slice JVM and Dart work separately after neutral review, and do not market big-integer educational ports as constant-time."
+    },
+    {
+      "id": "content-addressable-storage-neutral-conformance",
+      "title": "Freeze content-addressable storage neutral behavior",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "CAS exists in 12/15 lanes, missing Dart/Java/Kotlin. Resolve odd-hex prefix, NotFound versus Store error, path/digest, and SHA-1 legacy security semantics."
+    },
+    {
+      "id": "content-addressable-storage-dart-java-kotlin-parity",
+      "title": "Port content-addressable storage to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": ["content-addressable-storage-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "All three lanes already have SHA-1; split by lane and test neutral error/digest behavior without representing SHA-1 as adversarial authentication."
+    },
+    {
+      "id": "dartmouth-basic-neutral-lexer-parser-conformance",
+      "title": "Freeze Dartmouth BASIC lexer and parser conformance",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Lexer and parser each lack Dart/Java/Kotlin (six slots). Pin token/AST fixtures and complete-consumption rules; JVM generic lexer keyword promotion and parser token-consumption bugs must be fixed before language wrappers."
+    },
+    {
+      "id": "dartmouth-basic-dart-java-kotlin-parity",
+      "title": "Port Dartmouth BASIC lexer and parser to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": ["dartmouth-basic-neutral-lexer-parser-conformance"], "branch": null, "pr_number": null,
+      "notes": "Implement same-lane lexer before parser, bounded by lane; normalize Dart wrapper output against the neutral contract."
+    },
+    {
+      "id": "brainfuck-wasm-compiler-dart-swift-parity",
+      "title": "Port Brainfuck-to-Wasm compilation to Dart and Swift",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Thirteen of fifteen lanes present. Dart needs encoder import-section and WASI fd_read support first; Swift can direct-emit its small Wasm subset with LEB128. Define neutral module/runtime cases; no generic IR prerequisite. Split by lane."
+    },
+    {
+      "id": "ml02-gradient-descent-dart-java-kotlin-swift-parity",
+      "title": "Port ML02 gradient descent across four missing lanes",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Ten of fifteen lanes present; Dart, Java, Kotlin, Swift missing. Existing matrix, activation, and loss foundations permit independent lane-sized SGD ports with deterministic neutral cases."
+    },
+    {
+      "id": "perceptron-neutral-conformance-and-four-lane-parity",
+      "title": "Specify perceptron behavior and port four missing lanes",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Eleven of fifteen lanes present; Dart, Java, Kotlin, Swift missing. Freeze independent neutral training/prediction cases, then split lane ports. Perceptron does not require gradient-descent."
+    },
+    {
+      "id": "dart-swift-language-frontends-neutral-fixtures",
+      "title": "Freeze Dart and Swift language-frontend token and AST fixture contract",
+      "status": "pr-open", "depends_on": [],
+      "branch": "codex/parity-dart-swift-frontend-fixtures-20261006", "pr_number": 16798,
+      "selected_at": "2026-10-06T10:56:00Z",
+      "selection_revision": "2547600e9636d1dfd2ad5df9e2cfdf14963d556a",
+      "opened_at": "2026-10-06T11:30:16Z",
+      "opened_revision": "fdc3d4e088d137fcbde9a00371756634c7a09d95",
+      "validation_notes": "Exact-main schema-3 inventory after conflict-free rebase on d702210f2f remains 1,487 identities, 4,757 slots, zero collisions and unknown buckets. Python 3.13 fixture tests 11/11 including exact oracle replay; canonical Python grammar substrate 586/586; Dart grammar-tools, lexer, parser tests and analyze pass; Swift grammar-tools, lexer, parser suites 68/61/40 pass; Swift lexer coverage BUILD and embedded grammar check pass; Python validator coverage 82%; Ruff, YAML parse, diff check, and independent security re-review pass. CI is queued on the open PR.",
+      "selection_notes": "Selected after #16796 auto-merged, exact-main schema-3 collision inventory remained at 15 established lanes, 1,487 identities and 4,757 slots with no collisions or unknown buckets, and parallel audits found no new unowned package, build-tool, or OCaml gate. This prerequisite-free neutral fixture tranche unlocks twelve already-owned Dart/Swift frontend verticals spanning 48 missing slots, ahead of correlation-vector (seven) and block-RAM (four direct, seven total). No active parity PR or live path overlap exists; use this fresh clean main-based branch and keep lexer/parser implementation for later vertical owners.",
+      "notes": "Twelve lexer/parser roots in both lanes produce 48 missing slots: C#, Excel, Java, JavaScript, Lattice, Python, Ruby, SQL, Starlark, TypeScript, Verilog, VHDL. Pin grammar embed/drift and neutral token/AST cases; split subsequent vertical lexer-to-parser slices. Contextual generic closer must precede C#/Java semantic ports."
+    },
+    {
+      "id": "dart-swift-lattice-frontend-vertical-parity",
+      "title": "Port Lattice lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "First bounded vertical from the 48-slot wave; same-lane generic graph, state-machine, grammar-tools, lexer, parser foundations exist. Split by lane, lexer before parser."
+    },
+    {
+      "id": "dart-swift-starlark-frontend-vertical-parity",
+      "title": "Port Starlark lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Collision-checked after PR #16756. Starlark lexer and parser each exist in 13/15 established lanes, missing only Dart and Swift; both lanes have grammar-tools, lexer, parser, directed-graph, and state-machine foundations. Preserve indentation/significant-newline, alias, and reserved-keyword behavior. Split by lane and lexer before parser; evaluator, metering, and build-tool activation remain outside this package owner."
+    },
+    {
+      "id": "dart-swift-sql-frontend-vertical-parity",
+      "title": "Port SQL lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Collision-checked after PR #16756. SQL lexer and parser each exist in 13/15 established lanes, missing only Dart and Swift; shared SQL grammar and same-lane foundations exist. Preserve case-insensitive keywords, <> aliasing, comments, quoted identifiers, PEG precedence, and stable ASTs. Do not invent a dependency on the independent SQL CSV adapter owner. Split by lane and lexer before parser."
+    },
+    {
+      "id": "dart-swift-python-frontend-vertical-parity",
+      "title": "Port Python lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Read-only post-#16776 audit found Python lexer present in 13/15 established lanes, missing Dart and Swift; Python parser is 12/15, missing Dart, Swift, and separately owned Python self-hosting. This owner covers the four Dart/Swift slots only. The neutral frontend fixture owner lists Python among twelve roots. Split by lane and lexer before parser after the shared token/AST fixture; the Dart subtranche additionally depends on dart-generic-lexer-indentation-mode-conformance, whereas Swift must not be blocked by that Dart substrate. Python self-hosting and C#/Java contextual parsing are separate concerns. Exact and punctuation-insensitive owner-ID collision checks found no match, and live open-PR file lists had no overlap."
+    },
+    {
+      "id": "dart-generic-lexer-indentation-mode-conformance",
+      "title": "Implement Dart generic lexer indentation mode",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Dart grammar-tools parses mode: indentation and its cross-validator permits implicit NEWLINE/INDENT/DEDENT, but the generic lexer ignores grammar.mode and emits no INDENT/DEDENT. Add neutral vectors for nested blocks, blank/comment lines, bracket line joining, EOF dedents, tab and inconsistent-indent diagnostics, and exact token order, then test through Dart generic lexer and BUILD fronts. Dart Python/Starlark frontend ports depend on this substrate; Swift siblings do not. Python and TypeScript/Swift differ on no-terminal-newline order, so freeze the parser-consistent behavior before claiming cross-language conformance. No normalized owner-ID or open-PR file collision was found."
+    },
+    {
+      "id": "dart-java-kotlin-core-eight-family-parity",
+      "title": "Classify and split eight Dart/JVM core package families",
+      "status": "pending", "depends_on": ["arithmetic-09-neutral-conformance-and-existing-lane-reconciliation", "arithmetic-dart-lane-parity", "arithmetic-java-lane-parity", "arithmetic-kotlin-lane-parity", "block-ram-f00-neutral-conformance-and-existing-lane-reconciliation", "block-ram-dart-lane-parity", "block-ram-java-lane-parity", "block-ram-kotlin-lane-parity", "fpga-f01-neutral-conformance-and-existing-lane-reconciliation", "fpga-dart-lane-parity", "fpga-java-lane-parity", "fpga-kotlin-lane-parity", "brotli-dart-java-kotlin-lane-parity", "clock-dart-java-kotlin-lane-parity", "hash-functions-dart-java-kotlin-lane-parity", "tree-dart-java-kotlin-lane-parity", "xml-lexer-dart-java-kotlin-lane-parity"], "branch": null, "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Twenty-four missing Dart/JVM slots across arithmetic, block-ram, Brotli, clock, FPGA, hash-functions, tree, XML lexer. Post-#16761 audits materialized exact 09/F00/F01 lane children plus five family umbrellas for the other 15 slots; split those umbrellas by lane before implementation. Separate Haskell Brotli and Swift hash-functions owners already exist. FPGA depends on same-lane block-ram; Brotli neutral owner is pending, DT17 vector correction precedes hash-functions ports, and XML requires generic lexer hook support. Do not select this classifier as an implementation PR."
+    },
+    {
+      "id": "arithmetic-09-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Freeze 09 arithmetic neutral behavior across existing lanes",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Collision-checked after #16761. Define bounded half/full-adder, ripple-carry, and ALU fixtures with exact flags and errors before porting three missing 12/15 lanes. Reconcile Go/Python versus Rust subtraction carry for width-four 5-0 and Rust-only ripple overflow; do not silently pick one oracle. Existing Dart/Java/Kotlin logic-gates foundations are present."
+    },
+    {
+      "id": "arithmetic-dart-lane-parity",
+      "title": "Port 09 arithmetic to Dart",
+      "status": "pending", "depends_on": ["arithmetic-09-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 arithmetic slot. Use the existing Dart logic-gates package, the reconciled neutral corpus, native package tests, dart analyze, and exact BUILD validation; no host authority."
+    },
+    {
+      "id": "arithmetic-java-lane-parity",
+      "title": "Port 09 arithmetic to Java",
+      "status": "pending", "depends_on": ["arithmetic-09-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 arithmetic slot. Use existing Java logic-gates and the reconciled neutral corpus with native Gradle tests, coverage, and BUILD validation."
+    },
+    {
+      "id": "arithmetic-kotlin-lane-parity",
+      "title": "Port 09 arithmetic to Kotlin",
+      "status": "pending", "depends_on": ["arithmetic-09-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 arithmetic slot. Use existing Kotlin logic-gates and the reconciled neutral corpus with native Gradle tests, coverage, and BUILD validation."
+    },
+    {
+      "id": "block-ram-f00-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Freeze F00 block-RAM neutral behavior across existing lanes",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Collision-checked after #16761. Reconcile F00 SRAM cell/word memory semantics and configuration bounds into language-neutral fixtures before Dart/JVM ports. The three missing 12/15 lanes already provide logic-gates."
+    },
+    {
+      "id": "block-ram-dart-lane-parity",
+      "title": "Port F00 block-RAM to Dart",
+      "status": "pending", "depends_on": ["block-ram-f00-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 block-RAM slot. Build on Dart logic-gates and F00 neutral fixtures; provide real package tests and BUILD validation before Dart FPGA."
+    },
+    {
+      "id": "block-ram-java-lane-parity",
+      "title": "Port F00 block-RAM to Java",
+      "status": "pending", "depends_on": ["block-ram-f00-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 block-RAM slot. Build on Java logic-gates and F00 neutral fixtures; provide real Gradle tests and BUILD validation before Java FPGA."
+    },
+    {
+      "id": "block-ram-kotlin-lane-parity",
+      "title": "Port F00 block-RAM to Kotlin",
+      "status": "pending", "depends_on": ["block-ram-f00-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 block-RAM slot. Build on Kotlin logic-gates and F00 neutral fixtures; provide real Gradle tests and BUILD validation before Kotlin FPGA."
+    },
+    {
+      "id": "fpga-f01-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Freeze F01 FPGA neutral behavior across existing lanes",
+      "status": "pending", "depends_on": ["block-ram-f00-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "Collision-checked after #16761. Reconcile F01 configuration, logic-gate, and block-RAM integration semantics into bounded neutral fixtures before three 12/15 missing-lane ports. Keep real bitstream/export workflows separate."
+    },
+    {
+      "id": "fpga-dart-lane-parity",
+      "title": "Port F01 FPGA to Dart",
+      "status": "pending", "depends_on": ["fpga-f01-neutral-conformance-and-existing-lane-reconciliation", "block-ram-dart-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 FPGA slot. Integrate existing Dart logic-gates with the Dart block-RAM port; consume F01 fixtures and native BUILD tests."
+    },
+    {
+      "id": "fpga-java-lane-parity",
+      "title": "Port F01 FPGA to Java",
+      "status": "pending", "depends_on": ["fpga-f01-neutral-conformance-and-existing-lane-reconciliation", "block-ram-java-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 FPGA slot. Integrate existing Java logic-gates with the Java block-RAM port; consume F01 fixtures and native Gradle/BUILD tests."
+    },
+    {
+      "id": "fpga-kotlin-lane-parity",
+      "title": "Port F01 FPGA to Kotlin",
+      "status": "pending", "depends_on": ["fpga-f01-neutral-conformance-and-existing-lane-reconciliation", "block-ram-kotlin-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 FPGA slot. Integrate existing Kotlin logic-gates with the Kotlin block-RAM port; consume F01 fixtures and native Gradle/BUILD tests."
+    },
+    {
+      "id": "brotli-dart-java-kotlin-lane-parity",
+      "title": "Classify Dart and JVM Brotli ports after neutral CMP06 conformance",
+      "status": "pending", "depends_on": ["brotli-language-neutral-conformance"], "branch": null, "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Three missing 11/15 slots, separate from the existing Haskell owner. CMP06 is a custom educational subset, not ordinary RFC 7932 interoperability; its neutral owner must close malformed-input and output ceilings. Same-lane huffman-tree exists. Split by lane before selecting one implementation PR."
+    },
+    {
+      "id": "clock-language-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Specify and reconcile portable clock behavior",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "The 12/15 clock family lacks a governing package spec. Existing Haskell behavior disagrees with Python/Go on divider full-cycle output and first multiphase tick. Freeze frequency validation, listener order, reset, phase indexing, and divider semantics before ports."
+    },
+    {
+      "id": "clock-dart-java-kotlin-lane-parity",
+      "title": "Classify Dart and JVM clock ports",
+      "status": "pending", "depends_on": ["clock-language-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Three missing 12/15 slots. Split by lane after the neutral contract reconciles existing behavior; each native package needs tests, coverage, README, changelog, and BUILD."
+    },
+    {
+      "id": "hash-functions-dart-java-kotlin-lane-parity",
+      "title": "Classify Dart and JVM DT17 hash-function ports",
+      "status": "pending", "depends_on": ["hash-functions-dt17-vector-and-documentation-correction"], "branch": null, "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Three missing 11/15 slots, separate from existing Swift owner. DT17 correction must fix FNV-1a and Murmur3 vectors first. Preserve explicit 32/64-bit masks, little-endian behavior, and caller-supplied SipHash keys. Split by lane before implementation."
+    },
+    {
+      "id": "tree-dt02-language-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Reconcile DT02 tree behavior before missing-lane ports",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Existing implementations disagree with DT02 on empty construction, root removal, insertion versus sorted child order, and leaf height (Haskell reports one versus specified zero). Freeze neutral cases and correct the governing contract before ports."
+    },
+    {
+      "id": "tree-dart-java-kotlin-lane-parity",
+      "title": "Classify Dart and JVM tree ports",
+      "status": "pending", "depends_on": ["tree-dt02-language-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Three missing 12/15 slots. Split by lane after DT02 neutral reconciliation; do not copy one existing implementation as an unreviewed oracle."
+    },
+    {
+      "id": "xml-lexer-f04-language-neutral-conformance-and-target-hook-readiness",
+      "title": "Specify XML lexer F04 behavior and target generic-lexer hooks",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Dart/Java/Kotlin grammar-tools parse F04 groups but generic lexers lack LexerContext/on-token callbacks. Freeze XML01 entity, text, whitespace, and malformed-input cases; resolve documented whitespace loss immediately after entity references before target wrappers."
+    },
+    {
+      "id": "xml-lexer-dart-java-kotlin-lane-parity",
+      "title": "Classify Dart and JVM XML lexer ports",
+      "status": "pending", "depends_on": ["xml-lexer-f04-language-neutral-conformance-and-target-hook-readiness"], "branch": null, "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Three missing 12/15 slots. Split by lane after generic lexer hook readiness and XML01 neutral semantics are established; same-lane grammar-tools and lexer foundations already exist."
+    },
+    {
+      "id": "dart-hash-foundation-and-eleven-storage-families",
+      "title": "Plan Dart hash foundation and eleven missing data/store identities",
+      "status": "pending", "depends_on": ["hash-functions-dt17-vector-and-documentation-correction"], "branch": null, "pr_number": null,
+      "notes": "Dart and Swift each lack 11 identities including bloom-filter, hash-map/set, HyperLogLog, in-memory store/protocol/engine, radix-tree, RESP, skip-list, tree-set; Swift children already owned, Dart not. Dart hash-functions unlocks bloom/hash-map/HLL; hash-set needs hash-map, tree-set needs tree substrate, store engine needs several data structures. Split by DAG; exclude full server/AOF without applicability review."
+    },
+    {
+      "id": "sql-csv-source-neutral-and-dart-swift-parity",
+      "title": "Specify and port SQL CSV source adapters to Dart and Swift",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Both lanes have csv-parser and sql-execution-engine. Pin quoted headers, ragged rows, coercion, and snapshot semantics in neutral fixtures, then port each missing adapter separately."
+    },
+    {
+      "id": "nib-wasm-compiler-dart-swift-dependency-plan",
+      "title": "Plan Dart and Swift Nib Wasm compiler substrate chain",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Both lanes lack Nib frontend, compiler-ir, and ir-to-wasm; Swift also lacks encoder. Record exact dependency DAG and language-neutral module fixtures before attempting missing orchestration packages."
+    },
+    {
+      "id": "net03-http-core-http1-dart-java-kotlin-parity",
+      "title": "Plan NET03 HTTP core and HTTP/1 parity in Dart and JVM lanes",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "http-core 9/15 and http1 12/15; Dart/Java/Kotlin miss both. Pin neutral framing and safe failure behavior, port same-lane core before HTTP/1, and include existing safe-framing backfill. Split lane-sized implementations."
+    },
+    {
+      "id": "json-rpc-dart-java-kotlin-parity",
+      "title": "Specify and port JSON-RPC to Dart, Java, and Kotlin",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Nine of fifteen lanes present. Freeze neutral request/response/error fixtures and port the three missing lanes independently; JSON-RPC is not inherently gated by an rpc package."
+    },
+    {
+      "id": "brainfuck-language-neutral-interpreter-conformance",
+      "title": "Freeze portable Brainfuck interpreter behavior and reconcile existing lanes",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "The brainfuck core identity exists in 11/15 lanes; Dart, Java, Kotlin, and Swift are missing. Reconcile bounded versus wrapping tape pointers, 30,000 wrapping byte cells, EOF, bracket prevalidation, explicit step and output ceilings, and in-memory input/output API into neutral fixtures before ports. This is distinct from the Brainfuck-to-Wasm compiler identity."
+    },
+    {
+      "id": "brainfuck-swift-lane-parity",
+      "title": "Port the Brainfuck interpreter to Swift",
+      "status": "pending", "depends_on": ["brainfuck-language-neutral-interpreter-conformance"], "branch": null, "pr_number": null,
+      "notes": "One missing high-consensus core interpreter slot. Swift has generic VM foundations; validate pure byte I/O, neutral tape/bounds behavior, native tests, coverage, and BUILD. Keep Wasm compilation separate."
+    },
+    {
+      "id": "brainfuck-dart-lane-parity",
+      "title": "Port the Brainfuck interpreter to Dart",
+      "status": "pending", "depends_on": ["brainfuck-language-neutral-interpreter-conformance"], "branch": null, "pr_number": null,
+      "notes": "One missing high-consensus core interpreter slot. Implement a bounded pure interpreter using the neutral fixtures, native tests, dart analyze, coverage, and BUILD. Keep Wasm compilation separate."
+    },
+    {
+      "id": "brainfuck-java-lane-parity",
+      "title": "Port the Brainfuck interpreter to Java",
+      "status": "pending", "depends_on": ["brainfuck-language-neutral-interpreter-conformance"], "branch": null, "pr_number": null,
+      "notes": "One missing high-consensus core interpreter slot. Implement pure byte input/output and neutral tape/bounds behavior with Gradle tests, coverage, and BUILD."
+    },
+    {
+      "id": "brainfuck-kotlin-lane-parity",
+      "title": "Port the Brainfuck interpreter to Kotlin",
+      "status": "pending", "depends_on": ["brainfuck-language-neutral-interpreter-conformance"], "branch": null, "pr_number": null,
+      "notes": "One missing high-consensus core interpreter slot. Use the same neutral fixtures, pure byte input/output, Gradle tests, coverage, and BUILD; coordinate JVM API shape with the Java port."
+    },
+    {
+      "id": "dart-swift-javascript-frontend-vertical-parity",
+      "title": "Port JavaScript lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Both identities are 13/15, missing exactly Dart and Swift. Split by lane, lexer before parser. Neutral cases must cover ECMAScript editions, regex versus division, template groups, version rejection, and stable ASTs; downstream Closure and Test262 consumers increase leverage."
+    },
+    {
+      "id": "dart-swift-typescript-frontend-vertical-parity",
+      "title": "Port TypeScript lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Both identities are 13/15, missing exactly Dart and Swift. Split by lane, lexer before parser; pin six TypeScript grammar versions, nested generic closers, JSX ambiguity, and stable ASTs. Do not invent a JavaScript vertical dependency."
+    },
+    {
+      "id": "dart-swift-java-lexer-lane-parity",
+      "title": "Port the Java lexer to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Java lexer is 13/15 and missing only Dart and Swift. Split by lane and preserve ten Java grammar versions. Java parser is already owned by parser-contextual-generic-closer-established-lane-parity; do not duplicate it."
+    },
+    {
+      "id": "dart-swift-excel-frontend-vertical-parity",
+      "title": "Port Excel lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Both identities are 13/15 and missing only Dart and Swift. Split by lane, lexer before parser; freeze references, precedence, and ambiguity in neutral token and AST fixtures. TypeScript spreadsheet-engine is a downstream reference."
+    },
+    {
+      "id": "dart-swift-verilog-frontend-vertical-parity",
+      "title": "Port Verilog lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Both identities are 13/15 and missing only Dart and Swift. Split by lane, lexer before parser; cover 1995/2001/2005 grammar, macros, and injected include stubs without ambient filesystem authority."
+    },
+    {
+      "id": "dart-swift-vhdl-frontend-vertical-parity",
+      "title": "Port VHDL lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Both identities are 13/15 and missing only Dart and Swift. Split by lane, lexer before parser; cover 1987/1993/2002/2008/2019 grammar, case folding, attributes, and based and bit strings."
+    },
+    {
+      "id": "dart-swift-csharp-lexer-lane-parity",
+      "title": "Port the C# lexer to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "C# lexer is 13/15 and missing only Dart and Swift. Split by lane and preserve versioned token behavior. C# parser is already owned by the contextual generic-closer umbrella; make its eventual lane children depend on the matching lexer owner."
+    },
+    {
+      "id": "dart-swift-ruby-frontend-vertical-parity",
+      "title": "Port Ruby lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures", "state-machine-tokenizer-and-markup-portable-conformance"], "branch": null, "pr_number": null,
+      "notes": "Both identities are 13/15 and missing only Dart and Swift. Existing Ruby frontend references are placeholders, and state-machine-tokenizer is Rust-only; reconcile the substrate and neutral behavior before lane-sized lexer-before-parser ports."
+    },
+    {
+      "id": "image-codec-bmp-ppm-qoi-neutral-conformance",
+      "title": "Reconcile portable BMP, PPM, and QOI codec contracts in neutral fixtures",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Each codec has 9/15 established lanes and lacks C#, Dart, F#, Haskell, Java, and Kotlin (18 slots total); pixel-container is already 15/15. Freeze BMP row order and BGRA, PPM binary separator and alpha, QOI end marker and malformed bounds, then split lane-sized ports. IC03 calls the marker optional in prose but requires a missing-marker error, and existing implementations disagree; reconcile before choosing an oracle. Do not broaden this neutral owner into three multi-lane implementation PRs."
+    },
+    {
+      "id": "sql-planner-neutral-conformance",
+      "title": "Freeze the SQL planner AST-to-logical-plan contract",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "SQL planner appears in 8/15 established lanes, leaving seven slots; the four-stage planner, optimizer, codegen, and VM chain has 28 structural gaps. Reconcile pure AST-to-plan fixtures and correct the spec's obsolete 17-lane claim before lane-sized ports. Dart and Swift parser gaps remain separately frontend-owned."
+    },
+    {
+      "id": "compiler-ir-aot-neutral-conformance",
+      "title": "Freeze BF03 compiler IR types, opcodes, and text round trips",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Compiler IR appears in 7/15 established lanes, leaving eight slots and blocking several Nib/AOT chains. Define pure ID, opcode, and textual round-trip fixtures before lane-sized ports. Keep BF03's source-map sketch out of this owner because compiler-source-map-language-neutral-conformance owns map semantics. Avoid overlapping the TypeScript compiler-IR metadata surface of PR #15858."
+    },
+    {
+      "id": "segment-tree-dt05-neutral-conformance",
+      "title": "Reconcile DT05 segment-tree query and update behavior",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Segment tree appears in 6/15 established lanes, missing Dart, Elixir, Go, Lua, Perl, Python, Ruby, Swift, and TypeScript. Freeze inclusive ranges, point updates, empty input, invalid bounds, and complexity claims; Rust identity/no-op behavior conflicts with Java/Kotlin/.NET errors, while Haskell is list-backed O(n). DT03 binary tree is conceptual, not a proven package prerequisite. No downstream consumer has yet been established, so rank below the codec foundation."
+    },
+    {
+      "id": "scrypt-kd02-neutral-conformance",
+      "title": "Reconcile KD02 scrypt parameters, bounds, and vectors",
+      "status": "pending", "depends_on": ["pbkdf2-language-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Scrypt appears in 9/15 established lanes, leaving six slots. Pin parameter and memory ceilings and public vectors after the pending PBKDF2 neutral contract; split lane ports afterward. KD02 ROMix pseudocode omits a final BlockMix before X=V[N-1], unlike Go/Python and the vectors; reconcile the governing spec before copying an implementation."
+    },
+    {
+      "id": "virtual-machine-language-neutral-conformance",
+      "title": "Freeze the pure pluggable stack-VM execution contract",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "The virtual-machine identity exists in 9/15 established lanes and is missing C#, Dart, F#, Haskell, Java, and Kotlin. Reconcile zero-based program counters, handler-owned control flow, stable invalid-opcode and stack-underflow outcomes, immutable step traces, and explicit reset semantics over literal CodeObjects. Keep fixed legacy opcodes, register-vm, simulator-protocol, typed/context/WASM extensions, builtins/call frames, VM-GC integration, and missing-lane ports outside this owner."
     }
   ]
 }

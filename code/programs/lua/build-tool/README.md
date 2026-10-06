@@ -42,6 +42,36 @@ The build tool follows a pipeline:
    byte-exact CRLF grammar, scheduled and forced toolchain unions, and the
    shared byte, line, and aggregate resource ceilings.
 
+8. **Portable Source Hashing** (`lib/build_tool/source_hashing.lua`): Select
+   package-local files from caller-supplied inert snapshots through the exact
+   23-language, seven-role reviewed registry. It prunes generated components
+   and link boundaries before matching, then computes SHA-256 per-file and
+   length-framed package and dependency digests over raw bytes using the
+   repository Lua SHA-256 package. Separate digest streams feed a combined
+   digest and a pure decision over inert prior-cache records and declared
+   dependents. The generated registry table is installed beside the module; the
+   runtime does not look for a fixture in the checkout.
+
+   This is a process-free library surface, not yet incremental CLI execution.
+   Repository-boundary union and reverse-diff selection, native no-follow and
+   stable-identity reads, and persistent cache behavior have separate owners
+   and are not claimed here. For a caller-supplied
+   snapshot, `collect_source_files` accepts `language`, canonical
+   `package_root`, `mode` (`extension` or `declared_sources`), the checked
+   `registry_sha256`, `declared_srcs`, and candidate `{path, kind, content_hex}`
+   records. `package_digest(include_paths, contents)` accepts canonical
+   repository-relative paths and a map of exact byte strings.
+   `dependencies_digest` sorts caller-supplied package/digest records before
+   SHA-256 length framing, while `combined_digest` hashes the two decoded
+   32-byte digests. `evaluate_hashing_cache(options, contents)` evaluates
+   missing, corrupt, successful, failed, and stale prior records without
+   reading or writing a native cache. Its Busted suite consumes all 11
+   language-neutral hashing-cache cases.
+
+   The packaged projection is checked by native tests against the complete
+   reviewed neutral registry and its domain-separated SHA-256 digest. Changes
+   to that registry require a reviewed update to the packaged Lua data.
+
 ## OCaml and Dune Discovery
 
 Lua discovery independently projects the shared language-registry fixture's

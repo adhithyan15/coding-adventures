@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-153-DATE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "PA-EXT-153-A1-DATE-FIELD"
+  ],
+  "after": []
+}

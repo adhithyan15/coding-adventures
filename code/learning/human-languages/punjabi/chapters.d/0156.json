@@ -1,0 +1,22 @@
+{
+  "chapter": 156,
+  "title": "Write to One Named Reader",
+  "label": "ch:pa-a1-named-reader-message",
+  "canDo": "I can choose and order already practised Gurmukhi chunks into an untimed independent 30–40-word message for one named reader, then check tone, meaning, agreement, spacing, spelling, and punctuation separately.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-W12-message-no-model",
+    "kind": "production",
+    "summary": "The learner writes a no-model 30–40-word message to Manan for a stated purpose, independently selecting and ordering known chunks, then self-checks separate error dimensions without an exact-answer auto-grade.",
+    "assesses": [
+      "PA-LEX-NAMASTE-01",
+      "PA-PHRASE-HOW-ARE-YOU-03",
+      "PA-SKILL-CONNECTED-READING",
+      "PA-GRAMMAR-DATIVE-LIKING",
+      "PA-LEX-JALDI",
+      "PA-PHRASE-SEE-YOU-AGAIN-04"
+    ]
+  }
+}

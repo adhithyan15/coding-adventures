@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Not That, and Neither",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b4819d0273010819",
+  "sourceHash": "fnv1a64:3c4af26f413ccc5b",
   "lessons": [
     {
       "id": "KA-S135-letter-a",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6dcc1aab9244be5c",
+      "sourceHash": "fnv1a64:11c5fe0533006652",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -128,7 +128,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every character before this one asked you only to copy what you could see, because nothing available to this book said where the pen starts. For ಅ somebody wrote it down and published it, so here it is. The characters still waiting on a source keep the older instruction, and will until one turns up."
+              "text": "Many characters before this one asked you only to copy what you could see, because nothing available to this book said where the pen starts. For ಅ somebody wrote it down and published it, so here it is. The characters still waiting on a source keep the older instruction, and will until one turns up."
             }
           ]
         },

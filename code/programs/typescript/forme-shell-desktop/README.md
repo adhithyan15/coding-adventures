@@ -66,3 +66,10 @@ On non-macOS builders, the selected platform front runs the portable
 TypeScript build, tests, and coverage gate while skipping the unsupported
 native product gate. The Windows `BUILD_windows` front is native-command-free:
 it must not invoke `uname`, SEA assembly, Cargo, or Tauri packaging.
+
+FM-B072 invokes that same checked-in platform front as part of the complete
+release contract on Linux, macOS, and Windows. macOS additionally produces and
+tests the native app; every host also proves the two live sites, API-v2 map,
+release benchmark, and browser budgets. The aggregate technical verdict records
+the mandatory external exact-head security-review policy but never trusts a
+self-authored repository file as approval.

@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "The People Around You",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:85dde99596ac7555",
+  "sourceHash": "fnv1a64:014c154bada4fe81",
   "lessons": [
     {
       "id": "HI-C39-dost",
@@ -662,7 +662,7 @@
       "title": "औ (au) — the standing form, and the longest build",
       "headword": "औ",
       "romanization": "au",
-      "gloss": "the single character औ — the standing form of the mark drawn one chapter ago, and the most pen lifts in the book",
+      "gloss": "the single character औ — the standing form of the mark drawn one chapter ago, and the longest build in the book",
       "script": "devanagari",
       "modality": "pen",
       "derivedModality": "pen",
@@ -671,7 +671,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:111186c7fdb06114",
+      "sourceHash": "fnv1a64:7238a7531d77d476",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -746,7 +746,7 @@
             },
             {
               "kind": "speech",
-              "text": "a separately swept middle shoulder."
+              "text": "a middle shoulder running into the inner stem."
             },
             {
               "kind": "speech",
@@ -806,31 +806,35 @@
             },
             {
               "kind": "speech",
-              "text": "3. lift and descend the inner stem."
+              "text": "3. without lifting, climb up the inner stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and descend the trailing stem."
+              "text": "4. descend the inner stem."
             },
             {
               "kind": "speech",
-              "text": "5. lift at the trailing stem's headline junction and sweep the lower upper arc upward and left."
+              "text": "5. lift and descend the trailing stem."
             },
             {
               "kind": "speech",
-              "text": "6. lift at the same junction and sweep the taller upper arc upward and left."
+              "text": "6. lift at the trailing stem's headline junction and sweep the lower upper arc upward and left."
             },
             {
               "kind": "speech",
-              "text": "7. lift and draw the top shirorekhā left-to-right."
+              "text": "7. lift at the same junction and sweep the taller upper arc upward and left."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 6. More than any other character you have drawn — take it slowly."
+              "text": "8. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "Verified modern printed teaching form; traditional and everyday handwriting may divide or simplify the curves differently."
+              "text": "Pen lifts: 5. One more than ओ, and more than any other — take it slowly."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows seven movements; most native writers draw औ (au) in six strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and lifts five times; only the shoulder runs on, up the inner stem."
             },
             {
               "kind": "speech",
@@ -895,7 +899,7 @@
             },
             {
               "kind": "speech",
-              "text": "What sound is औ? (au.) What is its sitting form? (◌ौ.) How many pen lifts does it take? (Six — the most in the book.)"
+              "text": "What sound is औ? (au.) What is its sitting form? (◌ौ.) How many pen lifts does it take? (Five — one more than ओ, the most in the book.)"
             }
           ]
         }

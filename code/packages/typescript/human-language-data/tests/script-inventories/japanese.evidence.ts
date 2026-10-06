@@ -518,51 +518,136 @@ export const scriptInventoryEvidence = {
       expect(letter?.strokeOrderSource, glyph).toBeDefined();
       expect(letter?.strokeOrderNote, glyph).not.toBe("authoritative");
     }
-    // Chapters 134 and 135: eight voiced kana, each recorded the way が, ご, ざ
-    // and ぼ already are -- the base sign plus the dakuten, written as the base
-    // sign in full and then the two short strokes at the upper right. None
-    // cites a stroke-order source of its own, so none has a ductus, and the
-    // record does not pretend otherwise (no penLifts, no strokeOrderSource).
-    // The precomposed glyph is what script closure counts, so each must also
-    // be covered, not merely decomposable.
-    for (const [glyph, base, sound] of [
-      ["で", "て", "de"], ["ば", "は", "ba"], ["べ", "へ", "be"], ["ぶ", "ふ", "bu"],
-      ["び", "ひ", "bi"], ["ぐ", "く", "gu"], ["げ", "け", "ge"], ["ぎ", "き", "gi"],
+    // Every voiced kana row, and the three spacing marks, now cite KanjiVG.
+    // Chapters 134 to 137 recorded で, ば, べ, ぶ, び, ぐ, げ, ぎ, ぞ, ず, ぜ, ぱ,
+    // ぴ, ぷ and ぺ the way が, ご, ざ, ぼ and ぽ already were: the base sign plus
+    // the mark, with no stroke-order source. だ and ど, written since chapters
+    // 11 and 9, had no row at all. KanjiVG draws each as one glyph: the base
+    // sign's own paths, then the dakuten's two ticks or the handakuten's ring,
+    // so the lift count is the base sign's path count plus one (dakuten) or
+    // plus none (handakuten). Phrase by phrase with toContain, as above. The
+    // precomposed glyph is what script closure counts, so each must also be
+    // covered, not merely decomposable.
+    for (const [glyph, base, sound, file, name, lifts] of [
+      ["が", "か", "ga", "0304c", "U+304C HIRAGANA LETTER GA", 4],
+      ["ぎ", "き", "gi", "0304e", "U+304E HIRAGANA LETTER GI", 5],
+      ["ぐ", "く", "gu", "03050", "U+3050 HIRAGANA LETTER GU", 2],
+      ["げ", "け", "ge", "03052", "U+3052 HIRAGANA LETTER GE", 4],
+      ["ご", "こ", "go", "03054", "U+3054 HIRAGANA LETTER GO", 3],
+      ["ざ", "さ", "za", "03056", "U+3056 HIRAGANA LETTER ZA", 4],
+      ["ず", "す", "zu", "0305a", "U+305A HIRAGANA LETTER ZU", 3],
+      ["ぜ", "せ", "ze", "0305c", "U+305C HIRAGANA LETTER ZE", 4],
+      ["ぞ", "そ", "zo", "0305e", "U+305E HIRAGANA LETTER ZO", 2],
+      ["だ", "た", "da", "03060", "U+3060 HIRAGANA LETTER DA", 5],
+      ["で", "て", "de", "03067", "U+3067 HIRAGANA LETTER DE", 2],
+      ["ど", "と", "do", "03069", "U+3069 HIRAGANA LETTER DO", 3],
+      ["ば", "は", "ba", "03070", "U+3070 HIRAGANA LETTER BA", 4],
+      ["び", "ひ", "bi", "03073", "U+3073 HIRAGANA LETTER BI", 2],
+      ["ぶ", "ふ", "bu", "03076", "U+3076 HIRAGANA LETTER BU", 5],
+      ["べ", "へ", "be", "03079", "U+3079 HIRAGANA LETTER BE", 2],
+      ["ぼ", "ほ", "bo", "0307c", "U+307C HIRAGANA LETTER BO", 5],
+      ["ぱ", "は", "pa", "03071", "U+3071 HIRAGANA LETTER PA", 3],
+      ["ぴ", "ひ", "pi", "03074", "U+3074 HIRAGANA LETTER PI", 1],
+      ["ぷ", "ふ", "pu", "03077", "U+3077 HIRAGANA LETTER PU", 4],
+      ["ぺ", "へ", "pe", "0307a", "U+307A HIRAGANA LETTER PE", 1],
+      ["ぽ", "ほ", "po", "0307d", "U+307D HIRAGANA LETTER PO", 4],
     ] as const) {
       const letter = scripts.japanese!.letters.find((entry) => entry.glyph === glyph)!;
+      const ring = glyph.normalize("NFD").endsWith("\u309a");
       expect(letter.role).toBe("hiragana");
       expect(letter.sound).toBe(sound);
-      expect(letter.components).toEqual([base, "the dakuten ゛"]);
-      expect(letter.strokeOrder).toEqual([`${base} in full`, "two short strokes at the upper right"]);
-      expect(letter.strokeOrderSource).toBeUndefined();
+      expect(letter.components).toEqual([base, ring ? "the handakuten ゜" : "the dakuten ゛"]);
+      expect(letter.penLifts).toBe(lifts);
+      expect(letter.strokeOrder).toHaveLength(
+        scripts.japanese!.letters.find((entry) => entry.glyph === base)!.strokeOrder.length + (ring ? 1 : 2),
+      );
+      expect(letter.strokeOrderNote).not.toBe("authoritative");
+      expect(letter.strokeOrderSource?.url).toBe(
+        `https://github.com/KanjiVG/kanjivg/blob/master/kanji/${file}.svg`,
+      );
+      for (const phrase of [
+        "KanjiVG",
+        name,
+        "Ulrich Apel and contributors, CC BY-SA 3.0",
+      ]) {
+        expect(letter.strokeOrderSource?.citation, phrase).toContain(phrase);
+      }
+      for (const phrase of [
+        "Only the order and direction",
+        "Noto Sans JP outline's own medial line",
+        ring ? "starts at its foot and runs clockwise" : "the left tick first",
+      ]) {
+        expect(letter.strokeOrderSource?.variation, phrase).toContain(phrase);
+      }
       expect(scripts.japanese!.letters.some((entry) => entry.glyph === base)).toBe(true);
       expect(missingJapanese.has(glyph)).toBe(false);
       expect(affected.get(glyph) ?? 0).toBe(0);
     }
-    // Chapters 136 and 137: the rest of the z row and the whole p row. ぞ, ず
-    // and ぜ are recorded as ざ is (the base sign plus the dakuten). ぱ, ぴ, ぷ
-    // and ぺ are recorded as ぽ is: the base sign plus the handakuten, written
-    // as the base sign in full and then a small circle at the upper right. As
-    // above, none cites a stroke-order source, and each precomposed glyph must
-    // be covered in its own right.
-    for (const [glyph, base, sound, mark, last] of [
-      ["ぞ", "そ", "zo", "the dakuten ゛", "two short strokes at the upper right"],
-      ["ず", "す", "zu", "the dakuten ゛", "two short strokes at the upper right"],
-      ["ぜ", "せ", "ze", "the dakuten ゛", "two short strokes at the upper right"],
-      ["ぱ", "は", "pa", "the handakuten ゜", "a small circle at the upper right"],
-      ["ぴ", "ひ", "pi", "the handakuten ゜", "a small circle at the upper right"],
-      ["ぷ", "ふ", "pu", "the handakuten ゜", "a small circle at the upper right"],
-      ["ぺ", "へ", "pe", "the handakuten ゜", "a small circle at the upper right"],
+    // Where KanjiVG's voiced file disagrees with the base sign's Sirgazil-cited
+    // row, the voiced row says so and follows KanjiVG.
+    for (const [glyph, phrase] of [
+      ["ぜ", "This inventory's せ row, which cites Sirgazil's animation"],
+      ["ぶ", "This inventory's ふ row, which cites Sirgazil's animation"],
+      ["ぷ", "This inventory's ふ row, which cites Sirgazil's animation"],
+      ["ぼ", "This inventory's ほ row, which cites Sirgazil's animation"],
+      ["ぽ", "This inventory's ほ row, which cites Sirgazil's animation"],
     ] as const) {
       const letter = scripts.japanese!.letters.find((entry) => entry.glyph === glyph)!;
-      expect(letter.role).toBe("hiragana");
-      expect(letter.sound).toBe(sound);
-      expect(letter.components).toEqual([base, mark]);
-      expect(letter.strokeOrder).toEqual([`${base} in full`, last]);
-      expect(letter.strokeOrderSource).toBeUndefined();
-      expect(scripts.japanese!.letters.some((entry) => entry.glyph === base)).toBe(true);
+      expect(letter.strokeOrderSource?.variation, glyph).toContain(phrase);
+      expect(letter.strokeOrderSource?.variation, glyph).toContain("this path follows KanjiVG");
+    }
+    // The spacing marks: ゛ two ticks, ゜ one ring, ー one bar.
+    for (const [mark, file, lifts] of [
+      ["゛", "0309b", 1],
+      ["゜", "0309c", 0],
+      ["ー", "030fc", 0],
+    ] as const) {
+      const record = scripts.japanese!.marks!.find((entry) => entry.mark === mark)!;
+      expect(record.penLifts).toBe(lifts);
+      expect(record.strokeOrder).toHaveLength(lifts + 1);
+      expect(record.strokeOrderSource?.url).toBe(
+        `https://github.com/KanjiVG/kanjivg/blob/master/kanji/${file}.svg`,
+      );
+      for (const phrase of ["KanjiVG", `U+${file.slice(1).toUpperCase()}`, "Ulrich Apel and contributors, CC BY-SA 3.0"]) {
+        expect(record.strokeOrderSource?.citation, phrase).toContain(phrase);
+      }
+      expect(record.strokeOrderSource?.variation).toContain("Only the order and direction");
+    }
+    // The katakana and kanji rows the writing lessons teach. コ, ヒ, 日, 本
+    // and 語 said only "authoritative". Each now cites KanjiVG's file for its
+    // own code point, one step per stroke path, so the lift count is the path
+    // count less one. 語 is 言, 五 and 口 in that order. Phrase by phrase with
+    // toContain, as above.
+    for (const [glyph, role, file, name, paths] of [
+      ["コ", "katakana", "030b3", "U+30B3 KATAKANA LETTER KO", 2],
+      ["ヒ", "katakana", "030d2", "U+30D2 KATAKANA LETTER HI", 2],
+      ["日", "logograph", "065e5", "U+65E5 CJK UNIFIED IDEOGRAPH-65E5", 4],
+      ["語", "logograph", "08a9e", "U+8A9E CJK UNIFIED IDEOGRAPH-8A9E", 14],
+      ["本", "logograph", "0672c", "U+672C CJK UNIFIED IDEOGRAPH-672C", 5],
+    ] as const) {
+      const letter = scripts.japanese!.letters.find((entry) => entry.glyph === glyph)!;
+      expect(letter.role, glyph).toBe(role);
+      expect(letter.penLifts, glyph).toBe(paths - 1);
+      expect(letter.strokeOrder, glyph).toHaveLength(paths);
+      expect(letter.strokeOrderNote, glyph).not.toBe("authoritative");
+      expect(letter.strokeOrderSource?.url).toBe(
+        `https://github.com/KanjiVG/kanjivg/blob/master/kanji/${file}.svg`,
+      );
+      for (const phrase of ["KanjiVG", name, "Ulrich Apel and contributors, CC BY-SA 3.0"]) {
+        expect(letter.strokeOrderSource?.citation, phrase).toContain(phrase);
+      }
+      for (const phrase of ["Only the order and direction", "Noto Sans JP outline's own medial line"]) {
+        expect(letter.strokeOrderSource?.variation, phrase).toContain(phrase);
+      }
       expect(missingJapanese.has(glyph)).toBe(false);
       expect(affected.get(glyph) ?? 0).toBe(0);
     }
+    const language = scripts.japanese!.letters.find((entry) => entry.glyph === "語")!;
+    expect(language.strokeOrderSource?.variation).toContain(
+      "s1 to s7 are 言, s8 to s11 五 and s12 to s14 口",
+    );
+    expect(language.strokeOrderSource?.variation).toContain(
+      "the path runs along the bar from left to right",
+    );
   },
 };

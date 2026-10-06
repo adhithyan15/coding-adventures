@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:723c13ec505c916e",
+  "sourceHash": "fnv1a64:d82c617748f78f70",
   "lessons": [
     {
       "id": "HI-C19-umr",
@@ -230,7 +230,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0c364ee0a56229e4",
+      "sourceHash": "fnv1a64:c7a8819e81163fc6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -333,7 +333,7 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift at the stem's lower junction, sweep left through the upper shoulder and around the outer body, curl inward and clockwise through the loop, then continue down-right through the tail without lifting."
+              "text": "2. without lifting, sweep left through the upper shoulder and around the outer body, curl inward and clockwise through the loop, then continue down-right through the tail."
             },
             {
               "kind": "speech",
@@ -341,11 +341,11 @@
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "Pen lifts: 1. The pen comes up once."
             },
             {
               "kind": "speech",
-              "text": "Verified three-stroke teaching form; another learner source stages the outer body and curl-tail separately."
+              "text": "The source shows three movements; most native writers draw द (da) in two strokes (95% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

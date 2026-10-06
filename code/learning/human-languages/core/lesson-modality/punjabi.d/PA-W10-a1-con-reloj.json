@@ -9,16 +9,18 @@
     "drivable": false,
     "reasons": [
       "writing-type",
-      "writing-block"
+      "writing-block",
+      "sight-cue"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type"
+      "writing-type",
+      "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:d84c5194ab0619fb",
+    "sourceHash": "fnv1a64:6fe7172c6caa2768",
     "detachableSegments": [
-      "Writing — timed production"
+      "Writing — the published paper envelope"
     ],
     "delivery": "script"
   },

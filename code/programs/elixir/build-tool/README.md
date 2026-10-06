@@ -15,9 +15,11 @@ The `coding-adventures` monorepo contains build tool implementations in multiple
 | **Ruby** | Educational implementation — idiomatic Ruby with gems |
 | **Elixir** | This package — OTP-native implementation using Agent and Task |
 
-All implementations share the same algorithm (discover packages, resolve dependencies,
-hash source files, execute builds in parallel by dependency level) and produce identical
-results given the same inputs.
+Implementations share a build-tool contract, but individual engines adopt its
+portable source, dependency, and native-authority boundaries in separate
+reviewed slices. This Elixir engine now uses the checked package-local Source
+Inputs v1 registry and Hashing v1 package digest; its dependency digest and
+native retained-handle snapshot contracts are not yet at parity.
 
 ## Architecture
 
@@ -45,7 +47,8 @@ The build tool follows an 11-step pipeline:
 | `BuildTool.Resolver` | Parse dependency metadata, build the dependency graph |
 | `BuildTool.GitDiff` | Git-based change detection |
 | `BuildTool.GlobMatch` | Bounded Unicode-scalar portable-glob matching |
-| `BuildTool.Hasher` | SHA256 hashing of source files and dependencies |
+| `BuildTool.SourceInputRegistry` | Immutable generated package-local source selector and registry digest |
+| `BuildTool.Hasher` | Hashing v1 package-source frames and legacy dependency hashing |
 | `BuildTool.Cache` | Agent-based JSON build cache with atomic writes |
 | `BuildTool.Executor` | Parallel build execution with progress tracking |
 | `BuildTool.Reporter` | Fixed-width report table formatting |
@@ -185,6 +188,28 @@ selection and strict hashing compile every declared source pattern before
 checking a BUILD-file fast path, an earlier matching pattern, or the package
 filesystem. Patterns remain inert strings; matching adds no filesystem, Git,
 process, environment, network, credential, or execution authority.
+
+## Source hashing v1
+
+Package source selection uses the checked language-neutral source-input
+registry, including exact generated-directory pruning and package-local
+language exceptions. A deterministic generated Elixir module embeds the full
+registry bytes; because it is an `.ex` file, changes to the projection also
+change the build tool's own package digest. Refresh it from the neutral fixture
+after a registry change, and check for drift before committing:
+
+```bash
+python scripts/sync_source_input_registry.py
+python scripts/sync_source_input_registry.py --check
+```
+
+The package hash frames sorted repository-relative paths and raw file contents
+with 64-bit big-endian lengths before SHA-256. Native reads are streamed under
+candidate, depth, and package-byte limits, and an opened file must retain the
+identity observed by the collector. `test/source_input_registry_test.exs`
+checks the complete projection, all seven package-local neutral collection
+cases, byte framing, and exact generated-name pruning. Dependency hashing and
+retained-handle filesystem authority are separate conformance stages.
 
 ## Testing
 

@@ -57,9 +57,9 @@ In hiragana it is **こ** with the dakuten: **ご**. Both marks are yours.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-GO, JA-LEX-ICHI, JA-SCRIPT-KANJI-FIVE-COMPONENT-01, JA-SCRIPT-DAKUTEN-01] -->
 
-Write **五** from memory: top, turn, middle, long bottom. Then write **ご** and
-say *go*. Say **いち**, then **ご** — the two numbers you owned before this
-chapter opened.
+Write **五** from memory: top, down, middle and turn, long bottom. Then
+write **ご** and say *go*. Say **いち**, then **ご** — the two numbers you
+owned before this chapter opened.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-GO, JA-LEX-ICHI, JA-SCRIPT-KANJI-FIVE-COMPONENT-01] -->

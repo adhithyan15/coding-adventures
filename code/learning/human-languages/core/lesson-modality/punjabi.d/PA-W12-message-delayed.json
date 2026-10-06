@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W12-message-delayed",
+    "language": "punjabi",
+    "chapter": 156,
+    "sequence": 8680,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:66f8e4f0238f9e85",
+    "detachableSegments": [
+      "Writing — delayed assembly"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

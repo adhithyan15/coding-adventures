@@ -417,11 +417,34 @@ Packet at the full compatibility level.
 
 The initial Mermaid 11.16.1 Kanban slice uses dedicated portable grammars and
 preserves indentation-defined columns and cards, with plain labels and explicit
-`id[label]` forms, in typed board semantic IR. `diagram-layout-board` resolves
+`id[label]` forms, in typed board semantic IR. Rounded, circular, hexagonal,
+cloud, bang, and alternate node delimiters normalize to Mermaid's fixed Kanban semantics while
+preserving their authored labels through layout and Paint lowering. Quoted labels inside
+node delimiters are unquoted before entering semantic IR, while quoted and inline Markdown labels
+preserve bold and italic spans through backend-neutral glyph lowering. Escaped multiline labels
+expand deterministic section headers and card geometry before Paint lowering. Inline or multiline `@{...}`
+card metadata preserves label overrides, ticket identifiers, assignees, and
+priorities in semantic IR. Icon identifiers from either metadata or following
+`::icon(...)` decorators survive the same pipeline and lower to generic,
+backend-neutral shaped badge geometry without coupling the board IR to an icon
+provider. Board layout reserves a compact metadata footer and PaintScene
+lowering emits it as backend-neutral shaped text.
+Following `:::class` decorators preserve ordered column or card class names
+through board semantic IR and layout, then lower them as `diagram.classes`
+PaintInstruction metadata without coupling native renderers to CSS.
+Kanban `ticketBaseUrl` configuration from Mermaid init directives or YAML
+front matter survives semantic IR; layout resolves each card ticket placeholder
+and Paint lowering exposes the resulting URL as backend-neutral hit-test metadata.
+Ticket metadata on sections follows the same typed IR, layout, and backend-neutral
+link-metadata path as card tickets.
+Positive `sectionWidth` and `padding` settings from the same configuration paths
+resolve column width and outer canvas geometry before backend-neutral Paint lowering.
+`diagram-layout-board` resolves
 deterministic column/card geometry and dedicated PaintScene lowering emits
 backend-neutral rectangles and shaped text. A native Metal-to-PNG fixture gates
-this slice; icons, classes, shape-data metadata, styles, links, assignments,
-priorities, and configurable fields remain unsupported at the partial level.
+this slice; external icon-pack artwork, class-driven styles, non-ticket links, description
+fields, non-ticket section metadata, and configurable field arrangements remain
+unsupported at the partial level.
 
 ### Architecture Native Slice
 
@@ -575,6 +598,26 @@ whiteness-plus-blackness sums as powerless hues.
 The rectangular D50 `lab` interpolation space converts sRGB stops through
 chromatic adaptation before premultiplied-alpha mixing and converts the result
 back to backend-neutral sRGB paint.
+The cylindrical D50 `lch` interpolation space adds shortest-path hue
+interpolation and powerless low-chroma hue fixup to that same backend-neutral
+conversion path.
+The encoded `display-p3` interpolation space converts sRGB paint into the
+wider D65 gamut for premultiplied-alpha mixing, then lowers the result back to
+backend-neutral sRGB paint instructions.
+The encoded `a98-rgb` interpolation space applies Adobe RGB's sign-preserving
+gamma around D65 XYZ conversion while retaining the same alpha and
+backend-neutral lowering semantics.
+The encoded `prophoto-rgb` interpolation space applies its piecewise transfer
+function around D50 XYZ conversion, including chromatic adaptation to and from
+the backend-neutral sRGB paint space.
+The encoded `rec2020` interpolation space applies its sign-preserving transfer
+function around D65 XYZ conversion before backend-neutral paint lowering.
+The rectangular `xyz` and `xyz-d65` interpolation aliases mix directly in D65
+XYZ, while `xyz-d50` applies chromatic adaptation before interpolation; all
+three retain premultiplied-alpha and backend-neutral lowering semantics.
+Polar HSL, HWB, LCH, and OKLCH interpolation accepts the CSS `shorter`,
+`longer`, `increasing`, and `decreasing hue` methods, with `shorter hue`
+remaining the default and powerless-hue fixup applied before interpolation.
 The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
@@ -739,11 +782,31 @@ and accessibility metadata survive deterministic branch-and-loop layout and
 backend-neutral path, ellipse, rectangle, and glyph PaintInstructions with
 native Metal-to-PNG validation.
 
-This is intentionally partial. The textual `railroad-ebnf-beta`,
-`railroad-abnf-beta`, and `railroad-peg-beta` dialects, separator-bearing
-repetition constructors, upstream curve geometry, theme/config overrides, and
-exact typography remain unsupported and fail explicitly rather than being
-counted as compatible.
+The textual `railroad-ebnf-beta` dialect now has its own portable token and
+parser grammars. W3C and ISO choices, sequences, groups, optional elements,
+zero-or-more and one-or-more repetition, special sequences, exceptions, both
+rule-assignment spellings, comments, titles, and accessibility metadata lower
+to the same recursive semantic IR, deterministic layout, and backend-neutral
+PaintScene path as constructor notation, with native Metal-to-PNG validation.
+
+The textual `railroad-abnf-beta` dialect likewise uses dedicated portable
+grammars and lowers string literals, numeric values and ranges, rule
+references, concatenation, alternation, groups, optional groups, and exact or
+bounded repetition into the recursive Railroad IR. Repetition bounds remain
+semantic even though the pinned renderer draws every repeat with the same
+loopback convention. A pinned syntax corpus and native Metal-to-PNG fixture
+exercise the complete backend-neutral path.
+
+The textual `railroad-peg-beta` dialect completes the four-notation parser
+surface with dedicated portable grammars. Literals, identifiers, ordered
+choice, sequences, groups, wildcard matches, lookahead predicates, and suffix
+operators lower to the same recursive Railroad IR. Predicate labels preserve
+the pinned transformer's special-node convention, and a pinned syntax corpus
+plus native Metal-to-PNG fixture exercise the backend-neutral path.
+
+This is intentionally partial. Upstream curve geometry, theme/config
+overrides, and exact typography remain unsupported rather than being counted
+as compatible.
 
 ### Info Full Compatibility
 

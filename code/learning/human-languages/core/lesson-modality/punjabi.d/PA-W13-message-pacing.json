@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W13-message-pacing",
+    "language": "punjabi",
+    "chapter": 157,
+    "sequence": 8720,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6afad102e8900002",
+    "detachableSegments": [
+      "Writing — one small timed opening"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

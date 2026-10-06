@@ -1,0 +1,11 @@
+{
+  "id": "PA-W09-date-delayed",
+  "pathSegment": "PA-PATH-153-DATE",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "PA-EXT-153-A1-DATE-FIELD",
+      "order": 7
+    }
+  ]
+}

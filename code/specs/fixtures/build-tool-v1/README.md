@@ -39,7 +39,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 175-case bootstrap corpus covers every process-free v1 domain:
+The 178-case bootstrap corpus covers every process-free v1 domain:
 
 - validated CI gate selection with exact package intersection, path and
   globstar matching, explicit false verdicts, deterministic output names,
@@ -82,6 +82,10 @@ The 175-case bootstrap corpus covers every process-free v1 domain:
   BUILD-front exemptions;
 - framed SHA-256 hashing over the caller-supplied, deduplicated union of local
   and repository-boundary inputs, plus hit, miss, and corrupt-cache recovery.
+  Three adversarial dependency cases additionally pin reverse-ordered
+  two-dependency name/raw-digest framing, a dependency-only change with
+  unchanged package bytes that invalidates the package and dependent, and a
+  matching failed prior record that must miss.
   Eight paired source-collection and hashing/cache cases additionally prove
   that an edit to one exact Rust workspace manifest changes the source and
   package digests of both registered Swift consumers, while their local files

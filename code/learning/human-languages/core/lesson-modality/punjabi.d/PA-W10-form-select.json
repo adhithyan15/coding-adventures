@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "PA-W10-form-select",
+    "language": "punjabi",
+    "chapter": 154,
+    "sequence": 8390,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8b16e74ddd6980f1",
+    "delivery": "script"
+  },
+  "findings": []
+}

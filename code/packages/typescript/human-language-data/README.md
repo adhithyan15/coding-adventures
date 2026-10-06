@@ -965,9 +965,51 @@ Two kinds exist:
   two steps**: declare it here, then run `npm run generate:filmstrip-ledger` in
   `script-ductus` before `npm run generate:figures` here. A missing entry fails
   with the command to run. Stroke order is never invented — an uncited letter has
-  no ledger entry and therefore no figure. Generated book chapters rewrite the lesson's `.svg` image
+  no ledger entry and therefore no figure. A one-frame strip (़, ्, ا) wraps its
+  heading and citation at the width of a two-frame strip, not at its single
+  150-unit panel, so it is not a tall column of text; its panel is unchanged.
+
+  Most filmstrip targets are not declared at all: `figure-targets.ts` derives one
+  for each `type: writing` lesson on a switched-on track whose headword is one
+  cited letter. A headword that is a **list** of single letters (`வ, க`,
+  `ક — ણ — શ`, `в, р`) or a **word** in a script whose letters stand apart
+  (`はい`) becomes a *sequence* target with `letters: [...]`, drawn as each
+  letter's own cited strip in writing order, one labelled group per letter.
+  It prints only if every letter is cited. Words are not composed in
+  Devanagari (one shared headline), the Arabic family (joined, positional
+  forms) or Cyrillic (cursive joins), nor when they carry a vowel sign or
+  virama that no written-order table places, because the per-letter ductus
+  cannot draw those honestly. Tamil has such a table (`WRITTEN_SIGN_SIDES`):
+  its signs are drawn in the order they are WRITTEN, so `மேசை` is ே, ம, ை, ச
+  and `சொ` is ெ, ச, ா, each side cited in the sign's mark record; the strip
+  then calls its groups "parts". The pulli and ு/ூ have no row and stay
+  refused. Gujarati has a table too, in which every sign is written AFTER its
+  consonant, even િ, which sits to its left: `કેમકે` is ક, ે, મ, ક, ે, each
+  place cited to KanoAI's barakhadi templates in the sign's mark record. The
+  virama ્ and ૃ have no row, two signs on one consonant (ાં) are refused, and
+  so are the pairs the bundled font reshapes (ણુ, રુ, રૂ; ુ and ૂ under the
+  22 consonants that take a stem form; જ and ૹ with ા, ી, ો, ૌ). Each group
+  of fused pairs carries its citation in `FUSED_SIGN_PAIR_SOURCES`, and a
+  test fails if a pair is added or dropped without its source.
+  Devanagari has no table on purpose: its eight cited signs (ु ू े ं ़ ् ृ ँ)
+  come from native writers who wrote each sign alone, which says nothing about
+  its order against a consonant or the headline, so only a lesson whose
+  headword is the bare sign prints one (a one-glyph strip), and कि or any
+  Devanagari word with a sign stays refused.
+  Generated book chapters rewrite the lesson's `.svg` image
 destination to `.pdf`; the books workflow creates that PDF with `rsvg-convert`
 before XeLaTeX runs.
+
+  Single-letter writing lessons on the tracks in `DERIVED_FILMSTRIP_SCRIPTS`
+  (`figure-targets.ts`) need no declaration: each becomes a candidate, and it
+  is drawn when its letter has a cited ledger entry. Bengali is the latest
+  track switched on; nine of its letter lessons print a strip, cited to native
+  writers' pen traces in HP Labs India's LipiTk Bangla recognizer.
+
+  Script inventories (`data/scripts/<script>.json`) close a track's headwords:
+  `validate` warns about any script character no row covers. Letters, marks,
+  cited independent vowels and final consonants count, and so do a script's
+  own `digits` rows, which is what lets the Bengali numbers lessons (০–৯) close.
 
 Print the registry-ordered track table on demand, or verify that its former
 tracked projection remains absent:

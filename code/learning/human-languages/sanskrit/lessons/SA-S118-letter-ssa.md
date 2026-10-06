@@ -63,14 +63,14 @@ You already say these, and every one of them has ष somewhere inside it:
 ## Writing: ष
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-118] -->
 
-- **1.** descend the left side, curve counterclockwise around the lower bowl, and rise along the right side to the headline without lifting
-- **2.** lift and draw the right stem top-to-bottom, retracing its upper body-side segment before continuing below the bowl
+- **1.** descend the left side, curve counterclockwise around the lower bowl, and rise along the right side to the headline
+- **2.** without lifting, draw the right stem top-to-bottom, retracing its upper body-side segment before continuing below the bowl
 - **3.** lift at the upper-left interior and draw the inner diagonal down-right to the bowl junction
 - **4.** lift and draw the top shirorekhā left-to-right
 
-**Pen lifts: 3.** The pen comes up 3 times and no more.
+**Pen lifts: 2.** The pen comes up 2 times and no more.
 
-> verified four-stroke teaching form fitted to the bundled printed outline
+> The source shows four movements; most native writers draw ष in three strokes (83% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the diagonal and the headline.
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ष-order.gif’, strokes 1–4, Wikimedia Commons, 10 May 2009.

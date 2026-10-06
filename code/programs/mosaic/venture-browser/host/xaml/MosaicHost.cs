@@ -359,6 +359,7 @@ public static class MosaicHost
                     () => component.HistoryOpen
                         && component.HistoryLabel == "History (2)"
                         && component.HistoryPosition == "2 of 2"
+                        && component.HistoryTitle == "Venture interaction acceptance"
                         && component.HistoryAddress == targetUrl))
                 {
                     WriteInteractionResult(markerPath, new
@@ -1217,6 +1218,9 @@ public static class MosaicHost
             SetIfChanged(component.HistoryPosition,
                 props.GetProperty("history-position").GetString(),
                 value => component.HistoryPosition = value);
+            SetIfChanged(component.HistoryTitle,
+                props.GetProperty("history-title").GetString(),
+                value => component.HistoryTitle = value);
             SetIfChanged(component.HistoryAddress,
                 props.GetProperty("history-address").GetString(),
                 value => component.HistoryAddress = value);

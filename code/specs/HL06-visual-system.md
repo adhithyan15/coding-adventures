@@ -125,6 +125,189 @@ file, and places each frame in a nested SVG viewport so a frame can only ever
 paint inside its own panel. A tampered ledger therefore fails the build, and
 could at worst spoil the one frame it belongs to.
 
+**Tiny marks and one-frame strips.** Two layout rules keep the smallest strips
+readable. Every frame's box is the letter's ink plus fixed padding, so the panel
+zooms in on a dot-sized mark, and a pen line and pen dot sized for whole letters
+(26 and 34 font units) covered the mark. When a letter's whole pen path spans
+less than 150 font units (`TINY_STROKE_EXTENT`; today the nukta ़, Devanagari ं
+and Gujarati ં, at 44 to 60), the ledger draws the pen and the dot at
+`extent / 150` of their default size, never below 0.3 of it. Every other letter
+keeps the defaults. Separately, a strip of ONE frame (a dab such as ़ or ्, or
+Perso-Arabic ا) wraps its heading and citation at the width of a two-frame strip
+(310) instead of at its one 150-unit panel, which had made a figure three heading
+lines and ten citation lines tall. The panel keeps its size at the left margin.
+
+#### As built (HL-C443) — sequence strips
+
+A writing lesson that names several letters gets one `script-filmstrip` figure
+with `letters: [...]`: each letter's own ledger frames, in writing order, as a
+labelled group ("Letter 2 of 3 — …"), with short letters sharing a row. Two
+headword shapes qualify:
+
+- a **list** of single letters (`வ, க`, `ક — ણ — શ`, `в, р`, `ع ي`), in any
+  script, because a letter written by itself is exactly what its isolated ductus
+  draws; and
+- a **word** in a script whose letters stand apart within a word (chinese,
+  japanese, tamil, gujarati, kannada, telugu, malayalam), when every grapheme is
+  one base letter with no mark.
+
+The figure prints only when every letter is cited, credits every letter's source
+in its footer, and claims nothing about relative size, spacing or joins: each
+letter keeps its own panels at its own scale, and the `<desc>` says so.
+
+Words are deliberately **not** composed where the parts would assemble into
+something false. Devanagari (and Bengali and Gurmukhi) words share one
+continuous headline, while every cited letter draws its own; Arabic-family
+letters join and change shape by position, while the ductus holds isolated
+forms; the cited Cyrillic hand is connected cursive. A word with a vowel sign,
+virama or length mark is refused in every script that has no written-order
+table (below), because some marks are written before the consonant they follow
+in Unicode, so drawing in code-point order would draw strokes in the wrong
+order. These are the open work for combinations: mark ductus with a
+written-order model for scripts other than Tamil and Gujarati, a cited
+word-level headline, and positional or joined forms.
+
+#### As built — Tamil vowel signs in written order
+
+Six Tamil vowel signs have a cited ductus of their own (ா ி ீ ெ ே ை, from the
+native-writer pen traces in HP Labs India's LipiTk Tamil recognizer), so a sign
+lesson prints a one-glyph strip of the sign alone. To compose words with them,
+`figure-targets.ts` holds a per-script table of which side of its consonant
+each sign is **written** on (`WRITTEN_SIGN_SIDES`). Tamil was the first
+script with one (Gujarati follows, below):
+
+| typed | written | source of the side |
+|---|---|---|
+| C + ெ / ே / ை | sign, then C | Radhakrishnan Modules 6–7 (ெ ே); LipiTk recognizer manual (ை) |
+| C + ொ / ோ (NFD: left half + ா) | left half, C, ா | the rows for each half |
+| C + ா / ி / ீ | C, then sign | LipiTk recognizer manual |
+
+Each row must match the cited `compositionSource` of its mark record, and a test
+enforces it. A sequence strip that contains a sign calls its groups "parts"
+("Part 2 of 4"), says in its `<desc>` that they are in written order, and draws
+each sign without its consonant. A two-part sign taught by itself (ோ) prints
+its two halves. Refused: any sign without a row (the pulli ், ு and ூ, which
+have no cited ductus and fuse with their consonant, and ௌ, whose right half ௗ
+has none), the pairs Unicode fuses into ligatures (டி, டீ, லீ), and every sign
+in every other script. The pen lift between parts is the same assumption the
+separate-letter word strips already make: the recognizer stores these signs as
+distinct symbols, written left to right.
+
+#### As built — Gujarati vowel signs, written after the consonant
+
+Eleven Gujarati signs have a cited ductus of their own: ા િ ી ુ ૂ ે ૈ ો ૌ, the
+anusvara ં and the visarga ઃ. Their order, start, direction and pen lifts come
+from KanoAI's hand-made barakhadi centre-line templates (one path per pen-down
+run, pinned to commit `9d3e294`). KanoAI's licence is ambiguous (MIT in its
+LICENSE file, GNU GPL in its README), so the mark records cite facts only and
+no template path was copied; each path is fitted to the bundled Noto Sans
+Gujarati outline of the sign by itself. The t30apps records already cited for
+આ એ ઐ ઓ ઔ and HP Labs India's LipiTk Devanagari matra prototypes agree on the
+shared shapes, and each `variation` says so.
+
+Gujarati gets a `WRITTEN_SIGN_SIDES` table too, and every row is "after":
+
+| typed | written | source of the place |
+|---|---|---|
+| C + ા / ી / ુ / ૂ / ે / ૈ / ો / ૌ | C, then sign | KanoAI: consonant group before sign group in every row whose consonant keeps its bare outline |
+| C + િ | C, then િ (although it sits LEFT of C) | KanoAI: 33 of 34 rows (ઢિ lists the sign first) |
+| C + ં / ઃ | C, then the mark | KanoAI: 33 of 33 and 34 of 34 rows |
+
+So a Gujarati word is drawn in typed order, part by part, and its `<desc>` says
+that its parts are in typed order (Tamil's says that a left-hand sign comes
+first). ો and ૌ have no Unicode decomposition, so each is one sign of two or
+three runs (bar first, then the flags). Refused: the virama ્ and the
+vocalic-r sign ૃ (no Gujarati source; a Devanagari analogy is not used), two
+signs on one consonant (ાં: no source orders them against each other; this
+rule leaves Tamil unchanged, since its two-part signs put one half on each
+side), and the consonant-sign pairs the bundled Noto Sans Gujarati reshapes,
+read from its GSUB table: the ligatures ણુ, રુ, રૂ and the "stem" forms 22
+consonants take before ુ and ૂ (`blws`), and જ and ૹ with ા, ી, ો and ૌ, whose
+ā bar joins the consonant (`psts`). So જો and બજાર stay undrawn.
+
+Every fused pair, Tamil's and Gujarati's, stands on a cited source:
+`FUSED_SIGN_PAIRS` is built only from `FUSED_SIGN_PAIR_SOURCES`, which groups
+the pairs under a citation (Unicode 17.0 §12.6.3, Figure 12-21 for Tamil; Noto
+Sans Gujarati 2.106's GSUB lookups by feature and number for Gujarati) and an
+HTTPS URL. A test holds each citation to its pairs both ways (it names every
+pair's letter and sign, and every letter it names has a pair), pins each
+source's pair count, and checks that the bundled Gujarati font is still the
+cited version.
+
+#### As built — Devanagari signs drawn alone
+
+Eight Devanagari signs have a cited ductus of their own: ु ू े, the anusvara ं,
+the nukta ़, the virama ्, ृ and the candrabindu ँ. Their stroke count, start
+and direction come from native writers' tablet pen traces in HP Labs India's
+LipiTk Devanagari recognizer (classes 50 to 62; the model is MIT, the data
+under it research-only, so the mark records cite counts and shares only and
+no trace was copied). Each path is fitted to the bundled Noto Sans Devanagari
+outline of the sign by itself, at the default tolerances.
+
+| sign | strokes (share of stored prototypes) | start and direction (share) |
+|---|---|---|
+| ु | 1 (79/83) | top third (67/83), clockwise (65/83), ends left (65/83) |
+| ू | 1 (83/83) | first move left (75/83), clockwise (72/83), ends lower right (77/83) |
+| े | 1 (162/165) | upper left to lower right (116/165) |
+| ं | 1 (156/157) | anticlockwise (112/157); start in the upper half (94/157) |
+| ़ | 1 (82/83) | a dab down to the left (82/83) |
+| ् | 1 (80/82) | downward (79/82); the slant is the printed one |
+| ृ | 1 (81/83) | top third (77/83), anticlockwise (80/83), ends lower right (69/83) |
+| ँ | 2 (79/82) | crescent first (76/82), left to right; then the dot above (78/82) |
+
+The writers wrote each sign alone, with no consonant and no headline, so the
+traces say nothing about when a sign is written against its consonant or the
+shared headline. Devanagari therefore gets **no** `WRITTEN_SIGN_SIDES` row and
+no mark record gains a `compositionOrder` (the nukta keeps its earlier
+Unicode-cited carrier-first convention). Only a lesson whose headword is the
+sign by itself prints a strip (32 lessons across Hindi, Marathi, Sanskrit and
+Marwadi); a sign on a consonant (कि) and every word with a sign stay refused.
+े's foot meets the headline in a word; drawn alone it floats, and no headline
+is added.
+
+Left out:
+
+* ा, ि, ी, ो and ः. Noto Sans Devanagari prints each with a short piece of
+  headline (x 0 to 273 font units) that the traces, written without one, never
+  draw. A path that follows the traces leaves 9.7% (ा), 4.0% (ि), 3.5% (ी),
+  4.5% (ो) and 37% (ः, two dots under a headline piece) of the printed ink
+  untraced, over the 2% the honesty check allows, and no override is taken. ी's drawn form (stem, then the arch left
+  to right) is also a minority (39 of 91, 43%), and ो's two-stroke form a weak
+  one (42 of 83, 51%).
+* ै and ौ. ै is two strokes in 76 of 83, but the flags' direction splits: 28
+  of 83 (34%) draw both from upper left to lower right. ौ's commonest count
+  is three strokes in 35 of 83 (42%).
+
+#### As built — Bengali, cited to native writers' pen traces
+
+Bengali joins the derived filmstrips (`DERIVED_FILMSTRIP_SCRIPTS.bengali`) with
+nine glyphs: এ ও খ থ ঞ ব র and the signs ঃ ঁ. Their order is not taken from a
+teaching animation (Wikimedia Commons cannot be reached from the authoring
+environment) but from the native writers' tablet pen traces stored in HP Labs
+India's LipiTk 4.0 Bangla recognizer: the modal stroke count, the part order,
+the start and the turn, each cited as counts and shares, never as copied
+coordinates. The recognizer scales traces to a square, so proportions come from
+the font: every path is fitted to Noto Sans Bengali at the default tolerances.
+
+**The headline (mātrā).** The traces do not treat it one way. Across the
+recognizer classes whose printed form has a full-width bar, 40% of one-stroke
+prototypes draw no bar run, 27% draw it first and 16% last; multi-stroke writers
+lift it out as the last stroke (20%) more often than the first (7%). The rule
+that follows: a letter is drawn only where one placement wins a majority AND
+covers the printed bar. ব and র qualify (bar first, left to right); খ and থ end
+with a short move right into the flag beside the stem; এ ও ঞ ঃ ঁ have no bar.
+ন (five lessons), ক, ম, ল, য, ত and others are left undrawn with the reason in
+`data/scripts/bengali.json`.
+
+**Divergence: the script inventory.** Bengali had no `data/scripts/` file. The
+new `bengali.json` holds exactly what the track reads (30 letters, 11 signs, 10
+digits) rather than the whole alphabet, because the letter-anchoring ceiling
+pins unread inventory letters at zero; `complete` is false. The glyph-gap queue
+stays empty only if digits count, so `validate.ts` now counts a script's
+`digits` rows as covered (no other track has digit headwords). Bengali words
+remain undrawn: there is no composer on this branch, and a Bengali word shares
+one headline across its letters.
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams

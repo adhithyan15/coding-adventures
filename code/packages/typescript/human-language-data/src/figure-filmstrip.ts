@@ -364,6 +364,16 @@ const MAX_COLUMNS = 6;
 const FRAME_GAP = 10;
 const ROW_GAP = 12;
 const MARGIN = 16;
+/**
+ * The narrowest a one-letter strip's heading and footer may wrap: the width
+ * of a two-frame strip. A ONE-frame strip (a dab such as the nukta ़, the
+ * virama ्, Perso-Arabic ا) would otherwise be a single 150 px panel with its
+ * heading broken over three lines and its citation over ten, a figure taller
+ * than it is useful. The panel keeps its size and its place at the left
+ * margin; only the text gets the room. Two or more frames are already at
+ * least this wide, so their strips do not change.
+ */
+const MIN_TEXT_WIDTH = 2 * FRAME_WIDTH + FRAME_GAP;
 /** Space above the frames for the heading. */
 const HEADING_BAND = 26;
 /** Space below the frames for the citation. */
@@ -449,6 +459,187 @@ export function renderScriptFilmstripFigure(
   lessonId: string,
   entry: FilmstripEntry,
 ): GeneratedFigure {
+  const viewBox = checkedFilmstripEntry(lessonId, entry);
+
+  // The panel takes its height from the letter's own box, so the nested viewport
+  // below fits exactly and `preserveAspectRatio` never has to letterbox.
+  const frameHeight = round((viewBox.height * FRAME_WIDTH) / viewBox.width);
+  const columns = Math.min(entry.frames.length, MAX_COLUMNS);
+  const rows = Math.ceil(entry.frames.length / columns);
+  const gridWidth = columns * FRAME_WIDTH + (columns - 1) * FRAME_GAP;
+  const textWidth = Math.max(gridWidth, MIN_TEXT_WIDTH);
+
+  // The heading WRAPS, like the citation below. It used to be one `<text>` line,
+  // which is fine for a strip of three or more frames — but a one-stroke letter
+  // (し, へ) gets a two-frame strip only 310 px wide, and "How it is written —
+  // one unbroken stroke · 2 movements" ran straight past the figure's right
+  // edge, clipped mid-word on the printed page. Each extra line pushes the
+  // frames down by one line height, so a heading that fits on one line (every
+  // strip of three or more frames today) lays out byte-for-byte as before.
+  const headingLines = wrapHeading(`How it is written — ${entry.summary}`, textWidth);
+  const headingBand = HEADING_BAND + (headingLines.length - 1) * HEADING_SIZE * 1.25;
+
+  // The footer prints the CITATION and, when the source records that the order
+  // varies, one fixed sentence saying so. It does not print the `variation`
+  // note itself: those notes run to a paragraph — for several scripts they were
+  // taller than the filmstrip they sat under, which buries the teaching in
+  // provenance. The full note is not lost; it goes into `<desc>`, so it travels
+  // in the file and reaches a screen reader, while the printed page keeps the
+  // one claim a learner has to see — that this is AN order, not THE order.
+  const varies = sourceVaries(entry);
+  const citationLines = wrapFigureText(
+    `Stroke order after ${entry.source.citation}`,
+    textWidth,
+    CITATION_SIZE,
+  );
+  if (varies) citationLines.push(...wrapFigureText(VARIATION_SENTENCE, textWidth, CITATION_SIZE));
+
+  const gridTop = round(MARGIN + headingBand);
+  const gridHeight = rows * frameHeight + (rows - 1) * ROW_GAP;
+  const citationTop = gridTop + gridHeight + CITATION_LEADING;
+  const width = MARGIN * 2 + textWidth;
+  const height = round(
+    citationTop + CITATION_SIZE * citationLines.length * 1.25 + MARGIN - CITATION_SIZE * 0.25,
+  );
+
+  const parts: string[] = [];
+  parts.push(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" ` +
+      `viewBox="0 0 ${width} ${height}" role="img" ` +
+      `aria-label="${escapeXml(`How to write ${entry.glyph}: ${entry.summary}`)}">`,
+  );
+  parts.push(`<title>${escapeXml(`Writing ${entry.glyph}`)}</title>`);
+  parts.push(
+    `<desc>${escapeXml(
+      `${entry.frames.length} frames; frame N shows movements 1 to N of ${entry.glyph} ` +
+        `(${entry.script}), the movement being added drawn in ink over the finished letter, ` +
+        `whose outline is read from ${entry.font}. Stroke order after ` +
+        `${entry.source.citation} <${entry.source.url}>.` +
+        (varies ? ` Source note on variation: ${entry.source.variation ?? ""}` : ""),
+    )}</desc>`,
+  );
+  parts.push(
+    `<rect x="0" y="0" width="${width}" height="${height}" fill="${BACKGROUND}"/>`,
+  );
+  pushHeading(parts, headingLines);
+
+  entry.frames.forEach((frame, index) => {
+    const column = index % columns;
+    const row = Math.floor(index / columns);
+    const x = round(MARGIN + column * (FRAME_WIDTH + FRAME_GAP));
+    const y = round(gridTop + row * (frameHeight + ROW_GAP));
+    parts.push(...framePanel(x, y, frameHeight, viewBox, frame.markup));
+  });
+
+  pushCitation(parts, citationLines, citationTop);
+  parts.push("</svg>");
+
+  const svg = `${parts.join("")}\n`;
+  const sourceHash = fnv1a64(scriptFilmstripFigureSource(lessonId, entry));
+  return {
+    svg,
+    sourceHash,
+    svgHash: fnv1a64(svg),
+    labels: entry.frames.map((frame) => frame.label),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Pieces both strips share
+// ---------------------------------------------------------------------------
+//
+// The one-letter strip above and the several-letter strip below print the same
+// panels, the same heading and the same footer. These helpers are those parts,
+// lifted out WITHOUT changing a byte: every committed one-letter filmstrip is
+// byte-checked by `check:figures`, so a refactor that moved one attribute
+// would fail that gate on hundreds of files.
+
+/** Printed under the citation when a source records that the order varies. */
+const VARIATION_SENTENCE =
+  "This order is attested, not standardised; the source records where it varies.";
+
+/** Does this letter's source record that its order varies? */
+function sourceVaries(entry: FilmstripEntry): boolean {
+  return entry.source.variation !== undefined && entry.source.variation.trim() !== "";
+}
+
+/**
+ * Wrap a heading to the strip's width.
+ *
+ * A " · " separator is glued to the word before it (U+E000, a private-use
+ * character the wrapper does not treat as a space, stands in for the space
+ * while wrapping), so a wrapped line ends "stroke ·" instead of the next one
+ * beginning "· 2 movements".
+ */
+function wrapHeading(text: string, width: number, size = HEADING_SIZE): string[] {
+  return wrapFigureText(text.replace(/ · /g, "\uE000· "), width, size).map((line) =>
+    line.replace(/\uE000/g, " "),
+  );
+}
+
+function pushHeading(parts: string[], lines: string[]): void {
+  lines.forEach((line, index) => {
+    parts.push(
+      `<text x="${MARGIN}" y="${round(MARGIN + HEADING_SIZE + index * HEADING_SIZE * 1.25)}" ` +
+        `font-family="Latin Modern Sans, sans-serif" ` +
+        `font-size="${HEADING_SIZE}" fill="${HEADING_COLOR}">${escapeXml(line)}</text>`,
+    );
+  });
+}
+
+function pushCitation(parts: string[], lines: string[], top: number): void {
+  lines.forEach((line, index) => {
+    parts.push(
+      `<text x="${MARGIN}" y="${round(top + index * CITATION_SIZE * 1.25)}" ` +
+        `font-family="Latin Modern Sans, sans-serif" font-size="${CITATION_SIZE}" ` +
+        `fill="${CITATION_COLOR}">${escapeXml(line)}</text>`,
+    );
+  });
+}
+
+/**
+ * One frame's panel: a rounded card, and the frame inside it.
+ *
+ * The frame goes in a NESTED VIEWPORT, not a `<g transform>`.
+ *
+ * Both would place the frame. Only this one CONTAINS it. A nested `<svg>`
+ * establishes a new viewport that clips to its own bounds, so whatever the
+ * fragment's own transforms say, nothing it draws can appear outside the
+ * panel it belongs to — a tampered ledger can spoil its own frame and
+ * nothing else. With a `<g transform>` the containment would be an
+ * assertion made by the allowlist, and the allowlist has to permit
+ * `transform`, so one `translate` with the right numbers would drop an
+ * allowlisted `<text>` exactly where the citation line goes.
+ *
+ * The viewBox also does the fitting arithmetic, so the scale factor is
+ * stated once, as a ratio of two boxes, instead of being multiplied into a
+ * translate. `preserveAspectRatio` is explicit rather than defaulted: the
+ * panel is sized from this box's own aspect, so `meet` is exact, and saying
+ * so keeps every renderer agreeing about it.
+ */
+function framePanel(
+  x: number,
+  y: number,
+  frameHeight: number,
+  viewBox: FilmstripViewBox,
+  markup: string,
+): string[] {
+  return [
+    `<rect x="${x}" y="${y}" width="${FRAME_WIDTH}" height="${frameHeight}" rx="6" ` +
+      `fill="${PANEL_FILL}" stroke="${PANEL_STROKE}" stroke-width="1"/>`,
+    `<svg x="${x}" y="${y}" width="${FRAME_WIDTH}" height="${frameHeight}" ` +
+      `viewBox="${viewBox.minX} ${viewBox.minY} ${viewBox.width} ` +
+      `${viewBox.height}" preserveAspectRatio="xMidYMid meet" ` +
+      `overflow="hidden">${markup}</svg>`,
+  ];
+}
+
+/**
+ * Everything a ledger entry must satisfy before any of it reaches a file, for
+ * either strip: frames to draw, a real box, a citation, and markup that passes
+ * the allowlist. Answers with the checked box.
+ */
+function checkedFilmstripEntry(lessonId: string, entry: FilmstripEntry): FilmstripViewBox {
   if (entry.frames.length === 0) {
     throw new Error(`${lessonId}: filmstrip entry has no frames`);
   }
@@ -478,141 +669,335 @@ export function renderScriptFilmstripFigure(
   for (const frame of entry.frames) {
     assertSafeFilmstripMarkup(frame.markup, `${lessonId} frame ${frame.number}`);
   }
+  return viewBox;
+}
 
-  // The panel takes its height from the letter's own box, so the nested viewport
-  // below fits exactly and `preserveAspectRatio` never has to letterbox.
-  const frameHeight = round((viewBox.height * FRAME_WIDTH) / viewBox.width);
-  const columns = Math.min(entry.frames.length, MAX_COLUMNS);
-  const rows = Math.ceil(entry.frames.length / columns);
-  const gridWidth = columns * FRAME_WIDTH + (columns - 1) * FRAME_GAP;
+// ---------------------------------------------------------------------------
+// Several letters: the sequence strip
+// ---------------------------------------------------------------------------
+//
+// A lesson whose headword is "வ, க", "ક — ણ — શ" or "はい" teaches more than
+// one letter, and until now printed nothing at all, because a filmstrip was one
+// ledger entry. The sequence strip prints every letter's OWN cited strip, in
+// writing order, one labelled group per letter (short letters share a row;
+// see `shelveLetters`):
+//
+//     How it is written — 2 letters, one after another
+//     Letter 1 of 2 — 3 strokes · 2 pen lifts · 6 movements
+//     ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐
+//     │  は  │ │  は  │ │  は  │ │  は  │ │  は  │ │  は  │
+//     └──────┘ └──────┘ └──────┘ └──────┘ └──────┘ └──────┘
+//     Letter 2 of 2 — 2 strokes · 1 pen lift · 3 movements
+//     ┌──────┐ ┌──────┐ ┌──────┐
+//     │  い  │ │  い  │ │  い  │
+//     └──────┘ └──────┘ └──────┘
+//     Letter 1: stroke order after KanjiVG, kanji/0306f.svg, …
+//     Letter 2: stroke order after KanjiVG, kanji/03044.svg, …
+//
+// WHAT IT DOES NOT CLAIM, and why that is the honest version. The ledger
+// knows how each letter is written ON ITS OWN. It does not know how big one
+// letter is next to the next, how far apart they sit, or whether the pen joins
+// them. So each letter keeps its own panels at its own scale — exactly the
+// frames its one-letter strip prints — and nothing is drawn between letters.
+// The `<desc>` says this in words. Which headwords may be drawn this way at
+// all (a Devanagari word may NOT: its letters share one headline the per-
+// letter ductus cannot draw) is decided upstream, in `figure-targets.ts`.
+//
+// The labels name each letter by NUMBER, never by the letter itself: a
+// figure's printed text is set in Latin Modern Sans, which has no Tamil,
+// Gujarati or kana glyphs. The letters themselves are in the title, the
+// aria-label and the `<desc>`, where no font is needed.
 
-  // The heading WRAPS, like the citation below. It used to be one `<text>` line,
-  // which is fine for a strip of three or more frames — but a one-stroke letter
-  // (し, へ) gets a two-frame strip only 310 px wide, and "How it is written —
-  // one unbroken stroke · 2 movements" ran straight past the figure's right
-  // edge, clipped mid-word on the printed page. Each extra line pushes the
-  // frames down by one line height, so a heading that fits on one line (every
-  // strip of three or more frames today) lays out byte-for-byte as before.
-  const heading = `How it is written — ${entry.summary}`;
-  // A " · " separator is glued to the word before it (U+E000, a private-use
-  // character the wrapper does not treat as a space, stands in for the space
-  // while wrapping), so a wrapped line ends "stroke ·" instead of the next one
-  // beginning "· 2 movements".
-  const headingLines = wrapFigureText(
-    heading.replace(/ · /g, "\uE000· "),
-    gridWidth,
-    HEADING_SIZE,
-  ).map((line) => line.replace(/\uE000/g, " "));
+/** Type size of the "Letter k of n" line above each letter's frames. */
+const GROUP_LABEL_SIZE = 12;
+/** Space between a group label's baseline and that letter's first panel. */
+const GROUP_LABEL_LEADING = 7;
+/** Space between one shelf's lowest panel and the next shelf's labels. */
+const GROUP_GAP = 14;
+
+/**
+ * The canonical subset that is allowed to change a sequence figure: every
+ * letter's whole entry, in order, the headword it spells, and the layout.
+ * Like `scriptFilmstripFigureSource`, the lesson's prose is not in it.
+ */
+export function scriptSequenceFilmstripFigureSource(
+  lessonId: string,
+  text: string,
+  entries: readonly FilmstripEntry[],
+): string {
+  return JSON.stringify({
+    kind: "script-filmstrip-sequence",
+    lessonId,
+    text,
+    layout: {
+      FRAME_WIDTH,
+      MAX_COLUMNS,
+      FRAME_GAP,
+      ROW_GAP,
+      MARGIN,
+      GROUP_LABEL_SIZE,
+      GROUP_LABEL_LEADING,
+      GROUP_GAP,
+      GROUP_GAP_X,
+    },
+    entries,
+  });
+}
+
+/** "Letter 2", "Letters 1 and 3", "Letters 1, 2 and 4" (or "Part 2", …). */
+export function letterNumbers(numbers: readonly number[], unit: SequenceUnit = "Letter"): string {
+  if (numbers.length === 1) return `${unit} ${numbers[0]}`;
+  const head = numbers.slice(0, -1).join(", ");
+  return `${unit}s ${head} and ${numbers[numbers.length - 1]}`;
+}
+
+/**
+ * What one group of a sequence strip is called.
+ *
+ * A strip of letters says "Letter 2 of 3". Once a vowel sign is one of the
+ * groups (Tamil மேசை is drawn ே, ம, ை, ச), "letter" would be wrong: a sign is
+ * not a letter, and the groups no longer spell the word in typed order. Such a
+ * strip says "Part 2 of 4" instead. A strip with no sign prints exactly what
+ * it printed before signs could be drawn.
+ */
+export type SequenceUnit = "Letter" | "Part";
+
+/** A ledger glyph made only of combining signs is a vowel sign drawn alone. */
+const SIGN_GLYPH = /^\p{M}+$/u;
+
+/**
+ * What a strip of parts says about their order, in its `<desc>`.
+ *
+ * Tamil writes three signs to the LEFT of their consonant and writes them
+ * first, so its parts are not in typed order. Gujarati writes every sign after
+ * its consonant, even િ, which sits to the left of it, so its parts are in
+ * typed order. The note must say which, or the description would claim a
+ * reordering the strip does not make.
+ */
+const WRITTEN_ORDER_NOTES: Readonly<Record<string, string>> = {
+  gujarati:
+    `The parts are in the order the hand writes them, which in Gujarati is the order ` +
+    `they are typed: each sign comes after its consonant, even the i sign, which sits ` +
+    `to the left of it. Each sign is drawn on its own, without the consonant it attaches to. `,
+};
+
+/** The note for scripts that write some signs before their consonant (Tamil). */
+const SIGN_FIRST_NOTE =
+  `The parts are in the order the hand writes them, which is not always the order ` +
+  `they are typed: a vowel sign written to the left of its consonant comes before ` +
+  `it. Each vowel sign is drawn on its own, without the consonant it attaches to. `;
+
+/** The `<desc>` sentence on written order for a strip of parts in `script`. */
+export function writtenOrderNote(script: string): string {
+  return WRITTEN_ORDER_NOTES[script] ?? SIGN_FIRST_NOTE;
+}
+
+/** "Part" when any group is a vowel sign, else "Letter". */
+export function sequenceUnit(entries: readonly FilmstripEntry[]): SequenceUnit {
+  return entries.some((entry) => SIGN_GLYPH.test(entry.glyph)) ? "Part" : "Letter";
+}
+
+/**
+ * The footer's citation lines: every letter's source, each printed once.
+ *
+ * When every letter shares one source the line reads exactly as a one-letter
+ * strip's does. Otherwise each source is introduced by the letters it covers,
+ * in the order the letters are written, so a reader can match a source to a
+ * row without counting.
+ */
+function sequenceCitationLines(
+  entries: readonly FilmstripEntry[],
+  width: number,
+  unit: SequenceUnit = "Letter",
+): string[] {
+  const bySource = new Map<string, number[]>();
+  entries.forEach((entry, index) => {
+    const numbers = bySource.get(entry.source.citation) ?? [];
+    numbers.push(index + 1);
+    bySource.set(entry.source.citation, numbers);
+  });
+  const lines: string[] = [];
+  if (bySource.size === 1) {
+    lines.push(...wrapFigureText(`Stroke order after ${entries[0]!.source.citation}`, width, CITATION_SIZE));
+  } else {
+    for (const [citation, numbers] of bySource) {
+      lines.push(
+        ...wrapFigureText(`${letterNumbers(numbers, unit)}: stroke order after ${citation}`, width, CITATION_SIZE),
+      );
+    }
+  }
+  if (entries.some(sourceVaries)) {
+    lines.push(...wrapFigureText(VARIATION_SENTENCE, width, CITATION_SIZE));
+  }
+  return lines;
+}
+
+/**
+ * Which letters share a shelf (a band of the figure), in writing order.
+ *
+ * A book prints a block figure no taller than 0.45 of the text height, so a
+ * strip that stacks four short letters one under another — two frames each,
+ * in a figure two frames wide — is shrunk until its captions cannot be read.
+ * Instead, consecutive letters share a shelf while their frames fit across
+ * `maxColumns` panels together:
+ *
+ *     frames per letter   3  2  2  2        6  3        8  2
+ *     shelves             [3 2] [2 2]       [6] [3]     [8] [2]
+ *
+ * A letter with more frames than fit on one shelf gets a shelf of its own and
+ * wraps inside it, exactly as a one-letter strip wraps. Order never changes:
+ * a shelf is read left to right, shelves top to bottom.
+ */
+export function shelveLetters(frameCounts: readonly number[], maxColumns = MAX_COLUMNS): number[][] {
+  const shelves: number[][] = [];
+  let used = maxColumns;
+  frameCounts.forEach((frames, index) => {
+    const columns = Math.min(frames, maxColumns);
+    if (used + columns > maxColumns) {
+      shelves.push([index]);
+      used = columns;
+    } else {
+      shelves[shelves.length - 1]!.push(index);
+      used += columns;
+    }
+  });
+  return shelves;
+}
+
+/** Horizontal space between two letters that share a shelf. */
+const GROUP_GAP_X = 26;
+
+/**
+ * Lay several letters' frames out as one printed strip, a group per letter.
+ *
+ * Each group is the one-letter strip's grid on its own: the letter's frames,
+ * `MAX_COLUMNS` to a row, at that letter's own scale, under a label line that
+ * names the letter by number. Groups sit on shelves (`shelveLetters`), so short
+ * letters print side by side; a shelf is as tall as its tallest group, and its
+ * groups hang from the same top edge.
+ */
+export function renderScriptSequenceFilmstripFigure(
+  lessonId: string,
+  text: string,
+  entries: readonly FilmstripEntry[],
+): GeneratedFigure {
+  if (entries.length < 2) {
+    throw new Error(`${lessonId}: a sequence filmstrip needs at least two letters`);
+  }
+  const script = entries[0]!.script;
+  if (entries.some((entry) => entry.script !== script)) {
+    throw new Error(`${lessonId}: a sequence filmstrip draws letters of one script`);
+  }
+  const boxes = entries.map((entry) => checkedFilmstripEntry(lessonId, entry));
+  const count = entries.length;
+  const unit = sequenceUnit(entries);
+  const units = `${unit.toLowerCase()}s`;
+
+  // Each group's own geometry, before anything is placed: how many columns it
+  // spans, how wide that is, how tall one of its panels is, and its label.
+  const groups = entries.map((entry, index) => {
+    const columns = Math.min(entry.frames.length, MAX_COLUMNS);
+    const width = columns * FRAME_WIDTH + (columns - 1) * FRAME_GAP;
+    const viewBox = boxes[index]!;
+    const frameHeight = round((viewBox.height * FRAME_WIDTH) / viewBox.width);
+    const rows = Math.ceil(entry.frames.length / columns);
+    return {
+      entry,
+      viewBox,
+      columns,
+      width,
+      frameHeight,
+      height: rows * frameHeight + (rows - 1) * ROW_GAP,
+      label: wrapHeading(`${unit} ${index + 1} of ${count} — ${entry.summary}`, width, GROUP_LABEL_SIZE),
+    };
+  });
+  const shelves = shelveLetters(entries.map((entry) => entry.frames.length));
+  const shelfWidth = (shelf: number[]): number =>
+    shelf.reduce((sum, index) => sum + groups[index]!.width, 0) + (shelf.length - 1) * GROUP_GAP_X;
+  const gridWidth = Math.max(...shelves.map(shelfWidth));
+
+  const headingLines = wrapHeading(`How it is written — ${count} ${units}, one after another`, gridWidth);
   const headingBand = HEADING_BAND + (headingLines.length - 1) * HEADING_SIZE * 1.25;
 
-  // The footer prints the CITATION and, when the source records that the order
-  // varies, one fixed sentence saying so. It does not print the `variation`
-  // note itself: those notes run to a paragraph — for several scripts they were
-  // taller than the filmstrip they sat under, which buries the teaching in
-  // provenance. The full note is not lost; it goes into `<desc>`, so it travels
-  // in the file and reaches a screen reader, while the printed page keeps the
-  // one claim a learner has to see — that this is AN order, not THE order.
-  const varies =
-    entry.source.variation !== undefined && entry.source.variation.trim() !== "";
-  const citationLines = wrapFigureText(
-    `Stroke order after ${entry.source.citation}`,
-    gridWidth,
-    CITATION_SIZE,
-  );
-  if (varies) {
-    citationLines.push(
-      ...wrapFigureText(
-        "This order is attested, not standardised; the source records where it varies.",
-        gridWidth,
-        CITATION_SIZE,
-      ),
+  // Walk down the page once, shelf by shelf. `cursor` is the top of the next
+  // shelf; within a shelf, `x` is the left edge of the next group.
+  const body: string[] = [];
+  let cursor = round(MARGIN + headingBand);
+  shelves.forEach((shelf, shelfIndex) => {
+    const labelLines = Math.max(...shelf.map((index) => groups[index]!.label.length));
+    const frameTop = round(
+      cursor + GROUP_LABEL_SIZE + (labelLines - 1) * GROUP_LABEL_SIZE * 1.25 + GROUP_LABEL_LEADING,
     );
-  }
+    let x = MARGIN;
+    for (const index of shelf) {
+      const group = groups[index]!;
+      group.label.forEach((line, lineIndex) => {
+        body.push(
+          `<text x="${round(x)}" y="${round(cursor + GROUP_LABEL_SIZE + lineIndex * GROUP_LABEL_SIZE * 1.25)}" ` +
+            `font-family="Latin Modern Sans, sans-serif" ` +
+            `font-size="${GROUP_LABEL_SIZE}" fill="${HEADING_COLOR}">${escapeXml(line)}</text>`,
+        );
+      });
+      group.entry.frames.forEach((frame, frameIndex) => {
+        const panelX = round(x + (frameIndex % group.columns) * (FRAME_WIDTH + FRAME_GAP));
+        const panelY = round(frameTop + Math.floor(frameIndex / group.columns) * (group.frameHeight + ROW_GAP));
+        body.push(...framePanel(panelX, panelY, group.frameHeight, group.viewBox, frame.markup));
+      });
+      x += group.width + GROUP_GAP_X;
+    }
+    cursor = round(frameTop + Math.max(...shelf.map((index) => groups[index]!.height)));
+    if (shelfIndex < shelves.length - 1) cursor = round(cursor + GROUP_GAP);
+  });
 
-  const gridTop = round(MARGIN + headingBand);
-  const gridHeight = rows * frameHeight + (rows - 1) * ROW_GAP;
-  const citationTop = gridTop + gridHeight + CITATION_LEADING;
+  const citationLines = sequenceCitationLines(entries, gridWidth, unit);
+  const citationTop = cursor + CITATION_LEADING;
   const width = MARGIN * 2 + gridWidth;
   const height = round(
     citationTop + CITATION_SIZE * citationLines.length * 1.25 + MARGIN - CITATION_SIZE * 0.25,
   );
 
+  const letters = entries.map((entry) => entry.glyph);
+  const fonts = [...new Set(entries.map((entry) => entry.font))].join(", ");
+  const sources = entries
+    .map((entry) => `${entry.glyph}: ${entry.source.citation} <${entry.source.url}>`)
+    .join("; ");
+  const variations = entries
+    .filter(sourceVaries)
+    .map((entry) => `${entry.glyph}: ${entry.source.variation ?? ""}`)
+    .join(" ");
+
   const parts: string[] = [];
   parts.push(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" ` +
       `viewBox="0 0 ${width} ${height}" role="img" ` +
-      `aria-label="${escapeXml(`How to write ${entry.glyph}: ${entry.summary}`)}">`,
+      `aria-label="${escapeXml(`How to write ${text}: ${count} ${units}, ${letters.join(", ")}, one after another`)}">`,
   );
-  parts.push(`<title>${escapeXml(`Writing ${entry.glyph}`)}</title>`);
+  parts.push(`<title>${escapeXml(`Writing ${text}`)}</title>`);
   parts.push(
     `<desc>${escapeXml(
-      `${entry.frames.length} frames; frame N shows movements 1 to N of ${entry.glyph} ` +
-        `(${entry.script}), the movement being added drawn in ink over the finished letter, ` +
-        `whose outline is read from ${entry.font}. Stroke order after ` +
-        `${entry.source.citation} <${entry.source.url}>.` +
-        (varies ? ` Source note on variation: ${entry.source.variation ?? ""}` : ""),
+      `${count} ${units} written one after another: ${letters.join(", ")} (${script}). ` +
+        (unit === "Part" ? writtenOrderNote(script) : "") +
+        `Each ${unit.toLowerCase()} has its own group of frames; frame N of a group shows movements 1 to N ` +
+        `of that ${unit.toLowerCase()}, the movement being added drawn in ink over the finished ${unit.toLowerCase()}, ` +
+        `whose outline is read from ${fonts}. Each ${unit.toLowerCase()} is drawn at its own scale from ` +
+        `its own cited stroke order, so the strip does not show how large the ${units} are ` +
+        `next to each other, how far apart they sit, or any join between them. ` +
+        `Stroke order: ${sources}.` +
+        (variations === "" ? "" : ` Source notes on variation: ${variations}`),
     )}</desc>`,
   );
-  parts.push(
-    `<rect x="0" y="0" width="${width}" height="${height}" fill="${BACKGROUND}"/>`,
-  );
-  headingLines.forEach((line, index) => {
-    parts.push(
-      `<text x="${MARGIN}" y="${round(MARGIN + HEADING_SIZE + index * HEADING_SIZE * 1.25)}" ` +
-        `font-family="Latin Modern Sans, sans-serif" ` +
-        `font-size="${HEADING_SIZE}" fill="${HEADING_COLOR}">${escapeXml(line)}</text>`,
-    );
-  });
-
-  entry.frames.forEach((frame, index) => {
-    const column = index % columns;
-    const row = Math.floor(index / columns);
-    const x = round(MARGIN + column * (FRAME_WIDTH + FRAME_GAP));
-    const y = round(gridTop + row * (frameHeight + ROW_GAP));
-    parts.push(
-      `<rect x="${x}" y="${y}" width="${FRAME_WIDTH}" height="${frameHeight}" rx="6" ` +
-        `fill="${PANEL_FILL}" stroke="${PANEL_STROKE}" stroke-width="1"/>`,
-    );
-    // A NESTED VIEWPORT, not a `<g transform>`.
-    //
-    // Both would place the frame. Only this one CONTAINS it. A nested `<svg>`
-    // establishes a new viewport that clips to its own bounds, so whatever the
-    // fragment's own transforms say, nothing it draws can appear outside the
-    // panel it belongs to — a tampered ledger can spoil its own frame and
-    // nothing else. With a `<g transform>` the containment would be an
-    // assertion made by the allowlist, and the allowlist has to permit
-    // `transform`, so one `translate` with the right numbers would drop an
-    // allowlisted `<text>` exactly where the citation line goes.
-    //
-    // The viewBox also does the fitting arithmetic, so the scale factor is
-    // stated once, as a ratio of two boxes, instead of being multiplied into a
-    // translate. `preserveAspectRatio` is explicit rather than defaulted: the
-    // panel is sized from this box's own aspect, so `meet` is exact, and saying
-    // so keeps every renderer agreeing about it.
-    parts.push(
-      `<svg x="${x}" y="${y}" width="${FRAME_WIDTH}" height="${frameHeight}" ` +
-        `viewBox="${viewBox.minX} ${viewBox.minY} ${viewBox.width} ` +
-        `${viewBox.height}" preserveAspectRatio="xMidYMid meet" ` +
-        `overflow="hidden">${frame.markup}</svg>`,
-    );
-  });
-
-  citationLines.forEach((line, index) => {
-    parts.push(
-      `<text x="${MARGIN}" y="${round(citationTop + index * CITATION_SIZE * 1.25)}" ` +
-        `font-family="Latin Modern Sans, sans-serif" font-size="${CITATION_SIZE}" ` +
-        `fill="${CITATION_COLOR}">${escapeXml(line)}</text>`,
-    );
-  });
+  parts.push(`<rect x="0" y="0" width="${width}" height="${height}" fill="${BACKGROUND}"/>`);
+  pushHeading(parts, headingLines);
+  parts.push(...body);
+  pushCitation(parts, citationLines, citationTop);
   parts.push("</svg>");
 
   const svg = `${parts.join("")}\n`;
-  const sourceHash = fnv1a64(scriptFilmstripFigureSource(lessonId, entry));
   return {
     svg,
-    sourceHash,
+    sourceHash: fnv1a64(scriptSequenceFilmstripFigureSource(lessonId, text, entries)),
     svgHash: fnv1a64(svg),
-    labels: entry.frames.map((frame) => frame.label),
+    labels: entries.flatMap((entry) => entry.frames.map((frame) => frame.label)),
   };
 }
 

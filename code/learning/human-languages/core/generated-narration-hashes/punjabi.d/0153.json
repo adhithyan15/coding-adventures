@@ -1,0 +1,25 @@
+{
+  "language": "punjabi",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:d68e460a991bd089",
+  "lessonIds": [
+    "PA-W09-date-label",
+    "PA-W09-month-map",
+    "PA-W09-date-format",
+    "PA-W09-date-a",
+    "PA-W09-date-b",
+    "PA-W09-date-select",
+    "PA-W09-date-supported",
+    "PA-W09-date-delayed",
+    "PA-W09-date-dictation",
+    "PA-W09-date-repair",
+    "PA-W09-date-no-model"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch153.txt",
+  "json": "punjabi/narration/ch153.json",
+  "textHash": "fnv1a64:7e5c259d26ae2d41",
+  "jsonHash": "fnv1a64:3a655a94e26ef058",
+  "findings": []
+}

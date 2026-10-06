@@ -48,7 +48,9 @@
 // ---------------------------------------------------------------------------
 
 import {
+  DEFAULTS,
   ductusFilmstrip,
+  penBounds,
   svgMarkup,
   viewBoxFor,
   type DuctusOptions,
@@ -159,6 +161,62 @@ export function captionSizeFor(
 }
 
 /**
+ * Below this many font units, a letter's whole pen path counts as a TINY mark.
+ *
+ * The pen line and the dot that shows where the pen is are sized in font
+ * units (`penWidth: 26`, `tipRadius: 34`) for letters whose pen path spans
+ * several hundred units. A mark such as Gujarati ં, Devanagari ं or the nukta
+ * ़ is a dot: its whole pen path spans 44 to 60 units, so a 68-unit tip is
+ * wider than the movement it marks, and the 26-unit line fills the dot. Every
+ * frame's box is padded around the ink, so the panel also zooms in on a tiny
+ * mark, and the marker grows on the page with it.
+ *
+ * The extents across the ledger have a wide gap, which is where the line is:
+ *
+ *     pen extent (font units)   marks
+ *     44, 52, 60                ़  ं  ં           <- tiny
+ *     185 and up                ゜ ゛ ે ् ... and every letter
+ *
+ * so only those three marks change, and no other strip moves by a byte.
+ */
+export const TINY_STROKE_EXTENT = 150;
+
+/** The smallest share of the default pen and tip a tiny mark is drawn with. */
+export const MIN_TINY_PEN_SCALE = 0.3;
+
+/**
+ * Pen width and tip radius for one letter's printed frames: the defaults,
+ * scaled down for a tiny mark in proportion to its pen extent.
+ *
+ *     scale = clamp(extent / TINY_STROKE_EXTENT, MIN_TINY_PEN_SCALE, 1)
+ *
+ *     mark   extent   scale   penWidth   tipRadius
+ *     ़       44       0.3     7.8        10.2       (clamped at the minimum)
+ *     ं       52       0.35    9          11.8
+ *     ં       60       0.4     10.4       13.6
+ *     any     >= 150   1       26         34         (returns {}: unchanged)
+ *
+ * The scale reaches 1 exactly at the threshold, so a mark just under it is
+ * drawn just under full size: there is no jump. The minimum keeps the line
+ * and the dot visible on the pale glyph. A value the caller set explicitly
+ * is left alone, the same rule `captionSizeFor` follows.
+ */
+export function penSizeFor(
+  letter: LetterDuctus,
+  options: DuctusOptions,
+): Pick<DuctusOptions, "penWidth" | "tipRadius"> {
+  const bounds = penBounds(letter);
+  if (bounds === null) return {};
+  const extent = Math.max(bounds.x1 - bounds.x0, bounds.y1 - bounds.y0);
+  if (extent >= TINY_STROKE_EXTENT) return {};
+  const scale = Math.max(MIN_TINY_PEN_SCALE, extent / TINY_STROKE_EXTENT);
+  return {
+    ...(options.penWidth === undefined ? { penWidth: round1(DEFAULTS.penWidth * scale) } : {}),
+    ...(options.tipRadius === undefined ? { tipRadius: round1(DEFAULTS.tipRadius * scale) } : {}),
+  };
+}
+
+/**
  * Parse the `viewBox` attribute back into numbers.
  *
  * Reading it off the rendered frame rather than calling `viewBoxFor` again is
@@ -204,10 +262,14 @@ export function buildFilmstripEntry(
 ): FilmstripEntry {
   // Size the caption to this script's own box unless the caller has an opinion,
   // so a narrow Arabic panel is not two-thirds words. See `captionSizeFor`.
-  const sized: DuctusOptions =
-    options.captionSize === undefined
+  // Likewise shrink the pen and its tip for a tiny mark (see `penSizeFor`),
+  // which leaves every other letter's options exactly as they were.
+  const sized: DuctusOptions = {
+    ...(options.captionSize === undefined
       ? { ...options, captionSize: captionSizeFor(letter, outline, options) }
-      : options;
+      : options),
+    ...penSizeFor(letter, options),
+  };
   const strip = ductusFilmstrip(letter, outline, sized);
   if (strip.frames.length === 0) {
     throw new Error(`${letter.script}:${letter.glyph} has no filmstrip frames`);

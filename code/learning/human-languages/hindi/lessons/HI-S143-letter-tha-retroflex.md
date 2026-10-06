@@ -48,16 +48,16 @@ reviews_of: [HI-S142-letter-ta-retroflex]
 What it is made of:
 
 - a short top-to-bottom central stem
-- a separate counterclockwise **closed** round body
+- a counterclockwise **closed** round body
 - the top shirorekhā
 
 | letter | round body | stem |
 |---|---|---|
 | ट | open at the upper right | part of the same run |
-| ठ | closed | drawn on its own first |
+| ठ | closed | part of the same run |
 
-Two differences, one you can hear and one you can only see: the body closes, and
-the stem stops being part of the body's run.
+Two differences, one you can hear and one you can only see: the breath, and the
+body that closes. The pen still runs from the stem into the body without lifting.
 
 ## Script: the fifth breath pair
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-143, HI-SCRIPT-RECOG-142] -->
@@ -83,14 +83,13 @@ Words that were yours long before this page:
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-143] -->
 
 - **1.** draw the short central stem top-to-bottom
-- **2.** lift at the stem's lower junction and sweep left, then counterclockwise around the closed round body back to the junction without lifting
+- **2.** without lifting, sweep left, then counterclockwise around the closed round body back to the junction
 - **3.** lift and draw the top shirorekhā left-to-right
 
-**Pen lifts: 2.** One more than **ट**, and the extra lift is what lets the body
-close cleanly.
+**Pen lifts: 1.** The same as **ट**: the stem and the body are one run, and the
+pen comes up only for the headline.
 
-> Verified three-stroke teaching form fitted to the bundled printed outline;
-> everyday handwriting may narrow or simplify the curve differently.
+> The source shows three movements; most native writers draw ठ in two strokes (89% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline.
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Opiaterein,
@@ -111,5 +110,5 @@ close cleanly.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-143] -->
 
 [PAUSE 3s] What separates **ठ** from **ट** on the page? (The body closes.) How
-many pen lifts does it take? (Two.) Name the number you count to that contains
+many pen lifts does it take? (One.) Name the number you count to that contains
 it.

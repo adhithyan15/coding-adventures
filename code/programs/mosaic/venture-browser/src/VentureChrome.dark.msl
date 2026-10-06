@@ -6,6 +6,7 @@ style VentureChrome {
   part brand { color : "#e1a45d" ; font-size : 15 ; font-weight : bold ; }
   part page-title { color : "#d8d0c4" ; font-size : 13 ; }
   part toolbar { background : "#2b2823" ; padding : 8 ; gap : 6 ; align : center-vertical ; border-bottom-width : 1 ; border-bottom-color : "#50483d" ; }
+  part library-actions { background : "#2f2b26" ; padding : 7 ; gap : 6 ; align : center-vertical ; border-bottom-width : 1 ; border-bottom-color : "#50483d" ; }
   part page-actions { background : "#312d27" ; padding : 8 ; gap : 6 ; align : center-vertical ; border-bottom-width : 1 ; border-bottom-color : "#50483d" ; }
   part back-button {
     background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
@@ -51,6 +52,7 @@ style VentureChrome {
   part history-heading { color : "#e1a45d" ; font-size : 14 ; font-weight : bold ; flex-grow : 1 ; }
   part history-position { color : "#bdb4a7" ; font-size : 11 ; }
   part history-close-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; }
+  part history-title { color : "#d8d0c4" ; font-weight : bold ; }
   part history-address { color : "#bdb4a7" ; font-family : monospace ; font-size : 11 ; }
   part history-actions { gap : 6 ; align : center-vertical ; }
   part history-previous-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; state disabled { opacity : 0.45 ; } }

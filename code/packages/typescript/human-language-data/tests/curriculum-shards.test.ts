@@ -39,6 +39,7 @@ import {
   loadCurriculumSpine,
   loadLanguageCurricula,
   loadLanguageRegistry,
+  loadTrackLanguageCurriculum,
 } from "../src/loader.js";
 import {
   listShardNames,
@@ -445,6 +446,12 @@ describe("the loader sees the sharded curricula", () => {
     // no `curriculum.json`, and a migrated track may not have one. Without the
     // `isSharded` half, tracks would vanish from every gate in silence.
     expect(loaded).toHaveLength(23);
+  });
+
+  it("reads one track without changing its membership projection", () => {
+    const punjabi = loaded.find((curriculum) => curriculum.language === "punjabi");
+    expect(loadTrackLanguageCurriculum("punjabi", root)).toEqual(punjabi);
+    expect(() => loadTrackLanguageCurriculum("../punjabi", root)).toThrow(/unsafe language id/);
   });
 
   it("reads the same authored projection the canonical shards rebuild", () => {

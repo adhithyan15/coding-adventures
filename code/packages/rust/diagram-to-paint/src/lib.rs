@@ -26,18 +26,18 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.67.0";
+pub const VERSION: &str = "0.73.0";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
-    ChartTextAnchor, ChartTextBaseline, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
+    ChartTextAnchor, ChartTextBaseline, DiagramLabel, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
     LayoutedChartDiagram, LayoutedChartItem,
     EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
     LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
-    LayoutedBoardDiagram, LayoutedPacketDiagram,
+    LayoutedBoardCard, LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
@@ -2063,11 +2063,26 @@ fn parse_css_color(css: &str) -> Option<Color> {
 enum CssColorMixSpace {
     Srgb,
     SrgbLinear,
+    DisplayP3,
+    A98Rgb,
+    ProPhotoRgb,
+    Rec2020,
+    XyzD65,
+    XyzD50,
     Hsl,
     Hwb,
     Lab,
+    Lch,
     Oklab,
     Oklch,
+}
+
+#[derive(Clone, Copy)]
+enum CssHueInterpolation {
+    Shorter,
+    Longer,
+    Increasing,
+    Decreasing,
 }
 
 fn parse_css_color_mix_function(css: &str) -> Option<Color> {
@@ -2078,16 +2093,43 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         return None;
     }
     let interpolation = parts[0].split_whitespace().collect::<Vec<_>>();
-    let space = match interpolation.as_slice() {
-        ["in", "srgb"] => CssColorMixSpace::Srgb,
-        ["in", "srgb-linear"] => CssColorMixSpace::SrgbLinear,
-        ["in", "hsl"] => CssColorMixSpace::Hsl,
-        ["in", "hwb"] => CssColorMixSpace::Hwb,
-        ["in", "lab"] => CssColorMixSpace::Lab,
-        ["in", "oklab"] => CssColorMixSpace::Oklab,
-        ["in", "oklch"] => CssColorMixSpace::Oklch,
+    let (space_name, hue_interpolation, explicit_hue_method) = match interpolation.as_slice() {
+        ["in", space] => (*space, CssHueInterpolation::Shorter, false),
+        ["in", space, method, "hue"] => {
+            let method = match *method {
+                "shorter" => CssHueInterpolation::Shorter,
+                "longer" => CssHueInterpolation::Longer,
+                "increasing" => CssHueInterpolation::Increasing,
+                "decreasing" => CssHueInterpolation::Decreasing,
+                _ => return None,
+            };
+            (*space, method, true)
+        }
         _ => return None,
     };
+    let space = match space_name {
+        "srgb" => CssColorMixSpace::Srgb,
+        "srgb-linear" => CssColorMixSpace::SrgbLinear,
+        "display-p3" => CssColorMixSpace::DisplayP3,
+        "a98-rgb" => CssColorMixSpace::A98Rgb,
+        "prophoto-rgb" => CssColorMixSpace::ProPhotoRgb,
+        "rec2020" => CssColorMixSpace::Rec2020,
+        "xyz" | "xyz-d65" => CssColorMixSpace::XyzD65,
+        "xyz-d50" => CssColorMixSpace::XyzD50,
+        "hsl" => CssColorMixSpace::Hsl,
+        "hwb" => CssColorMixSpace::Hwb,
+        "lab" => CssColorMixSpace::Lab,
+        "lch" => CssColorMixSpace::Lch,
+        "oklab" => CssColorMixSpace::Oklab,
+        "oklch" => CssColorMixSpace::Oklch,
+        _ => return None,
+    };
+    let polar = matches!(space,
+        CssColorMixSpace::Hsl | CssColorMixSpace::Hwb
+            | CssColorMixSpace::Lch | CssColorMixSpace::Oklch);
+    if explicit_hue_method && !polar {
+        return None;
+    }
     let (first_source, first_percentage) = parse_css_color_mix_stop(parts[1])?;
     let (second_source, second_percentage) = parse_css_color_mix_stop(parts[2])?;
     let first = parse_css_color(first_source)?;
@@ -2114,6 +2156,7 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
             let powerless = (first_components[0] == 0.0, second_components[0] == 0.0);
             fixup_css_polar_hues(
                 &mut first_components, &mut second_components, powerless.0, powerless.1,
+                hue_interpolation,
             );
         }
         CssColorMixSpace::Hwb => {
@@ -2123,18 +2166,31 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
             );
             fixup_css_polar_hues(
                 &mut first_components, &mut second_components, powerless.0, powerless.1,
+                hue_interpolation,
+            );
+        }
+        CssColorMixSpace::Lch => {
+            let powerless = (first_components[1] <= 0.02, second_components[1] <= 0.02);
+            fixup_css_polar_hues(
+                &mut first_components, &mut second_components, powerless.0, powerless.1,
+                hue_interpolation,
             );
         }
         CssColorMixSpace::Oklch => {
             let powerless = (first_components[1] <= 0.000004, second_components[1] <= 0.000004);
             fixup_css_polar_hues(
                 &mut first_components, &mut second_components, powerless.0, powerless.1,
+                hue_interpolation,
             );
         }
         _ => {}
     }
     let component = |index: usize| {
-        if matches!(space, CssColorMixSpace::Hsl | CssColorMixSpace::Hwb | CssColorMixSpace::Oklch)
+        if matches!(
+            space,
+            CssColorMixSpace::Hsl | CssColorMixSpace::Hwb
+                | CssColorMixSpace::Lch | CssColorMixSpace::Oklch
+        )
             && index == 2
         {
             first_components[index] * first_weight + second_components[index] * second_weight
@@ -2157,6 +2213,16 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         CssColorMixSpace::SrgbLinear => linear_srgb_to_color(
             components[0], components[1], components[2], alpha,
         ),
+        CssColorMixSpace::DisplayP3 => css_display_p3_to_color(components, alpha),
+        CssColorMixSpace::A98Rgb => css_a98_rgb_to_color(components, alpha),
+        CssColorMixSpace::ProPhotoRgb => css_prophoto_rgb_to_color(components, alpha),
+        CssColorMixSpace::Rec2020 => css_rec2020_to_color(components, alpha),
+        CssColorMixSpace::XyzD65 => xyz_d65_to_color(
+            components[0], components[1], components[2], alpha,
+        ),
+        CssColorMixSpace::XyzD50 => xyz_d50_to_color(
+            components[0], components[1], components[2], alpha,
+        ),
         CssColorMixSpace::Hsl => css_hsl_to_color(
             components[2].to_degrees(), components[0], components[1], alpha,
         ),
@@ -2165,6 +2231,12 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         ),
         CssColorMixSpace::Lab => css_lab_to_color(
             components[0], components[1], components[2], alpha,
+        ),
+        CssColorMixSpace::Lch => css_lab_to_color(
+            components[0],
+            components[1] * components[2].cos(),
+            components[1] * components[2].sin(),
+            alpha,
         ),
         CssColorMixSpace::Oklab => css_oklab_to_color(
             components[0], components[1], components[2], alpha,
@@ -2187,9 +2259,22 @@ fn css_color_mix_components(color: Color, space: CssColorMixSpace) -> [f64; 3] {
     match space {
         CssColorMixSpace::Srgb => encoded,
         CssColorMixSpace::SrgbLinear => encoded.map(encoded_srgb_to_linear),
+        CssColorMixSpace::DisplayP3 => css_color_to_display_p3(encoded),
+        CssColorMixSpace::A98Rgb => css_color_to_a98_rgb(encoded),
+        CssColorMixSpace::ProPhotoRgb => css_color_to_prophoto_rgb(encoded),
+        CssColorMixSpace::Rec2020 => css_color_to_rec2020(encoded),
+        CssColorMixSpace::XyzD65 => css_color_to_xyz_d65(encoded),
+        CssColorMixSpace::XyzD50 => {
+            let [x, y, z] = css_color_to_xyz_d65(encoded);
+            xyz_d65_to_d50(x, y, z)
+        }
         CssColorMixSpace::Hsl => css_color_to_hsl(encoded),
         CssColorMixSpace::Hwb => css_color_to_hwb(encoded),
         CssColorMixSpace::Lab => css_color_to_lab(encoded),
+        CssColorMixSpace::Lch => {
+            let [lightness, a, b] = css_color_to_lab(encoded);
+            [lightness, a.hypot(b), b.atan2(a)]
+        }
         CssColorMixSpace::Oklab => css_color_to_oklab(encoded),
         CssColorMixSpace::Oklch => {
             let [lightness, a, b] = css_color_to_oklab(encoded);
@@ -2265,6 +2350,7 @@ fn fixup_css_polar_hues(
     second: &mut [f64; 3],
     first_powerless: bool,
     second_powerless: bool,
+    interpolation: CssHueInterpolation,
 ) {
     if first_powerless {
         first[2] = second[2];
@@ -2273,9 +2359,31 @@ fn fixup_css_polar_hues(
         second[2] = first[2];
     }
     let turn = std::f64::consts::TAU;
-    let delta = (second[2] - first[2] + std::f64::consts::PI).rem_euclid(turn)
-        - std::f64::consts::PI;
-    second[2] = first[2] + delta;
+    match interpolation {
+        CssHueInterpolation::Shorter => {
+            let delta = (second[2] - first[2] + std::f64::consts::PI).rem_euclid(turn)
+                - std::f64::consts::PI;
+            second[2] = first[2] + delta;
+        }
+        CssHueInterpolation::Longer => {
+            let delta = second[2] - first[2];
+            if delta > 0.0 && delta < std::f64::consts::PI {
+                first[2] += turn;
+            } else if delta < 0.0 && delta > -std::f64::consts::PI {
+                second[2] += turn;
+            }
+        }
+        CssHueInterpolation::Increasing => {
+            if second[2] < first[2] {
+                second[2] += turn;
+            }
+        }
+        CssHueInterpolation::Decreasing => {
+            if first[2] < second[2] {
+                first[2] += turn;
+            }
+        }
+    }
 }
 
 fn split_css_top_level_commas(source: &str) -> Option<Vec<&str>> {
@@ -2490,58 +2598,16 @@ fn parse_css_color_function(css: &str) -> Option<Color> {
         }),
         "srgb-linear" => Some(linear_srgb_to_color(r, g, b, alpha)),
         "display-p3" => {
-            let r = encoded_srgb_to_linear(r);
-            let g = encoded_srgb_to_linear(g);
-            let b = encoded_srgb_to_linear(b);
-            Some(xyz_d65_to_color(
-                0.4865709486482162 * r + 0.2656676931690931 * g + 0.1982172852343625 * b,
-                0.2289745640697488 * r + 0.6917385218365064 * g + 0.0792869140937450 * b,
-                0.0451133818589026 * g + 1.043_944_368_900_976 * b,
-                alpha,
-            ))
+            Some(css_display_p3_to_color([r, g, b], alpha))
         }
         "a98-rgb" => {
-            let r = r.powf(563.0 / 256.0);
-            let g = g.powf(563.0 / 256.0);
-            let b = b.powf(563.0 / 256.0);
-            Some(xyz_d65_to_color(
-                (573536.0 / 994567.0) * r + (263643.0 / 1420810.0) * g + (187206.0 / 994567.0) * b,
-                (591459.0 / 1989134.0) * r + (6239551.0 / 9945670.0) * g + (37422.0 / 4972835.0) * b,
-                (53769.0 / 1989134.0) * r + (351524.0 / 4972835.0) * g + (4929758.0 / 4972835.0) * b,
-                alpha,
-            ))
+            Some(css_a98_rgb_to_color([r, g, b], alpha))
         }
         "prophoto-rgb" => {
-            let decode = |value: f64| if value <= 16.0 / 512.0 { value / 16.0 } else { value.powf(1.8) };
-            let r = decode(r);
-            let g = decode(g);
-            let b = decode(b);
-            Some(xyz_d50_to_color(
-                0.7977666449006423 * r + 0.1351812974005331 * g + 0.0313477341283922 * b,
-                0.2880748288194013 * r + 0.711_835_234_241_873 * g + 0.0000899369387256 * b,
-                0.8251046025104601 * b,
-                alpha,
-            ))
+            Some(css_prophoto_rgb_to_color([r, g, b], alpha))
         }
         "rec2020" => {
-            let transfer_alpha = 1.09929682680944;
-            let beta = 0.018053968510807;
-            let decode = |value: f64| {
-                if value < beta * 4.5 {
-                    value / 4.5
-                } else {
-                    ((value + transfer_alpha - 1.0) / transfer_alpha).powf(1.0 / 0.45)
-                }
-            };
-            let r = decode(r);
-            let g = decode(g);
-            let b = decode(b);
-            Some(xyz_d65_to_color(
-                (63426534.0 / 99577255.0) * r + (20160776.0 / 139408157.0) * g + (47086771.0 / 278816314.0) * b,
-                (26158966.0 / 99577255.0) * r + (472592308.0 / 697040785.0) * g + (8267143.0 / 139408157.0) * b,
-                (19567812.0 / 697040785.0) * g + (295819943.0 / 278816314.0) * b,
-                alpha,
-            ))
+            Some(css_rec2020_to_color([r, g, b], alpha))
         }
         "xyz" | "xyz-d65" => Some(xyz_d65_to_color(r, g, b, alpha)),
         "xyz-d50" => Some(xyz_d50_to_color(r, g, b, alpha)),
@@ -2649,24 +2715,211 @@ fn css_oklab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
 }
 
 fn linear_srgb_to_color(r: f64, g: f64, b: f64, alpha: u8) -> Color {
-    let encode = |linear: f64| {
-        let value = if linear <= 0.0031308 {
-            12.92 * linear
-        } else {
-            1.055 * linear.powf(1.0 / 2.4) - 0.055
-        };
-        (value.clamp(0.0, 1.0) * 255.0).round() as u8
-    };
     Color {
-        r: encode(r),
-        g: encode(g),
-        b: encode(b),
+        r: (linear_srgb_to_encoded(r).clamp(0.0, 1.0) * 255.0).round() as u8,
+        g: (linear_srgb_to_encoded(g).clamp(0.0, 1.0) * 255.0).round() as u8,
+        b: (linear_srgb_to_encoded(b).clamp(0.0, 1.0) * 255.0).round() as u8,
         a: alpha,
+    }
+}
+
+fn linear_srgb_to_encoded(linear: f64) -> f64 {
+    if linear <= 0.0031308 {
+        12.92 * linear
+    } else {
+        1.055 * linear.powf(1.0 / 2.4) - 0.055
     }
 }
 
 fn encoded_srgb_to_linear(value: f64) -> f64 {
     if value <= 0.04045 { value / 12.92 } else { ((value + 0.055) / 1.055).powf(2.4) }
+}
+
+fn css_display_p3_to_color([r, g, b]: [f64; 3], alpha: u8) -> Color {
+    let r = encoded_srgb_to_linear(r);
+    let g = encoded_srgb_to_linear(g);
+    let b = encoded_srgb_to_linear(b);
+    let x = 0.4865709486482162 * r + 0.2656676931690931 * g + 0.1982172852343625 * b;
+    let y = 0.2289745640697488 * r + 0.6917385218365064 * g + 0.0792869140937450 * b;
+    let z = 0.0451133818589026 * g + 1.043_944_368_900_976 * b;
+    linear_srgb_to_color(
+        3.2409699419045226 * x - 1.537383177570094 * y - 0.4986107602930034 * z,
+        -0.9692436362808796 * x + 1.8759675015077202 * y + 0.04155505740717559 * z,
+        0.05563007969699366 * x - 0.20397695888897652 * y + 1.0569715142428786 * z,
+        alpha,
+    )
+}
+
+fn css_color_to_display_p3(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    let x = 0.4123907992659595 * r + 0.357_584_339_383_878 * g + 0.1804807884018343 * b;
+    let y = 0.2126390058715104 * r + 0.715_168_678_767_756 * g + 0.0721923153607337 * b;
+    let z = 0.0193308187155918 * r + 0.119_194_779_794_626 * g + 0.9505321522496607 * b;
+    let linear = [
+        2.493496911941425 * x - 0.9313836179191239 * y - 0.40271078445071684 * z,
+        -0.8294889695615747 * x + 1.7626640603183463 * y + 0.023624685841943577 * z,
+        0.03584583024378447 * x - 0.07617238926804182 * y + 0.9568845240076872 * z,
+    ];
+    linear.map(|value| {
+        let encoded = linear_srgb_to_encoded(value);
+        if encoded.abs() < 1e-12 {
+            0.0
+        } else if (encoded - 1.0).abs() < 1e-12 {
+            1.0
+        } else {
+            encoded
+        }
+    })
+}
+
+fn css_a98_rgb_to_color([r, g, b]: [f64; 3], alpha: u8) -> Color {
+    let decode = |value: f64| value.signum() * value.abs().powf(563.0 / 256.0);
+    let r = decode(r);
+    let g = decode(g);
+    let b = decode(b);
+    xyz_d65_to_color(
+        (573536.0 / 994567.0) * r + (263643.0 / 1420810.0) * g + (187206.0 / 994567.0) * b,
+        (591459.0 / 1989134.0) * r + (6239551.0 / 9945670.0) * g + (374412.0 / 4972835.0) * b,
+        (53769.0 / 1989134.0) * r + (351524.0 / 4972835.0) * g + (4929758.0 / 4972835.0) * b,
+        alpha,
+    )
+}
+
+fn css_color_to_a98_rgb(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    let x = 0.4123907992659595 * r + 0.357_584_339_383_878 * g + 0.1804807884018343 * b;
+    let y = 0.2126390058715104 * r + 0.715_168_678_767_756 * g + 0.0721923153607337 * b;
+    let z = 0.0193308187155918 * r + 0.119_194_779_794_626 * g + 0.9505321522496607 * b;
+    let linear = [
+        (1829569.0 / 896150.0) * x - (506331.0 / 896150.0) * y - (308931.0 / 896150.0) * z,
+        -(851781.0 / 878810.0) * x + (1648619.0 / 878810.0) * y + (36519.0 / 878810.0) * z,
+        (16779.0 / 1248040.0) * x - (147721.0 / 1248040.0) * y + (1266979.0 / 1248040.0) * z,
+    ];
+    linear.map(|value| {
+        let encoded = value.signum() * value.abs().powf(256.0 / 563.0);
+        if encoded.abs() < 1e-12 {
+            0.0
+        } else if (encoded - 1.0).abs() < 1e-12 {
+            1.0
+        } else {
+            encoded
+        }
+    })
+}
+
+fn css_prophoto_rgb_to_color([r, g, b]: [f64; 3], alpha: u8) -> Color {
+    let decode = |value: f64| {
+        if value.abs() <= 16.0 / 512.0 {
+            value / 16.0
+        } else {
+            value.signum() * value.abs().powf(1.8)
+        }
+    };
+    let r = decode(r);
+    let g = decode(g);
+    let b = decode(b);
+    xyz_d50_to_color(
+        0.7977666449006423 * r + 0.1351812974005331 * g + 0.0313477341283922 * b,
+        0.2880748288194013 * r + 0.711_835_234_241_873 * g + 0.0000899369387256 * b,
+        0.8251046025104601 * b,
+        alpha,
+    )
+}
+
+fn css_color_to_prophoto_rgb(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    let x65 = 0.4123907992659595 * r + 0.357_584_339_383_878 * g + 0.1804807884018343 * b;
+    let y65 = 0.2126390058715104 * r + 0.715_168_678_767_756 * g + 0.0721923153607337 * b;
+    let z65 = 0.0193308187155918 * r + 0.119_194_779_794_626 * g + 0.9505321522496607 * b;
+    let x = 1.0479298 * x65 + 0.0229468 * y65 - 0.0501922 * z65;
+    let y = 0.0296278 * x65 + 0.9904345 * y65 - 0.0170738 * z65;
+    let z = -0.0092430 * x65 + 0.0150552 * y65 + 0.7518743 * z65;
+    let linear = [
+        1.3457868816471583 * x - 0.25557208737979464 * y - 0.05110186497554526 * z,
+        -0.5446307051249019 * x + 1.5082477428451468 * y + 0.02052744743642139 * z,
+        1.2119675456389452 * z,
+    ];
+    linear.map(|value| {
+        let encoded = if value.abs() >= 1.0 / 512.0 {
+            value.signum() * value.abs().powf(1.0 / 1.8)
+        } else {
+            16.0 * value
+        };
+        if encoded.abs() < 1e-12 {
+            0.0
+        } else if (encoded - 1.0).abs() < 1e-12 {
+            1.0
+        } else {
+            encoded
+        }
+    })
+}
+
+fn css_rec2020_to_color([r, g, b]: [f64; 3], alpha: u8) -> Color {
+    let transfer_alpha = 1.09929682680944;
+    let beta = 0.018053968510807;
+    let decode = |value: f64| {
+        if value.abs() < beta * 4.5 {
+            value / 4.5
+        } else {
+            value.signum()
+                * ((value.abs() + transfer_alpha - 1.0) / transfer_alpha).powf(1.0 / 0.45)
+        }
+    };
+    let r = decode(r);
+    let g = decode(g);
+    let b = decode(b);
+    xyz_d65_to_color(
+        (63426534.0 / 99577255.0) * r + (20160776.0 / 139408157.0) * g + (47086771.0 / 278816314.0) * b,
+        (26158966.0 / 99577255.0) * r + (472592308.0 / 697040785.0) * g + (8267143.0 / 139408157.0) * b,
+        (19567812.0 / 697040785.0) * g + (295819943.0 / 278816314.0) * b,
+        alpha,
+    )
+}
+
+fn css_color_to_rec2020(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    let x = 0.4123907992659595 * r + 0.357_584_339_383_878 * g + 0.1804807884018343 * b;
+    let y = 0.2126390058715104 * r + 0.715_168_678_767_756 * g + 0.0721923153607337 * b;
+    let z = 0.0193308187155918 * r + 0.119_194_779_794_626 * g + 0.9505321522496607 * b;
+    let linear = [
+        (30757411.0 / 17917100.0) * x - (6372589.0 / 17917100.0) * y - (4539589.0 / 17917100.0) * z,
+        -(19765991.0 / 29648200.0) * x + (47925759.0 / 29648200.0) * y + (467509.0 / 29648200.0) * z,
+        (792561.0 / 44930125.0) * x - (1921689.0 / 44930125.0) * y + (42328811.0 / 44930125.0) * z,
+    ];
+    let transfer_alpha = 1.09929682680944;
+    let beta = 0.018053968510807;
+    linear.map(|value| {
+        let encoded = if value.abs() > beta {
+            value.signum() * (transfer_alpha * value.abs().powf(0.45) - (transfer_alpha - 1.0))
+        } else {
+            4.5 * value
+        };
+        if encoded.abs() < 1e-12 {
+            0.0
+        } else if (encoded - 1.0).abs() < 1e-12 {
+            1.0
+        } else {
+            encoded
+        }
+    })
+}
+
+fn css_color_to_xyz_d65(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    [
+        0.4123907992659595 * r + 0.357_584_339_383_878 * g + 0.1804807884018343 * b,
+        0.2126390058715104 * r + 0.715_168_678_767_756 * g + 0.0721923153607337 * b,
+        0.0193308187155918 * r + 0.119_194_779_794_626 * g + 0.9505321522496607 * b,
+    ]
+}
+
+fn xyz_d65_to_d50(x: f64, y: f64, z: f64) -> [f64; 3] {
+    [
+        1.0479298 * x + 0.0229468 * y - 0.0501922 * z,
+        0.0296278 * x + 0.9904345 * y - 0.0170738 * z,
+        -0.0092430 * x + 0.0150552 * y + 0.7518743 * z,
+    ]
 }
 
 fn xyz_d65_to_color(x: f64, y: f64, z: f64, alpha: u8) -> Color {
@@ -2934,8 +3187,18 @@ fn text_node_no_wrap(
     node
 }
 
+struct MarkdownLabelBox {
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+}
+
 fn markdown_label_instructions<S, M, R>(
-    node: &LayoutedGraphNode,
+    label: &DiagramLabel,
+    bounds: MarkdownLabelBox,
+    font: &FontSpec,
+    color: &str,
     options: &DiagramToPaintOptions<'_, S, M, R>,
 ) -> Vec<PaintInstruction>
 where
@@ -2944,7 +3207,7 @@ where
     R: FontResolver<Handle = S::Handle>,
 {
     let mut lines = vec![Vec::<(String, bool, bool)>::new()];
-    for span in &node.label.spans {
+    for span in &label.spans {
         for (index, part) in span.text.split('\n').enumerate() {
             if index > 0 {
                 lines.push(Vec::new());
@@ -2958,27 +3221,24 @@ where
         }
     }
 
-    let icon_width = node.icon_glyph.as_ref().map(|_| node.style.font_size * 1.5).unwrap_or(0.0);
-    let content_x = node.x + icon_width;
-    let content_width = node.width - icon_width;
-    let size = node.style.font_size as f32;
-    let line_height = node.style.font_size * 1.2;
+    let size = font.size as f32;
+    let line_height = font.size * 1.2;
     let text_height = lines.len().max(1) as f64 * line_height;
-    let top = node.y + (node.height - text_height) / 2.0;
+    let top = bounds.y + (bounds.height - text_height) / 2.0;
     let mut output = Vec::new();
 
     for (line_index, line) in lines.into_iter().enumerate() {
         let mut shaped_chunks = Vec::new();
         let mut line_advance = 0.0;
-        let mut ascent = node.style.font_size * 0.8;
+        let mut ascent = font.size * 0.8;
         for (text, bold, italic) in line {
-            let query = FontQuery::named(node.style.font_family.clone())
+            let query = FontQuery::named(font.family.clone())
                 .with_weight(FontWeight(if bold {
-                    node.style.font_weight.max(700)
+                    font.weight.max(700)
                 } else {
-                    node.style.font_weight
+                    font.weight
                 }))
-                .with_style(if italic || node.style.font_italic {
+                .with_style(if italic || font.italic {
                     FontStyle::Italic
                 } else {
                     FontStyle::Normal
@@ -2988,7 +3248,7 @@ where
             };
             let units_per_em = options.metrics.units_per_em(&handle).max(1) as f64;
             ascent = ascent.max(
-                options.metrics.ascent(&handle) as f64 * node.style.font_size / units_per_em,
+                options.metrics.ascent(&handle) as f64 * font.size / units_per_em,
             );
             let Ok(shaped) = options
                 .shaper
@@ -3001,7 +3261,7 @@ where
         }
 
         let baseline_y = top + line_index as f64 * line_height + ascent;
-        let mut pen_x = content_x + (content_width - line_advance) / 2.0;
+        let mut pen_x = bounds.x + (bounds.width - line_advance) / 2.0;
         for shaped in shaped_chunks {
             for run in shaped.runs {
                 let mut segment_pen = 0.0;
@@ -3022,8 +3282,8 @@ where
                     base: PaintBase::default(),
                     glyphs,
                     font_ref: run.font_ref,
-                    font_size: node.style.font_size,
-                    fill: Some(node.style.text_color.clone()),
+                    font_size: font.size,
+                    fill: Some(color.to_string()),
                 }));
                 pen_x += run.x_advance_total as f64;
             }
@@ -3201,7 +3461,26 @@ where
             ));
         }
         if !node.label.spans.is_empty() {
-            instructions.extend(markdown_label_instructions(node, options));
+            let icon_width = node.icon_glyph.as_ref().map(|_| node.style.font_size * 1.5).unwrap_or(0.0);
+            let font = FontSpec {
+                family: node.style.font_family.clone(),
+                size: node.style.font_size,
+                weight: node.style.font_weight,
+                italic: node.style.font_italic,
+                ..label_font.clone()
+            };
+            instructions.extend(markdown_label_instructions(
+                &node.label,
+                MarkdownLabelBox {
+                    x: node.x + icon_width,
+                    y: node.y,
+                    width: node.width - icon_width,
+                    height: node.height,
+                },
+                &font,
+                &node.style.text_color,
+                options,
+            ));
             continue;
         }
         let line_count = node.label.text.lines().count().max(1) as f64;
@@ -3432,7 +3711,7 @@ where
     let mut text_children = Vec::new();
     for column in &board.columns {
         instructions.push(PaintInstruction::Rect(PaintRect {
-            base: PaintBase::default(), x: column.x, y: column.y,
+            base: kanban_paint_base(&column.id, &column.classes, column.ticket_url.as_deref()), x: column.x, y: column.y,
             width: column.width, height: column.height,
             fill: Some(column.style.fill.clone()), stroke: Some(column.style.stroke.clone()),
             stroke_width: Some(column.style.stroke_width),
@@ -3441,25 +3720,99 @@ where
         }));
         let mut heading_font = options.title_font.clone();
         heading_font.size = 16.0;
-        text_children.push(text_node_no_wrap(
-            &column.label.text, column.x + 12.0, column.y + 14.0,
-            column.width - 24.0, 22.0, heading_font,
-            css_to_color(&column.style.text_color),
-        ));
+        if column.label.spans.is_empty() {
+            text_children.push(text_node_no_wrap(
+                &column.label.text, column.x + 12.0, column.y + 14.0,
+                column.width - 24.0, 22.0, heading_font,
+                css_to_color(&column.style.text_color),
+            ));
+        } else {
+            instructions.extend(markdown_label_instructions(
+                &column.label,
+                MarkdownLabelBox {
+                    x: column.x + 12.0,
+                y: column.y + 14.0,
+                width: column.width - 24.0,
+                height: column.header_height - 28.0,
+                },
+                &heading_font,
+                &column.style.text_color,
+                options,
+            ));
+        }
         for card in &column.cards {
+            let metadata = kanban_card_metadata(card);
             instructions.push(PaintInstruction::Rect(PaintRect {
-                base: PaintBase::default(), x: card.x, y: card.y,
+                base: kanban_paint_base(&card.id, &card.classes, card.ticket_url.as_deref()), x: card.x, y: card.y,
                 width: card.width, height: card.height,
                 fill: Some(card.style.fill.clone()), stroke: Some(card.style.stroke.clone()),
                 stroke_width: Some(card.style.stroke_width),
                 corner_radius: Some(card.style.corner_radius),
                 stroke_dash: None, stroke_dash_offset: None,
             }));
-            text_children.push(text_node(
-                &card.label.text, card.x + 10.0, card.y + 18.0,
-                card.width - 20.0, card.height - 24.0,
-                options.label_font.clone(), css_to_color(&card.style.text_color),
-            ));
+            let (label_x, label_width) = if let Some(icon) = &card.icon {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: card.x + 8.0,
+                    y: card.y + 12.0,
+                    width: 52.0,
+                    height: 22.0,
+                    fill: None,
+                    stroke: Some(card.style.stroke.clone()),
+                    stroke_width: Some(1.0),
+                    corner_radius: Some(11.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                let mut icon_font = options.label_font.clone();
+                icon_font.size = 9.0;
+                text_children.push(text_node_no_wrap(
+                    icon,
+                    card.x + 11.0,
+                    card.y + 15.0,
+                    46.0,
+                    16.0,
+                    icon_font,
+                    css_to_color(&card.style.text_color),
+                ));
+                (card.x + 66.0, card.width - 76.0)
+            } else {
+                (card.x + 10.0, card.width - 20.0)
+            };
+            let label_height = card.height - if metadata.is_some() { 46.0 } else { 24.0 };
+            if card.label.spans.is_empty() {
+                text_children.push(text_node(
+                    &card.label.text, label_x, card.y + 18.0,
+                    label_width, label_height,
+                    options.label_font.clone(), css_to_color(&card.style.text_color),
+                ));
+            } else {
+                instructions.extend(markdown_label_instructions(
+                    &card.label,
+                    MarkdownLabelBox {
+                        x: label_x,
+                        y: card.y + 18.0,
+                        width: label_width,
+                        height: label_height,
+                    },
+                    &options.label_font,
+                    &card.style.text_color,
+                    options,
+                ));
+            }
+            if let Some(metadata) = metadata {
+                let mut metadata_font = options.label_font.clone();
+                metadata_font.size = 11.0;
+                text_children.push(text_node_no_wrap(
+                    &metadata,
+                    card.x + 10.0,
+                    card.y + card.height - 24.0,
+                    card.width - 20.0,
+                    16.0,
+                    metadata_font,
+                    css_to_color(&card.style.text_color),
+                ));
+            }
         }
     }
     let root = PositionedNode {
@@ -3478,6 +3831,32 @@ where
         background: format!("rgba({}, {}, {}, {:.4})", bg.r, bg.g, bg.b, f64::from(bg.a) / 255.0),
         instructions, id: None, metadata: None,
     }
+}
+
+fn kanban_card_metadata(card: &LayoutedBoardCard) -> Option<String> {
+    let mut fields = Vec::new();
+    if let Some(ticket) = &card.ticket {
+        fields.push(format!("#{ticket}"));
+    }
+    if let Some(assigned) = &card.assigned {
+        fields.push(format!("@{assigned}"));
+    }
+    if let Some(priority) = &card.priority {
+        fields.push(format!("priority: {priority}"));
+    }
+    (!fields.is_empty()).then(|| fields.join("  "))
+}
+
+fn kanban_paint_base(id: &str, classes: &[String], ticket_url: Option<&str>) -> PaintBase {
+    let mut metadata = HashMap::new();
+    if !classes.is_empty() {
+        metadata.insert("diagram.classes".into(), classes.join(" "));
+    }
+    if let Some(ticket_url) = ticket_url {
+        metadata.insert("diagram.link.url".into(), ticket_url.into());
+        metadata.insert("diagram.link.target".into(), "_blank".into());
+    }
+    PaintBase { id: Some(id.into()), metadata: (!metadata.is_empty()).then_some(metadata) }
 }
 
 // ============================================================================
@@ -7020,7 +7399,74 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.67.0");
+        assert_eq!(crate::VERSION, "0.73.0");
+    }
+
+    #[test]
+    fn kanban_markdown_labels_lower_to_backend_neutral_glyph_runs() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let rich_label = |text: &str, source: &str, spans| {
+            DiagramLabel::markdown(text, source, spans)
+        };
+        let layout = LayoutedBoardDiagram {
+            width: 300.0,
+            height: 180.0,
+            columns: vec![diagram_ir::LayoutedBoardColumn {
+                id: "todo".into(),
+                label: rich_label(
+                    "Todo queue",
+                    "**Todo** queue",
+                    vec![
+                        diagram_ir::DiagramTextSpan { text: "Todo".into(), bold: true, italic: false },
+                        diagram_ir::DiagramTextSpan { text: " queue".into(), bold: false, italic: false },
+                    ],
+                ),
+                x: 20.0,
+                y: 20.0,
+                width: 260.0,
+                height: 140.0,
+                header_height: 52.0,
+                cards: vec![diagram_ir::LayoutedBoardCard {
+                    id: "card".into(),
+                    label: rich_label(
+                        "Quoted card",
+                        "Quoted *card*",
+                        vec![
+                            diagram_ir::DiagramTextSpan { text: "Quoted ".into(), bold: false, italic: false },
+                            diagram_ir::DiagramTextSpan { text: "card".into(), bold: false, italic: true },
+                        ],
+                    ),
+                    x: 32.0,
+                    y: 84.0,
+                    width: 236.0,
+                    height: 72.0,
+                    style: default_style(),
+                    ticket: None,
+                    ticket_url: None,
+                    assigned: None,
+                    priority: None,
+                    icon: None,
+                    classes: Vec::new(),
+                }],
+                style: default_style(),
+                ticket: None,
+                ticket_url: None,
+                classes: Vec::new(),
+            }],
+        };
+
+        let scene = diagram_to_paint_board(&layout, &opts);
+        let runs = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some(run),
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(runs.len(), 4);
+        assert!(runs.iter().all(|run| run.glyphs.iter().all(|glyph| {
+            glyph.glyph_id != '*' as u32 && glyph.glyph_id != '`' as u32
+        })));
     }
 
     #[test]
@@ -8058,11 +8504,11 @@ mod tests {
 
     #[test]
     fn css_colors_parse_color_a98_rgb_profile() {
-        let expected = Color { r: 40, g: 86, b: 157, a: 204 };
+        let expected = Color { r: 0, g: 102, b: 156, a: 204 };
         assert_eq!(css_to_color("color(a98-rgb 0.2 0.4 0.6 / 0.8)"), expected);
         assert_eq!(css_to_color("color(a98-rgb 20% 40% 60% / 80%)"), expected);
-        assert_eq!(with_opacity("color(a98-rgb 0.2 0.4 0.6 / 80%)", 0.5), "rgba(40,86,157,0.4)");
-        assert_eq!(normalize_css_paint("color(a98-rgb 20% 40% 60% / 80%)".into()), "rgba(40,86,157,0.8)");
+        assert_eq!(with_opacity("color(a98-rgb 0.2 0.4 0.6 / 80%)", 0.5), "rgba(0,102,156,0.4)");
+        assert_eq!(normalize_css_paint("color(a98-rgb 20% 40% 60% / 80%)".into()), "rgba(0,102,156,0.8)");
     }
 
     #[test]
@@ -8144,6 +8590,95 @@ mod tests {
     }
 
     #[test]
+    fn css_colors_mix_in_display_p3() {
+        assert_eq!(
+            css_to_color("color-mix(in display-p3, black, white)"),
+            Color { r: 128, g: 128, b: 128, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in display-p3, red, blue)"),
+            Color { r: 128, g: 10, b: 145, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in display-p3, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in display-p3, black, white)", 0.5), "rgba(128,128,128,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_a98_rgb() {
+        assert_eq!(
+            css_to_color("color-mix(in a98-rgb, black, white)"),
+            Color { r: 129, g: 129, b: 129, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in a98-rgb, red, blue)"),
+            Color { r: 129, g: 0, b: 129, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in a98-rgb, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in a98-rgb, black, white)", 0.5), "rgba(129,129,129,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_prophoto_rgb() {
+        assert_eq!(
+            css_to_color("color-mix(in prophoto-rgb, black, white)"),
+            Color { r: 146, g: 146, b: 146, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in prophoto-rgb, red, blue)"),
+            Color { r: 186, g: 3, b: 157, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in prophoto-rgb, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in prophoto-rgb, black, white)", 0.5), "rgba(146,146,146,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_rec2020() {
+        assert_eq!(
+            css_to_color("color-mix(in rec2020, black, white)"),
+            Color { r: 139, g: 139, b: 139, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in rec2020, red, blue)"),
+            Color { r: 162, g: 19, b: 148, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in rec2020, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in rec2020, black, white)", 0.5), "rgba(139,139,139,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_xyz_spaces() {
+        assert_eq!(
+            css_to_color("color-mix(in xyz, black, white)"),
+            Color { r: 188, g: 188, b: 188, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in xyz-d65, red, blue)"),
+            Color { r: 188, g: 0, b: 188, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in xyz-d50, red, blue)"),
+            Color { r: 188, g: 0, b: 188, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in xyz-d50, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in xyz-d65, black, white)", 0.5), "rgba(188,188,188,0.5)");
+    }
+
+    #[test]
     fn css_colors_mix_in_hsl() {
         assert_eq!(
             css_to_color("color-mix(in hsl, black, white)"),
@@ -8158,6 +8693,30 @@ mod tests {
             Color { r: 255, g: 0, b: 0, a: 51 },
         );
         assert_eq!(with_opacity("color-mix(in hsl, black, white)", 0.5), "rgba(128,128,128,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_with_explicit_hue_interpolation() {
+        assert_eq!(
+            css_to_color("color-mix(in hsl shorter hue, red, blue)"),
+            Color { r: 255, g: 0, b: 255, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in hsl longer hue, red, blue)"),
+            Color { r: 0, g: 255, b: 0, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in hsl increasing hue, red, blue)"),
+            Color { r: 0, g: 255, b: 0, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in hsl decreasing hue, red, blue)"),
+            Color { r: 255, g: 0, b: 255, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in srgb longer hue, red, blue)"),
+            Color { r: 0, g: 0, b: 0, a: 255 },
+        );
     }
 
     #[test]
@@ -8196,6 +8755,23 @@ mod tests {
             Color { r: 255, g: 0, b: 0, a: 51 },
         );
         assert_eq!(with_opacity("color-mix(in lab, black, white)", 0.5), "rgba(119,119,119,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_lch() {
+        assert_eq!(
+            css_to_color("color-mix(in lch, black, white)"),
+            Color { r: 119, g: 119, b: 119, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in lch, red, blue)"),
+            Color { r: 245, g: 0, b: 134, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in lch, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in lch, black, white)", 0.5), "rgba(119,119,119,0.5)");
     }
 
     #[test]

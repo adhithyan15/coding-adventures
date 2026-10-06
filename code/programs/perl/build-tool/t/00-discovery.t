@@ -29,6 +29,7 @@ use Test2::V0;
 use File::Temp qw(tempdir);
 use File::Path qw(make_path);
 use File::Spec ();
+use JSON::PP qw(decode_json);
 
 use CodingAdventures::BuildTool::Discovery;
 
@@ -40,6 +41,15 @@ sub make_pkg {
     open(my $fh, '>', "$root/$path/BUILD") or die "Cannot create BUILD: $!";
     print $fh $content;
     close $fh;
+}
+
+sub load_registry_fixture {
+    my $path = "$Bin/../../../../specs/fixtures/build-tool-v1/cases/discovery-language-registry.json";
+    open(my $fh, '<:raw', $path) or die "Cannot read $path: $!";
+    local $/;
+    my $fixture = decode_json(<$fh>);
+    close $fh;
+    return $fixture;
 }
 
 # ---------------------------------------------------------------------------
@@ -322,6 +332,96 @@ END
     is(scalar @cmds, 2, '2 non-blank non-comment lines');
     is($cmds[0], 'cpanm --installdeps --quiet .', 'first command correct');
     is($cmds[1], 'prove -l -v t/', 'second command correct');
+};
+
+subtest 'neutral OCaml package and Dune decoy projection' => sub {
+    my $root = tempdir(CLEANUP => 1);
+    my $fixture = load_registry_fixture();
+    my @ocaml = grep { $_->{path} =~ m{^code/packages/ocaml/} }
+        @{ $fixture->{workspace}{files} };
+    is(scalar @ocaml, 2, 'neutral fixture has package and generated decoy');
+    for my $file (@ocaml) {
+        (my $package_path = $file->{path}) =~ s{/BUILD$}{};
+        make_pkg($root, $package_path, $file->{content_utf8});
+    }
+    make_pkg($root, 'code/packages/ocaml/near/_Build/demo');
+    make_pkg($root, 'code/packages/ocaml/near/_build-example/demo');
+
+    my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $root);
+    $discovery->discover();
+    my @relative = sort map {
+        my $path = File::Spec->abs2rel($_->{path}, $root);
+        $path =~ s{\\}{/}g;
+        $path;
+    } @{ $discovery->packages() };
+    is(
+        \@relative,
+        [qw(code/packages/ocaml/demo-ocaml code/packages/ocaml/near/_Build/demo code/packages/ocaml/near/_build-example/demo)],
+        'only exact lowercase _build is pruned during discovery',
+    );
+    my ($package) = grep { $_->{path} =~ m{demo-ocaml$} }
+        @{ $discovery->packages() };
+    is($package->{language}, 'ocaml', 'neutral package is classified as OCaml');
+    is($package->{name}, 'ocaml/demo-ocaml', 'neutral package identity is preserved');
+};
+
+subtest 'selected BUILD carries explicit source mode and declarations' => sub {
+    my $root = tempdir(CLEANUP => 1);
+    make_pkg($root, 'code/packages/perl/shell', "prove -l t/\n");
+    make_pkg($root, 'code/packages/perl/declared', <<'BUILD');
+perl_library(
+    name = "declared",
+    srcs = glob(["assets/*.bin", "lib/**/*.pm"]),
+)
+BUILD
+    make_pkg($root, 'code/packages/perl/empty', <<'BUILD');
+perl_library(name = "empty", srcs = [])
+BUILD
+
+    my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $root);
+    $discovery->discover();
+    my %packages = map { $_->{name} => $_ } @{ $discovery->packages() };
+
+    is($packages{'perl/shell'}{source_mode}, 'extension', 'shell BUILD uses extension mode');
+    is($packages{'perl/shell'}{declared_srcs}, [], 'shell BUILD has no declarations');
+    is($packages{'perl/shell'}{build_commands}, ['prove -l t/'], 'shell commands unchanged');
+    is($packages{'perl/declared'}{source_mode}, 'declared_sources', 'Starlark target uses declared mode');
+    is($packages{'perl/declared'}{declared_srcs}, ['assets/*.bin', 'lib/**/*.pm'], 'ordered source globs are carried');
+    is($packages{'perl/declared'}{build_commands},
+        ['cpanm --installdeps --quiet .', 'prove -l -v t/'],
+        'Starlark target generates commands rather than executing raw BUILD lines');
+    is($packages{'perl/empty'}{source_mode}, 'declared_sources', 'empty srcs remains declared mode');
+    is($packages{'perl/empty'}{declared_srcs}, [], 'empty declaration remains empty');
+};
+
+subtest 'detected Starlark without a supported target fails closed' => sub {
+    my $root = tempdir(CLEANUP => 1);
+    make_pkg($root, 'code/packages/perl/unsupported', 'load("//rules:perl.bzl", "perl_library")');
+    my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $root);
+    like(
+        dies { $discovery->discover() },
+        qr/STARLARK_TARGET_INVALID/,
+        'invalid declaration is not reinterpreted as shell commands',
+    );
+};
+
+subtest 'malformed Starlark srcs fail closed' => sub {
+    for my $srcs ('glob(["assets/*.bin")', '[unquoted]', '["a.pm"] + ["b.pm"]') {
+        my $root = tempdir(CLEANUP => 1);
+        make_pkg($root, 'code/packages/perl/malformed',
+            "perl_library(name = \"malformed\", srcs = $srcs)\n");
+        my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $root);
+        like(dies { $discovery->discover() }, qr/STARLARK_TARGET_INVALID/,
+            "$srcs rejected rather than treated as an empty declaration");
+    }
+    my $root = tempdir(CLEANUP => 1);
+    make_pkg($root, 'code/packages/perl/partially-valid', <<'BUILD');
+perl_library(name = "first", srcs = ["a.pm"])
+perl_library(name = "broken", srcs = ["missing.pm"] + ["other.pm"])
+BUILD
+    my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $root);
+    like(dies { $discovery->discover() }, qr/STARLARK_TARGET_INVALID/,
+        'a malformed later target invalidates the whole BUILD');
 };
 
 done_testing();

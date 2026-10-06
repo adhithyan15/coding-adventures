@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W12-closing-supported",
+    "language": "punjabi",
+    "chapter": 156,
+    "sequence": 8540,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:411d5aed4af6866a",
+    "detachableSegments": [
+      "Writing — supported closing"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

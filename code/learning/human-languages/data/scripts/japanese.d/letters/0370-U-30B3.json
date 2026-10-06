@@ -3,13 +3,19 @@
   "sound": "ko",
   "role": "katakana",
   "components": [
-    "a top-and-right corner",
-    "a base horizontal"
+    "a top bar that turns down the right side",
+    "a base bar"
   ],
   "strokeOrder": [
-    "corner",
-    "base"
+    "draw the top bar from left to right, then without lifting turn down the right side",
+    "lift, draw the base bar from left to right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 030b3 file records コ as two stroke paths in this order and direction: the top bar turning down the right side, then the base bar; so there is one pen lift.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/030b3.svg",
+    "citation": "KanjiVG, kanji/030b3.svg, katakana コ (U+30B3 KATAKANA LETTER KO), two stroke paths kvg:030b3-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the top bar drawn left to right, which turns down the right side without lifting; s2 is the base bar drawn left to right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. In the print glyph the right side runs on a little below the base bar, and the base bar ends on it."
+  },
   "notes": "Opens コーヒー. Traces to the same character as hiragana こ."
 }

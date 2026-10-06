@@ -73,7 +73,17 @@ it("pins Punjabi lesson-content budgets", () =>
     // two over-budget number lessons. No idiom, sense or culture claim.
     // 818 -> 820: PA-C07-hona-two-roots and PA-C07-khana-tone, the atom-budget
     // continuations. No idiom, sense or culture claim.
-    lessons: 820,
+    // 820 -> 831: the date-field runway, using taught months and digits. No
+    // idiom, sense or culture claim.
+    // 831 -> 838: three-field form integration, using only taught labels and
+    // fictional values. No idiom, sense or culture claim.
+    // 838 -> 844: six-field form integration, again with only taught values.
+    // No new idiom, sense or culture claim.
+    // 844 -> 863: named-reader message assembly and separate repair dimensions,
+    // again reusing taught language without new idioms, senses, or culture claims.
+    // 863 -> 868: two short timed checkpoints, two scaffolds, and one repair;
+    // all reuse familiar language without new idioms, senses, or culture claims.
+    lessons: 868,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

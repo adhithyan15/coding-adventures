@@ -14,7 +14,7 @@ import {
   languageWritingStages,
 } from "../assert-language-corpus.js";
 
-it("keeps Punjabi's 272-row session map aligned with canonical order", () => {
+it("keeps Punjabi's session map aligned with canonical order", () => {
   // 272 -> 278 rows: HL-C437 appends chapter 48, six `review` lessons, at the END
   // of the sequence. Appending rather than inserting is why this is a six-row
   // addition and not a renumbering: every existing session keeps its number.
@@ -40,8 +40,13 @@ it("keeps Punjabi's 272-row session map aligned with canonical order", () => {
     }),
   );
   // 818 -> 820: chapter 7's hona and khana each split a continuation off.
-  expect(rows).toHaveLength(820);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 820 }, (_, index) => index + 1));
+  // 820 -> 831: chapter 153 appends the 11-step fictional date-field runway.
+  // 831 -> 838: chapter 154 joins age, phone, and date in seven short steps.
+  // 838 -> 844: chapter 155 joins six taught fields in six bounded steps.
+  // 844 -> 863: chapter 156 builds an untimed named-reader message in 19 short steps.
+  // 863 -> 868: chapter 157 adds five bounded timed-writing and repair steps.
+  expect(rows).toHaveLength(868);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 868 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );

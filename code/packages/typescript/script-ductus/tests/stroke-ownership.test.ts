@@ -13,6 +13,8 @@ const sha256 = (value: string): string =>
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ownerNames = [
   "arabic-family",
+  // Bengali joins as one owner module, like Malayalam and Gujarati.
+  "bengali",
   "chinese",
   "cyrillic",
   "devanagari",
@@ -370,27 +372,142 @@ describe("stroke ownership migration baseline", () => {
       // lifts, down from 1, 2, 3, 3, 1, 1, 2, 2, 3, 3, 2, 3, 1, 1, 1 and 2).
       // Again only the non-Tamil data hash moves; keys, the key hash, every
       // count, Tamil and both shared-identity values remain unchanged.
+      //
+      // The 22 voiced kana the inventory holds, が to ぽ, and the three spacing
+      // marks ゛, ゜ and ー now cite KanjiVG and gain a ductus each. Keys move
+      // 439 -> 464 and Japanese 50 -> 75, with the ordered key hash and the
+      // non-Tamil data hash, measured after the last caption was settled;
+      // Tamil and both shared-identity values remain unchanged.
+      //
+      // The katakana コ and ヒ and the kanji 日, 語 and 本, taught by the
+      // chapter 5 and 6 writing lessons, now cite KanjiVG and gain a ductus
+      // each. Keys move 464 -> 469 and Japanese 75 -> 80, with
+      // the ordered key hash and the non-Tamil data hash, measured after the
+      // last caption was settled; Tamil and both shared-identity values
+      // remain unchanged.
+      // The non-Tamil hash was re-measured on top of the Telugu native-lift
+      // batches.
+      //
+      // Devanagari क, य, र, प, ध, ल, द, ठ, घ, ष and औ now lift only where HP
+      // Labs India's native writers do: their sourced runs become segments of
+      // fewer strokes, with new captions and source notes. Only the non-Tamil
+      // data hash moves, measured after the last caption was settled; keys,
+      // the key hash, every script count, Tamil and both shared-identity
+      // values remain unchanged.
+      //
+      // Devanagari अ, आ, ओ, झ, स, ब, च, थ, भ, म and व follow: each joins one
+      // run into the next by climbing the stem it then descends, so each lifts
+      // once less. Every Devanagari headline caption now reads "rightward" and
+      // every long caption is shortened to fit two lines. Only the non-Tamil
+      // data hash moves, measured after the last caption was settled.
+      //
+      // Kannada base consonants ನ (U+0CA8), ತ (U+0CA4), ದ (U+0CA6), ರ (U+0CB0),
+      // ಕ (U+0C95) and ಗ (U+0C97), taught since chapters 1 to 7 but never
+      // given a cited stroke-order source, now cite Gopala Krishna A's Commons
+      // animations and gain a ductus each. Keys move 439 -> 445 and Kannada
+      // 13 -> 19, with the ordered key hash and the non-Tamil data hash,
+      // measured after the last caption was settled; Tamil and both
+      // shared-identity values remain unchanged.
+      //
+      // Kannada base consonants ಬ (U+0CAC), ಳ (U+0CB3), ಯ (U+0CAF), ಡ (U+0CA1),
+      // ಹ (U+0CB9) and ಸ (U+0CB8), taught since chapters 4 to 12 but never
+      // given a cited stroke-order source, now cite Gopala Krishna A's Commons
+      // animations and gain a ductus each. Keys move
+      // 445 -> 451 and Kannada 19 -> 25, with the ordered key hash and the
+      // non-Tamil data hash, measured after the last caption was settled;
+      // Tamil and both shared-identity values remain unchanged.
+      //
+      // Kannada base consonants ಚ (U+0C9A), ಪ (U+0CAA), ಝ (U+0C9D), ಥ (U+0CA5),
+      // ಮ (U+0CAE), ಲ (U+0CB2), ವ (U+0CB5) and ಜ (U+0C9C), taught since
+      // chapters 13 to 72 but never given a cited stroke-order source, now cite
+      // Gopala Krishna A's Commons animations and gain a ductus each. Keys move
+      // 451 -> 459 and Kannada 25 -> 33, with the ordered key hash and the
+      // non-Tamil data hash, measured after the last caption was settled;
+      // Tamil and both shared-identity values remain unchanged.
+      //
+      // Kannada ಚ (U+0C9A) and ಯ (U+0CAF) lifted the pen after every run of
+      // their animations (three lifts each), more often than even Omniglot's
+      // non-native copyists. ಚ now joins its body, lower bar and link (one
+      // lift) and ಯ its middle arm and hooked bar (two lifts), through short
+      // connectors along the bars. Only the non-Tamil data hash moves,
+      // measured after the last caption was settled; keys, Tamil and both
+      // shared-identity values remain unchanged.
+      //
+      // Kannada base consonants ಟ (U+0C9F), ಣ (U+0CA3), ಶ (U+0CB6), ಷ (U+0CB7),
+      // ಧ (U+0CA7), ಭ (U+0CAD), ಫ (U+0CAB), ಖ (U+0C96), ಘ (U+0C98) and ಢ
+      // (U+0CA2), taught since chapters 73 to 80 but never given a cited
+      // stroke-order source, now cite Gopala Krishna A's Commons animations and
+      // gain a ductus each; ಭ and ಘ join one pair of runs so they lift no more
+      // often than Omniglot's copyists most often do. Keys move 459 -> 469 and
+      // Kannada 33 -> 43, with the ordered key hash and the non-Tamil data
+      // hash, measured after the last caption was settled; Tamil and both
+      // shared-identity values remain unchanged.
+      //
+      // The six Tamil vowel signs written as separate symbols beside their
+      // consonant — ா (U+0BBE), ி (U+0BBF), ீ (U+0BC0), ெ (U+0BC6),
+      // ே (U+0BC7) and ை (U+0BC8) — gain a ductus each, cited to native
+      // writers' pen traces in HP Labs India's LipiTk Tamil recognizer. They
+      // join the Tamil tail owner after எ, ஏ and ஓ, so every existing key keeps
+      // its relative order. Keys move 439 -> 445 and Tamil 29 -> 35, with the
+      // ordered key hash, measured after the last caption was settled. No
+      // other script changes, so the non-Tamil data hash and both
+      //
+      // Eleven Gujarati signs — ા (U+0ABE), િ (U+0ABF), ી (U+0AC0),
+      // ુ (U+0AC1), ૂ (U+0AC2), ે (U+0AC7), ૈ (U+0AC8), ો (U+0ACB),
+      // ૌ (U+0ACC), the anusvara ં (U+0A82) and the visarga ઃ (U+0A83) —
+      // gain a ductus each, their order, start, direction and lifts cited to
+      // KanoAI's hand-made Gujarati barakhadi templates. They follow હ at the
+      // end of the Gujarati owner, so every existing key keeps its relative
+      // order. Keys move 445 -> 456 and Gujarati 44 -> 55, with the ordered
+      // key hash and the non-Tamil data hash; Tamil and both shared-identity
+      //
+      // Eight Devanagari signs — ु (U+0941), ू (U+0942), े (U+0947), the
+      // anusvara ं (U+0902), the nukta ़ (U+093C), the virama ् (U+094D),
+      // ृ (U+0943) and the candrabindu ँ (U+0901) — gain a ductus each, drawn
+      // alone, their lifts, start and direction cited to native writers' pen
+      // traces in HP Labs India's LipiTk Devanagari recognizer. They follow ह
+      // at the end of the Devanagari owner, so every existing key keeps its
+      // relative order. Keys move 456 -> 464 and Devanagari 44 -> 52, with the
+      //
+  // Bengali joins as one owner module, like Malayalam and Gujarati.
+  // Bengali joins as one owner module, like Malayalam and Gujarati.
+      // Bengali joins as a new last owner with nine glyphs cited to native
+      // writers' pen traces in HP Labs India's LipiTk Bangla recognizer:
+      // এ ও খ থ ঞ ব র and the signs ঃ ঁ, keyed `bengali:<glyph>`. Appending
+      // the owner keeps every existing key in place. Keys move 439 -> 448 with
+      // a new `bengali: 9` count, and the ordered key hash and the non-Tamil
+      // data hash move, measured after the last caption was settled; Tamil
+      // and both shared-identity values remain unchanged.
+      //
+      // Kannada base consonant ಠ (U+0CA0), taught in chapter 80 and the last
+      // Kannada consonant without a cited stroke-order source, now cites Gopala
+      // Krishna A's Commons animation (filed as "tta") and gains a ductus: the
+      // round bowl, the hooked bar and the dot, two lifts, which is also the
+      // Omniglot copyists' most common count. Keys move 499 -> 500 and Kannada
+      // 43 -> 44, with the ordered key hash and the non-Tamil data hash,
+      // measured after the captions were settled; Tamil and both
     }).toEqual({
-      keys: 439,
+      keys: 534,
       keyHash:
-        "952c14e67c27696d414897603004184adb25c58878d6a78cd91d85e6b269918c",
+        "507e26694474b2f503ad4c94223d905424a7dfc5d8e467b7d7f478bcf5f296d5",
       nonTamilDataHash:
-        "baf7297488c44d74f73c67785ab3ea7a7d4b1d47aeb6f09f6dc1953f09d0ae3a",
+        "f6c9dcc5ed1af7aa8286e172414fc3c2b852b6eaab4de09fa477abc7d6b8ea36",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
       counts: {
         arabic: 32,
+        bengali: 9,
         chinese: 60,
         cyrillic: 33,
-        devanagari: 44,
-        gujarati: 44,
+        devanagari: 52,
+        gujarati: 55,
         hebrew: 22,
-        japanese: 50,
-        kannada: 13,
+        japanese: 80,
+        kannada: 44,
         malayalam: 14,
         "perso-arabic": 24,
-        tamil: 29,
+        tamil: 35,
         telugu: 43,
         "urdu-nastaliq": 31,
       },

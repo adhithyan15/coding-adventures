@@ -4,30 +4,32 @@
   "chapter": 46,
   "title": "Writing --- With A Clock",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ae89c72eacc6d251",
+  "sourceHash": "fnv1a64:2cf6afa1db255143",
   "lessons": [
     {
       "id": "PA-W10-a1-con-reloj",
       "sequence": 2610,
-      "title": "The same fields, with a clock",
+      "title": "See the A1 writing clock",
       "headword": "(timed)",
       "romanization": "",
-      "gloss": "the A1 writing paper's own clock, its own two tasks, and its own published lengths",
+      "gloss": "orient to the A1 writing paper's clock, two tasks, and published lengths",
       "script": "gurmukhi",
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d84c5194ab0619fb",
+      "sourceHash": "fnv1a64:6fe7172c6caa2768",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -43,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have filled these fields with as long as you liked."
+              "text": "You have filled some familiar fields with as long as you liked."
             },
             {
               "kind": "pause",
@@ -53,14 +55,14 @@
             },
             {
               "kind": "speech",
-              "text": "A task you can only do untimed is not yet a task you can do. Here are the conditions the assessment actually publishes."
+              "text": "Read the later paper's conditions now. This short lesson only explains them; it does not attempt or score either task under a clock."
             }
           ]
         },
         {
           "index": 1,
           "type": "writing",
-          "title": "Writing — timed production",
+          "title": "Writing — the published paper envelope",
           "segments": [
             {
               "kind": "speech",
@@ -96,7 +98,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the form its share and no more: seven minutes, starting now. Fill every field. A blank field scores nothing and cannot be argued with."
+              "text": "One possible whole-paper plan gives the form about seven minutes, but that is a planning example, not a timer starting in this lesson. First, learn every field and practise all six together without a model."
             },
             {
               "kind": "pause",
@@ -116,7 +118,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now the message: thirteen minutes, thirty to forty words, to one named reader."
+              "text": "The remaining thirteen minutes would be for the 30–40-word message to one named reader. That message also needs its own untimed runway first."
             },
             {
               "kind": "pause",
@@ -126,7 +128,7 @@
             },
             {
               "kind": "speech",
-              "text": "When the time is up, stop even if a line is unfinished. An unfinished paper is information. An untimed one is not."
+              "text": "Later short timed checkpoints will train each task separately. Two complete mocks will test the full twenty-minute paper after that."
             }
           ]
         },
@@ -143,7 +145,7 @@
             },
             {
               "kind": "speech",
-              "text": "Count the words in your message. Under thirty and the task is half done; well past forty and you spent time the paper did not give you."
+              "text": "Recall the message's word band: 30–40 words. You are not writing that message yet."
             },
             {
               "kind": "pause",
@@ -153,7 +155,7 @@
             },
             {
               "kind": "speech",
-              "text": "Then check the form, and check it for blanks before mistakes. A field with a wrong answer can still earn something; a field left empty cannot."
+              "text": "Recall the form's size: six to eight fields. Those fields must be taught before they can be scored."
             },
             {
               "kind": "pause",
@@ -163,7 +165,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the last of the seven writing stages. Everything before it asked you to produce the language. This one asks whether you can produce it when the conditions are not yours to choose — which is the only version of the question an assessment ever asks."
+              "text": "This orientation awards no timed-writing credit. Timed production comes only after independent form and named-reader message writing are both secure without a visible answer model."
             }
           ]
         }

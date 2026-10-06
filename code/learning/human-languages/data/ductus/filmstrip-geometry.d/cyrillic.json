@@ -35,6 +35,70 @@
     },
     {
       "script": "cyrillic",
+      "glyph": "б",
+      "font": "_fonts/NotoSansCyrillic-Static.ttf",
+      "source": {
+        "citation": "RussianIrina, ‘Learning Russian - Alphabet letters, handwriting’, lowercase б demonstration, 01:13–01:18, YouTube, 5 February 2013",
+        "url": "https://www.youtube.com/watch?v=tqDLDfYoO2o",
+        "variation": "The native-teacher video presents all 33 Russian letters first in print and then in the classic handwritten form taught at school. In the 01:13–01:18 lowercase б demonstration, the pen circles the lower body counterclockwise, closes it at the upper-right junction, and continues through the rising shoulder into the rightward top flag in one continuous pen-down run, for zero intervening lifts. The demonstrated school hand crosses diagonally from the body's upper-right junction toward the rising shoulder; the bundled Noto Sans Cyrillic glyph joins its ascender through the body's upper-left shoulder instead. This learner path preserves the source's uninterrupted body-to-flag order while routing that transition along the printed upper shoulder so it remains on the font's ink. Connected cursive may lengthen the top flag into an exit join, and individual handwriting may narrow, round, or slant the lower body differently."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": -17,
+        "minY": -840,
+        "width": 636,
+        "height": 1245.5
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "circle counterclockwise around the rounded lower body",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M300 -10Q181 -10 117.5 74.5Q54 159 53 328Q54 525 119.5 624Q185 723 328 746Q354 751 404.5 758Q455 765 505 770L513 691Q481 688 446 683.5Q411 679 381 675Q351 671 333 667Q271 656 231.5 630.5Q192 605 170.5 559.5Q149 514 139 443L144 443Q168 480 214.5 502.5Q261 525 322 525Q425 525 487 459.5Q549 394 549 266Q549 182 518 120Q487 58 431.5 24Q376 -10 300 -10ZM302 63Q375 63 415.5 115.5Q456 168 456 265Q456 454 302 454Q148 454 148 268Q148 170 188.5 116.5Q229 63 302 63Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M430 480 L430 480\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M430 480 L350 495 L270 495 L190 470 L125 420 L90 340 L85 250 L105 165 L155 95 L225 45 L305 25 L380 45 L445 90 L490 155 L510 235 L505 315 L480 400 L430 480 L430 480\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"430\" cy=\"480\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"301\" y=\"201\" text-anchor=\"middle\" font-size=\"51\" fill=\"#6b7280\"><tspan x=\"301\" y=\"201\">1. circle</tspan><tspan x=\"301\" y=\"263.2\">counterclockwise around</tspan><tspan x=\"301\" y=\"325.4\">the rounded lower body</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "continue through the rising shoulder and sweep the top flag right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M300 -10Q181 -10 117.5 74.5Q54 159 53 328Q54 525 119.5 624Q185 723 328 746Q354 751 404.5 758Q455 765 505 770L513 691Q481 688 446 683.5Q411 679 381 675Q351 671 333 667Q271 656 231.5 630.5Q192 605 170.5 559.5Q149 514 139 443L144 443Q168 480 214.5 502.5Q261 525 322 525Q425 525 487 459.5Q549 394 549 266Q549 182 518 120Q487 58 431.5 24Q376 -10 300 -10ZM302 63Q375 63 415.5 115.5Q456 168 456 265Q456 454 302 454Q148 454 148 268Q148 170 188.5 116.5Q229 63 302 63Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M430 480 L350 495 L270 495 L190 470 L125 420 L90 340 L85 250 L105 165 L155 95 L225 45 L305 25 L380 45 L445 90 L490 155 L510 235 L505 315 L480 400 L430 480 L430 480\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M430 480 L350 490 L270 490 L195 485 L195 465 L195 450 L170 445 L140 445 L140 480 L140 520 L150 545 L165 585 L185 620 L215 660 L260 690 L320 710 L390 720 L460 730 L500 735\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"500\" cy=\"735\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"301\" y=\"201\" text-anchor=\"middle\" font-size=\"51\" fill=\"#6b7280\"><tspan x=\"301\" y=\"201\">2. continue through the</tspan><tspan x=\"301\" y=\"263.2\">rising shoulder and</tspan><tspan x=\"301\" y=\"325.4\">sweep the top flag</tspan><tspan x=\"301\" y=\"387.7\">right</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "cyrillic",
+      "glyph": "в",
+      "font": "_fonts/NotoSansCyrillic-Static.ttf",
+      "source": {
+        "citation": "RussianIrina, ‘Learning Russian - Alphabet letters, handwriting’, lowercase в demonstration, 01:33–01:38, YouTube, 5 February 2013",
+        "url": "https://www.youtube.com/watch?v=tqDLDfYoO2o",
+        "variation": "The native-teacher video presents all 33 Russian letters first in print and then in the classic handwritten form taught at school. In the 01:33–01:38 lowercase в demonstration, the pen starts at the baseline, climbs through the tall upper loop, descends to the baseline, and continues counterclockwise around the rounded lower bowl in one continuous pen-down run, for zero intervening lifts. The demonstrated school hand resembles a looped Latin cursive b with one tall ascender loop above a lower bowl; the bundled Noto Sans Cyrillic glyph is a compact printed form with two stacked bowls attached to a straight left stem. This learner path preserves the source's baseline-to-upper-loop-to-baseline-to-lower-bowl order while routing the ascender through the printed upper bowl and left stem so it remains on the font's ink. Connected cursive may add entry and exit joins, and individual handwriting may narrow, round, or slant either loop differently."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": 15,
+        "minY": -606,
+        "width": 574,
+        "height": 920.3
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "climb through the upper loop and descend to the baseline",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 0L85 536L300 536Q399 536 450.5 501.5Q502 467 502 401Q502 306 394 285L394 281Q456 273 487.5 240Q519 207 519 154Q519 111 497 76Q475 41 427 20.5Q379 0 301 0L85 0ZM173 315L279 315Q348 315 380 333Q412 351 412 390Q412 464 295 464L173 464L173 315ZM173 72L291 72Q361 72 394 92.5Q427 113 427 157Q427 244 289 244L173 244L173 72Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M130 20 L130 20\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M130 20 L130 100 L130 200 L130 300 L130 400 L130 500 L220 500 L310 500 L380 480 L430 445 L455 400 L450 355 L420 320 L365 300 L295 290 L220 290 L150 290 L130 260 L130 180 L130 100 L130 20\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"130\" cy=\"20\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"302\" y=\"186\" text-anchor=\"middle\" font-size=\"46\" fill=\"#6b7280\"><tspan x=\"302\" y=\"186\">1. climb through the</tspan><tspan x=\"302\" y=\"242.1\">upper loop and descend</tspan><tspan x=\"302\" y=\"298.2\">to the baseline</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "continue counterclockwise around the rounded lower bowl",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 0L85 536L300 536Q399 536 450.5 501.5Q502 467 502 401Q502 306 394 285L394 281Q456 273 487.5 240Q519 207 519 154Q519 111 497 76Q475 41 427 20.5Q379 0 301 0L85 0ZM173 315L279 315Q348 315 380 333Q412 351 412 390Q412 464 295 464L173 464L173 315ZM173 72L291 72Q361 72 394 92.5Q427 113 427 157Q427 244 289 244L173 244L173 72Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M130 20 L130 100 L130 200 L130 300 L130 400 L130 500 L220 500 L310 500 L380 480 L430 445 L455 400 L450 355 L420 320 L365 300 L295 290 L220 290 L150 290 L130 260 L130 180 L130 100 L130 20 L130 20\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M130 20 L220 35 L310 35 L385 50 L440 80 L470 120 L475 165 L455 205 L415 235 L360 260 L295 270 L220 270 L150 270 L130 260\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"130\" cy=\"260\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"302\" y=\"186\" text-anchor=\"middle\" font-size=\"46\" fill=\"#6b7280\"><tspan x=\"302\" y=\"186\">2. continue</tspan><tspan x=\"302\" y=\"242.1\">counterclockwise around</tspan><tspan x=\"302\" y=\"298.2\">the rounded lower bowl</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "cyrillic",
       "glyph": "г",
       "font": "_fonts/NotoSansCyrillic-Static.ttf",
       "source": {
@@ -62,6 +126,70 @@
           "label": "reverse along the top and descend to the baseline",
           "startsAfterLift": false,
           "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 0L85 536L417 536L417 462L173 462L173 0L85 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M130 20 L130 120 L130 240 L130 360 L130 500 L220 500 L310 500 L390 500 L390 500\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M390 500 L310 500 L220 500 L130 500 L130 360 L130 240 L130 120 L130 20\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"130\" cy=\"20\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"251\" y=\"177.8\" text-anchor=\"middle\" font-size=\"37.8\" fill=\"#6b7280\"><tspan x=\"251\" y=\"177.8\">2. reverse along the top</tspan><tspan x=\"251\" y=\"223.9\">and descend to the</tspan><tspan x=\"251\" y=\"270\">baseline</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "cyrillic",
+      "glyph": "д",
+      "font": "_fonts/NotoSansCyrillic-Static.ttf",
+      "source": {
+        "citation": "RussianIrina, ‘Learning Russian - Alphabet letters, handwriting’, lowercase д demonstration, 02:14–02:19, YouTube, 5 February 2013",
+        "url": "https://www.youtube.com/watch?v=tqDLDfYoO2o",
+        "variation": "The native-teacher video presents all 33 Russian letters first in print and then in the classic handwritten form taught at school. In the 02:14–02:19 lowercase д demonstration, the pen circles the rounded body counterclockwise, closes it at the upper-right junction, descends below the baseline, loops left, and rises into the rightward exit in one continuous pen-down run, for zero intervening lifts. The demonstrated school hand resembles a looped Latin cursive g; the bundled Noto Sans Cyrillic glyph is a block-like printed form with a trapezoidal body, a joined base shelf, and two separated feet rather than one descender loop. This learner path preserves the source's body-before-descender order and zero-lift evidence while fitting the printed form: circle the body, descend through the right stem and foot, retrace to the shelf, sweep left, retrace the left foot, and finish rightward along the shelf without lifting. Connected cursive restores the source's below-baseline loop and exit join, and individual handwriting may narrow, round, or slant the body and loop differently."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": -60,
+        "minY": -606,
+        "width": 727,
+        "height": 1107
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "circle counterclockwise around the closed body",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M10 -140L10 74L66 74Q101 116 117 166Q133 216 140 286Q142 304 143.5 322.5Q145 341 146.5 367.5Q148 394 150 434.5Q152 475 154 536L516 536L516 74L597 74L597 -140L512 -140L512 0L95 0L95 -140L10 -140ZM161 74L429 74L429 462L231 462Q229 416 226 372Q223 328 220 291Q214 217 199.5 165Q185 113 161 74Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M470 462 L470 462\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M470 462 L390 500 L300 500 L205 500 L190 420 L185 330 L175 240 L150 150 L110 74 L190 35 L290 35 L390 35 L470 74 L470 170 L470 270 L470 370 L470 462\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"470\" cy=\"462\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"303.5\" y=\"338.3\" text-anchor=\"middle\" font-size=\"58.3\" fill=\"#6b7280\"><tspan x=\"303.5\" y=\"338.3\">1. circle</tspan><tspan x=\"303.5\" y=\"409.4\">counterclockwise around</tspan><tspan x=\"303.5\" y=\"480.6\">the closed body</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "descend, retrace both feet, and finish along the base shelf",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M10 -140L10 74L66 74Q101 116 117 166Q133 216 140 286Q142 304 143.5 322.5Q145 341 146.5 367.5Q148 394 150 434.5Q152 475 154 536L516 536L516 74L597 74L597 -140L512 -140L512 0L95 0L95 -140L10 -140ZM161 74L429 74L429 462L231 462Q229 416 226 372Q223 328 220 291Q214 217 199.5 165Q185 113 161 74Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M470 462 L390 500 L300 500 L205 500 L190 420 L185 330 L175 240 L150 150 L110 74 L190 35 L290 35 L390 35 L470 74 L470 170 L470 270 L470 370 L470 462 L470 462\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M470 462 L470 330 L470 200 L470 74 L550 35 L550 -50 L550 -110 L550 -50 L550 35 L450 35 L350 35 L250 35 L150 35 L55 35 L55 -50 L55 -110 L55 -50 L55 35 L150 35 L250 35 L350 35\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"350\" cy=\"35\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"303.5\" y=\"338.3\" text-anchor=\"middle\" font-size=\"58.3\" fill=\"#6b7280\"><tspan x=\"303.5\" y=\"338.3\">2. descend, retrace</tspan><tspan x=\"303.5\" y=\"409.4\">both feet, and finish</tspan><tspan x=\"303.5\" y=\"480.6\">along the base shelf</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "cyrillic",
+      "glyph": "е",
+      "font": "_fonts/NotoSansCyrillic-Static.ttf",
+      "source": {
+        "citation": "RussianIrina, ‘Learning Russian - Alphabet letters, handwriting’, lowercase е demonstration, 02:26–02:30, YouTube, 5 February 2013",
+        "url": "https://www.youtube.com/watch?v=tqDLDfYoO2o",
+        "variation": "The native-teacher video presents all 33 Russian letters first in print and then in the classic handwritten form taught at school. In the 02:26–02:30 lowercase е demonstration, the pen begins at the upper right, curves left around the upper loop, crosses through the middle, and continues counterclockwise around the rounded lower bowl in one continuous pen-down run, for zero intervening lifts. The demonstrated school hand is a tall open epsilon-like form with a small crossing loop at the middle; the bundled Noto Sans Cyrillic glyph is a compact printed e whose long middle bar reaches the open right side. This learner path preserves the source's upper-loop-to-middle-to-lower-bowl order and zero-lift evidence while fitting the printed form: curve around the upper bowl, sweep right along the middle bar, reverse through the junction, and circle the lower bowl without lifting. Connected cursive may add entry and exit joins, and individual handwriting may narrow, round, or slant either bowl differently."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": -22,
+        "minY": -616,
+        "width": 598,
+        "height": 947.5
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "curve around the upper bowl and sweep through the middle",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M306 -10Q230 -10 171.5 21Q113 52 80.5 113.5Q48 175 48 264Q48 352 77.5 415Q107 478 160.5 512Q214 546 285 546Q354 546 403.5 516Q453 486 479.5 431.5Q506 377 506 304L506 249L140 249Q143 159 187 112Q231 65 310 65Q361 65 400.5 74.5Q440 84 482 102L482 25Q441 7 401 -1.5Q361 -10 306 -10ZM142 321L413 321Q412 389 381 431.5Q350 474 284 474Q222 474 185.5 433.5Q149 393 142 321Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M430 380 L430 380\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M430 380 L390 455 L320 505 L245 505 L175 470 L115 410 L85 340 L85 285 L150 285 L240 285 L330 285 L440 285\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"440\" cy=\"285\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"277\" y=\"197.9\" text-anchor=\"middle\" font-size=\"47.9\" fill=\"#6b7280\"><tspan x=\"277\" y=\"197.9\">1. curve around the</tspan><tspan x=\"277\" y=\"256.3\">upper bowl and sweep</tspan><tspan x=\"277\" y=\"314.8\">through the middle</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "reverse through the middle and circle the lower bowl",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M306 -10Q230 -10 171.5 21Q113 52 80.5 113.5Q48 175 48 264Q48 352 77.5 415Q107 478 160.5 512Q214 546 285 546Q354 546 403.5 516Q453 486 479.5 431.5Q506 377 506 304L506 249L140 249Q143 159 187 112Q231 65 310 65Q361 65 400.5 74.5Q440 84 482 102L482 25Q441 7 401 -1.5Q361 -10 306 -10ZM142 321L413 321Q412 389 381 431.5Q350 474 284 474Q222 474 185.5 433.5Q149 393 142 321Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M430 380 L390 455 L320 505 L245 505 L175 470 L115 410 L85 340 L85 285 L150 285 L240 285 L330 285 L440 285 L440 285\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M440 285 L330 285 L240 285 L150 285 L85 260 L80 185 L105 115 L160 55 L230 25 L305 25 L375 40 L440 70\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"440\" cy=\"70\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"277\" y=\"197.9\" text-anchor=\"middle\" font-size=\"47.9\" fill=\"#6b7280\"><tspan x=\"277\" y=\"197.9\">2. reverse through the</tspan><tspan x=\"277\" y=\"256.3\">middle and circle the</tspan><tspan x=\"277\" y=\"314.8\">lower bowl</tspan></text>"
         }
       ]
     },
@@ -126,6 +254,44 @@
           "label": "circle the larger lower lobe and finish at the lower right",
           "startsAfterLift": false,
           "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M211 -10Q162 -10 115.5 -2Q69 6 34 20L34 96Q122 62 210 62Q349 62 349 154Q349 200 313 222Q277 244 200 244L112 244L112 315L200 315Q334 315 334 397Q334 435 305.5 454Q277 473 216 473Q181 473 146.5 466Q112 459 66 439L40 510Q79 527 125 536.5Q171 546 221 546Q316 546 370 508.5Q424 471 424 405Q424 359 396.5 328Q369 297 314 285L314 281Q377 268 409 233.5Q441 199 441 149Q441 74 382 32Q323 -10 211 -10Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M80 485 L155 510 L225 510 L300 500 L365 460 L390 410 L385 360 L345 320 L285 285 L200 280 L200 280\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M200 280 L285 275 L360 245 L405 200 L410 145 L385 90 L325 45 L245 25 L160 25 L85 45 L160 25 L245 25 L325 45 L405 75\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"405\" cy=\"75\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"237.5\" y=\"193.8\" text-anchor=\"middle\" font-size=\"43.8\" fill=\"#6b7280\"><tspan x=\"237.5\" y=\"193.8\">2. circle the larger</tspan><tspan x=\"237.5\" y=\"247.2\">lower lobe and finish at</tspan><tspan x=\"237.5\" y=\"300.7\">the lower right</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "cyrillic",
+      "glyph": "и",
+      "font": "_fonts/NotoSansCyrillic-Static.ttf",
+      "source": {
+        "citation": "RussianIrina, ‘Learning Russian - Alphabet letters, handwriting’, lowercase и demonstration, 03:56–04:02, YouTube, 5 February 2013",
+        "url": "https://www.youtube.com/watch?v=tqDLDfYoO2o",
+        "variation": "The native-teacher video presents all 33 Russian letters first in print and then in the classic handwritten form taught at school. In the 03:56–04:02 lowercase и demonstration, the pen begins at the upper left, descends to the baseline, turns directly into a rising diagonal, descends the right stem, and finishes through a small rising exit in one continuous pen-down run, for zero intervening lifts. The demonstrated school hand resembles a rounded Latin u with a rising entry side and exit join; the bundled Noto Sans Cyrillic glyph is a printed backwards-N form with two straight vertical stems joined by a rising diagonal and no entry or exit joins. This learner path preserves the source's left-stem-to-rising-diagonal-to-right-stem order and zero-lift evidence while fitting the printed outline: descend the left stem, turn along its baseline, rise through the diagonal, and descend the right stem without lifting. Connected cursive restores the source's entry and exit joins, and individual handwriting may round, narrow, or slant the stems and diagonal differently."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": 15,
+        "minY": -606,
+        "width": 591,
+        "height": 925.6
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "descend the left stem to the baseline",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 0L85 536L172 536L172 209Q172 197 171 174Q170 151 168.5 128.5Q167 106 166 92L167 92L427 536L536 536L536 0L449 0L449 316Q449 332 449.5 356.5Q450 381 451 404.5Q452 428 453 441L452 441L194 0L85 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M125 510 L125 510\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M125 510 L125 390 L125 270 L125 150 L125 25 L160 25 L190 40\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"190\" cy=\"40\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"310.5\" y=\"187.4\" text-anchor=\"middle\" font-size=\"47.4\" fill=\"#6b7280\"><tspan x=\"310.5\" y=\"187.4\">1. descend the left</tspan><tspan x=\"310.5\" y=\"245.2\">stem to the baseline</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "rise diagonally to the upper right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 0L85 536L172 536L172 209Q172 197 171 174Q170 151 168.5 128.5Q167 106 166 92L167 92L427 536L536 536L536 0L449 0L449 316Q449 332 449.5 356.5Q450 381 451 404.5Q452 428 453 441L452 441L194 0L85 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M125 510 L125 390 L125 270 L125 150 L125 25 L160 25 L190 40 L190 40\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M190 40 L225 100 L270 180 L315 255 L360 335 L405 410 L450 485 L475 510\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"475\" cy=\"510\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"310.5\" y=\"187.4\" text-anchor=\"middle\" font-size=\"47.4\" fill=\"#6b7280\"><tspan x=\"310.5\" y=\"187.4\">2. rise diagonally to</tspan><tspan x=\"310.5\" y=\"245.2\">the upper right</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "descend the right stem and finish at the baseline",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 0L85 536L172 536L172 209Q172 197 171 174Q170 151 168.5 128.5Q167 106 166 92L167 92L427 536L536 536L536 0L449 0L449 316Q449 332 449.5 356.5Q450 381 451 404.5Q452 428 453 441L452 441L194 0L85 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M125 510 L125 390 L125 270 L125 150 L125 25 L160 25 L190 40 L225 100 L270 180 L315 255 L360 335 L405 410 L450 485 L475 510 L475 510\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M475 510 L475 390 L475 270 L475 150 L475 25\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"475\" cy=\"25\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"310.5\" y=\"187.4\" text-anchor=\"middle\" font-size=\"47.4\" fill=\"#6b7280\"><tspan x=\"310.5\" y=\"187.4\">3. descend the right</tspan><tspan x=\"310.5\" y=\"245.2\">stem and finish at the</tspan><tspan x=\"310.5\" y=\"303.1\">baseline</tspan></text>"
         }
       ]
     },
@@ -295,6 +461,44 @@
     },
     {
       "script": "cyrillic",
+      "glyph": "н",
+      "font": "_fonts/NotoSansCyrillic-Static.ttf",
+      "source": {
+        "citation": "RussianIrina, ‘Learning Russian - Alphabet letters, handwriting’, lowercase н demonstration, 05:47–05:52, YouTube, 5 February 2013",
+        "url": "https://www.youtube.com/watch?v=tqDLDfYoO2o",
+        "variation": "The native-teacher video presents all 33 Russian letters first in print and then in the classic handwritten form taught at school. In the 05:47–05:52 lowercase н demonstration, the pen begins at the upper left, descends the left stem to the baseline, turns upward without lifting, crosses through a rounded middle bridge, rises to the right shoulder, descends the right stem, and finishes through a small rising exit in one continuous pen-down run, for zero intervening lifts. The demonstrated school hand has a rounded bridge plus entry and exit joins; the bundled Noto Sans Cyrillic glyph is a printed H-like form with two straight vertical stems joined by a horizontal middle bar, without the cursive joins. This learner path preserves the source's left-stem-to-middle-bridge-to-right-stem order and zero-lift evidence while fitting the printed outline: descend the left stem, retrace to the middle junction, sweep through the horizontal bar, rise to the upper-right tip, and descend the right stem without lifting. Connected cursive restores the source's rounded bridge and entry and exit joins, and individual handwriting may round, narrow, or slant the bridge and stems differently."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": 15,
+        "minY": -606,
+        "width": 584,
+        "height": 923.4
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "descend the left stem to the baseline",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 0L85 536L173 536L173 313L441 313L441 536L529 536L529 0L441 0L441 239L173 239L173 0L85 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M129 510 L129 510\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M129 510 L129 390 L129 274 L129 150 L129 25\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"129\" cy=\"25\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"307\" y=\"186.8\" text-anchor=\"middle\" font-size=\"46.8\" fill=\"#6b7280\"><tspan x=\"307\" y=\"186.8\">1. descend the left</tspan><tspan x=\"307\" y=\"243.9\">stem to the baseline</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "retrace to the middle bridge and rise to the upper right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 0L85 536L173 536L173 313L441 313L441 536L529 536L529 0L441 0L441 239L173 239L173 0L85 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M129 510 L129 390 L129 274 L129 150 L129 25\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M129 25 L129 25 L129 140 L129 274 L220 274 L310 274 L400 274 L485 274 L485 390 L485 510\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"485\" cy=\"510\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"307\" y=\"186.8\" text-anchor=\"middle\" font-size=\"46.8\" fill=\"#6b7280\"><tspan x=\"307\" y=\"186.8\">2. retrace to the</tspan><tspan x=\"307\" y=\"243.9\">middle bridge and rise</tspan><tspan x=\"307\" y=\"301\">to the upper right</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "descend the right stem to the baseline",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 0L85 536L173 536L173 313L441 313L441 536L529 536L529 0L441 0L441 239L173 239L173 0L85 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M129 510 L129 390 L129 274 L129 150 L129 25 L129 140 L129 274 L220 274 L310 274 L400 274 L485 274 L485 390 L485 510 L485 510\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M485 510 L485 390 L485 274 L485 150 L485 25\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"485\" cy=\"25\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"307\" y=\"186.8\" text-anchor=\"middle\" font-size=\"46.8\" fill=\"#6b7280\"><tspan x=\"307\" y=\"186.8\">3. descend the right</tspan><tspan x=\"307\" y=\"243.9\">stem to the baseline</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "cyrillic",
       "glyph": "о",
       "font": "_fonts/NotoSansCyrillic-Static.ttf",
       "source": {
@@ -322,6 +526,152 @@
           "label": "sweep through the bottom and rise to close the oval",
           "startsAfterLift": false,
           "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M295 -10Q224 -10 168 22.5Q112 55 80 117.5Q48 180 48 269Q48 402 115.5 474Q183 546 298 546Q371 546 426.5 513.5Q482 481 514 419Q546 357 546 268Q546 135 478 62.5Q410 -10 295 -10ZM297 63Q377 63 415 118.5Q453 174 453 268Q453 364 415 418.5Q377 473 296 473Q215 473 178 419Q141 365 141 269Q141 174 178.5 118.5Q216 63 297 63Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M430 450 L380 490 L300 510 L220 500 L145 450 L105 380 L95 270 L105 170 L150 90 L220 40 L300 25\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M300 25 L300 25 L380 40 L450 90 L490 170 L500 268 L490 360 L450 440 L380 490 L300 510 L380 490 L430 450\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"430\" cy=\"450\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"297\" y=\"201.1\" text-anchor=\"middle\" font-size=\"51.1\" fill=\"#6b7280\"><tspan x=\"297\" y=\"201.1\">2. sweep through the</tspan><tspan x=\"297\" y=\"263.4\">bottom and rise to close</tspan><tspan x=\"297\" y=\"325.8\">the oval</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "cyrillic",
+      "glyph": "п",
+      "font": "_fonts/NotoSansCyrillic-Static.ttf",
+      "source": {
+        "citation": "RussianIrina, ‘Learning Russian - Alphabet letters, handwriting’, lowercase п demonstration, 06:26–06:31, YouTube, 5 February 2013",
+        "url": "https://www.youtube.com/watch?v=tqDLDfYoO2o",
+        "variation": "The native-teacher video presents all 33 Russian letters first in print and then in the classic handwritten form taught at school. In the 06:26–06:31 lowercase п demonstration, the pen begins at the upper left, descends the left stem to the baseline, turns upward without lifting, rises into a rounded top shoulder, descends the right stem, and finishes through a small rising exit in one continuous pen-down run, for zero intervening lifts. The demonstrated school hand resembles a rounded Latin n with entry and exit joins; the bundled Noto Sans Cyrillic glyph is a printed squared arch with two straight vertical stems joined by a horizontal top bar, without the cursive joins. This learner path preserves the source's left-stem-to-top-shoulder-to-right-stem order and zero-lift evidence while fitting the printed outline: descend the left stem, retrace to the upper-left junction, sweep through the top bar, and descend the right stem without lifting. Connected cursive restores the source's rounded shoulder and entry and exit joins, and individual handwriting may round, narrow, widen, or slant the shoulder and stems differently."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": 15,
+        "minY": -606,
+        "width": 576,
+        "height": 921.1
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "descend the left stem to the baseline",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 0L85 536L521 536L521 0L433 0L433 462L173 462L173 0L85 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M129 500 L129 500\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M129 500 L129 380 L129 260 L129 140 L129 25\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"129\" cy=\"25\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"303\" y=\"186.2\" text-anchor=\"middle\" font-size=\"46.2\" fill=\"#6b7280\"><tspan x=\"303\" y=\"186.2\">1. descend the left</tspan><tspan x=\"303\" y=\"242.6\">stem to the baseline</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "retrace to the top shoulder and sweep right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 0L85 536L521 536L521 0L433 0L433 462L173 462L173 0L85 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M129 500 L129 380 L129 260 L129 140 L129 25 L129 25\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M129 25 L129 140 L129 260 L129 380 L129 500 L220 500 L310 500 L400 500 L477 500\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"477\" cy=\"500\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"303\" y=\"186.2\" text-anchor=\"middle\" font-size=\"46.2\" fill=\"#6b7280\"><tspan x=\"303\" y=\"186.2\">2. retrace to the top</tspan><tspan x=\"303\" y=\"242.6\">shoulder and sweep</tspan><tspan x=\"303\" y=\"298.9\">right</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "descend the right stem to the baseline",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 0L85 536L521 536L521 0L433 0L433 462L173 462L173 0L85 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M129 500 L129 380 L129 260 L129 140 L129 25 L129 140 L129 260 L129 380 L129 500 L220 500 L310 500 L400 500 L477 500 L477 500\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M477 500 L477 380 L477 260 L477 140 L477 25\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"477\" cy=\"25\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"303\" y=\"186.2\" text-anchor=\"middle\" font-size=\"46.2\" fill=\"#6b7280\"><tspan x=\"303\" y=\"186.2\">3. descend the right</tspan><tspan x=\"303\" y=\"242.6\">stem to the baseline</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "cyrillic",
+      "glyph": "р",
+      "font": "_fonts/NotoSansCyrillic-Static.ttf",
+      "source": {
+        "citation": "RussianIrina, ‘Learning Russian - Alphabet letters, handwriting’, lowercase р demonstration, 06:46–06:52, YouTube, 5 February 2013",
+        "url": "https://www.youtube.com/watch?v=tqDLDfYoO2o",
+        "variation": "The native-teacher video presents all 33 Russian letters first in print and then in the classic handwritten form taught at school. In the 06:46–06:52 lowercase р demonstration, the pen begins near the upper left, descends below the baseline, retraces upward without lifting, curves right through a rounded shoulder, descends to the baseline, and finishes through a small rising exit in one continuous pen-down run, for zero intervening lifts. The demonstrated school hand resembles a long-descender Latin p with an open rounded bowl plus entry and exit joins; the bundled Noto Sans Cyrillic glyph is a printed p-like form with a straight descender stem and a closed rounded bowl, without cursive joins. This learner path preserves the source's stem-before-bowl order and zero-lift evidence while fitting the printed outline: descend below the baseline, retrace to the upper-left shoulder, circle the upper bowl clockwise, and return to the middle junction without lifting. Connected cursive restores the source's open bowl and entry and exit joins, and individual handwriting may round, narrow, widen, or slant the bowl and stem differently."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": 15,
+        "minY": -616,
+        "width": 615,
+        "height": 1182.8
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "descend the stem below the baseline",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 -240L85 536L157 536L169 463L173 463Q197 498 236 522Q275 546 340 546Q439 546 499.5 477Q560 408 560 269Q560 132 499.5 61Q439 -10 339 -10Q277 -10 236.5 13.5Q196 37 173 68L167 68Q169 51 171 25Q173 -1 173 -20L173 -240L85 -240ZM326 63Q374 63 405.5 90Q437 117 452.5 163.5Q468 210 468 270Q468 362 433 417Q398 472 324 472Q242 472 207.5 426Q173 380 173 286L173 269Q173 170 205.5 116.5Q238 63 326 63Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M129 510 L129 510\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M129 510 L129 350 L129 190 L129 30 L129 -100 L129 -200\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"129\" cy=\"-200\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"322.5\" y=\"429.3\" text-anchor=\"middle\" font-size=\"49.3\" fill=\"#6b7280\"><tspan x=\"322.5\" y=\"429.3\">1. descend the stem</tspan><tspan x=\"322.5\" y=\"489.4\">below the baseline</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "retrace to the upper shoulder and curve right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 -240L85 536L157 536L169 463L173 463Q197 498 236 522Q275 546 340 546Q439 546 499.5 477Q560 408 560 269Q560 132 499.5 61Q439 -10 339 -10Q277 -10 236.5 13.5Q196 37 173 68L167 68Q169 51 171 25Q173 -1 173 -20L173 -240L85 -240ZM326 63Q374 63 405.5 90Q437 117 452.5 163.5Q468 210 468 270Q468 362 433 417Q398 472 324 472Q242 472 207.5 426Q173 380 173 286L173 269Q173 170 205.5 116.5Q238 63 326 63Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M129 510 L129 350 L129 190 L129 30 L129 -100 L129 -200 L129 -200\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M129 -200 L129 -80 L129 40 L129 180 L129 320 L129 450 L157 450 L173 463 L190 475 L220 490 L280 510 L370 500 L450 450 L500 370 L515 270 L515 270\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"515\" cy=\"270\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"322.5\" y=\"429.3\" text-anchor=\"middle\" font-size=\"49.3\" fill=\"#6b7280\"><tspan x=\"322.5\" y=\"429.3\">2. retrace to the upper</tspan><tspan x=\"322.5\" y=\"489.4\">shoulder and curve</tspan><tspan x=\"322.5\" y=\"549.6\">right</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "sweep around the bowl and return to the stem",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M85 -240L85 536L157 536L169 463L173 463Q197 498 236 522Q275 546 340 546Q439 546 499.5 477Q560 408 560 269Q560 132 499.5 61Q439 -10 339 -10Q277 -10 236.5 13.5Q196 37 173 68L167 68Q169 51 171 25Q173 -1 173 -20L173 -240L85 -240ZM326 63Q374 63 405.5 90Q437 117 452.5 163.5Q468 210 468 270Q468 362 433 417Q398 472 324 472Q242 472 207.5 426Q173 380 173 286L173 269Q173 170 205.5 116.5Q238 63 326 63Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M129 510 L129 350 L129 190 L129 30 L129 -100 L129 -200 L129 -80 L129 40 L129 180 L129 320 L129 450 L157 450 L173 463 L190 475 L220 490 L280 510 L370 500 L450 450 L500 370 L515 270 L515 270\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M515 270 L505 170 L455 90 L380 40 L300 25 L230 45 L185 100 L177 175 L165 220 L150 269 L129 269\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"129\" cy=\"269\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"322.5\" y=\"429.3\" text-anchor=\"middle\" font-size=\"49.3\" fill=\"#6b7280\"><tspan x=\"322.5\" y=\"429.3\">3. sweep around the</tspan><tspan x=\"322.5\" y=\"489.4\">bowl and return to the</tspan><tspan x=\"322.5\" y=\"549.6\">stem</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "cyrillic",
+      "glyph": "с",
+      "font": "_fonts/NotoSansCyrillic-Static.ttf",
+      "source": {
+        "citation": "RussianIrina, ‘Learning Russian - Alphabet letters, handwriting’, lowercase с demonstration, 07:04–07:08, YouTube, 5 February 2013",
+        "url": "https://www.youtube.com/watch?v=tqDLDfYoO2o",
+        "variation": "The native-teacher video presents all 33 Russian letters first in print and then in the classic handwritten form taught at school. In the 07:04–07:08 lowercase с demonstration, the pen begins at the upper right, curves left across the top, descends the left side, sweeps through the bottom, and rises into a small lower-right exit in one continuous counterclockwise pen-down run, for zero intervening lifts. The demonstrated school hand is a tall, slightly slanted open curve with a small rising exit; the bundled Noto Sans Cyrillic glyph is a wider, upright printed C-like form with blunt open tips. This learner path preserves the source's upper-right-to-left-side-to-bottom-to-lower-right order and zero-lift evidence while fitting the printed outline as one open counterclockwise curve. Connected cursive may add an entry join and lengthen the source's exit join, and individual handwriting may round, narrow, widen, or slant the open curve differently."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": -22,
+        "minY": -616,
+        "width": 544,
+        "height": 931.2
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "curve left over the top and descend the left side",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M303 -10Q183 -10 115.5 60Q48 130 48 263Q48 396 116.5 471Q185 546 306 546Q345 546 384 538Q423 530 452 514L425 445Q394 459 367 465.5Q340 472 306 472Q225 472 182 418.5Q139 365 139 264Q139 64 312 64Q342 64 375 70Q408 76 439 88L439 14Q385 -10 303 -10Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M438 480 L438 480\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M438 480 L380 510 L306 509 L230 500 L160 450 L110 380 L94 263\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"94\" cy=\"263\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"250\" y=\"193.6\" text-anchor=\"middle\" font-size=\"43.6\" fill=\"#6b7280\"><tspan x=\"250\" y=\"193.6\">1. curve left over the</tspan><tspan x=\"250\" y=\"246.8\">top and descend the</tspan><tspan x=\"250\" y=\"300\">left side</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "sweep through the bottom and rise to the lower-right tip",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M303 -10Q183 -10 115.5 60Q48 130 48 263Q48 396 116.5 471Q185 546 306 546Q345 546 384 538Q423 530 452 514L425 445Q394 459 367 465.5Q340 472 306 472Q225 472 182 418.5Q139 365 139 264Q139 64 312 64Q342 64 375 70Q408 76 439 88L439 14Q385 -10 303 -10Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M438 480 L380 510 L306 509 L230 500 L160 450 L110 380 L94 263\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M94 263 L94 263 L100 160 L145 80 L220 35 L307 27 L380 35 L439 51\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"439\" cy=\"51\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"250\" y=\"193.6\" text-anchor=\"middle\" font-size=\"43.6\" fill=\"#6b7280\"><tspan x=\"250\" y=\"193.6\">2. sweep through the</tspan><tspan x=\"250\" y=\"246.8\">bottom and rise to the</tspan><tspan x=\"250\" y=\"300\">lower-right tip</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "cyrillic",
+      "glyph": "т",
+      "font": "_fonts/NotoSansCyrillic-Static.ttf",
+      "source": {
+        "citation": "RussianIrina, ‘Learning Russian - Alphabet letters, handwriting’, lowercase т demonstration, 07:29–07:36, YouTube, 5 February 2013",
+        "url": "https://www.youtube.com/watch?v=tqDLDfYoO2o",
+        "variation": "The native-teacher video presents all 33 Russian letters first in print and then in the classic handwritten form taught at school. In the 07:29–07:36 lowercase т demonstration, the pen begins at the upper left, descends the left stem, turns upward without lifting into a rounded first arch, descends the middle stem, rises through a rounded second arch, descends the right stem, and finishes through a small rising exit in one continuous pen-down run, for zero intervening lifts. The demonstrated school hand resembles a rounded Latin m with two arches and a rising exit; the bundled Noto Sans Cyrillic glyph is a printed T-shaped form with one central vertical stem and a horizontal top bar. This learner path preserves the source's initial-descent-before-joined-top-movements order and zero-lift evidence while fitting the printed outline: descend the central stem, retrace to the top junction, sweep left along the top bar, then retrace through the junction and sweep to the right tip without lifting. Connected cursive restores the source's two rounded arches and rising exit, and individual handwriting may round, narrow, widen, or slant the arches and stems differently."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": -55,
+        "minY": -606,
+        "width": 575,
+        "height": 920.7
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "descend the central stem to the baseline",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M188 0L188 462L15 462L15 536L450 536L450 462L275 462L275 0L188 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M231 499 L231 499\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M231 499 L231 380 L231 260 L231 140 L231 25\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"231\" cy=\"25\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"232.5\" y=\"186.1\" text-anchor=\"middle\" font-size=\"46.1\" fill=\"#6b7280\"><tspan x=\"232.5\" y=\"186.1\">1. descend the central</tspan><tspan x=\"232.5\" y=\"242.3\">stem to the baseline</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "retrace to the top junction and sweep left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M188 0L188 462L15 462L15 536L450 536L450 462L275 462L275 0L188 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M231 499 L231 380 L231 260 L231 140 L231 25 L231 25\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M231 25 L231 140 L231 260 L231 380 L231 499 L150 499 L52 499\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"52\" cy=\"499\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"232.5\" y=\"186.1\" text-anchor=\"middle\" font-size=\"46.1\" fill=\"#6b7280\"><tspan x=\"232.5\" y=\"186.1\">2. retrace to the top</tspan><tspan x=\"232.5\" y=\"242.3\">junction and sweep left</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "retrace through the junction and sweep to the right tip",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M188 0L188 462L15 462L15 536L450 536L450 462L275 462L275 0L188 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M231 499 L231 380 L231 260 L231 140 L231 25 L231 140 L231 260 L231 380 L231 499 L150 499 L52 499 L52 499\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M52 499 L150 499 L231 499 L320 499 L413 499\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"413\" cy=\"499\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"232.5\" y=\"186.1\" text-anchor=\"middle\" font-size=\"46.1\" fill=\"#6b7280\"><tspan x=\"232.5\" y=\"186.1\">3. retrace through the</tspan><tspan x=\"232.5\" y=\"242.3\">junction and sweep to</tspan><tspan x=\"232.5\" y=\"298.6\">the right tip</tspan></text>"
         }
       ]
     },

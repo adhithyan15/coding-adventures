@@ -100,6 +100,12 @@ reuses the typed clipboard effect without refetching, reconstructing source, or
 closing the panel. Core owns the `Page source copied` status; hosts perform only
 the final platform clipboard write.
 
+The session-history catalog also remains core-owned. Each departing entry
+retains its normalized document title beside form, editing, and scroll state;
+untitled documents fall back to their committed address. Catalog selection
+resolves that metadata by stable entry identity, so repeated URLs remain
+distinct without host-side title caches or background refetches.
+
 The native Mosaic bridge protocol follows the same ownership rule.
 `BrowserChromeEvent::from_mosaic_event` owns event names and required values;
 `browser_bridge_response_json` owns every chrome slot, typed host-effect

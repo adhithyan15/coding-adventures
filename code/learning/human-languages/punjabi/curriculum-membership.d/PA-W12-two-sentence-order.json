@@ -1,0 +1,11 @@
+{
+  "id": "PA-W12-two-sentence-order",
+  "pathSegment": "PA-PATH-156-NAMED-READER-MESSAGE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-156-A1-NAMED-READER-MESSAGE",
+      "order": 5
+    }
+  ]
+}

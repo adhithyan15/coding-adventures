@@ -15675,6 +15675,357 @@ build-tool paths. The Python owner, AES neutral reconciliation, and OCaml
 execution chain remain separate serial candidates; no second parity PR is
 opened alongside this one.
 
+After reviewed PR #16744 auto-merged as `7196f381b0`, the collision-checked
+schema-3 inventory on exact merged main still has 15 established languages,
+1,487 implementation identities, 4,757 package slots, 178 high-consensus
+packages with 262 missing slots, and zero collisions or unknown language
+buckets. A fresh audit registered separate HF06 BLAKE2b and KD03 Argon2 neutral
+and Java/Kotlin/Dart owners, a DT17 vector-correction prerequisite for Swift
+hash-functions, and the nine-path TypeScript blog prose correction before
+selection. C and C++ cryptographic directories remain emerging rather than
+counting toward the 15-lane denominator. OCaml remains emerging until its
+scaffold, resolver, capability, reporter, build-tool, CI, and representative
+package promotion gates pass.
+
+CT01 constant-time comparison neutral conformance is the next single owner:
+it has no unmerged prerequisite and directly unlocks six pending owners, versus
+three each for the ready Python source-registry and Haskell graph/diff items.
+This tranche defines the reviewable public-input and data-independent-work
+contract with a closed versioned fixture corpus and independent validator; it
+does not claim that functional vectors prove hardware timing or promote any
+particular language lane. The existing-lane reconciliation and five missing
+lane ports remain separate pending children.
+
+After guarded auto-merge of CT01 PR #16749 at `eadd4774e5`, an exact-main
+schema-3 collision-checked inventory still reports 15 established languages,
+1,487 implementation identities, 4,757 package slots, 178 high-consensus
+identities with 262 missing slots, zero canonical collisions, and zero unknown
+language buckets. OCaml remains emerging with five packages and is excluded
+from the denominator until its explicit promotion gates pass. The newly
+registered backlog owners capture F03 TOML, D20 JSON value/serializer, TE03
+AsciiDoc, RFC 8032 Ed25519, SE03 ChaCha20-Poly1305, CAS, Dartmouth BASIC,
+Brainfuck Wasm, ML02 gradient descent, perceptron, Dart/Swift language
+frontends, eight Dart/JVM core families, Dart hash/store foundations, SQL CSV,
+Nib Wasm, NET03 HTTP, and JSON-RPC. Those records are audit findings and
+dependency plans; multi-lane records must be split into coherent lane-sized
+implementation PRs after their neutral contracts are reviewed. They do not
+claim behavioral conformance merely from package-directory presence.
+
+The next single owner is Python build-tool exact source-input registry
+adoption. Its six prerequisites are merged, no open PR owns its production or
+neutral-fixture paths, and adoption unlocks three direct pending children:
+Python repository-boundary reverse-diff/digest, the Python terminal neutral
+adapter, and the hashing completion umbrella. This is a narrower ready change
+than the newly discovered cross-language families and retains one active
+parity PR at a time.
+
+After guarded auto-merge of Python source-registry PR #16756 at
+`d843a420ec`, the exact merged-main schema-3 report remains at 15 established
+languages, 1,487 implementation identities, 4,757 package slots, 178
+high-consensus identities with 262 missing slots, and zero collisions or
+unknown buckets. Read-only cross-lane audits registered two previously
+unowned Dart/Swift Starlark and SQL lexer/parser verticals under the shared
+frontend fixture prerequisite. Those four package identities each have 13/15
+lane coverage; implementation must remain lexer-before-parser and lane-sized.
+The Haskell neutral adapter is already owned by a selection-blocked terminal
+closure, so this refresh does not invent a duplicate adapter or imply readiness.
+The dependency/leverage pass ranks Haskell's 20-case process-free graph/diff
+core first (six merged prerequisites, three direct children, five unfinished
+descendants), then Ruby source-registry adoption (six merged prerequisites,
+three direct children, four descendants). Fresh-main collision checks found
+no open PR in either candidate's production paths. Select only the Haskell
+core next; keep adapter execution, shared-boundary digest activation, and
+other language ports as separate owners.
+
+After guarded auto-merge of Haskell graph/diff PR #16761 at
+`cec7a1deb62b`, the exact merged-main schema-3 collision-checked report is
+unchanged: 15 established languages, 1,487 implementation identities, 4,757
+package slots, 178 high-consensus identities with 262 missing slots, zero
+canonical collisions, and zero unknown buckets. OCaml remains emerging; its
+scaffold, resolver substrate, capability analyzer, reporter, representative
+packages, and package CI are merged, while its native build-tool, adapter,
+denominator consumers, and atomic promotion have existing pending owners.
+The opam archive-mirror prerequisite remains selection-blocked by the open
+Dependabot workflow PR #15723, so no duplicate OCaml owner was added.
+
+Read-only cross-lane audits materialized twelve exact neutral and lane-sized
+children under the existing Dart/JVM eight-family classifier: 09 arithmetic,
+F00 block-RAM, and F01 FPGA each have a neutral reconciliation owner and
+separate Dart, Java, and Kotlin ports. These nine missing package slots are
+structurally absent while same-lane logic-gates exist. F01 ports depend on
+their same-lane F00 ports. The 09 neutral owner must resolve a real subtraction
+carry disagreement: Go/Python and Rust differ for width-four `5 - 0`.
+Directory presence and an unresolved oracle disagreement do not establish
+behavioral parity; the remaining five eight-family fronts still need exact
+children or reviewed exceptions. The original classifier stays
+selection-blocked rather than masquerading as an implementation PR.
+
+A follow-up exact-main audit on `be52215294` classified the remaining fifteen
+Dart/JVM slots: Brotli, clock, hash-functions, tree, and XML lexer each miss
+Dart, Java, and Kotlin. Haskell Brotli and Swift hash-functions have separate
+existing owners. Five pending family classifiers now retain these slots, with
+three new neutral prerequisites for clock, DT02 tree, and F04/XML lexer; split
+each family classifier into lane-sized owners before selection. Brotli must
+wait on the existing CMP06 neutral owner, whose educational wire format and
+malformed/output ceilings are not RFC interoperability. Hash-functions must
+wait on the existing DT17 vector correction. Clock has no governing package
+spec and a divider/phase disagreement; DT02 conflicts with implementations on
+root and ordering semantics; the target generic lexers lack F04 token hooks,
+and XML01 documents entity-adjacent whitespace loss. These are contract
+questions, not reasons to copy an arbitrary existing lane as the oracle.
+
+The post-merge dependency/leverage pass ranks Ruby's checked source-input
+registry adoption first: its six prerequisites are merged, it directly
+unblocks three owners, and existing production lookup still has only a
+10-language global allowlist against the checked 23-language, seven-role
+registry. TypeScript registry adoption ranks second with the same direct
+leverage; Lua pure source hashing ranks third but is a larger from-scratch
+slice. Ruby's seven package-local neutral cases and full native test route
+have been audited; repository-boundary reverse diff and native snapshot safety
+remain separate. No open PR owns the Ruby production or fixture paths. Select
+only Ruby registry adoption next, from a fresh clean main-based worktree.
+
+After guarded auto-merge of Ruby registry PR #16764 at
+`8816976e43`, the exact merged-main schema-3 collision-checked report
+still has 15 established lanes, 1,487 implementation identities, 4,757
+package slots, 178 high-consensus identities with 262 missing slots,
+and zero canonical collisions or unknown buckets. Ruby now consumes the
+checked 23-language, seven-role source-input registry. Repository-boundary
+reverse diff and snapshot safety remain separately owned.
+
+Parallel read-only audits registered 13 additional owners before selecting
+the next implementation: a neutral Brainfuck interpreter contract and four
+missing Dart/Java/Kotlin/Swift lane ports; Dart/Swift JavaScript and TypeScript
+lexer/parser verticals; a Java lexer owner without duplicating the already
+owned Java parser; Excel, Verilog, VHDL, and Ruby lexer/parser verticals; and
+a C# lexer owner without duplicating the generic-closer parser owner.
+Each frontend vertical is gated by the existing neutral token/AST fixture
+owner and must split into lane-sized lexer-before-parser implementations.
+The Ruby frontend also depends on the state-machine-tokenizer substrate.
+Brainfuck core and Brainfuck-to-Wasm compilation are distinct identities.
+
+The post-merge leverage pass selects only TypeScript build-tool exact
+source-input registry adoption. Its six prerequisites are merged, its
+production selector still uses nine hard-coded languages, and adopting the
+checked registry directly unblocks the TypeScript repository-boundary
+reverse-diff/digest owner, terminal neutral adapter, and hashing completion
+umbrella. The seven package-local neutral cases and 13 repository-boundary
+cases are already checked. No open parity PR or overlapping TypeScript
+implementation PR exists. The newly classified Brainfuck and frontend gaps
+remain pending behind their neutral contracts.
+
+After guarded squash auto-merge of TypeScript source-registry PR #16770 at
+`3054917763`, the exact merged-main schema-3 inventory remains 15 established
+lanes, 1,487 identities, 4,757 package slots, 178 high-consensus identities
+with 262 missing slots, and zero canonical collisions or unknown buckets.
+The PR changed no package identity slot. Its 33 final-head checks were all
+terminal and acceptable, and GitHub reported the branch mergeable before
+auto-merge was enabled. TypeScript now consumes the checked 23-language,
+seven-role source-input registry; repository-boundary reverse diff and
+native snapshot safety remain separate owners.
+
+Parallel read-only audits found five previously unregistered neutral-contract
+owners in the five-to-nine-lane and adjacent coverage bands: BMP/PPM/QOI
+codecs (18 missing slots), the SQL planner (seven), compiler IR (eight), DT05
+segment tree (nine), and KD02 scrypt (six). Their specification disagreements
+and lane-sized follow-on requirements are recorded in the state backlog; none
+is treated as an immediately conformant port. The high-consensus scan found
+no newly unowned gap, and OCaml remains emerging with five packages. The
+post-merge dependency pass ranks process-free Lua source hashing ahead of the
+ready Perl Dune discovery fixture, TypeScript diff-selection ceiling, and
+shared .NET CI-gate selection: all six Lua prerequisites are merged, and the
+pure package-digest contract directly unlocks dependency hashing and three
+other downstream owners. Native Lua filesystem stability and cache persistence
+remain separate, selection-blocked authority work. Select only the bounded
+Lua portable source-hashing owner next in a fresh clean main-based worktree.
+
+## Post-#16774 inventory and next dependency pass (2026-10-06)
+
+GitHub merged the ready Lua source-hashing PR after all 32 final-head checks
+completed acceptably (13 success, 19 expected skips), with no merge conflict.
+The exact `origin/main` schema-3 collision check still reports 15 established
+lanes, 1,487 implementation identities, 4,757 package slots, 178
+high-consensus identities with 262 missing slots, five emerging OCaml
+packages, and zero canonical collisions or unknown buckets. Lua's process-free
+registry selection and package digest are now merged; native stable snapshots,
+dependency hashing, and persistent cache remain separate owners.
+
+A parallel audit found one newly unowned nine-lane identity: the pluggable
+`virtual-machine` package. Its fixed-ISA and `GenericVM` specifications and
+existing lane behavior disagree on program-counter advancement, invalid
+opcode/underflow outcomes, step traces, and reset. Register a pending,
+language-neutral pure stack-VM fixture owner before any missing-lane port;
+the six absent established lanes are C#, Dart, F#, Haskell, Java, and Kotlin.
+The audit found no other unowned high-consensus identity or OCaml promotion
+gate. OCaml remains emerging until its owned native build-tool, adapter, and
+three-platform execution gates pass.
+
+The quick dependency pass ranks the unblocked Perl exact-Dune-discovery
+fixture owner next: its prerequisites are merged and it reaches 12 unfinished
+downstream owners. Elixir source hashing reaches eight, while Lua dependency
+hashing and TypeScript diff selection each reach six. The Perl tranche must
+prove exact `_build` pruning without erasing `_Build` or `_build-example`, and
+must not claim full OCaml source hashing or native filesystem authority.
+
+## Post-#16776 inventory and next dependency pass (2026-10-06)
+
+GitHub auto-merged the Perl Dune fixture PR after all 32 final-head checks
+completed acceptably (13 success, 19 expected skips) and the branch was
+conflict-free. The exact merged `origin/main` collision report still records
+15 established lanes, 1,487 implementation identities, 4,757 package slots,
+178 high-consensus identities with 262 missing slots, five emerging OCaml
+packages, and no canonical collision or unknown bucket. OCaml's native
+build-tool, neutral adapter, three-platform execution, and denominator gates
+remain separately owned and pending; no new OCaml promotion owner is needed.
+
+The parallel discovery audit found one additional unowned Haskell build-tool
+gap. Its hard-coded discovery skip list misses seven generated components,
+and language inference can select an incidental nested language name. Add a
+pending full language-registry discovery owner after the narrow Haskell Dune
+owner; the latter remains a focused exact `_build` predecessor and must not
+claim the entire neutral case. The new ID has no exact or normalized collision.
+
+A subsequent exact-main audit also found that the shared Dart/Swift language-
+frontend fixture owner lists Python among twelve roots, but no implementation
+child owned the Python lexer/parser vertical. The lexer is 13/15 (missing Dart
+and Swift); the parser is 12/15 (missing Dart, Swift, and separately owned
+Python self-hosting). Register a pending vertical owner for the four Dart/Swift
+slots after the neutral fixture, then split lane and lexer/parser implementation;
+the new ID has no collision or open-PR file overlap.
+
+With Perl Dune merged, Perl declared-source metadata plumbing is the highest
+leverage eligible next slice: it directly unlocks Perl source hashing and
+reaches nine unfinished descendants. Elixir portable source hashing reaches
+seven and Lua dependency hashing five. No open PR overlaps the expected
+Perl, Elixir, or Lua build-tool implementation paths. Select the Perl metadata
+owner in a fresh clean main-based worktree, keeping full source hashing and
+native filesystem authority outside that bounded plumbing tranche.
+
+## Post-#16778 inventory and next dependency pass (2026-10-06)
+
+GitHub auto-merged the Perl declared-source metadata PR after all 32 final-head
+checks completed acceptably (13 success, 19 expected skips), with no merge
+conflict. The exact merged-main collision report still records 15 established
+lanes, 1,487 implementation identities, 4,757 package slots, 178
+high-consensus identities with 262 missing slots, five emerging OCaml packages,
+and zero canonical collisions or unknown buckets. A subsequent unrelated
+Mermaid merge changed `main` but did not touch parity state or implementation
+paths; refresh this branch onto that newer main before delivery.
+
+Parallel source and owner audits registered ten additional pending owners:
+Haskell duplicate-identity discovery conformance; Dart generic lexer
+indentation-mode conformance; the language-neutral correlation-vector CV00
+fixture; six missing CV00 lane ports (C#, Dart, F#, Haskell, Java, Kotlin);
+and Swift CV00 existing-lane reconciliation. Swift already has a package but
+its ID and merge conventions diverge. CV00 children depend on the neutral
+fixture; the Haskell case feeds adapter closure. Dart indentation is a
+prerequisite for Dart Python/Starlark lexer work, while Swift siblings may
+proceed independently. Exact and punctuation-normalized owner IDs and live
+open-PR file lists had no overlap.
+
+Perl full portable source hashing now has all eight prerequisite owners
+merged and reaches eight unfinished descendants. Elixir source hashing reaches
+seven, then Lua dependency hashing five; those counts are structural leverage,
+not immediate runnable unlocks because native snapshot/cache work remains
+separately blocked. Select only the Perl source-hashing slice in a fresh clean
+main-based branch. Keep native filesystem authority, dependency hashing, cache,
+CLI, and adapter activation outside it.
+
+## Post-#16785 inventory and dependency-fixture priority (2026-10-06)
+
+Guarded squash auto-merge merged the Perl portable source-hashing PR after all
+32 final-head checks completed acceptably (13 success, 19 expected skips) and
+GitHub reported no conflict. The exact merged-main collision report remains
+15 established lanes, 1,487 implementation identities, 4,757 slots, 1,529
+all-reported identities, 178 high-consensus packages with 262 missing slots,
+five emerging OCaml packages, and zero canonical collisions or unknown
+buckets. Intervening main commits changed existing roots only; no package
+identity was added or removed.
+
+Parallel read-only audits ranked Elixir source hashing (seven unfinished
+descendants), Lua dependency hashing (five), and TypeScript diff selection
+(five) among the previously owned ready leaves. The neutral `hashing_cache`
+corpus, however, has only zero- and one-dependency cases. It lacks an
+out-of-order two-dependency case, a dependency-only invalidation pair with
+unchanged package bytes, and a failed-prior-record miss. Register one pending
+process-free neutral fixture owner before choosing another native adopter;
+its cases become prerequisites of the pending dependency-hashing leaves.
+This shared owner has higher leverage across implementation lanes than any
+single ready leaf. Keep native cache persistence and filesystem authority
+separate. An OCaml promotion review found the remaining gates already owned;
+its opam archive-mirroring path currently overlaps open Dependabot PR #15723.
+Select the neutral dependency-hashing adversarial corpus as the sole next
+delivery item in a fresh clean merged-main worktree. Its two prerequisites are
+merged and its fixture/schema/runner paths do not overlap a live PR.
+
+## Post-#16787 inventory and source-hashing priority (2026-10-06)
+
+Guarded squash auto-merge landed the adversarial dependency-hashing corpus at
+`2ec42cd3e0` after all final-head checks passed or skipped as expected and
+GitHub reported no conflict. The exact merged-main collision report still has
+15 established lanes, 1,487 implementation identities, 4,757 slots, 1,529
+all-reported identities, 178 high-consensus packages with 262 missing slots,
+five emerging OCaml packages, and zero collisions or unknown language buckets.
+No package identity or lane classification changed. The state graph has 1,077
+owners with unique exact and punctuation-normalized IDs and no missing
+prerequisites; the neutral fixture owner is now merged. Read-only package,
+build-tool, and OCaml promotion audits found no newly unowned gap to register.
+
+The fixture merge makes Lua, shared C#/F#, Swift, Ruby, and TypeScript native
+dependency-hashing leaves prerequisite-clear. Go, Elixir, Perl, Haskell, and
+Rust retain explicit preceding source/snapshot owners; Python's dependency
+hashing is already merged. The remaining OCaml promotion chain is owned but
+still gated by native front-door, adapter, current-contract, and three-platform
+execution work. Among ready items, Elixir portable source hashing has seven
+unfinished descendants, Lua dependency hashing has five, and TypeScript diff
+selection has five. Select only the process-free Elixir source-hashing tranche
+next, after verifying no open PR overlaps its engine paths. Keep dependency
+hashing, native retained-handle snapshot authority, cache persistence, and
+adapter activation in their separate owners.
+
+## Post-#16794 inventory and dependency-hashing priority (2026-10-06)
+
+Guarded squash auto-merge landed the Elixir Source Inputs and Hashing v1 PR at
+`79e4605cda43` after all 33 final-head checks completed acceptably (14
+successes, 19 expected skips) and GitHub reported no conflict. The exact
+merged-main collision report remains schema 3 with 15 established lanes,
+1,487 implementation identities, 4,757 slots, 1,529 all-reported identities,
+178 high-consensus packages and 262 missing high-consensus slots, five emerging
+OCaml packages, and zero canonical collisions or unknown buckets. The state
+graph retains 1,077 exact and punctuation-unique owners with no missing
+prerequisites. Parallel read-only audits found no newly unowned package,
+build-tool, Dart/JVM front-door, or OCaml promotion gap to add.
+
+The next eligible dependency-shaped leaf is process-free Lua portable
+dependency hashing: its Lua source-hashing and shared adversarial fixture
+prerequisites are merged, it reaches five unfinished descendants, and the
+eleven neutral `hashing-cache-*` cases provide the behavioral oracle. Keep
+native source snapshots, cache persistence, CLI activation, and adapters in
+their separate owners. Dart/Java/Kotlin front doors remain owned but blocked
+by the execution-semantics corpus; Elixir native source-snapshot hardening is
+explicitly selection-blocked by the loop's native-authority boundary. Select
+only the Lua dependency-hashing tranche in a fresh main-based worktree after
+confirming no live PR overlaps its implementation paths.
+
+## Post-#16796 inventory and frontend priority
+
+PR #16796 auto-merged at `2547600e9636d1dfd2ad5df9e2cfdf14963d556a` after
+all 32 final-head checks were acceptable and the two required gates passed.
+The exact merged tree remains collision-clean: 15 established implementation
+lanes, 1,487 implementation identities, 4,757 slots, 1,529 all-reported
+identities, 178 high-consensus identities with 262 missing slots, five emerging
+OCaml packages, and no collisions or unknown buckets. Read-only package,
+build-tool, Dart/JVM, and OCaml audits found no newly unowned eligible gap.
+
+A dependency/leverage pass now selects the existing Dart/Swift frontend neutral
+fixture owner: it has no prerequisites and unlocks twelve already-owned
+frontend slices across 48 missing slots. The correlation-vector neutral owner
+is next by unblocked fanout (seven), followed by the block-RAM neutral owner
+(four direct and seven total). TypeScript diff selection remains ready but has
+only one currently unblocked descendant; two others require separate native
+authority. Freeze the Dart/Swift grammar embed/drift and token/AST contract in
+one bounded fixture tranche before porting any lexer or parser package.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

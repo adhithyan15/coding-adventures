@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W13-message-timed",
+    "language": "punjabi",
+    "chapter": 157,
+    "sequence": 8730,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1b426b8a083b9fa9",
+    "detachableSegments": [
+      "Writing — independent timed message"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

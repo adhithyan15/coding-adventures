@@ -6,13 +6,13 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.134.0";
+pub const VERSION: &str = "0.144.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
-    BlockArrowDirections, BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel,
+    BlockArrowDirections, BoardCard, BoardColumn, BoardConfig, BoardDiagram, DiagramDirection, DiagramLabel,
     DiagramShape, DiagramTextSpan, EdgeMarker,
     DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
@@ -31,7 +31,10 @@ use mermaid_lexer::{
     try_tokenize_mermaid_eventmodeling, try_tokenize_mermaid_radar, try_tokenize_mermaid_xychart,
     try_tokenize_mermaid_treemap, try_tokenize_mermaid_venn, try_tokenize_mermaid_ishikawa,
     try_tokenize_mermaid_wardley, try_tokenize_mermaid_cynefin, try_tokenize_mermaid_treeview,
-    try_tokenize_mermaid_swimlane, try_tokenize_mermaid_railroad, try_tokenize_mermaid_info,
+    try_tokenize_mermaid_swimlane, try_tokenize_mermaid_railroad,
+    try_tokenize_mermaid_railroad_ebnf, try_tokenize_mermaid_railroad_abnf,
+    try_tokenize_mermaid_railroad_peg,
+    try_tokenize_mermaid_info,
     try_tokenize_mermaid_zenuml,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
@@ -77,6 +80,12 @@ const CYNEFIN_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/m
 const TREEVIEW_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/treeview.grammar");
 const SWIMLANE_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/swimlane.grammar");
 const RAILROAD_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/railroad.grammar");
+const RAILROAD_EBNF_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/railroad-ebnf.grammar");
+const RAILROAD_ABNF_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/railroad-abnf.grammar");
+const RAILROAD_PEG_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/railroad-peg.grammar");
 const INFO_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/info.grammar");
 const ZENUML_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/zenuml.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
@@ -547,6 +556,8 @@ fn token_name(token: &Token) -> &str {
         TokenType::Keyword => "KEYWORD",
         TokenType::Plus => "PLUS",
         TokenType::Minus => "MINUS",
+        TokenType::Star => "STAR",
+        TokenType::Slash => "SLASH",
         TokenType::Colon => "COLON",
         TokenType::Comma => "COMMA",
         TokenType::Equals => "EQUALS",
@@ -556,6 +567,7 @@ fn token_name(token: &Token) -> &str {
         TokenType::RBrace => "RBRACE",
         TokenType::LBracket => "LBRACKET",
         TokenType::RBracket => "RBRACKET",
+        TokenType::Dot => "DOT",
         TokenType::Newline => "NEWLINE",
         TokenType::Semicolon => "SEMICOLON",
         TokenType::Eof => "EOF",
@@ -1387,6 +1399,8 @@ fn parse_architecture_labeled_edge_operator(
 
 /// Parse a core indentation-defined Mermaid Kanban board.
 pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
+    let ticket_base_url = parse_kanban_ticket_base_url(source);
+    let config = parse_kanban_layout_config(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_kanban(&prepared).map_err(|message| ParseError {
         message, line: 1, col: 1,
@@ -1401,29 +1415,76 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
         })?;
 
     let lines = tokens.iter()
-        .filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE"))
+        .filter(|token| matches!(token.type_name.as_deref(), Some("STATEMENT_LINE" | "NODE_WITH_DATA" | "ICON_LINE" | "CLASS_LINE")))
         .collect::<Vec<_>>();
     let column_indent = lines.iter()
+        .filter(|token| !matches!(token.type_name.as_deref(), Some("ICON_LINE" | "CLASS_LINE")))
         .map(|token| token.value.len() - token.value.trim_start().len())
         .min()
         .ok_or_else(|| ParseError {
             message: "kanban diagram requires a column".into(), line: 1, col: 1,
         })?;
-    let mut diagram = BoardDiagram::default();
+    let mut diagram = BoardDiagram { ticket_base_url, config, ..BoardDiagram::default() };
     let mut ids = HashSet::new();
     let mut card_indent = None;
+    let mut last_card: Option<(usize, usize)> = None;
     for token in lines {
+        if token.type_name.as_deref() == Some("ICON_LINE") {
+            let (column_index, card_index) = last_card
+                .ok_or_else(|| token_error(token, "kanban icon must follow a card"))?;
+            let value = token.value.trim();
+            let icon = value
+                .strip_prefix("::icon(")
+                .and_then(|value| value.strip_suffix(')'))
+                .map(str::trim)
+                .filter(|value| !value.is_empty())
+                .ok_or_else(|| token_error(token, "kanban icon name cannot be empty"))?;
+            diagram.columns[column_index].cards[card_index].icon = Some(icon.to_string());
+            continue;
+        }
+        if token.type_name.as_deref() == Some("CLASS_LINE") {
+            let classes = token.value.trim().strip_prefix(":::")
+                .map(str::trim)
+                .filter(|value| !value.is_empty())
+                .ok_or_else(|| token_error(token, "kanban class name cannot be empty"))?
+                .split_whitespace()
+                .map(str::to_string)
+                .collect::<Vec<_>>();
+            if let Some((column_index, card_index)) = last_card {
+                diagram.columns[column_index].cards[card_index].classes.extend(classes);
+            } else if let Some(column) = diagram.columns.last_mut() {
+                column.classes.extend(classes);
+            } else {
+                return Err(token_error(token, "kanban class must follow a column or card"));
+            }
+            continue;
+        }
         let indent = token.value.len() - token.value.trim_start().len();
         let value = token.value.trim();
-        if value.contains("@{") || value.starts_with("::") || value.starts_with("style ") {
+        if value.starts_with("::") || value.starts_with("style ") {
             return Err(token_error(token, "kanban decorations are outside the supported subset"));
         }
-        let (explicit_id, label) = parse_board_node(value);
-        let id = unique_mindmap_id(explicit_id.unwrap_or_else(|| mindmap_slug(&label)), &mut ids);
+        let (node_source, metadata) = parse_kanban_node_metadata(value, token)?;
+        let (explicit_id, mut label) = parse_board_node(node_source);
+        if let Some(metadata_label) = &metadata.label {
+            label = parse_kanban_label(metadata_label);
+        }
+        let id = unique_mindmap_id(
+            explicit_id.unwrap_or_else(|| mindmap_slug(&label.text)),
+            &mut ids,
+        );
         if indent == column_indent {
+            if metadata.has_card_only_fields() {
+                return Err(token_error(token, "kanban card metadata requires a card"));
+            }
             diagram.columns.push(BoardColumn {
-                id, label: DiagramLabel::new(label), cards: Vec::new(),
+                id,
+                label,
+                ticket: metadata.ticket,
+                cards: Vec::new(),
+                classes: Vec::new(),
             });
+            last_card = None;
         } else if indent > column_indent {
             match card_indent {
                 Some(expected) if indent != expected => {
@@ -1432,9 +1493,20 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
                 None => card_indent = Some(indent),
                 Some(_) => {}
             }
-            let column = diagram.columns.last_mut()
+            let column_index = diagram.columns.len().checked_sub(1)
                 .ok_or_else(|| token_error(token, "kanban card must follow a column"))?;
-            column.cards.push(BoardCard { id, label: DiagramLabel::new(label) });
+            let column = diagram.columns.get_mut(column_index)
+                .ok_or_else(|| token_error(token, "kanban card must follow a column"))?;
+            column.cards.push(BoardCard {
+                id,
+                label,
+                ticket: metadata.ticket,
+                assigned: metadata.assigned,
+                priority: metadata.priority,
+                icon: metadata.icon,
+                classes: Vec::new(),
+            });
+            last_card = Some((column_index, column.cards.len() - 1));
         } else {
             return Err(token_error(token, "invalid kanban indentation"));
         }
@@ -1442,16 +1514,179 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
     Ok(diagram)
 }
 
-fn parse_board_node(source: &str) -> (Option<String>, String) {
-    if let Some(open) = source.find('[') {
-        if source.ends_with(']') {
+#[derive(Default)]
+struct KanbanNodeMetadata {
+    label: Option<String>,
+    ticket: Option<String>,
+    assigned: Option<String>,
+    priority: Option<String>,
+    icon: Option<String>,
+}
+
+impl KanbanNodeMetadata {
+    fn has_card_only_fields(&self) -> bool {
+        self.assigned.is_some() || self.priority.is_some() || self.icon.is_some()
+    }
+}
+
+fn parse_kanban_node_metadata<'a>(
+    source: &'a str,
+    token: &Token,
+) -> Result<(&'a str, KanbanNodeMetadata), ParseError> {
+    let Some(open) = source.find("@{") else {
+        return Ok((source, KanbanNodeMetadata::default()));
+    };
+    let body = source[open + 2..]
+        .strip_suffix('}')
+        .ok_or_else(|| token_error(token, "unterminated kanban metadata"))?;
+    let mut metadata = KanbanNodeMetadata::default();
+    for field in split_kanban_metadata_fields(body) {
+        let (key, value) = field
+            .split_once(':')
+            .ok_or_else(|| token_error(token, "kanban metadata fields require key: value"))?;
+        let value = parse_kanban_metadata_scalar(value.trim());
+        match key.trim() {
+            "label" => metadata.label = Some(value),
+            "ticket" => metadata.ticket = Some(value),
+            "assigned" => metadata.assigned = Some(value),
+            "priority" => metadata.priority = Some(value),
+            "icon" => metadata.icon = Some(value),
+            _ => {}
+        }
+    }
+    Ok((source[..open].trim_end(), metadata))
+}
+
+fn split_kanban_metadata_fields(source: &str) -> Vec<&str> {
+    let mut fields = Vec::new();
+    let mut start = 0;
+    let mut quote = None;
+    let mut escaped = false;
+    for (index, character) in source.char_indices() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        if character == '\\' && quote.is_some() {
+            escaped = true;
+            continue;
+        }
+        if matches!(character, '\'' | '"') {
+            if quote == Some(character) {
+                quote = None;
+            } else if quote.is_none() {
+                quote = Some(character);
+            }
+            continue;
+        }
+        if quote.is_none() && matches!(character, ',' | '\n' | '\r') {
+            let field = source[start..index].trim();
+            if !field.is_empty() {
+                fields.push(field);
+            }
+            start = index + character.len_utf8();
+        }
+    }
+    let field = source[start..].trim();
+    if !field.is_empty() {
+        fields.push(field);
+    }
+    fields
+}
+
+fn parse_kanban_metadata_scalar(source: &str) -> String {
+    source
+        .strip_prefix('\'')
+        .and_then(|value| value.strip_suffix('\''))
+        .map_or_else(|| unquote_mermaid_string(source), |value| value.replace("''", "'"))
+}
+
+fn parse_kanban_ticket_base_url(source: &str) -> Option<String> {
+    let front_matter = mermaid_front_matter_section(source, &["config", "kanban"]);
+    let kanban_source = mermaid_directive_object(source, "kanban")
+        .or(front_matter.as_deref())?;
+    quadrant_directive_value(kanban_source, "ticketBaseUrl").or_else(|| {
+        kanban_source.lines().find_map(|line| {
+            let (name, value) = line.trim().split_once(':')?;
+            (name.trim() == "ticketBaseUrl").then(|| {
+                value.trim().trim_matches(['"', '\'']).to_string()
+            })
+        })
+    }).filter(|value| !value.is_empty())
+}
+
+fn parse_kanban_layout_config(source: &str) -> BoardConfig {
+    let front_matter = mermaid_front_matter_section(source, &["config", "kanban"]);
+    let kanban_source = mermaid_directive_object(source, "kanban")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |key| {
+        quadrant_directive_value(kanban_source, key).or_else(|| {
+            kanban_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+    };
+    let positive_number = |key| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value > 0.0)
+    };
+    let defaults = BoardConfig::default();
+    BoardConfig {
+        section_width: positive_number("sectionWidth").unwrap_or(defaults.section_width),
+        padding: positive_number("padding").unwrap_or(defaults.padding),
+    }
+}
+
+fn parse_board_node(source: &str) -> (Option<String>, DiagramLabel) {
+    let source = source.trim();
+    for (open, close) in [
+        ("-)", "(-"),
+        ("(-", "-)"),
+        ("))", "(("),
+        (")", "("),
+        ("((", "))"),
+        ("{{", "}}"),
+        ("[", "]"),
+        ("(", ")"),
+    ] {
+        if let Some(open_index) = source.find(open) {
+            if !source.ends_with(close) {
+                continue;
+            }
+            let id = source[..open_index].trim();
+            let label_end = source.len() - close.len();
+            if open_index + open.len() > label_end {
+                continue;
+            }
             return (
-                Some(source[..open].trim().to_string()),
-                normalize_mermaid_line_breaks(source[open + 1..source.len() - 1].trim()),
+                (!id.is_empty()).then(|| id.to_string()),
+                parse_kanban_label(source[open_index + open.len()..label_end].trim()),
             );
         }
     }
-    (None, normalize_mermaid_line_breaks(source.trim()))
+    (None, parse_kanban_label(source))
+}
+
+fn parse_kanban_label(source: &str) -> DiagramLabel {
+    let label = parse_mermaid_label(source);
+    if label.markdown.is_some() {
+        return label;
+    }
+    let markdown = label.text.replace("\\n", "\n");
+    let marker_count = markdown.chars().filter(|character| *character == '*').count();
+    let has_emphasis = marker_count >= 2 && marker_count.is_multiple_of(2);
+    if !has_emphasis && !markdown.contains('\n') {
+        return label;
+    }
+    let (text, spans) = parse_mindmap_markdown_spans(&markdown);
+    if markdown.contains('\n') || spans.iter().any(|span| span.bold || span.italic) {
+        DiagramLabel::markdown(text, markdown, spans)
+    } else {
+        label
+    }
 }
 
 /// Parse absolute and relative bit ranges from the Mermaid packet family.
@@ -2757,7 +2992,7 @@ fn parse_mindmap_node(source: &str) -> (Option<String>, DiagramLabel, DiagramSha
         if let Some(open_index) = source.find(open) {
             if source.ends_with(close) && open_index + open.len() <= source.len() - close.len() {
                 let id = source[..open_index].trim();
-                let label = parse_mindmap_label(
+                let label = parse_mermaid_label(
                     source[open_index + open.len()..source.len() - close.len()].trim(),
                 );
                 return (
@@ -2775,7 +3010,7 @@ fn parse_mindmap_node(source: &str) -> (Option<String>, DiagramLabel, DiagramSha
     )
 }
 
-fn parse_mindmap_label(source: &str) -> DiagramLabel {
+fn parse_mermaid_label(source: &str) -> DiagramLabel {
     let trimmed = source.trim();
     if let Some(markdown) = trimmed
         .strip_prefix("\"`")
@@ -5871,6 +6106,15 @@ fn swimlane_error(line: usize, message: impl Into<String>) -> ParseError {
 /// Parse Mermaid's explicit Railroad IR constructor notation.
 pub fn parse_railroad(source: &str) -> Result<RailroadDiagram, ParseError> {
     let family = detect_mermaid_type(source)?; let prepared = prepare_line_grammar_source(source)?;
+    if prepared.trim_start().starts_with("railroad-ebnf-beta") {
+        return parse_railroad_ebnf_prepared(&prepared);
+    }
+    if prepared.trim_start().starts_with("railroad-abnf-beta") {
+        return parse_railroad_abnf_prepared(&prepared);
+    }
+    if prepared.trim_start().starts_with("railroad-peg-beta") {
+        return parse_railroad_peg_prepared(&prepared);
+    }
     if !prepared.trim_start().starts_with("railroad-beta") {
         return Err(ParseError { message: format!("Mermaid {} Railroad {:?} notation is recognized but not implemented", MERMAID_COMPATIBILITY_BASELINE, family.canonical_id()), line: 1, col: 1 });
     }
@@ -5899,6 +6143,499 @@ pub fn parse_railroad(source: &str) -> Result<RailroadDiagram, ParseError> {
     Ok(diagram)
 }
 
+fn parse_railroad_ebnf_prepared(source: &str) -> Result<RailroadDiagram, ParseError> {
+    let tokens = try_tokenize_mermaid_railroad_ebnf(source)
+        .map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let grammar = parse_parser_grammar(RAILROAD_EBNF_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse railroad-ebnf.grammar: {error}"));
+    GrammarParser::new(tokens.clone(), grammar)
+        .with_max_depth(MAX_RULE_DEPTH)
+        .parse()
+        .map_err(|error| ParseError {
+            message: error.message,
+            line: error.token.line,
+            col: error.token.column,
+        })?;
+    let mut cursor = RailroadCursor { tokens: &tokens, index: 1 };
+    let mut diagram = RailroadDiagram {
+        title: None,
+        accessibility_title: None,
+        accessibility_description: None,
+        rules: Vec::new(),
+    };
+    while !cursor.at("EOF") {
+        match cursor.name() {
+            "TITLE" => {
+                let value = cursor.take_value();
+                diagram.title = Some(unquote_railroad_string(value["title".len()..].trim()));
+            }
+            "ACC_TITLE" => {
+                diagram.accessibility_title = Some(
+                    cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string(),
+                );
+            }
+            "ACC_DESCR" => {
+                diagram.accessibility_description = Some(
+                    cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string(),
+                );
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.take_value();
+                let description = value
+                    .split_once('{')
+                    .and_then(|(_, body)| body.rsplit_once('}').map(|(body, _)| body))
+                    .unwrap_or("")
+                    .trim();
+                diagram.accessibility_description = Some(description.to_string());
+            }
+            "IDENT" => {
+                let name = cursor.take_value();
+                if cursor.at("EQUAL") || cursor.at("DEFINE") {
+                    cursor.index += 1;
+                } else {
+                    return Err(cursor.error("expected EBNF rule assignment"));
+                }
+                let definition = parse_railroad_ebnf_choice(&mut cursor)?;
+                cursor.expect("SEMICOLON")?;
+                if diagram.rules.iter().any(|rule| rule.name == name) {
+                    return Err(cursor.error(format!("duplicate Railroad rule {name:?}")));
+                }
+                diagram.rules.push(RailroadRule { name, definition });
+            }
+            other => return Err(cursor.error(format!("unexpected Railroad EBNF token {other}"))),
+        }
+    }
+    if diagram.rules.is_empty() {
+        return Err(ParseError {
+            message: "Railroad diagrams require at least one rule".into(),
+            line: 1,
+            col: 1,
+        });
+    }
+    Ok(diagram)
+}
+
+fn parse_railroad_ebnf_choice(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut alternatives = vec![parse_railroad_ebnf_sequence(cursor)?];
+    while cursor.at("PIPE") {
+        cursor.index += 1;
+        alternatives.push(parse_railroad_ebnf_sequence(cursor)?);
+    }
+    if alternatives.len() == 1 {
+        Ok(alternatives.remove(0))
+    } else {
+        Ok(RailroadExpression::Choice(alternatives))
+    }
+}
+
+fn parse_railroad_ebnf_sequence(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut elements = vec![parse_railroad_ebnf_term(cursor)?];
+    while cursor.at("COMMA") || railroad_ebnf_primary_starts(cursor.name()) {
+        if cursor.at("COMMA") {
+            cursor.index += 1;
+        }
+        elements.push(parse_railroad_ebnf_term(cursor)?);
+    }
+    if elements.len() == 1 {
+        Ok(elements.remove(0))
+    } else {
+        Ok(RailroadExpression::Sequence(elements))
+    }
+}
+
+fn parse_railroad_ebnf_term(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut expression = parse_railroad_ebnf_primary(cursor)?;
+    loop {
+        expression = match cursor.name() {
+            "QUESTION" => {
+                cursor.index += 1;
+                RailroadExpression::Optional(Box::new(expression))
+            }
+            "STAR" => {
+                cursor.index += 1;
+                RailroadExpression::Repetition { element: Box::new(expression), min: 0, max: None }
+            }
+            "PLUS" => {
+                cursor.index += 1;
+                RailroadExpression::Repetition { element: Box::new(expression), min: 1, max: None }
+            }
+            "MINUS" => {
+                cursor.index += 1;
+                let except = parse_railroad_ebnf_primary(cursor)?;
+                RailroadExpression::Sequence(vec![
+                    expression,
+                    RailroadExpression::Terminal("-".into()),
+                    except,
+                ])
+            }
+            _ => break,
+        };
+    }
+    Ok(expression)
+}
+
+fn parse_railroad_ebnf_primary(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    match cursor.name() {
+        "STRING" => Ok(RailroadExpression::Terminal(unquote_railroad_string(&cursor.take_value()))),
+        "IDENT" => Ok(RailroadExpression::NonTerminal(cursor.take_value())),
+        "SPECIAL" => {
+            let value = cursor.take_value();
+            Ok(RailroadExpression::Special(value[1..value.len() - 1].trim().to_string()))
+        }
+        "LPAREN" | "LBRACKET" | "LBRACE" => {
+            let (close, kind) = match cursor.name() {
+                "LPAREN" => ("RPAREN", 0),
+                "LBRACKET" => ("RBRACKET", 1),
+                _ => ("RBRACE", 2),
+            };
+            cursor.index += 1;
+            let expression = parse_railroad_ebnf_choice(cursor)?;
+            cursor.expect(close)?;
+            Ok(match kind {
+                1 => RailroadExpression::Optional(Box::new(expression)),
+                2 => RailroadExpression::Repetition { element: Box::new(expression), min: 0, max: None },
+                _ => expression,
+            })
+        }
+        _ => Err(cursor.error("expected Railroad EBNF expression")),
+    }
+}
+
+fn railroad_ebnf_primary_starts(name: &str) -> bool {
+    matches!(name, "STRING" | "IDENT" | "SPECIAL" | "LPAREN" | "LBRACKET" | "LBRACE")
+}
+
+fn unquote_railroad_string(raw: &str) -> String {
+    let inner = raw
+        .strip_prefix('\'')
+        .and_then(|value| value.strip_suffix('\''))
+        .unwrap_or(raw);
+    unquote_mermaid_string(inner)
+}
+
+fn parse_railroad_abnf_prepared(source: &str) -> Result<RailroadDiagram, ParseError> {
+    let tokens = try_tokenize_mermaid_railroad_abnf(source)
+        .map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let grammar = parse_parser_grammar(RAILROAD_ABNF_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse railroad-abnf.grammar: {error}"));
+    GrammarParser::new(tokens.clone(), grammar)
+        .with_max_depth(MAX_RULE_DEPTH)
+        .parse()
+        .map_err(|error| ParseError {
+            message: error.message,
+            line: error.token.line,
+            col: error.token.column,
+        })?;
+    let mut cursor = RailroadCursor { tokens: &tokens, index: 1 };
+    let mut diagram = RailroadDiagram {
+        title: None,
+        accessibility_title: None,
+        accessibility_description: None,
+        rules: Vec::new(),
+    };
+    while !cursor.at("EOF") {
+        match cursor.name() {
+            "TITLE" => {
+                let value = cursor.take_value();
+                diagram.title = Some(unquote_railroad_string(value["title".len()..].trim()));
+            }
+            "ACC_TITLE" => {
+                diagram.accessibility_title = Some(
+                    cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string(),
+                );
+            }
+            "ACC_DESCR" => {
+                diagram.accessibility_description = Some(
+                    cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string(),
+                );
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.take_value();
+                let description = value
+                    .split_once('{')
+                    .and_then(|(_, body)| body.rsplit_once('}').map(|(body, _)| body))
+                    .unwrap_or("")
+                    .trim();
+                diagram.accessibility_description = Some(description.to_string());
+            }
+            "RULENAME" => {
+                let name = cursor.take_value();
+                cursor.expect("EQUAL")?;
+                let definition = parse_railroad_abnf_alternation(&mut cursor)?;
+                cursor.expect("SEMICOLON")?;
+                if diagram.rules.iter().any(|rule| rule.name == name) {
+                    return Err(cursor.error(format!("duplicate Railroad rule {name:?}")));
+                }
+                diagram.rules.push(RailroadRule { name, definition });
+            }
+            other => return Err(cursor.error(format!("unexpected Railroad ABNF token {other}"))),
+        }
+    }
+    if diagram.rules.is_empty() {
+        return Err(ParseError {
+            message: "Railroad diagrams require at least one rule".into(),
+            line: 1,
+            col: 1,
+        });
+    }
+    Ok(diagram)
+}
+
+fn parse_railroad_abnf_alternation(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut alternatives = vec![parse_railroad_abnf_concatenation(cursor)?];
+    while cursor.at("SLASH") {
+        cursor.index += 1;
+        alternatives.push(parse_railroad_abnf_concatenation(cursor)?);
+    }
+    if alternatives.len() == 1 {
+        Ok(alternatives.remove(0))
+    } else {
+        Ok(RailroadExpression::Choice(alternatives))
+    }
+}
+
+fn parse_railroad_abnf_concatenation(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut elements = vec![parse_railroad_abnf_element(cursor)?];
+    while railroad_abnf_element_starts(cursor.name()) {
+        elements.push(parse_railroad_abnf_element(cursor)?);
+    }
+    if elements.len() == 1 {
+        Ok(elements.remove(0))
+    } else {
+        Ok(RailroadExpression::Sequence(elements))
+    }
+}
+
+fn parse_railroad_abnf_element(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let repeat = if matches!(cursor.name(), "REPEAT" | "STAR" | "EXACT_REPEAT") {
+        Some(cursor.take_value())
+    } else {
+        None
+    };
+    let expression = parse_railroad_abnf_primary(cursor)?;
+    let Some(repeat) = repeat else { return Ok(expression); };
+    let (min, max) = parse_railroad_abnf_repeat(&repeat, cursor)?;
+    if min == 0 && max == Some(1) {
+        Ok(RailroadExpression::Optional(Box::new(expression)))
+    } else {
+        Ok(RailroadExpression::Repetition { element: Box::new(expression), min, max })
+    }
+}
+
+fn parse_railroad_abnf_repeat(
+    repeat: &str,
+    cursor: &RailroadCursor<'_>,
+) -> Result<(usize, Option<usize>), ParseError> {
+    if let Some((minimum, maximum)) = repeat.split_once('*') {
+        let min = if minimum.is_empty() {
+            0
+        } else {
+            minimum.parse().map_err(|_| cursor.error("invalid ABNF repeat minimum"))?
+        };
+        let max = if maximum.is_empty() {
+            None
+        } else {
+            Some(maximum.parse().map_err(|_| cursor.error("invalid ABNF repeat maximum"))?)
+        };
+        if max.is_some_and(|max| min > max) {
+            return Err(cursor.error("ABNF repeat minimum exceeds maximum"));
+        }
+        Ok((min, max))
+    } else {
+        let exact = repeat.parse().map_err(|_| cursor.error("invalid exact ABNF repeat"))?;
+        Ok((exact, Some(exact)))
+    }
+}
+
+fn parse_railroad_abnf_primary(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    match cursor.name() {
+        "STRING" => Ok(RailroadExpression::Terminal(unquote_railroad_string(&cursor.take_value()))),
+        "NUMVAL" => Ok(RailroadExpression::Terminal(cursor.take_value())),
+        "RULENAME" => Ok(RailroadExpression::NonTerminal(cursor.take_value())),
+        "LPAREN" | "LBRACKET" => {
+            let optional = cursor.at("LBRACKET");
+            let close = if optional { "RBRACKET" } else { "RPAREN" };
+            cursor.index += 1;
+            let expression = parse_railroad_abnf_alternation(cursor)?;
+            cursor.expect(close)?;
+            if optional {
+                Ok(RailroadExpression::Optional(Box::new(expression)))
+            } else {
+                Ok(expression)
+            }
+        }
+        _ => Err(cursor.error("expected Railroad ABNF expression")),
+    }
+}
+
+fn railroad_abnf_element_starts(name: &str) -> bool {
+    matches!(
+        name,
+        "REPEAT" | "STAR" | "EXACT_REPEAT" | "STRING" | "NUMVAL" | "RULENAME" | "LPAREN" | "LBRACKET"
+    )
+}
+
+fn parse_railroad_peg_prepared(source: &str) -> Result<RailroadDiagram, ParseError> {
+    let tokens = try_tokenize_mermaid_railroad_peg(source)
+        .map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let grammar = parse_parser_grammar(RAILROAD_PEG_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse railroad-peg.grammar: {error}"));
+    GrammarParser::new(tokens.clone(), grammar)
+        .with_max_depth(MAX_RULE_DEPTH)
+        .parse()
+        .map_err(|error| ParseError {
+            message: error.message,
+            line: error.token.line,
+            col: error.token.column,
+        })?;
+    let mut cursor = RailroadCursor { tokens: &tokens, index: 1 };
+    let mut diagram = RailroadDiagram {
+        title: None,
+        accessibility_title: None,
+        accessibility_description: None,
+        rules: Vec::new(),
+    };
+    while !cursor.at("EOF") {
+        match cursor.name() {
+            "TITLE" => {
+                let value = cursor.take_value();
+                diagram.title = Some(unquote_railroad_string(value["title".len()..].trim()));
+            }
+            "ACC_TITLE" => {
+                diagram.accessibility_title = Some(
+                    cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string(),
+                );
+            }
+            "ACC_DESCR" => {
+                diagram.accessibility_description = Some(
+                    cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string(),
+                );
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.take_value();
+                let description = value
+                    .split_once('{')
+                    .and_then(|(_, body)| body.rsplit_once('}').map(|(body, _)| body))
+                    .unwrap_or("")
+                    .trim();
+                diagram.accessibility_description = Some(description.to_string());
+            }
+            "IDENT" => {
+                let name = cursor.take_value();
+                cursor.expect("ASSIGN")?;
+                let definition = parse_railroad_peg_choice(&mut cursor)?;
+                cursor.expect("SEMICOLON")?;
+                if diagram.rules.iter().any(|rule| rule.name == name) {
+                    return Err(cursor.error(format!("duplicate Railroad rule {name:?}")));
+                }
+                diagram.rules.push(RailroadRule { name, definition });
+            }
+            other => return Err(cursor.error(format!("unexpected Railroad PEG token {other}"))),
+        }
+    }
+    if diagram.rules.is_empty() {
+        return Err(ParseError {
+            message: "Railroad diagrams require at least one rule".into(),
+            line: 1,
+            col: 1,
+        });
+    }
+    Ok(diagram)
+}
+
+fn parse_railroad_peg_choice(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut alternatives = vec![parse_railroad_peg_sequence(cursor)?];
+    while cursor.at("SLASH") {
+        cursor.index += 1;
+        alternatives.push(parse_railroad_peg_sequence(cursor)?);
+    }
+    if alternatives.len() == 1 {
+        Ok(alternatives.remove(0))
+    } else {
+        Ok(RailroadExpression::Choice(alternatives))
+    }
+}
+
+fn parse_railroad_peg_sequence(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut elements = vec![parse_railroad_peg_prefix(cursor)?];
+    while railroad_peg_prefix_starts(cursor.name()) {
+        elements.push(parse_railroad_peg_prefix(cursor)?);
+    }
+    if elements.len() == 1 {
+        Ok(elements.remove(0))
+    } else {
+        Ok(RailroadExpression::Sequence(elements))
+    }
+}
+
+fn parse_railroad_peg_prefix(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let operator = if cursor.at("AND") || cursor.at("NOT") {
+        Some(cursor.take_value())
+    } else {
+        None
+    };
+    let expression = parse_railroad_peg_suffix(cursor)?;
+    if let Some(operator) = operator {
+        Ok(RailroadExpression::Special(format!(
+            "{operator}{}",
+            railroad_peg_expression_label(&expression)
+        )))
+    } else {
+        Ok(expression)
+    }
+}
+
+fn parse_railroad_peg_suffix(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let expression = parse_railroad_peg_primary(cursor)?;
+    match cursor.name() {
+        "QUESTION" => {
+            cursor.index += 1;
+            Ok(RailroadExpression::Optional(Box::new(expression)))
+        }
+        "STAR" | "PLUS" => {
+            let min = usize::from(cursor.at("PLUS"));
+            cursor.index += 1;
+            Ok(RailroadExpression::Repetition {
+                element: Box::new(expression),
+                min,
+                max: None,
+            })
+        }
+        _ => Ok(expression),
+    }
+}
+
+fn parse_railroad_peg_primary(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    match cursor.name() {
+        "STRING" => Ok(RailroadExpression::Terminal(unquote_railroad_string(&cursor.take_value()))),
+        "IDENT" => Ok(RailroadExpression::NonTerminal(cursor.take_value())),
+        "DOT" => {
+            cursor.index += 1;
+            Ok(RailroadExpression::Special(".".into()))
+        }
+        "LPAREN" => {
+            cursor.index += 1;
+            let expression = parse_railroad_peg_choice(cursor)?;
+            cursor.expect("RPAREN")?;
+            Ok(expression)
+        }
+        _ => Err(cursor.error("expected Railroad PEG expression")),
+    }
+}
+
+fn railroad_peg_prefix_starts(name: &str) -> bool {
+    matches!(name, "AND" | "NOT" | "STRING" | "IDENT" | "DOT" | "LPAREN")
+}
+
+fn railroad_peg_expression_label(expression: &RailroadExpression) -> String {
+    match expression {
+        RailroadExpression::Terminal(value) => format!("\"{value}\""),
+        RailroadExpression::NonTerminal(name) => name.clone(),
+        RailroadExpression::Special(text) => text.clone(),
+        _ => "(...)".into(),
+    }
+}
+
 struct RailroadCursor<'a> { tokens: &'a [Token], index: usize }
 impl RailroadCursor<'_> {
     fn token(&self) -> &Token { &self.tokens[self.index.min(self.tokens.len() - 1)] }
@@ -5914,7 +6651,7 @@ fn parse_railroad_expression(cursor: &mut RailroadCursor<'_>) -> Result<Railroad
     let constructor = cursor.take_value(); cursor.expect("LPAREN")?;
     if matches!(constructor.as_str(), "terminal" | "nonterminal" | "special") {
         if !cursor.at("STRING") { return Err(cursor.error(format!("{constructor} requires one string argument"))); }
-        let value = unquote_mermaid_string(&cursor.take_value()); cursor.expect("RPAREN")?;
+        let value = unquote_railroad_string(&cursor.take_value()); cursor.expect("RPAREN")?;
         return Ok(match constructor.as_str() { "terminal" => RailroadExpression::Terminal(value),
             "nonterminal" => RailroadExpression::NonTerminal(value), "special" => RailroadExpression::Special(value), _ => unreachable!() });
     }
@@ -5925,8 +6662,8 @@ fn parse_railroad_expression(cursor: &mut RailroadCursor<'_>) -> Result<Railroad
         "sequence" if !arguments.is_empty() => Ok(RailroadExpression::Sequence(arguments)),
         "choice" if arguments.len() >= 2 => Ok(RailroadExpression::Choice(arguments)),
         "optional" if arguments.len() == 1 => Ok(RailroadExpression::Optional(Box::new(arguments.remove(0)))),
-        "zeroOrMore" if arguments.len() == 1 => Ok(RailroadExpression::Repetition { element: Box::new(arguments.remove(0)), min: 0 }),
-        "oneOrMore" if arguments.len() == 1 => Ok(RailroadExpression::Repetition { element: Box::new(arguments.remove(0)), min: 1 }),
+        "zeroOrMore" if arguments.len() == 1 => Ok(RailroadExpression::Repetition { element: Box::new(arguments.remove(0)), min: 0, max: None }),
+        "oneOrMore" if arguments.len() == 1 => Ok(RailroadExpression::Repetition { element: Box::new(arguments.remove(0)), min: 1, max: None }),
         _ => Err(cursor.error(format!("invalid or unsupported Railroad constructor {constructor:?}"))),
     }
 }
@@ -11681,6 +12418,154 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn kanban_preserves_inline_and_multiline_card_metadata() {
+        let board = parse_kanban(
+            "kanban\n  todo[Todo]\n    parser[Write grammar]@{ ticket: MC-42, assigned: 'Ada Lovelace', priority: high, icon: heart }\n    tests@{\n      label: \"Add parser tests\"\n      ticket: MC-43\n      assigned: Grace\n      priority: low\n    }\n      ::icon(test-tube)",
+        )
+        .unwrap();
+        let parser = &board.columns[0].cards[0];
+        assert_eq!(parser.ticket.as_deref(), Some("MC-42"));
+        assert_eq!(parser.assigned.as_deref(), Some("Ada Lovelace"));
+        assert_eq!(parser.priority.as_deref(), Some("high"));
+        assert_eq!(parser.icon.as_deref(), Some("heart"));
+        let tests = &board.columns[0].cards[1];
+        assert_eq!(tests.label.text, "Add parser tests");
+        assert_eq!(tests.ticket.as_deref(), Some("MC-43"));
+        assert_eq!(tests.icon.as_deref(), Some("test-tube"));
+    }
+
+    #[test]
+    fn kanban_preserves_column_and_card_classes() {
+        let board = parse_kanban(
+            "kanban\n  todo[Todo]\n    :::backlog\n    parser[Write grammar]\n      :::urgent blocked",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].classes, ["backlog"]);
+        assert_eq!(board.columns[0].cards[0].classes, ["urgent", "blocked"]);
+    }
+
+    #[test]
+    fn kanban_preserves_ticket_base_url_configuration() {
+        let board = parse_kanban(
+            "%%{init: {'kanban': {'ticketBaseUrl': 'https://tracker.example/issues/#TICKET#'}}}%%\nkanban\n  todo[Todo]\n    parser[Write grammar]@{ ticket: MC-42 }",
+        )
+        .unwrap();
+        assert_eq!(
+            board.ticket_base_url.as_deref(),
+            Some("https://tracker.example/issues/#TICKET#")
+        );
+        let front_matter = parse_kanban(
+            "---\nconfig:\n  kanban:\n    ticketBaseUrl: https://frontmatter.example/#TICKET#\n---\nkanban\n  todo[Todo]\n    parser[Write grammar]@{ ticket: MC-42 }",
+        )
+        .unwrap();
+        assert_eq!(
+            front_matter.ticket_base_url.as_deref(),
+            Some("https://frontmatter.example/#TICKET#")
+        );
+    }
+
+    #[test]
+    fn kanban_preserves_layout_configuration() {
+        let board = parse_kanban(
+            "%%{init: {'kanban': {'sectionWidth': 300, 'padding': 32}}}%%\nkanban\n  todo[Todo]\n    parser[Write grammar]",
+        )
+        .unwrap();
+        assert_eq!(board.config.section_width, 300.0);
+        assert_eq!(board.config.padding, 32.0);
+        let front_matter = parse_kanban(
+            "---\nconfig:\n  kanban:\n    sectionWidth: 320\n    padding: 28\n---\nkanban\n  todo[Todo]\n    parser[Write grammar]",
+        )
+        .unwrap();
+        assert_eq!(front_matter.config.section_width, 320.0);
+        assert_eq!(front_matter.config.padding, 28.0);
+    }
+
+    #[test]
+    fn kanban_preserves_section_ticket_metadata() {
+        let board = parse_kanban(
+            "kanban\n  todo[Todo]@{ ticket: KB-7 }\n    parser[Write grammar]",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].ticket.as_deref(), Some("KB-7"));
+        assert_eq!(board.columns[0].label.text, "Todo");
+    }
+
+    #[test]
+    fn kanban_normalizes_shape_delimited_labels() {
+        let board = parse_kanban(
+            "kanban\n  todo((Todo))\n    rounded(Rounded card)\n    hex{{Hex card}}\n  plain[Plain]\n    circle((Circle card))",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].id, "todo");
+        assert_eq!(board.columns[0].label.text, "Todo");
+        assert_eq!(board.columns[0].cards[0].label.text, "Rounded card");
+        assert_eq!(board.columns[0].cards[1].label.text, "Hex card");
+        assert_eq!(board.columns[1].cards[0].label.text, "Circle card");
+    }
+
+    #[test]
+    fn kanban_normalizes_cloud_and_bang_labels() {
+        let board = parse_kanban(
+            "kanban\n  todo)Cloud section(\n    bang))Bang card((\n    cloud(-Cloud card-)\n    burst-)Burst card(-",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].id, "todo");
+        assert_eq!(board.columns[0].label.text, "Cloud section");
+        assert_eq!(board.columns[0].cards[0].label.text, "Bang card");
+        assert_eq!(board.columns[0].cards[1].label.text, "Cloud card");
+        assert_eq!(board.columns[0].cards[2].label.text, "Burst card");
+    }
+
+    #[test]
+    fn kanban_unquotes_delimited_labels() {
+        let board = parse_kanban(
+            "kanban\n  todo[\"Todo queue\"]\n    card[\"Quoted card\"]",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].id, "todo");
+        assert_eq!(board.columns[0].label.text, "Todo queue");
+        assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
+    }
+
+    #[test]
+    fn kanban_preserves_markdown_label_spans() {
+        let board = parse_kanban(
+            "kanban\n  todo[\"`**Todo** queue`\"]\n    card[\"`Quoted *card*`\"]",
+        )
+        .unwrap();
+        let column = &board.columns[0];
+        let card = &column.cards[0];
+        assert_eq!(column.label.text, "Todo queue");
+        assert_eq!(column.label.markdown.as_deref(), Some("**Todo** queue"));
+        assert!(column.label.spans[0].bold);
+        assert_eq!(card.label.text, "Quoted card");
+        assert!(card.label.spans.iter().any(|span| span.italic));
+    }
+
+    #[test]
+    fn kanban_parses_inline_markdown_label_spans() {
+        let board = parse_kanban(
+            "kanban\n  todo[**Todo** queue]\n    card[Quoted *card*]",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].label.text, "Todo queue");
+        assert!(board.columns[0].label.spans[0].bold);
+        assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
+        assert!(board.columns[0].cards[0].label.spans.iter().any(|span| span.italic));
+    }
+
+    #[test]
+    fn kanban_normalizes_escaped_multiline_labels() {
+        let board = parse_kanban(
+            "kanban\n  todo[Todo\\nqueue]\n    card[Line 1\\nLine 2\\nLine 3]",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].label.text, "Todo\nqueue");
+        assert_eq!(board.columns[0].cards[0].label.text, "Line 1\nLine 2\nLine 3");
+        assert!(board.columns[0].label.markdown.is_some());
+    }
+
+    #[test]
     fn dispatch_kanban_to_board_ir() {
         match parse_any_mermaid("kanban\nTodo\n  task1[Task]").unwrap() {
             MermaidDiagram::Board(board) => assert_eq!(board.columns.len(), 1),
@@ -15496,6 +16381,57 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn treemap_preserves_css_display_p3_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in display-p3, red 20%, transparent),fill:color-mix(in display-p3, black, white)",
+        ).expect("CSS Display P3 color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in display-p3, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in display-p3, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_a98_rgb_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in a98-rgb, red 20%, transparent),fill:color-mix(in a98-rgb, black, white)",
+        ).expect("CSS A98 RGB color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in a98-rgb, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in a98-rgb, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_prophoto_rgb_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in prophoto-rgb, red 20%, transparent),fill:color-mix(in prophoto-rgb, black, white)",
+        ).expect("CSS ProPhoto RGB color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in prophoto-rgb, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in prophoto-rgb, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_rec2020_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in rec2020, red 20%, transparent),fill:color-mix(in rec2020, black, white)",
+        ).expect("CSS Rec. 2020 color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in rec2020, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in rec2020, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_xyz_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in xyz, red 20%, transparent),fill:color-mix(in xyz-d50, black, white),stroke:color-mix(in xyz-d65, red, blue)",
+        ).expect("CSS XYZ color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in xyz, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in xyz-d50, black, white)"));
+        assert_eq!(style.node.stroke.as_deref(), Some("color-mix(in xyz-d65, red, blue)"));
+    }
+
+    #[test]
     fn treemap_preserves_css_hsl_color_mix() {
         let diagram = parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in hsl, red 20%, transparent),fill:color-mix(in hsl, black, white)",
@@ -15503,6 +16439,17 @@ B//-A: reverse stick top
         let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
         assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in hsl, red 20%, transparent)"));
         assert_eq!(style.node.fill.as_deref(), Some("color-mix(in hsl, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_hue_interpolation_methods() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in hsl longer hue, red, blue),fill:color-mix(in oklch increasing hue, red, blue),stroke:color-mix(in lch decreasing hue, red, blue)",
+        ).expect("CSS hue interpolation methods must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in hsl longer hue, red, blue)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in oklch increasing hue, red, blue)"));
+        assert_eq!(style.node.stroke.as_deref(), Some("color-mix(in lch decreasing hue, red, blue)"));
     }
 
     #[test]
@@ -15523,6 +16470,16 @@ B//-A: reverse stick top
         let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
         assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in lab, red 20%, transparent)"));
         assert_eq!(style.node.fill.as_deref(), Some("color-mix(in lab, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_lch_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in lch, red 20%, transparent),fill:color-mix(in lch, black, white)",
+        ).expect("CSS LCH color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in lch, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in lch, black, white)"));
     }
 
     #[test]
@@ -15600,7 +16557,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.134.0");
+        assert_eq!(crate::VERSION, "0.144.0");
     }
 
     #[test]

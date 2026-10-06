@@ -44,6 +44,7 @@ const props = (statusText: string) => ({
     historyDisabled: navigationDisabled,
     historyOpen,
     historyPosition: `${historyPosition} of 2`,
+    historyTitle: historyPosition === 1 ? "Previous page" : "Venture React acceptance",
     historyAddress: historyPosition === 1 ? "http://venture.test/previous" : "http://venture.test/start",
     historyPreviousDisabled: navigationDisabled,
     historyNextDisabled: navigationDisabled,
@@ -283,11 +284,13 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("historyOpen");
   expect(document.body.textContent).toContain("2 of 2");
+  expect(document.body.textContent).toContain("Venture React acceptance");
   await act(async () => {
     textButton("Previous").click();
   });
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("historyPrevious");
+  expect(document.body.textContent).toContain("Previous page");
   expect(document.body.textContent).toContain("http://venture.test/previous");
   await act(async () => {
     textButton("Open").click();

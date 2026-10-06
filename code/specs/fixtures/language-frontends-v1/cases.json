@@ -1,0 +1,1644 @@
+{
+  "schema_version": 1,
+  "kind": "cases",
+  "cases": [
+    {
+      "id": "csharp-baseline",
+      "family": "csharp",
+      "version": "csharp12.0",
+      "source": "public class Foo {}",
+      "outcome": "ok",
+      "tokens": [
+        {
+          "type": "KEYWORD",
+          "value": "public",
+          "line": 1,
+          "column": 1
+        },
+        {
+          "type": "KEYWORD",
+          "value": "class",
+          "line": 1,
+          "column": 8
+        },
+        {
+          "type": "NAME",
+          "value": "Foo",
+          "line": 1,
+          "column": 14
+        },
+        {
+          "type": "LBRACE",
+          "value": "{",
+          "line": 1,
+          "column": 18
+        },
+        {
+          "type": "RBRACE",
+          "value": "}",
+          "line": 1,
+          "column": 19
+        },
+        {
+          "type": "EOF",
+          "value": "",
+          "line": 1,
+          "column": 20
+        }
+      ],
+      "ast": {
+        "rule": "compilation_unit",
+        "children": [
+          {
+            "rule": "namespace_member_declaration",
+            "children": [
+              {
+                "rule": "type_declaration",
+                "children": [
+                  {
+                    "rule": "class_declaration",
+                    "children": [
+                      {
+                        "rule": "class_modifier",
+                        "children": [
+                          {
+                            "token": 0
+                          }
+                        ]
+                      },
+                      {
+                        "token": 1
+                      },
+                      {
+                        "token": 2
+                      },
+                      {
+                        "rule": "class_body",
+                        "children": [
+                          {
+                            "token": 3
+                          },
+                          {
+                            "token": 4
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "excel-baseline",
+      "family": "excel",
+      "version": "excel",
+      "source": "A1",
+      "outcome": "ok",
+      "tokens": [
+        {
+          "type": "CELL",
+          "value": "A1",
+          "line": 1,
+          "column": 1
+        },
+        {
+          "type": "EOF",
+          "value": "",
+          "line": 1,
+          "column": 3
+        }
+      ],
+      "ast": {
+        "rule": "formula",
+        "children": [
+          {
+            "rule": "ws",
+            "children": []
+          },
+          {
+            "rule": "expression",
+            "children": [
+              {
+                "rule": "comparison_expr",
+                "children": [
+                  {
+                    "rule": "concat_expr",
+                    "children": [
+                      {
+                        "rule": "additive_expr",
+                        "children": [
+                          {
+                            "rule": "multiplicative_expr",
+                            "children": [
+                              {
+                                "rule": "power_expr",
+                                "children": [
+                                  {
+                                    "rule": "unary_expr",
+                                    "children": [
+                                      {
+                                        "rule": "postfix_expr",
+                                        "children": [
+                                          {
+                                            "rule": "primary",
+                                            "children": [
+                                              {
+                                                "rule": "reference_expression",
+                                                "children": [
+                                                  {
+                                                    "rule": "union_reference",
+                                                    "children": [
+                                                      {
+                                                        "rule": "intersection_reference",
+                                                        "children": [
+                                                          {
+                                                            "rule": "range_reference",
+                                                            "children": [
+                                                              {
+                                                                "rule": "reference_primary",
+                                                                "children": [
+                                                                  {
+                                                                    "rule": "a1_reference",
+                                                                    "children": [
+                                                                      {
+                                                                        "token": 0
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "rule": "ws",
+            "children": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "java-baseline",
+      "family": "java",
+      "version": "java21",
+      "source": "class Hello { }",
+      "outcome": "ok",
+      "tokens": [
+        {
+          "type": "KEYWORD",
+          "value": "class",
+          "line": 1,
+          "column": 1
+        },
+        {
+          "type": "NAME",
+          "value": "Hello",
+          "line": 1,
+          "column": 7
+        },
+        {
+          "type": "LBRACE",
+          "value": "{",
+          "line": 1,
+          "column": 13
+        },
+        {
+          "type": "RBRACE",
+          "value": "}",
+          "line": 1,
+          "column": 15
+        },
+        {
+          "type": "EOF",
+          "value": "",
+          "line": 1,
+          "column": 16
+        }
+      ],
+      "ast": {
+        "rule": "program",
+        "children": [
+          {
+            "rule": "program_item",
+            "children": [
+              {
+                "rule": "type_declaration",
+                "children": [
+                  {
+                    "rule": "class_declaration",
+                    "children": [
+                      {
+                        "token": 0
+                      },
+                      {
+                        "token": 1
+                      },
+                      {
+                        "rule": "class_body",
+                        "children": [
+                          {
+                            "token": 2
+                          },
+                          {
+                            "token": 3
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "javascript-baseline",
+      "family": "javascript",
+      "version": "javascript",
+      "source": "let x = 1 + 2;",
+      "outcome": "ok",
+      "tokens": [
+        {
+          "type": "KEYWORD",
+          "value": "let",
+          "line": 1,
+          "column": 1
+        },
+        {
+          "type": "NAME",
+          "value": "x",
+          "line": 1,
+          "column": 5
+        },
+        {
+          "type": "EQUALS",
+          "value": "=",
+          "line": 1,
+          "column": 7
+        },
+        {
+          "type": "NUMBER",
+          "value": "1",
+          "line": 1,
+          "column": 9
+        },
+        {
+          "type": "PLUS",
+          "value": "+",
+          "line": 1,
+          "column": 11
+        },
+        {
+          "type": "NUMBER",
+          "value": "2",
+          "line": 1,
+          "column": 13
+        },
+        {
+          "type": "SEMICOLON",
+          "value": ";",
+          "line": 1,
+          "column": 14
+        },
+        {
+          "type": "EOF",
+          "value": "",
+          "line": 1,
+          "column": 15
+        }
+      ],
+      "ast": {
+        "rule": "program",
+        "children": [
+          {
+            "rule": "statement",
+            "children": [
+              {
+                "rule": "var_declaration",
+                "children": [
+                  {
+                    "token": 0
+                  },
+                  {
+                    "token": 1
+                  },
+                  {
+                    "token": 2
+                  },
+                  {
+                    "rule": "expression",
+                    "children": [
+                      {
+                        "rule": "term",
+                        "children": [
+                          {
+                            "rule": "factor",
+                            "children": [
+                              {
+                                "token": 3
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "token": 4
+                      },
+                      {
+                        "rule": "term",
+                        "children": [
+                          {
+                            "rule": "factor",
+                            "children": [
+                              {
+                                "token": 5
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "token": 6
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "lattice-baseline",
+      "family": "lattice",
+      "version": "lattice",
+      "source": "h1 { color: red; }",
+      "outcome": "ok",
+      "tokens": [
+        {
+          "type": "IDENT",
+          "value": "h1",
+          "line": 1,
+          "column": 1
+        },
+        {
+          "type": "LBRACE",
+          "value": "{",
+          "line": 1,
+          "column": 4
+        },
+        {
+          "type": "IDENT",
+          "value": "color",
+          "line": 1,
+          "column": 6
+        },
+        {
+          "type": "COLON",
+          "value": ":",
+          "line": 1,
+          "column": 11
+        },
+        {
+          "type": "IDENT",
+          "value": "red",
+          "line": 1,
+          "column": 13
+        },
+        {
+          "type": "SEMICOLON",
+          "value": ";",
+          "line": 1,
+          "column": 16
+        },
+        {
+          "type": "RBRACE",
+          "value": "}",
+          "line": 1,
+          "column": 18
+        },
+        {
+          "type": "EOF",
+          "value": "",
+          "line": 1,
+          "column": 19
+        }
+      ],
+      "ast": {
+        "rule": "stylesheet",
+        "children": [
+          {
+            "rule": "rule",
+            "children": [
+              {
+                "rule": "qualified_rule",
+                "children": [
+                  {
+                    "rule": "selector_list",
+                    "children": [
+                      {
+                        "rule": "complex_selector",
+                        "children": [
+                          {
+                            "rule": "compound_selector",
+                            "children": [
+                              {
+                                "rule": "simple_selector",
+                                "children": [
+                                  {
+                                    "token": 0
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "rule": "block",
+                    "children": [
+                      {
+                        "token": 1
+                      },
+                      {
+                        "rule": "block_contents",
+                        "children": [
+                          {
+                            "rule": "block_item",
+                            "children": [
+                              {
+                                "rule": "declaration_or_nested",
+                                "children": [
+                                  {
+                                    "rule": "declaration",
+                                    "children": [
+                                      {
+                                        "rule": "property",
+                                        "children": [
+                                          {
+                                            "token": 2
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "token": 3
+                                      },
+                                      {
+                                        "rule": "value_list",
+                                        "children": [
+                                          {
+                                            "rule": "value",
+                                            "children": [
+                                              {
+                                                "token": 4
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "token": 5
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "token": 6
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "python-baseline",
+      "family": "python",
+      "version": "python3.12",
+      "source": "x = 1\n",
+      "outcome": "ok",
+      "tokens": [
+        {
+          "type": "NAME",
+          "value": "x",
+          "line": 1,
+          "column": 1
+        },
+        {
+          "type": "EQUALS",
+          "value": "=",
+          "line": 1,
+          "column": 3
+        },
+        {
+          "type": "INT",
+          "value": "1",
+          "line": 1,
+          "column": 5
+        },
+        {
+          "type": "NEWLINE",
+          "value": "\\n",
+          "line": 1,
+          "column": 6
+        },
+        {
+          "type": "EOF",
+          "value": "",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "ast": {
+        "rule": "file",
+        "children": [
+          {
+            "rule": "statement",
+            "children": [
+              {
+                "rule": "simple_stmt",
+                "children": [
+                  {
+                    "rule": "small_stmt",
+                    "children": [
+                      {
+                        "rule": "assign_stmt",
+                        "children": [
+                          {
+                            "rule": "expression_list",
+                            "children": [
+                              {
+                                "rule": "expression",
+                                "children": [
+                                  {
+                                    "rule": "or_expr",
+                                    "children": [
+                                      {
+                                        "rule": "and_expr",
+                                        "children": [
+                                          {
+                                            "rule": "not_expr",
+                                            "children": [
+                                              {
+                                                "rule": "comparison",
+                                                "children": [
+                                                  {
+                                                    "rule": "bitwise_or",
+                                                    "children": [
+                                                      {
+                                                        "rule": "bitwise_xor",
+                                                        "children": [
+                                                          {
+                                                            "rule": "bitwise_and",
+                                                            "children": [
+                                                              {
+                                                                "rule": "shift",
+                                                                "children": [
+                                                                  {
+                                                                    "rule": "arith",
+                                                                    "children": [
+                                                                      {
+                                                                        "rule": "term",
+                                                                        "children": [
+                                                                          {
+                                                                            "rule": "factor",
+                                                                            "children": [
+                                                                              {
+                                                                                "rule": "power",
+                                                                                "children": [
+                                                                                  {
+                                                                                    "rule": "await_expr",
+                                                                                    "children": [
+                                                                                      {
+                                                                                        "rule": "primary",
+                                                                                        "children": [
+                                                                                          {
+                                                                                            "rule": "atom",
+                                                                                            "children": [
+                                                                                              {
+                                                                                                "token": 0
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "token": 1
+                          },
+                          {
+                            "rule": "expression_list",
+                            "children": [
+                              {
+                                "rule": "expression",
+                                "children": [
+                                  {
+                                    "rule": "or_expr",
+                                    "children": [
+                                      {
+                                        "rule": "and_expr",
+                                        "children": [
+                                          {
+                                            "rule": "not_expr",
+                                            "children": [
+                                              {
+                                                "rule": "comparison",
+                                                "children": [
+                                                  {
+                                                    "rule": "bitwise_or",
+                                                    "children": [
+                                                      {
+                                                        "rule": "bitwise_xor",
+                                                        "children": [
+                                                          {
+                                                            "rule": "bitwise_and",
+                                                            "children": [
+                                                              {
+                                                                "rule": "shift",
+                                                                "children": [
+                                                                  {
+                                                                    "rule": "arith",
+                                                                    "children": [
+                                                                      {
+                                                                        "rule": "term",
+                                                                        "children": [
+                                                                          {
+                                                                            "rule": "factor",
+                                                                            "children": [
+                                                                              {
+                                                                                "rule": "power",
+                                                                                "children": [
+                                                                                  {
+                                                                                    "rule": "await_expr",
+                                                                                    "children": [
+                                                                                      {
+                                                                                        "rule": "primary",
+                                                                                        "children": [
+                                                                                          {
+                                                                                            "rule": "atom",
+                                                                                            "children": [
+                                                                                              {
+                                                                                                "token": 2
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "token": 3
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ruby-baseline",
+      "family": "ruby",
+      "version": "ruby",
+      "source": "x = 1",
+      "outcome": "ok",
+      "tokens": [
+        {
+          "type": "NAME",
+          "value": "x",
+          "line": 1,
+          "column": 1
+        },
+        {
+          "type": "EQUALS",
+          "value": "=",
+          "line": 1,
+          "column": 3
+        },
+        {
+          "type": "NUMBER",
+          "value": "1",
+          "line": 1,
+          "column": 5
+        },
+        {
+          "type": "EOF",
+          "value": "",
+          "line": 1,
+          "column": 6
+        }
+      ],
+      "ast": {
+        "rule": "program",
+        "children": [
+          {
+            "rule": "statement",
+            "children": [
+              {
+                "rule": "assignment",
+                "children": [
+                  {
+                    "token": 0
+                  },
+                  {
+                    "token": 1
+                  },
+                  {
+                    "rule": "expression",
+                    "children": [
+                      {
+                        "rule": "ternary",
+                        "children": [
+                          {
+                            "rule": "range",
+                            "children": [
+                              {
+                                "rule": "logical_or",
+                                "children": [
+                                  {
+                                    "rule": "logical_and",
+                                    "children": [
+                                      {
+                                        "rule": "logical_not",
+                                        "children": [
+                                          {
+                                            "rule": "comparison",
+                                            "children": [
+                                              {
+                                                "rule": "shift",
+                                                "children": [
+                                                  {
+                                                    "rule": "sum",
+                                                    "children": [
+                                                      {
+                                                        "rule": "term",
+                                                        "children": [
+                                                          {
+                                                            "rule": "factor",
+                                                            "children": [
+                                                              {
+                                                                "token": 2
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "sql-baseline",
+      "family": "sql",
+      "version": "sql",
+      "source": "SELECT 1 FROM t",
+      "outcome": "ok",
+      "tokens": [
+        {
+          "type": "KEYWORD",
+          "value": "SELECT",
+          "line": 1,
+          "column": 1
+        },
+        {
+          "type": "NUMBER",
+          "value": "1",
+          "line": 1,
+          "column": 8
+        },
+        {
+          "type": "KEYWORD",
+          "value": "FROM",
+          "line": 1,
+          "column": 10
+        },
+        {
+          "type": "NAME",
+          "value": "t",
+          "line": 1,
+          "column": 15
+        },
+        {
+          "type": "EOF",
+          "value": "",
+          "line": 1,
+          "column": 16
+        }
+      ],
+      "ast": {
+        "rule": "program",
+        "children": [
+          {
+            "rule": "statement",
+            "children": [
+              {
+                "rule": "query_stmt",
+                "children": [
+                  {
+                    "rule": "select_stmt",
+                    "children": [
+                      {
+                        "token": 0
+                      },
+                      {
+                        "rule": "select_list",
+                        "children": [
+                          {
+                            "rule": "select_item",
+                            "children": [
+                              {
+                                "rule": "expr",
+                                "children": [
+                                  {
+                                    "rule": "or_expr",
+                                    "children": [
+                                      {
+                                        "rule": "and_expr",
+                                        "children": [
+                                          {
+                                            "rule": "not_expr",
+                                            "children": [
+                                              {
+                                                "rule": "comparison",
+                                                "children": [
+                                                  {
+                                                    "rule": "collated",
+                                                    "children": [
+                                                      {
+                                                        "rule": "bitwise",
+                                                        "children": [
+                                                          {
+                                                            "rule": "additive",
+                                                            "children": [
+                                                              {
+                                                                "rule": "multiplicative",
+                                                                "children": [
+                                                                  {
+                                                                    "rule": "unary",
+                                                                    "children": [
+                                                                      {
+                                                                        "rule": "primary",
+                                                                        "children": [
+                                                                          {
+                                                                            "token": 1
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "token": 2
+                      },
+                      {
+                        "rule": "table_ref",
+                        "children": [
+                          {
+                            "rule": "table_name",
+                            "children": [
+                              {
+                                "token": 3
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "starlark-baseline",
+      "family": "starlark",
+      "version": "starlark",
+      "source": "x = 1\n",
+      "outcome": "ok",
+      "tokens": [
+        {
+          "type": "NAME",
+          "value": "x",
+          "line": 1,
+          "column": 1
+        },
+        {
+          "type": "EQUALS",
+          "value": "=",
+          "line": 1,
+          "column": 3
+        },
+        {
+          "type": "INT",
+          "value": "1",
+          "line": 1,
+          "column": 5
+        },
+        {
+          "type": "NEWLINE",
+          "value": "\\n",
+          "line": 1,
+          "column": 6
+        },
+        {
+          "type": "EOF",
+          "value": "",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "ast": {
+        "rule": "file",
+        "children": [
+          {
+            "rule": "statement",
+            "children": [
+              {
+                "rule": "simple_stmt",
+                "children": [
+                  {
+                    "rule": "small_stmt",
+                    "children": [
+                      {
+                        "rule": "assign_stmt",
+                        "children": [
+                          {
+                            "rule": "expression_list",
+                            "children": [
+                              {
+                                "rule": "expression",
+                                "children": [
+                                  {
+                                    "rule": "or_expr",
+                                    "children": [
+                                      {
+                                        "rule": "and_expr",
+                                        "children": [
+                                          {
+                                            "rule": "not_expr",
+                                            "children": [
+                                              {
+                                                "rule": "comparison",
+                                                "children": [
+                                                  {
+                                                    "rule": "bitwise_or",
+                                                    "children": [
+                                                      {
+                                                        "rule": "bitwise_xor",
+                                                        "children": [
+                                                          {
+                                                            "rule": "bitwise_and",
+                                                            "children": [
+                                                              {
+                                                                "rule": "shift",
+                                                                "children": [
+                                                                  {
+                                                                    "rule": "arith",
+                                                                    "children": [
+                                                                      {
+                                                                        "rule": "term",
+                                                                        "children": [
+                                                                          {
+                                                                            "rule": "factor",
+                                                                            "children": [
+                                                                              {
+                                                                                "rule": "power",
+                                                                                "children": [
+                                                                                  {
+                                                                                    "rule": "primary",
+                                                                                    "children": [
+                                                                                      {
+                                                                                        "rule": "atom",
+                                                                                        "children": [
+                                                                                          {
+                                                                                            "token": 0
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "rule": "assign_op",
+                            "children": [
+                              {
+                                "token": 1
+                              }
+                            ]
+                          },
+                          {
+                            "rule": "expression_list",
+                            "children": [
+                              {
+                                "rule": "expression",
+                                "children": [
+                                  {
+                                    "rule": "or_expr",
+                                    "children": [
+                                      {
+                                        "rule": "and_expr",
+                                        "children": [
+                                          {
+                                            "rule": "not_expr",
+                                            "children": [
+                                              {
+                                                "rule": "comparison",
+                                                "children": [
+                                                  {
+                                                    "rule": "bitwise_or",
+                                                    "children": [
+                                                      {
+                                                        "rule": "bitwise_xor",
+                                                        "children": [
+                                                          {
+                                                            "rule": "bitwise_and",
+                                                            "children": [
+                                                              {
+                                                                "rule": "shift",
+                                                                "children": [
+                                                                  {
+                                                                    "rule": "arith",
+                                                                    "children": [
+                                                                      {
+                                                                        "rule": "term",
+                                                                        "children": [
+                                                                          {
+                                                                            "rule": "factor",
+                                                                            "children": [
+                                                                              {
+                                                                                "rule": "power",
+                                                                                "children": [
+                                                                                  {
+                                                                                    "rule": "primary",
+                                                                                    "children": [
+                                                                                      {
+                                                                                        "rule": "atom",
+                                                                                        "children": [
+                                                                                          {
+                                                                                            "token": 2
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "token": 3
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "typescript-baseline",
+      "family": "typescript",
+      "version": "ts1.0",
+      "source": "var x = 1;",
+      "outcome": "ok",
+      "tokens": [
+        {
+          "type": "KEYWORD",
+          "value": "var",
+          "line": 1,
+          "column": 1
+        },
+        {
+          "type": "NAME",
+          "value": "x",
+          "line": 1,
+          "column": 5
+        },
+        {
+          "type": "EQUALS",
+          "value": "=",
+          "line": 1,
+          "column": 7
+        },
+        {
+          "type": "NUMBER",
+          "value": "1",
+          "line": 1,
+          "column": 9
+        },
+        {
+          "type": "SEMICOLON",
+          "value": ";",
+          "line": 1,
+          "column": 10
+        },
+        {
+          "type": "EOF",
+          "value": "",
+          "line": 1,
+          "column": 11
+        }
+      ],
+      "ast": {
+        "rule": "program",
+        "children": [
+          {
+            "rule": "source_element",
+            "children": [
+              {
+                "rule": "statement",
+                "children": [
+                  {
+                    "rule": "variable_statement",
+                    "children": [
+                      {
+                        "token": 0
+                      },
+                      {
+                        "rule": "variable_declaration_list",
+                        "children": [
+                          {
+                            "rule": "variable_declaration",
+                            "children": [
+                              {
+                                "token": 1
+                              },
+                              {
+                                "token": 2
+                              },
+                              {
+                                "rule": "assignment_expression",
+                                "children": [
+                                  {
+                                    "rule": "conditional_expression",
+                                    "children": [
+                                      {
+                                        "rule": "logical_or_expression",
+                                        "children": [
+                                          {
+                                            "rule": "logical_and_expression",
+                                            "children": [
+                                              {
+                                                "rule": "bitwise_or_expression",
+                                                "children": [
+                                                  {
+                                                    "rule": "bitwise_xor_expression",
+                                                    "children": [
+                                                      {
+                                                        "rule": "bitwise_and_expression",
+                                                        "children": [
+                                                          {
+                                                            "rule": "equality_expression",
+                                                            "children": [
+                                                              {
+                                                                "rule": "relational_expression",
+                                                                "children": [
+                                                                  {
+                                                                    "rule": "shift_expression",
+                                                                    "children": [
+                                                                      {
+                                                                        "rule": "additive_expression",
+                                                                        "children": [
+                                                                          {
+                                                                            "rule": "multiplicative_expression",
+                                                                            "children": [
+                                                                              {
+                                                                                "rule": "unary_expression",
+                                                                                "children": [
+                                                                                  {
+                                                                                    "rule": "postfix_expression",
+                                                                                    "children": [
+                                                                                      {
+                                                                                        "rule": "left_hand_side_expression",
+                                                                                        "children": [
+                                                                                          {
+                                                                                            "rule": "new_expression",
+                                                                                            "children": [
+                                                                                              {
+                                                                                                "rule": "member_expression",
+                                                                                                "children": [
+                                                                                                  {
+                                                                                                    "rule": "primary_expression",
+                                                                                                    "children": [
+                                                                                                      {
+                                                                                                        "token": 3
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "token": 4
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "verilog-baseline",
+      "family": "verilog",
+      "version": "verilog2005",
+      "source": "module m; endmodule",
+      "outcome": "ok",
+      "tokens": [
+        {
+          "type": "KEYWORD",
+          "value": "module",
+          "line": 1,
+          "column": 1
+        },
+        {
+          "type": "NAME",
+          "value": "m",
+          "line": 1,
+          "column": 8
+        },
+        {
+          "type": "SEMICOLON",
+          "value": ";",
+          "line": 1,
+          "column": 9
+        },
+        {
+          "type": "KEYWORD",
+          "value": "endmodule",
+          "line": 1,
+          "column": 11
+        },
+        {
+          "type": "EOF",
+          "value": "",
+          "line": 1,
+          "column": 20
+        }
+      ],
+      "ast": {
+        "rule": "source_text",
+        "children": [
+          {
+            "rule": "description",
+            "children": [
+              {
+                "rule": "module_declaration",
+                "children": [
+                  {
+                    "token": 0
+                  },
+                  {
+                    "token": 1
+                  },
+                  {
+                    "token": 2
+                  },
+                  {
+                    "token": 3
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "vhdl-baseline",
+      "family": "vhdl",
+      "version": "vhdl2008",
+      "source": "entity e is end entity e;",
+      "outcome": "ok",
+      "tokens": [
+        {
+          "type": "KEYWORD",
+          "value": "entity",
+          "line": 1,
+          "column": 1
+        },
+        {
+          "type": "NAME",
+          "value": "e",
+          "line": 1,
+          "column": 8
+        },
+        {
+          "type": "KEYWORD",
+          "value": "is",
+          "line": 1,
+          "column": 10
+        },
+        {
+          "type": "KEYWORD",
+          "value": "end",
+          "line": 1,
+          "column": 13
+        },
+        {
+          "type": "KEYWORD",
+          "value": "entity",
+          "line": 1,
+          "column": 17
+        },
+        {
+          "type": "NAME",
+          "value": "e",
+          "line": 1,
+          "column": 24
+        },
+        {
+          "type": "SEMICOLON",
+          "value": ";",
+          "line": 1,
+          "column": 25
+        },
+        {
+          "type": "EOF",
+          "value": "",
+          "line": 1,
+          "column": 26
+        }
+      ],
+      "ast": {
+        "rule": "design_file",
+        "children": [
+          {
+            "rule": "design_unit",
+            "children": [
+              {
+                "rule": "library_unit",
+                "children": [
+                  {
+                    "rule": "entity_declaration",
+                    "children": [
+                      {
+                        "token": 0
+                      },
+                      {
+                        "token": 1
+                      },
+                      {
+                        "token": 2
+                      },
+                      {
+                        "token": 3
+                      },
+                      {
+                        "token": 4
+                      },
+                      {
+                        "token": 5
+                      },
+                      {
+                        "token": 6
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

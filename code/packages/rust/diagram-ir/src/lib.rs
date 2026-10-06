@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.74.0";
+pub const VERSION: &str = "0.82.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -399,18 +399,39 @@ pub struct LayoutedPacketDiagram {
 pub struct BoardCard {
     pub id: String,
     pub label: DiagramLabel,
+    pub ticket: Option<String>,
+    pub assigned: Option<String>,
+    pub priority: Option<String>,
+    pub icon: Option<String>,
+    pub classes: Vec<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct BoardColumn {
     pub id: String,
     pub label: DiagramLabel,
+    pub ticket: Option<String>,
     pub cards: Vec<BoardCard>,
+    pub classes: Vec<String>,
 }
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct BoardDiagram {
     pub columns: Vec<BoardColumn>,
+    pub ticket_base_url: Option<String>,
+    pub config: BoardConfig,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct BoardConfig {
+    pub section_width: f64,
+    pub padding: f64,
+}
+
+impl Default for BoardConfig {
+    fn default() -> Self {
+        Self { section_width: 260.0, padding: 24.0 }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -422,6 +443,12 @@ pub struct LayoutedBoardCard {
     pub width: f64,
     pub height: f64,
     pub style: ResolvedDiagramStyle,
+    pub ticket: Option<String>,
+    pub ticket_url: Option<String>,
+    pub assigned: Option<String>,
+    pub priority: Option<String>,
+    pub icon: Option<String>,
+    pub classes: Vec<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -432,8 +459,12 @@ pub struct LayoutedBoardColumn {
     pub y: f64,
     pub width: f64,
     pub height: f64,
+    pub header_height: f64,
     pub cards: Vec<LayoutedBoardCard>,
     pub style: ResolvedDiagramStyle,
+    pub ticket: Option<String>,
+    pub ticket_url: Option<String>,
+    pub classes: Vec<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1817,7 +1848,9 @@ pub struct LayoutedSwimlaneDiagram {
 #[derive(Clone, Debug, PartialEq)]
 pub enum RailroadExpression {
     Terminal(String), NonTerminal(String), Sequence(Vec<RailroadExpression>), Choice(Vec<RailroadExpression>),
-    Optional(Box<RailroadExpression>), Repetition { element: Box<RailroadExpression>, min: usize }, Special(String),
+    Optional(Box<RailroadExpression>),
+    Repetition { element: Box<RailroadExpression>, min: usize, max: Option<usize> },
+    Special(String),
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct RailroadRule { pub name: String, pub definition: RailroadExpression }
@@ -2691,7 +2724,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.74.0");
+        assert_eq!(VERSION, "0.82.0");
     }
     #[test]
     fn default_direction_is_tb() {

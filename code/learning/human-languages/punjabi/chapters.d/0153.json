@@ -1,0 +1,22 @@
+{
+  "chapter": 153,
+  "title": "Write One Fictional Date Field",
+  "label": "ch:pa-form-date-runway",
+  "canDo": "I can recognise a Punjabi date label, connect two taught month names to their numeric positions, and independently write one of two fictional dates in day/month/year order from a nonverbal cue.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W09-date-no-model",
+    "kind": "production",
+    "summary": "The learner fills one fictional date line from a remembered nonverbal cue without a value bank, romanization, Latin digits, or a copyable Gurmukhi answer, then checks cue selection, month, digit order, separators, and placement separately.",
+    "assesses": [
+      "PA-FORM-LABEL-DATE-01",
+      "PA-FORM-DATE-MONTH-MAP-01",
+      "PA-FORM-DATE-FORMAT-01",
+      "PA-FORM-DATE-B-01",
+      "PA-FORM-DATE-CUE-MAP-01",
+      "PA-FORM-DATE-REPAIR-01"
+    ]
+  }
+}

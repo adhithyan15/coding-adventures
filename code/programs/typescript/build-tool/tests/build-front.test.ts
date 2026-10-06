@@ -39,6 +39,7 @@ describe("TypeScript build front", () => {
 
     expect(commands).toEqual([
       "npm install --silent",
+      "node scripts/sync-source-input-registry.mjs --check",
       "npm run typecheck",
       "npx vitest run --coverage",
     ]);

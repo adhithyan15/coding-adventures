@@ -38,6 +38,7 @@ use File::Find ();
 use File::Spec ();
 use File::Basename ();
 use Cwd ();
+use CodingAdventures::BuildTool::StarlarkEval ();
 
 our $VERSION = '0.01';
 
@@ -46,7 +47,7 @@ our $VERSION = '0.01';
 # correctness but we list them alphabetically for readability.
 my @KNOWN_LANGUAGES = qw(
     python ruby go rust typescript elixir lua perl swift wasm haskell starlark
-    java kotlin csharp fsharp dotnet
+    java kotlin csharp fsharp dotnet ocaml
 );
 
 # SKIP_DIRS -- directory names that we never descend into during the walk.
@@ -149,8 +150,27 @@ sub discover {
                 $normalized_canonical =~ s{\\}{/}g;
                 return unless $normalized_fullpath eq $normalized_canonical;
 
-                # Read the BUILD commands — non-blank, non-comment lines.
-                my @commands = _read_commands($canonical);
+                # The selected platform front alone supplies declaration metadata.
+                open(my $build_fh, '<:raw', $canonical)
+                    or die "BUILD_READ_FAILED: $canonical: $!";
+                my $content;
+                { local $/; $content = <$build_fh>; }
+                close $build_fh;
+                my $starlark = CodingAdventures::BuildTool::StarlarkEval->new();
+                my ($source_mode, $declared_srcs, @commands);
+                if ($starlark->is_starlark($content)) {
+                    my @targets = $starlark->extract_targets($content);
+                    die "STARLARK_TARGET_INVALID: $canonical" unless @targets;
+                    $source_mode = 'declared_sources';
+                    $declared_srcs = [ @{ $targets[0]{srcs} } ];
+                    for my $target (@targets) {
+                        push @commands, $starlark->generate_commands($target->{rule});
+                    }
+                } else {
+                    $source_mode = 'extension';
+                    $declared_srcs = [];
+                    @commands = _read_commands($canonical);
+                }
 
                 # Infer language and name from the directory path.
                 my $language = _infer_language($dir);
@@ -161,6 +181,9 @@ sub discover {
                     path           => $dir,
                     language       => $language,
                     build_commands => \@commands,
+                    build_file     => $build_file,
+                    source_mode    => $source_mode,
+                    declared_srcs  => $declared_srcs,
                 };
             },
             no_chdir => 1,

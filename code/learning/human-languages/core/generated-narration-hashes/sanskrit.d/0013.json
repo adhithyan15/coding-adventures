@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 13,
-  "sourceHash": "fnv1a64:2ad68367084cafc8",
+  "sourceHash": "fnv1a64:3c72319d8ef77953",
   "lessonIds": [
     "SA-C13-nasika",
     "SA-S212-letter-dha",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "sanskrit/narration/ch13.txt",
   "json": "sanskrit/narration/ch13.json",
-  "textHash": "fnv1a64:66b63c238cb9e34c",
-  "jsonHash": "fnv1a64:eb48e783254c39c6",
+  "textHash": "fnv1a64:75d5663e404546fc",
+  "jsonHash": "fnv1a64:e5ed1b354a8e20d7",
   "findings": []
 }

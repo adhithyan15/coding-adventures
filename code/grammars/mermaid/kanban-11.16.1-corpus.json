@@ -5,6 +5,19 @@
   "level": "partial",
   "fixtures": [
     { "id": "plain", "source": "kanban\n  Todo\n    Write grammar\n    Add tests\n  Done\n    Ship" },
-    { "id": "explicit-ids", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]\n  done[Done]\n    paint[Native paint]" }
+    { "id": "explicit-ids", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]\n  done[Done]\n    paint[Native paint]" },
+    { "id": "inline-card-metadata", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]@{ ticket: MC-42, assigned: Ada, priority: high }" },
+    { "id": "multiline-card-metadata", "source": "kanban\n  todo[Todo]\n    parser@{\n      label: \"Grammar parser\"\n      ticket: MC-42\n      assigned: Ada\n      priority: high\n      icon: heart\n    }" },
+    { "id": "card-icon-decoration", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]\n      ::icon(heart)" },
+    { "id": "class-decorations", "source": "kanban\n  todo[Todo]\n    :::backlog\n    parser[Grammar parser]\n      :::urgent blocked" },
+    { "id": "ticket-base-url", "source": "%%{init: {'kanban': {'ticketBaseUrl': 'https://tracker.example/issues/#TICKET#'}}}%%\nkanban\n  todo[Todo]\n    parser[Grammar parser]@{ ticket: MC-42 }" },
+    { "id": "layout-config", "source": "%%{init: {'kanban': {'sectionWidth': 300, 'padding': 32}}}%%\nkanban\n  todo[Todo]\n    parser[Grammar parser]" },
+    { "id": "section-ticket-metadata", "source": "kanban\n  todo[Todo]@{ ticket: KB-7 }\n    parser[Grammar parser]" },
+    { "id": "shape-delimited-labels", "source": "kanban\n  todo((Todo))\n    rounded(Rounded card)\n    hex{{Hex card}}\n  plain[Plain]\n    circle((Circle card))" },
+    { "id": "cloud-and-bang-labels", "source": "kanban\n  todo)Cloud section(\n    bang))Bang card((\n    cloud(-Cloud card-)\n    burst-)Burst card(-" },
+    { "id": "quoted-labels", "source": "kanban\n  todo[\"Todo queue\"]\n    card[\"Quoted card\"]" },
+    { "id": "markdown-labels", "source": "kanban\n  todo[\"`**Todo** queue`\"]\n    card[\"`Quoted *card*`\"]" },
+    { "id": "inline-markdown-labels", "source": "kanban\n  todo[**Todo** queue]\n    card[Quoted *card*]" },
+    { "id": "multiline-labels", "source": "kanban\n  todo[Todo\\nqueue]\n    card[Line 1\\nLine 2\\nLine 3]" }
   ]
 }
