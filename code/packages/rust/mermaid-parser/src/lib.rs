@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.141.0";
+pub const VERSION: &str = "0.142.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -1467,16 +1467,19 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
         let (node_source, metadata) = parse_kanban_node_metadata(value, token)?;
         let (explicit_id, mut label) = parse_board_node(node_source);
         if let Some(metadata_label) = &metadata.label {
-            label = normalize_mermaid_line_breaks(metadata_label);
+            label = parse_mermaid_label(metadata_label);
         }
-        let id = unique_mindmap_id(explicit_id.unwrap_or_else(|| mindmap_slug(&label)), &mut ids);
+        let id = unique_mindmap_id(
+            explicit_id.unwrap_or_else(|| mindmap_slug(&label.text)),
+            &mut ids,
+        );
         if indent == column_indent {
             if metadata.has_card_only_fields() {
                 return Err(token_error(token, "kanban card metadata requires a card"));
             }
             diagram.columns.push(BoardColumn {
                 id,
-                label: DiagramLabel::new(label),
+                label,
                 ticket: metadata.ticket,
                 cards: Vec::new(),
                 classes: Vec::new(),
@@ -1496,7 +1499,7 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
                 .ok_or_else(|| token_error(token, "kanban card must follow a column"))?;
             column.cards.push(BoardCard {
                 id,
-                label: DiagramLabel::new(label),
+                label,
                 ticket: metadata.ticket,
                 assigned: metadata.assigned,
                 priority: metadata.priority,
@@ -1637,7 +1640,7 @@ fn parse_kanban_layout_config(source: &str) -> BoardConfig {
     }
 }
 
-fn parse_board_node(source: &str) -> (Option<String>, String) {
+fn parse_board_node(source: &str) -> (Option<String>, DiagramLabel) {
     let source = source.trim();
     for (open, close) in [
         ("-)", "(-"),
@@ -1660,15 +1663,11 @@ fn parse_board_node(source: &str) -> (Option<String>, String) {
             }
             return (
                 (!id.is_empty()).then(|| id.to_string()),
-                normalize_mermaid_line_breaks(
-                    &unquote_mermaid_string(
-                        source[open_index + open.len()..label_end].trim(),
-                    ),
-                ),
+                parse_mermaid_label(source[open_index + open.len()..label_end].trim()),
             );
         }
     }
-    (None, normalize_mermaid_line_breaks(source))
+    (None, parse_mermaid_label(source))
 }
 
 /// Parse absolute and relative bit ranges from the Mermaid packet family.
@@ -2974,7 +2973,7 @@ fn parse_mindmap_node(source: &str) -> (Option<String>, DiagramLabel, DiagramSha
         if let Some(open_index) = source.find(open) {
             if source.ends_with(close) && open_index + open.len() <= source.len() - close.len() {
                 let id = source[..open_index].trim();
-                let label = parse_mindmap_label(
+                let label = parse_mermaid_label(
                     source[open_index + open.len()..source.len() - close.len()].trim(),
                 );
                 return (
@@ -2992,7 +2991,7 @@ fn parse_mindmap_node(source: &str) -> (Option<String>, DiagramLabel, DiagramSha
     )
 }
 
-fn parse_mindmap_label(source: &str) -> DiagramLabel {
+fn parse_mermaid_label(source: &str) -> DiagramLabel {
     let trimmed = source.trim();
     if let Some(markdown) = trimmed
         .strip_prefix("\"`")
@@ -12510,6 +12509,21 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn kanban_preserves_markdown_label_spans() {
+        let board = parse_kanban(
+            "kanban\n  todo[\"`**Todo** queue`\"]\n    card[\"`Quoted *card*`\"]",
+        )
+        .unwrap();
+        let column = &board.columns[0];
+        let card = &column.cards[0];
+        assert_eq!(column.label.text, "Todo queue");
+        assert_eq!(column.label.markdown.as_deref(), Some("**Todo** queue"));
+        assert!(column.label.spans[0].bold);
+        assert_eq!(card.label.text, "Quoted card");
+        assert!(card.label.spans.iter().any(|span| span.italic));
+    }
+
+    #[test]
     fn dispatch_kanban_to_board_ir() {
         match parse_any_mermaid("kanban\nTodo\n  task1[Task]").unwrap() {
             MermaidDiagram::Board(board) => assert_eq!(board.columns.len(), 1),
@@ -16501,7 +16515,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.141.0");
+        assert_eq!(crate::VERSION, "0.142.0");
     }
 
     #[test]
