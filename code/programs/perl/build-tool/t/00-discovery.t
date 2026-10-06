@@ -405,4 +405,15 @@ subtest 'detected Starlark without a supported target fails closed' => sub {
     );
 };
 
+subtest 'malformed Starlark srcs fail closed' => sub {
+    for my $srcs ('glob(["assets/*.bin")', '[unquoted]') {
+        my $root = tempdir(CLEANUP => 1);
+        make_pkg($root, 'code/packages/perl/malformed',
+            "perl_library(name = \"malformed\", srcs = $srcs)\n");
+        my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $root);
+        like(dies { $discovery->discover() }, qr/STARLARK_TARGET_INVALID/,
+            "$srcs rejected rather than treated as an empty declaration");
+    }
+};
+
 done_testing();
