@@ -3854,14 +3854,14 @@ impl Compiler {
             }
             let actuals = self.standard_fn_actuals(node);
             return actuals.len() == sig.params.len()
-                && sig.params.iter().all(|param| {
-                    !matches!(
-                        (param.mode, &param.ty),
+                && sig.params.iter().zip(actuals).all(|(param, actual)| {
+                    match (param.mode, &param.ty) {
                         (
                             ProcedureParamMode::Name,
-                            ProcedureParamType::Scalar(ScalarType::Real)
-                        )
-                    )
+                            ProcedureParamType::Scalar(ScalarType::Real),
+                        ) => self.is_selector_call_safe_real_procedure_result(actual),
+                        _ => true,
+                    }
                 });
         }
         if let Some(child) = single_parenthesized_child(node) {
@@ -12471,6 +12471,21 @@ mod tests {
             "test",
         )
         .expect("a calling selector may choose between direct formatter-safe real results");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_nested_direct_name_actuals() {
+        let module = compile_source(
+            "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(left()) else relay(right()); output(result) end",
+            "test",
+        )
+        .expect("a calling selector may choose nested direct real name-actual results");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "call"

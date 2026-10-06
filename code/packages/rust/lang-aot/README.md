@@ -10,8 +10,10 @@ statement conditions may also merge that provenance
 when both exits establish it for the same slot, and side-effect-free conditional
 value selectors may choose between proven runtime-real branches. Calling
 selectors may choose between direct formatter-safe real procedure results that
-do not depend on pre-call local or real name-actual provenance. One-sided reassignment remains
-gated. Unary signs, additive
+do not depend on pre-call local provenance. A real name-formal result is also
+allowed when its actual is itself a selector-call-safe direct real procedure
+result. Other real name-actual provenance remains conservative. One-sided
+reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The
 real-valued standard functions preserve that provenance for a runtime-real
