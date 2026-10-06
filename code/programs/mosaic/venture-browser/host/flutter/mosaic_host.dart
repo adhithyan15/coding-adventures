@@ -319,6 +319,34 @@ class MosaicHost {
     }
   }
 
+  // ── Mosaic's platform library (UI87 §7.7) ───────────────────────────────
+  //
+  // Every generated Flutter project installs the platform library beside this
+  // host, and the library reads and wraps the host's effect handler, so the
+  // host must expose the same three members as the generated one. Venture's
+  // shared browser session answers its own effects inside the native library
+  // (the `venture_browser_flutter_take_effect` queue above). No Await effect
+  // ever reaches Dart for the library to answer. So this host behaves as the
+  // generated host does with no runtime behind it:
+  //
+  //   member         | here
+  //   ---------------+------------------------------------------------------
+  //   effectHandler  | stored, never called -- no effect is delivered to it
+  //   deferEffect    | false -- nothing is awaiting an answer from Dart
+  //   completeEffect | null  -- "no runtime to answer", which the library
+  //                  |          reports as a failure instead of dropping it
+
+  /// The handler installed now, or null. Venture never calls it; see above.
+  void Function(int id, String kind, Object? payload, String delivery)?
+  effectHandler;
+
+  /// Always null: no effect from this host waits on an answer from Dart.
+  Map<String, Object?>? completeEffect(int id, Map<String, Object?> result) =>
+      null;
+
+  /// Always false: no effect from this host is awaiting an answer.
+  bool deferEffect(int id) => false;
+
   void setPropsChangedHandler(void Function()? handler) {
     _propsChangedHandler = handler;
   }

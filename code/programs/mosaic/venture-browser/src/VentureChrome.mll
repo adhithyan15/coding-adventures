@@ -36,6 +36,22 @@ layout VentureChrome {
         state-when-disabled : slot: stop-disabled ,
         onClick : emit: onStop
       )
+      HostInput [ address-input ] (
+        value : slot: address ,
+        placeholder : "Enter a URL" ,
+        read-only : slot: navigation-disabled ,
+        onChange : emit: onAddressChange ,
+        onCommit : emit: onNavigate
+      )
+      HostButton [ go-button ] (
+        label : "Go" ,
+        disabled : slot: navigation-disabled ,
+        state-when-disabled : slot: navigation-disabled ,
+        onClick : emit: onNavigate
+      )
+    }
+
+    Row [ library-actions ] {
       HostButton [ bookmark-button ] (
         label : slot: bookmark-label ,
         disabled : slot: bookmark-disabled ,
@@ -53,19 +69,6 @@ layout VentureChrome {
         disabled : slot: history-disabled ,
         state-when-disabled : slot: history-disabled ,
         onClick : emit: onHistoryOpen
-      )
-      HostInput [ address-input ] (
-        value : slot: address ,
-        placeholder : "Enter a URL" ,
-        read-only : slot: navigation-disabled ,
-        onChange : emit: onAddressChange ,
-        onCommit : emit: onNavigate
-      )
-      HostButton [ go-button ] (
-        label : "Go" ,
-        disabled : slot: navigation-disabled ,
-        state-when-disabled : slot: navigation-disabled ,
-        onClick : emit: onNavigate
       )
       HostButton [ find-button ] (
         label : "Find" ,
@@ -183,6 +186,7 @@ layout VentureChrome {
             onClick : emit: onHistoryClose
           )
         }
+        Text [ history-title ] ( content : slot: history-title )
         Text [ history-address ] ( content : slot: history-address )
         Row [ history-actions ] {
           HostButton [ history-previous-button ] (
@@ -254,7 +258,9 @@ layout VentureChrome {
         }
         Text [ view-source-title ] ( content : slot: view-source-title )
         Text [ view-source-address ] ( content : slot: view-source-address )
-        Text [ view-source-content ] ( content : slot: view-source-content )
+        HostScroll [ view-source-content ] {
+          Text [ view-source-content-text ] ( content : slot: view-source-content )
+        }
       }
     }
 

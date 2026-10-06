@@ -1185,6 +1185,7 @@ fn history_catalog_uses_one_identity_preserving_transaction_across_generated_hos
         "slot history-label",
         "slot history-open",
         "slot history-position",
+        "slot history-title",
         "slot history-address",
         "emit onHistoryOpen",
         "emit onHistoryPrevious",
@@ -1196,6 +1197,7 @@ fn history_catalog_uses_one_identity_preserving_transaction_across_generated_hos
     }
     for control in [
         "history-button",
+        "library-actions",
         "history-panel",
         "history-previous-button",
         "history-next-button",
@@ -1234,8 +1236,8 @@ fn history_catalog_uses_one_identity_preserving_transaction_across_generated_hos
     }
 
     for (path, mapping) in [
-        ("host/qt/MosaicHost.cpp", "historyPosition"),
-        ("host/xaml/MosaicHost.cs", "HistoryPosition"),
+        ("host/qt/MosaicHost.cpp", "historyTitle"),
+        ("host/xaml/MosaicHost.cs", "HistoryTitle"),
     ] {
         assert!(
             read_package_file(path).contains(mapping),
@@ -1386,6 +1388,7 @@ fn view_source_uses_one_retained_snapshot_and_visible_lifecycle_across_generated
         "view-source-panel",
         "view-source-copy-button",
         "view-source-close-button",
+        "HostScroll [ view-source-content ]",
         "view-source-content",
     ] {
         assert!(

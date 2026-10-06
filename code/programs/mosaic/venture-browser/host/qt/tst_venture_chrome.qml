@@ -284,6 +284,7 @@ TestCase {
             "props": {
                 "historyOpen": true,
                 "historyPosition": "2 of 2",
+                "historyTitle": "Venture start",
                 "historyAddress": "http://venture.test/start",
                 "historyPreviousDisabled": false,
                 "historyNextDisabled": false,
@@ -292,6 +293,7 @@ TestCase {
         })
         wait(0)
         compare(chrome.historyOpen, true)
+        compare(chrome.historyTitle, "Venture start")
         const previousButton = nativeControl("history-previous-button")
         verify(previousButton.enabled)
         previousButton.forceActiveFocus()

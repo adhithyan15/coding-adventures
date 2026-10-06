@@ -7,6 +7,14 @@ Share Page, Page Information, bounded page zoom, View Source, and find-in-page c
 line, disabled states, and dispatch contract once
 in MIL, MLL, and MSL.
 
+Navigation, library, and page utility controls occupy separate shared rows so
+native hosts do not clip the address field or controls at ordinary window
+widths, and no toolkit owns a divergent wrapping policy.
+
+The retained View Source snapshot is presented in a bounded shared scroll
+viewport, keeping long documents inspectable without displacing the native
+page surface.
+
 The package intentionally does not draw a web page. `venture-browser-core`
 owns navigation and the URL-to-paint pipeline. The `content-surface` node slot
 now lowers through Mosaic's `HostSurface` primitive on every package backend:
@@ -18,7 +26,7 @@ recreating the surrounding chrome in backend-specific UI code.
 ## Contract
 
 - Slots carry the current address, page title, status text, bookmark label,
-  bookmark/history catalog selection, and host-derived disabled flags; the host supplies
+  bookmark/history catalog selection, retained history-entry title, and host-derived disabled flags; the host supplies
   the native page renderer as a node slot.
 - Emits carry Back, Forward, Home, Reload, Stop, address edits, Navigate, the
   storage-neutral bookmark and identity-preserving history catalog commands, host-neutral Copy Address and Open

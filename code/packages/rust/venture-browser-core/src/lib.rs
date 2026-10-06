@@ -548,7 +548,7 @@ fn positioned_node_breaks_find_text(node: &PositionedNode) -> bool {
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 51] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 52] = [
     "address",
     "page-title",
     "status-text",
@@ -570,6 +570,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 51] = [
     "history-disabled",
     "history-open",
     "history-position",
+    "history-title",
     "history-address",
     "history-previous-disabled",
     "history-next-disabled",
@@ -1358,6 +1359,7 @@ pub struct BrowserHistoryRestorationState {
 
 #[derive(Clone, Debug, PartialEq)]
 struct BrowserHistoryEntryState {
+    title: String,
     controls: ControlStateSnapshot,
     contenteditables: ContentEditableSnapshot,
     scroll_offset_y: f64,
@@ -2002,6 +2004,7 @@ pub struct BrowserChromeProps {
     pub history_disabled: bool,
     pub history_open: bool,
     pub history_position: String,
+    pub history_title: String,
     pub history_address: String,
     pub history_previous_disabled: bool,
     pub history_next_disabled: bool,
@@ -2122,7 +2125,7 @@ impl BrowserChromeProps {
     /// Serialize all shared chrome slots using their authored MIL names.
     pub fn to_bridge_json(&self) -> String {
         format!(
-            "{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"stop-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"bookmarks-label\":{},\"bookmarks-disabled\":{},\"bookmarks-open\":{},\"bookmarks-position\":{},\"bookmarks-title\":{},\"bookmarks-address\":{},\"bookmarks-previous-disabled\":{},\"bookmarks-next-disabled\":{},\"bookmarks-navigate-disabled\":{},\"history-label\":{},\"history-disabled\":{},\"history-open\":{},\"history-position\":{},\"history-address\":{},\"history-previous-disabled\":{},\"history-next-disabled\":{},\"history-navigate-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"page-info-open\":{},\"page-info-title\":{},\"page-info-address\":{},\"page-info-requested-address\":{},\"page-info-status\":{},\"page-info-resources\":{},\"zoom-label\":{},\"zoom-out-disabled\":{},\"zoom-reset-disabled\":{},\"zoom-in-disabled\":{},\"view-source-disabled\":{},\"view-source-open\":{},\"view-source-title\":{},\"view-source-address\":{},\"view-source-content\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":{}}}",
+            "{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"stop-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"bookmarks-label\":{},\"bookmarks-disabled\":{},\"bookmarks-open\":{},\"bookmarks-position\":{},\"bookmarks-title\":{},\"bookmarks-address\":{},\"bookmarks-previous-disabled\":{},\"bookmarks-next-disabled\":{},\"bookmarks-navigate-disabled\":{},\"history-label\":{},\"history-disabled\":{},\"history-open\":{},\"history-position\":{},\"history-title\":{},\"history-address\":{},\"history-previous-disabled\":{},\"history-next-disabled\":{},\"history-navigate-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"page-info-open\":{},\"page-info-title\":{},\"page-info-address\":{},\"page-info-requested-address\":{},\"page-info-status\":{},\"page-info-resources\":{},\"zoom-label\":{},\"zoom-out-disabled\":{},\"zoom-reset-disabled\":{},\"zoom-in-disabled\":{},\"view-source-disabled\":{},\"view-source-open\":{},\"view-source-title\":{},\"view-source-address\":{},\"view-source-content\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":{}}}",
             bridge_json_string(&self.address),
             bridge_json_string(&self.page_title),
             bridge_json_string(&self.status_text),
@@ -2144,6 +2147,7 @@ impl BrowserChromeProps {
             self.history_disabled,
             self.history_open,
             bridge_json_string(&self.history_position),
+            bridge_json_string(&self.history_title),
             bridge_json_string(&self.history_address),
             self.history_previous_disabled,
             self.history_next_disabled,
@@ -2613,6 +2617,10 @@ impl BrowserChromeController {
             history_position: selected_history
                 .map(|_| format!("{} of {}", history_selection + 1, history.len()))
                 .unwrap_or_default(),
+            history_title: selected_history
+                .and_then(|(entry_id, _)| session.history_entry_title(entry_id))
+                .unwrap_or_default()
+                .to_string(),
             history_address: selected_history
                 .map(|(_, address)| address.to_string())
                 .unwrap_or_default(),
@@ -3261,6 +3269,27 @@ impl BrowserSession {
 
     pub fn history(&self) -> &NavigationHistory {
         &self.history
+    }
+
+    /// Return the normalized title retained for one stable history entry.
+    ///
+    /// Untitled documents use their committed address so every catalog row
+    /// remains distinguishable without refetching or reparsing old pages.
+    pub fn history_entry_title(&self, entry_id: NavigationEntryId) -> Option<&str> {
+        if self.history.current_entry_id() == Some(entry_id) {
+            return self
+                .viewport
+                .as_ref()
+                .and_then(|viewport| viewport.page().document.title.as_deref())
+                .map(str::trim)
+                .filter(|title| !title.is_empty())
+                .or_else(|| self.history.current_url());
+        }
+        self.history_states
+            .iter()
+            .rev()
+            .find(|(candidate, _)| *candidate == entry_id)
+            .map(|(_, state)| state.title.as_str())
     }
 
     pub fn visited_links(&self) -> &VisitedLinks {
@@ -6593,6 +6622,15 @@ impl BrowserSession {
         Some((
             self.history.current_entry_id()?,
             BrowserHistoryEntryState {
+                title: self
+                    .viewport
+                    .as_ref()
+                    .and_then(|viewport| viewport.page().document.title.as_deref())
+                    .map(str::trim)
+                    .filter(|title| !title.is_empty())
+                    .or_else(|| self.history.current_url())
+                    .unwrap_or_default()
+                    .to_string(),
                 controls: self.controls.capture_state(ControlStatePrivacy::Public),
                 contenteditables: self.contenteditables.capture_state(),
                 scroll_offset_y: self
@@ -8163,6 +8201,7 @@ mod tests {
             history_disabled: false,
             history_open: true,
             history_position: "2 of 3".into(),
+            history_title: "History entry".into(),
             history_address: "https://example.test/history".into(),
             history_previous_disabled: false,
             history_next_disabled: false,
@@ -8198,7 +8237,7 @@ mod tests {
 
         assert_eq!(
             browser_bridge_response_json(&props, Some(&effect), Some("bad\nrequest")),
-            r#"{"props":{"address":"https://example.test/\"draft\"","page-title":"Line\nTitle","status-text":"Ready\tsoon","back-disabled":true,"forward-disabled":false,"stop-disabled":false,"bookmark-label":"Remove \"bookmark\"","bookmark-disabled":false,"bookmarks-label":"Bookmarks (2)","bookmarks-disabled":false,"bookmarks-open":true,"bookmarks-position":"2 of 2","bookmarks-title":"Second","bookmarks-address":"https://example.test/second","bookmarks-previous-disabled":false,"bookmarks-next-disabled":false,"bookmarks-navigate-disabled":false,"history-label":"History (3)","history-disabled":false,"history-open":true,"history-position":"2 of 3","history-address":"https://example.test/history","history-previous-disabled":false,"history-next-disabled":false,"history-navigate-disabled":false,"copy-address-disabled":true,"open-page-disabled":false,"save-page-disabled":true,"print-page-disabled":false,"share-page-disabled":true,"page-info-disabled":false,"page-info-open":true,"page-info-title":"Example","page-info-address":"https://example.test/final","page-info-requested-address":"https://example.test/start","page-info-status":"HTTP 200","page-info-resources":"Images: 3 (1 failed)  Stylesheets: 2 (0 failed)","zoom-label":"125%","zoom-out-disabled":true,"zoom-reset-disabled":false,"zoom-in-disabled":true,"view-source-disabled":false,"view-source-open":true,"view-source-title":"Source: Example","view-source-address":"https://example.test/final","view-source-content":"<p>source</p>\n","find-open":true,"find-query":"a\\b","find-result-label":"1 of 2","find-disabled":false,"navigation-disabled":true},"effect":{"type":"write-clipboard","text":"copy\u0001"},"error":"bad\nrequest"}"#
+            r#"{"props":{"address":"https://example.test/\"draft\"","page-title":"Line\nTitle","status-text":"Ready\tsoon","back-disabled":true,"forward-disabled":false,"stop-disabled":false,"bookmark-label":"Remove \"bookmark\"","bookmark-disabled":false,"bookmarks-label":"Bookmarks (2)","bookmarks-disabled":false,"bookmarks-open":true,"bookmarks-position":"2 of 2","bookmarks-title":"Second","bookmarks-address":"https://example.test/second","bookmarks-previous-disabled":false,"bookmarks-next-disabled":false,"bookmarks-navigate-disabled":false,"history-label":"History (3)","history-disabled":false,"history-open":true,"history-position":"2 of 3","history-title":"History entry","history-address":"https://example.test/history","history-previous-disabled":false,"history-next-disabled":false,"history-navigate-disabled":false,"copy-address-disabled":true,"open-page-disabled":false,"save-page-disabled":true,"print-page-disabled":false,"share-page-disabled":true,"page-info-disabled":false,"page-info-open":true,"page-info-title":"Example","page-info-address":"https://example.test/final","page-info-requested-address":"https://example.test/start","page-info-status":"HTTP 200","page-info-resources":"Images: 3 (1 failed)  Stylesheets: 2 (0 failed)","zoom-label":"125%","zoom-out-disabled":true,"zoom-reset-disabled":false,"zoom-in-disabled":true,"view-source-disabled":false,"view-source-open":true,"view-source-title":"Source: Example","view-source-address":"https://example.test/final","view-source-content":"<p>source</p>\n","find-open":true,"find-query":"a\\b","find-result-label":"1 of 2","find-disabled":false,"navigation-disabled":true},"effect":{"type":"write-clipboard","text":"copy\u0001"},"error":"bad\nrequest"}"#
         );
     }
 
@@ -8273,6 +8312,7 @@ mod tests {
                 history_disabled: true,
                 history_open: false,
                 history_position: String::new(),
+                history_title: String::new(),
                 history_address: String::new(),
                 history_previous_disabled: true,
                 history_next_disabled: true,
@@ -8368,6 +8408,7 @@ mod tests {
                 history_disabled: false,
                 history_open: false,
                 history_position: "2 of 2".into(),
+                history_title: "Venture Guide".into(),
                 history_address: page_url.into(),
                 history_previous_disabled: false,
                 history_next_disabled: false,
@@ -9136,6 +9177,7 @@ mod tests {
             .unwrap());
         assert!(host.props().history_open);
         assert_eq!(host.props().history_position, "3 of 3");
+        assert_eq!(host.props().history_title, repeated);
         assert_eq!(host.props().history_address, repeated);
         assert!(host.props().history_navigate_disabled);
 
@@ -9146,6 +9188,7 @@ mod tests {
         )
         .unwrap();
         assert_eq!(host.props().history_position, "2 of 3");
+        assert_eq!(host.props().history_title, repeated);
         assert!(!host.props().history_navigate_disabled);
 
         assert!(host

@@ -42,6 +42,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       historyDisabled: true,
       historyOpen: false,
       historyPosition: "2 of 2",
+      historyTitle: "Initial page",
       historyAddress: "https://venture.test/initial",
       historyPreviousDisabled: true,
       historyNextDisabled: true,
@@ -109,6 +110,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
           props = {
             ...props,
             historyPosition: "1 of 2",
+            historyTitle: "Previous page",
             historyAddress: "https://venture.test/previous",
             historyNavigateDisabled: false,
           };
@@ -283,6 +285,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     buttonByLabel(root, "Previous").click();
     await settle();
     assert.equal(calls.at(-1)?.type, "historyPrevious");
+    assert.match(renderScope(root).textContent, /Previous page/);
     assert.match(renderScope(root).textContent, /https:\/\/venture\.test\/previous/);
     buttonByLabel(root, "Open").click();
     await settle();

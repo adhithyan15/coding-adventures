@@ -5,6 +5,22 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser usability - bounded source preview.** Keep retained page
+  source inside one shared 180-pixel scroll viewport so long documents cannot
+  displace the native browser surface. Use Mosaic's host-neutral scroll
+  primitive instead of toolkit-specific clipping.
+
+- [x] **P1 browser usability - bounded native toolbar rows.** Split navigation,
+  library, and page utility controls into shared authored rows after Flutter's
+  live acceptance exposed clipped controls at the standard native test width.
+  Keep every control and event shared rather than adding toolkit-only wrapping.
+
+- [x] **P1 browser usability - titled session-history entries.** Retain each
+  normalized document title by stable navigation-entry identity, fall back to
+  the committed address for untitled documents, and project the selected title
+  through one shared Mosaic slot. Core, bridge, and generated-host acceptance
+  prevent toolkit-owned title caches or background refetches.
+
 - [x] **P1 browser usability - browsable session-history catalog.** Project
   the ordered navigation stack into one core-owned Mosaic panel with stable
   entry identity, address, current position, wraparound Previous/Next
