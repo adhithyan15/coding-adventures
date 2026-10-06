@@ -1149,6 +1149,12 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             stroke: Some("#64748b".into()), stroke_width: Some(2.0), stroke_cap: Some(StrokeCap::Round),
             stroke_join: Some(StrokeJoin::Round), stroke_dash: Some(vec![6.0, 3.0]), stroke_dash_offset: None }));
     }
+    let mut cliff_commands = vec![PathCommand::MoveTo { x: diagram.cliff.start.x, y: diagram.cliff.start.y }];
+    cliff_commands.extend(diagram.cliff.segments.iter().map(|segment| PathCommand::CubicTo { cx1: segment.control1.x,
+        cy1: segment.control1.y, cx2: segment.control2.x, cy2: segment.control2.y, x: segment.end.x, y: segment.end.y }));
+    instructions.push(PaintInstruction::Path(PaintPath { base: PaintBase::default(), commands: cliff_commands,
+        fill: None, fill_rule: None, stroke: Some("#8b0000".into()), stroke_width: Some(4.0),
+        stroke_cap: Some(StrokeCap::Round), stroke_join: Some(StrokeJoin::Round), stroke_dash: None, stroke_dash_offset: None }));
     if let Some(domain) = diagram.domains.iter().find(|domain| domain.confusion) {
         instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: domain.center.x, cy: domain.center.y,
             rx: domain.width / 2.0, ry: domain.height / 2.0, fill: Some("#e2e8f0".into()), stroke: Some("#475569".into()),
@@ -9354,6 +9360,9 @@ mod tests {
             boundaries: vec![diagram_ir::LayoutedCynefinBoundary { start: Point { x: 200.0, y: 10.0 },
                 segments: vec![diagram_ir::CubicCurveSegment { control1: Point { x: 210.0, y: 55.0 },
                     control2: Point { x: 190.0, y: 95.0 }, end: Point { x: 200.0, y: 140.0 } }] }],
+            cliff: diagram_ir::LayoutedCynefinBoundary { start: Point { x: 200.0, y: 150.0 },
+                segments: vec![diagram_ir::CubicCurveSegment { control1: Point { x: 220.0, y: 190.0 },
+                    control2: Point { x: 180.0, y: 250.0 }, end: Point { x: 200.0, y: 290.0 } }] },
             domains: vec![diagram_ir::LayoutedCynefinDomain { name: "complex".into(), items: vec!["Probe".into()], overflow_count: 0, x: 10.0, y: 10.0,
                 width: 180.0, height: 130.0, center: Point { x: 100.0, y: 75.0 }, confusion: false },
                 diagram_ir::LayoutedCynefinDomain { name: "confusion".into(), items: vec!["One".into(), "Two".into(), "Three".into()], overflow_count: 2, x: 150.0, y: 110.0,
@@ -9363,9 +9372,12 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
-        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Path(_))).count(), 3);
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Path(_))).count(), 4);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[6.0, 3.0])
+                && path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. })) )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#8b0000") && path.stroke_width == Some(4.0)
                 && path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. })) )));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#cbd5e1"))));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")).map(String::as_str), Some("Cynefin framework"));

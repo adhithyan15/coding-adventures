@@ -153,9 +153,10 @@ pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
             to: cynefin_boundary_point(to, &from.center), label: transition.label.clone() })
     }).collect();
     let boundaries = cynefin_boundaries(&diagram.config, left, top);
+    let cliff = cynefin_cliff(&diagram.config, left, top);
     LayoutedCynefinDiagram { width, height, title: diagram.title.clone(), accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
-        show_domain_descriptions: diagram.config.show_domain_descriptions, domains, boundaries, transitions }
+        show_domain_descriptions: diagram.config.show_domain_descriptions, domains, boundaries, cliff, transitions }
 }
 
 fn cynefin_boundaries(config: &diagram_ir::CynefinConfig, left: f64, top: f64) -> Vec<LayoutedCynefinBoundary> {
@@ -188,6 +189,22 @@ fn cynefin_seeded_random(seed: i32) -> f64 {
     value = (value ^ ((value as u32 >> 15) as i32)).wrapping_mul(value | 1);
     value ^= value.wrapping_add((value ^ ((value as u32 >> 7) as i32)).wrapping_mul(value | 61));
     f64::from((value ^ ((value as u32 >> 14) as i32)) as u32) / 4_294_967_296.0
+}
+
+fn cynefin_cliff(config: &diagram_ir::CynefinConfig, left: f64, top: f64) -> LayoutedCynefinBoundary {
+    let center_x = left + config.width / 2.0;
+    let top_y = top + config.height / 2.0;
+    let bottom_y = top + config.height;
+    let height = bottom_y - top_y;
+    let amplitude = config.width * 0.03;
+    LayoutedCynefinBoundary { start: Point { x: center_x, y: top_y }, segments: vec![
+        CubicCurveSegment { control1: Point { x: center_x + amplitude, y: top_y + height * 0.2 },
+            control2: Point { x: center_x - amplitude * 1.5, y: top_y + height * 0.55 },
+            end: Point { x: center_x + amplitude * 0.5, y: top_y + height * 0.75 } },
+        CubicCurveSegment { control1: Point { x: center_x - amplitude, y: top_y + height * 0.85 },
+            control2: Point { x: center_x + amplitude * 0.3, y: top_y + height * 0.95 },
+            end: Point { x: center_x, y: bottom_y } },
+    ] }
 }
 
 fn cynefin_boundary_point(domain: &LayoutedCynefinDomain, toward: &Point) -> Point {
@@ -401,6 +418,9 @@ mod tests {
         assert!(!layout.show_domain_descriptions);
         assert_eq!(layout.boundaries.len(), 2);
         assert!(layout.boundaries.iter().all(|boundary| boundary.segments.len() == 7));
+        assert_eq!(layout.cliff.start, Point { x: 344.0, y: 234.0 });
+        assert_eq!(layout.cliff.segments.len(), 2);
+        assert_eq!(layout.cliff.segments[1].end, Point { x: 344.0, y: 444.0 });
         assert!(layout.transitions[0].from.x > complex.center.x);
         assert!(layout.transitions[0].to.x < clear.center.x);
     }

@@ -770,9 +770,9 @@ Fixed semantic quadrant and center-ellipse layout preserves accessibility
 metadata while lowering through backend-neutral rectangles, ellipses, paths,
 filled transition arrowheads, and glyph runs with native Metal-to-PNG
 validation. Transition endpoints are clipped to rectangular or elliptical
-domain boundaries instead of crossing domain labels. Theme/config overrides,
-organic seeded boundary waviness, and exact cliff styling remain unsupported at
-the partial level. Confusion domains follow Mermaid's three-item display cap
+domain boundaries instead of crossing domain labels. Theme overrides and exact
+remaining styles remain unsupported at the partial level. Confusion domains
+follow Mermaid's three-item display cap
 and lower any hidden count to a backend-neutral `+N more` badge.
 Positive `width` and `height` plus non-negative `padding` values from Mermaid
 init directives or YAML front matter survive semantic IR and control the inner
@@ -781,6 +781,8 @@ The default-enabled `showDomainDescriptions` switch also survives config IR
 and controls backend-neutral model and practice subtitles for all five domains.
 Non-negative `boundaryAmplitude` and integer `seed` values resolve deterministic
 cubic vertical and horizontal domain boundaries before Paint lowering.
+The fixed complex-to-chaotic cliff follows Mermaid's two-segment cubic geometry
+and lowers as a backend-neutral dark-red four-pixel path.
 
 ### TreeView Native Slice
 

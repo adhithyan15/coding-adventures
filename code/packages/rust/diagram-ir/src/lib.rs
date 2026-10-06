@@ -1821,7 +1821,7 @@ pub struct LayoutedCynefinTransition { pub from: Point, pub to: Point, pub label
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedCynefinBoundary { pub start: Point, pub segments: Vec<CubicCurveSegment> }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub show_domain_descriptions: bool, pub domains: Vec<LayoutedCynefinDomain>, pub boundaries: Vec<LayoutedCynefinBoundary>, pub transitions: Vec<LayoutedCynefinTransition> }
+pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub show_domain_descriptions: bool, pub domains: Vec<LayoutedCynefinDomain>, pub boundaries: Vec<LayoutedCynefinBoundary>, pub cliff: LayoutedCynefinBoundary, pub transitions: Vec<LayoutedCynefinTransition> }
 
 // PROCESS OWNERSHIP FAMILY
 #[derive(Clone, Debug, PartialEq)]
