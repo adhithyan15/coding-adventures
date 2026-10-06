@@ -1,0 +1,8 @@
+# @version 1
+document = HEADER { TITLE | ACC_TITLE | ACC_DESCR | ACC_DESCR_BLOCK } { rule } EOF ;
+rule = IDENT ASSIGN choice SEMICOLON ;
+choice = sequence { SLASH sequence } ;
+sequence = prefix { prefix } ;
+prefix = [ AND | NOT ] suffix ;
+suffix = primary [ QUESTION | STAR | PLUS ] ;
+primary = STRING | IDENT | DOT | LPAREN choice RPAREN ;
