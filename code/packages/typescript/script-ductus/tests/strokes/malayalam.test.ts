@@ -298,3 +298,212 @@ describe("handwriting ductus", () => {
     ]);
   });
 });
+
+// Base consonants cited to SPACE's Thooval formation arrows (facts only; the
+// tool is GPL-3.0 and nothing of it is copied). Each is one continuous run:
+// Thooval keeps the pen down by design, and two recorded sources that could
+// show a lift (hand, grahyam) show none. The labels below are the turning
+// points Thooval marks, in order.
+const THOOVAL_CONSONANTS: ReadonlyArray<
+  readonly [glyph: string, slug: string, labels: readonly string[]]
+> = [
+  [
+    "ന",
+    "NA",
+    [
+      "climb clockwise over the left arch",
+      "descend the stem to the line",
+      "retrace the stem upward",
+      "sweep over the right arch to its foot",
+    ],
+  ],
+  [
+    "മ",
+    "MA",
+    [
+      "climb the left side and arch over",
+      "curve down the inner stroke",
+      "run right along the base",
+      "climb the right side to the top",
+    ],
+  ],
+  [
+    "സ",
+    "SA",
+    [
+      "climb clockwise over the left arch",
+      "descend the stem to the line",
+      "retrace the stem upward",
+      "sweep over the middle arch and down",
+      "round the bowl and up to the top",
+    ],
+  ],
+  [
+    "ര",
+    "RA",
+    [
+      "climb clockwise over the top",
+      "descend the right side",
+      "curl up around the inner loop",
+    ],
+  ],
+  [
+    "ത",
+    "TA",
+    [
+      "climb clockwise over the left arch",
+      "cross down the middle loop",
+      "round its base and climb back up",
+      "sweep over the right arch to its foot",
+    ],
+  ],
+  [
+    "ഷ",
+    "SSA",
+    [
+      "climb over the small arch",
+      "run right along the base",
+      "climb the right upright",
+      "slant down to the left",
+      "circle the loop",
+      "descend the stem to the line",
+    ],
+  ],
+  [
+    "പ",
+    "PA",
+    [
+      "climb over the small arch",
+      "run right along the base",
+      "climb the upright to the top",
+    ],
+  ],
+  [
+    "വ",
+    "VA",
+    [
+      "climb clockwise over the arch",
+      "run right along the base",
+      "climb the upright to the top",
+    ],
+  ],
+  [
+    "ണ",
+    "NNA",
+    [
+      "circle the small inner loop",
+      "climb over the big left arch",
+      "descend the first stem",
+      "climb back up over the middle arch",
+      "descend the second stem",
+      "climb back up and round the right arch",
+    ],
+  ],
+  [
+    "ട",
+    "TTA",
+    [
+      "curve left over the top and down",
+      "swing right through the middle",
+      "round the lower bowl to the left",
+    ],
+  ],
+  [
+    "ദ",
+    "DA",
+    [
+      "climb clockwise over the top",
+      "curve in to the middle tip",
+      "retrace and round the lower bowl",
+    ],
+  ],
+  [
+    "ഹ",
+    "HA",
+    [
+      "climb over the small arch",
+      "run right along the base",
+      "climb the left side of the loop",
+      "sweep over and down to the foot",
+    ],
+  ],
+  [
+    "ഗ",
+    "GA",
+    [
+      "curve down around the left bowl",
+      "climb the middle stem",
+      "sweep over the right arch to its foot",
+    ],
+  ],
+  [
+    "റ",
+    "RRA",
+    [
+      "climb the left side",
+      "arch over and down to the foot",
+    ],
+  ],
+  [
+    "ല",
+    "LA",
+    [
+      "draw the middle bar to the right",
+      "climb and arch back over the top",
+      "descend the left side",
+      "run right along the base",
+      "climb the upright to the top",
+    ],
+  ],
+  [
+    "ശ",
+    "SHA",
+    [
+      "curve down around the left bowl",
+      "climb the middle stem",
+      "sweep over and down the right side",
+      "round the base and curl up inside",
+    ],
+  ],
+  [
+    "ബ",
+    "BA",
+    [
+      "circle the small inner loop",
+      "climb over the big left arch",
+      "descend the stem to the line",
+      "climb back up over the right arch",
+      "curve down and run along the base",
+      "climb the upright to the top",
+    ],
+  ],
+];
+
+describe("Malayalam consonants cited to Thooval", () => {
+  for (const [glyph, slug, labels] of THOOVAL_CONSONANTS) {
+    const letter = DUCTUS[ductusKey("malayalam", glyph)];
+
+    it(`${glyph} is one continuous run through Thooval's turning points`, () => {
+      expect(letter).toBeDefined();
+      expect(penLifts(letter)).toBe(0);
+      expect(letter.strokes).toHaveLength(1);
+      expect(
+        letter.strokes[0].segments.map((segment) => segment.label),
+      ).toEqual(labels);
+      for (const gap of joinGaps(letter.strokes[0])) expect(gap).toBe(0);
+    });
+
+    it(`${glyph} cites the pinned Thooval formation image and the Malayalam font`, () => {
+      expect(letter.source.url).toBe(
+        `https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/${slug}.png`,
+      );
+      expect(letter.source.citation).toMatch(/SPACE Kerala.*Thooval.*GPL-3\.0/);
+      expect(letter.source.variation).toMatch(
+        /only these facts are cited.*santhoshtr\/hand.*grahyam.*counts only.*Noto Sans Malayalam/,
+      );
+      expect(verifiedLetterFont(glyph, letter.source.url)).toBe(
+        "_fonts/NotoSansMalayalam-Static.ttf",
+      );
+    });
+  }
+});

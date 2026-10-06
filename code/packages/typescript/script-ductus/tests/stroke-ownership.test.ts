@@ -504,12 +504,24 @@ describe("stroke ownership migration baseline", () => {
       // 537 -> 564 with a new `gurmukhi: 27` count, and the ordered key hash
       // and the non-Tamil data hash move, measured after the last caption was
       // settled; Tamil and both shared-identity values remain unchanged.
+      //
+      // Seventeen Malayalam base consonants — ന മ സ ര ത ഷ പ വ ണ ട ദ ഹ ഗ റ ല
+      // ശ ബ (U+0D28, U+0D2E, U+0D38, U+0D30, U+0D24, U+0D37, U+0D2A, U+0D35,
+      // U+0D23, U+0D1F, U+0D26, U+0D39, U+0D17, U+0D31, U+0D32, U+0D36,
+      // U+0D2C) — taught from chapter 1 but never given a cited stroke
+      // order, now cite the formation arrows of SPACE Kerala's Thooval
+      // teaching tool (facts only; GPL-3.0) and gain one unbroken run each.
+      // They follow ഴ at the end of the Malayalam owner, so no existing key
+      // changes its relative order. Keys move 564 -> 581 and Malayalam
+      // 14 -> 31, with the ordered key hash and the non-Tamil data hash,
+      // measured after the last caption was settled; Tamil and both
+      // shared-identity values remain unchanged.
     }).toEqual({
-      keys: 564,
+      keys: 581,
       keyHash:
-        "80d0aed62b9324f85dedecc2796357d7c43aa0f3886ca4a10a05b1db89b098e2",
+        "324b91e9fa398828613ed4581052ea7eec859420d121e0ab3ef4bce151192993",
       nonTamilDataHash:
-        "1dd51666afd3337a9bc6210ac502e13cc2bfce6ded470ee7282e68356c9f5449",
+        "e09d3e90c94cd412e4f2d369141db7eda556e8b6803289b931f234ac6d1fd436",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -524,7 +536,7 @@ describe("stroke ownership migration baseline", () => {
         hebrew: 22,
         japanese: 83,
         kannada: 44,
-        malayalam: 14,
+        malayalam: 31,
         "perso-arabic": 24,
         tamil: 35,
         telugu: 43,

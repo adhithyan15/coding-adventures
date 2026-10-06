@@ -346,6 +346,32 @@ with an uncited sign and are left for a later batch. The new
 `data/scripts/gurmukhi.json` holds exactly what the track reads (33 letters, 14
 signs, 4 digits), with `complete` false, the same way `bengali.json` does.
 
+#### As built — Malayalam consonants, cited to a teaching tool's formation arrows
+
+Seventeen Malayalam base consonants (ന മ സ ര ത ഷ പ വ ണ ട ദ ഹ ഗ റ ല ശ ബ) gain a
+ductus, which brings the Malayalam filmstrips from 14 to 35: their letter
+lessons, plus the four chapter-1 lessons whose headword is നമ (Malayalam is in
+`SEPARATE_LETTER_SCRIPTS`, so a word of cited letters is drawn letter by
+letter). The order comes from SPACE Kerala's Thooval, a Malayalam alphabet
+teaching tool whose image for each letter marks the start, every turn where the
+pen runs back along its own ink, and the end. Thooval is GPL-3.0, so it is a
+source of facts only: no image, path or template point enters the repository.
+
+**Pen lifts need a second kind of source.** Thooval has the learner keep the
+pen down to the end of every letter, so it cannot show a lift even where a
+writer would make one. The zero-lift claim therefore rests on two recordings
+that could have shown one: Santhosh Thottingal's *hand* curves (MIT), which
+store several strokes where a glyph has them, and the *grahyam* samples, cited
+as counts only because the dataset has no licence. Every letter here is one
+stroke in *hand*, and no grahyam sample jumps between points the way a lift
+would (its files keep no pen-up marker, so a jump is the only sign). Letters whose sources disagree on the start (ക, യ) or whose source is
+uncertain (ഏ) or missing (ം) are not drawn.
+
+**Divergence: lesson prose.** As with the vowels and chillus already drawn, the
+lessons keep their "copy what you see" writing blocks; the filmstrip is added
+beside them. Rewriting those blocks to list the movements is left to a lesson
+tranche.
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams
