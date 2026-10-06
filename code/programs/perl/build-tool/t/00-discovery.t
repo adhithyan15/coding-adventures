@@ -29,6 +29,7 @@ use Test2::V0;
 use File::Temp qw(tempdir);
 use File::Path qw(make_path);
 use File::Spec ();
+use JSON::PP qw(decode_json);
 
 use CodingAdventures::BuildTool::Discovery;
 
@@ -40,6 +41,15 @@ sub make_pkg {
     open(my $fh, '>', "$root/$path/BUILD") or die "Cannot create BUILD: $!";
     print $fh $content;
     close $fh;
+}
+
+sub load_registry_fixture {
+    my $path = "$Bin/../../../../specs/fixtures/build-tool-v1/cases/discovery-language-registry.json";
+    open(my $fh, '<:raw', $path) or die "Cannot read $path: $!";
+    local $/;
+    my $fixture = decode_json(<$fh>);
+    close $fh;
+    return $fixture;
 }
 
 # ---------------------------------------------------------------------------
@@ -322,6 +332,37 @@ END
     is(scalar @cmds, 2, '2 non-blank non-comment lines');
     is($cmds[0], 'cpanm --installdeps --quiet .', 'first command correct');
     is($cmds[1], 'prove -l -v t/', 'second command correct');
+};
+
+subtest 'neutral OCaml package and Dune decoy projection' => sub {
+    my $root = tempdir(CLEANUP => 1);
+    my $fixture = load_registry_fixture();
+    my @ocaml = grep { $_->{path} =~ m{^code/packages/ocaml/} }
+        @{ $fixture->{workspace}{files} };
+    is(scalar @ocaml, 2, 'neutral fixture has package and generated decoy');
+    for my $file (@ocaml) {
+        (my $package_path = $file->{path}) =~ s{/BUILD$}{};
+        make_pkg($root, $package_path, $file->{content_utf8});
+    }
+    make_pkg($root, 'code/packages/ocaml/near/_Build/demo');
+    make_pkg($root, 'code/packages/ocaml/near/_build-example/demo');
+
+    my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $root);
+    $discovery->discover();
+    my @relative = sort map {
+        my $path = File::Spec->abs2rel($_->{path}, $root);
+        $path =~ s{\\}{/}g;
+        $path;
+    } @{ $discovery->packages() };
+    is(
+        \@relative,
+        [qw(code/packages/ocaml/demo-ocaml code/packages/ocaml/near/_Build/demo code/packages/ocaml/near/_build-example/demo)],
+        'only exact lowercase _build is pruned during discovery',
+    );
+    my ($package) = grep { $_->{path} =~ m{demo-ocaml$} }
+        @{ $discovery->packages() };
+    is($package->{language}, 'ocaml', 'neutral package is classified as OCaml');
+    is($package->{name}, 'ocaml/demo-ocaml', 'neutral package identity is preserved');
 };
 
 done_testing();

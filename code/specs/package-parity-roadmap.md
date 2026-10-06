@@ -15839,6 +15839,34 @@ other downstream owners. Native Lua filesystem stability and cache persistence
 remain separate, selection-blocked authority work. Select only the bounded
 Lua portable source-hashing owner next in a fresh clean main-based worktree.
 
+## Post-#16774 inventory and next dependency pass (2026-10-06)
+
+GitHub merged the ready Lua source-hashing PR after all 32 final-head checks
+completed acceptably (13 success, 19 expected skips), with no merge conflict.
+The exact `origin/main` schema-3 collision check still reports 15 established
+lanes, 1,487 implementation identities, 4,757 package slots, 178
+high-consensus identities with 262 missing slots, five emerging OCaml
+packages, and zero canonical collisions or unknown buckets. Lua's process-free
+registry selection and package digest are now merged; native stable snapshots,
+dependency hashing, and persistent cache remain separate owners.
+
+A parallel audit found one newly unowned nine-lane identity: the pluggable
+`virtual-machine` package. Its fixed-ISA and `GenericVM` specifications and
+existing lane behavior disagree on program-counter advancement, invalid
+opcode/underflow outcomes, step traces, and reset. Register a pending,
+language-neutral pure stack-VM fixture owner before any missing-lane port;
+the six absent established lanes are C#, Dart, F#, Haskell, Java, and Kotlin.
+The audit found no other unowned high-consensus identity or OCaml promotion
+gate. OCaml remains emerging until its owned native build-tool, adapter, and
+three-platform execution gates pass.
+
+The quick dependency pass ranks the unblocked Perl exact-Dune-discovery
+fixture owner next: its prerequisites are merged and it reaches 12 unfinished
+downstream owners. Elixir source hashing reaches eight, while Lua dependency
+hashing and TypeScript diff selection each reach six. The Perl tranche must
+prove exact `_build` pruning without erasing `_Build` or `_build-example`, and
+must not claim full OCaml source hashing or native filesystem authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
