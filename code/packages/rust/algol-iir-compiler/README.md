@@ -207,8 +207,10 @@ on every reachable exit. Conditional value expressions likewise preserve it
 when the selector contains no procedure call and every reachable value branch
 is a direct runtime real result or a provenance-backed local. A selector may
 call a procedure when both value branches are direct formatter-safe real
-procedure calls that do not rely on real name-actual provenance; selector calls
-paired with provenance-backed local or real-name branches remain conservative.
+procedure calls. Those calls may nest through a real name formal only when its
+actual is itself a selector-call-safe direct real procedure result; selector
+calls paired with provenance-backed local or other real-name branches remain
+conservative.
 One-sided reassignment remains conservative. `for` loops preserve
 runtime-real provenance for caller-frame locals whose values their bodies leave
 invariant; controlled, changed, captured, and name-promoted storage remains
