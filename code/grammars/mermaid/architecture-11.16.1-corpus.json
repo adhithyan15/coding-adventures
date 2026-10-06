@@ -57,6 +57,10 @@
     {
       "id": "size-and-separation-config",
       "source": "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25}}}%%\narchitecture-beta\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\nservice db(database)[Database] in platform"
+    },
+    {
+      "id": "edge-elasticity-config",
+      "source": "%%{init: {\"architecture\": {\"edgeElasticity\": 0.8}}}%%\narchitecture-beta\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\nservice db(database)[Database] in platform\napi:R --> L:db"
     }
   ]
 }

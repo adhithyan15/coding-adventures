@@ -1800,10 +1800,11 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_architecture_to_png() {
         let diagram = parse_architecture(
-            "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25}}}%%\narchitecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\ngroup cachegroup(disk)[Cache Layer]\nservice api \"API\"[Gateway]\nservice cache(disk)[Cache] in cachegroup\njunction split\nservice db(database)[Database] in platform\nservice worker(aws:lambda)[Worker] in platform\nalign row api cache split db worker\napi:R -[reads and writes]-> T:split\nsplit:R <--> L:db{group}\napi:R -[dispatches]-> L:worker",
+            "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25, \"edgeElasticity\": 0.8}}}%%\narchitecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\ngroup cachegroup(disk)[Cache Layer]\nservice api \"API\"[Gateway]\nservice cache(disk)[Cache] in cachegroup\njunction split\nservice db(database)[Database] in platform\nservice worker(aws:lambda)[Worker] in platform\nalign row api cache split db worker\napi:R -[reads and writes]-> T:split\nsplit:R <--> L:db{group}\napi:R -[dispatches]-> L:worker",
         )
         .expect("Mermaid architecture parse failed");
         let layout = layout_structural_diagram(&diagram);
+        assert_eq!(diagram.architecture_config.as_ref().unwrap().edge_elasticity, 0.8);
         assert_eq!(layout.groups.len(), 2);
         assert!(layout.groups.iter().any(|group| group.icon_name.as_deref() == Some("cloud")));
         let cache_group = layout.groups.iter().find(|group| group.id == "cachegroup").unwrap();
