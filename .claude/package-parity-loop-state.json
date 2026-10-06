@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16761,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16761",
-    "branch": "codex/parity-haskell-graphdiff-20261006",
-    "implementation_revision": "f1536fc214dc4cf5da4f926413b51f4445dec36c",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-06T01:00:45Z",
+    "observed_at": "2026-10-06T01:36:34Z",
     "pr_number": 16761,
-    "status": "checks-pending",
-    "notes": "Ready-for-review Haskell graph/diff core PR opened from reviewed head f1536fc214dc4cf5da4f926413b51f4445dec36c. GitHub reports MERGEABLE but CI and CodeQL checks are queued. Do not enable auto-merge until required final-head checks are terminal and acceptable and GitHub reports no conflict."
+    "status": "merged",
+    "notes": "All 54 final-head checks were terminal and acceptable with zero failures; GitHub reported CLEAN/MERGEABLE before guarded squash auto-merge. PR #16761 merged as cec7a1deb62b8facbdd02f8f8c9275ecbd7b8f17 at 2026-10-06T01:34:06Z; no manual merge."
   },
   "last_inventory": {
-    "revision": "d843a420ec191e88235f372aad764636ae60bffa",
+    "revision": "cec7a1deb62b8facbdd02f8f8c9275ecbd7b8f17",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1237,15 +1231,17 @@
     {
       "id": "build-tool-haskell-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Haskell build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": "codex/parity-haskell-graphdiff-20261006",
       "pr_number": 16761,
       "opened_at": "2026-10-06T01:00:45Z",
+      "merged_at": "2026-10-06T01:34:06Z",
+      "merge_commit": "cec7a1deb62b8facbdd02f8f8c9275ecbd7b8f17",
       "selected_at": "2026-10-06T00:30:11Z",
       "selection_revision": "d843a420ec191e88235f372aad764636ae60bffa",
       "selection_notes": "Selected only after registering two newly audited Dart/Swift frontend children and exact-main collision-free schema-3 refresh. All six prerequisites are merged; no open PR touches Haskell build-tool paths. This process-free 20-case core has three direct pending consumers and five unfinished descendants, ahead of Ruby source-registry adoption's four descendants. Adapter execution and boundary-digest activation remain separate.",
-      "notes": "Implement and dynamically consume the complete eight-graph and twelve-diff process-free contract, including shared-input multi-consumer selection, canonical topology, no-partial cycle failures, closures, boundary selection, strict bounded matching, and stable diagnostics."
+      "notes": "Merged by guarded auto-merge in PR #16761. The typed process-free Haskell core dynamically consumes the exact eight graph and twelve diff-selection neutral cases, pins case IDs, enforces canonical topology and closures, checked repository-boundary digest, strict bounded matching, and stable no-partial diagnostics. Local optimized package/downstream tests, -Wall -Werror, 94% expression coverage, neutral corpus validation, and collision checks passed; adapter execution remains separately owned."
     },
     {
       "id": "build-tool-lua-diff-selection-match-work-ceiling-adoption",
@@ -12137,8 +12133,81 @@
     {
       "id": "dart-java-kotlin-core-eight-family-parity",
       "title": "Classify and split eight Dart/JVM core package families",
+      "status": "pending", "depends_on": ["arithmetic-09-neutral-conformance-and-existing-lane-reconciliation", "arithmetic-dart-lane-parity", "arithmetic-java-lane-parity", "arithmetic-kotlin-lane-parity", "block-ram-f00-neutral-conformance-and-existing-lane-reconciliation", "block-ram-dart-lane-parity", "block-ram-java-lane-parity", "block-ram-kotlin-lane-parity", "fpga-f01-neutral-conformance-and-existing-lane-reconciliation", "fpga-dart-lane-parity", "fpga-java-lane-parity", "fpga-kotlin-lane-parity"], "branch": null, "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Twenty-four missing slots across arithmetic, block-ram, Brotli, clock, FPGA, hash-functions, tree, XML lexer. The post-#16761 audit materialized exact 09/F00/F01 neutral and lane-sized arithmetic, block-ram, and FPGA children; other families still require exact ownership or reviewed exceptions. FPGA depends on same-lane block-ram; Brotli neutral owner already pending, DT17 vector correction precedes hash-functions ports, and XML requires generic lexer hook support. Do not select this umbrella as an implementation PR."
+    },
+    {
+      "id": "arithmetic-09-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Freeze 09 arithmetic neutral behavior across existing lanes",
       "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
-      "notes": "Twenty-four missing slots across arithmetic, block-ram, Brotli, clock, FPGA, hash-functions, tree, XML lexer. Split by family/lane; FPGA depends block-ram, Brotli neutral owner already pending, DT17 vector correction precedes hash-functions ports, XML requires generic lexer hook support."
+      "notes": "Collision-checked after #16761. Define bounded half/full-adder, ripple-carry, and ALU fixtures with exact flags and errors before porting three missing 12/15 lanes. Reconcile Go/Python versus Rust subtraction carry for width-four 5-0 and Rust-only ripple overflow; do not silently pick one oracle. Existing Dart/Java/Kotlin logic-gates foundations are present."
+    },
+    {
+      "id": "arithmetic-dart-lane-parity",
+      "title": "Port 09 arithmetic to Dart",
+      "status": "pending", "depends_on": ["arithmetic-09-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 arithmetic slot. Use the existing Dart logic-gates package, the reconciled neutral corpus, native package tests, dart analyze, and exact BUILD validation; no host authority."
+    },
+    {
+      "id": "arithmetic-java-lane-parity",
+      "title": "Port 09 arithmetic to Java",
+      "status": "pending", "depends_on": ["arithmetic-09-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 arithmetic slot. Use existing Java logic-gates and the reconciled neutral corpus with native Gradle tests, coverage, and BUILD validation."
+    },
+    {
+      "id": "arithmetic-kotlin-lane-parity",
+      "title": "Port 09 arithmetic to Kotlin",
+      "status": "pending", "depends_on": ["arithmetic-09-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 arithmetic slot. Use existing Kotlin logic-gates and the reconciled neutral corpus with native Gradle tests, coverage, and BUILD validation."
+    },
+    {
+      "id": "block-ram-f00-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Freeze F00 block-RAM neutral behavior across existing lanes",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Collision-checked after #16761. Reconcile F00 SRAM cell/word memory semantics and configuration bounds into language-neutral fixtures before Dart/JVM ports. The three missing 12/15 lanes already provide logic-gates."
+    },
+    {
+      "id": "block-ram-dart-lane-parity",
+      "title": "Port F00 block-RAM to Dart",
+      "status": "pending", "depends_on": ["block-ram-f00-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 block-RAM slot. Build on Dart logic-gates and F00 neutral fixtures; provide real package tests and BUILD validation before Dart FPGA."
+    },
+    {
+      "id": "block-ram-java-lane-parity",
+      "title": "Port F00 block-RAM to Java",
+      "status": "pending", "depends_on": ["block-ram-f00-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 block-RAM slot. Build on Java logic-gates and F00 neutral fixtures; provide real Gradle tests and BUILD validation before Java FPGA."
+    },
+    {
+      "id": "block-ram-kotlin-lane-parity",
+      "title": "Port F00 block-RAM to Kotlin",
+      "status": "pending", "depends_on": ["block-ram-f00-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 block-RAM slot. Build on Kotlin logic-gates and F00 neutral fixtures; provide real Gradle tests and BUILD validation before Kotlin FPGA."
+    },
+    {
+      "id": "fpga-f01-neutral-conformance-and-existing-lane-reconciliation",
+      "title": "Freeze F01 FPGA neutral behavior across existing lanes",
+      "status": "pending", "depends_on": ["block-ram-f00-neutral-conformance-and-existing-lane-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "Collision-checked after #16761. Reconcile F01 configuration, logic-gate, and block-RAM integration semantics into bounded neutral fixtures before three 12/15 missing-lane ports. Keep real bitstream/export workflows separate."
+    },
+    {
+      "id": "fpga-dart-lane-parity",
+      "title": "Port F01 FPGA to Dart",
+      "status": "pending", "depends_on": ["fpga-f01-neutral-conformance-and-existing-lane-reconciliation", "block-ram-dart-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 FPGA slot. Integrate existing Dart logic-gates with the Dart block-RAM port; consume F01 fixtures and native BUILD tests."
+    },
+    {
+      "id": "fpga-java-lane-parity",
+      "title": "Port F01 FPGA to Java",
+      "status": "pending", "depends_on": ["fpga-f01-neutral-conformance-and-existing-lane-reconciliation", "block-ram-java-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 FPGA slot. Integrate existing Java logic-gates with the Java block-RAM port; consume F01 fixtures and native Gradle/BUILD tests."
+    },
+    {
+      "id": "fpga-kotlin-lane-parity",
+      "title": "Port F01 FPGA to Kotlin",
+      "status": "pending", "depends_on": ["fpga-f01-neutral-conformance-and-existing-lane-reconciliation", "block-ram-kotlin-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "One missing 12/15 FPGA slot. Integrate existing Kotlin logic-gates with the Kotlin block-RAM port; consume F01 fixtures and native Gradle/BUILD tests."
     },
     {
       "id": "dart-hash-foundation-and-eleven-storage-families",
