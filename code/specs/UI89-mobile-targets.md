@@ -1238,9 +1238,18 @@ builder adds is the command, written into the generated README:
   `--org dev.codingadventures` and `--project-name trestle`. Android's
   `applicationId` and iOS's bundle identifier are then the manifest's
   identity, as they are for Compose and SwiftUI.
-- **The name must be a Dart package name.** If the last segment is not one
-  (`^[a-z][a-z0-9_]*$`, and not a Dart reserved word), the README says so
-  and gives no command. It never makes up a different identity.
+- **Every part must be valid for both platforms.** The project name must
+  be a Dart package name: `^[a-z][a-z0-9_]*$`, and not a Dart reserved
+  word. Each org part must match the same pattern and not be a Java or
+  Kotlin keyword, so the org is a valid `applicationId` and Kotlin
+  package. A manifest identifier is `[A-Za-z0-9-]` and dots, which can
+  still yield `my-app`, `2d` or `dev.new`.
+- **If any part fails,** the README gives no command and says which part,
+  and it never makes up a different identity. (Compose sanitizes the same
+  identifier into an `applicationId`; Flutter cannot, because `flutter
+  create` derives it.)
+- **No quoting is needed.** Every token in the command is then free of
+  shell metacharacters.
 - The desktop command in the README is unchanged.
 
 ### 7.2 The runtime directory
@@ -1256,21 +1265,45 @@ fixed layout. Either half may be absent, but at least one must be present:
     <dir>/ios/iphonesimulator/libmosaic_app.dylib   arm64 + x86_64 (lipo)
 
 - **The Android half** is exactly the jniLibs layout that
-  `build-mosaic-android-libs.sh` writes for Compose, read by the same
-  strict reader: all four ABIs, regular files, no links, nothing else.
+  `build-mosaic-android-libs.sh` writes for Compose (which builds all four
+  ABIs), read by the same strict reader.
 - **The iOS half** is dynamic. Flutter's native assets bundle a dynamic
   library into the app as a framework, and it cannot link a static one, so
   SwiftUI's static `.xcframework` does not carry over. A new script,
   `build-mosaic-ios-dylibs.sh`, builds the app crate as a `cdylib` for
   `aarch64-apple-ios`, `aarch64-apple-ios-sim` and `x86_64-apple-ios`. It
   joins the two simulator slices with `lipo`, as the static script does.
-- **What gets copied.** The builder copies the directory to the project's
-  `runtime/`, and checks that each file starts like an ELF (Android) or
-  Mach-O (iOS) file. Nothing else in the directory is copied.
-- **What is refused.** A desktop runtime file and a runtime directory cannot
-  be mixed. A Flutter build is either for desktop or for phones, as a
-  Compose build with jniLibs is for Android. Any other layout is refused,
-  with a message naming the expected one.
+- **Reading the directory: nothing is copied recursively.** The rules:
+  - The top level may hold only `android/` and `ios/`, each a real
+    directory, not a link.
+  - `android/` is read by `android_jni_libs`, Compose's strict reader.
+  - `ios/` may hold only `iphoneos/` and `iphonesimulator/`, each holding
+    exactly one regular `libmosaic_app.dylib`.
+  - Any other entry, link or file type is refused, never ignored.
+  - Each selected file is read with `read_regular_file_without_links`,
+    which compares device and inode after opening, so a link swapped in
+    after the check is still refused. It is written to its fixed path
+    under `runtime/`.
+- **Clearing first.** Before installing, the builder removes the project's
+  `runtime/` entirely, as Compose clears jniLibs. Only this build's files
+  then exist there. A reused output directory cannot keep last time's
+  `x86` library, or a desktop `libmosaic_app.so`, for the hook to bundle.
+- **Which ABIs.** `android_jni_libs` accepts any non-empty subset of the
+  four ABIs. An APK build that asks for an ABI with no file fails in the
+  hook (§7.3), saying which one.
+- **What each file must be.**
+  - Android: ELF, as the hook checks.
+  - `iphoneos`: thin `MH_MAGIC_64` arm64.
+  - `iphonesimulator`: fat `FAT_MAGIC` with exactly arm64 and x86_64.
+  - Each iOS slice's `LC_BUILD_VERSION` platform must be IOS (2) in
+    `iphoneos` and IOSSIMULATOR (7) in `iphonesimulator`. A simulator
+    library swapped into the device folder would otherwise pass every
+    architecture check and fail only on a real device, which CI never
+    runs.
+- **What is refused.** A desktop runtime file and a runtime directory
+  cannot be mixed. A Flutter build is either for desktop or for phones, as
+  a Compose build with jniLibs is for Android. The refusal names the
+  expected layout.
 
 ### 7.3 `hook/build.dart` per ABI and per SDK
 
@@ -1285,9 +1318,20 @@ With a runtime directory it first chooses the file:
 
 It then runs the existing verifier on that file. The CodeAsset is the same
 one (`mosaic_host.dart`, `DynamicLoadingBundled`), so `mosaic_host.dart`'s
-`@Native` bindings do not change. An architecture or SDK the directory has no
-file for fails the build, with the path it looked for. It never falls back
-to another ABI's library.
+`@Native` bindings do not change.
+
+- **Missing file.** An ABI or SDK the directory has no file for fails the
+  build, naming the path it looked for. It never falls back to another
+  ABI's library.
+- **Outside the map.** An architecture outside the four-entry map (riscv64,
+  say) or an unknown SDK fails before any path is built, naming what was
+  asked for.
+- **Stricter than the desktop verifier.** With a runtime directory, the
+  hook refuses a file that is not ELF (Android) or Mach-O (iOS). The
+  desktop verifier's "too short or not ELF: left alone" does not apply.
+  It also repeats the iOS platform check from §7.2. Like the `lipo`
+  slicing it already does, the check runs its tool through `Process.run`
+  with an argument list, never through a shell.
 
 ### 7.4 State through `path_provider`
 
@@ -1308,11 +1352,27 @@ before the host loads:
 - **When the root is unknown.** If the call throws, or a phone build has no
   root, persistence is off and the host says so through its existing
   persistence warning. It never writes beside the executable.
-- `MOSAIC_APP_STATE_PATH` still wins, for tests. On a phone nothing outside
-  the app can set it.
+- **No desktop fallback on a phone.** On Android and iOS, `_statePath`
+  uses only `MOSAIC_APP_STATE_PATH` or `mosaicStateRoot`. If neither is
+  set, it returns null. It never consults `HOME` or `XDG_DATA_HOME`, which
+  would put Android in the desktop branch. On desktop `mosaicStateRoot` is
+  ignored.
+- **`MOSAIC_APP_STATE_PATH` still wins, for tests.** No other app can set
+  it on Android. On iOS only a developer can, through the simulator
+  (`SIMCTL_CHILD_…`) or an Xcode scheme, which is acceptable.
+- **The bundled runtime only.** On Android and iOS the bundled runtime is
+  always used, and `MOSAIC_APP_LIBRARY` is ignored. That variable is a
+  desktop development override and has no meaning in a signed app.
 - **The dependency.** `path_provider` is pinned exactly in the generated
-  `pubspec.yaml`, as `file_selector` is. The platform implementations it
-  pulls in are the federated packages that Flutter's own templates use.
+  `pubspec.yaml`, as `file_selector` is. Its endorsed implementations are
+  published by flutter.dev:
+  - `path_provider_android` and `path_provider_foundation`;
+  - on desktop, also `path_provider_linux`, `path_provider_windows` and
+    `xdg_directories`.
+
+  They resolve with `pub get` within its ranges, as `file_selector`'s do,
+  and generated projects ship no lockfile. CI prints the resolved versions
+  from `pubspec.lock`, so a change in them is visible in the log.
 
 ### 7.5 CI
 
@@ -1323,13 +1383,34 @@ PR is proven in CI.
   1. Build Trestle's jniLibs (the Compose step already does).
   2. `pkg --backend flutter --emit-project --runtime-library <dir>`, with
      only the `android/` half.
-  3. `flutter create --platforms=android …`, then
+  3. `flutter create --platforms=android …`, then set
+     `android:allowBackup="false"` in the created
+     `android/app/src/main/AndroidManifest.xml`, as Compose's manifest
+     does. The README says to make the same edit. Then
      `flutter build apk --debug`.
-  4. Check that the APK has `lib/<abi>/libmosaic_app.so` for all four ABIs,
-     each equal to its input.
-  5. Run the same `mosaic-android-emulator-gate.sh`. It gains an optional
-     activity argument, because Flutter's launcher is
-     `<package>/.MainActivity` rather than `mosaic.android.MosaicActivity`.
+  4. Check the APK:
+     - its manifest says `allowBackup` false (`aapt2 dump xmltree`);
+     - it holds `lib/<abi>/libmosaic_app.so` for every ABI it packages,
+       each byte-equal to its input;
+     - those ABIs include `x86_64`, which the emulator runs, and
+       `arm64-v8a`.
+
+     The build may not package 32-bit `x86`, so the check does not
+     require it.
+  5. `adb uninstall` the Compose Trestle first. It has the same package
+     name, so its data and signing key must not carry over.
+  6. Run the same `mosaic-android-emulator-gate.sh`, which gains an
+     optional fourth argument: an activity class name only, never a full
+     component, because Flutter's launcher is `.MainActivity` rather than
+     `mosaic.android.MosaicActivity`.
+     - It must match `^\.?[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$`,
+       or the gate exits 2.
+     - The gate builds the component itself as `$package/$activity`. The
+       default stays `mosaic.android.MosaicActivity`, and the gate accepts
+       three or four arguments.
+     - The rule matters because `adb shell` joins its arguments into one
+       device command line, so local quoting does not protect them. Every
+       value the gate splices in must be validated first.
 - **iOS, on the macOS runner after the SwiftUI iOS gates.**
   1. Run `build-mosaic-ios-dylibs.sh`.
   2. `pkg` with the `ios/` half.
