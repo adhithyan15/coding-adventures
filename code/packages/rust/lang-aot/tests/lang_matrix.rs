@@ -1787,6 +1787,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("-2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — additive composition with finite static operands can transform
+    // each direct producer before finite real name specialisation.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(left() + 1.25) else relay(10.0 - right()); output(result) end",
+        expect: Expect::Stdout("3.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — unary plus is an identity and may preserve runtime-real
     // formatter provenance through assignment and output.
     Prog {
@@ -12457,6 +12466,33 @@ fn algol_call_selected_signed_name_result_runs_on_every_available_standard_backe
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but call-selected signed real name-result output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_additive_name_result_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "if choose() then relay(left() + 1.25) else relay(10.0 - right())",
+                )
+        })
+        .expect(
+            "the ALGOL call-selected additive real name-result program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but call-selected additive real name-result output did not complete"
             );
             continue;
         };
