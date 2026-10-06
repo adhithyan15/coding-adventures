@@ -231,6 +231,23 @@ class FormeSpecMapTests(unittest.TestCase):
         )
         self.assertEqual(len(active), 1, "exactly one backlog item must be active")
 
+    def test_release_quality_milestone_is_closed(self) -> None:
+        roadmap = (SPECS / "FM00-forme-completion-roadmap.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            "| 69 | FM-B072 | done | Compose the supported-platform release gate |",
+            roadmap,
+        )
+        self.assertIn(
+            "| 70 | FM-B018 | done | Close release-quality gates |", roadmap
+        )
+        self.assertIn(
+            "| 71 | FM-B029 | active | Make duplicate PR CI cancellation and merge state unambiguous |",
+            roadmap,
+        )
+        self.assertIn("Authoring v1 is complete.", roadmap)
+
     def test_forme_spec_markdown_links_resolve(self) -> None:
         for path in sorted(SPECS.glob("FM[0-9][0-9]-*.md")):
             text = path.read_text(encoding="utf-8")

@@ -15,7 +15,7 @@
 | Headless deployment | Implemented | [FM08](FM08-forme-deploy-runner.md) and FM-B044–FM-B047 close the FM-B012 milestone with live product publication. |
 | Third-party plugin runtime | Implemented | [FM02](FM02-forme-plugin-host.md)'s host, runners, installation, grants, sandboxes, product composition, and live storage-watch mediation close FM-B015 and Extensible v1. |
 | Interactivity IR | Implemented | [FM05](FM05-forme-interactivity-ir.md) defines the normative v1 contract; FM-B059–FM-B061 deliver validation, exact per-page selection, and the live progressive-enhancement proof. |
-| Authoring shell and multi-backend proof | Implemented; release gates active | [FM09](FM09-forme-authoring-shell.md) defines the completed authoring product boundary; FM-B017 proves the live HTML/terminal fan-out, and FM-B018 owns the remaining release gates. |
+| Authoring shell and multi-backend proof | Authoring v1 implemented | [FM09](FM09-forme-authoring-shell.md) defines the completed authoring product boundary; FM-B017 proves the live HTML/terminal fan-out, and FM-B018 closes the supported-platform release-quality contract. |
 
 This document remains the long-range vision. The implementation ledger and
 ordered delivery state live in the companion completion roadmap; numbered
