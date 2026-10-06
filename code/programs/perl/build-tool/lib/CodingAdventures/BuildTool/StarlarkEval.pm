@@ -167,8 +167,15 @@ sub extract_targets {
                     last if $depth <= 0;
                 }
 
+                # A truncated call is never a valid declaration. Discovery
+                # must not reinterpret it as an extension-mode shell BUILD.
+                if ($depth != 0) {
+                    return ();
+                }
+
                 my $target = $self->_parse_rule_call($rule, $body);
-                push @targets, $target if $target;
+                return () unless $target;
+                push @targets, $target;
                 $i = $j;
                 next;
             }
@@ -193,8 +200,19 @@ sub _parse_rule_call {
 
     # Extract srcs = ["...", "..."] or srcs = glob(["...", "..."]).
     my @srcs;
-    if ($body =~ /srcs\s*=\s*(?:glob\s*\()?\s*\[([^\]]*)\]/s) {
-        my $srcs_text = $1;
+    if ($body =~ /\bsrcs\s*=/) {
+        my $srcs_text;
+        if ($body =~ /\bsrcs\s*=\s*glob\s*\(\s*\[([^\]]*)\]\s*\)(?=\s*(?:,|\)))/s) {
+            $srcs_text = $1;
+        } elsif ($body =~ /\bsrcs\s*=\s*\[([^\]]*)\](?=\s*(?:,|\)))/s) {
+            $srcs_text = $1;
+        } else {
+            return undef;
+        }
+        # This bridge accepts only literal string lists. A malformed or
+        # computed expression must not silently become srcs = [].
+        (my $remainder = $srcs_text) =~ s/["'][^"']+["']//g;
+        return undef if $remainder =~ /[^\s,]/;
         @srcs = ($srcs_text =~ /["']([^"']+)["']/g);
     }
 

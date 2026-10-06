@@ -1,0 +1,12 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "fixtures": [
+    {"name":"literals-and-identifiers","source":"railroad-peg-beta\nvalue <- identifier \"literal\" 'single';"},
+    {"name":"ordered-choice-and-group","source":"railroad-peg-beta\nexpression <- term ((\"+\" / \"-\") term)*;"},
+    {"name":"suffix-operators","source":"railroad-peg-beta\noptional <- item?;\nzero <- item*;\none <- item+;"},
+    {"name":"lookahead-prefixes","source":"railroad-peg-beta\npositive <- &\"a\" .;\nnegative <- !\"b\" item;\ngrouped <- &(item / other) item;"},
+    {"name":"any-character","source":"railroad-peg-beta\nany <- .;"},
+    {"name":"metadata-and-comments","source":"railroad-peg-beta\ntitle \"Path grammar\"\naccTitle: Path\naccDescr {\n  PEG grammar\n}\n# PEG comment\npath <- segment (\"/\" segment)*;\nsegment <- !\"/\" .+;"}
+  ]
+}

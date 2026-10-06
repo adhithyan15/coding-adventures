@@ -19,6 +19,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Supported Starlark targets now carry selected-BUILD `srcs` into an explicit
+  declared-source hashing mode. Matching non-source files and the selected
+  BUILD affect the fingerprint; empty declarations remain empty. Shell BUILD
+  files retain extension mode, and malformed detected Starlark fails closed.
+  This is a metadata bridge, not full source-registry or CLI-cache conformance.
 - A pure graph and diff-selection core now consumes the exact eight graph and
   eleven diff-selection conformance fixtures. It provides canonical levels and
   closures, repository-boundary reverse indexing, exact BUILD-front handling,

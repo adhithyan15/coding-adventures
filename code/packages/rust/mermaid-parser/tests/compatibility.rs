@@ -72,6 +72,7 @@ const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "
 const RAILROAD_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-corpus.json"));
 const RAILROAD_EBNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-ebnf-11.16.1-corpus.json"));
 const RAILROAD_ABNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-abnf-11.16.1-corpus.json"));
+const RAILROAD_PEG_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-peg-11.16.1-corpus.json"));
 const INFO_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/info-11.16.1-corpus.json"));
 const ZENUML_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/zenuml-11.16.1-corpus.json"));
 
@@ -135,6 +136,21 @@ fn pinned_railroad_abnf_corpus_parses_to_recursive_ir() {
         let diagram = parse_railroad(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("railroad ABNF fixture {name} failed: {error}"));
         assert!(!diagram.rules.is_empty());
+    }
+}
+
+#[test]
+fn pinned_railroad_peg_corpus_parses_to_recursive_ir() {
+    let corpus: Value = serde_json::from_str(RAILROAD_PEG_CORPUS).expect("railroad PEG corpus must be JSON");
+    for fixture in corpus["fixtures"].as_array().expect("fixtures must be an array") {
+        let name = fixture["name"].as_str().expect("fixture name");
+        let diagram = parse_railroad(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("railroad PEG fixture {name} failed: {error}"));
+        assert!(!diagram.rules.is_empty());
+        if name == "metadata-and-comments" {
+            assert_eq!(diagram.title.as_deref(), Some("Path grammar"));
+            assert_eq!(diagram.accessibility_description.as_deref(), Some("PEG grammar"));
+        }
     }
 }
 
@@ -1146,7 +1162,7 @@ fn pinned_swimlane_subset_corpus_parses_to_ownership_ir() {
 }
 
 #[test]
-fn railroad_dispatches_constructor_and_ebnf_notation_to_recursive_ir() {
+fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");
     match diagram {
@@ -1167,6 +1183,13 @@ fn railroad_dispatches_constructor_and_ebnf_notation_to_recursive_ir() {
         abnf.rules[0].definition,
         diagram_ir::RailroadExpression::Repetition { min: 2, max: Some(4), .. }
     ));
+    let peg = parse_railroad("railroad-peg-beta\nvalue <- !\"x\" item+;")
+        .expect("railroad PEG notation should parse");
+    let diagram_ir::RailroadExpression::Sequence(elements) = &peg.rules[0].definition else {
+        panic!("PEG prefix and suffix should lower to a sequence");
+    };
+    assert!(matches!(&elements[0], diagram_ir::RailroadExpression::Special(label) if label == "!\"x\""));
+    assert!(matches!(elements[1], diagram_ir::RailroadExpression::Repetition { min: 1, max: None, .. }));
     assert!(parse_railroad("railroad-beta\nvalue = optional(terminal(\"x\"), terminal(\"y\"));").is_err());
 }
 

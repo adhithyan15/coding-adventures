@@ -234,6 +234,28 @@ my $package = {
 This mirrors Go's `Package` struct. In Perl, we don't define a formal struct
 type — the hash keys serve as implicit fields.
 
+### 5.5 Declared-source metadata bridge
+
+The selected platform BUILD front is the only source of package declaration
+metadata. For the existing, supported Starlark rule subset, Discovery carries
+an explicit `source_mode => 'declared_sources'` and the first valid target's
+ordered `srcs` array into the package hashref. A shell BUILD carries
+`source_mode => 'extension'` and an empty array. An explicit Starlark
+`srcs = []` remains declared mode; it MUST NOT silently fall back to the
+legacy extension list. A successfully parsed Starlark target uses generated
+rule commands, not the raw BUILD source lines as shell commands. An
+unparseable detected Starlark BUILD fails closed rather than becoming shell.
+
+The current Hasher consumes those fields. In declared mode it validates the
+entire bounded list of package-relative source globs before walking, selects
+matching retained files (including explicitly declared non-source suffixes),
+and still includes the selected BUILD front. Exact generated-directory
+pruning, including lowercase `_build`, precedes matching. This bounded
+metadata bridge does not claim the complete language-source-input registry,
+all portable glob grammar, native stable-snapshot authority, dependency
+digests, cache persistence, or executable CLI cache integration; those remain
+separate parity owners under `build-tool-conformance.md`.
+
 ---
 
 ## 6. CLI Interface

@@ -774,9 +774,16 @@ semantic even though the pinned renderer draws every repeat with the same
 loopback convention. A pinned syntax corpus and native Metal-to-PNG fixture
 exercise the complete backend-neutral path.
 
-This is intentionally partial. The textual `railroad-peg-beta` dialect,
-upstream curve geometry, theme/config overrides, and exact typography remain
-unsupported and fail explicitly rather than being counted as compatible.
+The textual `railroad-peg-beta` dialect completes the four-notation parser
+surface with dedicated portable grammars. Literals, identifiers, ordered
+choice, sequences, groups, wildcard matches, lookahead predicates, and suffix
+operators lower to the same recursive Railroad IR. Predicate labels preserve
+the pinned transformer's special-node convention, and a pinned syntax corpus
+plus native Metal-to-PNG fixture exercise the backend-neutral path.
+
+This is intentionally partial. Upstream curve geometry, theme/config
+overrides, and exact typography remain unsupported rather than being counted
+as compatible.
 
 ### Info Full Compatibility
 

@@ -50,6 +50,7 @@ use Digest::SHA ();
 use File::Find ();
 use File::Spec ();
 use File::Basename ();
+use CodingAdventures::BuildTool::GlobMatch ();
 
 our $VERSION = '0.01';
 
@@ -141,6 +142,27 @@ sub collect_source_files {
     my ($self, $pkg) = @_;
     my $root = $pkg->{path};
     my @files;
+    my $declared = ($pkg->{source_mode} // 'extension') eq 'declared_sources';
+    my @patterns;
+    my @compiled;
+    if ($declared) {
+        my $srcs = $pkg->{declared_srcs};
+        die 'DECLARED_GLOB_INVALID: expected an array' unless ref($srcs) eq 'ARRAY';
+        die 'DECLARED_GLOB_INVALID: too many patterns' if @$srcs > 256;
+        for my $pattern (@$srcs) {
+            die 'DECLARED_GLOB_INVALID: unsafe pattern'
+                unless defined($pattern) && !ref($pattern)
+                && length($pattern) > 0 && length($pattern) <= 4096
+                && $pattern =~ m{\A[A-Za-z0-9_.+/*?-]+\z}
+                && $pattern !~ m{(?:\A|/)\.\.? (?:/|\z)}x
+                && $pattern !~ m{//|\A/|/\z|\*\*\*};
+            push @patterns, $pattern;
+        }
+        my $matcher = CodingAdventures::BuildTool::GlobMatch->new();
+        @compiled = map { $matcher->glob_to_regex($_) } @patterns;
+    } elsif (($pkg->{source_mode} // 'extension') ne 'extension') {
+        die 'SOURCE_MODE_INVALID: unknown source mode';
+    }
 
     File::Find::find(
         {
@@ -151,11 +173,21 @@ sub collect_source_files {
                     return;
                 }
                 return unless -f $_;
+                # Declared globs cannot reopen an external file via a link.
+                return if $declared && -l $_;
                 my $basename = File::Basename::basename($_);
                 my ($ext)    = ($basename =~ /(\.[^.]+)$/);
                 $ext //= '';
 
-                if (exists $SOURCE_EXTENSIONS{$ext} || exists $SPECIAL_FILENAMES{$basename}) {
+                if ($declared) {
+                    my $relative = File::Spec->abs2rel($File::Find::name, $root);
+                    $relative =~ s{\\}{/}g;
+                    my $build_file = $pkg->{build_file} // 'BUILD';
+                    if ($relative eq $build_file
+                        || grep { $relative =~ $_ } @compiled) {
+                        push @files, $File::Find::name;
+                    }
+                } elsif (exists $SOURCE_EXTENSIONS{$ext} || exists $SPECIAL_FILENAMES{$basename}) {
                     push @files, $File::Find::name;
                 }
             },

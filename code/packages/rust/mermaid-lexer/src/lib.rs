@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.76.0";
+pub const VERSION: &str = "0.77.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -48,6 +48,8 @@ const RAILROAD_EBNF_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/railroad-ebnf.tokens");
 const RAILROAD_ABNF_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/railroad-abnf.tokens");
+const RAILROAD_PEG_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/railroad-peg.tokens");
 const INFO_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/info.tokens");
 const ZENUML_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/zenuml.tokens");
 const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
@@ -180,6 +182,14 @@ pub fn create_mermaid_railroad_abnf_lexer(source: &str) -> GrammarLexer<'_> {
         source,
         RAILROAD_ABNF_TOKEN_GRAMMAR_SOURCE,
         "railroad-abnf.tokens",
+    )
+}
+
+pub fn create_mermaid_railroad_peg_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(
+        source,
+        RAILROAD_PEG_TOKEN_GRAMMAR_SOURCE,
+        "railroad-peg.tokens",
     )
 }
 
@@ -489,6 +499,11 @@ pub fn try_tokenize_mermaid_railroad_abnf(source: &str) -> Result<Vec<Token>, St
     lexer.tokenize().map_err(|error| error.to_string())
 }
 
+pub fn try_tokenize_mermaid_railroad_peg(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_railroad_peg_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
 pub fn try_tokenize_mermaid_info(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_info_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
@@ -744,7 +759,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.76.0");
+        assert_eq!(VERSION, "0.77.0");
     }
 
     #[test]
@@ -767,6 +782,18 @@ mod tests {
         assert!(tokens.iter().any(|token| custom_name(token) == Some("HEADER")));
         assert!(tokens.iter().any(|token| custom_name(token) == Some("REPEAT")));
         assert!(tokens.iter().any(|token| token.type_ == TokenType::Star));
+    }
+
+    #[test]
+    fn tokenizes_railroad_peg_operators() {
+        let tokens = try_tokenize_mermaid_railroad_peg(
+            "railroad-peg-beta\nrule <- !\"x\" (item / .)+;",
+        )
+        .expect("railroad PEG should tokenize");
+        assert!(tokens.iter().any(|token| custom_name(token) == Some("HEADER")));
+        assert!(tokens.iter().any(|token| custom_name(token) == Some("ASSIGN")));
+        assert!(tokens.iter().any(|token| custom_name(token) == Some("NOT")));
+        assert!(tokens.iter().any(|token| token.type_ == TokenType::Dot));
     }
 
     #[test]
