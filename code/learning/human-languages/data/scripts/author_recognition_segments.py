@@ -498,6 +498,12 @@ def writing_block(seg, show):
     rec = seg["record"]
     steps = rec.get("strokeOrder") or []
     src = rec.get("strokeOrderSource")
+    # This decides from the script record alone and cannot see the filmstrip
+    # ledger. A letter can gain a cited ductus (and so a printed filmstrip)
+    # without gaining `strokeOrder` steps here, and then the template below
+    # would sit right under a strip that shows the order. The human-language-
+    # data case "a strip lesson never disclaims its stroke order" fails if that
+    # happens; reword the regenerated lesson to point at the strip instead.
     if not (steps and src):
         return f"## Writing: {show} — copy what you see", f"""Put your pen on {show} and follow its line. Copy the shape you can see — slowly,
 and larger than it is printed.
