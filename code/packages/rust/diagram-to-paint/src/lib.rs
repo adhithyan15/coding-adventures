@@ -2066,6 +2066,7 @@ enum CssColorMixSpace {
     DisplayP3,
     A98Rgb,
     ProPhotoRgb,
+    Rec2020,
     Hsl,
     Hwb,
     Lab,
@@ -2088,6 +2089,7 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         ["in", "display-p3"] => CssColorMixSpace::DisplayP3,
         ["in", "a98-rgb"] => CssColorMixSpace::A98Rgb,
         ["in", "prophoto-rgb"] => CssColorMixSpace::ProPhotoRgb,
+        ["in", "rec2020"] => CssColorMixSpace::Rec2020,
         ["in", "hsl"] => CssColorMixSpace::Hsl,
         ["in", "hwb"] => CssColorMixSpace::Hwb,
         ["in", "lab"] => CssColorMixSpace::Lab,
@@ -2178,6 +2180,7 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         CssColorMixSpace::DisplayP3 => css_display_p3_to_color(components, alpha),
         CssColorMixSpace::A98Rgb => css_a98_rgb_to_color(components, alpha),
         CssColorMixSpace::ProPhotoRgb => css_prophoto_rgb_to_color(components, alpha),
+        CssColorMixSpace::Rec2020 => css_rec2020_to_color(components, alpha),
         CssColorMixSpace::Hsl => css_hsl_to_color(
             components[2].to_degrees(), components[0], components[1], alpha,
         ),
@@ -2217,6 +2220,7 @@ fn css_color_mix_components(color: Color, space: CssColorMixSpace) -> [f64; 3] {
         CssColorMixSpace::DisplayP3 => css_color_to_display_p3(encoded),
         CssColorMixSpace::A98Rgb => css_color_to_a98_rgb(encoded),
         CssColorMixSpace::ProPhotoRgb => css_color_to_prophoto_rgb(encoded),
+        CssColorMixSpace::Rec2020 => css_color_to_rec2020(encoded),
         CssColorMixSpace::Hsl => css_color_to_hsl(encoded),
         CssColorMixSpace::Hwb => css_color_to_hwb(encoded),
         CssColorMixSpace::Lab => css_color_to_lab(encoded),
@@ -2533,24 +2537,7 @@ fn parse_css_color_function(css: &str) -> Option<Color> {
             Some(css_prophoto_rgb_to_color([r, g, b], alpha))
         }
         "rec2020" => {
-            let transfer_alpha = 1.09929682680944;
-            let beta = 0.018053968510807;
-            let decode = |value: f64| {
-                if value < beta * 4.5 {
-                    value / 4.5
-                } else {
-                    ((value + transfer_alpha - 1.0) / transfer_alpha).powf(1.0 / 0.45)
-                }
-            };
-            let r = decode(r);
-            let g = decode(g);
-            let b = decode(b);
-            Some(xyz_d65_to_color(
-                (63426534.0 / 99577255.0) * r + (20160776.0 / 139408157.0) * g + (47086771.0 / 278816314.0) * b,
-                (26158966.0 / 99577255.0) * r + (472592308.0 / 697040785.0) * g + (8267143.0 / 139408157.0) * b,
-                (19567812.0 / 697040785.0) * g + (295819943.0 / 278816314.0) * b,
-                alpha,
-            ))
+            Some(css_rec2020_to_color([r, g, b], alpha))
         }
         "xyz" | "xyz-d65" => Some(xyz_d65_to_color(r, g, b, alpha)),
         "xyz-d50" => Some(xyz_d50_to_color(r, g, b, alpha)),
@@ -2787,6 +2774,56 @@ fn css_color_to_prophoto_rgb(encoded: [f64; 3]) -> [f64; 3] {
             value.signum() * value.abs().powf(1.0 / 1.8)
         } else {
             16.0 * value
+        };
+        if encoded.abs() < 1e-12 {
+            0.0
+        } else if (encoded - 1.0).abs() < 1e-12 {
+            1.0
+        } else {
+            encoded
+        }
+    })
+}
+
+fn css_rec2020_to_color([r, g, b]: [f64; 3], alpha: u8) -> Color {
+    let transfer_alpha = 1.09929682680944;
+    let beta = 0.018053968510807;
+    let decode = |value: f64| {
+        if value.abs() < beta * 4.5 {
+            value / 4.5
+        } else {
+            value.signum()
+                * ((value.abs() + transfer_alpha - 1.0) / transfer_alpha).powf(1.0 / 0.45)
+        }
+    };
+    let r = decode(r);
+    let g = decode(g);
+    let b = decode(b);
+    xyz_d65_to_color(
+        (63426534.0 / 99577255.0) * r + (20160776.0 / 139408157.0) * g + (47086771.0 / 278816314.0) * b,
+        (26158966.0 / 99577255.0) * r + (472592308.0 / 697040785.0) * g + (8267143.0 / 139408157.0) * b,
+        (19567812.0 / 697040785.0) * g + (295819943.0 / 278816314.0) * b,
+        alpha,
+    )
+}
+
+fn css_color_to_rec2020(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    let x = 0.4123907992659595 * r + 0.357_584_339_383_878 * g + 0.1804807884018343 * b;
+    let y = 0.2126390058715104 * r + 0.715_168_678_767_756 * g + 0.0721923153607337 * b;
+    let z = 0.0193308187155918 * r + 0.119_194_779_794_626 * g + 0.9505321522496607 * b;
+    let linear = [
+        (30757411.0 / 17917100.0) * x - (6372589.0 / 17917100.0) * y - (4539589.0 / 17917100.0) * z,
+        -(19765991.0 / 29648200.0) * x + (47925759.0 / 29648200.0) * y + (467509.0 / 29648200.0) * z,
+        (792561.0 / 44930125.0) * x - (1921689.0 / 44930125.0) * y + (42328811.0 / 44930125.0) * z,
+    ];
+    let transfer_alpha = 1.09929682680944;
+    let beta = 0.018053968510807;
+    linear.map(|value| {
+        let encoded = if value.abs() > beta {
+            value.signum() * (transfer_alpha * value.abs().powf(0.45) - (transfer_alpha - 1.0))
+        } else {
+            4.5 * value
         };
         if encoded.abs() < 1e-12 {
             0.0
@@ -8321,6 +8358,23 @@ mod tests {
             Color { r: 255, g: 0, b: 0, a: 51 },
         );
         assert_eq!(with_opacity("color-mix(in prophoto-rgb, black, white)", 0.5), "rgba(146,146,146,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_rec2020() {
+        assert_eq!(
+            css_to_color("color-mix(in rec2020, black, white)"),
+            Color { r: 139, g: 139, b: 139, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in rec2020, red, blue)"),
+            Color { r: 162, g: 19, b: 148, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in rec2020, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in rec2020, black, white)", 0.5), "rgba(139,139,139,0.5)");
     }
 
     #[test]
