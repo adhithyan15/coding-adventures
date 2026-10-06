@@ -1,0 +1,23 @@
+# @version 1
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+  MERMAID_COMMENT = /%%[^\r\n]*/
+  LINE_COMMENT = /#[^\r\n]*/
+HEADER = "railroad-peg-beta"
+ACC_TITLE = /accTitle[ \t]*:[^\r\n]*/
+ACC_DESCR_BLOCK = /accDescr[ \t]*\{[^}]*\}/
+ACC_DESCR = /accDescr[ \t]*:[^\r\n]*/
+TITLE = /title(?:[ \t]+[^\r\n]*)?/
+STRING = /"([^"\\]|\\.)*"|'([^'\\]|\\.)*'/
+ASSIGN = "<-"
+SEMICOLON = ";"
+SLASH = "/"
+AND = "&"
+NOT = "!"
+QUESTION = "?"
+STAR = "*"
+PLUS = "+"
+LPAREN = "("
+RPAREN = ")"
+DOT = "."
+IDENT = /[A-Z_a-z][A-Za-z0-9_-]*/

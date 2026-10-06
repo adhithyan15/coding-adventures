@@ -3254,6 +3254,22 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_mermaid_railroad_peg_to_png() {
+        let diagram = parse_railroad("railroad-peg-beta\ntitle \"Path grammar\"\npath <- segment (\"/\" segment)*;\nsegment <- !\"/\" .+;")
+            .expect("railroad PEG parse failed");
+        let layout = layout_railroad(&diagram);
+        let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_railroad(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_railroad_peg_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
     fn render_mermaid_info_to_png() {
         let diagram = parse_info("info showInfo").expect("info parse failed");
         let layout = layout_info(&diagram);

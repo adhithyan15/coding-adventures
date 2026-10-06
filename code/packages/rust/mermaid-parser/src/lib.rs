@@ -33,6 +33,7 @@ use mermaid_lexer::{
     try_tokenize_mermaid_wardley, try_tokenize_mermaid_cynefin, try_tokenize_mermaid_treeview,
     try_tokenize_mermaid_swimlane, try_tokenize_mermaid_railroad,
     try_tokenize_mermaid_railroad_ebnf, try_tokenize_mermaid_railroad_abnf,
+    try_tokenize_mermaid_railroad_peg,
     try_tokenize_mermaid_info,
     try_tokenize_mermaid_zenuml,
 };
@@ -83,6 +84,8 @@ const RAILROAD_EBNF_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/railroad-ebnf.grammar");
 const RAILROAD_ABNF_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/railroad-abnf.grammar");
+const RAILROAD_PEG_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/railroad-peg.grammar");
 const INFO_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/info.grammar");
 const ZENUML_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/zenuml.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
@@ -564,6 +567,7 @@ fn token_name(token: &Token) -> &str {
         TokenType::RBrace => "RBRACE",
         TokenType::LBracket => "LBRACKET",
         TokenType::RBracket => "RBRACKET",
+        TokenType::Dot => "DOT",
         TokenType::Newline => "NEWLINE",
         TokenType::Semicolon => "SEMICOLON",
         TokenType::Eof => "EOF",
@@ -5885,6 +5889,9 @@ pub fn parse_railroad(source: &str) -> Result<RailroadDiagram, ParseError> {
     if prepared.trim_start().starts_with("railroad-abnf-beta") {
         return parse_railroad_abnf_prepared(&prepared);
     }
+    if prepared.trim_start().starts_with("railroad-peg-beta") {
+        return parse_railroad_peg_prepared(&prepared);
+    }
     if !prepared.trim_start().starts_with("railroad-beta") {
         return Err(ParseError { message: format!("Mermaid {} Railroad {:?} notation is recognized but not implemented", MERMAID_COMPATIBILITY_BASELINE, family.canonical_id()), line: 1, col: 1 });
     }
@@ -6243,6 +6250,167 @@ fn railroad_abnf_element_starts(name: &str) -> bool {
         name,
         "REPEAT" | "STAR" | "EXACT_REPEAT" | "STRING" | "NUMVAL" | "RULENAME" | "LPAREN" | "LBRACKET"
     )
+}
+
+fn parse_railroad_peg_prepared(source: &str) -> Result<RailroadDiagram, ParseError> {
+    let tokens = try_tokenize_mermaid_railroad_peg(source)
+        .map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let grammar = parse_parser_grammar(RAILROAD_PEG_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse railroad-peg.grammar: {error}"));
+    GrammarParser::new(tokens.clone(), grammar)
+        .with_max_depth(MAX_RULE_DEPTH)
+        .parse()
+        .map_err(|error| ParseError {
+            message: error.message,
+            line: error.token.line,
+            col: error.token.column,
+        })?;
+    let mut cursor = RailroadCursor { tokens: &tokens, index: 1 };
+    let mut diagram = RailroadDiagram {
+        title: None,
+        accessibility_title: None,
+        accessibility_description: None,
+        rules: Vec::new(),
+    };
+    while !cursor.at("EOF") {
+        match cursor.name() {
+            "TITLE" => {
+                let value = cursor.take_value();
+                diagram.title = Some(unquote_railroad_string(value["title".len()..].trim()));
+            }
+            "ACC_TITLE" => {
+                diagram.accessibility_title = Some(
+                    cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string(),
+                );
+            }
+            "ACC_DESCR" => {
+                diagram.accessibility_description = Some(
+                    cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string(),
+                );
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.take_value();
+                let description = value
+                    .split_once('{')
+                    .and_then(|(_, body)| body.rsplit_once('}').map(|(body, _)| body))
+                    .unwrap_or("")
+                    .trim();
+                diagram.accessibility_description = Some(description.to_string());
+            }
+            "IDENT" => {
+                let name = cursor.take_value();
+                cursor.expect("ASSIGN")?;
+                let definition = parse_railroad_peg_choice(&mut cursor)?;
+                cursor.expect("SEMICOLON")?;
+                if diagram.rules.iter().any(|rule| rule.name == name) {
+                    return Err(cursor.error(format!("duplicate Railroad rule {name:?}")));
+                }
+                diagram.rules.push(RailroadRule { name, definition });
+            }
+            other => return Err(cursor.error(format!("unexpected Railroad PEG token {other}"))),
+        }
+    }
+    if diagram.rules.is_empty() {
+        return Err(ParseError {
+            message: "Railroad diagrams require at least one rule".into(),
+            line: 1,
+            col: 1,
+        });
+    }
+    Ok(diagram)
+}
+
+fn parse_railroad_peg_choice(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut alternatives = vec![parse_railroad_peg_sequence(cursor)?];
+    while cursor.at("SLASH") {
+        cursor.index += 1;
+        alternatives.push(parse_railroad_peg_sequence(cursor)?);
+    }
+    if alternatives.len() == 1 {
+        Ok(alternatives.remove(0))
+    } else {
+        Ok(RailroadExpression::Choice(alternatives))
+    }
+}
+
+fn parse_railroad_peg_sequence(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut elements = vec![parse_railroad_peg_prefix(cursor)?];
+    while railroad_peg_prefix_starts(cursor.name()) {
+        elements.push(parse_railroad_peg_prefix(cursor)?);
+    }
+    if elements.len() == 1 {
+        Ok(elements.remove(0))
+    } else {
+        Ok(RailroadExpression::Sequence(elements))
+    }
+}
+
+fn parse_railroad_peg_prefix(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let operator = if cursor.at("AND") || cursor.at("NOT") {
+        Some(cursor.take_value())
+    } else {
+        None
+    };
+    let expression = parse_railroad_peg_suffix(cursor)?;
+    if let Some(operator) = operator {
+        Ok(RailroadExpression::Special(format!(
+            "{operator}{}",
+            railroad_peg_expression_label(&expression)
+        )))
+    } else {
+        Ok(expression)
+    }
+}
+
+fn parse_railroad_peg_suffix(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let expression = parse_railroad_peg_primary(cursor)?;
+    match cursor.name() {
+        "QUESTION" => {
+            cursor.index += 1;
+            Ok(RailroadExpression::Optional(Box::new(expression)))
+        }
+        "STAR" | "PLUS" => {
+            let min = usize::from(cursor.at("PLUS"));
+            cursor.index += 1;
+            Ok(RailroadExpression::Repetition {
+                element: Box::new(expression),
+                min,
+                max: None,
+            })
+        }
+        _ => Ok(expression),
+    }
+}
+
+fn parse_railroad_peg_primary(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    match cursor.name() {
+        "STRING" => Ok(RailroadExpression::Terminal(unquote_railroad_string(&cursor.take_value()))),
+        "IDENT" => Ok(RailroadExpression::NonTerminal(cursor.take_value())),
+        "DOT" => {
+            cursor.index += 1;
+            Ok(RailroadExpression::Special(".".into()))
+        }
+        "LPAREN" => {
+            cursor.index += 1;
+            let expression = parse_railroad_peg_choice(cursor)?;
+            cursor.expect("RPAREN")?;
+            Ok(expression)
+        }
+        _ => Err(cursor.error("expected Railroad PEG expression")),
+    }
+}
+
+fn railroad_peg_prefix_starts(name: &str) -> bool {
+    matches!(name, "AND" | "NOT" | "STRING" | "IDENT" | "DOT" | "LPAREN")
+}
+
+fn railroad_peg_expression_label(expression: &RailroadExpression) -> String {
+    match expression {
+        RailroadExpression::Terminal(value) => format!("\"{value}\""),
+        RailroadExpression::NonTerminal(name) => name.clone(),
+        RailroadExpression::Special(text) => text.clone(),
+        _ => "(...)".into(),
+    }
 }
 
 struct RailroadCursor<'a> { tokens: &'a [Token], index: usize }
