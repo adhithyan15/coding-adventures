@@ -1,6 +1,6 @@
 //! Deterministic column/card layout for board diagrams.
 
-pub const VERSION: &str = "0.6.0";
+pub const VERSION: &str = "0.7.0";
 
 use diagram_ir::{
     BoardDiagram, DiagramStyle, LayoutedBoardCard, LayoutedBoardColumn, LayoutedBoardDiagram,
@@ -66,6 +66,10 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
                 height: column_height,
                 cards,
                 style: column_style(column_index),
+                ticket: column.ticket.clone(),
+                ticket_url: board.ticket_base_url.as_ref().and_then(|base| {
+                    column.ticket.as_ref().map(|ticket| base.replace("#TICKET#", ticket))
+                }),
                 classes: column.classes.clone(),
             }
         })
@@ -126,6 +130,7 @@ mod tests {
             columns: vec![BoardColumn {
                 id: "todo".into(),
                 label: DiagramLabel::new("Todo"),
+                ticket: None,
                 classes: Vec::new(),
                 cards: vec![BoardCard {
                     id: "one".into(),
@@ -152,6 +157,7 @@ mod tests {
             columns: vec![BoardColumn {
                 id: "todo".into(),
                 label: DiagramLabel::new("Todo"),
+                ticket: Some("KB-7".into()),
                 classes: vec!["backlog".into()],
                 cards: vec![BoardCard {
                     id: "one".into(),
@@ -172,6 +178,11 @@ mod tests {
             Some("https://tracker.example/issues/MC-42")
         );
         assert_eq!(layout.columns[0].classes, ["backlog"]);
+        assert_eq!(layout.columns[0].ticket.as_deref(), Some("KB-7"));
+        assert_eq!(
+            layout.columns[0].ticket_url.as_deref(),
+            Some("https://tracker.example/issues/KB-7")
+        );
         assert_eq!(layout.columns[0].cards[0].classes, ["urgent", "blocked"]);
         assert_eq!(layout.columns[0].x, 32.0);
         assert_eq!(layout.columns[0].width, 300.0);

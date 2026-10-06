@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.71.0";
+pub const VERSION: &str = "0.72.0";
 
 use std::collections::HashMap;
 
@@ -3685,7 +3685,7 @@ where
     let mut text_children = Vec::new();
     for column in &board.columns {
         instructions.push(PaintInstruction::Rect(PaintRect {
-            base: kanban_paint_base(&column.id, &column.classes, None), x: column.x, y: column.y,
+            base: kanban_paint_base(&column.id, &column.classes, column.ticket_url.as_deref()), x: column.x, y: column.y,
             width: column.width, height: column.height,
             fill: Some(column.style.fill.clone()), stroke: Some(column.style.stroke.clone()),
             stroke_width: Some(column.style.stroke_width),
@@ -7342,7 +7342,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.71.0");
+        assert_eq!(crate::VERSION, "0.72.0");
     }
 
     #[test]

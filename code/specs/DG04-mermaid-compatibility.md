@@ -430,13 +430,15 @@ PaintInstruction metadata without coupling native renderers to CSS.
 Kanban `ticketBaseUrl` configuration from Mermaid init directives or YAML
 front matter survives semantic IR; layout resolves each card ticket placeholder
 and Paint lowering exposes the resulting URL as backend-neutral hit-test metadata.
+Ticket metadata on sections follows the same typed IR, layout, and backend-neutral
+link-metadata path as card tickets.
 Positive `sectionWidth` and `padding` settings from the same configuration paths
 resolve column width and outer canvas geometry before backend-neutral Paint lowering.
 `diagram-layout-board` resolves
 deterministic column/card geometry and dedicated PaintScene lowering emits
 backend-neutral rectangles and shaped text. A native Metal-to-PNG fixture gates
 this slice; external icon-pack artwork, class-driven styles, non-ticket links, description
-fields, section metadata, and configurable field arrangements remain
+fields, non-ticket section metadata, and configurable field arrangements remain
 unsupported at the partial level.
 
 ### Architecture Native Slice
