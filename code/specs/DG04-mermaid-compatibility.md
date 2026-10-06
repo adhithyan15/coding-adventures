@@ -777,6 +777,8 @@ and lower any hidden count to a backend-neutral `+N more` badge.
 Positive `width` and `height` plus non-negative `padding` values from Mermaid
 init directives or YAML front matter survive semantic IR and control the inner
 framework and outer canvas dimensions during deterministic layout.
+The default-enabled `showDomainDescriptions` switch also survives config IR
+and controls backend-neutral model and practice subtitles for all five domains.
 
 ### TreeView Native Slice
 

@@ -153,7 +153,8 @@ pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
             to: cynefin_boundary_point(to, &from.center), label: transition.label.clone() })
     }).collect();
     LayoutedCynefinDiagram { width, height, title: diagram.title.clone(), accessibility_title: diagram.accessibility_title.clone(),
-        accessibility_description: diagram.accessibility_description.clone(), domains, transitions }
+        accessibility_description: diagram.accessibility_description.clone(),
+        show_domain_descriptions: diagram.config.show_domain_descriptions, domains, transitions }
 }
 
 fn cynefin_boundary_point(domain: &LayoutedCynefinDomain, toward: &Point) -> Point {
@@ -353,7 +354,7 @@ mod tests {
     #[test]
     fn cynefin_layout_places_domains_in_fixed_semantic_quadrants() {
         let layout = layout_cynefin(&CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None,
-            config: diagram_ir::CynefinConfig { width: 640.0, height: 420.0, padding: 24.0 },
+            config: diagram_ir::CynefinConfig { width: 640.0, height: 420.0, padding: 24.0, show_domain_descriptions: false },
             domains: vec![diagram_ir::CynefinDomain { name: "confusion".into(),
                 items: vec!["One".into(), "Two".into(), "Three".into(), "Four".into(), "Five".into()] }],
             transitions: vec![diagram_ir::CynefinTransition { from: "complex".into(), to: "clear".into(), label: None }] });
@@ -363,6 +364,7 @@ mod tests {
         assert!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().confusion);
         assert_eq!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().overflow_count, 2);
         assert_eq!((layout.width, layout.height), (688.0, 468.0));
+        assert!(!layout.show_domain_descriptions);
         assert!(layout.transitions[0].from.x > complex.center.x);
         assert!(layout.transitions[0].to.x < clear.center.x);
     }

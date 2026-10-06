@@ -5738,8 +5738,12 @@ fn parse_cynefin_config(source: &str) -> CynefinConfig {
         .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
     let non_negative = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
         .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+    let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
+        "true" => Some(true), "false" => Some(false), _ => None,
+    }).unwrap_or(fallback);
     CynefinConfig { width: positive("width", defaults.width), height: positive("height", defaults.height),
-        padding: non_negative("padding", defaults.padding) }
+        padding: non_negative("padding", defaults.padding),
+        show_domain_descriptions: boolean("showDomainDescriptions", defaults.show_domain_descriptions) }
 }
 
 fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
