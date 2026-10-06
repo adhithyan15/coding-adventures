@@ -1808,9 +1808,9 @@ pub struct CynefinDomain { pub name: String, pub items: Vec<String> }
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct CynefinTransition { pub from: String, pub to: String, pub label: Option<String> }
 #[derive(Clone, Debug, PartialEq)]
-pub struct CynefinConfig { pub width: f64, pub height: f64, pub padding: f64, pub show_domain_descriptions: bool }
+pub struct CynefinConfig { pub width: f64, pub height: f64, pub padding: f64, pub show_domain_descriptions: bool, pub boundary_amplitude: f64, pub seed: i32 }
 impl Default for CynefinConfig {
-    fn default() -> Self { Self { width: 800.0, height: 600.0, padding: 40.0, show_domain_descriptions: true } }
+    fn default() -> Self { Self { width: 800.0, height: 600.0, padding: 40.0, show_domain_descriptions: true, boundary_amplitude: 8.0, seed: 0 } }
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct CynefinDiagram { pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub config: CynefinConfig, pub domains: Vec<CynefinDomain>, pub transitions: Vec<CynefinTransition> }
@@ -1819,7 +1819,9 @@ pub struct LayoutedCynefinDomain { pub name: String, pub items: Vec<String>, pub
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedCynefinTransition { pub from: Point, pub to: Point, pub label: Option<String> }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub show_domain_descriptions: bool, pub domains: Vec<LayoutedCynefinDomain>, pub transitions: Vec<LayoutedCynefinTransition> }
+pub struct LayoutedCynefinBoundary { pub start: Point, pub segments: Vec<CubicCurveSegment> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub show_domain_descriptions: bool, pub domains: Vec<LayoutedCynefinDomain>, pub boundaries: Vec<LayoutedCynefinBoundary>, pub transitions: Vec<LayoutedCynefinTransition> }
 
 // PROCESS OWNERSHIP FAMILY
 #[derive(Clone, Debug, PartialEq)]
