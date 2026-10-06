@@ -192,9 +192,10 @@ binary64's exact integer range; larger widenings remain unsupported.
 Labels, branches, loops,
 gotos, calls, dynamic reassignment, and captured globals invalidate that shortcut.
 Direct real-procedure results with zero parameters, value-mode scalar
-parameters, array descriptor formals, direct procedure formals, or a finitely
-specialised real scalar name formal bound to a proven runtime-real actual, and
-local real scalar variables whose latest straight-line
+parameters, array descriptor formals, direct procedure formals, integer/boolean
+name formals, or a finitely specialised real scalar name formal bound to a
+proven runtime-real actual, and local real scalar variables whose latest
+straight-line
 assignment is such a result or a bare copy of another
 provenance-backed local call the portable six-significant-digit
 IIR formatter shared with Dartmouth BASIC; its helper
@@ -229,7 +230,10 @@ array formals likewise retain result provenance because both supported paths
 use the existing concrete typed descriptor ABI. Direct procedure formals retain
 it as well: finite specialisation substitutes the statically known target, so
 no procedure descriptor crosses the IIR ABI. Broader computed scalar formatting
-remains outside this bounded proof.
+remains outside this bounded proof. Integer and boolean name formals also
+retain real-result provenance because their actual expressions are substituted
+by that same finite specialisation; unproven real name actuals and string name
+formals remain excluded.
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.

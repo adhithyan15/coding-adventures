@@ -1887,6 +1887,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — finite specialisation substitutes integer and boolean name
+    // actuals directly while the result remains a concrete f64.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure frominteger(n); integer n; frominteger := n + 0.25; real procedure fromboolean(b); boolean b; fromboolean := if b then 2.25 else 0.0; output(frominteger(2), fromboolean(true)) end",
+        expect: Expect::Stdout("2.252.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a specialised read-only name formal retains the bounded
     // runtime-real provenance of its non-assignable actual expression.
     Prog {
@@ -12648,6 +12657,31 @@ fn algol_procedure_formal_result_runtime_real_output_runs_on_every_available_sta
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but procedure-formal result output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nonreal_name_formal_result_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real procedure frominteger(n)")
+                && program.src.contains("real procedure fromboolean(b)")
+        })
+        .expect("the non-real name-formal result program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but non-real name-formal result output did not complete"
             );
             continue;
         };
