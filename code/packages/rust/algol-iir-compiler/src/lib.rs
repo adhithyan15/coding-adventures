@@ -6089,7 +6089,7 @@ impl Compiler {
 
     fn emit_for(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
-        let mut zero_trip_runtime_real_slots = self.runtime_real_slots.clone();
+        let entry_runtime_real_slots = self.runtime_real_slots.clone();
         self.runtime_real_slots.clear();
         let target = first_direct_node(node, "variable")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
@@ -6100,13 +6100,9 @@ impl Compiler {
                 var_ty.name()
             )));
         }
-        if array_subscripts(target).is_none() {
-            let target_name = self.simple_variable_name(target)?;
-            if self.active_by_name_binding(&target_name).is_none() {
-                let target_binding = self.require_var(&target_name)?;
-                zero_trip_runtime_real_slots.remove(&target_binding.slot);
-            }
-        }
+        let target_name = (array_subscripts(target).is_none())
+            .then(|| self.simple_variable_name(target))
+            .transpose()?;
 
         let for_list = first_direct_node(node, "for_list")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing for_list".into()))?;
@@ -6122,7 +6118,32 @@ impl Compiler {
             .find(|n| n.rule_name == "statement")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
 
-        let mut all_elements_are_zero_trip = true;
+        let local_runtime_reals = self
+            .scopes
+            .iter()
+            .flat_map(HashMap::iter)
+            .filter(|(name, binding)| {
+                binding.ty == ScalarType::Real
+                    && binding.array.is_none()
+                    && !binding.is_global
+                    && entry_runtime_real_slots.contains(&binding.slot)
+                    && target_name.as_deref() != Some(name.as_str())
+            })
+            .map(|(name, binding)| (name.clone(), binding.slot.clone()))
+            .collect::<Vec<_>>();
+        let loop_invariant_runtime_real_slots = local_runtime_reals
+            .into_iter()
+            .filter(|(name, _)| {
+                !self.for_body_writes_name(
+                    body,
+                    name,
+                    target_name.as_deref().unwrap_or(""),
+                    body,
+                )
+            })
+            .map(|(_, slot)| slot)
+            .collect::<HashSet<_>>();
+
         for elem in elems {
             let entry_initialized_string_slots = self.initialized_string_slots.clone();
             let entry_real_slots = self.static_real_slots.clone();
@@ -6130,7 +6151,6 @@ impl Compiler {
             let entry_boolean_slots = self.static_boolean_slots.clone();
             let entry_tracking_disabled = self.static_real_tracking_disabled;
             let executes = self.for_element_execution(target, var_ty, elem);
-            all_elements_are_zero_trip &= executes == Some(false);
             let tokens = direct_tokens(elem);
             let is_step_element = tokens.iter().any(|token| token.value == "step");
             let is_while_element = tokens.iter().any(|token| token.value == "while");
@@ -6254,9 +6274,7 @@ impl Compiler {
             }
         }
         self.runtime_real_slots.clear();
-        if all_elements_are_zero_trip {
-            self.restore_unaliased_runtime_real_slots(zero_trip_runtime_real_slots);
-        }
+        self.restore_unaliased_runtime_real_slots(loop_invariant_runtime_real_slots);
         Ok(())
     }
 
@@ -18319,12 +18337,12 @@ mod tests {
     }
 
     #[test]
-    fn al4_zero_trip_loops_preserve_unrelated_runtime_real_provenance() {
+    fn al4_loops_preserve_unmodified_runtime_real_provenance() {
         let module = compile_source(
-            "begin real procedure pick; pick := 2.25; integer i; real x; x := pick(); for i := 2 step 1 until 1 do x := 1.5; output(x); for i := 1 while false do x := 1.5; output(x) end",
+            "begin real procedure pick; pick := 2.25; integer i; real x; x := pick(); for i := 1 step 1 until 3 do output(''); output(x); for i := 1, 2, 3 do output(''); output(x); for i := i + 1 while i < 6 do output(''); output(x) end",
             "test",
         )
-        .expect("proven zero-trip loops preserve an unrelated local real's provenance");
+        .expect("loops preserve an unmodified local real's provenance");
         let main = module.get_function("main").expect("has main");
         assert_eq!(
             main.instructions
@@ -18335,12 +18353,12 @@ mod tests {
                             == Some("__basic_print_real")
                 })
                 .count(),
-            2
+            3
         );
     }
 
     #[test]
-    fn al4_non_zero_trip_loops_still_invalidate_runtime_real_provenance() {
+    fn al4_loops_that_change_a_real_still_invalidate_its_provenance() {
         for source in [
             "begin real procedure pick; pick := 2.25; integer i; boolean flag; real x; x := pick(); for i := 1 while flag do x := 1.5; output(x) end",
             "begin real procedure pick; pick := 2.25; integer i; real x; x := pick(); for i := 2 step 1 until 1, 1 do x := 1.5; output(x) end",
