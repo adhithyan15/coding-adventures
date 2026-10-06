@@ -516,10 +516,19 @@ describe("stroke ownership migration baseline", () => {
       // 14 -> 31, with the ordered key hash and the non-Tamil data hash,
       // measured after the last caption was settled; Tamil and both
       // shared-identity values remain unchanged.
+      //
+      // The Tamil puḷḷi ் (U+0BCD), the dot made after its consonant's body,
+      // gains a ductus cited to Varai's recorded drawings of the 18
+      // consonants with puḷḷi (one writer, confidence medium). It joins the
+      // end of the Tamil tail owner, after the six vowel signs, so every
+      // existing key keeps its relative order. Keys move 581 -> 582 and Tamil
+      // 35 -> 36, with the ordered key hash, measured after the caption was
+      // settled. No other script changes, so the non-Tamil data hash and both
+      // shared-identity values remain unchanged.
     }).toEqual({
-      keys: 581,
+      keys: 582,
       keyHash:
-        "324b91e9fa398828613ed4581052ea7eec859420d121e0ab3ef4bce151192993",
+        "1a0a07993327043b67ce4602a2b8308fd9a011f961fef66c64a826e563c9b4a2",
       nonTamilDataHash:
         "e09d3e90c94cd412e4f2d369141db7eda556e8b6803289b931f234ac6d1fd436",
       sharedIdentityGroups: 17,
@@ -538,7 +547,7 @@ describe("stroke ownership migration baseline", () => {
         kannada: 44,
         malayalam: 31,
         "perso-arabic": 24,
-        tamil: 35,
+        tamil: 36,
         telugu: 43,
         "urdu-nastaliq": 31,
       },

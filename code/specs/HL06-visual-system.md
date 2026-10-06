@@ -186,12 +186,43 @@ Each row must match the cited `compositionSource` of its mark record, and a test
 enforces it. A sequence strip that contains a sign calls its groups "parts"
 ("Part 2 of 4"), says in its `<desc>` that they are in written order, and draws
 each sign without its consonant. A two-part sign taught by itself (ோ) prints
-its two halves. Refused: any sign without a row (the pulli ், ு and ூ, which
-have no cited ductus and fuse with their consonant, and ௌ, whose right half ௗ
-has none), the pairs Unicode fuses into ligatures (டி, டீ, லீ), and every sign
+its two halves. Refused: any sign without a row (ு and ூ, which have no cited
+ductus and fuse with their consonant, and ௌ, whose right half ௗ has none), the pairs Unicode fuses into ligatures (டி, டீ, லீ), and every sign
 in every other script. The pen lift between parts is the same assumption the
 separate-letter word strips already make: the recognizer stores these signs as
 distinct symbols, written left to right.
+
+#### As built — the Tamil pulli, after its consonant
+
+The pulli ் has a cited ductus of its own: one short dab inside the bundled
+Noto Sans Tamil disc. Its order comes from Abhinaya Rajarajan's *Varai*
+(Swift Student Challenge 2026, commit `952294fa`), whose hand-recorded
+reference drawings of the 18 consonants with pulli (க் to ன்) all draw the
+body as one stroke and then the dot as a second stroke above it, centred at
+0.47 to 0.65 of the body's width. An earlier reading of Info-farmer's
+*Writing Tamil* animations on Wikimedia Commons agrees. *Varai* has no
+licence, so the mark record cites facts only; it is one writer, so the
+record says confidence is medium, and the dab's direction is not a claim.
+
+`WRITTEN_SIGN_SIDES.tamil` gains a row for it:
+
+| typed | written | source of the side |
+|---|---|---|
+| C + ் | C, then the dot | Varai: body first, dot second, in all 18 recordings |
+
+So `வணக்கம்` is drawn வ, ண, க, ், க, ம, ், and a left-hand sign still comes
+first (`இல்லை` is இ, ல, ், ை, ல). The font's cluster shows the same parts:
+every consonant + pulli glyph in Noto Sans Tamil 2.004 (GSUB `haln`) is a
+composite of the unchanged consonant outline and the unchanged pulli disc,
+so the strip's dot is the printed dot. Two runs across the pulli are not:
+the font prints க்ஷ (`akhn`) and ஸ்ரீ / ஶ்ரீ (`abvs`) as one glyph each. A
+pulli ends a grapheme, so the per-grapheme pair check cannot see them;
+`FUSED_LETTER_SEQUENCE_SOURCES` lists them with that citation, and a word
+containing one is refused.
+
+This unlocked 17 Tamil lessons (target count 48 to 65): the two that teach the
+dot by itself and fifteen words. Words with ு or ூ, or with the fused டி,
+are still refused.
 
 #### As built — Gujarati vowel signs, written after the consonant
 

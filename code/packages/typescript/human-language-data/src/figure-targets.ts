@@ -133,8 +133,9 @@ export function letterBlockIndex(lesson: ParsedLesson): number {
  * not a single-letter writing lesson with a Writing block. A headword like
  * "வ, க" teaches more than one letter; `writingSequenceOf` below decides
  * whether it becomes a sequence strip, as does a word like "மேசை" whose vowel
- * signs have a cited written order. "வணக்கம்" does not yet: its puḷḷi has
- * neither a cited ductus nor a written-order row (`WRITTEN_SIGN_SIDES`).
+ * signs have a cited written order, and so does "வணக்கம்", whose puḷḷi is
+ * written after its consonant. "பேசு" does not: ு has neither a cited ductus
+ * nor a written-order row (`WRITTEN_SIGN_SIDES`).
  */
 export function writingLetterOf(lesson: ParsedLesson): string | undefined {
   if (lesson.realization.type !== "writing") return undefined;
@@ -223,6 +224,7 @@ const SIGNS_ONLY = /^\p{M}+$/u;
 //     க + ொ  (= ெ + ா)         ெ, then க, then ா       கொ
 //     க + ோ  (= ே + ா)         ே, then க, then ா       கோ
 //     க + ா / ி / ீ            க, then the sign         கா கி கீ
+//     க + ்  (puḷḷi)           க, then the dot          க்
 //
 // A strip drawn in code-point order would put the left-hand sign's strokes
 // AFTER the consonant's. So a script may compose words with signs only through
@@ -234,8 +236,11 @@ const SIGNS_ONLY = /^\p{M}+$/u;
 //     Modules 6 and 7, for ெ and ே ("written before the primary consonant");
 //     HP Labs India's Lipi Indic Character Recognizers 4.0 User Manual for
 //     ா, ி, ீ and ை (signs written as distinct characters to the left or right
-//     of the consonant, and units written from left to right). A test holds
-//     this table to those records.
+//     of the consonant, and units written from left to right). The puḷḷi
+//     cites Varai's recorded drawings of the 18 consonants with puḷḷi: the
+//     body is drawn first, then the dot above it, as a second stroke (one
+//     writer, so confidence is medium). A test holds this table to those
+//     records.
 //   * ொ and ோ are not in the table: Unicode decomposes them (NFD) into ெ/ே
 //     plus ா, and each half is placed by its own row. ௌ decomposes into ெ
 //     plus ௗ, which has no row, so it stays refused.
@@ -262,9 +267,9 @@ const SIGNS_ONLY = /^\p{M}+$/u;
 //   * The virama ્ and the vocalic-r sign ૃ have no row: no Gujarati source
 //     gives their pen path or place, so every word with one stays refused.
 //
-// Everything without a row is refused: the Tamil puḷḷi ் and the signs ு and
-// ூ (no cited ductus, and ு and ூ fuse with their consonant into shapes of
-// their own), Gujarati ્ and ૃ, and every sign in every other script
+// Everything without a row is refused: the Tamil signs ு and ூ (no cited
+// ductus, and they fuse with their consonant into shapes of their own),
+// Gujarati ્ and ૃ, and every sign in every other script
 // (Devanagari ि, the kana voicing mark ゙), because no other script has a
 // table yet.
 //
@@ -305,6 +310,7 @@ export const WRITTEN_SIGN_SIDES: Readonly<Record<string, Readonly<Record<string,
     "\u0BBE": "after", //  ா  ā
     "\u0BBF": "after", //  ி  i
     "\u0BC0": "after", //  ீ  ī
+    "\u0BCD": "after", //  ்  puḷḷi (the dot above, made after the body)
   },
   gujarati: {
     "\u0ABE": "after", //  ા  ā
@@ -401,6 +407,53 @@ export const FUSED_SIGN_PAIRS: Readonly<Record<string, ReadonlySet<string>>> = O
   ]),
 );
 
+// A puḷḷi is a grapheme boundary in Tamil: க்ஷ is two graphemes, க் and ஷ.
+// So `writtenPiecesOf`, which looks at one grapheme, cannot see that the font
+// joins some letters ACROSS that boundary. Noto Sans Tamil prints every
+// consonant + puḷḷi as the unchanged consonant with the unchanged dot above
+// it (each such glyph is a composite of exactly those two outlines), so a
+// plain க் is honest to draw as க, then ். But two sequences become one new
+// shape, and a strip of their parts would draw letters the page does not show:
+//
+//     typed              printed as
+//     ----------------   -----------------------------------
+//     க ் ஷ              க்ஷ, one glyph ('akhn')
+//     ஸ ் ர ீ / ஶ ் ர ீ    ஸ்ரீ, one glyph ('abvs')
+//
+// A word containing one is refused, whatever its letters' ductus.
+
+/** One cited reason that a run of letters across graphemes is printed as one shape. */
+export interface FusedLetterSequenceSource {
+  /** Where the fusion is shown, specific enough to check. */
+  readonly citation: string;
+  /** An HTTPS URL for the source. */
+  readonly url: string;
+  /** The NFD letter runs this source shows joined into one glyph. */
+  readonly sequences: readonly string[];
+}
+
+/** Letter runs, spanning graphemes, that the bundled font prints as one glyph, per script. */
+export const FUSED_LETTER_SEQUENCE_SOURCES: Readonly<Record<string, readonly FusedLetterSequenceSource[]>> = {
+  tamil: [
+    {
+      citation:
+        "Noto Sans Tamil Version 2.004, bundled as learning/human-languages/_fonts/NotoSansTamil-Static.ttf: " +
+        "GSUB 'akhn' ligature lookup 2 joins க, ் and ஷ into one glyph; GSUB 'abvs' ligature lookup 1 joins " +
+        "ஸ or ஶ with ், ர and ீ into one glyph",
+      url: "https://github.com/notofonts/tamil",
+      sequences: ["\u0B95\u0BCD\u0BB7", "\u0BB8\u0BCD\u0BB0\u0BC0", "\u0BB6\u0BCD\u0BB0\u0BC0"], // க்ஷ ஸ்ரீ ஶ்ரீ
+    },
+  ],
+};
+
+/** Whether `word` contains a letter run its script's font prints as one glyph. */
+export function hasFusedLetterSequence(word: string, script: string): boolean {
+  const nfd = word.normalize("NFD");
+  return (FUSED_LETTER_SEQUENCE_SOURCES[script] ?? []).some((source) =>
+    source.sequences.some((sequence) => nfd.includes(sequence)),
+  );
+}
+
 /**
  * The pieces one grapheme is written as, in written order, or `undefined`
  * when this module will not draw it.
@@ -476,6 +529,7 @@ export function writingSequenceOf(lesson: ParsedLesson, script: string): string[
     return hasTable ? letters.flatMap((letter) => writtenPiecesOf(letter, script) ?? [letter]) : letters;
   }
   if (!SEPARATE_LETTER_SCRIPTS.has(script)) return undefined;
+  if (items.some((item) => hasFusedLetterSequence(item, script))) return undefined;
   const pieces = letters.map((letter) => writtenPiecesOf(letter, script));
   if (pieces.some((piece) => piece === undefined)) return undefined;
   return pieces.flat() as string[];
