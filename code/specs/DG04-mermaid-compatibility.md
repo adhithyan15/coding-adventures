@@ -428,8 +428,9 @@ priorities in semantic IR. Icon identifiers from either metadata or following
 `::icon(...)` decorators survive the same pipeline and lower to generic,
 backend-neutral shaped badge geometry without coupling the board IR to an icon
 provider. High and low priority values lower to Mermaid-compatible colored edge
-markers. Board layout reserves a compact metadata footer and PaintScene
-lowering emits it as backend-neutral shaped text.
+markers without reserving footer space. Board layout reserves a compact metadata
+footer for ticket and assignee fields, which PaintScene lowering aligns to the
+left and right as backend-neutral shaped text.
 Following `:::class` decorators preserve ordered column or card class names
 through board semantic IR and layout, then lower them as `diagram.classes`
 PaintInstruction metadata without coupling native renderers to CSS.

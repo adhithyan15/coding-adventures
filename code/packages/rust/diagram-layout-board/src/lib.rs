@@ -1,6 +1,6 @@
 //! Deterministic column/card layout for board diagrams.
 
-pub const VERSION: &str = "0.8.0";
+pub const VERSION: &str = "0.9.0";
 
 use diagram_ir::{
     BoardDiagram, DiagramStyle, LayoutedBoardCard, LayoutedBoardColumn, LayoutedBoardDiagram,
@@ -92,7 +92,7 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
 fn card_height(card: &diagram_ir::BoardCard) -> f64 {
     let content_height = label_box_height(&card.label, 18.0, 44.0).max(CARD_HEIGHT);
     content_height
-        + if card.ticket.is_some() || card.assigned.is_some() || card.priority.is_some() {
+        + if card.ticket.is_some() || card.assigned.is_some() {
             24.0
         } else {
             0.0
@@ -226,5 +226,19 @@ mod tests {
         assert_eq!(layout.columns[0].header_height, 68.0);
         assert_eq!(layout.columns[0].cards[0].height, 98.0);
         assert_eq!(layout.columns[0].cards[0].y, 104.0);
+    }
+
+    #[test]
+    fn priority_only_cards_do_not_reserve_a_footer() {
+        let card = BoardCard {
+            id: "urgent".into(),
+            label: DiagramLabel::new("Urgent"),
+            ticket: None,
+            assigned: None,
+            priority: Some("Very High".into()),
+            icon: None,
+            classes: Vec::new(),
+        };
+        assert_eq!(card_height(&card), CARD_HEIGHT);
     }
 }
