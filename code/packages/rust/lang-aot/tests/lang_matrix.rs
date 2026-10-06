@@ -1868,6 +1868,16 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — real procedure results remain concrete f64 values when the
+    // direct call carries either a copied value-array descriptor or the
+    // existing specialised name-array descriptor.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real array values[1:2]; real procedure copied(a); value a; real array a; copied := a[1] + a[2]; real procedure shared(a); real array a; shared := a[1] + a[2]; values[1] := 1.125; values[2] := 1.125; output(copied(values), shared(values)) end",
+        expect: Expect::Stdout("2.252.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a specialised read-only name formal retains the bounded
     // runtime-real provenance of its non-assignable actual expression.
     Prog {
@@ -12578,6 +12588,31 @@ fn algol_name_formal_procedure_result_runtime_real_output_runs_on_every_availabl
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but name-formal procedure-result output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_array_formal_procedure_result_runtime_real_output_runs_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real procedure copied(a); value a; real array a")
+                && program.src.contains("real procedure shared(a); real array a")
+        })
+        .expect("the array-formal procedure-result program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but array-formal procedure-result output did not complete"
             );
             continue;
         };

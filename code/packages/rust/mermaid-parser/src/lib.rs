@@ -15526,6 +15526,16 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn treemap_preserves_css_rec2020_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in rec2020, red 20%, transparent),fill:color-mix(in rec2020, black, white)",
+        ).expect("CSS Rec. 2020 color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in rec2020, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in rec2020, black, white)"));
+    }
+
+    #[test]
     fn treemap_preserves_css_hsl_color_mix() {
         let diagram = parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in hsl, red 20%, transparent),fill:color-mix(in hsl, black, white)",

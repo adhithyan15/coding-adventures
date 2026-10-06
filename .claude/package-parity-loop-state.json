@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16756,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16756",
-    "branch": "codex/parity-python-source-registry-20261005",
-    "implementation_revision": "1dbf66344e9ac3c62c14c1b8a261b70f88a2b079",
+    "number": 16761,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16761",
+    "branch": "codex/parity-haskell-graphdiff-20261006",
+    "implementation_revision": "f1536fc214dc4cf5da4f926413b51f4445dec36c",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-06T00:01:46Z",
-    "pr_number": 16756,
+    "observed_at": "2026-10-06T01:00:45Z",
+    "pr_number": 16761,
     "status": "checks-pending",
-    "notes": "Ready-for-review Python exact registry adoption PR opened from validated implementation head 1dbf66344e9ac3c62c14c1b8a261b70f88a2b079. GitHub reports MERGEABLE with checks queued; do not enable auto-merge until every required final-head check is terminal and acceptable, with no CI failure or merge conflict."
+    "notes": "Ready-for-review Haskell graph/diff core PR opened from reviewed head f1536fc214dc4cf5da4f926413b51f4445dec36c. GitHub reports MERGEABLE but CI and CodeQL checks are queued. Do not enable auto-merge until required final-head checks are terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
-    "revision": "eadd4774e5a8e28a9a25ccdac1c34153e5274db2",
+    "revision": "d843a420ec191e88235f372aad764636ae60bffa",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1237,10 +1237,14 @@
     {
       "id": "build-tool-haskell-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Haskell build tool",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-haskell-graphdiff-20261006",
+      "pr_number": 16761,
+      "opened_at": "2026-10-06T01:00:45Z",
+      "selected_at": "2026-10-06T00:30:11Z",
+      "selection_revision": "d843a420ec191e88235f372aad764636ae60bffa",
+      "selection_notes": "Selected only after registering two newly audited Dart/Swift frontend children and exact-main collision-free schema-3 refresh. All six prerequisites are merged; no open PR touches Haskell build-tool paths. This process-free 20-case core has three direct pending consumers and five unfinished descendants, ahead of Ruby source-registry adoption's four descendants. Adapter execution and boundary-digest activation remain separate.",
       "notes": "Implement and dynamically consume the complete eight-graph and twelve-diff process-free contract, including shared-input multi-consumer selection, canonical topology, no-partial cycle failures, closures, boundary selection, strict bounded matching, and stable diagnostics."
     },
     {
@@ -1352,14 +1356,14 @@
     {
       "id": "build-tool-python-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Python build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-python-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-python-glob-matcher-complexity-hardening"],
       "branch": "codex/parity-python-source-registry-20261005",
       "pr_number": 16756,
       "selected_at": "2026-10-05T23:30:11Z",
       "selection_revision": "eadd4774e5a8e28a9a25ccdac1c34153e5274db2",
       "selection_notes": "Selected after registering 25 audited ownership gaps and an exact-main schema-3 collision-checked refresh. All six prerequisites are merged; no open PR touches Python build-tool or neutral source-registry paths. Three direct children depend on this owner. Scope is production Python registry adoption and dynamic equality tests, not a second implementation lane.",
-      "notes": "Production Python currently owns only a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including scoped Rust companions, package resources, and exact root metadata, and test production lookup equality rather than a fixture-only copy."
+      "notes": "Merged by guarded auto-merge in PR #16756 as d843a420ec. Production Python now consumes a byte-identical checked 23-language, seven-role registry with site/path scoping, dynamic neutral source-collection tests, resource bounds, and link/nonregular safety; shared ancestor and generated-pruning exception owners remain separate."
     },
     {
       "id": "build-tool-ruby-language-source-input-registry-adoption",
@@ -4028,7 +4032,9 @@
         "swift-in-memory-data-store-engine-lane-parity",
         "swift-in-memory-data-store-lane-parity",
         "swift-tree-set-lane-parity",
-        "swift-radix-tree-lane-parity"
+        "swift-radix-tree-lane-parity",
+        "dart-swift-starlark-frontend-vertical-parity",
+        "dart-swift-sql-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -12115,6 +12121,18 @@
       "title": "Port Lattice lexer and parser verticals to Dart and Swift",
       "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
       "notes": "First bounded vertical from the 48-slot wave; same-lane generic graph, state-machine, grammar-tools, lexer, parser foundations exist. Split by lane, lexer before parser."
+    },
+    {
+      "id": "dart-swift-starlark-frontend-vertical-parity",
+      "title": "Port Starlark lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Collision-checked after PR #16756. Starlark lexer and parser each exist in 13/15 established lanes, missing only Dart and Swift; both lanes have grammar-tools, lexer, parser, directed-graph, and state-machine foundations. Preserve indentation/significant-newline, alias, and reserved-keyword behavior. Split by lane and lexer before parser; evaluator, metering, and build-tool activation remain outside this package owner."
+    },
+    {
+      "id": "dart-swift-sql-frontend-vertical-parity",
+      "title": "Port SQL lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Collision-checked after PR #16756. SQL lexer and parser each exist in 13/15 established lanes, missing only Dart and Swift; shared SQL grammar and same-lane foundations exist. Preserve case-insensitive keywords, <> aliasing, comments, quoted identifiers, PEG precedence, and stable ASTs. Do not invent a dependency on the independent SQL CSV adapter owner. Split by lane and lexer before parser."
     },
     {
       "id": "dart-java-kotlin-core-eight-family-parity",

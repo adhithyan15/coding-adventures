@@ -1314,7 +1314,9 @@ backend immediately) come before the enabler-dependent items.
   Ordinary real scalars captured through E6 typed globals likewise carry the
   proof into nested sibling procedures. Real procedure results preserve the
   proof when finite call-by-name specialisation binds each real scalar name
-  formal to a proven runtime-real actual; no dynamic thunk ABI is introduced.
+  formal to a proven runtime-real actual. Value and name array formals also
+  preserve result provenance through their existing concrete typed descriptor
+  paths; no dynamic thunk ABI is introduced.
   Broader computed scalar `f64` formatting remains a follow-up.
   Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.

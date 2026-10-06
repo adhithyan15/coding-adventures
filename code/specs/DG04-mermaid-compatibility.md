@@ -587,6 +587,8 @@ backend-neutral lowering semantics.
 The encoded `prophoto-rgb` interpolation space applies its piecewise transfer
 function around D50 XYZ conversion, including chromatic adaptation to and from
 the backend-neutral sRGB paint space.
+The encoded `rec2020` interpolation space applies its sign-preserving transfer
+function around D65 XYZ conversion before backend-neutral paint lowering.
 The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
