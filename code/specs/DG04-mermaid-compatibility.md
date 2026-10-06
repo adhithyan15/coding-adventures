@@ -584,6 +584,9 @@ backend-neutral sRGB paint instructions.
 The encoded `a98-rgb` interpolation space applies Adobe RGB's sign-preserving
 gamma around D65 XYZ conversion while retaining the same alpha and
 backend-neutral lowering semantics.
+The encoded `prophoto-rgb` interpolation space applies its piecewise transfer
+function around D50 XYZ conversion, including chromatic adaptation to and from
+the backend-neutral sRGB paint space.
 The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
