@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.67.0";
+pub const VERSION: &str = "0.68.0";
 
 use std::collections::HashMap;
 
@@ -37,7 +37,7 @@ use diagram_ir::{
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
     LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
-    LayoutedBoardDiagram, LayoutedPacketDiagram,
+    LayoutedBoardCard, LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
@@ -3700,6 +3700,7 @@ where
             css_to_color(&column.style.text_color),
         ));
         for card in &column.cards {
+            let metadata = kanban_card_metadata(card);
             instructions.push(PaintInstruction::Rect(PaintRect {
                 base: PaintBase::default(), x: card.x, y: card.y,
                 width: card.width, height: card.height,
@@ -3710,9 +3711,22 @@ where
             }));
             text_children.push(text_node(
                 &card.label.text, card.x + 10.0, card.y + 18.0,
-                card.width - 20.0, card.height - 24.0,
+                card.width - 20.0, card.height - if metadata.is_some() { 46.0 } else { 24.0 },
                 options.label_font.clone(), css_to_color(&card.style.text_color),
             ));
+            if let Some(metadata) = metadata {
+                let mut metadata_font = options.label_font.clone();
+                metadata_font.size = 11.0;
+                text_children.push(text_node_no_wrap(
+                    &metadata,
+                    card.x + 10.0,
+                    card.y + card.height - 24.0,
+                    card.width - 20.0,
+                    16.0,
+                    metadata_font,
+                    css_to_color(&card.style.text_color),
+                ));
+            }
         }
     }
     let root = PositionedNode {
@@ -3731,6 +3745,20 @@ where
         background: format!("rgba({}, {}, {}, {:.4})", bg.r, bg.g, bg.b, f64::from(bg.a) / 255.0),
         instructions, id: None, metadata: None,
     }
+}
+
+fn kanban_card_metadata(card: &LayoutedBoardCard) -> Option<String> {
+    let mut fields = Vec::new();
+    if let Some(ticket) = &card.ticket {
+        fields.push(format!("#{ticket}"));
+    }
+    if let Some(assigned) = &card.assigned {
+        fields.push(format!("@{assigned}"));
+    }
+    if let Some(priority) = &card.priority {
+        fields.push(format!("priority: {priority}"));
+    }
+    (!fields.is_empty()).then(|| fields.join("  "))
 }
 
 // ============================================================================
@@ -7273,7 +7301,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.67.0");
+        assert_eq!(crate::VERSION, "0.68.0");
     }
 
     #[test]
