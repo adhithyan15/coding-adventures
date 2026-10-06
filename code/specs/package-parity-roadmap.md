@@ -16007,6 +16007,25 @@ explicitly selection-blocked by the loop's native-authority boundary. Select
 only the Lua dependency-hashing tranche in a fresh main-based worktree after
 confirming no live PR overlaps its implementation paths.
 
+## Post-#16796 inventory and frontend priority
+
+PR #16796 auto-merged at `2547600e9636d1dfd2ad5df9e2cfdf14963d556a` after
+all 32 final-head checks were acceptable and the two required gates passed.
+The exact merged tree remains collision-clean: 15 established implementation
+lanes, 1,487 implementation identities, 4,757 slots, 1,529 all-reported
+identities, 178 high-consensus identities with 262 missing slots, five emerging
+OCaml packages, and no collisions or unknown buckets. Read-only package,
+build-tool, Dart/JVM, and OCaml audits found no newly unowned eligible gap.
+
+A dependency/leverage pass now selects the existing Dart/Swift frontend neutral
+fixture owner: it has no prerequisites and unlocks twelve already-owned
+frontend slices across 48 missing slots. The correlation-vector neutral owner
+is next by unblocked fanout (seven), followed by the block-RAM neutral owner
+(four direct and seven total). TypeScript diff selection remains ready but has
+only one currently unblocked descendant; two others require separate native
+authority. Freeze the Dart/Swift grammar embed/drift and token/AST contract in
+one bounded fixture tranche before porting any lexer or parser package.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

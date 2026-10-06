@@ -1,0 +1,930 @@
+{
+  "schema_version": 1,
+  "kind": "grammars",
+  "grammars": [
+    {
+      "family": "csharp",
+      "version": "csharp1.0",
+      "kind": "grammar",
+      "path": "code/grammars/csharp/csharp1.0.grammar",
+      "sha256": "196aac2eb02e1af350529e24940a4591d732cde7a9f98a4b25ca90ae57af6e22"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp1.0",
+      "kind": "tokens",
+      "path": "code/grammars/csharp/csharp1.0.tokens",
+      "sha256": "06a5ae3f84ca6a67bb999e609dc1e944f397a0c1f75300960d308d720e8a4149"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp10.0",
+      "kind": "grammar",
+      "path": "code/grammars/csharp/csharp10.0.grammar",
+      "sha256": "ac20bceff5de1179605057c167b8d82fdccbdcb9570fc875fe52f2a9ebed85f6"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp10.0",
+      "kind": "tokens",
+      "path": "code/grammars/csharp/csharp10.0.tokens",
+      "sha256": "ae8ca2dcffb9578d7c695226e38ffe9c1cfc1c2c04b43605bd9bdb2f3584ba07"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp11.0",
+      "kind": "grammar",
+      "path": "code/grammars/csharp/csharp11.0.grammar",
+      "sha256": "840b2a09a924f5df4a6aaf1b170df7543d3a83b650f5f30995094c51b4bb4098"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp11.0",
+      "kind": "tokens",
+      "path": "code/grammars/csharp/csharp11.0.tokens",
+      "sha256": "f4550a0c0d3a352037d6ba436b5123099a56c92fa33cbe515c65a849c35c2d9e"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp12.0",
+      "kind": "grammar",
+      "path": "code/grammars/csharp/csharp12.0.grammar",
+      "sha256": "a9aa13571fc92b22d3a3244bf2c478c5607988d60d335cba8e4e7565018a82eb"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp12.0",
+      "kind": "tokens",
+      "path": "code/grammars/csharp/csharp12.0.tokens",
+      "sha256": "ced136d3faaa59bed28c0f28f22166b1ff34aa63d8f88586c1e9e18fc3622199"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp2.0",
+      "kind": "grammar",
+      "path": "code/grammars/csharp/csharp2.0.grammar",
+      "sha256": "3a5cb248cc08328dfb365a4f98e341e5c1c58ab841dc2ac95399fc1cde15d489"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp2.0",
+      "kind": "tokens",
+      "path": "code/grammars/csharp/csharp2.0.tokens",
+      "sha256": "45134cb482fb9ff27e471c333ac02823f626b84ff1b1c873a16285a0bd53a625"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp3.0",
+      "kind": "grammar",
+      "path": "code/grammars/csharp/csharp3.0.grammar",
+      "sha256": "881e73dc010ef8f82f659e4f7b4e0c2605751d92e65b050311600c63df908d5b"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp3.0",
+      "kind": "tokens",
+      "path": "code/grammars/csharp/csharp3.0.tokens",
+      "sha256": "8715f7ad400a7353acfb13aa771b1be9f58127fa69c9ced053ef01f389b36f52"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp4.0",
+      "kind": "grammar",
+      "path": "code/grammars/csharp/csharp4.0.grammar",
+      "sha256": "6a16e39c2d05e50a9fed2c3c57faec6cd7914ec0b31f816a29c4dff96aa33424"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp4.0",
+      "kind": "tokens",
+      "path": "code/grammars/csharp/csharp4.0.tokens",
+      "sha256": "8ebc7ab9f013627ed0ea7d84fecdba07f3f7a75969532e8fc27d0db24349b178"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp5.0",
+      "kind": "grammar",
+      "path": "code/grammars/csharp/csharp5.0.grammar",
+      "sha256": "2651b7c9a943b679175c05de3dadfee9b2543718c6a4ed954ffe0271436c3239"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp5.0",
+      "kind": "tokens",
+      "path": "code/grammars/csharp/csharp5.0.tokens",
+      "sha256": "cebc00812e89a3b95f2895e9806f5183df148cb25d5eab75093b31fdac723ade"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp6.0",
+      "kind": "grammar",
+      "path": "code/grammars/csharp/csharp6.0.grammar",
+      "sha256": "5c23da355924d9dec1d7372c842a6182a7ca936eceb7802651c0f0dee0ee8979"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp6.0",
+      "kind": "tokens",
+      "path": "code/grammars/csharp/csharp6.0.tokens",
+      "sha256": "a3f2ad79f53d17e0b405176e4630fd11016a7a1943419a12526cffbea954979c"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp7.0",
+      "kind": "grammar",
+      "path": "code/grammars/csharp/csharp7.0.grammar",
+      "sha256": "eb96b292aeee316cfb119eb18395fb6e3cfdf87ad0c575e8a84fea54bc95b97f"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp7.0",
+      "kind": "tokens",
+      "path": "code/grammars/csharp/csharp7.0.tokens",
+      "sha256": "ed6c1a6746b837b0cac762b3c791745758f5cacd2c462b0b6d58422f6a823199"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp8.0",
+      "kind": "grammar",
+      "path": "code/grammars/csharp/csharp8.0.grammar",
+      "sha256": "ae8abf15e143ea1b54eddd46326c535973666414cda91b1da1774f0fa271f2b7"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp8.0",
+      "kind": "tokens",
+      "path": "code/grammars/csharp/csharp8.0.tokens",
+      "sha256": "7592b319e9fc1f9fae607ba8a91193b00a4ec4e73c119f74300b737a4db1bacd"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp9.0",
+      "kind": "grammar",
+      "path": "code/grammars/csharp/csharp9.0.grammar",
+      "sha256": "9280519e95701a93bb103aa5c19a5242782ac9f79341f676dc26a4f49fec8679"
+    },
+    {
+      "family": "csharp",
+      "version": "csharp9.0",
+      "kind": "tokens",
+      "path": "code/grammars/csharp/csharp9.0.tokens",
+      "sha256": "ea331a310b8cbe81f50d6231ca0f472795b5de0e698dd397255ae87d3cafd7fb"
+    },
+    {
+      "family": "excel",
+      "version": "excel",
+      "kind": "grammar",
+      "path": "code/grammars/excel/excel.grammar",
+      "sha256": "e0aa26b1971c250518af8bde2d49deb0ef0f9ec1ba1d7e8d234750200409986d"
+    },
+    {
+      "family": "excel",
+      "version": "excel",
+      "kind": "tokens",
+      "path": "code/grammars/excel/excel.tokens",
+      "sha256": "ee2b33352b7f4c9cd45a51a88aaebd89e37506dd8d1e93f91ee574b1ad84e88f"
+    },
+    {
+      "family": "java",
+      "version": "java1.0",
+      "kind": "grammar",
+      "path": "code/grammars/java/java1.0.grammar",
+      "sha256": "5dc4f9955d0c9c2ee47d08d4297a31373f89dbd26e915b9eac18981ab958ee9e"
+    },
+    {
+      "family": "java",
+      "version": "java1.0",
+      "kind": "tokens",
+      "path": "code/grammars/java/java1.0.tokens",
+      "sha256": "234469282af4f0ea1b36316d0c0ea3d10fb2fbc759f3cc2bfaa2bcda1c381e6e"
+    },
+    {
+      "family": "java",
+      "version": "java1.1",
+      "kind": "grammar",
+      "path": "code/grammars/java/java1.1.grammar",
+      "sha256": "f7a30727b27cceed8a24bc787622374e3282021c79b598e86a42eafed4e7ab82"
+    },
+    {
+      "family": "java",
+      "version": "java1.1",
+      "kind": "tokens",
+      "path": "code/grammars/java/java1.1.tokens",
+      "sha256": "3c8d8cf68741046f6080d070c25f3a234779c332def40bf55b35b687a86f424f"
+    },
+    {
+      "family": "java",
+      "version": "java1.4",
+      "kind": "grammar",
+      "path": "code/grammars/java/java1.4.grammar",
+      "sha256": "15a7e3ba5e44d4e0774527722b2b6e8ee5b7f5d5b4bcbeb412d8a1f5bd47082a"
+    },
+    {
+      "family": "java",
+      "version": "java1.4",
+      "kind": "tokens",
+      "path": "code/grammars/java/java1.4.tokens",
+      "sha256": "af990a7168f15677ec4edae890ae67115d412036ff549f74ef5c5c74e5033ac8"
+    },
+    {
+      "family": "java",
+      "version": "java10",
+      "kind": "grammar",
+      "path": "code/grammars/java/java10.grammar",
+      "sha256": "9513fd8c75df7a7b8ead09f663439cb3ca3d62605c4f72876211e46e7999308c"
+    },
+    {
+      "family": "java",
+      "version": "java10",
+      "kind": "tokens",
+      "path": "code/grammars/java/java10.tokens",
+      "sha256": "612bbfca0eb5bd023b474f83d7d1b6086efc2ee06377983b5e5d0e2dac46f79e"
+    },
+    {
+      "family": "java",
+      "version": "java14",
+      "kind": "grammar",
+      "path": "code/grammars/java/java14.grammar",
+      "sha256": "c1a5705dbf88c177fca64dd1d8ce3f8712b4af7c57f280f565127001849de3a8"
+    },
+    {
+      "family": "java",
+      "version": "java14",
+      "kind": "tokens",
+      "path": "code/grammars/java/java14.tokens",
+      "sha256": "b76153b3920afc0118577196456997000368f12afbef0424943ae527c98c8b82"
+    },
+    {
+      "family": "java",
+      "version": "java17",
+      "kind": "grammar",
+      "path": "code/grammars/java/java17.grammar",
+      "sha256": "e41303aa8890deb987813c122a702f0238058e38337029774987a3c26b99062e"
+    },
+    {
+      "family": "java",
+      "version": "java17",
+      "kind": "tokens",
+      "path": "code/grammars/java/java17.tokens",
+      "sha256": "c590137472d3907cc5fdad57e518a44c98e845e6fa1aa44c737851676cff1787"
+    },
+    {
+      "family": "java",
+      "version": "java21",
+      "kind": "grammar",
+      "path": "code/grammars/java/java21.grammar",
+      "sha256": "1dabff5b8f62dd9650893c1f91772ea8f0e4e3887e74446d07e90c26b89b6b5e"
+    },
+    {
+      "family": "java",
+      "version": "java21",
+      "kind": "tokens",
+      "path": "code/grammars/java/java21.tokens",
+      "sha256": "e99ffd73d4f414f9d27463ce01234228568523001716f70e53685e49478e663e"
+    },
+    {
+      "family": "java",
+      "version": "java5",
+      "kind": "grammar",
+      "path": "code/grammars/java/java5.grammar",
+      "sha256": "2ca965c002aef7987070d07d87d5a913fe03545aae3c9661a0848db0269c7733"
+    },
+    {
+      "family": "java",
+      "version": "java5",
+      "kind": "tokens",
+      "path": "code/grammars/java/java5.tokens",
+      "sha256": "334675420c9510d3441a7a0c82c8172589e5bf75e2dcffe3ef8f3844de3b6b8b"
+    },
+    {
+      "family": "java",
+      "version": "java7",
+      "kind": "grammar",
+      "path": "code/grammars/java/java7.grammar",
+      "sha256": "551f4c3dc4d3f6e1a9bec9980519c4b17cc9ebf8eec900c028198e220532555e"
+    },
+    {
+      "family": "java",
+      "version": "java7",
+      "kind": "tokens",
+      "path": "code/grammars/java/java7.tokens",
+      "sha256": "48b474916df3a5a129b5d3ce372166ed46215c20728cdf0eab8f86b512d98781"
+    },
+    {
+      "family": "java",
+      "version": "java8",
+      "kind": "grammar",
+      "path": "code/grammars/java/java8.grammar",
+      "sha256": "c15672e003e86c6eba718d4916fd73b9d78c59b7cfcefe0a768634c8273a3318"
+    },
+    {
+      "family": "java",
+      "version": "java8",
+      "kind": "tokens",
+      "path": "code/grammars/java/java8.tokens",
+      "sha256": "ef1307c55535970651a973318f0dcd00f6233063ca9dd35449a4a4af439bae6b"
+    },
+    {
+      "family": "javascript",
+      "version": "javascript",
+      "kind": "grammar",
+      "path": "code/grammars/javascript/javascript.grammar",
+      "sha256": "feea9524e2dcd71f05823fac61f49003841322c81e799b598a81c882ad1b120d"
+    },
+    {
+      "family": "javascript",
+      "version": "javascript",
+      "kind": "tokens",
+      "path": "code/grammars/javascript/javascript.tokens",
+      "sha256": "c50106f728a03c2c1e8632e4a0756cd49c51ee2b6bc2386235509b8bf9b75de5"
+    },
+    {
+      "family": "javascript",
+      "version": "es1",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es1.grammar",
+      "sha256": "64fb6ab7b4eb4e20dcfad8c89abf2a1fd3e64b4e174ba798dcd996ab720c497d"
+    },
+    {
+      "family": "javascript",
+      "version": "es1",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es1.tokens",
+      "sha256": "8688c258bfd7268a2b475f4b4f1e99a06f6c3e4a0e2b75192300f85048f4c805"
+    },
+    {
+      "family": "javascript",
+      "version": "es2015",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es2015.grammar",
+      "sha256": "837db586f4966d674e7e4db3b3fb00d935c56901bdeaf0e98388ae4a7bb59263"
+    },
+    {
+      "family": "javascript",
+      "version": "es2015",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es2015.tokens",
+      "sha256": "f2cdbd9e94a638eee73b0158216a34a9e91f6466ba3ed8f5ae8a2e767418ee6a"
+    },
+    {
+      "family": "javascript",
+      "version": "es2016",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es2016.grammar",
+      "sha256": "dfd97a780de15ffee04c325438eea084e93f7f257678bf92e9a328f3cfdc855d"
+    },
+    {
+      "family": "javascript",
+      "version": "es2016",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es2016.tokens",
+      "sha256": "5b1861ff039dc79461f0889ae3906ffbb139d3e12a21bc96cd0a8ab9af4fe772"
+    },
+    {
+      "family": "javascript",
+      "version": "es2017",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es2017.grammar",
+      "sha256": "72f3d97acf085fd4c76be61ca97ee6ce22f408b78adbb8810627b4541e290d36"
+    },
+    {
+      "family": "javascript",
+      "version": "es2017",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es2017.tokens",
+      "sha256": "a53596eb593ca7414a4a6da636cad6e1b9f1835cd13d3ff74ab075821a7326e8"
+    },
+    {
+      "family": "javascript",
+      "version": "es2018",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es2018.grammar",
+      "sha256": "398276918e6193aafb19d24209a9d806c41cedb24fbd645ae688cd7b2470a5a9"
+    },
+    {
+      "family": "javascript",
+      "version": "es2018",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es2018.tokens",
+      "sha256": "6eaa4b58ec5575d7dbca8afc9e5f26a27455911881599a48ee8a0f78d1512a6b"
+    },
+    {
+      "family": "javascript",
+      "version": "es2019",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es2019.grammar",
+      "sha256": "4935002fed220204819bc6f7615c82034cd354f2c9678e5d0bd434f8c7ead8c1"
+    },
+    {
+      "family": "javascript",
+      "version": "es2019",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es2019.tokens",
+      "sha256": "8c92a0297ac91065e1dc86ad1eb23c49ef44947d7e3ec22f86cd114c5d05e4ce"
+    },
+    {
+      "family": "javascript",
+      "version": "es2020",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es2020.grammar",
+      "sha256": "d98d5ee5d1c3352b09962550777f78bad4f0e5d57b167a0a7259cfb9280ecdd6"
+    },
+    {
+      "family": "javascript",
+      "version": "es2020",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es2020.tokens",
+      "sha256": "8999f7c7d4addd770e4111f67a4039f1ec60664082d3098c26d98122e75ba255"
+    },
+    {
+      "family": "javascript",
+      "version": "es2021",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es2021.grammar",
+      "sha256": "d4557daa3f436ae6fdbf434973c6ade1f348d9c9b1a166816984be5b1b1df900"
+    },
+    {
+      "family": "javascript",
+      "version": "es2021",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es2021.tokens",
+      "sha256": "3595b952c344b38dadae6a3c742040c4b5f94f8f50abcbe318babb65d37a767b"
+    },
+    {
+      "family": "javascript",
+      "version": "es2022",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es2022.grammar",
+      "sha256": "0067ecc64ba4cbbc9a0487257147e18352f7b2bc761a8c6a7a0a2d5da6554c28"
+    },
+    {
+      "family": "javascript",
+      "version": "es2022",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es2022.tokens",
+      "sha256": "e4054fd680ae8fb2e735ca5c13dba5d8530e43744fe4051422b9c838d6207d0e"
+    },
+    {
+      "family": "javascript",
+      "version": "es2023",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es2023.grammar",
+      "sha256": "1d0a144d72d3b1b0c2245d659ec2a11a3510ea2b5608a4de4e759c8e75e366e3"
+    },
+    {
+      "family": "javascript",
+      "version": "es2023",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es2023.tokens",
+      "sha256": "9eb936f04404e817e992c4185737e8e6ee060b470789a35bda4adc392efbe6f6"
+    },
+    {
+      "family": "javascript",
+      "version": "es2024",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es2024.grammar",
+      "sha256": "e2288174a4e5875dad9fe9b090d328b75b39e719b405ab6e3dfed4ad10ab8fde"
+    },
+    {
+      "family": "javascript",
+      "version": "es2024",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es2024.tokens",
+      "sha256": "3d4739bf54655efe76fdcd1dca9f06b8a6c24a52fdc82de62d770ca0224c14ac"
+    },
+    {
+      "family": "javascript",
+      "version": "es2025",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es2025.grammar",
+      "sha256": "8fd98c4eb0224430fd7296ff7b8ffa84ff47b5b122b3941a354bf3802bf61547"
+    },
+    {
+      "family": "javascript",
+      "version": "es2025",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es2025.tokens",
+      "sha256": "3bcd2623768c4c2fe81cdb573d4a6f3fbf317e62e0bf620116cc81f598a36e0e"
+    },
+    {
+      "family": "javascript",
+      "version": "es3",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es3.grammar",
+      "sha256": "fbc7f4e0cab0a4c1f16cc3df3ac17fb4558ad5e2c9149826b98914abcff3907e"
+    },
+    {
+      "family": "javascript",
+      "version": "es3",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es3.tokens",
+      "sha256": "6a30d2a80155e3b4648a4e46bece1c4038c43f59d41d88c9a0b29f9c1614f19c"
+    },
+    {
+      "family": "javascript",
+      "version": "es5",
+      "kind": "grammar",
+      "path": "code/grammars/ecmascript/es5.grammar",
+      "sha256": "65d1623b0a4ca1e246de5934bb16d722486521d0e6110708ab1b589aea7d63bf"
+    },
+    {
+      "family": "javascript",
+      "version": "es5",
+      "kind": "tokens",
+      "path": "code/grammars/ecmascript/es5.tokens",
+      "sha256": "bde22838db093e2de2a98284e0cc9c2f4c6e9986c3e24a394d3cd15889d856a6"
+    },
+    {
+      "family": "lattice",
+      "version": "lattice",
+      "kind": "grammar",
+      "path": "code/grammars/lattice/lattice.grammar",
+      "sha256": "6ba159ce15dfabd631c062fd144d9b23e3f7cf6dab54f15878785eb8c30ec3ac"
+    },
+    {
+      "family": "lattice",
+      "version": "lattice",
+      "kind": "tokens",
+      "path": "code/grammars/lattice/lattice.tokens",
+      "sha256": "ac85aab853dd4f9bcf76d6bdd019ebc71cd75fbb3bca3bd47e3f5127ec7f8416"
+    },
+    {
+      "family": "python",
+      "version": "python",
+      "kind": "grammar",
+      "path": "code/grammars/python/python.grammar",
+      "sha256": "05916a9953acff9a67dcb18328524172516d6cc6080503b0defe84ca4349635d"
+    },
+    {
+      "family": "python",
+      "version": "python",
+      "kind": "tokens",
+      "path": "code/grammars/python/python.tokens",
+      "sha256": "5917e70e73dab058dd569185d28a80d551a863fa5709e0d43a52294ef654762b"
+    },
+    {
+      "family": "python",
+      "version": "python2.7",
+      "kind": "grammar",
+      "path": "code/grammars/python/python2.7.grammar",
+      "sha256": "6c07db847c4ae5677abbffa5eca12c512395a36599cefd12c457b3c835b0385e"
+    },
+    {
+      "family": "python",
+      "version": "python2.7",
+      "kind": "tokens",
+      "path": "code/grammars/python/python2.7.tokens",
+      "sha256": "e1bd1a75781c4ccf3fce05fdf4221dd9a5b75ccea4df372897d833f333c020a2"
+    },
+    {
+      "family": "python",
+      "version": "python3.0",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.0.grammar",
+      "sha256": "663a69a565ebcabf62dc960aba843990e47b50b362c96be6a8f5da1479a8eed8"
+    },
+    {
+      "family": "python",
+      "version": "python3.0",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.0.tokens",
+      "sha256": "239552d9476c267eca3c7d321168516f7ba9e7e424d2ef3a7ab0c98b35276714"
+    },
+    {
+      "family": "python",
+      "version": "python3.10",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.10.grammar",
+      "sha256": "a657214d735d014b9cf826f1c38b9feeaabf2e1b51ec534669b915e979f728dd"
+    },
+    {
+      "family": "python",
+      "version": "python3.10",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.10.tokens",
+      "sha256": "149947f0d3a2a5d4c538fe1b4d41de87fac3d2a0b258468a9b6ea47e62ba9016"
+    },
+    {
+      "family": "python",
+      "version": "python3.12",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.12.grammar",
+      "sha256": "a8c832cfbe43cd16e8446665839e102e2eb9f4bf925da630e6f3ad43f41fac75"
+    },
+    {
+      "family": "python",
+      "version": "python3.12",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.12.tokens",
+      "sha256": "80b0f83691b1c34106577fa82cb17be69e21106796d304ba1a752f9867677cbf"
+    },
+    {
+      "family": "python",
+      "version": "python3.6",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.6.grammar",
+      "sha256": "068395a51026c551b3589ed718b341c732d5bd9431bc69bdca10e9de576158ab"
+    },
+    {
+      "family": "python",
+      "version": "python3.6",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.6.tokens",
+      "sha256": "26a582aaa371308d6bb9b22da81295de3df6daa4cbeeb545c7f8bd9835ad0c50"
+    },
+    {
+      "family": "python",
+      "version": "python3.8",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.8.grammar",
+      "sha256": "715981cf7385183e9fe974d76a53e093534d524b1ab9337c5764938159ddbc12"
+    },
+    {
+      "family": "python",
+      "version": "python3.8",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.8.tokens",
+      "sha256": "a460aa50a92765d8f76391650e2ff16920aef328149b622b974169e166c1c783"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby",
+      "kind": "grammar",
+      "path": "code/grammars/ruby/ruby.grammar",
+      "sha256": "d38daf984bd2a4369cd9d25158b8707c9724cd68305adf9867c0c09367385a59"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby",
+      "kind": "tokens",
+      "path": "code/grammars/ruby/ruby.tokens",
+      "sha256": "b7221aebe863c4fd3177a3174dbb547dd66e67c9fe7c77c4f9496c73efdf1f7d"
+    },
+    {
+      "family": "sql",
+      "version": "sql",
+      "kind": "grammar",
+      "path": "code/grammars/sql/sql.grammar",
+      "sha256": "1266b1069ecefe03487173d7c30d64149b6ab129ce81b13cd35a6caa39ba4539"
+    },
+    {
+      "family": "sql",
+      "version": "sql",
+      "kind": "tokens",
+      "path": "code/grammars/sql/sql.tokens",
+      "sha256": "c2d117a3ca1b300291eadb00c93cbedcc110dccd695fe1f57b3ea69a4b81accf"
+    },
+    {
+      "family": "starlark",
+      "version": "starlark",
+      "kind": "grammar",
+      "path": "code/grammars/starlark/starlark.grammar",
+      "sha256": "415005e733a195126779f749defccce57fe6b606fa75dd4e566187ca53345127"
+    },
+    {
+      "family": "starlark",
+      "version": "starlark",
+      "kind": "tokens",
+      "path": "code/grammars/starlark/starlark.tokens",
+      "sha256": "7b0f726b893d4152bd5b57b492d8bfe2371633bbf52885f5a273fc2d600c89a9"
+    },
+    {
+      "family": "typescript",
+      "version": "ts1.0",
+      "kind": "grammar",
+      "path": "code/grammars/typescript/ts1.0.grammar",
+      "sha256": "f3ee66339172492bb07a91804da9757dd0840fe633aeeda1f8972ce46c18c3b5"
+    },
+    {
+      "family": "typescript",
+      "version": "ts1.0",
+      "kind": "tokens",
+      "path": "code/grammars/typescript/ts1.0.tokens",
+      "sha256": "248a641162daf30f7280d953e0854f3b1df904d61be3d9b4ab8e895f5f74575a"
+    },
+    {
+      "family": "typescript",
+      "version": "ts2.0",
+      "kind": "grammar",
+      "path": "code/grammars/typescript/ts2.0.grammar",
+      "sha256": "6a39273ffbd4e6f8ef0d0eac50ca2abb2d39a9e23ec432a61737ac5cf0d8320f"
+    },
+    {
+      "family": "typescript",
+      "version": "ts2.0",
+      "kind": "tokens",
+      "path": "code/grammars/typescript/ts2.0.tokens",
+      "sha256": "bd666f659874c06bc2ad9c87bcdc587b2d2b62206e4556cafa4edb4e3a5adc26"
+    },
+    {
+      "family": "typescript",
+      "version": "ts3.0",
+      "kind": "grammar",
+      "path": "code/grammars/typescript/ts3.0.grammar",
+      "sha256": "b1da5d0f68b1f6e4b2a288a4ebbb2507b2c841548e4619953308d4ca939ad372"
+    },
+    {
+      "family": "typescript",
+      "version": "ts3.0",
+      "kind": "tokens",
+      "path": "code/grammars/typescript/ts3.0.tokens",
+      "sha256": "c1f5c2dbef83d3e360ab5fd046a78998152825843689119b265b7dabeb2df0ed"
+    },
+    {
+      "family": "typescript",
+      "version": "ts4.0",
+      "kind": "grammar",
+      "path": "code/grammars/typescript/ts4.0.grammar",
+      "sha256": "ea29f008fa31a15aab39cab615810a8a06d22f489d9bc3f8990e46776f1e17a6"
+    },
+    {
+      "family": "typescript",
+      "version": "ts4.0",
+      "kind": "tokens",
+      "path": "code/grammars/typescript/ts4.0.tokens",
+      "sha256": "d1fead964706cb9a4b2800a908831ba61063ef68b3dd176fc5a7b82220b62d9e"
+    },
+    {
+      "family": "typescript",
+      "version": "ts5.0",
+      "kind": "grammar",
+      "path": "code/grammars/typescript/ts5.0.grammar",
+      "sha256": "7aaa68116ada56c036107a64411a22137445c7a721bd1168cda632e3a4ef747e"
+    },
+    {
+      "family": "typescript",
+      "version": "ts5.0",
+      "kind": "tokens",
+      "path": "code/grammars/typescript/ts5.0.tokens",
+      "sha256": "9a8b7c8ccc8f1fd67e2c9e0d63e7f256e12c03235e565242d9d017fa30276d72"
+    },
+    {
+      "family": "typescript",
+      "version": "ts5.8",
+      "kind": "grammar",
+      "path": "code/grammars/typescript/ts5.8.grammar",
+      "sha256": "fb9d1d1587be02eece726d5247dcdaefe0a9a023bb53259811e6809cf9d0cfa2"
+    },
+    {
+      "family": "typescript",
+      "version": "ts5.8",
+      "kind": "tokens",
+      "path": "code/grammars/typescript/ts5.8.tokens",
+      "sha256": "f8f527a9af04ef04aed1dc943ed8f727a3cd84cf5e4ef07e47c27f7fba833cb0"
+    },
+    {
+      "family": "typescript",
+      "version": "typescript",
+      "kind": "grammar",
+      "path": "code/grammars/typescript/typescript.grammar",
+      "sha256": "6e231c7ad4b784a457a85e76473a4b4c082dc50904580d59ec2a1c76fad484ae"
+    },
+    {
+      "family": "typescript",
+      "version": "typescript",
+      "kind": "tokens",
+      "path": "code/grammars/typescript/typescript.tokens",
+      "sha256": "997f1464454d82e31e33eb01de4553fdcf8f953afaffe01ef569751402e9269c"
+    },
+    {
+      "family": "verilog",
+      "version": "verilog",
+      "kind": "grammar",
+      "path": "code/grammars/verilog/verilog.grammar",
+      "sha256": "fa674a5725d7e43cf3ce50b15bf4c22562db1e467d341fdbf4aabb2cc0e884da"
+    },
+    {
+      "family": "verilog",
+      "version": "verilog",
+      "kind": "tokens",
+      "path": "code/grammars/verilog/verilog.tokens",
+      "sha256": "5ba2513f57b2e84814cdd0f83a25b21dcc8b74952c86494c75daa1aa7552e2cd"
+    },
+    {
+      "family": "verilog",
+      "version": "verilog1995",
+      "kind": "grammar",
+      "path": "code/grammars/verilog/verilog1995.grammar",
+      "sha256": "6f9345102c5652eb78f03f7ed5388367ff5837388c68d1cd5bec16b96577efca"
+    },
+    {
+      "family": "verilog",
+      "version": "verilog1995",
+      "kind": "tokens",
+      "path": "code/grammars/verilog/verilog1995.tokens",
+      "sha256": "09862972f232610dc2741744a9fa1192de2dd93b97f4f287b49067384fa2eb95"
+    },
+    {
+      "family": "verilog",
+      "version": "verilog2001",
+      "kind": "grammar",
+      "path": "code/grammars/verilog/verilog2001.grammar",
+      "sha256": "ac31b49c27dc7b5d03483d7487e0540177b95144e257f8cd2d13e081b1175d5b"
+    },
+    {
+      "family": "verilog",
+      "version": "verilog2001",
+      "kind": "tokens",
+      "path": "code/grammars/verilog/verilog2001.tokens",
+      "sha256": "e9f3fb3906c71efed2bcc20b5e9c571da4e42b6b4fb2cb4a611c8534d519bafe"
+    },
+    {
+      "family": "verilog",
+      "version": "verilog2005",
+      "kind": "grammar",
+      "path": "code/grammars/verilog/verilog2005.grammar",
+      "sha256": "b09105c55341e13d200fa652bb035d46edb09aeaecf6d352ed6b8c235c14e6a3"
+    },
+    {
+      "family": "verilog",
+      "version": "verilog2005",
+      "kind": "tokens",
+      "path": "code/grammars/verilog/verilog2005.tokens",
+      "sha256": "77d526ca16416b578d539288b3827536cbb8d275a53718dacf9e04424b651f1a"
+    },
+    {
+      "family": "vhdl",
+      "version": "vhdl",
+      "kind": "grammar",
+      "path": "code/grammars/vhdl/vhdl.grammar",
+      "sha256": "5d8a4183bded03208055eccf9cba316dbeee21eaea7a4957f5958b0e552c14e7"
+    },
+    {
+      "family": "vhdl",
+      "version": "vhdl",
+      "kind": "tokens",
+      "path": "code/grammars/vhdl/vhdl.tokens",
+      "sha256": "89433d900a89aa33cb6e28d9e7ff8369d4698d45eb5a5ae3a00c16baad7c7712"
+    },
+    {
+      "family": "vhdl",
+      "version": "vhdl1987",
+      "kind": "grammar",
+      "path": "code/grammars/vhdl/vhdl1987.grammar",
+      "sha256": "8203cc07043591b2783935edfc27744a973596df170193d72359621391bfd0b3"
+    },
+    {
+      "family": "vhdl",
+      "version": "vhdl1987",
+      "kind": "tokens",
+      "path": "code/grammars/vhdl/vhdl1987.tokens",
+      "sha256": "fce82870510ca7813fa9db872c5fe035f1096878c4e49ee8ff65fdc868066c5d"
+    },
+    {
+      "family": "vhdl",
+      "version": "vhdl1993",
+      "kind": "grammar",
+      "path": "code/grammars/vhdl/vhdl1993.grammar",
+      "sha256": "6ec4b4c749453b8fee9fd19aa57cad3bf42ae4f6e18d0709cae77d166a614959"
+    },
+    {
+      "family": "vhdl",
+      "version": "vhdl1993",
+      "kind": "tokens",
+      "path": "code/grammars/vhdl/vhdl1993.tokens",
+      "sha256": "5ea63282bbb9c39fd8b51d5bb555070075f07a96e0abf5d4ab10a8e0eba03b03"
+    },
+    {
+      "family": "vhdl",
+      "version": "vhdl2002",
+      "kind": "grammar",
+      "path": "code/grammars/vhdl/vhdl2002.grammar",
+      "sha256": "e6ae555e4ee8cd508d73df89815d48db55a04e64682622875f396ba9406aa7a7"
+    },
+    {
+      "family": "vhdl",
+      "version": "vhdl2002",
+      "kind": "tokens",
+      "path": "code/grammars/vhdl/vhdl2002.tokens",
+      "sha256": "d2dd1e5f898c5d451628094a7cc7323875d5cd5991ccc539d7f52a5f9b348440"
+    },
+    {
+      "family": "vhdl",
+      "version": "vhdl2008",
+      "kind": "grammar",
+      "path": "code/grammars/vhdl/vhdl2008.grammar",
+      "sha256": "b2fcb212b4b4d3f4fbc6056af963239fb042d376c1badc1e407d354e74785c9a"
+    },
+    {
+      "family": "vhdl",
+      "version": "vhdl2008",
+      "kind": "tokens",
+      "path": "code/grammars/vhdl/vhdl2008.tokens",
+      "sha256": "b51084a9ec97a78fc4ab01c5019b5a70fdb8bff061a09272121c8edc2e0a0a81"
+    },
+    {
+      "family": "vhdl",
+      "version": "vhdl2019",
+      "kind": "grammar",
+      "path": "code/grammars/vhdl/vhdl2019.grammar",
+      "sha256": "55a103beca5f92104a0e8f2d94473e5a13a2f90710d9848b02c303b4b3e19c11"
+    },
+    {
+      "family": "vhdl",
+      "version": "vhdl2019",
+      "kind": "tokens",
+      "path": "code/grammars/vhdl/vhdl2019.tokens",
+      "sha256": "306a494deb21d47d68dd2a91eecf455eef1021d8750517881af31a4b1b2cb695"
+    }
+  ]
+}
