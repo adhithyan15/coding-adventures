@@ -766,6 +766,19 @@ pure operations to gain filesystem, process, environment, network, clock,
 randomness, or credential authority. Native case coverage alone does not
 claim a ready neutral execution adapter.
 
+The Haskell build-tool engine MUST expose a typed, process-free graph and
+diff-selection core with the same input limits, prerequisite-first levels,
+cycle no-partial-output, exact BUILD fronts, strict portable globs,
+repository-boundary digest and shared-input fanout, sorted closure sets, and
+50,000,000-unit Unicode-scalar match-work preflight. Its native Hspec suite
+MUST discover and evaluate the exact eight `graph-*.json` and twelve
+`diff-selection-*.json` cases through those production operations and pin the
+case-ID roster. Structural and boundary failures precede match-work failures;
+match-work failures precede unknown-path policy. Fixture decoding and all
+checkout, Git, filesystem, process, environment, network, clock, randomness,
+and credential access remain outside the pure core. Native package tests are
+not a neutral adapter and do not change Haskell adapter readiness.
+
 ### 5. Hashing and cache
 
 Required behavior:
