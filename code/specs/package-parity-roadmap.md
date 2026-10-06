@@ -15760,6 +15760,20 @@ behavioral parity; the remaining five eight-family fronts still need exact
 children or reviewed exceptions. The original classifier stays
 selection-blocked rather than masquerading as an implementation PR.
 
+A follow-up exact-main audit on `be52215294` classified the remaining fifteen
+Dart/JVM slots: Brotli, clock, hash-functions, tree, and XML lexer each miss
+Dart, Java, and Kotlin. Haskell Brotli and Swift hash-functions have separate
+existing owners. Five pending family classifiers now retain these slots, with
+three new neutral prerequisites for clock, DT02 tree, and F04/XML lexer; split
+each family classifier into lane-sized owners before selection. Brotli must
+wait on the existing CMP06 neutral owner, whose educational wire format and
+malformed/output ceilings are not RFC interoperability. Hash-functions must
+wait on the existing DT17 vector correction. Clock has no governing package
+spec and a divider/phase disagreement; DT02 conflicts with implementations on
+root and ordering semantics; the target generic lexers lack F04 token hooks,
+and XML01 documents entity-adjacent whitespace loss. These are contract
+questions, not reasons to copy an arbitrary existing lane as the oracle.
+
 The post-merge dependency/leverage pass ranks Ruby's checked source-input
 registry adoption first: its six prerequisites are merged, it directly
 unblocks three owners, and existing production lookup still has only a
