@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W06-write-illai-filmstrip-BKxEQ2bo.svg`,import.meta.url).href;export{e as default};

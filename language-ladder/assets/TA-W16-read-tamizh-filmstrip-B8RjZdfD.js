@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W16-read-tamizh-filmstrip-BWRnTN9u.svg`,import.meta.url).href;export{e as default};

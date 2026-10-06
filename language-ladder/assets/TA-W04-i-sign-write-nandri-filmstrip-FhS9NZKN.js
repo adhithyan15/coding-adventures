@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W04-i-sign-write-nandri-filmstrip-0u5tzsci.svg`,import.meta.url).href;export{e as default};

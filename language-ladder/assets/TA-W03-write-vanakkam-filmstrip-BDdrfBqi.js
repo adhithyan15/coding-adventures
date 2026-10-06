@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W03-write-vanakkam-filmstrip-OLL4_nlC.svg`,import.meta.url).href;export{e as default};

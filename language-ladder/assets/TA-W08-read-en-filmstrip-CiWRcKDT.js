@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W08-read-en-filmstrip-D5MAT8MT.svg`,import.meta.url).href;export{e as default};

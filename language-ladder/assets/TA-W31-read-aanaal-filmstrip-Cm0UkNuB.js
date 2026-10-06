@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W31-read-aanaal-filmstrip-D5pdDVmc.svg`,import.meta.url).href;export{e as default};

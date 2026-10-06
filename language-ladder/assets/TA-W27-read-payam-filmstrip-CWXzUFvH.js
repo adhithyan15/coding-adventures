@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W27-read-payam-filmstrip-wdHdA8lh.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W11-read-niingal-filmstrip-DK2Aiuw3.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W23-read-sattai-filmstrip-BF2yHGr2.svg`,import.meta.url).href;export{e as default};

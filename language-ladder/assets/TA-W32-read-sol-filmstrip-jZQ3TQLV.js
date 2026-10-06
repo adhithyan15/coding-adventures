@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W32-read-sol-filmstrip-al7udaPf.svg`,import.meta.url).href;export{e as default};

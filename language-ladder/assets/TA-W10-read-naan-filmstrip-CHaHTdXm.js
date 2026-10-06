@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W10-read-naan-filmstrip-DWAccpt4.svg`,import.meta.url).href;export{e as default};
