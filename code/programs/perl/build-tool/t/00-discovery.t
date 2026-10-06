@@ -365,4 +365,44 @@ subtest 'neutral OCaml package and Dune decoy projection' => sub {
     is($package->{name}, 'ocaml/demo-ocaml', 'neutral package identity is preserved');
 };
 
+subtest 'selected BUILD carries explicit source mode and declarations' => sub {
+    my $root = tempdir(CLEANUP => 1);
+    make_pkg($root, 'code/packages/perl/shell', "prove -l t/\n");
+    make_pkg($root, 'code/packages/perl/declared', <<'BUILD');
+perl_library(
+    name = "declared",
+    srcs = glob(["assets/*.bin", "lib/**/*.pm"]),
+)
+BUILD
+    make_pkg($root, 'code/packages/perl/empty', <<'BUILD');
+perl_library(name = "empty", srcs = [])
+BUILD
+
+    my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $root);
+    $discovery->discover();
+    my %packages = map { $_->{name} => $_ } @{ $discovery->packages() };
+
+    is($packages{'perl/shell'}{source_mode}, 'extension', 'shell BUILD uses extension mode');
+    is($packages{'perl/shell'}{declared_srcs}, [], 'shell BUILD has no declarations');
+    is($packages{'perl/shell'}{build_commands}, ['prove -l t/'], 'shell commands unchanged');
+    is($packages{'perl/declared'}{source_mode}, 'declared_sources', 'Starlark target uses declared mode');
+    is($packages{'perl/declared'}{declared_srcs}, ['assets/*.bin', 'lib/**/*.pm'], 'ordered source globs are carried');
+    is($packages{'perl/declared'}{build_commands},
+        ['cpanm --installdeps --quiet .', 'prove -l -v t/'],
+        'Starlark target generates commands rather than executing raw BUILD lines');
+    is($packages{'perl/empty'}{source_mode}, 'declared_sources', 'empty srcs remains declared mode');
+    is($packages{'perl/empty'}{declared_srcs}, [], 'empty declaration remains empty');
+};
+
+subtest 'detected Starlark without a supported target fails closed' => sub {
+    my $root = tempdir(CLEANUP => 1);
+    make_pkg($root, 'code/packages/perl/unsupported', 'load("//rules:perl.bzl", "perl_library")');
+    my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $root);
+    like(
+        dies { $discovery->discover() },
+        qr/STARLARK_TARGET_INVALID/,
+        'invalid declaration is not reinterpreted as shell commands',
+    );
+};
+
 done_testing();
