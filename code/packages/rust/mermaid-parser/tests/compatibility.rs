@@ -498,6 +498,10 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.columns[0].cards[1].label.text, "Cloud card");
             assert_eq!(board.columns[0].cards[2].label.text, "Burst card");
         }
+        if id == "quoted-labels" {
+            assert_eq!(board.columns[0].label.text, "Todo queue");
+            assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
+        }
     }
 }
 

@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.140.0";
+pub const VERSION: &str = "0.141.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -1661,7 +1661,9 @@ fn parse_board_node(source: &str) -> (Option<String>, String) {
             return (
                 (!id.is_empty()).then(|| id.to_string()),
                 normalize_mermaid_line_breaks(
-                    source[open_index + open.len()..label_end].trim(),
+                    &unquote_mermaid_string(
+                        source[open_index + open.len()..label_end].trim(),
+                    ),
                 ),
             );
         }
@@ -12497,6 +12499,17 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn kanban_unquotes_delimited_labels() {
+        let board = parse_kanban(
+            "kanban\n  todo[\"Todo queue\"]\n    card[\"Quoted card\"]",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].id, "todo");
+        assert_eq!(board.columns[0].label.text, "Todo queue");
+        assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
+    }
+
+    #[test]
     fn dispatch_kanban_to_board_ir() {
         match parse_any_mermaid("kanban\nTodo\n  task1[Task]").unwrap() {
             MermaidDiagram::Board(board) => assert_eq!(board.columns.len(), 1),
@@ -16488,7 +16501,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.140.0");
+        assert_eq!(crate::VERSION, "0.141.0");
     }
 
     #[test]
