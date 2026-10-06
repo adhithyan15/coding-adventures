@@ -599,7 +599,7 @@ use diagram_ir::{
     TemporalKind, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
-    CynefinDiagram, CynefinDomain, CynefinTransition, IshikawaCause, IshikawaDiagram,
+    CynefinConfig, CynefinDiagram, CynefinDomain, CynefinTransition, IshikawaCause, IshikawaDiagram,
     WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind,
 };
@@ -5679,13 +5679,14 @@ fn wardley_error(line: usize, message: impl Into<String>) -> ParseError { ParseE
 
 /// Parse Mermaid 11.16.1 Cynefin domains, items, and cross-domain transitions.
 pub fn parse_cynefin(source: &str) -> Result<CynefinDiagram, ParseError> {
+    let config = parse_cynefin_config(source);
     let (prepared, multiline_descriptions) = prepare_cynefin_source(source)?;
     let tokens = try_tokenize_mermaid_cynefin(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(CYNEFIN_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse cynefin.grammar: {error}"));
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
-    let mut diagram = CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None, domains: Vec::new(), transitions: Vec::new() };
+    let mut diagram = CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None, config, domains: Vec::new(), transitions: Vec::new() };
     let mut current_domain: Option<usize> = None;
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1; let line = raw.trim();
@@ -5721,6 +5722,24 @@ pub fn parse_cynefin(source: &str) -> Result<CynefinDiagram, ParseError> {
         return Err(ParseError { message: format!("unsupported Cynefin statement: {line}"), line: line_number, col: 1 });
     }
     Ok(diagram)
+}
+
+fn parse_cynefin_config(source: &str) -> CynefinConfig {
+    let defaults = CynefinConfig::default();
+    let front_matter = mermaid_front_matter_section(source, &["config", "cynefin"]);
+    let config = mermaid_directive_object(source, "cynefin").or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        }))
+    };
+    let positive = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
+    let non_negative = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+    CynefinConfig { width: positive("width", defaults.width), height: positive("height", defaults.height),
+        padding: non_negative("padding", defaults.padding) }
 }
 
 fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<String>), ParseError> {

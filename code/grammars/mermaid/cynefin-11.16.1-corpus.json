@@ -3,4 +3,5 @@
 {"name":"transitions","source":"cynefin-beta:\ncomplex\n  \"Research\"\ncomplicated\n  \"Analysis\"\ncomplex --> complicated : \"Pattern identified\"\nclear --> chaotic : \"Complacency\""},
 {"name":"empty-framework","source":"cynefin-beta\ncomplex\ncomplicated\nclear\nchaotic"},
 {"name":"accessibility","source":"cynefin-beta\naccTitle: Incident response framework\naccDescr {\n  Practices organized by\n  uncertainty and causality\n}\nclear\n  \"Apply known fix\""},
-{"name":"confusion-overflow","source":"cynefin-beta\nconfusion\n  \"Unknown mode\"\n  \"Insufficient evidence\"\n  \"Mixed signals\"\n  \"Unclear ownership\"\n  \"Novel incident\""}]}
+{"name":"confusion-overflow","source":"cynefin-beta\nconfusion\n  \"Unknown mode\"\n  \"Insufficient evidence\"\n  \"Mixed signals\"\n  \"Unclear ownership\"\n  \"Novel incident\""},
+{"name":"canvas-config","source":"%%{init: {\"cynefin\": {\"width\": 640, \"height\": 420, \"padding\": 24}}}%%\ncynefin-beta\nclear\n  \"Apply known fix\""}]}
