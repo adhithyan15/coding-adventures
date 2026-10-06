@@ -1159,6 +1159,14 @@ list (`deck-option-button`), and on a second launch find it restored.
    call, which now also runs `assembleDebugAndroidTest`. The macOS step's
    timeout rises from 75 to 90 minutes for the second XCUITest run.
 
+*Done (#16748):* steps 1–4 merged together, and every device test passed on
+its first green run. On the x86_64 emulator, Trestle, Journal and Engram each
+passed both cold launches. On the iPad simulator, the three XCUITests each
+reported `Executed 1 test, with 0 failures`. The macOS step took 49 minutes,
+under its 105-minute timeout; the emulator step took 4. One iOS problem took
+three CI rounds: the scheme had to move into a workspace (§4.3), recorded in
+`lessons.d/a-shared-xcode-scheme-for-a-project-whose-projectdirpath-is-belongs-in.md`.
+
 Neither lane can be run in this repository's Linux sandbox (no `/dev/kvm`,
 no Xcode), so each PR is proven in CI. A green run must show it drove the
 screen: the scripts require the expected test count (`OK (1 test)`, or
@@ -1185,7 +1193,8 @@ compiled in or was filtered out fails the step instead of passing it.
    step 8, which builds Flutter for phones.*
 7. **Every app:** Journal, Engram, Venture (after BR02's host work).
    *Journal on Android: §3.9; on iOS and iPadOS: §2.4. Engram on Android:
-   §3.10; on iOS and iPadOS: §2.5.*
+   §3.10; on iOS and iPadOS: §2.5. CI drives each app's generated controls
+   on both platforms (§4, done). Venture is still open.*
 8. **Flutter:** `flutter create --platforms=android,ios`, per-ABI native
    assets, `path_provider` for state.
 
