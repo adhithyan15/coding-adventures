@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16778,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16778",
-    "branch": "codex/parity-perl-declared-source-20261006",
-    "implementation_revision": "599b2193edd6f9e195bcdd762c292f0d83eb1d69",
+    "number": 16785,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16785",
+    "branch": "codex/parity-perl-portable-source-20261006",
+    "implementation_revision": "dc432cb4b0dbe61fd922e478c856e1d5b80a7f54",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-06T05:38:37Z",
-    "pr_number": 16778,
+    "observed_at": "2026-10-06T07:16:29Z",
+    "pr_number": 16785,
     "status": "checks-pending",
-    "notes": "Ready-for-review Perl declared-source metadata bridge PR opened at 599b2193edd6f9e195bcdd762c292f0d83eb1d69. GitHub reports MERGEABLE; CI detect, CodeQL detect, and human-language detection are queued. Do not enable auto-merge until every required final-head check is terminal and acceptable and GitHub reports no conflict."
+    "notes": "Ready-for-review Perl source hashing PR opened at dc432cb4b0dbe61fd922e478c856e1d5b80a7f54. GitHub reports MERGEABLE; the first checks are queued or in progress. Keep the implementation unchanged while checks run, and enable auto-merge only after every required final-head check is terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "a8966b6591f23fab05838be84169d5490087d344",
+    "revision": "0456d5d170a4a837f99092c9de4586eead165f04",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -740,6 +740,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Read-only post-#16776 audit found that Haskell discovery omits seven exact generated components (.cargo, .dart_tool, .gradle, _build, blib, dist-newstyle, gradle-build), infers language from any path component, and can include specification fixtures. After the narrow Dune predecessor, consume the complete shared discovery/language-registry case: exact package/program bucket classification and identity, generated-directory and fixture-tree exclusions, and any remaining full-case divergences. The proposed ID has no exact or punctuation-insensitive collision in the state graph."
+    },
+    {
+      "id": "build-tool-haskell-discovery-duplicate-identity-conformance",
+      "title": "Reject duplicate Haskell build-tool package identities",
+      "status": "pending",
+      "depends_on": ["build-tool-haskell-discovery-language-registry-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The separate discovery/duplicate-identity neutral case is unowned after the Haskell language-registry case. Discover both unknown/demo roots, reject before resolution or hashing with stable DUPLICATE_PACKAGE_IDENTITY, sorted repository-relative paths and no host-root leak, and return CLI exit 2. Add this owner to Haskell adapter closure; do not fold the separate case into the narrow Dune or full language-registry owner. The ID has no exact or punctuation-insensitive collision."
     },
     {
       "id": "build-tool-python-dune-build-discovery-conformance",
@@ -1509,10 +1518,10 @@
     {
       "id": "build-tool-perl-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Perl build tool",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-perl-blib-generated-directory-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-perl-diff-selection-match-work-ceiling-adoption", "build-tool-perl-declared-source-metadata-plumbing"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-perl-portable-source-20261006",
+      "pr_number": 16785,
       "notes": "Discovered by the post-#13544 source-hashing audit. Perl has only a partial artifact skip registry, uses platform-native relative paths, and lacks OCaml source recognition. Adopt the complete checked language source-input registry and normalized framing contract in one engine-scoped tranche, proving exact production lookup equality."
     },
     {
@@ -1967,10 +1976,11 @@
     {
       "id": "build-tool-perl-declared-source-metadata-plumbing",
       "title": "Plumb declared-source metadata through the Perl build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-perl-dune-build-discovery-fixture-adoption"],
       "branch": "codex/parity-perl-declared-source-20261006",
       "pr_number": 16778,
+      "merged_revision": "0456d5d170a4a837f99092c9de4586eead165f04",
       "selected_at": "2026-10-06T05:11:42Z",
       "selection_revision": "a8966b6591f23fab05838be84169d5490087d344",
       "selection_notes": "Selected after #16776 auto-merged with 32 terminal acceptable checks. The exact merged-main collision inventory remains 15 established lanes, 1,487 identities, 4,757 slots, five emerging OCaml packages, and zero collisions or unknown buckets. The newly discovered Haskell full-discovery owner was registered before selection. The sole prerequisite is merged, no active parity PR remains, and this narrow metadata-plumbing owner reaches nine unfinished descendants, ahead of Elixir source hashing (seven) and Lua dependency hashing (five). Use this fresh clean main-based branch; full source hashing, native filesystem authority, and unrelated Haskell discovery remain separate owners.",
@@ -3168,7 +3178,7 @@
       "title": "Close Haskell native build-tool adapter conformance",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-execution-semantics-corpus", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-extra-ci-toolchain-declaration-conformance", "build-tool-haskell-dune-build-discovery-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-haskell-orphan-crate-validation-conformance", "build-tool-haskell-tracked-artifact-validation-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-cli-parser-adoption", "build-tool-haskell-starlark-metering-adoption", "build-tool-haskell-validation-oracle-adoption"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-execution-semantics-corpus", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-extra-ci-toolchain-declaration-conformance", "build-tool-haskell-dune-build-discovery-conformance", "build-tool-haskell-discovery-language-registry-conformance", "build-tool-haskell-discovery-duplicate-identity-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-haskell-orphan-crate-validation-conformance", "build-tool-haskell-tracked-artifact-validation-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-cli-parser-adoption", "build-tool-haskell-starlark-metering-adoption", "build-tool-haskell-validation-oracle-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Haskell build-tool lane gate materialized by the post-#14615 audit. After every native correctness child lands, add a real adapter and run the entire versioned neutral corpus, including the completed graph/diff cases, through the Haskell front door with no undeclared expected failures. Keep this owner selection-blocked until the native retained-handle snapshot design and all listed children are complete."
@@ -11079,6 +11089,54 @@
       "notes": "The exact-main audit found 117 of 123 identities in the five-to-nine-language band without exact owners. Prioritize dependency foundations led by transistors and cache, then create bounded family or package owners before any implementation selection."
     },
     {
+      "id": "correlation-vector-cv00-neutral-conformance",
+      "title": "Freeze CV00 correlation-vector portable behavior",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "CV00 defines a generic domain-agnostic identity and lineage structure, present in 9/15 established lanes with six missing. Add language-neutral vectors for root/derive/merge/contribute/delete/passthrough, deterministic SHA-256-derived IDs, disabled tracing, ancestry and pass ordering, canonical JSON roundtrip and counter continuity, and stable malformed/unknown-ID outcomes. Freeze edge behavior before copying an existing lane; Swift currently diverges from CV00 and must not serve as oracle. The ID is collision-checked; no live open PR overlaps CV00 or package paths."
+    },
+    {
+      "id": "correlation-vector-csharp-lane-parity",
+      "title": "Port CV00 correlation-vector to C#",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "One of six missing established correlation-vector lanes. Implement the neutral CV00 fixture through the C# package and real native tests; preserve F# as a separate front-door child if sharing an engine."
+    },
+    {
+      "id": "correlation-vector-dart-lane-parity",
+      "title": "Port CV00 correlation-vector to Dart",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance", "json-value-dart-java-kotlin-parity"], "branch": null, "pr_number": null,
+      "notes": "One of six missing established correlation-vector lanes. Wait for same-lane D20 JSON value and serializer readiness, then consume the neutral CV00 vectors in Dart tests and BUILD fronts."
+    },
+    {
+      "id": "correlation-vector-fsharp-lane-parity",
+      "title": "Port CV00 correlation-vector to F#",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "One of six missing established correlation-vector lanes. Prove F#-native fixture entry and package front door even if a reviewed shared C# engine is reused."
+    },
+    {
+      "id": "correlation-vector-haskell-lane-parity",
+      "title": "Port CV00 correlation-vector to Haskell",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "One of six missing established correlation-vector lanes. Implement deterministic IDs, lineage and canonical interchange through Haskell-native tests without borrowing Swift's divergent schema."
+    },
+    {
+      "id": "correlation-vector-java-lane-parity",
+      "title": "Port CV00 correlation-vector to Java",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance", "json-value-dart-java-kotlin-parity"], "branch": null, "pr_number": null,
+      "notes": "One of six missing established correlation-vector lanes. Wait for real same-lane D20 JSON value/serializer behavior; current Java JSON lexer/parser ping stubs are not readiness evidence."
+    },
+    {
+      "id": "correlation-vector-kotlin-lane-parity",
+      "title": "Port CV00 correlation-vector to Kotlin",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance", "json-value-dart-java-kotlin-parity"], "branch": null, "pr_number": null,
+      "notes": "One of six missing established correlation-vector lanes. Wait for real same-lane D20 JSON value/serializer behavior; current Kotlin JSON lexer/parser ping stubs are not readiness evidence."
+    },
+    {
+      "id": "correlation-vector-swift-cv00-existing-lane-reconciliation",
+      "title": "Reconcile existing Swift correlation-vector with CV00",
+      "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Swift already has the package identity, but its global counter, merge ID derivation, timestamped contributions, per-entry pass order, and JSON schema diverge from CV00. Run the neutral vectors through Swift and repair only the observed portable differences; do not use Swift as the reference oracle."
+    },
+    {
       "id": "two-to-four-unowned-gap-classification-20260905",
       "title": "Classify the unowned two-to-four-language package band",
       "status": "pending",
@@ -12173,7 +12231,13 @@
       "id": "dart-swift-python-frontend-vertical-parity",
       "title": "Port Python lexer and parser verticals to Dart and Swift",
       "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
-      "notes": "Read-only post-#16776 audit found Python lexer and parser each present in 13/15 established lanes, missing Dart and Swift only (four slots). The neutral frontend fixture owner lists Python among twelve roots, but no Python implementation child owned these four slots. Split by lane and lexer before parser after the shared token/AST fixture; Python self-hosting and C#/Java contextual parsing are separate concerns. Exact and punctuation-insensitive owner-ID collision checks found no match, and live open-PR file lists had no overlap."
+      "notes": "Read-only post-#16776 audit found Python lexer present in 13/15 established lanes, missing Dart and Swift; Python parser is 12/15, missing Dart, Swift, and separately owned Python self-hosting. This owner covers the four Dart/Swift slots only. The neutral frontend fixture owner lists Python among twelve roots. Split by lane and lexer before parser after the shared token/AST fixture; the Dart subtranche additionally depends on dart-generic-lexer-indentation-mode-conformance, whereas Swift must not be blocked by that Dart substrate. Python self-hosting and C#/Java contextual parsing are separate concerns. Exact and punctuation-insensitive owner-ID collision checks found no match, and live open-PR file lists had no overlap."
+    },
+    {
+      "id": "dart-generic-lexer-indentation-mode-conformance",
+      "title": "Implement Dart generic lexer indentation mode",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Dart grammar-tools parses mode: indentation and its cross-validator permits implicit NEWLINE/INDENT/DEDENT, but the generic lexer ignores grammar.mode and emits no INDENT/DEDENT. Add neutral vectors for nested blocks, blank/comment lines, bracket line joining, EOF dedents, tab and inconsistent-indent diagnostics, and exact token order, then test through Dart generic lexer and BUILD fronts. Dart Python/Starlark frontend ports depend on this substrate; Swift siblings do not. Python and TypeScript/Swift differ on no-terminal-newline order, so freeze the parser-consistent behavior before claiming cross-language conformance. No normalized owner-ID or open-PR file collision was found."
     },
     {
       "id": "dart-java-kotlin-core-eight-family-parity",

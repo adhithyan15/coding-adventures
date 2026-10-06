@@ -17,23 +17,20 @@ package CodingAdventures::BuildTool::Hasher;
 # What counts as "source"?
 # ------------------------
 #
-# Not all files in a package directory are source files. Build artifacts,
-# editor swap files, and log files should not affect the hash. We use two
-# allowlists:
-#
-#   SOURCE_EXTENSIONS -- file suffixes that count as source code.
-#   SPECIAL_FILENAMES -- specific filenames that count as source regardless
-#                        of extension (e.g., BUILD, Makefile, cpanfile).
+# Not all files in a package directory are source files. The installed
+# language-source-input registry supplies seven exact selector roles; a
+# package's language controls its suffixes and metadata names. Generated
+# directory components are pruned before either declared or extension mode.
 #
 # Algorithm
 # ---------
 #
 #   1. Walk the package directory recursively with File::Find.
-#   2. For each file, check if its extension or basename is on the allowlist.
-#   3. Sort the qualifying files by relative path for determinism.
-#   4. For each file, compute SHA256 of its contents.
-#   5. Feed all hashes (including the relative path) into a final SHA256.
-#   6. Return the hex digest.
+#   2. Select package-local inputs through the same registry projection that
+#      the neutral inert-candidate tests exercise.
+#   3. Sort normalized relative paths by raw UTF-8 bytes.
+#   4. Frame each path and content body with unsigned 64-bit byte lengths.
+#   5. SHA256-hash the framed stream (empty selection = SHA256 of empty bytes).
 #
 # Including the path in the hash means that renaming a file changes the
 # hash even if the content is identical. This is intentional — file
@@ -42,7 +39,7 @@ package CodingAdventures::BuildTool::Hasher;
 # Perl advantages demonstrated here:
 #   - Digest::SHA (core) for cryptographic hashing.
 #   - File::Find for recursive traversal without external dependencies.
-#   - Hash slices for fast membership testing: $EXTS{$ext}.
+#   - JSON::PP for a complete installed registry snapshot.
 
 use strict;
 use warnings;
@@ -50,71 +47,93 @@ use Digest::SHA ();
 use File::Find ();
 use File::Spec ();
 use File::Basename ();
+use Encode qw(encode);
+use JSON::PP ();
 use CodingAdventures::BuildTool::GlobMatch ();
+use CodingAdventures::BuildTool::SourceInputRegistry ();
 
 our $VERSION = '0.01';
-
-# SOURCE_EXTENSIONS -- file suffixes that are considered source code.
-#
-# Organised by language. Each key is a language name; each value is a hash
-# of extensions (with leading dot) that count as source for that language.
-# We use a flat merged hash for fast lookup by extension alone.
-my %SOURCE_EXTENSIONS = map { $_ => 1 } (
-    # Python
-    qw(.py .pyi .toml .cfg .ini),
-    # Ruby
-    qw(.rb .rake .gemspec .ru),
-    # Go
-    qw(.go .mod .sum),
-    # TypeScript / JavaScript
-    qw(.ts .tsx .js .jsx .mjs .cjs .json),
-    # Rust
-    qw(.rs),
-    # Elixir / Erlang
-    qw(.ex .exs),
-    # Lua
-    qw(.lua .rockspec),
-    # Perl
-    qw(.pm .pl .t .xs .pod),
-    # Starlark / BUILD-adjacent
-    qw(.star .bzl),
-    # C / C++ (for XS extensions and native code)
-    qw(.c .h .cpp .cc .cxx .hh .hpp),
-    # Documentation and markup (changes to docs trigger rebuilds too)
-    qw(.md .rst .txt),
-    # YAML / TOML (config files that affect build)
-    qw(.yaml .yml),
-    # Haskell
-    qw(.hs .cabal),
-);
-
-# SPECIAL_FILENAMES -- specific filenames that count as source regardless
-# of extension. These are top-level build and config files.
-my %SPECIAL_FILENAMES = map { $_ => 1 } qw(
-    BUILD BUILD_mac BUILD_linux BUILD_windows BUILD_mac_and_linux
-    Makefile.PL Build.PL cpanfile MANIFEST META.json META.yml
-    Makefile makefile GNUmakefile
-    Gemfile Gemfile.lock .gemspec
-    pyproject.toml setup.py setup.cfg requirements.txt
-    go.mod go.sum
-    package.json package-lock.json tsconfig.json vitest.config.ts
-    Cargo.toml Cargo.lock
-    mix.exs mix.lock
-    .luarocks rockspec
-    Dockerfile docker-compose.yml .dockerignore
-);
-
-# SKIP_DIRS -- directories to never recurse into when collecting source files.
-# Same list as Discovery — avoids double-counting installed deps.
-my %SKIP_DIRS = map { $_ => 1 } qw(
-    .git .hg .svn .venv .tox __pycache__ node_modules vendor dist
-    build target .claude _build blib .mypy_cache .pytest_cache .ruff_cache
-);
 
 # new -- Constructor.
 sub new {
     my ($class) = @_;
-    return bless {}, $class;
+    return bless { registry => bless({}, 'CodingAdventures::BuildTool::SourceInputRegistry') }, $class;
+}
+
+sub registry_bytes  { return $_[0]->{registry}->bytes() }
+sub registry_digest { return $_[0]->{registry}->digest() }
+
+# Resolve the language encoded by a discovered package. A test-only isolated
+# directory may omit a canonical root; it never gains exact-package rules.
+sub _identity {
+    my ($self, $pkg) = @_;
+    my $root = $pkg->{package_root};
+    if (!defined($root) && defined($pkg->{path})) {
+        my $path = $pkg->{path};
+        $path =~ s{\\}{/}g;
+        $root = $1 if $path =~ m{(?:\A|/)(code/(?:packages|programs)/[^/]+/[^/]+(?:/[^/]+)*|code/sites/[^/]+)\z};
+    }
+    my $language = $pkg->{language};
+    $language = (split m{/}, $pkg->{name} // '')[0] unless defined $language;
+    $language = 'typescript' if defined($root) && $root =~ m{\Acode/sites/(?:blog|landing-page)\z}
+        && $language eq 'unknown';
+    return ($language, $root);
+}
+
+sub select_source_paths {
+    my ($self, $pkg, $candidates) = @_;
+    my ($language, $root) = $self->_identity($pkg);
+    my $mode = $pkg->{source_mode} // 'extension';
+    my $srcs = $pkg->{declared_srcs} // [];
+    my @compiled;
+    my $matcher = CodingAdventures::BuildTool::GlobMatch->new();
+    if ($mode eq 'declared_sources') {
+        die 'DECLARED_GLOB_INVALID: expected an array' unless ref($srcs) eq 'ARRAY';
+        die 'DECLARED_GLOB_INVALID: too many patterns' if @$srcs > 256;
+        for my $pattern (@$srcs) {
+            die 'DECLARED_GLOB_INVALID: unsafe pattern'
+                unless defined($pattern) && !ref($pattern)
+                && length($pattern) > 0 && length($pattern) <= 4096
+                && $pattern =~ m{\A[A-Za-z0-9_.+/*?\[\]!^-]+\z}
+                && $pattern !~ m{(?:\A|/)\.\.?(?:/|\z)|//|\A/|/\z};
+            my $compiled = eval { $matcher->compile_portable($pattern) };
+            die 'DECLARED_GLOB_INVALID: malformed pattern' if $@ || !defined $compiled;
+            push @compiled, [$pattern, $compiled];
+        }
+    }
+    my $match_work = 0;
+    return $self->{registry}->select(
+        $language, $root, $mode, $srcs, $candidates,
+        sub {
+            my ($path) = @_;
+            for my $glob (@compiled) {
+                my $charge = (length($glob->[0]) + 1) * (length($path) + 1);
+                die "SOURCE_HASH_LIMIT_EXCEEDED: glob match work\n"
+                    if $charge > 50_000_000 - $match_work;
+                $match_work += $charge;
+                return 1 if $matcher->matches_portable_compiled($glob->[1], $path);
+            }
+            return 0;
+        },
+    );
+}
+
+sub hash_source_records {
+    my ($self, $records) = @_;
+    die 'SOURCE_RECORDS_INVALID: expected array' unless ref($records) eq 'ARRAY';
+    my $sha = Digest::SHA->new(256);
+    for my $record (sort {
+        encode('UTF-8', $a->{path}) cmp encode('UTF-8', $b->{path})
+    } @$records) {
+        die 'SOURCE_RECORDS_INVALID: record' unless ref($record) eq 'HASH'
+            && defined($record->{path}) && defined($record->{content});
+        my $path = encode('UTF-8', $record->{path});
+        my $bytes = $record->{content};
+        die 'SOURCE_HASH_LIMIT_EXCEEDED: file' if length($bytes) > 64 * 1024 * 1024;
+        $sha->add(pack('Q>', length($path)), $path,
+            pack('Q>', length($bytes)), $bytes);
+    }
+    return $sha->hexdigest();
 }
 
 # hash_package -- Compute a SHA256 fingerprint for a package.
@@ -127,7 +146,7 @@ sub new {
 sub hash_package {
     my ($self, $pkg) = @_;
     my @files = $self->collect_source_files($pkg);
-    return $self->_hash_files($pkg->{path}, @files);
+    return $self->_hash_files($pkg, @files);
 }
 
 # collect_source_files -- Return sorted list of source file paths for a package.
@@ -141,63 +160,41 @@ sub hash_package {
 sub collect_source_files {
     my ($self, $pkg) = @_;
     my $root = $pkg->{path};
-    my @files;
-    my $declared = ($pkg->{source_mode} // 'extension') eq 'declared_sources';
-    my @patterns;
-    my @compiled;
-    if ($declared) {
-        my $srcs = $pkg->{declared_srcs};
-        die 'DECLARED_GLOB_INVALID: expected an array' unless ref($srcs) eq 'ARRAY';
-        die 'DECLARED_GLOB_INVALID: too many patterns' if @$srcs > 256;
-        for my $pattern (@$srcs) {
-            die 'DECLARED_GLOB_INVALID: unsafe pattern'
-                unless defined($pattern) && !ref($pattern)
-                && length($pattern) > 0 && length($pattern) <= 4096
-                && $pattern =~ m{\A[A-Za-z0-9_.+/*?-]+\z}
-                && $pattern !~ m{(?:\A|/)\.\.? (?:/|\z)}x
-                && $pattern !~ m{//|\A/|/\z|\*\*\*};
-            push @patterns, $pattern;
-        }
-        my $matcher = CodingAdventures::BuildTool::GlobMatch->new();
-        @compiled = map { $matcher->glob_to_regex($_) } @patterns;
-    } elsif (($pkg->{source_mode} // 'extension') ne 'extension') {
-        die 'SOURCE_MODE_INVALID: unknown source mode';
-    }
-
+    die 'SOURCE_ROOT_INVALID: missing path' unless defined($root) && -d $root;
+    # Validate language, mode, and every declared pattern before enumeration.
+    $self->select_source_paths($pkg, []);
+    my @candidates;
+    my %physical;
+    my $walked_entries = 0;
     File::Find::find(
         {
             wanted => sub {
-                # Prune skip directories.
-                if (-d $_ && exists $SKIP_DIRS{ File::Basename::basename($_) }) {
-                    $File::Find::prune = 1;
+                return if $File::Find::name eq $root;
+                $walked_entries++;
+                die "SOURCE_HASH_LIMIT_EXCEEDED: enumerated entries\n"
+                    if $walked_entries > 100_000;
+                my $relative = File::Spec->abs2rel($File::Find::name, $root);
+                $relative =~ s{\\}{/}g;
+                if (-l $File::Find::name) {
+                    push @candidates, {path => $relative, kind => 'symlink'};
+                    $File::Find::prune = 1 if -d $File::Find::name;
                     return;
                 }
-                return unless -f $_;
-                # Declared globs cannot reopen an external file via a link.
-                return if $declared && -l $_;
-                my $basename = File::Basename::basename($_);
-                my ($ext)    = ($basename =~ /(\.[^.]+)$/);
-                $ext //= '';
-
-                if ($declared) {
-                    my $relative = File::Spec->abs2rel($File::Find::name, $root);
-                    $relative =~ s{\\}{/}g;
-                    my $build_file = $pkg->{build_file} // 'BUILD';
-                    if ($relative eq $build_file
-                        || grep { $relative =~ $_ } @compiled) {
-                        push @files, $File::Find::name;
-                    }
-                } elsif (exists $SOURCE_EXTENSIONS{$ext} || exists $SPECIAL_FILENAMES{$basename}) {
-                    push @files, $File::Find::name;
+                if (-d $File::Find::name) {
+                    $File::Find::prune = 1
+                        if $self->{registry}->generated_component(File::Basename::basename($File::Find::name));
+                    return;
                 }
+                return unless -f $File::Find::name;
+                push @candidates, {path => $relative, kind => 'file'};
+                $physical{$relative} = $File::Find::name;
             },
             no_chdir => 1,
         },
         $root,
     );
-
-    # Sort for determinism — same order on every call.
-    return sort @files;
+    my @selected = $self->select_source_paths($pkg, \@candidates);
+    return map { $physical{$_} } @selected;
 }
 
 # _hash_files -- Compute the combined SHA256 of a set of files.
@@ -213,35 +210,41 @@ sub collect_source_files {
 # @param @files -- Sorted list of absolute file paths.
 # @return 64-char hex string.
 sub _hash_files {
-    my ($self, $root, @files) = @_;
-
-    # Digest::SHA->new(256) creates a SHA256 context.
-    # ->add($data) feeds data into the digest.
-    # ->hexdigest() finalises and returns the hex string.
+    my ($self, $pkg, @files) = @_;
+    my $root = $pkg->{path};
+    my ($language, $canonical_root) = $self->_identity($pkg);
+    if (!defined($canonical_root) || $canonical_root eq '') {
+        my @name = split m{/}, $pkg->{name} // '';
+        die "SOURCE_PACKAGE_ROOT_INVALID: cannot derive root\n" unless @name >= 2;
+        $canonical_root = @name == 3 && $name[1] eq 'programs'
+            ? join('/', 'code', 'programs', $name[0], $name[2])
+            : join('/', 'code', 'packages', $language, @name[1 .. $#name]);
+    }
     my $sha = Digest::SHA->new(256);
-
-    if (!@files) {
-        # Empty package: hash the string "empty" so we still return a valid
-        # hex string rather than the hash of nothing.
-        $sha->add('empty');
-        return $sha->hexdigest();
-    }
-
+    my $total = 0;
     for my $file (@files) {
-        # Compute the relative path from the package root.
-        # File::Spec->abs2rel handles cross-platform path normalisation.
         my $rel = File::Spec->abs2rel($file, $root);
-
-        # Feed the relative path into the digest (including the separator).
-        $sha->add($rel);
-        $sha->add("\0");  # null byte as separator
-
-        # Feed the file contents.
-        open(my $fh, '<:raw', $file) or next;
-        $sha->addfile($fh);  # Digest::SHA::addfile reads the filehandle efficiently
-        close $fh;
+        $rel =~ s{\\}{/}g;
+        my $path_bytes = encode('UTF-8', "$canonical_root/$rel");
+        open my $fh, '<:raw', $file or die "SOURCE_READ_FAILED: $!";
+        my $size = -s $fh;
+        die "SOURCE_READ_FAILED: size unavailable\n" unless defined $size;
+        die "SOURCE_HASH_LIMIT_EXCEEDED: file\n" if $size > 64 * 1024 * 1024;
+        $total += $size;
+        die "SOURCE_HASH_LIMIT_EXCEEDED: package\n" if $total > 1024 * 1024 * 1024;
+        $sha->add(pack('Q>', length($path_bytes)), $path_bytes, pack('Q>', $size));
+        my $read_total = 0;
+        while (1) {
+            my $read = read($fh, my $chunk, 8192);
+            die "SOURCE_READ_FAILED: $!" unless defined $read;
+            last if !$read;
+            $read_total += $read;
+            die "SOURCE_READ_FAILED: file changed\n" if $read_total > $size;
+            $sha->add($chunk);
+        }
+        close $fh or die "SOURCE_READ_FAILED: $!";
+        die "SOURCE_READ_FAILED: file changed\n" if $read_total != $size;
     }
-
     return $sha->hexdigest();
 }
 
@@ -252,8 +255,10 @@ sub _hash_files {
 # @param $ext -- File extension including the leading dot (e.g. ".pm").
 # @return 1 or 0.
 sub is_source_extension {
-    my ($self, $ext) = @_;
-    return exists $SOURCE_EXTENSIONS{$ext} ? 1 : 0;
+    my ($self, $ext, $language) = @_;
+    $language //= 'perl';
+    my $entry = $self->{registry}->entry($language);
+    return scalar(grep { $_ eq $ext } @{ $entry->{recursive_suffixes} }) ? 1 : 0;
 }
 
 # is_special_filename -- Predicate: is $name a recognised special filename?
@@ -261,8 +266,14 @@ sub is_source_extension {
 # @param $name -- Basename without path (e.g. "cpanfile").
 # @return 1 or 0.
 sub is_special_filename {
-    my ($self, $name) = @_;
-    return exists $SPECIAL_FILENAMES{$name} ? 1 : 0;
+    my ($self, $name, $language) = @_;
+    $language //= 'perl';
+    my $entry = $self->{registry}->entry($language);
+    my $registry = JSON::PP->new->utf8->decode($self->registry_bytes());
+    return 1 if grep { $_ eq $name } @{ $registry->{universal_inputs}{build_filenames} };
+    return 1 if grep { $_ eq $name } @{ $entry->{root_exact_basenames} };
+    return 1 if grep { $_ eq $name } @{ $entry->{recursive_exact_basenames} };
+    return 0;
 }
 
 1;
