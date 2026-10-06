@@ -349,6 +349,12 @@ describe("validate", () => {
       expect(isSingleDecimalDigit("ঌ")).toBe(false);
       expect(isSingleDecimalDigit("")).toBe(false);
     });
+
+    it("rejects a glyph that is not a string instead of throwing", () => {
+      expect(isSingleDecimalDigit(7)).toBe(false);
+      expect(isSingleDecimalDigit(undefined)).toBe(false);
+      expect(isSingleDecimalDigit(null)).toBe(false);
+    });
   });
 
   it("summarize counts levels", () => {

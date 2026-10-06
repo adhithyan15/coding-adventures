@@ -160,8 +160,9 @@ export interface DuctusOptions {
   highlightSegment?: boolean;
 }
 
-/** Every knob's default. Exported so the filmstrip ledger can scale from them. */
-export const DEFAULTS: Readonly<Required<DuctusOptions>> = {
+/** Every knob's default. Exported so the filmstrip ledger can scale from them,
+ * and frozen so no importer can change the defaults for everyone else. */
+export const DEFAULTS: Readonly<Required<DuctusOptions>> = Object.freeze({
   padding: 70,
   captionGap: 70,
   penWidth: 26,
@@ -173,7 +174,7 @@ export const DEFAULTS: Readonly<Required<DuctusOptions>> = {
   captionSize: 92,
   frameWidth: 118,
   highlightSegment: false,
-};
+});
 
 /** Caption line spacing, as a multiple of the caption size. */
 const LINE_HEIGHT = 1.22;

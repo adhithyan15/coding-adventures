@@ -229,7 +229,10 @@ export function validate(input: ValidateInput): Issue[] {
  * `[...glyph]` counts code points, not UTF-16 units, so an astral digit such
  * as U+1D7CE MATHEMATICAL BOLD DIGIT ZERO still counts as one.
  */
-export function isSingleDecimalDigit(glyph: string): boolean {
+export function isSingleDecimalDigit(glyph: unknown): boolean {
+  // Malformed JSON can put a number or nothing where the glyph belongs; report
+  // that as an invalid row instead of letting the spread below throw.
+  if (typeof glyph !== "string") return false;
   const codePoints = [...glyph];
   return codePoints.length === 1 && /^\p{Nd}$/u.test(codePoints[0]);
 }
