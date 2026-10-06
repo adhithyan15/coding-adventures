@@ -1364,10 +1364,13 @@
     {
       "id": "build-tool-ruby-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Ruby build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-ruby-glob-matcher-complexity-hardening"],
-      "branch": null,
+      "branch": "codex/parity-ruby-source-registry-20261006",
       "pr_number": null,
+      "selected_at": "2026-10-06T01:41:10Z",
+      "selection_revision": "cec7a1deb62b8facbdd02f8f8c9275ecbd7b8f17",
+      "selection_notes": "Selected after merging #16761, collision-checking exact merged main, registering twelve audited 09/F00/F01 children, and confirming no active parity PR or overlapping Ruby registry work. Six prerequisites merged; exact 23-language registry adoption directly unblocks three pending owners. Use one fresh clean main-based Ruby worktree and keep repository-boundary reverse diff and native snapshot safety separate.",
       "notes": "Production Ruby currently owns a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including path-scoped native companions and resources, with exact production lookup equality and no selector widening."
     },
     {
