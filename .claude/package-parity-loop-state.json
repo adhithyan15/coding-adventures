@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16770,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16770",
-    "branch": "codex/parity-ts-source-registry-20261006",
-    "implementation_revision": "84819e9b944f8a7848fadfc65a743c75d934aacf",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-06T03:02:27Z",
+    "observed_at": "2026-10-06T03:24:15Z",
     "pr_number": 16770,
-    "status": "checks-pending",
-    "notes": "Ready-for-review TypeScript source-registry PR opened at 84819e9b944f8a7848fadfc65a743c75d934aacf. GitHub reports MERGEABLE; detect, CodeQL, and human-language checks are queued. Do not enable auto-merge until every required final-head check is terminal and acceptable and GitHub reports no conflict."
+    "status": "merged",
+    "notes": "All 33 final-head checks were terminal and acceptable (14 success, 18 expected skips, one neutral); GitHub reported MERGEABLE and the loop enabled guarded squash auto-merge. GitHub merged PR #16770 as 3054917763cf0bc2921398f59cc2d57a15fd4b33 without manual merge."
   },
   "last_inventory": {
-    "revision": "8816976e430215645095aeddf7ae33fbcaa06881",
+    "revision": "3054917763cf0bc2921398f59cc2d57a15fd4b33",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1442,7 +1436,7 @@
     {
       "id": "build-tool-typescript-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the TypeScript build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-typescript-glob-matcher-complexity-hardening"],
       "branch": "codex/parity-ts-source-registry-20261006",
       "pr_number": 16770,
@@ -1450,6 +1444,9 @@
       "selected_at": "2026-10-06T02:43:49Z",
       "selection_revision": "8816976e430215645095aeddf7ae33fbcaa06881",
       "selection_notes": "Selected after #16764 merged, refreshing collision-checked exact main, and registering 13 additional audited owners. All six prerequisites merged, no active parity PR, no overlapping TypeScript build-tool PR, and three direct pending children. Use one clean fresh main-based TypeScript worktree; keep repository-boundary reverse diff and native snapshot concerns separate.",
+      "merged_at": "2026-10-06T03:24:15Z",
+      "merge_commit": "3054917763cf0bc2921398f59cc2d57a15fd4b33",
+      "merge_notes": "All 33 final-head checks were terminal and acceptable: 14 successes, 18 expected skips, and one neutral. GitHub reported the final head mergeable; guarded squash auto-merge was enabled and GitHub merged the PR without a manual merge command.",
       "notes": "PR #16770 adopts the checked 23-language, seven-role registry as immutable package data; production extension and declared-source lookup passes all seven package-local neutral cases, complete equality and digest tests, TypeScript typecheck, focused coverage, shared conformance, Go BUILD dry run, diff, and read-only security review. Two unrelated Windows-only package tests also fail unchanged on pre-change main and are explicitly documented in the PR. Repository-boundary reverse diff and native snapshot safety remain separate owners."
     },
     {
@@ -1740,10 +1737,13 @@
     {
       "id": "build-tool-lua-portable-source-hashing-conformance",
       "title": "Implement portable source hashing in the Lua build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-lua-dune-build-discovery-fixture-adoption", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension"],
-      "branch": null,
+      "branch": "codex/parity-lua-source-hashing-20261006",
       "pr_number": null,
+      "selected_at": "2026-10-06T03:26:43Z",
+      "selection_revision": "3054917763cf0bc2921398f59cc2d57a15fd4b33",
+      "selection_notes": "Selected after #16770 auto-merged, exact-main schema-3 collision check confirmed 15 lanes, 1,487 identities, 4,757 slots, 262 high-consensus missing slots, and no package topology changes; five additional neutral-contract owners were registered before selection. All six prerequisites are merged and no live PR overlaps the Lua build-tool, neutral fixture, ledger, or roadmap paths. The process-free source hashing core directly unlocks dependency hashing and several downstream Lua owners; native snapshot and persistence authority remain separate and selection-blocked. Use the fresh clean main-based Lua worktree, not the prior merged TypeScript branch.",
       "notes": "Split from the older combined Lua hashing/cache owner after the native-authority audit. Implement only the process-free registry projection, deterministic source selection, normalized path framing, and package digest contract over caller-supplied inert snapshots. Do not claim native no-follow, retained-handle, stable-identity, filesystem, process, environment, or cache-persistence authority."
     },
     {
@@ -12385,6 +12385,36 @@
       "title": "Port Ruby lexer and parser verticals to Dart and Swift",
       "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures", "state-machine-tokenizer-and-markup-portable-conformance"], "branch": null, "pr_number": null,
       "notes": "Both identities are 13/15 and missing only Dart and Swift. Existing Ruby frontend references are placeholders, and state-machine-tokenizer is Rust-only; reconcile the substrate and neutral behavior before lane-sized lexer-before-parser ports."
+    },
+    {
+      "id": "image-codec-bmp-ppm-qoi-neutral-conformance",
+      "title": "Reconcile portable BMP, PPM, and QOI codec contracts in neutral fixtures",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Each codec has 9/15 established lanes and lacks C#, Dart, F#, Haskell, Java, and Kotlin (18 slots total); pixel-container is already 15/15. Freeze BMP row order and BGRA, PPM binary separator and alpha, QOI end marker and malformed bounds, then split lane-sized ports. IC03 calls the marker optional in prose but requires a missing-marker error, and existing implementations disagree; reconcile before choosing an oracle. Do not broaden this neutral owner into three multi-lane implementation PRs."
+    },
+    {
+      "id": "sql-planner-neutral-conformance",
+      "title": "Freeze the SQL planner AST-to-logical-plan contract",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "SQL planner appears in 8/15 established lanes, leaving seven slots; the four-stage planner, optimizer, codegen, and VM chain has 28 structural gaps. Reconcile pure AST-to-plan fixtures and correct the spec's obsolete 17-lane claim before lane-sized ports. Dart and Swift parser gaps remain separately frontend-owned."
+    },
+    {
+      "id": "compiler-ir-aot-neutral-conformance",
+      "title": "Freeze BF03 compiler IR types, opcodes, and text round trips",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Compiler IR appears in 7/15 established lanes, leaving eight slots and blocking several Nib/AOT chains. Define pure ID, opcode, and textual round-trip fixtures before lane-sized ports. Keep BF03's source-map sketch out of this owner because compiler-source-map-language-neutral-conformance owns map semantics. Avoid overlapping the TypeScript compiler-IR metadata surface of PR #15858."
+    },
+    {
+      "id": "segment-tree-dt05-neutral-conformance",
+      "title": "Reconcile DT05 segment-tree query and update behavior",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Segment tree appears in 6/15 established lanes, missing Dart, Elixir, Go, Lua, Perl, Python, Ruby, Swift, and TypeScript. Freeze inclusive ranges, point updates, empty input, invalid bounds, and complexity claims; Rust identity/no-op behavior conflicts with Java/Kotlin/.NET errors, while Haskell is list-backed O(n). DT03 binary tree is conceptual, not a proven package prerequisite. No downstream consumer has yet been established, so rank below the codec foundation."
+    },
+    {
+      "id": "scrypt-kd02-neutral-conformance",
+      "title": "Reconcile KD02 scrypt parameters, bounds, and vectors",
+      "status": "pending", "depends_on": ["pbkdf2-language-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Scrypt appears in 9/15 established lanes, leaving six slots. Pin parameter and memory ceilings and public vectors after the pending PBKDF2 neutral contract; split lane ports afterward. KD02 ROMix pseudocode omits a final BlockMix before X=V[N-1], unlike Go/Python and the vectors; reconcile the governing spec before copying an implementation."
     }
   ]
 }

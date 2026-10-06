@@ -1213,6 +1213,22 @@ reverse diff selection remain owned by the separate Haskell repository-boundary
 adoption child. Dependency hashing and cache classification remain owned by the
 separate Haskell dependency-hashing child.
 
+The Lua portable source-hashing core consumes the checked language source-input
+registry as package data and accepts only caller-supplied inert candidate and
+byte snapshots. It rejects unknown lanes and malformed candidate identities,
+prunes exact generated components before every selector, applies all seven
+registry roles with their package-root and mode scopes, deduplicates selected
+paths, sorts normalized repository-relative UTF-8 path bytes, and computes only
+the Hashing v1 `package_digest` from unsigned 64-bit big-endian path/content
+frames. Its neutral conformance tests must compare the complete packaged
+registry projection and domain-separated digest against the checked corpus,
+then exercise the production selector on every package-local case. The pure
+module neither walks the host filesystem nor invokes Git, shell tools, or
+environment probes. Repository-boundary union/reverse diff, native no-follow
+and stable-identity reads, dependency digests, cache persistence, and cache
+classification are separate owners; this portable core cannot claim their
+authority or completion.
+
 ### 6. Starlark
 
 Final parity requires:

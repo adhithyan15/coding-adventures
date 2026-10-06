@@ -15814,6 +15814,31 @@ cases are already checked. No open parity PR or overlapping TypeScript
 implementation PR exists. The newly classified Brainfuck and frontend gaps
 remain pending behind their neutral contracts.
 
+After guarded squash auto-merge of TypeScript source-registry PR #16770 at
+`3054917763`, the exact merged-main schema-3 inventory remains 15 established
+lanes, 1,487 identities, 4,757 package slots, 178 high-consensus identities
+with 262 missing slots, and zero canonical collisions or unknown buckets.
+The PR changed no package identity slot. Its 33 final-head checks were all
+terminal and acceptable, and GitHub reported the branch mergeable before
+auto-merge was enabled. TypeScript now consumes the checked 23-language,
+seven-role source-input registry; repository-boundary reverse diff and
+native snapshot safety remain separate owners.
+
+Parallel read-only audits found five previously unregistered neutral-contract
+owners in the five-to-nine-lane and adjacent coverage bands: BMP/PPM/QOI
+codecs (18 missing slots), the SQL planner (seven), compiler IR (eight), DT05
+segment tree (nine), and KD02 scrypt (six). Their specification disagreements
+and lane-sized follow-on requirements are recorded in the state backlog; none
+is treated as an immediately conformant port. The high-consensus scan found
+no newly unowned gap, and OCaml remains emerging with five packages. The
+post-merge dependency pass ranks process-free Lua source hashing ahead of the
+ready Perl Dune discovery fixture, TypeScript diff-selection ceiling, and
+shared .NET CI-gate selection: all six Lua prerequisites are merged, and the
+pure package-digest contract directly unlocks dependency hashing and three
+other downstream owners. Native Lua filesystem stability and cache persistence
+remain separate, selection-blocked authority work. Select only the bounded
+Lua portable source-hashing owner next in a fresh clean main-based worktree.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
