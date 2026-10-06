@@ -3180,6 +3180,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — statically empty step and while elements preserve runtime-real
+    // formatter provenance for an unrelated caller-frame local.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; integer i; real x; x := pick(); for i := 2 step 1 until 1 do x := 1.5; output(x); for i := 1 while false do x := 1.5; output(x) end",
+        expect: Expect::Stdout("2.252.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — even a zero-trip step element assigns its controlled variable
     // in the loop preheader before testing the bound.
     Prog {
@@ -14983,6 +14992,33 @@ fn algol_static_zero_trip_snapshot_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the static zero-trip snapshot did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_zero_trip_runtime_real_provenance_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real procedure pick; pick := 2.25")
+                && program
+                    .src
+                    .contains("for i := 2 step 1 until 1 do x := 1.5")
+                && program.src.contains("for i := 1 while false do x := 1.5")
+        })
+        .expect("the ALGOL zero-trip runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but zero-trip runtime-real output did not run"
             );
             continue;
         };
