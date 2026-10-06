@@ -86,24 +86,35 @@ sub select_source_paths {
     my $mode = $pkg->{source_mode} // 'extension';
     my $srcs = $pkg->{declared_srcs} // [];
     my @compiled;
+    my $matcher = CodingAdventures::BuildTool::GlobMatch->new();
     if ($mode eq 'declared_sources') {
         die 'DECLARED_GLOB_INVALID: expected an array' unless ref($srcs) eq 'ARRAY';
         die 'DECLARED_GLOB_INVALID: too many patterns' if @$srcs > 256;
-        my $matcher = CodingAdventures::BuildTool::GlobMatch->new();
         for my $pattern (@$srcs) {
             die 'DECLARED_GLOB_INVALID: unsafe pattern'
                 unless defined($pattern) && !ref($pattern)
                 && length($pattern) > 0 && length($pattern) <= 4096
                 && $pattern =~ m{\A[A-Za-z0-9_.+/*?\[\]!^-]+\z}
-                && $pattern !~ m{(?:\A|/)\.\.?(?:/|\z)|//|\A/|/\z|\*\*\*|--|&&|~~|\|\|};
-            my $compiled = eval { $matcher->glob_to_regex($pattern) };
+                && $pattern !~ m{(?:\A|/)\.\.?(?:/|\z)|//|\A/|/\z};
+            my $compiled = eval { $matcher->compile_portable($pattern) };
             die 'DECLARED_GLOB_INVALID: malformed pattern' if $@ || !defined $compiled;
-            push @compiled, $compiled;
+            push @compiled, [$pattern, $compiled];
         }
     }
+    my $match_work = 0;
     return $self->{registry}->select(
         $language, $root, $mode, $srcs, $candidates,
-        sub { my ($path) = @_; return scalar(grep { $path =~ $_ } @compiled) },
+        sub {
+            my ($path) = @_;
+            for my $glob (@compiled) {
+                my $charge = (length($glob->[0]) + 1) * (length($path) + 1);
+                die "SOURCE_HASH_LIMIT_EXCEEDED: glob match work\n"
+                    if $charge > 50_000_000 - $match_work;
+                $match_work += $charge;
+                return 1 if $matcher->matches_portable_compiled($glob->[1], $path);
+            }
+            return 0;
+        },
     );
 }
 
@@ -154,10 +165,14 @@ sub collect_source_files {
     $self->select_source_paths($pkg, []);
     my @candidates;
     my %physical;
+    my $walked_entries = 0;
     File::Find::find(
         {
             wanted => sub {
                 return if $File::Find::name eq $root;
+                $walked_entries++;
+                die "SOURCE_HASH_LIMIT_EXCEEDED: enumerated entries\n"
+                    if $walked_entries > 100_000;
                 my $relative = File::Spec->abs2rel($File::Find::name, $root);
                 $relative =~ s{\\}{/}g;
                 if (-l $File::Find::name) {
@@ -173,7 +188,6 @@ sub collect_source_files {
                 return unless -f $File::Find::name;
                 push @candidates, {path => $relative, kind => 'file'};
                 $physical{$relative} = $File::Find::name;
-                die "SOURCE_HASH_LIMIT_EXCEEDED: candidates\n" if @candidates > 100_000;
             },
             no_chdir => 1,
         },

@@ -10,6 +10,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+- Source hashing now consults a complete installed language-specific input
+  registry instead of a cross-language merged suffix list. Universal BUILD
+  and root capability inputs, all seven registry roles, fixed-path precedence,
+  exact generated-component pruning, and declared-source selection are tested
+  against the seven package-local neutral cases. Source digests now frame
+  canonical repository-relative UTF-8 paths and raw bytes with unsigned
+  64-bit lengths; empty packages use the standard empty SHA-256 digest and
+  unreadable selected files fail instead of disappearing from the hash.
+  Declared-source matching now uses bounded segment-aware dynamic programming
+  instead of a backtracking regex, and the native walk caps directories and
+  inert links as well as regular files.
+- `Makefile.PL` installs the byte-identical registry JSON beside the runtime
+  modules; the deterministic sync command and registry digest test detect
+  stale package data.
 - Discovery now classifies OCaml package BUILD files; fixture-projected tests
   verify exact lowercase Dune `_build` pruning in both discovery and source
   collection while retaining `_Build` and `_build-example` directories.

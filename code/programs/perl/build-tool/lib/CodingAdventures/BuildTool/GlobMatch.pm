@@ -154,6 +154,131 @@ sub filter_files {
     } @{$files_ref};
 }
 
+# The portable source selector deliberately does not use the regex converter
+# above. Repeated globstars give a backtracking regex exponentially many ways
+# to fail, and a negated regex class may consume a path separator. Compile
+# slash-free segments once and match them with bounded state grids instead.
+sub compile_portable {
+    my ($self, $glob) = @_;
+    my @segments;
+    for my $segment (split m{/}, $glob, -1) {
+        if ($segment eq '**') {
+            push @segments, undef;
+            next;
+        }
+        my @chars = split //, $segment;
+        my @tokens;
+        for (my $i = 0; $i < @chars;) {
+            my $char = $chars[$i];
+            if ($char eq '*') {
+                push @tokens, ['star'] unless @tokens && $tokens[-1][0] eq 'star';
+                $i++;
+            } elsif ($char eq '?') {
+                push @tokens, ['question'];
+                $i++;
+            } elsif ($char ne '[') {
+                push @tokens, ['literal', $char];
+                $i++;
+            } else {
+                my $cursor = $i + 1;
+                my $negated = $cursor < @chars && $chars[$cursor] eq '!';
+                $cursor++ if $negated;
+                my $closing = $cursor;
+                $closing++ if $closing < @chars && $chars[$closing] eq ']';
+                $closing++ while $closing < @chars && $chars[$closing] ne ']';
+                if ($closing >= @chars) {
+                    push @tokens, ['literal', '['];
+                    $i++;
+                    next;
+                }
+                my $body = join('', @chars[$cursor .. $closing - 1]);
+                die "DECLARED_GLOB_INVALID: ambiguous class\n"
+                    if $body =~ /(?:--|&&|~~|\|\|)/;
+                my @members;
+                while ($cursor < $closing) {
+                    if ($cursor + 2 < $closing && $chars[$cursor + 1] eq '-') {
+                        die "DECLARED_GLOB_INVALID: descending class\n"
+                            if ord($chars[$cursor]) > ord($chars[$cursor + 2]);
+                        push @members, [$chars[$cursor], $chars[$cursor + 2]];
+                        $cursor += 3;
+                    } else {
+                        push @members, $chars[$cursor];
+                        $cursor++;
+                    }
+                }
+                push @tokens, ['class', $negated, \@members];
+                $i = $closing + 1;
+            }
+        }
+        push @segments, \@tokens;
+    }
+    return \@segments;
+}
+
+sub matches_portable_compiled {
+    my ($self, $compiled, $path) = @_;
+    my @parts = split m{/}, $path, -1;
+    my $end = scalar @parts;
+    my @next = (0) x ($end + 1);
+    $next[$end] = 1;
+    for my $segment (reverse @$compiled) {
+        my @row = (0) x ($end + 1);
+        if (!defined $segment) {
+            $row[$end] = $next[$end];
+            for (my $i = $end - 1; $i >= 0; $i--) {
+                $row[$i] = $next[$i] || $row[$i + 1];
+            }
+        } else {
+            for (my $i = $end - 1; $i >= 0; $i--) {
+                $row[$i] = $next[$i + 1] && _match_portable_segment($segment, $parts[$i]);
+            }
+        }
+        @next = @row;
+    }
+    return !!$next[0];
+}
+
+sub _match_portable_segment {
+    my ($tokens, $value) = @_;
+    my @chars = split //, $value;
+    my $end = scalar @chars;
+    my @next = (0) x ($end + 1);
+    $next[$end] = 1;
+    for my $token (reverse @$tokens) {
+        my @row = (0) x ($end + 1);
+        my $type = $token->[0];
+        if ($type eq 'star') {
+            $row[$end] = $next[$end];
+            for (my $i = $end - 1; $i >= 0; $i--) {
+                $row[$i] = $next[$i] || $row[$i + 1];
+            }
+        } else {
+            for (my $i = $end - 1; $i >= 0; $i--) {
+                $row[$i] = $next[$i + 1] && (
+                    $type eq 'question' ||
+                    ($type eq 'literal' && $token->[1] eq $chars[$i]) ||
+                    ($type eq 'class' && _class_has($token, $chars[$i]))
+                );
+            }
+        }
+        @next = @row;
+    }
+    return !!$next[0];
+}
+
+sub _class_has {
+    my ($token, $char) = @_;
+    my $matched = 0;
+    for my $member (@{ $token->[2] }) {
+        if (ref($member) eq 'ARRAY') {
+            $matched ||= $member->[0] le $char && $char le $member->[1];
+        } else {
+            $matched ||= $member eq $char;
+        }
+    }
+    return $token->[1] ? !$matched : $matched;
+}
+
 1;
 
 __END__

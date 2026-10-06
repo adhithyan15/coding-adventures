@@ -88,6 +88,36 @@ subtest 'portable path and package identity checks fail closed' => sub {
     is([$h->select_source_paths({%$pkg, source_mode => 'declared_sources',
         declared_srcs => ['lib/[literal.pm']}, [{path => 'lib/[literal.pm', kind => 'file'}])],
         ['lib/[literal.pm'], 'unmatched left bracket is a literal');
+    like(dies { $h->select_source_paths($pkg, [
+        {path => 'safe' . chr(0x202e) . '.pm', kind => 'file'},
+    ]) }, qr/SOURCE_PATH_INVALID/, 'Unicode format controls are rejected');
+    like(dies { $h->select_source_paths($pkg, [
+        {path => 'file', kind => 'file'},
+        {path => 'file/nested.pm', kind => 'file'},
+    ]) }, qr/SOURCE_PATH_INVALID/, 'a file cannot be an ancestor of another candidate');
+};
+
+subtest 'declared globs are bounded and segment-aware' => sub {
+    my $pkg = {language => 'perl', source_mode => 'declared_sources'};
+    is([$h->select_source_paths({%$pkg, declared_srcs => ['lib[!x]secret.pm']}, [
+        {path => 'lib/secret.pm', kind => 'file'},
+    ])], [], 'negated class does not cross a slash');
+    is([$h->select_source_paths({%$pkg, declared_srcs => ['lib**secret.pm']}, [
+        {path => 'lib/x/secret.pm', kind => 'file'},
+    ])], [], 'embedded double-star does not cross a slash');
+    is([$h->select_source_paths({%$pkg, declared_srcs => ['lib/**/secret.pm']}, [
+        {path => 'lib/secret.pm', kind => 'file'},
+        {path => 'lib/x/secret.pm', kind => 'file'},
+    ])], ['lib/secret.pm', 'lib/x/secret.pm'], 'whole-segment double-star crosses zero or more segments');
+    is([$h->select_source_paths({%$pkg, declared_srcs => ['foo--bar.pm', 'lib/***.pm']}, [
+        {path => 'foo--bar.pm', kind => 'file'},
+        {path => 'lib/a.pm', kind => 'file'},
+    ])], ['foo--bar.pm', 'lib/a.pm'], 'literal dashes and coalesced stars are portable');
+    my $near_miss = ('x/' x 12) . 'z';
+    my $adversarial = ('**/' x 12) . '[ab]';
+    is([$h->select_source_paths({%$pkg, declared_srcs => [$adversarial]}, [
+        {path => $near_miss, kind => 'file'},
+    ])], [], 'many globstars have bounded near-miss matching');
 };
 
 subtest 'Hashing v1 frames paths and bytes unambiguously' => sub {

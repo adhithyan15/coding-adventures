@@ -251,10 +251,10 @@ entire bounded list of package-relative source globs before walking, selects
 matching retained files (including explicitly declared non-source suffixes),
 and still includes the selected BUILD front. Exact generated-directory
 pruning, including lowercase `_build`, precedes matching. This bounded
-metadata bridge does not claim the complete language-source-input registry,
-all portable glob grammar, native stable-snapshot authority, dependency
-digests, cache persistence, or executable CLI cache integration; those remain
-separate parity owners under `build-tool-conformance.md`.
+metadata bridge was extended by the package-local source hashing contract
+below. Native stable-snapshot authority, dependency digests, cache
+persistence, and executable CLI cache integration remain separate parity
+owners under `build-tool-conformance.md`.
 
 ### 5.6 Portable package-local source hashing
 
@@ -269,6 +269,14 @@ and fixed inputs in both extension and declared-source modes. Unknown
 languages fail closed before walking. Exact-package rules require a canonical
 language-matched repository root; only the two registered TypeScript site
 roots may use the reviewed `unknown/*` graph identities.
+
+Declared-source globs use slash-segment-aware, bottom-up dynamic programming:
+only a whole `**` segment spans zero or more path segments, while `*`, `?`,
+and character classes remain within one segment. Every declared pattern is
+validated before enumeration. Each attempted match charges the product of
+pattern and candidate Unicode-scalar lengths plus one for each; 50,000,000
+units is the per-package ceiling. Enumeration includes directories and inert
+links in its 100,000-entry walk cap; no selected input is silently dropped.
 
 The selected files are ordered by normalized UTF-8 package-relative path, then
 hashed using their canonical repository-relative paths.

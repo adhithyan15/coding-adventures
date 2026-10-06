@@ -65,7 +65,7 @@ sub canonical_root {
 sub _valid_path {
     my ($path) = @_;
     return 0 if !defined($path) || ref($path) || length(encode('UTF-8', $path)) > 512
-        || $path =~ m{\A/|\A[A-Za-z]:|\\|//|[<>:"|?*]|[\x00-\x1f\x7f]}
+        || $path =~ m{\A/|\A[A-Za-z]:|\\|//|[<>:"|?*]|[\p{Cc}\p{Cf}]}
         || CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfc($path) ne $path;
     my %reserved = map { $_ => 1 } (qw(CON PRN AUX NUL CONIN$ CONOUT$ CLOCK$),
         map { "COM$_" } 1..9, map { "LPT$_" } 1..9);
@@ -88,6 +88,7 @@ sub select {
     my %seen;
     my %prefix_seen;
     my %inert;
+    my %files;
     for my $candidate (@$candidates) {
         die "SOURCE_CANDIDATES_INVALID: record\n" unless ref($candidate) eq 'HASH';
         my $path = $candidate->{path};
@@ -109,6 +110,15 @@ sub select {
         die "SOURCE_CANDIDATES_INVALID: kind\n"
             unless defined($kind) && $kind =~ /\A(?:file|symlink|reparse_point)\z/;
         $inert{$path} = 1 if $kind ne 'file';
+        $files{$path} = 1 if $kind eq 'file';
+    }
+    for my $path (keys %files) {
+        my @parts = split m{/}, $path;
+        my $prefix = '';
+        for my $part (@parts[0 .. $#parts - 1]) {
+            $prefix = length($prefix) ? "$prefix/$part" : $part;
+            die "SOURCE_PATH_INVALID: file prefix\n" if $files{$prefix};
+        }
     }
     my @selected;
     CANDIDATE: for my $candidate (@$candidates) {
