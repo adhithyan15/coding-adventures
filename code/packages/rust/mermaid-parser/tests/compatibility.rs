@@ -178,6 +178,9 @@ fn pinned_cynefin_subset_corpus_parses_to_domain_map_ir() {
             assert_eq!(diagram.accessibility_title.as_deref(), Some("Incident response framework"));
             assert_eq!(diagram.accessibility_description.as_deref(), Some("Practices organized by\nuncertainty and causality"));
         }
+        if name == "canvas-config" {
+            assert_eq!((diagram.config.width, diagram.config.height, diagram.config.padding), (640.0, 420.0, 24.0));
+        }
     }
 }
 

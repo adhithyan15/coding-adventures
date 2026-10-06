@@ -127,9 +127,11 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
 
 /// Place the four Cynefin quadrants and central confusion domain deterministically.
 pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
-    let width = 800.0; let height = 600.0; let top = if diagram.title.is_some() { 48.0 } else { 24.0 };
-    let left = 28.0; let gap = 10.0; let domain_width = (width - left * 2.0 - gap) / 2.0;
-    let domain_height = (height - top - 28.0 - gap) / 2.0;
+    let width = diagram.config.width + diagram.config.padding * 2.0;
+    let height = diagram.config.height + diagram.config.padding * 2.0;
+    let top = diagram.config.padding; let left = diagram.config.padding; let gap = 10.0;
+    let domain_width = (diagram.config.width - gap) / 2.0;
+    let domain_height = (diagram.config.height - gap) / 2.0;
     let specs = [("complex", left, top), ("complicated", left + domain_width + gap, top),
         ("chaotic", left, top + domain_height + gap), ("clear", left + domain_width + gap, top + domain_height + gap)];
     let mut domains: Vec<_> = specs.into_iter().map(|(name, x, y)| LayoutedCynefinDomain { name: name.into(),
@@ -140,8 +142,9 @@ pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
     let confusion_overflow = confusion_items.len().saturating_sub(3);
     domains.push(LayoutedCynefinDomain { name: "confusion".into(),
         items: confusion_items.into_iter().take(3).collect(), overflow_count: confusion_overflow,
-        x: width / 2.0 - 90.0, y: top + (height - top - 28.0) / 2.0 - 58.0, width: 180.0, height: 116.0,
-        center: Point { x: width / 2.0, y: top + (height - top - 28.0) / 2.0 }, confusion: true });
+        x: left + diagram.config.width * 0.35, y: top + diagram.config.height * 0.35,
+        width: diagram.config.width * 0.3, height: diagram.config.height * 0.3,
+        center: Point { x: left + diagram.config.width / 2.0, y: top + diagram.config.height / 2.0 }, confusion: true });
     let domain_by_name: HashMap<_, _> = domains.iter().map(|domain| (domain.name.as_str(), domain)).collect();
     let transitions = diagram.transitions.iter().filter_map(|transition| {
         let from = domain_by_name.get(transition.from.as_str())?;
@@ -350,6 +353,7 @@ mod tests {
     #[test]
     fn cynefin_layout_places_domains_in_fixed_semantic_quadrants() {
         let layout = layout_cynefin(&CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None,
+            config: diagram_ir::CynefinConfig { width: 640.0, height: 420.0, padding: 24.0 },
             domains: vec![diagram_ir::CynefinDomain { name: "confusion".into(),
                 items: vec!["One".into(), "Two".into(), "Three".into(), "Four".into(), "Five".into()] }],
             transitions: vec![diagram_ir::CynefinTransition { from: "complex".into(), to: "clear".into(), label: None }] });
@@ -358,6 +362,7 @@ mod tests {
         assert!(complex.center.x < clear.center.x && complex.center.y < clear.center.y);
         assert!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().confusion);
         assert_eq!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().overflow_count, 2);
+        assert_eq!((layout.width, layout.height), (688.0, 468.0));
         assert!(layout.transitions[0].from.x > complex.center.x);
         assert!(layout.transitions[0].to.x < clear.center.x);
     }
