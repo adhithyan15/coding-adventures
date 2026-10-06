@@ -170,12 +170,12 @@ sub extract_targets {
                 # A truncated call is never a valid declaration. Discovery
                 # must not reinterpret it as an extension-mode shell BUILD.
                 if ($depth != 0) {
-                    $i = $j;
-                    next;
+                    return ();
                 }
 
                 my $target = $self->_parse_rule_call($rule, $body);
-                push @targets, $target if $target;
+                return () unless $target;
+                push @targets, $target;
                 $i = $j;
                 next;
             }
@@ -202,9 +202,9 @@ sub _parse_rule_call {
     my @srcs;
     if ($body =~ /\bsrcs\s*=/) {
         my $srcs_text;
-        if ($body =~ /\bsrcs\s*=\s*glob\s*\(\s*\[([^\]]*)\]\s*\)/s) {
+        if ($body =~ /\bsrcs\s*=\s*glob\s*\(\s*\[([^\]]*)\]\s*\)(?=\s*(?:,|\)))/s) {
             $srcs_text = $1;
-        } elsif ($body =~ /\bsrcs\s*=\s*\[([^\]]*)\]/s) {
+        } elsif ($body =~ /\bsrcs\s*=\s*\[([^\]]*)\](?=\s*(?:,|\)))/s) {
             $srcs_text = $1;
         } else {
             return undef;

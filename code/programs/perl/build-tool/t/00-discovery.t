@@ -406,7 +406,7 @@ subtest 'detected Starlark without a supported target fails closed' => sub {
 };
 
 subtest 'malformed Starlark srcs fail closed' => sub {
-    for my $srcs ('glob(["assets/*.bin")', '[unquoted]') {
+    for my $srcs ('glob(["assets/*.bin")', '[unquoted]', '["a.pm"] + ["b.pm"]') {
         my $root = tempdir(CLEANUP => 1);
         make_pkg($root, 'code/packages/perl/malformed',
             "perl_library(name = \"malformed\", srcs = $srcs)\n");
@@ -414,6 +414,14 @@ subtest 'malformed Starlark srcs fail closed' => sub {
         like(dies { $discovery->discover() }, qr/STARLARK_TARGET_INVALID/,
             "$srcs rejected rather than treated as an empty declaration");
     }
+    my $root = tempdir(CLEANUP => 1);
+    make_pkg($root, 'code/packages/perl/partially-valid', <<'BUILD');
+perl_library(name = "first", srcs = ["a.pm"])
+perl_library(name = "broken", srcs = ["missing.pm"] + ["other.pm"])
+BUILD
+    my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $root);
+    like(dies { $discovery->discover() }, qr/STARLARK_TARGET_INVALID/,
+        'a malformed later target invalidates the whole BUILD');
 };
 
 done_testing();

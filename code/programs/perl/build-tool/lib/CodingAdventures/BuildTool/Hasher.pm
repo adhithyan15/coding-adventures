@@ -144,7 +144,7 @@ sub collect_source_files {
     my @files;
     my $declared = ($pkg->{source_mode} // 'extension') eq 'declared_sources';
     my @patterns;
-    my $matcher;
+    my @compiled;
     if ($declared) {
         my $srcs = $pkg->{declared_srcs};
         die 'DECLARED_GLOB_INVALID: expected an array' unless ref($srcs) eq 'ARRAY';
@@ -158,7 +158,8 @@ sub collect_source_files {
                 && $pattern !~ m{//|\A/|/\z|\*\*\*};
             push @patterns, $pattern;
         }
-        $matcher = CodingAdventures::BuildTool::GlobMatch->new();
+        my $matcher = CodingAdventures::BuildTool::GlobMatch->new();
+        @compiled = map { $matcher->glob_to_regex($_) } @patterns;
     } elsif (($pkg->{source_mode} // 'extension') ne 'extension') {
         die 'SOURCE_MODE_INVALID: unknown source mode';
     }
@@ -172,6 +173,8 @@ sub collect_source_files {
                     return;
                 }
                 return unless -f $_;
+                # Declared globs cannot reopen an external file via a link.
+                return if $declared && -l $_;
                 my $basename = File::Basename::basename($_);
                 my ($ext)    = ($basename =~ /(\.[^.]+)$/);
                 $ext //= '';
@@ -181,7 +184,7 @@ sub collect_source_files {
                     $relative =~ s{\\}{/}g;
                     my $build_file = $pkg->{build_file} // 'BUILD';
                     if ($relative eq $build_file
-                        || grep { $matcher->matches($_, $relative) } @patterns) {
+                        || grep { $relative =~ $_ } @compiled) {
                         push @files, $File::Find::name;
                     }
                 } elsif (exists $SOURCE_EXTENSIONS{$ext} || exists $SPECIAL_FILENAMES{$basename}) {
