@@ -15954,6 +15954,9 @@ This shared owner has higher leverage across implementation lanes than any
 single ready leaf. Keep native cache persistence and filesystem authority
 separate. An OCaml promotion review found the remaining gates already owned;
 its opam archive-mirroring path currently overlaps open Dependabot PR #15723.
+Select the neutral dependency-hashing adversarial corpus as the sole next
+delivery item in a fresh clean merged-main worktree. Its two prerequisites are
+merged and its fixture/schema/runner paths do not overlap a live PR.
 
 ## Autonomous Loop Protocol
 

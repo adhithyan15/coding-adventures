@@ -1769,10 +1769,13 @@
     {
       "id": "build-tool-neutral-dependency-hashing-adversarial-corpus",
       "title": "Complete adversarial neutral dependency-hashing fixtures",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-contract", "build-tool-fixtures"],
-      "branch": null,
+      "branch": "codex/parity-neutral-dependency-fixtures-20261006",
       "pr_number": null,
+      "selected_at": "2026-10-06T07:42:02Z",
+      "selection_revision": "deffa7f4837dc36835b1b23426e43eabd2ac8ee4",
+      "selection_notes": "Selected after PR #16785 merged through guarded auto-merge, exact-main inventory stayed collision-clean with unchanged 1,487 identities and 4,757 slots, and read-only audits found no other unowned package or OCaml promotion gap. This process-free neutral fixture tranche governs ten pending native dependency-hashing leaves; it outranks one-lane Elixir source hashing, Lua dependency hashing, and TypeScript diff selection by reusable contract leverage. Both prerequisites are merged, a fresh clean worktree and codex branch start at exact merged main, and no open PR overlaps the neutral hashing fixtures or schema/runner paths.",
       "notes": "Discovered in the post-#16785 read-only fixture audit. The eight hashing_cache cases have at most one dependency and do not prove multi-dependency name sorting, dependency-only invalidation with unchanged package bytes, or failed-prior-record miss behavior. Add bounded language-neutral cases and schema/oracle tests before the pending native dependency-hashing adopters consume them. Keep filesystem cache persistence and native authority outside this process-free fixture owner."
     },
     {
