@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16764,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16764",
+    "branch": "codex/parity-ruby-source-registry-20261006",
+    "implementation_revision": "de9a5da155b8c193735e5ed546b8be700c01fa09",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-06T01:36:34Z",
-    "pr_number": 16761,
-    "status": "merged",
-    "notes": "All 54 final-head checks were terminal and acceptable with zero failures; GitHub reported CLEAN/MERGEABLE before guarded squash auto-merge. PR #16761 merged as cec7a1deb62b8facbdd02f8f8c9275ecbd7b8f17 at 2026-10-06T01:34:06Z; no manual merge."
+    "observed_at": "2026-10-06T02:04:18Z",
+    "pr_number": 16764,
+    "status": "checks-pending",
+    "notes": "Ready-for-review Ruby source-registry PR opened at de9a5da155b8c193735e5ed546b8be700c01fa09. GitHub reports MERGEABLE but detect and CodeQL checks are queued; do not enable auto-merge until every required final-head check is terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
     "revision": "be52215294c542f73ac8142487a5c6f211ab025c",
@@ -1364,10 +1370,11 @@
     {
       "id": "build-tool-ruby-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Ruby build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-ruby-glob-matcher-complexity-hardening"],
       "branch": "codex/parity-ruby-source-registry-20261006",
-      "pr_number": null,
+      "pr_number": 16764,
+      "opened_at": "2026-10-06T02:04:18Z",
       "selected_at": "2026-10-06T01:41:10Z",
       "selection_revision": "cec7a1deb62b8facbdd02f8f8c9275ecbd7b8f17",
       "selection_notes": "Selected after merging #16761, collision-checking exact merged main, registering twelve audited 09/F00/F01 children, and confirming no active parity PR or overlapping Ruby registry work. Six prerequisites merged; exact 23-language registry adoption directly unblocks three pending owners. Use one fresh clean main-based Ruby worktree and keep repository-boundary reverse diff and native snapshot safety separate.",
