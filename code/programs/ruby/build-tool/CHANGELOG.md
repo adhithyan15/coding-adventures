@@ -6,6 +6,14 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- Source collection now loads a byte-for-byte packaged snapshot of the
+  checked 23-language, seven-role registry instead of a ten-language global
+  suffix/name allowlist. Extension mode includes exact scoped companions and
+  package-bound Engram WASM or site inputs without widening ordinary packages;
+  declared mode retains only universal, root metadata, and fixed-path inputs
+  outside its explicit globs. The full snapshot and digest are pinned, and all
+  seven package-local neutral cases run through the native collector. A sync
+  command and BUILD check keep installed package data current.
 - Source hashing now follows the 27-component neutral generated-directory
   registry, pruning exact lowercase `blib` while retaining `Blib` and
   `blib-example` in both extension and declared-source modes.
@@ -15,11 +23,11 @@ All notable changes to the Ruby build tool are documented in this file.
   validate every pattern before enumerating candidates, reuse the compiled
   form, raise one stable typed error for ambiguous or descending classes, and
   preserve Python-compatible leading-dot behavior.
-- Source hashing now recognizes OCaml `.ml`, `.mli`, and `.opam` inputs plus
-  exact `.ocamlformat`, `dune`, `dune-project`, and supported BUILD-front
-  metadata in extension and declared-source modes. Declared mode retains a
-  root `.opam` manifest independently of globs while nested manifests require
-  an explicit match. Package hashes use the
+- Source hashing now recognizes OCaml `.ml` and `.mli` inputs, root-only
+  `.opam`, `.ocamlformat`, and `dune-project` metadata, recursive extension-
+  mode `dune`, and exact supported BUILD fronts. Declared mode retains root
+  metadata independently of globs while nested manifests require an explicit
+  match. Package hashes use the
   language-neutral hashing-v1 stream of sorted repository-relative UTF-8 paths
   and exact raw bodies framed by unsigned 64-bit big-endian lengths, so
   same-content renames invalidate the cache without leaking checkout paths or
