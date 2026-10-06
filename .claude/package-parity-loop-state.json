@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16776,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16776",
+    "branch": "codex/parity-perl-dune-20261006",
+    "implementation_revision": "59f643ac25f95d70d7ace6964a48eb5e03979ab6",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-06T04:29:04Z",
-    "pr_number": 16774,
-    "status": "merged",
-    "notes": "All 32 final-head checks were terminal and acceptable (13 success, 19 expected skips), and GitHub reported MERGEABLE. The loop enabled guarded squash auto-merge; GitHub merged PR #16774 as 5bce810b2aad798b5be2d2035142cb65db7cf832 without manual merge."
+    "observed_at": "2026-10-06T04:58:37Z",
+    "pr_number": 16776,
+    "status": "checks-pending",
+    "notes": "Ready-for-review Perl Dune fixture PR opened at 59f643ac25f95d70d7ace6964a48eb5e03979ab6. GitHub reports MERGEABLE; CI detect, CodeQL detect, and human-language detection are queued. Do not enable auto-merge until every required final-head check is terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
     "revision": "2ec4adb9b14f20e958eee0f9340e9fe3d84ad8f7",
@@ -1939,10 +1945,10 @@
     {
       "id": "build-tool-perl-dune-build-discovery-fixture-adoption",
       "title": "Make Perl consume the Dune discovery fixture",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-generated-directory-hashing-conformance-corpus"],
       "branch": "codex/parity-perl-dune-20261006",
-      "pr_number": null,
+      "pr_number": 16776,
       "selected_at": "2026-10-06T04:32:09Z",
       "selection_revision": "5bce810b2aad798b5be2d2035142cb65db7cf832",
       "selection_notes": "Selected after #16774 auto-merged, exact-main collision report confirmed 15 lanes, 1,487 identities, 4,757 slots, five emerging OCaml packages, and zero collisions. Both prerequisites are merged; this narrow fixture owner reaches 12 unfinished downstream owners and does not overlap any open PR. Register the newly discovered stack-VM neutral owner before selection. Keep full OCaml source hashing, declared-source plumbing, and native snapshot authority outside this slice.",
