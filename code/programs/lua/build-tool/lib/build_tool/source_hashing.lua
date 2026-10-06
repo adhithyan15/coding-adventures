@@ -20,6 +20,7 @@ local snapshot = copy(packaged_snapshot)
 local SourceHashing = {}
 local MAX_CANDIDATES = 100000
 local MAX_SELECTED = 50000
+local MAX_HASHING_IDENTITIES = 4096
 local MAX_FILE_BYTES = 64 * 1024 * 1024
 local MAX_PACKAGE_BYTES = 1024 * 1024 * 1024
 local MAX_GLOB_WORK = 50000000
@@ -489,13 +490,26 @@ local function digest_bytes(hex, label)
 end
 
 local function package_identity(name)
-    local parts = parts_of(name)
-    if #parts < 2 then reject("package identity needs a language and name") end
+    -- The neutral schema defines short ASCII identities. Validate before any
+    -- Unicode normalization so hostile combining-mark runs cannot consume
+    -- disproportionate CPU at this pure-data boundary.
+    if type(name) ~= "string" or #name > 240 or #name == 0
+        or name:find("[^a-z0-9._/-]") then
+        reject("non-canonical package identity")
+    end
+    local count = 0
+    for segment in (name .. "/"):gmatch("(.-)/") do
+        if not segment:match("^[a-z0-9][a-z0-9._-]*$") then
+            reject("non-canonical package identity")
+        end
+        count = count + 1
+    end
+    if count < 2 then reject("package identity needs a language and name") end
     return name
 end
 
 function SourceHashing.dependencies_digest(dependency_digests)
-    local count = dense_count(dependency_digests, MAX_SELECTED, "dependency digests")
+    local count = dense_count(dependency_digests, MAX_HASHING_IDENTITIES, "dependency digests")
     local sorted, seen = {}, {}
     local total = 0
     for index = 1, count do
@@ -531,7 +545,7 @@ function SourceHashing.evaluate_hashing_cache(options, contents)
         reject("unsupported hashing-cache options")
     end
     local package = package_identity(options.package)
-    local dependent_count = dense_count(options.dependents, MAX_SELECTED, "dependents")
+    local dependent_count = dense_count(options.dependents, MAX_HASHING_IDENTITIES, "dependents")
     local invalidated, seen = {package}, {[package] = true}
     for index = 1, dependent_count do
         local dependent = package_identity(options.dependents[index])

@@ -89,6 +89,19 @@ describe("portable Lua dependency hashing and inert cache decisions", function()
         assert.has_error(function()
             SourceHashing.combined_digest(string.rep("11", 32), "invalid")
         end)
+        assert.has_error(function()
+            SourceHashing.dependencies_digest({{package = "lua/" .. string.rep("a", 240),
+                digest = valid.digest}})
+        end)
+        assert.has_error(function()
+            SourceHashing.dependencies_digest({{package = "lua/" .. string.rep("\204\129", 200),
+                digest = valid.digest}})
+        end)
+        local oversized = {}
+        for index = 1, 4097 do
+            oversized[index] = {package = "lua/item" .. index, digest = valid.digest}
+        end
+        assert.has_error(function() SourceHashing.dependencies_digest(oversized) end)
     end)
 
     it("keeps prior-cache decisions inert and invalidation sorted", function()
