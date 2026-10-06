@@ -1,0 +1,1 @@
+var e=``+new URL(`MR-W05-candrabindu-filmstrip-DJaQM1sL.svg`,import.meta.url).href;export{e as default};

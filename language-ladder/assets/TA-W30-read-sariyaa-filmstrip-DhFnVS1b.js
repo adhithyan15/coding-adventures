@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W30-read-sariyaa-filmstrip-B05ZLz5n.svg`,import.meta.url).href;export{e as default};

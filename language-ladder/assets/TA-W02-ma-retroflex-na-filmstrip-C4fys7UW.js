@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W02-ma-retroflex-na-filmstrip-bv9p-C48.svg`,import.meta.url).href;export{e as default};

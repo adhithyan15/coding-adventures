@@ -1,0 +1,1 @@
+var e=``+new URL(`MR-W01-virama-filmstrip-2qn3boMe.svg`,import.meta.url).href;export{e as default};

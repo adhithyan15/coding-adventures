@@ -1,0 +1,1 @@
+var e=``+new URL(`GU-C34-kemke-write-filmstrip-B5najVBk.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`MW-W15-nukta-filmstrip-B9_EOhKQ.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W04-vowel-signs-nandri-filmstrip-CWt3pr-4.svg`,import.meta.url).href;export{e as default};

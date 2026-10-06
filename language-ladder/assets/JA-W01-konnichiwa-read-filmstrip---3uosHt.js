@@ -1,0 +1,1 @@
+var e=``+new URL(`JA-W01-konnichiwa-read-filmstrip-Chd6naVi.svg`,import.meta.url).href;export{e as default};

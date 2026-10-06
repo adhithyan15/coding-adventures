@@ -1,0 +1,1 @@
+var e=``+new URL(`GU-C36-te-write-filmstrip-BSO1nl4n.svg`,import.meta.url).href;export{e as default};

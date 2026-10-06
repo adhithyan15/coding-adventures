@@ -1,0 +1,1 @@
+var e=``+new URL(`GU-W04-i-matra-filmstrip-CprDnnFU.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`GU-C32-ane-write-filmstrip-BheTZavh.svg`,import.meta.url).href;export{e as default};

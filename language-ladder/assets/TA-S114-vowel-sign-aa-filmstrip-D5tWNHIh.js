@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-S114-vowel-sign-aa-filmstrip-DPTyVnww.svg`,import.meta.url).href;export{e as default};

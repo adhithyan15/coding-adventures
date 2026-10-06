@@ -1,0 +1,1 @@
+var e=``+new URL(`RU-W05-privet-letters-e-t-filmstrip-C4Cf_L4t.svg`,import.meta.url).href;export{e as default};

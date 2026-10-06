@@ -1,0 +1,1 @@
+var e=``+new URL(`RU-W04-privet-letters-p-i-filmstrip-HvnvPAbt.svg`,import.meta.url).href;export{e as default};

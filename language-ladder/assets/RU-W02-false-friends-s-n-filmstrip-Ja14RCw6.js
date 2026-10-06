@@ -1,0 +1,1 @@
+var e=``+new URL(`RU-W02-false-friends-s-n-filmstrip-d6z1r-kR.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W07-write-sari-filmstrip-DkiURp1_.svg`,import.meta.url).href;export{e as default};

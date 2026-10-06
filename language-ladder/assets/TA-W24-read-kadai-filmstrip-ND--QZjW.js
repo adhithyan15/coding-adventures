@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W24-read-kadai-filmstrip-DhVrcjOp.svg`,import.meta.url).href;export{e as default};

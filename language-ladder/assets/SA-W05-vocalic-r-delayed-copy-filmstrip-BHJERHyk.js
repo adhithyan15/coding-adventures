@@ -1,0 +1,1 @@
+var e=``+new URL(`MR-W05-ru-matra-filmstrip-fgeyefUf.svg`,import.meta.url).href;export{e as default};

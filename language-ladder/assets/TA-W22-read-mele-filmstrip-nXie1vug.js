@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W22-read-mele-filmstrip-DfA_hnOD.svg`,import.meta.url).href;export{e as default};

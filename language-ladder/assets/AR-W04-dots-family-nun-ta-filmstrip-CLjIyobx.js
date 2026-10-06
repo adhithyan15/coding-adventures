@@ -1,0 +1,1 @@
+var e=``+new URL(`AR-W04-dots-family-nun-ta-filmstrip-CGMjJ5g-.svg`,import.meta.url).href;export{e as default};

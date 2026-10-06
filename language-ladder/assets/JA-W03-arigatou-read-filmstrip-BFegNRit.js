@@ -1,0 +1,1 @@
+var e=``+new URL(`JA-W03-arigatou-read-filmstrip-uJN6nJgg.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W01-abugida-va-ka-filmstrip-DSgpZoOs.svg`,import.meta.url).href;export{e as default};
