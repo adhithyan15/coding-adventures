@@ -3860,16 +3860,29 @@ fn write_ios_app_project(
     }
     write_file(&project_path, project.as_bytes())?;
     written.push(project_path);
-    // `xcodebuild test` needs a scheme; there is one only with UI tests.
+    // `xcodebuild test` needs a scheme; there is one only with UI tests. It
+    // lives in a workspace beside the project, not in the project: see
+    // `mosaic_ios_project::shared_scheme` for why.
     if let Some(scheme) = mosaic_ios_project::shared_scheme(&app, "App.xcodeproj")
         .map_err(|error| BuildError::Io(format!("iOS app scheme: {error}")))?
     {
-        let scheme_path = backend_dir.join("iOS/App.xcodeproj/xcshareddata/xcschemes/App.xcscheme");
-        if let Some(parent) = scheme_path.parent() {
-            create_dir_all(parent)?;
+        let workspace = mosaic_ios_project::workspace_contents("App.xcodeproj")
+            .map_err(|error| BuildError::Io(format!("iOS app workspace: {error}")))?;
+        let scheme_name = mosaic_ios_project::ui_test_target_name(&app);
+        for (relative, body) in [
+            ("iOS/App.xcworkspace/contents.xcworkspacedata".to_string(), workspace),
+            (
+                format!("iOS/App.xcworkspace/xcshareddata/xcschemes/{scheme_name}.xcscheme"),
+                scheme,
+            ),
+        ] {
+            let path = backend_dir.join(relative);
+            if let Some(parent) = path.parent() {
+                create_dir_all(parent)?;
+            }
+            write_file(&path, body.as_bytes())?;
+            written.push(path);
         }
-        write_file(&scheme_path, scheme.as_bytes())?;
-        written.push(scheme_path);
     }
     Ok(written)
 }
@@ -14737,7 +14750,16 @@ layout NativeEvents {
         );
         let scheme_path = out
             .path()
-            .join("swiftui/iOS/App.xcodeproj/xcshareddata/xcschemes/App.xcscheme");
+            .join("swiftui/iOS/App.xcworkspace/xcshareddata/xcschemes/AppUITests.xcscheme");
+        let workspace = fs::read_to_string(
+            out.path()
+                .join("swiftui/iOS/App.xcworkspace/contents.xcworkspacedata"),
+        )
+        .unwrap();
+        assert!(workspace.contains("location = \"group:App.xcodeproj\""), "{workspace}");
+        // Nothing in the project itself: a project's own schemes resolve
+        // against its `..` project directory.
+        assert!(!out.path().join("swiftui/iOS/App.xcodeproj/xcshareddata").exists());
         assert!(result.artifacts.contains(&scheme_path));
         let scheme = fs::read_to_string(&scheme_path).unwrap();
         assert!(
@@ -14764,6 +14786,7 @@ layout NativeEvents {
             .path()
             .join("swiftui/iOS/App.xcodeproj/xcshareddata")
             .exists());
+        assert!(!plain.path().join("swiftui/iOS/App.xcworkspace").exists());
         assert!(!plain.path().join("swiftui/UITests").exists());
     }
 

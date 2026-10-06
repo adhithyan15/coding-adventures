@@ -4,8 +4,12 @@
   plus XCUITest sources. The older function now calls it with none, so its
   output is unchanged. Each source is copied to `swiftui/UITests/<name>`
   and listed in a UI test bundle in `iOS/App.xcodeproj`. The builder also
-  writes `iOS/App.xcodeproj/xcshareddata/xcschemes/App.xcscheme`, which
-  `xcodebuild test -scheme App` needs.
+  writes `iOS/App.xcworkspace`, holding only that project, with the shared
+  scheme `xcshareddata/xcschemes/AppUITests.xcscheme`. That is what
+  `xcodebuild test -workspace App.xcworkspace -scheme AppUITests` needs.
+  The scheme does not go in the project itself, because the project's
+  `projectDirPath` is `..`, and `xcodebuild` found no buildable platforms
+  for a scheme there.
 - The sources are checked before anything is emitted:
   - an iOS app build only (`swiftui`, `--emit-project`, an `.xcframework`
     runtime);

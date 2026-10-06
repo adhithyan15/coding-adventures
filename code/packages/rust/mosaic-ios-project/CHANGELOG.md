@@ -12,6 +12,15 @@
   - `shared_scheme` returns the scheme XML (build, launch, and test with the
     bundle), with every attribute value XML-escaped, or `None` without UI
     tests. Without them the project is byte-for-byte what it was.
+  - `workspace_contents` returns an `App.xcworkspace` that holds only the
+    project beside it. The scheme (named `<product>UITests`) is written into
+    that workspace, not into `App.xcodeproj/xcshareddata`. A project whose
+    `projectDirPath` is `".."` left `xcodebuild` with an implicit workspace
+    whose scheme had no buildable platforms: "Supported platforms for the
+    buildables in the current scheme is empty". That happened even though
+    every target named its SDK.
+  - Every target names `SDKROOT = iphoneos`, so a scheme that builds only
+    the UI-test bundle still resolves an iOS destination.
   - `cargo fmt` was applied to the whole file with this change.
 - **New crate (UI89 §2.2).** `project_pbxproj` writes the Xcode project for a
   Mosaic app on iOS and iPadOS: one application target for iPhone and iPad,

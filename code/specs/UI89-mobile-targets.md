@@ -1057,6 +1057,15 @@ cold launches against one state file:
     since that keyboard covers the bottom of a landscape iPad.
   - **It runs after the iPad launch check.** The app is uninstalled first,
     and the step requires `Executed 1 test, with 0 failures` in the log.
+  - **The scheme lives in a workspace.** The builder writes
+    `iOS/App.xcworkspace` (holding only `App.xcodeproj`) and puts the scheme
+    there as `AppUITests`. CI runs `xcodebuild test -workspace
+    App.xcworkspace -scheme AppUITests -sdk iphonesimulator`. The first runs
+    put the scheme inside the project instead. Every scheme there resolved
+    to no buildables, Xcode's auto-created `App` scheme included: the
+    project's directory is `..`, and a project's own schemes resolve
+    `container:` against it. A workspace resolves it against its own
+    folder.
   - **The builder.** It takes the sources through
     `build_package_with_ios_ui_tests`, which
     `build_package_with_profile_runtime_and_tokens` now calls with none, so

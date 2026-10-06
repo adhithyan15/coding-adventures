@@ -94,7 +94,7 @@ fn repeated_ui_tests_reach_the_ios_project_and_its_scheme() {
         "{project}"
     );
     assert!(swiftui
-        .join("iOS/App.xcodeproj/xcshareddata/xcschemes/App.xcscheme")
+        .join("iOS/App.xcworkspace/xcshareddata/xcschemes/AppUITests.xcscheme")
         .is_file());
     fs::remove_dir_all(&scratch).ok();
 }

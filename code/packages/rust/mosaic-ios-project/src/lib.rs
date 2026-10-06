@@ -794,11 +794,22 @@ fn ui_test_settings(app: &IosApp) -> Vec<(&'static str, Setting)> {
 // The shared scheme
 // --------------------------------------------------------------------------
 
-/// `App.xcodeproj/xcshareddata/xcschemes/<product>.xcscheme` for an app with
-/// UI tests (UI89 §4.3), or `None` without them. `xcodebuild test` needs a
-/// scheme, and Xcode creates one only when the project is opened in its
-/// UI, so the builder writes it. The scheme builds the app, runs it, and
-/// tests it with the UI test bundle.
+/// The scheme for an app with UI tests (UI89 §4.3), or `None` without them.
+/// `xcodebuild test` needs a scheme, and Xcode creates one only when the
+/// project is opened in its UI, so the builder writes it. The scheme builds
+/// the app, runs it, and tests it with the UI test bundle. It is named
+/// [`ui_test_target_name`] (`AppUITests`), so it can never be confused with a
+/// scheme Xcode creates for the app target itself.
+///
+/// It belongs in a WORKSPACE beside the project
+/// (`App.xcworkspace/xcshareddata/xcschemes/AppUITests.xcscheme`, with
+/// [`workspace_contents`]), not inside the `.xcodeproj`. A project's own
+/// schemes resolve `container:` against the project's directory, and this
+/// project's directory is `..` (`source_root`), where no `App.xcodeproj`
+/// exists. Two CI runs saw every scheme in the project, Xcode's own
+/// included, resolve to no buildables ("Supported platforms for the
+/// buildables in the current scheme is empty"). A workspace resolves
+/// `container:` against its own folder, which is the project's folder.
 ///
 /// The file is exactly what Xcode itself writes: the XML declaration, then
 /// the `<Scheme>` root. It carries no provenance comment, unlike the
@@ -809,6 +820,7 @@ fn ui_test_settings(app: &IosApp) -> Vec<(&'static str, Setting)> {
 /// the product name to letters, digits, `-` and `_`. `project_file` is the
 /// `.xcodeproj` directory's name, which the scheme refers to as its container.
 pub fn shared_scheme(app: &IosApp, project_file: &str) -> Result<Option<String>, ProjectError> {
+    // (The workspace that holds this scheme is `workspace_contents`.)
     validate(app)?;
     check_text("project_file", project_file)?;
     if app.ui_test_sources.is_empty() {
@@ -862,6 +874,25 @@ pub fn shared_scheme(app: &IosApp, project_file: &str) -> Result<Option<String>,
         app = app_reference,
         tests = test_reference,
     )))
+}
+
+/// `contents.xcworkspacedata` for a workspace that holds only `project_file`
+/// (the `.xcodeproj` beside it), so a scheme in the workspace can refer to the
+/// project by a path relative to the workspace's folder. See [`shared_scheme`].
+pub fn workspace_contents(project_file: &str) -> Result<String, ProjectError> {
+    check_text("project_file", project_file)?;
+    Ok(format!(
+        concat!(
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+            "<Workspace\n",
+            "   version = \"1.0\">\n",
+            "   <FileRef\n",
+            "      location = \"group:{}\">\n",
+            "   </FileRef>\n",
+            "</Workspace>\n",
+        ),
+        xml_escape(project_file)
+    ))
 }
 
 /// An XML attribute value with `&`, `<`, `>`, `"` and `'` escaped.
@@ -1013,6 +1044,19 @@ mod tests {
             scheme.matches("<BuildableReference ").count(),
             scheme.matches("</BuildableReference>").count()
         );
+    }
+
+    #[test]
+    fn the_workspace_holds_only_the_project_beside_it() {
+        let workspace = workspace_contents("App.xcodeproj").unwrap();
+        assert_eq!(
+            workspace,
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Workspace\n   version = \"1.0\">\n   <FileRef\n      location = \"group:App.xcodeproj\">\n   </FileRef>\n</Workspace>\n"
+        );
+        assert!(workspace_contents("A&B.xcodeproj")
+            .unwrap()
+            .contains("group:A&amp;B.xcodeproj"));
+        assert!(workspace_contents("").is_err());
     }
 
     #[test]
