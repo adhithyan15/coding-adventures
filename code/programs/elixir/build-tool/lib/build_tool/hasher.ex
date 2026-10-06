@@ -37,6 +37,11 @@ defmodule BuildTool.Hasher do
 
   alias BuildTool.{DirectedGraph, SourceInputRegistry}
 
+  @max_source_candidates 100_000
+  @max_source_depth 64
+  @max_source_bytes 268_435_456
+  @read_chunk_bytes 65_536
+
   # ---------------------------------------------------------------------------
   # Public API
   # ---------------------------------------------------------------------------
@@ -76,16 +81,17 @@ defmodule BuildTool.Hasher do
     files = collect_source_files(package.path, entry, package_root, mode, compiled_srcs)
 
     files
-    |> Enum.reduce(:crypto.hash_init(:sha256), fn {relative, absolute}, hash ->
+    |> Enum.reduce(:crypto.hash_init(:sha256), fn {relative, absolute, stat}, hash ->
       path = if package_root == nil, do: relative, else: package_root <> "/" <> relative
-      bytes = File.read!(absolute)
 
-      :crypto.hash_update(hash, [
-        <<byte_size(path)::unsigned-big-integer-size(64)>>,
-        path,
-        <<byte_size(bytes)::unsigned-big-integer-size(64)>>,
-        bytes
-      ])
+      hash =
+        :crypto.hash_update(hash, [
+          <<byte_size(path)::unsigned-big-integer-size(64)>>,
+          path,
+          <<stat.size::unsigned-big-integer-size(64)>>
+        ])
+
+      hash_open_file(hash, absolute, stat)
     end)
     |> :crypto.hash_final()
     |> Base.encode16(case: :lower)
@@ -95,6 +101,54 @@ defmodule BuildTool.Hasher do
   defdelegate source_input_registry_snapshot(), to: SourceInputRegistry, as: :snapshot_bytes
   defdelegate source_input_registry_digest(), to: SourceInputRegistry, as: :digest
   defdelegate collect_candidates(options), to: SourceInputRegistry
+
+  defp hash_open_file(hash, absolute, expected) do
+    {:ok, device} = File.open(absolute, [:read, :raw, :binary])
+
+    try do
+      verify_open_file!(device, expected)
+      {hashed, size} = hash_file_chunks(device, hash, 0)
+
+      if size != expected.size do
+        raise ArgumentError, "source file size changed while hashing"
+      end
+
+      verify_open_file!(device, expected)
+      hashed
+    after
+      File.close(device)
+    end
+  end
+
+  defp hash_file_chunks(device, hash, size) do
+    case IO.binread(device, @read_chunk_bytes) do
+      :eof ->
+        {hash, size}
+
+      {:error, reason} ->
+        raise File.Error, reason: reason, action: "read", path: "source"
+
+      bytes ->
+        next_size = size + byte_size(bytes)
+
+        if next_size > @max_source_bytes do
+          raise ArgumentError, "source byte limit exceeded"
+        end
+
+        hash_file_chunks(device, :crypto.hash_update(hash, bytes), next_size)
+    end
+  end
+
+  defp verify_open_file!(device, expected) do
+    {:ok, info} = :file.read_file_info(device)
+    actual = File.Stat.from_record(info)
+
+    unless actual.type == :regular and actual.size == expected.size and
+             actual.major_device == expected.major_device and
+             actual.minor_device == expected.minor_device and actual.inode == expected.inode do
+      raise ArgumentError, "source file identity changed while hashing"
+    end
+  end
 
   @doc """
   Computes a SHA256 hash of all transitive dependency hashes.
@@ -150,35 +204,64 @@ defmodule BuildTool.Hasher do
   # inert. Stable retained-handle proof is separately owned; this stage only
   # removes the old follow-links collector and its silent read sentinel.
   defp collect_source_files(root, entry, package_root, mode, compiled_srcs) do
-    {files, _count} = walk_files(root, "", [], 0, entry, package_root, mode, compiled_srcs)
-    Enum.sort_by(files, fn {relative, _absolute} -> relative end)
+    {files, _count, _bytes} =
+      walk_files(root, "", [], 0, 0, 0, entry, package_root, mode, compiled_srcs)
+
+    Enum.sort_by(files, fn {relative, _absolute, _stat} -> relative end)
   end
 
-  defp walk_files(dir, prefix, files, count, entry, package_root, mode, compiled_srcs) do
-    dir
-    |> File.ls!()
+  defp walk_files(
+         dir,
+         prefix,
+         files,
+         count,
+         bytes,
+         depth,
+         entry,
+         package_root,
+         mode,
+         compiled_srcs
+       ) do
+    if depth > @max_source_depth do
+      raise ArgumentError, "source depth limit exceeded"
+    end
+
+    names = File.ls!(dir)
+
+    if count + length(names) > @max_source_candidates do
+      raise ArgumentError, "source candidate limit exceeded"
+    end
+
+    names
     |> Enum.sort()
-    |> Enum.reduce({files, count}, fn name, {found, seen} ->
+    |> Enum.reduce({files, count, bytes}, fn name, {found, seen, total_bytes} ->
       relative = if prefix == "", do: name, else: prefix <> "/" <> name
       absolute = Path.join(dir, name)
+      next_count = seen + 1
+      stat = File.lstat!(absolute)
 
-      case File.lstat!(absolute).type do
+      case stat.type do
         :directory ->
           if name in SourceInputRegistry.registry()["universal_inputs"][
                "generated_directory_components"
              ] do
-            {found, seen}
+            {found, next_count, total_bytes}
           else
-            walk_files(absolute, relative, found, seen, entry, package_root, mode, compiled_srcs)
+            walk_files(
+              absolute,
+              relative,
+              found,
+              next_count,
+              total_bytes,
+              depth + 1,
+              entry,
+              package_root,
+              mode,
+              compiled_srcs
+            )
           end
 
         :regular ->
-          next_count = seen + 1
-
-          if next_count > 100_000 do
-            raise ArgumentError, "source candidate limit exceeded"
-          end
-
           if SourceInputRegistry.selected_path?(
                entry,
                package_root,
@@ -186,13 +269,19 @@ defmodule BuildTool.Hasher do
                compiled_srcs,
                relative
              ) do
-            {[{relative, absolute} | found], next_count}
+            next_bytes = total_bytes + stat.size
+
+            if next_bytes > @max_source_bytes do
+              raise ArgumentError, "source byte limit exceeded"
+            end
+
+            {[{relative, absolute, stat} | found], next_count, next_bytes}
           else
-            {found, next_count}
+            {found, next_count, total_bytes}
           end
 
         _ ->
-          {found, seen}
+          {found, next_count, total_bytes}
       end
     end)
   end

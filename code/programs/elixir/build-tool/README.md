@@ -204,7 +204,9 @@ python scripts/sync_source_input_registry.py --check
 ```
 
 The package hash frames sorted repository-relative paths and raw file contents
-with 64-bit big-endian lengths before SHA-256. `test/source_input_registry_test.exs`
+with 64-bit big-endian lengths before SHA-256. Native reads are streamed under
+candidate, depth, and package-byte limits, and an opened file must retain the
+identity observed by the collector. `test/source_input_registry_test.exs`
 checks the complete projection, all seven package-local neutral collection
 cases, byte framing, and exact generated-name pruning. Dependency hashing and
 retained-handle filesystem authority are separate conformance stages.

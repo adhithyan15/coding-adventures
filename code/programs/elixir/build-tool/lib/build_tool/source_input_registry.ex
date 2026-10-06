@@ -26,6 +26,7 @@ defmodule BuildTool.SourceInputRegistry do
   @registry_bytes BuildTool.SourceInputRegistryData.bytes()
   @registry Jason.decode!(@registry_bytes)
   @digest_domain "coding-adventures/build-tool-language-source-input-registry/v1"
+  @max_source_bytes 268_435_456
 
   def registry, do: @registry
   def snapshot_bytes, do: @registry_bytes
@@ -187,8 +188,9 @@ defmodule BuildTool.SourceInputRegistry do
     do: Enum.any?(suffixes, &String.ends_with?(basename, &1))
 
   defp validate_candidates!(candidates) do
-    {kinds, _identities} =
-      Enum.reduce(candidates, {%{}, MapSet.new()}, fn candidate, {paths, identities} ->
+    {kinds, _identities, _bytes} =
+      Enum.reduce(candidates, {%{}, MapSet.new(), 0}, fn candidate,
+                                                         {paths, identities, total_bytes} ->
         unless is_map(candidate) and candidate["kind"] in ["file", "symlink", "reparse_point"] do
           raise ArgumentError, "invalid source candidate kind"
         end
@@ -205,7 +207,26 @@ defmodule BuildTool.SourceInputRegistry do
           raise ArgumentError, "source candidate identity collision"
         end
 
-        {Map.put(paths, path, candidate["kind"]), MapSet.put(identities, identity)}
+        content_bytes =
+          if candidate["kind"] == "file" do
+            hex = candidate["content_hex"]
+
+            unless is_binary(hex) and rem(byte_size(hex), 2) == 0 do
+              raise ArgumentError, "invalid source candidate content"
+            end
+
+            div(byte_size(hex), 2)
+          else
+            0
+          end
+
+        next_bytes = total_bytes + content_bytes
+
+        if next_bytes > @max_source_bytes do
+          raise ArgumentError, "source candidate byte limit exceeded"
+        end
+
+        {Map.put(paths, path, candidate["kind"]), MapSet.put(identities, identity), next_bytes}
       end)
 
     Enum.each(kinds, fn {path, _kind} ->

@@ -14,7 +14,8 @@ All notable changes to this project will be documented in this file.
 - Package source hashes now use Hashing v1: raw UTF-8 repository-relative path
   and raw content bytes, each framed with an unsigned 64-bit big-endian length.
   Deterministic sorting, binary bytes, and read errors no longer pass through
-  the old concatenated per-file-hex-digest or sentinel paths.
+  the old concatenated per-file-hex-digest or sentinel paths. Native reads are
+  streamed with candidate, depth, byte, and opened-file identity bounds.
 
 ### Tests
 
