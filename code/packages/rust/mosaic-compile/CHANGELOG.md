@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Added — `pkg --ios-ui-test <FILE.swift>` (UI89 §4.3)
+
+A repeatable flag that passes XCUITest sources to the artifact builder's new
+`build_package_with_ios_ui_tests`. They become a UI test bundle and shared
+scheme in the iOS app project. It is refused outside an iOS app build, and
+for a name that is not plain. `tests/ios_ui_tests.rs` drives it end to end
+through the binary.
+
 ### Changed — the list-fixture tests drive `SegmentedControl`'s new flat `options` (UI86, #15420)
 
 `tests/list_fixtures.rs` compiles the real component, whose `options` slot is

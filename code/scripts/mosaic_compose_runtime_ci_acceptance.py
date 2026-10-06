@@ -53,6 +53,9 @@ CI_SCRIPT_PATHS = (
     # Assembles Journal's generated Android project through that verified
     # jar (UI89 §3.9).
     "code/scripts/assemble-mosaic-android-debug.sh",
+    # Runs an app's instrumented UI test across two cold launches on the
+    # emulator (UI89 §4.2).
+    "code/scripts/mosaic-android-ui-test.sh",
 )
 
 

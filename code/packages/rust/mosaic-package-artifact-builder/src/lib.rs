@@ -1855,7 +1855,28 @@ pub fn build_package_with_profile_runtime_and_tokens(
     runtime_library: Option<&Path>,
     tokens: &mosstyle_compiler::TokenOverrides,
 ) -> Result<BuildResult, BuildError> {
+    build_package_with_ios_ui_tests(opts, profile, runtime_library, tokens, &[])
+}
+
+/// [`build_package_with_profile_runtime_and_tokens`], plus XCUITest sources
+/// for the iOS app (UI89 §4.3, `mosaic-compile pkg --ios-ui-test`).
+///
+/// Each file is copied to `swiftui/UITests/<name>` and compiled by a UI test
+/// bundle beside the app target, and a shared scheme is written so
+/// `xcodebuild test` can run it. Only an iOS app build takes them (SwiftUI,
+/// `--emit-project`, an `.xcframework` runtime). Each must be a regular
+/// `.swift` file whose name is plain (`^[A-Za-z0-9_]+\.swift$`), and only that
+/// name reaches the project. With none, the build is exactly
+/// [`build_package_with_profile_runtime_and_tokens`]'s.
+pub fn build_package_with_ios_ui_tests(
+    opts: &BuildOptions,
+    profile: BuildProfile,
+    runtime_library: Option<&Path>,
+    tokens: &mosstyle_compiler::TokenOverrides,
+    ios_ui_tests: &[PathBuf],
+) -> Result<BuildResult, BuildError> {
     validate_runtime_library_selection(opts, runtime_library)?;
+    validate_ios_ui_tests(opts, runtime_library, ios_ui_tests)?;
     let report = analyze_package_degradations_with_runtime_and_tokens(
         opts,
         profile,
@@ -1875,7 +1896,8 @@ pub fn build_package_with_profile_runtime_and_tokens(
         });
     }
 
-    let mut result = build_package_inner(opts, Some(profile), runtime_library, tokens)?;
+    let mut result =
+        build_package_inner(opts, Some(profile), runtime_library, tokens, ios_ui_tests)?;
     // Filled in after emission, from what the build actually overwrote — the
     // analysis pass above cannot know, because it writes nothing.
     let mut report = report;
@@ -2734,7 +2756,7 @@ pub fn build_package_with_tokens(
     opts: &BuildOptions,
     tokens: &mosstyle_compiler::TokenOverrides,
 ) -> Result<BuildResult, BuildError> {
-    build_package_inner(opts, None, None, tokens)
+    build_package_inner(opts, None, None, tokens, &[])
 }
 
 fn build_package_inner(
@@ -2742,6 +2764,7 @@ fn build_package_inner(
     profile: Option<BuildProfile>,
     runtime_library: Option<&Path>,
     tokens: &mosstyle_compiler::TokenOverrides,
+    ios_ui_tests: &[PathBuf],
 ) -> Result<BuildResult, BuildError> {
     // ----- 1. Validate the backend up front --------------------------------
     //
@@ -3058,7 +3081,12 @@ fn build_package_inner(
             components_built.first(),
             runtime_library.is_some_and(is_xcframework),
         ) {
-            artifacts.extend(write_ios_app_project(&manifest, &backend_dir, root_component)?);
+            artifacts.extend(write_ios_app_project(
+                &manifest,
+                &backend_dir,
+                root_component,
+                ios_ui_tests,
+            )?);
         }
     }
 
@@ -3406,6 +3434,9 @@ fn build_android_build_gradle_kts(application_id: &str, package_version: &str) -
             "        targetSdk = {sdk}\n",
             "        versionCode = 1\n",
             "        versionName = \"{version}\"\n",
+            "        // The runner for an app's instrumented UI test (UI89 §4.2),\n",
+            "        // which drives this app's own MosaicActivity on a device.\n",
+            "        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\n",
             "    }}\n\n",
             "    compileOptions {{\n",
             "        sourceCompatibility = JavaVersion.VERSION_17\n",
@@ -3431,6 +3462,13 @@ fn build_android_build_gradle_kts(application_id: &str, package_version: &str) -
             "    // binding code is the desktop's (UI89 §3.2).\n",
             "    implementation(\"net.java.dev.jna:jna:{jna}@aar\")\n",
             "    implementation(\"org.jetbrains.kotlinx:kotlinx-serialization-json:{serialization}\")\n",
+            "    // Only an instrumented test (UI89 §4.2) compiles against these;\n",
+            "    // `assembleDebug` never resolves them, so the app APK is unchanged.\n",
+            "    androidTestImplementation(\"org.jetbrains.compose.ui:ui-test-junit4:{compose}\")\n",
+            "    androidTestImplementation(\"androidx.test:runner:{test_runner}\")\n",
+            "    androidTestImplementation(\"androidx.test.ext:junit:{test_junit}\")\n",
+            "    // A UI test answers the system's document picker itself (UI89 §4.4).\n",
+            "    androidTestImplementation(\"androidx.test.espresso:espresso-intents:{test_intents}\")\n",
             "}}\n",
         ),
         agp = ANDROID_GRADLE_PLUGIN_VERSION,
@@ -3446,8 +3484,24 @@ fn build_android_build_gradle_kts(application_id: &str, package_version: &str) -
         adaptive = ANDROID_COMPOSE_MATERIAL3_ADAPTIVE_VERSION,
         jna = COMPOSE_JNA_VERSION,
         serialization = COMPOSE_SERIALIZATION_JSON_VERSION,
+        test_runner = ANDROID_TEST_RUNNER_VERSION,
+        test_junit = ANDROID_TEST_EXT_JUNIT_VERSION,
+        test_intents = ANDROID_TEST_ESPRESSO_INTENTS_VERSION,
     )
 }
+
+/// `androidx.test` for an app's instrumented UI test (UI89 §4.2), pinned
+/// exactly, as every other dependency here is. Runner 1.6.2 and ext-junit
+/// 1.2.1 are one androidx.test release (with core 1.6.1). The Compose test
+/// rule is JetBrains' `ui-test-junit4` at the app's own Compose version; on
+/// Android it resolves to androidx's `ui-test-junit4` (1.11.2 for 1.11.1).
+const ANDROID_TEST_RUNNER_VERSION: &str = "1.6.2";
+const ANDROID_TEST_EXT_JUNIT_VERSION: &str = "1.2.1";
+/// Espresso-Intents, from the same androidx.test release (espresso 3.6.1).
+/// A UI test uses it to stub `ACTION_OPEN_DOCUMENT` and
+/// `ACTION_CREATE_DOCUMENT` with a document of its own (UI89 §4.4), so the
+/// system's picker, whose layout changes with the OS, is never driven.
+const ANDROID_TEST_ESPRESSO_INTENTS_VERSION: &str = "3.6.1";
 
 const ANDROID_GRADLE_PROPERTIES: &str = concat!(
     "# AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
@@ -3739,9 +3793,54 @@ fn write_ios_app_project(
     manifest: &MosaicPackage,
     backend_dir: &Path,
     root_component: &str,
+    ios_ui_tests: &[PathBuf],
 ) -> Result<Vec<PathBuf>, BuildError> {
     const LOADER_INCLUDE: &str = "Sources/CMosaicRuntime/include";
     let mut written = Vec::new();
+
+    // XCUITest sources (UI89 §4.3), copied by their plain name only; they
+    // were checked by `validate_ios_ui_tests` before anything was written.
+    let mut ui_test_sources = Vec::new();
+    for source in ios_ui_tests {
+        let name = ios_ui_test_name(source)?;
+        let relative = format!("{IOS_UI_TESTS_DIR}/{name}");
+        let target = backend_dir.join(&relative);
+        if let Some(parent) = target.parent() {
+            create_dir_all(parent)?;
+        }
+        write_file(
+            &target,
+            &fs::read(source).map_err(|error| {
+                BuildError::Io(format!(
+                    "cannot read iOS UI test {}: {error}",
+                    source.display()
+                ))
+            })?,
+        )?;
+        written.push(target);
+        ui_test_sources.push(relative);
+    }
+
+    // With UI tests, the app also compiles the fake document picker they
+    // answer instead of the system's (UI89 §4.4). It goes into the Xcode
+    // project only, never `Sources/App`, so the Swift package does not see
+    // it, and all of it sits behind a condition only the app target's Debug
+    // configuration defines.
+    let mut swift_sources = project_files(backend_dir, "Sources/App", "swift")?;
+    let mut debug_compilation_conditions = Vec::new();
+    if !ui_test_sources.is_empty() {
+        let picker = backend_dir.join(IOS_UI_TEST_PICKER);
+        if let Some(parent) = picker.parent() {
+            create_dir_all(parent)?;
+        }
+        write_file(
+            &picker,
+            mosaic_app_bindings::swift_ios_ui_test_picker().as_bytes(),
+        )?;
+        written.push(picker);
+        swift_sources.push(IOS_UI_TEST_PICKER.to_string());
+        debug_compilation_conditions.push(IOS_UI_TEST_PICKER_CONDITION.to_string());
+    }
 
     let module_map = backend_dir.join(LOADER_INCLUDE).join("module.modulemap");
     write_file(
@@ -3770,7 +3869,7 @@ fn write_ios_app_project(
             .unwrap_or("0.1.0")
             .to_string(),
         deployment_target: "16.0".to_string(),
-        swift_sources: project_files(backend_dir, "Sources/App", "swift")?,
+        swift_sources,
         c_sources: project_files(backend_dir, "Sources/CMosaicRuntime", "c")?,
         headers: project_files(backend_dir, "Sources/CMosaicRuntime", "h")?,
         header_search_paths: vec![LOADER_INCLUDE.to_string()],
@@ -3780,6 +3879,8 @@ fn write_ios_app_project(
         // The project lives in iOS/, so `xcodebuild` in the package directory
         // still builds the Swift package rather than picking this project up.
         source_root: "..".to_string(),
+        ui_test_sources,
+        debug_compilation_conditions,
     };
     let project = mosaic_ios_project::project_pbxproj(&app)
         .map_err(|error| BuildError::Io(format!("iOS app project: {error}")))?;
@@ -3789,7 +3890,115 @@ fn write_ios_app_project(
     }
     write_file(&project_path, project.as_bytes())?;
     written.push(project_path);
+    // `xcodebuild test` needs a scheme; there is one only with UI tests. It
+    // lives in a workspace beside the project, not in the project: see
+    // `mosaic_ios_project::shared_scheme` for why.
+    if let Some(scheme) = mosaic_ios_project::shared_scheme(&app, "App.xcodeproj")
+        .map_err(|error| BuildError::Io(format!("iOS app scheme: {error}")))?
+    {
+        let workspace = mosaic_ios_project::workspace_contents("App.xcodeproj")
+            .map_err(|error| BuildError::Io(format!("iOS app workspace: {error}")))?;
+        let scheme_name = mosaic_ios_project::ui_test_target_name(&app);
+        for (relative, body) in [
+            (
+                "iOS/App.xcworkspace/contents.xcworkspacedata".to_string(),
+                workspace,
+            ),
+            (
+                format!("iOS/App.xcworkspace/xcshareddata/xcschemes/{scheme_name}.xcscheme"),
+                scheme,
+            ),
+        ] {
+            let path = backend_dir.join(relative);
+            if let Some(parent) = path.parent() {
+                create_dir_all(parent)?;
+            }
+            write_file(&path, body.as_bytes())?;
+            written.push(path);
+        }
+    }
     Ok(written)
+}
+
+/// Where the builder copies XCUITest sources, inside `swiftui/`.
+const IOS_UI_TESTS_DIR: &str = "UITests";
+
+/// The UI tests' fake document picker (UI89 §4.4), inside `swiftui/` and
+/// outside `Sources/App`, so only the Xcode project compiles it.
+const IOS_UI_TEST_PICKER: &str = "UITestSupport/MosaicUITestPicker.swift";
+
+/// The condition that compiles [`IOS_UI_TEST_PICKER`] and the platform
+/// library's hook for it: defined in the app target's Debug configuration
+/// only, and only in a build with UI tests.
+const IOS_UI_TEST_PICKER_CONDITION: &str = "MOSAIC_UI_TEST_PICKER";
+
+/// A UI test source's name, if it is a plain `.swift` file name
+/// (`^[A-Za-z0-9_]+\.swift$`). Only this name reaches the Xcode project, so
+/// the caller's directories never do.
+fn ios_ui_test_name(source: &Path) -> Result<String, BuildError> {
+    let refuse = |reason: &'static str| BuildError::UnsafePath {
+        kind: "--ios-ui-test",
+        path: source.display().to_string(),
+        reason,
+    };
+    let name = source
+        .file_name()
+        .and_then(|name| name.to_str())
+        .ok_or_else(|| refuse("has no file name"))?;
+    let Some(stem) = name.strip_suffix(".swift") else {
+        return Err(refuse("must be a .swift file"));
+    };
+    if stem.is_empty()
+        || !stem
+            .chars()
+            .all(|character| character.is_ascii_alphanumeric() || character == '_')
+    {
+        return Err(refuse(
+            "must be named with letters, digits and _ only, then .swift",
+        ));
+    }
+    Ok(name.to_string())
+}
+
+/// UI tests (UI89 §4.3) belong to an iOS app build only, and each must be a
+/// regular file with a plain name, named once. Checked before anything is
+/// emitted, so a refused test leaves nothing half-written.
+fn validate_ios_ui_tests(
+    opts: &BuildOptions,
+    runtime_library: Option<&Path>,
+    ios_ui_tests: &[PathBuf],
+) -> Result<(), BuildError> {
+    if ios_ui_tests.is_empty() {
+        return Ok(());
+    }
+    if !(opts.backend == Backend::SwiftUI
+        && opts.emit_project
+        && runtime_library.is_some_and(is_xcframework))
+    {
+        return Err(BuildError::Io(
+            "--ios-ui-test needs an iOS app build: --backend swiftui --emit-project with an .xcframework --runtime-library"
+                .to_string(),
+        ));
+    }
+    let mut names = HashSet::new();
+    for source in ios_ui_tests {
+        let name = ios_ui_test_name(source)?;
+        if !fs::symlink_metadata(source).is_ok_and(|meta| meta.is_file()) {
+            return Err(BuildError::UnsafePath {
+                kind: "--ios-ui-test",
+                path: source.display().to_string(),
+                reason: "must be a regular file, not a link or a directory",
+            });
+        }
+        if !names.insert(name.clone()) {
+            return Err(BuildError::UnsafePath {
+                kind: "--ios-ui-test",
+                path: source.display().to_string(),
+                reason: "names a file another --ios-ui-test already named",
+            });
+        }
+    }
+    Ok(())
 }
 
 /// Every `.{extension}` file under `backend_dir/relative`, as sorted
@@ -14539,6 +14748,248 @@ layout NativeEvents {
         assert!(module_map.contains("module CMosaicRuntime"));
     }
 
+    /// UI89 §4.3: `--ios-ui-test` adds the XCUITest bundle and the shared
+    /// scheme `xcodebuild test` runs; without it neither exists.
+    #[test]
+    fn ios_ui_tests_add_a_test_target_and_a_scheme() {
+        let pkg = card_package();
+        let framework = fake_xcframework(pkg.path());
+        let test = pkg.path().join("CardUiTests.swift");
+        fs::write(
+            &test,
+            b"import XCTest\nfinal class CardUiTests: XCTestCase {}\n",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_ios_ui_tests(
+            &swiftui_options(&pkg, &out, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+            &mosstyle_compiler::TokenOverrides::default(),
+            std::slice::from_ref(&test),
+        )
+        .expect("iOS app with a UI test");
+
+        let copied = out.path().join("swiftui/UITests/CardUiTests.swift");
+        assert_eq!(fs::read(&copied).unwrap(), fs::read(&test).unwrap());
+        assert!(result.artifacts.contains(&copied));
+        let project =
+            fs::read_to_string(out.path().join("swiftui/iOS/App.xcodeproj/project.pbxproj"))
+                .unwrap();
+        assert!(
+            project.contains("path = \"UITests/CardUiTests.swift\";"),
+            "{project}"
+        );
+        assert!(
+            project.contains("com.apple.product-type.bundle.ui-testing"),
+            "{project}"
+        );
+        assert!(project.contains("TEST_TARGET_NAME = \"App\";"), "{project}");
+        // Only the plain name reaches the project, never the caller's path.
+        assert!(
+            !project.contains(&pkg.path().display().to_string()),
+            "{project}"
+        );
+        let scheme_path = out
+            .path()
+            .join("swiftui/iOS/App.xcworkspace/xcshareddata/xcschemes/AppUITests.xcscheme");
+        let workspace = fs::read_to_string(
+            out.path()
+                .join("swiftui/iOS/App.xcworkspace/contents.xcworkspacedata"),
+        )
+        .unwrap();
+        assert!(
+            workspace.contains("location = \"group:App.xcodeproj\""),
+            "{workspace}"
+        );
+        // Nothing in the project itself: a project's own schemes resolve
+        // against its `..` project directory.
+        assert!(!out
+            .path()
+            .join("swiftui/iOS/App.xcodeproj/xcshareddata")
+            .exists());
+        assert!(result.artifacts.contains(&scheme_path));
+        let scheme = fs::read_to_string(&scheme_path).unwrap();
+        assert!(
+            scheme.contains("BuildableName = \"AppUITests.xctest\""),
+            "{scheme}"
+        );
+
+        // The fake document picker (UI89 §4.4): written outside `Sources/App`
+        // (so the Swift package never compiles it), listed in the project,
+        // and switched on by a condition only the app's Debug configuration
+        // defines.
+        let picker = out
+            .path()
+            .join("swiftui/UITestSupport/MosaicUITestPicker.swift");
+        assert_eq!(
+            fs::read_to_string(&picker).unwrap(),
+            mosaic_app_bindings::swift_ios_ui_test_picker()
+        );
+        assert!(result.artifacts.contains(&picker));
+        assert!(
+            project.contains("path = \"UITestSupport/MosaicUITestPicker.swift\";"),
+            "{project}"
+        );
+        let conditions =
+            "SWIFT_ACTIVE_COMPILATION_CONDITIONS = (\"$(inherited)\", \"MOSAIC_UI_TEST_PICKER\");";
+        let configurations: Vec<&str> = project
+            .lines()
+            .filter(|line| line.contains("MOSAIC_UI_TEST_PICKER"))
+            .collect();
+        assert_eq!(configurations.len(), 1, "{project}");
+        assert!(
+            configurations[0].contains(conditions),
+            "{}",
+            configurations[0]
+        );
+        assert!(
+            configurations[0].contains("name = \"Debug\";"),
+            "{}",
+            configurations[0]
+        );
+        assert!(
+            configurations[0].contains("PRODUCT_NAME = \"App\";"),
+            "{}",
+            configurations[0]
+        );
+        assert!(!out
+            .path()
+            .join("swiftui/Sources/App/MosaicUITestPicker.swift")
+            .exists());
+
+        // The same build without the flag: one target, no scheme, no copy.
+        let plain = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &plain, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+        )
+        .expect("iOS app without UI tests");
+        let project = fs::read_to_string(
+            plain
+                .path()
+                .join("swiftui/iOS/App.xcodeproj/project.pbxproj"),
+        )
+        .unwrap();
+        assert_eq!(project.matches("isa = PBXNativeTarget;").count(), 1);
+        assert!(!plain
+            .path()
+            .join("swiftui/iOS/App.xcodeproj/xcshareddata")
+            .exists());
+        assert!(!plain.path().join("swiftui/iOS/App.xcworkspace").exists());
+        assert!(!plain.path().join("swiftui/UITests").exists());
+        // No fake picker, and nothing defines its condition: the platform
+        // library's hook for it compiles to nothing.
+        assert!(!plain.path().join("swiftui/UITestSupport").exists());
+        assert!(!project.contains("MosaicUITestPicker"), "{project}");
+        assert!(!project.contains("MOSAIC_UI_TEST_PICKER"), "{project}");
+    }
+
+    #[test]
+    fn ios_ui_tests_are_refused_outside_an_ios_app_build_or_with_a_bad_name() {
+        let pkg = card_package();
+        let framework = fake_xcframework(pkg.path());
+        let good = pkg.path().join("CardUiTests.swift");
+        fs::write(&good, b"import XCTest\n").unwrap();
+        let tokens = mosstyle_compiler::TokenOverrides::default();
+        let build = |backend: Backend, runtime: Option<&Path>, tests: &[PathBuf]| {
+            let out = TempDir::new().unwrap();
+            let result = build_package_with_ios_ui_tests(
+                &swiftui_options(&pkg, &out, backend),
+                BuildProfile::Permissive,
+                runtime,
+                &tokens,
+                tests,
+            );
+            (out, result)
+        };
+
+        // Not an iOS app: no .xcframework, or not SwiftUI.
+        let (_, result) = build(Backend::SwiftUI, None, std::slice::from_ref(&good));
+        assert!(
+            matches!(result, Err(BuildError::Io(ref message)) if message.contains("--ios-ui-test")),
+            "{result:?}"
+        );
+        let (_, result) = build(Backend::Compose, None, std::slice::from_ref(&good));
+        assert!(matches!(result, Err(BuildError::Io(_))), "{result:?}");
+
+        // Names that are not plain .swift names, and the same name twice.
+        let other_dir = pkg.path().join("other");
+        fs::create_dir_all(&other_dir).unwrap();
+        fs::write(other_dir.join("CardUiTests.swift"), b"").unwrap();
+        for (name, body) in [
+            ("Card-UiTests.swift", Some(&b""[..])),
+            ("Card UiTests.swift", Some(&b""[..])),
+            ("CardUiTests.swift.txt", Some(&b""[..])),
+            (".swift", Some(&b""[..])),
+        ] {
+            let path = pkg.path().join(name);
+            if let Some(body) = body {
+                fs::write(&path, body).unwrap();
+            }
+            let (out, result) = build(Backend::SwiftUI, Some(&framework), &[path]);
+            assert!(
+                matches!(
+                    result,
+                    Err(BuildError::UnsafePath {
+                        kind: "--ios-ui-test",
+                        ..
+                    })
+                ),
+                "{name}: {result:?}"
+            );
+            // Refused before anything was emitted.
+            assert!(!out.path().join("swiftui").exists(), "{name}");
+        }
+        let (_, result) = build(
+            Backend::SwiftUI,
+            Some(&framework),
+            &[good.clone(), other_dir.join("CardUiTests.swift")],
+        );
+        assert!(
+            matches!(
+                result,
+                Err(BuildError::UnsafePath {
+                    kind: "--ios-ui-test",
+                    ..
+                })
+            ),
+            "{result:?}"
+        );
+
+        // A directory, and (on Unix) a link, are not regular files.
+        let directory = pkg.path().join("DirUiTests.swift");
+        fs::create_dir_all(&directory).unwrap();
+        let (_, result) = build(Backend::SwiftUI, Some(&framework), &[directory]);
+        assert!(
+            matches!(
+                result,
+                Err(BuildError::UnsafePath {
+                    kind: "--ios-ui-test",
+                    ..
+                })
+            ),
+            "{result:?}"
+        );
+        #[cfg(unix)]
+        {
+            let link = pkg.path().join("LinkUiTests.swift");
+            std::os::unix::fs::symlink(&good, &link).unwrap();
+            let (_, result) = build(Backend::SwiftUI, Some(&framework), &[link]);
+            assert!(
+                matches!(
+                    result,
+                    Err(BuildError::UnsafePath {
+                        kind: "--ios-ui-test",
+                        ..
+                    })
+                ),
+                "{result:?}"
+            );
+        }
+    }
+
     #[test]
     fn the_ios_app_project_takes_identity_from_the_manifest() {
         let pkg = card_package();
@@ -14642,6 +15093,13 @@ layout NativeEvents {
         }
         assert!(manifest.contains("android:name=\"mosaic.android.MosaicActivity\""));
         assert!(manifest.contains("android.intent.category.LAUNCHER"));
+        // A UI test answers the picker with a document in the app's own cache
+        // (UI89 §4.4), so the app declares no provider for one. Nothing in
+        // the project does, and the project has no androidTest manifest that
+        // could merge one in.
+        assert!(!manifest.contains("<provider"), "{manifest}");
+        assert!(!android.join("src/androidTest").exists());
+        assert!(!android.join("src/debug/AndroidManifest.xml").exists());
         assert!(manifest.contains("android:label=\"@string/mosaic_app_label\""));
         assert!(!manifest.contains("uses-permission"), "{manifest}");
 
@@ -14655,6 +15113,35 @@ layout NativeEvents {
         assert!(gradle.contains("compileSdk = 36\n"), "{gradle}");
         assert!(gradle.contains("minSdk = 26\n"), "{gradle}");
         assert!(gradle.contains("\"net.java.dev.jna:jna:5.19.1@aar\""), "{gradle}");
+        // The instrumented UI test's runner and its dependencies (UI89 §4.2):
+        // pinned, and only on the androidTest classpath, so the app itself
+        // gains nothing.
+        assert!(
+            gradle.contains(
+                "testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\n"
+            ),
+            "{gradle}"
+        );
+        for dependency in [
+            "androidTestImplementation(\"org.jetbrains.compose.ui:ui-test-junit4:1.11.1\")",
+            "androidTestImplementation(\"androidx.test:runner:1.6.2\")",
+            "androidTestImplementation(\"androidx.test.ext:junit:1.2.1\")",
+            "androidTestImplementation(\"androidx.test.espresso:espresso-intents:3.6.1\")",
+        ] {
+            assert!(
+                gradle.contains(dependency),
+                "{dependency} missing:\n{gradle}"
+            );
+        }
+        for line in gradle.lines().filter(|line| line.contains("test")) {
+            assert!(
+                line.trim_start().starts_with("androidTestImplementation(")
+                    || line.contains("testInstrumentationRunner")
+                    || line.trim_start().starts_with("//"),
+                "a test dependency outside androidTest: {line}"
+            );
+        }
+        assert!(!gradle.contains("debugImplementation"), "{gradle}");
         let wrapper =
             fs::read_to_string(android.join("gradle/wrapper/gradle-wrapper.properties")).unwrap();
         assert!(wrapper.contains("gradle-8.14.3-bin.zip"), "{wrapper}");

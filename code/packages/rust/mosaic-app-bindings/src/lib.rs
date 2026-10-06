@@ -66,6 +66,16 @@ pub fn swift_platform_effects() -> String {
     include_str!("../templates/swiftui/MosaicPlatformEffects.swift").to_string()
 }
 
+/// The fake document picker an iOS app's XCUITests answer instead of the
+/// system's (UI89 §4.4). The builder writes it only for `--ios-ui-test`,
+/// into the Xcode project alone. All of it is inside
+/// `#if MOSAIC_UI_TEST_PICKER`, which only that project's Debug
+/// configuration defines, and the platform library selects it there only
+/// when the app was launched with `-MosaicUITestPicker`.
+pub fn swift_ios_ui_test_picker() -> String {
+    include_str!("../templates/swiftui/ios-ui-test/MosaicUITestPicker.swift").to_string()
+}
+
 /// The Qt platform library (UI87 §7, §7.4a).
 pub struct QtPlatformEffects {
     pub header: String,
@@ -804,6 +814,43 @@ mod tests {
     /// The SwiftUI and Compose libraries answer one contract (UI87 §7.1): the
     /// same kinds, limits and MIME table, so an app sees the same outcome on
     /// either host. A drift in one template fails here, not on a Mac.
+    #[test]
+    fn the_ios_ui_test_picker_is_compiled_only_under_its_condition() {
+        // UI89 §4.4: nothing of the fake exists outside the condition, and
+        // the platform library reaches it only under the same condition.
+        let picker = swift_ios_ui_test_picker();
+        let open = "#if MOSAIC_UI_TEST_PICKER && os(iOS)\n";
+        let start = picker.find(open).expect("the condition guards the fake");
+        assert!(
+            picker.trim_end().ends_with("#endif"),
+            "the guard closes at the end"
+        );
+        // Before the guard there are only comments and blank lines.
+        assert!(
+            picker[..start]
+                .lines()
+                .all(|line| line.is_empty() || line.starts_with("//")),
+            "code outside the guard"
+        );
+        assert_eq!(
+            picker
+                .lines()
+                .filter(|line| line.starts_with("#if"))
+                .count(),
+            1,
+            "one guard, no nesting"
+        );
+        assert!(picker.contains("let mosaicUITestPickerArgument = \"-MosaicUITestPicker\""));
+        // The fake's file is fixed, inside the app's own container.
+        assert!(picker.contains("FileManager.default.temporaryDirectory"));
+        assert!(!picker.contains("launchEnvironment"));
+
+        let library = swift_platform_effects();
+        let hook = "  #if MOSAIC_UI_TEST_PICKER\n  if let fake = mosaicUITestPicker() { return fake }\n  #endif\n";
+        assert!(library.contains(hook), "the system picker's hook");
+        assert_eq!(library.matches("mosaicUITestPicker").count(), 1);
+    }
+
     #[test]
     fn swift_platform_effects_match_the_compose_contract() {
         let swift = swift_platform_effects();

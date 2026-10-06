@@ -33,6 +33,16 @@ adapter. `code/scripts/taskapp_native_control_contract.py` separately rejects
 generated sources with inert controls, sample fallbacks, missing runtime wiring,
 or native style-degradation growth.
 
+The phones have their own UI tests (UI89 §4.4), run on the CI emulator and
+simulator against the installed app.
+`conformance/compose-android/TrestleAndroidUiTest.kt` is compiled into the
+Android test APK and run by `code/scripts/mosaic-android-ui-test.sh`.
+`conformance/swiftui-ios/TrestleUiTests.swift` reaches the iOS project through
+`mosaic-compile pkg --ios-ui-test` and runs on an iPad simulator. Each one goes
+through the generated controls in two cold launches. The first adds a task,
+completes it, reopens it, deletes it, and then adds the task that must
+survive. The second finds that task restored and deletes it.
+
 The crate also consumes TaskApp's shared
 `fixtures/presentation-contract-v1.json`. Its checkpoint test and the web host's
 real-WASM test assert the same canonical task/project state and user-visible core

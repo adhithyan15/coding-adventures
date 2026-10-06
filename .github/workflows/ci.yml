@@ -2791,8 +2791,10 @@ jobs:
         if: runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'
         shell: bash
         # 16 minutes before Journal's iOS gate (UI89 §2.4) joined it, about 25
-        # after; Engram's (§2.5) adds a second engine and app build.
-        timeout-minutes: 60
+        # after; Engram's (§2.5) adds a second engine and app build, and
+        # Journal's XCUITest (§4.3), Trestle's and Engram's (§4.4) each a test
+        # build and run on the iPad.
+        timeout-minutes: 105
         run: |
           set -euo pipefail
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
@@ -3023,7 +3025,9 @@ jobs:
           ios_runtime="$RUNNER_TEMP/TaskAppRuntime.xcframework"
           bash code/scripts/build-mosaic-xcframework.sh task-mosaic-app "$ios_runtime"
           ios_linked_output="$RUNNER_TEMP/mosaic-swift-taskapp-ios-linked"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_linked_output" --emit-project --profile native-complete --runtime-library "$ios_runtime"
+          # Trestle's XCUITest (UI89 §4.4) goes into the iOS project as a UI
+          # test bundle with a shared scheme; it runs on the iPad below.
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_linked_output" --emit-project --profile native-complete --runtime-library "$ios_runtime" --ios-ui-test code/packages/rust/task-mosaic-app/conformance/swiftui-ios/TrestleUiTests.swift
           jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$ios_linked_output/swiftui/mosaic-degradations.json"
           grep -q 'cSettings: \[.define("MOSAIC_RUNTIME_STATIC")\]' "$ios_linked_output/swiftui/Package.swift"
           ios_linked_data="$RUNNER_TEMP/mosaic-swift-taskapp-ios-linked-dd"
@@ -3110,6 +3114,18 @@ jobs:
           xcrun simctl launch "$ipad" dev.codingadventures.trestle
           sleep 10
           xcrun simctl spawn "$ipad" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+          # A person's use of it (UI89 §4.4): add, complete, reopen and delete
+          # a task through the generated controls, and find a saved task after
+          # a relaunch. Uninstalled first, so launch 1 starts without the state
+          # the launch above left; `xcodebuild test` installs the app fresh.
+          xcrun simctl uninstall "$ipad" dev.codingadventures.trestle
+          trestle_ui_test_log="$RUNNER_TEMP/mosaic-trestle-ios-ui-test.log"
+          (
+            cd "$ios_linked_output/swiftui/iOS"
+            xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator -destination "platform=iOS Simulator,id=$ipad" -derivedDataPath "$RUNNER_TEMP/mosaic-trestle-ios-ui-test" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$trestle_ui_test_log"
+          )
+          # The count, not just the exit status, as for Journal below.
+          grep -q 'Executed 1 test, with 0 failures' "$trestle_ui_test_log"
           xcrun simctl shutdown "$ipad"
 
           # ---- Journal on iOS and iPadOS (UI89 §2.4, step 7). ---------------
@@ -3123,7 +3139,9 @@ jobs:
           journal_ios_runtime="$RUNNER_TEMP/JournalAppRuntime.xcframework"
           bash code/scripts/build-mosaic-xcframework.sh journal-mosaic-app "$journal_ios_runtime"
           journal_ios_output="$RUNNER_TEMP/mosaic-swift-journal-ios-linked"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend swiftui --output "$journal_ios_output" --emit-project --profile native-complete --runtime-library "$journal_ios_runtime"
+          # Journal's XCUITest (UI89 §4.3) goes into the project as a UI test
+          # bundle with a shared scheme; it runs on the iPad below.
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend swiftui --output "$journal_ios_output" --emit-project --profile native-complete --runtime-library "$journal_ios_runtime" --ios-ui-test code/packages/rust/journal-mosaic-app/conformance/swiftui-ios/JournalUiTests.swift
           jq -e '.replacedGeneratedFiles == []' "$journal_ios_output/swiftui/mosaic-degradations.json"
           jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_ios_output/swiftui/mosaic-degradations.json"
           test -f "$journal_ios_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
@@ -3151,16 +3169,43 @@ jobs:
           # for its PID, so the label is matched exactly with a numeric PID.
           ipad_services="$(xcrun simctl spawn "$ipad" launchctl list)"
           awk -v b=dev.codingadventures.journalapp '$1 ~ /^[0-9]+$/ && ($3 == b || index($3, "UIKitApplication:" b "[") == 1) { f = 1 } END { exit !f }' <<< "$ipad_services"
+          # A person's use of it (UI89 §4.3): write, save and delete entries
+          # through the generated controls, in landscape so both columns of
+          # the split are on screen, and find the survivor after a relaunch.
+          # Uninstalled first, so launch 1 starts without the state the launch
+          # above left; `xcodebuild test` installs the app fresh.
+          xcrun simctl uninstall "$ipad" dev.codingadventures.journalapp
+          journal_ui_test_log="$RUNNER_TEMP/mosaic-journal-ios-ui-test.log"
+          (
+            cd "$journal_ios_output/swiftui/iOS"
+            # What xcodebuild makes of the generated scheme, logged before the
+            # run so a scheme it cannot use is diagnosable from this log.
+            # The UI test scheme lives in a workspace beside the project: the
+            # project's own schemes resolve against its `..` project directory
+            # and found no buildables (mosaic-ios-project, shared_scheme).
+            find App.xcworkspace App.xcodeproj -name '*.xcscheme' -print
+            xcodebuild -list -workspace App.xcworkspace || true
+            xcodebuild -showdestinations -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator || true
+            # -sdk as the app build above passes it: the destination is a
+            # simulator, so the SDK is the simulator's.
+            xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator -destination "platform=iOS Simulator,id=$ipad" -derivedDataPath "$RUNNER_TEMP/mosaic-journal-ios-ui-test" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$journal_ui_test_log"
+          )
+          # The count, not just the exit status: a test that was never compiled
+          # in, or was filtered out, would leave xcodebuild green.
+          grep -q 'Executed 1 test, with 0 failures' "$journal_ui_test_log"
           xcrun simctl shutdown "$ipad"
 
           # ---- Engram on iOS and iPadOS (UI89 §2.5, step 7). ----------------
           # Journal's recipe and gate. The app also compiles Engram's
-          # [host_effects] handler (EngramEffects.swift), whose iOS branch
-          # fails Anki import/export with a message, and its touch layout.
+          # [host_effects] handler (EngramEffects.swift), which answers Anki
+          # import/export through the platform library's document picker, and
+          # its touch layout. Its XCUITest (UI89 §4.4) goes in as a UI test
+          # bundle; with it, the Debug build compiles the fake picker the
+          # test selects with -MosaicUITestPicker.
           engram_ios_runtime="$RUNNER_TEMP/EngramAppRuntime.xcframework"
           bash code/scripts/build-mosaic-xcframework.sh engram-mosaic-app "$engram_ios_runtime"
           engram_ios_output="$RUNNER_TEMP/mosaic-swift-engram-ios-linked"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend swiftui --output "$engram_ios_output" --emit-project --profile native-complete --runtime-library "$engram_ios_runtime"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend swiftui --output "$engram_ios_output" --emit-project --profile native-complete --runtime-library "$engram_ios_runtime" --ios-ui-test code/programs/mosaic/engram-app/conformance/swiftui-ios/EngramUiTests.swift
           jq -e '.replacedGeneratedFiles == []' "$engram_ios_output/swiftui/mosaic-degradations.json"
           jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_ios_output/swiftui/mosaic-degradations.json"
           test -f "$engram_ios_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
@@ -3191,6 +3236,16 @@ jobs:
           # for its PID, so the label is matched exactly with a numeric PID.
           ipad_services="$(xcrun simctl spawn "$ipad" launchctl list)"
           awk -v b=dev.codingadventures.engramapp '$1 ~ /^[0-9]+$/ && ($3 == b || index($3, "UIKitApplication:" b "[") == 1) { f = 1 } END { exit !f }' <<< "$ipad_services"
+          # Anki export and import through the fake picker, and the imported
+          # deck again after a relaunch (UI89 §4.4). Uninstalled first, so
+          # launch 1 starts from an empty collection.
+          xcrun simctl uninstall "$ipad" dev.codingadventures.engramapp
+          engram_ui_test_log="$RUNNER_TEMP/mosaic-engram-ios-ui-test.log"
+          (
+            cd "$engram_ios_output/swiftui/iOS"
+            xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator -destination "platform=iOS Simulator,id=$ipad" -derivedDataPath "$RUNNER_TEMP/mosaic-engram-ios-ui-test" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$engram_ui_test_log"
+          )
+          grep -q 'Executed 1 test, with 0 failures' "$engram_ui_test_log"
           xcrun simctl shutdown "$ipad"
 
           toolkit_output="$RUNNER_TEMP/mosaic-swift-toolkit"
@@ -4180,6 +4235,10 @@ jobs:
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend compose --output "$output" --emit-project --profile native-complete --runtime-library "$jni_libs"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
           android_project="$output/compose/android"
+          # Trestle's instrumented UI test (UI89 §4.4) lives with the app, as
+          # the desktop TaskAppUiTest does; the emulator step runs it.
+          mkdir -p "$android_project/src/androidTest/kotlin"
+          cp code/packages/rust/task-mosaic-app/conformance/compose-android/TrestleAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"
 
           # The wrapper, written outside the project as in the step above.
           gradle_version="$(sed -n 's|^distributionUrl=.*/gradle-\(.*\)-bin\.zip$|\1|p' "$android_project/gradle/wrapper/gradle-wrapper.properties")"
@@ -4201,8 +4260,10 @@ jobs:
             cd "$android_project"
             "${JAVA_HOME:+$JAVA_HOME/bin/}java" -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew \
               -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain \
-              --no-daemon --stacktrace assembleDebug
+              --no-daemon --stacktrace assembleDebug assembleDebugAndroidTest
           )
+          test_apk="$(find "$android_project/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$test_apk"
 
           apk="$(find "$android_project/build/outputs/apk/debug" -name '*.apk' -print -quit)"
           test -n "$apk"
@@ -4258,7 +4319,13 @@ jobs:
           jq -e '.replacedGeneratedFiles == []' "$output/compose/mosaic-degradations.json"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
           android_project="$output/compose/android"
-          bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"
+          # Journal's instrumented UI test (UI89 §4.2) lives with the app, as
+          # the desktop JournalUiTest does; the emulator step runs it.
+          mkdir -p "$android_project/src/androidTest/kotlin"
+          cp code/packages/rust/journal-mosaic-app/conformance/compose-android/JournalAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"
+          bash code/scripts/assemble-mosaic-android-debug.sh "$android_project" --with-android-test
+          test_apk="$(find "$android_project/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$test_apk"
 
           apk="$(find "$android_project/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
           test -n "$apk"
@@ -4348,7 +4415,13 @@ jobs:
           # wraps it and routes the kinds it claims to it (UI89 §3.12).
           grep -q -F 'installEngramAndroidEffects(it); platformRouter = installMosaicPlatformEffects(it, documentPicker, setOf("importAnki", "exportAnki"))' \
             "$android_project/src/main/kotlin/mosaic/android/MosaicActivity.kt"
-          bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"
+          # Engram's instrumented UI test (UI89 §4.4) answers the document
+          # picker itself; the emulator step runs it.
+          mkdir -p "$android_project/src/androidTest/kotlin"
+          cp code/programs/mosaic/engram-app/conformance/compose-android/EngramAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"
+          bash code/scripts/assemble-mosaic-android-debug.sh "$android_project" --with-android-test
+          test_apk="$(find "$android_project/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$test_apk"
 
           apk="$(find "$android_project/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
           test -n "$apk"
@@ -4433,7 +4506,8 @@ jobs:
       - name: Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
         shell: bash
-        timeout-minutes: 30
+        # Each app's gate, then each one's UI test in two cold launches (§4).
+        timeout-minutes: 50
         run: |
           set -euo pipefail
           # Let the runner's user open /dev/kvm (GitHub's documented recipe).
@@ -4458,14 +4532,32 @@ jobs:
           trap finish EXIT
           bash code/scripts/start-mosaic-android-emulator.sh "$emulator_log"
           bash code/scripts/mosaic-android-emulator-gate.sh "$apk" dev.codingadventures.trestle task-app
+          # Then a person's use of it (UI89 §4.4): add, complete, reopen and
+          # delete a task through the generated controls, and find a saved
+          # task again after a cold relaunch.
+          trestle_test_apk="$(find "$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime/compose/android/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$trestle_test_apk"
+          bash code/scripts/mosaic-android-ui-test.sh "$apk" "$trestle_test_apk" dev.codingadventures.trestle dev.codingadventures.trestle.uitest.TrestleAndroidUiTest
 
           journal_apk="$(find "$RUNNER_TEMP/mosaic-compose-journal-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
           test -n "$journal_apk"
           bash code/scripts/mosaic-android-emulator-gate.sh "$journal_apk" dev.codingadventures.journalapp journal-app
+          # Then a person's use of it (UI89 §4.2): write, save and delete
+          # entries through the generated controls, and find the survivor
+          # again after a cold relaunch.
+          journal_test_apk="$(find "$RUNNER_TEMP/mosaic-compose-journal-android-runtime/compose/android/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$journal_test_apk"
+          bash code/scripts/mosaic-android-ui-test.sh "$journal_apk" "$journal_test_apk" dev.codingadventures.journalapp dev.codingadventures.journalapp.uitest.JournalAndroidUiTest
 
           engram_apk="$(find "$RUNNER_TEMP/mosaic-compose-engram-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
           test -n "$engram_apk"
           bash code/scripts/mosaic-android-emulator-gate.sh "$engram_apk" dev.codingadventures.engramapp engram-app
+          # Then Anki export and import through the document picker, which
+          # the test answers with a file in the app's cache (UI89 §4.4), and
+          # the imported deck again after a cold relaunch.
+          engram_test_apk="$(find "$RUNNER_TEMP/mosaic-compose-engram-android-runtime/compose/android/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$engram_test_apk"
+          bash code/scripts/mosaic-android-ui-test.sh "$engram_apk" "$engram_test_apk" dev.codingadventures.engramapp dev.codingadventures.engramapp.uitest.EngramAndroidUiTest
 
       - name: Build concrete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'

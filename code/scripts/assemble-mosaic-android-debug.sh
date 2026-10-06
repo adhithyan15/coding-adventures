@@ -3,7 +3,7 @@
 # wrapper jar that is checked against Gradle's published checksum first
 # (UI89 §3.5, §3.9).
 #
-#   assemble-mosaic-android-debug.sh <android-project>
+#   assemble-mosaic-android-debug.sh <android-project> [--with-android-test]
 #
 # The generated project names its Gradle in
 # gradle/wrapper/gradle-wrapper.properties but ships no wrapper jar or
@@ -20,15 +20,32 @@
 #      can verify. Naming the main class (not `-jar`) works with every
 #      Gradle's wrapper jar, including old ones without a Main-Class.
 #
-# The APK lands in <android-project>/build/outputs/apk/debug. Needs `gradle`
+# With --with-android-test it also builds the instrumented test APK
+# (`assembleDebugAndroidTest`, UI89 §4.2) from whatever the caller put under
+# <android-project>/src/androidTest. The app APK is the same either way.
+#
+# The APK lands in <android-project>/build/outputs/apk/debug, the test APK in
+# <android-project>/build/outputs/apk/androidTest/debug. Needs `gradle`
 # on PATH, a JDK (JAVA_HOME or `java` on PATH) and the Android SDK
 # (ANDROID_HOME) for the project's own build.
 set -euo pipefail
 
-if [[ $# -ne 1 ]]; then
-  echo "usage: $0 <android-project>" >&2
-  exit 2
-fi
+usage="usage: $0 <android-project> [--with-android-test]"
+tasks=(assembleDebug)
+case $# in
+  1) ;;
+  2)
+    if [[ "$2" != "--with-android-test" ]]; then
+      echo "$usage" >&2
+      exit 2
+    fi
+    tasks+=(assembleDebugAndroidTest)
+    ;;
+  *)
+    echo "$usage" >&2
+    exit 2
+    ;;
+esac
 project="$1"
 properties="$project/gradle/wrapper/gradle-wrapper.properties"
 if [[ ! -f "$properties" ]]; then
@@ -62,4 +79,4 @@ bash "$here/verify-gradle-wrapper-jar.sh" "$project/gradle/wrapper/gradle-wrappe
 cd -- "$project"
 "${JAVA_HOME:+$JAVA_HOME/bin/}java" -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew \
   -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain \
-  --no-daemon --stacktrace assembleDebug
+  --no-daemon --stacktrace "${tasks[@]}"
