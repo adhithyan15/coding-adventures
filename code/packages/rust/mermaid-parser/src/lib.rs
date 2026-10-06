@@ -5679,18 +5679,27 @@ fn wardley_error(line: usize, message: impl Into<String>) -> ParseError { ParseE
 
 /// Parse Mermaid 11.16.1 Cynefin domains, items, and cross-domain transitions.
 pub fn parse_cynefin(source: &str) -> Result<CynefinDiagram, ParseError> {
-    let prepared = prepare_line_grammar_source(source)?;
+    let (prepared, multiline_descriptions) = prepare_cynefin_source(source)?;
     let tokens = try_tokenize_mermaid_cynefin(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(CYNEFIN_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse cynefin.grammar: {error}"));
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
-    let mut diagram = CynefinDiagram { title: None, domains: Vec::new(), transitions: Vec::new() };
+    let mut diagram = CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None, domains: Vec::new(), transitions: Vec::new() };
     let mut current_domain: Option<usize> = None;
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1; let line = raw.trim();
         if line.is_empty() || matches!(line.to_ascii_lowercase().as_str(), "cynefin-beta" | "cynefin-beta:") { continue; }
         if let Some(title) = line.strip_prefix("title ") { diagram.title = Some(title.trim().to_string()); current_domain = None; continue; }
+        if let Some(value) = line.strip_prefix("accTitle:") { diagram.accessibility_title = Some(value.trim().to_string()); current_domain = None; continue; }
+        if let Some(value) = line.strip_prefix("accDescr:") {
+            let value = value.trim();
+            diagram.accessibility_description = value.strip_prefix("__CYNEFIN_MULTILINE_")
+                .and_then(|index| index.parse::<usize>().ok())
+                .and_then(|index| multiline_descriptions.get(index).cloned())
+                .or_else(|| Some(value.to_string()));
+            current_domain = None; continue;
+        }
         if let Some((from, rest)) = line.split_once("-->") {
             let (to, label) = rest.split_once(':').map_or((rest, None), |(to, label)| (to, Some(label.trim().trim_matches('"').to_string())));
             let from = from.trim().to_ascii_lowercase(); let to = to.trim().to_ascii_lowercase();
@@ -5712,6 +5721,36 @@ pub fn parse_cynefin(source: &str) -> Result<CynefinDiagram, ParseError> {
         return Err(ParseError { message: format!("unsupported Cynefin statement: {line}"), line: line_number, col: 1 });
     }
     Ok(diagram)
+}
+
+fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let lines: Vec<_> = prepared.lines().collect();
+    let mut output = Vec::with_capacity(lines.len());
+    let mut multiline_descriptions = Vec::new();
+    let mut index = 0usize;
+    while index < lines.len() {
+        if lines[index].trim() != "accDescr {" {
+            output.push(lines[index].to_string());
+            index += 1;
+            continue;
+        }
+        let start_line = index + 1;
+        index += 1;
+        let mut description = Vec::new();
+        while index < lines.len() && lines[index].trim() != "}" {
+            description.push(lines[index].trim());
+            index += 1;
+        }
+        if index == lines.len() {
+            return Err(ParseError { message: "unterminated Cynefin accessibility description".into(), line: start_line, col: 1 });
+        }
+        let description_index = multiline_descriptions.len();
+        multiline_descriptions.push(description.join("\n"));
+        output.push(format!("accDescr: __CYNEFIN_MULTILINE_{description_index}"));
+        index += 1;
+    }
+    Ok((output.join("\n"), multiline_descriptions))
 }
 
 // ── radar-beta parser ─────────────────────────────────────────────────────

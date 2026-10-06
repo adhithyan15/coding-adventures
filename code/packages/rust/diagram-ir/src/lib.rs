@@ -1808,13 +1808,13 @@ pub struct CynefinDomain { pub name: String, pub items: Vec<String> }
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct CynefinTransition { pub from: String, pub to: String, pub label: Option<String> }
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct CynefinDiagram { pub title: Option<String>, pub domains: Vec<CynefinDomain>, pub transitions: Vec<CynefinTransition> }
+pub struct CynefinDiagram { pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub domains: Vec<CynefinDomain>, pub transitions: Vec<CynefinTransition> }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedCynefinDomain { pub name: String, pub items: Vec<String>, pub x: f64, pub y: f64, pub width: f64, pub height: f64, pub center: Point, pub confusion: bool }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedCynefinTransition { pub from: Point, pub to: Point, pub label: Option<String> }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub domains: Vec<LayoutedCynefinDomain>, pub transitions: Vec<LayoutedCynefinTransition> }
+pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub domains: Vec<LayoutedCynefinDomain>, pub transitions: Vec<LayoutedCynefinTransition> }
 
 // PROCESS OWNERSHIP FAMILY
 #[derive(Clone, Debug, PartialEq)]

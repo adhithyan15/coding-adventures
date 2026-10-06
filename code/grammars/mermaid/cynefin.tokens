@@ -5,6 +5,8 @@ skip:
 NEWLINE = /\r?\n/
 HEADER = /cynefin-beta:?/
 TITLE_LINE = /[ \t]*title[ \t]+[^\r\n]+/
+ACC_TITLE_LINE = /[ \t]*accTitle[ \t]*:[^\r\n]*/
+ACC_DESCR_LINE = /[ \t]*accDescr[ \t]*:[^\r\n]*/
 TRANSITION_LINE = /[ \t]*(?:complex|complicated|clear|chaotic|confusion)[ \t]*-->[ \t]*(?:complex|complicated|clear|chaotic|confusion)(?:[ \t]*:[ \t]*"[^"\r\n]*")?[ \t]*/
 DOMAIN_LINE = /[ \t]*(?:complex|complicated|clear|chaotic|confusion)[ \t]*/
 ITEM_LINE = /[ \t]*"[^"\r\n]*"[ \t]*/

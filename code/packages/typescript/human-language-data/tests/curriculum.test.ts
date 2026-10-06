@@ -264,6 +264,64 @@ Recall it.`,
     expect(codes).not.toContain("schema-v2-block-assessment-missing");
   });
 
+  // The knowledge closure is memoised per lesson (see `prerequisiteKnowledge`).
+  // These cases pin that the memo answers exactly what the plain transitive
+  // walk answers: through a diamond, through a schema-v1 lesson that introduces
+  // nothing, down a chain too deep to recurse, and across the fallback path.
+  const notClosed = (lessons: ReturnType<typeof parseLesson>[]) =>
+    validateCurriculum({ registry, taxonomy, spine, lessons })
+      .filter((issue) => issue.code === "schema-v2-knowledge-not-closed")
+      .map((issue) => issue.message);
+
+  it("closes knowledge over every branch of a diamond, and only over ancestors", () => {
+    const lessons = [
+      parseLesson(sourceV2("A", 10, [], [], ["TEST-LEX-ROOT"], []), "test"),
+      parseLesson(sourceV2("B", 20, ["A"], [], ["TEST-LEX-LEFT"], []), "test"),
+      parseLesson(sourceV2("C", 30, ["A"], [], ["TEST-LEX-RIGHT"], []), "test"),
+      // A schema-v1 lesson is walked through but introduces nothing itself.
+      parseLesson(source("V1", "word", "GREETING-HELLO", ["C"]), "test"),
+      parseLesson(
+        sourceV2("D", 40, ["B", "V1"], ["TEST-LEX-ROOT", "TEST-LEX-LEFT", "TEST-LEX-RIGHT"], [], []),
+        "test",
+      ),
+      // E descends from B only, so C's atom is not available to it.
+      parseLesson(sourceV2("E", 50, ["B"], ["TEST-LEX-ROOT", "TEST-LEX-RIGHT"], [], []), "test"),
+    ];
+    expect(notClosed(lessons)).toEqual([
+      "E: required atom 'TEST-LEX-RIGHT' is not introduced by a transitive prerequisite",
+    ]);
+  });
+
+  it("closes knowledge down a prerequisite chain thousands of lessons deep", () => {
+    // Deeper than a recursive walk can safely go, and long enough that the
+    // old per-lesson re-walk (quadratic in chain length) would be slow.
+    const depth = 4000;
+    const atom = (n: number) => `TEST-LEX-W${n}`;
+    const lessons = Array.from({ length: depth }, (_, n) =>
+      parseLesson(
+        sourceV2(`L${n}`, n + 1, n === 0 ? [] : [`L${n - 1}`], n === 0 ? [] : [atom(0), atom(n - 1)], [atom(n)], []),
+        "test",
+      ));
+    lessons.push(parseLesson(sourceV2("LAST", depth + 1, [`L${depth - 1}`], [atom(depth)], [], []), "test"));
+    expect(notClosed(lessons)).toEqual([
+      `LAST: required atom '${atom(depth)}' is not introduced by a transitive prerequisite`,
+    ]);
+  });
+
+  it("keeps the walk's answer when a prerequisite crosses languages", () => {
+    // A cross-language prerequisite is itself an error, and it turns the memo
+    // off. The walk still credits the foreign lesson's own atoms without
+    // following its prerequisites, and that answer must not change.
+    const lessons = [
+      parseLesson(sourceV2("F0", 10, [], [], ["TEST-LEX-DEEP"], []), "other"),
+      parseLesson(sourceV2("F1", 20, ["F0"], [], ["TEST-LEX-NEAR"], []), "other"),
+      parseLesson(sourceV2("T", 30, ["F1"], ["TEST-LEX-NEAR", "TEST-LEX-DEEP"], [], []), "test"),
+    ];
+    expect(notClosed(lessons)).toEqual([
+      "T: required atom 'TEST-LEX-DEEP' is not introduced by a transitive prerequisite",
+    ]);
+  });
+
   it("distinguishes an existing but unavailable atom from an unknown practised atom", () => {
     const lessons = [
       parseLesson(
