@@ -15785,6 +15785,35 @@ have been audited; repository-boundary reverse diff and native snapshot safety
 remain separate. No open PR owns the Ruby production or fixture paths. Select
 only Ruby registry adoption next, from a fresh clean main-based worktree.
 
+After guarded auto-merge of Ruby registry PR #16764 at
+`8816976e43`, the exact merged-main schema-3 collision-checked report
+still has 15 established lanes, 1,487 implementation identities, 4,757
+package slots, 178 high-consensus identities with 262 missing slots,
+and zero canonical collisions or unknown buckets. Ruby now consumes the
+checked 23-language, seven-role source-input registry. Repository-boundary
+reverse diff and snapshot safety remain separately owned.
+
+Parallel read-only audits registered 13 additional owners before selecting
+the next implementation: a neutral Brainfuck interpreter contract and four
+missing Dart/Java/Kotlin/Swift lane ports; Dart/Swift JavaScript and TypeScript
+lexer/parser verticals; a Java lexer owner without duplicating the already
+owned Java parser; Excel, Verilog, VHDL, and Ruby lexer/parser verticals; and
+a C# lexer owner without duplicating the generic-closer parser owner.
+Each frontend vertical is gated by the existing neutral token/AST fixture
+owner and must split into lane-sized lexer-before-parser implementations.
+The Ruby frontend also depends on the state-machine-tokenizer substrate.
+Brainfuck core and Brainfuck-to-Wasm compilation are distinct identities.
+
+The post-merge leverage pass selects only TypeScript build-tool exact
+source-input registry adoption. Its six prerequisites are merged, its
+production selector still uses nine hard-coded languages, and adopting the
+checked registry directly unblocks the TypeScript repository-boundary
+reverse-diff/digest owner, terminal neutral adapter, and hashing completion
+umbrella. The seven package-local neutral cases and 13 repository-boundary
+cases are already checked. No open parity PR or overlapping TypeScript
+implementation PR exists. The newly classified Brainfuck and frontend gaps
+remain pending behind their neutral contracts.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
