@@ -4,7 +4,7 @@
   "chapter": 155,
   "title": "Join Six Fictional Form Fields",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:26ccfb40126f5dbc",
+  "sourceHash": "fnv1a64:88ee61885ce93064",
   "lessons": [
     {
       "id": "PA-W11-form-six-order",
@@ -289,7 +289,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d85f472d8c1839fa",
+      "sourceHash": "fnv1a64:86ffc3ea4f857a3e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -306,7 +306,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look once at the old B and ਖ values: ਮਨਨ, ਹਿੰਦੀ, ਸ਼ਹਿਰ, ਨੌਕਰੀ, then ੨੫, ੦੨੫ ੧੨੫. Cover this complete bank and wait ten seconds."
+              "text": "Look once at the old B and ਖ values: ਮਨਨ, ਹਿੰਦੀ, ਸ਼ਹਿਰ, ਨੌਕਰੀ, then ੨੫, ੦੨੫ ੧੨੫. With this bank visible, fill the six labelled lines once as a supported review. Then cover the bank and wait ten seconds."
             }
           ]
         },
@@ -380,7 +380,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:9ff89d589035483b",
+      "sourceHash": "fnv1a64:a2ce9724083bcfa9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -397,7 +397,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the six old labels in their new order. Today we repair old forms, not learn a seventh field or a new sentence pattern."
+              "text": "Read the six old labels in their new order. Cover the old B, ਖ bank for ten seconds, then fill the six lines from memory. Keep this draft for the repair passes. Today we repair old forms, not learn a seventh field or a new sentence pattern."
             }
           ]
         },
@@ -408,7 +408,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Use B, ਖ. First check that each line has the selected B or ਖ value. Next check spelling in the four word lines; ਸ਼ਹਰ needs the old vowel mark to become ਸ਼ਹਿਰ. Next check one space after every colon. Then check the two Gurmukhi digit lines left to right and the phone's one group space. Last, check that each whole value sits beside its own label. Change only the first wrong dimension you find on each pass."
+              "text": "Reopen the old B, ਖ bank. With the bank visible, rewrite the corrected six-line form as a supported pass. First check that each line has the selected B or ਖ value. Next check spelling in the four word lines; ਸ਼ਹਰ needs the old vowel mark to become ਸ਼ਹਿਰ. Next check one space after every colon. Then check the two Gurmukhi digit lines left to right and the phone's one group space. Last, check that each whole value sits beside its own label. Change only the first wrong dimension you find on each pass."
             },
             {
               "kind": "speech",
@@ -472,7 +472,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:8ececa7a28d631b8",
+      "sourceHash": "fnv1a64:040d628d7f558824",
       "notice": {
         "modality": "pen",
         "needs": [

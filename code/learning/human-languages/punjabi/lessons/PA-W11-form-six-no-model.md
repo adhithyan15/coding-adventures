@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-FORM-SIX-ORDER-01, PA-FORM-SIX-CUE-01, PA-FORM-SIX-REPAIR-01, PA-FORM-SIX-NO-MODEL-01]
+  knowledge: [PA-FORM-SIX-ORDER-01, PA-FORM-SIX-CUE-01, PA-FORM-SIX-DELAYED-01, PA-FORM-SIX-REPAIR-01, PA-FORM-SIX-NO-MODEL-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -41,7 +41,7 @@ romanization, Latin-digit version, or copyable Gurmukhi answer appears
 below. Use only the old fictional card marks B · ਖ.
 
 ## Writing — independent controlled choice
-<!-- hl-knowledge: introduces=[PA-FORM-SIX-NO-MODEL-01]; assesses=[PA-FORM-SIX-ORDER-01, PA-FORM-SIX-CUE-01] -->
+<!-- hl-knowledge: introduces=[PA-FORM-SIX-NO-MODEL-01]; assesses=[PA-FORM-SIX-ORDER-01, PA-FORM-SIX-CUE-01, PA-FORM-SIX-DELAYED-01] -->
 <!-- hl-writing-stage: controlled-composition -->
 
 Write all six requested values from memory. Pause after the third line.

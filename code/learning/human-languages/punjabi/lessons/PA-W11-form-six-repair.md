@@ -13,7 +13,7 @@ prerequisites: [PA-W11-form-six-delayed]
 sounds: []
 roots: []
 duration:
-  max_seconds: 210
+  max_seconds: 270
 requires:
   knowledge: [PA-FORM-SIX-DELAYED-01, PA-FORM-THREE-SPELLING-REPAIR-01, PA-FORM-THREE-SPACING-REPAIR-01, PA-FORM-PHONE-DIGIT-ORDER-01]
 introduces:
@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-FORM-SIX-CUE-01, PA-FORM-SIX-ORDER-01, PA-FORM-SIX-REPAIR-01, PA-FORM-THREE-SPELLING-REPAIR-01, PA-FORM-THREE-SPACING-REPAIR-01, PA-FORM-PHONE-DIGIT-ORDER-01]
+  knowledge: [PA-FORM-SIX-CUE-01, PA-FORM-SIX-ORDER-01, PA-FORM-SIX-SUPPORTED-01, PA-FORM-SIX-DELAYED-01, PA-FORM-SIX-REPAIR-01, PA-FORM-THREE-SPELLING-REPAIR-01, PA-FORM-THREE-SPACING-REPAIR-01, PA-FORM-PHONE-DIGIT-ORDER-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,16 +34,20 @@ reviews_of: [PA-W06-spelling-repair, PA-W06-spacing-repair, PA-W10-form-repair-v
 # Repair one dimension at a time
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-SIX-CUE-01, PA-FORM-SIX-ORDER-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-SIX-CUE-01, PA-FORM-SIX-ORDER-01, PA-FORM-SIX-DELAYED-01] -->
 
-Read the six old labels in their new order. Today we repair old forms, not
-learn a seventh field or a new sentence pattern.
+Read the six old labels in their new order. Cover the old B · ਖ bank for
+ten seconds, then fill the six lines from memory. Keep this draft for the
+repair passes. Today we repair old forms, not learn a seventh field or a
+new sentence pattern.
 
 ## Writing — six small repair passes
-<!-- hl-knowledge: introduces=[PA-FORM-SIX-REPAIR-01]; assesses=[PA-FORM-THREE-SPELLING-REPAIR-01, PA-FORM-THREE-SPACING-REPAIR-01, PA-FORM-PHONE-DIGIT-ORDER-01] -->
+<!-- hl-knowledge: introduces=[PA-FORM-SIX-REPAIR-01]; assesses=[PA-FORM-SIX-SUPPORTED-01, PA-FORM-THREE-SPELLING-REPAIR-01, PA-FORM-THREE-SPACING-REPAIR-01, PA-FORM-PHONE-DIGIT-ORDER-01] -->
 <!-- hl-writing-stage: controlled-composition -->
 
-Use B · ਖ. First check that each line has the selected B or ਖ value.
+Reopen the old B · ਖ bank. With the bank visible, rewrite the corrected
+six-line form as a supported pass. First check that each line has the
+selected B or ਖ value.
 Next check spelling in the four word lines; **ਸ਼ਹਰ** needs the old vowel
 mark to become **ਸ਼ਹਿਰ**. Next check one space after every colon. Then
 check the two Gurmukhi digit lines left to right and the phone's one group

@@ -163,8 +163,8 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // independent form also revisits date-format repair within its R2 window,
   // closing that one missed retrieval; the chapter-3 assertions still guard
   // the original debt.
-  // Chapter 155 adds six short form sessions at the tail, making two R1,
-  // one R2, four R3, and six R4 missed windows newly measurable. These are
-  // reported as curriculum debt, not silently counted as mastered retrievals.
-  expect(report.summary.missedByWindow).toEqual({ R1: 58, R2: 563, R3: 504, R4: 555 });
+  // Chapter 155 adds six short form sessions at the tail. The supported
+  // and delayed six-field skills are genuinely revisited twice, closing two
+  // R1 misses; one R2, four R3, and six R4 misses remain measurable debt.
+  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 563, R3: 504, R4: 555 });
 });
