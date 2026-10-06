@@ -10,6 +10,8 @@ use lib "$Bin/../lib";
 use Test2::V0;
 use JSON::PP qw(decode_json);
 use Digest::SHA qw(sha256_hex);
+use File::Temp qw(tempdir);
+use File::Path qw(make_path);
 
 use CodingAdventures::BuildTool::Hasher;
 
@@ -72,6 +74,22 @@ subtest 'unknown language fails before touching candidates' => sub {
     ) }, qr/SOURCE_LANGUAGE_INVALID/, 'unknown lane is rejected first');
 };
 
+subtest 'portable path and package identity checks fail closed' => sub {
+    my $pkg = {language => 'perl', source_mode => 'extension'};
+    like(dies { $h->select_source_paths($pkg, [
+        {path => 'Foo/a.pm', kind => 'file'},
+        {path => 'foo/b.pm', kind => 'file'},
+    ]) }, qr/SOURCE_PATH_INVALID/, 'casefold aliases of directory prefixes are rejected');
+    like(dies { $h->select_source_paths({%$pkg, package_root => 'code/packages/python/demo'}, []) },
+        qr/SOURCE_PACKAGE_ROOT_INVALID/, 'package-exact authority requires matching lane');
+    like(dies { $h->select_source_paths({%$pkg, source_mode => 'declared_sources',
+        declared_srcs => ['*.pm', 'lib/[z-a].pm']}, []) },
+        qr/DECLARED_GLOB_INVALID/, 'a later invalid glob fails before candidates');
+    is([$h->select_source_paths({%$pkg, source_mode => 'declared_sources',
+        declared_srcs => ['lib/[literal.pm']}, [{path => 'lib/[literal.pm', kind => 'file'}])],
+        ['lib/[literal.pm'], 'unmatched left bracket is a literal');
+};
+
 subtest 'Hashing v1 frames paths and bytes unambiguously' => sub {
     my $digest = $h->hash_source_records([
         {path => 'b.pm', content => "two\0bytes"},
@@ -83,6 +101,21 @@ subtest 'Hashing v1 frames paths and bytes unambiguously' => sub {
     );
     is($digest, $expected, 'sorted normalized paths and length-framed raw contents');
     is($h->hash_source_records([]), sha256_hex(''), 'empty package hashes empty stream');
+    my $case = decode_json(raw_file("$fixtures/cases/hashing-cache-missing.json"));
+    my $input = $case->{workspace}{files}[0];
+    is($h->hash_source_records([{path => $input->{path}, content => $input->{content_utf8}}]),
+        $case->{expected}{result}{package_digest}, 'one-file neutral Hashing v1 package digest');
+
+    my $dir = tempdir(CLEANUP => 1);
+    my $package = "$dir/code/packages/python/demo";
+    make_path("$package/src");
+    open my $fh, '>:raw', "$package/src/data.bin" or die "Cannot create source: $!";
+    print $fh $input->{content_utf8};
+    close $fh;
+    is($h->hash_package({path => $package, language => 'python', name => 'python/demo',
+        source_mode => 'declared_sources', declared_srcs => ['src/data.bin']}),
+        $case->{expected}{result}{package_digest},
+        'native collector frames the canonical repository-relative path');
 };
 
 done_testing();

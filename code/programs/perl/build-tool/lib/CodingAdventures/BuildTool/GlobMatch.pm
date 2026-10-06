@@ -101,13 +101,22 @@ sub glob_to_regex {
             $pattern .= '[^/]';
             $i++;
         } elsif ($c eq '[') {
-            # Character class — find the matching ] and pass through verbatim.
+            # Character class — Python fnmatchcase treats an unmatched '[' as
+            # a literal. A leading '!' negates the class; Perl spells that '^'.
             my $j = $i + 1;
-            $j++ if $j < @chars && $chars[$j] eq '^';  # handle negation [^...]
+            my $negated = $j < @chars && $chars[$j] eq '!';
+            $j++ if $negated || ($j < @chars && $chars[$j] eq '^');
             $j++ if $j < @chars && $chars[$j] eq ']';  # handle literal ] at start
             while ($j < @chars && $chars[$j] ne ']') { $j++ }
-            $pattern .= join('', @chars[$i..$j]);
-            $i = $j + 1;
+            if ($j >= @chars) {
+                $pattern .= '\\[';
+                $i++;
+            } else {
+                my $class = join('', @chars[$i..$j]);
+                $class =~ s/^\[!/[^/ if $negated;
+                $pattern .= $class;
+                $i = $j + 1;
+            }
         } elsif ($c eq '.') {
             $pattern .= '\\.';
             $i++;

@@ -270,7 +270,8 @@ languages fail closed before walking. Exact-package rules require a canonical
 language-matched repository root; only the two registered TypeScript site
 roots may use the reviewed `unknown/*` graph identities.
 
-The selected files are ordered by normalized UTF-8 package-relative path.
+The selected files are ordered by normalized UTF-8 package-relative path, then
+hashed using their canonical repository-relative paths.
 Each file contributes an unsigned 64-bit big-endian path-byte length, its UTF-8
 path bytes, an unsigned 64-bit big-endian content-byte length, and the exact
 content bytes to SHA-256. An empty selection hashes the empty byte string.
