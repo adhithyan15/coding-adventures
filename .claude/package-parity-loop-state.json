@@ -1789,10 +1789,13 @@
     {
       "id": "build-tool-lua-portable-dependency-hashing-conformance",
       "title": "Implement portable dependency hashing in the Lua build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-lua-portable-source-hashing-conformance", "build-tool-neutral-dependency-hashing-adversarial-corpus"],
-      "branch": null,
+      "branch": "codex/parity-lua-dependency-hashing-20261006",
       "pr_number": null,
+      "selected_at": "2026-10-06T10:20:00Z",
+      "selection_revision": "79e4605cda43f5a282d1f773f7d89ca92fac724b",
+      "selection_notes": "Selected after #16794 auto-merged at exact main, the full 15-lane collision report remained unchanged with 1,487 identities, 4,757 slots, and no collisions/unknown buckets, and parallel audits found no new unowned package, build-tool, or OCaml promotion gap. Both prerequisites are merged; no live PR overlaps the Lua engine path; this process-free leaf reaches five unfinished descendants and consumes the eleven neutral hashing-cache cases. Use the fresh clean main-based Lua worktree, keeping native snapshot, persistence, and adapter authority separate.",
       "notes": "Consume the neutral hashing-v1 dependency and combined-digest oracle after Lua package hashing lands. Keep the work process-free and limited to package-identity framing, decoded dependency digests, deterministic invalidation, and cache-result classification over inert inputs."
     },
     {
