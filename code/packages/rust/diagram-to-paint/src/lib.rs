@@ -1158,12 +1158,27 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         let label_y = if domain.confusion { domain.center.y - 34.0 } else { domain.y + 14.0 };
         text_children.push(text_node(&capitalize(&domain.name), domain.x + 12.0, label_y, domain.width - 24.0, 28.0,
             options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+        if diagram.show_domain_descriptions {
+            let (model, practice) = match domain.name.as_str() {
+                "complex" => (Some("Probe -> Sense -> Respond"), "Emergent Practices"),
+                "complicated" => (Some("Sense -> Analyse -> Respond"), "Good Practices"),
+                "clear" => (Some("Sense -> Categorise -> Respond"), "Best Practices"),
+                "chaotic" => (Some("Act -> Sense -> Respond"), "Novel Practices"),
+                _ => (None, "Disorder"),
+            };
+            let description_y = if domain.confusion { domain.center.y - 12.0 } else { domain.y + 40.0 };
+            if let Some(model) = model { text_children.push(text_node(model, domain.x + 12.0, description_y,
+                domain.width - 24.0, 20.0, options.label_font.clone(), Color { r: 71, g: 85, b: 105, a: 255 })); }
+            text_children.push(text_node(practice, domain.x + 12.0, description_y + if model.is_some() { 18.0 } else { 0.0 },
+                domain.width - 24.0, 20.0, options.label_font.clone(), Color { r: 71, g: 85, b: 105, a: 255 }));
+        }
         for (index, item) in domain.items.iter().enumerate() {
-            let y = if domain.confusion { domain.center.y - 2.0 + index as f64 * 22.0 } else { domain.y + 52.0 + index as f64 * 28.0 };
+            let y = if domain.confusion { domain.center.y + if diagram.show_domain_descriptions { 14.0 } else { -2.0 } + index as f64 * 22.0 }
+                else { domain.y + if diagram.show_domain_descriptions { 82.0 } else { 52.0 } + index as f64 * 28.0 };
             text_children.push(text_node(item, domain.x + 18.0, y, domain.width - 36.0, 24.0, options.label_font.clone(), Color { r: 30, g: 41, b: 59, a: 255 }));
         }
         if domain.overflow_count > 0 {
-            let y = domain.center.y - 2.0 + domain.items.len() as f64 * 22.0;
+            let y = domain.center.y + if diagram.show_domain_descriptions { 14.0 } else { -2.0 } + domain.items.len() as f64 * 22.0;
             instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: domain.center.x - 45.0, y,
                 width: 90.0, height: 24.0, fill: Some("#cbd5e1".into()), stroke: None, stroke_width: None,
                 corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
@@ -9327,6 +9342,7 @@ mod tests {
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver; let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedCynefinDiagram { width: 400.0, height: 300.0, title: None, accessibility_title: Some("Cynefin framework".into()),
             accessibility_description: Some("Practices by domain".into()),
+            show_domain_descriptions: true,
             domains: vec![diagram_ir::LayoutedCynefinDomain { name: "complex".into(), items: vec!["Probe".into()], overflow_count: 0, x: 10.0, y: 10.0,
                 width: 180.0, height: 130.0, center: Point { x: 100.0, y: 75.0 }, confusion: false },
                 diagram_ir::LayoutedCynefinDomain { name: "confusion".into(), items: vec!["One".into(), "Two".into(), "Three".into()], overflow_count: 2, x: 150.0, y: 110.0,

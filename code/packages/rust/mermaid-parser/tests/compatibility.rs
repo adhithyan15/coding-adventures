@@ -180,6 +180,7 @@ fn pinned_cynefin_subset_corpus_parses_to_domain_map_ir() {
         }
         if name == "canvas-config" {
             assert_eq!((diagram.config.width, diagram.config.height, diagram.config.padding), (640.0, 420.0, 24.0));
+            assert!(!diagram.config.show_domain_descriptions);
         }
     }
 }
