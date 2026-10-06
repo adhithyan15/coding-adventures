@@ -210,8 +210,9 @@ call a procedure when both value branches are selector-safe runtime-real
 expressions rooted in direct formatter-safe real procedure calls. Those calls
 may nest through a real name formal only when its actual has the same proof;
 unary signs, arithmetic composition with finite static operands, and
-real-valued standard functions preserve it. Selector calls paired with
-provenance-backed local or other real-name branches remain conservative.
+real-valued standard functions preserve it, while a finite static real actual
+is safe directly. Selector calls paired with provenance-backed local or other
+real-name branches remain conservative.
 One-sided reassignment remains conservative. `for` loops preserve
 runtime-real provenance for caller-frame locals whose values their bodies leave
 invariant; controlled, changed, captured, and name-promoted storage remains

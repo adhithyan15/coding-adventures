@@ -3979,6 +3979,11 @@ impl Compiler {
                 }
             }
         }
+        if !self.contains_procedure_call(node)
+            && expr_static_real_arithmetic_value_with(node, &|_| None).is_some()
+        {
+            return true;
+        }
         if let Some(child) = single_parenthesized_child(node) {
             return self.is_selector_call_safe_runtime_real_value(child);
         }
@@ -12691,6 +12696,21 @@ mod tests {
             "test",
         )
         .expect("a calling selector may choose powered real name-actual results");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_static_name_actuals() {
+        let module = compile_source(
+            "begin boolean procedure choose; choose := true; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(2.25 + 1.25) else relay(7.0 / 2); output(result) end",
+            "test",
+        )
+        .expect("a calling selector may choose finite static real name-actual results");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "call"
