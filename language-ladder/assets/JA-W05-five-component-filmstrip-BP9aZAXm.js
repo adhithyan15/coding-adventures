@@ -1,0 +1,1 @@
+var e=``+new URL(`JA-W05-five-component-filmstrip-DHvQ8_vF.svg`,import.meta.url).href;export{e as default};

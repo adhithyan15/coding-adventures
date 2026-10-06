@@ -1,0 +1,1 @@
+var e=``+new URL(`JA-W05-mouth-component-filmstrip-6D0UJZwQ.svg`,import.meta.url).href;export{e as default};
