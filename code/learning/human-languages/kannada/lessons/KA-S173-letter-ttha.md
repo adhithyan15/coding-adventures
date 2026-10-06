@@ -58,14 +58,22 @@ You already say these:
 ## Writing: ಠ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-173] -->
 
-Put your pen on ಠ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** start at the upper left of the bowl and go down the left side and round the base
+- **2.** without lifting, climb the right side
+- **3.** without lifting, close the bowl leftward along the top
+- **4.** lift, then draw the top bar from left to right
+- **5.** without lifting, curl up into the hook
+- **6.** lift, then set the dot in the middle
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 2.** The round bowl is one run, closing back along the top as
+in ದ; then come the curled bar and last the dot, each after a lift.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-tta.gif', 41 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
+
+> The animation is filed as 'tta': that series spells ಟ as 'ta' and ಥ as 'thha'.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-173, KA-SCRIPT-RECOG-172] -->

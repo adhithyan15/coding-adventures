@@ -57,6 +57,7 @@ const KANNADA_PHA = DUCTUS[ductusKey("kannada", "ಫ")];
 const KANNADA_KHA = DUCTUS[ductusKey("kannada", "ಖ")];
 const KANNADA_GHA = DUCTUS[ductusKey("kannada", "ಘ")];
 const KANNADA_DDHA = DUCTUS[ductusKey("kannada", "ಢ")];
+const KANNADA_TTHA = DUCTUS[ductusKey("kannada", "ಠ")];
 
 const OWNER_SCRIPTS = new Set(["kannada"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -1156,6 +1157,35 @@ describe("handwriting ductus", () => {
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-dda.gif",
     );
     expect(verifiedLetterFont("ಢ", KANNADA_DDHA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಠ draws its round bowl, hooked bar, and dot in three runs", () => {
+    expect(penLifts(KANNADA_TTHA)).toBe(2);
+    expect(KANNADA_TTHA.strokes).toHaveLength(3);
+    expect(
+      KANNADA_TTHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "go down the left side round the base",
+        "climb the right side",
+        "close the bowl along the top",
+      ],
+      [
+        "lift, then draw the top bar rightward",
+        "curl up into the hook",
+      ],
+      [
+        "lift, then set the dot in the middle",
+      ],
+    ]);
+    expect(KANNADA_TTHA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-tta.gif",
+    );
+    expect(verifiedLetterFont("ಠ", KANNADA_TTHA.source.url)).toBe(
       "_fonts/NotoSansKannada-Static.ttf",
     );
   });

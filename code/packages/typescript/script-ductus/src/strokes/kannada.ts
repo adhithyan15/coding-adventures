@@ -5169,4 +5169,132 @@ export const entries: DuctusEntry[] = [
       source: kannadaLetterSource("ಢ"),
     },
   ],
+  // Gopala Krishna A's 41-frame Kannada-alphabet-tta.gif (the uploader's slug
+  // for retroflex ಠ; "ta" is ಟ and "thha" is ಥ) writes the round bowl in one
+  // run: down the left side, round the base, up the right side and back left
+  // across the top. After a lift the top bar and hook follow, and after a
+  // second lift the dot. Noto fuses the bowl's top into the bar, so the closing
+  // movement runs along the lower edge of that ink.
+  [
+    "kannada:ಠ",
+    {
+      script: "kannada",
+      glyph: "ಠ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "go down the left side round the base",
+              path: [
+                { x: 205, y: 498 },
+                { x: 184, y: 479 },
+                { x: 163, y: 454 },
+                { x: 141, y: 424 },
+                { x: 120, y: 392 },
+                { x: 104, y: 359 },
+                { x: 93, y: 323 },
+                { x: 88, y: 285 },
+                { x: 87, y: 246 },
+                { x: 91, y: 208 },
+                { x: 101, y: 171 },
+                { x: 117, y: 138 },
+                { x: 139, y: 107 },
+                { x: 167, y: 81 },
+                { x: 198, y: 60 },
+                { x: 233, y: 46 },
+                { x: 269, y: 37 },
+                { x: 307, y: 32 },
+                { x: 345, y: 32 },
+                { x: 383, y: 37 },
+                { x: 420, y: 46 },
+                { x: 454, y: 60 },
+                { x: 485, y: 81 },
+                { x: 514, y: 106 },
+              ],
+            },
+            {
+              label: "climb the right side",
+              path: [
+                { x: 514, y: 106 },
+                { x: 533, y: 137 },
+                { x: 548, y: 169 },
+                { x: 558, y: 203 },
+                { x: 563, y: 238 },
+                { x: 563, y: 275 },
+                { x: 560, y: 311 },
+                { x: 553, y: 346 },
+                { x: 540, y: 380 },
+                { x: 522, y: 410 },
+                { x: 500, y: 439 },
+                { x: 480, y: 469 },
+                { x: 462, y: 500 },
+              ],
+            },
+            {
+              label: "close the bowl along the top",
+              path: [
+                { x: 462, y: 500 },
+                { x: 419, y: 500 },
+                { x: 376, y: 500 },
+                { x: 334, y: 500 },
+                { x: 291, y: 500 },
+                { x: 248, y: 500 },
+                { x: 205, y: 500 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the top bar rightward",
+              path: [
+                { x: 55, y: 516 },
+                { x: 96, y: 516 },
+                { x: 136, y: 516 },
+                { x: 177, y: 516 },
+                { x: 218, y: 516 },
+                { x: 258, y: 516 },
+                { x: 299, y: 516 },
+                { x: 340, y: 516 },
+                { x: 381, y: 516 },
+                { x: 421, y: 516 },
+                { x: 462, y: 516 },
+              ],
+            },
+            {
+              label: "curl up into the hook",
+              path: [
+                { x: 462, y: 516 },
+                { x: 497, y: 527 },
+                { x: 527, y: 545 },
+                { x: 549, y: 572 },
+                { x: 559, y: 607 },
+                { x: 559, y: 644 },
+                { x: 550, y: 680 },
+                { x: 536, y: 712 },
+                { x: 512, y: 734 },
+                { x: 481, y: 744 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then set the dot in the middle",
+              path: [
+                { x: 325, y: 304 },
+                { x: 331, y: 283 },
+                { x: 325, y: 274 },
+                { x: 319, y: 283 },
+                { x: 325, y: 304 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: kannadaLetterSource("ಠ"),
+    },
+  ],
 ];
