@@ -1,5 +1,5 @@
 -- Generated from the reviewed language source-input registry.
--- Do not edit; run tools/sync_source_registry.py --sync.
+-- Reviewed package-data projection; tests check the full registry and digest.
 return { digest = "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621", data = {
   ["languages"] = {
     {

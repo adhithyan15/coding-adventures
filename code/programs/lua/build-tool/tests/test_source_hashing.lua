@@ -30,6 +30,23 @@ local function hex_bytes(hex)
     end))
 end
 
+local function canonical_json(value)
+    if type(value) ~= "table" then return json.encode(value) end
+    if #value > 0 or (getmetatable(value) or {}).__jsontype == "array" then
+        local elements = {}
+        for index = 1, #value do elements[index] = canonical_json(value[index]) end
+        return "[" .. table.concat(elements, ",") .. "]"
+    end
+    local keys = {}
+    for key in pairs(value) do keys[#keys + 1] = key end
+    table.sort(keys)
+    local fields = {}
+    for _, key in ipairs(keys) do
+        fields[#fields + 1] = json.encode(key) .. ":" .. canonical_json(value[key])
+    end
+    return "{" .. table.concat(fields, ",") .. "}"
+end
+
 local local_cases = {
     "source-collection-extension.json",
     "source-collection-declared.json",
@@ -48,6 +65,10 @@ describe("portable Lua source hashing", function()
             "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621",
             SourceHashing.registry_digest()
         )
+        local canonical = canonical_json(fixture)
+        local frame = "coding-adventures/build-tool-language-source-input-registry/v1\0"
+            .. string.pack(">I8", #canonical) .. canonical
+        assert.equals(sha256.sha256_hex(frame), SourceHashing.registry_digest())
     end)
 
     it("keeps production selectors isolated from caller-owned tables", function()
@@ -128,10 +149,10 @@ describe("portable Lua source hashing", function()
             {files[1].path, files[2].path, files[3].path})
     end)
 
-    it("bounds cumulative declared-match work before the fifth large match", function()
+    it("bounds cumulative declared-match work", function()
         local patterns = {}
-        for index = 1, 5 do
-            patterns[index] = string.rep("**/", 1000) .. index
+        for index = 1, 26 do
+            patterns[index] = string.rep("b", 510) .. index
         end
         assert.has_error(function()
             SourceHashing.collect_source_files({
@@ -141,6 +162,59 @@ describe("portable Lua source hashing", function()
                 candidates = {{path = string.rep("a", 4000),
                     kind = "file", content_hex = "78"}},
             })
+        end)
+    end)
+
+    it("rejects oversized declared pattern collections without any candidates", function()
+        local patterns = {}
+        for index = 1, 129 do patterns[index] = "src/" .. index .. "/*.lua" end
+        assert.has_error(function()
+            SourceHashing.collect_source_files({
+                language = "lua", package_root = "code/packages/lua/example",
+                mode = "declared_sources", registry_sha256 = SourceHashing.registry_digest(),
+                declared_srcs = patterns, candidates = {},
+            })
+        end)
+        patterns = {}
+        patterns[1] = string.rep("a", 513)
+        assert.has_error(function()
+            SourceHashing.collect_source_files({
+                language = "lua", package_root = "code/packages/lua/example",
+                mode = "declared_sources", registry_sha256 = SourceHashing.registry_digest(),
+                declared_srcs = patterns, candidates = {},
+            })
+        end)
+    end)
+
+    it("requires mode-consistent unique declared patterns", function()
+        local base = {
+            language = "lua", package_root = "code/packages/lua/example",
+            mode = "extension", registry_sha256 = SourceHashing.registry_digest(),
+            declared_srcs = {"src/*.lua"}, candidates = {},
+        }
+        assert.has_error(function() SourceHashing.collect_source_files(base) end)
+        base.mode = "declared_sources"
+        base.declared_srcs = {}
+        assert.has_error(function() SourceHashing.collect_source_files(base) end)
+        base.declared_srcs = {"src/*.lua", "src/*.lua"}
+        assert.has_error(function() SourceHashing.collect_source_files(base) end)
+    end)
+
+    it("rejects sparse caller-owned arrays before selection or hashing", function()
+        local options = {
+            language = "lua", package_root = "code/packages/lua/example",
+            mode = "extension", registry_sha256 = SourceHashing.registry_digest(),
+            declared_srcs = {}, candidates = {[2] = {
+                path = "src/x.lua", kind = "file", content_hex = "78",
+            }},
+        }
+        assert.has_error(function() SourceHashing.collect_source_files(options) end)
+        options.mode = "declared_sources"
+        options.candidates = {{path = "src/x.lua", kind = "file", content_hex = "78"}}
+        options.declared_srcs = {[1] = "src/*.lua", [3] = "[z-a].lua"}
+        assert.has_error(function() SourceHashing.collect_source_files(options) end)
+        assert.has_error(function()
+            SourceHashing.package_digest({[2] = "src/x.lua"}, {["src/x.lua"] = "x"})
         end)
     end)
 
@@ -156,6 +230,28 @@ describe("portable Lua source hashing", function()
         assert.has_error(function() SourceHashing.collect_source_files(options) end)
         options.candidates[2].path = "src/A.lua/child.lua"
         assert.has_error(function() SourceHashing.collect_source_files(options) end)
+    end)
+
+    it("supports nested canonical package roots and exact suffix basenames", function()
+        local files = SourceHashing.collect_source_files({
+            language = "lua", package_root = "code/packages/lua/nested/package",
+            mode = "extension", registry_sha256 = SourceHashing.registry_digest(),
+            declared_srcs = {}, candidates = {{path = ".lua", kind = "file", content_hex = "78"},
+                {path = "src/.lua", kind = "file", content_hex = "79"}},
+        })
+        assert.same({".lua", "src/.lua"}, {files[1].path, files[2].path})
+    end)
+
+    it("rejects non-portable declared glob characters", function()
+        for _, invalid in ipairs({"bad:pattern", "bad<pattern", "bad|pattern"}) do
+            assert.has_error(function()
+                SourceHashing.collect_source_files({
+                    language = "lua", package_root = "code/packages/lua/example",
+                    mode = "declared_sources", registry_sha256 = SourceHashing.registry_digest(),
+                    declared_srcs = {invalid}, candidates = {},
+                })
+            end)
+        end
     end)
 
     it("hashes an inert local and shared-input union with v1 length frames", function()
@@ -181,5 +277,20 @@ describe("portable Lua source hashing", function()
             SourceHashing.package_digest({second, path, path}, {[path] = "a\0b", [second] = "build\n"})
         )
         assert.not_equals(sha256.sha256_hex(""), initial)
+    end)
+
+    it("hashes across bounded SHA update boundaries", function()
+        local bytes = string.rep("x", 2049)
+        local path = "src/main.lua"
+        local files = SourceHashing.collect_source_files({
+            language = "lua", package_root = "code/packages/lua/example",
+            mode = "extension", registry_sha256 = SourceHashing.registry_digest(),
+            declared_srcs = {}, candidates = {{path = path, kind = "file", content_utf8 = bytes}},
+        })
+        assert.equals(sha256.sha256_hex(bytes), files[1].digest)
+        local framed = string.pack(">I8", #path) .. path
+            .. string.pack(">I8", #bytes) .. bytes
+        assert.equals(sha256.sha256_hex(framed),
+            SourceHashing.package_digest({path}, {[path] = bytes}))
     end)
 end)

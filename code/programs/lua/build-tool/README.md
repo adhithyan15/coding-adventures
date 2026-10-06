@@ -60,10 +60,9 @@ The build tool follows a pipeline:
    records. `package_digest(include_paths, contents)` accepts canonical
    repository-relative paths and a map of exact byte strings.
 
-   The package-data projection is regenerated only by
-   `python tools/sync_source_registry.py --sync`; CI or maintainers can run
-   `--check` to reject drift from the reviewed neutral registry. Both modes
-   reject linked source, target, or parent paths.
+   The packaged projection is checked by native tests against the complete
+   reviewed neutral registry and its domain-separated SHA-256 digest. Changes
+   to that registry require a reviewed update to the packaged Lua data.
 
 ## OCaml and Dune Discovery
 

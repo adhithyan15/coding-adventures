@@ -23,6 +23,23 @@ local MAX_SELECTED = 50000
 local MAX_FILE_BYTES = 64 * 1024 * 1024
 local MAX_PACKAGE_BYTES = 1024 * 1024 * 1024
 local MAX_GLOB_WORK = 50000000
+local MAX_DECLARED_PATTERNS = 128
+local MAX_DECLARED_PATTERN_BYTES = 128 * 512 * 4
+-- The SHA-256 package buffers each update before compressing blocks. Small
+-- updates keep its internal buffer bounded even at the 64-MiB file ceiling.
+local HASH_CHUNK_BYTES = 1024
+
+local function update_bounded(hasher, bytes)
+    for first = 1, #bytes, HASH_CHUNK_BYTES do
+        hasher:update(bytes:sub(first, first + HASH_CHUNK_BYTES - 1))
+    end
+end
+
+local function digest_bounded(bytes)
+    local hasher = sha256.new()
+    update_bounded(hasher, bytes)
+    return hasher:hex_digest()
+end
 
 local languages = {}
 for _, entry in ipairs(snapshot.data.languages) do
@@ -45,6 +62,22 @@ end
 
 local function reject(message)
     error("SOURCE_HASH_INVALID_INPUT: " .. message, 3)
+end
+
+local function dense_count(values, maximum, label)
+    if type(values) ~= "table" then reject(label .. " must be an array") end
+    local count = 0
+    for key in next, values do
+        if type(key) ~= "number" or key % 1 ~= 0 or key < 1 or key > maximum then
+            reject(label .. " array shape or limit")
+        end
+        count = count + 1
+        if count > maximum then reject(label .. " array limit") end
+    end
+    for index = 1, count do
+        if rawget(values, index) == nil then reject(label .. " sparse array") end
+    end
+    return count
 end
 
 local reserved = {
@@ -91,7 +124,7 @@ end
 
 local function suffix_match(name, suffixes)
     for _, suffix in ipairs(suffixes) do
-        if #name > #suffix and name:sub(-#suffix) == suffix then return true end
+        if #name >= #suffix and name:sub(-#suffix) == suffix then return true end
     end
     return false
 end
@@ -207,15 +240,26 @@ local function segment_matches(tokens, value)
 end
 
 local function compile_globs(patterns)
-    if type(patterns) ~= "table" then reject("declared patterns must be an array") end
-    local compiled = {}
-    for _, pattern in ipairs(patterns) do
+    local pattern_count = dense_count(patterns, MAX_DECLARED_PATTERNS, "declared patterns")
+    local compiled, seen_patterns = {}, {}
+    local total_bytes = 0
+    for index = 1, pattern_count do
+        local pattern = patterns[index]
+        if type(pattern) == "string" then
+            total_bytes = total_bytes + #pattern
+            if total_bytes > MAX_DECLARED_PATTERN_BYTES then
+                reject("declared pattern byte limit")
+            end
+        end
         if type(pattern) ~= "string" or pattern == "" or pattern:sub(1, 1) == "/"
             or pattern:find("\\", 1, true)
-            or not utf8.len(pattern) or utf8.len(pattern) > 4096
+            or pattern:find('[:<>"|%z\1-\31\127]')
+            or not utf8.len(pattern) or utf8.len(pattern) > 512
             or Unicode.nfc(pattern) ~= pattern then
             reject("invalid declared pattern")
         end
+        if seen_patterns[pattern] then reject("duplicate declared pattern") end
+        seen_patterns[pattern] = true
         local segments = split(pattern)
         local result = {}
         for _, segment in ipairs(segments) do
@@ -287,7 +331,8 @@ local function chosen_by_registry(entry, root, path, mode, declared_matches)
 end
 
 local function hex_bytes(hex)
-    if type(hex) ~= "string" or #hex % 2 ~= 0 or hex:find("[^0-9a-fA-F]") then
+    if type(hex) ~= "string" or #hex > 2 * MAX_FILE_BYTES
+        or #hex % 2 ~= 0 or hex:find("[^0-9a-fA-F]") then
         reject("invalid content hex")
     end
     return (hex:gsub("..", function(pair)
@@ -304,7 +349,7 @@ local function validate_root(root, language, entry)
         end
         reject("unregistered site root")
     end
-    if #parts ~= 4 or parts[1] ~= "code"
+    if #parts < 4 or parts[1] ~= "code"
         or (parts[2] ~= "packages" and parts[2] ~= "programs")
         or parts[3] ~= language then
         reject("package root does not match language")
@@ -322,6 +367,10 @@ function SourceHashing.collect_source_files(options)
     end
     validate_root(options.package_root, options.language, entry)
     local globs = compile_globs(options.declared_srcs)
+    if (options.mode == "extension" and #globs ~= 0)
+        or (options.mode == "declared_sources" and #globs == 0) then
+        reject("declared patterns do not match mode")
+    end
     local glob_work = 0
     local function declared_matches(path)
         local scalar_count = utf8.len(path)
@@ -335,12 +384,11 @@ function SourceHashing.collect_source_files(options)
         end
         return false
     end
-    if type(options.candidates) ~= "table" or #options.candidates > MAX_CANDIDATES then
-        reject("candidate limit or shape")
-    end
+    local candidate_count = dense_count(options.candidates, MAX_CANDIDATES, "candidates")
 
     local seen, aliases, links, files = {}, {}, {}, {}
-    for _, candidate in ipairs(options.candidates) do
+    for index = 1, candidate_count do
+        local candidate = options.candidates[index]
         if type(candidate) ~= "table" then reject("candidate shape") end
         local path = candidate.path
         parts_of(path)
@@ -352,7 +400,7 @@ function SourceHashing.collect_source_files(options)
         aliases[alias] = path
         seen[path] = candidate.kind
         if candidate.kind == "symlink" or candidate.kind == "reparse_point" then
-            links[#links + 1] = path
+            links[path] = true
         elseif candidate.kind ~= "file" then
             reject("unsupported candidate kind")
         end
@@ -366,18 +414,19 @@ function SourceHashing.collect_source_files(options)
     end
 
     local selected_bytes = 0
-    for _, candidate in ipairs(options.candidates) do
+    for index = 1, candidate_count do
+        local candidate = options.candidates[index]
         local path = candidate.path
         local pruned = false
         local components = parts_of(path)
-        for index = 1, #components - 1 do
-            if generated[components[index]] then pruned = true; break end
+        for component_index = 1, #components - 1 do
+            if generated[components[component_index]] then pruned = true; break end
         end
         if not pruned then
-            for _, link in ipairs(links) do
-                if path == link or path:sub(1, #link + 1) == link .. "/" then
-                    pruned = true; break
-                end
+            local prefix = ""
+            for _, component in ipairs(components) do
+                prefix = prefix == "" and component or prefix .. "/" .. component
+                if links[prefix] then pruned = true; break end
             end
         end
         if not pruned and candidate.kind == "file"
@@ -391,7 +440,7 @@ function SourceHashing.collect_source_files(options)
             if selected_bytes > MAX_PACKAGE_BYTES or #files >= MAX_SELECTED then
                 reject("selected package limit")
             end
-            files[#files + 1] = {path = path, digest = sha256.sha256_hex(bytes)}
+            files[#files + 1] = {path = path, digest = digest_bounded(bytes)}
         end
     end
     table.sort(files, function(left, right) return left.path < right.path end)
@@ -399,10 +448,11 @@ function SourceHashing.collect_source_files(options)
 end
 
 function SourceHashing.package_digest(include_paths, contents)
-    if type(include_paths) ~= "table" or type(contents) ~= "table"
-        or #include_paths > MAX_SELECTED then reject("package digest input shape") end
+    local path_count = dense_count(include_paths, MAX_SELECTED, "package digest paths")
+    if type(contents) ~= "table" then reject("package digest contents shape") end
     local selected, aliases = {}, {}
-    for _, path in ipairs(include_paths) do
+    for index = 1, path_count do
+        local path = include_paths[index]
         parts_of(path)
         local alias = Unicode.casefold(path)
         if aliases[alias] and aliases[alias] ~= path then
@@ -424,9 +474,9 @@ function SourceHashing.package_digest(include_paths, contents)
         total = total + #bytes
         if total > MAX_PACKAGE_BYTES then reject("package byte limit") end
         digest:update(string.pack(">I8", #path))
-        digest:update(path)
+        update_bounded(digest, path)
         digest:update(string.pack(">I8", #bytes))
-        digest:update(bytes)
+        update_bounded(digest, bytes)
     end
     return digest:hex_digest()
 end

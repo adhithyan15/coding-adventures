@@ -9,8 +9,6 @@
   package data. The native Busted suite exercises all seven package-local
   neutral cases, SHA-256 v1 path/content framing, generated and link pruning,
   invalid glob rejection, path aliases, and raw-byte/rename sensitivity.
-- A strict registry sync/check command regenerates the inert Lua projection
-  from the reviewed fixture and rejects linked maintenance paths.
 - Native discovery tests now project the shared language-registry fixture's
   OCaml package and exact Dune `_build` decoy, with direct case-variant and
   near-name coverage.
