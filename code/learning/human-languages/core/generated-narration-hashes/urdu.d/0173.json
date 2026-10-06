@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:a3c2fdf6fc8a2e7c",
+  "lessonIds": [
+    "UR-C173-divar-ghari",
+    "UR-C173-gamla",
+    "UR-C173-pauda",
+    "UR-C173-tana",
+    "UR-C173-kichar",
+    "UR-R173-first-pass-words-from-chapters-165-168",
+    "UR-R173-second-pass-words-from-chapters-169-173"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch173.txt",
+  "json": "urdu/narration/ch173.json",
+  "textHash": "fnv1a64:48d1930cb04b31fb",
+  "jsonHash": "fnv1a64:f0e53befa47d19c3",
+  "findings": []
+}

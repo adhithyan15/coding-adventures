@@ -1,5 +1,165 @@
 # Changelog — Russian track
 
+## Chapters 232-257: 130 more headwords, and Russian attains A2
+
+The last of four Russian A2 vocabulary tranches. It has twenty-six chapters of
+five words each, in three runs, and each run closes with two reviews.
+
+- **Verbs (30):** money and post (*копить*, *занимать*, *звонить*,
+  *отправлять*, *получать*), choices (*решать*, *выбирать*, *менять*), the
+  garden (*подметать*, *сажать*, *поливать*, *расти*, *кормить*), the voice
+  (*кричать*, *шептать*, *молчать*, *улыбаться*), forms (*считать*,
+  *проверять*, *заполнять*) and life events (*умирать*, *переезжать*,
+  *зарабатывать*).
+- **Nouns and qualities (100):** the pharmacy (*мазь*, *капли*,
+  *термометр*, *скорая помощь*), the body (*вес*, *рост*, *бровь*),
+  November and December, the block of flats (*подвал*, *балкон*, *двор*),
+  places to go (*библиотека*, *университет*, *зоопарк*), age and size
+  (*молодой*, *пожилой*, *высокий*), *древний*, *странный* and *ужасный*, the
+  kitchen (*чайник*, *кружка*), papers (*паспорт*, *виза*), clothes
+  (*одежда*, *плащ*, *джинсы*), dairy and meat (*сметана*, *творог*), fruit
+  (*арбуз*, *слива*), farm birds (*гусь*, *петух*), sport (*хоккей*,
+  *плавание*), stories (*сказка*, *история*, *шахматы*), family (*родители*,
+  *племянник*), names and numbers (*фамилия*, *возраст*, *номер*), the arts
+  (*журналист*, *художник*, *актёр*) and the firm (*компания*, *проект*).
+- *подъезд* (a stairwell) gave way to *подвал* (a basement): it is written with
+  ъ, which the track does not yet teach the learner to write.
+- **Russian attains A2.** At or below A2 it now teaches 1,224 distinct
+  headwords (target 1,200) and more than 120 verbs, and every A2 spine node is
+  realized. Chapters 136-257 add 610 headwords, 128 of them verbs.
+  `tests/level-gate-attainment/russian.json` moves from A1 to A2, and the
+  level-gate climb history records the climb.
+
+    russian lessons          1202  ->  1338
+
+## Chapters 204-231: 140 more A2 headwords
+
+The third of four Russian A2 vocabulary tranches. It has twenty-eight chapters
+of five words each, in four runs, and each run closes with two reviews.
+
+- **Verbs (30):** money (*пробовать*, *заказывать*, *платить*, *стоить*,
+  *тратить*), school (*забывать*, *учиться*, *изучать*, *преподавать*,
+  *сдавать*), work with the hands (*строить*, *ломать*, *красить*,
+  *чистить*), being ill (*болеть*, *лечить*, *дышать*, *кашлять*, *чихать*),
+  the senses (*чувствовать*, *замечать*, *слышать*, *трогать*) and a wedding
+  (*фотографировать*, *обещать*, *жениться*).
+- **Nouns and qualities (110):** first aid (*ожог*, *аллергия*, *пластырь*),
+  the body (*мышца*, *кость*, *пульс*), June to October, the border
+  (*граница*, *таможня*, *столица*), directions (*отсюда*, *назад*, *вперёд*),
+  sentence adverbs (*конечно*, *наверное*, *может быть*, *к сожалению*), mood
+  (*спокойный*, *счастливый*, *грустный*), texture (*свежий*, *гладкий*),
+  comparison (*разный*, *одинаковый*, *похожий*), the bathroom and gadgets
+  (*пылесос*, *клавиатура*), toys, food (*меню*, *апельсин*), trees
+  (*берёза*, *сосна*), animals (*жираф*, *верблюд*), music (*скрипка*), the
+  classroom (*ошибка*, *правило*), the office (*программист*, *бухгалтер*),
+  trades (*парикмахер*, *кассир*) and money (*рубль*, *копейка*).
+- **The book passes page 999.** `book/preamble.tex` widens the contents
+  page-number box from 1.55em to 2.4em, and the right margin with it, as the
+  Tamil, German, Sanskrit, Italian and French preambles already do. Without
+  the change, 124 contents lines with a four-digit page reported an overfull
+  box.
+
+    russian lessons          1054  ->  1202
+
+## Chapters 173-203: 155 more A2 headwords
+
+The second of four Russian A2 vocabulary tranches. It has thirty-one chapters
+of five words each, in four runs, and each run closes with two reviews. With
+its thirty verbs, Russian now teaches the 120 verb headwords that A2 asks for.
+
+- **Verbs (30):** the kitchen (*шить*, *резать*, *варить*, *жарить*,
+  *наливать*), talking (*советовать*, *описывать*, *повторять*, *переводить*,
+  *помнить*), switches and lights (*тянуть*, *поднимать*, *включать*,
+  *выключать*), coming and going (*возвращаться*, *опаздывать*, *спешить*),
+  friends (*обнимать*, *целовать*, *спорить*, *мириться*) and sport.
+- *объяснять* (to explain) gave way to *описывать* (to describe): it is written
+  with ъ, which the track does not yet teach the learner to write.
+- *Новый год* (New Year) gave way to *выходной* (a day off): its capital Н is
+  not yet in the track's Cyrillic inventory.
+- **Nouns and qualities (125):** at the doctor's (*рецепт*, *укол*, *рана*,
+  *диета*), five months (*январь* to *май*), dates (*каникулы*, *день
+  рождения*, *выходной*), the street (*тротуар*, *шоссе*), directions
+  (*везде*, *туда*, *сюда*), reasons (*причина*, *цель*, *например*), character
+  (*грубый*, *честный*, *щедрый*), *полезный* and *сложный*, the bathroom,
+  gadgets, reading, clothes, food, nature, insects, hobbies, travel, people,
+  feelings, the shop and the trades.
+- *пересадка* is glossed "a transfer, a change (of trains)", so its cue does
+  not collide with *сдача*, "change" from a purchase.
+
+    russian lessons          891  ->  1054
+
+## Chapters 140-172: 165 A2 headwords, thirty-five of them verbs
+
+The first of four Russian A2 vocabulary tranches. It has thirty-three chapters
+of five words each, in four runs of at most nine chapters. Each run closes
+with two reviews.
+
+- **Verbs (35):** meals (*обедать*, *завтракать*, *ужинать*), meeting people
+  (*встречать*, *знакомиться*, *приглашать*, *благодарить*, *извиняться*),
+  carrying and moving (*носить*, *держать*, *бросать*, *ловить*, *толкать*),
+  getting about (*летать*, *ездить*, *ходить*, *приходить*, *уходить*), and
+  feelings, the office and the road.
+- **Nouns and qualities (130):** health (*больной*, *простуда*, *грипп*),
+  parts of the day (*полчаса*, *сутки*, *рассвет*, *закат*), places in town
+  (*центр*, *район*, *проспект*, *храм*, *памятник*), linking words (*поэтому*,
+  *так как*, *если*, *хотя*), qualities (*умный*, *вежливый*, *богатый*,
+  *вкусный*), things at home and in a shop, clothes, food, animals, sport,
+  transport, a wedding, and the words of a job.
+- **Screening:** every headword was checked against the track's lessons. A
+  candidate that an earlier lesson already uses untaught (*завтра*, *утро*,
+  *ночь*, *письмо*, *студент* and thirteen more) was dropped, so there is no
+  new forward reference. Glosses were made distinct where two cues would
+  collide: *стирать* is "to do the laundry" beside *мыть*, *проигрывать* is
+  "to be beaten" beside *терять*, *сытый* is "well-fed" beside *полный*.
+- **Language review:** every spelling and stress mark was checked. The review
+  sharpened *храм* to "a temple, a church".
+
+    russian lessons          718  ->  891
+
+## Chapters 136-139: saying no, the past, the future and practical texts
+
+Russian had realized one of its five A2 spine nodes. Four chapters realize the
+other four, so the A2 gate no longer reports a missing spine node. Russian is
+still 566 headwords and 53 verbs short of A2.
+
+- **Chapter 136 (NEGATE-AND-ASK):** *никто*, *ничего*, *нигде*, *никуда*,
+  *зачем*. The notes show that Russian still puts **не** before the verb
+  (*Никто не знает*), and that *ничего* is said with a *v*, like *сегодня*.
+- **Chapter 137 (TALK-ABOUT-PAST):** *недавно*, *давно*, *раньше*, *прошлый*,
+  *случиться*. The notes introduce the past in **-л** / **-ла** (*читал*,
+  *читала*, *был*).
+- **Chapter 138 (TALK-ABOUT-FUTURE):** *будущий*, *через*, *план*,
+  *планировать*, *надеяться*. The notes introduce the future with **буду** and
+  an infinitive.
+- **Chapter 139 (READ-PRACTICAL-TEXTS):** *расписание*, *реклама*, *вход*,
+  *выход*, *чек*: a timetable, an advert, the signs on a door and a receipt.
+  *объявление* (a notice) was left out: it is written with ъ, which the
+  track does not yet teach the learner to write.
+- *скоро* was a candidate, but an earlier lesson already uses it untaught, so
+  it was dropped. No new forward reference.
+- Stress is marked in the romanization only, as everywhere in the track.
+
+    russian lessons          696  ->  718
+
+## Chapter payoffs say "I can", not "i can"
+
+The payoff line under each chapter's goal lowercased the goal's first letter,
+so 108 chapters printed "Complete the last lesson of chapter N: i can say …".
+Every one now keeps the capital: "…: I can say …", and a new test
+(`payoff-summary-case.test.ts`) fails if the lowercase pronoun comes back. Only
+the payoff summary changed; no lesson, word or atom moved.
+
+## говорить fits the atom budget
+
+**говорить** introduced four atoms against a budget of three. It keeps the
+word, the letter **г**, and the two verb families. Its "false friend" section,
+which explains why *говорить* is not English *govern*, moves to a continuation
+straight after it, `RU-C03-govorit-false-friend`, together with its recall
+question.
+
+    russian lessons          695  ->  696
+    lessons over budget        1  ->  0
+
 ## Chapters 82-135: 265 headwords, the letters э and щ, and Russian attains A1
 
 Russian had four A1 gaps. It was 261 headwords short and 11 verbs short. Four A1

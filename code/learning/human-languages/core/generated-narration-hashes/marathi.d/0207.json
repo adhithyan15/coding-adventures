@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:6b97a38b6375aac6",
+  "lessonIds": [
+    "MR-C207-dhit",
+    "MR-C207-savadh",
+    "MR-C207-niskalji",
+    "MR-C207-vyasta",
+    "MR-C207-mokla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch207.txt",
+  "json": "marathi/narration/ch207.json",
+  "textHash": "fnv1a64:911e588eb950df3d",
+  "jsonHash": "fnv1a64:9ed9de102ae4eb30",
+  "findings": []
+}

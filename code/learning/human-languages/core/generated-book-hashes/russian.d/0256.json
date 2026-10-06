@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:38d8f3319f9e03b2",
+  "lessonIds": [
+    "RU-C256-professor",
+    "RU-C256-zhurnalist",
+    "RU-C256-khudozhnik",
+    "RU-C256-muzykant",
+    "RU-C256-aktyor"
+  ],
+  "tex": "russian/book/chapters/ch256-professor-journalist-artist-musician-actor.tex"
+}

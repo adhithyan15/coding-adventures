@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:f8c2be74c8c1688e",
+  "lessonIds": [
+    "MR-C270-badam",
+    "MR-C270-manuka",
+    "MR-C270-gul",
+    "MR-C270-dhotar",
+    "MR-C270-kurta"
+  ],
+  "tex": "marathi/book/chapters/ch270-almonds-raisins-jaggery-dhoti-kurta.tex"
+}

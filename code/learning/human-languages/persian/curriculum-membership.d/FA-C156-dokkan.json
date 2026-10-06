@@ -1,0 +1,11 @@
+{
+  "id": "FA-C156-dokkan",
+  "pathSegment": "FA-PATH-156-MAKAN156",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-156-MAKAN156",
+      "order": 4
+    }
+  ]
+}

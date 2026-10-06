@@ -21,7 +21,7 @@
 | Persistent cache and affected set | Implemented | External source ledgers and topology checkpoints work across CLI processes. |
 | Concurrent scheduling and cancellation | Implemented | One FIFO permit pool bounds ready stages, items, and iterator pulls. |
 | Reproducible reports | Implemented | Clean and warm live builds compare canonical reports and artifact hashes. |
-| Third-party stage loading | Pending | [FM02](FM02-forme-plugin-host.md) owns the host boundary. |
+| Third-party stage loading | Implemented | Optional FM02 `PluginStageLoader` resolution is covered end to end. |
 
 ---
 
@@ -164,6 +164,12 @@ export interface PipelineSettings {
 
   /** Maximum wall-clock for the entire run. Null = unlimited. */
   readonly deadlineMs: number | null;
+
+  /** Trusted host distributions for non-default plugin runtimes. */
+  readonly pluginRuntimes?: Partial<Record<"deno" | "bun" | "python", {
+    readonly executable: string;
+    readonly root: string;
+  }>>;
 }
 
 export interface StageInstanceSpec {
@@ -1181,48 +1187,37 @@ This is opt-in. By default the orchestrator emits nothing.
 
 ---
 
-## 12. Plugin Host Integration (Preview)
+## 12. Plugin Host Integration
 
 Full plugin-host design is FM02. The orchestrator's relationship to
 the host is narrow:
 
 ```typescript
-export interface PluginHost {
-  /** Resolve a stage reference to a loaded Stage. */
-  loadStage(ref: StageRef): Promise<Stage<KindDescriptor, KindDescriptor>>;
+export interface PluginStageLoader {
+  /** Resolve a stage reference and bind its instance-scoped grants. */
+  loadStage(
+    ref: StageRef,
+    instanceId?: string,
+    instanceCapabilities?: readonly Capability[],
+  ): Promise<Stage<KindDescriptor, KindDescriptor>>;
 
-  /** Verify a capability grant is consistent with the plugin's manifest. */
-  validateCapability(
-    stage: Stage<KindDescriptor, KindDescriptor>,
-    capability: Capability
-  ): Promise<void>;
-
-  /** Construct a sandbox-wrapped StageContext given declared capabilities. */
-  buildContext(
-    stage: Stage<KindDescriptor, KindDescriptor>,
-    capabilities: readonly Capability[],
-    runtimeCtx: RuntimeContext
-  ): StageContext;
+  /** Release all plugin sessions and sandbox resources. */
+  dispose?(): Promise<void>;
 }
 ```
 
 The orchestrator never reaches inside a stage's package boundary or
-sandbox. It calls `loadStage`, `validateCapability`, and `buildContext`
-— that's the entire surface.
+sandbox. It calls `loadStage` during pipeline construction, passes the
+per-instance capability request to the host, and owns `dispose` — that is the
+entire surface. The returned proxy mediates its runtime context across FM02's
+wire boundary. If an instance omits `id`, the loader derives the proxy's stage
+name and final config validation uses that same name as the DAG identity.
 
-When `pluginHost` is omitted (TypeScript-only flows where stages are
-imported directly), the orchestrator uses an internal
-`DefaultDirectImportHost` that:
-
-- Treats every import as already-loaded and trusted.
-- Validates capabilities against `stage.capabilities` with no
-  manifest involved.
-- Builds an unsandboxed `StageContext` (no `vm`, no `Worker`).
-
-This default is appropriate for the v0 dogfood — first-party stages
-the developer wrote — and is **never** appropriate for third-party
-plugins. The CLI refuses to use it when any `StageRef` (vs direct
-import) appears in the config.
+When `pluginHost` is omitted, direct-import stage values continue to work and
+every unresolved `StageRef` fails configuration validation. There is no
+ambient subprocess or unsandboxed plugin fallback. The concrete FM02 host is
+an optional composition dependency and supplies trusted backing APIs only
+after both policy and per-instance grants pass.
 
 ---
 
@@ -1276,8 +1271,10 @@ The runtime that ties the kernel, the config, and the cache together.
 
 Depends on `forme-types`, `forme-stage`, `forme-capability`,
 `forme-identity`, `forme-errors`, `forme-pipeline-config`,
-`forme-cache`. Optionally on FM02's plugin host package when it
-exists.
+`forme-cache`. A caller may now inject FM02's `PluginStageLoader`; the
+orchestrator resolves `StageRef`s through it before graph validation and owns
+its disposal. The concrete plugin-host package remains an optional composition
+dependency rather than a static import.
 
 ### 13.4 Dependency graph addition to FM01
 
@@ -1391,7 +1388,7 @@ import { Kinds, defineStage } from "@coding-adventures/forme-types";
 const greetSource = defineStage({
   name:        "greet-source",
   version:     "0.1.0",
-  apiVersion:  1,
+  apiVersion:  2,
   description: "produces a single greeting source",
   consumes:    Kinds.Void,
   produces:    Kinds.ContentSource,
@@ -1413,7 +1410,7 @@ const greetSource = defineStage({
 const printSink = defineStage({
   name:        "print-sink",
   version:     "0.1.0",
-  apiVersion:  1,
+  apiVersion:  2,
   description: "logs the source content",
   consumes:    Kinds.ContentSource,
   produces:    Kinds.Void,

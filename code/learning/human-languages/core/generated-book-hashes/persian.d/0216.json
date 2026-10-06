@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:5c7247d47ff3e60e",
+  "lessonIds": [
+    "FA-C216-kargah",
+    "FA-C216-najjar",
+    "FA-C216-lulekesh",
+    "FA-C216-barqkar",
+    "FA-C216-khayyat",
+    "FA-R216-first-pass-words-from-chapters-212-213",
+    "FA-R216-second-pass-words-from-chapters-214-216"
+  ],
+  "tex": "persian/book/chapters/ch216-workshop-carpenter-plumber-electrician-tailor.tex"
+}

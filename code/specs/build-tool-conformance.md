@@ -175,7 +175,7 @@ fixture-path handling belong only to package-local tests.
 All four native suites MUST discover and independently evaluate the complete
 shared `graph` and `diff_selection` fixture set. They MUST assert the exact case-ID
 roster so a newly added case cannot be skipped silently. The required roster
-contains eight graph cases and eleven diff-selection cases. In addition to
+contains eight graph cases and twelve diff-selection cases. In addition to
 canonical edge ordering, deterministic levels, cycle rejection, transitive
 affected and prerequisite closure, package-prefix and forced-package selection,
 repository-boundary reverse selection, both unknown-path policies, and the
@@ -725,7 +725,7 @@ outcome.
 
 The Go operational reference MUST expose this graph and diff-selection domain
 through one typed, process-free module boundary. Its package-local suite MUST
-discover the exact eight `graph-*.json` and eleven `diff-selection-*.json`
+discover the exact eight `graph-*.json` and twelve `diff-selection-*.json`
 cases in the checked v1 corpus and evaluate every case through that production
 boundary. The boundary accepts only caller-owned immutable values: fixture
 decoding, checkout discovery, Git invocation, filesystem reads, environment
@@ -734,6 +734,50 @@ return the same canonical graph levels, closure sets, stable error codes,
 repository-boundary digest behavior, Unicode-scalar match-work accounting, and
 structural validation precedence specified above. This native core does not by
 itself claim a neutral adapter or additional host authority.
+
+The C# build-tool engine shared with the F# front door MUST expose equally
+process-free, typed graph and diff-selection operations. Both native test suites
+MUST discover and evaluate the exact eight `graph-*.json` and twelve
+`diff-selection-*.json` cases through production operations, pinning the case-ID
+roster so additions cannot be silently ignored. The F# suite MUST enter through
+explicit F# facade functions, not call the C# operations directly. The shared
+engine MUST retain the exact structural, boundary-digest, Unicode-scalar
+match-work, strict portable glob, cycle no-partial-output, and diagnostic
+precedence rules above; legacy repository traversal and Git diff methods do
+not satisfy this pure-domain contract. Native fixture loading may read the
+checked-in corpus, but the operations MUST accept only already-materialized
+values and gain no filesystem, process, environment, Git, network, clock,
+randomness, or credential authority. This adoption alone does not make either
+neutral execution adapter ready.
+
+The Swift build-tool engine MUST expose an equally process-free, typed graph
+and diff-selection core. Its native test suite MUST discover and evaluate the
+exact eight `graph-*.json` and twelve `diff-selection-*.json` cases through
+production operations, pinning the case-ID roster. The core MUST enforce the
+same declared-node and edge bounds, canonical prerequisite-first levels,
+no-partial-output cycle failure, exact BUILD-front recognition, strict portable
+globs, repository-boundary digest and exact shared-input fanout, sorted
+dependent/prerequisite closures, and one operation-wide 50,000,000-unit
+Unicode-scalar match-work preflight before matching. Structural and boundary
+diagnostics precede the ceiling; the ceiling precedes unknown-path handling.
+Fixture decoding and any host Git or checkout access remain outside this
+core. Existing Swift front-door code may delegate to it but MUST NOT cause the
+pure operations to gain filesystem, process, environment, network, clock,
+randomness, or credential authority. Native case coverage alone does not
+claim a ready neutral execution adapter.
+
+The Haskell build-tool engine MUST expose a typed, process-free graph and
+diff-selection core with the same input limits, prerequisite-first levels,
+cycle no-partial-output, exact BUILD fronts, strict portable globs,
+repository-boundary digest and shared-input fanout, sorted closure sets, and
+50,000,000-unit Unicode-scalar match-work preflight. Its native Hspec suite
+MUST discover and evaluate the exact eight `graph-*.json` and twelve
+`diff-selection-*.json` cases through those production operations and pin the
+case-ID roster. Structural and boundary failures precede match-work failures;
+match-work failures precede unknown-path policy. Fixture decoding and all
+checkout, Git, filesystem, process, environment, network, clock, randomness,
+and credential access remain outside the pure core. Native package tests are
+not a neutral adapter and do not change Haskell adapter readiness.
 
 ### 5. Hashing and cache
 
@@ -757,10 +801,10 @@ Before extension or declared-source filtering, every source collector prunes a
 directory when any exact case-sensitive path component is one of `.git`,
 `.hg`, `.svn`, `.venv`, `.tox`, `.mypy_cache`, `.pytest_cache`, `.ruff_cache`,
 `.stack-work`, `__pycache__`, `node_modules`, `vendor`, `dist`,
-`dist-newstyle`, `_build`, `build`, `target`, `.claude`, `Pods`, `.gradle`,
+`dist-newstyle`, `_build`, `blib`, `build`, `target`, `.claude`, `Pods`, `.gradle`,
 `.dart_tool`, `gradle-build`, `deps`, `.build`, `.cargo`, or `cover`.
-Similarly named source components, including `_Build`, `_build-example`,
-`Dist-newstyle`, and `dist-newstyle-example`, remain eligible. Collectors do
+Similarly named source components, including `_Build`, `Blib`, `blib-example`,
+`_build-example`, `Dist-newstyle`, and `dist-newstyle-example`, remain eligible. Collectors do
 not traverse symlink or reparse-point components. The rule is lexical over
 bounded normalized candidate records and does not grant filesystem authority.
 
@@ -938,6 +982,21 @@ languages fail before the package root is inspected or walked. Generated-tree
 pruning remains exact and case-sensitive, and neither a declared glob nor a
 package-specific selector can reopen a pruned directory or inert link boundary.
 
+The Python build tool packages a byte-for-byte snapshot of the checked
+language source-input registry as package data. A deterministic sync command
+refreshes that snapshot from the checked neutral JSON; tests require complete
+structural equality and the same domain-separated digest, and exercise the
+production selector through every package-local neutral case. Runtime hashing
+loads only its installed package data, never searches for a repository fixture.
+Its lookup uses all seven roles with the same extension-versus-declared
+precedence, exact generated-component pruning, and inert link boundaries.
+Unknown languages fail before enumeration. Exact-package selection requires a
+canonical `code/packages|programs/<lane>/<name...>` root agreeing with the
+language, or one of the two exact registered TypeScript site roots; unrelated
+`code/sites` roots do not acquire TypeScript authority. This package-local
+adoption does not include the separate repository-boundary source registry,
+Git-index proof, or boundary reverse-diff selection.
+
 Swift and the shared C#/F# engine complete this package-local projection with
 the repository-relative boundary registry, tracked-regular-file evidence, and
 an exact reverse diff index. Their native readers remain responsible for
@@ -981,6 +1040,12 @@ Applicability contains three canonical arrays:
   only to package roots strictly below them; and
 - `excluded_roots` removes reviewed exact descendants from those broad roots.
 
+The Haskell shared `cabal.project` boundary applies only to packages that
+actually inherit that file. A package-local `cabal.project` replaces the shared
+project for that package, so its root MUST be removed from the shared boundary
+when the local project is introduced. The checked-in boundary, its digest users,
+and the canonical-root test MUST be updated together.
+
 At least one exact or descendant root is required. Every listed input applies
 to every selected root in that boundary, so inputs with different consumer
 sets MUST be split into separate boundaries. An exact root already covered by
@@ -1022,7 +1087,7 @@ inputs per boundary, 8,192 aggregate consumer scopes, and 32,768 aggregate
 input-to-scope authorizations.
 
 The reviewed v1 projection has 18 boundaries, 21 input registrations, 19
-unique tracked paths, 483 consumer scopes, and 486 authorizations. It covers
+unique tracked paths, 479 consumer scopes, and 482 authorizations. It covers
 only real consumers of the Haskell Cabal project, Lua lint config, Python uv
 workspace manifest, Rust workspace manifest, Cargo target config, and Windows
 launcher; exact cross-language Rust-workspace consumers; all direct TypeScript
@@ -1402,6 +1467,18 @@ digest and `success` or `failed` status. A matching successful record is a
 corrupt records are `recovered`. Every non-hit invalidates the package and its
 declared dependent closure.
 
+The shared-input multi-consumer digest fixture MUST pair two exact Swift
+consumers of `code/packages/rust/Cargo.toml` with before/after snapshots of
+that one registered input. For each consumer, process-free repository-boundary
+`source_collection` MUST select the same exact path and produce the SHA-256 of
+the corresponding bytes; it MUST exclude unregistered same-shaped candidates.
+Separate `hashing_cache` cases MUST hash the package-local input together with
+that shared path. Between snapshots, each consumer's local input and dependency
+digest remain unchanged, while its `package_digest` and `combined_digest`
+change. The two consumers MUST be asserted independently; diff selection of
+both consumers alone is not digest evidence. These cases add no Git,
+filesystem, process, credential, or execution authority.
+
 Toolchain detection v1 treats extra-CI declarations as inert BUILD metadata.
 Each package supplies a required generic `BUILD` string plus optional
 `BUILD_windows`, `BUILD_mac`, `BUILD_linux`, and `BUILD_mac_and_linux` strings.
@@ -1523,14 +1600,15 @@ Validation v1 uses the stable diagnostic registry
 `STANDALONE_PREREQUISITE_MISSING`, `STARLARK_SOURCE_INVALID`,
 `STARLARK_DEPENDENCY_INVALID`, `IDENTITY_AMBIGUOUS`, `MANIFEST_AMBIGUOUS`,
 `TOOLCHAIN_UNSUPPORTED`, `PATH_UNSAFE`, `ORPHAN_CRATE_UNLISTED`,
-`ORPHAN_CRATE_EMPTY_BUILD`, `ORPHAN_EXEMPTION_INVALID`, and
+`ORPHAN_CRATE_EMPTY_BUILD`, `ORPHAN_PACKAGE_ROOT_UNLISTED`,
+`ORPHAN_PACKAGE_ROOT_EMPTY_BUILD`, `ORPHAN_EXEMPTION_INVALID`,
 `ORPHAN_EXEMPTION_STALE`, `TRACKED_ARTIFACT_FORBIDDEN`, and
 `TRACKED_ARTIFACT_PATH_INVALID`. The closed check registry is
 `build_file_presence`, `local_dependency_declarations`,
 `standalone_prerequisites`, `starlark_declarations`, `identity_uniqueness`,
 `manifest_uniqueness`, `toolchain_support`, `path_safety`, and
 `lua_windows_sibling_parity`, plus `orphan_crate_coverage` and
-`tracked_artifact_absence`.
+`orphan_package_root_coverage`, plus `tracked_artifact_absence`.
 
 Every validation package carries one normalized snapshot: canonical package
 identity and root, implementation language, selected BUILD state and local
@@ -1637,6 +1715,41 @@ even when there are no diagnostics. Diagnostics are independently derived,
 retain only safe paths, and sort by the normal validation ordering. The snapshot and
 expected result provide no filesystem, Git, process, environment, or network
 authority.
+
+The separate process-free `orphan_package_root_coverage` check consumes one
+closed `orphan_package_root_snapshot`; it does not enlarge or reinterpret the
+Cargo-specific snapshot above. `roots` contains at most 8,192 direct children
+of `code/packages/<language>/` where `<language>` is one of the fifteen
+established implementation lanes. Each record carries the root, its exact
+lane, `package` or `virtual` kind, and one compact governed source witness.
+The witness must be a descendant matched by the pinned
+`language-source-input-registry.json`; a BUILD filename is never sufficient
+evidence. Exact generated-directory components from that registry and all
+`virtual` roots are retained as auditable data but excluded from enforcement.
+OCaml remains emerging and is not inferred into this denominator.
+
+The snapshot pins the validated source-input-registry digest, contains at most
+16,384 recognized BUILD-front records and 8,192 ledger records, and its
+canonical compact sorted-key JSON encoding is at most 2,000,000 UTF-8 bytes.
+Roots and BUILD paths are bytewise sorted. Root, BUILD, and exemption
+identities use NFC plus full default case folding for collision rejection;
+raw unsafe values remain redacted. The exact five BUILD names, component-wise
+ancestor coverage, runnable-versus-empty precedence, exemption grammar, stale
+entry behavior, diagnostic ordering, and fixed redacted ledger path are the
+same as the Cargo check. An uncovered root reports
+`ORPHAN_PACKAGE_ROOT_UNLISTED`; when only an empty front covers it, the result
+is `ORPHAN_PACKAGE_ROOT_EMPTY_BUILD`. Exemption diagnostics remain shared.
+
+When both orphan checks run, `pending_exemption_count` is the path-deduplicated
+union of their active PENDING entries and is bounded by 12,288. Native
+discovery must stream the direct established-lane
+roots and enforce all count and byte ceilings before retaining unbounded input.
+It may inspect only the caller-selected repository tree under the build
+tool's existing filesystem authority; it must not invoke Git or another
+process, consult the environment or network, follow generated trees, or treat
+the expected result as evidence. Every engine/front-door adoption consumes the
+neutral snapshot through a language-native inert adapter before claiming this
+check.
 
 The process-free `tracked_artifact_absence` check consumes one closed
 `tracked_artifact_snapshot`. Its required `unicode_version` is exactly

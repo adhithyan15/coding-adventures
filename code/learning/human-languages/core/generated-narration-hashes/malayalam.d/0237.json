@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:c3767f820fb5dc9f",
+  "lessonIds": [
+    "ML-C237-pakal",
+    "ML-C237-ennenkilum",
+    "ML-C237-talennu",
+    "ML-C237-pirrennu",
+    "ML-C237-mininnannu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch237.txt",
+  "json": "malayalam/narration/ch237.json",
+  "textHash": "fnv1a64:39f3b3bd4f882f09",
+  "jsonHash": "fnv1a64:8dcb9c532cfa2681",
+  "findings": []
+}

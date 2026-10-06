@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:53b6a81bb5434bf3",
+  "lessonIds": [
+    "TE-C185-kavaru",
+    "TE-C185-stampu",
+    "TE-C185-parselu",
+    "TE-C185-tapala",
+    "TE-C185-pensilu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch185.txt",
+  "json": "telugu/narration/ch185.json",
+  "textHash": "fnv1a64:25854ca94ea5fe0f",
+  "jsonHash": "fnv1a64:c69f174cb947a36c",
+  "findings": []
+}

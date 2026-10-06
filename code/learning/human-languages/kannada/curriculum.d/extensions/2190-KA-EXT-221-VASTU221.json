@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-221-VASTU221",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an apple, an orange, a papaya, a watermelon and a chapati.",
+  "prerequisites": []
+}

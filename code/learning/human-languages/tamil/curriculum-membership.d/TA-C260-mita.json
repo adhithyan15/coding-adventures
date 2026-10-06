@@ -1,0 +1,11 @@
+{
+  "id": "TA-C260-mita",
+  "pathSegment": "TA-PATH-260-ACT260",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-260-ACT260",
+      "order": 3
+    }
+  ]
+}

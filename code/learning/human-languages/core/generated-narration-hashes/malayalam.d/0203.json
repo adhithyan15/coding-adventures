@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:4b7d2361e5ad1282",
+  "lessonIds": [
+    "ML-C203-ruciyulla",
+    "ML-C203-cinna",
+    "ML-C203-ayanna",
+    "ML-C203-irukiya",
+    "ML-C203-kaliyaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch203.txt",
+  "json": "malayalam/narration/ch203.json",
+  "textHash": "fnv1a64:ee1c3861cf5dd5b6",
+  "jsonHash": "fnv1a64:e2ea5e00bace3b6e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C237-sabr",
+    "language": "arabic",
+    "chapter": 237,
+    "sequence": 13020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3ed1e94047ae908"
+  },
+  "findings": []
+}

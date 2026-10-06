@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:28ebd7d62d14087b",
+  "lessonIds": [
+    "PT-C246-mecanico",
+    "PT-C246-eletricista",
+    "PT-C246-canalizador",
+    "PT-C246-operario",
+    "PT-C246-piloto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch246.txt",
+  "json": "portuguese/narration/ch246.json",
+  "textHash": "fnv1a64:5c265217b2969b73",
+  "jsonHash": "fnv1a64:dac100f37b44ca62",
+  "findings": []
+}

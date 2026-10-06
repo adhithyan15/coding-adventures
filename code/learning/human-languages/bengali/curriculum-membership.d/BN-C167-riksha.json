@@ -1,0 +1,11 @@
+{
+  "id": "BN-C167-riksha",
+  "pathSegment": "BN-PATH-167-JINIS167",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-167-JINIS167",
+      "order": 2
+    }
+  ]
+}

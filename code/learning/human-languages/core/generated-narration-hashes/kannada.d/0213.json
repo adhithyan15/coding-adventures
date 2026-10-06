@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:099648eb0b8ddc25",
+  "lessonIds": [
+    "KA-C213-kote",
+    "KA-C213-kalyana-mantapa",
+    "KA-C213-jim",
+    "KA-C213-kridangana",
+    "KA-C213-vastusangrahalaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch213.txt",
+  "json": "kannada/narration/ch213.json",
+  "textHash": "fnv1a64:298c09c154392b7b",
+  "jsonHash": "fnv1a64:9ffc17a1e579a1d5",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:1f30cb1e1e281286",
+  "lessonIds": [
+    "LA-C185-cella",
+    "LA-C185-tablinum",
+    "LA-C185-peristylium",
+    "LA-C185-impluvium",
+    "LA-C185-fundamentum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch185.txt",
+  "json": "latin/narration/ch185.json",
+  "textHash": "fnv1a64:04959da952de024f",
+  "jsonHash": "fnv1a64:d014221aebeed612",
+  "findings": []
+}

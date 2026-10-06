@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Grocer, Pastry shop, Firefighter, Guard, Street sweeper",
+  "label": "ch:fa-grocer-pastry-shop-firefighter-guard-street-sweeper",
+  "canDo": "I can say a grocer, a pastry shop, a firefighter, a guard and a street sweeper.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-R252-second-pass-words-from-chapters-248-252",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say a grocer, a pastry shop, a firefighter, a guard and a street sweeper.",
+    "assesses": [
+      "FA-LEX-C252-KAR252-03",
+      "FA-LEX-C252-KAR252-04",
+      "FA-LEX-C252-KAR252-05"
+    ]
+  }
+}

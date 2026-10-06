@@ -40,6 +40,12 @@ ACCEPTANCE_PACKAGES = frozenset(
 )
 ACCEPTANCE_PACKAGE_PREFIXES = ("mosaic/mosaic-pkg-",)
 CI_WORKFLOW_PATH = ".github/workflows/ci.yml"
+# The lane's own shell scripts (UI89 §2.4): they belong to no package, so a
+# change to one reaches the lane only through this list.
+CI_SCRIPT_PATHS = (
+    "code/scripts/build-mosaic-xcframework.sh",
+    "code/scripts/mosaic-ios-simulator-gate.sh",
+)
 
 
 def requires_mosaic_swift_runtime(
@@ -62,7 +68,8 @@ def requires_mosaic_swift_runtime(
 
 
 def workflow_changed(repo_root: Path, diff_base: str) -> bool:
-    """Return whether the main CI workflow differs from the selected base."""
+    """Return whether the main CI workflow, or a script only this lane runs,
+    differs from the selected base."""
 
     result = subprocess.run(
         [
@@ -72,6 +79,7 @@ def workflow_changed(repo_root: Path, diff_base: str) -> bool:
             f"{diff_base}...HEAD",
             "--",
             CI_WORKFLOW_PATH,
+            *CI_SCRIPT_PATHS,
         ],
         cwd=repo_root,
         check=False,

@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "Trade, Ruler, Pencil sharpener, Chalk, Stapler",
+  "label": "ch:ar-trade-ruler-pencil-sharpener-chalk-stapler",
+  "canDo": "I can say trade, a ruler, a pencil sharpener, chalk and a stapler.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-R253-second-pass-words-from-chapters-252-253",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say trade, a ruler, a pencil sharpener, chalk and a stapler.",
+    "assesses": [
+      "AR-LEX-C253-AMAL253-03",
+      "AR-LEX-C253-AMAL253-04",
+      "AR-LEX-C253-AMAL253-05"
+    ]
+  }
+}

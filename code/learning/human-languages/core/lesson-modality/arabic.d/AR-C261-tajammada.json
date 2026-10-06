@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C261-tajammada",
+    "language": "arabic",
+    "chapter": 261,
+    "sequence": 14750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c85ce242ed8d4c9a"
+  },
+  "findings": []
+}

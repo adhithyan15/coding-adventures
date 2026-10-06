@@ -1,0 +1,11 @@
+{
+  "id": "HI-C176-hilana",
+  "pathSegment": "HI-PATH-176-ACT176",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-176-ACT176",
+      "order": 0
+    }
+  ]
+}

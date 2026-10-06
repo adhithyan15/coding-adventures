@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "Emergency department, Emergency, Medical appointment, Diet, Rest",
+  "label": "ch:pt-emergency-department-emergency-medical-appointment-diet-rest",
+  "canDo": "I can say the emergency department, an emergency, a medical appointment, a diet and rest.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C240-descanso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say the emergency department, an emergency, a medical appointment, a diet and rest.",
+    "assesses": [
+      "PT-LEX-C240-SAUDE240-03",
+      "PT-LEX-C240-SAUDE240-04",
+      "PT-LEX-C240-SAUDE240-05"
+    ]
+  }
+}

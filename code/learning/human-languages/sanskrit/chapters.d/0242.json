@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "Easy to get, Hard to get, Complicated, Easy to do, Hard to do",
+  "label": "ch:sa-easy-to-get-hard-to-get-complicated-easy-to-do-hard-to-do",
+  "canDo": "I can say easy to get, hard to get, complicated, easy to do and hard to do.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C242-duskarah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say easy to get, hard to get, complicated, easy to do and hard to do.",
+    "assesses": [
+      "SA-LEX-C242-QUAL242-03",
+      "SA-LEX-C242-QUAL242-04",
+      "SA-LEX-C242-QUAL242-05"
+    ]
+  }
+}

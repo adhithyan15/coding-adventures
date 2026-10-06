@@ -1,0 +1,11 @@
+{
+  "id": "FA-C236-jaleb",
+  "pathSegment": "FA-PATH-236-SEFAT236",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-236-SEFAT236",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C265-kopuram",
+  "pathSegment": "TA-PATH-265-IDAM265",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-265-IDAM265",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C96-shopno",
+    "language": "bengali",
+    "chapter": 96,
+    "sequence": 5020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da7988e2dc664ded"
+  },
+  "findings": []
+}

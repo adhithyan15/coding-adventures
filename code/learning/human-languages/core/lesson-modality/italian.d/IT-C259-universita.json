@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C259-universita",
+    "language": "italian",
+    "chapter": 259,
+    "sequence": 15550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:396a39a2a612976a"
+  },
+  "findings": []
+}

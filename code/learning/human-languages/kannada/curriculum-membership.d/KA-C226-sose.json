@@ -1,0 +1,11 @@
+{
+  "id": "KA-C226-sose",
+  "pathSegment": "KA-PATH-226-VASTU226",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-226-VASTU226",
+      "order": 2
+    }
+  ]
+}

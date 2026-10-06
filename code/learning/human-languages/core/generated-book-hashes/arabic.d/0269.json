@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:cbe5b48db2c6729f",
+  "lessonIds": [
+    "AR-C269-fashal",
+    "AR-C269-khutwa",
+    "AR-C269-darar",
+    "AR-C269-ayb",
+    "AR-C269-miza"
+  ],
+  "tex": "arabic/book/chapters/ch269-failure-step-harm-fault-advantage.tex"
+}

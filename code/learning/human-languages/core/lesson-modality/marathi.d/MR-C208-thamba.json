@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C208-thamba",
+    "language": "marathi",
+    "chapter": 208,
+    "sequence": 10980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b00b6adfd1970811"
+  },
+  "findings": []
+}

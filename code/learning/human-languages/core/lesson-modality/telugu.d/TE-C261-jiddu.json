@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C261-jiddu",
+    "language": "telugu",
+    "chapter": 261,
+    "sequence": 12300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8de74938f82f42ed"
+  },
+  "findings": []
+}

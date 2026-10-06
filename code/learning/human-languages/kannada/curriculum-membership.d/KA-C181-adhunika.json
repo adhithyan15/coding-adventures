@@ -1,0 +1,11 @@
+{
+  "id": "KA-C181-adhunika",
+  "pathSegment": "KA-PATH-181-GUNA181",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-181-GUNA181",
+      "order": 3
+    }
+  ]
+}

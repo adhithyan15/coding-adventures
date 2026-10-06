@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C190-verschieben",
+    "language": "german",
+    "chapter": 190,
+    "sequence": 9540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efb45c81b58455c7"
+  },
+  "findings": []
+}

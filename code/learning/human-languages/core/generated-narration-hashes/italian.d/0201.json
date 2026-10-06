@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:a6dc12fc253bfbb1",
+  "lessonIds": [
+    "IT-C201-elettricita",
+    "IT-C201-legno",
+    "IT-C201-ferro",
+    "IT-C201-oro",
+    "IT-C201-argento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch201.txt",
+  "json": "italian/narration/ch201.json",
+  "textHash": "fnv1a64:11064fc5db421bff",
+  "jsonHash": "fnv1a64:f64c55ba93199e2f",
+  "findings": []
+}

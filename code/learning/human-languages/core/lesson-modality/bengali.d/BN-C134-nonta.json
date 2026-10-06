@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C134-nonta",
+    "language": "bengali",
+    "chapter": 134,
+    "sequence": 7320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b8271e53d5fda17"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C140-deyakam",
+  "pathSegment": "SA-PATH-140-READ140",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-140-READ140",
+      "order": 3
+    }
+  ]
+}

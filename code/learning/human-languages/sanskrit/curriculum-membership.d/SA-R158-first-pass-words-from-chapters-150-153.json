@@ -1,0 +1,11 @@
+{
+  "id": "SA-R158-first-pass-words-from-chapters-150-153",
+  "pathSegment": "SA-PATH-158-THG158",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-158-THG158",
+      "order": 5
+    }
+  ]
+}

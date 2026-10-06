@@ -7,7 +7,7 @@ chapter: 451
 type: word
 headword: apuntar
 gloss: to note down, to put your name on a list — a verb built on the point of something
-concept_tag: ES-TURN-APUNTAR
+concept_tag: ES-VERB-APUNTAR
 prerequisites: [ES-C451-cola, ES-C342-punto]
 sounds: [nasal-n, diphthong-ua, stress-final]
 roots: [pungere-latin]

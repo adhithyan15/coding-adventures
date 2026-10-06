@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:1fa268e582a99288",
+  "lessonIds": [
+    "RU-C147-bolnoy",
+    "RU-C147-prostuda",
+    "RU-C147-gripp",
+    "RU-C147-nasmork",
+    "RU-C147-tabletka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch147.txt",
+  "json": "russian/narration/ch147.json",
+  "textHash": "fnv1a64:e29ea69dc4f0c508",
+  "jsonHash": "fnv1a64:dabbd0e731713e0c",
+  "findings": []
+}

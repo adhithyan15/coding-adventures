@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "A loss, A benefit, A price, A coin, A banknote",
+  "label": "ch:hi-a-loss-a-benefit-a-price-a-coin-a-banknote",
+  "canDo": "I can say a loss, a benefit, a price, a coin and a banknote.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C208-not",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say a loss, a benefit, a price, a coin and a banknote.",
+    "assesses": [
+      "HI-LEX-C208-THG208-03",
+      "HI-LEX-C208-THG208-04",
+      "HI-LEX-C208-THG208-05"
+    ]
+  }
+}

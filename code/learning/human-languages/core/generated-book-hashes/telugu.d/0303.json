@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:35dc89cad676550b",
+  "lessonIds": [
+    "TE-C303-mullu",
+    "TE-C303-tiga",
+    "TE-C303-veduru",
+    "TE-C303-ceraku",
+    "TE-C303-puja"
+  ],
+  "tex": "telugu/book/chapters/ch303-thorn-creeper-bamboo-sugarcane-worship.tex"
+}

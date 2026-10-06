@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import {
+  KERNEL_API_VERSION,
   Kinds,
   streamOf,
   type AssetRef,
@@ -30,7 +31,7 @@ interface RenderLandingConfig {
 const renderLanding = defineStage({
   name: "@coding-adventures/site-landing-render",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: KERNEL_API_VERSION,
   description: "Render the Coding Adventures landing model with Style IR and its web layout layer.",
   consumes: streamOf(Kinds.ContentNode),
   produces: streamOf(Kinds.RenderedPage),
@@ -94,7 +95,6 @@ const renderLanding = defineStage({
         usedAssets: [ogAsset.id],
         meta,
         provenance: createOutputProvenance([node]),
-        source: node.identity,
       };
       yield page as never;
     }

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C263-kappal",
+  "pathSegment": "TA-PATH-263-IDAM263",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-263-IDAM263",
+      "order": 4
+    }
+  ]
+}

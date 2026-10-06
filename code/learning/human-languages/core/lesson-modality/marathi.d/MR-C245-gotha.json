@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C245-gotha",
+    "language": "marathi",
+    "chapter": 245,
+    "sequence": 13690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:776f5d26c0b0ccf1"
+  },
+  "findings": []
+}

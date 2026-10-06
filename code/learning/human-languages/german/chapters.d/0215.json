@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Fair, Divorced, At the same time, Generous, Good value",
+  "label": "ch:ge-fair-divorced-at-the-same-time-generous-good-value",
+  "canDo": "I can say fair, divorced, at the same time, generous and good value.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C215-guenstig",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say fair, divorced, at the same time, generous and good value.",
+    "assesses": [
+      "GE-LEX-C215-QUAL215-03",
+      "GE-LEX-C215-QUAL215-04",
+      "GE-LEX-C215-QUAL215-05"
+    ]
+  }
+}

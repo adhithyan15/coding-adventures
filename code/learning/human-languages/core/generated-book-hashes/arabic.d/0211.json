@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:52b1de6fdf4b1597",
+  "lessonIds": [
+    "AR-C211-mushmis",
+    "AR-C211-mukhtalif",
+    "AR-C211-mushabih",
+    "AR-C211-nadir",
+    "AR-C211-adi"
+  ],
+  "tex": "arabic/book/chapters/ch211-sunny-different-similar-rare-ordinary.tex"
+}

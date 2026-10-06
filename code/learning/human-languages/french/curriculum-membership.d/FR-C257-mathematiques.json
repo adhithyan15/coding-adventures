@@ -1,0 +1,11 @@
+{
+  "id": "FR-C257-mathematiques",
+  "pathSegment": "FR-PATH-257-TRAV257",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-257-TRAV257",
+      "order": 1
+    }
+  ]
+}

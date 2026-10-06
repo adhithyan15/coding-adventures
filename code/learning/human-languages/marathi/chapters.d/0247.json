@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Job, Degree, Homework, Education, Feeling",
+  "label": "ch:mr-job-degree-homework-education-feeling",
+  "canDo": "I can say a job, a degree, homework, education and a feeling.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C247-bhavana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say a job, a degree, homework, education and a feeling.",
+    "assesses": [
+      "MR-LEX-C247-VASTU247-03",
+      "MR-LEX-C247-VASTU247-04",
+      "MR-LEX-C247-VASTU247-05"
+    ]
+  }
+}

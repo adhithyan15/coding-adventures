@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C163-constituo",
+    "language": "latin",
+    "chapter": 163,
+    "sequence": 7050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1996ccec8948f4e"
+  },
+  "findings": []
+}

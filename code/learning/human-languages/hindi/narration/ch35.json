@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Taking, Asking, Helping — and Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5c93225f199fd2c3",
+  "sourceHash": "fnv1a64:d780c8c7a112d1b6",
   "lessons": [
     {
       "id": "HI-C35-lena",
@@ -164,7 +164,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:648a0aeeafededbf",
+      "sourceHash": "fnv1a64:b270572ab7376cfd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -294,19 +294,23 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift and draw the right stem top-to-bottom."
+              "text": "2. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the top shirorekhā left-to-right."
+              "text": "3. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The same count as श, over much less distance."
+              "text": "4. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "Verified three-stroke teaching form; everyday handwriting may join or simplify the body differently."
+              "text": "Pen lifts: 1. One fewer than श: the loop runs on into the right stem."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows three movements; most native writers draw व (va) in two strokes (69% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

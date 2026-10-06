@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "Lovely, Terrible, Amazing, Boring, Whole",
+  "label": "ch:mr-lovely-terrible-amazing-boring-whole",
+  "canDo": "I can say lovely, terrible, amazing, boring and whole.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C235-sampurna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say lovely, terrible, amazing, boring and whole.",
+    "assesses": [
+      "MR-LEX-C235-GUN235-03",
+      "MR-LEX-C235-GUN235-04",
+      "MR-LEX-C235-GUN235-05"
+    ]
+  }
+}

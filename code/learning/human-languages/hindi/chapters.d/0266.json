@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "A latch, A saw, A pickaxe, A spade, A mattress",
+  "label": "ch:hi-a-latch-a-saw-a-pickaxe-a-spade-a-mattress",
+  "canDo": "I can say a latch, a saw, a pickaxe, a spade and a mattress.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C266-gadda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 266: I can say a latch, a saw, a pickaxe, a spade and a mattress.",
+    "assesses": [
+      "HI-LEX-C266-THG266-03",
+      "HI-LEX-C266-THG266-04",
+      "HI-LEX-C266-THG266-05"
+    ]
+  }
+}

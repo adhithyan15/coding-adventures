@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:40e5da887a6bab84",
+  "lessonIds": [
+    "AR-C244-zabadi",
+    "AR-C244-khawkh",
+    "AR-C244-kummathra",
+    "AR-C244-ananas",
+    "AR-C244-lawz"
+  ],
+  "tex": "arabic/book/chapters/ch244-yoghurt-peaches-pears-pineapple-almonds.tex"
+}

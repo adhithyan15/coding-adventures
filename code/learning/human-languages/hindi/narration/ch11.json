@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:097399b644489c38",
+  "sourceHash": "fnv1a64:458a498e0d390f8a",
   "lessons": [
     {
       "id": "HI-C11-kaalaa-safed",
@@ -426,7 +426,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fab5daea77036d36",
+      "sourceHash": "fnv1a64:6ce4c09a121708c8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -533,23 +533,27 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift at that waist, curve down and right around the lower bowl, and rise to the right-stem junction."
+              "text": "2. without lifting, curve down and right around the lower bowl, and rise to the right-stem junction."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the right stem top-to-bottom."
+              "text": "3. climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "5. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "Verified four-stroke teaching form; another animated learner source joins the inner curl and lower bowl."
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw य (ya) in two strokes (89% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

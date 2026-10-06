@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:e0c8b69641c8b22f",
+  "lessonIds": [
+    "GE-C185-retten",
+    "GE-C185-rudern",
+    "GE-C185-schieben",
+    "GE-C185-schlagen",
+    "GE-C185-schmecken"
+  ],
+  "tex": "german/book/chapters/ch185-to-rescue-to-row-to-push-to-hit-to-taste.tex"
+}

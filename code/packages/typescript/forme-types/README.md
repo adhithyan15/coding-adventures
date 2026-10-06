@@ -13,22 +13,23 @@ See [code/specs/FM01-forme-kernel.md](../../../specs/FM01-forme-kernel.md) §2 f
 | `utility.ts`  | `JsonValue`, `ReadonlyRecord`                                            |
 | `identity.ts` | `LogicalId`, `RevisionId` branded type aliases                           |
 | `kinds.ts`    | `KIND` constants, `KindDescriptor`, canonical `Kinds` object, `streamOf` |
-| `shapes.ts`   | TypeScript interfaces for all 12 built-in kinds + stub style/interactivity |
+| `shapes.ts`   | TypeScript interfaces for the built-in kinds + stub style/interactivity |
 | `payload.ts`  | `KindPayload<K>` mapped type — descriptor → value type                    |
 
 ## Quick reference
 
-### The 12 built-in Kinds
+### Built-in Kinds
 
 ```
 Void                  → no payload (source-stage input, sink-stage output)
 ContentSource         → raw bytes + metadata from a storage adapter
 ContentNode           → parsed document (DocumentNode + frontmatter + identity)
 Collection            → ordered set of content references with grouping discriminant
-Asset                 → image / video / font / binary with metadata
+Asset                 → image / video / font / script / binary with metadata
 Document              → (content, style, interactivity) triple ready to render
 RenderedPage          → HTML + metadata + revision-aware input provenance
 PrintForme            → backend-neutral page for LaTeX / PDF / EPUB
+TerminalBuffer        → ANSI text + content revision + source provenance + explicit degradation evidence
 RequestHandler        → per-request handler (Workers, Node, Deno, Bun)
 SearchIndex           → serialised search index
 Feed                  → RSS / Atom / JSON Feed / sitemap
@@ -69,12 +70,18 @@ The implementations of `computeRevisionId`, `canonicalJson`, etc. live in `@codi
 
 ### Rendered output provenance
 
-New `RenderedPage` producers attach an `OutputProvenance`: a canonical list of
+Every `RenderedPage` producer attaches an `OutputProvenance`: a canonical list of
 every contributing `{ identity, revision }` pair plus a revision hash of that
 set. Use `createOutputProvenance` from `@coding-adventures/forme-identity` to
-construct it. Aggregate pages omit the legacy `source` field instead of
-inventing a single source; v1.0 producers that only carry `source` remain valid
-during the v1.1 migration.
+construct it. The v2 shape has no `source` shortcut: a single-source page has
+one contributor, while aggregate pages record the complete normalized set.
+See [MIGRATION-v2.md](MIGRATION-v2.md) for the package, kernel, and kind-version
+migration contract.
+
+Interactive renderers also provide an exact `islandModules` list pairing each
+document-local `IslandId` with its reviewed script `LogicalId`, package/export,
+and exact SHA-256 bytes. The field is optional for static pages; interactive
+pages must provide it.
 
 ## Spec divergences (v0)
 

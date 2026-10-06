@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C191-saciv",
+    "language": "marathi",
+    "chapter": 191,
+    "sequence": 9770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e85152db20b2c53"
+  },
+  "findings": []
+}

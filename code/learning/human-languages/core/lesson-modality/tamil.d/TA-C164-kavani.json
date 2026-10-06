@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C164-kavani",
+    "language": "tamil",
+    "chapter": 164,
+    "sequence": 7730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d485b205f7e8b303"
+  },
+  "findings": []
+}

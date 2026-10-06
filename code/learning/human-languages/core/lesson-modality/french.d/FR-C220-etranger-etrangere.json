@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C220-etranger-etrangere",
+    "language": "french",
+    "chapter": 220,
+    "sequence": 12260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a3e053a8ae4e5f8"
+  },
+  "findings": []
+}

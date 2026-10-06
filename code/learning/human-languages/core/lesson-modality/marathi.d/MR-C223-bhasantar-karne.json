@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C223-bhasantar-karne",
+    "language": "marathi",
+    "chapter": 223,
+    "sequence": 12230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b44fb8b12cc7a50b"
+  },
+  "findings": []
+}

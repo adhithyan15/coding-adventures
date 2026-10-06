@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:3aa9b142f5895d8e",
+  "lessonIds": [
+    "AR-C182-salsa",
+    "AR-C182-shatira",
+    "AR-C182-muthallajat",
+    "AR-C182-wajba",
+    "AR-C182-tannura"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch182.txt",
+  "json": "arabic/narration/ch182.json",
+  "textHash": "fnv1a64:64d2fb0175058c23",
+  "jsonHash": "fnv1a64:9e6dada215354e48",
+  "findings": []
+}

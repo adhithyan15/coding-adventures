@@ -4,7 +4,7 @@
   "chapter": 440,
   "title": "La Fiesta Y El Año",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:baa9db3c16babda0",
+  "sourceHash": "fnv1a64:4f972e302d0bc87f",
   "lessons": [
     {
       "id": "ES-C440-boda",
@@ -344,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:441036c289b8c3c3",
+      "sourceHash": "fnv1a64:f6a85f28b5ab6f5c",
       "notice": null,
       "blocks": [
         {
@@ -506,7 +506,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1009a5248deb25e",
+      "sourceHash": "fnv1a64:f711814e363f171f",
       "notice": null,
       "blocks": [
         {

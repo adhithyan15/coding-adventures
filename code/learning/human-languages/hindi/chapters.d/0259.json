@@ -1,0 +1,19 @@
+{
+  "chapter": 259,
+  "title": "Restlessness, A crowd, An event, An accident, Danger",
+  "label": "ch:hi-restlessness-a-crowd-an-event-an-accident-danger",
+  "canDo": "I can say restlessness, a crowd, an event, an accident and danger.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C259-khatra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can say restlessness, a crowd, an event, an accident and danger.",
+    "assesses": [
+      "HI-LEX-C259-THG259-03",
+      "HI-LEX-C259-THG259-04",
+      "HI-LEX-C259-THG259-05"
+    ]
+  }
+}

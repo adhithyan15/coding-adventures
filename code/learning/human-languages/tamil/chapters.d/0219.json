@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Bamboo, Rainbow, Fog, Gentle breeze, Flood",
+  "label": "ch:ta-bamboo-rainbow-fog-gentle-breeze-flood",
+  "canDo": "I can say bamboo, a rainbow, fog, a gentle breeze and a flood.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C219-vellam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say bamboo, a rainbow, fog, a gentle breeze and a flood.",
+    "assesses": [
+      "TA-LEX-C219-PORUL219-03",
+      "TA-LEX-C219-PORUL219-04",
+      "TA-LEX-C219-PORUL219-05"
+    ]
+  }
+}

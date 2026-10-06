@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:0a81a765d37ca764",
+  "lessonIds": [
+    "GE-C251-uebrigens",
+    "GE-C251-sowieso",
+    "GE-C251-hoechstens",
+    "GE-C251-mindestens",
+    "GE-C251-waehrend",
+    "GE-R251-first-pass-words-from-chapters-247-248",
+    "GE-R251-second-pass-words-from-chapters-249-251"
+  ],
+  "tex": "german/book/chapters/ch251-by-the-way-anyway-at-most-at-least-during.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:4cb901243a9fa9a4",
+  "lessonIds": [
+    "BN-C122-machhi",
+    "BN-C122-mosha",
+    "BN-C122-kecho",
+    "BN-C122-tiktiki",
+    "BN-C122-kochchhop"
+  ],
+  "tex": "bengali/book/chapters/ch122-fly-mosquito-earthworm-gecko-turtle.tex"
+}

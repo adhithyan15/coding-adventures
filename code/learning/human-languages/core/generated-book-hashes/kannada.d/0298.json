@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:19e518e5e47196e3",
+  "lessonIds": [
+    "KA-C298-ata",
+    "KA-C298-sinima",
+    "KA-C298-sangita",
+    "KA-C298-spardhe",
+    "KA-C298-bahumana",
+    "KA-R298-first-pass-words-from-chapters-290-293",
+    "KA-R298-second-pass-words-from-chapters-294-298"
+  ],
+  "tex": "kannada/book/chapters/ch298-game-film-music-competition-prize.tex"
+}

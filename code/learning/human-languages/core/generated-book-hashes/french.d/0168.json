@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:ab33a8d7c9960fb9",
+  "lessonIds": [
+    "FR-C168-regle",
+    "FR-C168-permission",
+    "FR-C168-interdiction",
+    "FR-C168-securite",
+    "FR-C168-conseil"
+  ],
+  "tex": "french/book/chapters/ch168-rule-permission-ban-safety-advice.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-270-VASTU270",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say almonds, raisins, jaggery, a dhoti and a kurta.",
+  "prerequisites": []
+}

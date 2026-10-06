@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C274-damnum",
+    "language": "latin",
+    "chapter": 274,
+    "sequence": 15000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06829a315e2c764c"
+  },
+  "findings": []
+}

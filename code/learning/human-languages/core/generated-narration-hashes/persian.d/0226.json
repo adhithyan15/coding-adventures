@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:a6e6bc76f79bfb48",
+  "lessonIds": [
+    "FA-C226-kud-dadan",
+    "FA-C226-paru-kardan",
+    "FA-C226-raha-kardan",
+    "FA-C226-sabidan",
+    "FA-C226-abkeshi-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch226.txt",
+  "json": "persian/narration/ch226.json",
+  "textHash": "fnv1a64:2288c07f0fb39951",
+  "jsonHash": "fnv1a64:5f096a8ce3157bd2",
+  "findings": []
+}

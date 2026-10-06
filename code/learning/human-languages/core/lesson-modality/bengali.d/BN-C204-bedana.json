@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C204-bedana",
+    "language": "bengali",
+    "chapter": 204,
+    "sequence": 12310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e44469e10a7a6b62"
+  },
+  "findings": []
+}

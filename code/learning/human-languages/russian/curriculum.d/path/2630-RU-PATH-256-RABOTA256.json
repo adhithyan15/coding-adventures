@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-256-RABOTA256",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "RU-EXT-256-RABOTA256"
+  ],
+  "after": []
+}

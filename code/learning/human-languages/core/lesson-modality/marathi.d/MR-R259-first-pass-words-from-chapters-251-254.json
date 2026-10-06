@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R259-first-pass-words-from-chapters-251-254",
+    "language": "marathi",
+    "chapter": 259,
+    "sequence": 14730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb4b53af4d85d012"
+  },
+  "findings": []
+}

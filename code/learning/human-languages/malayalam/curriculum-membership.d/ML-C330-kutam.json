@@ -1,0 +1,11 @@
+{
+  "id": "ML-C330-kutam",
+  "pathSegment": "ML-PATH-330-VASTU330",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-330-VASTU330",
+      "order": 2
+    }
+  ]
+}

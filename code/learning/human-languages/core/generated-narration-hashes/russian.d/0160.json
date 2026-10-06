@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:eb83cea0ba5ecffb",
+  "lessonIds": [
+    "RU-C160-bokal",
+    "RU-C160-paket",
+    "RU-C160-korobka",
+    "RU-C160-yashchik",
+    "RU-C160-lampochka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch160.txt",
+  "json": "russian/narration/ch160.json",
+  "textHash": "fnv1a64:5e9c9802543af0e0",
+  "jsonHash": "fnv1a64:dddc89583f302e9c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:a837cec677a2ce1f",
+  "lessonIds": [
+    "AR-C256-rasaba",
+    "AR-C256-ijtaza",
+    "AR-C256-sharaha",
+    "AR-C256-tarjama",
+    "AR-C256-aada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch256.txt",
+  "json": "arabic/narration/ch256.json",
+  "textHash": "fnv1a64:a62d0bd043905a65",
+  "jsonHash": "fnv1a64:ca2c809131a84380",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C308-mukka",
+  "pathSegment": "TE-PATH-308-VASTUVU308",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-308-VASTUVU308",
+      "order": 1
+    }
+  ]
+}

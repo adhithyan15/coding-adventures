@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C207-savadh",
+    "language": "marathi",
+    "chapter": 207,
+    "sequence": 10900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d254a649353fab9"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:7fc30360ddb845ab",
+  "lessonIds": [
+    "FA-C233-shayad",
+    "FA-C233-hatman",
+    "FA-C233-albatte",
+    "FA-C233-ehtemalan",
+    "FA-C233-kheyli"
+  ],
+  "tex": "persian/book/chapters/ch233-maybe-definitely-of-course-probably-very.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "Employee, Boss, Manager, Company, Meeting",
+  "label": "ch:ml-employee-boss-manager-company-meeting",
+  "canDo": "I can say an employee, a boss, a manager, a company and a meeting.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C334-yogam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can say an employee, a boss, a manager, a company and a meeting.",
+    "assesses": [
+      "ML-LEX-C334-JOLI334-03",
+      "ML-LEX-C334-JOLI334-04",
+      "ML-LEX-C334-JOLI334-05"
+    ]
+  }
+}

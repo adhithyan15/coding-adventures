@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R266-second-pass-words-from-chapters-264-266",
+    "language": "kannada",
+    "chapter": 266,
+    "sequence": 12730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3459284a41cb1eef"
+  },
+  "findings": []
+}

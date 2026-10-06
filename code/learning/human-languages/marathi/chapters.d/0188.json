@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "Calendar, Crab, Eagle, Cuckoo, Bee",
+  "label": "ch:mr-calendar-crab-eagle-cuckoo-bee",
+  "canDo": "I can say a calendar, a crab, an eagle, a cuckoo and a bee.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-R188-second-pass-words-from-chapters-184-188",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say a calendar, a crab, an eagle, a cuckoo and a bee.",
+    "assesses": [
+      "MR-LEX-C188-VASTU188-03",
+      "MR-LEX-C188-VASTU188-04",
+      "MR-LEX-C188-VASTU188-05"
+    ]
+  }
+}

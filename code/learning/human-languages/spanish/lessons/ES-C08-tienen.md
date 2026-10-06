@@ -16,11 +16,11 @@ etymology_hook: "the ie is back because the stress is back; the stem change is a
 duration:
   max_seconds: 230
 requires:
-  knowledge: [ES-GRAMMAR-TENER-PRESENT-1PL, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-ER-PRESENT-3PL, ES-LEX-USTEDES]
+  knowledge: [ES-GRAMMAR-TENER-PRESENT-1PL, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-ER-PRESENT-3PL, ES-LEX-USTEDES, ES-GRAMMAR-TENER-PRESENT-2PL]
 introduces:
   knowledge: [ES-GRAMMAR-TENER-PRESENT-3PL, ES-GRAMMAR-STEM-CHANGE-STRESS-RULE]
 practises:
-  knowledge: [ES-GRAMMAR-TENER-PRESENT-1PL, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-ER-PRESENT-3PL, ES-LEX-USTEDES, ES-GRAMMAR-TENER-PRESENT-3PL, ES-GRAMMAR-STEM-CHANGE-STRESS-RULE]
+  knowledge: [ES-GRAMMAR-TENER-PRESENT-1PL, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-ER-PRESENT-3PL, ES-LEX-USTEDES, ES-GRAMMAR-TENER-PRESENT-3PL, ES-GRAMMAR-STEM-CHANGE-STRESS-RULE, ES-GRAMMAR-TENER-PRESENT-2PL]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,10 +32,12 @@ reviews_of: [ES-C08-tenemos, ES-C07-comen-viven]
 # tienen — the break comes back
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-TENER-PRESENT-1PL, ES-GRAMMAR-TENER-PRESENT-SINGULAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-TENER-PRESENT-1PL, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-TENER-PRESENT-2PL] -->
 
 [PAUSE 2s] Say "we have", then "you have" to a friend. (*Tenemos, tienes*.)
 Which one has the broken stem?
+
+[PAUSE 2s] Before the break comes back: *tenemos*, *tenéis*. Plain *e*, because the stress sits on the ending.
 
 ## Grammar Lens: the rule, stated once and for all
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-TENER-PRESENT-3PL, ES-GRAMMAR-STEM-CHANGE-STRESS-RULE]; assesses=[ES-GRAMMAR-TENER-PRESENT-1PL, ES-GRAMMAR-ER-PRESENT-3PL, ES-LEX-USTEDES] -->

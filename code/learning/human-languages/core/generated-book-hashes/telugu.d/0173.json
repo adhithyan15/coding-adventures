@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:086803a7dc51ed9c",
+  "lessonIds": [
+    "TE-C173-varanda",
+    "TE-C173-peradu",
+    "TE-C173-hotalu",
+    "TE-C173-pakkana",
+    "TE-C173-postaphisu"
+  ],
+  "tex": "telugu/book/chapters/ch173-veranda-backyard-restaurant-beside-post-office.tex"
+}

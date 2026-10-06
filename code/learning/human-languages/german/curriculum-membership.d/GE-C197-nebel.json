@@ -1,0 +1,11 @@
+{
+  "id": "GE-C197-nebel",
+  "pathSegment": "GE-PATH-197-THING197",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-197-THING197",
+      "order": 1
+    }
+  ]
+}

@@ -7,7 +7,7 @@ chapter: 445
 type: word
 headword: repetir
 gloss: to repeat — to seek again, from the same petere that sits under el pedido
-concept_tag: ES-ACT-REPETIR
+concept_tag: ES-VERB-REPETIR
 prerequisites: [ES-C445-ensenar, ES-C303-otra-vez, ES-C431-pedido]
 sounds: [r-tap, stress-final]
 roots: [petere-latin]

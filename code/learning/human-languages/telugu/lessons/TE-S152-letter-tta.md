@@ -51,17 +51,16 @@ are different letters. The dot under the *ṭ* in the romanization is the only
 warning you get there — on the page the two shapes are nothing alike, which is
 easier.
 
-## Writing: ట — copy what you see
+## Writing: ట — six deliberate movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-152] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on ట and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Follow the filmstrip slowly. Movement 1 curls up the inner shoulder. Movements
+2–5 travel around the broad outer body in four sections. Finish with movement
+6, the separate short stem above.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+This is one attested school-style order. Telugu handwriting varies, so keep
+the six directions clear and let the rounded shape grow from them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-152, TE-SCRIPT-RECOG-150, TE-SCRIPT-RECOG-151] -->
@@ -71,7 +70,8 @@ and larger than it is printed.
 
 > ఏమిటి
 
-- [YOU TRACE: ట three times, saying *ṭa* as you finish each one]
+- [YOU TRACE: ట once, following all six numbered movements]
+- [YOU COPY: ట twice without tracing, saying *ṭa* as you finish each one]
 - [YOU SAY: where your tongue goes for it, against where it goes for a plain *t*]
 - [YOU LOOK: back at the greeting chapter and find మ and ధ once each]
 

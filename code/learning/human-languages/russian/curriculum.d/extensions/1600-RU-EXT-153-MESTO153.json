@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-153-MESTO153",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a gym, a mosque, a temple, a monument and a fountain.",
+  "prerequisites": []
+}

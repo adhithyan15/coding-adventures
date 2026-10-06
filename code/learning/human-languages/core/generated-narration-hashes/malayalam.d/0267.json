@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:95bccfb638c16d81",
+  "lessonIds": [
+    "ML-C267-parisilikkuka",
+    "ML-C267-jayikkuka",
+    "ML-C267-tolkkuka",
+    "ML-C267-kaimaruka",
+    "ML-C267-sampadikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch267.txt",
+  "json": "malayalam/narration/ch267.json",
+  "textHash": "fnv1a64:bd9b075b329af732",
+  "jsonHash": "fnv1a64:4e8c8f6cc0c3bbcc",
+  "findings": []
+}

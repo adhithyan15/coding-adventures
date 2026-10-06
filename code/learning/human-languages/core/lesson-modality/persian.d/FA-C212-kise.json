@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C212-kise",
+    "language": "persian",
+    "chapter": 212,
+    "sequence": 10940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4a1db4e9cc57d5c"
+  },
+  "findings": []
+}

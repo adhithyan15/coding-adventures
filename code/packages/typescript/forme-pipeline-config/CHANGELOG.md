@@ -2,7 +2,14 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
 ### Added
+
+- Add validated `settings.pluginRuntimes` entries for absolute Deno, Bun, and
+  Python executable/distribution-root pairs used by the native plugin sandbox.
 
 - `validateConfig` rejects multiple explicit wires targeting the same stage
   input port with `MULTIPLE_INPUT_WIRES`. Different named ports may each have

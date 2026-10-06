@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C208-rogi",
+    "language": "kannada",
+    "chapter": 208,
+    "sequence": 9670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8d70cea0c8bc1c6"
+  },
+  "findings": []
+}

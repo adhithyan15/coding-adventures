@@ -70,10 +70,12 @@ byte-identical, validates the PNG dimensions, and requires distinct light and
 dark output. It is a CI snapshot, not a host, interaction claim, or release
 artifact.
 
-**Partial.** iOS compiles the generated SwiftUI sources against the iOS 16
-deployment target. That is source portability; nothing runs the app or its
-dylib on an iOS target. Android has no Mosaic backend at all — `compose` emits
-Compose *Desktop*.
+**Mobile reach.** iOS now builds an installable generated app with the real
+statically linked Rust runtime, launches on both iPhone and iPad simulators,
+and exercises sandboxed restore and corrupt-state quarantine (#16035, #16041,
+#16144). That is runtime evidence, but there is still no signed device build or
+TaskApp release artifact. Android has no Mosaic backend on `main`; `compose`
+still denotes Compose *Desktop*.
 
 ## Completion queue
 
@@ -142,19 +144,35 @@ rather than letting them read as silent gaps.
    — publish corrective `task-app-v0.5.1` notes.** Put the CI-only backend
    boundary directly in the release-note template, protect it with a focused
    test, and publish an immutable patch from the same verified artifact matrix.
+   **Published and independently audited from #16170.**
+
+### Product quality ratchet
+
+10. **P1 [#16182](https://github.com/adhithyan15/coding-adventures/issues/16182)
+    — ratchet TaskApp's native style degradations.** All five native reporters
+    are now wired, but a fresh `native-complete` generation recorded 77 XAML,
+    142 SwiftUI, 89 Compose, 307 Qt, and 463 Flutter style drops. **Ratcheted in
+    #16183.** The first follow-up, #15285, lowers Flutter `Text` part typography
+    and reduces its measured inventory to 371. The next follow-up, #16201,
+    lowers stylesheet font sizes for Flutter buttons and text-bearing
+    containers, reducing Flutter to 329 drops and the five-backend total to 944.
+    Keep the per-property maxima in the shared TaskApp contract so no new
+    property or increased occurrence count can enter while fixes drive those
+    inventories toward #12022's zero-drop hard fail. Do not call the existing
+    debt native completeness.
 
 ### Tier C — reach, stated honestly
 
-10. **iOS: run, don't just compile.** Today's gate proves the generated SwiftUI
-   sources compile for iOS 16. Promoting that to a real claim needs a simulator
-   launch and a driven lifecycle against an iOS-built `task-mosaic-app`.
-   Until then the README's phrasing — "source portability rather than a claim" —
-   stays exactly as written.
-11. **Android has no backend.** `compose` is Compose Desktop. An Android target
-   is a new Mosaic backend, not a TaskApp task, and belongs to
-   [#12017](https://github.com/adhithyan15/coding-adventures/issues/12017), not
-   here. Recorded so its absence is a decision rather than an oversight.
-12. **Signing, notarization, and installers**
+11. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,
+    #16041, and #16144.** The generated app carries the real runtime, launches
+    on iPhone and iPad simulators, restores state from its sandbox, and
+    quarantines corrupt state. Signing, device execution, and a downloadable
+    iOS artifact remain outside that claim.
+12. **Android has no backend.** `compose` is Compose Desktop. An Android target
+    is a new Mosaic backend, not a TaskApp task, and belongs to
+    [#12017](https://github.com/adhithyan15/coding-adventures/issues/12017), not
+    here. Recorded so its absence is a decision rather than an oversight.
+13. **Signing, notarization, and installers**
     ([#13977](https://github.com/adhithyan15/coding-adventures/issues/13977)).
     macOS is unsigned and un-notarized; Windows is an unsigned portable folder,
     not MSIX; Linux ships tarballs, not packages. Writing this spec turned up

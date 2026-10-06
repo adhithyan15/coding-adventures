@@ -1,0 +1,11 @@
+{
+  "id": "FR-C151-recommander",
+  "pathSegment": "FR-PATH-151-VERBES151",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-151-VERBES151",
+      "order": 2
+    }
+  ]
+}

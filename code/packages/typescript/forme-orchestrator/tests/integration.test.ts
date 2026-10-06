@@ -227,7 +227,13 @@ describe("buildPipeline + runOnce — happy path", () => {
               structured: [],
               extra: {},
             },
-            source: "01952c0d-7e63-7000-8000-000000000000" as never,
+            provenance: {
+              contributors: [{
+                identity: "01952c0d-7e63-7000-8000-000000000000" as never,
+                revision: `blake2b:${"a".repeat(64)}` as never,
+              }],
+              revision: `blake2b:${"a".repeat(64)}` as never,
+            },
           } as never;
         }
       },

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:5d142759200381a5",
+  "lessonIds": [
+    "RU-C180-golovnaya-bol",
+    "RU-C180-son",
+    "RU-C180-diyeta",
+    "RU-C180-vitamin",
+    "RU-C180-lyogkiye"
+  ],
+  "tex": "russian/book/chapters/ch180-headache-sleep-diet-vitamin-lungs.tex"
+}

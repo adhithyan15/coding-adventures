@@ -1,0 +1,11 @@
+{
+  "id": "MR-C178-ghanta",
+  "pathSegment": "MR-PATH-178-VASTU178",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-178-VASTU178",
+      "order": 3
+    }
+  ]
+}

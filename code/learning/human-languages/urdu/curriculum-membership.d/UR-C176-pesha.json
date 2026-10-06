@@ -1,0 +1,11 @@
+{
+  "id": "UR-C176-pesha",
+  "pathSegment": "UR-PATH-176-KAM176",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-176-KAM176",
+      "order": 1
+    }
+  ]
+}

@@ -1,7 +1,23 @@
 import { describe, expect, it } from "vitest";
-import { createGitHubRestBoundary, GitHubPagesBoundaryError } from "../src/index.js";
+import {
+  createGitHubRestBoundary,
+  createGitHubRestReadBoundary,
+  GitHubPagesBoundaryError,
+} from "../src/index.js";
 
 describe("createGitHubRestBoundary", () => {
+  it("supports anonymous GET-only inspection without an authorization header", async () => {
+    const mock = fetchQueue(json({ object: { sha: hex("a") } }));
+    const boundary = createGitHubRestReadBoundary({ fetch: mock.fetch });
+
+    await boundary.getRef({ owner: "octo", repository: "site", ref: "heads/gh-pages" });
+
+    expect(mock.calls[0]?.init.method).toBe("GET");
+    expect(mock.calls[0]?.init.headers).not.toHaveProperty("Authorization");
+    expect(boundary).not.toHaveProperty("createBlob");
+    expect(boundary).not.toHaveProperty("updateRef");
+  });
+
   it("authenticates and encodes the selected repository and ref", async () => {
     const mock = fetchQueue(json({ object: { sha: hex("a") } }));
     const boundary = createGitHubRestBoundary({ token: "secret", fetch: mock.fetch });

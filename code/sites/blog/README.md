@@ -23,9 +23,11 @@ only those deployment settings change; the routes and destination do not.
 ```
 forme-source-fs           Void                → Stream<ContentSource>
 forme-parse-markdown      ContentSource       → ContentNode
+blog-attach-interactivity Stream<ContentNode> → Stream<ContentNode>
 forme-resolve-asset-refs  Stream<ContentNode> → Stream<ContentNode>
 forme-router              Stream<ContentNode> → Stream<ContentNode>
                          ├→ forme-render-static ───────────┐
+                         ├→ forme-render-terminal → package-terminal (`terminal`)
                          ├→ forme-load-assets-fs ──────────┴→ forme-emit-site-fs (`articles`)
                          └→ forme-collect-chronological
                               → blog-surface → forme-emit-fs (`surface`)
@@ -35,8 +37,10 @@ forme-router              Stream<ContentNode> → Stream<ContentNode>
 materializes its routed-node stream once and fans it out: the article renderer
 uses each canonical route, while the chronological collector feeds an aggregate
 surface stage built from the existing Forme index, RSS, Atom, sitemap, metadata,
-and feed-discovery generators. Two named deploy sinks write disjoint route sets
-to the same `dist/` tree.
+and feed-discovery generators. Two filesystem deploy sinks write disjoint route
+sets to the same `dist/` tree. A third capability-free sink packages those
+same routed articles as ANSI plus canonical degradation evidence, proving the
+backend attach point without acquiring filesystem authority.
 
 ## Local build
 
@@ -57,15 +61,75 @@ post-build verifier checks the exact surface, fingerprinted asset bytes,
 rewritten project-page URL, and absence of unresolved Forme placeholders. HTML
 files carry matched rules from the
 reusable classless Style IR theme compiled through the AOT slicer and inlined
-in `<style>` — including light/dark preferences, with no JS or external CSS.
+in `<style>` — including light/dark preferences. Static articles remain at
+zero JavaScript; the one enhanced article receives only its selected module.
 Local post images are emitted under `dist/blog/assets/` with complete content
 hashes, making changed bytes produce a new cache-safe URL while unchanged bytes
 keep the same URL.
+
+The `Hello, Forme` article is the live FM05 progressive-enhancement proof. Its
+complete pipeline list is useful without JavaScript. A site-owned pure stage
+attaches one reviewed script asset only to that source, and the render config
+binds the declared package/export pair to the asset's exact identity and
+SHA-256 bytes with explicit executable-output authority. The emitter includes
+the fingerprinted module and `pipeline-step-explorer` island ID only on that
+route; the other article pages contain no script tags or island IDs.
 
 The test suite also runs a clean and an unchanged second-process build in
 reproducible mode. It requires identical build IDs, canonical output reports,
 and file hashes; verifies that the source, pure transforms, and replay-capable
 emitters skip safely; and keeps ambient asset readers conservative.
+
+`npm run benchmark:release` supplies the FM-B069 release-scale gate. It derives
+a disposable configuration from the live thirteen-stage DAG, generates exactly
+1,000 bounded Markdown pages under `.forme/`, runs a clean build, edits one
+page, and runs an incremental build against the persistent cache. The report at
+`dist/.forme-release-benchmark.json` records both same-run elapsed times while
+the pass/fail contract uses portable work evidence: both HTML and terminal
+backends retain 1,000 routes, the clean parser handles all 1,000 pages, and the
+incremental parser reuses 999 entries while rebuilding one. No absolute
+millisecond threshold mistakes hosted-runner load for a Forme regression.
+Each CLI phase has a three-minute liveness deadline and forced child
+retirement. The disposable source/cache/output tree lives in a freshly created
+private project-temporary directory and is removed in `finally` on both success and failure;
+the retained summary is replaced atomically without following a target symlink.
+
+`npm run quality:release` owns the cross-site FM-B070 release gate. After both
+live sites have been built, it serves only their generated directories on an
+ephemeral loopback port and audits the landing page, blog index, and `Hello,
+Forme` article with Lighthouse 13.5.0 and a reviewed Chrome binary. Every route
+uses three fresh browser samples and must retain a median score of at least
+0.95 for desktop performance; every sample must retain exactly 1.00 for
+accessibility and stay within the resource budgets. Explicit total, image, and
+script transfer budgets keep the
+static routes at zero JavaScript while bounding the enhanced article's one
+module. A resource- and navigation-disabled DOM pass separately proves useful
+navigation, content, and all thirteen fallback steps before Chrome runs. The
+browser is sandboxed, proxied back to the loopback artifact server, constrained
+by a restrictive response policy, and required to report the exact requested
+and final route. CI pins Node 22.23.2 and Chrome for Testing 154.0.8037.92,
+binds Windows version evidence to the pinned setup action's PE-file metadata
+output because the Windows GUI binary does not implement a terminating
+`--version` query, content-authenticates that exact build's SUID helper before
+making its
+root-owned copy mode 4755 so Ubuntu's AppArmor user-namespace restriction does
+not require disabling Chrome's sandbox, uses the frozen local bootstrap to
+enforce every reviewed npm lock without dependency lifecycle scripts before
+explicitly building packages and products, and retains only the bounded
+`dist/.forme-web-quality.json` summary with three performance samples and the
+conservative median/minimum/maximum aggregate; browser phases have finite
+deadlines and fresh processes. A failed Chrome launch reports at most 1,024 printable
+characters from a bounded, no-follow read of its startup log so hosted-runner
+failures remain diagnosable without retaining raw browser traces. The required
+CI gate waits for this lane.
+
+FM-B072 composes that browser contract with the 1,000-page benchmark, API-v2
+map, landing-page build, and desktop authoring product on Linux, macOS, and
+Windows. Each host publishes only a bounded digest attestation; the final CI
+job accepts exactly those three attestations for one commit before publishing
+the technical verdict. The evidence records that a separately authenticated
+exact-head security review remains mandatory without letting repository data
+self-assert that approval.
 
 The installed `forme` launcher registers `tsx` for TypeScript-first packages;
 the site uses `tsx` directly only for its post-build verifier and unit tests.
@@ -81,9 +145,21 @@ last good blog when an edit produces a build error.
 - `data/` — Markdown posts. Frontmatter is `key: value` only (the v0
   parser is grammar-restricted; see
   `code/packages/typescript/forme-parse-markdown/README.md`).
-- `forme.config.ts` — `PipelineConfig` literal wiring ten named stage
+- `forme.config.ts` — `PipelineConfig` literal wiring thirteen named stage
   instances, including routed content/asset fan-out, named asset fan-in, and
-  two deploy outputs.
+  three deploy outputs.
+- `release-benchmark.config.ts` / `release-benchmark.ts` — disposable
+  1,000-page clean/single-edit incremental release-scale evidence derived from
+  the exact live DAG.
+- `web-quality.ts` / `release-web-quality.ts` — pure score, resource,
+  fallback, containment, and evidence contracts plus the bounded browser
+  runner shared by both live sites.
+- `interactivity-stage.ts` — the narrow product authority boundary that
+  attaches the reviewed pipeline-step module identity and source to the one
+  article allowed to use it.
+- `pipeline-steps.test.ts` — DOM-level acceptance for the shipped browser
+  module's fallback preservation, opt-in focus controls, restoration,
+  idempotency, and fail-closed structure checks.
 - `surface-stage.ts` — collection adapter that composes the reusable Forme
   index/feed/sitemap/head generators into deployable pages.
 - `verify.ts` — site-specific filesystem acceptance checks that run after the

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:64955eb57448f073",
+  "lessonIds": [
+    "ES-C479-inscribirse",
+    "ES-C479-cancelar",
+    "ES-C479-obligatorio",
+    "ES-C479-adelantado",
+    "ES-C479-sustituir"
+  ],
+  "tex": "spanish/book/chapters/ch479-papeles-y-plazos.tex"
+}

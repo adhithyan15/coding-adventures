@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C213-girana",
+    "language": "urdu",
+    "chapter": 213,
+    "sequence": 12570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e798b3ab3e2a1d73"
+  },
+  "findings": []
+}

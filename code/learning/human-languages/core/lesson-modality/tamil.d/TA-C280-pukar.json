@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C280-pukar",
+    "language": "tamil",
+    "chapter": 280,
+    "sequence": 16030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25d06c29bd5190b9"
+  },
+  "findings": []
+}

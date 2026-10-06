@@ -1,5 +1,19 @@
 # Changelog — intel8086-encoder
 
+## Unreleased — WORD03b branch surface
+
+- Re-export signed near `JMP rel16` encoding for final backend label fixups.
+
+## Unreleased — WORD03a
+
+- Re-export short conditional-jump encoding for normalized comparison
+  results.
+
+## Unreleased — WORD02
+
+- Re-export byte register moves and typed register ALU encoding plus the
+  AX/BX/CX byte and word register codes used by the Word backend.
+
 ## [0.1.0] - 2026-08-17
 
 ### Added

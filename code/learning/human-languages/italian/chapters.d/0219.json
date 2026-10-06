@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Equal, Similar, False, Free of charge, Modern",
+  "label": "ch:it-equal-similar-false-free-of-charge-modern",
+  "canDo": "I can say equal, similar, false, free of charge and modern.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C219-moderno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say equal, similar, false, free of charge and modern.",
+    "assesses": [
+      "IT-LEX-C219-QUAL219-03",
+      "IT-LEX-C219-QUAL219-04",
+      "IT-LEX-C219-QUAL219-05"
+    ]
+  }
+}

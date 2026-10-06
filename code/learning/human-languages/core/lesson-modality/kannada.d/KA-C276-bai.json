@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C276-bai",
+    "language": "kannada",
+    "chapter": 276,
+    "sequence": 13210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a222ae07b362d30"
+  },
+  "findings": []
+}

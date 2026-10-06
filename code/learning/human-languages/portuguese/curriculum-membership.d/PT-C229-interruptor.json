@@ -1,0 +1,11 @@
+{
+  "id": "PT-C229-interruptor",
+  "pathSegment": "PT-PATH-229-COISAS229",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-229-COISAS229",
+      "order": 4
+    }
+  ]
+}

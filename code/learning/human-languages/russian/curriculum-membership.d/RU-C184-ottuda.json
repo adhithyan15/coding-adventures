@@ -1,0 +1,11 @@
+{
+  "id": "RU-C184-ottuda",
+  "pathSegment": "RU-PATH-184-MESTO184",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-184-MESTO184",
+      "order": 4
+    }
+  ]
+}

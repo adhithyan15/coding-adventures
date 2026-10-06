@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 189,
+  "title": "To spit, To wring, To shake, To roll, To crawl",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:deea379ea97c0575",
+  "lessons": [
+    {
+      "id": "ML-C189-tuppuka",
+      "sequence": 8240,
+      "title": "തുപ്പുക (tuppuka) — to spit",
+      "headword": "തുപ്പുക",
+      "romanization": "tuppuka",
+      "gloss": "to spit",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84b4b6deabc64ad2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to publish, then the Malayalam for to repair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തുപ്പുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തുപ്പുക — tuppuka — \"to spit\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuppuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuppuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuppuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuppuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tuppuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tuppuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to publish, then the Malayalam for to repair, then say tuppuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to publish, then the Malayalam for to repair, then say *tuppuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തുപ്പുക (tuppuka) mean? (\"To spit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C189-piliyuka",
+      "sequence": 8250,
+      "title": "പിഴിയുക (piḻiyuka) — to wring, to squeeze out",
+      "headword": "പിഴിയുക",
+      "romanization": "piḻiyuka",
+      "gloss": "to wring, to squeeze out",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98b0d26051316315",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to repair, then the Malayalam for to spit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പിഴിയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിഴിയുക — piḻiyuka — \"to wring, to squeeze out\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piḻiyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piḻiyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piḻiyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piḻiyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say piḻiyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *piḻiyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to repair, then the Malayalam for to spit, then say piḻiyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to repair, then the Malayalam for to spit, then say *piḻiyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പിഴിയുക (piḻiyuka) mean? (\"To wring, to squeeze out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C189-kulukkuka",
+      "sequence": 8260,
+      "title": "കുലുക്കുക (kulukkuka) — to shake",
+      "headword": "കുലുക്കുക",
+      "romanization": "kulukkuka",
+      "gloss": "to shake",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae31f8480a98c8b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to spit, then the Malayalam for to wring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുലുക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുലുക്കുക — kulukkuka — \"to shake\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kulukkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kulukkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kulukkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kulukkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kulukkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kulukkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to spit, then the Malayalam for to wring, then say kulukkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to spit, then the Malayalam for to wring, then say *kulukkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുലുക്കുക (kulukkuka) mean? (\"To shake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C189-uruttuka",
+      "sequence": 8270,
+      "title": "ഉരുട്ടുക (uruṭṭuka) — to roll (something along)",
+      "headword": "ഉരുട്ടുക",
+      "romanization": "uruṭṭuka",
+      "gloss": "to roll (something along)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9e46c5e8abcef0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to wring, then the Malayalam for to shake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉരുട്ടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉരുട്ടുക — uruṭṭuka — \"to roll (something along)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uruṭṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uruṭṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uruṭṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uruṭṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say uruṭṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *uruṭṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to wring, then the Malayalam for to shake, then say uruṭṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to wring, then the Malayalam for to shake, then say *uruṭṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉരുട്ടുക (uruṭṭuka) mean? (\"To roll (something along)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C189-ilayuka",
+      "sequence": 8280,
+      "title": "ഇഴയുക (iḻayuka) — to crawl",
+      "headword": "ഇഴയുക",
+      "romanization": "iḻayuka",
+      "gloss": "to crawl",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f9d7834a8c832f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to shake, then the Malayalam for to roll."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഇഴയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇഴയുക — iḻayuka — \"to crawl\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḻayuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḻayuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḻayuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḻayuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say iḻayuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *iḻayuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to shake, then the Malayalam for to roll, then say iḻayuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to shake, then the Malayalam for to roll, then say *iḻayuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഇഴയുക (iḻayuka) mean? (\"To crawl\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R189-first-pass-words-from-chapters-181-184",
+      "sequence": 8290,
+      "title": "Words from chapters 181-184 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 181-184",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f480589b3acdebc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to roll and to crawl."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to lie down, to turn, to cross, to pull, to push",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to lie down, to turn, to cross, to pull, to push]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stir, to fry, to boil, to roast, to pour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stir, to fry, to boil, to roast, to pour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to choose, to use, to try, to get, to lose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to choose, to use, to try, to get, to lose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to break, to get better, to exercise, to fill in, to sign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to break, to get better, to exercise, to fill in, to sign]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To lie down? (കിടക്കുക, kiṭakkuka.) To turn? (തിരിയുക, tiriyuka.) To cross? (കടക്കുക, kaṭakkuka.) To pull? (വലിക്കുക, valikkuka.) To push? (തള്ളുക, taḷḷuka.) To stir? (ഇളക്കുക, iḷakkuka.) To fry? (പൊരിക്കുക, porikkuka.) To boil? (തിളപ്പിക്കുക, tiḷappikkuka.) To roast? (വറുക്കുക, vaṟukkuka.) To pour? (ഒഴിക്കുക, oḻikkuka.) To choose? (തിരഞ്ഞെടുക്കുക, tiraññeṭukkuka.) To use? (ഉപയോഗിക്കുക, upayōgikkuka.) To try? (ശ്രമിക്കുക, śramikkuka.) To get? (കിട്ടുക, kiṭṭuka.) To lose? (നഷ്ടപ്പെടുക, naṣṭappeṭuka.) To break? (ഒടിയുക, oṭiyuka.) To get better? (ഭേദമാകുക, bhēdamākuka.) To exercise? (വ്യായാമം ചെയ്യുക, vyāyāmaṁ ceyyuka.) To fill in? (പൂരിപ്പിക്കുക, pūrippikkuka.) To sign? (ഒപ്പിടുക, oppiṭuka.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R189-second-pass-words-from-chapters-185-189",
+      "sequence": 8300,
+      "title": "Words from chapters 185-189 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 185-189",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3cd67146b4d1b802",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to resign and to inform."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to resign, to inform, to charge, to fly, to follow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to resign, to inform, to charge, to fly, to follow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to share, to hug, to quarrel, to sulk, to tease",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to share, to hug, to quarrel, to sulk, to tease]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to blow, to bloom, to plant, to bark, to rise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to blow, to bloom, to plant, to bark, to rise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to erase, to switch on, to switch off, to publish, to repair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to erase, to switch on, to switch off, to publish, to repair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to spit, to wring, to shake, to roll, to crawl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to spit, to wring, to shake, to roll, to crawl]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To resign? (രാജിവയ്ക്കുക, rājivaykkuka.) To inform? (അറിയിക്കുക, aṟiyikkuka.) To charge? (ചാർജ് ചെയ്യുക, cārjŭ ceyyuka.) To fly? (പറക്കുക, paṟakkuka.) To follow? (പിന്തുടരുക, pintuṭaruka.) To share? (പങ്കുവെക്കുക, paṅkuvekkuka.) To hug? (കെട്ടിപ്പിടിക്കുക, keṭṭippiṭikkuka.) To quarrel? (വഴക്കിടുക, vaḻakkiṭuka.) To sulk? (പിണങ്ങുക, piṇaṅṅuka.) To tease? (കളിയാക്കുക, kaḷiyākkuka.) To blow? (വീശുക, vīśuka.) To bloom? (വിരിയുക, viriyuka.) To plant? (നടുക, naṭuka.) To bark? (കുരയ്ക്കുക, kuraykkuka.) To rise? (ഉദിക്കുക, udikkuka.) To erase? (മായ്ക്കുക, māykkuka.) To switch on? (ഓണാക്കുക, ōṇākkuka.) To switch off? (ഓഫാക്കുക, ōphākkuka.) To publish? (പ്രസിദ്ധീകരിക്കുക, prasiddhīkarikkuka.) To repair? (നന്നാക്കുക, nannākkuka.) To spit? (തുപ്പുക, tuppuka.) To wring? (പിഴിയുക, piḻiyuka.) To shake? (കുലുക്കുക, kulukkuka.) To roll? (ഉരുട്ടുക, uruṭṭuka.) To crawl? (ഇഴയുക, iḻayuka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

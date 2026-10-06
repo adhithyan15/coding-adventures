@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:80f4d54ce93a2dad",
+  "lessonIds": [
+    "LA-C161-nihil",
+    "LA-C161-nemo",
+    "LA-C161-nullus",
+    "LA-C161-uter",
+    "LA-C161-neque"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch161.txt",
+  "json": "latin/narration/ch161.json",
+  "textHash": "fnv1a64:38933231445da1c7",
+  "jsonHash": "fnv1a64:58f3d79d0a00817a",
+  "findings": []
+}

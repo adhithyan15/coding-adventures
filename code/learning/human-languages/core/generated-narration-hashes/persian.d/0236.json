@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:2b9b530cb3453ecb",
+  "lessonIds": [
+    "FA-C236-khasis",
+    "FA-C236-bamaze",
+    "FA-C236-jaleb",
+    "FA-C236-divane",
+    "FA-C236-vafadar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch236.txt",
+  "json": "persian/narration/ch236.json",
+  "textHash": "fnv1a64:9ec4809869b608bc",
+  "jsonHash": "fnv1a64:38b4a8e01a2d8aa3",
+  "findings": []
+}

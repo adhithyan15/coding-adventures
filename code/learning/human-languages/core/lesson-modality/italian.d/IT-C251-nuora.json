@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C251-nuora",
+    "language": "italian",
+    "chapter": 251,
+    "sequence": 15180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09cdb58b99600a40"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-171-CHIZ171",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "FA-EXT-171-CHIZ171"
+  ],
+  "after": []
+}

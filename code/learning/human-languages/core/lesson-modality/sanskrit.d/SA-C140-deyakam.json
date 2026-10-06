@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C140-deyakam",
+    "language": "sanskrit",
+    "chapter": 140,
+    "sequence": 6970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24c33cce0d11445c"
+  },
+  "findings": []
+}

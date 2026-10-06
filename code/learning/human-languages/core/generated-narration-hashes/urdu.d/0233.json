@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:108697d836c4d16f",
+  "lessonIds": [
+    "UR-C233-kohra",
+    "UR-C233-os",
+    "UR-C233-ole",
+    "UR-C233-zalzala",
+    "UR-C233-sailab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch233.txt",
+  "json": "urdu/narration/ch233.json",
+  "textHash": "fnv1a64:5fa069055f372427",
+  "jsonHash": "fnv1a64:d262526dd6ea8ffa",
+  "findings": []
+}

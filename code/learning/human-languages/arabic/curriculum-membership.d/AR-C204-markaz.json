@@ -1,0 +1,11 @@
+{
+  "id": "AR-C204-markaz",
+  "pathSegment": "AR-PATH-204-MAKAN204",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-204-MAKAN204",
+      "order": 2
+    }
+  ]
+}

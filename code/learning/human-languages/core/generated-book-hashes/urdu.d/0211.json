@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:b8df32c462da8376",
+  "lessonIds": [
+    "UR-C211-sekretari",
+    "UR-C211-mainejar",
+    "UR-C211-klas",
+    "UR-C211-naukar",
+    "UR-C211-rahgir",
+    "UR-R211-first-pass-words-from-chapters-207-208",
+    "UR-R211-second-pass-words-from-chapters-209-211"
+  ],
+  "tex": "urdu/book/chapters/ch211-secretary-manager-class-servant-passer-by.tex"
+}

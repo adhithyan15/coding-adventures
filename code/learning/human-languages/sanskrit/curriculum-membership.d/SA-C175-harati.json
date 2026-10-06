@@ -1,0 +1,11 @@
+{
+  "id": "SA-C175-harati",
+  "pathSegment": "SA-PATH-175-ACT175",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-175-ACT175",
+      "order": 0
+    }
+  ]
+}

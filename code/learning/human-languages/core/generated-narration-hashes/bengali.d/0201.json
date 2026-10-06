@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:35e5cbc1fb430ca1",
+  "lessonIds": [
+    "BN-C201-besin",
+    "BN-C201-shaoyar",
+    "BN-C201-droyar",
+    "BN-C201-thole",
+    "BN-C201-glas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch201.txt",
+  "json": "bengali/narration/ch201.json",
+  "textHash": "fnv1a64:14bb2a1c4112eae9",
+  "jsonHash": "fnv1a64:eec1c86cfd5e4ec8",
+  "findings": []
+}

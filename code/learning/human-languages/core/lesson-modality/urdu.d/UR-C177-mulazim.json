@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C177-mulazim",
+    "language": "urdu",
+    "chapter": 177,
+    "sequence": 9870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:436f63210251d08d"
+  },
+  "findings": []
+}

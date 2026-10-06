@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "Socks, Shoes, Belt, Purse, Pocket",
+  "label": "ch:ml-socks-shoes-belt-purse-pocket",
+  "canDo": "I can say socks, shoes, a belt, a purse and a pocket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C286-pokkarru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can say socks, shoes, a belt, a purse and a pocket.",
+    "assesses": [
+      "ML-LEX-C286-VASTU286-03",
+      "ML-LEX-C286-VASTU286-04",
+      "ML-LEX-C286-VASTU286-05"
+    ]
+  }
+}

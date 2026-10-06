@@ -172,7 +172,11 @@ describe("literal markup", () => {
     expect(report.findings.map((f) => `${f.where}:${f.line} ${f.markup}`)).toEqual([]);
     expect(rendered.length).toBeGreaterThan(0);
     expect(lessons.length).toBeGreaterThan(0);
-  }, 60_000);
+    // 180s, like the other whole-corpus gates (gentle-ramp, its retirement
+    // pin): this renders every book of every track, so it grows with each
+    // vocabulary tranche. It took 36s locally once Arabic passed page 999
+    // and timed out at the old 60s on a CI runner.
+  }, 180_000);
 
   it("proves the corpus gate is not vacuous", () => {
     // The check above passes on an empty input too. This pins that the same

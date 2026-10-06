@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:eced1d2c73ab6dfc",
+  "lessonIds": [
+    "IT-C182-uccidere",
+    "IT-C182-valere",
+    "IT-C182-volare",
+    "IT-C182-abituarsi",
+    "IT-C182-accorgersi",
+    "IT-R182-first-pass-words-from-chapters-174-177",
+    "IT-R182-second-pass-words-from-chapters-178-182"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch182.txt",
+  "json": "italian/narration/ch182.json",
+  "textHash": "fnv1a64:480d0b4446a9e343",
+  "jsonHash": "fnv1a64:ca2b1871fc9f4464",
+  "findings": []
+}

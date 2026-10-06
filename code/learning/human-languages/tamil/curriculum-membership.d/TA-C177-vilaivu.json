@@ -1,0 +1,11 @@
+{
+  "id": "TA-C177-vilaivu",
+  "pathSegment": "TA-PATH-177-KARANAM177",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-177-KARANAM177",
+      "order": 0
+    }
+  ]
+}

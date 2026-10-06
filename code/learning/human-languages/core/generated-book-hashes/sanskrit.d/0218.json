@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:ead9d7deee379a7d",
+  "lessonIds": [
+    "SA-C218-sammarjani",
+    "SA-C218-kutharah",
+    "SA-C218-khanitram",
+    "SA-C218-halam",
+    "SA-C218-datram"
+  ],
+  "tex": "sanskrit/book/chapters/ch218-broom-axe-spade-plough-sickle.tex"
+}

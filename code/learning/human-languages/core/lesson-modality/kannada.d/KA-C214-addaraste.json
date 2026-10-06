@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C214-addaraste",
+    "language": "kannada",
+    "chapter": 214,
+    "sequence": 9960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a697b2864776fd5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C178-einschlafen",
+    "language": "german",
+    "chapter": 178,
+    "sequence": 8730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98f288462d2198be"
+  },
+  "findings": []
+}

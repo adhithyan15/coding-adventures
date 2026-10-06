@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "To get off, To enter, To go out, To push, To throw",
+  "label": "ch:fa-to-get-off-to-enter-to-go-out-to-push-to-throw",
+  "canDo": "I can say to get off, to enter, to go out, to push and to throw.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C253-andakhtan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say to get off, to enter, to go out, to push and to throw.",
+    "assesses": [
+      "FA-LEX-C253-KONESH253-03",
+      "FA-LEX-C253-KONESH253-04",
+      "FA-LEX-C253-KONESH253-05"
+    ]
+  }
+}

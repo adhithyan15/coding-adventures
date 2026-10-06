@@ -1,0 +1,11 @@
+{
+  "id": "KA-C257-bele",
+  "pathSegment": "KA-PATH-257-VASTU257",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-257-VASTU257",
+      "order": 3
+    }
+  ]
+}

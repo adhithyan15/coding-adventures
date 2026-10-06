@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:d7bb66b6cb60cbf2",
+  "lessonIds": [
+    "TE-C235-notu",
+    "TE-C235-cillara",
+    "TE-C235-jitam",
+    "TE-C235-labham",
+    "TE-C235-nastam"
+  ],
+  "tex": "telugu/book/chapters/ch235-banknote-loose-change-salary-profit-loss.tex"
+}

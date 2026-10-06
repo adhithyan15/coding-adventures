@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-194-THING194",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a rucksack, a sight, a city map, a round trip and a market square.",
+  "prerequisites": []
+}

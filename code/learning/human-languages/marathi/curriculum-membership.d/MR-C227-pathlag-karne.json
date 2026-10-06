@@ -1,0 +1,11 @@
+{
+  "id": "MR-C227-pathlag-karne",
+  "pathSegment": "MR-PATH-227-ACT227",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-227-ACT227",
+      "order": 4
+    }
+  ]
+}

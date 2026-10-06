@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:7933bdc6468ed847",
+  "lessonIds": [
+    "ES-C499-bocadillo",
+    "ES-C499-batido",
+    "ES-C499-anadir",
+    "ES-C499-apetecer",
+    "ES-C499-compartir"
+  ],
+  "tex": "spanish/book/chapters/ch499-algo-de-comer.tex"
+}

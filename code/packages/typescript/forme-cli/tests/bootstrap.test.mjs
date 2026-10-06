@@ -2,7 +2,12 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { bootstrap, localInstallOrder, runCommand } from "../bin/bootstrap.mjs";
+import {
+  bootstrap,
+  localInstallOrder,
+  npmInvocationForPlatform,
+  runCommand,
+} from "../bin/bootstrap.mjs";
 
 const roots = [];
 
@@ -73,11 +78,55 @@ describe("local dependency bootstrap", () => {
     expect(logs).toEqual(["[bootstrap] leaf", "[bootstrap] project"]);
   });
 
+  it("offers a lock-enforced lifecycle-script-free install mode", async () => {
+    const root = await mkdtemp(path.join(tmpdir(), "forme-cli-bootstrap-frozen-"));
+    roots.push(root);
+    const project = await packageAt(root, "project");
+    const calls = [];
+    await bootstrap(project, {
+      frozen: true,
+      install: async (command, args, cwd) => { calls.push({ command, args, cwd }); },
+    });
+    const npm = npmInvocationForPlatform();
+    expect(calls).toEqual([
+      {
+        command: npm.command,
+        args: [
+          ...npm.argsPrefix,
+          "ci",
+          "--silent",
+          "--ignore-scripts",
+          "--legacy-peer-deps",
+          "--audit=false",
+          "--fund=false",
+        ],
+        cwd: project,
+      },
+      {
+        command: npm.command,
+        args: [...npm.argsPrefix, "run", "build", "--if-present"],
+        cwd: project,
+      },
+    ]);
+  });
+
   it("reports child-process success, exit failure, and spawn failure", async () => {
     const root = await mkdtemp(path.join(tmpdir(), "forme-cli-bootstrap-child-"));
     roots.push(root);
     await expect(runCommand(process.execPath, ["-e", "process.exit(0)"], root)).resolves.toBeUndefined();
     await expect(runCommand(process.execPath, ["-e", "process.exit(7)"], root)).rejects.toThrow(/status 7/);
     await expect(runCommand(path.join(root, "missing-command"), [], root)).rejects.toThrow();
+  });
+
+  it("runs Windows npm through the active Node executable without a shell", () => {
+    expect(npmInvocationForPlatform("win32", "C:\\tools&more\\nodejs\\node.exe"))
+      .toEqual({
+        command: "C:\\tools&more\\nodejs\\node.exe",
+        argsPrefix: ["C:\\tools&more\\nodejs\\node_modules\\npm\\bin\\npm-cli.js"],
+      });
+    expect(npmInvocationForPlatform("linux", "/opt/node/bin/node")).toEqual({
+      command: "npm",
+      argsPrefix: [],
+    });
   });
 });

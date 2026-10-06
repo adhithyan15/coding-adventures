@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C245-fur",
+    "language": "latin",
+    "chapter": 245,
+    "sequence": 12770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:335021ebe621a9be"
+  },
+  "findings": []
+}

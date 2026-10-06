@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:7b98ebe59725b6d7",
+  "lessonIds": [
+    "PT-C246-mecanico",
+    "PT-C246-eletricista",
+    "PT-C246-canalizador",
+    "PT-C246-operario",
+    "PT-C246-piloto"
+  ],
+  "tex": "portuguese/book/chapters/ch246-mechanic-electrician-plumber-factory-worker-pilot.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:75d1a7f796c4c537",
+  "lessonIds": [
+    "TE-C168-asuya",
+    "TE-C168-garvam",
+    "TE-C168-utsaham",
+    "TE-C168-santi",
+    "TE-C168-sahanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch168.txt",
+  "json": "telugu/narration/ch168.json",
+  "textHash": "fnv1a64:d2bc4d04850c36e1",
+  "jsonHash": "fnv1a64:2ca3e5a724ee2a85",
+  "findings": []
+}

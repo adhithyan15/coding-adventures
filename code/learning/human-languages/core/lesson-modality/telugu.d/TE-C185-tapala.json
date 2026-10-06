@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C185-tapala",
+    "language": "telugu",
+    "chapter": 185,
+    "sequence": 8330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a890905435680815"
+  },
+  "findings": []
+}

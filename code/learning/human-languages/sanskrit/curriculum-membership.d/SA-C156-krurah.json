@@ -1,0 +1,11 @@
+{
+  "id": "SA-C156-krurah",
+  "pathSegment": "SA-PATH-156-QUAL156",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-156-QUAL156",
+      "order": 4
+    }
+  ]
+}

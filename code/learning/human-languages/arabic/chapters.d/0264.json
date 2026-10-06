@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "Season, Childhood, Evening out, Ramadan, Afternoon",
+  "label": "ch:ar-season-childhood-evening-out-ramadan-afternoon",
+  "canDo": "I can say a season, childhood, an evening out, Ramadan and the afternoon.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C264-asr",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can say a season, childhood, an evening out, Ramadan and the afternoon.",
+    "assesses": [
+      "AR-LEX-C264-WAQT264-03",
+      "AR-LEX-C264-WAQT264-04",
+      "AR-LEX-C264-WAQT264-05"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:2f0904333d96a062",
+  "lessonIds": [
+    "KA-C261-sakuprani",
+    "KA-C261-karu",
+    "KA-C261-alilu",
+    "KA-C261-halli",
+    "KA-C261-jirale",
+    "KA-R261-first-pass-words-from-chapters-253-256",
+    "KA-R261-second-pass-words-from-chapters-257-261"
+  ],
+  "tex": "kannada/book/chapters/ch261-pet-calf-squirrel-lizard-cockroach.tex"
+}

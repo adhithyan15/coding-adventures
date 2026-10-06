@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R203-first-pass-words-from-chapters-198-200",
+    "language": "italian",
+    "chapter": 203,
+    "sequence": 11570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec0ebd19146fb8b7"
+  },
+  "findings": []
+}

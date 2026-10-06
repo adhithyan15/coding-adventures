@@ -1,0 +1,11 @@
+{
+  "id": "FR-C238-resoudre",
+  "pathSegment": "FR-PATH-238-VERBES238",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-238-VERBES238",
+      "order": 3
+    }
+  ]
+}

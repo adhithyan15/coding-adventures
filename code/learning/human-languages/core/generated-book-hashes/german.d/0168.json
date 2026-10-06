@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:c2977f845b4b7813",
+  "lessonIds": [
+    "GE-C168-unmoeglich",
+    "GE-C168-hell",
+    "GE-C168-dunkel",
+    "GE-C168-voll",
+    "GE-C168-altmodisch"
+  ],
+  "tex": "german/book/chapters/ch168-impossible-bright-dark-full-old-fashioned.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C194-panimanisi",
+  "pathSegment": "TE-PATH-194-PANI194",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-194-PANI194",
+      "order": 1
+    }
+  ]
+}

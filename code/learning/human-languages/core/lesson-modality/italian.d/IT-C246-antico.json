@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C246-antico",
+    "language": "italian",
+    "chapter": 246,
+    "sequence": 14710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34627e24b21f136f"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-305-VASTUVU305",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an app, a keyboard, a laptop, a battery and a video.",
+  "prerequisites": []
+}

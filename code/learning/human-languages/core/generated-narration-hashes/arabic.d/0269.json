@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:30a92b1a43e206b0",
+  "lessonIds": [
+    "AR-C269-fashal",
+    "AR-C269-khutwa",
+    "AR-C269-darar",
+    "AR-C269-ayb",
+    "AR-C269-miza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch269.txt",
+  "json": "arabic/narration/ch269.json",
+  "textHash": "fnv1a64:fb7e74beb5d3871a",
+  "jsonHash": "fnv1a64:b92d27653d1d1385",
+  "findings": []
+}

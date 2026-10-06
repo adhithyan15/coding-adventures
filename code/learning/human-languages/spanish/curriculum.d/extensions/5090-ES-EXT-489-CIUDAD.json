@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-489-CIUDAD",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a notice about parking, a traffic jam, petrol, the town hall and the postbox.",
+  "prerequisites": []
+}

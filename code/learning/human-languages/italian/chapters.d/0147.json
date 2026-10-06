@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "To reduce, To refuse, To remain, To grow younger, To heat up",
+  "label": "ch:it-to-reduce-to-refuse-to-remain-to-grow-younger-to-heat-up",
+  "canDo": "I can say to reduce, to refuse, to remain, to grow younger and to heat up.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C147-riscaldare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: I can say to reduce, to refuse, to remain, to grow younger and to heat up.",
+    "assesses": [
+      "IT-LEX-C147-VERBI147-03",
+      "IT-LEX-C147-VERBI147-04",
+      "IT-LEX-C147-VERBI147-05"
+    ]
+  }
+}

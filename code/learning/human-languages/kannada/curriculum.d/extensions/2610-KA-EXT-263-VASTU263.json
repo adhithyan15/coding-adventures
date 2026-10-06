@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-263-VASTU263",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a boy, a girl, a man, a woman and an old man.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Failure, Experience, Choice, Decision, Possibility",
+  "label": "ch:mr-failure-experience-choice-decision-possibility",
+  "canDo": "I can say failure, experience, a choice, a decision and a possibility.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C211-sakyata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say failure, experience, a choice, a decision and a possibility.",
+    "assesses": [
+      "MR-LEX-C211-VASTU211-03",
+      "MR-LEX-C211-VASTU211-04",
+      "MR-LEX-C211-VASTU211-05"
+    ]
+  }
+}

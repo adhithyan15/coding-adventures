@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "Usually, Immediately, Later, Date, Moment",
+  "label": "ch:ar-usually-immediately-later-date-moment",
+  "canDo": "I can say usually, immediately, later, a date and a moment.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C202-lahza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say usually, immediately, later, a date and a moment.",
+    "assesses": [
+      "AR-LEX-C202-WAQT202-03",
+      "AR-LEX-C202-WAQT202-04",
+      "AR-LEX-C202-WAQT202-05"
+    ]
+  }
+}

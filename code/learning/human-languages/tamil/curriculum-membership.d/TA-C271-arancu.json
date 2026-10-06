@@ -1,0 +1,11 @@
+{
+  "id": "TA-C271-arancu",
+  "pathSegment": "TA-PATH-271-PORUL271",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-271-PORUL271",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:b45903f59793762b",
+  "lessonIds": [
+    "TE-C198-tyusanu",
+    "TE-C198-intarvyu",
+    "TE-C198-siphtu",
+    "TE-C198-yunipharam",
+    "TE-C198-sibbandi",
+    "TE-R198-first-pass-words-from-chapters-193-195",
+    "TE-R198-second-pass-words-from-chapters-196-198"
+  ],
+  "tex": "telugu/book/chapters/ch198-tuition-interview-work-shift-uniform-staff.tex"
+}

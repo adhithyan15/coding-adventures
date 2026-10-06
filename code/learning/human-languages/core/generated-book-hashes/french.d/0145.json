@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:5c2442527314c9d9",
+  "lessonIds": [
+    "FR-C145-signer",
+    "FR-C145-remplir-un-formulaire",
+    "FR-C145-telephoner",
+    "FR-C145-discuter",
+    "FR-C145-disputer"
+  ],
+  "tex": "french/book/chapters/ch145-to-sign-to-fill-in-a-form-to-phone-to-discuss-to-quarrel.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:f0d83c90d25bbc0e",
+  "lessonIds": [
+    "ML-C297-maida",
+    "ML-C297-aval",
+    "ML-C297-kun",
+    "ML-C297-peraykka",
+    "ML-C297-nellikka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch297.txt",
+  "json": "malayalam/narration/ch297.json",
+  "textHash": "fnv1a64:f66c1bab1748f790",
+  "jsonHash": "fnv1a64:79b033328f9190fa",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:e5432aec991b077b",
+  "lessonIds": [
+    "SA-C243-balavan",
+    "SA-C243-rugnah",
+    "SA-C243-svasthah",
+    "SA-C243-sukhi",
+    "SA-C243-duhkhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch243.txt",
+  "json": "sanskrit/narration/ch243.json",
+  "textHash": "fnv1a64:dc6d59e9c9883358",
+  "jsonHash": "fnv1a64:3873933daa4e8718",
+  "findings": []
+}

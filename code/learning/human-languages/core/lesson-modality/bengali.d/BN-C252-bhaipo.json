@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C252-bhaipo",
+    "language": "bengali",
+    "chapter": 252,
+    "sequence": 15740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14b589ac4ffe058a"
+  },
+  "findings": []
+}

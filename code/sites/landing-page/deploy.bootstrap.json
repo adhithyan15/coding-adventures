@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "owner": "adhithyan15",
+  "repository": "coding-adventures",
+  "ref": "heads/gh-pages",
+  "deploymentOwner": "landing",
+  "destination": "",
+  "files": {
+    "assets/og.cdd34a3f86357da564c666ff3bf62671dd78e489dec11df38357e2baefe218e3.jpg": {
+      "sha256": "zdNKP4Y1faVkxmb/O/Ymcd145InewR3zg1fiuu/iGOM=",
+      "gitBlobSha": "3292735f1dc2c0a0cd766c9dff335fd3d763197f"
+    },
+    "index.html": {
+      "sha256": "ZdhIUvxymJ0uebNqUfTkXCmo9Uomu7d5q3q9GPKO8oc=",
+      "gitBlobSha": "2f8b244766fb375bdc60a287cb7c78e5c093326c"
+    }
+  }
+}

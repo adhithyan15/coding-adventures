@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:036acc08a1100dd8",
+  "lessonIds": [
+    "TA-C193-parvaiyalar",
+    "TA-C193-natikar",
+    "TA-C193-patakar",
+    "TA-C193-payirciyalar",
+    "TA-C193-taccar",
+    "TA-R193-first-pass-words-from-chapters-188-190",
+    "TA-R193-second-pass-words-from-chapters-191-193"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch193.txt",
+  "json": "tamil/narration/ch193.json",
+  "textHash": "fnv1a64:d9a5870a1ad9a4d8",
+  "jsonHash": "fnv1a64:b70d10fd860e7829",
+  "findings": []
+}

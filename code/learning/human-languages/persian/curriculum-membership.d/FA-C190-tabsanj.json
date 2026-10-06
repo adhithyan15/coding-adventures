@@ -1,0 +1,11 @@
+{
+  "id": "FA-C190-tabsanj",
+  "pathSegment": "FA-PATH-190-SALAMAT190",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-190-SALAMAT190",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:291df233554cf9fa",
+  "lessonIds": [
+    "FR-C253-permis-de-conduire",
+    "FR-C253-casque",
+    "FR-C253-tunnel",
+    "FR-C253-chantier",
+    "FR-C253-immeuble"
+  ],
+  "tex": "french/book/chapters/ch253-driving-licence-helmet-tunnel-building-site-block-of-flats.tex"
+}

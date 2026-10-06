@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Song, Line of verse, Writer, Painter, Music",
+  "label": "ch:la-song-line-of-verse-writer-painter-music",
+  "canDo": "I can say a song, a line of verse, a writer, a painter and music.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-R246-second-pass-words-from-chapters-242-246",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say a song, a line of verse, a writer, a painter and music.",
+    "assesses": [
+      "LA-LEX-C246-RES246-03",
+      "LA-LEX-C246-RES246-04",
+      "LA-LEX-C246-RES246-05"
+    ]
+  }
+}

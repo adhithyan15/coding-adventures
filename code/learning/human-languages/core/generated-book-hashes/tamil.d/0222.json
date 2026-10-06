@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:f4afa1d2afeea528",
+  "lessonIds": [
+    "TA-C222-tallupati",
+    "TA-C222-rupay",
+    "TA-C222-nanayam",
+    "TA-C222-celavu",
+    "TA-C222-campalam"
+  ],
+  "tex": "tamil/book/chapters/ch222-discount-rupee-coin-expense-salary.tex"
+}

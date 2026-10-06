@@ -1,0 +1,11 @@
+{
+  "id": "PT-C210-xarope",
+  "pathSegment": "PT-PATH-210-SAUDE210",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-210-SAUDE210",
+      "order": 3
+    }
+  ]
+}

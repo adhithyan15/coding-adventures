@@ -1,0 +1,11 @@
+{
+  "id": "BN-C104-shoya",
+  "pathSegment": "BN-PATH-104-ACT104",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-104-ACT104",
+      "order": 2
+    }
+  ]
+}

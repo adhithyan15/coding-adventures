@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:4bd4a7b29344db45",
+  "lessonIds": [
+    "FA-C260-rande-kardan",
+    "FA-C260-surakh-kardan",
+    "FA-C260-gereh-zadan",
+    "FA-C260-dar-zadan",
+    "FA-C260-sut-zadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch260.txt",
+  "json": "persian/narration/ch260.json",
+  "textHash": "fnv1a64:7ace12696bb84538",
+  "jsonHash": "fnv1a64:c0353a531e538535",
+  "findings": []
+}

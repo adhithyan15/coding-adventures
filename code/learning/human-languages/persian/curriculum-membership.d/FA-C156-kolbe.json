@@ -1,0 +1,11 @@
+{
+  "id": "FA-C156-kolbe",
+  "pathSegment": "FA-PATH-156-MAKAN156",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-156-MAKAN156",
+      "order": 1
+    }
+  ]
+}

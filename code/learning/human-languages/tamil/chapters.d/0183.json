@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "Pongal, Upma, Sambar, Chutney, Dry stir-fried vegetable dish",
+  "label": "ch:ta-pongal-upma-sambar-chutney-dry-stir-fried-vegetable-dish",
+  "canDo": "I can say pongal, upma, sambar, a chutney and a dry stir-fried vegetable dish.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C183-poriyal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can say pongal, upma, sambar, a chutney and a dry stir-fried vegetable dish.",
+    "assesses": [
+      "TA-LEX-C183-PORUL183-03",
+      "TA-LEX-C183-PORUL183-04",
+      "TA-LEX-C183-PORUL183-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Someone else's, Native, Local, Foreign, Russian",
+  "label": "ch:ru-someone-else-s-native-local-foreign-russian",
+  "canDo": "I can say someone else's, native, local, foreign and Russian.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C189-russkiy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say someone else's, native, local, foreign and Russian.",
+    "assesses": [
+      "RU-LEX-C189-KACH189-03",
+      "RU-LEX-C189-KACH189-04",
+      "RU-LEX-C189-KACH189-05"
+    ]
+  }
+}

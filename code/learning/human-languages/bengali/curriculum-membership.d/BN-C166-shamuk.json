@@ -1,0 +1,11 @@
+{
+  "id": "BN-C166-shamuk",
+  "pathSegment": "BN-PATH-166-JINIS166",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-166-JINIS166",
+      "order": 3
+    }
+  ]
+}

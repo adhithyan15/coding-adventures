@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "Kitchen, Bathroom, Bedroom, Toilet, Window",
+  "label": "ch:ta-kitchen-bathroom-bedroom-toilet-window",
+  "canDo": "I can say a kitchen, a bathroom, a bedroom, a toilet and a window.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C173-cannal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can say a kitchen, a bathroom, a bedroom, a toilet and a window.",
+    "assesses": [
+      "TA-LEX-C173-IDAM173-03",
+      "TA-LEX-C173-IDAM173-04",
+      "TA-LEX-C173-IDAM173-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:9b44ad8d898b8d8f",
+  "lessonIds": [
+    "ML-C326-vetikkettu",
+    "ML-C326-dipavali",
+    "ML-C326-puja",
+    "ML-C326-paramparyam",
+    "ML-C326-samskaram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch326.txt",
+  "json": "malayalam/narration/ch326.json",
+  "textHash": "fnv1a64:ac6c49ba77222b2f",
+  "jsonHash": "fnv1a64:524d49f4261400a1",
+  "findings": []
+}

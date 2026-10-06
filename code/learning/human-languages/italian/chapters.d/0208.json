@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "To applaud, To take advantage, To cross, To increase, To decrease",
+  "label": "ch:it-to-applaud-to-take-advantage-to-cross-to-increase-to-decrease",
+  "canDo": "I can say to applaud, to take advantage, to cross, to increase and to decrease.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C208-diminuire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say to applaud, to take advantage, to cross, to increase and to decrease.",
+    "assesses": [
+      "IT-LEX-C208-VERBI208-03",
+      "IT-LEX-C208-VERBI208-04",
+      "IT-LEX-C208-VERBI208-05"
+    ]
+  }
+}

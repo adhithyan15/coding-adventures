@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:f85e8ce7c8e834dc",
+  "lessonIds": [
+    "PT-C252-derrota",
+    "PT-C252-campeonato",
+    "PT-C252-jogador",
+    "PT-C252-treinador",
+    "PT-C252-adepto"
+  ],
+  "tex": "portuguese/book/chapters/ch252-defeat-championship-player-coach-fan.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C161-comune",
+  "pathSegment": "IT-PATH-161-COSE161",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-161-COSE161",
+      "order": 3
+    }
+  ]
+}

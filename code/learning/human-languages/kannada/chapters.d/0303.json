@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "Raised veranda, Loft, Door latch, Handle, Smell",
+  "label": "ch:ka-raised-veranda-loft-door-latch-handle-smell",
+  "canDo": "I can say a raised veranda, a loft, a door latch, a handle and a smell.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C303-vasane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can say a raised veranda, a loft, a door latch, a handle and a smell.",
+    "assesses": [
+      "KA-LEX-C303-VASTU303-03",
+      "KA-LEX-C303-VASTU303-04",
+      "KA-LEX-C303-VASTU303-05"
+    ]
+  }
+}

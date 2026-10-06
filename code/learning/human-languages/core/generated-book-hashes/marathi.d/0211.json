@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:5f431729007a8481",
+  "lessonIds": [
+    "MR-C211-apayas",
+    "MR-C211-anubhav",
+    "MR-C211-nivad",
+    "MR-C211-nirnay",
+    "MR-C211-sakyata"
+  ],
+  "tex": "marathi/book/chapters/ch211-failure-experience-choice-decision-possibility.tex"
+}

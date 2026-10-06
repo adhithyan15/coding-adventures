@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "To tidy, To sweep, To iron, To fold, To hang",
+  "label": "ch:ar-to-tidy-to-sweep-to-iron-to-fold-to-hang",
+  "canDo": "I can say to tidy, to sweep, to iron, to fold and to hang.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C223-allaqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say to tidy, to sweep, to iron, to fold and to hang.",
+    "assesses": [
+      "AR-LEX-C223-ACT223-03",
+      "AR-LEX-C223-ACT223-04",
+      "AR-LEX-C223-ACT223-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "To pay attention, To spend, To pronounce, To answer, To end",
+  "label": "ch:ge-to-pay-attention-to-spend-to-pronounce-to-answer-to-end",
+  "canDo": "I can say to pay attention, to spend, to pronounce, to answer and to end.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C245-beenden",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say to pay attention, to spend, to pronounce, to answer and to end.",
+    "assesses": [
+      "GE-LEX-C245-VERB245-03",
+      "GE-LEX-C245-VERB245-04",
+      "GE-LEX-C245-VERB245-05"
+    ]
+  }
+}

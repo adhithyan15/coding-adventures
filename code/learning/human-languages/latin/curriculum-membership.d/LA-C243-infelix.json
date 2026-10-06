@@ -1,0 +1,11 @@
+{
+  "id": "LA-C243-infelix",
+  "pathSegment": "LA-PATH-243-QUAL243",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-243-QUAL243",
+      "order": 3
+    }
+  ]
+}

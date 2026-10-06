@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C133-phuldani",
+    "language": "bengali",
+    "chapter": 133,
+    "sequence": 7280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9018fabc134770e"
+  },
+  "findings": []
+}

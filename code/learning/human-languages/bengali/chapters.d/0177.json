@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "Judge, Student, Engineer, Scientist, Singer",
+  "label": "ch:bn-judge-student-engineer-scientist-singer",
+  "canDo": "I can say a judge, a student, an engineer, a scientist and a singer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C177-gayok",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say a judge, a student, an engineer, a scientist and a singer.",
+    "assesses": [
+      "BN-LEX-C177-KAJ177-03",
+      "BN-LEX-C177-KAJ177-04",
+      "BN-LEX-C177-KAJ177-05"
+    ]
+  }
+}

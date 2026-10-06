@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C224-yel",
+    "language": "russian",
+    "chapter": 224,
+    "sequence": 13490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30fcb76f5929a69b"
+  },
+  "findings": []
+}

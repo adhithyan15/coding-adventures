@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C194-baje",
+    "language": "persian",
+    "chapter": 194,
+    "sequence": 9980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31897e6ef3c5ac5b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C168-soffitta",
+    "language": "italian",
+    "chapter": 168,
+    "sequence": 9060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c06b27e43556fc9"
+  },
+  "findings": []
+}

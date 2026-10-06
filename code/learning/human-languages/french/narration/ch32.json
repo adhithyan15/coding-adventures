@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Coffee, Tea, Milk, Sugar",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9858bef0d73f1ee3",
+  "sourceHash": "fnv1a64:ea86e018202630d5",
   "lessons": [
     {
       "id": "FR-C28-cafe",
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8bce53f7a0acd06a",
+      "sourceHash": "fnv1a64:efcbcf0e50d281eb",
       "notice": null,
       "blocks": [
         {
@@ -306,6 +306,16 @@
             {
               "kind": "speech",
               "text": "Café and thé both crossed an ocean to reach French. This word never left home."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Je m'assieds, tu t'assieds, il s'assied: three forms, one sound."
             }
           ]
         },

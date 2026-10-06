@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Free of charge, Modern, Ancient, Spicy, Raw",
+  "label": "ch:pt-free-of-charge-modern-ancient-spicy-raw",
+  "canDo": "I can say free of charge, modern, ancient, spicy and raw.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C216-cru-crua",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say free of charge, modern, ancient, spicy and raw.",
+    "assesses": [
+      "PT-LEX-C216-QUAL216-03",
+      "PT-LEX-C216-QUAL216-04",
+      "PT-LEX-C216-QUAL216-05"
+    ]
+  }
+}

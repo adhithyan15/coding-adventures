@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:1ffa30278d1a2c06",
+  "lessonIds": [
+    "RU-C163-sosiska",
+    "RU-C163-krevetka",
+    "RU-C163-borshch",
+    "RU-C163-shchi",
+    "RU-C163-blin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch163.txt",
+  "json": "russian/narration/ch163.json",
+  "textHash": "fnv1a64:37173984cc3b49ad",
+  "jsonHash": "fnv1a64:843728e2543f44d1",
+  "findings": []
+}

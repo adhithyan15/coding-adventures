@@ -1,0 +1,11 @@
+{
+  "id": "SA-C193-upakaranam",
+  "pathSegment": "SA-PATH-193-THG193",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-193-THG193",
+      "order": 4
+    }
+  ]
+}

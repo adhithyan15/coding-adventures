@@ -1,0 +1,11 @@
+{
+  "id": "HI-C195-neta",
+  "pathSegment": "HI-PATH-195-THG195",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-195-THG195",
+      "order": 4
+    }
+  ]
+}

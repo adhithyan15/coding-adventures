@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:edc2ad676a4f980e",
+  "lessonIds": [
+    "IT-C149-festeggiare",
+    "IT-C149-fissare",
+    "IT-C149-frenare",
+    "IT-C149-funzionare",
+    "IT-C149-galleggiare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch149.txt",
+  "json": "italian/narration/ch149.json",
+  "textHash": "fnv1a64:2087545c28cd4800",
+  "jsonHash": "fnv1a64:0071f08877729424",
+  "findings": []
+}

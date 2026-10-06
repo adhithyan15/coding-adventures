@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:1b1e9004dec9f241",
+  "lessonIds": [
+    "FR-C251-resultat",
+    "FR-C251-difference",
+    "FR-C251-exemple",
+    "FR-C251-verite",
+    "FR-C251-mensonge"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch251.txt",
+  "json": "french/narration/ch251.json",
+  "textHash": "fnv1a64:fb2159ba2b43971a",
+  "jsonHash": "fnv1a64:fbe8ff40074fa0d1",
+  "findings": []
+}

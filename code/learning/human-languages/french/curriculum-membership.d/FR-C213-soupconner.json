@@ -1,0 +1,11 @@
+{
+  "id": "FR-C213-soupconner",
+  "pathSegment": "FR-PATH-213-VERBES213",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-213-VERBES213",
+      "order": 2
+    }
+  ]
+}

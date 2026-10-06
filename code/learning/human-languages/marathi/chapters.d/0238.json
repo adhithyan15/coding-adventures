@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "Pilot, Researcher, Foreigner, Tourist, Adult",
+  "label": "ch:mr-pilot-researcher-foreigner-tourist-adult",
+  "canDo": "I can say a pilot, a researcher, a foreigner, a tourist and an adult.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C238-praudh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say a pilot, a researcher, a foreigner, a tourist and an adult.",
+    "assesses": [
+      "MR-LEX-C238-VASTU238-03",
+      "MR-LEX-C238-VASTU238-04",
+      "MR-LEX-C238-VASTU238-05"
+    ]
+  }
+}

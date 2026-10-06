@@ -1,0 +1,11 @@
+{
+  "id": "LA-C252-sartago",
+  "pathSegment": "LA-PATH-252-RES252",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-252-RES252",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:18eaea4458277340",
+  "lessonIds": [
+    "HI-C220-jhanda",
+    "HI-C220-bacpan",
+    "HI-C220-javani",
+    "HI-C220-burhapa",
+    "HI-C220-jivan"
+  ],
+  "tex": "hindi/book/chapters/ch220-a-flag-childhood-youth-old-age-life.tex"
+}

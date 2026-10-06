@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C506-regalar",
+    "language": "spanish",
+    "chapter": 506,
+    "sequence": 14860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb3469d4692c3582"
+  },
+  "findings": []
+}

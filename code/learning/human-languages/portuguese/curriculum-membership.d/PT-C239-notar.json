@@ -1,0 +1,11 @@
+{
+  "id": "PT-C239-notar",
+  "pathSegment": "PT-PATH-239-VERBOS239",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-239-VERBOS239",
+      "order": 4
+    }
+  ]
+}

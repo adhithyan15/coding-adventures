@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:5b4b0161a46b01e7",
+  "lessonIds": [
+    "GE-C208-gesetz",
+    "GE-C208-strafe",
+    "GE-C208-regierung",
+    "GE-C208-staat",
+    "GE-C208-bevoelkerung"
+  ],
+  "tex": "german/book/chapters/ch208-a-law-a-punishment-the-government-a-state-the-population.tex"
+}

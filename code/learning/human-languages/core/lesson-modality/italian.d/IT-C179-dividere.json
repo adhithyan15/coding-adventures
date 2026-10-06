@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C179-dividere",
+    "language": "italian",
+    "chapter": 179,
+    "sequence": 9800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e46196a3a9fa7454"
+  },
+  "findings": []
+}

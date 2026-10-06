@@ -1,0 +1,11 @@
+{
+  "id": "BN-C222-lptop",
+  "pathSegment": "BN-PATH-222-JINIS222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-222-JINIS222",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:e1aba62830b17217",
+  "lessonIds": [
+    "LA-C219-fama",
+    "LA-C219-nuntius",
+    "LA-C219-spectaculum",
+    "LA-C219-histrio",
+    "LA-C219-fabula"
+  ],
+  "tex": "latin/book/chapters/ch219-reputation-messenger-show-actor-story.tex"
+}

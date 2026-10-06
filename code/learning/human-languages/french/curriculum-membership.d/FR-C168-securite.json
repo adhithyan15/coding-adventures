@@ -1,0 +1,11 @@
+{
+  "id": "FR-C168-securite",
+  "pathSegment": "FR-PATH-168-CHOSES168",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-168-CHOSES168",
+      "order": 3
+    }
+  ]
+}

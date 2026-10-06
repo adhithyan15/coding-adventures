@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:12a3cf3a18f9416c",
+  "lessonIds": [
+    "TE-C288-aparesanu",
+    "TE-C288-ajirnam",
+    "TE-C288-malabaddhakam",
+    "TE-C288-madhumeham",
+    "TE-C288-raktapotu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch288.txt",
+  "json": "telugu/narration/ch288.json",
+  "textHash": "fnv1a64:0993532e1ab2ab18",
+  "jsonHash": "fnv1a64:9b8d235ac9d5e99c",
+  "findings": []
+}

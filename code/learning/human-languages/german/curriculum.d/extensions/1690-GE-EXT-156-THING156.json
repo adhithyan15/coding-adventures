@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-156-THING156",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a prescription, a pain, a cold, a cough and the flu.",
+  "prerequisites": []
+}

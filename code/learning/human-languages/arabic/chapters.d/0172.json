@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Living room, Bakery, Café, Direction, Opposite",
+  "label": "ch:ar-living-room-bakery-cafe-direction-opposite",
+  "canDo": "I can say a living room, a bakery, a café, a direction and opposite.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "AR-C172-muqabil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say a living room, a bakery, a café, a direction and opposite.",
+    "assesses": [
+      "AR-LEX-C172-MAKAN172-03",
+      "AR-LEX-C172-MAKAN172-04",
+      "AR-LEX-C172-MAKAN172-05"
+    ]
+  }
+}

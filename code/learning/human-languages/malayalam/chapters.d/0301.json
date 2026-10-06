@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "Contract, Tax, Fine, Stapler, Ruler",
+  "label": "ch:ml-contract-tax-fine-stapler-ruler",
+  "canDo": "I can say a contract, a tax, a fine, a stapler and a ruler.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-R301-second-pass-words-from-chapters-299-301",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can say a contract, a tax, a fine, a stapler and a ruler.",
+    "assesses": [
+      "ML-LEX-C301-JOLI301-03",
+      "ML-LEX-C301-JOLI301-04",
+      "ML-LEX-C301-JOLI301-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C200-svadhinota",
+  "pathSegment": "BN-PATH-200-JINIS200",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-200-JINIS200",
+      "order": 1
+    }
+  ]
+}

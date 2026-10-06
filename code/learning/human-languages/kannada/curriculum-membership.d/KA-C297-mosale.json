@@ -1,0 +1,11 @@
+{
+  "id": "KA-C297-mosale",
+  "pathSegment": "KA-PATH-297-VASTU297",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-297-VASTU297",
+      "order": 2
+    }
+  ]
+}

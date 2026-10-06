@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "Flat, Dining room, Balcony, Bell, Compartment",
+  "label": "ch:mr-flat-dining-room-balcony-bell-compartment",
+  "canDo": "I can say a flat, a dining room, a balcony, a bell and a compartment.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C178-kappa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say a flat, a dining room, a balcony, a bell and a compartment.",
+    "assesses": [
+      "MR-LEX-C178-VASTU178-03",
+      "MR-LEX-C178-VASTU178-04",
+      "MR-LEX-C178-VASTU178-05"
+    ]
+  }
+}

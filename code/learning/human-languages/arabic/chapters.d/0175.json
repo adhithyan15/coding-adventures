@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "Friendship, Society, Hospitality, Despite, Also",
+  "label": "ch:ar-friendship-society-hospitality-despite-also",
+  "canDo": "I can say friendship, society, hospitality, despite and also.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-C175-aydan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say friendship, society, hospitality, despite and also.",
+    "assesses": [
+      "AR-LEX-C175-SABAB175-03",
+      "AR-LEX-C175-SABAB175-04",
+      "AR-LEX-C175-SABAB175-05"
+    ]
+  }
+}

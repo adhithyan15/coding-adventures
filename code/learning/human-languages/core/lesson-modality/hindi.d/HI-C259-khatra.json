@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C259-khatra",
+    "language": "hindi",
+    "chapter": 259,
+    "sequence": 14090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ba7ab9f68f824c2"
+  },
+  "findings": []
+}

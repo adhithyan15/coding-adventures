@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-161-NEG161",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "LA-EXT-161-NEG161"
+  ],
+  "after": []
+}

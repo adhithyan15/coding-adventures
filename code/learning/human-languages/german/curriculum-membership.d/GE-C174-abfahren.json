@@ -1,0 +1,11 @@
+{
+  "id": "GE-C174-abfahren",
+  "pathSegment": "GE-PATH-174-VERB174",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-174-VERB174",
+      "order": 1
+    }
+  ]
+}

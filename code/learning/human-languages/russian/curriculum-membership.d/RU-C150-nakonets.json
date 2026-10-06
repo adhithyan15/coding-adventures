@@ -1,0 +1,11 @@
+{
+  "id": "RU-C150-nakonets",
+  "pathSegment": "RU-PATH-150-VREMYA150",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-150-VREMYA150",
+      "order": 3
+    }
+  ]
+}

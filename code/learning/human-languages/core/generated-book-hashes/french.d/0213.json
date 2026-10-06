@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:79938281e299134b",
+  "lessonIds": [
+    "FR-C213-soulever",
+    "FR-C213-surprendre",
+    "FR-C213-soupconner",
+    "FR-C213-serrer",
+    "FR-C213-suggerer",
+    "FR-R213-first-pass-words-from-chapters-205-208",
+    "FR-R213-second-pass-words-from-chapters-209-213"
+  ],
+  "tex": "french/book/chapters/ch213-to-lift-to-surprise-to-suspect-to-squeeze-to-suggest.tex"
+}

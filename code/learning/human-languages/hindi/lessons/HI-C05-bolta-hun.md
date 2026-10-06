@@ -58,7 +58,7 @@ the **stem**, a **participle ending**, and the **"to be" verb**.
 |---|---|---|
 | I (a man) | **-ता** *-tā* + **हूँ** *hūṁ* | **बोलता हूँ** *boltā hūṁ* |
 | I (a woman) | **-ती** *-tī* + **हूँ** *hūṁ* | **बोलती हूँ** *boltī hūṁ* |
-| आप *āp* (you, respectful) | **-ते** *-te* + **हैं** *haiṁ* | **बोलते हैं** *bolte haiṁ* |
+| *āp* (you, respectful) | **-ते** *-te* + **हैं** *haiṁ* | **बोलते हैं** *bolte haiṁ* |
 
 Strip *-nā*, add the ending, add *honā*. That is the whole rule, and it does
 not change from verb to verb.

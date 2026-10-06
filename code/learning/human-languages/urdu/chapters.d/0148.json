@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "To choose, To change, To borrow, To lend, To save",
+  "label": "ch:ur-to-choose-to-change-to-borrow-to-lend-to-save",
+  "canDo": "I can say to choose, to change, to borrow, to lend and to save.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C148-bachana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: I can say to choose, to change, to borrow, to lend and to save.",
+    "assesses": [
+      "UR-LEX-C148-ACT148-03",
+      "UR-LEX-C148-ACT148-04",
+      "UR-LEX-C148-ACT148-05"
+    ]
+  }
+}

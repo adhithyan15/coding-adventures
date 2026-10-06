@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C257-filo",
+    "language": "italian",
+    "chapter": 257,
+    "sequence": 15480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb7d05a274812cdb"
+  },
+  "findings": []
+}

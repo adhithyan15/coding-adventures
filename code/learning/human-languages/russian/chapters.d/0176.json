@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "To come back, To be late, To hurry, To rest, To get tired",
+  "label": "ch:ru-to-come-back-to-be-late-to-hurry-to-rest-to-get-tired",
+  "canDo": "I can say to come back, to be late, to hurry, to rest and to get tired.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C176-ustavat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say to come back, to be late, to hurry, to rest and to get tired.",
+    "assesses": [
+      "RU-LEX-C176-ACT176-03",
+      "RU-LEX-C176-ACT176-04",
+      "RU-LEX-C176-ACT176-05"
+    ]
+  }
+}

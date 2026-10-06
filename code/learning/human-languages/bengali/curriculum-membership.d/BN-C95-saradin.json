@@ -1,0 +1,11 @@
+{
+  "id": "BN-C95-saradin",
+  "pathSegment": "BN-PATH-95-TIME95",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-95-TIME95",
+      "order": 1
+    }
+  ]
+}

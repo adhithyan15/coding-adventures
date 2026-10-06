@@ -1,0 +1,11 @@
+{
+  "id": "RU-C178-zagorat",
+  "pathSegment": "RU-PATH-178-ACT178",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-178-ACT178",
+      "order": 4
+    }
+  ]
+}

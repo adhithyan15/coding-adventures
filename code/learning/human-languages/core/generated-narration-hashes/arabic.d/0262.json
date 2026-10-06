@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:11d0688e7212680f",
+  "lessonIds": [
+    "AR-C262-isaf",
+    "AR-C262-harara",
+    "AR-C262-dimada",
+    "AR-C262-hadith2",
+    "AR-C262-tawattur",
+    "AR-R262-first-pass-words-from-chapters-254-257",
+    "AR-R262-second-pass-words-from-chapters-258-262"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch262.txt",
+  "json": "arabic/narration/ch262.json",
+  "textHash": "fnv1a64:474dcbf91833a015",
+  "jsonHash": "fnv1a64:9c1db289556f0de2",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C158-au-contraire",
+  "pathSegment": "FR-PATH-158-POURQUOI158",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-158-POURQUOI158",
+      "order": 3
+    }
+  ]
+}

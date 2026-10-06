@@ -1,0 +1,11 @@
+{
+  "id": "RU-C220-ekran",
+  "pathSegment": "RU-PATH-220-VESHCH220",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-220-VESHCH220",
+      "order": 1
+    }
+  ]
+}

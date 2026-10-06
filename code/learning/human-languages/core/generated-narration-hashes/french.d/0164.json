@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:1462cad52185a7dc",
+  "lessonIds": [
+    "FR-C164-passeport",
+    "FR-C164-douane",
+    "FR-C164-reservation",
+    "FR-C164-boucherie",
+    "FR-C164-fleuve"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch164.txt",
+  "json": "french/narration/ch164.json",
+  "textHash": "fnv1a64:98185a5e5611d7ec",
+  "jsonHash": "fnv1a64:fc6d9b4ca7698169",
+  "findings": []
+}

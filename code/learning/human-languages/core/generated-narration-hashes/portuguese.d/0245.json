@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:eb5f8f8e0f1d9db9",
+  "lessonIds": [
+    "PT-C245-dialeto",
+    "PT-C245-noticia",
+    "PT-C245-publicidade",
+    "PT-C245-ecra",
+    "PT-C245-teclado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch245.txt",
+  "json": "portuguese/narration/ch245.json",
+  "textHash": "fnv1a64:9c471e408211b7e1",
+  "jsonHash": "fnv1a64:c077e31318b6dbfd",
+  "findings": []
+}

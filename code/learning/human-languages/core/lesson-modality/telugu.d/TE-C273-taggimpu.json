@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C273-taggimpu",
+    "language": "telugu",
+    "chapter": 273,
+    "sequence": 12940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f57bc59ca1087529"
+  },
+  "findings": []
+}

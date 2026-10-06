@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C168-badalna",
+    "language": "hindi",
+    "chapter": 168,
+    "sequence": 7980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:598395e64e66b31d"
+  },
+  "findings": []
+}

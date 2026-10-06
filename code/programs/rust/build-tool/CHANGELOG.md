@@ -4,6 +4,14 @@ All notable changes to the Rust build tool will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+- Source hashing now follows the 27-component neutral generated-directory
+  registry, pruning exact lowercase `blib` while retaining `Blib` and
+  `blib-example` in both extension and declared-source modes.
+
 ## [0.2.11] - 2026-09-27
 
 ### Fixed

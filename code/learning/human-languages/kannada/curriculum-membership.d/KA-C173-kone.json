@@ -1,0 +1,11 @@
+{
+  "id": "KA-C173-kone",
+  "pathSegment": "KA-PATH-173-STHALA173",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-173-STHALA173",
+      "order": 3
+    }
+  ]
+}

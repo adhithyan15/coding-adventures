@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "Vaccine, Sweat, Wrist, Thumb, Muscle",
+  "label": "ch:ar-vaccine-sweat-wrist-thumb-muscle",
+  "canDo": "I can say a vaccine, sweat, a wrist, a thumb and a muscle.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C263-adala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can say a vaccine, sweat, a wrist, a thumb and a muscle.",
+    "assesses": [
+      "AR-LEX-C263-SIHHA263-03",
+      "AR-LEX-C263-SIHHA263-04",
+      "AR-LEX-C263-SIHHA263-05"
+    ]
+  }
+}

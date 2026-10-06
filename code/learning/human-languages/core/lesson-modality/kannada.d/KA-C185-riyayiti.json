@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C185-riyayiti",
+    "language": "kannada",
+    "chapter": 185,
+    "sequence": 8440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:921a5f3e827c77db"
+  },
+  "findings": []
+}

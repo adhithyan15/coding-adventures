@@ -1,0 +1,11 @@
+{
+  "id": "RU-C177-sporit",
+  "pathSegment": "RU-PATH-177-ACT177",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-177-ACT177",
+      "order": 2
+    }
+  ]
+}

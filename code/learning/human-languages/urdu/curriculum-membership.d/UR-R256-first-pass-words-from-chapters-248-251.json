@@ -1,0 +1,11 @@
+{
+  "id": "UR-R256-first-pass-words-from-chapters-248-251",
+  "pathSegment": "UR-PATH-256-CHIZ256",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "UR-EXT-256-CHIZ256",
+      "order": 5
+    }
+  ]
+}

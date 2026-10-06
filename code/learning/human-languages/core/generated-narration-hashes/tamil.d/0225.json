@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:78eded8c885e5ef6",
+  "lessonIds": [
+    "TA-C225-cuvai-par",
+    "TA-C225-nirappu",
+    "TA-C225-mati2",
+    "TA-C225-kalarru",
+    "TA-C225-marru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch225.txt",
+  "json": "tamil/narration/ch225.json",
+  "textHash": "fnv1a64:81b0c3c02bc43c31",
+  "jsonHash": "fnv1a64:d69546b827040c6c",
+  "findings": []
+}

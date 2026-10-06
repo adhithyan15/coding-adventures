@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C182-salsa",
+    "language": "arabic",
+    "chapter": 182,
+    "sequence": 9020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1496f87b143da53c"
+  },
+  "findings": []
+}

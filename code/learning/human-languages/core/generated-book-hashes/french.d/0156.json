@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:8cde674c0d008f3d",
+  "lessonIds": [
+    "FR-C156-rarement",
+    "FR-C156-ensuite",
+    "FR-C156-enfin",
+    "FR-C156-desormais",
+    "FR-C156-encore"
+  ],
+  "tex": "french/book/chapters/ch156-rarely-afterwards-finally-from-now-on-still.tex"
+}

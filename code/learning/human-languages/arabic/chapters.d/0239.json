@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "Luck, Agreement, Discussion, Memory, Doubt",
+  "label": "ch:ar-luck-agreement-discussion-memory-doubt",
+  "canDo": "I can say luck, an agreement, a discussion, a memory and doubt.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-C239-shakk",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say luck, an agreement, a discussion, a memory and doubt.",
+    "assesses": [
+      "AR-LEX-C239-SABAB239-03",
+      "AR-LEX-C239-SABAB239-04",
+      "AR-LEX-C239-SABAB239-05"
+    ]
+  }
+}

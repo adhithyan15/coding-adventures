@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "Holidays, Banquet, Sacrifice, Altar, Goddess",
+  "label": "ch:la-holidays-banquet-sacrifice-altar-goddess",
+  "canDo": "I can say holidays, a banquet, a sacrifice, an altar and a goddess.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C253-dea",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say holidays, a banquet, a sacrifice, an altar and a goddess.",
+    "assesses": [
+      "LA-LEX-C253-RES253-03",
+      "LA-LEX-C253-RES253-04",
+      "LA-LEX-C253-RES253-05"
+    ]
+  }
+}

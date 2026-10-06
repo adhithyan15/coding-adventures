@@ -1,0 +1,11 @@
+{
+  "id": "GE-C153-werfen",
+  "pathSegment": "GE-PATH-153-VERB153",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-153-VERB153",
+      "order": 2
+    }
+  ]
+}

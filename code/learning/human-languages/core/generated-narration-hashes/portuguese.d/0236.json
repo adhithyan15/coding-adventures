@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:ed326bc28aae2ece",
+  "lessonIds": [
+    "PT-C236-sonhar",
+    "PT-C236-empurrar",
+    "PT-C236-puxar",
+    "PT-C236-desperdicar",
+    "PT-C236-ultrapassar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch236.txt",
+  "json": "portuguese/narration/ch236.json",
+  "textHash": "fnv1a64:313237fec5c97fe5",
+  "jsonHash": "fnv1a64:62ca28dee2bc19e6",
+  "findings": []
+}

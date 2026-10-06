@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C272-vari",
+    "language": "tamil",
+    "chapter": 272,
+    "sequence": 15610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e52bdef062584b6e"
+  },
+  "findings": []
+}

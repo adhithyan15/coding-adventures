@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R197-second-pass-words-from-chapters-196-197",
+    "language": "kannada",
+    "chapter": 197,
+    "sequence": 9100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b0b855e65c28f9a"
+  },
+  "findings": []
+}

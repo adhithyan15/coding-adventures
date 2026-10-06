@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R184-second-pass-words-from-chapters-180-184",
+    "language": "kannada",
+    "chapter": 184,
+    "sequence": 8410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:169737fff7f2d68f"
+  },
+  "findings": []
+}

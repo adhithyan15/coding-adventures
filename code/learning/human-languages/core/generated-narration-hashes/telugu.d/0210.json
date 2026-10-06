@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:c162964e23a2cc71",
+  "lessonIds": [
+    "TE-C210-anumanam",
+    "TE-C210-trpti",
+    "TE-C210-nirasa",
+    "TE-C210-visugu",
+    "TE-C210-benga"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch210.txt",
+  "json": "telugu/narration/ch210.json",
+  "textHash": "fnv1a64:7bffe9287c1fc11d",
+  "jsonHash": "fnv1a64:a3cd9d121eff6258",
+  "findings": []
+}

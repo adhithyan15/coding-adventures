@@ -1,0 +1,11 @@
+{
+  "id": "KA-C216-javabdari",
+  "pathSegment": "KA-PATH-216-KARANA216",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-216-KARANA216",
+      "order": 3
+    }
+  ]
+}

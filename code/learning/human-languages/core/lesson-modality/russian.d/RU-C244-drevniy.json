@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C244-drevniy",
+    "language": "russian",
+    "chapter": 244,
+    "sequence": 14970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2fe13a09a857b605"
+  },
+  "findings": []
+}

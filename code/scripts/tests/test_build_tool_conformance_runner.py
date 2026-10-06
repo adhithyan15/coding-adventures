@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 162)
+        self.assertEqual(summary["case_count"], 175)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -446,13 +446,13 @@ class CorpusTests(unittest.TestCase):
             {
                 "boundary_count": 18,
                 "input_count": 21,
-                "scope_count": 489,
-                "authorization_count": 492,
+                "scope_count": 485,
+                "authorization_count": 488,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "252845441c83ddece72e81504bf59319bb0c469e0e0d48b567c3eb1a4c1225b3",
+            "220436e5989c1d3b46770da00de3d5c7d55cc0c4d0535f2940daa9c6daa6d6e3",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
@@ -967,7 +967,7 @@ class CorpusTests(unittest.TestCase):
             self.assertEqual(raised.exception.code, expected_code)
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 480),
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 483),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
@@ -978,7 +978,7 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "REPOSITORY_SOURCE_SCOPE_LIMIT")
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 483),
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 486),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
@@ -1303,6 +1303,7 @@ class CorpusTests(unittest.TestCase):
                 "data/2026-05-12-why-forme.md",
                 "data/2026-05-15-hello-forme.md",
                 "data/assets/.forme-pipeline.svg.id.json",
+                "data/assets/.pipeline-steps.js.id.json",
                 "data/assets/forme-pipeline.svg",
             ],
             "code/sites/landing-page": [
@@ -2578,13 +2579,151 @@ class PureDomainValidationTests(unittest.TestCase):
             )
         self.assertEqual(raised.exception.code, "RESULT_VALIDATION_INCONSISTENT")
 
+        combined = load_case("validation-orphan-package-roots-clean.json")
+        crate_case = load_case("validation-orphan-crates-clean.json")
+        combined["input"]["options"]["checks"] = [
+            "orphan_crate_coverage",
+            "orphan_package_root_coverage",
+        ]
+        combined["input"]["options"]["orphan_snapshot"] = copy.deepcopy(
+            crate_case["input"]["options"]["orphan_snapshot"]
+        )
+        combined_result = copy.deepcopy(combined["expected"])
+        combined_result["result"]["pending_exemption_count"] = 2
+        combined["expected"] = copy.deepcopy(combined_result)
+        runner.validate_case_document(combined, **schema_args)
+        runner.assert_result_matches(
+            combined,
+            combined_result,
+            pure_domain_schema=schema_args["pure_domain_schema"],
+        )
+
+        overlap = copy.deepcopy(combined)
+        package_snapshot = overlap["input"]["options"][
+            "orphan_package_root_snapshot"
+        ]
+        package_snapshot["roots"] = [
+            {
+                "path": "code/packages/rust/pending",
+                "language": "rust",
+                "kind": "package",
+                "source_evidence": "code/packages/rust/pending/Cargo.toml",
+            }
+        ]
+        package_snapshot["build_files"] = []
+        package_snapshot["exemptions"] = [
+            {
+                "line": 20,
+                "kind": "PENDING",
+                "path": "code/packages/rust/pending",
+                "reason": "shared pending debt",
+            }
+        ]
+        overlap_result = copy.deepcopy(overlap["expected"])
+        overlap_result["result"]["pending_exemption_count"] = 1
+        overlap["expected"] = copy.deepcopy(overlap_result)
+        runner.validate_case_document(overlap, **schema_args)
+        runner.assert_result_matches(
+            overlap,
+            overlap_result,
+            pure_domain_schema=schema_args["pure_domain_schema"],
+        )
+
+    def test_orphan_package_root_coverage_is_derived_from_closed_snapshots(
+        self,
+    ) -> None:
+        schema_args = self._schema_args()
+        for filename in (
+            "validation-orphan-package-roots-clean.json",
+            "validation-orphan-package-roots-unlisted.json",
+            "validation-orphan-package-root-exemptions-invalid.json",
+            "validation-orphan-package-root-exemptions-stale.json",
+        ):
+            with self.subTest(filename=filename):
+                case = load_case(filename)
+                runner.validate_case_document(case, **schema_args)
+                runner.assert_result_matches(
+                    case,
+                    copy.deepcopy(case["expected"]),
+                    pure_domain_schema=schema_args["pure_domain_schema"],
+                )
+
+        wrong_registry = load_case("validation-orphan-package-roots-clean.json")
+        wrong_registry["input"]["options"]["orphan_package_root_snapshot"][
+            "registry_sha256"
+        ] = "0" * 64
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(wrong_registry, **schema_args)
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_SOURCE_REGISTRY_DIGEST_MISMATCH",
+        )
+
+        wrong_evidence = load_case("validation-orphan-package-roots-clean.json")
+        wrong_evidence["input"]["options"]["orphan_package_root_snapshot"][
+            "roots"
+        ][0]["source_evidence"] = "code/packages/csharp/alpha/BUILD"
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(wrong_evidence, **schema_args)
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+        )
+
+        wrong_count = load_case("validation-orphan-package-roots-clean.json")
+        wrong_result = copy.deepcopy(wrong_count["expected"])
+        wrong_result["result"]["pending_exemption_count"] = 2
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(
+                wrong_count,
+                wrong_result,
+                pure_domain_schema=schema_args["pure_domain_schema"],
+            )
+        self.assertEqual(raised.exception.code, "RESULT_VALIDATION_INCONSISTENT")
+
+    def test_orphan_package_root_snapshot_rejects_collisions_and_limits(self) -> None:
+        schema_args = self._schema_args()
+        collision = load_case("validation-orphan-package-roots-clean.json")
+        roots = collision["input"]["options"]["orphan_package_root_snapshot"][
+            "roots"
+        ]
+        alias = copy.deepcopy(roots[0])
+        alias["path"] = "code/packages/csharp/ALPHA"
+        alias["source_evidence"] = "code/packages/csharp/ALPHA/Program.cs"
+        roots.append(alias)
+        roots.sort(key=lambda item: item["path"])
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(collision, **schema_args)
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+        )
+
+        oversized = load_case("validation-orphan-package-roots-clean.json")
+        snapshot = oversized["input"]["options"]["orphan_package_root_snapshot"]
+        snapshot["exemptions"] = [
+            {
+                "line": line,
+                "kind": "PENDING",
+                "path": f"code/packages/python/p{line:04d}",
+                "reason": "x" * 400,
+            }
+            for line in range(1, 8193)
+        ]
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner._validate_orphan_package_root_snapshot(snapshot, None)
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_VALIDATION_SNAPSHOT_LIMIT_EXCEEDED",
+        )
+
     def test_orphan_snapshot_joins_use_exact_portable_paths(self) -> None:
         schema_args = self._schema_args()
         case_variant = load_case("validation-orphan-crates-clean.json")
         case_variant["input"]["options"]["orphan_snapshot"]["exemptions"][0]["path"] = (
             "code/packages/rust/Compile-only"
         )
-        diagnostics, pending_count = runner._expected_orphan_validation(
+        diagnostics, pending_count, _ = runner._expected_orphan_validation(
             case_variant["input"]["options"]
         )
         self.assertEqual(pending_count, 1)
@@ -3005,6 +3144,7 @@ class PureDomainValidationTests(unittest.TestCase):
             "dist",
             "dist-newstyle",
             "_build",
+            "blib",
             "build",
             "target",
             ".claude",
@@ -3053,8 +3193,10 @@ class PureDomainValidationTests(unittest.TestCase):
                 {
                     "case/_Build/generated.ml",
                     "near/Build/generated.ml",
+                    "near/Blib/generated.ml",
                     "near/Dist-newstyle/generated.ml",
                     "near/_build-example/generated.ml",
+                    "near/blib-example/generated.ml",
                     "near/dist-newstyle-example/generated.ml",
                 }.issubset(included)
             )
@@ -3361,6 +3503,29 @@ class PureDomainValidationTests(unittest.TestCase):
             "DIFF_UNKNOWN_PATH",
         )
 
+    def test_shared_repository_input_selects_all_declared_consumers(self) -> None:
+        boundary = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        case = load_case("diff-selection-shared-input-multiconsumer.json")
+        self.assertEqual(
+            runner._expected_diff_selection(
+                case["input"]["options"],
+                case["input"]["changed_paths"],
+                boundary,
+            ),
+            (
+                {"swift/conduit", "swift/sha256-native"},
+                {"swift/app", "swift/conduit", "swift/sha256-native"},
+                {"swift/base"},
+            ),
+        )
+        runner.validate_case_document(
+            case,
+            **self._schema_args(),
+            repository_source_input_boundary=boundary,
+        )
+
     def test_hashing_cache_sorts_local_and_boundary_union_by_raw_utf8(self) -> None:
         case = load_case("hashing-cache-local-boundary-union.json")
         expected = case["expected"]["result"]
@@ -3375,6 +3540,172 @@ class PureDomainValidationTests(unittest.TestCase):
         self.assertEqual(dependencies_digest, expected["dependencies_digest"])
         self.assertEqual(combined_digest, expected["combined_digest"])
         runner.validate_case_document(case, **self._schema_args())
+
+    def test_shared_input_changes_both_consumers_source_and_package_digests(
+        self,
+    ) -> None:
+        boundary = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        shared_path = "code/packages/rust/Cargo.toml"
+        evidence = {}
+
+        for consumer in ("conduit", "sha256-native"):
+            source_cases = {}
+            hash_cases = {}
+            for snapshot in ("before", "after"):
+                source = load_case(
+                    f"source-collection-shared-input-{consumer}-{snapshot}.json"
+                )
+                hashing = load_case(
+                    f"hashing-cache-shared-input-{consumer}-{snapshot}.json"
+                )
+                with self.subTest(consumer=consumer, snapshot=snapshot):
+                    self.assertEqual(
+                        source["input"]["options"]["package_root"],
+                        f"code/packages/swift/{consumer}",
+                    )
+                    self.assertEqual(
+                        runner._expected_repository_source_collection(
+                            source["input"]["options"], boundary
+                        ),
+                        source["expected"]["result"]["files"],
+                    )
+                    self.assertEqual(
+                        [
+                            item["path"]
+                            for item in source["expected"]["result"]["files"]
+                        ],
+                        [shared_path],
+                    )
+                    runner.validate_case_document(source, **self._schema_args())
+
+                    workspace = runner.preflight_workspace(hashing)
+                    self.assertEqual(
+                        runner._expected_hashes(hashing["input"]["options"], workspace),
+                        (
+                            hashing["expected"]["result"]["package_digest"],
+                            hashing["expected"]["result"]["dependencies_digest"],
+                            hashing["expected"]["result"]["combined_digest"],
+                        ),
+                    )
+                    self.assertIn(
+                        shared_path, hashing["input"]["options"]["include_paths"]
+                    )
+                    runner.validate_case_document(hashing, **self._schema_args())
+                source_cases[snapshot] = source
+                hash_cases[snapshot] = hashing
+
+            before_source = source_cases["before"]
+            after_source = source_cases["after"]
+            before_hashing = hash_cases["before"]
+            after_hashing = hash_cases["after"]
+            local_path = f"code/packages/swift/{consumer}/Package.swift"
+            self.assertEqual(
+                before_hashing["input"]["options"]["include_paths"],
+                after_hashing["input"]["options"]["include_paths"],
+            )
+            self.assertEqual(
+                set(before_hashing["input"]["options"]["include_paths"]),
+                {shared_path, local_path},
+            )
+            self.assertEqual(
+                before_source["input"]["options"]["candidates"][0]["path"], shared_path
+            )
+            self.assertEqual(
+                after_source["input"]["options"]["candidates"][0]["path"], shared_path
+            )
+            self.assertNotEqual(
+                before_source["expected"]["result"]["files"][0]["digest"],
+                after_source["expected"]["result"]["files"][0]["digest"],
+            )
+            before_files = {
+                item["path"]: item["content_utf8"]
+                for item in before_hashing["workspace"]["files"]
+            }
+            after_files = {
+                item["path"]: item["content_utf8"]
+                for item in after_hashing["workspace"]["files"]
+            }
+            self.assertEqual(set(before_files), set(after_files))
+            self.assertEqual(
+                [path for path in before_files if path != shared_path],
+                [path for path in after_files if path != shared_path],
+            )
+            self.assertEqual(
+                {
+                    path: content
+                    for path, content in before_files.items()
+                    if path != shared_path
+                },
+                {
+                    path: content
+                    for path, content in after_files.items()
+                    if path != shared_path
+                },
+            )
+            self.assertNotEqual(before_files[shared_path], after_files[shared_path])
+            self.assertEqual(
+                before_source["expected"]["result"]["files"][0]["digest"],
+                hashlib.sha256(before_files[shared_path].encode("utf-8")).hexdigest(),
+            )
+            self.assertEqual(
+                after_source["expected"]["result"]["files"][0]["digest"],
+                hashlib.sha256(after_files[shared_path].encode("utf-8")).hexdigest(),
+            )
+            self.assertEqual(
+                before_hashing["input"]["options"]["dependency_digests"],
+                after_hashing["input"]["options"]["dependency_digests"],
+            )
+            self.assertEqual(
+                before_hashing["expected"]["result"]["dependencies_digest"],
+                after_hashing["expected"]["result"]["dependencies_digest"],
+            )
+            self.assertEqual(
+                after_hashing["input"]["options"]["prior_cache"],
+                {
+                    "state": "record",
+                    "combined_digest": before_hashing["expected"]["result"][
+                        "combined_digest"
+                    ],
+                    "status": "success",
+                },
+            )
+            self.assertEqual(
+                after_hashing["expected"]["result"]["cache_status"], "miss"
+            )
+            for field in ("package_digest", "combined_digest"):
+                self.assertNotEqual(
+                    before_hashing["expected"]["result"][field],
+                    after_hashing["expected"]["result"][field],
+                )
+            evidence[consumer] = (source_cases, hash_cases)
+
+        conduit_sources, conduit_hashes = evidence["conduit"]
+        sha256_sources, sha256_hashes = evidence["sha256-native"]
+        for snapshot in ("before", "after"):
+            self.assertEqual(
+                conduit_sources[snapshot]["input"]["options"]["candidates"][0],
+                sha256_sources[snapshot]["input"]["options"]["candidates"][0],
+            )
+            self.assertEqual(
+                conduit_sources[snapshot]["expected"]["result"]["files"],
+                sha256_sources[snapshot]["expected"]["result"]["files"],
+            )
+            for hashing in (conduit_hashes[snapshot], sha256_hashes[snapshot]):
+                shared_file = next(
+                    item
+                    for item in hashing["workspace"]["files"]
+                    if item["path"] == shared_path
+                )
+                self.assertEqual(
+                    hashlib.sha256(
+                        shared_file["content_utf8"].encode("utf-8")
+                    ).hexdigest(),
+                    conduit_sources[snapshot]["expected"]["result"]["files"][0][
+                        "digest"
+                    ],
+                )
 
     def test_dependency_cycles_are_rejected_without_recursion(self) -> None:
         cyclic = load_case("diff-selection-transitive.json")
@@ -4116,7 +4447,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 162)
+        self.assertEqual(summary["case_count"], 175)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

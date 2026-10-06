@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "To hurry, To be late, To conceal, To earn, To look after",
+  "label": "ch:ur-to-hurry-to-be-late-to-conceal-to-earn-to-look-after",
+  "canDo": "I can say to hurry, to be late, to conceal, to earn and to look after.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C214-sambhalna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say to hurry, to be late, to conceal, to earn and to look after.",
+    "assesses": [
+      "UR-LEX-C214-ACT214-03",
+      "UR-LEX-C214-ACT214-04",
+      "UR-LEX-C214-ACT214-05"
+    ]
+  }
+}

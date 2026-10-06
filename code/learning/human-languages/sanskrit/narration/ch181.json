@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 181,
+  "title": "Toothache, Head cold, Breath, Pulse, Fitness",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:9f85d1e149b72095",
+  "lessons": [
+    {
+      "id": "SA-C181-dantapida",
+      "sequence": 9830,
+      "title": "दन्तपीडा (dantapīḍā) — a toothache",
+      "headword": "दन्तपीडा",
+      "romanization": "dantapīḍā",
+      "gloss": "a toothache",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa6def9b246a6f8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a scholar, then the Sanskrit for a learned person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दन्तपीडा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दन्तपीडा — dantapīḍā — \"a toothache\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dantapīḍā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dantapīḍā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dantapīḍā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dantapīḍā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dantapīḍā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dantapīḍā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a scholar, then the Sanskrit for a learned person, then say dantapīḍā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a scholar, then the Sanskrit for a learned person, then say *dantapīḍā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दन्तपीडा (dantapīḍā) mean? (\"A toothache\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C181-pratisyayah",
+      "sequence": 9840,
+      "title": "प्रतिश्यायः (pratiśyāyaḥ) — a head cold",
+      "headword": "प्रतिश्यायः",
+      "romanization": "pratiśyāyaḥ",
+      "gloss": "a head cold",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d78f45bbd9cc9e2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a learned person, then the Sanskrit for a toothache."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रतिश्यायः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिश्यायः — pratiśyāyaḥ — \"a head cold\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiśyāyaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiśyāyaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiśyāyaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiśyāyaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pratiśyāyaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pratiśyāyaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a learned person, then the Sanskrit for a toothache, then say pratiśyāyaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a learned person, then the Sanskrit for a toothache, then say *pratiśyāyaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रतिश्यायः (pratiśyāyaḥ) mean? (\"A head cold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C181-svasah",
+      "sequence": 9850,
+      "title": "श्वासः (śvāsaḥ) — breath",
+      "headword": "श्वासः",
+      "romanization": "śvāsaḥ",
+      "gloss": "breath",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eedf1da835d1ba42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a toothache, then the Sanskrit for a head cold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: श्वासः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "श्वासः — śvāsaḥ — \"breath\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śvāsaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śvāsaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śvāsaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śvāsaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say śvāsaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *śvāsaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a toothache, then the Sanskrit for a head cold, then say śvāsaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a toothache, then the Sanskrit for a head cold, then say *śvāsaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does श्वासः (śvāsaḥ) mean? (\"Breath\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C181-nadi",
+      "sequence": 9860,
+      "title": "नाडी (nāḍī) — the pulse",
+      "headword": "नाडी",
+      "romanization": "nāḍī",
+      "gloss": "the pulse",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de9148aa87d74eb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a head cold, then the Sanskrit for breath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाडी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाडी — nāḍī — \"the pulse\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāḍī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāḍī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāḍī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāḍī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nāḍī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nāḍī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a head cold, then the Sanskrit for breath, then say nāḍī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a head cold, then the Sanskrit for breath, then say *nāḍī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नाडी (nāḍī) mean? (\"The pulse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C181-svasthyam",
+      "sequence": 9870,
+      "title": "स्वास्थ्यम् (svāsthyam) — fitness, health",
+      "headword": "स्वास्थ्यम्",
+      "romanization": "svāsthyam",
+      "gloss": "fitness, health",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1892687c80f064be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for breath, then the Sanskrit for the pulse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्वास्थ्यम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वास्थ्यम् — svāsthyam — \"fitness, health\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svāsthyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svāsthyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svāsthyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svāsthyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say svāsthyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *svāsthyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for breath, then the Sanskrit for the pulse, then say svāsthyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for breath, then the Sanskrit for the pulse, then say *svāsthyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्वास्थ्यम् (svāsthyam) mean? (\"Fitness, health\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R181-first-pass-words-from-chapters-173-176",
+      "sequence": 9880,
+      "title": "Words from chapters 173-176 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 173-176",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b17f81e9b9551d3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for the pulse and fitness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "throws, lets go, gets, serves, enjoys",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: throws, lets go, gets, serves, enjoys]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "steals, eats up, strikes, keeps, hurts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: steals, eats up, strikes, keeps, hurts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takes away, supports, carries, endures, tries",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: takes away, supports, carries, endures, tries]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "changes, reports, invites, cleans, fills",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: changes, reports, invites, cleans, fills]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Throws? (क्षिपति, kṣipati.) Lets go? (मुञ्चति, muñcati.) Gets? (लभते, labhate.) Serves? (सेवते, sevate.) Enjoys? (रमते, ramate.) Steals? (चोरयति, corayati.) Eats up? (भक्षयति, bhakṣayati.) Strikes? (ताडयति, tāḍayati.) Keeps? (पालयति, pālayati.) Hurts? (पीडयति, pīḍayati.) Takes away? (हरति, harati.) Supports? (भरति, bharati.) Carries? (वहति, vahati.) Endures? (सहते, sahate.) Tries? (यतते, yatate.) Changes? (परिवर्तयति, parivartayati.) Reports? (निवेदयति, nivedayati.) Invites? (आमन्त्रयति, āmantrayati.) Cleans? (शोधयति, śodhayati.) Fills? (पूरयति, pūrayati.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R181-second-pass-words-from-chapters-177-181",
+      "sequence": 9890,
+      "title": "Words from chapters 177-181 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 177-181",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89e3da76a4fa6cb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for conceals and distributes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "conceals, distributes, collects, trusts, is ashamed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: conceals, distributes, collects, trusts, is ashamed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mother's brother's wife, a father-in-law, a mother-in-law, a son-in-law, a daughter-in-law",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mother's brother's wife, a father-in-law, a mother-in-law, a son-in-law, a daughter-in-law]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a soldier, a guard, a judge, a lawyer, a writer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a soldier, a guard, a judge, a lawyer, a writer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hunter, a thief, a beggar, a scholar, a learned person",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hunter, a thief, a beggar, a scholar, a learned person]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a toothache, a head cold, breath, the pulse, fitness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a toothache, a head cold, breath, the pulse, fitness]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Conceals? (प्रच्छादयति, pracchādayati.) Distributes? (वितरति, vitarati.) Collects? (संगृह्णाति, saṅgṛhṇāti.) Trusts? (विश्वसिति, viśvasiti.) Is ashamed? (लज्जते, lajjate.) A mother's brother's wife? (मातुलानी, mātulānī.) A father-in-law? (श्वशुरः, śvaśuraḥ.) A mother-in-law? (श्वश्रूः, śvaśrūḥ.) A son-in-law? (जामाता, jāmātā.) A daughter-in-law? (स्नुषा, snuṣā.) A soldier? (सैनिकः, sainikaḥ.) A guard? (रक्षकः, rakṣakaḥ.) A judge? (न्यायाधीशः, nyāyādhīśaḥ.) A lawyer? (अधिवक्ता, adhivaktā.) A writer? (लेखकः, lekhakaḥ.) A hunter? (व्याधः, vyādhaḥ.) A thief? (चौरः, cauraḥ.) A beggar? (याचकः, yācakaḥ.) A scholar? (पण्डितः, paṇḍitaḥ.) A learned person? (विद्वान्, vidvān.) A toothache? (दन्तपीडा, dantapīḍā.) A head cold? (प्रतिश्यायः, pratiśyāyaḥ.) Breath? (श्वासः, śvāsaḥ.) The pulse? (नाडी, nāḍī.) Fitness? (स्वास्थ्यम्, svāsthyam.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

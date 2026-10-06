@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C507-debate",
+    "language": "spanish",
+    "chapter": 507,
+    "sequence": 14950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c27b1f7bd5c9a6f9"
+  },
+  "findings": []
+}

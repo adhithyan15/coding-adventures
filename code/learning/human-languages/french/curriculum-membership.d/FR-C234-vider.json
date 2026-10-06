@@ -1,0 +1,11 @@
+{
+  "id": "FR-C234-vider",
+  "pathSegment": "FR-PATH-234-VERBES234",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-234-VERBES234",
+      "order": 1
+    }
+  ]
+}

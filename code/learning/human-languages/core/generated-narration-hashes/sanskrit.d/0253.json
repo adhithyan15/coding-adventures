@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:9217e003c6fb3bbd",
+  "lessonIds": [
+    "SA-C253-kitah",
+    "SA-C253-luta",
+    "SA-C253-vrscikah",
+    "SA-C253-godha",
+    "SA-C253-nakrah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch253.txt",
+  "json": "sanskrit/narration/ch253.json",
+  "textHash": "fnv1a64:31c31312b28dc471",
+  "jsonHash": "fnv1a64:40210376602acf50",
+  "findings": []
+}

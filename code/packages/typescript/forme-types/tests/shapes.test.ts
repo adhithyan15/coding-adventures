@@ -22,7 +22,7 @@ import type {
   DeployArtifact, DeployManifest,
   Document, Feed,
   IslandId, LogicalId,
-  OutputProvenance, PrintForme, RenderedPage, RequestHandler, RevisionId,
+  OutputProvenance, PrintForme, RenderedPage, RequestHandler, RevisionId, TerminalBuffer,
   SearchIndex, Stream,
   StyleRuleId,
 } from "../src/index.js";
@@ -230,6 +230,13 @@ describe("RenderedPage", () => {
       html: "<!doctype html><html><body>hi</body></html>",
       usedStyle: ["body" as StyleRuleId],
       usedIslands: ["search" as IslandId],
+      islandModules: [{
+        island: "search" as IslandId,
+        asset: SAMPLE_ID,
+        packageName: "@example/search",
+        export: "enhance",
+        sha256: "a".repeat(64),
+      }],
       usedAssets: [],
       meta: {
         title: "Hello",
@@ -240,31 +247,58 @@ describe("RenderedPage", () => {
         extra: {},
       },
       provenance,
-      source: SAMPLE_ID,
     };
     expect(page.usedStyle.length).toBe(1);
     expect(page.usedIslands.length).toBe(1);
+    expect(page.islandModules?.[0]?.sha256).toBe("a".repeat(64));
     expect(page.provenance.contributors[0]?.revision).toBe(SAMPLE_REV);
   });
 
-  it("keeps the legacy single-source producer shape during migration", () => {
+  it("requires provenance and no longer exposes the legacy source field", () => {
     const page: RenderedPage = {
-      route: "/legacy",
+      route: "/current",
       html: "<!doctype html>",
       usedStyle: [],
       usedIslands: [],
       usedAssets: [],
       meta: {
-        title: "Legacy",
+        title: "Current",
         description: null,
         canonicalUrl: null,
         openGraph: {},
         structured: [],
         extra: {},
       },
-      source: SAMPLE_ID,
+      provenance: {
+        contributors: [{ identity: SAMPLE_ID, revision: SAMPLE_REV }],
+        revision: SAMPLE_REV,
+      },
     };
-    expect(page.source).toBe(SAMPLE_ID);
+    expect("source" in page).toBe(false);
+    expect(page.provenance.contributors[0]?.identity).toBe(SAMPLE_ID);
+  });
+});
+
+describe("TerminalBuffer", () => {
+  it("carries ANSI text and explicit backend degradations", () => {
+    const buffer: TerminalBuffer = {
+      route: "/posts/hello",
+      text: "\u001b[1mHello\u001b[0m\n",
+      usedStyle: ["heading" as StyleRuleId],
+      usedAssets: [SAMPLE_ID],
+      degradations: [{
+        code: "interactivity-dropped",
+        islandId: "search" as IslandId,
+        message: "terminal output preserves fallback content",
+      }],
+      revision: SAMPLE_REV,
+      provenance: {
+        contributors: [{ identity: SAMPLE_ID, revision: SAMPLE_REV }],
+        revision: SAMPLE_REV,
+      },
+    };
+    expect(buffer.text).toContain("Hello");
+    expect(buffer.degradations[0]?.code).toBe("interactivity-dropped");
   });
 });
 

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C301-taksi",
+  "pathSegment": "TE-PATH-301-VASTUVU301",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-301-VASTUVU301",
+      "order": 3
+    }
+  ]
+}

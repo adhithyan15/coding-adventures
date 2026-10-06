@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:510b9f4b1fdd94fc",
+  "sourceHash": "fnv1a64:07c83e62dcd45ba3",
   "lessons": [
     {
       "id": "SA-C05-vadami",
@@ -165,7 +165,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ea64fa3d0ae638e9",
+      "sourceHash": "fnv1a64:75b8373156da9f8d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -264,23 +264,27 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift at that waist, curve down and right around the lower bowl, and rise to the right-stem junction."
+              "text": "2. without lifting, curve down and right around the lower bowl, and rise to the right-stem junction."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the right stem top-to-bottom."
+              "text": "3. climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "5. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "verified four-stroke teaching form; another animated learner source joins the inner curl and lower bowl."
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw य (ya) in two strokes (89% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",
@@ -777,6 +781,202 @@
       ]
     },
     {
+      "id": "SA-W05-vocalic-r-guided-copy",
+      "sequence": 282,
+      "title": "◌ृ (ṛ) — the known vocalic-r sign, now copied with support",
+      "headword": "ृ",
+      "romanization": "ṛ",
+      "gloss": "copy the known vocalic-r vowel sign while its model stays visible",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:1d21fb010795cd5c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to ◌ृ and say what it does. It puts the vowel ṛ on a consonant and replaces that consonant's built-in a. This is the same sign you traced in the previous lesson, not a new word or a new shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided vocalic-r copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ◌ृ (ṛ) visible and copy the mark once, slowly and larger than print. The dotted circle only shows where a consonant would stand; copy the small hook below it, not the dotted circle."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare your mark with ◌ृ. Check that the hook sits below the place where a consonant would be. Read its sound aloud: ṛ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What does ◌ृ add, and what does it remove? (It adds vocalic ṛ and removes the consonant's built-in a.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-W05-vocalic-r-delayed-copy",
+      "sequence": 283,
+      "title": "◌ृ (ṛ) — cover the model, keep the hook in mind",
+      "headword": "ृ",
+      "romanization": "ṛ",
+      "gloss": "write the known vocalic-r vowel sign after its model is covered",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2bb967f30c16b19b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at ◌ृ for five seconds. Say its sound and job: vocalic ṛ, replacing the consonant's built-in a. Then cover the model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed vocalic-r copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Wait ten seconds. With no visible answer and no romanization, write only the vowel mark from memory. Leave an empty place above it for the consonant that would carry it; do not draw the dotted teaching circle."
+            },
+            {
+              "kind": "speech",
+              "text": "Only after the mark is complete, uncover ◌ृ (ṛ). Compare its size, position, and direction with your mark. Repair only the first difference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where does this dependent vowel sign sit? (Below the consonant it changes.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-W05-vocalic-r-dictation",
+      "sequence": 284,
+      "title": "A heard vowel sign — write vocalic r independently",
+      "headword": "ृ",
+      "romanization": "ṛ",
+      "gloss": "write the known vocalic-r vowel sign from its sound and function alone",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:2119d01775267b9e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every answer below this line. You will hear the name and function of one known vowel sign. There is no visible Devanagari model and no romanized answer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — vocalic-r dictation",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "the dependent vowel sign vocalic r, which replaces a consonant's built-in a",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: the dependent vowel sign vocalic r, which replaces a consonant's built-in *a*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the sign from sound and function alone. Stop after one attempt. Now uncover and compare: ◌ृ (ṛ). Check its below-consonant position and hook. Repair only the first difference. Credit requires the Devanagari mark; a Latin-letter transliteration does not count."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The vocalic-r sign has now moved from trace to independent transcription. Which later debts remain? (Conjuncts, connected text, and independent recall across a longer passage.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "SA-C05-karomi",
       "sequence": 290,
       "title": "करोमि (karomi) — \"I do,\" from the root behind karma and namaskāra",
@@ -1101,7 +1301,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8616b21f85cad43f",
+      "sourceHash": "fnv1a64:cd35d1fcc0b4dfd5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1165,7 +1365,7 @@
             },
             {
               "kind": "speech",
-              "text": "a middle shoulder."
+              "text": "a middle shoulder running into the right stem."
             },
             {
               "kind": "speech",
@@ -1212,19 +1412,23 @@
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the right stem top-to-bottom."
+              "text": "3. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "5. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "verified modern printed teaching form; other Devanagari traditions split the body into more strokes."
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw अ in three strokes (74% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the shoulder and the headline."
             },
             {
               "kind": "speech",

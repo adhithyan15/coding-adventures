@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:f7a60ea0edea658d",
+  "lessonIds": [
+    "MR-C211-apayas",
+    "MR-C211-anubhav",
+    "MR-C211-nivad",
+    "MR-C211-nirnay",
+    "MR-C211-sakyata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch211.txt",
+  "json": "marathi/narration/ch211.json",
+  "textHash": "fnv1a64:2d7851ebc3d4b816",
+  "jsonHash": "fnv1a64:828e15aa2df93f26",
+  "findings": []
+}

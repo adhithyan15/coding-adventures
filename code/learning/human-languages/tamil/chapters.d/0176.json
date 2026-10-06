@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "However, Even though, Moreover, For example, Otherwise",
+  "label": "ch:ta-however-even-though-moreover-for-example-otherwise",
+  "canDo": "I can say however, even though, moreover, for example and otherwise.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TA-C176-illavittal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say however, even though, moreover, for example and otherwise.",
+    "assesses": [
+      "TA-LEX-C176-KARANAM176-03",
+      "TA-LEX-C176-KARANAM176-04",
+      "TA-LEX-C176-KARANAM176-05"
+    ]
+  }
+}

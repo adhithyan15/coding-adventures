@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C172-chhatri",
+    "language": "bengali",
+    "chapter": 172,
+    "sequence": 9840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8889e2cfc28b6fca"
+  },
+  "findings": []
+}

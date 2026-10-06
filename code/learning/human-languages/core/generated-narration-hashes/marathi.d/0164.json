@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:de7c9dedeb0c2b85",
+  "lessonIds": [
+    "MR-C164-jahir-karne",
+    "MR-C164-talya-vajavne",
+    "MR-C164-olandne",
+    "MR-C164-vadhavne",
+    "MR-C164-kami-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch164.txt",
+  "json": "marathi/narration/ch164.json",
+  "textHash": "fnv1a64:d26bca4d686da063",
+  "jsonHash": "fnv1a64:d0cf74c536353164",
+  "findings": []
+}

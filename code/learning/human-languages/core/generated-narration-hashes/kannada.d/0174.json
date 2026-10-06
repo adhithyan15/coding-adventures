@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:f9342a6a03fd1ecc",
+  "lessonIds": [
+    "KA-C174-pravasi",
+    "KA-C174-sarovara",
+    "KA-C174-guhe",
+    "KA-C174-mrgalaya",
+    "KA-C174-aramane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch174.txt",
+  "json": "kannada/narration/ch174.json",
+  "textHash": "fnv1a64:7c7b3a23167f51d7",
+  "jsonHash": "fnv1a64:a4911982d5c956de",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C258-satak",
+  "pathSegment": "MR-PATH-258-VEL258",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-258-VEL258",
+      "order": 1
+    }
+  ]
+}

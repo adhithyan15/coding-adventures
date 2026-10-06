@@ -1,0 +1,11 @@
+{
+  "id": "FR-C222-tribunal",
+  "pathSegment": "FR-PATH-222-CHOSES222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-222-CHOSES222",
+      "order": 3
+    }
+  ]
+}

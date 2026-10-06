@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C189-ampul",
+    "language": "persian",
+    "chapter": 189,
+    "sequence": 9710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9540e1385d0ab57"
+  },
+  "findings": []
+}

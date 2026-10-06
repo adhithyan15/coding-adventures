@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:36178c39ce4bbfc9",
+  "lessonIds": [
+    "TA-C210-manam",
+    "TA-C210-kunam",
+    "TA-C210-poramai",
+    "TA-C210-vetkam",
+    "TA-C210-accariyam"
+  ],
+  "tex": "tamil/book/chapters/ch210-mind-character-jealousy-shyness-surprise.tex"
+}

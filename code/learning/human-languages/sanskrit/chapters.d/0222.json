@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Instrument, Load, Goods for sale, Shopkeeper, Newspaper",
+  "label": "ch:sa-instrument-load-goods-for-sale-shopkeeper-newspaper",
+  "canDo": "I can say an instrument, a load, goods for sale, a shopkeeper and a newspaper.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C222-patrika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say an instrument, a load, goods for sale, a shopkeeper and a newspaper.",
+    "assesses": [
+      "SA-LEX-C222-THG222-03",
+      "SA-LEX-C222-THG222-04",
+      "SA-LEX-C222-THG222-05"
+    ]
+  }
+}

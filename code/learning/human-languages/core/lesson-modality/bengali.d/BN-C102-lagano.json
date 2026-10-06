@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C102-lagano",
+    "language": "bengali",
+    "chapter": 102,
+    "sequence": 5410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:592898f16294a0b9"
+  },
+  "findings": []
+}

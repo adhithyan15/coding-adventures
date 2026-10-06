@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Yearly, Late morning, Soon, Alarm clock, Calendar",
+  "label": "ch:ar-yearly-late-morning-soon-alarm-clock-calendar",
+  "canDo": "I can say yearly, late morning, soon, an alarm clock and a calendar.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C234-taqwim",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say yearly, late morning, soon, an alarm clock and a calendar.",
+    "assesses": [
+      "AR-LEX-C234-WAQT234-03",
+      "AR-LEX-C234-WAQT234-04",
+      "AR-LEX-C234-WAQT234-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C183-shosse",
+  "pathSegment": "RU-PATH-183-MESTO183",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-183-MESTO183",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-159-ACT159",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "AR-EXT-159-ACT159"
+  ],
+  "after": []
+}

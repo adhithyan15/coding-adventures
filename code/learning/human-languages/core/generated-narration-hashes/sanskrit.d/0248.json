@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:1bdc0c49914e8e5e",
+  "lessonIds": [
+    "SA-C248-kosah",
+    "SA-C248-nidhih",
+    "SA-C248-rupyakam",
+    "SA-C248-panah",
+    "SA-C248-sulkam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch248.txt",
+  "json": "sanskrit/narration/ch248.json",
+  "textHash": "fnv1a64:db0a1bededdf57bd",
+  "jsonHash": "fnv1a64:8fa9388fe4335458",
+  "findings": []
+}

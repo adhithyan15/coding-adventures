@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:eb500d11db18ffa4",
+  "lessonIds": [
+    "HI-C175-napna",
+    "HI-C175-girana",
+    "HI-C175-jalana",
+    "HI-C175-jalna",
+    "HI-C175-bujhana",
+    "HI-R175-first-pass-verbs-of-change-and-movement",
+    "HI-R175-second-pass-verbs-of-the-hands-and-the-kitchen"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch175.txt",
+  "json": "hindi/narration/ch175.json",
+  "textHash": "fnv1a64:fe413107c7e02931",
+  "jsonHash": "fnv1a64:f5910ef0068f0c16",
+  "findings": []
+}

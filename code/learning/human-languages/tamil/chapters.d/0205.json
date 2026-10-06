@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "Tour, Cinema, Building, Upper floor, Police station",
+  "label": "ch:ta-tour-cinema-building-upper-floor-police-station",
+  "canDo": "I can say a tour, a cinema, a building, an upper floor and a police station.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C205-kaval-nilaiyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say a tour, a cinema, a building, an upper floor and a police station.",
+    "assesses": [
+      "TA-LEX-C205-IDAM205-03",
+      "TA-LEX-C205-IDAM205-04",
+      "TA-LEX-C205-IDAM205-05"
+    ]
+  }
+}

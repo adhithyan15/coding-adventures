@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C255-jurmana",
+    "language": "urdu",
+    "chapter": 255,
+    "sequence": 15430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba065680e0c3edd9"
+  },
+  "findings": []
+}

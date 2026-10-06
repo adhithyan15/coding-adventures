@@ -21,6 +21,13 @@ public static class MosaicRuntimeHost
     private static readonly bool PersistenceEnabled = __MOSAIC_PERSISTENCE_ENABLED__;
     private const string ApplicationId = "__MOSAIC_APPLICATION_ID__";
     private const string StateFileName = "mosaic-state.v1.json";
+    /// <summary>
+    /// How the runtime's refusal of an invalid environment begins
+    /// (<c>mosaic-app-runtime</c>'s <c>INVALID_ENVIRONMENT_DIAGNOSTIC</c>). No
+    /// other failure begins this way: an app error begins "Mosaic application
+    /// error".
+    /// </summary>
+    private const string InvalidEnvironmentDiagnostic = "__MOSAIC_INVALID_ENVIRONMENT__";
     private static string? LastLoadError;
     private static Runtime? State = Load();
 
@@ -92,6 +99,115 @@ public static class MosaicRuntimeHost
     }
 
     /// <summary>
+    /// What the platform knows before the first frame (UI48 ENV4): a Windows
+    /// desktop has a mouse that hovers. WinUI's reduced-motion setting is not
+    /// read yet, so that axis is <c>no-preference</c>, as on Compose Desktop
+    /// and Qt. The same values go into the start context.
+    /// </summary>
+    public static IReadOnlyDictionary<string, string> InitialEnvironment() =>
+        new Dictionary<string, string>
+        {
+            ["pointer"] = "fine",
+            ["hover"] = "hover",
+            ["reducedMotion"] = "no-preference",
+        };
+
+    /// <summary>
+    /// A window reduced to the six UI48 §4 values, under
+    /// <c>mosaic-app-runtime</c>'s wire names. <paramref name="width"/> and
+    /// <paramref name="height"/> are effective pixels (WinUI's
+    /// <c>ActualWidth</c>/<c>ActualHeight</c>), bucketed at 600 and 1024 as on
+    /// every other host, so one window size is one size class everywhere.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    ///   width      sizeClass     height vs width   orientation
+    ///   &lt; 600      compact       taller            portrait
+    ///   &lt; 1024     regular       otherwise         landscape (a square too)
+    ///   otherwise  expanded
+    /// </code>
+    /// </remarks>
+    public static IReadOnlyDictionary<string, string> EnvironmentReport(
+        double width, double height, bool dark) =>
+        new Dictionary<string, string>(InitialEnvironment())
+        {
+            ["colorScheme"] = dark ? "dark" : "light",
+            ["sizeClass"] = width < 600 ? "compact" : width < 1024 ? "regular" : "expanded",
+            ["orientation"] = height > width ? "portrait" : "landscape",
+        };
+
+    /// <summary>
+    /// Tell the runtime the window's environment (UI48 ENV4) as
+    /// <c>environmentChanged</c>, and show its answer on
+    /// <paramref name="component"/>.
+    /// </summary>
+    /// <returns>
+    /// Null when there was nothing to say or the runtime took it and it was
+    /// shown; a status line when it failed (refused, or its props could not be
+    /// applied), when taking it tripped a settle guard, or when it retried a
+    /// failed save and so set or cleared the storage warning. Accepting says nothing, so the status
+    /// bar keeps describing the user's last action rather than a resize.
+    /// </returns>
+    /// <remarks>
+    /// <list type="bullet">
+    /// <item>No runtime, the same report as the last one taken, or the same
+    /// as the last one refused as invalid: nothing is sent.</item>
+    /// <item>An app that does not react answers at the revision already
+    /// showing, without props. The props showing stay (see
+    /// <c>KeepShowingProps</c>) and nothing is re-applied, so lists are not
+    /// rebuilt under the user on every resize.</item>
+    /// <item>An answer with new props is applied, strictly when
+    /// <paramref name="requiredProps"/> are named (a native-complete shell), as
+    /// <see cref="HandleRequiredEvent"/> applies an event's.</item>
+    /// <item>A failure leaves the screen as it is and is not remembered as
+    /// taken. Only a refusal of the report itself (an invalid environment)
+    /// holds that identical report back; any other failure -- an app error,
+    /// which may be transient -- lets the same report be sent again.
+    /// A report the runtime took but whose strict apply failed IS remembered
+    /// (the runtime has it); the apply is retried by the next report or
+    /// event.</item>
+    /// <item>An answer at the revision showing (the app ignored it) rewrites
+    /// no state file, so a resize storm costs no disk writes -- unless an
+    /// earlier save failed, when it retries that save and shows the warning
+    /// it sets or clears.</item>
+    /// </list>
+    /// </remarks>
+    public static string? ReportEnvironment(
+        object component,
+        IReadOnlyDictionary<string, string> environment,
+        params string[] requiredProps)
+    {
+        var runtime = State;
+        if (runtime is null) return null;
+        try
+        {
+            return runtime.ReportEnvironment(component, environment, requiredProps);
+        }
+        catch (Exception error)
+        {
+            // A refusal, a strict apply that found props missing, or a
+            // runtime closed underneath: each leaves the screen as it was.
+            return $"Status: Mosaic environment report failed: {error.GetType().Name}: {error.Message}";
+        }
+    }
+
+    /// <summary>
+    /// True while the loaded runtime is settling effects -- a dispatch, a
+    /// report or an effect answer is still running its effect loop (UI48
+    /// §7.11). False with no runtime.
+    /// </summary>
+    /// <remarks>
+    /// A window that switches layout roots checks this before swapping one
+    /// root for another, so a root is never taken out of the tree while an
+    /// effect handler may still be applying props to it. The window queues
+    /// the switch on the dispatcher, which does not run inside a settle on
+    /// its own thread, so this is a backstop. Read without the lock: taking
+    /// it from the UI thread while another thread settles would stall the
+    /// window for the whole settle, only to learn it had ended.
+    /// </remarks>
+    public static bool IsSettling => State?.IsSettling ?? false;
+
+    /// <summary>
     /// Called once per effect the runtime asks for. See the runtime's own
     /// documentation; setting it with no runtime loaded is a no-op, matching
     /// every other accessor here.
@@ -100,6 +216,23 @@ public static class MosaicRuntimeHost
     {
         get => State?.EffectHandler;
         set { if (State is { } runtime) runtime.EffectHandler = value; }
+    }
+
+    /// <summary>
+    /// Called after an effect that was deferred is answered: the app moved
+    /// with no call from the window, so the window has to be told (UI87 §7.6).
+    /// Compose's and Flutter's <c>setPropsChangedHandler</c>. Raised on the
+    /// thread that answered, after the host's lock is released, so a handler
+    /// should marshal to its <c>DispatcherQueue</c> and re-apply props there.
+    /// An answer given inside the handler that was offered the effect is not
+    /// deferred and raises nothing: the dispatch that minted it returns it.
+    /// Setting it with no runtime loaded is a no-op, as for
+    /// <see cref="EffectHandler"/>; a retried start sets it again.
+    /// </summary>
+    public static Action? PropsChanged
+    {
+        get => State?.PropsChanged;
+        set { if (State is { } runtime) runtime.PropsChanged = value; }
     }
 
     /// <summary>Answer an effect the app is waiting on.</summary>
@@ -111,6 +244,45 @@ public static class MosaicRuntimeHost
     /// runtime is not awaiting this id, or when there is no runtime at all.
     /// </summary>
     public static bool DeferEffect(ulong id) => State?.DeferEffect(id) ?? false;
+
+    /// <summary>
+    /// The effect surface of ONE loaded runtime, for work that answers later.
+    /// </summary>
+    /// <remarks>
+    /// The static <c>CompleteEffect</c> answers whichever runtime is loaded
+    /// when it is called. Work that deferred an effect and answers after a
+    /// <c>Close</c> and <c>LoadRequired</c> (a retried start) would then
+    /// answer the NEW runtime -- whose effect ids restart, so a stale answer
+    /// could settle an unrelated effect that happens to reuse the id. A scope
+    /// is bound to the runtime loaded when it was taken: once that runtime is
+    /// closed, <c>DeferEffect</c> refuses and <c>CompleteEffect</c> throws
+    /// <see cref="ObjectDisposedException"/>, and the new runtime never sees
+    /// the answer. The platform library (MosaicPlatformEffects.cs) installs
+    /// through one.
+    /// </remarks>
+    public sealed class EffectScope
+    {
+        private readonly Runtime runtime;
+
+        private EffectScope(Runtime runtime) => this.runtime = runtime;
+
+        /// <summary>A scope on the runtime loaded now, or null when none is.</summary>
+        public static EffectScope? Current() => State is { } runtime ? new EffectScope(runtime) : null;
+
+        /// <summary>True while this scope's runtime is the one loaded.</summary>
+        public bool IsCurrent => ReferenceEquals(State, runtime);
+
+        public Action<ulong, string, JsonElement, string>? EffectHandler
+        {
+            get => runtime.EffectHandler;
+            set => runtime.EffectHandler = value;
+        }
+
+        public bool DeferEffect(ulong id) => IsCurrent && runtime.DeferEffect(id);
+
+        /// <summary>Throws <see cref="ObjectDisposedException"/> once this runtime is closed.</summary>
+        public void CompleteEffect(ulong id, object result) => runtime.CompleteEffect(id, result);
+    }
 
     public static void Close()
     {
@@ -194,6 +366,31 @@ public static class MosaicRuntimeHost
         private ulong sequence;
         private JsonElement latestUpdate;
         private string? persistenceWarning;
+        /// <summary>
+        /// The revision the state file was last saved at by an answer, so an
+        /// answer at that same revision skips the write. Null until the first
+        /// save: the first answer after launch always writes, so a fresh
+        /// install has its state on disk even when the app ignored that first
+        /// answer.
+        /// </summary>
+        private ulong? savedRevision;
+        /// <summary>
+        /// The last environment the runtime took (UI48 ENV4), so an unchanged
+        /// report is not sent twice. Per runtime: a retried start reports
+        /// afresh.
+        /// </summary>
+        private Dictionary<string, string>? lastReportedEnvironment;
+        /// <summary>
+        /// The last report the runtime refused as invalid, not re-sent
+        /// unchanged. Any other failure leaves it alone.
+        /// </summary>
+        private Dictionary<string, string>? lastRefusedEnvironment;
+        /// <summary>
+        /// The revision last applied to a component, so an environment report
+        /// re-applies only when there is something new to show -- or an
+        /// earlier apply is still owed.
+        /// </summary>
+        private ulong? appliedRevision;
         private readonly Create create;
         private readonly Dispatch dispatch;
         private readonly Snapshot snapshot;
@@ -218,6 +415,9 @@ public static class MosaicRuntimeHost
         /// instead.
         /// </remarks>
         public Action<ulong, string, JsonElement, string>? EffectHandler { get; set; }
+
+        /// <summary>See <see cref="MosaicRuntimeHost.PropsChanged"/>.</summary>
+        public Action? PropsChanged { get; set; }
 
         /// <summary>Awaited effect ids nothing has answered yet.</summary>
         private readonly HashSet<ulong> awaiting = new();
@@ -245,6 +445,9 @@ public static class MosaicRuntimeHost
         private bool answered;
         private int settling;
         private string? effectWarning;
+
+        /// <summary>See <see cref="MosaicRuntimeHost.IsSettling"/>.</summary>
+        public bool IsSettling => System.Threading.Volatile.Read(ref settling) > 0;
 
         /// <summary>
         /// Why the last settle gave up, if it did.
@@ -305,6 +508,10 @@ public static class MosaicRuntimeHost
                     ["platform"] = "windows",
                     ["restoredSnapshot"] = restoredSnapshot,
                 };
+                // What the platform knows before the first frame (UI48 ENV4).
+                // The window's size class and orientation arrive with the
+                // shell's first environment report.
+                foreach (var (axis, value) in InitialEnvironment()) start[axis] = value;
                 // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time"). Left out when outside -840..=840 (a custom TZ string can say anything): the runtime would refuse it and the app would not start; without it the app uses UTC.
                 var utcOffsetMinutes = (int)TimeZoneInfo.Local.GetUtcOffset(DateTime.Now).TotalMinutes;
                 if (utcOffsetMinutes >= -840 && utcOffsetMinutes <= 840) start["utcOffsetMinutes"] = utcOffsetMinutes;
@@ -378,10 +585,121 @@ public static class MosaicRuntimeHost
                 // Settle BEFORE persisting: the runtime refuses to snapshot
                 // while an effect is outstanding, so persisting first warns on
                 // every effect.
-                latestUpdate = SettleEffects(update);
-                PersistSnapshot();
+                latestUpdate = KeepShowingProps(SettleEffects(update));
+                // An answer at the revision the state file already holds --
+                // an environment the app ignored (UI48 §7.1) -- changed
+                // nothing the app would save, so the file is not rewritten: a
+                // resize storm costs no disk writes. Compared with the
+                // revision SAVED, not the one showing: a fresh install's first
+                // answer is often an ignored environment, and must still write
+                // the state. Unless an earlier save failed (a warning is
+                // pending): then it retries that save, so a kill before the
+                // next event does not lose that revision. Unreadable revisions
+                // persist.
+                var revision = Revision(latestUpdate);
+                if (revision is null
+                    || revision != savedRevision
+                    || persistenceWarning is not null)
+                {
+                    PersistSnapshot();
+                    savedRevision = persistenceWarning is null ? revision : null;
+                }
             }
         }
+
+        /// <summary>
+        /// An update without props AT THE REVISION ALREADY SHOWING (an
+        /// environment the app did not react to, UI48 §7.1) carries nothing to
+        /// render: keep the props showing, so a later <c>ApplyProps</c> still
+        /// has them. Only then -- a props-less update that moves the revision
+        /// is a defect, and is left as it is so it surfaces.
+        /// </summary>
+        private JsonElement KeepShowingProps(JsonElement update)
+        {
+            if (update.ValueKind != JsonValueKind.Object
+                || !update.TryGetProperty("props", out var props)
+                || props.ValueKind != JsonValueKind.Null)
+                return update;
+            if (latestUpdate.ValueKind != JsonValueKind.Object
+                || !latestUpdate.TryGetProperty("props", out var showing)
+                || showing.ValueKind != JsonValueKind.Object)
+                return update;
+            if (Revision(update) is not { } revision
+                || Revision(latestUpdate) is not { } shownRevision
+                || revision != shownRevision)
+                return update;
+            return WithProperty(update, "props", showing);
+        }
+
+        private static ulong? Revision(JsonElement update) =>
+            update.ValueKind == JsonValueKind.Object
+                && update.TryGetProperty("revision", out var revision)
+                && revision.ValueKind == JsonValueKind.Number
+                && revision.TryGetUInt64(out var value)
+                ? value
+                : null;
+
+        /// <summary>The host half of <see cref="MosaicRuntimeHost.ReportEnvironment"/>.</summary>
+        public string? ReportEnvironment(
+            object component,
+            IReadOnlyDictionary<string, string> environment,
+            IReadOnlyCollection<string> requiredProps)
+        {
+            lock (gate)
+            {
+                EnsureOpen();
+                // Inside a settle -- an effect handler that changed the window
+                // synchronously -- a dispatch would nest in the outer settle
+                // and be overwritten by it. The shell reports from the
+                // dispatcher queue, so this is only a backstop; not remembered,
+                // so the next report is sent.
+                if (settling > 0) return null;
+                var report = new Dictionary<string, string>(environment);
+                if (SameEnvironment(lastReportedEnvironment, report)) return null;
+                // A report the runtime refused as invalid is not re-sent until
+                // it changes: a drag over a threshold would otherwise send it,
+                // and rewrite the status line, on every tick.
+                if (SameEnvironment(lastRefusedEnvironment, report)) return null;
+                var warningBefore = persistenceWarning;
+                try
+                {
+                    Dispatch("environmentChanged", report);
+                }
+                catch (MosaicRuntimeException error) when (
+                    error.Message.StartsWith(InvalidEnvironmentDiagnostic, StringComparison.Ordinal))
+                {
+                    // Only a refusal of the report itself. Any other failure
+                    // (an app error, which may be transient) propagates
+                    // unremembered, so the same report is sent again rather
+                    // than leaving the app on a stale environment until the
+                    // window changes to a third one.
+                    lastRefusedEnvironment = report;
+                    throw;
+                }
+                // The runtime took it: remembered now, whether or not the
+                // apply below succeeds. An apply still owed is retried by the
+                // next report or event, which compare against what was last
+                // APPLIED rather than what was showing before this dispatch.
+                lastReportedEnvironment = report;
+                lastRefusedEnvironment = null;
+                // A tripped settle guard reaches the caller only through
+                // Status, which consumes it.
+                if (settleError is not null)
+                    return Status("Mosaic runtime handled environmentChanged");
+                // An ignored report retries a failed save (see Dispatch); if
+                // that set or cleared the storage warning, it is shown as an
+                // event's would be: re-applied props and a status line.
+                var warningChanged = persistenceWarning != warningBefore;
+                if (Revision(latestUpdate) != appliedRevision || warningChanged)
+                    ApplyProps(component, requiredProps, strict: requiredProps.Count > 0);
+                return warningChanged ? Status("Mosaic runtime handled environmentChanged") : null;
+            }
+        }
+
+        private static bool SameEnvironment(
+            Dictionary<string, string>? last, Dictionary<string, string> report) =>
+            // Set equality: keys are unique and KeyValuePair compares ordinally.
+            last is not null && last.Count == report.Count && !last.Except(report).Any();
 
         public JsonElement? Snapshot()
         {
@@ -419,7 +737,35 @@ public static class MosaicRuntimeHost
         /// </remarks>
         public void CompleteEffect(ulong id, object result)
         {
+            Action? notify;
             lock (gate)
+            {
+                notify = CompleteEffectLocked(id, result);
+            }
+            // Outside the lock: the window's handler runs window code, and a
+            // handler that re-applied props inline would otherwise take the
+            // host's lock from inside it on another thread's behalf.
+            if (notify is null) return;
+            try
+            {
+                notify();
+            }
+            catch (Exception error)
+            {
+                // The answer is already the runtime's; a window that failed to
+                // hear about it must not turn that into a failed answer.
+                System.Diagnostics.Debug.WriteLine($"Mosaic props-changed handler failed: {error}");
+            }
+        }
+
+        /// <summary>
+        /// The answer itself, under the host's lock. Returns the props-changed
+        /// handler to raise once the lock is released: only for an effect that
+        /// was deferred, and only when no settle is running (an answer inside a
+        /// settle is returned by the call that started it).
+        /// </summary>
+        private Action? CompleteEffectLocked(ulong id, object result)
+        {
             {
                 EnsureOpen();
                 var complete = completeEffect
@@ -433,7 +779,7 @@ public static class MosaicRuntimeHost
                 // Cleared only once the runtime accepted the answer: clearing on
                 // the way in would drop the obligation if the call failed.
                 awaiting.Remove(id);
-                deferred.Remove(id);
+                var wasDeferred = deferred.Remove(id);
                 if (settling > 0 && carriedEffects is { } carrier)
                 {
                     // Inside a settle: hand this to the loop already running
@@ -442,10 +788,13 @@ public static class MosaicRuntimeHost
                     carrier.AddRange(EffectsOf(update));
                     latestAnswer = update;
                     answered = true;
-                    return;
+                    return null;
                 }
-                latestUpdate = SettleEffects(update);
+                latestUpdate = KeepShowingProps(SettleEffects(update));
                 PersistSnapshot();
+                // A deferred answer is the return value of no call the window
+                // made, so the window has to be told even though nothing asked.
+                return wasDeferred ? PropsChanged : null;
             }
         }
 
@@ -862,6 +1211,7 @@ public static class MosaicRuntimeHost
                     }
                     property.SetValue(component, converted.value);
                 }
+                appliedRevision = Revision(latestUpdate);
             }
         }
 
@@ -871,6 +1221,8 @@ public static class MosaicRuntimeHost
             {
                 if (app != IntPtr.Zero) destroy(app);
                 app = IntPtr.Zero;
+                // Drop the window: a closed runtime answers nothing more.
+                PropsChanged = null;
                 if (settling > 0)
                 {
                     // A callback below us is still running, and its caller will

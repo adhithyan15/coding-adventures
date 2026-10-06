@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "Battery, Charger, Singer, Concert, Show",
+  "label": "ch:fr-battery-charger-singer-concert-show",
+  "canDo": "I can say a battery, a charger, a singer, a concert and a show.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C223-spectacle",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say a battery, a charger, a singer, a concert and a show.",
+    "assesses": [
+      "FR-LEX-C223-CHOSES223-03",
+      "FR-LEX-C223-CHOSES223-04",
+      "FR-LEX-C223-CHOSES223-05"
+    ]
+  }
+}

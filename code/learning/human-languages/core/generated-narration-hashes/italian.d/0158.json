@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:d47519df7221d9e2",
+  "lessonIds": [
+    "IT-C158-maturo",
+    "IT-C158-buio",
+    "IT-C158-chiaro",
+    "IT-C158-scuro",
+    "IT-C158-puntuale"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch158.txt",
+  "json": "italian/narration/ch158.json",
+  "textHash": "fnv1a64:877d365237b7d4e8",
+  "jsonHash": "fnv1a64:2da48b348db88562",
+  "findings": []
+}

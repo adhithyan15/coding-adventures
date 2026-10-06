@@ -39,7 +39,7 @@ for a live cross-language view.
 | Grammar families | 54 |
 | Architecture and roadmap specifications | 1,498 |
 | Learning documents | 4,963 |
-| Forme packages | 63 |
+| Forme packages | 67 |
 | CI, release, and deployment workflows | 36 |
 
 These counts are a dated orientation point, not release promises. The generated
@@ -249,7 +249,7 @@ See the [Mosaic overview](./code/specs/UI00-mosaic.md) and
 
 Forme is the repository's universal authoring pipeline: typed, capability-aware
 stages turn content into web pages, documentation sites, feeds, search indexes,
-and deployment artifacts. Its 66 TypeScript packages now cover the kernel and
+and deployment artifacts. Its 67 TypeScript packages now cover the kernel and
 orchestrator, filesystem and Markdown sources, routing and collection,
 transformations, Style IR, HTML/AOT emitters, metadata, sitemaps, feeds,
 fingerprinted assets, an in-memory live-preview server, and a complete
@@ -275,13 +275,18 @@ through one pipeline-wide permit budget. Filesystem emitters can replay
 validated artifacts to reconstruct a deleted output tree without rerunning
 unrelated pure stages. The capability-free deploy core now validates complete
 manifests, plans owned creates/updates/skips/deletes, verifies content hashes,
-and emits reproducible dry-run reports. Its filesystem adapter stages and
-reversibly swaps complete output trees. The GitHub Pages adapter preserves
-independently owned prefixes of a shared source branch and publishes each site
-through one atomic non-forced ref update. Forme is not yet a turnkey site
-generator: the remaining product layer includes deploy-command composition,
-plugin host and OS sandboxes,
-interactivity, and the authoring shell. Its canonical specification map now
+and emits reproducible reports. Its filesystem adapter stages and reversibly
+swaps complete output trees. The GitHub Pages adapter preserves independently
+owned prefixes of a shared source branch and publishes each site through one
+atomic non-forced ref update. Both live sites now build, inspect, and publish
+through `forme deploy`, completing the turnkey headless v0 path. The plugin
+host now adds deterministic discovery, manifest-authored stage proxies, a
+bounded JSON-RPC wire contract, typed streams, mediated capabilities,
+cancellation, and crash isolation without an unsandboxed fallback. Persistent
+trust and grants, atomic installation, TypeScript/Python/Rust runners, native
+Linux/macOS/Windows sandboxes, mixed first-/third-party orchestration, and
+bounded live storage watches complete the Extensible v1 path. Interactivity
+and the authoring shell remain. Its canonical specification map now
 runs collision-free from FM01 through FM08, with an implementation ledger in
 every Forme specification and an always-on CI contract guarding the map.
 The checked-in [completion roadmap](./code/specs/FM00-forme-completion-roadmap.md)

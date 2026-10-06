@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-205-VALE205",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "LA-EXT-205-VALE205"
+  ],
+  "after": []
+}

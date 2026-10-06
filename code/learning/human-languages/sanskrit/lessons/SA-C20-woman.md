@@ -45,7 +45,7 @@ reviews_of: [SA-C20-man]
 
 Look at it beside नरः and the relationship is visible: the same *nar-*, a
 different ending. Sanskrit builds a great many feminine nouns with a long
-**-ई** (*-ī*), and this is your first.
+*-ī*, and this is your first.
 
 So the map has grown again: *-am* neuter, *-aḥ* masculine, *-iḥ* a third family,
 and now *-ī* feminine. Four endings, four families. You are not being asked to

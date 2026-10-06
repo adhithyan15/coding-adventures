@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:75aca70472979417",
+  "lessonIds": [
+    "MR-C186-papad",
+    "MR-C186-catni",
+    "MR-C186-kosimbir",
+    "MR-C186-sira",
+    "MR-C186-modak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch186.txt",
+  "json": "marathi/narration/ch186.json",
+  "textHash": "fnv1a64:60689863495d3e8c",
+  "jsonHash": "fnv1a64:0d201a62ea2d68fc",
+  "findings": []
+}

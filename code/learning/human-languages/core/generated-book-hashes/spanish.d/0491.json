@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:9f2a187bb1ea37ec",
+  "lessonIds": [
+    "ES-C491-recibo",
+    "ES-C491-oferta",
+    "ES-C491-cajero",
+    "ES-C491-cartera",
+    "ES-C491-propina"
+  ],
+  "tex": "spanish/book/chapters/ch491-pagar-en-la-tienda.tex"
+}

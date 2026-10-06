@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:5955649fde6427f4",
+  "lessonIds": [
+    "GE-C207-krankenwagen",
+    "GE-C207-feuerwehr",
+    "GE-C207-dieb",
+    "GE-C207-diebstahl",
+    "GE-C207-gericht"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch207.txt",
+  "json": "german/narration/ch207.json",
+  "textHash": "fnv1a64:2450fce1fef25c49",
+  "jsonHash": "fnv1a64:920f2f4b21ff194b",
+  "findings": []
+}

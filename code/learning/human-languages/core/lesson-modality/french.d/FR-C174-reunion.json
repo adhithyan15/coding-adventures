@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C174-reunion",
+    "language": "french",
+    "chapter": 174,
+    "sequence": 8940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a92266e3f7b00c0"
+  },
+  "findings": []
+}

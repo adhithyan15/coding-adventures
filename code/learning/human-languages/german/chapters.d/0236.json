@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "A duty, Quality, A speech, A row, Religion",
+  "label": "ch:ge-a-duty-quality-a-speech-a-row-religion",
+  "canDo": "I can say a duty, quality, a speech, a row and religion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C236-religion",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say a duty, quality, a speech, a row and religion.",
+    "assesses": [
+      "GE-LEX-C236-THING236-03",
+      "GE-LEX-C236-THING236-04",
+      "GE-LEX-C236-THING236-05"
+    ]
+  }
+}

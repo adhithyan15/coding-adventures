@@ -1,0 +1,19 @@
+{
+  "chapter": 99,
+  "title": "Property, Income, Job, Intelligence, Knowledge",
+  "label": "ch:bn-property-income-job-intelligence-knowledge",
+  "canDo": "I can say property, income, a job, intelligence and knowledge.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "BN-R99-second-pass-wanting-and-having",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: I can say property, income, a job, intelligence and knowledge.",
+    "assesses": [
+      "BN-LEX-C99-CAN99-03",
+      "BN-LEX-C99-CAN99-04",
+      "BN-LEX-C99-CAN99-05"
+    ]
+  }
+}

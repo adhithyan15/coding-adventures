@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:51b2add66f093b69",
+  "lessonIds": [
+    "LA-C205-vulnus",
+    "LA-C205-cicatrix",
+    "LA-C205-gravedo",
+    "LA-C205-medicamentum",
+    "LA-C205-unguentum",
+    "LA-R205-first-pass-words-from-chapters-197-200",
+    "LA-R205-second-pass-words-from-chapters-201-205"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch205.txt",
+  "json": "latin/narration/ch205.json",
+  "textHash": "fnv1a64:065f9ec8d3ca4939",
+  "jsonHash": "fnv1a64:de65d6c82372a792",
+  "findings": []
+}

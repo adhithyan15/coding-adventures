@@ -24,10 +24,14 @@
  *   - Write paths derived from the bundle's routes have already
  *     been validated by the site-emitter (no `..`, no `\`,
  *     leading `/` required) — we still re-confirm before
- *     opening files, as defence in depth.
+ *     opening files, reject linked directory components and
+ *     multiply-linked targets, and identity-check each open
+ *     handle before truncation, as defence in depth.
  */
 
 import * as fs from "node:fs/promises";
+import type { FileHandle } from "node:fs/promises";
+import { constants as fsConstants, type Stats } from "node:fs";
 import * as path from "node:path";
 import * as url from "node:url";
 import { routeToOutputPath } from "@coding-adventures/forme-aot-page-bundle-emitter";
@@ -45,7 +49,6 @@ async function cli(): Promise<void> {
   const outDir = path.resolve(process.cwd(), outArg ?? "dist");
 
   validateOutDir(outDir, process.cwd());
-  await warnIfOverwritingFiles(outDir);
 
   console.log(`[forme-doc-demo] corpus = ${corpusDir}`);
   console.log(`[forme-doc-demo] out    = ${outDir}`);
@@ -188,40 +191,6 @@ export function validateOutDir(outDir: string, cwd: string): void {
 }
 
 /**
- * If `outDir` already exists and contains files that don't look
- * like a previous demo build's output, log a prominent warning.
- *
- * We don't BLOCK overwrite — the typical run case is re-running
- * the demo against the previous `dist/` — but we do want a user
- * who accidentally points the demo at their actual website to
- * see the warning before everything is silently overwritten.
- *
- * Heuristic: a "previous demo build" has either no files at all,
- * or `index.html` + `sidebar.json` + `search/manifest.json` at
- * the top level.  Anything else triggers the warning.
- */
-async function warnIfOverwritingFiles(outDir: string): Promise<void> {
-  let entries: import("node:fs").Dirent[];
-  try {
-    entries = await fs.readdir(outDir, { withFileTypes: true });
-  } catch {
-    return; // Doesn't exist yet → nothing to warn about.
-  }
-  if (entries.length === 0) return;
-  // Look for the demo-build fingerprint.
-  const names = new Set(entries.map((e) => e.name));
-  const looksLikeDemoBuild =
-    names.has("index.html") && names.has("sidebar.json") && names.has("search");
-  if (looksLikeDemoBuild) return;
-  console.warn(
-    `[forme-doc-demo] WARNING: ${outDir} contains files that don't look ` +
-    `like a previous demo build (${entries.length} entries: ` +
-    `${entries.slice(0, 5).map((e) => e.name).join(", ")}${entries.length > 5 ? ", ..." : ""}). ` +
-    `Existing files at conflicting paths WILL be overwritten.`,
-  );
-}
-
-/**
  * Walk a corpus directory and return every `.md` file under it.
  * Refuses symlinks (defence against escape-via-symlink).  Result
  * paths are relative to `root` and use forward slashes (so the
@@ -256,21 +225,369 @@ async function walk(root: string, rel: string, out: MarkdownFile[]): Promise<voi
  * written to `outDir/<routeToOutputPath(route)>`; intermediate
  * directories are created on demand.
  *
- * Containment check: every resolved write target must start with
- * `outDir + path.sep`.  If a malicious route ever slipped past
- * the site-emitter's validation, this catches it before opening
- * any handle.
+ * The output root must not exist. It is created privately under the canonical
+ * working directory and protected by an exclusive writer lock for the whole
+ * operation. Directory components are created and inspected one at a time
+ * without traversing symlinks or Windows reparse points. Final files are
+ * opened with O_NOFOLLOW where the host exposes it, then authority-chain,
+ * path, handle, and lock identities are checked before truncation;
+ * multiply-linked and unowned files are refused.
  */
 export async function writeBundle(
   bundle: { pages: ReadonlyArray<{ route: string; html: string }> },
   outDir: string,
 ): Promise<void> {
-  await fs.mkdir(outDir, { recursive: true });
-  for (const page of bundle.pages) {
-    const relPath = routeToOutputPath(page.route);
-    const target = safeJoin(outDir, relPath);
-    await fs.mkdir(path.dirname(target), { recursive: true });
-    await fs.writeFile(target, page.html, "utf8");
+  const context = await createPrivateOutputRoot(outDir);
+  try {
+    for (const page of bundle.pages) {
+      const relPath = routeToOutputPath(page.route);
+      const target = safeJoin(context.root, relPath);
+      await createPrivateChildDirectories(context, path.dirname(target));
+      await writeFileWithoutFollowingLinks(context, target, page.html);
+    }
+  } finally {
+    await releasePrivateOutputRoot(context);
+  }
+}
+
+type PathIdentity = Readonly<{ dev: number; ino: number }>;
+type DirectorySnapshot = Readonly<{ path: string; identity: PathIdentity }>;
+type OutputContext = {
+  readonly anchor: string;
+  readonly root: string;
+  readonly authorityChain: ReadonlyArray<DirectorySnapshot>;
+  readonly lockPath: string;
+  readonly lockHandle: FileHandle;
+  readonly lockIdentity: PathIdentity;
+  readonly ownedFiles: Map<string, PathIdentity>;
+};
+
+function identityOf(stat: Stats): PathIdentity {
+  return { dev: stat.dev, ino: stat.ino };
+}
+
+function sameIdentity(left: PathIdentity, right: PathIdentity): boolean {
+  return left.dev === right.dev && left.ino === right.ino;
+}
+
+function isMissing(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: unknown }).code === "ENOENT"
+  );
+}
+
+async function inspectDirectory(candidate: string): Promise<PathIdentity> {
+  const stat = await fs.lstat(candidate);
+  if (stat.isSymbolicLink()) {
+    throw new Error(`writeBundle: refusing symbolic link or reparse point ${candidate}`);
+  }
+  if (!stat.isDirectory()) {
+    throw new Error(`writeBundle: expected directory at ${candidate}`);
+  }
+  return identityOf(stat);
+}
+
+async function inspectDirectoryChain(
+  root: string,
+  descendant: string,
+): Promise<ReadonlyArray<DirectorySnapshot>> {
+  const resolvedRoot = path.resolve(root);
+  const resolvedDescendant = path.resolve(descendant);
+  const relative = path.relative(resolvedRoot, resolvedDescendant);
+  if (relative === ".." || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+    throw new Error(`writeBundle: ${resolvedDescendant} escapes ${resolvedRoot}`);
+  }
+
+  const paths = [resolvedRoot];
+  let current = resolvedRoot;
+  for (const component of relative.split(path.sep).filter((part) => part.length > 0)) {
+    current = path.join(current, component);
+    paths.push(current);
+  }
+
+  const canonicalRoot = await fs.realpath(resolvedRoot);
+  const canonicalRootWithSep = canonicalRoot.endsWith(path.sep)
+    ? canonicalRoot
+    : canonicalRoot + path.sep;
+  const snapshots: DirectorySnapshot[] = [];
+  for (const candidate of paths) {
+    const identity = await inspectDirectory(candidate);
+    const canonical = await fs.realpath(candidate);
+    if (!(canonical === canonicalRoot || canonical.startsWith(canonicalRootWithSep))) {
+      throw new Error(`writeBundle: linked directory ${candidate} escapes ${resolvedRoot}`);
+    }
+    snapshots.push({ path: candidate, identity });
+  }
+  return snapshots;
+}
+
+function assertSameDirectoryChain(
+  before: ReadonlyArray<DirectorySnapshot>,
+  after: ReadonlyArray<DirectorySnapshot>,
+): void {
+  if (
+    before.length !== after.length ||
+    before.some(
+      (entry, index) =>
+        after[index]?.path !== entry.path ||
+        !sameIdentity(entry.identity, after[index]!.identity),
+    )
+  ) {
+    throw new Error("writeBundle: output directory identity changed during write");
+  }
+}
+
+function assertPrivateDirectory(candidate: string, stat: Stats): void {
+  if (process.platform !== "win32" && (stat.mode & 0o077) !== 0) {
+    throw new Error(`writeBundle: private root permissions changed at ${candidate}`);
+  }
+  if (
+    process.platform !== "win32" &&
+    typeof process.getuid === "function" &&
+    stat.uid !== process.getuid()
+  ) {
+    throw new Error(`writeBundle: private root ownership changed at ${candidate}`);
+  }
+}
+
+function assertAuthorityPrefix(
+  authority: ReadonlyArray<DirectorySnapshot>,
+  observed: ReadonlyArray<DirectorySnapshot>,
+): void {
+  if (observed.length < authority.length) {
+    throw new Error("writeBundle: output authority chain was shortened");
+  }
+  assertSameDirectoryChain(authority, observed.slice(0, authority.length));
+}
+
+/**
+ * Establish a single-writer output root beneath the canonical current working
+ * directory. The root must not exist: exclusive creation plus mode 0700 and an
+ * O_EXCL lock file form the enforced quiescent-root contract used on portable
+ * Node runtimes that do not expose openat-style descriptor-relative writes.
+ * Concurrent mutation by another process running as the same OS identity is
+ * outside that contract; every observable identity change still fails closed.
+ */
+async function createPrivateOutputRoot(requested: string): Promise<OutputContext> {
+  const lexicalAnchor = path.resolve(process.cwd());
+  const requestedResolved = path.resolve(requested);
+  const relative = path.relative(lexicalAnchor, requestedResolved);
+  if (
+    relative.length === 0 ||
+    relative === ".." ||
+    relative.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relative)
+  ) {
+    throw new Error("writeBundle: output directory must be a new child of the working directory");
+  }
+
+  const anchor = await fs.realpath(lexicalAnchor);
+  const root = path.resolve(anchor, relative);
+  const components = relative.split(path.sep).filter((component) => component.length > 0);
+  let current = anchor;
+  for (const component of components.slice(0, -1)) {
+    current = path.join(current, component);
+    try {
+      await fs.mkdir(current, { mode: 0o700 });
+    } catch (error) {
+      if (
+        typeof error !== "object" ||
+        error === null ||
+        !("code" in error) ||
+        (error as { code?: unknown }).code !== "EEXIST"
+      ) {
+        throw error;
+      }
+    }
+    await inspectDirectory(current);
+  }
+
+  try {
+    const existing = await fs.lstat(root);
+    if (existing.isSymbolicLink()) {
+      throw new Error(`writeBundle: refusing symbolic link or reparse point ${root}`);
+    }
+    throw new Error(`writeBundle: private output root already exists at ${root}`);
+  } catch (error) {
+    if (!isMissing(error)) throw error;
+  }
+
+  await fs.mkdir(root, { mode: 0o700 });
+  if (process.platform !== "win32") await fs.chmod(root, 0o700);
+  const rootStat = await fs.lstat(root);
+  if (rootStat.isSymbolicLink() || !rootStat.isDirectory()) {
+    throw new Error(`writeBundle: private output root is linked or invalid at ${root}`);
+  }
+  assertPrivateDirectory(root, rootStat);
+
+  const authorityChain = await inspectDirectoryChain(anchor, root);
+  const lockPath = path.join(root, ".forme-write-lock");
+  const noFollow = typeof fsConstants.O_NOFOLLOW === "number" ? fsConstants.O_NOFOLLOW : 0;
+  const lockHandle = await fs.open(
+    lockPath,
+    fsConstants.O_WRONLY | fsConstants.O_CREAT | fsConstants.O_EXCL | noFollow,
+    0o600,
+  );
+  const lockStat = await lockHandle.stat();
+  if (!lockStat.isFile() || lockStat.nlink !== 1) {
+    await lockHandle.close();
+    throw new Error("writeBundle: could not establish the private writer lock");
+  }
+
+  return {
+    anchor,
+    root,
+    authorityChain,
+    lockPath,
+    lockHandle,
+    lockIdentity: identityOf(lockStat),
+    ownedFiles: new Map<string, PathIdentity>(),
+  };
+}
+
+async function verifyPrivateOutputRoot(context: OutputContext): Promise<void> {
+  const observed = await inspectDirectoryChain(context.anchor, context.root);
+  assertSameDirectoryChain(context.authorityChain, observed);
+  const rootStat = await fs.lstat(context.root);
+  assertPrivateDirectory(context.root, rootStat);
+
+  const openedLock = await context.lockHandle.stat();
+  const namedLock = await fs.lstat(context.lockPath);
+  if (
+    !openedLock.isFile() ||
+    openedLock.nlink !== 1 ||
+    namedLock.isSymbolicLink() ||
+    namedLock.nlink !== 1 ||
+    !sameIdentity(context.lockIdentity, identityOf(openedLock)) ||
+    !sameIdentity(context.lockIdentity, identityOf(namedLock))
+  ) {
+    throw new Error("writeBundle: private writer lock identity changed");
+  }
+}
+
+async function releasePrivateOutputRoot(context: OutputContext): Promise<void> {
+  try {
+    await verifyPrivateOutputRoot(context);
+    await fs.unlink(context.lockPath);
+  } finally {
+    await context.lockHandle.close();
+  }
+}
+
+async function createPrivateChildDirectories(
+  context: OutputContext,
+  requested: string,
+): Promise<void> {
+  const resolved = path.resolve(requested);
+  const relative = path.relative(context.root, resolved);
+  if (relative === ".." || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+    throw new Error(`writeBundle: ${resolved} escapes ${context.root}`);
+  }
+
+  await verifyPrivateOutputRoot(context);
+  let current = context.root;
+  for (const component of relative.split(path.sep).filter((part) => part.length > 0)) {
+    current = path.join(current, component);
+    try {
+      await fs.mkdir(current, { mode: 0o700 });
+    } catch (error) {
+      if (
+        typeof error !== "object" ||
+        error === null ||
+        !("code" in error) ||
+        (error as { code?: unknown }).code !== "EEXIST"
+      ) {
+        throw error;
+      }
+    }
+    await inspectDirectory(current);
+  }
+  const observed = await inspectDirectoryChain(context.anchor, resolved);
+  assertAuthorityPrefix(context.authorityChain, observed);
+}
+
+async function writeFileWithoutFollowingLinks(
+  context: OutputContext,
+  target: string,
+  contents: string,
+): Promise<void> {
+  const parent = path.dirname(target);
+  await verifyPrivateOutputRoot(context);
+  const beforeDirectories = await inspectDirectoryChain(context.anchor, parent);
+  assertAuthorityPrefix(context.authorityChain, beforeDirectories);
+
+  try {
+    const existing = await fs.lstat(target);
+    if (existing.isSymbolicLink()) {
+      throw new Error(`writeBundle: refusing symbolic link or reparse point ${target}`);
+    }
+    if (!existing.isFile()) {
+      throw new Error(`writeBundle: expected regular file at ${target}`);
+    }
+    if (existing.nlink !== 1) {
+      throw new Error(`writeBundle: refusing multiply-linked output file ${target}`);
+    }
+    const owned = context.ownedFiles.get(target);
+    if (owned === undefined || !sameIdentity(owned, identityOf(existing))) {
+      throw new Error(`writeBundle: refusing unowned existing output file ${target}`);
+    }
+  } catch (error) {
+    if (!isMissing(error)) throw error;
+  }
+
+  const noFollow = typeof fsConstants.O_NOFOLLOW === "number" ? fsConstants.O_NOFOLLOW : 0;
+  const handle = await fs.open(
+    target,
+    fsConstants.O_WRONLY | fsConstants.O_CREAT | noFollow,
+    0o644,
+  );
+  try {
+    const opened = await handle.stat();
+    if (!opened.isFile() || opened.nlink !== 1) {
+      throw new Error(`writeBundle: refusing linked or non-regular output file ${target}`);
+    }
+    const named = await fs.lstat(target);
+    if (
+      named.isSymbolicLink() ||
+      named.nlink !== 1 ||
+      !sameIdentity(identityOf(opened), identityOf(named))
+    ) {
+      throw new Error(`writeBundle: output file identity mismatch at ${target}`);
+    }
+
+    const afterOpenDirectories = await inspectDirectoryChain(context.anchor, parent);
+    assertSameDirectoryChain(beforeDirectories, afterOpenDirectories);
+    await verifyPrivateOutputRoot(context);
+
+    const immediatelyBeforeTruncate = await handle.stat();
+    if (
+      immediatelyBeforeTruncate.nlink !== 1 ||
+      !sameIdentity(identityOf(opened), identityOf(immediatelyBeforeTruncate))
+    ) {
+      throw new Error(`writeBundle: output file link identity changed at ${target}`);
+    }
+
+    await handle.truncate(0);
+    await handle.writeFile(contents, "utf8");
+    await handle.sync();
+
+    const afterWrite = await fs.lstat(target);
+    if (
+      afterWrite.isSymbolicLink() ||
+      afterWrite.nlink !== 1 ||
+      !sameIdentity(identityOf(opened), identityOf(afterWrite))
+    ) {
+      throw new Error(`writeBundle: output file identity changed at ${target}`);
+    }
+    const afterWriteDirectories = await inspectDirectoryChain(context.anchor, parent);
+    assertSameDirectoryChain(beforeDirectories, afterWriteDirectories);
+    await verifyPrivateOutputRoot(context);
+    context.ownedFiles.set(target, identityOf(afterWrite));
+  } finally {
+    await handle.close();
   }
 }
 
@@ -281,12 +598,15 @@ export async function writeBundle(
  * joined absolute path.
  */
 export function safeJoin(base: string, rel: string): string {
-  const target = path.resolve(base, rel);
+  const resolvedBase = path.resolve(base);
+  const target = path.resolve(resolvedBase, rel);
   // Containment check using the resolved-prefix comparison.
   // Append `path.sep` to `base` so that `outDir/foo` doesn't
   // accept an outDir of `outD` (prefix-string false match).
-  const baseWithSep = base.endsWith(path.sep) ? base : base + path.sep;
-  if (!(target === base || target.startsWith(baseWithSep))) {
+  const baseWithSep = resolvedBase.endsWith(path.sep)
+    ? resolvedBase
+    : resolvedBase + path.sep;
+  if (!(target === resolvedBase || target.startsWith(baseWithSep))) {
     throw new Error(`safeJoin: ${rel} escapes ${base} (resolved to ${target})`);
   }
   return target;

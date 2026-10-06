@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:57e9b3ec24e47553",
+  "lessonIds": [
+    "TE-C169-pundu",
+    "TE-C169-bobba",
+    "TE-C169-daddurlu",
+    "TE-C169-macca",
+    "TE-C169-benuku"
+  ],
+  "tex": "telugu/book/chapters/ch169-sore-blister-rash-scar-sprain.tex"
+}

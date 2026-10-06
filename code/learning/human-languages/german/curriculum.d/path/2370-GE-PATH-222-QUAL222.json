@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-222-QUAL222",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "GE-EXT-222-QUAL222"
+  ],
+  "after": []
+}

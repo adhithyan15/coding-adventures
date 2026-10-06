@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:8bdb3cd2b6f60a62",
+  "lessonIds": [
+    "RU-C146-bronirovat",
+    "RU-C146-povorachivat",
+    "RU-C146-peresekat",
+    "RU-C146-ostanavlivatsya",
+    "RU-C146-parkovat"
+  ],
+  "tex": "russian/book/chapters/ch146-to-book-to-turn-to-cross-to-stop-to-park.tex"
+}

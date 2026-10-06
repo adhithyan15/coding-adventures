@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R193-second-pass-words-from-chapters-189-193",
+    "language": "kannada",
+    "chapter": 193,
+    "sequence": 8880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c123deb4fd40965c"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C266-sakhteman",
+  "pathSegment": "FA-PATH-266-MAKAN266",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-266-MAKAN266",
+      "order": 2
+    }
+  ]
+}

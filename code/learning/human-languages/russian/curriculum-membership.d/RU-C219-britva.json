@@ -1,0 +1,11 @@
+{
+  "id": "RU-C219-britva",
+  "pathSegment": "RU-PATH-219-VESHCH219",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-219-VESHCH219",
+      "order": 1
+    }
+  ]
+}

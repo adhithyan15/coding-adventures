@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Ponerse en forma",
+  "label": "ch:es-ponerse-en-forma",
+  "canDo": "I can talk about getting fit: losing weight, putting up with effort and pressure, and being patient.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C503-paciente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about getting fit: losing weight, putting up with effort and pressure, and being patient.",
+    "assesses": [
+      "ES-LEX-C503-FORMA-03",
+      "ES-LEX-C503-FORMA-04",
+      "ES-LEX-C503-FORMA-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C180-samayappattika",
+  "pathSegment": "ML-PATH-180-VAYANA180",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-180-VAYANA180",
+      "order": 0
+    }
+  ]
+}

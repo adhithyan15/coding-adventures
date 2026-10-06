@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C248-varsikotsava",
+    "language": "kannada",
+    "chapter": 248,
+    "sequence": 11740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44ab8a736bb3d593"
+  },
+  "findings": []
+}

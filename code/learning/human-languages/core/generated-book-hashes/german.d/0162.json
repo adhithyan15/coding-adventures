@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:00839534d8b41d61",
+  "lessonIds": [
+    "GE-C162-sofa",
+    "GE-C162-radio",
+    "GE-C162-wetter",
+    "GE-C162-wind",
+    "GE-C162-gewitter"
+  ],
+  "tex": "german/book/chapters/ch162-a-sofa-a-radio-the-weather-the-wind-a-thunderstorm.tex"
+}

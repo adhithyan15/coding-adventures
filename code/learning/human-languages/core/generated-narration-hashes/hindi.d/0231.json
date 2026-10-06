@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:32b06efc102e4912",
+  "lessonIds": [
+    "HI-C231-bahna",
+    "HI-C231-tapakna",
+    "HI-C231-chinkna",
+    "HI-C231-jamhailena",
+    "HI-C231-khasna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch231.txt",
+  "json": "hindi/narration/ch231.json",
+  "textHash": "fnv1a64:8da1f97fd2c80158",
+  "jsonHash": "fnv1a64:09ba05f26fb099e1",
+  "findings": []
+}

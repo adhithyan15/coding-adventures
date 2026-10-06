@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:25d67db3fd05261c",
+  "sourceHash": "fnv1a64:85146a112c66868b",
   "lessons": [
     {
       "id": "KA-C23-dina",
@@ -260,7 +260,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7950558c6daa8d6e",
+      "sourceHash": "fnv1a64:ae27ed0ebf85d7de",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -359,15 +359,47 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ಥ — copy what you see",
+          "title": "Writing: ಥ",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಥ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. start at the upper left and go down the left side into the left lobe, rising into the middle point."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. without lifting, drop from the point around the right lobe and climb the right side."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, close the bowl leftward along the top."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift, then draw the top bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "5. without lifting, curl up into the hook."
+            },
+            {
+              "kind": "speech",
+              "text": "6. lift, then draw the tail downward."
+            },
+            {
+              "kind": "speech",
+              "text": "7. lift, then set the dot in the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. The body is drawn as in ದ; the bar, the tail and the dot each start fresh."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-thha.gif', 43 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0."
+            },
+            {
+              "kind": "speech",
+              "text": "Filed as 'thha': that series spells ತ as 'tha'."
             }
           ]
         },

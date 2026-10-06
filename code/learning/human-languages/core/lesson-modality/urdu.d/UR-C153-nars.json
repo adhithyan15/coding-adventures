@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C153-nars",
+    "language": "urdu",
+    "chapter": 153,
+    "sequence": 8100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b14b4aa15bdc1e1e"
+  },
+  "findings": []
+}

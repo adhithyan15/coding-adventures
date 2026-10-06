@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C142-priyo",
+    "language": "bengali",
+    "chapter": 142,
+    "sequence": 7800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a34369d51c8bcd51"
+  },
+  "findings": []
+}

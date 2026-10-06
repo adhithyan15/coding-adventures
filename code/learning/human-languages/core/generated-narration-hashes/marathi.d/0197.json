@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:f1fefea6cf126be9",
+  "lessonIds": [
+    "MR-C197-savay-hone",
+    "MR-C197-ghai-karne",
+    "MR-C197-javal-yene",
+    "MR-C197-gappa-marne",
+    "MR-C197-pocavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch197.txt",
+  "json": "marathi/narration/ch197.json",
+  "textHash": "fnv1a64:3e18757201e707aa",
+  "jsonHash": "fnv1a64:95284afcaff7c231",
+  "findings": []
+}

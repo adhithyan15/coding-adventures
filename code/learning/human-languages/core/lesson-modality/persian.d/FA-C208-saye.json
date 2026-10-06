@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C208-saye",
+    "language": "persian",
+    "chapter": 208,
+    "sequence": 10730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43e3c18447d6275d"
+  },
+  "findings": []
+}

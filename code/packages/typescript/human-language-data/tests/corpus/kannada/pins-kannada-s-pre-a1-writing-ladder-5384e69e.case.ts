@@ -17,7 +17,7 @@ import {
   languageWritingStages,
 } from "../assert-language-corpus.js";
 
-it("pins Kannada's pre-A1 writing ladder", () => {
+it("pins Kannada's writing ladder through its complete A1 timed paper", () => {
   const track = languageWritingStages("kannada");
 
   // The track had NO stage evidence at all -- 50 script lessons and not one
@@ -33,6 +33,8 @@ it("pins Kannada's pre-A1 writing ladder", () => {
     ["KA-S01-copy-in-a-word", "guided-copy"],
     ["KA-S01-delayed-copy", "delayed-copy"],
     ["KA-S01-dictation", "dictation-transcription"],
+    ["KA-W77-gotta-controlled-question", "controlled-composition"],
+    ["KA-W77-a1-timed-production", "timed-assessment-production"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C239-pharak",
+  "pathSegment": "MR-PATH-239-VASTU239",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-239-VASTU239",
+      "order": 1
+    }
+  ]
+}

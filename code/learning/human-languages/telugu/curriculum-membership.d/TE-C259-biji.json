@@ -1,0 +1,11 @@
+{
+  "id": "TE-C259-biji",
+  "pathSegment": "TE-PATH-259-GUNAM259",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-259-GUNAM259",
+      "order": 3
+    }
+  ]
+}

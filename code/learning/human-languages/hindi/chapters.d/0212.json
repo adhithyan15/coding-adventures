@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Ugly, Strong, Weak, Cheap, Hard",
+  "label": "ch:hi-ugly-strong-weak-cheap-hard",
+  "canDo": "I can say ugly, strong, weak, cheap and hard.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-C212-kathin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say ugly, strong, weak, cheap and hard.",
+    "assesses": [
+      "HI-LEX-C212-QUAL212-03",
+      "HI-LEX-C212-QUAL212-04",
+      "HI-LEX-C212-QUAL212-05"
+    ]
+  }
+}

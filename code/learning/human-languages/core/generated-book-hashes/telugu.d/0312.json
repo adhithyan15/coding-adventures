@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:a07225770806f4de",
+  "lessonIds": [
+    "TE-C312-katha",
+    "TE-C312-ata",
+    "TE-C312-sinima",
+    "TE-C312-siksakudu",
+    "TE-C312-injaniru"
+  ],
+  "tex": "telugu/book/chapters/ch312-story-game-film-coach-engineer.tex"
+}

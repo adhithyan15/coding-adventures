@@ -1,0 +1,11 @@
+{
+  "id": "MR-C198-svagat-karne",
+  "pathSegment": "MR-PATH-198-ACT198",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-198-ACT198",
+      "order": 4
+    }
+  ]
+}

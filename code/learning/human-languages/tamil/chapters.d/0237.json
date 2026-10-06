@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "Especially, Instead, Not only, Together, Carefully",
+  "label": "ch:ta-especially-instead-not-only-together-carefully",
+  "canDo": "I can say especially, instead, not only, together and carefully.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TA-C237-kavanamaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say especially, instead, not only, together and carefully.",
+    "assesses": [
+      "TA-LEX-C237-KARANAM237-03",
+      "TA-LEX-C237-KARANAM237-04",
+      "TA-LEX-C237-KARANAM237-05"
+    ]
+  }
+}

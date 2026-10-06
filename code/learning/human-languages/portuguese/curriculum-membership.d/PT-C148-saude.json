@@ -1,0 +1,11 @@
+{
+  "id": "PT-C148-saude",
+  "pathSegment": "PT-PATH-148-SAUDE148",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-148-SAUDE148",
+      "order": 0
+    }
+  ]
+}

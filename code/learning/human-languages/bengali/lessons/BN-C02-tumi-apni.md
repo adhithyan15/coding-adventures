@@ -48,7 +48,7 @@ reviews_of: [BN-C02-amar-naam]
 root as English archaic **thou**, Latin *tū*, French *tu*. Bengali grades respect
 in **three** levels:
 
-- **তুই** (*tui*) — intimate: close friends, children, family.
+- *tui* — intimate: close friends, children, family.
 - **তুমি** (*tumi*) — familiar: friends, juniors, warmth.
 - **আপনি** (*āpni*) — respectful: elders, strangers, formality.
 

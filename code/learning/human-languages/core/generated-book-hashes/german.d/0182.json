@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:2c894d217bee01dd",
+  "lessonIds": [
+    "GE-C182-kaempfen",
+    "GE-C182-klettern",
+    "GE-C182-kuemmern",
+    "GE-C182-landen",
+    "GE-C182-laecheln",
+    "GE-R182-first-pass-words-from-chapters-174-177",
+    "GE-R182-second-pass-words-from-chapters-178-182"
+  ],
+  "tex": "german/book/chapters/ch182-to-fight-to-climb-to-take-care-to-land-to-smile.tex"
+}

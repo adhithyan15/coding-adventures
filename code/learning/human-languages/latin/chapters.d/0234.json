@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "To let down, To gather, To vanish, To entrust, To hold back",
+  "label": "ch:la-to-let-down-to-gather-to-vanish-to-entrust-to-hold-back",
+  "canDo": "I can say to let down, to gather, to vanish, to entrust and to hold back.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C234-retineo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say to let down, to gather, to vanish, to entrust and to hold back.",
+    "assesses": [
+      "LA-LEX-C234-ACT234-03",
+      "LA-LEX-C234-ACT234-04",
+      "LA-LEX-C234-ACT234-05"
+    ]
+  }
+}

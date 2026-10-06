@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "To advise, To convince, To criticise, To depend, To share",
+  "label": "ch:pt-to-advise-to-convince-to-criticise-to-depend-to-share",
+  "canDo": "I can say to advise, to convince, to criticise, to depend and to share.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C234-partilhar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say to advise, to convince, to criticise, to depend and to share.",
+    "assesses": [
+      "PT-LEX-C234-VERBOS234-03",
+      "PT-LEX-C234-VERBOS234-04",
+      "PT-LEX-C234-VERBOS234-05"
+    ]
+  }
+}

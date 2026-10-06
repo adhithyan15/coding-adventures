@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C224-windig",
+    "language": "german",
+    "chapter": 224,
+    "sequence": 12070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a320b1cf8cf5336"
+  },
+  "findings": []
+}

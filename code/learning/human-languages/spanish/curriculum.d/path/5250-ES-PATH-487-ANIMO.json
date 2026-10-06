@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-487-ANIMO",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-487-ANIMO"
+  ],
+  "after": []
+}

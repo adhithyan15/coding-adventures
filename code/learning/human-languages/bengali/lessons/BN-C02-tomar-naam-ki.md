@@ -47,7 +47,7 @@ complete.
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-KI-01, BN-CONCEPT-C02-NAAM-01, BN-CONCEPT-C02-TOMARNAAMKI-01, BN-CONCEPT-C02-TUMIAPNI-01] -->
 
 Answer with the sentence you built: *Āmār nām Arun.* The respectful version swaps
-*tomār* (from *tumi*) for **আপনার** (*āpnār*, "your," from *āpni*): *āpnār nām
+*tomār* (from *tumi*) for *āpnār* ("your," from *āpni*): *āpnār nām
 ki?* — the one to use with a stranger.
 
 ## Guided Practice

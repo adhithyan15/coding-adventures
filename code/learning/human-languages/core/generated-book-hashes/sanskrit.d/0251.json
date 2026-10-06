@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:62f78eb2ebeedcf2",
+  "lessonIds": [
+    "SA-C251-prthivi",
+    "SA-C251-jagat",
+    "SA-C251-lokah",
+    "SA-C251-prakrtih",
+    "SA-C251-pankah"
+  ],
+  "tex": "sanskrit/book/chapters/ch251-earth-universe-world-nature-mud.tex"
+}

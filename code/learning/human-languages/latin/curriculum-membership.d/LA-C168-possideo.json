@@ -1,0 +1,11 @@
+{
+  "id": "LA-C168-possideo",
+  "pathSegment": "LA-PATH-168-ACT168",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-168-ACT168",
+      "order": 1
+    }
+  ]
+}

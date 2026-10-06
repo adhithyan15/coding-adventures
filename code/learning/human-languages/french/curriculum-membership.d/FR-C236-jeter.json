@@ -1,0 +1,11 @@
+{
+  "id": "FR-C236-jeter",
+  "pathSegment": "FR-PATH-236-VERBES236",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-236-VERBES236",
+      "order": 2
+    }
+  ]
+}

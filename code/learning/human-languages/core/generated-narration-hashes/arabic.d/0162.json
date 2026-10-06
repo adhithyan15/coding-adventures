@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:5e6cb46a7686d50d",
+  "lessonIds": [
+    "AR-C162-tabaa",
+    "AR-C162-nasakha",
+    "AR-C162-intaqala",
+    "AR-C162-sajjala",
+    "AR-C162-wazzafa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch162.txt",
+  "json": "arabic/narration/ch162.json",
+  "textHash": "fnv1a64:e2abfe4cd9b22e35",
+  "jsonHash": "fnv1a64:f8edb9bfbd259615",
+  "findings": []
+}

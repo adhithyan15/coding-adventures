@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Source hashing now consumes an installed, byte-identical projection of the
+  checked 23-language source-input registry. All seven selector roles apply
+  with exact package/site scoping and declared-source precedence; unknown
+  language identifiers fail before file enumeration.
+- Native adoption tests compare the complete installed projection and digest
+  with the neutral registry and run the production collector against every
+  package-local source-collection case. A deterministic sync command rejects
+  stale package data before release.
+- The registry collector bounds source enumeration, glob work, and content
+  bytes and rejects ambiguous names, linked or hardlinked inputs, and
+  non-regular sources before incorporating their bytes into a digest.
+- Source hashing now follows the 27-component neutral generated-directory
+  registry, pruning exact lowercase `blib` while retaining `Blib` and
+  `blib-example` in both extension and declared-source modes.
+
 ## [0.3.18] - 2026-09-27
 
 ### Added

@@ -26,9 +26,9 @@ they are derived only from exact paths relative to the nearest real Git
 repository root, so arbitrary, nested, and outside site roots fail before
 traversal. Their eight and five authored
 inputs are exact paths, so Markdown, identity JSON, image, and root CSS suffixes
-do not widen to other packages. The exact case-sensitive 26-component
+do not widen to other packages. The exact case-sensitive 27-component
 generated-directory registry is applied before every selector while preserving
-near names such as `_Build` and `_build-example`; symlink and Windows
+near names such as `_Build`, `Blib`, `blib-example`, and `_build-example`; symlink and Windows
 reparse-point components are never traversed.
 
 Regenerate the embedded projection deterministically from the repository root:
@@ -55,7 +55,9 @@ Unreadable, unstable, non-portable, linked, or reparse-backed source inputs do
 not produce a cache digest. `HashPackage` returns a checked error, and the CLI
 emits the root-redacted `Error: HASH_PACKAGE_FAILED "<package-identity>"`
 record with Go-escaped control characters and exits `2` instead of caching a
-sentinel digest or printing an uncontrolled stack trace.
+sentinel digest or printing an uncontrolled stack trace. Executor regressions
+exercise hostile FIFO manifests on POSIX hosts; Windows builds use a
+build-tagged helper and explicitly skip only that unavailable POSIX primitive.
 
 ## Process-free graph and diff selection
 
@@ -67,7 +69,7 @@ returns canonical prerequisite-first levels, exact dependent and prerequisite
 closures, and stable empty-output diagnostics for graph cycles, unknown paths,
 and match-work exhaustion.
 
-The package-local suite dynamically enumerates the exact eight graph and eleven
+The package-local suite dynamically enumerates the exact eight graph and twelve
 diff-selection cases in the language-neutral v1 corpus. It covers the five
 recursive BUILD fronts, strict character classes, repository-boundary reverse
 selection and digest verification, both unknown-path policies, and the fixed
@@ -167,7 +169,7 @@ On Windows, use the compiled `.exe`:
 | `-language` | all | Filter to any canonical discovery bucket, or `all` |
 | `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
-| `-validate-build-files` | true | Validate BUILD dependency metadata, crate coverage, and tracked artifacts |
+| `-validate-build-files` | true | Validate BUILD dependency metadata, established-lane package-root coverage, crate coverage, and tracked artifacts |
 | `-ci-gates` | code/specs/data/ci-gates.json | CI gate registry used to decide which Actions jobs this change needs; empty disables gating |
 
 For strict Starlark packages with declared sources, diff selection recognizes
@@ -179,6 +181,15 @@ declared source glob matches.
 `-validate-build-files` also fails closed when Git tracks any `node_modules`
 path. Dependency directories are machine-local build products; committing one
 can hide an absolute symlink that works only in its author's checkout.
+
+The same gate streams direct roots under each of the fifteen established
+`code/packages/<language>/` lanes. A root is eligible only when the governed
+language-source registry supplies a compact source witness; exact generated
+components and reviewed virtual roots stay excluded. A runnable one of the
+five canonical BUILD fronts in the root or a component-wise ancestor covers
+it. Remaining reviewed gaps must carry a reasoned `EXCLUDED` or `PENDING`
+entry in `code/BUILD-EXEMPTIONS`, and stale entries fail the gate. Discovery is
+bounded before retention and never shells out to Git.
 
 ## Deciding which CI jobs to run
 

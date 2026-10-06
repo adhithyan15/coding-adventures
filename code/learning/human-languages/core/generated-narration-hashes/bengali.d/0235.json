@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:721047dad5f873c6",
+  "lessonIds": [
+    "BN-C235-miting",
+    "BN-C235-kormochari",
+    "BN-C235-sohokormi",
+    "BN-C235-muchi",
+    "BN-C235-chhutor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch235.txt",
+  "json": "bengali/narration/ch235.json",
+  "textHash": "fnv1a64:7768a5680f0c62f2",
+  "jsonHash": "fnv1a64:2640716a2db2332b",
+  "findings": []
+}

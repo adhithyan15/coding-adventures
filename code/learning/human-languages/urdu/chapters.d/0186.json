@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Heel, Fist, Palm, Liver, Lung",
+  "label": "ch:ur-heel-fist-palm-liver-lung",
+  "canDo": "I can say a heel, a fist, a palm, the liver and a lung.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C186-phephra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say a heel, a fist, a palm, the liver and a lung.",
+    "assesses": [
+      "UR-LEX-C186-SEHAT186-03",
+      "UR-LEX-C186-SEHAT186-04",
+      "UR-LEX-C186-SEHAT186-05"
+    ]
+  }
+}

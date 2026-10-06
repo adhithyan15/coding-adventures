@@ -2,11 +2,41 @@
 
 ## Unreleased
 
-- Regenerated the source-input registry projection to pick up the
-  `forme-deploy-runner-fs-adapter` and `forme-deploy-runner-github-pages-adapter`
-  TypeScript roots (added on main without regenerating this checked
-  projection, which broke the neutral conformance test). Digest updated to
-  `c36bb88a03fa6bd7585e22139f59f4c64e1f8547dbe64bad234483cc2a7b4566`.
+- Expanded dynamic source-selection and package-hash fixture replay from 16/4
+  to 20/8 cases, covering before/after shared-input digest evidence for two
+  Swift consumers. The production engine and host authority are unchanged.
+- Rejected caller-owned diff package lists over 4,096 entries before
+  enumeration or allocation, preserving the graph-limit diagnostic.
+- Matched the reference's granular graph/diff diagnostics and validation
+  precedence, rejected diff edge cycles and nested package roots before
+  selection, and counted only consumer roots against the boundary scope limit.
+- Added a process-free typed graph and diff-selection core with deterministic
+  prerequisite-first levels, no-partial cycle and diff failures, Unicode 17
+  path identity, exact repository-boundary digest/projection, strict portable
+  globs, and the 50,000,000 Unicode-scalar match-work preflight. The C# suite
+  pins and evaluates all eight graph and twelve diff fixtures plus negative
+  structural, precedence, and glob cases; this does not claim a neutral CLI
+  adapter or broader build-tool parity.
+
+- Added the `forme-plugin-installer-core`, `forme-plugin-runner-conformance`, and `forme-plugin-runner-ts`
+  TypeScript roots to the repository source-input boundary projection. Digest updated to
+  `3370c811b51962c87757b01e98ad3db5206cad2c75e74c6853bf5209548bd18e`.
+
+- Regenerated both source-input projections for exact lowercase `blib`, the
+  current Lua and Forme boundary consumers, and the new canonical registry and
+  boundary digests shared by the C# engine and F# facade.
+
+- Retained a hard bound on Git-index snapshot capture while raising its timeout
+  from 15 to 60 seconds, preventing valid large-checkout enumeration from
+  failing on contended macOS CI runners.
+
+- Regenerated the repository source-input boundary projection against the
+  neutral fixture: removed the ten Haskell roots that now carry their own
+  `cabal.project`, added the `lua/der_asn1` and `lua/x509_extension` lint
+  roots, and picked up the
+  `forme-deploy-runner-fs-adapter`, `forme-deploy-runner-github-pages-adapter`,
+  and `forme-plugin-host` TypeScript roots. Digest updated to
+  `7983f42a84dc9905f50729798a5d7d4000a4356016eb2b9cfd42217b15070b59`.
 
 - Extended the generated source-input projection and xUnit coverage with the
   two exact TypeScript site roots and their 13 authored inputs. Discovery keeps

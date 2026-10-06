@@ -51,6 +51,13 @@ const resolved = resolveCapabilityTemplate("filesystem:read:$storageRoot", {
 
 ## Design notes
 
+### Typed stream references
+
+Stage contributions use a closed `KindRef` string: a bare kernel/extension
+kind such as `ContentNode`, or a single `Stream<ContentNode>` wrapper. Nested
+streams and malformed angle-bracket forms fail validation, so the plugin host
+can construct the complete runtime descriptor before launching untrusted code.
+
 ### Why a hand-rolled TOML parser
 
 The monorepo's other parsers (gfm-parser, csv-parser, etc.) are all
@@ -79,7 +86,11 @@ separate to avoid cross-confusion at the call site.
 
 Only three variables are recognised: `$storageRoot`, `$cacheDir`,
 `$pluginDir`. Unrecognised variables fail validation. `$$` is the
-literal-dollar escape. This is intentionally minimal — it's NOT a
+literal-dollar escape. Substituted paths use reversible URI-path encoding:
+`/` stays the hierarchy separator while `%`, `:`, backslashes, whitespace,
+controls, and non-ASCII bytes are percent-encoded (`C:\\site` becomes
+`C%3A%5Csite`). The path therefore remains one capability detail segment on
+every platform without aliasing distinct POSIX names. This is intentionally minimal — it's NOT a
 template engine; it's enough scoping syntax for a plugin's filesystem
 grants to inherit the user's project root without the plugin knowing
 that path.

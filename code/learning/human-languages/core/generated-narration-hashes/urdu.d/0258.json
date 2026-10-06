@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:e9d6d0397b31f776",
+  "lessonIds": [
+    "UR-C258-pechkas",
+    "UR-C258-auzar",
+    "UR-C258-paip",
+    "UR-C258-nal",
+    "UR-C258-shavar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch258.txt",
+  "json": "urdu/narration/ch258.json",
+  "textHash": "fnv1a64:4ab527a6776a73ff",
+  "jsonHash": "fnv1a64:5766b9fef964106d",
+  "findings": []
+}

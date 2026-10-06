@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7dd5ab676d098936",
+  "sourceHash": "fnv1a64:8994499e1e4012c2",
   "lessons": [
     {
       "id": "TE-C23-roju",
@@ -135,7 +135,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e8b2305be3ca9e8e",
+      "sourceHash": "fnv1a64:979ffee6ca7038b1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -214,15 +214,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ణ — copy what you see",
+          "title": "Writing: ణ — five deliberate movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ణ (ṇa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the filmstrip slowly. Movement 1 sweeps left and upward around the lower-left bowl. Movement 2 curves right across the upper-left bowl. Movement 3 arches right and downward over the upper-right bowl. Movement 4 turns left around the lower-right bowl. Movement 5 finishes along the inner curve."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "This is one attested school-style order. Telugu handwriting varies, so keep the five movements distinct and let the paired round shapes grow from them."
             }
           ]
         },

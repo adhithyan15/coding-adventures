@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C260-karhi",
+    "language": "urdu",
+    "chapter": 260,
+    "sequence": 15870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:751672ddff12e281"
+  },
+  "findings": []
+}

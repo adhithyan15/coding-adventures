@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "End, Ever, At present, In the past, Dawn",
+  "label": "ch:te-end-ever-at-present-in-the-past-dawn",
+  "canDo": "I can say the end, ever, at present, in the past and dawn.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C253-tellavarujamu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say the end, ever, at present, in the past and dawn.",
+    "assesses": [
+      "TE-LEX-C253-SAMAYAM253-03",
+      "TE-LEX-C253-SAMAYAM253-04",
+      "TE-LEX-C253-SAMAYAM253-05"
+    ]
+  }
+}

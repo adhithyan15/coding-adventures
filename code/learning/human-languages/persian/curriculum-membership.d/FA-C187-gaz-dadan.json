@@ -1,0 +1,11 @@
+{
+  "id": "FA-C187-gaz-dadan",
+  "pathSegment": "FA-PATH-187-KONESH187",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-187-KONESH187",
+      "order": 1
+    }
+  ]
+}

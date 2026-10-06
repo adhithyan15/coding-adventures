@@ -154,7 +154,7 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn('libtask_mosaic_app.so', workflow)
         self.assertIn('cmp "$task_runtime_library" "$bundled_taskapp_runtime"', workflow)
         self.assertIn("-path '*/bundle/mosaic_taskapp_acceptance'", workflow)
-        self.assertIn('xvfb-run -a timeout 8s "$installed_taskapp"', workflow)
+        self.assertIn('run-under-xvfb.sh" timeout 8s "$installed_taskapp"', workflow)
         self.assertIn('test "$taskapp_status" -eq 124', workflow)
         self.assertIn('Mosaic Rust runtime unavailable', workflow)
         self.assertIn("--runtime-library \"$runtime_library\"", workflow)
@@ -188,6 +188,85 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertNotIn(
             'assign = text.index("_mosaicHost = widget.mosaicHost")', workflow
         )
+
+    def test_engram_layout_variant_is_compiled_beside_the_default(self) -> None:
+        """UI48 §7.9: the Flutter lane checks Engram's touch variant and its
+        selector are in lib/ before analyzing and building it."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index(
+            "# UI48 §7.9 (ENV2/ENV3): Engram is the one package with a layout"
+        )
+        block = workflow[start : workflow.index("\n\n", start)]
+        self.assertIn("^class EngramAppTouch extends StatelessWidget {$", block)
+        self.assertIn("then exit 1; fi", block)
+        self.assertIn("switch (mosaicLayoutVariant(environment))", block)
+        self.assertIn("return EngramAppTouch($", block)
+        # The checks run before the project is analyzed and built.
+        self.assertLess(
+            start, workflow.index("--project-name mosaic_engram_app .")
+        )
+        self.assertIn("rust/mosaic-package-manifest", MODULE.ACCEPTANCE_PACKAGES)
+
+    def test_layout_variants_fixture_is_resized_in_the_lane(self) -> None:
+        """UI48 §7 wants a gate that changes the environment: the lane runs
+        the layout-variants fixture's widget test, which resizes the window
+        across the compact threshold and asserts the root swaps."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# UI48 §7.9 (ENV2/ENV3): the resize gate")
+        block = workflow[start : workflow.index("\n\n", start)]
+        self.assertIn("fixtures/layout-variants --backend flutter", block)
+        self.assertIn("fixtures/layout-variants-test/widget_test.dart", block)
+        self.assertIn("flutter analyze", block)
+        self.assertIn("flutter test test/widget_test.dart", block)
+        test = (
+            Path(__file__).resolve().parents[2]
+            / "packages"
+            / "rust"
+            / "mosaic-emit-flutter"
+            / "fixtures"
+            / "layout-variants-test"
+            / "widget_test.dart"
+        ).read_text(encoding="utf-8")
+        self.assertIn("tester.view.physicalSize = const Size(400, 800);", test)
+        self.assertIn("find.byType(LayoutProbeCompact), findsOneWidget", test)
+
+    def test_workflow_runs_the_platform_library_harness(self) -> None:
+        """UI87 §7.7: the lane checks TaskApp installs the platform library on
+        its started host, then runs the headless harness against TaskApp's
+        generated core and host -- after the TaskApp project was built, so the
+        files it copies exist."""
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn(
+            'install = text.index("installMosaicPlatformEffects(host, appKinds: null);")',
+            workflow,
+        )
+        self.assertIn(
+            "cp -R code/packages/rust/mosaic-app-bindings/conformance/flutter-platform-effects",
+            workflow,
+        )
+        self.assertIn(
+            '"$taskapp_output/flutter/lib/mosaic_platform_effects_core.dart"', workflow
+        )
+        self.assertIn("dart analyze --fatal-infos", workflow)
+        self.assertIn(
+            'grep -F "Mosaic Flutter platform effects conformance passed"', workflow
+        )
+        taskapp_build = workflow.index(
+            "--project-name mosaic_taskapp_acceptance ."
+        )
+        harness = workflow.index("conformance/flutter-platform-effects")
+        self.assertLess(taskapp_build, harness)
+
+    def test_platform_harness_does_not_duplicate_the_generated_library(self) -> None:
+        harness = FLUTTER_CONFORMANCE.parent / "flutter-platform-effects"
+        self.assertTrue((harness / "bin" / "conformance.dart").is_file())
+        self.assertFalse((harness / "lib").exists())
+        pubspec = (harness / "pubspec.yaml").read_text(encoding="utf-8")
+        self.assertIn("ffi:", pubspec)
+        self.assertNotIn("sdk: flutter", pubspec)
+        self.assertNotIn("file_selector", pubspec)
 
     def test_harness_does_not_duplicate_the_generated_binding(self) -> None:
         self.assertTrue(

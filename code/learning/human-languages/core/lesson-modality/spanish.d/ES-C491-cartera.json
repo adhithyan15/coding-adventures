@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C491-cartera",
+    "language": "spanish",
+    "chapter": 491,
+    "sequence": 14100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:223bad099d9e0f7d"
+  },
+  "findings": []
+}

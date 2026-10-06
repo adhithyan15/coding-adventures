@@ -1,0 +1,11 @@
+{
+  "id": "TE-C221-padunaina",
+  "pathSegment": "TE-PATH-221-GUNAM221",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-221-GUNAM221",
+      "order": 4
+    }
+  ]
+}

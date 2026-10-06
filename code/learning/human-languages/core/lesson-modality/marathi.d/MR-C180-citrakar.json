@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C180-citrakar",
+    "language": "marathi",
+    "chapter": 180,
+    "sequence": 9030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f92ad61bfd6652c"
+  },
+  "findings": []
+}

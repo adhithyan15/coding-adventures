@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:82cf42899922ff75",
+  "lessonIds": [
+    "FR-C220-ponctuel-ponctuelle",
+    "FR-C220-etranger-etrangere",
+    "FR-C220-aimable",
+    "FR-C220-honnete",
+    "FR-C220-patient-patiente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch220.txt",
+  "json": "french/narration/ch220.json",
+  "textHash": "fnv1a64:47477bf569e68e23",
+  "jsonHash": "fnv1a64:d26321b738bb04e0",
+  "findings": []
+}

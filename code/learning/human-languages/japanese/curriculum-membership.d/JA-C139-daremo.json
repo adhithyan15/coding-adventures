@@ -1,0 +1,11 @@
+{
+  "id": "JA-C139-daremo",
+  "pathSegment": "JA-PATH-139-NEG139",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-139-NEG139",
+      "order": 4
+    }
+  ]
+}

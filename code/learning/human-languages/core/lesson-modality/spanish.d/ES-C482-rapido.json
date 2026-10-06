@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C482-rapido",
+    "language": "spanish",
+    "chapter": 482,
+    "sequence": 13630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1d396ccf6f90542"
+  },
+  "findings": []
+}

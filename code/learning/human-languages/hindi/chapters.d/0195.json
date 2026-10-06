@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "A poet, A painter, A singer, A player, A leader",
+  "label": "ch:hi-a-poet-a-painter-a-singer-a-player-a-leader",
+  "canDo": "I can say a poet, a painter, a singer, a player and a leader.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C195-neta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say a poet, a painter, a singer, a player and a leader.",
+    "assesses": [
+      "HI-LEX-C195-THG195-03",
+      "HI-LEX-C195-THG195-04",
+      "HI-LEX-C195-THG195-05"
+    ]
+  }
+}

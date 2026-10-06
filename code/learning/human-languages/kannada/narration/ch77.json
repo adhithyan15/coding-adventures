@@ -2,9 +2,9 @@
   "version": 1,
   "language": "kannada",
   "chapter": 77,
-  "title": "Marks on the Page",
+  "title": "Marks on the Page, Your First Question, and Timed Writing",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:99407c31a083f5b6",
+  "sourceHash": "fnv1a64:412b3cd2ee4633f2",
   "lessons": [
     {
       "id": "KA-S152-full-stop-and-comma",
@@ -643,6 +643,257 @@
             {
               "kind": "speech",
               "text": "Which three marks do you write? (.,? (question mark)) Which mark opens a question? (None.) Where did the whole set come from? (The Latin alphabet.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-W77-gotta-controlled-question",
+      "sequence": 2735,
+      "title": "Your first Kannada question from meaning",
+      "headword": "ನಿಮಗೆ ಗೊತ್ತಾ?",
+      "romanization": "nimage gottā?",
+      "gloss": "assemble one familiar Kannada yes-or-no question from meaning, with no visible answer",
+      "script": "kannada",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:49db0b3475d639dc",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the earlier lessons. Recall how Kannada marks the person who knows, the word meaning known, the ending that turns a statement into a yes-or-no question, and the mark that closes a question. Do not write yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — assemble one familiar question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "From meaning alone, write Do you know? There is no word bank, romanization, or copyable sentence. Choose the familiar pieces, put them in Kannada order, change the know-word into a yes-or-no question, and add the question mark. This first composition is untimed: finish before opening the answer key."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "KA-W77-gotta-controlled-question-check",
+              "prompt": "With no word bank, romanization, or copyable answer, write the Kannada question meaning: Do you know?",
+              "assesses": [
+                "KA-LEX-C06-DATIVE-GE-01",
+                "KA-LEX-C32-GOTTU-01",
+                "KA-GRAMMAR-C32-GOTTU-02",
+                "KA-GRAMMAR-C69-ASK-02",
+                "KA-SCRIPT-RECOG-153"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "ನಿಮಗೆ ಗೊತ್ತಾ?",
+                "ನಿಮಗೆ ಗೊತ್ತಾ"
+              ],
+              "feedback": {
+                "correct": "You selected familiar pieces, changed the ending, and closed a Kannada question.",
+                "incorrect": "Finish the attempt first. Then check the knower, the know-word, the question ending, word boundary, and final question mark separately."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — repair one difference",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check the knower, know-word, long question ending, word boundary, and punctuation separately. Repair the first difference and write the whole question once more from meaning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What made this composition rather than copying? (You selected, changed, and ordered known pieces from meaning, with no visible Kannada answer.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One controlled line proves this rung, not the later timed A1 writing task."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-W77-a1-timed-production",
+      "sequence": 2737,
+      "title": "Your first complete Kannada A1 writing paper",
+      "headword": "(timed A1 writing)",
+      "romanization": "",
+      "gloss": "a complete 20-minute Kannada A1 form and named-reader message under assessment conditions",
+      "script": "kannada",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:b06777b979047771",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is an attempt, not a model. You will write the answers, and this page will not show you any copyable Kannada answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Put away romanization, dictionaries, translators, and spell-checkers. Set one timer for 20 minutes. Keep it running through both tasks. Write in Kannada script. Ordinary legible handwriting is enough; decorative calligraphy is not scored."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — timed assessment production",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Task 1 — practical form: 7 minutes, 40 points."
+            },
+            {
+              "kind": "speech",
+              "text": "Complete all six fields in Kannada script for a neighbourhood language exchange. Short answers are enough."
+            },
+            {
+              "kind": "speech",
+              "text": "Your name."
+            },
+            {
+              "kind": "speech",
+              "text": "A language you speak."
+            },
+            {
+              "kind": "speech",
+              "text": "One greeting you would use."
+            },
+            {
+              "kind": "speech",
+              "text": "One drink you would ask for."
+            },
+            {
+              "kind": "speech",
+              "text": "One place-question word."
+            },
+            {
+              "kind": "speech",
+              "text": "One polite closing you would use."
+            },
+            {
+              "kind": "speech",
+              "text": "At seven minutes, move on even if a field is unfinished. Do not restart the timer and do not polish the form with time meant for the message."
+            },
+            {
+              "kind": "speech",
+              "text": "Task 2 — message: 13 minutes, 60 points."
+            },
+            {
+              "kind": "speech",
+              "text": "Reader: Mira. Purpose: help Mira recognise you and arrange a first conversation tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Write 20–30 words in Kannada script. Greet Mira, give your name, say that you speak Kannada, mention the drink you would ask for, ask where Mira is, ask one familiar yes-or-no question, and close politely. The instructions give content, not sentences: choose and connect the Kannada yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "When the 20-minute timer rings, stop, even if a line is unfinished. Record the number of completed form fields and the message word count. An honest timed attempt is more useful than a perfect untimed one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Only after you have stopped, review the same attempt. Do not rewrite it yet. Mark one strength and one next step under each assessment criterion:"
+            },
+            {
+              "kind": "speech",
+              "text": "Task fulfilment and relevant content — six fields are attempted; the named reader, conversation purpose, and requested message points are present."
+            },
+            {
+              "kind": "speech",
+              "text": "Comprehensibility and organisation — Mira can follow the message and see how its ideas connect."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada vocabulary, grammar, and register — familiar words and sentence patterns carry the intended meaning in a suitable everyday tone."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada orthographic control — vowel-sign placement, consonant clusters, word spacing, and punctuation remain readable."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the paper. On another day, repeat the same two-task shape with new personal details. The goal is not to memorise this prompt; it is to make a complete Kannada attempt calmly inside the real limit."
             }
           ]
         }

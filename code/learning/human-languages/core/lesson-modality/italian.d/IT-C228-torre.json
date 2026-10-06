@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C228-torre",
+    "language": "italian",
+    "chapter": 228,
+    "sequence": 13490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c39b9430852b6aca"
+  },
+  "findings": []
+}

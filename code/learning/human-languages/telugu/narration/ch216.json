@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 216,
+  "title": "Bathroom, Foundation, Gate, Bakery, Hair salon",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:14d084562c5c16f0",
+  "lessons": [
+    {
+      "id": "TE-C216-snanapu-gadi",
+      "sequence": 9910,
+      "title": "స్నానపు గది (snānapu gadi) — a bathroom",
+      "headword": "స్నానపు గది",
+      "romanization": "snānapu gadi",
+      "gloss": "a bathroom",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf462bc53fc904df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a theatre, then the Telugu for a stadium."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: స్నానపు గది",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్నానపు గది — snānapu gadi — \"a bathroom\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "snānapu gadi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *snānapu gadi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "snānapu gadi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *snānapu gadi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say snānapu gadi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *snānapu gadi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a theatre, then the Telugu for a stadium, then say snānapu gadi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a theatre, then the Telugu for a stadium, then say *snānapu gadi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does స్నానపు గది (snānapu gadi) mean? (\"A bathroom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C216-punadi",
+      "sequence": 9920,
+      "title": "పునాది (punādi) — a foundation",
+      "headword": "పునాది",
+      "romanization": "punādi",
+      "gloss": "a foundation",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f114a69541050c93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a stadium, then the Telugu for a bathroom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పునాది",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పునాది — punādi — \"a foundation\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "punādi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *punādi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "punādi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *punādi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say punādi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *punādi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a stadium, then the Telugu for a bathroom, then say punādi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a stadium, then the Telugu for a bathroom, then say *punādi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పునాది (punādi) mean? (\"A foundation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C216-getu",
+      "sequence": 9930,
+      "title": "గేటు (gēṭu) — a gate",
+      "headword": "గేటు",
+      "romanization": "gēṭu",
+      "gloss": "a gate",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b82a6abcf606005",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a bathroom, then the Telugu for a foundation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గేటు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గేటు — gēṭu — \"a gate\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gēṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gēṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gēṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gēṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gēṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gēṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a bathroom, then the Telugu for a foundation, then say gēṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a bathroom, then the Telugu for a foundation, then say *gēṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గేటు (gēṭu) mean? (\"A gate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C216-bekari",
+      "sequence": 9940,
+      "title": "బేకరీ (bēkarī) — a bakery",
+      "headword": "బేకరీ",
+      "romanization": "bēkarī",
+      "gloss": "a bakery",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3bd7033d17b9c02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a foundation, then the Telugu for a gate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బేకరీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బేకరీ — bēkarī — \"a bakery\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēkarī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēkarī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēkarī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēkarī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bēkarī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bēkarī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a foundation, then the Telugu for a gate, then say bēkarī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a foundation, then the Telugu for a gate, then say *bēkarī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బేకరీ (bēkarī) mean? (\"A bakery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C216-selunu",
+      "sequence": 9950,
+      "title": "సెలూను (selūnu) — a hair salon",
+      "headword": "సెలూను",
+      "romanization": "selūnu",
+      "gloss": "a hair salon",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88b58dc0022d74e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a gate, then the Telugu for a bakery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సెలూను",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సెలూను — selūnu — \"a hair salon\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "selūnu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *selūnu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "selūnu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *selūnu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say selūnu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *selūnu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a gate, then the Telugu for a bakery, then say selūnu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a gate, then the Telugu for a bakery, then say *selūnu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సెలూను (selūnu) mean? (\"A hair salon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R216-first-pass-words-from-chapters-208-211",
+      "sequence": 9960,
+      "title": "Words from chapters 208-211 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 208-211",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:604bcee76a8bbd51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a bakery and a hair salon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stick, to gargle, to die, to be born, to confront",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stick, to gargle, to die, to be born, to confront]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an itch, a nurse, a test, medical treatment, the forehead",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an itch, a nurse, a test, medical treatment, the forehead]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doubt, contentment, disappointment, boredom, pining",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: doubt, contentment, disappointment, boredom, pining]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "numbness, hiccups, snoring, sunstroke, steam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: numbness, hiccups, snoring, sunstroke, steam]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To stick? (అతుకు, atuku.) To gargle? (పుక్కిలించు, pukkiliñcu.) To die? (చనిపోవు, canipōvu.) To be born? (పుట్టు, puṭṭu.) To confront? (ఎదుర్కొను, edurkonu.) An itch? (దురద, durada.) A nurse? (నర్సు, narsu.) A test? (పరీక్ష, parīkṣa.) Medical treatment? (వైద్యం, vaidyaṁ.) The forehead? (నుదురు, nuduru.) Doubt? (అనుమానం, anumānaṁ.) Contentment? (తృప్తి, tṛpti.) Disappointment? (నిరాశ, nirāśa.) Boredom? (విసుగు, visugu.) Pining? (బెంగ, beṅga.) Numbness? (తిమ్మిరి, timmiri.) Hiccups? (ఎక్కిళ్ళు, ekkiḷḷu.) Snoring? (గురక, guraka.) Sunstroke? (వడదెబ్బ, vaḍadebba.) Steam? (ఆవిరి, āviri.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R216-second-pass-words-from-chapters-212-216",
+      "sequence": 9970,
+      "title": "Words from chapters 212-216 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 212-216",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e97cbd3b6865e3ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for free time and immediately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "free time, immediately, finally, until, Sankranti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: free time, immediately, finally, until, Sankranti]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suddenly, again and again, a little while, a second, the day before yesterday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: suddenly, again and again, a little while, a second, the day before yesterday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bus stand, an airport, a junction, a capital city, a district",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bus stand, an airport, a junction, a capital city, a district]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a desert, a rock, an open ground, a theatre, a stadium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a desert, a rock, an open ground, a theatre, a stadium]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bathroom, a foundation, a gate, a bakery, a hair salon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bathroom, a foundation, a gate, a bakery, a hair salon]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Free time? (తీరిక, tīrika.) Immediately? (వెంటనే, veṇṭanē.) Finally? (చివరకు, civaraku.) Until? (వరకు, varaku.) Sankranti? (సంక్రాంతి, saṅkrānti.) Suddenly? (అకస్మాత్తుగా, akasmāttugā.) Again and again? (పదే పదే, padē padē.) A little while? (కాసేపు, kāsēpu.) A second? (సెకను, sekanu.) The day before yesterday? (మొన్న, monna.) A bus stand? (బస్టాండు, basṭāṇḍu.) An airport? (విమానాశ్రయం, vimānāśrayaṁ.) A junction? (కూడలి, kūḍali.) A capital city? (రాజధాని, rājadhāni.) A district? (జిల్లా, jillā.) A desert? (ఎడారి, eḍāri.) A rock? (బండ, baṇḍa.) An open ground? (మైదానం, maidānaṁ.) A theatre? (థియేటరు, thiyēṭaru.) A stadium? (స్టేడియం, sṭēḍiyaṁ.) A bathroom? (స్నానపు గది, snānapu gadi.) A foundation? (పునాది, punādi.) A gate? (గేటు, gēṭu.) A bakery? (బేకరీ, bēkarī.) A hair salon? (సెలూను, selūnu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

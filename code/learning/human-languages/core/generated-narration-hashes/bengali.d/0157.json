@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:5f50b3778452802f",
+  "lessonIds": [
+    "BN-C157-jayga",
+    "BN-C157-phutpat",
+    "BN-C157-mor",
+    "BN-C157-khal",
+    "BN-C157-chiriyakhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch157.txt",
+  "json": "bengali/narration/ch157.json",
+  "textHash": "fnv1a64:1925d4e3ef7d831a",
+  "jsonHash": "fnv1a64:ed82aec74111a6bc",
+  "findings": []
+}

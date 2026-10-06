@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:fdb97202dfc341bc",
+  "lessonIds": [
+    "LA-C253-feriae",
+    "LA-C253-convivium",
+    "LA-C253-sacrificium",
+    "LA-C253-ara",
+    "LA-C253-dea"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch253.txt",
+  "json": "latin/narration/ch253.json",
+  "textHash": "fnv1a64:0d47ec04ba9e394f",
+  "jsonHash": "fnv1a64:21023e37482073a2",
+  "findings": []
+}

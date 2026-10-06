@@ -1,0 +1,11 @@
+{
+  "id": "IT-R203-first-pass-words-from-chapters-198-200",
+  "pathSegment": "IT-PATH-203-LAV203",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-203-LAV203",
+      "order": 5
+    }
+  ]
+}

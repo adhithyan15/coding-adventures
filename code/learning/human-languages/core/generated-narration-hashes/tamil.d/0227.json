@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:bb067feea21d6bc4",
+  "lessonIds": [
+    "TA-C227-tiruttu",
+    "TA-C227-vicari",
+    "TA-C227-pativu-cey",
+    "TA-C227-munpativu-cey",
+    "TA-C227-vinnappi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch227.txt",
+  "json": "tamil/narration/ch227.json",
+  "textHash": "fnv1a64:406260f13ce03869",
+  "jsonHash": "fnv1a64:2e26f2193e965c59",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 151,
+  "title": "A Word for Shade — Then Its First Letter",
+  "label": "ch:te-chhaya-chha",
+  "canDo": "I can say a Telugu word for shade or shadow, recognise its uncommon first letter, and write that letter in a source-backed order.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "TE-S172-letter-chha",
+    "kind": "production",
+    "summary": "Take ఛ from the already-known word ఛాయ and write its five movements in two pen-down runs.",
+    "assesses": [
+      "TE-LEX-C151-SHADE-01",
+      "TE-SCRIPT-RECOG-172"
+    ]
+  }
+}

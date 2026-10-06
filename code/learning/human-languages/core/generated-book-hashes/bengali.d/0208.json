@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:57e1f3da2506f83a",
+  "lessonIds": [
+    "BN-C208-pailot",
+    "BN-C208-nabik",
+    "BN-C208-mali",
+    "BN-C208-sochib",
+    "BN-C208-mnejar",
+    "BN-R208-first-pass-words-from-chapters-203-205",
+    "BN-R208-second-pass-words-from-chapters-206-208"
+  ],
+  "tex": "bengali/book/chapters/ch208-pilot-sailor-gardener-secretary-manager.tex"
+}

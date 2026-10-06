@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "To deliver, To correct, To direct, To destroy, To exaggerate",
+  "label": "ch:it-to-deliver-to-correct-to-direct-to-destroy-to-exaggerate",
+  "canDo": "I can say to deliver, to correct, to direct, to destroy and to exaggerate.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-R241-second-pass-words-from-chapters-237-241",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say to deliver, to correct, to direct, to destroy and to exaggerate.",
+    "assesses": [
+      "IT-LEX-C241-VERBI241-03",
+      "IT-LEX-C241-VERBI241-04",
+      "IT-LEX-C241-VERBI241-05"
+    ]
+  }
+}

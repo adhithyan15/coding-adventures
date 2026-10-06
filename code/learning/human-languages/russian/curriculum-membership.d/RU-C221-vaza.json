@@ -1,0 +1,11 @@
+{
+  "id": "RU-C221-vaza",
+  "pathSegment": "RU-PATH-221-VESHCH221",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-221-VESHCH221",
+      "order": 3
+    }
+  ]
+}

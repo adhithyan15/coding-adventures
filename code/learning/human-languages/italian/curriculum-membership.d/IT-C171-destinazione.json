@@ -1,0 +1,11 @@
+{
+  "id": "IT-C171-destinazione",
+  "pathSegment": "IT-PATH-171-COSE171",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-171-COSE171",
+      "order": 2
+    }
+  ]
+}

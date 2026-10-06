@@ -1192,6 +1192,121 @@ fn is_xcframework(path: &Path) -> bool {
         .is_some_and(|extension| extension.eq_ignore_ascii_case("xcframework"))
 }
 
+/// The ABIs an Android runtime directory may hold (UI89 §3.6): what
+/// `build-mosaic-android-libs.sh` writes, under Android's own ABI names.
+const ANDROID_ABIS: &[&str] = &["arm64-v8a", "armeabi-v7a", "x86_64", "x86"];
+
+/// A `--runtime-library` that is a real directory (not an `.xcframework`) is a
+/// set of per-ABI Android libraries, laid out as jniLibs expects.
+fn is_android_jni_libs(path: &Path) -> bool {
+    !is_xcframework(path) && fs::symlink_metadata(path).is_ok_and(|meta| meta.is_dir())
+}
+
+/// The libraries in an Android runtime directory, as (ABI, library) pairs.
+///
+/// Strict, because these files are copied into an APK that runs them: every
+/// entry must be a known ABI directory holding exactly one regular
+/// `libmosaic_app.so`, nothing is followed through a link, and at least one
+/// ABI must be present.
+fn android_jni_libs(path: &Path) -> Result<Vec<(&'static str, PathBuf)>, BuildError> {
+    let refuse = |reason: String| BuildError::InvalidRuntimeLibrary {
+        path: path.to_path_buf(),
+        reason,
+    };
+    let entries = fs::read_dir(path).map_err(|error| refuse(format!("cannot read the directory: {error}")))?;
+    let mut libraries = Vec::new();
+    for entry in entries {
+        let entry = entry.map_err(|error| refuse(format!("cannot read the directory: {error}")))?;
+        let name = entry.file_name();
+        let Some(abi) = name.to_str().and_then(|name| ANDROID_ABIS.iter().find(|abi| **abi == name)) else {
+            return Err(refuse(format!(
+                "{} is not an Android ABI directory (expected {})",
+                name.to_string_lossy(),
+                ANDROID_ABIS.join(", ")
+            )));
+        };
+        let abi_dir = entry.path();
+        if !fs::symlink_metadata(&abi_dir).is_ok_and(|meta| meta.is_dir()) {
+            return Err(refuse(format!("{abi} must be a directory, not a link or a file")));
+        }
+        let contents: Vec<_> = fs::read_dir(&abi_dir)
+            .map_err(|error| refuse(format!("cannot read {abi}: {error}")))?
+            .collect::<Result<_, _>>()
+            .map_err(|error| refuse(format!("cannot read {abi}: {error}")))?;
+        let library = abi_dir.join("libmosaic_app.so");
+        if contents.len() != 1
+            || contents[0].file_name() != "libmosaic_app.so"
+            || !fs::symlink_metadata(&library).is_ok_and(|meta| meta.is_file())
+        {
+            return Err(refuse(format!(
+                "{abi} must hold exactly one regular file, libmosaic_app.so (build-mosaic-android-libs.sh)"
+            )));
+        }
+        libraries.push((*abi, library));
+    }
+    if libraries.is_empty() {
+        return Err(refuse(format!("no Android ABI directory ({})", ANDROID_ABIS.join(", "))));
+    }
+    libraries.sort_by_key(|(abi, _)| *abi);
+    Ok(libraries)
+}
+
+/// Copy an Android runtime directory into the Android project's jniLibs, where
+/// Gradle packages each ABI's library into the APK and JNA finds it by name.
+fn install_android_runtime_libraries(source: &Path, backend_dir: &Path) -> Result<Vec<PathBuf>, BuildError> {
+    let libraries = android_jni_libs(source)?;
+    // Only the selected ABIs: a reused output keeps no library from an
+    // earlier build in an ABI this one does not have.
+    let jni_libs = backend_dir.join(ANDROID_PROJECT_DIR).join("src/main/jniLibs");
+    if fs::symlink_metadata(&jni_libs).is_ok() {
+        fs::remove_dir_all(&jni_libs).map_err(|error| BuildError::Io(format!(
+            "cannot clear {}: {error}",
+            jni_libs.display()
+        )))?;
+    }
+    let mut written = Vec::new();
+    for (abi, library) in libraries {
+        let bytes = read_regular_file_without_links(&library)?;
+        let target = backend_dir
+            .join(ANDROID_PROJECT_DIR)
+            .join("src/main/jniLibs")
+            .join(abi)
+            .join("libmosaic_app.so");
+        write_file(&target, &bytes)?;
+        written.push(target);
+    }
+    Ok(written)
+}
+
+/// Read a file validated as a regular file, refusing it if the path has
+/// become a link, or a different file, since it was checked. The handle is
+/// compared with the path after opening, so a link swapped in between the
+/// check and the read is caught (UI89 §3.6).
+fn read_regular_file_without_links(path: &Path) -> Result<Vec<u8>, BuildError> {
+    use std::io::Read;
+    let refuse = |reason: String| BuildError::InvalidRuntimeLibrary {
+        path: path.to_path_buf(),
+        reason,
+    };
+    let mut file = fs::File::open(path).map_err(|error| refuse(format!("cannot read selected file: {error}")))?;
+    let opened = file.metadata().map_err(|error| refuse(format!("cannot read selected file: {error}")))?;
+    let at_path = fs::symlink_metadata(path).map_err(|error| refuse(format!("cannot read selected file: {error}")))?;
+    #[cfg(unix)]
+    let same = {
+        use std::os::unix::fs::MetadataExt;
+        opened.dev() == at_path.dev() && opened.ino() == at_path.ino()
+    };
+    #[cfg(not(unix))]
+    let same = true;
+    if !opened.is_file() || !at_path.is_file() || !same {
+        return Err(refuse("the file changed, or became a link, after it was checked".to_string()));
+    }
+    let mut bytes = Vec::new();
+    file.read_to_end(&mut bytes)
+        .map_err(|error| refuse(format!("cannot read selected file: {error}")))?;
+    Ok(bytes)
+}
+
 fn validate_runtime_library_selection(
     opts: &BuildOptions,
     runtime_library: Option<&Path>,
@@ -1225,6 +1340,22 @@ fn validate_runtime_library_selection(
             });
         }
         return Ok(());
+    }
+    if is_android_jni_libs(path) {
+        if opts.backend != Backend::Compose {
+            return Err(BuildError::InvalidRuntimeLibrary {
+                path: path.to_path_buf(),
+                reason: "a directory of per-ABI libraries is the Android runtime, which only the Compose backend packages"
+                    .to_string(),
+            });
+        }
+        if !opts.emit_project {
+            return Err(BuildError::InvalidRuntimeLibrary {
+                path: path.to_path_buf(),
+                reason: "--runtime-library requires --emit-project".to_string(),
+            });
+        }
+        return android_jni_libs(path).map(|_| ());
     }
     if !matches!(
         opts.backend,
@@ -2195,15 +2326,15 @@ fn collect_native_degradations(
         )),
         // #13010: fixed for the common `modal: true` (default) case --
         // `host_dialog_has_native_semantics` is false only for the
-        // still-unimplemented `modal: false` shape (Flutter's
-        // `showDialog` is inherently modal).
+        // still-unimplemented `modal: false` shape (a Flutter dialog
+        // route is inherently modal).
         "HostDialog"
             if backend == Backend::Flutter
                 && !mosaic_emit_flutter::pipeline::host_dialog_has_native_semantics(node) =>
         {
             Some((
                 "interaction.dialog-placeholder",
-                "the Flutter emitter produces a zero-size TODO placeholder instead of a native dialog for modal: false (Flutter's showDialog is inherently modal)",
+                "the Flutter emitter produces a zero-size TODO placeholder instead of a native dialog for modal: false (a Flutter dialog route is inherently modal)",
             ))
         }
         "HostSlider"
@@ -2645,6 +2776,21 @@ fn build_package_inner(
     for component in &manifest.components.exports {
         validate_component_name(component)?;
     }
+    // Two exports whose names differ only in letter case (`Card`, `CARD`)
+    // generate one file on a case-insensitive filesystem -- macOS's and
+    // Windows' default -- each over the other's (UI32 §3.7).
+    let mut by_folded_name: HashMap<String, &String> = HashMap::new();
+    for component in &manifest.components.exports {
+        if let Some(first) = by_folded_name.insert(component.to_lowercase(), component) {
+            if first != component {
+                return Err(BuildError::Io(format!(
+                    "the exports {first} and {component} differ only in letter case, so \
+                     their generated files are one file on a case-insensitive filesystem; \
+                     rename one"
+                )));
+            }
+        }
+    }
     // The theme selector is interpolated into a stylesheet filename and joined
     // onto `src/`, so validate it as a safe path segment before any I/O — the
     // library enforces this itself, not just the CLI (see `validate_theme_name`).
@@ -2666,7 +2812,9 @@ fn build_package_inner(
     // emitted" can later be told apart from "what a previous build left". Into
     // a fresh directory this is empty and costs one failed `read_dir`.
     let pre_emission = pre_emission_stamps(&backend_dir);
-    begin_write_recording();
+    // Ended explicitly below; the guard also clears the recording when the
+    // build fails part-way, so nothing outlives it on this thread.
+    let _recording = WriteRecording::begin();
 
     // ----- 4. Compile each component (× each variant) ----------------------
     //
@@ -2692,6 +2840,41 @@ fn build_package_inner(
     let mut artifacts = Vec::new();
     let mut components_built = Vec::new();
 
+    // UI48 ENV2: one namespace holds every export and every export's
+    // variants, so a variant root may not take a name another claims
+    // (`Card.touch.mll` beside an exported `CardTouch`). Checked for the
+    // whole package before anything is written -- the flat artifacts are
+    // what a consumer compiles together, project or not. Qt's collide only
+    // in a project's QML module (a flat `Card.touch.qml` registers no type),
+    // so a Qt project build checks, still before anything is written; the
+    // module is assembled later, by `qt_cmake_with_layout_variants`.
+    let exports = &manifest.components.exports;
+    match opts.backend {
+        Backend::Xaml => xaml_check_variant_types(exports, &src_dir)?,
+        Backend::SwiftUI => check_layout_namespace(&SWIFTUI_NAMESPACE, exports, &src_dir)?,
+        Backend::Compose => check_layout_namespace(&COMPOSE_NAMESPACE, exports, &src_dir)?,
+        Backend::Flutter => check_layout_namespace(&FLUTTER_NAMESPACE, exports, &src_dir)?,
+        Backend::Qt if opts.emit_project => {
+            check_layout_namespace(&QT_NAMESPACE, exports, &src_dir)?
+        }
+        _ => {}
+    }
+    if opts.emit_project {
+        let shell_namespace = match opts.backend {
+            Backend::Xaml => Some(&XAML_NAMESPACE),
+            Backend::SwiftUI => Some(&SWIFTUI_NAMESPACE),
+            Backend::Compose => Some(&COMPOSE_NAMESPACE),
+            Backend::Flutter => Some(&FLUTTER_NAMESPACE),
+            Backend::Qt => Some(&QT_NAMESPACE),
+            _ => None,
+        };
+        if let Some(namespace) = shell_namespace {
+            check_exports_against_shell(namespace, exports)?;
+        }
+    }
+
+    // Which export each generated file belongs to, for the guard below.
+    let mut export_files: Vec<(PathBuf, String)> = Vec::new();
     for component in &manifest.components.exports {
         let variants = discover_variants(&src_dir, component)?;
         for variant in &variants {
@@ -2703,6 +2886,7 @@ fn build_package_inner(
                 &backend_dir,
                 opts.backend,
                 &package_search_paths,
+                &manifest.components.exports,
             )?;
             // Deduped across variants, not inside the call: each variant gets
             // its own artifact vector, so a component-scoped file emitted by
@@ -2712,6 +2896,7 @@ fn build_package_inner(
             // between them.
             for artifact in component_artifacts {
                 if !artifacts.contains(&artifact) {
+                    export_files.push((artifact.clone(), component.clone()));
                     artifacts.push(artifact);
                 }
             }
@@ -2723,6 +2908,14 @@ fn build_package_inner(
         // every per-backend index emitter (deferred to a follow-up).
         components_built.push(component.clone());
     }
+
+    // UI32 §3.7: from here on the builder writes the package's own files --
+    // the index, the platform library, the project shell -- and none of them
+    // may land on a file an export was just generated into. An export's file
+    // names come from its name, so `App` (SwiftUI's `App.swift`) or `Main`
+    // (Compose's `Main.kt`) would otherwise be silently replaced by the
+    // shell's, leaving a project with no entry point.
+    protect_export_files(&export_files);
 
     // ----- 5. Emit the per-backend index / qmldir --------------------------
     //
@@ -2839,6 +3032,8 @@ fn build_package_inner(
     // the runtime the caller chose at the packaging boundary.
     if let Some(source) = runtime_library {
         let target = match opts.backend {
+            // Android's libraries go into the Android project, written below.
+            Backend::Compose if is_android_jni_libs(source) => source.to_path_buf(),
             Backend::Compose => install_compose_runtime_library(source, &backend_dir)?,
             Backend::Flutter => install_flutter_runtime_library(source, &backend_dir)?,
             Backend::Qt => install_qt_runtime_library(source, &backend_dir)?,
@@ -2849,7 +3044,9 @@ fn build_package_inner(
             Backend::Xaml => install_xaml_runtime_library(source, &backend_dir)?,
             _ => unreachable!("runtime library selection was validated before emission"),
         };
-        artifacts.push(target);
+        if !(opts.backend == Backend::Compose && is_android_jni_libs(source)) {
+            artifacts.push(target);
+        }
     }
 
     // An .xcframework runtime means iOS / iPadOS: add the app target Xcode
@@ -2865,11 +3062,674 @@ fn build_package_inner(
         }
     }
 
+    // Android (UI89 §3.4): a second Gradle project beside the desktop one,
+    // in `android/`. Last, for the iOS project's reason: it takes the shared
+    // sources as the installers above left them.
+    if opts.emit_project && matches!(opts.backend, Backend::Compose) {
+        if let Some(root_component) = components_built.first() {
+            artifacts.extend(write_android_app_project(AndroidProject {
+                manifest: &manifest,
+                package_root: &opts.package_root,
+                backend_dir: &backend_dir,
+                src_dir: &src_dir,
+                root_component,
+                components: &components_built,
+                require_runtime: project_shell_requires_runtime(profile, runtime_library),
+            })?);
+            // A per-ABI runtime (UI89 §3.6) is the Android app's engine.
+            if let Some(source) = runtime_library.filter(|source| is_android_jni_libs(source)) {
+                artifacts.extend(install_android_runtime_libraries(source, &backend_dir)?);
+            }
+        }
+    }
+
     Ok(BuildResult {
         artifacts,
         components_built,
         replaced_generated_files,
     })
+}
+
+// ---------------------------------------------------------------------------
+// Android (UI89 §3.4)
+// ---------------------------------------------------------------------------
+//
+// A Compose build with `--emit-project` writes a second Gradle project beside
+// the desktop one, the way a SwiftUI build with a static runtime writes
+// `iOS/`:
+//
+//   compose/
+//     src/main/kotlin/       desktop: Main.kt, MosaicPlatform.kt (AWT), the
+//                            platform library -- and the shared sources
+//     android/
+//       settings.gradle.kts, build.gradle.kts, gradle.properties
+//       gradle/wrapper/gradle-wrapper.properties
+//       src/main/AndroidManifest.xml
+//       src/main/res/values/strings.xml       the app's label
+//       src/main/kotlin/mosaic/android/MosaicActivity.kt
+//       src/main/kotlin/MosaicPlatform.kt     the Android half of the seams
+//       src/main/kotlin/<shared sources>      copied from ../src/main/kotlin
+//
+// The shared sources are COPIED, not named from `../src/main/kotlin`: an
+// Android source set takes directories and cannot leave out the desktop-only
+// files that sit beside the shared ones. The copies are taken after the
+// installers, so a `[host_assets]` replacement of a shared file reaches
+// Android too. What stays desktop-only: `Main.kt` (the window), the AWT
+// `MosaicPlatform.kt`, the platform library (`MosaicPlatformEffects.kt`,
+// `java.awt.FileDialog`) and the package's desktop `compose` effect handler.
+// Android has its own platform library (UI89 §3.8), and a package's Android
+// handler is its `compose-android` entry (§3.12).
+
+/// The Android Gradle Plugin the generated project applies.
+const ANDROID_GRADLE_PLUGIN_VERSION: &str = "8.13.0";
+/// The Gradle its wrapper names (AGP 8.13 needs 8.13 or later).
+const ANDROID_GRADLE_VERSION: &str = "8.14.3";
+/// SHA-256 of that version's `-bin` distribution zip, from Gradle's published
+/// checksums (https://gradle.org/release-checksums/). The wrapper refuses a
+/// download that does not match, so a tampered or substituted zip never runs.
+/// It changes with ANDROID_GRADLE_VERSION: bump both together.
+const ANDROID_GRADLE_DISTRIBUTION_SHA256: &str =
+    "bd71102213493060956ec229d946beee57158dbd89d0e62b91bca0fa2c5f3531";
+/// compileSdk and targetSdk: Android 16.
+const ANDROID_TARGET_SDK: u32 = 36;
+/// minSdk: Android 8.0, where `java.nio.file` and `java.util.Base64` -- both
+/// used by the shared runtime host -- arrive.
+const ANDROID_MIN_SDK: u32 = 26;
+/// Compose for Android through the same JetBrains coordinates the desktop
+/// build resolves, so both platforms compile against one API. Each resolves
+/// to its `androidx.compose` artifact on Android.
+const ANDROID_COMPOSE_MATERIAL3_ADAPTIVE_VERSION: &str = "1.9.0";
+const ANDROID_ACTIVITY_COMPOSE_VERSION: &str = "1.10.1";
+
+/// Where the Android project lives inside the Compose output.
+pub const ANDROID_PROJECT_DIR: &str = "android";
+
+struct AndroidProject<'a> {
+    manifest: &'a MosaicPackage,
+    package_root: &'a Path,
+    backend_dir: &'a Path,
+    src_dir: &'a Path,
+    root_component: &'a str,
+    components: &'a [String],
+    require_runtime: bool,
+}
+
+fn write_android_app_project(project: AndroidProject<'_>) -> Result<Vec<PathBuf>, BuildError> {
+    let AndroidProject {
+        manifest,
+        package_root,
+        backend_dir,
+        src_dir,
+        root_component,
+        components,
+        require_runtime,
+    } = project;
+    let android_dir = backend_dir.join(ANDROID_PROJECT_DIR);
+    let application_id = android_application_id(
+        &manifest
+            .app
+            .bundle_identifier
+            .clone()
+            .unwrap_or_else(|| mosaic_ios_project::default_bundle_identifier(&manifest.package.name)),
+    );
+    let label = manifest
+        .app
+        .display_name
+        .clone()
+        .unwrap_or_else(|| root_component.to_string());
+
+    let mut files: Vec<(String, String)> = vec![
+        (
+            "settings.gradle.kts".to_string(),
+            build_compose_settings_gradle_kts(&format!("{}-android", manifest.package.name)),
+        ),
+        (
+            "build.gradle.kts".to_string(),
+            build_android_build_gradle_kts(&application_id, &manifest.package.version),
+        ),
+        ("gradle.properties".to_string(), ANDROID_GRADLE_PROPERTIES.to_string()),
+        (
+            "gradle/wrapper/gradle-wrapper.properties".to_string(),
+            android_gradle_wrapper_properties(),
+        ),
+        ("src/main/AndroidManifest.xml".to_string(), ANDROID_MANIFEST_XML.to_string()),
+        ("src/main/res/values/strings.xml".to_string(), android_strings_xml(&label)),
+        (
+            "src/main/kotlin/mosaic/android/MosaicActivity.kt".to_string(),
+            build_android_activity_kt(
+                require_runtime,
+                manifest
+                    .host_effects
+                    .handlers
+                    .iter()
+                    .find(|handler| handler.backend == ANDROID_HOST_EFFECTS_BACKEND),
+            )?,
+        ),
+        (
+            "src/main/kotlin/MosaicPlatform.kt".to_string(),
+            mosaic_emit_compose::pipeline::ANDROID_PLATFORM_KT.to_string(),
+        ),
+        // Android's half of the platform library (UI89 §3.8): the document
+        // picker. The shared half, MosaicFileEffects.kt, is copied below.
+        (
+            "src/main/kotlin/MosaicPlatformEffects.kt".to_string(),
+            mosaic_app_bindings::compose_android_platform_effects(),
+        ),
+        ("README.md".to_string(), android_readme(&application_id)),
+    ];
+    for shared in android_shared_sources(src_dir, components)? {
+        let source = backend_dir.join("src/main/kotlin").join(&shared);
+        files.push((format!("src/main/kotlin/{shared}"), read_to_string(&source)?));
+    }
+    let mut files: Vec<(String, Vec<u8>)> = files
+        .into_iter()
+        .map(|(relative, body)| (relative, body.into_bytes()))
+        .collect();
+    files.extend(android_host_effect_files(manifest, package_root, &files)?);
+
+    let mut written = Vec::with_capacity(files.len());
+    for (relative, body) in files {
+        let path = android_dir.join(relative);
+        if let Some(parent) = path.parent() {
+            create_dir_all(parent)?;
+        }
+        write_file(&path, &body)?;
+        written.push(path);
+    }
+    Ok(written)
+}
+
+/// A package's `compose-android` `[host_effects]` files (UI89 §3.12), read
+/// under the rules `install_host_effects` keeps: package-relative paths with
+/// no `..` or absolute part, and a source that resolves inside the package
+/// and is a regular file. Each lands at its `target` inside the Android
+/// project, which must be a Kotlin source under `src/main/kotlin/`: a
+/// handler is Kotlin, and anywhere else in the project is build input with
+/// more reach than a handler needs -- `buildSrc/` runs at build time,
+/// `src/debug/AndroidManifest.xml` is merged into the app, and
+/// `src/main/jniLibs/` is wiped by the runtime copy. One that would replace
+/// a file the project already holds -- the activity, a shared source, a
+/// component -- is refused, compared without case (one file on
+/// case-insensitive disks): a handler silently replacing generated code is
+/// what `[host_assets]` exists to disclose.
+fn android_host_effect_files(
+    manifest: &MosaicPackage,
+    package_root: &Path,
+    existing: &[(String, Vec<u8>)],
+) -> Result<Vec<(String, Vec<u8>)>, BuildError> {
+    let declared: Vec<_> = manifest
+        .host_effects
+        .files
+        .iter()
+        .filter(|file| file.backend == ANDROID_HOST_EFFECTS_BACKEND)
+        .collect();
+    if declared.is_empty() {
+        return Ok(Vec::new());
+    }
+    let canonical_root = package_root
+        .canonicalize()
+        .map_err(|e| BuildError::Io(format!("canonicalize {}: {e}", package_root.display())))?;
+    let mut taken: HashSet<String> = existing
+        .iter()
+        .map(|(relative, _)| relative.to_lowercase())
+        .collect();
+    let mut out = Vec::with_capacity(declared.len());
+    for file in declared {
+        let source_rel = safe_manifest_relative_path("host effect source", &file.source)?;
+        let target_rel = safe_manifest_relative_path("host effect target", &file.target)?;
+        let source = package_root.join(&source_rel);
+        let canonical_source = source
+            .canonicalize()
+            .map_err(|e| BuildError::Io(format!("read {}: {e}", source.display())))?;
+        if !canonical_source.starts_with(&canonical_root) {
+            return Err(BuildError::Io(format!(
+                "host effect source {} resolves to {}, outside the package",
+                file.source,
+                canonical_source.display()
+            )));
+        }
+        let metadata = fs::metadata(&canonical_source)
+            .map_err(|e| BuildError::Io(format!("stat {}: {e}", source.display())))?;
+        if !metadata.is_file() {
+            return Err(BuildError::Io(format!(
+                "host effect source {} is not a regular file",
+                file.source
+            )));
+        }
+        // Forward slashes, as the project's own keys are written.
+        let relative = target_rel
+            .components()
+            .map(|part| part.as_os_str().to_string_lossy().into_owned())
+            .collect::<Vec<_>>()
+            .join("/");
+        if !(relative.starts_with("src/main/kotlin/") && relative.ends_with(".kt")) {
+            return Err(BuildError::Io(format!(
+                "{ANDROID_HOST_EFFECTS_BACKEND} host effect target {} must be a Kotlin \
+                 source under src/main/kotlin/",
+                file.target
+            )));
+        }
+        if !taken.insert(relative.to_lowercase()) {
+            return Err(BuildError::Io(format!(
+                "{ANDROID_HOST_EFFECTS_BACKEND} host effect target {} would replace a file of the \
+                 generated Android project",
+                file.target
+            )));
+        }
+        let bytes = fs::read(&canonical_source)
+            .map_err(|e| BuildError::Io(format!("read {}: {e}", source.display())))?;
+        out.push((relative, bytes));
+    }
+    Ok(out)
+}
+
+/// The desktop project's Kotlin files that Android compiles too: the app
+/// shell, the runtime host, and every exported component with its layout
+/// variants (UI48 §7.5).
+fn android_shared_sources(src_dir: &Path, components: &[String]) -> Result<Vec<String>, BuildError> {
+    let mut shared = vec![
+        "MosaicAppShell.kt".to_string(),
+        "MosaicRuntimeHost.kt".to_string(),
+        "MosaicFileEffects.kt".to_string(),
+    ];
+    for component in components {
+        shared.push(format!("{component}.kt"));
+        for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
+            shared.push(format!("{component}.{variant}.kt"));
+        }
+    }
+    Ok(shared)
+}
+
+/// An Android application id from a reverse-DNS bundle identifier.
+///
+/// The manifest accepts what Apple accepts (letters, digits and `-`); Android
+/// is stricter, and the id doubles as the Java package of the generated `R`
+/// class:
+///
+/// | rule | example | becomes |
+/// |---|---|---|
+/// | `-` is not allowed | `dev.example.task-app` | `dev.example.task_app` |
+/// | a part starts with a letter | `dev.example.2048` | `dev.example.x2048` |
+/// | a part is not a Java keyword | `dev.new.app` | `dev.new_.app` |
+fn android_application_id(bundle_identifier: &str) -> String {
+    const JAVA_RESERVED: &[&str] = &[
+        "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class",
+        "const", "continue", "default", "do", "double", "else", "enum", "extends", "false",
+        "final", "finally", "float", "for", "goto", "if", "implements", "import", "instanceof",
+        "int", "interface", "long", "native", "new", "null", "package", "private", "protected",
+        "public", "return", "short", "static", "strictfp", "super", "switch", "synchronized",
+        "this", "throw", "throws", "transient", "true", "try", "void", "volatile", "while",
+    ];
+    let parts: Vec<String> = bundle_identifier
+        .split('.')
+        .filter(|part| !part.is_empty())
+        .map(|part| {
+            let mut part: String = part
+                .chars()
+                .map(|c| if c.is_ascii_alphanumeric() { c } else { '_' })
+                .collect();
+            if !part.starts_with(|c: char| c.is_ascii_alphabetic()) {
+                part.insert(0, 'x');
+            }
+            if JAVA_RESERVED.contains(&part.as_str()) {
+                part.push('_');
+            }
+            part
+        })
+        .collect();
+    if parts.len() >= 2 {
+        parts.join(".")
+    } else {
+        // The manifest refuses a one-part identifier; this is a backstop.
+        format!("dev.codingadventures.{}", parts.first().map_or("app", String::as_str))
+    }
+}
+
+fn build_android_build_gradle_kts(application_id: &str, package_version: &str) -> String {
+    format!(
+        concat!(
+            "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
+            "// The Android app (UI89 §3.4). Its Kotlin is the desktop app's shared\n",
+            "// sources plus MosaicActivity and the Android MosaicPlatform.kt.\n",
+            "plugins {{\n",
+            "    id(\"com.android.application\") version \"{agp}\"\n",
+            "    kotlin(\"android\") version \"{kotlin}\"\n",
+            "    id(\"org.jetbrains.kotlin.plugin.compose\") version \"{kotlin}\"\n",
+            "}}\n\n",
+            "android {{\n",
+            "    namespace = \"{application_id}\"\n",
+            "    compileSdk = {sdk}\n\n",
+            "    defaultConfig {{\n",
+            "        applicationId = \"{application_id}\"\n",
+            "        minSdk = {min_sdk}\n",
+            "        targetSdk = {sdk}\n",
+            "        versionCode = 1\n",
+            "        versionName = \"{version}\"\n",
+            "    }}\n\n",
+            "    compileOptions {{\n",
+            "        sourceCompatibility = JavaVersion.VERSION_17\n",
+            "        targetCompatibility = JavaVersion.VERSION_17\n",
+            "    }}\n\n",
+            "    buildFeatures {{\n",
+            "        compose = true\n",
+            "    }}\n",
+            "}}\n\n",
+            "kotlin {{\n",
+            "    compilerOptions {{\n",
+            "        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)\n",
+            "    }}\n",
+            "}}\n\n",
+            "dependencies {{\n",
+            "    implementation(\"androidx.activity:activity-compose:{activity}\")\n",
+            "    implementation(\"org.jetbrains.compose.runtime:runtime:{compose}\")\n",
+            "    implementation(\"org.jetbrains.compose.foundation:foundation:{compose}\")\n",
+            "    implementation(\"org.jetbrains.compose.ui:ui:{compose}\")\n",
+            "    implementation(\"org.jetbrains.compose.material:material:{compose}\")\n",
+            "    implementation(\"org.jetbrains.compose.material3:material3-adaptive-navigation-suite:{adaptive}\")\n",
+            "    // JNA's Android archive carries libjnidispatch for every ABI; the\n",
+            "    // binding code is the desktop's (UI89 §3.2).\n",
+            "    implementation(\"net.java.dev.jna:jna:{jna}@aar\")\n",
+            "    implementation(\"org.jetbrains.kotlinx:kotlinx-serialization-json:{serialization}\")\n",
+            "}}\n",
+        ),
+        agp = ANDROID_GRADLE_PLUGIN_VERSION,
+        kotlin = COMPOSE_KOTLIN_PLUGIN_VERSION,
+        application_id = application_id,
+        sdk = ANDROID_TARGET_SDK,
+        min_sdk = ANDROID_MIN_SDK,
+        // The package version is validated semver: digits, dots, `-`, `+`
+        // and ASCII letters, all safe inside a Kotlin string.
+        version = escape_kotlin_string(package_version),
+        activity = ANDROID_ACTIVITY_COMPOSE_VERSION,
+        compose = COMPOSE_GRADLE_PLUGIN_VERSION,
+        adaptive = ANDROID_COMPOSE_MATERIAL3_ADAPTIVE_VERSION,
+        jna = COMPOSE_JNA_VERSION,
+        serialization = COMPOSE_SERIALIZATION_JSON_VERSION,
+    )
+}
+
+const ANDROID_GRADLE_PROPERTIES: &str = concat!(
+    "# AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
+    "android.useAndroidX=true\n",
+    "org.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8\n",
+    "kotlin.code.style=official\n",
+);
+
+/// The wrapper's properties only: Android Studio and `gradle wrapper` both
+/// read them, and the wrapper's jar and scripts are binary or platform
+/// files a generator should not carry.
+fn android_gradle_wrapper_properties() -> String {
+    format!(
+        concat!(
+            "# AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
+            "distributionBase=GRADLE_USER_HOME\n",
+            "distributionPath=wrapper/dists\n",
+            "distributionSha256Sum={}\n",
+            "distributionUrl=https\\://services.gradle.org/distributions/gradle-{}-bin.zip\n",
+            "networkTimeout=10000\n",
+            "validateDistributionUrl=true\n",
+            "zipStoreBase=GRADLE_USER_HOME\n",
+            "zipStorePath=wrapper/dists\n",
+        ),
+        ANDROID_GRADLE_DISTRIBUTION_SHA256,
+        ANDROID_GRADLE_VERSION
+    )
+}
+
+/// One activity, launched from the home screen. It handles its own
+/// configuration changes -- a rotation or a resize re-lays out the Compose
+/// tree (UI48's environment reporting sees the new size) instead of
+/// destroying the activity and, with it, the runtime host. Cloud backup is
+/// off (`allowBackup`); Android 12+ still moves app data in a device-to-device
+/// transfer, which carries the user's own state to the user's new device.
+const ANDROID_MANIFEST_XML: &str = r#"<?xml version="1.0" encoding="utf-8"?>
+<!-- AUTO-GENERATED by mosaic-compile pkg (Compose backend, emit-project). Edits will be overwritten on next emit. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application
+        android:allowBackup="false"
+        android:label="@string/mosaic_app_label"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        <activity
+            android:name="mosaic.android.MosaicActivity"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|density|uiMode|fontScale|layoutDirection|locale"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+"#;
+
+/// `res/values/strings.xml` holding the app's label.
+///
+/// A string resource, not a literal in the manifest, because a manifest
+/// attribute starting with `@` or `?` is a reference. Two layers of escaping,
+/// in this order: Android's string syntax (`\`, `'`, `"`, and a leading `@`
+/// or `?`, leading blanks aside), then XML (`&`, `<`, `>`). The manifest
+/// already refused control characters in a display name. `formatted="false"`
+/// keeps a `%` in a name from reading as a format specifier.
+fn android_strings_xml(label: &str) -> String {
+    // aapt2 trims ASCII whitespace before it looks for a reference, so the
+    // first character that matters is the first non-blank one.
+    let first = label
+        .char_indices()
+        .find(|(_, c)| !c.is_ascii_whitespace())
+        .map(|(index, _)| index);
+    let mut android = String::new();
+    for (index, c) in label.char_indices() {
+        match c {
+            '\\' | '\'' | '"' => {
+                android.push('\\');
+                android.push(c);
+            }
+            '@' | '?' if Some(index) == first => {
+                android.push('\\');
+                android.push(c);
+            }
+            c => android.push(c),
+        }
+    }
+    let xml = android
+        .replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;");
+    format!(
+        concat!(
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n",
+            // XML forbids `--` inside a comment, so the banner cannot quote the
+            // command line the way the Kotlin and Gradle banners do.
+            "<!-- AUTO-GENERATED by mosaic-compile pkg (Compose backend, emit-project). Edits will be overwritten on next emit. -->\n",
+            "<resources>\n",
+            "    <string name=\"mosaic_app_label\" formatted=\"false\">{}</string>\n",
+            "</resources>\n",
+        ),
+        xml
+    )
+}
+
+/// The backend name of a package's Android `[host_effects]` (UI89 §3.12):
+/// its files land in the Android project and `MosaicActivity` installs its
+/// handler. The desktop `compose` entries are a different target.
+pub const ANDROID_HOST_EFFECTS_BACKEND: &str = "compose-android";
+
+/// How `MosaicActivity` installs a package's `compose-android` handler: the
+/// import it needs (a root-package function must be imported into
+/// `mosaic.android`; a qualified one is called by its full name) and the call.
+fn android_host_effect_install(install: &str) -> Result<(Option<String>, String), BuildError> {
+    // The manifest's shared symbol rule allows `:` and `::` separators for
+    // C++ and C#; Kotlin qualifies with `.` alone, so anything with a colon
+    // would not compile.
+    if install.contains(':') {
+        return Err(BuildError::Io(format!(
+            "`[host_effects]` {ANDROID_HOST_EFFECTS_BACKEND} handler `{install}` is not a Kotlin \
+             function name"
+        )));
+    }
+    if install.contains('.') {
+        Ok((None, install.to_string()))
+    } else {
+        Ok((Some(install.to_string()), install.to_string()))
+    }
+}
+
+/// The Android half of the app, the counterpart of the desktop `Main.kt`:
+/// the activity and the host loader. It lives in a package because a manifest
+/// cannot name a class in the root one; the shared sources stay in the root
+/// package, which Kotlin (unlike Java) can import from.
+fn build_android_activity_kt(
+    require_runtime: bool,
+    handler: Option<&mosaic_package_manifest::HostEffectHandler>,
+) -> Result<String, BuildError> {
+    // The host loads inside `MosaicStartup` (strict) or `remember` (sample),
+    // and the platform library is installed on it as it loads, with the
+    // document picker the activity registered in onCreate (UI89 §3.8). A
+    // package's `compose-android` handler is installed first, so the library
+    // wraps it and routes its `kinds` to it (UI89 §3.12). The content sits
+    // inside `MosaicDragEndWatcher`, so every drag's end reaches its source,
+    // even one no component wanted (UI89 §3.5).
+    let (handler_import, install_call, claimed) = match handler {
+        None => (None, String::new(), String::new()),
+        Some(handler) => {
+            if handler.include.is_some() {
+                return Err(BuildError::Io(format!(
+                    "`[host_effects]` {ANDROID_HOST_EFFECTS_BACKEND} handler `{}` declares an \
+                     `include`, but Kotlin has no include directive: every file in the module is visible",
+                    handler.install
+                )));
+            }
+            let (import, call) = android_host_effect_install(&handler.install)?;
+            let claimed = match handler.kinds.as_deref() {
+                None => ", null".to_string(),
+                Some(kinds) => format!(
+                    ", setOf({})",
+                    kinds
+                        .iter()
+                        .map(|kind| format!("\"{kind}\""))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                ),
+            };
+            (import, format!("{call}(it); "), claimed)
+        }
+    };
+    let also = format!(
+        "{install_call}platformRouter = installMosaicPlatformEffects(it, documentPicker{claimed})"
+    );
+    let (mut imports, content, loader) = if require_runtime {
+        (
+            "import MosaicComposeHost\nimport MosaicRuntimeHost\nimport MosaicStartup\n".to_string(),
+            "        setContent { MosaicDragEndWatcher { MosaicStartup(::loadMosaicHost) } }\n".to_string(),
+            format!(
+                concat!(
+                    "\n",
+                    "    private fun loadMosaicHost(): MosaicComposeHost =\n",
+                    "        requireNotNull(MosaicRuntimeHost.load()) {{\n",
+                    "            \"native-complete requires the Mosaic Rust application runtime\"\n",
+                    "        }}.also {{ {also} }}\n",
+                ),
+                also = also,
+            ),
+        )
+    } else {
+        (
+            "import MosaicApp\nimport MosaicComposeHostBridge\nimport MosaicRuntimeHost\nimport androidx.compose.runtime.remember\n"
+                .to_string(),
+            format!(
+                concat!(
+                    "        setContent {{\n",
+                    "            val mosaicHost = remember {{\n",
+                    "                MosaicRuntimeHost.load()\n",
+                    "                    ?.also {{ {also} }}\n",
+                    "                    ?: MosaicComposeHostBridge.load()\n",
+                    "            }}\n",
+                    "            MosaicDragEndWatcher {{ MosaicApp(mosaicHost) }}\n",
+                    "        }}\n",
+                ),
+                also = also,
+            ),
+            String::new(),
+        )
+    };
+    if let Some(import) = handler_import {
+        imports.push_str(&format!("import {import}\n"));
+    }
+    Ok(format!(
+        concat!(
+            "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
+            "// The Android half of the app (UI89 §3.4): the activity and the host\n",
+            "// loader, as Main.kt is the desktop's. Everything else is shared.\n",
+            "package mosaic.android\n\n",
+            "{imports}",
+            "import MosaicAndroidDocumentPicker\n",
+            "import MosaicDragEndWatcher\n",
+            "import MosaicPlatformRouter\n",
+            "import installMosaicPlatformEffects\n",
+            "import android.os.Bundle\n",
+            "import androidx.activity.ComponentActivity\n",
+            "import androidx.activity.compose.setContent\n\n",
+            "class MosaicActivity : ComponentActivity() {{\n",
+            "    // The document picker registers with the activity before it starts,\n",
+            "    // as the result registry requires; the platform library is installed\n",
+            "    // on the host as it loads (UI89 §3.8).\n",
+            "    private lateinit var documentPicker: MosaicAndroidDocumentPicker\n\n",
+            "    @Volatile\n",
+            "    private var platformRouter: MosaicPlatformRouter? = null\n\n",
+            "    override fun onCreate(savedInstanceState: Bundle?) {{\n",
+            "        super.onCreate(savedInstanceState)\n",
+            "        // State lives in the app's own storage, not a home directory\n",
+            "        // (UI89 §3.3). Set before the host loads, which reads it.\n",
+            "        MosaicRuntimeHost.stateDirectory = filesDir\n",
+            "        documentPicker = MosaicAndroidDocumentPicker(this)\n",
+            "{content}",
+            "    }}\n\n",
+            "    override fun onDestroy() {{\n",
+            "        // A picker still open answers this activity's registry, which is\n",
+            "        // going away: fail its request rather than leave the app awaiting\n",
+            "        // an answer that can no longer arrive.\n",
+            "        if (::documentPicker.isInitialized && documentPicker.isWaiting) {{\n",
+            "            platformRouter?.failPending(\"the window closed before the file picker answered\")\n",
+            "        }}\n",
+            "        super.onDestroy()\n",
+            "    }}\n",
+            "{loader}",
+            "}}\n",
+        ),
+        imports = imports,
+        content = content,
+        loader = loader,
+    ))
+}
+
+fn android_readme(application_id: &str) -> String {
+    format!(
+        concat!(
+            "<!-- AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit. -->\n",
+            "# Android app\n\n",
+            "The Android build of this Compose app (UI89 §3.4), application id\n",
+            "`{application_id}`. Its Kotlin is the desktop app's shared sources, copied\n",
+            "here, plus `MosaicActivity` and the Android half of `MosaicPlatform.kt`.\n\n",
+            "Open this directory in Android Studio, or build the debug APK with a\n",
+            "Gradle wrapper and the Android SDK (`ANDROID_HOME`):\n\n",
+            "```sh\n",
+            "gradle wrapper --gradle-version {gradle}   # once; any Gradle can write the wrapper\n",
+            "./gradlew assembleDebug\n",
+            "```\n\n",
+            "Built with `--runtime-library <jniLibs dir>`, the Rust runtime is in\n",
+            "`src/main/jniLibs` (UI89 §3.6); without it, an app that needs it shows its\n",
+            "startup failure screen, and a sample app runs on sample props.\n",
+            "`files.open` and `files.save` go through the system's document picker\n",
+            "(UI89 §3.8). A package's own Android handler is its `compose-android`\n",
+            "`[host_effects]` entry, copied here and installed by `MosaicActivity`\n",
+            "(UI89 §3.12); the desktop `compose` one is the window's alone.\n",
+        ),
+        application_id = application_id,
+        gradle = ANDROID_GRADLE_VERSION,
+    )
 }
 
 /// Write `iOS/App.xcodeproj/project.pbxproj` for a SwiftUI package built with a
@@ -3878,9 +4738,13 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         }
         Backend::Flutter => {
             let bundle_runtime = runtime_library.is_some();
+            // UI48 §7.9 (ENV3): the root's layout variants the shell switches
+            // between, by the same rules as SwiftUI and Compose.
+            let layout_variants = flutter_layout_choices(src_dir, component, layouts)?;
             let fl_opts = mosaic_emit_flutter::pipeline::EmitOptions {
                 emit_project: true,
                 require_runtime: project_shell_requires_runtime(profile, runtime_library),
+                layout_variants,
                 ..Default::default()
             };
             let r = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
@@ -3896,6 +4760,10 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 } else {
                     mosaic_app_bindings::flutter_pubspec_with_runtime_binding(&proj.pubspec_yaml)
                 };
+                // The platform library's dialogs (`file_selector`, pinned),
+                // before the package's own dependencies so a package that
+                // declares the same one is not written twice (UI87 §7.7).
+                let pubspec = mosaic_app_bindings::flutter_pubspec_with_platform_effects(&pubspec);
                 // Dependencies this package's `[host_assets]` declared. The
                 // emitter cannot know what a replacement host file imports, so
                 // without this the emitted project does not resolve.
@@ -3944,8 +4812,33 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     let component_source =
                         read_to_string(&backend_dir.join(format!("{exported_component}.dart")))?;
                     let component_copy = backend_dir.join(format!("lib/{exported_component}.dart"));
-                    write_file(&component_copy, component_source.as_bytes())?;
+                    write_export_mirror(
+                        &component_copy,
+                        component_source.as_bytes(),
+                        exported_component,
+                    )?;
                     written.push(component_copy);
+                    // Every layout variant too (UI48 §7.9): the root's are
+                    // imported by `main.dart` and selected at run time, and
+                    // `flutter analyze` type-checks all of `lib/`, so every
+                    // export's variants are checked beside their default --
+                    // whose file each variant imports for the interface.
+                    for variant in discover_variants(src_dir, exported_component)?
+                        .into_iter()
+                        .flatten()
+                    {
+                        let variant_file = format!("{exported_component}.{variant}.dart");
+                        let variant_source = backend_dir.join(&variant_file);
+                        if variant_source.is_file() {
+                            let variant_copy = backend_dir.join("lib").join(&variant_file);
+                            write_export_mirror(
+                                &variant_copy,
+                                read_to_string(&variant_source)?.as_bytes(),
+                                exported_component,
+                            )?;
+                            written.push(variant_copy);
+                        }
+                    }
                 }
                 let host = backend_dir.join("lib/mosaic_host.dart");
                 if let Some(parent) = host.parent() {
@@ -3957,6 +4850,32 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 );
                 write_file(&host, runtime_binding.as_bytes())?;
                 written.push(host);
+                // Mosaic's platform library (UI87 §7.7) beside the host, in
+                // every project: `main.dart` imports and installs it.
+                let platform = mosaic_app_bindings::flutter_platform_effects();
+                for (file, body) in [
+                    (FLUTTER_PLATFORM_EFFECTS_FILE, &platform.library),
+                    (FLUTTER_PLATFORM_EFFECTS_CORE_FILE, &platform.core),
+                ] {
+                    let path = backend_dir.join("lib").join(file);
+                    write_file(&path, body.as_bytes())?;
+                    written.push(path);
+                }
+                // The macOS runner's entitlements (UI87 §7.7), written before
+                // `flutter create` makes the runner: it keeps files that are
+                // already there, so the sandboxed app can open the file
+                // dialogs the platform library shows.
+                for (file, body) in [
+                    (FLUTTER_MACOS_DEBUG_ENTITLEMENTS, FLUTTER_MACOS_DEBUG_ENTITLEMENTS_BODY),
+                    (FLUTTER_MACOS_RELEASE_ENTITLEMENTS, FLUTTER_MACOS_RELEASE_ENTITLEMENTS_BODY),
+                ] {
+                    let path = backend_dir.join(file);
+                    if let Some(parent) = path.parent() {
+                        create_dir_all(parent)?;
+                    }
+                    write_file(&path, body.as_bytes())?;
+                    written.push(path);
+                }
                 if let Some(source) = runtime_library {
                     let hook = backend_dir.join("hook/build.dart");
                     write_file(&hook, build_flutter_runtime_hook(source)?.as_bytes())?;
@@ -3966,7 +4885,9 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         }
         Backend::Compose => {
             let require_runtime = project_shell_requires_runtime(profile, runtime_library);
-            let bundle_runtime = runtime_library.is_some();
+            // An Android runtime (UI89 §3.6) is not the desktop app's: the
+            // desktop project bundles nothing then.
+            let bundle_runtime = runtime_library.is_some_and(|source| !is_android_jni_libs(source));
             let flat: [(&str, String); 3] = [
                 (
                     "settings.gradle.kts",
@@ -4022,7 +4943,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     read_to_string(&backend_dir.join(format!("{exported_component}.kt")))?;
                 let component_nested =
                     backend_dir.join(format!("src/main/kotlin/{exported_component}.kt"));
-                write_file(&component_nested, component_source.as_bytes())?;
+                write_export_mirror(
+                    &component_nested,
+                    component_source.as_bytes(),
+                    exported_component,
+                )?;
                 written.push(component_nested);
                 // Every layout variant too (UI48 §7.5): the root's are selected
                 // at run time, and every export's is compiled, for the same
@@ -4036,7 +4961,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     if variant_source.is_file() {
                         let variant_nested =
                             backend_dir.join(format!("src/main/kotlin/{variant_file}"));
-                        write_file(&variant_nested, read_to_string(&variant_source)?.as_bytes())?;
+                        write_export_mirror(
+                            &variant_nested,
+                            read_to_string(&variant_source)?.as_bytes(),
+                            exported_component,
+                        )?;
                         written.push(variant_nested);
                     }
                 }
@@ -4050,7 +4979,15 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             written.push(host_nested);
 
             // The platform library every Compose app gets (UI87 §7): the
-            // standard file effects, and the router Main.kt installs.
+            // shared half -- rules, router, the asynchronous path from a
+            // picker to an outcome (UI89 §3.8) -- and the desktop's dialogs,
+            // which Main.kt installs.
+            let file_effects_nested = backend_dir.join("src/main/kotlin/MosaicFileEffects.kt");
+            write_file(
+                &file_effects_nested,
+                mosaic_app_bindings::compose_file_effects().as_bytes(),
+            )?;
+            written.push(file_effects_nested);
             let platform_nested = backend_dir.join("src/main/kotlin/MosaicPlatformEffects.kt");
             write_file(
                 &platform_nested,
@@ -4060,9 +4997,26 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         }
         Backend::Qt => {
             let require_runtime = project_shell_requires_runtime(profile, runtime_library);
+            // UI48 §7.10 (ENV2/ENV3): the root's layout variants, composed the
+            // way its default is just above, and the rules the shell switches
+            // between them by -- the same rules as SwiftUI, Compose and Flutter.
+            let mut root_variants = Vec::new();
+            for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
+                let variant_mll = read_to_string(&src_dir.join(format!("{component}.{variant}.mll")))?;
+                let composed = compose_component_with_backend_tokens(
+                    component,
+                    &mil_src,
+                    &variant_mll,
+                    &msl_src,
+                    package_search_paths,
+                    &shell_style_options,
+                )?;
+                root_variants.push((variant, composed));
+            }
             let qt_opts = mosaic_emit_qt::pipeline::EmitOptions {
                 emit_project: true,
                 require_runtime,
+                layout_variants: qt_layout_choices(component, layouts, &root_variants)?,
                 ..Default::default()
             };
             let r = mosaic_emit_qt::pipeline::from_pipeline_with_options(
@@ -4073,21 +5027,45 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if require_runtime {
-                write_file(
+                // The root export's own file, re-emitted strictly: the one
+                // write UI32 §3.7's guard is told about.
+                write_export_file(
                     &backend_dir.join(format!("{component}.qml")),
                     r.output.as_bytes(),
                 )?;
+                // A native-complete shell mounts every root strictly, so the
+                // root's variants are re-emitted under the same policy as its
+                // default (the flat artifacts were emitted permissively).
+                for (variant, composed) in &root_variants {
+                    let strict = mosaic_emit_qt::pipeline::from_pipeline_variant_with_options(
+                        &composed.model.component,
+                        &composed.layout.def,
+                        &composed.style,
+                        variant,
+                        &qt_opts,
+                    )
+                    .map_err(|e| pipeline_emit_err(component, e))?;
+                    write_export_file(
+                        &backend_dir.join(format!("{component}.{variant}.qml")),
+                        strict.output.as_bytes(),
+                    )?;
+                }
             }
             if let Some(proj) = r.project {
                 let bundled_runtime = runtime_library.map(runtime_file_name).transpose()?;
                 let platform_effects = !replaces_qt_host;
                 let cmake_lists = qt_cmake_with_host_effects(
-                    &qt_cmake_with_package_exports(
-                        &proj.cmake_lists,
+                    &qt_cmake_with_layout_variants(
+                        &qt_cmake_with_package_exports(
+                            &proj.cmake_lists,
+                            component,
+                            components,
+                            bundled_runtime,
+                        ),
                         component,
                         components,
-                        bundled_runtime,
-                    ),
+                        src_dir,
+                    )?,
                     component,
                     host_effects,
                 );
@@ -4269,7 +5247,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                         read_to_string(&backend_dir.join(format!("{exported_component}.swift")))?;
                     let component_nested =
                         backend_dir.join(format!("Sources/App/{exported_component}.swift"));
-                    write_file(&component_nested, component_source.as_bytes())?;
+                    write_export_mirror(
+                        &component_nested,
+                        component_source.as_bytes(),
+                        exported_component,
+                    )?;
                     written.push(component_nested);
                 }
                 // And the root's layout variants the shell can switch to.
@@ -4277,15 +5259,46 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     let file = format!("{component}.{}.swift", choice.variant);
                     let source = read_to_string(&backend_dir.join(&file))?;
                     let nested = backend_dir.join("Sources/App").join(&file);
-                    write_file(&nested, source.as_bytes())?;
+                    write_export_mirror(&nested, source.as_bytes(), component)?;
                     written.push(nested);
                 }
             }
         }
         Backend::Xaml => {
+            // UI48 §7.11 (ENV2/ENV3): the root's layout variants, composed the
+            // way its default is above -- only to learn each one's kind of
+            // root -- and the rules the window switches between them by, the
+            // same as every other backend's. The variants' controls are the
+            // flat artifacts already beside this project, which the WinUI SDK
+            // compiles with everything else under it; a native-complete
+            // window applies props to each strictly, from MainWindow, so no
+            // control is re-emitted per profile.
+            let mut root_variants = Vec::new();
+            for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
+                let variant_mll =
+                    read_to_string(&src_dir.join(format!("{component}.{variant}.mll")))?;
+                let composed = compose_component_with_backend_tokens(
+                    component,
+                    &mil_src,
+                    &variant_mll,
+                    &msl_src,
+                    package_search_paths,
+                    &shell_style_options,
+                )?;
+                let is_dialog = mosaic_emit_xaml::pipeline::layout_root_is_dialog(&composed.layout.def);
+                root_variants.push((variant, is_dialog));
+            }
+            let layout_variants = xaml_layout_choices(
+                component,
+                layouts,
+                mosaic_emit_xaml::pipeline::layout_root_is_dialog(&layout_out.def),
+                &root_variants,
+            )?;
             let xaml_opts = mosaic_emit_xaml::pipeline::EmitOptions {
                 emit_project: true,
                 require_runtime: project_shell_requires_runtime(profile, runtime_library),
+                layout_variants,
+                package_exports: components.to_vec(),
                 ..Default::default()
             };
             let r = mosaic_emit_xaml::pipeline::from_pipeline(
@@ -4301,6 +5314,13 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     &xaml_opts.namespace,
                     package_name,
                 );
+                // The platform library (UI87 §7.6), in the runtime binding's
+                // namespace. Written into every WinUI project -- the SDK globs
+                // `**/*.cs`, so it compiles in the stub shell too -- and
+                // installed only by the runtime-backed window, the one shell
+                // with a host to install onto.
+                let platform_effects =
+                    mosaic_app_bindings::xaml_platform_effects(&xaml_opts.namespace);
                 let runtime_distribution = if runtime_library.is_some() {
                     "The selected target Rust engine is copied into the project as `mosaic_app.dll`. The generated MSBuild target copies it beside the WinUI executable, and the standard binding resolves it through `AppContext.BaseDirectory` before global lookup; no environment variable or global library install is required."
                 } else {
@@ -4327,6 +5347,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     ("build.ps1".to_string(), &proj.build_script),
                     ("README.md".to_string(), &readme),
                     ("MosaicRuntimeHost.cs".to_string(), &runtime_binding),
+                    ("MosaicPlatformEffects.cs".to_string(), &platform_effects),
                 ];
                 for (rel, body) in flat {
                     let p = backend_dir.join(rel);
@@ -4334,9 +5355,12 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     written.push(p);
                 }
             }
+            // The root export's own side files, re-emitted with the shell's
+            // options -- like Qt's strict root, a deliberate rewrite of an
+            // export's files that UI32 §3.7's guard is told about.
             for side_file in r.for_view_models.iter().chain(r.if_helpers.iter()) {
                 let p = backend_dir.join(&side_file.filename);
-                write_file(&p, side_file.source.as_bytes())?;
+                write_export_file(&p, side_file.source.as_bytes())?;
                 written.push(p);
             }
         }
@@ -4380,6 +5404,109 @@ fn qt_cmake_with_package_exports(
         .expect("write Qt runtime packaging CMake");
     }
     cmake
+}
+
+/// The layout variants a Qt shell switches between (UI48 §7.10): the same
+/// rules as SwiftUI's, Compose's and Flutter's (`[[app.layouts]]`, or the
+/// conventions), each keyed by the wire names `MosaicHost::environmentReport`
+/// answers, with the native table models its root takes. A rule for a
+/// variant with no `.mll`, or one whose name cannot become a QML type, fails
+/// the build.
+fn qt_layout_choices(
+    component: &str,
+    declared: &[mosaic_package_manifest::layouts::LayoutRule],
+    root_variants: &[(String, ComposedComponent)],
+) -> Result<Vec<mosaic_emit_qt::pipeline::LayoutChoice>, BuildError> {
+    let variants: Vec<String> = root_variants
+        .iter()
+        .map(|(variant, _)| variant.clone())
+        .collect();
+    let rules = mosaic_package_manifest::layouts::effective_layout_rules(declared, &variants);
+    rules
+        .into_iter()
+        .map(|rule| {
+            let Some((_, composed)) = root_variants
+                .iter()
+                .find(|(variant, _)| *variant == rule.variant)
+            else {
+                return Err(BuildError::Io(format!(
+                    "`[[app.layouts]]` selects variant `{}`, but {component} has no {component}.{}.mll",
+                    rule.variant, rule.variant
+                )));
+            };
+            if mosaic_emit_qt::pipeline::variant_type_name(component, &rule.variant).is_none() {
+                return Err(BuildError::Io(format!(
+                    "layout variant `{}` of {component} cannot name a QML type",
+                    rule.variant
+                )));
+            }
+            Ok(mosaic_emit_qt::pipeline::LayoutChoice {
+                native_table_models: mosaic_emit_qt::pipeline::native_table_model_count(
+                    &composed.layout.def,
+                ),
+                conditions: rule
+                    .conditions
+                    .into_iter()
+                    .map(|(axis, value)| (axis.wire_name().to_string(), value))
+                    .collect(),
+                variant: rule.variant,
+            })
+        })
+        .collect()
+}
+
+/// Compile every export's layout variants into the Qt project's QML module
+/// (UI48 §7.10), as [`qt_cmake_with_package_exports`] does every export's
+/// default: the package shell is the package's native compile boundary, so a
+/// variant that does not compile must fail here rather than ship. The root's
+/// selectable variants are already listed by the emitter (main.cpp mounts
+/// them); the rest are added after.
+///
+/// Every QML type in one module must be unique, and a variant's
+/// `<Component><Variant>` could be another export's name (`Card` + `touch`
+/// beside an exported `CardTouch`) or another variant's (`Card` + `touch-bar`
+/// and `CardTouch` + `bar`). Both are refused here, naming the two, rather
+/// than registering one type twice. So is a variant of any export named like
+/// something the Qt shell owns (`SHELL_RESERVED_NAMES`: `Mosaic` + `host`
+/// is `MosaicHost`): the emitter refuses that for every variant it emits,
+/// and this keeps the module's own list from relying on it. The check is
+/// the one every backend shares, [`check_layout_namespace`] with
+/// [`QT_NAMESPACE`], which `build_package` runs for a Qt project before
+/// writing anything (only the project has a module: a flat `Card.touch.qml`
+/// registers nothing), so by the time this runs every type is known unique.
+fn qt_cmake_with_layout_variants(
+    generated: &str,
+    mounted_component: &str,
+    components: &[String],
+    src_dir: &Path,
+) -> Result<String, BuildError> {
+    // No variant of ANY export registers a name the module already holds --
+    // an export, another variant, or a name the Qt shell owns (`Mosaic` +
+    // `host`): `build_package` refused those before writing anything.
+    let mut added = String::new();
+    for component in components {
+        for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
+            let file = format!("{component}.{variant}.qml");
+            if mosaic_emit_qt::pipeline::variant_type_name(component, &variant).is_none() {
+                return Err(BuildError::Io(format!(
+                    "layout variant `{variant}` of {component} cannot name a QML type"
+                )));
+            }
+            if generated.contains(&format!("qt_target_qml_sources({mounted_component} QML_FILES {file})\n")) {
+                continue;
+            }
+            added.push_str(
+                &mosaic_emit_qt::pipeline::layout_variant_cmake(mounted_component, component, &variant)
+                    .expect("the type name was just checked"),
+            );
+        }
+    }
+    if added.is_empty() {
+        return Ok(generated.to_string());
+    }
+    Ok(format!(
+        "{generated}\n# UI48 §7.10: every other layout variant of every export, compiled into the\n# module as its own QML type, so a variant that does not compile fails the build.\n{added}"
+    ))
 }
 
 fn initial_window_anchor_error(
@@ -4472,6 +5599,7 @@ fn qt_main_with_startup_states(
     const VIEW_ANCHOR: &str = "    QQuickView view;\n";
     const END_ANCHOR: &str = concat!(
         "    mosaicHost.attach(view.rootObject());\n",
+        "    mosaicObserveEnvironment(view, mosaicHost);\n",
         "    view.show();\n",
         "    return app.exec();\n",
         "  } catch (const std::exception &exception) {\n",
@@ -4628,6 +5756,9 @@ Item {{
     );
     let completion = concat!(
         "    mosaicHost.attach(view.rootObject());\n",
+        // UI48 ENV4 (§7.6): each host that starts is observed; one a retry
+        // replaces takes its connections and timer with it.
+        "        mosaicObserveEnvironment(view, mosaicHost);\n",
         "        activeHost = std::move(candidate);\n",
         "      } catch (const std::exception &exception) {\n",
         "        activeHost.reset();\n",
@@ -4775,6 +5906,478 @@ fn compose_layout_choices(
             })
         })
         .collect()
+}
+
+/// The layout variants a Flutter shell switches between (UI48 §7.9): the
+/// same rules as SwiftUI's and Compose's (`[[app.layouts]]`, or the
+/// conventions), each keyed by the wire names the shell's
+/// `MosaicHost.environmentReport` answers. A rule for a variant with no
+/// `.mll`, or one whose name cannot become a Dart widget class, fails the
+/// build.
+fn flutter_layout_choices(
+    src_dir: &Path,
+    component: &str,
+    declared: &[mosaic_package_manifest::layouts::LayoutRule],
+) -> Result<Vec<mosaic_emit_flutter::pipeline::LayoutChoice>, BuildError> {
+    let variants: Vec<String> = discover_variants(src_dir, component)?
+        .into_iter()
+        .flatten()
+        .collect();
+    let rules = mosaic_package_manifest::layouts::effective_layout_rules(declared, &variants);
+    rules
+        .into_iter()
+        .map(|rule| {
+            if !variants.contains(&rule.variant) {
+                return Err(BuildError::Io(format!(
+                    "`[[app.layouts]]` selects variant `{}`, but {component} has no {component}.{}.mll",
+                    rule.variant, rule.variant
+                )));
+            }
+            if mosaic_emit_flutter::pipeline::variant_widget_name(component, &rule.variant).is_none() {
+                return Err(BuildError::Io(format!(
+                    "layout variant `{}` of {component} cannot name a Dart widget class",
+                    rule.variant
+                )));
+            }
+            Ok(mosaic_emit_flutter::pipeline::LayoutChoice {
+                conditions: rule
+                    .conditions
+                    .into_iter()
+                    .map(|(axis, value)| (axis.wire_name().to_string(), value))
+                    .collect(),
+                variant: rule.variant,
+            })
+        })
+        .collect()
+}
+
+/// The layout variants a WinUI window switches between (UI48 §7.11): the
+/// same rules as every other backend's (`[[app.layouts]]`, or the
+/// conventions), each keyed by the wire names
+/// `MosaicRuntimeHost.EnvironmentReport` answers.
+///
+/// `root_variants` pairs each of the root's variants with whether its root
+/// is a `HostDialog`. A rule for a variant with no `.mll`, one whose name
+/// cannot become a C# type, or one whose root is a dialog -- WinUI lowers it
+/// to a `ContentDialog`, which cannot be placed in the window's tree in
+/// place of a control -- fails the build. A window whose OWN root is a
+/// dialog shows only the button that opens it, so it does not select: it
+/// gets no choices (its variants still compile, as every export's do).
+fn xaml_layout_choices(
+    component: &str,
+    declared: &[mosaic_package_manifest::layouts::LayoutRule],
+    default_is_dialog: bool,
+    root_variants: &[(String, bool)],
+) -> Result<Vec<mosaic_emit_xaml::pipeline::LayoutChoice>, BuildError> {
+    let variants: Vec<String> = root_variants
+        .iter()
+        .map(|(variant, _)| variant.clone())
+        .collect();
+    let rules = mosaic_package_manifest::layouts::effective_layout_rules(declared, &variants);
+    let mut choices = Vec::with_capacity(rules.len());
+    for rule in rules {
+        let Some((_, variant_is_dialog)) = root_variants
+            .iter()
+            .find(|(variant, _)| *variant == rule.variant)
+        else {
+            return Err(BuildError::Io(format!(
+                "`[[app.layouts]]` selects variant `{}`, but {component} has no {component}.{}.mll",
+                rule.variant, rule.variant
+            )));
+        };
+        if mosaic_emit_xaml::pipeline::variant_type_name(component, &rule.variant).is_none() {
+            return Err(BuildError::Io(format!(
+                "layout variant `{}` of {component} cannot name a C# type",
+                rule.variant
+            )));
+        }
+        if *variant_is_dialog && !default_is_dialog {
+            return Err(BuildError::Io(format!(
+                "layout variant `{}` of {component} is rooted in a HostDialog, so the WinUI \
+                 window cannot show it in place of {component}'s layout; give it the default's \
+                 kind of root, or no `[[app.layouts]]` rule",
+                rule.variant
+            )));
+        }
+        choices.push(mosaic_emit_xaml::pipeline::LayoutChoice {
+            conditions: rule
+                .conditions
+                .into_iter()
+                .map(|(axis, value)| (axis.wire_name().to_string(), value))
+                .collect(),
+            variant: rule.variant,
+        });
+    }
+    if default_is_dialog {
+        return Ok(Vec::new());
+    }
+    Ok(choices)
+}
+
+/// A component with variants but no default `<C>.mll` is refused on XAML
+/// (UI48 §7.11): the variants raise `<C>Event`, which only the default
+/// layout declares, so they could not compile. No backend supports that
+/// shape -- every variant takes the interface from its default's file -- but
+/// only here would the build otherwise succeed and the WinUI compile fail.
+///
+/// Then the names: every export's variants compile into ONE WinUI namespace
+/// (the project globs every `.xaml` and `.cs` beside it, and
+/// `MosaicPackage.props` lists them all), which [`check_layout_namespace`]
+/// checks with [`XAML_NAMESPACE`] before anything is written.
+fn xaml_check_variant_types(components: &[String], src_dir: &Path) -> Result<(), BuildError> {
+    for component in components {
+        let variants = discover_variants(src_dir, component)?;
+        if !variants.is_empty() && !variants.contains(&None) {
+            return Err(BuildError::Io(format!(
+                "{component} has layout variants but no default {component}.mll; on XAML each \
+                 variant raises {component}Event, which only the default layout declares, so \
+                 add {component}.mll"
+            )));
+        }
+    }
+    check_layout_namespace(&XAML_NAMESPACE, components, src_dir)
+}
+
+// =====================================================================
+// One namespace per package: every export, and every export's variants
+// =====================================================================
+//
+// UI48 ENV2 gives every layout variant a root of its own, named by one rule
+// on every backend: the component, then the variant in PascalCase
+// (`Card` + `touch` → `CardTouch`; SwiftUI adds `View`). That root shares a
+// namespace with everything else the package's generated files declare at
+// top level -- and the variant's name is built by concatenation, so it can
+// spell a name something else already owns:
+//
+// ```text
+//   Card.touch.mll      → CardTouch      beside an exported component CardTouch
+//   Card.touch-bar.mll  → CardTouchBar   beside CardTouch.bar.mll → CardTouchBar
+//   Mosaic.host.mll     → MosaicHost     beside the shell's own MosaicHost
+// ```
+//
+// An emitter sees one component at a time, so it cannot know the first two;
+// the builder sees the whole package, so it refuses all three here, naming
+// both claimants, before a backend compiler reports a redeclaration (or, on
+// Kotlin and Dart, silently resolves a call to the wrong one). What "the
+// namespace" is, and what a default layout's file declares in it, differ by
+// backend:
+//
+// | backend | shared by                  | variant root        | an export `Y`'s default file declares    | shell names                      |
+// |---------|----------------------------|---------------------|------------------------------------------|----------------------------------|
+// | SwiftUI | the Swift module           | `<C><Variant>View`  | `YView`, `YEvent`                        | none ends in `View` (pinned)     |
+// | Compose | the Kotlin package         | `<C><Variant>`      | `Y`, `YEvent`, `YProps`, `YProps<n>`     | [`COMPOSE_SHELL_RESERVED_NAMES`] |
+// | Flutter | the Dart package (`lib/`)  | `<C><Variant>`      | `Y`, `YEvent`, every `YEvent<Case>`      | the emitter's `SHELL_RESERVED_NAMES` |
+// | Qt      | the QML module             | `<C><Variant>`      | `Y` (the rest are members of `Y`)        | the emitter's `SHELL_RESERVED_NAMES` |
+// | XAML    | the C# namespace           | `<C><Variant>`      | `Y`, `YEvent`, every `YMosaic...`        | the emitter's `SHELL_RESERVED_NAMES` |
+//
+// Everything else a generated file declares is private to it (Kotlin
+// `private`, Swift `private`/`fileprivate`, Dart's leading `_`), nested in
+// a type above (Kotlin and Swift event cases), or -- on XAML -- named
+// inside its owner's `<X>Mosaic...` support namespace, which a variant is
+// also an owner of (`Card.touch` declares `CardTouchMosaicSlider`).
+//
+// Two prefix claims are deliberately wider than what one build emits:
+// Flutter's `YEvent<Case>` classes exist one per emit, and XAML's support
+// types one per primitive a layout uses. Claiming the whole prefix keeps
+// the rule independent of the interface and the layout -- adding an `onTap`
+// to `Card` can then never start failing a build because `Card.event-tap`
+// was already a variant. No package in the repo has a variant there.
+
+/// What else in a package's namespace claims a name a variant would take.
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum NameClaim {
+    /// Exactly this name.
+    Name,
+    /// Every name that starts with this prefix and continues with another
+    /// word: `CardMosaic` (XAML's support types), `CardEvent` (Flutter's
+    /// event classes).
+    Prefix(String),
+}
+
+/// One backend's namespace, as the table above describes it.
+struct LayoutNamespace {
+    /// What holds every declaration, for messages: "the Kotlin package".
+    holder: &'static str,
+    /// Who owns `shell_names`, for messages: "the Compose shell".
+    shell: &'static str,
+    /// Public names the generated project shell declares beside the
+    /// components, which no variant root may take.
+    shell_names: &'static [&'static str],
+    /// The variant root's name, or `None` for a variant name the backend
+    /// cannot spell an identifier from -- which is that backend's emitter's
+    /// (or its project shell's) to refuse, with its own message.
+    variant_type: fn(&str, &str) -> Option<String>,
+    /// Whether export `component`'s default layout file claims `name`.
+    export_claim: fn(&str, &str) -> Option<NameClaim>,
+    /// Whether the file of the variant whose root is `variant_type` claims
+    /// `name` -- besides the root itself, which is always checked.
+    variant_claim: fn(&str, &str) -> Option<NameClaim>,
+}
+
+/// `rest` continues a name with another word: it is non-empty and does not
+/// start with a lowercase letter (`CardEventTap` continues `CardEvent`;
+/// `CardEventsList` does not, so it is not in Flutter's event classes).
+fn continues_with_word(rest: &str) -> bool {
+    rest.chars().next().is_some_and(|first| !first.is_ascii_lowercase())
+}
+
+/// No file claims anything beyond its root (every backend but XAML).
+fn no_further_claim(_owner: &str, _name: &str) -> Option<NameClaim> {
+    None
+}
+
+const SWIFTUI_NAMESPACE: LayoutNamespace = LayoutNamespace {
+    holder: "the Swift module",
+    shell: "the SwiftUI shell",
+    // Every variant root ends in `View`, and no type the SwiftUI shell
+    // declares does (`MosaicApp`, `MosaicRuntimeHost`, ...): pinned by
+    // `no_swiftui_shell_type_can_be_a_variant_root`, so the list is empty
+    // rather than a list no variant could ever match.
+    shell_names: &[],
+    variant_type: mosaic_emit_swiftui::pipeline::variant_view_type,
+    export_claim: |component, name| {
+        (name == format!("{component}View") || name == format!("{component}Event"))
+            .then_some(NameClaim::Name)
+    },
+    variant_claim: no_further_claim,
+};
+
+/// The public names a Compose project shell declares in the root Kotlin
+/// package, beside the components (UI48 §7.5):
+///
+/// | file                              | names                                   |
+/// |-----------------------------------|-----------------------------------------|
+/// | `MosaicAppShell.kt`               | `MosaicApp`, `MosaicComposeHost`, `MosaicComposeHostBridge`, and a native-complete shell's `MosaicStartup` |
+/// | `MosaicRuntimeHost.kt`            | `MosaicRuntimeHost`, `MosaicRuntimeException`, `MosaicNativeApi`, `MosaicSizeT`, `MosaicBuffer`, `MosaicBytes`, `MosaicPlatformEffectHost` |
+/// | `MosaicFileEffects.kt`            | `MosaicPlatformRouter`, `MosaicAccept`, `MosaicFileFailure`, `MosaicOpenedDocument`, `MosaicSaveTarget`, `MosaicDocumentPicker`, `MosaicSaveRequest`, `MosaicStallWatch` |
+/// | `MosaicPlatformEffects.kt`        | desktop: `MosaicFileDialogs`, `AwtMosaicFileDialogs`, `MosaicDialogPicker`; Android: `MosaicAndroidDocumentPicker` |
+/// | `MosaicPlatform.kt`               | Android: `MosaicDragEndWatcher` (UI89 §3.5) |
+///
+/// `Main.kt`, the desktop half of `MosaicPlatform.kt` and the rest declare only
+/// `main`, camelCase helpers or `private` names; `MosaicActivity` lives in
+/// its own package (`mosaic.android`). A variant composable may not take
+/// one (`Mosaic` + `app` would be a second `MosaicApp`). Pinned by
+/// `every_public_name_the_compose_shell_declares_is_reserved` against
+/// every source the shell is generated from, so a new public declaration
+/// there fails a test until it is listed.
+const COMPOSE_SHELL_RESERVED_NAMES: &[&str] = &[
+    "MosaicApp",
+    "MosaicComposeHost",
+    "MosaicComposeHostBridge",
+    "MosaicStartup",
+    "MosaicRuntimeHost",
+    "MosaicRuntimeException",
+    "MosaicNativeApi",
+    "MosaicSizeT",
+    "MosaicBuffer",
+    "MosaicBytes",
+    "MosaicPlatformEffectHost",
+    "MosaicPlatformRouter",
+    "MosaicAccept",
+    "MosaicFileFailure",
+    "MosaicOpenedDocument",
+    "MosaicSaveTarget",
+    "MosaicDocumentPicker",
+    "MosaicSaveRequest",
+    "MosaicStallWatch",
+    "MosaicFileDialogs",
+    "AwtMosaicFileDialogs",
+    "MosaicDialogPicker",
+    "MosaicDragEndWatcher",
+    "MosaicAndroidDocumentPicker",
+];
+
+const COMPOSE_NAMESPACE: LayoutNamespace = LayoutNamespace {
+    holder: "the Kotlin package",
+    shell: "the Compose shell",
+    shell_names: COMPOSE_SHELL_RESERVED_NAMES,
+    variant_type: mosaic_emit_compose::pipeline::variant_composable_name,
+    // The composable, its event sealed class (whose cases are nested), and
+    // its props: `YProps`, or `YProps0`, `YProps1`, ... when the slots are
+    // split into groups.
+    export_claim: |component, name| {
+        let rest = name.strip_prefix(component)?;
+        let props = rest
+            .strip_prefix("Props")
+            .is_some_and(|index| index.chars().all(|c| c.is_ascii_digit()));
+        (rest.is_empty() || rest == "Event" || props).then_some(NameClaim::Name)
+    },
+    variant_claim: no_further_claim,
+};
+
+const FLUTTER_NAMESPACE: LayoutNamespace = LayoutNamespace {
+    holder: "the Dart package",
+    shell: "the Flutter shell",
+    shell_names: mosaic_emit_flutter::pipeline::SHELL_RESERVED_NAMES,
+    variant_type: mosaic_emit_flutter::pipeline::variant_widget_name,
+    // The widget, its sealed `YEvent`, and one top-level `YEvent<Case>`
+    // class per emit -- claimed as a prefix (see above).
+    export_claim: |component, name| {
+        let event = format!("{component}Event");
+        if name == component || name == event {
+            Some(NameClaim::Name)
+        } else if name.strip_prefix(event.as_str()).is_some_and(continues_with_word) {
+            Some(NameClaim::Prefix(event))
+        } else {
+            None
+        }
+    },
+    variant_claim: no_further_claim,
+};
+
+const QT_NAMESPACE: LayoutNamespace = LayoutNamespace {
+    holder: "the Qt module",
+    shell: "the Qt shell",
+    shell_names: mosaic_emit_qt::pipeline::SHELL_RESERVED_NAMES,
+    variant_type: mosaic_emit_qt::pipeline::variant_type_name,
+    // A QML file's declarations are members of its own type (§7.10).
+    export_claim: |component, name| (name == component).then_some(NameClaim::Name),
+    variant_claim: no_further_claim,
+};
+
+/// XAML's support namespace, `<owner>Mosaic...`, as a claim.
+fn xaml_support_claim(owner: &str, name: &str) -> Option<NameClaim> {
+    mosaic_emit_xaml::pipeline::in_support_namespace(owner, name)
+        .then(|| NameClaim::Prefix(format!("{owner}Mosaic")))
+}
+
+const XAML_NAMESPACE: LayoutNamespace = LayoutNamespace {
+    holder: "the WinUI project",
+    shell: "the WinUI shell",
+    shell_names: mosaic_emit_xaml::pipeline::SHELL_RESERVED_NAMES,
+    variant_type: mosaic_emit_xaml::pipeline::variant_type_name,
+    // The control, its event union, and its support types. (The emitter
+    // checks the same against `EmitOptions::package_exports`, for callers
+    // that are not this builder.)
+    export_claim: |component, name| {
+        if name == component || name == format!("{component}Event") {
+            Some(NameClaim::Name)
+        } else {
+            xaml_support_claim(component, name)
+        }
+    },
+    variant_claim: xaml_support_claim,
+};
+
+/// UI32 §3.7: in a project build, an export may not declare a name the
+/// backend's shell declares, variants or not -- `MosaicApp` on Compose or
+/// Flutter declared a second `MosaicApp` beside the shell's root, and the
+/// build went through. A flat build has no shell (its consumer brings one),
+/// so this is checked only when the shell is emitted; the layout-variant
+/// checks in [`check_layout_namespace`] apply to every build.
+fn check_exports_against_shell(
+    namespace: &LayoutNamespace,
+    components: &[String],
+) -> Result<(), BuildError> {
+    for export in components {
+        for &name in namespace.shell_names {
+            let claim = match (namespace.export_claim)(export, name) {
+                Some(NameClaim::Name) => format!("would declare `{name}`"),
+                Some(NameClaim::Prefix(prefix)) => {
+                    format!("would claim the names in `{prefix}...`, `{name}` among them")
+                }
+                None => continue,
+            };
+            return Err(BuildError::Io(format!(
+                "the export {export} ({export}.mll) {claim}, which {shell} declares in \
+                 {holder}; rename the export",
+                shell = namespace.shell,
+                holder = namespace.holder,
+            )));
+        }
+    }
+    Ok(())
+}
+
+/// Refuse a layout variant -- of ANY export, not only the root -- whose
+/// root would take a name already claimed in `namespace` (see the table
+/// above): a name the shell declares, a name an export's default layout
+/// declares (its own component's included), another variant's root, or a
+/// name another variant's file claims. The reverse is refused too: an export
+/// named inside a variant's claim (`CardTouchMosaicSlider` beside
+/// `Card.touch` on XAML). The message names the variant's `.mll` and the
+/// other claimant. Variants are visited in export order and, within one
+/// export, in `discover_variants` order, so the first collision reported is
+/// deterministic.
+///
+/// File names cannot collide the same way, so they are not checked here.
+/// Kotlin compiles a file's top-level functions into a class named after the
+/// file with `.` and `-` made `_` (`Card.touch.kt` → `Card_touchKt`), which
+/// would clash with an export `Card_touch` -- but the manifest admits only
+/// `[A-Z][a-zA-Z0-9]*` export names, so no export (and no other export's
+/// variant, whose stem starts `<Other>_`) can spell `Card_touch`, and
+/// `discover_variants` already refuses `touch-bar` beside `touch_bar`.
+/// `export_names_cannot_spell_a_mangled_variant_file` pins that. Qt's
+/// `qmlcachegen` escapes `.` instead (`Card_touch_0x2e_qml`, checked on Qt
+/// 6.4), and Swift, Dart and C# keep file names out of type names.
+fn check_layout_namespace(
+    namespace: &LayoutNamespace,
+    components: &[String],
+    src_dir: &Path,
+) -> Result<(), BuildError> {
+    let holder = namespace.holder;
+    // (root, `<C>.<variant>.mll`) for every variant that can name a root.
+    let mut roots: Vec<(String, String)> = Vec::new();
+    for component in components {
+        for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
+            if let Some(root) = (namespace.variant_type)(component, &variant) {
+                roots.push((root, format!("{component}.{variant}.mll")));
+            }
+        }
+    }
+    let twice = |root: &str, file: &str, owner: &str| {
+        BuildError::Io(format!(
+            "{holder} would declare `{root}` twice: for the layout variant {file} and for \
+             {owner}; rename the variant"
+        ))
+    };
+    let within = |root: &str, file: &str, prefix: &str, owner: &str| {
+        BuildError::Io(format!(
+            "the layout variant {file} would declare `{root}`, a name in `{prefix}...`, which \
+             {owner} uses in {holder}; rename the variant"
+        ))
+    };
+    for (index, (root, file)) in roots.iter().enumerate() {
+        if namespace.shell_names.contains(&root.as_str()) {
+            return Err(twice(root, file, namespace.shell));
+        }
+        for export in components {
+            let owner = format!("the export {export} ({export}.mll)");
+            match (namespace.export_claim)(export, root) {
+                Some(NameClaim::Name) => return Err(twice(root, file, &owner)),
+                Some(NameClaim::Prefix(prefix)) => {
+                    return Err(within(root, file, &prefix, &owner))
+                }
+                None => {}
+            }
+        }
+        for (other_index, (other, other_file)) in roots.iter().enumerate() {
+            if other_index == index {
+                continue;
+            }
+            // Equal roots are reported once, at the later of the two.
+            if other == root && other_index < index {
+                return Err(BuildError::Io(format!(
+                    "{holder} would declare `{root}` twice: for the layout variants \
+                     {other_file} and {file}; rename one"
+                )));
+            }
+            if let Some(NameClaim::Prefix(prefix)) = (namespace.variant_claim)(other, root) {
+                let owner = format!("the layout variant {other_file}");
+                return Err(within(root, file, &prefix, &owner));
+            }
+        }
+        // And the reverse: an export named inside this variant's claim.
+        for export in components {
+            if let Some(NameClaim::Prefix(prefix)) = (namespace.variant_claim)(root, export) {
+                return Err(BuildError::Io(format!(
+                    "the export {export} ({export}.mll) is named `{export}`, a name in \
+                     `{prefix}...`, which the layout variant {file} uses in {holder}; rename one"
+                )));
+            }
+        }
+    }
+    Ok(())
 }
 
 /// The color scheme a stylesheet was written for, from its file name:
@@ -5503,7 +7106,8 @@ fn compose_main_with_platform_effects(generated: &str, kinds: Option<&[String]>)
     out
 }
 
-/// Install a package's effect handler in the generated Flutter entry point.
+/// Install a package's effect handler, and Mosaic's platform library, in the
+/// generated Flutter entry point.
 ///
 /// Flutter needs an `include` where Compose and SwiftUI refuse one, and that is
 /// a language difference rather than a style choice: Dart resolves nothing
@@ -5513,8 +7117,8 @@ fn compose_main_with_platform_effects(generated: &str, kinds: Option<&[String]>)
 /// a field silently dropped. Qt is the same shape as this one for the same
 /// reason -- C++ has no cross-file visibility either.
 ///
-/// The call goes immediately after the host is assigned, and its shape depends
-/// on which generated shell is being wired.
+/// The calls go immediately after the host is assigned, and their shape
+/// depends on which generated shell is being wired.
 ///
 /// The permissive project declares `late final MosaicHost? _mosaicHost`, so the
 /// call needs a null check, and that check has to be on a LOCAL: Dart does not
@@ -5525,26 +7129,40 @@ fn compose_main_with_platform_effects(generated: &str, kinds: Option<&[String]>)
 /// handler is installed on that local before the first props read. Reading the
 /// nullable field instead would require a pointless guard and would make an
 /// install failure harder to associate with the startup attempt.
+///
+/// Every Flutter app also gets the platform library (UI87 §7.7): after the
+/// package's handler, if any, `installMosaicPlatformEffects(host, appKinds:
+/// ...)` wraps it and routes each effect by kind -- the router wraps whatever
+/// handler is set when it installs, so that order is what lets the app's
+/// kinds reach the app. The handler's `kinds` become a `const <String>[...]`
+/// the router checks; without `kinds`, `null` keeps the original meaning. A
+/// retried start runs the same lines on its new host, so it gets a new router
+/// along with the package handler. An entry point with neither anchor and no
+/// declared handler is left as it is: nothing was declared, so there is
+/// nothing to refuse.
 fn flutter_main_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
 ) -> Result<String, BuildError> {
-    let Some(handler) = host_effects
+    let handler = host_effects
         .handlers
         .iter()
-        .find(|handler| handler.backend == "flutter")
-    else {
-        return Ok(generated.to_string());
-    };
+        .find(|handler| handler.backend == "flutter");
 
-    let Some(include) = handler.include.as_deref() else {
-        return Err(BuildError::Io(format!(
-            "`[host_effects]` declares a Flutter handler `{}` with no `include`, \
-             but Dart resolves nothing across files without an import -- the \
-             handler would be copied, compiled and never reachable. Set \
-             `include` to the file's path relative to `lib/`.",
-            handler.install
-        )));
+    let include = match handler {
+        None => None,
+        Some(handler) => match handler.include.as_deref() {
+            Some(include) => Some(include),
+            None => {
+                return Err(BuildError::Io(format!(
+                    "`[host_effects]` declares a Flutter handler `{}` with no `include`, \
+                     but Dart resolves nothing across files without an import -- the \
+                     handler would be copied, compiled and never reachable. Set \
+                     `include` to the file's path relative to `lib/`.",
+                    handler.install
+                )))
+            }
+        },
     };
 
     const STRICT_ANCHOR: &str = "_mosaicHost = host;";
@@ -5554,6 +7172,9 @@ fn flutter_main_with_host_effects(
     } else if let Some(at) = line_anchored_find(generated, PERMISSIVE_ANCHOR) {
         (at, false)
     } else {
+        let Some(handler) = handler else {
+            return Ok(generated.to_string());
+        };
         // Loud, as on every other backend: Flutter compiles everything under
         // `lib/`, so an uninstalled handler still compiles and ships, and the
         // first symptom is an `Await` going unanswered at runtime.
@@ -5564,6 +7185,11 @@ fn flutter_main_with_host_effects(
             handler.install
         )));
     };
+
+    // Checked before anything is written: a kind that cannot be a Dart string
+    // literal is a build error, never generated code.
+    let app_kinds =
+        flutter_platform_app_kinds(handler.and_then(|handler| handler.kinds.as_deref()))?;
 
     let line_start = generated[..at].rfind('\n').map_or(0, |index| index + 1);
     let indent: String = generated[line_start..at].to_string();
@@ -5578,40 +7204,156 @@ fn flutter_main_with_host_effects(
     // this line with it rather than leaving a guard that no longer type-checks.
     let host_is_nullable = generated.contains("late final MosaicHost? _mosaicHost;");
 
-    let mut out = String::with_capacity(generated.len() + 256);
+    // Each install is one statement over the host, in the shell's own shape.
+    let call = |function: &str, arguments: &str| -> String {
+        if strict_startup {
+            format!("{indent}{function}(host{arguments});")
+        } else if host_is_nullable {
+            format!(
+                "{indent}if (mosaicEffectHost != null) {{ {function}(mosaicEffectHost{arguments}); }}"
+            )
+        } else {
+            format!("{indent}{function}(_mosaicHost{arguments});")
+        }
+    };
+
+    let mut out = String::with_capacity(generated.len() + 512);
     out.push_str(&generated[..line_end]);
-    writeln!(
-        out,
-        "{indent}// Package-declared effect handler, from `[host_effects]`."
-    )
-    .expect("write Flutter host-effect comment");
-    if strict_startup {
-        writeln!(out, "{indent}{}(host);", handler.install)
-    } else if host_is_nullable {
+    if !strict_startup && host_is_nullable {
+        writeln!(out, "{indent}final mosaicEffectHost = _mosaicHost;")
+            .expect("write Flutter effect-host local");
+    }
+    if let Some(handler) = handler {
         writeln!(
             out,
-            "{indent}final mosaicEffectHost = _mosaicHost;\n\
-             {indent}if (mosaicEffectHost != null) {{ {}(mosaicEffectHost); }}",
-            handler.install
+            "{indent}// Package-declared effect handler, from `[host_effects]`.\n{}",
+            call(&handler.install, "")
         )
-    } else {
-        writeln!(out, "{indent}{}(_mosaicHost);", handler.install)
+        .expect("write Flutter host-effect install");
     }
-    .expect("write Flutter host-effect install");
+    // After the package's handler: the router wraps whatever handler is set
+    // when it is installed (UI87 §7.2).
+    writeln!(
+        out,
+        "{indent}// Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n{}",
+        call(
+            "installMosaicPlatformEffects",
+            &format!(", appKinds: {app_kinds}")
+        )
+    )
+    .expect("write Flutter platform-effects install");
     out.push_str(&generated[line_end..]);
 
-    // The import goes at the top, after the last existing one so it cannot land
-    // between a directive and its own comment.
-    let import = format!("import '{include}';\n");
+    if let Some(include) = include {
+        insert_dart_import(&mut out, include);
+    }
+    insert_dart_import(&mut out, FLUTTER_PLATFORM_EFFECTS_FILE);
+    Ok(out)
+}
+
+/// The file the Flutter platform library's entry point is written to, under
+/// `lib/`, and imported by `main.dart` (UI87 §7.7).
+const FLUTTER_PLATFORM_EFFECTS_FILE: &str = "mosaic_platform_effects.dart";
+
+/// The platform library's plain-Dart core, beside it under `lib/`.
+const FLUTTER_PLATFORM_EFFECTS_CORE_FILE: &str = "mosaic_platform_effects_core.dart";
+
+/// Where `flutter create --platforms=macos` puts the runner's entitlements.
+/// `flutter create` writes only the files a project does not have yet, so
+/// writing these first decides what the runner is entitled to (UI87 §7.7).
+const FLUTTER_MACOS_DEBUG_ENTITLEMENTS: &str = "macos/Runner/DebugProfile.entitlements";
+const FLUTTER_MACOS_RELEASE_ENTITLEMENTS: &str = "macos/Runner/Release.entitlements";
+
+/// Flutter's own debug/profile entitlements -- the sandbox, JIT for the Dart
+/// VM, and the VM service's listening socket -- plus the one the platform
+/// library needs: read and write access to the files the person picks in an
+/// open or save panel. Without it NSOpenPanel and NSSavePanel fail inside the
+/// sandbox, and every `files.open` / `files.save` answers
+/// `failed { "the file dialog failed" }`.
+///
+/// `user-selected` is the narrowest file entitlement there is: the app gains
+/// the one file the person chose, for this launch, and nothing else on disk.
+const FLUTTER_MACOS_DEBUG_ENTITLEMENTS_BODY: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Written by Mosaic (UI87 §7.7): Flutter's debug entitlements plus
+     files.user-selected.read-write, which the open and save panels need inside
+     the sandbox. -->
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<key>com.apple.security.cs.allow-jit</key>
+	<true/>
+	<key>com.apple.security.network.server</key>
+	<true/>
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
+</dict>
+</plist>
+"#;
+
+/// Flutter's release entitlements (the sandbox alone) plus the same
+/// user-selected file access as [`FLUTTER_MACOS_DEBUG_ENTITLEMENTS_BODY`].
+const FLUTTER_MACOS_RELEASE_ENTITLEMENTS_BODY: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Written by Mosaic (UI87 §7.7): Flutter's release entitlements plus
+     files.user-selected.read-write, which the open and save panels need inside
+     the sandbox. -->
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
+</dict>
+</plist>
+"#;
+
+/// Add `import '<path>';` to a Dart file, after its last import so it cannot
+/// land between a directive and its own comment. Nothing when it is present.
+fn insert_dart_import(out: &mut String, path: &str) {
+    let import = format!("import '{path}';\n");
     if out.contains(&import) {
-        return Ok(out);
+        return;
     }
     let insert_at = out
         .rfind("\nimport ")
         .and_then(|start| out[start + 1..].find('\n').map(|end| start + 1 + end + 1))
         .unwrap_or(0);
     out.insert_str(insert_at, &import);
-    Ok(out)
+}
+
+/// The `appKinds:` argument for `installMosaicPlatformEffects` (UI87 §7.7):
+/// the package handler's `kinds` as a Dart `const` list, or `null` without
+/// them.
+///
+/// Each kind is spliced into a Dart string literal. The manifest already
+/// refuses any kind outside the dotted-name shape, but this is the line that
+/// would turn a quote, a backslash or a `$` (Dart interpolation) into
+/// generated code, so it checks the shape again itself rather than trusting a
+/// validation it cannot see: a `HostEffectsSection` built some other way (a
+/// test, a future caller) gets a build error, never injected code. An empty
+/// list -- also refused by the manifest -- is `const <String>[]`, which claims
+/// nothing.
+fn flutter_platform_app_kinds(kinds: Option<&[String]>) -> Result<String, BuildError> {
+    let Some(kinds) = kinds else {
+        return Ok("null".to_string());
+    };
+    if let Some(bad) = kinds.iter().find(|kind| !is_host_effect_kind_shape(kind)) {
+        return Err(BuildError::Io(format!(
+            "`[host_effects]` Flutter handler kind {bad:?} is not a dotted name \
+             (letters, digits and `_`, segments starting with a letter, \
+             joined by `.`), so it cannot be written into main.dart"
+        )));
+    }
+    Ok(format!(
+        "const <String>[{}]",
+        kinds
+            .iter()
+            .map(|kind| format!("'{kind}'"))
+            .collect::<Vec<_>>()
+            .join(", ")
+    ))
 }
 
 /// Install a package's `[host_effects]` handler into the generated WinUI window.
@@ -5629,19 +7371,25 @@ fn flutter_main_with_host_effects(
 /// `include` is refused for that reason -- C# has no include directive, and a
 /// `using` that the install name makes unnecessary would be a second way to say
 /// the same thing.
+///
+/// Every runtime-backed window also gets the platform library (UI87 §7.6):
+/// after the package's handler, if any, `MosaicPlatformEffects.Install(this,
+/// ...)` wraps it and routes each effect by kind. The handler's `kinds`
+/// (validated in the manifest to a shape with no quote or backslash) become
+/// the set the router checks; without `kinds`, `null` keeps the original
+/// meaning. `this` is the window: its handle owns the pickers and its
+/// `DispatcherQueue` runs them.
 fn xaml_main_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
 ) -> Result<String, BuildError> {
-    let Some(handler) = host_effects
+    let handler = host_effects
         .handlers
         .iter()
-        .find(|handler| handler.backend == "xaml")
-    else {
-        return Ok(generated.to_string());
-    };
+        .find(|handler| handler.backend == "xaml");
 
-    if let Some(include) = handler.include.as_deref() {
+    if let Some(include) = handler.and_then(|handler| handler.include.as_deref()) {
+        let handler = handler.expect("an include belongs to a handler");
         return Err(BuildError::Io(format!(
             "`[host_effects]` declares a XAML handler `{}` with `include = \"{include}\"`, \
              but C# has no include directive and every type in the assembly is \
@@ -5666,6 +7414,12 @@ fn xaml_main_with_host_effects(
     // every path that reaches the next line.
     const ANCHOR: &str = "MosaicRuntimeHost.LoadRequired();";
     let Some(at) = line_anchored_find(generated, ANCHOR) else {
+        // Without a declared handler there is nothing to refuse: the stub
+        // shell below cannot install the platform library either, and its
+        // file is merely compiled there, as `MosaicRuntimeHost.cs` is.
+        let Some(handler) = handler else {
+            return Ok(generated.to_string());
+        };
         // Loud, as on every other backend, and for the same reason sharpened:
         // `Microsoft.NET.Sdk` globs `**/*.cs` by default, so a copied handler is
         // compiled and shipped whether or not anything installs it. There is no
@@ -5704,17 +7458,81 @@ fn xaml_main_with_host_effects(
         .find('\n')
         .map_or(generated.len(), |index| at + index + 1);
 
-    let mut out = String::with_capacity(generated.len() + 128);
+    let mut out = String::with_capacity(generated.len() + 384);
     out.push_str(&generated[..line_end]);
-    writeln!(
-        out,
-        "{indent}// Package-declared effect handler, from `[host_effects]`.\n\
-         {indent}{}();",
-        handler.install
-    )
-    .expect("write XAML host-effect install");
+    if let Some(handler) = handler {
+        writeln!(
+            out,
+            "{indent}// Package-declared effect handler, from `[host_effects]`.\n\
+             {indent}{}();",
+            handler.install
+        )
+        .expect("write XAML host-effect install");
+    }
+    // After the package's handler: the router wraps whatever handler is set
+    // when it is installed, so this order is what lets the app's kinds reach
+    // the app (UI87 §7.2).
+    let install = xaml_platform_install_line(
+        &indent,
+        handler.and_then(|handler| handler.kinds.as_deref()),
+    )?;
+    writeln!(out, "{install}").expect("write XAML platform-effects install");
     out.push_str(&generated[line_end..]);
     Ok(out)
+}
+
+/// The `MainWindow.xaml.cs` line that installs the platform library (UI87
+/// §7.6). The package handler's `kinds` become a C# array literal the router
+/// checks; without `kinds`, `null` keeps the original meaning.
+///
+/// Each kind is spliced into a C# string literal. The manifest already
+/// refuses any kind outside the dotted-name shape, but this is the line that
+/// would turn a quote or backslash into generated code, so it checks the
+/// shape again itself rather than trusting a validation it cannot see: a
+/// `HostEffectsSection` built some other way (a test, a future caller) gets a
+/// build error, never an injected statement. An empty list -- also refused
+/// by the manifest -- is `System.Array.Empty<string>()`, which claims
+/// nothing, rather than the malformed-looking `new[] {  }`.
+fn xaml_platform_install_line(
+    indent: &str,
+    kinds: Option<&[String]>,
+) -> Result<String, BuildError> {
+    let claimed = match kinds {
+        None => "null".to_string(),
+        Some([]) => "System.Array.Empty<string>()".to_string(),
+        Some(kinds) => {
+            if let Some(bad) = kinds.iter().find(|kind| !is_host_effect_kind_shape(kind)) {
+                return Err(BuildError::Io(format!(
+                    "`[host_effects]` XAML handler kind {bad:?} is not a dotted name \
+                     (letters, digits and `_`, segments starting with a letter, \
+                     joined by `.`), so it cannot be written into MainWindow.xaml.cs"
+                )));
+            }
+            format!(
+                "new[] {{ {} }}",
+                kinds
+                    .iter()
+                    .map(|kind| format!("\"{kind}\""))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        }
+    };
+    Ok(format!(
+        "{indent}// Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n\
+         {indent}MosaicPlatformEffects.Install(this, appKinds: {claimed});"
+    ))
+}
+
+/// The manifest's `host_effect_kind_re`, `^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$`,
+/// by hand: dot-separated segments, each an ASCII letter followed by ASCII
+/// letters, digits or `_`. No quote, backslash, space or newline can pass.
+fn is_host_effect_kind_shape(kind: &str) -> bool {
+    kind.split('.').all(|segment| {
+        let mut chars = segment.chars();
+        matches!(chars.next(), Some(first) if first.is_ascii_alphabetic())
+            && chars.all(|c| c.is_ascii_alphanumeric() || c == '_')
+    })
 }
 
 fn build_electron_package_json(
@@ -6714,6 +8532,10 @@ fn build_electron_readme(npm_name: &str, component_name: &str) -> String {
 /// Returns the paths of the written component artifacts, or a [`BuildError`] tagged
 /// with the component name so a CLI can render
 /// `mosaic-compile pkg: error compiling Grid: …`.
+// `package_exports` is the eighth: the XAML emitter needs every export's name
+// to refuse a variant type another export owns (UI48 §7.11), and the other
+// seven are each a different input to the one compile.
+#[allow(clippy::too_many_arguments)]
 fn compile_one_component(
     component: &str,
     variant: Option<&str>,
@@ -6722,6 +8544,7 @@ fn compile_one_component(
     out_dir: &Path,
     backend: Backend,
     package_search_paths: &[PathBuf],
+    package_exports: &[String],
 ) -> Result<Vec<PathBuf>, BuildError> {
     // ----- 1. Locate the three source files --------------------------------
     //
@@ -6836,11 +8659,22 @@ fn compile_one_component(
         }
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
-        Backend::Qt => mosaic_emit_qt::pipeline::from_pipeline(
-            &mosmodel_out.component,
-            &layout_out.def,
-            &style_def,
-        )
+        // A named variant is a root of its own (UI48 §7.10): the QML type
+        // `<Component><Variant>`, which a Qt project shell compiles beside
+        // the default and mounts when the window's environment selects it.
+        Backend::Qt => match variant {
+            Some(variant) => mosaic_emit_qt::pipeline::from_pipeline_variant(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+                variant,
+            ),
+            None => mosaic_emit_qt::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+            ),
+        }
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
         Backend::Html => mosaic_emit_html::pipeline::from_pipeline_with_sample_slot_values(
@@ -6867,49 +8701,59 @@ fn compile_one_component(
             // mode treats every component as a stand-alone UserControl
             // (registry=None) and never emits the project shell
             // (EmitOptions::default()).
-            let opts = mosaic_emit_xaml::pipeline::EmitOptions::default();
+            //
+            // `package_exports` lets the emitter refuse a variant type that
+            // another export already names: every export lands in one C#
+            // namespace (UI48 §7.11).
+            let opts = mosaic_emit_xaml::pipeline::EmitOptions {
+                package_exports: package_exports.to_vec(),
+                ..Default::default()
+            };
 
             // A XAML layout and its code-behind are two halves of one C#
             // type. Filenames alone do not distinguish that type: emitting
             // `Grid.xaml(.cs)` and `Grid.touch.xaml(.cs)` with the same
             // `Mosaic.Generated.Grid` identity makes the C# compiler merge
             // both partial classes, where every property and handler then
-            // collides. Give each named layout variant its own generated type
-            // while preserving the historical name for the default layout.
-            let mut xaml_component = mosmodel_out.component.clone();
-            let mut xaml_layout = layout_out.def.clone();
-            if let Some(variant) = variant {
-                let emitted_name = format!("{component}{}", xaml_variant_type_suffix(variant));
-                xaml_component.component = emitted_name.clone();
-                xaml_layout.component_name = emitted_name;
+            // collides. A named layout variant is therefore its own type,
+            // `<Component><Variant>` (UI48 §7.11), which raises the DEFAULT's
+            // event union rather than declaring one -- so one window handler
+            // serves every layout -- while the default keeps its historical
+            // name.
+            let result = match variant {
+                None => mosaic_emit_xaml::pipeline::from_pipeline(
+                    &mosmodel_out.component,
+                    &layout_out.def,
+                    &style_def,
+                    None,
+                    &opts,
+                ),
+                Some(variant) => mosaic_emit_xaml::pipeline::from_pipeline_variant(
+                    &mosmodel_out.component,
+                    &layout_out.def,
+                    &style_def,
+                    None,
+                    variant,
+                    &opts,
+                ),
             }
-            let result = mosaic_emit_xaml::pipeline::from_pipeline(
-                &xaml_component,
-                &xaml_layout,
-                &style_def,
-                None,
-                &opts,
-            )
             .map_err(|e| pipeline_emit_err(component, e))?;
 
-            // Write the secondaries alongside the primary `.xaml`.
-            //
-            // Both the code-behind and event union are variant-scoped because
-            // the code-behind's Dispatch signature names its generated event
-            // type. The filename infix keeps the distinct sources side by side
-            // and the generated type suffix keeps the CLR identities distinct.
+            // Write the secondaries alongside the primary `.xaml`: the
+            // code-behind for every layout (the filename infix keeps the
+            // sources side by side, the type name keeps the CLR identities
+            // distinct), and the event union for the default only.
             let code_behind_path = match variant {
                 Some(v) => out_dir.join(format!("{component}.{v}.xaml.cs")),
                 None => out_dir.join(format!("{component}.xaml.cs")),
             };
-            let events_path = match variant {
-                Some(v) => out_dir.join(format!("{component}.{v}.Event.cs")),
-                None => out_dir.join(format!("{component}.Event.cs")),
-            };
             write_file(&code_behind_path, result.code_behind.as_bytes())?;
-            write_file(&events_path, result.events.as_bytes())?;
             backend_artifacts.push(code_behind_path);
-            backend_artifacts.push(events_path);
+            if variant.is_none() {
+                let events_path = out_dir.join(format!("{component}.Event.cs"));
+                write_file(&events_path, result.events.as_bytes())?;
+                backend_artifacts.push(events_path);
+            }
 
             // XAML can reference generated C# support files from its markup
             // (for example a ViewModel or an IValueConverter). Package mode
@@ -6927,11 +8771,22 @@ fn compile_one_component(
 
             result.xaml
         }
-        Backend::Flutter => mosaic_emit_flutter::pipeline::from_pipeline(
-            &mosmodel_out.component,
-            &layout_out.def,
-            &style_def,
-        )
+        // A named variant shares one app with the default (UI48 §7.9): it
+        // imports the default's event types rather than redeclaring them,
+        // and names its own widget class.
+        Backend::Flutter => match variant {
+            Some(variant) => mosaic_emit_flutter::pipeline::from_pipeline_variant(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+                variant,
+            ),
+            None => mosaic_emit_flutter::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+            ),
+        }
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
         // A named variant shares one app with the default (UI48 §7.5): it
@@ -6967,27 +8822,6 @@ fn compile_one_component(
         artifacts.push(lattice_path);
     }
     Ok(artifacts)
-}
-
-/// Turn a validated UI30 layout-variant name into a C# type suffix.
-///
-/// Variant names are restricted by `discover_variants` to ASCII letters,
-/// digits, `_`, and `-`. Separators start a new PascalCase word; the component
-/// prefix guarantees the resulting full identifier never starts with a digit.
-fn xaml_variant_type_suffix(variant: &str) -> String {
-    let mut suffix = String::with_capacity(variant.len());
-    let mut uppercase_next = true;
-    for ch in variant.chars() {
-        if ch == '-' || ch == '_' {
-            uppercase_next = true;
-        } else if uppercase_next {
-            suffix.push(ch.to_ascii_uppercase());
-            uppercase_next = false;
-        } else {
-            suffix.push(ch);
-        }
-    }
-    suffix
 }
 
 /// UI30 multi-layout — discover the layout variants present for one
@@ -7512,6 +9346,27 @@ fn discover_variants(src_dir: &Path, component: &str) -> Result<Vec<Option<Strin
     }
     named.sort();
     named.dedup();
+    // Two variants that differ only in letter case or in `-` / `_` name the
+    // same thing twice: SwiftUI and Compose build one type name from both
+    // (`touch` and `Touch` are both `GridTouch`, `task-list` and `task_list`
+    // both `GridTaskList`), and a case-insensitive filesystem holds only one
+    // of `Grid.touch.kt` and `Grid.Touch.kt`. Refuse the pair here, naming
+    // both files, rather than let a backend compiler report a redeclaration.
+    let fold = |variant: &str| -> String {
+        variant
+            .chars()
+            .filter(|c| *c != '-' && *c != '_')
+            .map(|c| c.to_ascii_lowercase())
+            .collect()
+    };
+    for (index, first) in named.iter().enumerate() {
+        if let Some(second) = named[index + 1..].iter().find(|other| fold(other) == fold(first)) {
+            return Err(BuildError::Io(format!(
+                "layout variants {component}.{first}.mll and {component}.{second}.mll differ only in \
+                 case or `-`/`_`, so they would name the same generated view; rename one"
+            )));
+        }
+    }
     for v in named {
         variants.push(Some(v));
     }
@@ -7787,6 +9642,34 @@ fn emit_index_file(
                     "    <Compile Include=\"{c}.xaml.cs\"><DependentUpon>{c}.xaml</DependentUpon></Compile>\n"
                 ));
                 body.push_str(&format!("    <Compile Include=\"{c}.Event.cs\"/>\n"));
+                // Each layout variant is a control of its own (UI48 §7.11),
+                // `{c}.{variant}.xaml(.cs)`, raising `{c}Event` from the line
+                // above. Its row view models are already among the support
+                // files below, so without these lines they would name a type
+                // the fragment never compiled. Taken from what this build
+                // wrote, in a stable order, and spliced into the XML only
+                // when the variant is one `variant_type_name` accepts (ASCII
+                // letters, digits, `-` and `_`): nothing that could close the
+                // attribute or the element.
+                let prefix = format!("{c}.");
+                let mut variant_pages = component_artifacts
+                    .iter()
+                    .filter_map(|artifact| artifact.file_name().and_then(|name| name.to_str()))
+                    .filter_map(|name| name.strip_prefix(&prefix)?.strip_suffix(".xaml"))
+                    .filter(|variant| {
+                        mosaic_emit_xaml::pipeline::variant_type_name(c, variant).is_some()
+                    })
+                    .collect::<Vec<_>>();
+                variant_pages.sort_unstable();
+                variant_pages.dedup();
+                for variant in variant_pages {
+                    body.push_str(&format!(
+                        "    <Page Include=\"{c}.{variant}.xaml\"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>\n"
+                    ));
+                    body.push_str(&format!(
+                        "    <Compile Include=\"{c}.{variant}.xaml.cs\"><DependentUpon>{c}.{variant}.xaml</DependentUpon></Compile>\n"
+                    ));
+                }
             }
             let mut support_files = component_artifacts
                 .iter()
@@ -7898,6 +9781,15 @@ fn read_to_string(path: &Path) -> Result<String, BuildError> {
 }
 
 fn write_file(path: &Path, bytes: &[u8]) -> Result<(), BuildError> {
+    refuse_overwriting_an_export(path)?;
+    write_export_file(path, bytes)
+}
+
+/// [`write_file`] for a write that replaces an export's own generated file on
+/// purpose -- the Qt shell re-emitting its root strictly, the XAML shell its
+/// root's side files -- and so is exempt from the UI32 §3.7 guard. Every
+/// other write goes through `write_file`.
+fn write_export_file(path: &Path, bytes: &[u8]) -> Result<(), BuildError> {
     if let Some(parent) = path.parent() {
         create_dir_all(parent)?;
     }
@@ -7924,6 +9816,13 @@ thread_local! {
 /// overwriting the HTML app shell reported nothing. An emitter cannot forget to
 /// do something it does not do.
 fn record_written(path: &Path) {
+    if let Some(key) = case_folded_key(path) {
+        WRITTEN_KEYS_THIS_BUILD.with(|written| {
+            if let Some(set) = written.borrow_mut().as_mut() {
+                set.insert(key);
+            }
+        });
+    }
     let Ok(canonical) = fs::canonicalize(path) else {
         return;
     };
@@ -7937,11 +9836,157 @@ fn record_written(path: &Path) {
 /// Start recording writes for a build, discarding anything a previous one left.
 fn begin_write_recording() {
     WRITTEN_THIS_BUILD.with(|written| *written.borrow_mut() = Some(HashSet::new()));
+    WRITTEN_KEYS_THIS_BUILD.with(|written| *written.borrow_mut() = Some(HashSet::new()));
+    // A build that failed part-way leaves its guard behind; this one starts
+    // with none.
+    PROTECTED_EXPORT_FILES.with(|protected| *protected.borrow_mut() = None);
+}
+
+/// A build's write recording, cleared however the build ends -- a `?` that
+/// returns early included -- so no guard or record outlives it on its thread.
+struct WriteRecording;
+
+impl WriteRecording {
+    fn begin() -> Self {
+        begin_write_recording();
+        WriteRecording
+    }
+}
+
+impl Drop for WriteRecording {
+    fn drop(&mut self) {
+        PROTECTED_EXPORT_FILES.with(|protected| *protected.borrow_mut() = None);
+        WRITTEN_KEYS_THIS_BUILD.with(|written| *written.borrow_mut() = None);
+        WRITTEN_THIS_BUILD.with(|written| *written.borrow_mut() = None);
+    }
 }
 
 /// Take what this build wrote, and stop recording.
+///
+/// Also lifts the export-file guard: what follows -- `[host_assets]` and
+/// `[host_effects]` -- may replace a generated file on purpose, and reports it
+/// where it does.
 fn end_write_recording() -> HashSet<PathBuf> {
+    PROTECTED_EXPORT_FILES.with(|protected| *protected.borrow_mut() = None);
+    WRITTEN_KEYS_THIS_BUILD.with(|written| *written.borrow_mut() = None);
     WRITTEN_THIS_BUILD.with(|written| written.borrow_mut().take().unwrap_or_default())
+}
+
+thread_local! {
+    /// Every path this build wrote, by [`case_folded_key`]: what a mirrored
+    /// export file must not land on.
+    static WRITTEN_KEYS_THIS_BUILD: std::cell::RefCell<Option<HashSet<String>>> =
+        const { std::cell::RefCell::new(None) };
+
+    /// The files this build generated for the package's exports, by the key
+    /// [`case_folded_key`] gives them, with the export each belongs to.
+    /// `Some` from the end of the component loop until `end_write_recording`.
+    static PROTECTED_EXPORT_FILES: std::cell::RefCell<Option<HashMap<String, (String, String)>>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+/// Protect `files` -- (path, export) -- from every later write in this build
+/// (UI32 §3.7).
+///
+/// Only files named after their export (`Card.qml`, `Card.Event.cs`,
+/// `Main.kt`) are protected: those are the ones an export's name can make
+/// collide with a shell file. Support files an emitter writes for any
+/// component (XAML's `BoolToVisibilityConverter.cs`) are the shell's too,
+/// and rewriting them is expected; an export cannot be named like one,
+/// since they are reserved names.
+fn protect_export_files(files: &[(PathBuf, String)]) {
+    let protected = files
+        .iter()
+        .filter(|(path, export)| {
+            path.file_name().is_some_and(|name| {
+                name.to_string_lossy()
+                    .to_lowercase()
+                    .starts_with(&export.to_lowercase())
+            })
+        })
+        .filter_map(|(path, export)| {
+            let file = path.file_name()?.to_string_lossy().into_owned();
+            Some((case_folded_key(path)?, (export.clone(), file)))
+        })
+        .collect();
+    PROTECTED_EXPORT_FILES.with(|cell| *cell.borrow_mut() = Some(protected));
+}
+
+/// A path as a case-insensitive filesystem would see it: resolved (the file
+/// itself when it exists, so a link to a protected file is that file;
+/// otherwise its directory), then folded to lower case. `Card.kt` and
+/// `card.kt` are one file on macOS's and Windows' default filesystems, so
+/// they are one key here on every OS. Export names are ASCII, so lower-casing
+/// is all the folding a generated name needs. `None` when the directory does
+/// not exist yet -- then nothing generated can be there either.
+fn case_folded_key(path: &Path) -> Option<String> {
+    let resolved = match fs::canonicalize(path) {
+        Ok(file) => file,
+        Err(_) => fs::canonicalize(path.parent()?)
+            .ok()?
+            .join(path.file_name()?),
+    };
+    Some(resolved.to_string_lossy().to_lowercase())
+}
+
+/// Copy an export's generated file into the project (the shells mirror every
+/// export into the directory their toolchain compiles: `Sources/App/`,
+/// `src/main/kotlin/`, `lib/`), protecting the copy like the original.
+///
+/// The copy is refused when this build already wrote that path -- the shell
+/// got there first (`Sources/App/App.swift` for an export `App`) -- and is
+/// protected from any write after it, so the collision is caught in either
+/// order.
+fn write_export_mirror(path: &Path, bytes: &[u8], export: &str) -> Result<(), BuildError> {
+    let file = path
+        .file_name()
+        .map(|name| name.to_string_lossy().into_owned())
+        .unwrap_or_default();
+    let shell_wrote_it = case_folded_key(path).is_some_and(|key| {
+        WRITTEN_KEYS_THIS_BUILD.with(|written| {
+            written
+                .borrow()
+                .as_ref()
+                .is_some_and(|set| set.contains(&key))
+        })
+    });
+    if shell_wrote_it {
+        return Err(BuildError::Io(format!(
+            "the export {export} ({export}.mll) generates {file}, and the project shell \
+             already wrote a file of that name where the export is copied (one file on a \
+             case-insensitive filesystem); rename the export"
+        )));
+    }
+    refuse_overwriting_an_export(path)?;
+    write_export_file(path, bytes)?;
+    if let Some(key) = case_folded_key(path) {
+        PROTECTED_EXPORT_FILES.with(|cell| {
+            if let Some(protected) = cell.borrow_mut().as_mut() {
+                protected.insert(key, (export.to_string(), file));
+            }
+        });
+    }
+    Ok(())
+}
+
+/// Refuse a write that would land on a file an export was generated into.
+fn refuse_overwriting_an_export(path: &Path) -> Result<(), BuildError> {
+    let owner = PROTECTED_EXPORT_FILES.with(|cell| {
+        let cell = cell.borrow();
+        let protected = cell.as_ref()?;
+        protected.get(&case_folded_key(path)?).cloned()
+    });
+    match owner {
+        None => Ok(()),
+        Some((export, file)) => Err(BuildError::Io(format!(
+            "the export {export} ({export}.mll) generates {file}, and the package's own \
+             output -- its index, platform library or project shell -- would write {} over \
+             it (one file on a case-insensitive filesystem); rename the export",
+            path.file_name()
+                .map(|name| name.to_string_lossy())
+                .unwrap_or_default()
+        ))),
+    }
 }
 
 fn create_dir_all(path: &Path) -> Result<(), BuildError> {
@@ -11050,7 +13095,64 @@ layout NativeEvents {
         assert!(host.contains("static const bool _hasBundledRuntime = true;"));
         assert!(host.contains("@Native<_CreateNative>(symbol: 'mosaic_app_create')"));
 
+        // UI87 §7.7: the platform library sits beside the host, byte for
+        // byte as mosaic-app-bindings emits it, and the shell installs it on
+        // each started host, after the assignment and before the first props.
+        let platform = mosaic_app_bindings::flutter_platform_effects();
+        for (file, body) in [
+            ("flutter/lib/mosaic_platform_effects.dart", &platform.library),
+            ("flutter/lib/mosaic_platform_effects_core.dart", &platform.core),
+        ] {
+            let path = out.path().join(file);
+            assert!(result.artifacts.contains(&path), "{file}");
+            assert_eq!(&fs::read_to_string(path).unwrap(), body, "{file}");
+        }
+        assert!(main.contains("import 'mosaic_platform_effects.dart';"));
+        let assign = main.find("_mosaicHost = host;").expect("assignment");
+        let install = main
+            .find("installMosaicPlatformEffects(host, appKinds: null);")
+            .expect("the platform library is installed");
+        let props = main
+            .find("host.setPropsChangedHandler")
+            .expect("props handler");
+        assert!(assign < install && install < props, "{main}");
+
+        // UI87 §7.7: the macOS runner's entitlements, written before
+        // `flutter create` (which keeps them) so the sandboxed app can open
+        // the panels: Flutter's own keys plus user-selected file access.
+        for (file, keys) in [
+            (
+                "flutter/macos/Runner/DebugProfile.entitlements",
+                &[
+                    "com.apple.security.app-sandbox",
+                    "com.apple.security.cs.allow-jit",
+                    "com.apple.security.network.server",
+                    "com.apple.security.files.user-selected.read-write",
+                ][..],
+            ),
+            (
+                "flutter/macos/Runner/Release.entitlements",
+                &[
+                    "com.apple.security.app-sandbox",
+                    "com.apple.security.files.user-selected.read-write",
+                ][..],
+            ),
+        ] {
+            let path = out.path().join(file);
+            assert!(result.artifacts.contains(&path), "{file}");
+            let plist = fs::read_to_string(path).unwrap();
+            let declared: Vec<&str> = plist
+                .lines()
+                .filter_map(|line| line.trim().strip_prefix("<key>"))
+                .filter_map(|line| line.strip_suffix("</key>"))
+                .collect();
+            assert_eq!(declared, keys, "{file}: exactly these keys, each set true");
+            assert_eq!(plist.matches("<true/>").count(), keys.len(), "{file}");
+            assert!(plist.starts_with("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
+        }
+
         let pubspec = fs::read_to_string(out.path().join("flutter/pubspec.yaml")).unwrap();
+        assert!(pubspec.contains("\n  file_selector: 1.0.4\n"), "{pubspec}");
         assert!(pubspec.contains("sdk: '>=3.10.0 <4.0.0'"));
         assert!(pubspec.contains("flutter: '>=3.38.0 <4.0.0'"));
         assert!(pubspec.contains("code_assets: '>=1.0.0 <2.0.0'"));
@@ -11455,6 +13557,880 @@ layout NativeEvents {
         assert!(shell.contains("            Card(\n"), "{shell}");
     }
 
+    // UI48 §7.9: the same on Flutter -- every variant in `lib/`, and a
+    // selector in `main.dart` generated from the same rules.
+
+    #[test]
+    fn a_flutter_app_carries_its_touch_variant_and_selects_it_by_convention() {
+        let pkg = card_package_with_touch_variant();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Flutter)).expect("Flutter shell");
+        let lib = out.path().join("flutter/lib");
+        let variant = fs::read_to_string(lib.join("Card.touch.dart")).unwrap();
+        assert!(variant.contains("\nclass CardTouch extends StatelessWidget {\n"), "{variant}");
+        // The interface is the default's, imported: no second event type.
+        assert!(variant.contains("\nimport 'Card.dart';\n"), "{variant}");
+        assert!(!variant.contains("sealed class CardEvent"), "{variant}");
+        assert!(variant.contains("final void Function(CardEvent) dispatch;"), "{variant}");
+        let default = fs::read_to_string(lib.join("Card.dart")).unwrap();
+        assert!(default.contains("sealed class CardEvent"), "{default}");
+        assert!(default.contains("\nclass Card extends StatelessWidget {\n"), "{default}");
+        // The flat package artifact is the same variant file.
+        assert_eq!(
+            fs::read_to_string(out.path().join("flutter/Card.touch.dart")).unwrap(),
+            variant
+        );
+        let main = fs::read_to_string(lib.join("main.dart")).unwrap();
+        assert!(main.contains("import 'Card.dart';\nimport 'Card.touch.dart';\n"), "{main}");
+        assert!(main.contains("child: Builder(builder: _mosaicLayoutRoot),"), "{main}");
+        assert!(main.contains("switch (mosaicLayoutVariant(environment)) {"), "{main}");
+        assert!(main.contains("      case 'touch':\n        return CardTouch(\n"), "{main}");
+        assert!(main.contains("      default:\n        return Card(\n"), "{main}");
+        // Keyed by the wire name the environment report uses.
+        assert!(
+            main.contains("  ('touch', <String, String>{'pointer': 'coarse'}),\n"),
+            "{main}"
+        );
+        // A sample shell reads the window, to choose, but reports to nobody.
+        assert!(main.contains("final environment = MosaicHost.environmentReport("), "{main}");
+        assert!(!main.contains("reportEnvironment("), "{main}");
+        assert!(!main.contains("_observeEnvironment"), "{main}");
+    }
+
+    #[test]
+    fn declared_layout_rules_reach_the_flutter_selector_under_wire_names() {
+        let pkg = card_package_with_touch_variant();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"touch\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Flutter)).expect("Flutter shell");
+        let main = fs::read_to_string(out.path().join("flutter/lib/main.dart")).unwrap();
+        // `size-class` in the manifest, `sizeClass` in the report.
+        assert!(
+            main.contains("  ('touch', <String, String>{'sizeClass': 'compact'}),\n"),
+            "{main}"
+        );
+        assert!(!main.contains("'pointer': 'coarse'"), "the declared rule replaces the convention");
+    }
+
+    #[test]
+    fn a_flutter_layout_rule_for_a_missing_variant_is_refused() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"compact\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Flutter)).unwrap_err();
+        assert!(error.to_string().contains("Card.compact.mll"), "{error}");
+    }
+
+    #[test]
+    fn a_flutter_app_without_variants_has_no_selector() {
+        let pkg = card_package();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Flutter)).expect("Flutter shell");
+        let main = fs::read_to_string(out.path().join("flutter/lib/main.dart")).unwrap();
+        assert!(!main.contains("mosaicLayout"), "{main}");
+        // A sample shell without variants does not read the window at all.
+        assert!(!main.contains("MediaQuery"), "{main}");
+        assert!(main.contains("          child: Card(\n"), "{main}");
+        let lib: Vec<String> = fs::read_dir(out.path().join("flutter/lib"))
+            .unwrap()
+            .map(|entry| entry.unwrap().file_name().to_string_lossy().into_owned())
+            .collect();
+        assert!(!lib.iter().any(|name| name.starts_with("Card.") && name != "Card.dart"), "{lib:?}");
+    }
+
+    /// Every axis a rule can test is a key the Flutter binding's
+    /// `environmentReport` answers, under the same wire name. The manifest
+    /// crate pins `wire_name` to `mosaic-app-runtime`; this pins the Dart
+    /// report to `wire_name`, so a generated rule can never test a key the
+    /// report does not carry (and so never silently match nothing).
+    #[test]
+    fn the_flutter_environment_report_carries_every_rule_axis() {
+        let binding = mosaic_app_bindings::flutter_runtime_binding_for_application("card", false);
+        let report = &binding[binding
+            .find("static Map<String, String> environmentReport(")
+            .expect("the binding reduces a window")..];
+        let report = &report[..report.find("};").expect("one map literal")];
+        let initial = &binding[binding
+            .find("static Map<String, String> initialEnvironment()")
+            .expect("the binding knows the platform")..];
+        let initial = &initial[..initial.find("};").expect("one map literal")];
+        for axis in mosaic_package_manifest::layouts::EnvironmentAxis::ALL {
+            let key = format!("'{}':", axis.wire_name());
+            assert!(
+                report.contains(&key) || (report.contains("...initialEnvironment()") && initial.contains(&key)),
+                "{key} is not in the Flutter environment report"
+            );
+        }
+    }
+
+    /// Every PascalCase top-level name in the Dart files the builder puts
+    /// beside a Flutter shell's variants -- the runtime binding and the
+    /// platform library `main.dart` imports -- is one a variant widget may
+    /// not take (UI48 §7.9), so a new public class there fails this test
+    /// until the emitter reserves it.
+    #[test]
+    fn every_public_class_the_flutter_shell_imports_is_reserved() {
+        let platform = mosaic_app_bindings::flutter_platform_effects();
+        for source in [
+            mosaic_app_bindings::flutter_runtime_binding_for_application("card", false),
+            mosaic_app_bindings::flutter_runtime_binding_for_application("card", true),
+            platform.library,
+            platform.core,
+        ] {
+            for line in source.lines() {
+                let mut words = line.split_whitespace().peekable();
+                // Skip modifiers: `abstract interface class`, `final class`, ...
+                while matches!(
+                    words.peek(),
+                    Some(&("abstract" | "interface" | "final" | "sealed" | "base"))
+                ) {
+                    words.next();
+                }
+                if !matches!(words.next(), Some("class" | "typedef" | "enum" | "mixin")) {
+                    continue;
+                }
+                let name: String = words
+                    .next()
+                    .unwrap_or_default()
+                    .chars()
+                    .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                    .collect();
+                if line.starts_with(|c: char| !c.is_whitespace())
+                    && name.starts_with(|c: char| c.is_ascii_uppercase())
+                {
+                    assert!(
+                        mosaic_emit_flutter::pipeline::SHELL_RESERVED_NAMES.contains(&name.as_str()),
+                        "{name} is public in the Flutter shell but a variant widget may take it"
+                    );
+                }
+            }
+        }
+    }
+
+    // UI48 §7.11: the same on XAML -- every variant a control of its own in
+    // the WinUI project, and a selector in `MainWindow.xaml.cs` generated
+    // from the same rules.
+
+    #[test]
+    fn a_xaml_app_carries_its_touch_variant_and_selects_it_by_convention() {
+        let pkg = card_package_with_touch_variant();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).expect("XAML shell");
+        let xaml = out.path().join("xaml");
+        // Both roots sit in the project directory, which the WinUI SDK
+        // compiles whole; the variant raises the default's union.
+        let variant = fs::read_to_string(xaml.join("Card.touch.xaml.cs")).unwrap();
+        assert!(variant.contains("public sealed partial class CardTouch : UserControl"), "{variant}");
+        assert!(variant.contains("public event EventHandler<CardEvent>? Dispatch;"), "{variant}");
+        assert!(!xaml.join("Card.touch.Event.cs").exists());
+        let window = fs::read_to_string(xaml.join("MainWindow.xaml")).unwrap();
+        assert!(window.contains("<Grid Grid.Row=\"0\" x:Name=\"LayoutHost\"/>"), "{window}");
+        let main = fs::read_to_string(xaml.join("MainWindow.xaml.cs")).unwrap();
+        // Keyed by the wire name the environment report uses.
+        assert!(main.contains("        (\"touch\", new[] { (\"pointer\", \"coarse\") }),\n"), "{main}");
+        assert!(main.contains("                var root = new CardTouch();\n"), "{main}");
+        assert!(main.contains("                var root = new Card();\n"), "{main}");
+        assert!(main.contains("this.layoutSwitchQueued = this.DispatcherQueue.TryEnqueue(SwitchLayout);"));
+        // A sample shell selects and carries its slots, but reports to nobody.
+        assert!(main.contains("CarryMosaicSlots(current, next);"), "{main}");
+        assert!(!main.contains("ReportEnvironment"), "{main}");
+        // And the standard binding it reads the window through is beside it.
+        let host = fs::read_to_string(xaml.join("MosaicRuntimeHost.cs")).unwrap();
+        assert!(host.contains("public static bool IsSettling =>"), "the switch's settle check");
+    }
+
+    #[test]
+    fn declared_layout_rules_reach_the_xaml_selector_under_wire_names() {
+        let pkg = card_package_with_touch_variant();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"touch\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).expect("XAML shell");
+        let main = fs::read_to_string(out.path().join("xaml/MainWindow.xaml.cs")).unwrap();
+        // `size-class` in the manifest, `sizeClass` in the report.
+        assert!(main.contains("        (\"touch\", new[] { (\"sizeClass\", \"compact\") }),\n"), "{main}");
+        assert!(!main.contains("(\"pointer\", \"coarse\")"), "the declared rule replaces the convention");
+    }
+
+    #[test]
+    fn a_xaml_layout_rule_for_a_missing_variant_is_refused() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"compact\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
+        assert!(error.to_string().contains("Card.compact.mll"), "{error}");
+    }
+
+    #[test]
+    fn a_xaml_app_without_variants_has_no_selector() {
+        let pkg = card_package();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).expect("XAML shell");
+        let xaml = out.path().join("xaml");
+        let main = fs::read_to_string(xaml.join("MainWindow.xaml.cs")).unwrap();
+        assert!(!main.contains("Layout"), "{main}");
+        assert!(main.contains("TryApplyMosaicHostProps(this.Component)"), "{main}");
+        let window = fs::read_to_string(xaml.join("MainWindow.xaml")).unwrap();
+        assert!(window.contains("<gen:Card Grid.Row=\"0\" x:Name=\"Component\"/>"), "{window}");
+        let props = fs::read_to_string(xaml.join("MosaicPackage.props")).unwrap();
+        assert_eq!(props.matches("<Page Include=").count(), 1, "{props}");
+    }
+
+    /// The native-complete window mounts every root strictly -- the same
+    /// `ApplyRequiredProps` with the same required props as the first --
+    /// and switches from the observer ENV4 already wired, after the report.
+    /// No control is re-emitted for the policy: it lives in the window.
+    #[test]
+    fn a_native_complete_xaml_app_mounts_its_variants_strictly() {
+        let pkg = card_package_with_touch_variant();
+        let flat = TempDir::new().unwrap();
+        build_package(&BuildOptions { emit_project: false, ..swiftui_options(&pkg, &flat, Backend::Xaml) })
+            .expect("flat XAML package");
+        let runtime = pkg.path().join("mosaic_app.dll");
+        fs::write(&runtime, b"runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Xaml),
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("native-complete XAML shell");
+        let xaml = out.path().join("xaml");
+        for file in ["Card.xaml", "Card.xaml.cs", "Card.touch.xaml", "Card.touch.xaml.cs"] {
+            assert_eq!(
+                fs::read_to_string(xaml.join(file)).unwrap(),
+                fs::read_to_string(flat.path().join("xaml").join(file)).unwrap(),
+                "{file} is the same control under either policy"
+            );
+        }
+        let main = fs::read_to_string(xaml.join("MainWindow.xaml.cs")).unwrap();
+        assert!(main.contains("private static readonly string[] RequiredProps = new[] { \"label\" };"), "{main}");
+        assert!(main.contains("        MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps);\n"), "{main}");
+        // Every root is mounted strictly in MountLayout; the one other call
+        // refreshes the root showing after a deferred answer (UI87 §7.6).
+        assert_eq!(main.matches("ApplyRequiredProps(").count(), 2, "{main}");
+        assert!(
+            main.contains("            MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n"),
+            "{main}"
+        );
+        let install = main.find("MosaicPlatformEffects.Install(this").expect("platform library");
+        let first = main.find("            MountLayout(WindowEnvironment() is { } environment\n").unwrap();
+        assert!(install < first, "effects are installed before the first root is mounted");
+        let report = main.find("root.SizeChanged += (_, _) => QueueEnvironmentReport();").unwrap();
+        let switch = main.find("root.SizeChanged += (_, _) => QueueLayoutSwitch();").unwrap();
+        assert!(report < switch, "{main}");
+    }
+
+    /// Every axis a rule can test is a key the XAML binding's
+    /// `EnvironmentReport` answers (or the `InitialEnvironment` it starts
+    /// from), under the same wire name. The manifest crate pins `wire_name`
+    /// to `mosaic-app-runtime`; this pins the C# report to `wire_name`, so a
+    /// generated rule can never test a key the report does not carry.
+    #[test]
+    fn the_xaml_environment_report_carries_every_rule_axis() {
+        let binding = mosaic_app_bindings::xaml_runtime_binding_for_application("Mosaic.Generated", "card");
+        let body = |signature: &str| {
+            let start = binding.find(signature).expect(signature);
+            let body = &binding[start..];
+            body[..body.find("};").expect("one dictionary initializer")].to_string()
+        };
+        let report = body("public static IReadOnlyDictionary<string, string> EnvironmentReport(");
+        let initial = body("public static IReadOnlyDictionary<string, string> InitialEnvironment()");
+        assert!(report.contains("new Dictionary<string, string>(InitialEnvironment())"), "{report}");
+        for axis in mosaic_package_manifest::layouts::EnvironmentAxis::ALL {
+            let key = format!("[\"{}\"] =", axis.wire_name());
+            assert!(
+                report.contains(&key) || initial.contains(&key),
+                "{key} is not in the XAML environment report"
+            );
+        }
+    }
+
+    /// Every type the XAML runtime binding and platform library declare in
+    /// the project's namespace is a name a variant's control may not take
+    /// (UI48 §7.11), so a new public type there fails this test until the
+    /// emitter reserves it.
+    #[test]
+    fn every_type_the_xaml_binding_declares_is_reserved() {
+        let mut declared = Vec::new();
+        for source in [
+            mosaic_app_bindings::xaml_runtime_binding_for_application("Mosaic.Generated", "card"),
+            mosaic_app_bindings::xaml_platform_effects("Mosaic.Generated"),
+        ] {
+            // A namespace-level declaration: unindented, and not a comment.
+            for line in source
+                .lines()
+                .filter(|line| !line.starts_with(char::is_whitespace) && !line.starts_with("//"))
+            {
+                let words: Vec<&str> = line.split_whitespace().collect();
+                let Some(at) = words.iter().position(|word| {
+                    matches!(*word, "class" | "record" | "struct" | "interface" | "enum" | "delegate")
+                }) else {
+                    continue;
+                };
+                let name: String = words[at + 1]
+                    .chars()
+                    .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                    .collect();
+                assert!(
+                    mosaic_emit_xaml::pipeline::SHELL_RESERVED_NAMES.contains(&name.as_str()),
+                    "{name} is public in the WinUI project but a variant's control may take it"
+                );
+                declared.push(name);
+            }
+        }
+        declared.sort();
+        assert_eq!(
+            declared,
+            [
+                "IMosaicFileDialogs",
+                "IMosaicPlatformEffectHost",
+                "MosaicPlatformEffects",
+                "MosaicPlatformRouter",
+                "MosaicRuntimeException",
+                "MosaicRuntimeHost",
+                "MosaicRuntimeHostEffects",
+                "MosaicRuntimeResult",
+                "WinUIMosaicFileDialogs",
+            ]
+        );
+    }
+
+    /// One WinUI namespace holds every export and every variant: a variant
+    /// may not take another export's name, and two exports' variants may
+    /// not spell one type. The builder, which sees them all, refuses both
+    /// before the emitter (which checks the first, given the exports) runs.
+    #[test]
+    fn a_xaml_variant_type_that_another_export_or_variant_owns_is_refused() {
+        let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+        fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
+        assert!(error.to_string().contains("`CardTouch` twice"), "{error}");
+        assert!(error.to_string().contains("Card.touch.mll"), "{error}");
+        assert!(error.to_string().contains("the export CardTouch (CardTouch.mll)"), "{error}");
+
+        let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+        fs::write(pkg.path().join("src/Card.touch-bar.mll"), minimal_mll("Card")).unwrap();
+        fs::write(pkg.path().join("src/CardTouch.bar.mll"), minimal_mll("CardTouch")).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
+        assert!(error.to_string().contains("`CardTouchBar` twice"), "{error}");
+        assert!(error.to_string().contains("Card.touch-bar.mll"), "{error}");
+        assert!(error.to_string().contains("CardTouch.bar.mll"), "{error}");
+
+        // Nor a name in another variant's support types: `Card.touch`
+        // declares `CardTouchMosaicSlider`, and so would this variant --
+        // here of another export, which only the builder sees.
+        let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+        fs::write(pkg.path().join("src/Card.touch-face.mll"), minimal_mll("Card")).unwrap();
+        fs::write(pkg.path().join("src/CardTouch.mosaic-slider.mll"), minimal_mll("CardTouch"))
+            .unwrap();
+        let error = xaml_check_variant_types(
+            &["Card".to_string(), "CardTouch".to_string()],
+            &pkg.path().join("src"),
+        )
+        .unwrap_err()
+        .to_string();
+        // (That name is in the EXPORT CardTouch's own support names: the
+        // emitter refuses it too, but the builder now sees it first.)
+        assert!(error.contains("`CardTouchMosaicSlider`"), "{error}");
+        assert!(error.contains("`CardTouchMosaic...`"), "{error}");
+        assert!(error.contains("the export CardTouch (CardTouch.mll)"), "{error}");
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
+        fs::write(pkg.path().join("src/Card.touch-mosaic-slider.mll"), minimal_mll("Card")).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
+        assert!(error.to_string().contains("`CardTouchMosaicSlider`"), "{error}");
+        assert!(error.to_string().contains("`CardTouchMosaic...`"), "{error}");
+        assert!(error.to_string().contains("Card.touch.mll"), "{error}");
+
+        // A variant of ANY export may not take a shell name either.
+        let pkg = make_package("mosaic-pkg-card", &["Card", "Mosaic"]);
+        fs::write(pkg.path().join("src/Mosaic.host.mll"), minimal_mll("Mosaic")).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
+        assert!(error.to_string().contains("`MosaicHost` twice"), "{error}");
+        assert!(error.to_string().contains("the WinUI shell"), "{error}");
+    }
+
+    // UI48 ENV2 on every backend: one namespace per package, so a variant
+    // root may not take a name another export or variant claims -- the check
+    // Qt and XAML made first, now shared by all five
+    // (`check_layout_namespace`). Each case runs flat and as a project,
+    // because the flat artifacts are what a consumer compiles together --
+    // except on Qt, whose types collide only in a project's QML module.
+
+    /// The root a variant of `component` takes on `backend`: SwiftUI adds
+    /// `View`, the others do not.
+    fn variant_root(backend: Backend, component: &str, variant: &str) -> String {
+        match backend {
+            Backend::Qt => {
+                mosaic_emit_qt::pipeline::variant_type_name(component, variant).unwrap()
+            }
+            Backend::Xaml => {
+                mosaic_emit_xaml::pipeline::variant_type_name(component, variant).unwrap()
+            }
+            Backend::SwiftUI => {
+                mosaic_emit_swiftui::pipeline::variant_view_type(component, variant).unwrap()
+            }
+            Backend::Compose => {
+                mosaic_emit_compose::pipeline::variant_composable_name(component, variant).unwrap()
+            }
+            Backend::Flutter => {
+                mosaic_emit_flutter::pipeline::variant_widget_name(component, variant).unwrap()
+            }
+            other => panic!("no variant roots checked here for {other:?}"),
+        }
+    }
+
+    /// The builds `backend` checks variant names in: flat and project, or a
+    /// Qt project only.
+    fn checked_builds(backend: Backend) -> &'static [bool] {
+        if backend == Backend::Qt { &[true] } else { &[false, true] }
+    }
+
+    /// Build `pkg` on `backend`, in every build it checks, and return the
+    /// errors (the builder refuses before writing, so each must fail and
+    /// leave no files behind -- a Qt project included).
+    fn build_errors(pkg: &TempDir, backend: Backend) -> Vec<String> {
+        checked_builds(backend)
+            .iter()
+            .map(|&emit_project| {
+                let out = TempDir::new().unwrap();
+                let error = build_package(&BuildOptions {
+                    emit_project,
+                    ..swiftui_options(pkg, &out, backend)
+                })
+                .expect_err("the collision is refused")
+                .to_string();
+                // Refused before anything is written.
+                let dir = out.path().join(backend.dir_name());
+                assert!(
+                    fs::read_dir(&dir).map_or(true, |mut entries| entries.next().is_none()),
+                    "{backend:?} wrote artifacts before refusing: {error}"
+                );
+                error
+            })
+            .collect()
+    }
+
+    const VARIANT_ROOT_BACKENDS: [Backend; 5] =
+        [Backend::SwiftUI, Backend::Compose, Backend::Flutter, Backend::Qt, Backend::Xaml];
+
+    /// `Card.touch.mll` beside an exported `CardTouch` would declare the
+    /// export's root again: `CardTouch` (`CardTouchView` on SwiftUI).
+    #[test]
+    fn a_variant_root_named_like_another_export_is_refused() {
+        for backend in VARIANT_ROOT_BACKENDS {
+            let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+            fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
+            let root = variant_root(backend, "Card", "touch");
+            for error in build_errors(&pkg, backend) {
+                assert!(error.contains(&format!("`{root}` twice")), "{backend:?}: {error}");
+                assert!(error.contains("the layout variant Card.touch.mll"), "{backend:?}: {error}");
+                assert!(
+                    error.contains("the export CardTouch (CardTouch.mll)"),
+                    "{backend:?}: {error}"
+                );
+            }
+        }
+    }
+
+    /// `Card` + `touch-bar` and `CardTouch` + `bar` are two files but one
+    /// root, `CardTouchBar`. Only the builder sees both exports.
+    #[test]
+    fn two_exports_variants_that_spell_one_root_are_refused() {
+        for backend in VARIANT_ROOT_BACKENDS {
+            let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+            fs::write(pkg.path().join("src/Card.touch-bar.mll"), minimal_mll("Card")).unwrap();
+            fs::write(pkg.path().join("src/CardTouch.bar.mll"), minimal_mll("CardTouch")).unwrap();
+            let root = variant_root(backend, "Card", "touch-bar");
+            assert_eq!(root, variant_root(backend, "CardTouch", "bar"));
+            for error in build_errors(&pkg, backend) {
+                assert!(error.contains(&format!("`{root}` twice")), "{backend:?}: {error}");
+                assert!(error.contains("Card.touch-bar.mll"), "{backend:?}: {error}");
+                assert!(error.contains("CardTouch.bar.mll"), "{backend:?}: {error}");
+            }
+        }
+    }
+
+    /// The same package with roots that do not collide builds on every
+    /// backend, flat and as a project, and every variant is emitted.
+    #[test]
+    fn a_multi_export_package_whose_variant_roots_are_distinct_builds() {
+        for backend in VARIANT_ROOT_BACKENDS {
+            let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+            fs::write(pkg.path().join("src/Card.compact.mll"), minimal_mll("Card")).unwrap();
+            fs::write(pkg.path().join("src/CardTouch.compact.mll"), minimal_mll("CardTouch")).unwrap();
+            fs::write(pkg.path().join("src/CardTouch.bar.mll"), minimal_mll("CardTouch")).unwrap();
+            for emit_project in [false, true] {
+                let out = TempDir::new().unwrap();
+                build_package(&BuildOptions {
+                    emit_project,
+                    ..swiftui_options(&pkg, &out, backend)
+                })
+                .unwrap_or_else(|error| panic!("{backend:?} (project: {emit_project}): {error}"));
+                let ext = backend.component_extension().unwrap();
+                for file in ["Card", "Card.compact", "CardTouch", "CardTouch.compact", "CardTouch.bar"] {
+                    let path = out.path().join(backend.dir_name()).join(format!("{file}.{ext}"));
+                    assert!(path.is_file(), "{backend:?}: {}", path.display());
+                }
+            }
+        }
+    }
+
+    /// Each backend's own claims, for a variant of any export: Compose's
+    /// props classes and shell composable, Flutter's event classes and
+    /// shell names (for a NON-root export too), SwiftUI's views.
+    #[test]
+    fn a_variant_root_may_not_take_a_name_the_backend_declares() {
+        for (backend, exports, file, owned, owner) in [
+            // `Card`'s props data class.
+            (Backend::Compose, &["Card"][..], "Card.props.mll", "`CardProps` twice", "the export Card (Card.mll)"),
+            // Or one of its grouped props classes.
+            (Backend::Compose, &["Card"][..], "Card.props-2.mll", "`CardProps2` twice", "the export Card (Card.mll)"),
+            // A name the Compose shell declares, here by a non-root export.
+            (Backend::Compose, &["Card", "Mosaic"][..], "Mosaic.app.mll", "`MosaicApp` twice", "the Compose shell"),
+            // Another export's event union.
+            (Backend::Compose, &["Card", "CardTouch"][..], "Card.touch-event.mll", "`CardTouchEvent` twice", "the export CardTouch (CardTouch.mll)"),
+            // Flutter: another export's event classes, a whole prefix.
+            (Backend::Flutter, &["Card", "CardTouch"][..], "Card.touch-event-tap.mll", "a name in `CardTouchEvent...`", "the export CardTouch (CardTouch.mll)"),
+            // Flutter: a shell name, by a variant of a NON-root export.
+            (Backend::Flutter, &["Card", "Mosaic"][..], "Mosaic.host.mll", "`MosaicHost` twice", "the Flutter shell"),
+            // SwiftUI: another export's view.
+            (Backend::SwiftUI, &["Card", "CardTouch"][..], "Card.touch.mll", "`CardTouchView` twice", "the export CardTouch (CardTouch.mll)"),
+            // Qt: a shell name, by a variant of a NON-root export.
+            (Backend::Qt, &["Card", "Mosaic"][..], "Mosaic.host.mll", "`MosaicHost` twice", "the Qt shell"),
+        ] {
+            let pkg = make_package("mosaic-pkg-card", exports);
+            let component = file.split('.').next().unwrap();
+            fs::write(pkg.path().join("src").join(file), minimal_mll(component)).unwrap();
+            for error in build_errors(&pkg, backend) {
+                assert!(error.contains(owned), "{backend:?} {file}: {error}");
+                assert!(error.contains(owner), "{backend:?} {file}: {error}");
+                assert!(error.contains(file), "{backend:?} {file}: {error}");
+            }
+        }
+        // Not every name that merely starts like a claim is one: `Card`'s
+        // `events-list` is `CardEventsList`, not an event class, and
+        // `CardPropsPanel` is not a props class.
+        for (backend, file) in [
+            (Backend::Flutter, "Card.events-list.mll"),
+            (Backend::Compose, "Card.props-panel.mll"),
+        ] {
+            let pkg = make_package("mosaic-pkg-card", &["Card"]);
+            fs::write(pkg.path().join("src").join(file), minimal_mll("Card")).unwrap();
+            let out = TempDir::new().unwrap();
+            build_package(&swiftui_options(&pkg, &out, backend))
+                .unwrap_or_else(|error| panic!("{backend:?} {file}: {error}"));
+        }
+    }
+
+    /// A Qt flat build has no module, so the same collision does not stop
+    /// it; the project build is refused before writing anything.
+    #[test]
+    fn a_qt_flat_build_has_no_module_to_collide_in() {
+        let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+        fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            emit_project: false,
+            ..swiftui_options(&pkg, &out, Backend::Qt)
+        })
+        .expect("a flat Qt build registers no types");
+        assert!(out.path().join("qt/Card.touch.qml").is_file());
+    }
+
+    /// Kotlin names a file's class after the file with `.` and `-` made
+    /// `_`: `Card.touch.kt` is `Card_touchKt`, which an export `Card_touch`
+    /// (`Card_touch.kt`) would declare again ("Duplicate JVM class name").
+    /// `check_layout_namespace` does not look for that because the manifest
+    /// cannot name such an export: this pins the invariant it relies on, on
+    /// every backend, so relaxing the export-name rule fails here first.
+    #[test]
+    fn export_names_cannot_spell_a_mangled_variant_file() {
+        for backend in VARIANT_ROOT_BACKENDS {
+            let pkg = make_package("mosaic-pkg-card", &["Card", "Card_touch"]);
+            fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
+            let out = TempDir::new().unwrap();
+            let error = build_package(&swiftui_options(&pkg, &out, backend))
+                .expect_err("an export name with `_` is refused")
+                .to_string();
+            assert!(error.contains("invalid component name `Card_touch`"), "{backend:?}: {error}");
+        }
+    }
+
+    /// On XAML a variant owns the support names `<Root>Mosaic...`, so an
+    /// export named inside them (`CardTouchMosaicSlider` beside
+    /// `Card.touch`) is refused too -- the reverse of a variant inside an
+    /// export's.
+    #[test]
+    fn a_xaml_export_inside_a_variants_support_names_is_refused() {
+        let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouchMosaicSlider"]);
+        fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
+        for error in build_errors(&pkg, Backend::Xaml) {
+            assert!(error.contains("the export CardTouchMosaicSlider (CardTouchMosaicSlider.mll)"), "{error}");
+            assert!(error.contains("`CardTouchMosaic...`"), "{error}");
+            assert!(error.contains("the layout variant Card.touch.mll"), "{error}");
+        }
+        // Only XAML's variants claim more than their root.
+        for backend in [Backend::SwiftUI, Backend::Compose, Backend::Flutter, Backend::Qt] {
+            let out = TempDir::new().unwrap();
+            build_package(&swiftui_options(&pkg, &out, backend))
+                .unwrap_or_else(|error| panic!("{backend:?}: {error}"));
+        }
+    }
+
+    /// The top-level names a source declares outside any type, for the
+    /// shell pins below: one per line that starts in column 0, after its
+    /// modifiers, whose keyword is in `keywords`. `private` and
+    /// `fileprivate` declarations are file-scoped, so they are left out.
+    fn top_level_declarations(source: &str, keywords: &[&str]) -> Vec<String> {
+        const MODIFIERS: &[&str] = &[
+            "public", "internal", "open", "final", "abstract", "data", "sealed", "inline",
+            "value", "indirect", "nonisolated", "expect", "actual",
+        ];
+        let mut names = Vec::new();
+        for line in source.lines() {
+            if line.starts_with(char::is_whitespace) {
+                continue;
+            }
+            // Attributes and annotations first (`@main struct App`).
+            let mut words = line
+                .split_whitespace()
+                .skip_while(|word| word.starts_with('@'))
+                .peekable();
+            if matches!(words.peek(), Some(&("private" | "fileprivate"))) {
+                continue;
+            }
+            while words.peek().is_some_and(|word| MODIFIERS.contains(word)) {
+                words.next();
+            }
+            let Some(mut keyword) = words.next() else { continue };
+            // Kotlin's `enum class X` and `annotation class X` are classes;
+            // Swift's `enum X` is its own keyword.
+            if matches!(keyword, "enum" | "annotation") && words.peek() == Some(&"class") {
+                keyword = words.next().unwrap();
+            }
+            if !keywords.contains(&keyword) {
+                continue;
+            }
+            // `fun interface X` is an interface.
+            let mut name = words.next().unwrap_or_default();
+            if keyword == "fun" && name == "interface" {
+                name = words.next().unwrap_or_default();
+            }
+            // Type parameters before the name (`fun <T> MosaicBox(...)`,
+            // `fun <K, V> f`): skip to the word after the closing `>`.
+            if name.starts_with('<') {
+                let mut word = name;
+                while !word.contains('>') {
+                    word = words.next().unwrap_or(">");
+                }
+                name = words.next().unwrap_or_default();
+            }
+            // An extension (`fun MosaicHost.install()`) declares nothing new.
+            if name.split('(').next().is_some_and(|head| head.contains('.')) {
+                continue;
+            }
+            let name: String = name
+                .chars()
+                .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                .collect();
+            if !name.is_empty() {
+                names.push(name);
+            }
+        }
+        names
+    }
+
+    /// Every `.ext` file under `dir`, recursively.
+    fn sources_under(dir: &Path, ext: &str, found: &mut Vec<PathBuf>) {
+        for entry in fs::read_dir(dir).unwrap() {
+            let path = entry.unwrap().path();
+            if path.is_dir() {
+                sources_under(&path, ext, found);
+            } else if path.extension().is_some_and(|e| e == ext) {
+                found.push(path);
+            }
+        }
+    }
+
+    /// Generate `pkg`'s project on `backend`, permissive and native-complete
+    /// (with a runtime, so the strict shell is the one written), and return
+    /// every `.ext` source the shell put beside the components -- not the
+    /// components' own files, which `check_layout_namespace` claims for.
+    fn shell_sources(pkg: &TempDir, backend: Backend, ext: &str) -> Vec<(PathBuf, String)> {
+        // SwiftUI bundles a `.dylib`; the JVM loads a `.so` on Linux.
+        let library = if backend == Backend::SwiftUI { "libcard_app.dylib" } else { "libcard_app.so" };
+        let runtime = pkg.path().join(library);
+        fs::write(&runtime, b"runtime").unwrap();
+        let mut sources = Vec::new();
+        for (profile, runtime) in [
+            (BuildProfile::Permissive, None),
+            (BuildProfile::NativeComplete, Some(runtime.as_path())),
+        ] {
+            let out = TempDir::new().unwrap();
+            build_package_with_profile_and_runtime(&swiftui_options(pkg, &out, backend), profile, runtime)
+                .unwrap_or_else(|error| panic!("{backend:?} {profile:?}: {error}"));
+            let mut files = Vec::new();
+            sources_under(&out.path().join(backend.dir_name()), ext, &mut files);
+            for file in files {
+                let name = file.file_name().unwrap().to_string_lossy().into_owned();
+                if name.starts_with("Card.") {
+                    continue;
+                }
+                let source = fs::read_to_string(&file).unwrap();
+                sources.push((file, source));
+            }
+        }
+        assert!(!sources.is_empty(), "{backend:?} wrote no shell sources");
+        sources
+    }
+
+    /// Every public PascalCase name a Compose project declares in the root
+    /// Kotlin package beside the components is one a variant composable may
+    /// not take (UI48 §7.5), so a new public declaration in the shell, the
+    /// runtime binding or the platform library fails this test until
+    /// `COMPOSE_SHELL_RESERVED_NAMES` lists it. Files in another package
+    /// (`mosaic.android`'s `MosaicActivity`) cannot collide and are skipped.
+    #[test]
+    fn every_public_name_the_compose_shell_declares_is_reserved() {
+        let pkg = card_package_with_touch_variant();
+        let mut sources = shell_sources(&pkg, Backend::Compose, "kt");
+        // Both halves of `MosaicPlatform.kt`, whichever one a build wrote.
+        for platform in [
+            mosaic_emit_compose::pipeline::DESKTOP_PLATFORM_KT,
+            mosaic_emit_compose::pipeline::ANDROID_PLATFORM_KT,
+        ] {
+            sources.push((PathBuf::from("MosaicPlatform.kt"), platform.to_string()));
+        }
+        let mut seen = HashSet::new();
+        for (file, source) in &sources {
+            if source.lines().any(|line| line.starts_with("package ")) {
+                continue;
+            }
+            for name in top_level_declarations(source, &["fun", "class", "object", "interface", "typealias"]) {
+                if name.starts_with(|c: char| c.is_ascii_uppercase()) {
+                    assert!(
+                        COMPOSE_SHELL_RESERVED_NAMES.contains(&name.as_str()),
+                        "{name} ({}) is public in the Compose shell but a variant may take it",
+                        file.display()
+                    );
+                    seen.insert(name);
+                }
+            }
+        }
+        // And the list holds nothing the shell no longer declares.
+        for name in COMPOSE_SHELL_RESERVED_NAMES {
+            assert!(seen.contains(*name), "{name} is reserved but no Compose shell declares it");
+        }
+    }
+
+    /// A SwiftUI variant root is `<C><Variant>View`, so the shell's names
+    /// can only collide with one that ends in `View`, and none does (UI48
+    /// §7.2). That is why `SWIFTUI_NAMESPACE` has no shell list; a shell type
+    /// ending in `View` fails this test until it has one.
+    #[test]
+    fn no_swiftui_shell_type_can_be_a_variant_root() {
+        let pkg = card_package_with_touch_variant();
+        let mut types = 0;
+        for (file, source) in shell_sources(&pkg, Backend::SwiftUI, "swift") {
+            for name in top_level_declarations(
+                &source,
+                &["struct", "class", "enum", "protocol", "actor", "typealias"],
+            ) {
+                types += 1;
+                assert!(
+                    !name.ends_with("View"),
+                    "{name} ({}) is a SwiftUI shell type a variant root could spell",
+                    file.display()
+                );
+            }
+        }
+        assert!(types > 0, "the scan found the shell's types");
+    }
+
+    /// A variant raises `<C>Event`, which only the default layout declares,
+    /// so a component with variants and no `<C>.mll` is refused on XAML --
+    /// in the flat package build too -- rather than emitting controls that
+    /// name an undeclared union.
+    #[test]
+    fn a_xaml_component_with_variants_but_no_default_is_refused() {
+        let pkg = card_package_with_touch_variant();
+        fs::remove_file(pkg.path().join("src/Card.mll")).unwrap();
+        for emit_project in [false, true] {
+            let out = TempDir::new().unwrap();
+            let error = build_package(&BuildOptions {
+                emit_project,
+                ..swiftui_options(&pkg, &out, Backend::Xaml)
+            })
+            .unwrap_err()
+            .to_string();
+            assert!(error.contains("Card has layout variants but no default Card.mll"), "{error}");
+            assert!(error.contains("CardEvent"), "{error}");
+            assert!(!out.path().join("xaml/Card.touch.xaml.cs").exists());
+        }
+    }
+
+    /// A ContentDialog cannot stand in the window's tree in place of a
+    /// control, so a selectable variant rooted in a HostDialog is refused;
+    /// a window whose own root is a dialog does not select at all.
+    #[test]
+    fn a_xaml_window_switches_only_between_control_roots() {
+        let dialog = "layout Card { HostDialog [ root ] ( title : slot: label ) { Text ( content: slot: label ) } }\n";
+        let pkg = card_package();
+        fs::write(pkg.path().join("src/Card.touch.mll"), dialog).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
+        assert!(error.to_string().contains("rooted in a HostDialog"), "{error}");
+
+        let pkg = card_package();
+        fs::write(pkg.path().join("src/Card.mll"), dialog).unwrap();
+        fs::write(pkg.path().join("src/Card.touch.mll"), dialog).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).expect("dialog-root shell");
+        let main = fs::read_to_string(out.path().join("xaml/MainWindow.xaml.cs")).unwrap();
+        assert!(main.contains("OnOpenButtonClick"), "{main}");
+        assert!(!main.contains("MosaicLayoutVariant"), "{main}");
+        assert!(out.path().join("xaml/Card.touch.xaml.cs").exists(), "still compiled");
+    }
+
+    /// The native-complete shell with a variant both reports (ENV4) and
+    /// selects (ENV3), from the same MediaQuery aspects.
+    #[test]
+    fn a_native_complete_flutter_app_observes_and_selects() {
+        let pkg = card_package_with_touch_variant();
+        let runtime = pkg.path().join("libcard_app.so");
+        fs::write(&runtime, b"runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Flutter),
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("native-complete Flutter shell");
+        let main = fs::read_to_string(out.path().join("flutter/lib/main.dart")).unwrap();
+        assert!(main.contains("builder: _observeEnvironment,"), "{main}");
+        assert!(main.contains("                  ? Builder(builder: _mosaicLayoutRoot)\n"), "{main}");
+        assert!(main.contains("      case 'touch':\n        return CardTouch(\n"), "{main}");
+        assert!(main.contains("mosaicRequiredString(_hostProps, \"label\")"), "{main}");
+        assert!(out.path().join("flutter/lib/Card.touch.dart").is_file());
+    }
+
     #[test]
     fn compiled_color_scheme_reads_the_stylesheet_name() {
         let scheme = |name: &str| compiled_color_scheme(Some(Path::new(name)), "Card");
@@ -11582,6 +14558,531 @@ layout NativeEvents {
             fs::read_to_string(out.path().join("swiftui/iOS/App.xcodeproj/project.pbxproj")).unwrap();
         assert!(project.contains("INFOPLIST_KEY_CFBundleDisplayName = \"Card Studio\";"));
         assert!(project.contains("PRODUCT_BUNDLE_IDENTIFIER = \"com.example.cards\";"));
+    }
+
+    // UI89 §3.4: a Compose project also writes an Android project.
+
+    #[test]
+    fn a_compose_project_writes_an_android_project_beside_it() {
+        let pkg = card_package_with_touch_variant();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect("Compose shell");
+        let android = out.path().join("compose/android");
+        let kotlin = android.join("src/main/kotlin");
+
+        // The shared sources, as the desktop project has them -- the platform
+        // library's shared half among them (UI89 §3.8).
+        for shared in ["MosaicAppShell.kt", "MosaicRuntimeHost.kt", "MosaicFileEffects.kt", "Card.kt", "Card.touch.kt"] {
+            assert_eq!(
+                fs::read_to_string(kotlin.join(shared)).unwrap(),
+                fs::read_to_string(out.path().join("compose/src/main/kotlin").join(shared)).unwrap(),
+                "{shared} is the desktop's"
+            );
+        }
+        // Never the desktop-only ones: the window and the AWT dialogs.
+        // Android's half of the platform library takes the dialogs' place.
+        assert!(!kotlin.join("Main.kt").exists());
+        let desktop = out.path().join("compose/src/main/kotlin");
+        assert_eq!(
+            fs::read_to_string(desktop.join("MosaicFileEffects.kt")).unwrap(),
+            mosaic_app_bindings::compose_file_effects()
+        );
+        assert_eq!(
+            fs::read_to_string(desktop.join("MosaicPlatformEffects.kt")).unwrap(),
+            mosaic_app_bindings::compose_platform_effects()
+        );
+        let android_effects = fs::read_to_string(kotlin.join("MosaicPlatformEffects.kt")).unwrap();
+        assert_eq!(android_effects, mosaic_app_bindings::compose_android_platform_effects());
+        assert!(!android_effects.contains("java.awt") && !android_effects.contains("javax.swing"));
+        assert_eq!(
+            fs::read_to_string(kotlin.join("MosaicPlatform.kt")).unwrap(),
+            mosaic_emit_compose::pipeline::ANDROID_PLATFORM_KT
+        );
+
+        // A sample app: the activity loads whatever host there is.
+        let activity = fs::read_to_string(kotlin.join("mosaic/android/MosaicActivity.kt")).unwrap();
+        assert!(activity.starts_with("// AUTO-GENERATED"), "{activity}");
+        assert!(activity.contains("package mosaic.android\n"), "{activity}");
+        assert!(activity.contains("MosaicRuntimeHost.stateDirectory = filesDir\n"), "{activity}");
+        assert!(
+            activity.contains(concat!(
+                "            val mosaicHost = remember {\n",
+                "                MosaicRuntimeHost.load()\n",
+                "                    ?.also { platformRouter = installMosaicPlatformEffects(it, documentPicker) }\n",
+                "                    ?: MosaicComposeHostBridge.load()\n",
+                "            }\n",
+            )),
+            "{activity}"
+        );
+        assert!(activity.find("stateDirectory").unwrap() < activity.find("load()").unwrap());
+        // UI89 §3.8: the picker registers in onCreate, before the activity
+        // starts and before the content (and so the host) exists; a request
+        // whose picker can no longer answer is failed when it is destroyed.
+        let registered = activity.find("documentPicker = MosaicAndroidDocumentPicker(this)\n").unwrap();
+        assert!(activity.find("super.onCreate(savedInstanceState)").unwrap() < registered);
+        assert!(registered < activity.find("setContent {").unwrap());
+        assert!(activity.contains(concat!(
+            "        if (::documentPicker.isInitialized && documentPicker.isWaiting) {\n",
+            "            platformRouter?.failPending(\"the window closed before the file picker answered\")\n",
+            "        }\n",
+            "        super.onDestroy()\n",
+        )), "{activity}");
+
+        let manifest = fs::read_to_string(android.join("src/main/AndroidManifest.xml")).unwrap();
+        // XML forbids `--` inside a comment; aapt refuses the file outright.
+        for xml in ["src/main/AndroidManifest.xml", "src/main/res/values/strings.xml"] {
+            let text = fs::read_to_string(android.join(xml)).unwrap();
+            let mut rest = text.as_str();
+            while let Some(start) = rest.find("<!--") {
+                let end = rest[start + 4..].find("-->").expect("closed comment") + start + 4;
+                let body = &rest[start + 4..end];
+                assert!(!body.contains("--") && !body.ends_with('-'), "{xml}: {}", &rest[start..end + 3]);
+                rest = &rest[end + 3..];
+            }
+        }
+        assert!(manifest.contains("android:name=\"mosaic.android.MosaicActivity\""));
+        assert!(manifest.contains("android.intent.category.LAUNCHER"));
+        assert!(manifest.contains("android:label=\"@string/mosaic_app_label\""));
+        assert!(!manifest.contains("uses-permission"), "{manifest}");
+
+        // Identity: the component name and the default bundle identifier.
+        let strings = fs::read_to_string(android.join("src/main/res/values/strings.xml")).unwrap();
+        assert!(strings.contains("<string name=\"mosaic_app_label\" formatted=\"false\">Card</string>"), "{strings}");
+        let gradle = fs::read_to_string(android.join("build.gradle.kts")).unwrap();
+        assert!(gradle.contains("id(\"com.android.application\") version \"8.13.0\""), "{gradle}");
+        assert!(gradle.contains("applicationId = \"dev.codingadventures.mosaicpkgcard\""), "{gradle}");
+        assert!(gradle.contains("namespace = \"dev.codingadventures.mosaicpkgcard\""), "{gradle}");
+        assert!(gradle.contains("compileSdk = 36\n"), "{gradle}");
+        assert!(gradle.contains("minSdk = 26\n"), "{gradle}");
+        assert!(gradle.contains("\"net.java.dev.jna:jna:5.19.1@aar\""), "{gradle}");
+        let wrapper =
+            fs::read_to_string(android.join("gradle/wrapper/gradle-wrapper.properties")).unwrap();
+        assert!(wrapper.contains("gradle-8.14.3-bin.zip"), "{wrapper}");
+        // The wrapper verifies the download against Gradle's published
+        // checksum for exactly that zip.
+        assert!(
+            wrapper.contains(
+                "distributionSha256Sum=bd71102213493060956ec229d946beee57158dbd89d0e62b91bca0fa2c5f3531\n"
+            ),
+            "{wrapper}"
+        );
+        let settings = fs::read_to_string(android.join("settings.gradle.kts")).unwrap();
+        assert!(settings.contains("rootProject.name = \"mosaic-pkg-card-android\""), "{settings}");
+    }
+
+    #[test]
+    fn a_native_complete_android_activity_requires_the_runtime() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str(
+            "\n[app]\ndisplay-name = \"@Tom's <Cards> & \\\"more\\\"\"\nbundle-identifier = \"com.example.new.2048-cards\"\n",
+        );
+        fs::write(&manifest, text).unwrap();
+        let runtime = pkg.path().join("libcard.so");
+        fs::write(&runtime, b"runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Compose),
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("strict Compose shell");
+        let android = out.path().join("compose/android");
+        let activity =
+            fs::read_to_string(android.join("src/main/kotlin/mosaic/android/MosaicActivity.kt")).unwrap();
+        // Inside the window-wide drag-end watcher (UI89 §3.5), which the
+        // Android half of MosaicPlatform.kt defines.
+        assert!(
+            activity.contains(
+                "setContent { MosaicDragEndWatcher { MosaicStartup(::loadMosaicHost) } }"
+            ),
+            "{activity}"
+        );
+        assert!(
+            activity.contains("import MosaicDragEndWatcher\n"),
+            "{activity}"
+        );
+        let platform =
+            fs::read_to_string(android.join("src/main/kotlin/MosaicPlatform.kt")).unwrap();
+        assert!(
+            platform.contains("internal fun MosaicDragEndWatcher(content: @Composable () -> Unit)"),
+            "{platform}"
+        );
+        // The platform library is installed on the host as it loads (UI89 §3.8).
+        assert!(
+            activity.contains("        }.also { platformRouter = installMosaicPlatformEffects(it, documentPicker) }\n"),
+            "{activity}"
+        );
+        assert!(activity.contains("requireNotNull(MosaicRuntimeHost.load())"), "{activity}");
+        assert!(!activity.contains("MosaicComposeHostBridge"), "{activity}");
+        // The strict shell defines what the activity calls.
+        let shell = fs::read_to_string(android.join("src/main/kotlin/MosaicAppShell.kt")).unwrap();
+        assert!(shell.contains("fun MosaicStartup("), "{shell}");
+
+        let gradle = fs::read_to_string(android.join("build.gradle.kts")).unwrap();
+        assert!(gradle.contains("applicationId = \"com.example.new_.x2048_cards\""), "{gradle}");
+        let strings = fs::read_to_string(android.join("src/main/res/values/strings.xml")).unwrap();
+        assert!(
+            strings.contains(
+                "<string name=\"mosaic_app_label\" formatted=\"false\">\\@Tom\\'s &lt;Cards&gt; &amp; \\\"more\\\"</string>"
+            ),
+            "{strings}"
+        );
+    }
+
+    // UI89 §3.12: a package's own Android `[host_effects]`.
+
+    /// The card package with a `compose-android` handler declared, its source
+    /// under `host/android/`, and `section` as the manifest's `[host_effects]`.
+    fn card_package_with_android_effects(section: &str) -> TempDir {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[host_effects]\n");
+        text.push_str(section);
+        fs::write(&manifest, text).unwrap();
+        fs::create_dir_all(pkg.path().join("host/android")).unwrap();
+        fs::write(
+            pkg.path().join("host/android/ProbeEffects.kt"),
+            "fun installProbe(host: MosaicRuntimeHost) {}\n",
+        )
+        .unwrap();
+        pkg
+    }
+
+    const ANDROID_PROBE_EFFECTS: &str = concat!(
+        "files = [ { backend = \"compose-android\", source = \"host/android/ProbeEffects.kt\", ",
+        "target = \"src/main/kotlin/ProbeEffects.kt\" } ]\n",
+        "handlers = [ { backend = \"compose-android\", install = \"installProbe\", ",
+        "kinds = [\"importAnki\", \"exportAnki\"] } ]\n",
+    );
+
+    #[test]
+    fn an_android_handler_is_copied_into_the_android_project_and_installed() {
+        let pkg = card_package_with_android_effects(ANDROID_PROBE_EFFECTS);
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect("Compose shell");
+        let kotlin = out.path().join("compose/android/src/main/kotlin");
+        assert_eq!(
+            fs::read_to_string(kotlin.join("ProbeEffects.kt")).unwrap(),
+            "fun installProbe(host: MosaicRuntimeHost) {}\n"
+        );
+        // Android's alone: the desktop project neither compiles nor installs it.
+        let desktop = out.path().join("compose/src/main/kotlin");
+        assert!(!desktop.join("ProbeEffects.kt").exists());
+        let main = fs::read_to_string(desktop.join("Main.kt")).unwrap();
+        assert!(!main.contains("installProbe"), "{main}");
+        assert!(
+            main.contains("installMosaicPlatformEffects(it, null)"),
+            "{main}"
+        );
+
+        // Installed first, so the platform library wraps it and routes its
+        // kinds to it.
+        let activity = fs::read_to_string(kotlin.join("mosaic/android/MosaicActivity.kt")).unwrap();
+        assert!(activity.contains("import installProbe\n"), "{activity}");
+        assert!(
+            activity.contains(concat!(
+                "                    ?.also { installProbe(it); platformRouter = ",
+                "installMosaicPlatformEffects(it, documentPicker, setOf(\"importAnki\", \"exportAnki\")) }\n",
+            )),
+            "{activity}"
+        );
+    }
+
+    #[test]
+    fn a_native_complete_android_activity_installs_the_handler_as_the_host_loads() {
+        let pkg = card_package_with_android_effects(concat!(
+            "files = [ { backend = \"compose-android\", source = \"host/android/ProbeEffects.kt\", ",
+            "target = \"src/main/kotlin/ProbeEffects.kt\" } ]\n",
+            "handlers = [ { backend = \"compose-android\", install = \"probe.effects.installProbe\" } ]\n",
+        ));
+        let runtime = pkg.path().join("libcard.so");
+        fs::write(&runtime, b"runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Compose),
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("strict Compose shell");
+        let activity = fs::read_to_string(
+            out.path()
+                .join("compose/android/src/main/kotlin/mosaic/android/MosaicActivity.kt"),
+        )
+        .unwrap();
+        // A qualified name is called as written, with nothing imported; no
+        // `kinds` passes `null`, as the desktop does.
+        assert!(!activity.contains("import probe"), "{activity}");
+        assert!(
+            activity.contains(concat!(
+                "        }.also { probe.effects.installProbe(it); platformRouter = ",
+                "installMosaicPlatformEffects(it, documentPicker, null) }\n",
+            )),
+            "{activity}"
+        );
+    }
+
+    #[test]
+    fn an_android_handler_never_replaces_a_generated_android_file() {
+        for target in [
+            "src/main/kotlin/MosaicAppShell.kt",
+            "src/main/kotlin/mosaic/android/MOSAICACTIVITY.kt",
+            "src/main/kotlin/mosaicplatformeffects.kt",
+            "src/main/kotlin/CARD.kt",
+        ] {
+            let pkg = card_package_with_android_effects(&format!(
+                concat!(
+                    "files = [ {{ backend = \"compose-android\", source = \"host/android/ProbeEffects.kt\", ",
+                    "target = \"{target}\" }} ]\n",
+                    "handlers = [ {{ backend = \"compose-android\", install = \"installProbe\" }} ]\n",
+                ),
+                target = target
+            ));
+            let out = TempDir::new().unwrap();
+            let err =
+                build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect_err(target);
+            assert!(
+                err.to_string()
+                    .contains("would replace a file of the generated Android project"),
+                "{target}: {err}"
+            );
+        }
+    }
+
+    #[test]
+    fn an_android_handler_target_is_a_kotlin_source() {
+        for target in [
+            "buildSrc/build.gradle.kts",
+            "src/debug/AndroidManifest.xml",
+            "src/main/jniLibs/x86_64/libprobe.so",
+            "src/main/res/values/probe.xml",
+            "src/main/kotlin/Probe.java",
+            "ProbeEffects.kt",
+        ] {
+            let pkg = card_package_with_android_effects(&format!(
+                concat!(
+                    "files = [ {{ backend = \"compose-android\", source = \"host/android/ProbeEffects.kt\", ",
+                    "target = \"{target}\" }} ]\n",
+                    "handlers = [ {{ backend = \"compose-android\", install = \"installProbe\" }} ]\n",
+                ),
+                target = target
+            ));
+            let out = TempDir::new().unwrap();
+            let err =
+                build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect_err(target);
+            assert!(
+                err.to_string()
+                    .contains("must be a Kotlin source under src/main/kotlin/"),
+                "{target}: {err}"
+            );
+            assert!(
+                !out.path().join("compose/android").join(target).exists(),
+                "{target}"
+            );
+        }
+    }
+
+    #[test]
+    fn an_android_handler_source_must_stay_inside_the_package() {
+        // A symbolic link out of the package. Unix only: creating one on
+        // Windows needs a privilege CI's runner does not grant. Scoped to a
+        // block rather than an early return, so Windows still runs the
+        // directory case below (and `-D warnings` sees no unreachable code).
+        #[cfg(unix)]
+        {
+            let pkg = card_package_with_android_effects(concat!(
+                "files = [ { backend = \"compose-android\", source = \"host/android/Escape.kt\", ",
+                "target = \"src/main/kotlin/Escape.kt\" } ]\n",
+                "handlers = [ { backend = \"compose-android\", install = \"installProbe\" } ]\n",
+            ));
+            let outside = TempDir::new().unwrap();
+            fs::write(outside.path().join("secret.kt"), "secret").unwrap();
+            std::os::unix::fs::symlink(
+                outside.path().join("secret.kt"),
+                pkg.path().join("host/android/Escape.kt"),
+            )
+            .unwrap();
+            let out = TempDir::new().unwrap();
+            let err = build_package(&swiftui_options(&pkg, &out, Backend::Compose))
+                .expect_err("a symlink out of the package");
+            assert!(err.to_string().contains("outside the package"), "{err}");
+        }
+
+        // A directory is not a source either.
+        let pkg = card_package_with_android_effects(concat!(
+            "files = [ { backend = \"compose-android\", source = \"host/android\", ",
+            "target = \"src/main/kotlin/Dir.kt\" } ]\n",
+            "handlers = [ { backend = \"compose-android\", install = \"installProbe\" } ]\n",
+        ));
+        let out = TempDir::new().unwrap();
+        let err = build_package(&swiftui_options(&pkg, &out, Backend::Compose))
+            .expect_err("a directory source");
+        assert!(err.to_string().contains("is not a regular file"), "{err}");
+    }
+
+    #[test]
+    fn an_android_handler_kotlin_cannot_express_is_refused() {
+        for (handler, expected) in [
+            (
+                "{ backend = \"compose-android\", include = \"probe.h\", install = \"installProbe\" }",
+                "Kotlin has no include directive",
+            ),
+            (
+                "{ backend = \"compose-android\", install = \"probe::installProbe\" }",
+                "is not a Kotlin function name",
+            ),
+            (
+                "{ backend = \"compose-android\", install = \"probe:installProbe\" }",
+                "is not a Kotlin function name",
+            ),
+        ] {
+            let pkg = card_package_with_android_effects(&format!(
+                concat!(
+                    "files = [ {{ backend = \"compose-android\", source = \"host/android/ProbeEffects.kt\", ",
+                    "target = \"src/main/kotlin/ProbeEffects.kt\" }} ]\n",
+                    "handlers = [ {handler} ]\n",
+                ),
+                handler = handler
+            ));
+            let out = TempDir::new().unwrap();
+            let err = build_package(&swiftui_options(&pkg, &out, Backend::Compose))
+                .expect_err(handler);
+            assert!(err.to_string().contains(expected), "{handler}: {err}");
+        }
+    }
+
+    fn android_runtime_dir(root: &Path, abis: &[&str]) -> PathBuf {
+        let dir = root.join("jniLibs");
+        for abi in abis {
+            fs::create_dir_all(dir.join(abi)).unwrap();
+            fs::write(dir.join(abi).join("libmosaic_app.so"), format!("elf-{abi}")).unwrap();
+        }
+        dir
+    }
+
+    #[test]
+    fn a_per_abi_runtime_goes_into_the_android_project() {
+        let pkg = card_package();
+        let runtime = android_runtime_dir(pkg.path(), &["arm64-v8a", "armeabi-v7a", "x86_64", "x86"]);
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Compose),
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("Compose shell with an Android runtime");
+        let jni = out.path().join("compose/android/src/main/jniLibs");
+        for abi in ["arm64-v8a", "armeabi-v7a", "x86_64", "x86"] {
+            assert_eq!(
+                fs::read_to_string(jni.join(abi).join("libmosaic_app.so")).unwrap(),
+                format!("elf-{abi}")
+            );
+        }
+        // A rebuild with fewer ABIs leaves none of the old ones behind.
+        let fewer = android_runtime_dir(&pkg.path().join("fewer"), &["x86_64"]);
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Compose),
+            BuildProfile::NativeComplete,
+            Some(&fewer),
+        )
+        .expect("rebuild with one ABI");
+        let left: Vec<_> = fs::read_dir(&jni).unwrap().map(|e| e.unwrap().file_name()).collect();
+        assert_eq!(left, ["x86_64"], "{left:?}");
+        // The desktop project bundles nothing: this runtime is not its own.
+        assert!(!out.path().join("compose/app-resources").exists());
+        let gradle = fs::read_to_string(out.path().join("compose/build.gradle.kts")).unwrap();
+        assert!(!gradle.contains("appResourcesRootDir"), "{gradle}");
+        // The runtime is required, so the activity starts strictly.
+        let activity = fs::read_to_string(
+            out.path().join("compose/android/src/main/kotlin/mosaic/android/MosaicActivity.kt"),
+        )
+        .unwrap();
+        assert!(activity.contains("MosaicStartup(::loadMosaicHost)"), "{activity}");
+    }
+
+    #[test]
+    fn an_android_runtime_directory_is_refused_unless_it_is_exactly_per_abi_libraries() {
+        let build = |pkg: &TempDir, runtime: &Path, backend: Backend| {
+            let out = TempDir::new().unwrap();
+            build_package_with_profile_and_runtime(
+                &swiftui_options(pkg, &out, backend),
+                BuildProfile::NativeComplete,
+                Some(runtime),
+            )
+            .expect_err("refused")
+            .to_string()
+        };
+        let pkg = card_package();
+        let empty = pkg.path().join("empty");
+        fs::create_dir_all(&empty).unwrap();
+        assert!(build(&pkg, &empty, Backend::Compose).contains("no Android ABI directory"));
+
+        let unknown = android_runtime_dir(&pkg.path().join("u"), &["arm64-v8a"]);
+        fs::create_dir_all(unknown.join("mips")).unwrap();
+        assert!(build(&pkg, &unknown, Backend::Compose).contains("mips is not an Android ABI directory"));
+
+        let extra = android_runtime_dir(&pkg.path().join("e"), &["x86_64"]);
+        fs::write(extra.join("x86_64/libother.so"), "x").unwrap();
+        assert!(build(&pkg, &extra, Backend::Compose).contains("exactly one regular file"));
+
+        let not_a_library = pkg.path().join("n/jniLibs");
+        fs::create_dir_all(not_a_library.join("x86_64/libmosaic_app.so")).unwrap();
+        assert!(build(&pkg, &not_a_library, Backend::Compose).contains("exactly one regular file"));
+
+        #[cfg(unix)]
+        {
+            let linked = android_runtime_dir(&pkg.path().join("l"), &[]);
+            fs::create_dir_all(&linked).unwrap();
+            let elsewhere = android_runtime_dir(&pkg.path().join("elsewhere"), &["x86_64"]);
+            std::os::unix::fs::symlink(elsewhere.join("x86_64"), linked.join("x86_64")).unwrap();
+            assert!(build(&pkg, &linked, Backend::Compose).contains("must be a directory, not a link"));
+            let file_link = android_runtime_dir(&pkg.path().join("f"), &[]);
+            fs::create_dir_all(file_link.join("x86")).unwrap();
+            std::os::unix::fs::symlink(elsewhere.join("x86_64/libmosaic_app.so"), file_link.join("x86/libmosaic_app.so"))
+                .unwrap();
+            assert!(build(&pkg, &file_link, Backend::Compose).contains("exactly one regular file"));
+        }
+
+        let good = android_runtime_dir(&pkg.path().join("g"), &["x86_64"]);
+        assert!(build(&pkg, &good, Backend::Qt).contains("only the Compose backend"));
+        let out = TempDir::new().unwrap();
+        let mut opts = swiftui_options(&pkg, &out, Backend::Compose);
+        opts.emit_project = false;
+        let error = build_package_with_profile_and_runtime(&opts, BuildProfile::NativeComplete, Some(&good))
+            .expect_err("needs a project")
+            .to_string();
+        assert!(error.contains("requires --emit-project"), "{error}");
+    }
+
+    #[test]
+    fn android_application_ids_follow_android_rules() {
+        assert_eq!(android_application_id("dev.codingadventures.trestle"), "dev.codingadventures.trestle");
+        assert_eq!(android_application_id("dev.example.task-app"), "dev.example.task_app");
+        assert_eq!(android_application_id("dev.example.2048"), "dev.example.x2048");
+        assert_eq!(android_application_id("dev.new.app"), "dev.new_.app");
+        assert_eq!(android_application_id("dev.-x.app"), "dev.x_x.app");
+        assert_eq!(android_application_id("solo"), "dev.codingadventures.solo");
+    }
+
+    #[test]
+    fn android_labels_escape_references_quotes_and_markup() {
+        let label = |name: &str| {
+            let xml = android_strings_xml(name);
+            let start = xml.find("\">").unwrap() + 2;
+            let end = xml.find("</string>").unwrap();
+            xml[start..end].to_string()
+        };
+        assert_eq!(label("Trestle"), "Trestle");
+        assert_eq!(label("?attr"), "\\?attr");
+        assert_eq!(label("a@b?c"), "a@b?c");
+        // aapt2 trims blanks before looking for a reference.
+        assert_eq!(label(" @null"), " \\@null");
+        assert_eq!(label("  ?attr"), "  \\?attr");
+        assert_eq!(label("100%"), "100%");
+        assert_eq!(label("back\\slash"), "back\\\\slash");
+        assert_eq!(label("</string><x>"), "&lt;/string&gt;&lt;x&gt;");
     }
 
     #[test]
@@ -11783,6 +15284,25 @@ layout NativeEvents {
         assert!(host.contains("public static Task<MosaicRuntimeResult> HandleRequiredEvent("));
         assert!(host.contains("native-complete requires the Mosaic Rust application runtime"));
         assert!(host.contains("Path.Combine(AppContext.BaseDirectory, \"mosaic_app.dll\")"));
+
+        // UI87 §7.6: the platform library sits beside the host, in its
+        // namespace, and the window installs it once the runtime is loaded.
+        let platform_path = out.path().join("xaml/MosaicPlatformEffects.cs");
+        assert!(result.artifacts.contains(&platform_path));
+        let platform = fs::read_to_string(platform_path).unwrap();
+        assert_eq!(
+            platform,
+            mosaic_app_bindings::xaml_platform_effects("Mosaic.Generated")
+        );
+        assert!(host.contains("namespace Mosaic.Generated;"));
+        assert!(platform.contains("namespace Mosaic.Generated;"));
+        let load = window
+            .find("MosaicRuntimeHost.LoadRequired();")
+            .expect("load");
+        let install = window
+            .find("MosaicPlatformEffects.Install(this, appKinds: null);")
+            .expect("the platform library is installed");
+        assert!(load < install, "{window}");
 
         let project = fs::read_to_string(out.path().join("xaml/Card.csproj")).unwrap();
         assert!(project.contains("CopyMosaicNativeHostLibraries"));
@@ -12054,7 +15574,7 @@ layout NativeEvents {
     #[test]
     fn flutter_specific_placeholders_are_reported() {
         // #13010: `modal: false` is the one HostDialog shape still
-        // unimplemented on Flutter (showDialog is inherently modal) --
+        // unimplemented on Flutter (a dialog route is inherently modal) --
         // the default/`modal: true` case is fixed and covered
         // separately by `flutter_modal_dialog_has_no_placeholder_degradation`.
         let pkg = make_package("mosaic-pkg-links", &["Links"]);
@@ -14111,6 +17631,32 @@ version = "1"
         assert_eq!(v, vec![None]);
     }
 
+    #[test]
+    fn discover_variants_refuses_names_that_collide_as_generated_views() {
+        // Every pair differs by more than letter case: on a case-insensitive
+        // filesystem (macOS's default) `Grid.Touch.mll` would overwrite
+        // `Grid.touch.mll` rather than sit beside it. `TouchFirst` still
+        // exercises the case fold, alongside the separators.
+        for (first, second) in [("touch-first", "TouchFirst"), ("task-list", "task_list"), ("task-list", "tasklist")] {
+            let tmp = TempDir::new().unwrap();
+            let src = tmp.path();
+            for name in ["Grid.mll".to_string(), format!("Grid.{first}.mll"), format!("Grid.{second}.mll")] {
+                fs::write(src.join(name), "layout Grid { Box [ root ] }\n").unwrap();
+            }
+            assert_eq!(fs::read_dir(src).unwrap().count(), 3, "all three files exist side by side");
+            let error = discover_variants(src, "Grid").expect_err("colliding variants");
+            let message = error.to_string();
+            assert!(message.contains(&format!("Grid.{first}.mll")) || message.contains(&format!("Grid.{second}.mll")), "{message}");
+            assert!(message.contains("differ only in case"), "{message}");
+        }
+        // Distinct names still pass.
+        let tmp = TempDir::new().unwrap();
+        for name in ["Grid.mll", "Grid.touch.mll", "Grid.wide.mll"] {
+            fs::write(tmp.path().join(name), "layout Grid { Box [ root ] }\n").unwrap();
+        }
+        assert_eq!(discover_variants(tmp.path(), "Grid").unwrap().len(), 3);
+    }
+
     /// Bare default + one named variant: returns `[None, Some("touch")]`
     /// in that order (default first per UI30 §5).
     #[test]
@@ -14532,6 +18078,8 @@ version = "1"
                     "lib/main.dart",
                     "lib/Grid.dart",
                     "lib/mosaic_host.dart",
+                    "lib/mosaic_platform_effects.dart",
+                    "lib/mosaic_platform_effects_core.dart",
                 ],
             ),
             (
@@ -14583,6 +18131,7 @@ version = "1"
                     "build.ps1",
                     "README.md",
                     "MosaicRuntimeHost.cs",
+                    "MosaicPlatformEffects.cs",
                 ],
             ),
         ] {
@@ -14952,6 +18501,392 @@ version = "1"
         }
     }
 
+    // UI48 §7.10: the same on Qt -- every variant a QML type in the module,
+    // and a selector in `main.cpp` generated from the same rules as SwiftUI,
+    // Compose and Flutter.
+
+    #[test]
+    fn a_qt_app_carries_its_touch_variant_and_selects_it_by_convention() {
+        let pkg = card_package_with_touch_variant();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Qt)).expect("Qt shell");
+        let qt = out.path().join("qt");
+        let variant = fs::read_to_string(qt.join("Card.touch.qml")).unwrap();
+        assert!(
+            variant.contains("    // Layout variant: touch, the QML type CardTouch (UI48 §7.10)\n"),
+            "{variant}"
+        );
+        // The same interface as the default (a QML root declares its own).
+        assert!(variant.contains("    property string label: \"\"\n"), "{variant}");
+        let cmake = fs::read_to_string(qt.join("CMakeLists.txt")).unwrap();
+        assert!(
+            cmake.contains(concat!(
+                "set_source_files_properties(Card.touch.qml PROPERTIES QT_QML_SOURCE_TYPENAME CardTouch)\n",
+                "qt_target_qml_sources(Card QML_FILES Card.touch.qml)\n",
+            )),
+            "{cmake}"
+        );
+        // Listed once: the builder adds no second entry for what the emitter
+        // already put in the module.
+        assert_eq!(cmake.matches("QML_FILES Card.touch.qml").count(), 1, "{cmake}");
+        let qmldir = fs::read_to_string(qt.join("qmldir")).unwrap();
+        assert!(qmldir.contains("CardTouch 1.0 Card.touch.qml\n"), "{qmldir}");
+        let main = fs::read_to_string(qt.join("main.cpp")).unwrap();
+        // Keyed by the wire name the environment report uses.
+        assert!(
+            main.contains(
+                "      {\"touch\", \"qrc:/qt/qml/Mosaic/Card/Card.touch.qml\", {{\"pointer\", \"coarse\"}}},\n"
+            ),
+            "{main}"
+        );
+        assert!(main.contains("    if (!layoutSwitch->isActive()) layoutSwitch->start(0);\n"), "{main}");
+        // A sample shell chooses from the window, carrying what it shows.
+        assert!(main.contains("const QStringList slotProperties{"), "{main}");
+    }
+
+    #[test]
+    fn declared_layout_rules_reach_the_qt_selector_under_wire_names() {
+        let pkg = card_package_with_touch_variant();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"touch\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Qt)).expect("Qt shell");
+        let main = fs::read_to_string(out.path().join("qt/main.cpp")).unwrap();
+        // `size-class` in the manifest, `sizeClass` in the report.
+        assert!(
+            main.contains(
+                "      {\"touch\", \"qrc:/qt/qml/Mosaic/Card/Card.touch.qml\", {{\"sizeClass\", \"compact\"}}},\n"
+            ),
+            "{main}"
+        );
+        assert!(!main.contains("{\"pointer\", \"coarse\"}"), "the declared rule replaces the convention");
+    }
+
+    #[test]
+    fn a_qt_layout_rule_for_a_missing_variant_is_refused() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"compact\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Qt)).unwrap_err();
+        assert!(error.to_string().contains("Card.compact.mll"), "{error}");
+    }
+
+    #[test]
+    fn a_qt_app_without_variants_has_no_selector() {
+        let pkg = card_package();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Qt)).expect("Qt shell");
+        let qt = out.path().join("qt");
+        let main = fs::read_to_string(qt.join("main.cpp")).unwrap();
+        assert!(!main.contains("Layout"), "{main}");
+        assert!(
+            main.contains("  const QUrl url(QStringLiteral(\"qrc:/qt/qml/Mosaic/Card/Card.qml\"));\n"),
+            "{main}"
+        );
+        let cmake = fs::read_to_string(qt.join("CMakeLists.txt")).unwrap();
+        assert!(!cmake.contains("UI48"), "{cmake}");
+        assert!(!cmake.contains("qt_target_qml_sources"), "{cmake}");
+    }
+
+    /// The native-complete shell mounts every root strictly, so the root's
+    /// variant is re-emitted under that policy, as its default is; and the
+    /// first root is mounted through the same function as every later one.
+    #[test]
+    fn a_native_complete_qt_app_mounts_its_variants_strictly() {
+        let pkg = card_package_with_touch_variant();
+        let runtime = pkg.path().join("libcard_app.so");
+        fs::write(&runtime, b"runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Qt),
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("native-complete Qt shell");
+        let qt = out.path().join("qt");
+        for file in ["Card.qml", "Card.touch.qml"] {
+            let root = fs::read_to_string(qt.join(file)).unwrap();
+            assert!(root.contains("    required property var mosaicHost\n"), "{file}:\n{root}");
+        }
+        let main = fs::read_to_string(qt.join("main.cpp")).unwrap();
+        assert!(main.contains("  auto properties = host.propsRequired();\n"), "{main}");
+        assert!(main.contains("        mosaicObserveEnvironment(view, mosaicHost);\n"), "{main}");
+        assert!(
+            main.contains("    mosaicMountLayout(view, mosaicLayoutUrl(MosaicHost::environmentReport("),
+            "{main}"
+        );
+    }
+
+    /// Every axis a rule can test is a key the Qt binding's
+    /// `environmentReport` answers, under the same wire name. The manifest
+    /// crate pins `wire_name` to `mosaic-app-runtime`; this pins the C++
+    /// report to `wire_name`, so a generated rule can never test a key the
+    /// report does not carry (and so never silently match nothing).
+    #[test]
+    fn the_qt_environment_report_carries_every_rule_axis() {
+        let binding = mosaic_app_bindings::qt_runtime_binding_for_application("card").source;
+        let body = |signature: &str| {
+            let start = binding.find(signature).expect(signature);
+            let body = &binding[start..];
+            body[..body.find("\n}\n").expect("one function body")].to_string()
+        };
+        let report = body("QVariantMap MosaicHost::environmentReport(");
+        let initial = body("QVariantMap MosaicHost::initialEnvironment()");
+        assert!(report.contains("auto report = initialEnvironment();"), "{report}");
+        for axis in mosaic_package_manifest::layouts::EnvironmentAxis::ALL {
+            let key = format!("QStringLiteral(\"{}\")", axis.wire_name());
+            assert!(
+                report.contains(&key) || initial.contains(&key),
+                "{key} is not in the Qt environment report"
+            );
+        }
+    }
+
+    /// Every class declared at file scope in the headers the Qt shell
+    /// includes beside its roots is a name a variant's QML type may not
+    /// take (UI48 §7.10), so a new public class there fails this test
+    /// until the emitter reserves it.
+    #[test]
+    fn every_public_class_the_qt_shell_includes_is_reserved() {
+        let binding = mosaic_app_bindings::qt_runtime_binding_for_application("card");
+        let platform = mosaic_app_bindings::qt_platform_effects();
+        let mut declared = Vec::new();
+        for header in [binding.header, platform.header] {
+            for line in header.lines() {
+                let Some(rest) = ["class ", "struct "]
+                    .iter()
+                    .find_map(|keyword| line.strip_prefix(keyword))
+                else {
+                    continue;
+                };
+                // A forward declaration (`class MosaicHost;`) declares nothing new.
+                if rest.trim_end().ends_with(';') {
+                    continue;
+                }
+                let name: String = rest
+                    .chars()
+                    .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                    .collect();
+                assert!(
+                    mosaic_emit_qt::pipeline::SHELL_RESERVED_NAMES.contains(&name.as_str()),
+                    "{name} is public in the Qt shell but a variant's QML type may take it"
+                );
+                declared.push(name);
+            }
+        }
+        assert_eq!(declared, ["MosaicHost", "MosaicFileDialogs"]);
+    }
+
+    /// UI32 §3.7: in a project build, an export named like a type the
+    /// backend's shell declares is refused before anything is written -- and
+    /// a flat build, which has no shell, still takes it.
+    #[test]
+    fn a_project_build_refuses_an_export_named_like_a_shell_type() {
+        for (backend, export) in [
+            (Backend::Compose, "MosaicApp"),
+            (Backend::Flutter, "MosaicApp"),
+            (Backend::Qt, "MosaicHost"),
+            (Backend::Xaml, "MainWindow"),
+        ] {
+            let pkg = make_package("mosaic-pkg-shell-name", &[export]);
+            let out = TempDir::new().unwrap();
+            let error = build_package(&swiftui_options(&pkg, &out, backend))
+                .unwrap_err()
+                .to_string();
+            assert!(
+                error.contains(&format!(
+                    "the export {export} ({export}.mll) would declare `{export}`"
+                )),
+                "{backend:?}: {error}"
+            );
+            assert!(error.contains("rename the export"), "{backend:?}: {error}");
+            assert!(
+                walk_files(out.path()).is_empty(),
+                "{backend:?}: refused before anything was written"
+            );
+
+            let flat = TempDir::new().unwrap();
+            build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: flat.path().to_path_buf(),
+                backend,
+                emit_project: false,
+                theme: None,
+            })
+            .unwrap_or_else(|error| panic!("{backend:?} flat build of {export}: {error}"));
+        }
+    }
+
+    /// Every regular file under `root`, depth first.
+    fn walk_files(root: &Path) -> Vec<PathBuf> {
+        let mut files = Vec::new();
+        let mut pending = vec![root.to_path_buf()];
+        while let Some(directory) = pending.pop() {
+            for entry in fs::read_dir(&directory).unwrap() {
+                let path = entry.unwrap().path();
+                if path.is_dir() {
+                    pending.push(path);
+                } else {
+                    files.push(path);
+                }
+            }
+        }
+        files
+    }
+
+    /// UI32 §3.7: exports differing only in letter case are one file on a
+    /// case-insensitive filesystem, so they are refused before any I/O, on
+    /// flat builds too.
+    #[test]
+    fn exports_differing_only_in_case_are_refused() {
+        let pkg = make_package("mosaic-pkg-case-twins", &["Card", "CARD"]);
+        let out = TempDir::new().unwrap();
+        let error = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Compose,
+            emit_project: false,
+            theme: None,
+        })
+        .unwrap_err()
+        .to_string();
+        assert!(
+            error.contains("the exports Card and CARD differ only in letter case"),
+            "{error}"
+        );
+        assert!(walk_files(out.path()).is_empty(), "refused before any I/O");
+    }
+
+    /// UI32 §3.7: the shell never writes over a file an export was generated
+    /// into. `App` on SwiftUI and `Main` on Compose used to lose their files
+    /// to the shell's `App.swift` and `Main.kt` -- and the project its entry
+    /// point -- without a word; `MAIN` is the same file on a case-insensitive
+    /// filesystem. The export's file is left as it was generated.
+    #[test]
+    fn the_shell_never_writes_over_an_export_file() {
+        for (backend, export, export_file) in [
+            (Backend::SwiftUI, "App", "App.swift"),
+            (Backend::Compose, "Main", "Main.kt"),
+            (Backend::Compose, "MAIN", "MAIN.kt"),
+        ] {
+            let pkg = make_package("mosaic-pkg-shell-file", &[export]);
+            let out = TempDir::new().unwrap();
+            let error = build_package(&swiftui_options(&pkg, &out, backend))
+                .unwrap_err()
+                .to_string();
+            assert!(
+                error.contains(&format!(
+                    "the export {export} ({export}.mll) generates {export_file}, and the"
+                )) && error.contains("case-insensitive filesystem); rename the export"),
+                "{backend:?} {export}: {error}"
+            );
+            // The export's own artifact is as the emitter wrote it.
+            let flat = out.path().join(backend.dir_name()).join(export_file);
+            let source = fs::read_to_string(&flat).unwrap();
+            assert!(
+                !source.contains("fun main()") && !source.contains("@main"),
+                "{backend:?}: {export_file} is the export's, not the shell's:\n{source}"
+            );
+        }
+    }
+
+    /// One QML module holds every export and every variant, so no two may
+    /// register one type name -- a variant's `<Component><Variant>` beside an
+    /// export of that name, or beside another variant's.
+    #[test]
+    fn a_qt_variant_type_that_another_export_owns_is_refused() {
+        let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+        fs::write(
+            pkg.path().join("src/Card.touch.mll"),
+            fs::read_to_string(pkg.path().join("src/Card.mll")).unwrap(),
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Qt)).unwrap_err();
+        assert!(error.to_string().contains("`CardTouch` twice"), "{error}");
+        assert!(error.to_string().contains("the export CardTouch"), "{error}");
+    }
+
+    /// A variant of ANY export -- not only the root, whose choices the
+    /// emitter checks -- may not register a name the Qt shell owns:
+    /// `Mosaic` + `host` would be the module type `MosaicHost`.
+    #[test]
+    fn a_qt_variant_of_any_export_may_not_take_a_shell_name() {
+        let src = TempDir::new().unwrap();
+        for file in ["Card.mll", "Mosaic.mll"] {
+            fs::write(src.path().join(file), "layout X { }\n").unwrap();
+        }
+        let components = ["Card".to_string(), "Mosaic".to_string()];
+        for (variant, owned) in [
+            ("host", "MosaicHost"),
+            ("table-model", "MosaicTableModel"),
+            ("layout_rule", "MosaicLayoutRule"),
+            ("file-dialogs", "MosaicFileDialogs"),
+        ] {
+            let file = src.path().join(format!("Mosaic.{variant}.mll"));
+            fs::write(&file, "layout X { }\n").unwrap();
+            let error = check_layout_namespace(&QT_NAMESPACE, &components, src.path())
+                .unwrap_err()
+                .to_string();
+            assert!(error.contains(&format!("`{owned}` twice")), "{error}");
+            assert!(error.contains("the Qt shell"), "{error}");
+            fs::remove_file(&file).unwrap();
+        }
+        // An ordinary variant of the same export joins the module.
+        fs::write(src.path().join("Mosaic.touch.mll"), "layout X { }\n").unwrap();
+        let cmake = qt_cmake_with_layout_variants("", "Card", &components, src.path()).unwrap();
+        assert!(cmake.contains("QT_QML_SOURCE_TYPENAME MosaicTouch"), "{cmake}");
+
+        // And the whole build refuses it too.
+        let pkg = make_package("mosaic-pkg-card", &["Card", "Mosaic"]);
+        fs::write(
+            pkg.path().join("src/Mosaic.host.mll"),
+            fs::read_to_string(pkg.path().join("src/Mosaic.mll")).unwrap(),
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Qt)).unwrap_err();
+        assert!(error.to_string().contains("MosaicHost"), "{error}");
+    }
+
+    /// Every export's variants are compiled, not only the root's: a variant
+    /// of another export joins the module as its own type, beside the root's
+    /// (which the emitter already listed, and which is not listed again).
+    #[test]
+    fn every_exports_qt_variants_join_the_module() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid", "Cell"]);
+        for component in ["Grid", "Cell"] {
+            fs::write(
+                pkg.path().join(format!("src/{component}.touch.mll")),
+                fs::read_to_string(pkg.path().join(format!("src/{component}.mll"))).unwrap(),
+            )
+            .unwrap();
+        }
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Qt)).expect("Qt shell");
+        let cmake = fs::read_to_string(out.path().join("qt/CMakeLists.txt")).unwrap();
+        for (file, type_name) in [("Grid.touch.qml", "GridTouch"), ("Cell.touch.qml", "CellTouch")] {
+            assert_eq!(
+                cmake
+                    .matches(&format!(
+                        "set_source_files_properties({file} PROPERTIES QT_QML_SOURCE_TYPENAME {type_name})\nqt_target_qml_sources(Grid QML_FILES {file})\n"
+                    ))
+                    .count(),
+                1,
+                "{file}:\n{cmake}"
+            );
+        }
+        // Only the root's variants are mounted.
+        let main = fs::read_to_string(out.path().join("qt/main.cpp")).unwrap();
+        assert!(main.contains("Grid.touch.qml"), "{main}");
+        assert!(!main.contains("Cell.touch.qml"), "{main}");
+    }
+
     #[test]
     fn swiftui_project_shell_installs_standard_rust_runtime_binding() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
@@ -15108,8 +19043,8 @@ version = "1"
     /// The emitted csproj compiles every `.xaml.cs` file. A filename infix is
     /// therefore insufficient: if both files declare `partial class Grid`, C#
     /// merges them and every generated property and handler collides. The
-    /// variant also gets a matching event-union identity because Dispatch in
-    /// that code-behind names the event type.
+    /// variant's `Dispatch` carries the DEFAULT's event union (UI48 §7.11),
+    /// which only the default declares, so one window handler serves both.
     #[test]
     fn a_xaml_layout_variant_has_distinct_generated_types() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
@@ -15135,11 +19070,8 @@ version = "1"
         events.sort();
         assert_eq!(
             events,
-            vec![
-                "Grid.Event.cs".to_string(),
-                "Grid.touch.Event.cs".to_string()
-            ],
-            "each generated component type needs its matching event union"
+            vec!["Grid.Event.cs".to_string()],
+            "the component's one event union, declared by the default"
         );
 
         let default_xaml = fs::read_to_string(dir.join("Grid.xaml")).unwrap();
@@ -15147,16 +19079,15 @@ version = "1"
         let default_code = fs::read_to_string(dir.join("Grid.xaml.cs")).unwrap();
         let touch_code = fs::read_to_string(dir.join("Grid.touch.xaml.cs")).unwrap();
         let default_events = fs::read_to_string(dir.join("Grid.Event.cs")).unwrap();
-        let touch_events = fs::read_to_string(dir.join("Grid.touch.Event.cs")).unwrap();
 
         assert!(default_xaml.contains("x:Class=\"Mosaic.Generated.Grid\""));
         assert!(touch_xaml.contains("x:Class=\"Mosaic.Generated.GridTouch\""));
         assert!(default_code.contains("partial class Grid : UserControl"));
         assert!(touch_code.contains("partial class GridTouch : UserControl"));
         assert!(default_code.contains("EventHandler<GridEvent>"));
-        assert!(touch_code.contains("EventHandler<GridTouchEvent>"));
+        assert!(touch_code.contains("EventHandler<GridEvent>"));
+        assert!(!touch_code.contains("GridTouchEvent"), "{touch_code}");
         assert!(default_events.contains("record GridEvent"));
-        assert!(touch_events.contains("record GridTouchEvent"));
 
         for expected in [
             "Grid.xaml",
@@ -15164,13 +19095,25 @@ version = "1"
             "Grid.Event.cs",
             "Grid.touch.xaml",
             "Grid.touch.xaml.cs",
-            "Grid.touch.Event.cs",
         ] {
             assert!(
                 result.artifacts.iter().any(|path| path.ends_with(expected)),
                 "missing {expected} from the build manifest"
             );
         }
+        assert!(!result
+            .artifacts
+            .iter()
+            .any(|path| path.ends_with("Grid.touch.Event.cs")));
+
+        // A host importing the package fragment compiles every layout: the
+        // variant's view models are listed, so its control must be too.
+        let props = fs::read_to_string(dir.join("MosaicPackage.props")).unwrap();
+        assert!(props.contains(concat!(
+            "    <Page Include=\"Grid.touch.xaml\"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>\n",
+            "    <Compile Include=\"Grid.touch.xaml.cs\"><DependentUpon>Grid.touch.xaml</DependentUpon></Compile>\n",
+        )), "{props}");
+        assert!(!props.contains("Grid.touch.Event.cs"), "{props}");
     }
 
     #[test]
@@ -16888,11 +20831,182 @@ handlers = [
     );
 
     #[test]
-    fn a_package_with_no_flutter_handler_is_untouched() {
+    fn a_package_with_no_flutter_handler_gets_only_the_platform_library() {
+        // UI87 §7.7: every Flutter app gets the platform library, installed
+        // right after the host is assigned, with no claimed kinds -- and
+        // imported, since Dart sees nothing across files without an import.
         let empty = section("");
+        let expected = MAIN_DART
+            .replacen(
+                "import 'mosaic_host.dart';\n",
+                "import 'mosaic_host.dart';\nimport 'mosaic_platform_effects.dart';\n",
+                1,
+            )
+            .replacen(
+                "    _mosaicHost = widget.mosaicHost ?? MosaicHost.load();\n",
+                "    _mosaicHost = widget.mosaicHost ?? MosaicHost.load();\n    \
+                 final mosaicEffectHost = _mosaicHost;\n    \
+                 // Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n    \
+                 if (mosaicEffectHost != null) { installMosaicPlatformEffects(mosaicEffectHost, appKinds: null); }\n",
+                1,
+            );
         assert_eq!(
             flutter_main_with_host_effects(MAIN_DART, &empty).expect("wiring must succeed"),
-            MAIN_DART
+            expected
+        );
+    }
+
+    /// An entry point with no host to install onto, and nothing declared, is
+    /// left as it is: there is nothing to refuse.
+    #[test]
+    fn an_entry_point_without_a_host_is_untouched_without_a_handler() {
+        let bare = "void main() {}\n";
+        assert_eq!(
+            flutter_main_with_host_effects(bare, &section("")).expect("bare"),
+            bare
+        );
+    }
+
+    /// After the package's handler, which the router wraps; the handler's
+    /// kinds reach the router as a Dart const list, and the one effect-host
+    /// local serves both installs.
+    #[test]
+    fn the_flutter_platform_library_wraps_the_package_handler_with_its_kinds() {
+        let wired = flutter_main_with_host_effects(MAIN_DART, &handler()).expect("wiring");
+        let host = wired
+            .find("_mosaicHost = widget.mosaicHost")
+            .expect("host assignment");
+        let package = wired
+            .find("installProbeEffects(mosaicEffectHost);")
+            .expect("package install");
+        let platform = wired
+            .find("installMosaicPlatformEffects(mosaicEffectHost, appKinds: null);")
+            .expect("platform install without kinds");
+        let props = wired.find("setPropsChangedHandler").expect("props handler");
+        assert!(
+            host < package && package < platform && platform < props,
+            "{wired}"
+        );
+        assert_eq!(
+            wired.matches("final mosaicEffectHost = _mosaicHost;").count(),
+            1,
+            "one local, or the second declaration does not compile:\n{wired}"
+        );
+        // Both imports, the package's first, after the existing directives.
+        let existing = wired.find("import 'mosaic_host.dart';").expect("host import");
+        let include = wired.find("import 'probe_effects.dart';").expect("include");
+        let library = wired
+            .find("import 'mosaic_platform_effects.dart';")
+            .expect("library import");
+        let class = wired.find("class _MosaicAppState").expect("class");
+        assert!(
+            existing < include && include < library && library < class,
+            "{wired}"
+        );
+
+        let claimed = section(
+            r#"
+[host_effects]
+files = [
+  { backend = "flutter", source = "host/flutter/effects.dart", target = "lib/probe_effects.dart" },
+]
+handlers = [
+  { backend = "flutter", include = "probe_effects.dart", install = "installProbeEffects", kinds = ["importAnki", "files.save"] },
+]
+"#,
+        );
+        let wired = flutter_main_with_host_effects(MAIN_DART, &claimed).expect("wiring");
+        let package = wired
+            .find("installProbeEffects(mosaicEffectHost);")
+            .expect("package install");
+        let platform = wired
+            .find("installMosaicPlatformEffects(mosaicEffectHost, appKinds: const <String>['importAnki', 'files.save']);")
+            .expect("platform install with claimed kinds");
+        assert!(package < platform, "{wired}");
+        assert_eq!(
+            wired.matches("installMosaicPlatformEffects(").count(),
+            1,
+            "{wired}"
+        );
+    }
+
+    /// The `appKinds:` argument checks each kind's shape itself before
+    /// splicing it into a Dart string literal (a quote, a backslash or a `$`
+    /// would become code), rather than trusting the manifest's check.
+    #[test]
+    fn the_flutter_install_line_refuses_a_kind_that_is_not_a_dotted_name() {
+        for bad in [
+            "a'); evil(); ('",
+            "a\\b",
+            "${evil()}",
+            "$evil",
+            "files.",
+            ".save",
+            "files..save",
+            "has space",
+            "1st",
+            "line\nbreak",
+            "caf\u{e9}",
+            "",
+        ] {
+            let kinds = vec![bad.to_string()];
+            let error = flutter_platform_app_kinds(Some(&kinds))
+                .expect_err("a kind outside the dotted-name shape must be refused");
+            assert!(
+                format!("{error:?}").contains("not a dotted name"),
+                "{bad:?}: {error:?}"
+            );
+        }
+        let kinds: Vec<String> = ["files.save", "importAnki", "a_b.c9"]
+            .iter()
+            .map(|kind| kind.to_string())
+            .collect();
+        assert_eq!(
+            flutter_platform_app_kinds(Some(&kinds)).expect("valid kinds"),
+            "const <String>['files.save', 'importAnki', 'a_b.c9']"
+        );
+        assert_eq!(flutter_platform_app_kinds(None).expect("none"), "null");
+        // A bad kind fails the whole wiring, before anything is written.
+        let bad = mosaic_package_manifest::HostEffectsSection {
+            files: Vec::new(),
+            handlers: vec![mosaic_package_manifest::HostEffectHandler {
+                backend: "flutter".to_string(),
+                include: Some("probe_effects.dart".to_string()),
+                install: "installProbeEffects".to_string(),
+                kinds: Some(vec!["a'b".to_string()]),
+            }],
+        };
+        assert!(flutter_main_with_host_effects(MAIN_DART, &bad).is_err());
+    }
+
+    /// An empty list claims nothing, spelled as Dart says it.
+    #[test]
+    fn an_empty_flutter_kind_list_is_an_empty_const_list() {
+        assert_eq!(
+            flutter_platform_app_kinds(Some(&[])).expect("empty kinds"),
+            "const <String>[]"
+        );
+    }
+
+    /// A handler for another backend leaves the Flutter package handler out;
+    /// the platform library is installed either way, with no claimed kinds --
+    /// the Qt handler's kinds are the Qt router's business.
+    #[test]
+    fn a_qt_only_handler_leaves_the_flutter_entry_point_alone() {
+        let qt_only = section(
+            r#"
+[host_effects]
+files = [
+  { backend = "qt", source = "host/qt/effects.cpp", target = "probe_effects.cpp" },
+]
+handlers = [
+  { backend = "qt", include = "probe_effects.h", install = "installProbeEffects", kinds = ["importAnki"] },
+]
+"#,
+        );
+        assert_eq!(
+            flutter_main_with_host_effects(MAIN_DART, &qt_only).expect("wiring must succeed"),
+            flutter_main_with_host_effects(MAIN_DART, &section("")).expect("wiring must succeed"),
         );
     }
 
@@ -17048,12 +21162,32 @@ handlers = [
                     !wired.contains("mosaicEffectHost != null"),
                     "the strict local needs no null guard:\n{wired}"
                 );
+                // The platform library on the same local, after the package
+                // handler and before the first props read (UI87 §7.7).
+                let package = wired.find("installProbeEffects(host);").expect("package");
+                let platform = wired
+                    .find("installMosaicPlatformEffects(host, appKinds: null);")
+                    .expect("platform library on the strict local");
+                let props = wired
+                    .find("host.setPropsChangedHandler")
+                    .expect("props handler");
+                assert!(package < platform && platform < props, "{wired}");
             } else {
                 assert!(
                     wired.contains("if (mosaicEffectHost != null)"),
                     "a nullable field needs the guard:\n{wired}"
                 );
+                assert!(
+                    wired.contains(
+                        "if (mosaicEffectHost != null) { installMosaicPlatformEffects(mosaicEffectHost, appKinds: null); }"
+                    ),
+                    "the permissive shape installs through the same guarded local:\n{wired}"
+                );
             }
+            assert!(
+                wired.contains("import 'mosaic_platform_effects.dart';"),
+                "{wired}"
+            );
         }
     }
 }
@@ -17117,20 +21251,178 @@ handlers = [
         "}\n",
     );
 
+    /// The platform library's install line, as `MAIN_WINDOW` indents it.
+    fn platform_install(claimed: &str) -> String {
+        format!(
+            "        // Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n        \
+             MosaicPlatformEffects.Install(this, appKinds: {claimed});\n"
+        )
+    }
+
+    /// A package with no XAML handler still gets the platform library (UI87
+    /// §7.6), installed right after the runtime loads, with no claimed kinds.
     #[test]
-    fn a_package_with_no_xaml_handler_is_untouched() {
+    fn a_package_with_no_xaml_handler_gets_only_the_platform_library() {
         let empty = section("");
         assert_eq!(
             xaml_main_with_host_effects(MAIN_WINDOW, &empty).expect("wiring must succeed"),
-            MAIN_WINDOW
+            MAIN_WINDOW.replacen(
+                "        MosaicRuntimeHost.LoadRequired();\n",
+                &format!(
+                    "        MosaicRuntimeHost.LoadRequired();\n{}",
+                    platform_install("null")
+                ),
+                1
+            )
         );
     }
 
-    /// A handler for another backend leaves the XAML window alone.
+    /// The stub shell has no host to install onto; without a declared
+    /// handler there is nothing to refuse, so it is left as it is.
+    #[test]
+    fn a_window_without_the_runtime_is_untouched_without_a_handler() {
+        let stub = "public class Nothing {}\n";
+        assert_eq!(
+            xaml_main_with_host_effects(stub, &section("")).expect("stub"),
+            stub
+        );
+    }
+
+    /// After the package's handler, which the router wraps; the handler's
+    /// kinds reach the router as a C# array.
+    #[test]
+    fn the_xaml_platform_library_wraps_the_package_handler_with_its_kinds() {
+        let wired = xaml_main_with_host_effects(MAIN_WINDOW, &handler()).expect("wiring");
+        let load = wired
+            .find("MosaicRuntimeHost.LoadRequired();")
+            .expect("load");
+        let package = wired
+            .find("ProbeEffects.Install();")
+            .expect("package install");
+        let platform = wired
+            .find("MosaicPlatformEffects.Install(this, appKinds: null);")
+            .expect("platform install without kinds");
+        let apply = wired
+            .find("MosaicRuntimeHost.ApplyRequiredProps")
+            .expect("apply");
+        assert!(
+            load < package && package < platform && platform < apply,
+            "{wired}"
+        );
+
+        let claimed = section(
+            r#"
+[host_effects]
+files = [
+  { backend = "xaml", source = "host/xaml/Effects.cs", target = "ProbeEffects.cs" },
+]
+handlers = [
+  { backend = "xaml", install = "ProbeEffects.Install", kinds = ["importAnki", "files.save"] },
+]
+"#,
+        );
+        let wired = xaml_main_with_host_effects(MAIN_WINDOW, &claimed).expect("wiring");
+        let package = wired
+            .find("ProbeEffects.Install();")
+            .expect("package install");
+        let platform = wired
+            .find(r#"MosaicPlatformEffects.Install(this, appKinds: new[] { "importAnki", "files.save" });"#)
+            .expect("platform install with claimed kinds");
+        assert!(package < platform, "{wired}");
+        assert_eq!(
+            wired.matches("MosaicPlatformEffects.Install(").count(),
+            1,
+            "{wired}"
+        );
+    }
+
+    /// The install line checks each kind's shape itself before splicing it
+    /// into a C# string literal, rather than trusting the manifest's check.
+    #[test]
+    fn the_xaml_install_line_refuses_a_kind_that_is_not_a_dotted_name() {
+        for bad in [
+            "a\"); Evil(); (\"",
+            "a\\b",
+            "files.",
+            ".save",
+            "files..save",
+            "has space",
+            "1st",
+            "line\nbreak",
+            "caf\u{e9}",
+            "",
+        ] {
+            let kinds = vec![bad.to_string()];
+            let error = xaml_platform_install_line("    ", Some(&kinds))
+                .expect_err("a kind outside the dotted-name shape must be refused");
+            assert!(
+                format!("{error:?}").contains("not a dotted name"),
+                "{bad:?}: {error:?}"
+            );
+        }
+        let kinds: Vec<String> = ["files.save", "importAnki", "a_b.c9"]
+            .iter()
+            .map(|kind| kind.to_string())
+            .collect();
+        let line = xaml_platform_install_line("    ", Some(&kinds)).expect("valid kinds");
+        assert!(
+            line.ends_with(r#"appKinds: new[] { "files.save", "importAnki", "a_b.c9" });"#),
+            "{line}"
+        );
+    }
+
+    /// The builder's shape check accepts exactly what the manifest accepts,
+    /// so it can never refuse a package the manifest let through.
+    #[test]
+    fn the_xaml_kind_check_agrees_with_the_manifest() {
+        for kind in [
+            "files.save",
+            "importAnki",
+            "a_b.c9",
+            "A",
+            "files.",
+            ".save",
+            "has space",
+            "1st",
+            "a-b",
+            "a\\b",
+            "a\"b",
+        ] {
+            let manifest = format!(
+                "[package]\nname = \"mosaic-pkg-probe\"\nversion = \"0.1.0\"\n\
+                 description = \"probe\"\nlicense = \"MIT\"\n\n[components]\n\
+                 exports = [\"Probe\"]\n\n[dependencies]\n\n[host_effects]\n\
+                 handlers = [ {{ backend = \"xaml\", install = \"Probe.Install\", kinds = [{kind:?}] }} ]\n\n\
+                 [kernel]\nversion = \"1\"\n"
+            );
+            assert_eq!(
+                mosaic_package_manifest::parse(&manifest).is_ok(),
+                is_host_effect_kind_shape(kind),
+                "{kind:?}"
+            );
+        }
+    }
+
+    /// An empty list claims nothing, spelled as C# says it.
+    #[test]
+    fn an_empty_xaml_kind_list_is_an_empty_array() {
+        let line = xaml_platform_install_line("", Some(&[])).expect("empty kinds");
+        assert!(
+            line.ends_with(
+                "MosaicPlatformEffects.Install(this, appKinds: System.Array.Empty<string>());"
+            ),
+            "{line}"
+        );
+        assert!(!line.contains("new[] {"), "{line}");
+    }
+
+    /// A handler for another backend leaves the XAML package handler out.
     ///
     /// The "does not fire" direction. Every shipped manifest with
     /// `[host_effects]` declares several backends, so a match keyed too broadly
-    /// would wire the wrong install into this file.
+    /// would wire the wrong install into this file. The platform library is
+    /// installed either way, with no claimed kinds: the Qt handler's kinds
+    /// are the Qt router's business.
     #[test]
     fn a_qt_only_handler_leaves_the_window_alone() {
         let qt_only = section(
@@ -17140,13 +21432,13 @@ files = [
   { backend = "qt", source = "host/qt/effects.cpp", target = "probe_effects.cpp" },
 ]
 handlers = [
-  { backend = "qt", include = "probe_effects.h", install = "installProbeEffects" },
+  { backend = "qt", include = "probe_effects.h", install = "installProbeEffects", kinds = ["importAnki"] },
 ]
 "#,
         );
         assert_eq!(
             xaml_main_with_host_effects(MAIN_WINDOW, &qt_only).expect("wiring must succeed"),
-            MAIN_WINDOW
+            xaml_main_with_host_effects(MAIN_WINDOW, &section("")).expect("wiring must succeed"),
         );
     }
 
@@ -17288,10 +21580,16 @@ handlers = [
                     .find("MosaicRuntimeHost.LoadRequired();")
                     .expect("the load call");
                 let install = wired.find("ProbeEffects.Install();").expect("the install");
+                let platform = wired
+                    .find("MosaicPlatformEffects.Install(this, appKinds: null);")
+                    .expect("the platform library");
                 let apply = wired
                     .find("MosaicRuntimeHost.ApplyRequiredProps")
                     .expect("the props call");
-                assert!(load < install && install < apply, "{wired}");
+                assert!(
+                    load < install && install < platform && platform < apply,
+                    "{wired}"
+                );
                 assert!(wired.contains("RetryStartup_Click"), "{wired}");
             } else {
                 let error = wired.expect_err("the stub shell must refuse, not emit a dead install");

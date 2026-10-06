@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "Number, Phone call, Information, Presenter, Actor",
+  "label": "ch:ar-number-phone-call-information-presenter-actor",
+  "canDo": "I can say a number, a phone call, information, a presenter and an actor.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C281-mumaththil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can say a number, a phone call, information, a presenter and an actor.",
+    "assesses": [
+      "AR-LEX-C281-AMAL281-03",
+      "AR-LEX-C281-AMAL281-04",
+      "AR-LEX-C281-AMAL281-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "Colourful, Thin, Smooth, Broken, Different",
+  "label": "ch:fa-colourful-thin-smooth-broken-different",
+  "canDo": "I can say colourful, thin, smooth, broken and different.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C163-mokhtalef",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say colourful, thin, smooth, broken and different.",
+    "assesses": [
+      "FA-LEX-C163-SEFAT163-03",
+      "FA-LEX-C163-SEFAT163-04",
+      "FA-LEX-C163-SEFAT163-05"
+    ]
+  }
+}

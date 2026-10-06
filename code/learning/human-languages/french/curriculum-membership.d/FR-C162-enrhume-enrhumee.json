@@ -1,0 +1,11 @@
+{
+  "id": "FR-C162-enrhume-enrhumee",
+  "pathSegment": "FR-PATH-162-QUAL162",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-162-QUAL162",
+      "order": 1
+    }
+  ]
+}

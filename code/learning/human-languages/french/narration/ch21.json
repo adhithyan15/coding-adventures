@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1f2258fda2204701",
+  "sourceHash": "fnv1a64:f695cc7d92f0fe59",
   "lessons": [
     {
       "id": "FR-C17-tete",
@@ -288,7 +288,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aeba834778e9317f",
+      "sourceHash": "fnv1a64:7ee0db70d456b38a",
       "notice": null,
       "blocks": [
         {
@@ -305,6 +305,16 @@
             {
               "kind": "speech",
               "text": "Where tête abandoned its Latin ancestor, this one kept it — and then lent it to English several dozen times over."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Je suis monté, but j'ai monté les valises: a direct object flips the helper to avoir."
             }
           ]
         },

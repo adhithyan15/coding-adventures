@@ -1,0 +1,11 @@
+{
+  "id": "HI-C275-karvat",
+  "pathSegment": "HI-PATH-275-THG275",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-275-THG275",
+      "order": 3
+    }
+  ]
+}

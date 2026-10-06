@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:34e61bba8f458faa",
+  "lessonIds": [
+    "FR-C245-semblable",
+    "FR-C245-juste",
+    "FR-C245-faux-fausse",
+    "FR-C245-pret-prete",
+    "FR-C245-gratuit-gratuite"
+  ],
+  "tex": "french/book/chapters/ch245-similar-fair-false-ready-free-of-charge.tex"
+}

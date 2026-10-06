@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:5fa2daa40200a4c1",
+  "lessonIds": [
+    "BN-C185-bori",
+    "BN-C185-injekshon",
+    "BN-C185-chot",
+    "BN-C185-phoska",
+    "BN-C185-bndej"
+  ],
+  "tex": "bengali/book/chapters/ch185-pill-injection-injury-blister-bandage.tex"
+}

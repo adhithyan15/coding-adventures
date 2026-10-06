@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:82a94a6ca420ab1d",
+  "lessonIds": [
+    "AR-C223-rattaba",
+    "AR-C223-kanasa",
+    "AR-C223-kawa",
+    "AR-C223-tawa",
+    "AR-C223-allaqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch223.txt",
+  "json": "arabic/narration/ch223.json",
+  "textHash": "fnv1a64:4c0deb858a2f405e",
+  "jsonHash": "fnv1a64:b0b8af9649867589",
+  "findings": []
+}

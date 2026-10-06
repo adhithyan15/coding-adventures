@@ -6,7 +6,7 @@ sequence: 210
 chapter: 4
 type: word
 headword: వెళ్ళు
-gloss: to go (and వచ్చు, to come)
+gloss: to go (and vaccu, to come)
 romanization: "veḷḷu"
 concept_tag: TE-VERB-VELLU
 prerequisites: [TE-C03-nenu, TE-C04-dappu]
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: []
 ---
 
-# వెళ్ళు (veḷḷu) — "go," and వచ్చు (come)
+# వెళ్ళు (veḷḷu) — "go," and vaccu (come)
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-ANCHOR-DAPPU] -->
@@ -39,13 +39,12 @@ reviews_of: []
 <!-- hl-knowledge: introduces=[TE-LEX-C04-VELLU-01]; assesses=[] -->
 
 **వె** (*ve*) + **ళ్ళు** (*ḷḷu*, a doubled retroflex **ళ** *ḷ*) → **వెళ్ళు**
-(*veḷḷu*). Its partner: **వచ్చు** (*vaccu*, "come") with the doubled **చ్చ**
-(*cc*).
+(*veḷḷu*). Its partner: *vaccu* ("come") with a doubled *cc*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[TE-ETYMON-C04-VELLU-02]; assesses=[] -->
 
-**వెళ్ళు** (*veḷḷu*, "to go") and **వచ్చు** (*vaccu*, "to come") are native
+**వెళ్ళు** (*veḷḷu*, "to go") and *vaccu* ("to come") are native
 Dravidian verbs. As commands they are whole words: *veḷḷu!* ("go!"), *rā!*
 ("come!"). You need both, because Telugu — like every Dravidian language — does
 not say a plain "goodbye." It says "I go, and I **come back**."
@@ -54,7 +53,7 @@ not say a plain "goodbye." It says "I go, and I **come back**."
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 వె (*ve*) + ళ్ళు (*ḷḷu*, doubled retroflex ళ
-*ḷ*) → వెళ్ళు. Its partner వచ్చు (*vaccu*, “come”).
+*ḷ*) → వెళ్ళు. Its partner is *vaccu* (“come”).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C04-VELLU-01, TE-ETYMON-C04-VELLU-02] -->

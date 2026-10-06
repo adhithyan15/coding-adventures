@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C264-samanu",
+    "language": "telugu",
+    "chapter": 264,
+    "sequence": 12450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b64cd166edf262fc"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C170-pallone",
+  "pathSegment": "IT-PATH-170-COSE170",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-170-COSE170",
+      "order": 4
+    }
+  ]
+}

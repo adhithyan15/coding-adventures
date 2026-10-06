@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "Signature, Seal, Business, Cash machine, Coin",
+  "label": "ch:ru-signature-seal-business-cash-machine-coin",
+  "canDo": "I can say a signature, a seal, business, a cash machine and a coin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-R203-second-pass-words-from-chapters-202-203",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say a signature, a seal, business, a cash machine and a coin.",
+    "assesses": [
+      "RU-LEX-C203-RABOTA203-03",
+      "RU-LEX-C203-RABOTA203-04",
+      "RU-LEX-C203-RABOTA203-05"
+    ]
+  }
+}

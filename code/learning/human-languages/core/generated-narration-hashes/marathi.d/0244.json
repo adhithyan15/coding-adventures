@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:a2d820c677589098",
+  "lessonIds": [
+    "MR-C244-mohari",
+    "MR-C244-kothimbir",
+    "MR-C244-kadhipatta",
+    "MR-C244-sengdane",
+    "MR-C244-kaju"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch244.txt",
+  "json": "marathi/narration/ch244.json",
+  "textHash": "fnv1a64:2b5b820f4a243107",
+  "jsonHash": "fnv1a64:9ad09e983e579580",
+  "findings": []
+}

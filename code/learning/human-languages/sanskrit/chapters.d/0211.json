@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Exercise, Yoga, Toil, Tiredness, Bath",
+  "label": "ch:sa-exercise-yoga-toil-tiredness-bath",
+  "canDo": "I can say exercise, yoga, toil, tiredness and a bath.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-R211-second-pass-words-from-chapters-207-211",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say exercise, yoga, toil, tiredness and a bath.",
+    "assesses": [
+      "SA-LEX-C211-WEL211-03",
+      "SA-LEX-C211-WEL211-04",
+      "SA-LEX-C211-WEL211-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "To reach, To achieve, To give, To give back, To recognise",
+  "label": "ch:it-to-reach-to-achieve-to-give-to-give-back-to-recognise",
+  "canDo": "I can say to reach, to achieve, to give, to give back and to recognise.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C239-riconoscere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say to reach, to achieve, to give, to give back and to recognise.",
+    "assesses": [
+      "IT-LEX-C239-VERBI239-03",
+      "IT-LEX-C239-VERBI239-04",
+      "IT-LEX-C239-VERBI239-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C255-pletfarm",
+    "language": "urdu",
+    "chapter": 255,
+    "sequence": 15410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94556a5a2d2f547d"
+  },
+  "findings": []
+}

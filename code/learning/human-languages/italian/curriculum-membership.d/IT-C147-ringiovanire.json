@@ -1,0 +1,11 @@
+{
+  "id": "IT-C147-ringiovanire",
+  "pathSegment": "IT-PATH-147-VERBI147",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-147-VERBI147",
+      "order": 3
+    }
+  ]
+}

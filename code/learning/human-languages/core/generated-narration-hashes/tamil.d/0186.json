@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:3e9fd422d0ba0837",
+  "lessonIds": [
+    "TA-C186-mamanar",
+    "TA-C186-katalan",
+    "TA-C186-katali",
+    "TA-C186-katal",
+    "TA-C186-natpu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch186.txt",
+  "json": "tamil/narration/ch186.json",
+  "textHash": "fnv1a64:2864a253f5c6f25c",
+  "jsonHash": "fnv1a64:7775b61603a5d040",
+  "findings": []
+}

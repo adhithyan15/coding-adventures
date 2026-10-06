@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:e37200969207bd99",
+  "lessonIds": [
+    "UR-C171-shahri",
+    "UR-C171-sayyah",
+    "UR-C171-jumla",
+    "UR-C171-harf",
+    "UR-C171-matlab"
+  ],
+  "tex": "urdu/book/chapters/ch171-citizen-tourist-sentence-character-meaning.tex"
+}

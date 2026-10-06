@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:87c373a7a5c1ef50",
+  "lessonIds": [
+    "GE-C209-buerger",
+    "GE-C209-wahl",
+    "GE-C209-partei",
+    "GE-C209-politik",
+    "GE-C209-wirtschaft"
+  ],
+  "tex": "german/book/chapters/ch209-a-citizen-an-election-a-party-politics-the-economy.tex"
+}

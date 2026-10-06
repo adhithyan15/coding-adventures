@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "Smoke, Flame, Climate, Environment, Pollution",
+  "label": "ch:mr-smoke-flame-climate-environment-pollution",
+  "canDo": "I can say smoke, a flame, the climate, the environment and pollution.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C184-pradusan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say smoke, a flame, the climate, the environment and pollution.",
+    "assesses": [
+      "MR-LEX-C184-VASTU184-03",
+      "MR-LEX-C184-VASTU184-04",
+      "MR-LEX-C184-VASTU184-05"
+    ]
+  }
+}

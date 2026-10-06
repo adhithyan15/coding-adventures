@@ -1,0 +1,20 @@
+{
+  "name": "@coding-adventures/forme-plugin-runner-conformance",
+  "version": "1.0.0",
+  "description": "Language-neutral subprocess conformance harness for Forme FM02 plugin runners.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "22.20.1",
+    "@vitest/coverage-v8": "4.1.11",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  }
+}

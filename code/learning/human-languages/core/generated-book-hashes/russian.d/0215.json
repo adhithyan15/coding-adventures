@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:ba1c8e8e8a3ade34",
+  "lessonIds": [
+    "RU-C215-konechno",
+    "RU-C215-navernoye",
+    "RU-C215-mozhet-byt",
+    "RU-C215-k-sozhaleniyu",
+    "RU-C215-k-schastyu"
+  ],
+  "tex": "russian/book/chapters/ch215-of-course-probably-maybe-unfortunately-fortunately.tex"
+}

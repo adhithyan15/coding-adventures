@@ -1,0 +1,11 @@
+{
+  "id": "BN-C164-soyetar",
+  "pathSegment": "BN-PATH-164-JINIS164",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-164-JINIS164",
+      "order": 4
+    }
+  ]
+}

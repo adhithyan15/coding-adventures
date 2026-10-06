@@ -1,0 +1,11 @@
+{
+  "id": "ES-C484-apoyar",
+  "pathSegment": "ES-PATH-484-USAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-484-USAR",
+      "order": 2
+    }
+  ]
+}

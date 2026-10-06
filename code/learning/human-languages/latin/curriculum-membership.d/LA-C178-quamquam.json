@@ -1,0 +1,11 @@
+{
+  "id": "LA-C178-quamquam",
+  "pathSegment": "LA-PATH-178-CAUSA178",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-178-CAUSA178",
+      "order": 2
+    }
+  ]
+}

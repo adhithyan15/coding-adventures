@@ -1,0 +1,11 @@
+{
+  "id": "SA-C230-prayatnah",
+  "pathSegment": "SA-PATH-230-WRK230",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-230-WRK230",
+      "order": 2
+    }
+  ]
+}

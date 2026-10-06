@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Main, Total, Every, Pink, Orange",
+  "label": "ch:te-main-total-every-pink-orange",
+  "canDo": "I can say main, total, every, pink and orange.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C180-narinja-rangu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say main, total, every, pink and orange.",
+    "assesses": [
+      "TE-LEX-C180-GUNAM180-03",
+      "TE-LEX-C180-GUNAM180-04",
+      "TE-LEX-C180-GUNAM180-05"
+    ]
+  }
+}

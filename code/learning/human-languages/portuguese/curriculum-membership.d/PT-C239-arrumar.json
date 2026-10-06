@@ -1,0 +1,11 @@
+{
+  "id": "PT-C239-arrumar",
+  "pathSegment": "PT-PATH-239-VERBOS239",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-239-VERBOS239",
+      "order": 3
+    }
+  ]
+}

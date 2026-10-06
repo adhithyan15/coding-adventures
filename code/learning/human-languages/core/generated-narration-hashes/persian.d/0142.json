@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:efa573ff6237a26b",
+  "lessonIds": [
+    "FA-C142-sabr-kardan",
+    "FA-C142-pishnahad-kardan",
+    "FA-C142-entekhab-kardan",
+    "FA-C142-sarma-khordan",
+    "FA-C142-zakhmi-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch142.txt",
+  "json": "persian/narration/ch142.json",
+  "textHash": "fnv1a64:b4cd1d19124078ef",
+  "jsonHash": "fnv1a64:48ac4d08d5cbfad5",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:2d646b5caca84ddb",
+  "lessonIds": [
+    "TE-C225-akukura",
+    "TE-C225-palakura",
+    "TE-C225-boppayi",
+    "TE-C225-puccakaya",
+    "TE-C225-jidipappu",
+    "TE-R225-first-pass-words-from-chapters-217-220",
+    "TE-R225-second-pass-words-from-chapters-221-225"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch225.txt",
+  "json": "telugu/narration/ch225.json",
+  "textHash": "fnv1a64:e3c25f7dd908ecc8",
+  "jsonHash": "fnv1a64:a836982d4aa43eab",
+  "findings": []
+}

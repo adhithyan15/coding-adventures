@@ -1,0 +1,11 @@
+{
+  "id": "FR-C156-rarement",
+  "pathSegment": "FR-PATH-156-TEMPS156",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-156-TEMPS156",
+      "order": 0
+    }
+  ]
+}

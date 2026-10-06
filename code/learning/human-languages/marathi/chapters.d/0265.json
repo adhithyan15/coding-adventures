@@ -1,0 +1,19 @@
+{
+  "chapter": 265,
+  "title": "Permission, Ban, Safety, Advice, Promise",
+  "label": "ch:mr-permission-ban-safety-advice-promise",
+  "canDo": "I can say permission, a ban, safety, advice and a promise.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C265-vacan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 265: I can say permission, a ban, safety, advice and a promise.",
+    "assesses": [
+      "MR-LEX-C265-VASTU265-03",
+      "MR-LEX-C265-VASTU265-04",
+      "MR-LEX-C265-VASTU265-05"
+    ]
+  }
+}

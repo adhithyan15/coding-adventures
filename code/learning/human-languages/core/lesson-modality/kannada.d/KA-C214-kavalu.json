@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C214-kavalu",
+    "language": "kannada",
+    "chapter": 214,
+    "sequence": 9970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f67c060ceec423cf"
+  },
+  "findings": []
+}

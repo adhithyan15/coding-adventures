@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C175-subito",
+    "language": "latin",
+    "chapter": 175,
+    "sequence": 7860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89abfa5e745b4e34"
+  },
+  "findings": []
+}

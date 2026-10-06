@@ -1,0 +1,11 @@
+{
+  "id": "FA-C169-mardom",
+  "pathSegment": "FA-PATH-169-CHIZ169",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-169-CHIZ169",
+      "order": 4
+    }
+  ]
+}

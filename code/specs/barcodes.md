@@ -34,6 +34,7 @@ separate spec files:
 ### 1D (linear) barcodes
 
 - [barcode-symbologies-v1.md](barcode-symbologies-v1.md) — normative portable encoder contract and fixtures
+- [barcode-layout-1d-v1.md](barcode-layout-1d-v1.md) — normative portable integer layout contract and fixtures
 - [barcode-1d.md](barcode-1d.md) — shared 1D abstraction (runs model)
 - [code39.md](code39.md) — Code 39
 - [upc-a.md](upc-a.md) — UPC-A

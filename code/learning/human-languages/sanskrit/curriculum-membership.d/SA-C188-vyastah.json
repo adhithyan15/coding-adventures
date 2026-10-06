@@ -1,0 +1,11 @@
+{
+  "id": "SA-C188-vyastah",
+  "pathSegment": "SA-PATH-188-QUAL188",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-188-QUAL188",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "Lime, Roof tile, Plastic, Foam, Hole",
+  "label": "ch:te-lime-roof-tile-plastic-foam-hole",
+  "canDo": "I can say lime, a roof tile, plastic, foam and a hole.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C271-cillu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say lime, a roof tile, plastic, foam and a hole.",
+    "assesses": [
+      "TE-LEX-C271-VASTUVU271-03",
+      "TE-LEX-C271-VASTUVU271-04",
+      "TE-LEX-C271-VASTUVU271-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "Blouse, T-shirt, Tights, Trainers, Slippers",
+  "label": "ch:ru-blouse-t-shirt-tights-trainers-slippers",
+  "canDo": "I can say a blouse, a T-shirt, tights, trainers and slippers.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C162-tapochki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say a blouse, a T-shirt, tights, trainers and slippers.",
+    "assesses": [
+      "RU-LEX-C162-VESHCH162-03",
+      "RU-LEX-C162-VESHCH162-04",
+      "RU-LEX-C162-VESHCH162-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C138-hatarakimasu",
+    "language": "japanese",
+    "chapter": 138,
+    "sequence": 8480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e11aeefd9de72177"
+  },
+  "findings": []
+}

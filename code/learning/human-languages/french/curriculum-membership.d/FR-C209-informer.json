@@ -1,0 +1,11 @@
+{
+  "id": "FR-C209-informer",
+  "pathSegment": "FR-PATH-209-VERBES209",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-209-VERBES209",
+      "order": 3
+    }
+  ]
+}

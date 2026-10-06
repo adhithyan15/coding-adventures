@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:7db7691753bd80a9",
+  "lessonIds": [
+    "FA-C235-tiz",
+    "FA-C235-mojud",
+    "FA-C235-kafi",
+    "FA-C235-majani",
+    "FA-C235-bikar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch235.txt",
+  "json": "persian/narration/ch235.json",
+  "textHash": "fnv1a64:a933500aa337121e",
+  "jsonHash": "fnv1a64:253f28354242ddfd",
+  "findings": []
+}

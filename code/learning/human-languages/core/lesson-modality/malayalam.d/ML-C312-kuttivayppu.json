@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C312-kuttivayppu",
+    "language": "malayalam",
+    "chapter": 312,
+    "sequence": 14740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7fa53a497d4eb775"
+  },
+  "findings": []
+}

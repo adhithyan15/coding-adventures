@@ -27,7 +27,24 @@ it("pins Portuguese lesson-content budgets", () =>
     // 384 -> 654: the A1 vocabulary tranche, chapters 82-133. 260 word lessons
     // (twenty-four verbs) in five runs of ten or eleven chapters, each closing on
     // two reviews. No idiom, sense or culture claim.
-    lessons: 654,
+    // 654 -> 676: chapters 134-137 realize Portuguese's last four A2 spine
+    // nodes: saying no and asking which, the past, the future and reading
+    // practical texts. Twenty word lessons and two reviews, with no idiom,
+    // sense or culture claim.
+    // 676 -> 849: the first Portuguese A2 vocabulary tranche, chapters
+    // 138-170. 165 word lessons (fifty verbs) and two reviews per run of at
+    // most nine chapters. No idiom, sense or culture claim.
+    // 849 -> 1007: the second Portuguese A2 vocabulary tranche, chapters
+    // 171-200. 150 word lessons (forty-five verbs) and two reviews per run of
+    // at most nine chapters. No idiom, sense or culture claim.
+    // 1007 -> 1165: the third Portuguese A2 vocabulary tranche, chapters
+    // 201-230. 150 word lessons (forty-five verbs) and two reviews per run of
+    // at most nine chapters. No idiom, sense or culture claim.
+    // 1165 -> 1296: the last Portuguese A2 vocabulary tranche, chapters
+    // 231-255. 125 word lessons (forty-five verbs) and two reviews per run of
+    // at most nine chapters. No idiom, sense or culture claim. Portuguese
+    // attains A2 here.
+    lessons: 1296,
     idioms: 7,
     senses: 7,
     cultureClaims: 11,

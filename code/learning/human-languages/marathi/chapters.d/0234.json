@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Important, Entertaining, Filthy, Full, Slow",
+  "label": "ch:mr-important-entertaining-filthy-full-slow",
+  "canDo": "I can say important, entertaining, filthy, full and slow.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C234-mand",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say important, entertaining, filthy, full and slow.",
+    "assesses": [
+      "MR-LEX-C234-GUN234-03",
+      "MR-LEX-C234-GUN234-04",
+      "MR-LEX-C234-GUN234-05"
+    ]
+  }
+}

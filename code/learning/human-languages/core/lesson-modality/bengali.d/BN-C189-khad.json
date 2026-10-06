@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C189-khad",
+    "language": "bengali",
+    "chapter": 189,
+    "sequence": 11230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c231a84bbb49191"
+  },
+  "findings": []
+}

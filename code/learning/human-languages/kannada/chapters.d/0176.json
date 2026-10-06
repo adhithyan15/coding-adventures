@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "For the sake of, Otherwise, Even so, In case, Instead",
+  "label": "ch:ka-for-the-sake-of-otherwise-even-so-in-case-instead",
+  "canDo": "I can say for the sake of, otherwise, even so, in case and instead.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "KA-C176-badalu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say for the sake of, otherwise, even so, in case and instead.",
+    "assesses": [
+      "KA-LEX-C176-KARANA176-03",
+      "KA-LEX-C176-KARANA176-04",
+      "KA-LEX-C176-KARANA176-05"
+    ]
+  }
+}

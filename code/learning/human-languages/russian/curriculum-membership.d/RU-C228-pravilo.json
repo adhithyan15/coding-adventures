@@ -1,0 +1,11 @@
+{
+  "id": "RU-C228-pravilo",
+  "pathSegment": "RU-PATH-228-VESHCH228",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-228-VESHCH228",
+      "order": 1
+    }
+  ]
+}

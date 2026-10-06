@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C227-pellikoduku",
+    "language": "telugu",
+    "chapter": 227,
+    "sequence": 10540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:929b805bb29dfc52"
+  },
+  "findings": []
+}

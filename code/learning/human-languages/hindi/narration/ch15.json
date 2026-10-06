@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Water and Bread",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5e72395e64551681",
+  "sourceHash": "fnv1a64:9e8438319fe61c5f",
   "lessons": [
     {
       "id": "HI-C15-dhol",
@@ -397,7 +397,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e80233831768248a",
+      "sourceHash": "fnv1a64:4a6b1a238df7fff2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -435,7 +435,7 @@
             },
             {
               "kind": "speech",
-              "text": "This one takes fewer than any character in the book."
+              "text": "This one takes the same."
             }
           ]
         },
@@ -473,7 +473,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One pen lift. Everything below the headline is a single unbroken run — stem, shoulder, outer bowl and inner loop without the pen leaving the paper — and then the headline goes on top. Nothing else in this book is drawn in two strokes."
+              "text": "One pen lift. Everything below the headline is a single unbroken run — stem, shoulder, outer bowl and inner loop without the pen leaving the paper — and then the headline goes on top. Many consonants are drawn in these two strokes; घ, the letter before it, was one."
             },
             {
               "kind": "speech",
@@ -531,11 +531,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "how many pen lifts it takes, against the last letter's two",
+              "instruction": "how many pen lifts it takes, and which letter before it took the same",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: how many pen lifts it takes, against the last letter's two]"
+              "source": "[YOU SAY: how many pen lifts it takes, and which letter before it took the same]"
             },
             {
               "kind": "prompt",

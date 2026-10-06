@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Society, The government, A law, A court, An election",
+  "label": "ch:hi-society-the-government-a-law-a-court-an-election",
+  "canDo": "I can say society, the government, a law, a court and an election.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C218-cunav",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say society, the government, a law, a court and an election.",
+    "assesses": [
+      "HI-LEX-C218-THG218-03",
+      "HI-LEX-C218-THG218-04",
+      "HI-LEX-C218-THG218-05"
+    ]
+  }
+}

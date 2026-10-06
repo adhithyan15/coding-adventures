@@ -1,5 +1,12 @@
 # Changelog — iir-to-jvm-class-file
 
+## 0.35.0 - 2026-10-05 - floating-point module globals
+
+Module globals carrying `f32` or `f64` values now use JVM fields with `F` or
+`D` descriptors instead of `J`. Typed `getstatic` and `putstatic` operations
+therefore agree with floating-point locals, including captured ALGOL real value
+formals used by nested procedures.
+
 ## Unreleased — JVM input/EOF (VM-039c)
 
 Support `input_more` through `env.BasicRuntime.inputMore()J`, preserving the

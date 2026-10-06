@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "To borrow, To lend, To build, To break down, To continue",
+  "label": "ch:ml-to-borrow-to-lend-to-build-to-break-down-to-continue",
+  "canDo": "I can say to borrow, to lend, to build, to break down and to continue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C271-tutaruka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say to borrow, to lend, to build, to break down and to continue.",
+    "assesses": [
+      "ML-LEX-C271-KRIYA271-03",
+      "ML-LEX-C271-KRIYA271-04",
+      "ML-LEX-C271-KRIYA271-05"
+    ]
+  }
+}

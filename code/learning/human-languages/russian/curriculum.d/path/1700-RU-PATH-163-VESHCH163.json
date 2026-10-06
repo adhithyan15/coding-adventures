@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-163-VESHCH163",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "RU-EXT-163-VESHCH163"
+  ],
+  "after": []
+}

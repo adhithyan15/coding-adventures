@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C175-harati",
+    "language": "sanskrit",
+    "chapter": 175,
+    "sequence": 9530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24bace3344552b30"
+  },
+  "findings": []
+}

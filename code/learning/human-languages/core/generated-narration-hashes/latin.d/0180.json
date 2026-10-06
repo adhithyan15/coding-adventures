@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:e0bcdf470eb715c8",
+  "lessonIds": [
+    "LA-C180-commodus",
+    "LA-C180-urbanus",
+    "LA-C180-rusticus",
+    "LA-C180-hilaris",
+    "LA-C180-verecundus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch180.txt",
+  "json": "latin/narration/ch180.json",
+  "textHash": "fnv1a64:78cf0f955ecc8b2f",
+  "jsonHash": "fnv1a64:7f606f458033e9a3",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C277-kummari",
+  "pathSegment": "TE-PATH-277-PANI277",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-277-PANI277",
+      "order": 3
+    }
+  ]
+}

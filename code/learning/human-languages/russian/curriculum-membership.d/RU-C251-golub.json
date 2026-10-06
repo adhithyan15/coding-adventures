@@ -1,0 +1,11 @@
+{
+  "id": "RU-C251-golub",
+  "pathSegment": "RU-PATH-251-VESHCH251",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-251-VESHCH251",
+      "order": 3
+    }
+  ]
+}

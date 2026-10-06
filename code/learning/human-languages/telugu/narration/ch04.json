@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:52255cd67993af76",
+  "sourceHash": "fnv1a64:88ea724917e63083",
   "lessons": [
     {
       "id": "TE-C04-dappu",
@@ -126,7 +126,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f5fd338c6db5c918",
+      "sourceHash": "fnv1a64:4d607dc82b2b3555",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -193,15 +193,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: డ — copy what you see",
+          "title": "Writing: డ — five deliberate movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on డ (ḍa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the filmstrip slowly. Movement 1 sweeps down around the upper-left curve. Movement 2 turns right around the lower-left bowl. Movement 3 restarts and sweeps right and upward around the lower-right bowl. Movement 4 curves left around the upper-right shoulder. Movement 5 finishes with the separate top flourish."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "This is one attested school-style order. Telugu handwriting varies, so keep the five movements distinct and let the round shape grow from them."
             }
           ]
         },
@@ -275,17 +275,17 @@
     {
       "id": "TE-C04-vellu",
       "sequence": 210,
-      "title": "వెళ్ళు (veḷḷu) — \"go,\" and వచ్చు (come)",
+      "title": "వెళ్ళు (veḷḷu) — \"go,\" and vaccu (come)",
       "headword": "వెళ్ళు",
       "romanization": "veḷḷu",
-      "gloss": "to go (and వచ్చు, to come)",
+      "gloss": "to go (and vaccu, to come)",
       "script": "telugu",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ca8555c1bbb4a25f",
+      "sourceHash": "fnv1a64:0663528e381b7bce",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -321,7 +321,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వె (ve) + ళ్ళు (ḷḷu, a doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner: వచ్చు (vaccu, \"come\") with the doubled చ్చ (cc)."
+              "text": "వె (ve) + ళ్ళు (ḷḷu, a doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner: vaccu (\"come\") with a doubled cc."
             }
           ]
         },
@@ -332,7 +332,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వెళ్ళు (veḷḷu, \"to go\") and వచ్చు (vaccu, \"to come\") are native Dravidian verbs. As commands they are whole words: veḷḷu! (\"go!\"), rā! (\"come!\"). You need both, because Telugu — like every Dravidian language — does not say a plain \"goodbye.\" It says \"I go, and I come back.\""
+              "text": "వెళ్ళు (veḷḷu, \"to go\") and vaccu (\"to come\") are native Dravidian verbs. As commands they are whole words: veḷḷu! (\"go!\"), rā! (\"come!\"). You need both, because Telugu — like every Dravidian language — does not say a plain \"goodbye.\" It says \"I go, and I come back.\""
             }
           ]
         },
@@ -343,7 +343,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వె (ve) + ళ్ళు (ḷḷu, doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner వచ్చు (vaccu, “come”)."
+              "text": "వె (ve) + ళ్ళు (ḷḷu, doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner is vaccu (“come”)."
             }
           ]
         },
@@ -857,7 +857,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f650196d6ea8f2d3",
+      "sourceHash": "fnv1a64:1faf6b9a5c40a91e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -932,15 +932,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ప — copy what you see",
+          "title": "Writing: ప — four calm curves",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ప (pa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left across the upper part of the small bowl. Lift, then movement 2 turns around its lower half. Movement 3 makes the broad bowl on the right. Lift once more for movement 4, the small rising flourish above."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the four clear movements instead of closing the small gaps."
             }
           ]
         },
@@ -1293,7 +1293,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9de82e3f75be2312",
+      "sourceHash": "fnv1a64:7ab32e2722c078ce",
       "notice": null,
       "blocks": [
         {
@@ -1332,15 +1332,15 @@
               "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "Telugu: వెళ్ళి వస్తాను., veḷḷi vastānu. English: I'll go and come back. (the goodbye).",
-                "Telugu: వెళ్ళి రండి., veḷḷi raṇḍi. English: Go and come back. (the reply).",
+                "Telugu: —, veḷḷi vastānu. English: I'll go and come back. (the goodbye).",
+                "Telugu: —, veḷḷi raṇḍi. English: Go and come back. (the reply).",
                 "Telugu: రేపు కలుద్దాం., rēpu kaluddām. English: See you tomorrow.",
-                "Telugu: మళ్ళీ కలుద్దాం., maḷḷī kaluddām. English: We'll meet again."
+                "Telugu: —, maḷḷī kaluddām. English: We'll meet again."
               ]
             },
             {
               "kind": "speech",
-              "text": "A few of these characters have not had their own lesson yet. They are here to be recognised, not decoded — the romanization beside each line is what you read from. The letters catch up in the chapters ahead."
+              "text": "Three of these stay in romanization for now: their doubled ḷ and their e-sign have not had their own lessons yet, and a line you cannot decode is not a line to read from. The letters catch up in the chapters ahead."
             },
             {
               "kind": "pause",

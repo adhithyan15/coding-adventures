@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:2eaeb54d90d88ca7",
+  "lessonIds": [
+    "MR-C201-paryant",
+    "MR-C201-dasak",
+    "MR-C201-suryasta",
+    "MR-C201-suryoday",
+    "MR-C201-sevat",
+    "MR-R201-first-pass-words-from-chapters-193-196",
+    "MR-R201-second-pass-words-from-chapters-197-201"
+  ],
+  "tex": "marathi/book/chapters/ch201-until-decade-sunset-sunrise-end.tex"
+}

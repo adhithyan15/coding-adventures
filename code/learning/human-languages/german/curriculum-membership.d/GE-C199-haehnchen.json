@@ -1,0 +1,11 @@
+{
+  "id": "GE-C199-haehnchen",
+  "pathSegment": "GE-PATH-199-THING199",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-199-THING199",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:0029a03177f4f5d6",
+  "lessonIds": [
+    "GE-C221-schlank",
+    "GE-C221-schrecklich",
+    "GE-C221-schuechtern",
+    "GE-C221-selbststaendig",
+    "GE-C221-sonnig"
+  ],
+  "tex": "german/book/chapters/ch221-slim-dreadful-shy-independent-sunny.tex"
+}

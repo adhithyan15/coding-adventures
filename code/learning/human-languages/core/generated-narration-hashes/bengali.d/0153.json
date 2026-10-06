@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:767d8a6a1f04a4ea",
+  "lessonIds": [
+    "BN-C153-alochona-kora",
+    "BN-C153-proshongsa-kora",
+    "BN-C153-boka",
+    "BN-C153-dhonyobad-deoya",
+    "BN-C153-sohyo-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch153.txt",
+  "json": "bengali/narration/ch153.json",
+  "textHash": "fnv1a64:cd4ef9bc67a7c235",
+  "jsonHash": "fnv1a64:27398dd7f2b4f13c",
+  "findings": []
+}

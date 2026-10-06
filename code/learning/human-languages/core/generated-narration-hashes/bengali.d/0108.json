@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:d263d4860d02b2ed",
+  "lessonIds": [
+    "BN-C108-jhata",
+    "BN-C108-balish",
+    "BN-C108-chador",
+    "BN-C108-lep",
+    "BN-C108-madur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch108.txt",
+  "json": "bengali/narration/ch108.json",
+  "textHash": "fnv1a64:afc0c7f62a7a8495",
+  "jsonHash": "fnv1a64:50704082ce8fe4cb",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:bc09128ac7f3e790",
+  "lessonIds": [
+    "TA-C217-manamakal",
+    "TA-C217-manamakan",
+    "TA-C217-niccayatarttam",
+    "TA-C217-viruntu",
+    "TA-C217-vila"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch217.txt",
+  "json": "tamil/narration/ch217.json",
+  "textHash": "fnv1a64:7b9a751495ff892f",
+  "jsonHash": "fnv1a64:8c8ac82003beda3c",
+  "findings": []
+}

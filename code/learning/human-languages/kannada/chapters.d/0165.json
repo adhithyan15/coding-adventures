@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "To steal, To recall, To roll, To remain, To heat",
+  "label": "ch:ka-to-steal-to-recall-to-roll-to-remain-to-heat",
+  "canDo": "I can say to steal, to recall, to roll, to remain and to heat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C165-kayisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say to steal, to recall, to roll, to remain and to heat.",
+    "assesses": [
+      "KA-LEX-C165-KRIYE165-03",
+      "KA-LEX-C165-KRIYE165-04",
+      "KA-LEX-C165-KRIYE165-05"
+    ]
+  }
+}

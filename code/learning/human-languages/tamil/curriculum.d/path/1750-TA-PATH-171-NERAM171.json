@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-171-NERAM171",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "TA-EXT-171-NERAM171"
+  ],
+  "after": []
+}

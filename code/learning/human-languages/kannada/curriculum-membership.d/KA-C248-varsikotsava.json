@@ -1,0 +1,11 @@
+{
+  "id": "KA-C248-varsikotsava",
+  "pathSegment": "KA-PATH-248-KALA248",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-248-KALA248",
+      "order": 1
+    }
+  ]
+}

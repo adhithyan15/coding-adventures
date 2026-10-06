@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:2756922c2e604f5c",
+  "lessonIds": [
+    "LA-C167-ardeo",
+    "LA-C167-incendo",
+    "LA-C167-abicio",
+    "LA-C167-computo",
+    "LA-C167-pulso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch167.txt",
+  "json": "latin/narration/ch167.json",
+  "textHash": "fnv1a64:57d7ffe4fdbc0a5b",
+  "jsonHash": "fnv1a64:abd683d99ab16cd7",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:296d474dda41f0d0",
+  "lessonIds": [
+    "ML-C284-kurran",
+    "ML-C284-valippam",
+    "ML-C284-rasakaramaya",
+    "ML-C284-virasamaya",
+    "ML-C284-apakatakaramaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch284.txt",
+  "json": "malayalam/narration/ch284.json",
+  "textHash": "fnv1a64:9058cc844ba40d60",
+  "jsonHash": "fnv1a64:29c76c24858a6d95",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C194-post",
+  "pathSegment": "FA-PATH-194-MAKAN194",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-194-MAKAN194",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "To scrub, To bring, To carry away, To hold, To let go",
+  "label": "ch:ka-to-scrub-to-bring-to-carry-away-to-hold-to-let-go",
+  "canDo": "I can say to scrub, to bring, to carry away, to hold and to let go.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C198-bidu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say to scrub, to bring, to carry away, to hold and to let go.",
+    "assesses": [
+      "KA-LEX-C198-KRIYE198-03",
+      "KA-LEX-C198-KRIYE198-04",
+      "KA-LEX-C198-KRIYE198-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:0ed8df1c5375c78f",
+  "lessonIds": [
+    "SA-C234-susyati",
+    "SA-C234-plavate",
+    "SA-C234-arabhate",
+    "SA-C234-samapayati",
+    "SA-C234-prayacchati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch234.txt",
+  "json": "sanskrit/narration/ch234.json",
+  "textHash": "fnv1a64:e4db00ceb02227f8",
+  "jsonHash": "fnv1a64:e0c4472402a761bf",
+  "findings": []
+}

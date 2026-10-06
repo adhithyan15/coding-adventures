@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Well known, Foreign, Nervous, Proud, Angry",
+  "label": "ch:ge-well-known-foreign-nervous-proud-angry",
+  "canDo": "I can say well known, foreign, nervous, proud and angry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C169-wuetend",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say well known, foreign, nervous, proud and angry.",
+    "assesses": [
+      "GE-LEX-C169-QUAL169-03",
+      "GE-LEX-C169-QUAL169-04",
+      "GE-LEX-C169-QUAL169-05"
+    ]
+  }
+}

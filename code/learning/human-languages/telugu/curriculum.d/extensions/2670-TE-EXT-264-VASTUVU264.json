@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-264-VASTUVU264",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a cheque, a visa, luggage, a newspaper and a number.",
+  "prerequisites": []
+}

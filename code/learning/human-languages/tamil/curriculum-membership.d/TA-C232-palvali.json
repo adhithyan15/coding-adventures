@@ -1,0 +1,11 @@
+{
+  "id": "TA-C232-palvali",
+  "pathSegment": "TA-PATH-232-NALAM232",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-232-NALAM232",
+      "order": 0
+    }
+  ]
+}

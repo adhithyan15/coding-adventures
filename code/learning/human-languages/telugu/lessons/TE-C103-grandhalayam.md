@@ -10,7 +10,7 @@ chapter: 103
 type: word
 headword: "గ్రంథాలయం"
 gloss: "a library"
-romanization: "grandhālayaṁ"
+romanization: "granthālayaṁ"
 concept_tag: TE-LOC103-GRANDHALAYAM
 prerequisites: [TE-C103-gudi, TE-C103-badi]
 sounds: []
@@ -31,7 +31,7 @@ variety: standard-colloquial
 reviews_of: [TE-C103-badi]
 ---
 
-# గ్రంథాలయం (grandhālayaṁ) — a library
+# గ్రంథాలయం (granthālayaṁ) — a library
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C103-LOC103-01, TE-LEX-C103-LOC103-02] -->
@@ -41,7 +41,7 @@ reviews_of: [TE-C103-badi]
 ## You'll want to know: గ్రంథాలయం
 <!-- hl-knowledge: introduces=[TE-LEX-C103-LOC103-03]; assesses=[] -->
 
-**గ్రంథాలయం** — *grandhālayaṁ* — "a library".
+**గ్రంథాలయం** — *granthālayaṁ* — "a library".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -52,10 +52,10 @@ One more word for this chapter.
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C103-LOC103-03, TE-LEX-C103-LOC103-01, TE-LEX-C103-LOC103-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: *grandhālayaṁ*]
-- [YOU SAY: *grandhālayaṁ*, once more]
-- [YOU SAY: say *grandhālayaṁ*]
-- [YOU RECALL: say the Telugu for a temple, then the Telugu for a school, then say *grandhālayaṁ* again]
+- [YOU SAY: *granthālayaṁ*]
+- [YOU SAY: *granthālayaṁ*, once more]
+- [YOU SAY: say *granthālayaṁ*]
+- [YOU RECALL: say the Telugu for a temple, then the Telugu for a school, then say *granthālayaṁ* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C103-LOC103-03, TE-LEX-C103-LOC103-01, TE-LEX-C103-LOC103-02] -->

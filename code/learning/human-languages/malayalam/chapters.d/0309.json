@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "To reduce, To recognize, To lock, To describe, To avoid",
+  "label": "ch:ml-to-reduce-to-recognize-to-lock-to-describe-to-avoid",
+  "canDo": "I can say to reduce, to recognize, to lock, to describe and to avoid.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C309-olivakkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can say to reduce, to recognize, to lock, to describe and to avoid.",
+    "assesses": [
+      "ML-LEX-C309-KRIYA309-03",
+      "ML-LEX-C309-KRIYA309-04",
+      "ML-LEX-C309-KRIYA309-05"
+    ]
+  }
+}

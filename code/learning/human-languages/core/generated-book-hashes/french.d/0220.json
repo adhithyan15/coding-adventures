@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:0e68f2e8fd6947f4",
+  "lessonIds": [
+    "FR-C220-ponctuel-ponctuelle",
+    "FR-C220-etranger-etrangere",
+    "FR-C220-aimable",
+    "FR-C220-honnete",
+    "FR-C220-patient-patiente"
+  ],
+  "tex": "french/book/chapters/ch220-punctual-foreign-friendly-honest-patient.tex"
+}

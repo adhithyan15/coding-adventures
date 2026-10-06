@@ -1,0 +1,11 @@
+{
+  "id": "MR-C192-baithak",
+  "pathSegment": "MR-PATH-192-KAAM192",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-192-KAAM192",
+      "order": 2
+    }
+  ]
+}

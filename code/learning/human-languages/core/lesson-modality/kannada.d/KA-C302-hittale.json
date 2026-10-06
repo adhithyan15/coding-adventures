@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C302-hittale",
+    "language": "kannada",
+    "chapter": 302,
+    "sequence": 14570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8355c64fdfb0c952"
+  },
+  "findings": []
+}

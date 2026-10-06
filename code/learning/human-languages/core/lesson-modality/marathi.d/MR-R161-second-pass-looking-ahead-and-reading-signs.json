@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R161-second-pass-looking-ahead-and-reading-signs",
+    "language": "marathi",
+    "chapter": 161,
+    "sequence": 7730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:774ee7d5cc7de981"
+  },
+  "findings": []
+}

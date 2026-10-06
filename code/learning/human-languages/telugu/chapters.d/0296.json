@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "Hard, Special, Convenient, Useful, Local",
+  "label": "ch:te-hard-special-convenient-useful-local",
+  "canDo": "I can say hard, special, convenient, useful and local.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C296-sthanika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can say hard, special, convenient, useful and local.",
+    "assesses": [
+      "TE-LEX-C296-GUNAM296-03",
+      "TE-LEX-C296-GUNAM296-04",
+      "TE-LEX-C296-GUNAM296-05"
+    ]
+  }
+}

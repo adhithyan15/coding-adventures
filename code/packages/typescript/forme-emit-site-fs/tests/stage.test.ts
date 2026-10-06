@@ -12,7 +12,7 @@ import {
   type RenderedPage,
 } from "@coding-adventures/forme-types";
 import { filesystemCache } from "@coding-adventures/forme-cache";
-import { computeRevisionId } from "@coding-adventures/forme-identity";
+import { computeRevisionId, createOutputProvenance } from "@coding-adventures/forme-identity";
 import {
   createCancellationTokenSource,
   frozenClock,
@@ -44,12 +44,14 @@ function asset(
   id: LogicalId = ID_A,
   bytes: Uint8Array = new Uint8Array([1, 2, 3]),
   sourcePath = "images/cat.png",
+  role: Asset["role"] = "image",
+  mimeType = "image/png",
 ): Asset {
   return {
     identity: id,
     revision: "blake2b:00" as never,
-    role: "image",
-    mimeType: "image/png",
+    role,
+    mimeType,
     bytes,
     byteLength: bytes.byteLength,
     dimensions: null,
@@ -59,16 +61,29 @@ function asset(
   };
 }
 
+function moduleUse(island: string, id: LogicalId, bytes: Uint8Array) {
+  return {
+    island: island as never,
+    asset: id,
+    packageName: "@example/island",
+    export: "enhance",
+    sha256: sha256Hex(bytes),
+  };
+}
+
 function page(options: {
   route?: string;
   html?: string;
   usedAssets?: readonly LogicalId[];
+  usedIslands?: readonly RenderedPage["usedIslands"][number][];
+  islandModules?: NonNullable<RenderedPage["islandModules"]>;
 } = {}): RenderedPage {
   return {
     route: options.route ?? "/post/index.html",
     html: options.html ?? `<img src="forme-asset:${ID_A}?width=400#hero">`,
     usedStyle: [],
-    usedIslands: [],
+    usedIslands: options.usedIslands ?? [],
+    islandModules: options.islandModules ?? [],
     usedAssets: options.usedAssets ?? [ID_A],
     meta: {
       title: "Post",
@@ -78,7 +93,10 @@ function page(options: {
       structured: [],
       extra: {},
     },
-    source: "01952c0d-7e63-7000-8000-000000000001" as LogicalId,
+    provenance: createOutputProvenance([{
+        identity: "01952c0d-7e63-7000-8000-000000000001" as LogicalId,
+        revision: `blake2b:${"a".repeat(64)}` as never,
+      }]),
   };
 }
 
@@ -119,6 +137,96 @@ describe("emitSiteFs contract", () => {
 });
 
 describe("fingerprinted static-site emission", () => {
+  it("rejects a legacy source-only page before writing output", async () => {
+    const { provenance: _provenance, ...legacy } = page({ route: "/legacy.html" });
+    await expect(runSite([{
+      ...legacy,
+      source: "01952c0d-7e63-7000-8000-000000000099",
+    } as never], [])).rejects.toThrow(/page.provenance is required/);
+    await expect(readFile(join(outDir, "legacy.html"))).rejects.toThrow();
+  });
+
+  it("emits only selected island scripts and preserves zero-JavaScript pages", async () => {
+    const selected = ID_A;
+    const unused = ID_B;
+    const selectedBytes = new TextEncoder().encode("export function enhanceCounter() {}\n");
+    const unusedBytes = new TextEncoder().encode("export function unused() {}\n");
+    const interactive = page({
+      route: "/interactive.html",
+      html: "<p>fallback</p></body>",
+      usedAssets: [selected],
+      usedIslands: ["counter" as never],
+      islandModules: [moduleUse("counter", selected, selectedBytes)],
+    });
+    const staticPage = page({
+      route: "/static.html",
+      html: "<p>static</p></body>",
+      usedAssets: [],
+    });
+    const artifact = await runSite(
+      [interactive, staticPage],
+      [
+        asset(selected, selectedBytes, "islands/counter.js", "script", "text/javascript"),
+        asset(unused, unusedBytes, "islands/unused.js", "script", "text/javascript"),
+      ],
+    );
+
+    const interactiveHtml = new TextDecoder().decode(artifact.files["interactive.html"]!);
+    const staticHtml = new TextDecoder().decode(artifact.files["static.html"]!);
+    expect(interactiveHtml).toMatch(/<script type="module" src="\/assets\/counter\.[0-9a-f]{64}\.js"><\/script><\/body>/);
+    expect(staticHtml).not.toContain("<script");
+    expect(Object.keys(artifact.files).some(path => path.includes("unused."))).toBe(false);
+    expect(artifact.manifest.assets.map(entry => entry.id)).toEqual([selected]);
+    expect(artifact.manifest.routes).toMatchObject([
+      { pattern: "/interactive.html", islands: ["counter"] },
+      { pattern: "/static.html", islands: [] },
+    ]);
+  });
+
+  it("rejects mismatched island-module usage and non-script module assets", async () => {
+    const mismatched = page({
+      usedAssets: [ID_A],
+      usedIslands: ["counter" as never],
+      islandModules: [],
+    });
+    await expect(runSite([mismatched], [asset()])).rejects.toThrow(/islandModules must match usedIslands/);
+
+    const wrongRole = page({
+      usedAssets: [ID_A],
+      usedIslands: ["counter" as never],
+      islandModules: [moduleUse("counter", ID_A, new Uint8Array([1, 2, 3]))],
+    });
+    await expect(runSite([wrongRole], [asset()])).rejects.toThrow(/must reference a script asset/);
+  });
+
+  it("deduplicates one selected module asset used by multiple island IDs", async () => {
+    const bytes = new TextEncoder().encode("export const enhance = () => {};\n");
+    const artifact = await runSite([page({
+      html: "<body></body>",
+      usedAssets: [ID_A],
+      usedIslands: ["first" as never, "second" as never],
+      islandModules: [
+        moduleUse("first", ID_A, bytes),
+        moduleUse("second", ID_A, bytes),
+      ],
+    })], [asset(ID_A, bytes, "islands/shared.js", "script", "application/javascript")]);
+    const html = new TextDecoder().decode(artifact.files["post/index.html"]!);
+    expect(html.match(/<script /g)).toHaveLength(1);
+    expect(artifact.manifest.routes[0]!.islands).toEqual(["first", "second"]);
+  });
+
+  it("rejects executable bytes that differ from the reviewed digest", async () => {
+    const reviewed = new Uint8Array([1, 2, 3]);
+    const actual = new Uint8Array([1, 2, 4]);
+    await expect(runSite([page({
+      html: "<body></body>",
+      usedAssets: [ID_A],
+      usedIslands: ["counter" as never],
+      islandModules: [moduleUse("counter", ID_A, reviewed)],
+    })], [asset(ID_A, actual, "islands/counter.js", "script", "text/javascript")]))
+      .rejects.toThrow(/do not match the reviewed SHA-256/);
+  });
+
   it("rewrites placeholders, preserves suffixes, writes bytes, and records assets", async () => {
     const bytes = new Uint8Array([0x89, 0x50, 0x4e, 0x47]);
     const digest = createHash("sha256").update(bytes).digest("hex");
@@ -208,9 +316,43 @@ describe("fingerprinted static-site emission", () => {
     );
     expect(second.manifest.buildId).toBe(first.manifest.buildId);
   });
+
+  it("preserves prototype-named routes as own artifact files", async () => {
+    const artifact = await runSite([page({ route: "/__proto__", html: "safe", usedAssets: [] })], []);
+    expect(Object.hasOwn(artifact.files, "__proto__")).toBe(true);
+    expect(new TextDecoder().decode(artifact.files["__proto__"]!)).toBe("safe");
+  });
 });
 
 describe("validation and safety", () => {
+  it("bounds retained page bytes and aggregate usage before snapshot copies", async () => {
+    await expect(runSite([page({
+      html: "x".repeat(16 * 1024 * 1024 + 1),
+      usedAssets: [],
+    })], [])).rejects.toThrow(/UTF-8 limit/);
+
+    const twelveMiB = "y".repeat(12 * 1024 * 1024);
+    await expect(runSite([
+      page({ route: "/a.html", html: twelveMiB, usedAssets: [] }),
+      page({ route: "/b.html", html: twelveMiB, usedAssets: [] }),
+      page({ route: "/c.html", html: twelveMiB, usedAssets: [] }),
+    ], [])).rejects.toThrow(/site page content.*UTF-8 limit/);
+
+    const manyUses = Array<LogicalId>(32_769).fill(ID_A);
+    await expect(runSite([
+      page({ route: "/a.html", html: "a", usedAssets: manyUses }),
+      page({ route: "/b.html", html: "b", usedAssets: manyUses }),
+    ], [])).rejects.toThrow(/site page usage.*entry limit/);
+
+    await expect(runSite([page({
+      usedAssets: [],
+      islandModules: [{
+        ...moduleUse("Search", ID_A, new Uint8Array([1])),
+        packageName: `@scope/${"a".repeat(208)}`,
+      }] as never,
+    })], [])).rejects.toThrow(/reviewed island-module binding/);
+  });
+
   it("validates config, source paths, sha256 helpers, and byte lengths", async () => {
     expect(fingerprintedAssetFilename("images/cat.png", "a".repeat(64)))
       .toBe(`cat.${"a".repeat(64)}.png`);
@@ -237,6 +379,43 @@ describe("validation and safety", () => {
     await expect(runSite([
       page({ route: `/assets/cat.${digest}.png`, html: "page", usedAssets: [] }),
     ], [asset()])).rejects.toThrow(/collides with output/);
+    await expect(runSite([], [
+      asset(ID_A, new Uint8Array([1]), "same.js", "script", "text/javascript"),
+      asset(ID_B, new Uint8Array([1]), "same.js", "binary", "text/javascript"),
+    ])).rejects.toThrow(/incompatible asset path collision/);
+    await expect(runSite([], [
+      asset(ID_A, new Uint8Array([1]), "foo.js", "script", "text/javascript"),
+      asset(ID_B, new Uint8Array([1]), "FOO.js", "script", "text/javascript"),
+    ])).rejects.toThrow(/portable asset path collision/);
+
+    const scriptBytes = new Uint8Array([7]);
+    const scriptPath = `assets/foo.${sha256Hex(scriptBytes)}.js`;
+    await expect(runSite([page({
+      route: `/${scriptPath.replace("assets/", "Assets/")}`,
+      html: "<body></body>",
+      usedAssets: [ID_A],
+      usedIslands: ["counter" as never],
+      islandModules: [moduleUse("counter", ID_A, scriptBytes)],
+    })], [asset(ID_A, scriptBytes, "foo.js", "script", "text/javascript")]))
+      .rejects.toThrow(/collides with output/);
+    await expect(runSite([page({
+      route: `/${scriptPath}.`,
+      html: "page",
+      usedAssets: [],
+    })], [asset(ID_A, scriptBytes, "foo.js", "script", "text/javascript")]))
+      .rejects.toThrow(/not portable across filesystems/);
+  });
+
+  it("snapshots bounded page usage without invoking accessors", async () => {
+    const hostile = page({ usedAssets: [] }) as unknown as Record<string, unknown>;
+    let reads = 0;
+    Object.defineProperty(hostile, "usedAssets", { enumerable: true, get: () => { reads++; return []; } });
+    await expect(runSite([hostile as never], [])).rejects.toThrow(/must not be an accessor/);
+    expect(reads).toBe(0);
+
+    const tooMany = Array.from({ length: 257 }, (_, index) => `island_${index}` as never);
+    await expect(runSite([page({ usedAssets: [], usedIslands: tooMany })], []))
+      .rejects.toThrow(/at most 256 entries/);
   });
 
   it("rejects unsafe or malformed replay artifacts", async () => {
@@ -255,6 +434,11 @@ describe("validation and safety", () => {
       ...artifact,
       variant: { kind: "pdf", pageCount: 1 },
     }, { outDir }, context())).rejects.toThrow(/dist-tree DeployArtifact/);
+    await expect(emitSiteFs.replay!({
+      ...artifact,
+      files: { Foo: new Uint8Array([1]), foo: new Uint8Array([2]) },
+    }, { outDir }, context())).rejects.toThrow(/collide on portable filesystems/);
+    await expect(readFile(join(outDir, "Foo"))).rejects.toThrow();
   });
 
   it("rejects directory symlinks beneath outDir during replay", async () => {
@@ -299,6 +483,17 @@ describe("validation and safety", () => {
     expect(rewriteAssetPlaceholders(original, new Map([[ID_A, "/assets/a.svg"]])))
       .toBe("prefix /assets/a.svg#icon suffix");
   });
+
+  it("rewrites a large declared asset set in one HTML pass", () => {
+    const ids = Array.from({ length: 4_096 }, (_, index) =>
+      `01952c0d-7e63-7000-8000-${index.toString(16).padStart(12, "0")}` as LogicalId);
+    const paths = new Map(ids.map(id => [id, `/assets/${id}.bin`] as const));
+    const original = page({
+      usedAssets: ids,
+      html: `${"ordinary text ".repeat(10_000)}forme-asset:${ids.at(-1)!}`,
+    });
+    expect(rewriteAssetPlaceholders(original, paths)).toContain(`/assets/${ids.at(-1)!}.bin`);
+  });
 });
 
 describe("orchestrator end-to-end", () => {
@@ -306,7 +501,7 @@ describe("orchestrator end-to-end", () => {
     const pages = defineStage({
       name: "@test/rendered-pages",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "fixture pages",
       consumes: Kinds.Void,
       produces: streamOf(Kinds.RenderedPage),
@@ -317,7 +512,7 @@ describe("orchestrator end-to-end", () => {
     const assets = defineStage({
       name: "@test/assets",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "fixture assets",
       consumes: Kinds.Void,
       produces: streamOf(Kinds.Asset),
@@ -359,6 +554,102 @@ describe("orchestrator end-to-end", () => {
       .toMatch(/src="\/assets\/cat\.[0-9a-f]{64}\.png\?width=400#hero"/);
   });
 
+  it("drains sibling page and asset streams without a two-window fan-in deadlock", async () => {
+    const count = 256;
+    const source = defineStage({
+      name: "@test/shared-content",
+      version: "0.1.0",
+      apiVersion: 2,
+      description: "shared source large enough to fill both bounded page windows",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.ContentSource),
+      capabilities: [],
+      configSchema: null,
+      async *run() {
+        for (let index = 0; index < count; index++) {
+          const path = `post-${index}.md`;
+          yield {
+            path,
+            bytes: new TextEncoder().encode(path),
+            mimeType: "text/markdown",
+            identity: ID_A,
+            revision: "blake2b:00",
+            providerMeta: {},
+          } as never;
+        }
+      },
+    });
+    const pages = defineStage({
+      name: "@test/shared-pages",
+      version: "0.1.0",
+      apiVersion: 2,
+      description: "renders every shared source without assets",
+      consumes: streamOf(Kinds.ContentSource),
+      produces: streamOf(Kinds.RenderedPage),
+      capabilities: [],
+      configSchema: null,
+      async *run(input) {
+        let index = 0;
+        for await (const _item of input as AsyncIterable<unknown>) {
+          yield page({ route: `/post-${index++}.html`, html: "page", usedAssets: [] });
+        }
+      },
+    });
+    const assets = defineStage({
+      name: "@test/shared-assets",
+      version: "0.1.0",
+      apiVersion: 2,
+      description: "drains the same shared source while producing no assets",
+      consumes: streamOf(Kinds.ContentSource),
+      produces: streamOf(Kinds.Asset),
+      capabilities: [],
+      configSchema: null,
+      async *run(input) {
+        for await (const _item of input as AsyncIterable<unknown>) {
+          // This fixture intentionally contains no asset references.
+        }
+      },
+    });
+    const orchestrator = createOrchestrator({ logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline({
+      name: "bounded-fan-in",
+      settings: {
+        storageRoot: ".",
+        cacheDir: null,
+        reproducibleBuild: true,
+        maxConcurrency: 4,
+        logLevel: "error",
+        bestEffort: false,
+        deadlineMs: null,
+      },
+      stages: [
+        { id: "source", stage: source },
+        { id: "pages", stage: pages },
+        { id: "assets", stage: assets },
+        { id: "site", stage: emitSiteFs, config: { outDir } },
+      ],
+      wires: [
+        { from: { id: "source" }, to: { id: "pages" } },
+        { from: { id: "source" }, to: { id: "assets" } },
+        { from: { id: "pages" }, to: { id: "site" } },
+        { from: { id: "assets" }, to: { id: "site", port: "assets" } },
+      ],
+      outputs: [{ fromInstance: "site", name: "site" }],
+    } as never);
+
+    const result = await Promise.race([
+      orchestrator.runOnce(pipeline),
+      new Promise<never>((_resolve, reject) => setTimeout(
+        () => reject(new Error("page/asset fan-in did not settle")),
+        10_000,
+      )),
+    ]);
+    await orchestrator.dispose();
+
+    expect(result.outcome).toBe("success");
+    expect((result.outputs.site as DeployArtifact).manifest.routes).toHaveLength(count);
+  }, 15_000);
+
   it("restores a deleted site from persistent checkpoints without rerunning producers", async () => {
     const cacheRoot = await mkdtemp(join(tmpdir(), "forme-emit-site-cache-"));
     roots.push(cacheRoot);
@@ -374,7 +665,7 @@ describe("orchestrator end-to-end", () => {
     }) => defineStage({
       name: options.name,
       version: "1.0.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "fixed observed fixture source",
       consumes: Kinds.Void,
       produces: streamOf(options.kind),

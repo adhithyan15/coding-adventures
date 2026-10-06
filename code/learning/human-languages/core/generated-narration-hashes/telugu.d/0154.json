@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:e83f76c337095101",
+  "lessonIds": [
+    "TE-C154-itivala",
+    "TE-C154-ippatike",
+    "TE-C154-gata",
+    "TE-C154-okasari",
+    "TE-C154-gadupu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch154.txt",
+  "json": "telugu/narration/ch154.json",
+  "textHash": "fnv1a64:814fbb67cd6a029d",
+  "jsonHash": "fnv1a64:14129fc09cd31e50",
+  "findings": []
+}

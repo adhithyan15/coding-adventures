@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:47f3f3f7c9810554",
+  "lessonIds": [
+    "KA-C290-ardha",
+    "KA-C290-purti",
+    "KA-C290-kasta",
+    "KA-C290-sulabha",
+    "KA-C290-mukhya"
+  ],
+  "tex": "kannada/book/chapters/ch290-half-whole-difficult-easy-important.tex"
+}

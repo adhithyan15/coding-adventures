@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Success, Failure, Experience, Choice, Decision",
+  "label": "ch:pt-success-failure-experience-choice-decision",
+  "canDo": "I can say success, failure, experience, a choice and a decision.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C247-decisao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say success, failure, experience, a choice and a decision.",
+    "assesses": [
+      "PT-LEX-C247-COISAS247-03",
+      "PT-LEX-C247-COISAS247-04",
+      "PT-LEX-C247-COISAS247-05"
+    ]
+  }
+}

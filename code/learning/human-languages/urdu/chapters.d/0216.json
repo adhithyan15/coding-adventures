@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Pulse, Breath, Sleep, Dream, Weakness",
+  "label": "ch:ur-pulse-breath-sleep-dream-weakness",
+  "canDo": "I can say a pulse, breath, sleep, a dream and weakness.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C216-kamzori",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say a pulse, breath, sleep, a dream and weakness.",
+    "assesses": [
+      "UR-LEX-C216-SEHAT216-03",
+      "UR-LEX-C216-SEHAT216-04",
+      "UR-LEX-C216-SEHAT216-05"
+    ]
+  }
+}

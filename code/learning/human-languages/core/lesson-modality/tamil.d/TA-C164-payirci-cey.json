@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C164-payirci-cey",
+    "language": "tamil",
+    "chapter": 164,
+    "sequence": 7710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aad16cc1b5e5fc77"
+  },
+  "findings": []
+}

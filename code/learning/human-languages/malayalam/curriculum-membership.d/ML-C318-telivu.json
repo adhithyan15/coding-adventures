@@ -1,0 +1,11 @@
+{
+  "id": "ML-C318-telivu",
+  "pathSegment": "ML-PATH-318-KARANAM318",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-318-KARANAM318",
+      "order": 1
+    }
+  ]
+}

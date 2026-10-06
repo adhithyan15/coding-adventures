@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:597049237c5edf2b",
+  "lessonIds": [
+    "RU-C213-granitsa",
+    "RU-C213-tamozhnya",
+    "RU-C213-stolitsa",
+    "RU-C213-kvartira",
+    "RU-C213-etazh"
+  ],
+  "tex": "russian/book/chapters/ch213-border-customs-capital-flat-floor.tex"
+}

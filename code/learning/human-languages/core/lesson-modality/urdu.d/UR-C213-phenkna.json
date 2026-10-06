@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C213-phenkna",
+    "language": "urdu",
+    "chapter": 213,
+    "sequence": 12580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c041e4494832d86"
+  },
+  "findings": []
+}

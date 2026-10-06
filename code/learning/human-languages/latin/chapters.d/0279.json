@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "Cherry, Plum, Cabbage, Leek, Porridge",
+  "label": "ch:la-cherry-plum-cabbage-leek-porridge",
+  "canDo": "I can say a cherry, a plum, cabbage, a leek and porridge.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C279-puls",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can say a cherry, a plum, cabbage, a leek and porridge.",
+    "assesses": [
+      "LA-LEX-C279-RES279-03",
+      "LA-LEX-C279-RES279-04",
+      "LA-LEX-C279-RES279-05"
+    ]
+  }
+}

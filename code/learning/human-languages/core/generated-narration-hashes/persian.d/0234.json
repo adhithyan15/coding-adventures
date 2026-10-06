@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:bd5f141500e01867",
+  "lessonIds": [
+    "FA-C234-ravesh",
+    "FA-C234-azadi",
+    "FA-C234-jang",
+    "FA-C234-zendegi",
+    "FA-C234-qesmat",
+    "FA-R234-first-pass-words-from-chapters-226-229",
+    "FA-R234-second-pass-words-from-chapters-230-234"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch234.txt",
+  "json": "persian/narration/ch234.json",
+  "textHash": "fnv1a64:1a1df71a4c40d2ad",
+  "jsonHash": "fnv1a64:1c8855aaa1ce85de",
+  "findings": []
+}

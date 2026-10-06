@@ -1,0 +1,11 @@
+{
+  "id": "IT-C160-villaggio",
+  "pathSegment": "IT-PATH-160-COSE160",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-160-COSE160",
+      "order": 3
+    }
+  ]
+}

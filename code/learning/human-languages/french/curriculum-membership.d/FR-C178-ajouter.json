@@ -1,0 +1,11 @@
+{
+  "id": "FR-C178-ajouter",
+  "pathSegment": "FR-PATH-178-VERBES178",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-178-VERBES178",
+      "order": 2
+    }
+  ]
+}

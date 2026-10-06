@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:c2025919f77dba1b",
+  "lessonIds": [
+    "KA-C191-citra",
+    "KA-C191-kride",
+    "KA-C191-pandya",
+    "KA-C191-tanda",
+    "KA-C191-kriket"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch191.txt",
+  "json": "kannada/narration/ch191.json",
+  "textHash": "fnv1a64:7fc3d04a7629cf65",
+  "jsonHash": "fnv1a64:b9b5d41cf4061fd4",
+  "findings": []
+}

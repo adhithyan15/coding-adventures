@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:3828eb151678c3b4",
+  "lessonIds": [
+    "MR-C262-tapman",
+    "MR-C262-masi",
+    "MR-C262-samaj",
+    "MR-C262-sarkar",
+    "MR-C262-kayda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch262.txt",
+  "json": "marathi/narration/ch262.json",
+  "textHash": "fnv1a64:17dad7fb9a54ec56",
+  "jsonHash": "fnv1a64:c14dbd9ee5cd0f8b",
+  "findings": []
+}

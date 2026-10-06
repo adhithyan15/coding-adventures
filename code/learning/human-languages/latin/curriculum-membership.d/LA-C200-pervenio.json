@@ -1,0 +1,11 @@
+{
+  "id": "LA-C200-pervenio",
+  "pathSegment": "LA-PATH-200-ACT200",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-200-ACT200",
+      "order": 1
+    }
+  ]
+}

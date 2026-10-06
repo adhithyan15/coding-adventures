@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Tasty, Useless, Unusual, Fake, Truthful",
+  "label": "ch:ur-tasty-useless-unusual-fake-truthful",
+  "canDo": "I can say tasty, useless, unusual, fake and truthful.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C222-sachcha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say tasty, useless, unusual, fake and truthful.",
+    "assesses": [
+      "UR-LEX-C222-SIFAT222-03",
+      "UR-LEX-C222-SIFAT222-04",
+      "UR-LEX-C222-SIFAT222-05"
+    ]
+  }
+}

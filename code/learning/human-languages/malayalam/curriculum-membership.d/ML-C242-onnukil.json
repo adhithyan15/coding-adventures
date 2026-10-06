@@ -1,0 +1,11 @@
+{
+  "id": "ML-C242-onnukil",
+  "pathSegment": "ML-PATH-242-KARANAM242",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-242-KARANAM242",
+      "order": 1
+    }
+  ]
+}

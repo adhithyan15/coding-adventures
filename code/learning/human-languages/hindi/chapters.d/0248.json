@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Only, About, Later, Soon, Suddenly",
+  "label": "ch:hi-only-about-later-soon-suddenly",
+  "canDo": "I can say only, about, later, soon and suddenly.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C248-acanak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say only, about, later, soon and suddenly.",
+    "assesses": [
+      "HI-LEX-C248-THG248-03",
+      "HI-LEX-C248-THG248-04",
+      "HI-LEX-C248-THG248-05"
+    ]
+  }
+}

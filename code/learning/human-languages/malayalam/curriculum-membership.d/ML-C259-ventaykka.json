@@ -1,0 +1,11 @@
+{
+  "id": "ML-C259-ventaykka",
+  "pathSegment": "ML-PATH-259-VASTU259",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-259-VASTU259",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C253-atikari",
+  "pathSegment": "TA-PATH-253-VELAI253",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-253-VELAI253",
+      "order": 1
+    }
+  ]
+}

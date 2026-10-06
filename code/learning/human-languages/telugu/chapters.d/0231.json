@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Fan, Pliers, Ladder, Glue, Ruler",
+  "label": "ch:te-fan-pliers-ladder-glue-ruler",
+  "canDo": "I can say a fan, pliers, a ladder, glue and a ruler.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C231-kolabadda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say a fan, pliers, a ladder, glue and a ruler.",
+    "assesses": [
+      "TE-LEX-C231-VASTUVU231-03",
+      "TE-LEX-C231-VASTUVU231-04",
+      "TE-LEX-C231-VASTUVU231-05"
+    ]
+  }
+}

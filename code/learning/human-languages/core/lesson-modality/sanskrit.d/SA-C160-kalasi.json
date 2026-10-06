@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C160-kalasi",
+    "language": "sanskrit",
+    "chapter": 160,
+    "sequence": 8480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c2d60a0f938fab3"
+  },
+  "findings": []
+}

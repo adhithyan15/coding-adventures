@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:0864f857af118280",
+  "lessonIds": [
+    "RU-C189-chuzhoy",
+    "RU-C189-rodnoy",
+    "RU-C189-mestnyy",
+    "RU-C189-inostrannyy",
+    "RU-C189-russkiy"
+  ],
+  "tex": "russian/book/chapters/ch189-someone-else-s-native-local-foreign-russian.tex"
+}

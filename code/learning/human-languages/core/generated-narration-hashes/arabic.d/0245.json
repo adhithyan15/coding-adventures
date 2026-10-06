@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:2f69bbcd43bc69d7",
+  "lessonIds": [
+    "AR-C245-qilada",
+    "AR-C245-maqas",
+    "AR-C245-hatif",
+    "AR-C245-jawwal",
+    "AR-C245-shasha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch245.txt",
+  "json": "arabic/narration/ch245.json",
+  "textHash": "fnv1a64:fe82b8e17f1f92d0",
+  "jsonHash": "fnv1a64:a49dedcf38307260",
+  "findings": []
+}

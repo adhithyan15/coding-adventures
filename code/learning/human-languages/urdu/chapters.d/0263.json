@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "Baker, Sweet-maker, Grocer, Fruit seller, Greengrocer",
+  "label": "ch:ur-baker-sweet-maker-grocer-fruit-seller-greengrocer",
+  "canDo": "I can say a baker, a sweet-maker, a grocer, a fruit seller and a greengrocer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R263-second-pass-words-from-chapters-260-263",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can say a baker, a sweet-maker, a grocer, a fruit seller and a greengrocer.",
+    "assesses": [
+      "UR-LEX-C263-KAM263-03",
+      "UR-LEX-C263-KAM263-04",
+      "UR-LEX-C263-KAM263-05"
+    ]
+  }
+}

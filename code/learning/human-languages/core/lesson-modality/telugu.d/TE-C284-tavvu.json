@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C284-tavvu",
+    "language": "telugu",
+    "chapter": 284,
+    "sequence": 13500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:603d2c6f34a71ca2"
+  },
+  "findings": []
+}

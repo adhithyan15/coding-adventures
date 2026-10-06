@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R277-second-pass-words-from-chapters-275-277",
+    "language": "telugu",
+    "chapter": 277,
+    "sequence": 13180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e369d0a80292d76"
+  },
+  "findings": []
+}

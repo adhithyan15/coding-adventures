@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "To earn, To look after, To rear, To water, To print",
+  "label": "ch:bn-to-earn-to-look-after-to-rear-to-water-to-print",
+  "canDo": "I can say to earn, to look after, to rear, to water and to print.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C180-chhapa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say to earn, to look after, to rear, to water and to print.",
+    "assesses": [
+      "BN-LEX-C180-ACT180-03",
+      "BN-LEX-C180-ACT180-04",
+      "BN-LEX-C180-ACT180-05"
+    ]
+  }
+}

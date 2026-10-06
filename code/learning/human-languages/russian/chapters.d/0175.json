@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "To pull, To lift, To switch on, To switch off, To light",
+  "label": "ch:ru-to-pull-to-lift-to-switch-on-to-switch-off-to-light",
+  "canDo": "I can say to pull, to lift, to switch on, to switch off and to light.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C175-zazhigat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say to pull, to lift, to switch on, to switch off and to light.",
+    "assesses": [
+      "RU-LEX-C175-ACT175-03",
+      "RU-LEX-C175-ACT175-04",
+      "RU-LEX-C175-ACT175-05"
+    ]
+  }
+}

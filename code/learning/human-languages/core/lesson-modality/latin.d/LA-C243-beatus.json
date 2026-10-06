@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C243-beatus",
+    "language": "latin",
+    "chapter": 243,
+    "sequence": 12710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e32bcbbcee299a4"
+  },
+  "findings": []
+}

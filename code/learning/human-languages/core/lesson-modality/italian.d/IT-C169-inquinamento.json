@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C169-inquinamento",
+    "language": "italian",
+    "chapter": 169,
+    "sequence": 9120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d690072e8ed7117"
+  },
+  "findings": []
+}

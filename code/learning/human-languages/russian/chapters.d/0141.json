@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "To meet, To get acquainted, To invite, To thank, To apologise",
+  "label": "ch:ru-to-meet-to-get-acquainted-to-invite-to-thank-to-apologise",
+  "canDo": "I can say to meet, to get acquainted, to invite, to thank and to apologise.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C141-izvinyatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: I can say to meet, to get acquainted, to invite, to thank and to apologise.",
+    "assesses": [
+      "RU-LEX-C141-ACT141-03",
+      "RU-LEX-C141-ACT141-04",
+      "RU-LEX-C141-ACT141-05"
+    ]
+  }
+}

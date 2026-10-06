@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "T-shirt, Stockings, Belt, Pyjamas, Pocket",
+  "label": "ch:it-t-shirt-stockings-belt-pyjamas-pocket",
+  "canDo": "I can say a T-shirt, stockings, a belt, pyjamas and a pocket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C220-tasca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say a T-shirt, stockings, a belt, pyjamas and a pocket.",
+    "assesses": [
+      "IT-LEX-C220-COSE220-03",
+      "IT-LEX-C220-COSE220-04",
+      "IT-LEX-C220-COSE220-05"
+    ]
+  }
+}

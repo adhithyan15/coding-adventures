@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-160-PATI160",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-160-PATI160"
+  ],
+  "after": []
+}

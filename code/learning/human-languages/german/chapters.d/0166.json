@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "A reason, A solution, Experience, A possibility, The afternoon",
+  "label": "ch:ge-a-reason-a-solution-experience-a-possibility-the-afternoon",
+  "canDo": "I can say a reason, a solution, experience, a possibility and the afternoon.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C166-nachmittag",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say a reason, a solution, experience, a possibility and the afternoon.",
+    "assesses": [
+      "GE-LEX-C166-THING166-03",
+      "GE-LEX-C166-THING166-04",
+      "GE-LEX-C166-THING166-05"
+    ]
+  }
+}

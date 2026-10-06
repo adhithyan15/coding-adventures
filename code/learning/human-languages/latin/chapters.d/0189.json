@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Kin, Uncle, Aunt, Truth, Lie",
+  "label": "ch:la-blood-relative-mother-s-brother-mother-s-sister-truth-lie",
+  "canDo": "I can say a blood relative, a mother's brother, a mother's sister, truth and a lie.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C189-mendacium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say a blood relative, a mother's brother, a mother's sister, truth and a lie.",
+    "assesses": [
+      "LA-LEX-C189-RES189-03",
+      "LA-LEX-C189-RES189-04",
+      "LA-LEX-C189-RES189-05"
+    ]
+  }
+}

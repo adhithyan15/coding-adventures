@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Dative Case and Dative Subjects",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bfa1250ec5a2b2db",
+  "sourceHash": "fnv1a64:892ca81c335d871e",
   "lessons": [
     {
       "id": "TA-C06-dative-ukku",
@@ -915,7 +915,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2a1e1f702ce9cc6c",
+      "sourceHash": "fnv1a64:96f060b4e51d9b98",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -987,7 +987,7 @@
             },
             {
               "kind": "speech",
-              "text": "a separate straight vertical on the right, down to the baseline."
+              "text": "a straight vertical on the right, hanging from the bar down to the baseline."
             },
             {
               "kind": "speech",
@@ -1022,15 +1022,15 @@
             },
             {
               "kind": "speech",
-              "text": "6. without lifting, carry the top bar to the right edge — then lift once."
+              "text": "6. without lifting, carry the top bar to the right edge."
             },
             {
               "kind": "speech",
-              "text": "7. set the pen at the top of the separate right upright and draw straight down — and only now lift."
+              "text": "7. without lifting, come back along the bar to the right upright and draw it straight down — and only now lift."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 1. The pen comes up 1 time and no more."
+              "text": "Pen lifts: 0. The pen never leaves the paper."
             },
             {
               "kind": "speech",
@@ -1091,7 +1091,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does the tongue go for ண (ṇa)? (Curled back, to the roof of the mouth.) How many pen lifts? (One — the body, then the upright.)"
+              "text": "Where does the tongue go for ண (ṇa)? (Curled back, to the roof of the mouth.) How many pen lifts? (None — the bar runs back into the upright.)"
             }
           ]
         }

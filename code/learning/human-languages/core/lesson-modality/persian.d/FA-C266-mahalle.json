@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C266-mahalle",
+    "language": "persian",
+    "chapter": 266,
+    "sequence": 13750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5519daf551834613"
+  },
+  "findings": []
+}

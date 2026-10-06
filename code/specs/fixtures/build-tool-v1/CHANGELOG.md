@@ -1,5 +1,43 @@
 # Changelog
 
+## 2026-10-05
+
+- Added eight process-free before/after source-collection and hashing/cache
+  cases for two independent Swift consumers of one exact Rust workspace
+  manifest. Both source and package digests change with only that shared input;
+  dependency digests stay fixed and the old successful cache records miss.
+  The closed corpus now contains 175 cases, with 14 repository-boundary
+  source-collection cases. No registry, adapter, or host authority changed.
+- Added a digest-pinned, process-free diff-selection case proving one exact
+  Rust workspace manifest change selects both declared Swift consumers but not
+  an unregistered peer, before dependent and prerequisite closure. The neutral
+  corpus now contains 167 cases: eight graph and twelve diff-selection cases.
+- Advanced the shared runner and native Go, Python, Perl, Java, Kotlin, Dart,
+  and OCaml exact-case rosters together; no production host authority changed.
+
+## 2026-09-30
+
+- Registered `forme-plugin-runner-conformance` as a TypeScript shared-config
+  consumer, regenerated the Swift and C# projections, and refreshed the
+  canonical repository-boundary digest to
+  `3370c811b51962c87757b01e98ad3db5206cad2c75e74c6853bf5209548bd18e`.
+- Added a closed `orphan_package_root_snapshot`, four independent validation
+  cases, package-root-specific diagnostics, and exact 8,192-root,
+  16,384-BUILD, and 2,000,000-byte ceilings without changing the legacy Cargo
+  snapshot limits. The process-free corpus now contains 166 cases.
+- Registered the merged `forme-plugin-installer-core` TypeScript base-config
+  consumer and refreshed the canonical repository-boundary digest to
+  `af6ae391a86167eb453bb4f5c2bed97cfb885039ce3ca0fce6cf2984ee5b4be7`.
+- Removed ten Haskell packages with local `cabal.project` files from the shared
+  workspace source boundary. Refreshed its digest in ten conformance cases and
+  the canonical summary test, which now pins 479 scopes and 482 authorizations.
+
+## 2026-09-27
+
+- Added exact lowercase `blib` to the canonical generated-directory registry,
+  preserved `Blib` and `blib-example` as source, and refreshed both source
+  modes plus the language-registry and repository-boundary digest cascades.
+
 ## 2026-09-19
 
 - Made the CI-gate match-work boundary fixtures wildcard-bounded so they still

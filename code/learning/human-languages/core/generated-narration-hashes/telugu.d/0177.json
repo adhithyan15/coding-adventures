@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:c9e0df04cabfcf38",
+  "lessonIds": [
+    "TE-C177-okavela",
+    "TE-C177-badulu",
+    "TE-C177-prakaram",
+    "TE-C177-asalu",
+    "TE-C177-edemaina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch177.txt",
+  "json": "telugu/narration/ch177.json",
+  "textHash": "fnv1a64:d76b73466f0cd4be",
+  "jsonHash": "fnv1a64:2690e1559625ff75",
+  "findings": []
+}

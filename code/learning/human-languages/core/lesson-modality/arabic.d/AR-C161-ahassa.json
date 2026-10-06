@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C161-ahassa",
+    "language": "arabic",
+    "chapter": 161,
+    "sequence": 7630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:831e241b0244bb6a"
+  },
+  "findings": []
+}

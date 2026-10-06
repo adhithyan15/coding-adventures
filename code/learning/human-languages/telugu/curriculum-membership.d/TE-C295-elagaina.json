@@ -1,0 +1,11 @@
+{
+  "id": "TE-C295-elagaina",
+  "pathSegment": "TE-PATH-295-KARANAM295",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-295-KARANAM295",
+      "order": 4
+    }
+  ]
+}

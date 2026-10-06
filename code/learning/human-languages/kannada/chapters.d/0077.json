@@ -1,16 +1,20 @@
 {
   "chapter": 77,
-  "title": "Marks on the Page",
+  "title": "Marks on the Page, Your First Question, and Timed Writing",
   "label": "ch:ka-viraama-chihne",
-  "canDo": "I can name the punctuation marks a Kannada page uses, write the three a sentence of my own needs, and recognise the rest when a notice or a form puts them in front of me.",
+  "canDo": "I can name Kannada punctuation, compose a familiar question, and complete the A1 writing paper within 20 minutes.",
   "payoff": {
-    "lesson": "KA-R77-marks-recall",
+    "lesson": "KA-W77-a1-timed-production",
     "kind": "production",
-    "summary": "From cold: name the three marks you write yourself, say where a question mark goes and how many a question gets, and name every mark in the previous chapter's reading passage.",
+    "summary": "Complete the chapter's final lesson: fill a six-field form and write a 20–30 word named-reader message within the A1 paper's 20-minute limit.",
     "assesses": [
       "KA-SCRIPT-RECOG-152",
       "KA-SCRIPT-RECOG-153",
-      "KA-SCRIPT-RECOG-154"
+      "KA-SCRIPT-RECOG-154",
+      "KA-LEX-C32-GOTTU-01",
+      "KA-GRAMMAR-C69-ASK-02",
+      "KA-LEX-C02-NANNA-HESARU-01",
+      "KA-LEX-C05-KANNADA-01"
     ],
     "note": "The chapter introduces exactly these three atoms and the payoff assesses all three, with nothing open in front of the reader."
   }

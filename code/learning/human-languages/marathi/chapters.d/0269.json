@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "Lid, Jar, Spiced lentil curry, Sprouted-bean curry, Pickle",
+  "label": "ch:mr-lid-jar-spiced-lentil-curry-sprouted-bean-curry-pickle",
+  "canDo": "I can say a lid, a jar, a spiced lentil curry, a sprouted-bean curry and a pickle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C269-lonce",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can say a lid, a jar, a spiced lentil curry, a sprouted-bean curry and a pickle.",
+    "assesses": [
+      "MR-LEX-C269-VASTU269-03",
+      "MR-LEX-C269-VASTU269-04",
+      "MR-LEX-C269-VASTU269-05"
+    ]
+  }
+}

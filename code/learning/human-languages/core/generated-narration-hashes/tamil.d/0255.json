@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:31adb423da7e6f3b",
+  "lessonIds": [
+    "TA-C255-cuvaci",
+    "TA-C255-kunamaku",
+    "TA-C255-vinku",
+    "TA-C255-eluppu",
+    "TA-C255-pal-tulakku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch255.txt",
+  "json": "tamil/narration/ch255.json",
+  "textHash": "fnv1a64:8172f1f9eb8e8585",
+  "jsonHash": "fnv1a64:14124205c31756a7",
+  "findings": []
+}

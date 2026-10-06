@@ -1,0 +1,11 @@
+{
+  "id": "IT-C228-castello",
+  "pathSegment": "IT-PATH-228-COSE228",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-228-COSE228",
+      "order": 1
+    }
+  ]
+}

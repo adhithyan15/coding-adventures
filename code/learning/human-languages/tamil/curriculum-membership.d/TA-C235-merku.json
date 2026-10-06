@@ -1,0 +1,11 @@
+{
+  "id": "TA-C235-merku",
+  "pathSegment": "TA-PATH-235-IDAM235",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-235-IDAM235",
+      "order": 4
+    }
+  ]
+}

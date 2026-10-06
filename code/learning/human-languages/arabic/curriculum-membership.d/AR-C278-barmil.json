@@ -1,0 +1,11 @@
+{
+  "id": "AR-C278-barmil",
+  "pathSegment": "AR-PATH-278-SHAY278",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-278-SHAY278",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C252-ariviyal",
+    "language": "tamil",
+    "chapter": 252,
+    "sequence": 14110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37b1a69f0b5a98bd"
+  },
+  "findings": []
+}

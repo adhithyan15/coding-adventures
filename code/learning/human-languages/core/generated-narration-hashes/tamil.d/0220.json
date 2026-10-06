@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:72a751e1ded46813",
+  "lessonIds": [
+    "TA-C220-vicaippalakai",
+    "TA-C220-kemara",
+    "TA-C220-vanoli",
+    "TA-C220-nikalcci",
+    "TA-C220-tiraippatam",
+    "TA-R220-first-pass-words-from-chapters-212-215",
+    "TA-R220-second-pass-words-from-chapters-216-220"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch220.txt",
+  "json": "tamil/narration/ch220.json",
+  "textHash": "fnv1a64:0946322bb425e797",
+  "jsonHash": "fnv1a64:189e359065193909",
+  "findings": []
+}

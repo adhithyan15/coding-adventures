@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "Fence, Pillar, Beside, On the other side, On this side",
+  "label": "ch:ka-fence-pillar-beside-on-the-other-side-on-this-side",
+  "canDo": "I can say a fence, a pillar, beside, on the other side and on this side.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-R175-second-pass-words-from-chapters-171-175",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say a fence, a pillar, beside, on the other side and on this side.",
+    "assesses": [
+      "KA-LEX-C175-STHALA175-03",
+      "KA-LEX-C175-STHALA175-04",
+      "KA-LEX-C175-STHALA175-05"
+    ]
+  }
+}

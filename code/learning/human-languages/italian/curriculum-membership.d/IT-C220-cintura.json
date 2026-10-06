@@ -1,0 +1,11 @@
+{
+  "id": "IT-C220-cintura",
+  "pathSegment": "IT-PATH-220-COSE220",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-220-COSE220",
+      "order": 2
+    }
+  ]
+}

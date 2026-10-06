@@ -1,0 +1,11 @@
+{
+  "id": "HI-C238-cipcipa",
+  "pathSegment": "HI-PATH-238-QUAL238",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-238-QUAL238",
+      "order": 3
+    }
+  ]
+}

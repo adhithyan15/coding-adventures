@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:9058a1cc6351d9ec",
+  "lessonIds": [
+    "FR-C231-retour",
+    "FR-C231-arrivee",
+    "FR-C231-depart",
+    "FR-C231-destination",
+    "FR-C231-paysage"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch231.txt",
+  "json": "french/narration/ch231.json",
+  "textHash": "fnv1a64:894fc68e8c3f6632",
+  "jsonHash": "fnv1a64:baae45b96201b404",
+  "findings": []
+}

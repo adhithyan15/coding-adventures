@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:d60c80ca89669ff8",
+  "lessonIds": [
+    "TE-C167-talanoppi",
+    "TE-C167-virecanalu",
+    "TE-C167-matra",
+    "TE-C167-cemata",
+    "TE-C167-vapu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch167.txt",
+  "json": "telugu/narration/ch167.json",
+  "textHash": "fnv1a64:02a9917533b1aa55",
+  "jsonHash": "fnv1a64:48d140b92bd1ac0b",
+  "findings": []
+}

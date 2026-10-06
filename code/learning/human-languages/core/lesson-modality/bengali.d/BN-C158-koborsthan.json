@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C158-koborsthan",
+    "language": "bengali",
+    "chapter": 158,
+    "sequence": 8940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9a9d689992717f8"
+  },
+  "findings": []
+}

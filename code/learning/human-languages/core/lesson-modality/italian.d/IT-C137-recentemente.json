@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C137-recentemente",
+    "language": "italian",
+    "chapter": 137,
+    "sequence": 6850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4a631e73802c9dc"
+  },
+  "findings": []
+}

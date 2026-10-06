@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C181-nadi",
+    "language": "sanskrit",
+    "chapter": 181,
+    "sequence": 9860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de9148aa87d74eb1"
+  },
+  "findings": []
+}

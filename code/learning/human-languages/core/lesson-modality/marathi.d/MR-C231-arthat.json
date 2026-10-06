@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C231-arthat",
+    "language": "marathi",
+    "chapter": 231,
+    "sequence": 12630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e53a3899f35038fd"
+  },
+  "findings": []
+}

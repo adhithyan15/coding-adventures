@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:00e299306f46782a",
+  "lessonIds": [
+    "LA-C182-publicus",
+    "LA-C182-privatus",
+    "LA-C182-communis",
+    "LA-C182-inanis",
+    "LA-C182-gravis",
+    "LA-R182-first-pass-words-from-chapters-174-177",
+    "LA-R182-second-pass-words-from-chapters-178-182"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch182.txt",
+  "json": "latin/narration/ch182.json",
+  "textHash": "fnv1a64:aab264dd23b836fa",
+  "jsonHash": "fnv1a64:e4df5398cb85dee6",
+  "findings": []
+}

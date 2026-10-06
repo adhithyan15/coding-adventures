@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Although, Such as, So that, Then, That is",
+  "label": "ch:bn-although-such-as-so-that-then-that-is",
+  "canDo": "I can say although, such as, so that, then and that is.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "BN-C218-mane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say although, such as, so that, then and that is.",
+    "assesses": [
+      "BN-LEX-C218-KARON218-03",
+      "BN-LEX-C218-KARON218-04",
+      "BN-LEX-C218-KARON218-05"
+    ]
+  }
+}

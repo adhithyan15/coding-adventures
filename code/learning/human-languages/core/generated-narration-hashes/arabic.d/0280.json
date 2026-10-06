@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:3e07b070c67c7232",
+  "lessonIds": [
+    "AR-C280-amil2",
+    "AR-C280-muhandis",
+    "AR-C280-muhami",
+    "AR-C280-tayyar",
+    "AR-C280-saydali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch280.txt",
+  "json": "arabic/narration/ch280.json",
+  "textHash": "fnv1a64:934d873b7087dd24",
+  "jsonHash": "fnv1a64:4813047426129dfb",
+  "findings": []
+}

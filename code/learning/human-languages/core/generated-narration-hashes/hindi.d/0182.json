@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:2a9d11dea84999f3",
+  "lessonIds": [
+    "HI-C182-nav",
+    "HI-C182-sit",
+    "HI-C182-tankhvah",
+    "HI-C182-malik",
+    "HI-C182-mazdur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch182.txt",
+  "json": "hindi/narration/ch182.json",
+  "textHash": "fnv1a64:02a6adda066bb5b1",
+  "jsonHash": "fnv1a64:3122ff54bf9e6d6f",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C226-skripka",
+    "language": "russian",
+    "chapter": 226,
+    "sequence": 13580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0890c0dcb8c29d82"
+  },
+  "findings": []
+}

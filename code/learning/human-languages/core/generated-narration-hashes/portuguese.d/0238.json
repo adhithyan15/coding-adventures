@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:9e41cc378ba98109",
+  "lessonIds": [
+    "PT-C238-levantar",
+    "PT-C238-surpreender",
+    "PT-C238-suspeitar",
+    "PT-C238-apertar",
+    "PT-C238-sugerir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch238.txt",
+  "json": "portuguese/narration/ch238.json",
+  "textHash": "fnv1a64:c8e3bb848a29c90e",
+  "jsonHash": "fnv1a64:95632b2d2f02f211",
+  "findings": []
+}

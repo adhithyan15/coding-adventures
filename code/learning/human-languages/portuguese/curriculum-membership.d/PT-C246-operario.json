@@ -1,0 +1,11 @@
+{
+  "id": "PT-C246-operario",
+  "pathSegment": "PT-PATH-246-COISAS246",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-246-COISAS246",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:a734f33876ee755e",
+  "lessonIds": [
+    "GE-C157-tablette",
+    "GE-C157-versicherung",
+    "GE-C157-konto",
+    "GE-C157-kreditkarte",
+    "GE-C157-preis"
+  ],
+  "tex": "german/book/chapters/ch157-a-tablet-insurance-a-bank-account-a-credit-card-a-price.tex"
+}

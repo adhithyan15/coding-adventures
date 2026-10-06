@@ -1,0 +1,11 @@
+{
+  "id": "IT-C229-sasso",
+  "pathSegment": "IT-PATH-229-COSE229",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-229-COSE229",
+      "order": 1
+    }
+  ]
+}

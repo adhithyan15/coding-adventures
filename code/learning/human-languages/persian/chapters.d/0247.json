@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Tin, Spices, Scales, Samovar, Wire",
+  "label": "ch:fa-tin-spices-scales-samovar-wire",
+  "canDo": "I can say a tin, spices, scales, a samovar and a wire.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C247-sim",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say a tin, spices, scales, a samovar and a wire.",
+    "assesses": [
+      "FA-LEX-C247-CHIZ247-03",
+      "FA-LEX-C247-CHIZ247-04",
+      "FA-LEX-C247-CHIZ247-05"
+    ]
+  }
+}

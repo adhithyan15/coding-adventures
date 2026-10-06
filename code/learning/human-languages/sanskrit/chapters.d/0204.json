@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Points out, Digs, Sows, Is alive, Heats",
+  "label": "ch:sa-points-out-digs-sows-is-alive-heats",
+  "canDo": "I can say points out, digs, sows, is alive and heats.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C204-tapati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say points out, digs, sows, is alive and heats.",
+    "assesses": [
+      "SA-LEX-C204-ACT204-03",
+      "SA-LEX-C204-ACT204-04",
+      "SA-LEX-C204-ACT204-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:173926e78eba56c1",
+  "lessonIds": [
+    "RU-C204-probovat",
+    "RU-C204-zakazyvat",
+    "RU-C204-platit",
+    "RU-C204-stoit",
+    "RU-C204-tratit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch204.txt",
+  "json": "russian/narration/ch204.json",
+  "textHash": "fnv1a64:838038e8d6891e4d",
+  "jsonHash": "fnv1a64:e37f5b8cf130bff5",
+  "findings": []
+}

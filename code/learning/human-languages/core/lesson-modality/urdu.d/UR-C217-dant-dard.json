@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C217-dant-dard",
+    "language": "urdu",
+    "chapter": 217,
+    "sequence": 12780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:688ff23be578064f"
+  },
+  "findings": []
+}

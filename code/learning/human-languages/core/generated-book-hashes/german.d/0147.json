@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:3a3ba2bc19a05631",
+  "lessonIds": [
+    "GE-C147-gewinnen",
+    "GE-C147-haengen",
+    "GE-C147-heiraten",
+    "GE-C147-kennen",
+    "GE-C147-klingeln"
+  ],
+  "tex": "german/book/chapters/ch147-to-win-to-hang-to-marry-to-know-to-ring.tex"
+}

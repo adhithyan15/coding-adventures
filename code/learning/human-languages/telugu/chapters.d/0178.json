@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "On purpose, By mistake, Never mind, Condition, Excuse",
+  "label": "ch:te-on-purpose-by-mistake-never-mind-condition-excuse",
+  "canDo": "I can say on purpose, by mistake, never mind, a condition and an excuse.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TE-C178-saku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say on purpose, by mistake, never mind, a condition and an excuse.",
+    "assesses": [
+      "TE-LEX-C178-KARANAM178-03",
+      "TE-LEX-C178-KARANAM178-04",
+      "TE-LEX-C178-KARANAM178-05"
+    ]
+  }
+}

@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d49296ff4bd5b809",
+  "sourceHash": "fnv1a64:d76c4aae902ddf03",
   "lessons": [
     {
       "id": "HI-C17-dopahar-aadhi-raat",
@@ -135,7 +135,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fcd442ea756bcd41",
+      "sourceHash": "fnv1a64:d32f2345093091a5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -242,23 +242,27 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift at that junction and sweep the diagonal arm up-right to the right stem."
+              "text": "2. without lifting, sweep the diagonal arm up-right to the right stem."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the right stem top-to-bottom."
+              "text": "3. climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "5. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "Verified four-stroke teaching form; another animated learner source writes the same parts in a stem-first order."
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw ल (la) in two strokes (54% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

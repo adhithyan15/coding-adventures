@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R337-second-pass-words-from-chapters-333-337",
+    "language": "malayalam",
+    "chapter": 337,
+    "sequence": 16060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:037ee0b34d2bc794"
+  },
+  "findings": []
+}

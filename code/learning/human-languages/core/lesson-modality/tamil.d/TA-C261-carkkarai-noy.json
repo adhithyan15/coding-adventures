@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C261-carkkarai-noy",
+    "language": "tamil",
+    "chapter": 261,
+    "sequence": 14670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38eafbdbd3c4b1f9"
+  },
+  "findings": []
+}

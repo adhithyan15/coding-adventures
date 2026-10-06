@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:ee5949ec6f021254",
+  "lessonIds": [
+    "IT-C240-spingere",
+    "IT-C240-tirare",
+    "IT-C240-sprecare",
+    "IT-C240-superare",
+    "IT-C240-svolgere"
+  ],
+  "tex": "italian/book/chapters/ch240-to-push-to-pull-to-waste-to-overtake-to-perform.tex"
+}

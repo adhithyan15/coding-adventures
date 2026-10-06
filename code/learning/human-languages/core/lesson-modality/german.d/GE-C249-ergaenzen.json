@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C249-ergaenzen",
+    "language": "german",
+    "chapter": 249,
+    "sequence": 13860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52f82f1e87967342"
+  },
+  "findings": []
+}

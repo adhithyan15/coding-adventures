@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:289148a27144282c",
+  "lessonIds": [
+    "FR-C180-preparer",
+    "FR-C180-presenter",
+    "FR-C180-preter",
+    "FR-C180-proposer",
+    "FR-C180-ramasser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch180.txt",
+  "json": "french/narration/ch180.json",
+  "textHash": "fnv1a64:9f945b0716855260",
+  "jsonHash": "fnv1a64:58521f8d6faf4901",
+  "findings": []
+}

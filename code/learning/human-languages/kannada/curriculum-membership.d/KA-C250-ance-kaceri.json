@@ -1,0 +1,11 @@
+{
+  "id": "KA-C250-ance-kaceri",
+  "pathSegment": "KA-PATH-250-STHALA250",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-250-STHALA250",
+      "order": 3
+    }
+  ]
+}

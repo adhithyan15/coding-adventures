@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:ea31f049089fed5b",
+  "lessonIds": [
+    "ES-C503-adelgazar",
+    "ES-C503-aguantar",
+    "ES-C503-esfuerzo",
+    "ES-C503-presion",
+    "ES-C503-paciente"
+  ],
+  "tex": "spanish/book/chapters/ch503-ponerse-en-forma.tex"
+}

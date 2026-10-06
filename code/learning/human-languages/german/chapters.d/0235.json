@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "A piece of news, A number, The public, Order, A couple",
+  "label": "ch:ge-a-piece-of-news-a-number-the-public-order-a-couple",
+  "canDo": "I can say a piece of news, a number, the public, order and a couple.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C235-paar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say a piece of news, a number, the public, order and a couple.",
+    "assesses": [
+      "GE-LEX-C235-THING235-03",
+      "GE-LEX-C235-THING235-04",
+      "GE-LEX-C235-THING235-05"
+    ]
+  }
+}

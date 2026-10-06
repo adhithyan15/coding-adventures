@@ -34,7 +34,7 @@ export const scriptInventoryEvidence = {
       (entry) => entry.glyph === "అ",
     )!;
     expect(teluguA.sound).toBe("a");
-    expect(teluguA.penLifts).toBe(1);
+    expect(teluguA.penLifts).toBe(0);
     expect(teluguA.strokeOrder).toEqual([
       "turn around the left lobe",
       "sweep around the broad lower bowl",
@@ -42,7 +42,7 @@ export const scriptInventoryEvidence = {
       "return left along the inner bar",
     ]);
     expect(teluguA.strokeOrderNote).toMatch(
-      /four numbered movements.*two pen-down runs.*1.?2.*3.?4/i,
+      /source numbers four movements.*one pen-down stroke.*without lifting.*1.?2.*movement 3.*movement 4/i,
     );
     expect(teluguA.strokeOrderSource?.url).toBe(
       "https://write-telugu-alphabets.en.aptoide.com/app",
@@ -51,20 +51,20 @@ export const scriptInventoryEvidence = {
       /Sathish Shanmugam.*Write Telugu Alphabets.*అ.*movements 1.?4.*version 2\.6/i,
     );
     expect(teluguA.strokeOrderSource?.variation).toMatch(
-      /four directional movements.*two pen-down starts.*1.?2.*3.?4.*not uniform.*Noto Sans Telugu/i,
+      /four directional movements.*second start.*1.?2.*3.?4.*not pen lifts.*single run.*Noto Sans Telugu.*not uniform/i,
     );
     const teluguE = scripts.telugu!.independentVowels!.find(
       (entry) => entry.glyph === "ఎ",
     )!;
     expect(teluguE.sound).toBe("e");
-    expect(teluguE.penLifts).toBe(1);
+    expect(teluguE.penLifts).toBe(0);
     expect(teluguE.strokeOrder).toEqual([
-      "turn down and left around the compact lower loop",
-      "continue around its base and return to the central junction",
-      "restart at the junction and sweep up through the broad outer arch",
+      "turn down and left round the lower loop",
+      "round its base and back to the junction",
+      "sweep up the broad outer arch",
     ]);
     expect(teluguE.strokeOrderNote).toMatch(
-      /three numbered movements.*two pen-down runs.*1.?2.*movement 3/i,
+      /source numbers three movements.*one pen-down stroke.*without lifting.*1.?2.*movement 3/i,
     );
     expect(teluguE.strokeOrderSource?.url).toBe(
       "https://write-telugu-alphabets.en.aptoide.com/app",
@@ -73,7 +73,7 @@ export const scriptInventoryEvidence = {
       /Sathish Shanmugam.*Write Telugu Alphabets.*ఎ.*dot_stroke_v_9_e\.png.*movements 1.?3.*version 2\.6/i,
     );
     expect(teluguE.strokeOrderSource?.variation).toMatch(
-      /three directional movements.*two pen-down runs.*1.?2.*movement 3.*not uniform.*Noto Sans Telugu/i,
+      /three directional movements.*movement 3.*junction.*not pen lifts.*single run.*not uniform.*Noto Sans Telugu/i,
     );
     const teluguEe = scripts.telugu!.independentVowels!.find(
       (entry) => entry.glyph === "ఏ",
@@ -81,10 +81,10 @@ export const scriptInventoryEvidence = {
     expect(teluguEe.sound).toBe("ē");
     expect(teluguEe.penLifts).toBe(2);
     expect(teluguEe.strokeOrder).toEqual([
-      "turn down and left around the compact lower loop",
-      "continue around its base and return to the central junction",
-      "restart at the lower-right tail and sweep up through the broad outer arch",
-      "restart below the upper-left hook and sweep upward to its tip",
+      "turn down and left round the lower loop",
+      "round its base and back to the junction",
+      "restart at the tail, sweep up the outer arch",
+      "restart and sweep up the upper-left hook",
     ]);
     expect(teluguEe.strokeOrderNote).toMatch(
       /four numbered movements.*three pen-down runs.*1.?2.*movement 3.*movement 4/i,
@@ -125,7 +125,7 @@ export const scriptInventoryEvidence = {
     expect(teluguKa.penLifts).toBe(1);
     expect(teluguKa.strokeOrder).toEqual([
       "turn down and left around the upper bowl",
-      "continue right through the middle shoulder",
+      "continue right over the middle shoulder",
       "curve down and left around the lower bowl",
       "finish upward along the left tail",
       "restart and sweep up through the separate headstroke",
@@ -153,7 +153,7 @@ export const scriptInventoryEvidence = {
       "circle up around the upper-left bowl",
       "descend through the central curve",
       "turn up around the left shoulder",
-      "sweep right and up around the broad outer bowl",
+      "sweep right and up the broad outer bowl",
       "return left along the crown",
       "restart and draw the separate downward stem",
     ]);
@@ -201,10 +201,10 @@ export const scriptInventoryEvidence = {
     expect(teluguGha.penLifts).toBe(3);
     expect(teluguGha.strokeOrder).toEqual([
       "sweep left around the upper-left shoulder",
-      "continue down and right around the lower-left bowl",
+      "continue down round the lower-left bowl",
       "turn upward around the broad middle arch",
       "sweep right and up around the outer arch",
-      "restart and cup through the upper flourish",
+      "restart and cup the upper flourish",
       "restart and draw the separate downward stem",
     ]);
     expect(teluguGha.strokeOrderNote).toMatch(
@@ -221,14 +221,118 @@ export const scriptInventoryEvidence = {
     );
     expect(missingByScript.get("telugu.json")?.has("ఘ") ?? false).toBe(false);
     expect(affected.get("ఘ") ?? 0).toBe(0);
+    const teluguNga = scripts.telugu!.letters.find(
+      (entry) => entry.glyph === "ఙ",
+    )!;
+    expect(teluguNga.sound).toBe("ṅa");
+    expect(teluguNga.penLifts).toBe(2);
+    expect(teluguNga.strokeOrder).toEqual([
+      "turn around the compact upper-left lobe",
+      "continue down round the broad lower bowl",
+      "curl upward around the rounded right lobe",
+      "lift and draw the inner bar left to right",
+      "lift again, draw the upper headstroke down",
+    ]);
+    expect(teluguNga.strokeOrderNote).toMatch(
+      /five numbered movements.*three pen-down runs.*1.?3.*movement 4.*movement 5/i,
+    );
+    expect(teluguNga.strokeOrderSource?.url).toBe(
+      "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+    );
+    expect(teluguNga.strokeOrderSource?.citation).toMatch(
+      /Sathish Shanmugam.*Write Telugu Alphabets.*ఙ.*dot_stroke_c_1_5_nya\.png.*movements 1.?5.*version 2\.6/i,
+    );
+    expect(teluguNga.strokeOrderSource?.variation).toMatch(
+      /three joined directional movements.*main body.*movement 4.*horizontal bar.*movement 5.*headstroke.*not uniform.*Noto Sans Telugu/i,
+    );
+    expect(missingByScript.get("telugu.json")?.has("ఙ") ?? false).toBe(false);
+    expect(affected.get("ఙ") ?? 0).toBe(0);
+    const teluguCa = scripts.telugu!.letters.find(
+      (entry) => entry.glyph === "చ",
+    )!;
+    expect(teluguCa.sound).toBe("ca");
+    expect(teluguCa.penLifts).toBe(0);
+    expect(teluguCa.strokeOrder).toEqual([
+      "draw the upper bar from left to right",
+      "continue down and around the left bowl",
+      "sweep right and up around the outer bowl",
+      "climb up the flourish's left arm",
+      "cup the upper flourish",
+    ]);
+    expect(teluguCa.strokeOrderNote).toMatch(
+      /source numbers four movements.*one pen-down stroke.*without lifting.*1.?3.*movement 4/i,
+    );
+    expect(teluguCa.strokeOrderSource?.url).toBe(
+      "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+    );
+    expect(teluguCa.strokeOrderSource?.citation).toMatch(
+      /Sathish Shanmugam.*Write Telugu Alphabets.*చ.*dot_stroke_c_2_1_cha\.png.*movements 1.?4.*version 2\.6/i,
+    );
+    expect(teluguCa.strokeOrderSource?.variation).toMatch(
+      /three directional movements.*main body.*movement 4.*upper flourish.*not pen lifts.*single run.*Noto Sans Telugu/i,
+    );
+    expect(missingByScript.get("telugu.json")?.has("చ") ?? false).toBe(false);
+    expect(affected.get("చ") ?? 0).toBe(0);
+    const teluguChha = scripts.telugu!.letters.find(
+      (entry) => entry.glyph === "ఛ",
+    )!;
+    expect(teluguChha.sound).toBe("cha");
+    expect(teluguChha.penLifts).toBe(1);
+    expect(teluguChha.strokeOrder).toEqual([
+      "draw the upper bar from left to right",
+      "continue down and around the left bowl",
+      "sweep right and up around the outer bowl",
+      "continue through the upper flourish",
+      "restart and draw the separate downward stem",
+    ]);
+    expect(teluguChha.strokeOrderNote).toMatch(
+      /five numbered movements.*two pen-down runs.*1.?4.*movement 5/i,
+    );
+    expect(teluguChha.strokeOrderSource?.url).toBe(
+      "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+    );
+    expect(teluguChha.strokeOrderSource?.citation).toMatch(
+      /Sathish Shanmugam.*Write Telugu Alphabets.*ఛ.*dot_stroke_c_2_2_chha\.png.*movements 1.?5.*version 2\.6/i,
+    );
+    expect(teluguChha.strokeOrderSource?.variation).toMatch(
+      /one pen-down start.*1.?4.*main body.*upper flourish.*second start.*movement 5.*downward stem.*not uniform.*Noto Sans Telugu/i,
+    );
+    expect(missingByScript.get("telugu.json")?.has("ఛ") ?? false).toBe(false);
+    expect(affected.get("ఛ") ?? 0).toBe(0);
+    const teluguJha = scripts.telugu!.letters.find(
+      (entry) => entry.glyph === "ఝ",
+    )!;
+    expect(teluguJha.sound).toBe("jha");
+    expect(teluguJha.penLifts).toBe(4);
+    expect(teluguJha.strokeOrder).toEqual([
+      "circle around the broad left bowl",
+      "restart and circle around the middle bowl",
+      "restart and circle around the right bowl",
+      "restart and sweep the upper flourish",
+      "restart and draw the separate downward stem",
+    ]);
+    expect(teluguJha.strokeOrderNote).toMatch(
+      /five numbered movements.*five pen-down runs.*1.?3.*three rounded bowls.*movement 4.*upper flourish.*movement 5.*downward stem/i,
+    );
+    expect(teluguJha.strokeOrderSource?.url).toBe(
+      "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+    );
+    expect(teluguJha.strokeOrderSource?.citation).toMatch(
+      /Sathish Shanmugam.*Write Telugu Alphabets.*ఝ.*dot_stroke_c_2_4_jha\.png.*movements 1.?5.*version 2\.6/i,
+    );
+    expect(teluguJha.strokeOrderSource?.variation).toMatch(
+      /three rounded bowls.*upper flourish.*downward stem.*five disconnected directional movements.*separate pen-down run.*Noto Sans Telugu.*not uniform/i,
+    );
+    expect(missingByScript.get("telugu.json")?.has("ఝ") ?? false).toBe(false);
+    expect(affected.get("ఝ") ?? 0).toBe(0);
     const teluguAa = scripts.telugu!.independentVowels!.find(
       (entry) => entry.glyph === "ఆ",
     )!;
     expect(teluguAa.sound).toBe("ā");
     expect(teluguAa.penLifts).toBe(1);
     expect(teluguAa.strokeOrder).toEqual([
-      "turn around the hooked left lobe and sweep through the broad lower bowl",
-      "after lifting, turn around the rounded right lobe and return left along the inner bar",
+      "turn round the left lobe and lower bowl",
+      "after lifting, turn the right lobe, then left along the bar",
     ]);
     expect(teluguAa.strokeOrderSource?.citation).toMatch(
       /Hojaswani LUCIDA and Physics classes.*ఆ letter.*00:00–00:10.*15 September 2024/i,
@@ -263,10 +367,10 @@ export const scriptInventoryEvidence = {
     expect(teluguU.penLifts).toBe(2);
     expect(teluguU.strokeOrder).toEqual([
       "sweep left across the rounded upper arch",
-      "continue down and around the broad lower bowl",
-      "curl upward around the rounded right lobe without lifting",
-      "lift and draw the inner horizontal bar from left to right",
-      "lift again and draw the short upper headstroke downward",
+      "continue down round the broad lower bowl",
+      "curl up round the right lobe, no lift",
+      "lift and draw the inner bar left to right",
+      "lift again, draw the upper headstroke down",
     ]);
     expect(teluguU.strokeOrderNote).toMatch(
       /five numbered movements.*three pen-down runs.*1.?3.*movement 4.*movement 5/i,
@@ -287,17 +391,17 @@ export const scriptInventoryEvidence = {
       (entry) => entry.glyph === "ఒ",
     )!;
     expect(teluguO.sound).toBe("o");
-    expect(teluguO.penLifts).toBe(2);
+    expect(teluguO.penLifts).toBe(0);
     expect(teluguO.strokeOrder).toEqual([
       "sweep right across the upper arch",
-      "restart and curve down around the left bowl",
-      "restart and sweep right around the broad lower bowl",
+      "curve down around the left bowl",
+      "sweep right around the broad lower bowl",
     ]);
     expect(teluguO.strokeOrderSource?.citation).toMatch(
       /Sathish Shanmugam.*independent vowel ఒ.*dot_stroke_v_12_o\.png.*movements 1–3.*version 2\.6/i,
     );
     expect(teluguO.strokeOrderSource?.variation).toMatch(
-      /three disconnected directional movements.*separate pen-down run.*movement 1.*upper arch.*movement 2.*left bowl.*movement 3.*broad lower bowl.*Noto Sans Telugu/i,
+      /three separately positioned directional movements.*movement 1.*upper arch.*movement 2.*left bowl.*movement 3.*broad lower bowl.*not pen lifts.*single run.*Noto Sans Telugu/i,
     );
     expect(missingByScript.get("telugu.json")?.has("ఒ") ?? false).toBe(false);
     expect(affected.get("ఒ") ?? 0).toBe(0);
@@ -305,19 +409,19 @@ export const scriptInventoryEvidence = {
       (entry) => entry.glyph === "ఐ",
     )!;
     expect(teluguAi.sound).toBe("ai");
-    expect(teluguAi.penLifts).toBe(4);
+    expect(teluguAi.penLifts).toBe(0);
     expect(teluguAi.strokeOrder).toEqual([
       "sweep left across the compact upper arch",
-      "restart and curve down around the left bowl",
-      "restart and sweep right around the broad lower bowl",
-      "restart and sweep left across the upper-right arch",
-      "restart and sweep left across the upper-left arch",
+      "curve down around the left bowl",
+      "sweep right around the broad lower bowl",
+      "sweep left across the upper-right arch",
+      "sweep left across the upper-left arch",
     ]);
     expect(teluguAi.strokeOrderSource?.citation).toMatch(
       /Sathish Shanmugam.*independent vowel ఐ.*dot_stroke_v_11_ai\.png.*movements 1–5.*version 2\.6/i,
     );
     expect(teluguAi.strokeOrderSource?.variation).toMatch(
-      /five disconnected directional movements.*separate pen-down run.*1.?3.*central and lower body.*4.?5.*two upper arches.*Noto Sans Telugu/i,
+      /five separately positioned directional movements.*1.?3.*central and lower body.*4.?5.*two upper arches.*not pen lifts.*single run.*Noto Sans Telugu/i,
     );
     expect(missingByScript.get("telugu.json")?.has("ఐ") ?? false).toBe(false);
     expect(affected.get("ఐ") ?? 0).toBe(0);
@@ -325,22 +429,189 @@ export const scriptInventoryEvidence = {
       (entry) => entry.glyph === "ఋ",
     )!;
     expect(teluguVocalicR.sound).toBe("r̥");
-    expect(teluguVocalicR.penLifts).toBe(5);
+    expect(teluguVocalicR.penLifts).toBe(2);
     expect(teluguVocalicR.strokeOrder).toEqual([
       "sweep right across the upper shoulder",
-      "restart and curve down around the left bowl",
-      "restart and sweep right around the lower bowl",
-      "restart and curl up around the first right lobe",
-      "restart and curl up around the middle lobe",
-      "restart and curl up around the final lobe",
+      "curve down around the left bowl",
+      "sweep right around the lower bowl",
+      "curl up around the first right lobe",
+      "lift and curl up around the middle lobe",
+      "lift again and curl up around the final lobe",
     ]);
     expect(teluguVocalicR.strokeOrderSource?.citation).toMatch(
       /Sathish Shanmugam.*independent vowel ఋ.*dot_stroke_v_7_ru\.png.*movements 1–6.*version 2\.6/i,
     );
     expect(teluguVocalicR.strokeOrderSource?.variation).toMatch(
-      /six disconnected directional movements.*separate pen-down run.*1.?3.*broad left body.*4.?6.*three successive right-side curls.*Noto Sans Telugu/i,
+      /six directional movements.*1.?3.*broad left body.*4.?6.*three successive right-side curls.*not pen lifts.*Noto Sans Telugu/i,
     );
     expect(missingByScript.get("telugu.json")?.has("ఋ") ?? false).toBe(false);
     expect(affected.get("ఋ") ?? 0).toBe(0);
+    // These seven once lifted the pen after every numbered movement of their
+    // tracing guide (7, 6, 6, 5, 5, 5 and 5 lifts), a count 0% of native
+    // writers use. They now lift only where HP Labs India's native writers
+    // do. Each note must cite the movement count, the native stroke count
+    // and its share; each variation must say the data gives counts only.
+    const nativeLifts: ReadonlyArray<
+      readonly [string, number, string, string, string, string]
+    > = [
+      ["ఞ", 2, "eight", "three", "89", "91 of 102"],
+      ["థ", 2, "seven", "three", "78", "83 of 106"],
+      ["మ", 1, "seven", "two", "78", "80 of 103"],
+      ["ట", 1, "six", "two", "94", "96 of 102"],
+      ["ధ", 1, "six", "two", "84", "87 of 104"],
+      ["భ", 1, "six", "two", "85", "88 of 104"],
+      ["ఢ", 2, "six", "three", "79", "80 of 101"],
+    ];
+    for (const [glyph, lifts, movements, strokes, share, samples] of nativeLifts) {
+      const letter = scripts.telugu!.letters.find(
+        (entry) => entry.glyph === glyph,
+      )!;
+      expect(letter.penLifts, glyph).toBe(lifts);
+      expect(letter.strokeOrderNote, glyph).toContain(
+        `The source numbers ${movements} movements; native writers draw ${glyph} as ${strokes} pen-down strokes (${share}% of HP Labs India's native-writer samples, ${samples}).`,
+      );
+      expect(letter.strokeOrderSource?.citation, glyph).toMatch(
+        /Sathish Shanmugam.*Write Telugu Alphabets.*version 2\.6/,
+      );
+      for (const phrase of [
+        "Those numbers mark movements, not pen lifts",
+        "hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm",
+        "MIT-licensed LipiTk 4.0 Telugu recognizer",
+        "Those counts say how many strokes writers use, not where they break",
+      ]) {
+        expect(letter.strokeOrderSource?.variation, glyph).toContain(phrase);
+      }
+      expect(
+        (letter.strokeOrder ?? []).filter((step) => step.startsWith("lift")),
+        glyph,
+      ).toHaveLength(lifts);
+      expect(missingByScript.get("telugu.json")?.has(glyph) ?? false).toBe(false);
+      expect(affected.get(glyph) ?? 0).toBe(0);
+    }
+    // Batch two: these eight also lifted after every numbered (for ళ,
+    // ordered) movement of their tracing source (4, 4, 4, 3, 4, 4, 5 and 3
+    // lifts), a count 0% of HP Labs India's native writers use. They now lift
+    // only where those writers do; ఋ's three strokes are the most common
+    // count (48%), not a majority.
+    const nativeLiftsBatchTwo: ReadonlyArray<
+      readonly [string, number, string, string, string, string, string]
+    > = [
+      ["ద", 0, "numbers five", "one pen-down stroke", "81", "87 of 107", "Sathish"],
+      ["డ", 1, "numbers five", "two pen-down strokes", "75", "79 of 105", "Sathish"],
+      ["ణ", 0, "numbers five", "one pen-down stroke", "79", "81 of 103", "Sathish"],
+      ["బ", 0, "numbers four", "one pen-down stroke", "97", "116 of 120", "Sathish"],
+      ["ఫ", 2, "numbers five", "three pen-down strokes", "78", "80 of 102", "Sathish"],
+      ["ఐ", 0, "numbers five", "one pen-down stroke", "70", "71 of 102", "Sathish"],
+      ["ఋ", 2, "numbers six", "three pen-down strokes", "48", "48 of 99", "Sathish"],
+      ["ళ", 0, "gives four ordered", "one pen-down stroke", "87", "91 of 105", "AppChant"],
+    ];
+    for (const [
+      glyph,
+      lifts,
+      movements,
+      strokes,
+      share,
+      samples,
+      source,
+    ] of nativeLiftsBatchTwo) {
+      const letter = [
+        ...scripts.telugu!.letters,
+        ...scripts.telugu!.independentVowels!,
+      ].find((entry) => entry.glyph === glyph)!;
+      expect(letter.penLifts, glyph).toBe(lifts);
+      expect(letter.strokeOrderNote, glyph).toContain(
+        `The source ${movements} movements; native writers draw ${glyph} as ${strokes} (${share}% of HP Labs India's native-writer samples, ${samples}).`,
+      );
+      expect(letter.strokeOrderSource?.citation, glyph).toMatch(
+        source === "AppChant"
+          ? /AppChant.*Telugu Alphabets Writing.*version 3\.8\.05/
+          : /Sathish Shanmugam.*Write Telugu Alphabets.*version 2\.6/,
+      );
+      for (const phrase of [
+        "mark movements, not pen lifts",
+        "hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm",
+        "MIT-licensed LipiTk 4.0 Telugu recognizer",
+        "Those counts say how many strokes writers use, not where they break",
+      ]) {
+        expect(letter.strokeOrderSource?.variation, glyph).toContain(phrase);
+      }
+      expect(
+        (letter.strokeOrder ?? []).filter((step) => step.startsWith("lift")),
+        glyph,
+      ).toHaveLength(lifts);
+      expect(
+        (letter.strokeOrder ?? []).filter((step) => step.startsWith("restart")),
+        glyph,
+      ).toHaveLength(0);
+      expect(missingByScript.get("telugu.json")?.has(glyph) ?? false).toBe(false);
+      expect(affected.get(glyph) ?? 0).toBe(0);
+    }
+    // Batch three: these sixteen also lifted after numbered or ordered
+    // movements of their tracing source (1, 2, 3, 3, 1, 1, 2, 2, 3, 3, 2, 3,
+    // 1, 1, 1 and 2 lifts). They now lift only where HP Labs India's native
+    // writers do. య's three strokes are the most common count (48%), not a
+    // majority; ష draws three strokes (27%) because its tail cannot join the
+    // body in the source's order, so its note still cites the two-stroke mode.
+    const nativeLiftsBatchThree: ReadonlyArray<
+      readonly [string, number, string, string, string, string, string]
+    > = [
+      ["త", 0, "numbers seven", "one pen-down stroke", "51", "54 of 105", "Sathish"],
+      ["న", 0, "numbers three", "one pen-down stroke", "92", "98 of 107", "Sathish"],
+      ["ప", 1, "numbers four", "two pen-down strokes", "76", "78 of 102", "Sathish"],
+      ["య", 2, "gives four ordered", "three pen-down strokes", "48", "50 of 104", "AppChant"],
+      ["ర", 0, "gives two ordered", "one pen-down stroke", "81", "83 of 103", "AppChant"],
+      ["ల", 0, "gives two ordered", "one pen-down stroke", "99", "106 of 107", "AppChant"],
+      ["వ", 0, "gives three ordered", "one pen-down stroke", "75", "80 of 107", "AppChant"],
+      ["శ", 0, "gives three ordered", "one pen-down stroke", "93", "96 of 103", "AppChant"],
+      ["ష", 2, "gives four ordered", "two pen-down strokes", "69", "70 of 102", "AppChant"],
+      ["హ", 1, "gives four ordered", "two pen-down strokes", "74", "80 of 108", "AppChant"],
+      ["ఠ", 1, "numbers three", "two pen-down strokes", "71", "75 of 106", "Sathish"],
+      ["జ", 1, "numbers four", "two pen-down strokes", "97", "101 of 104", "Sathish"],
+      ["చ", 0, "numbers four", "one pen-down stroke", "93", "95 of 102", "Sathish"],
+      ["అ", 0, "numbers four", "one pen-down stroke", "97", "100 of 103", "Sathish"],
+      ["ఎ", 0, "numbers three", "one pen-down stroke", "86", "81 of 94", "Sathish"],
+      ["ఒ", 0, "numbers three", "one pen-down stroke", "99", "104 of 105", "Sathish"],
+    ];
+    for (const [
+      glyph,
+      lifts,
+      movements,
+      strokes,
+      share,
+      samples,
+      source,
+    ] of nativeLiftsBatchThree) {
+      const letter = [
+        ...scripts.telugu!.letters,
+        ...scripts.telugu!.independentVowels!,
+      ].find((entry) => entry.glyph === glyph)!;
+      expect(letter.penLifts, glyph).toBe(lifts);
+      expect(letter.strokeOrderNote, glyph).toContain(
+        `The source ${movements} movements; native writers draw ${glyph} as ${strokes} (${share}% of HP Labs India's native-writer samples, ${samples}).`,
+      );
+      expect(letter.strokeOrderSource?.citation, glyph).toMatch(
+        source === "AppChant"
+          ? /AppChant.*Telugu Alphabets Writing.*version 3\.8\.05/
+          : /Sathish Shanmugam.*Write Telugu Alphabets.*version 2\.6/,
+      );
+      for (const phrase of [
+        "mark movements, not pen lifts",
+        "hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm",
+        "MIT-licensed LipiTk 4.0 Telugu recognizer",
+        "Those counts say how many strokes writers use, not where they break",
+      ]) {
+        expect(letter.strokeOrderSource?.variation, glyph).toContain(phrase);
+      }
+      expect(
+        (letter.strokeOrder ?? []).filter((step) => step.startsWith("lift")),
+        glyph,
+      ).toHaveLength(lifts);
+      expect(
+        (letter.strokeOrder ?? []).filter((step) => step.startsWith("restart")),
+        glyph,
+      ).toHaveLength(0);
+      expect(missingByScript.get("telugu.json")?.has(glyph) ?? false).toBe(false);
+      expect(affected.get(glyph) ?? 0).toBe(0);
+    }
   },
 };

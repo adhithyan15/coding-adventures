@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Muscle, Thumb, Wound, Scar, Cold",
+  "label": "ch:it-muscle-thumb-wound-scar-cold",
+  "canDo": "I can say a muscle, a thumb, a wound, a scar and a cold.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C185-raffreddore",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say a muscle, a thumb, a wound, a scar and a cold.",
+    "assesses": [
+      "IT-LEX-C185-SAL185-03",
+      "IT-LEX-C185-SAL185-04",
+      "IT-LEX-C185-SAL185-05"
+    ]
+  }
+}

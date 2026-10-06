@@ -1,0 +1,11 @@
+{
+  "id": "FA-C237-morde",
+  "pathSegment": "FA-PATH-237-SEFAT237",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-237-SEFAT237",
+      "order": 4
+    }
+  ]
+}

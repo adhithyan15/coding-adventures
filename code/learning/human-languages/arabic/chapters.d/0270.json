@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Boring, Booked, Available, International, Local",
+  "label": "ch:ar-boring-booked-available-international-local",
+  "canDo": "I can say boring, booked, available, international and local.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C270-mahalli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say boring, booked, available, international and local.",
+    "assesses": [
+      "AR-LEX-C270-SIFA270-03",
+      "AR-LEX-C270-SIFA270-04",
+      "AR-LEX-C270-SIFA270-05"
+    ]
+  }
+}

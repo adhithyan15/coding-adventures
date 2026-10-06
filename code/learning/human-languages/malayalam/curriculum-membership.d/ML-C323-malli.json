@@ -1,0 +1,11 @@
+{
+  "id": "ML-C323-malli",
+  "pathSegment": "ML-PATH-323-VASTU323",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-323-VASTU323",
+      "order": 4
+    }
+  ]
+}

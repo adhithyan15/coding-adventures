@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:7ef930e95e0ddc01",
+  "lessonIds": [
+    "GE-C242-verkehr",
+    "GE-C242-vertrauen",
+    "GE-C242-verein",
+    "GE-C242-vorsicht",
+    "GE-C242-vorteil"
+  ],
+  "tex": "german/book/chapters/ch242-traffic-trust-a-club-caution-an-advantage.tex"
+}

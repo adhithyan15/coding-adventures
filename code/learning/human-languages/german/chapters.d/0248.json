@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "To furnish, To end, To discover, To excuse, To find out",
+  "label": "ch:ge-to-furnish-to-end-to-discover-to-excuse-to-find-out",
+  "canDo": "I can say to furnish, to end, to discover, to excuse and to find out.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C248-erfahren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say to furnish, to end, to discover, to excuse and to find out.",
+    "assesses": [
+      "GE-LEX-C248-VERB248-03",
+      "GE-LEX-C248-VERB248-04",
+      "GE-LEX-C248-VERB248-05"
+    ]
+  }
+}

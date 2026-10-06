@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C227-bewerbung",
+    "language": "german",
+    "chapter": 227,
+    "sequence": 12190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86fb230f1368c629"
+  },
+  "findings": []
+}

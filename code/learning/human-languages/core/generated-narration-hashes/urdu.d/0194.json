@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:a0595af081adead9",
+  "lessonIds": [
+    "UR-C194-chaukor",
+    "UR-C194-terha",
+    "UR-C194-uthla",
+    "UR-C194-basi",
+    "UR-C194-tikha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch194.txt",
+  "json": "urdu/narration/ch194.json",
+  "textHash": "fnv1a64:f12330cc5c825af1",
+  "jsonHash": "fnv1a64:6b25e02ee5fb775b",
+  "findings": []
+}

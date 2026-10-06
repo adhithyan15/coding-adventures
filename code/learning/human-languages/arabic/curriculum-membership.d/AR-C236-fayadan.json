@@ -1,0 +1,11 @@
+{
+  "id": "AR-C236-fayadan",
+  "pathSegment": "AR-PATH-236-MAKAN236",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-236-MAKAN236",
+      "order": 1
+    }
+  ]
+}

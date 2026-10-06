@@ -1,0 +1,11 @@
+{
+  "id": "RU-C232-zanimat",
+  "pathSegment": "RU-PATH-232-ACT232",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-232-ACT232",
+      "order": 1
+    }
+  ]
+}

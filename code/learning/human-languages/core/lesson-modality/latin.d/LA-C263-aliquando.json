@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C263-aliquando",
+    "language": "latin",
+    "chapter": 263,
+    "sequence": 14060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf790ec996bb3f30"
+  },
+  "findings": []
+}

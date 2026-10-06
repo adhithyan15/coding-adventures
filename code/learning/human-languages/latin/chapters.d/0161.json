@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "Nothing, Nobody, No, Which of Two, Neither … Nor",
+  "label": "ch:la-nothing-nobody-no-which-of-two-neither-nor",
+  "canDo": "I can say that there is nothing, nobody and none, and ask which of two.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "LA-C161-neque",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say that there is nothing, nobody and none, and ask which of two.",
+    "assesses": [
+      "LA-LEX-C161-NEG161-03",
+      "LA-LEX-C161-NEG161-04",
+      "LA-LEX-C161-NEG161-05"
+    ]
+  }
+}

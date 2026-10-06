@@ -1,0 +1,11 @@
+{
+  "id": "LA-C248-beneficium",
+  "pathSegment": "LA-PATH-248-RES248",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-248-RES248",
+      "order": 2
+    }
+  ]
+}

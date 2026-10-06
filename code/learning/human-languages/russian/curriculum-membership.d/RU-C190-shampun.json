@@ -1,0 +1,11 @@
+{
+  "id": "RU-C190-shampun",
+  "pathSegment": "RU-PATH-190-VESHCH190",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-190-VESHCH190",
+      "order": 4
+    }
+  ]
+}

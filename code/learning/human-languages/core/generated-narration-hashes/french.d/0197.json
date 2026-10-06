@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:ed26972410f1cad0",
+  "lessonIds": [
+    "FR-C197-marie",
+    "FR-C197-mariee",
+    "FR-C197-veuf",
+    "FR-C197-succes",
+    "FR-C197-echec"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch197.txt",
+  "json": "french/narration/ch197.json",
+  "textHash": "fnv1a64:f1aba331bc831ea9",
+  "jsonHash": "fnv1a64:bf962667eaeef491",
+  "findings": []
+}

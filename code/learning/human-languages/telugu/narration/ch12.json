@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a6ef90070ce4b493",
+  "sourceHash": "fnv1a64:8940e6a7738ae0e3",
   "lessons": [
     {
       "id": "TE-C12-kutumbam",
@@ -155,7 +155,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:012aec21ab1f83e8",
+      "sourceHash": "fnv1a64:8d810498ec303a37",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -234,15 +234,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ద — copy what you see",
+          "title": "Writing: ద — five deliberate movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ద (da) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movements 1–4 build the round body in four short curves: upper left, lower left, lower right, then upper right. Lift between each curve. Movement 5 adds the rising top flourish."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so preserve the five clear movements rather than trying to join the gaps."
             }
           ]
         },

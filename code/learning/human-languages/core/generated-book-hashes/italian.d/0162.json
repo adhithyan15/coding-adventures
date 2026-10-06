@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:b89c4466754fc19f",
+  "lessonIds": [
+    "IT-C162-sito",
+    "IT-C162-schermo",
+    "IT-C162-tastiera",
+    "IT-C162-batteria",
+    "IT-C162-caricabatterie"
+  ],
+  "tex": "italian/book/chapters/ch162-website-screen-keyboard-battery-charger.tex"
+}

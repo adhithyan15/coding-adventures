@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C326-vetikkettu",
+    "language": "malayalam",
+    "chapter": 326,
+    "sequence": 15430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88b8d50680e52319"
+  },
+  "findings": []
+}

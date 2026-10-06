@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:ed006daa75ffbbda",
+  "lessonIds": [
+    "MR-C212-arj",
+    "MR-C212-pakit",
+    "MR-C212-patta",
+    "MR-C212-pagar",
+    "MR-C212-margadarsak"
+  ],
+  "tex": "marathi/book/chapters/ch212-application-envelope-address-salary-guide.tex"
+}

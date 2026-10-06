@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:e1f804ac58a06388",
+  "lessonIds": [
+    "TE-C197-vadrangi",
+    "TE-C197-racayita",
+    "TE-C197-samasya",
+    "TE-C197-pariskaram",
+    "TE-C197-abhiprayam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch197.txt",
+  "json": "telugu/narration/ch197.json",
+  "textHash": "fnv1a64:b500e14cfcd04d54",
+  "jsonHash": "fnv1a64:aba8f6d48b8c8492",
+  "findings": []
+}

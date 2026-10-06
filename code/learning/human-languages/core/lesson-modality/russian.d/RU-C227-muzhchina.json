@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C227-muzhchina",
+    "language": "russian",
+    "chapter": 227,
+    "sequence": 13800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4c19f4a17a48749"
+  },
+  "findings": []
+}

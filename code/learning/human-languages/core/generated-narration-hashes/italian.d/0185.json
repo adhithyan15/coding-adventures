@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:ffdfbdfa4d99eeaf",
+  "lessonIds": [
+    "IT-C185-muscolo",
+    "IT-C185-pollice",
+    "IT-C185-ferita",
+    "IT-C185-cicatrice",
+    "IT-C185-raffreddore"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch185.txt",
+  "json": "italian/narration/ch185.json",
+  "textHash": "fnv1a64:97e467223696416a",
+  "jsonHash": "fnv1a64:9ad721319771070e",
+  "findings": []
+}

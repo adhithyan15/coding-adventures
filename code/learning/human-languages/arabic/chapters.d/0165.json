@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "To delete, To begin, To end, To continue, To finish",
+  "label": "ch:ar-to-delete-to-begin-to-end-to-continue-to-finish",
+  "canDo": "I can say to delete, to begin, to end, to continue and to finish.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C165-anha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say to delete, to begin, to end, to continue and to finish.",
+    "assesses": [
+      "AR-LEX-C165-ACT165-03",
+      "AR-LEX-C165-ACT165-04",
+      "AR-LEX-C165-ACT165-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 259,
+  "title": "To check, To haggle, To steal, To escape, To sweep",
+  "label": "ch:fa-to-check-to-haggle-to-steal-to-escape-to-sweep",
+  "canDo": "I can say to check, to haggle, to steal, to escape and to sweep.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C259-jaru-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can say to check, to haggle, to steal, to escape and to sweep.",
+    "assesses": [
+      "FA-LEX-C259-KONESH259-03",
+      "FA-LEX-C259-KONESH259-04",
+      "FA-LEX-C259-KONESH259-05"
+    ]
+  }
+}

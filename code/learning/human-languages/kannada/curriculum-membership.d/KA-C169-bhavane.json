@@ -1,0 +1,11 @@
+{
+  "id": "KA-C169-bhavane",
+  "pathSegment": "KA-PATH-169-AROGYA169",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-169-AROGYA169",
+      "order": 4
+    }
+  ]
+}

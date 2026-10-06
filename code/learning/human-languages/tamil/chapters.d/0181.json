@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "Favourite, Terrible, Many, Everything, Thick",
+  "label": "ch:ta-favourite-terrible-many-everything-thick",
+  "canDo": "I can say favourite, terrible, many, everything and thick.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C181-tatimanana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say favourite, terrible, many, everything and thick.",
+    "assesses": [
+      "TA-LEX-C181-GUNAM181-03",
+      "TA-LEX-C181-GUNAM181-04",
+      "TA-LEX-C181-GUNAM181-05"
+    ]
+  }
+}

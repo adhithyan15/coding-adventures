@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C219-angan",
+    "language": "urdu",
+    "chapter": 219,
+    "sequence": 12880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fa17ba6b2463e3f"
+  },
+  "findings": []
+}

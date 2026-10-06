@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C164-passeport",
+    "language": "french",
+    "chapter": 164,
+    "sequence": 8220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a75e17da0c29c3d"
+  },
+  "findings": []
+}

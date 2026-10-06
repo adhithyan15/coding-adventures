@@ -1,0 +1,11 @@
+{
+  "id": "TE-C218-srama",
+  "pathSegment": "TE-PATH-218-KARANAM218",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-218-KARANAM218",
+      "order": 4
+    }
+  ]
+}

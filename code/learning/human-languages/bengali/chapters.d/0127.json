@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "King, Queen, Priest, Factory, Labourer",
+  "label": "ch:bn-king-queen-priest-factory-labourer",
+  "canDo": "I can say a king, a queen, a priest, a factory and a labourer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C127-mojur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: I can say a king, a queen, a priest, a factory and a labourer.",
+    "assesses": [
+      "BN-LEX-C127-THINGS127-03",
+      "BN-LEX-C127-THINGS127-04",
+      "BN-LEX-C127-THINGS127-05"
+    ]
+  }
+}

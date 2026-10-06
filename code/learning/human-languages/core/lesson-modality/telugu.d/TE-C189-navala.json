@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C189-navala",
+    "language": "telugu",
+    "chapter": 189,
+    "sequence": 8540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab46f46a51cf1c73"
+  },
+  "findings": []
+}

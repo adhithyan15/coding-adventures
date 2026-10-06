@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C250-kutaram",
+    "language": "tamil",
+    "chapter": 250,
+    "sequence": 13970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e683f45613c77e2f"
+  },
+  "findings": []
+}

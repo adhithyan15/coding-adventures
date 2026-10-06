@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:21ca6fe5e860ac97",
+  "lessonIds": [
+    "BN-C216-grej",
+    "BN-C216-pashe",
+    "BN-C216-charpashe",
+    "BN-C216-opore",
+    "BN-C216-kothao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch216.txt",
+  "json": "bengali/narration/ch216.json",
+  "textHash": "fnv1a64:a8d3854943fc2a7c",
+  "jsonHash": "fnv1a64:4d7b2860337ddfae",
+  "findings": []
+}

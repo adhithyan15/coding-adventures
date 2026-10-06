@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-158-KRIYA158",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "TE-EXT-158-KRIYA158"
+  ],
+  "after": []
+}

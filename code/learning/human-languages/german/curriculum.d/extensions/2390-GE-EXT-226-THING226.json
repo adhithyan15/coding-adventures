@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-226-THING226",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say pronunciation, a meaning, a greeting, a description and a visit.",
+  "prerequisites": []
+}

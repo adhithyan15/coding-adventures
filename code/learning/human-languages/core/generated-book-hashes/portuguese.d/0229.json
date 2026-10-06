@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:4cdf0308a6047678",
+  "lessonIds": [
+    "PT-C229-lavatorio",
+    "PT-C229-sanita",
+    "PT-C229-colchao",
+    "PT-C229-tomada",
+    "PT-C229-interruptor"
+  ],
+  "tex": "portuguese/book/chapters/ch229-washbasin-toilet-mattress-socket-light-switch.tex"
+}

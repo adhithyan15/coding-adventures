@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:4a66b775dd134565",
+  "lessonIds": [
+    "TE-C212-tirika",
+    "TE-C212-ventane",
+    "TE-C212-civaraku",
+    "TE-C212-varaku",
+    "TE-C212-sankranti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch212.txt",
+  "json": "telugu/narration/ch212.json",
+  "textHash": "fnv1a64:1e666f3a21e2b9d3",
+  "jsonHash": "fnv1a64:0e06872d55b032e6",
+  "findings": []
+}

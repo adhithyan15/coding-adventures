@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:a5e5e0898d002c60",
+  "lessonIds": [
+    "FR-C175-embrasser",
+    "FR-C175-saluer",
+    "FR-C175-remercier",
+    "FR-C175-inviter",
+    "FR-C175-garer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch175.txt",
+  "json": "french/narration/ch175.json",
+  "textHash": "fnv1a64:d5dec143bb17ff5c",
+  "jsonHash": "fnv1a64:57b4a7a8a6021d55",
+  "findings": []
+}

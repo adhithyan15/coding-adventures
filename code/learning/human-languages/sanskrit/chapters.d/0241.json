@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "For the sake of, By which, By that, That, However",
+  "label": "ch:sa-for-the-sake-of-by-which-by-that-that-however",
+  "canDo": "I can say for the sake of, by which, by that, that and however.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "SA-C241-parantu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say for the sake of, by which, by that, that and however.",
+    "assesses": [
+      "SA-LEX-C241-WHY241-03",
+      "SA-LEX-C241-WHY241-04",
+      "SA-LEX-C241-WHY241-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C206-sofrer",
+  "pathSegment": "PT-PATH-206-VERBOS206",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-206-VERBOS206",
+      "order": 4
+    }
+  ]
+}

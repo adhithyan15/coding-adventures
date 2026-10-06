@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:5219231e884c72db",
+  "lessonIds": [
+    "IT-C172-ditta",
+    "IT-C172-azienda",
+    "IT-C172-collega",
+    "IT-C172-stipendio",
+    "IT-C172-riunione"
+  ],
+  "tex": "italian/book/chapters/ch172-firm-company-colleague-salary-meeting.tex"
+}

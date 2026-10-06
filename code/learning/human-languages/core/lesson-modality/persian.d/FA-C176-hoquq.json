@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C176-hoquq",
+    "language": "persian",
+    "chapter": 176,
+    "sequence": 9060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6cd27e5f4433ac41"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C217-prokhladnyy",
+    "language": "russian",
+    "chapter": 217,
+    "sequence": 12960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07f7e279c7e12d7c"
+  },
+  "findings": []
+}

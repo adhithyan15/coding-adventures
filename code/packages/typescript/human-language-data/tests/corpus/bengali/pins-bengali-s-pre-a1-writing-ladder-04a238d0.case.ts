@@ -5,7 +5,7 @@ import {
   languageWritingStages,
 } from "../assert-language-corpus.js";
 
-it("pins Bengali's pre-A1 writing ladder", () => {
+it("pins Bengali's writing ladder through its first A1 controlled composition", () => {
   const track = languageWritingStages("bengali");
 
   // The track had NO stage evidence at all, so every writing-stage debt read as
@@ -20,6 +20,8 @@ it("pins Bengali's pre-A1 writing ladder", () => {
     ["BN-W01-na-guided-copy", "guided-copy"],
     ["BN-W01-na-delayed-copy", "delayed-copy"],
     ["BN-W01-na-dictation", "dictation-transcription"],
+    ["BN-W26-kothay-controlled-question", "controlled-composition"],
+    ["BN-W40-a1-timed-production", "timed-assessment-production"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({

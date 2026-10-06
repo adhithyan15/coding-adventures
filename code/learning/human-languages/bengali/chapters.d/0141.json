@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "Ripe, Funny, Comfortable, Dangerous, Safe",
+  "label": "ch:bn-ripe-funny-comfortable-dangerous-safe",
+  "canDo": "I can say ripe, funny, comfortable, dangerous and safe.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C141-nirapod",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: I can say ripe, funny, comfortable, dangerous and safe.",
+    "assesses": [
+      "BN-LEX-C141-QUAL141-03",
+      "BN-LEX-C141-QUAL141-04",
+      "BN-LEX-C141-QUAL141-05"
+    ]
+  }
+}

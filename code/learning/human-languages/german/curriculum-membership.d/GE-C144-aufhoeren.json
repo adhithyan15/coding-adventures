@@ -1,0 +1,11 @@
+{
+  "id": "GE-C144-aufhoeren",
+  "pathSegment": "GE-PATH-144-VERB144",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-144-VERB144",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C206-aturapadu",
+  "pathSegment": "KA-PATH-206-KRIYE206",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-206-KRIYE206",
+      "order": 4
+    }
+  ]
+}

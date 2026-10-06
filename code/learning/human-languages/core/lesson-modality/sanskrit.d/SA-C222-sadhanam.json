@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C222-sadhanam",
+    "language": "sanskrit",
+    "chapter": 222,
+    "sequence": 12960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c11dfc443d59ecf0"
+  },
+  "findings": []
+}

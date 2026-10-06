@@ -1,0 +1,11 @@
+{
+  "id": "ML-C195-munkutti",
+  "pathSegment": "ML-PATH-195-SAMAYAM195",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-195-SAMAYAM195",
+      "order": 4
+    }
+  ]
+}

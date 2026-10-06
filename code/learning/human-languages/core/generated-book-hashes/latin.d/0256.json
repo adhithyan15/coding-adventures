@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:e1a7944dbd64dca9",
+  "lessonIds": [
+    "LA-C256-plaudo",
+    "LA-C256-transeo",
+    "LA-C256-augeo",
+    "LA-C256-minuo",
+    "LA-C256-moneo"
+  ],
+  "tex": "latin/book/chapters/ch256-to-clap-to-cross-to-increase-to-lessen-to-warn.tex"
+}

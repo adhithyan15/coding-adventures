@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:2d9e2f388ea40f03",
+  "lessonIds": [
+    "SA-C218-sammarjani",
+    "SA-C218-kutharah",
+    "SA-C218-khanitram",
+    "SA-C218-halam",
+    "SA-C218-datram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch218.txt",
+  "json": "sanskrit/narration/ch218.json",
+  "textHash": "fnv1a64:7be3f052130e066f",
+  "jsonHash": "fnv1a64:a56db2333ef730d8",
+  "findings": []
+}

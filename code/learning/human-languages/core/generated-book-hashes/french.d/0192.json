@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:1ca0e82c08f24c5d",
+  "lessonIds": [
+    "FR-C192-cuit-cuite",
+    "FR-C192-mur-mure",
+    "FR-C192-sombre",
+    "FR-C192-clair-claire",
+    "FR-C192-lointain-lointaine",
+    "FR-R192-first-pass-words-from-chapters-184-187",
+    "FR-R192-second-pass-words-from-chapters-188-192"
+  ],
+  "tex": "french/book/chapters/ch192-cooked-ripe-dark-clear-distant.tex"
+}

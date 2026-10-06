@@ -1,0 +1,11 @@
+{
+  "id": "SA-C205-nindati",
+  "pathSegment": "SA-PATH-205-ACT205",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-205-ACT205",
+      "order": 1
+    }
+  ]
+}

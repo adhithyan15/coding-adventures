@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "Nowadays, School holidays, Birthday, Day off, On time",
+  "label": "ch:ru-nowadays-school-holidays-birthday-day-off-on-time",
+  "canDo": "I can say nowadays, school holidays, a birthday, a day off and on time.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "RU-C182-vovremya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say nowadays, school holidays, a birthday, a day off and on time.",
+    "assesses": [
+      "RU-LEX-C182-VREMYA182-03",
+      "RU-LEX-C182-VREMYA182-04",
+      "RU-LEX-C182-VREMYA182-05"
+    ]
+  }
+}

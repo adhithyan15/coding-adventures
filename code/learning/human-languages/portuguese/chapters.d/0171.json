@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "To kiss, To greet, To thank, To invite, To park",
+  "label": "ch:pt-to-kiss-to-greet-to-thank-to-invite-to-park",
+  "canDo": "I can say to kiss, to greet, to thank, to invite and to park.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C171-estacionar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say to kiss, to greet, to thank, to invite and to park.",
+    "assesses": [
+      "PT-LEX-C171-VERBOS171-03",
+      "PT-LEX-C171-VERBOS171-04",
+      "PT-LEX-C171-VERBOS171-05"
+    ]
+  }
+}

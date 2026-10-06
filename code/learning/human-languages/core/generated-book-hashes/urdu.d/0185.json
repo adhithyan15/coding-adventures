@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:050a8f41e14cdc37",
+  "lessonIds": [
+    "UR-C185-goli",
+    "UR-C185-nuskha",
+    "UR-C185-injekshan",
+    "UR-C185-zakhm",
+    "UR-C185-chot"
+  ],
+  "tex": "urdu/book/chapters/ch185-pill-prescription-injection-wound-injury.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:5fe200fe37a64a3e",
+  "lessonIds": [
+    "FA-C204-palto",
+    "FA-C204-manto",
+    "FA-C204-rusari",
+    "FA-C204-jin",
+    "FA-C204-poliver"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch204.txt",
+  "json": "persian/narration/ch204.json",
+  "textHash": "fnv1a64:a7565a63bfdf63fd",
+  "jsonHash": "fnv1a64:aa6186a038b1d9ec",
+  "findings": []
+}

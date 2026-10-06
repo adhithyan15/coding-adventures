@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:2cdaddf08f9339e2",
+  "lessonIds": [
+    "ML-C224-kalarttuka",
+    "ML-C224-vilambuka",
+    "ML-C224-rucikkuka",
+    "ML-C224-niraykkuka",
+    "ML-C224-mutuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch224.txt",
+  "json": "malayalam/narration/ch224.json",
+  "textHash": "fnv1a64:2dedf3ba591d0d2b",
+  "jsonHash": "fnv1a64:fe314c46dca63eed",
+  "findings": []
+}

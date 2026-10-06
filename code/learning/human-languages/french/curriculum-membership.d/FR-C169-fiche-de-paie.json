@@ -1,0 +1,11 @@
+{
+  "id": "FR-C169-fiche-de-paie",
+  "pathSegment": "FR-PATH-169-CHOSES169",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-169-CHOSES169",
+      "order": 2
+    }
+  ]
+}

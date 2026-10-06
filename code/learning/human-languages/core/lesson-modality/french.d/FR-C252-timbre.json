@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C252-timbre",
+    "language": "french",
+    "chapter": 252,
+    "sequence": 14750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffee18e6acee522e"
+  },
+  "findings": []
+}

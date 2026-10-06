@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "Line, Money box, Suitcase, Hoe, Sickle",
+  "label": "ch:ka-line-money-box-suitcase-hoe-sickle",
+  "canDo": "I can say a line, a money box, a suitcase, a hoe and a sickle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C230-kudugolu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say a line, a money box, a suitcase, a hoe and a sickle.",
+    "assesses": [
+      "KA-LEX-C230-VASTU230-03",
+      "KA-LEX-C230-VASTU230-04",
+      "KA-LEX-C230-VASTU230-05"
+    ]
+  }
+}

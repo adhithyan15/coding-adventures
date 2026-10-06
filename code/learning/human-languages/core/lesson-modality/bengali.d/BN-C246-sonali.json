@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C246-sonali",
+    "language": "bengali",
+    "chapter": 246,
+    "sequence": 15460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:401bd0ad93a7f895"
+  },
+  "findings": []
+}

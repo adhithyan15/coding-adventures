@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C318-ormma",
+    "language": "malayalam",
+    "chapter": 318,
+    "sequence": 15040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82d54c952337610e"
+  },
+  "findings": []
+}

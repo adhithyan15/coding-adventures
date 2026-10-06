@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C241-distruggere",
+    "language": "italian",
+    "chapter": 241,
+    "sequence": 14300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:721724aa46d19e52"
+  },
+  "findings": []
+}

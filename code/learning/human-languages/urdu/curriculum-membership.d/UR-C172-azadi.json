@@ -1,0 +1,11 @@
+{
+  "id": "UR-C172-azadi",
+  "pathSegment": "UR-PATH-172-CHIZ172",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-172-CHIZ172",
+      "order": 4
+    }
+  ]
+}

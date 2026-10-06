@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:97fd6ed6cb948577",
+  "lessonIds": [
+    "IT-C163-meccanico",
+    "IT-C163-elettricista",
+    "IT-C163-idraulico",
+    "IT-C163-operaio",
+    "IT-C163-impiegato"
+  ],
+  "tex": "italian/book/chapters/ch163-mechanic-electrician-plumber-worker-office-worker.tex"
+}

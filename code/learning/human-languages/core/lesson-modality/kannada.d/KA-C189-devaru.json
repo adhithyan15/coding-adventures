@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C189-devaru",
+    "language": "kannada",
+    "chapter": 189,
+    "sequence": 8650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0afe48c5188d6345"
+  },
+  "findings": []
+}

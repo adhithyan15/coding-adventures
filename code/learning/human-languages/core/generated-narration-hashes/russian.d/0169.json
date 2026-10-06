@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:9a77b33d60e046fa",
+  "lessonIds": [
+    "RU-C169-prosba",
+    "RU-C169-pomoshch",
+    "RU-C169-mneniye",
+    "RU-C169-pravda",
+    "RU-C169-lozh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch169.txt",
+  "json": "russian/narration/ch169.json",
+  "textHash": "fnv1a64:4139306dbdcc6821",
+  "jsonHash": "fnv1a64:dba72d991d2d6cfb",
+  "findings": []
+}

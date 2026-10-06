@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-177-NISHEDHAM177",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "ML-EXT-177-NISHEDHAM177"
+  ],
+  "after": []
+}

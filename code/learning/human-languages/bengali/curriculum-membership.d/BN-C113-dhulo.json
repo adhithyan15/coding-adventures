@@ -1,0 +1,11 @@
+{
+  "id": "BN-C113-dhulo",
+  "pathSegment": "BN-PATH-113-THINGS113",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-113-THINGS113",
+      "order": 2
+    }
+  ]
+}

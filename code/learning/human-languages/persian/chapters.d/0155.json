@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "Secondary school, Police station, Town hall, Embassy, Customs",
+  "label": "ch:fa-secondary-school-police-station-town-hall-embassy-customs",
+  "canDo": "I can say a secondary school, a police station, the town hall, an embassy and customs.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-C155-gomrok",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: I can say a secondary school, a police station, the town hall, an embassy and customs.",
+    "assesses": [
+      "FA-LEX-C155-MAKAN155-03",
+      "FA-LEX-C155-MAKAN155-04",
+      "FA-LEX-C155-MAKAN155-05"
+    ]
+  }
+}

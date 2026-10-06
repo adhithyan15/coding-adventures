@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:9c3db0f9967b4b27",
+  "lessonIds": [
+    "RU-C255-familiya",
+    "RU-C255-vozrast",
+    "RU-C255-nomer",
+    "RU-C255-soobshcheniye",
+    "RU-C255-razgovor"
+  ],
+  "tex": "russian/book/chapters/ch255-surname-age-number-message-conversation.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:157455cb10f11320",
+  "lessonIds": [
+    "ML-C327-cemmariyatu",
+    "ML-C327-mutala",
+    "ML-C327-palli",
+    "ML-C327-tenicca",
+    "ML-C327-cilanti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch327.txt",
+  "json": "malayalam/narration/ch327.json",
+  "textHash": "fnv1a64:a4ae7ab0601f5597",
+  "jsonHash": "fnv1a64:3b286cb5c9caef1f",
+  "findings": []
+}

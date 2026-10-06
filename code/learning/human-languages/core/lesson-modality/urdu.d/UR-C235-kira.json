@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C235-kira",
+    "language": "urdu",
+    "chapter": 235,
+    "sequence": 14030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbe9900bd4b8f622"
+  },
+  "findings": []
+}

@@ -7,7 +7,7 @@ chapter: 439
 type: word
 headword: cortar
 gloss: to cut — and on a road sign, to close; the verb behind an adjective you already own
-concept_tag: ES-ACT-CORTAR
+concept_tag: ES-VERB-CORTAR
 prerequisites: [ES-C439-cerrado, ES-C365-corto, ES-C294-cuchillo]
 sounds: [stress-final, r-tap]
 roots: [curtus-latin]

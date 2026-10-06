@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C151-sans-lena",
+    "language": "urdu",
+    "chapter": 151,
+    "sequence": 8040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:809c1f89bbb7a3d9"
+  },
+  "findings": []
+}

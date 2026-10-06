@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:a798b6e053562b2d",
+  "lessonIds": [
+    "HI-C240-adhunik",
+    "HI-C240-pracin",
+    "HI-C240-sthaniya",
+    "HI-C240-videsi",
+    "HI-C240-desi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch240.txt",
+  "json": "hindi/narration/ch240.json",
+  "textHash": "fnv1a64:d5173bba9097a05d",
+  "jsonHash": "fnv1a64:42908736488b49a8",
+  "findings": []
+}

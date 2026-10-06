@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:adba07919b711676",
+  "lessonIds": [
+    "TE-C254-rastram",
+    "TE-C254-prantam",
+    "TE-C254-dikku",
+    "TE-C254-turpu",
+    "TE-C254-padamara"
+  ],
+  "tex": "telugu/book/chapters/ch254-state-area-direction-east-west.tex"
+}

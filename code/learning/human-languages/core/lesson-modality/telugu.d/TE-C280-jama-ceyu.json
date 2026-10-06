@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C280-jama-ceyu",
+    "language": "telugu",
+    "chapter": 280,
+    "sequence": 13330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ec5563bf95d7833"
+  },
+  "findings": []
+}

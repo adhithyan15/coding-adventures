@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "Festival, New Year, Era, Every week, Every year",
+  "label": "ch:ur-festival-new-year-era-every-week-every-year",
+  "canDo": "I can say a festival, New Year, an era, every week and every year.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "UR-C156-har-sal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: I can say a festival, New Year, an era, every week and every year.",
+    "assesses": [
+      "UR-LEX-C156-VAQT156-03",
+      "UR-LEX-C156-VAQT156-04",
+      "UR-LEX-C156-VAQT156-05"
+    ]
+  }
+}

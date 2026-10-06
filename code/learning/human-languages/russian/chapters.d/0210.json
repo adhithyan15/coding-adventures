@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Burn, Allergy, Dentist, Sticking plaster, Bandage",
+  "label": "ch:ru-burn-allergy-dentist-sticking-plaster-bandage",
+  "canDo": "I can say a burn, an allergy, a dentist, a sticking plaster and a bandage.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C210-bint",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say a burn, an allergy, a dentist, a sticking plaster and a bandage.",
+    "assesses": [
+      "RU-LEX-C210-ZDOROV210-03",
+      "RU-LEX-C210-ZDOROV210-04",
+      "RU-LEX-C210-ZDOROV210-05"
+    ]
+  }
+}

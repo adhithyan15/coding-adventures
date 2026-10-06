@@ -1,0 +1,11 @@
+{
+  "id": "TA-C173-kalipparai",
+  "pathSegment": "TA-PATH-173-IDAM173",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-173-IDAM173",
+      "order": 3
+    }
+  ]
+}

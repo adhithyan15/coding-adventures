@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "A teacher, A lawyer, A soldier, A tailor, A barber",
+  "label": "ch:hi-a-teacher-a-lawyer-a-soldier-a-tailor-a-barber",
+  "canDo": "I can say a teacher, a lawyer, a soldier, a tailor and a barber.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C193-nai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say a teacher, a lawyer, a soldier, a tailor and a barber.",
+    "assesses": [
+      "HI-LEX-C193-THG193-03",
+      "HI-LEX-C193-THG193-04",
+      "HI-LEX-C193-THG193-05"
+    ]
+  }
+}

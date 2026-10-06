@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "So, However, Anyway, On the contrary, Although",
+  "label": "ch:fr-so-however-anyway-on-the-contrary-although",
+  "canDo": "I can say so, however, anyway, on the contrary and although.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FR-C158-bien-que",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can say so, however, anyway, on the contrary and although.",
+    "assesses": [
+      "FR-LEX-C158-POURQUOI158-03",
+      "FR-LEX-C158-POURQUOI158-04",
+      "FR-LEX-C158-POURQUOI158-05"
+    ]
+  }
+}

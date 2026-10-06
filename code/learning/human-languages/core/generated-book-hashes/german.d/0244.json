@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:67d3e3518483396a",
+  "lessonIds": [
+    "GE-C244-anbieten",
+    "GE-C244-annehmen",
+    "GE-C244-ablehnen",
+    "GE-C244-abschliessen",
+    "GE-C244-anmelden"
+  ],
+  "tex": "german/book/chapters/ch244-to-offer-to-accept-to-refuse-to-lock-to-register.tex"
+}

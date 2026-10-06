@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C227-malchik",
+    "language": "russian",
+    "chapter": 227,
+    "sequence": 13820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8b6554d0dfbbf91"
+  },
+  "findings": []
+}

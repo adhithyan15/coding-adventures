@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C196-ghadi-karne",
+    "language": "marathi",
+    "chapter": 196,
+    "sequence": 10160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38e0c05a58815dc9"
+  },
+  "findings": []
+}

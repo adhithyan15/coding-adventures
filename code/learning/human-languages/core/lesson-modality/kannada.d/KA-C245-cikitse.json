@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C245-cikitse",
+    "language": "kannada",
+    "chapter": 245,
+    "sequence": 11620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:482feee000066db2"
+  },
+  "findings": []
+}

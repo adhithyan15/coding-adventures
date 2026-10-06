@@ -1,0 +1,11 @@
+{
+  "id": "GE-C225-ahnung",
+  "pathSegment": "GE-PATH-225-THING225",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-225-THING225",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C245-imperator",
+    "language": "latin",
+    "chapter": 245,
+    "sequence": 12800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aeca91b72ca9ca2b"
+  },
+  "findings": []
+}

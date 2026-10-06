@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C145-tai-karna",
+    "language": "urdu",
+    "chapter": 145,
+    "sequence": 7630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b15c4bd1ba0d001e"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:82463f5c1ab4cea3",
+  "lessonIds": [
+    "FR-C208-applaudir",
+    "FR-C208-traverser",
+    "FR-C208-augmenter",
+    "FR-C208-diminuer",
+    "FR-C208-prevenir"
+  ],
+  "tex": "french/book/chapters/ch208-to-applaud-to-cross-to-increase-to-decrease-to-warn.tex"
+}

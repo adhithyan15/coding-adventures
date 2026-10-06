@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "Daytime, Half of the day, Decade, Century, Childhood",
+  "label": "ch:te-daytime-half-of-the-day-decade-century-childhood",
+  "canDo": "I can say daytime, a half of the day, a decade, a century and childhood.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C290-balyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can say daytime, a half of the day, a decade, a century and childhood.",
+    "assesses": [
+      "TE-LEX-C290-SAMAYAM290-03",
+      "TE-LEX-C290-SAMAYAM290-04",
+      "TE-LEX-C290-SAMAYAM290-05"
+    ]
+  }
+}

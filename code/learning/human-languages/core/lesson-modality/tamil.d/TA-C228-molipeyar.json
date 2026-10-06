@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C228-molipeyar",
+    "language": "tamil",
+    "chapter": 228,
+    "sequence": 12340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58eea7541f2590fa"
+  },
+  "findings": []
+}

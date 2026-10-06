@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:8cf82ccca5dbeef2",
+  "lessonIds": [
+    "PT-C141-acompanhar",
+    "PT-C141-acrescentar",
+    "PT-C141-anunciar",
+    "PT-C141-aparecer",
+    "PT-C141-aplaudir"
+  ],
+  "tex": "portuguese/book/chapters/ch141-to-go-with-to-add-to-announce-to-appear-to-applaud.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C293-canal",
+    "language": "malayalam",
+    "chapter": 293,
+    "sequence": 13730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c27b719f793d7b4"
+  },
+  "findings": []
+}

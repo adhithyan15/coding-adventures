@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Nature, Sport, Player, Cricket, Chess",
+  "label": "ch:te-nature-sport-player-cricket-chess",
+  "canDo": "I can say nature, a sport, a player, cricket and chess.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-R304-second-pass-words-from-chapters-300-304",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can say nature, a sport, a player, cricket and chess.",
+    "assesses": [
+      "TE-LEX-C304-VASTUVU304-03",
+      "TE-LEX-C304-VASTUVU304-04",
+      "TE-LEX-C304-VASTUVU304-05"
+    ]
+  }
+}

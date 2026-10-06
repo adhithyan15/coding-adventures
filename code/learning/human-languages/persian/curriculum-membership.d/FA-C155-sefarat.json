@@ -1,0 +1,11 @@
+{
+  "id": "FA-C155-sefarat",
+  "pathSegment": "FA-PATH-155-MAKAN155",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-155-MAKAN155",
+      "order": 3
+    }
+  ]
+}

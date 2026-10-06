@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:561ed186ee6913ac",
+  "lessonIds": [
+    "MR-C171-kvacit",
+    "MR-C171-mag",
+    "MR-C171-sevti",
+    "MR-C171-ajun",
+    "MR-C171-acanak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch171.txt",
+  "json": "marathi/narration/ch171.json",
+  "textHash": "fnv1a64:84729f6414a0d64a",
+  "jsonHash": "fnv1a64:9ee3b24a371b7635",
+  "findings": []
+}

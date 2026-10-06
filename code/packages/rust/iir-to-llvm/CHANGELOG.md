@@ -1,4 +1,9 @@
 # Changelog — iir-to-llvm
+## 0.58.0 - 2026-10-05 - valid floating module-global initializers
+
+Typed `double` and `float` module globals now use LLVM floating-point zero
+syntax instead of the invalid integer token `0`.
+
 ## Unreleased — FLOW-MATIC EOF peek (VM-039a)
 
 Support the zero-argument `input_more` builtin through the shared C runtime.

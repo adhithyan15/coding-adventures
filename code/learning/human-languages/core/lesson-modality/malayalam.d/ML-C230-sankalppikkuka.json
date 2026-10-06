@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C230-sankalppikkuka",
+    "language": "malayalam",
+    "chapter": 230,
+    "sequence": 10410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7d72fc50fc05ee7"
+  },
+  "findings": []
+}

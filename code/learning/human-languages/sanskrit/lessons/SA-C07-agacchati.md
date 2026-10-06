@@ -63,7 +63,7 @@ twice as long. Length alone carries meaning in Sanskrit, so give it its time:
 ## Grammar Lens: the upasarga, Sanskrit's aiming device
 <!-- hl-knowledge: introduces=[SA-GRAMMAR-UPASARGA-PREFIX]; assesses=[] -->
 
-**आ** is an **उपसर्ग** (*upasarga*), a preverb. Sanskrit has about twenty, and
+**आ** is an *upasarga*, a preverb. Sanskrit has about twenty, and
 any of them may ride in front of a root to re-aim it:
 
 | prefix | sense | on गम् |
@@ -73,8 +73,8 @@ any of them may ride in front of a root to re-aim it:
 | नि *ni* | down | *nigacchati*, goes down |
 
 A handful of roots plus a handful of prefixes covers an enormous amount of
-vocabulary. You have met the trick already without being told: **संस्कृत**
-(*saṁskṛta*, "Sanskrit") is *sam* "together" on the root कृ *kṛ* "make" —
+vocabulary. You have met the trick already without being told:
+*saṁskṛta* ("Sanskrit") is *sam* "together" on the root *kṛ* "make" —
 put-together, and so perfected.
 
 ## The word, taken apart — Latin does the same thing
@@ -100,6 +100,6 @@ visible.
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-AGACCHATI-COME, SA-LEX-GACCHATI-GO, SA-GRAMMAR-UPASARGA-PREFIX] -->
 
 [PAUSE 3s] How does Sanskrit say "comes"? (**आगच्छति** — *ā* "toward" on
-"goes.") What is such a prefix called? (An **उपसर्ग**, *upasarga*.) Which
-Sanskrit word you already knew is built the same way? (**संस्कृत** — *sam* plus
+"goes.") What is such a prefix called? (An *upasarga*.) Which
+Sanskrit word you already knew is built the same way? (*saṁskṛta* — *sam* plus
 *kṛ*.) Next: a verb whose everyday form is not the one related to English.

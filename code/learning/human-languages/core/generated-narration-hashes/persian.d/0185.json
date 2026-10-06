@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:02144fed5ef83e08",
+  "lessonIds": [
+    "FA-C185-tavajjoh-kardan",
+    "FA-C185-hal-kardan",
+    "FA-C185-eshtebah-kardan",
+    "FA-C185-amanat-gereftan",
+    "FA-C185-amanat-dadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch185.txt",
+  "json": "persian/narration/ch185.json",
+  "textHash": "fnv1a64:ba6f171fb4e52478",
+  "jsonHash": "fnv1a64:12aae73e12743ad9",
+  "findings": []
+}

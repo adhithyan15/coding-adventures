@@ -1,0 +1,11 @@
+{
+  "id": "FA-C240-sabzi",
+  "pathSegment": "FA-PATH-240-CHIZ240",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-240-CHIZ240",
+      "order": 4
+    }
+  ]
+}

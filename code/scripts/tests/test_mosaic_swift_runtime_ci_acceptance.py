@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import re
 import subprocess
 import sys
 import tempfile
@@ -103,6 +104,9 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("-destination 'generic/platform=iOS Simulator'", block)
         self.assertIn("-destination 'generic/platform=iOS'", block)
         self.assertIn("nm -gU", block)
+        # `nm | grep -q` under pipefail fails on SIGPIPE whenever grep exits
+        # at its first match while nm is still writing.
+        self.assertNotRegex(block, r"(?m)^\s*nm [^\n]*\| *grep -q")
 
     def test_ios_app_target_builds_installs_and_launches(self) -> None:
         """UI89 §2.2: the generated Xcode project builds an .app with the
@@ -114,6 +118,7 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         block = workflow[start:workflow.index("\n\n", start)]
         self.assertIn("xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator", block)
         self.assertIn("nm -gU \"$ios_app/App\"", block)
+        self.assertNotRegex(block, r"(?m)^\s*nm [^\n]*\| *grep -q")
         self.assertIn("= dev.codingadventures.trestle", block)
         self.assertIn("xcrun simctl install", block)
         self.assertIn("xcrun simctl launch", block)
@@ -162,6 +167,96 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         ipad = workflow[ipad_start:workflow.index("\n\n", ipad_start)]
         self.assertIn('select(.name | startswith("iPad"))', ipad)
         self.assertIn('xcrun simctl install "$ipad" "$ios_app"', ipad)
+
+    def test_journal_runs_and_keeps_its_state_on_ios(self) -> None:
+        """UI89 §2.4 (step 7): Journal's engine is linked statically, its
+        app carries the default identity, and the simulator gate's three
+        launches run before the iPad launch."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# ---- Journal on iOS and iPadOS (UI89 §2.4, step 7).")
+        block = workflow[start : workflow.index("\n\n", start)]
+        self.assertIn("bash code/scripts/build-mosaic-xcframework.sh journal-mosaic-app", block)
+        self.assertIn('--runtime-library "$journal_ios_runtime"', block)
+        self.assertIn("xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator", block)
+        self.assertIn("= dev.codingadventures.journalapp", block)
+        self.assertNotRegex(block, r"(?m)^\s*nm [^\n]*\| *grep -q")
+        gate = (
+            'bash code/scripts/mosaic-ios-simulator-gate.sh "$journal_ios_app" '
+            'dev.codingadventures.journalapp journal-app "$simulator"'
+        )
+        self.assertIn(gate, block)
+        self.assertLess(block.index(gate), block.index('xcrun simctl install "$ipad" "$journal_ios_app"'))
+
+        script = (SCRIPT.parent / "mosaic-ios-simulator-gate.sh").read_text(encoding="utf-8")
+        # Where the host keeps state, and the order that makes launch 3 mean
+        # something: the quarantine is seen before fresh state is trusted.
+        self.assertIn('state_dir="$container/Library/Application Support/$application_id"', script)
+        self.assertIn("printf '{}' > \"$state\"", script)
+        self.assertLess(script.index('test -e "$corrupt"'), script.rindex('test -s "$state"'))
+
+    def test_engram_runs_and_keeps_its_state_on_ios(self) -> None:
+        """UI89 §2.5 (step 7): Engram follows Journal's iOS recipe, after
+        Journal, and its iOS target compiles the [host_effects] handler."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        journal = workflow.index("# ---- Journal on iOS and iPadOS (UI89 §2.4, step 7).")
+        start = workflow.index("# ---- Engram on iOS and iPadOS (UI89 §2.5, step 7).")
+        self.assertLess(journal, start)
+        block = workflow[start : workflow.index("\n\n", start)]
+        self.assertIn("bash code/scripts/build-mosaic-xcframework.sh engram-mosaic-app", block)
+        self.assertIn("pkg code/programs/mosaic/engram-app --backend swiftui", block)
+        self.assertIn("grep -qF 'Sources/App/EngramEffects.swift'", block)
+        self.assertIn("= dev.codingadventures.engramapp", block)
+        self.assertNotRegex(block, r"(?m)^\s*nm [^\n]*\| *grep -q")
+        gate = (
+            'bash code/scripts/mosaic-ios-simulator-gate.sh "$engram_ios_app" '
+            'dev.codingadventures.engramapp engram-app "$simulator"'
+        )
+        self.assertIn(gate, block)
+        self.assertLess(block.index(gate), block.index('xcrun simctl install "$ipad" "$engram_ios_app"'))
+
+    def test_a_lane_script_change_alone_requires_acceptance(self) -> None:
+        """The iOS scripts belong to no package; changing one must still run
+        the lane that executes it."""
+
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+
+            def git(*arguments: str) -> None:
+                subprocess.run(
+                    ["git", "-c", "user.name=t", "-c", "user.email=t@example.com", *arguments],
+                    cwd=repo,
+                    check=True,
+                    capture_output=True,
+                )
+
+            git("init", "-q", "-b", "main")
+            for path in (MODULE.CI_WORKFLOW_PATH, *MODULE.CI_SCRIPT_PATHS, "README.md"):
+                (repo / path).parent.mkdir(parents=True, exist_ok=True)
+                (repo / path).write_text("v1\n", encoding="utf-8")
+            git("add", ".")
+            git("commit", "-q", "-m", "base")
+            git("checkout", "-q", "-b", "change")
+            (repo / "README.md").write_text("v2\n", encoding="utf-8")
+            git("commit", "-q", "-am", "unrelated")
+            self.assertFalse(MODULE.workflow_changed(repo, "main"))
+            for path in MODULE.CI_SCRIPT_PATHS:
+                (repo / path).write_text("v2\n", encoding="utf-8")
+                git("commit", "-q", "-am", f"change {path}")
+                self.assertTrue(MODULE.workflow_changed(repo, "main"), path)
+                git("reset", "-q", "--hard", "HEAD~1")
+
+    def test_every_script_the_swift_lane_calls_is_a_lane_script(self) -> None:
+        """Read the scripts the SwiftUI runtime step actually calls, so a new
+        one cannot be left out of CI_SCRIPT_PATHS."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Round-trip Rust engine through standard SwiftUI binding")
+        block = workflow[start : workflow.index("\n      - name:", start)]
+        called = set(re.findall(r"code/scripts/[\w./-]+\.sh\b", block))
+        self.assertTrue(called)
+        self.assertEqual(sorted(called - set(MODULE.CI_SCRIPT_PATHS)), [])
 
     def test_ios_project_generator_requires_acceptance(self) -> None:
         self.assertIn("rust/mosaic-ios-project", MODULE.ACCEPTANCE_PACKAGES)
@@ -249,9 +344,10 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn(
             "Round-trip Rust engine through standard SwiftUI binding", workflow
         )
-        # 30, not 15: since UI89 §2.2 the step also boots an iOS simulator
-        # and launches the generated app.
-        self.assertIn("timeout-minutes: 30", swift_runtime_step)
+        # 60: since UI89 §2.2 the step boots iOS simulators and launches the
+        # generated apps, and §2.4/§2.5 add Journal's and Engram's engines,
+        # app builds and simulator gates.
+        self.assertIn("timeout-minutes: 60", swift_runtime_step)
         self.assertIn(
             "mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app",
             workflow,

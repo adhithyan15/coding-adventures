@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "To suggest, To criticise, To imagine, To solve, To be bored",
+  "label": "ch:ml-to-suggest-to-criticise-to-imagine-to-solve-to-be-bored",
+  "canDo": "I can say to suggest, to criticise, to imagine, to solve and to be bored.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C230-boratikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say to suggest, to criticise, to imagine, to solve and to be bored.",
+    "assesses": [
+      "ML-LEX-C230-KRIYA230-03",
+      "ML-LEX-C230-KRIYA230-04",
+      "ML-LEX-C230-KRIYA230-05"
+    ]
+  }
+}

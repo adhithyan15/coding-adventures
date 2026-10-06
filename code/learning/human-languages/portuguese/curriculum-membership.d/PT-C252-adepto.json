@@ -1,0 +1,11 @@
+{
+  "id": "PT-C252-adepto",
+  "pathSegment": "PT-PATH-252-COISAS252",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-252-COISAS252",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R216-second-pass-words-from-chapters-214-216",
+    "language": "persian",
+    "chapter": 216,
+    "sequence": 11180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:234308a23ac9e4e6"
+  },
+  "findings": []
+}

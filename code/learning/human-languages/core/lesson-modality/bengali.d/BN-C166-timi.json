@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C166-timi",
+    "language": "bengali",
+    "chapter": 166,
+    "sequence": 9540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c00914217c2da0b"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C215-thiyetaru",
+  "pathSegment": "TE-PATH-215-STHALAM215",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-215-STHALAM215",
+      "order": 3
+    }
+  ]
+}

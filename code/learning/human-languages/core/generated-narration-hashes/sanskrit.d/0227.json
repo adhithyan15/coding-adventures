@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:b0c0215561f266c1",
+  "lessonIds": [
+    "SA-C227-paksah",
+    "SA-C227-pucchah",
+    "SA-C227-srngam",
+    "SA-C227-cancuh",
+    "SA-C227-grdhrah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch227.txt",
+  "json": "sanskrit/narration/ch227.json",
+  "textHash": "fnv1a64:fb83f2cf6c54d39e",
+  "jsonHash": "fnv1a64:626e3141320094ae",
+  "findings": []
+}

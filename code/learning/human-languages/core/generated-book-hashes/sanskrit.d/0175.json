@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:e94150cebf39ad6c",
+  "lessonIds": [
+    "SA-C175-harati",
+    "SA-C175-bharati",
+    "SA-C175-vahati",
+    "SA-C175-sahate",
+    "SA-C175-yatate"
+  ],
+  "tex": "sanskrit/book/chapters/ch175-takes-away-supports-carries-endures-tries.tex"
+}

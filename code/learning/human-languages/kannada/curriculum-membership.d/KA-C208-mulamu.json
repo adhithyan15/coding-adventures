@@ -1,0 +1,11 @@
+{
+  "id": "KA-C208-mulamu",
+  "pathSegment": "KA-PATH-208-AROGYA208",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-208-AROGYA208",
+      "order": 2
+    }
+  ]
+}

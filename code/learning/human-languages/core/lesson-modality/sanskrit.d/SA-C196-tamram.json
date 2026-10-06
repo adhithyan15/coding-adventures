@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C196-tamram",
+    "language": "sanskrit",
+    "chapter": 196,
+    "sequence": 10960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4953ed423d194ce9"
+  },
+  "findings": []
+}

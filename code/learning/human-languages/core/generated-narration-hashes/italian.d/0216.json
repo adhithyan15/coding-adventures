@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:61f80dd896264a3a",
+  "lessonIds": [
+    "IT-C216-fiducia",
+    "IT-C216-coraggio",
+    "IT-C216-vergogna",
+    "IT-C216-gelosia",
+    "IT-C216-sorpresa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch216.txt",
+  "json": "italian/narration/ch216.json",
+  "textHash": "fnv1a64:131b53f11ffa514c",
+  "jsonHash": "fnv1a64:252f054ed0e4202d",
+  "findings": []
+}

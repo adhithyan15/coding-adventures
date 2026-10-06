@@ -7,7 +7,7 @@ chapter: 441
 type: word
 headword: firmar
 gloss: to sign — literally to make firm, which is what a signature was for
-concept_tag: ES-ACT-FIRMAR
+concept_tag: ES-VERB-FIRMAR
 prerequisites: [ES-C441-contrato, ES-C305-nombre, ES-C34-escribir]
 sounds: [r-tap, stress-final]
 roots: [firmus-latin]

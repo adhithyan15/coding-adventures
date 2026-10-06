@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:8bd077ac4b2d0558",
+  "lessonIds": [
+    "MR-C163-thand-karne",
+    "MR-C163-rikame-karne",
+    "MR-C163-vajan-karne",
+    "MR-C163-tapasne",
+    "MR-C163-sahi-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch163.txt",
+  "json": "marathi/narration/ch163.json",
+  "textHash": "fnv1a64:0523e4480faf7002",
+  "jsonHash": "fnv1a64:213175d1e71f02fa",
+  "findings": []
+}

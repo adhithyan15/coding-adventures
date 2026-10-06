@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C155-sefarat",
+    "language": "persian",
+    "chapter": 155,
+    "sequence": 7940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e78f17334a51c79b"
+  },
+  "findings": []
+}

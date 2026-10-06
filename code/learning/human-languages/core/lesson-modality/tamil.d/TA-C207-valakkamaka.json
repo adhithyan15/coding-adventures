@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C207-valakkamaka",
+    "language": "tamil",
+    "chapter": 207,
+    "sequence": 10800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91b232fd2f53e1c5"
+  },
+  "findings": []
+}

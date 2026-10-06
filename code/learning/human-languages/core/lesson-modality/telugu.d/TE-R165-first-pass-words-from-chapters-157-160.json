@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R165-first-pass-words-from-chapters-157-160",
+    "language": "telugu",
+    "chapter": 165,
+    "sequence": 7290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:966e32f15d4e4837"
+  },
+  "findings": []
+}

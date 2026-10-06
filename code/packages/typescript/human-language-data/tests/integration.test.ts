@@ -237,7 +237,17 @@ describe("real curriculum", () => {
       // 78 -> 135: the A1 tranche, fifty-seven chapters of five words in six
       // runs (time, this and that, places, can, want, why, things, describing
       // words and verbs), each run closed by two reviews.
-    ).toEqual(Array.from({ length: 135 }, (_, i) => i + 1));
+      // 135 -> 139: chapters 136-139 realize the last four A2 spine nodes (negation and questions, the past, the future, practical texts).
+      // 139 -> 178: the first A2 vocabulary tranche, chapters 140-178: 195
+      // headwords, fifty of them verbs, in five runs each closed by two
+      // reviews.
+      // 178 -> 216: the second A2 vocabulary tranche, chapters 179-216: 190
+      // headwords, fifty of them verbs.
+      // 216 -> 252: the third A2 vocabulary tranche, chapters 217-252: 180
+      // headwords, fifty of them verbs, which brings Persian to A2.
+      // 252 -> 286: the fourth A2 vocabulary tranche, chapters 253-286: 170
+      // headwords, fifty of them verbs, beyond the A2 floor.
+    ).toEqual(Array.from({ length: 286 }, (_, i) => i + 1));
     expect(
       books.books
         .find((book) => book.language === "urdu")
@@ -306,7 +316,16 @@ describe("real curriculum", () => {
       // 87 -> 142: the A1 tranche, fifty-four chapters of five words (this and
       // that, time, places, can and want, things, describing words and verbs),
       // with chapter 99 writing ز and ط from روز and طرف.
-      ...Array.from({ length: 55 }, (_, i) => 88 + i)]);
+      // 142 -> 143: the first A2 writing rung, a model-free connected message.
+      // 143 -> 146: the A2 spine chapters (the past, the future, reading
+      // practical texts).
+      // 146 -> 179: the first A2 vocabulary tranche, 165 headwords, twenty-five
+      // of them verbs.
+      // 179 -> 211: the second A2 vocabulary tranche, 160 headwords.
+      // 211 -> 238: the third A2 vocabulary tranche, 135 headwords.
+      // 238 -> 263: the last A2 vocabulary tranche, 125 headwords; Urdu attains
+      // A2.
+      ...Array.from({ length: 176 }, (_, i) => 88 + i)]);
     expect(
       books.books
         .find((book) => book.language === "russian")
@@ -355,7 +374,15 @@ describe("real curriculum", () => {
       // headwords, twenty-five verbs), and chapter 93, which writes э from этот
       // and щ from площадь -- the two letters these words bring -- before any
       // review prints them.
-    ).toEqual(Array.from({ length: 135 }, (_, index) => index + 1));
+      // 135 -> 139: the A2 spine chapters -- saying no, the past, the future
+      // and reading practical texts.
+      // 139 -> 172: the first A2 vocabulary tranche, 165 headwords, thirty-five
+      // of them verbs.
+      // 172 -> 203: the second A2 vocabulary tranche, 155 headwords.
+      // 203 -> 231: the third A2 vocabulary tranche, 140 headwords.
+      // 231 -> 257: the last A2 vocabulary tranche, 130 headwords; Russian
+      // attains A2.
+    ).toEqual(Array.from({ length: 257 }, (_, index) => index + 1));
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

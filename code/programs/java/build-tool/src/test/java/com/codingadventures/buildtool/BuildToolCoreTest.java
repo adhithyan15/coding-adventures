@@ -25,6 +25,7 @@ final class BuildToolCoreTest {
             "diff-selection/match-work-over-limit",
             "diff-selection/package-prefix",
             "diff-selection/repository-boundary-reverse-index",
+            "diff-selection/shared-input-multiconsumer",
             "diff-selection/strict-glob-character-classes",
             "diff-selection/transitive-package-change",
             "diff-selection/unknown-path-all",

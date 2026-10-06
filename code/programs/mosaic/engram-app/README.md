@@ -90,6 +90,7 @@ editing, and save/delete/cancel controls.
   | Qt | `host/qt/engram_effects.cpp` | `QFileDialog`, `QMessageBox` |
   | SwiftUI | `host/swiftui/EngramEffects.swift` | `NSOpenPanel` / `NSSavePanel` |
   | Compose | `host/compose/EngramEffects.kt` | `JFileChooser`, `JOptionPane` |
+  | Compose on Android | `host/android/EngramAndroidEffects.kt` | the platform library's document picker |
   | Flutter | `host/flutter/engram_effects.dart` | `file_selector` |
 
   Each used to override the generated host with a hand-written `engram-capi`
@@ -195,7 +196,8 @@ cd code/programs/mosaic/engram-app
 
 Compiles the engine to wasm, emits the app as a complete React/Vite project, and
 installs the wasm runtime into it. `--build` also produces `dist/`; without it the
-script stops at a project ready for `npm install && npm run dev`. `--theme light`
+script stops at a project ready for `npm install && npm run dev` (a local
+convenience; the build itself installs from the committed lock, below). `--theme light`
 selects the light stylesheet.
 
 The runtime-install step is not optional: the emitted `src/engram-host.ts` imports
@@ -203,6 +205,87 @@ The runtime-install step is not optional: the emitted `src/engram-host.ts` impor
 itself lives in `engram-wasm/js`. Without it the build fails with
 `Could not resolve "./engram-mosaic-host-wasm"`. That step previously existed only
 in `build-all.ps1`, which cannot run on a Linux CI runner.
+
+## Pinned npm dependencies
+
+`build-web.sh --build` and `build-electron.sh --build`/`--package` install the
+emitted project with `npm ci` from a lockfile committed here, never with a bare
+`npm install`:
+
+| Emitted project | Lockfile                         | Regenerate with                           |
+|-----------------|----------------------------------|-------------------------------------------|
+| `react/`        | `npm/web/package-lock.json`      | `./scripts/build-web.sh --update-lock`      |
+| `electron/`     | `npm/electron/package-lock.json` | `./scripts/build-electron.sh --update-lock` |
+
+The emitter pins every direct dependency, but Vite, Electron and
+electron-builder pull in several hundred more that only a lockfile fixes (to one
+version and one integrity hash each). The emitted project is regenerated on
+every build, so the lock lives in this package and is copied in before `npm ci`.
+
+When the emitter changes an npm version, `npm ci` refuses the stale lock, and so
+do two tests that catch it on the PR rather than at release time:
+`tests/npm_lockfiles.rs` here and `tests/engram_npm_lockfiles.rs` in
+`mosaic-package-artifact-builder`. Run the matching `--update-lock` (it skips the
+wasm build and installs nothing), review the lockfile diff, and commit it.
+`build-electron.sh` also pins the packaging tools, `electron-builder` and
+`@electron/asar`, as devDependencies so they come from the lock too.
+
+Two more guards: `npm ci` runs with `--ignore-scripts` (nothing in the build
+needs an install script, and their fallbacks fetch unpinned code), and
+`--update-lock` resolves only versions published at least seven days earlier,
+since most compromised npm releases are pulled within days. The lock test also
+fails on an entry no dependency reaches, a tarball that is not the entry's own,
+and any new package that declares an install script. It cannot tell one
+in-range version from another (that needs registry data), so a lockfile diff is
+reviewed like code.
+
+The Electron runtime itself is not an npm package: the `electron` package only
+fetches it. `build-electron.sh --package` runs Electron's own `install.js`, which
+checks the downloaded zip against `checksums.json` inside the lock-pinned
+`electron` tarball, and points electron-builder at that copy (`electronDist`)
+instead of letting it download one of its own.
+
+## Android
+
+CI builds Engram for Android and runs it on an x86_64 emulator (UI89 §3.10).
+
+- **Engine:** `engram-mosaic-app` is built for the four Android ABIs and
+  packaged into the generated Compose project's debug APK. Its dependencies
+  are pure Rust, so the NDK is the only toolchain it needs.
+- **Gate:** three launches must write state under the app's `filesDir`,
+  restore it, and quarantine state the runtime refuses.
+- **Layout:** the touch layout reaches the Android project with the default
+  one, and the layout rules choose between them on a phone as they do on the
+  desktop.
+- **Anki import and export:** through the system document picker (UI89
+  §3.12). `host/android/EngramAndroidEffects.kt` is declared as a
+  `compose-android` `[host_effects]` handler, and the generated
+  `MosaicActivity` installs it ahead of the platform library. It hands both
+  kinds to the library's router, with the iOS rules:
+  - `.apkg` / `.colpkg` in, at most 256 MiB;
+  - `.apkg` out, after the same package check as the desktop.
+
+  The desktop handler, with its Swing dialogs, never reaches the APK. CI
+  fails if it does, and also if the Android handler is missing.
+- **Identity:** the manifest defaults, `dev.codingadventures.engramapp` and
+  `EngramApp`.
+
+## iOS and iPadOS
+
+CI also runs Engram on the iPhone and iPad simulators (UI89 §2.5):
+
+- **Engine:** linked statically from an `.xcframework`, into the
+  generated Xcode project's simulator app.
+- **Gate:** three launches must write state into the app's container,
+  restore it, and quarantine refused state. The same app then runs on an
+  iPad simulator.
+- **Anki import and export:** the SwiftUI handler `EngramEffects.swift` is
+  compiled into the iOS app. On iOS it answers these two effects through the
+  platform library's document picker (UI89 §2.6), with the macOS rules:
+  `.apkg`/`.colpkg`, the 256 MiB import limit, and the strict package check
+  on export.
+- **Identity:** the defaults, `dev.codingadventures.engramapp` and
+  `EngramApp`.
 
 ## Emitting every host shell
 

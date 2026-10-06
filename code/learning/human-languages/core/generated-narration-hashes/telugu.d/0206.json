@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:59b55428d1ef24c6",
+  "lessonIds": [
+    "TE-C206-dorlu",
+    "TE-C206-jaru",
+    "TE-C206-veladu",
+    "TE-C206-tokku",
+    "TE-C206-kottu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch206.txt",
+  "json": "telugu/narration/ch206.json",
+  "textHash": "fnv1a64:bbab729743932e9e",
+  "jsonHash": "fnv1a64:aa920bed9be65625",
+  "findings": []
+}

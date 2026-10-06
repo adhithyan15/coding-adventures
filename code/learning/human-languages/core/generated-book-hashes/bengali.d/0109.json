@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:baf594b274bc48d6",
+  "lessonIds": [
+    "BN-C109-chiruni",
+    "BN-C109-saban",
+    "BN-C109-gamchha",
+    "BN-C109-sui",
+    "BN-C109-suto",
+    "BN-R109-first-pass-everyday-actions",
+    "BN-R109-second-pass-things-in-the-kitchen-and-the-house"
+  ],
+  "tex": "bengali/book/chapters/ch109-comb-soap-thin-towel-needle-thread.tex"
+}

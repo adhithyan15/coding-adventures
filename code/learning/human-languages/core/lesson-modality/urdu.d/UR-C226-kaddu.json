@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C226-kaddu",
+    "language": "urdu",
+    "chapter": 226,
+    "sequence": 13420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44bcf3a1742ad5a0"
+  },
+  "findings": []
+}

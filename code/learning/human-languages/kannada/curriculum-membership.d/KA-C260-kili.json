@@ -1,0 +1,11 @@
+{
+  "id": "KA-C260-kili",
+  "pathSegment": "KA-PATH-260-VASTU260",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-260-VASTU260",
+      "order": 1
+    }
+  ]
+}

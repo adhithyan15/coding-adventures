@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:221fc49a9e9e5a27",
+  "lessonIds": [
+    "GE-C146-erklaeren",
+    "GE-C146-fehlen",
+    "GE-C146-feiern",
+    "GE-C146-fuellen",
+    "GE-C146-gefallen"
+  ],
+  "tex": "german/book/chapters/ch146-to-explain-to-be-missing-to-celebrate-to-fill-to-please.tex"
+}

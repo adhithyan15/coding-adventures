@@ -1,0 +1,11 @@
+{
+  "id": "TE-C301-petrolu",
+  "pathSegment": "TE-PATH-301-VASTUVU301",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-301-VASTUVU301",
+      "order": 4
+    }
+  ]
+}

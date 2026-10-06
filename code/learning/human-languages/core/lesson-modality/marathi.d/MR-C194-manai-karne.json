@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C194-manai-karne",
+    "language": "marathi",
+    "chapter": 194,
+    "sequence": 10070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c0f62711eb526ab"
+  },
+  "findings": []
+}

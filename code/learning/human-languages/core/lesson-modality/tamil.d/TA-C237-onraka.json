@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C237-onraka",
+    "language": "tamil",
+    "chapter": 237,
+    "sequence": 13000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8540a6ac7ea3f329"
+  },
+  "findings": []
+}

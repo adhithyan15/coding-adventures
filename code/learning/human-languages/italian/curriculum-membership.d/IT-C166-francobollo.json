@@ -1,0 +1,11 @@
+{
+  "id": "IT-C166-francobollo",
+  "pathSegment": "IT-PATH-166-COSE166",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-166-COSE166",
+      "order": 2
+    }
+  ]
+}

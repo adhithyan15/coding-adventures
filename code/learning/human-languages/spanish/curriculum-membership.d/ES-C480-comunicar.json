@@ -1,0 +1,11 @@
+{
+  "id": "ES-C480-comunicar",
+  "pathSegment": "ES-PATH-480-DECIR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-480-DECIR",
+      "order": 1
+    }
+  ]
+}

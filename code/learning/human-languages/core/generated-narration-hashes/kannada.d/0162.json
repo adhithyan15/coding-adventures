@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:a0386bf96aa40ee4",
+  "lessonIds": [
+    "KA-C162-tiddu",
+    "KA-C162-nakalu-madu",
+    "KA-C162-eccarisu",
+    "KA-C162-bhagavahisu",
+    "KA-C162-vargayisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch162.txt",
+  "json": "kannada/narration/ch162.json",
+  "textHash": "fnv1a64:d75c9c312ee1b2fb",
+  "jsonHash": "fnv1a64:413f39d1e99d432c",
+  "findings": []
+}

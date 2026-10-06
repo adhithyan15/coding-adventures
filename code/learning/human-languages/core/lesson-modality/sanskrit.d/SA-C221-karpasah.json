@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C221-karpasah",
+    "language": "sanskrit",
+    "chapter": 221,
+    "sequence": 12910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c63b0c1ecaa2f55"
+  },
+  "findings": []
+}

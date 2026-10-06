@@ -1,0 +1,11 @@
+{
+  "id": "KA-C270-ksaurika",
+  "pathSegment": "KA-PATH-270-KELASA270",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-270-KELASA270",
+      "order": 3
+    }
+  ]
+}

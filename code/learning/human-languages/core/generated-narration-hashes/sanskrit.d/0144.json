@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:7c4fcc93745108d4",
+  "lessonIds": [
+    "SA-C144-bhajati",
+    "SA-C144-tolayati",
+    "SA-C144-utpatati",
+    "SA-C144-niksipati",
+    "SA-C144-yojayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch144.txt",
+  "json": "sanskrit/narration/ch144.json",
+  "textHash": "fnv1a64:13fd6e689c8934e8",
+  "jsonHash": "fnv1a64:917b89f6d3fda762",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R223-second-pass-words-from-chapters-219-223",
+    "language": "latin",
+    "chapter": 223,
+    "sequence": 11200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5544d1e2a1e78937"
+  },
+  "findings": []
+}

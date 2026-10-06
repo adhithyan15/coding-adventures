@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "To stop, To keep, To practise, To kiss, To smile",
+  "label": "ch:fa-to-stop-to-keep-to-practise-to-kiss-to-smile",
+  "canDo": "I can say to stop, to keep, to practise, to kiss and to smile.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C219-labkhand-zadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say to stop, to keep, to practise, to kiss and to smile.",
+    "assesses": [
+      "FA-LEX-C219-KONESH219-03",
+      "FA-LEX-C219-KONESH219-04",
+      "FA-LEX-C219-KONESH219-05"
+    ]
+  }
+}

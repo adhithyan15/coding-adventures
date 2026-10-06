@@ -1,0 +1,11 @@
+{
+  "id": "IT-R139-second-pass-reading-notices",
+  "pathSegment": "IT-PATH-139-READ139",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "IT-EXT-139-READ139",
+      "order": 6
+    }
+  ]
+}

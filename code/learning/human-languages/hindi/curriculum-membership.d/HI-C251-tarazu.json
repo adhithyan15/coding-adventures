@@ -1,0 +1,11 @@
+{
+  "id": "HI-C251-tarazu",
+  "pathSegment": "HI-PATH-251-THG251",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-251-THG251",
+      "order": 1
+    }
+  ]
+}

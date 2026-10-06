@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:331df80d999d1b36",
+  "lessonIds": [
+    "AR-C191-sabbak",
+    "AR-C191-baqqal",
+    "AR-C191-sayyad",
+    "AR-C191-warsha",
+    "AR-C191-tawqi",
+    "AR-R191-first-pass-words-from-chapters-186-188",
+    "AR-R191-second-pass-words-from-chapters-189-191"
+  ],
+  "tex": "arabic/book/chapters/ch191-plumber-grocer-fisherman-workshop-signature.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "Smooth, Warm, Rare, Strange, Kind",
+  "label": "ch:te-smooth-warm-rare-strange-kind",
+  "canDo": "I can say smooth, warm, rare, strange and kind.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C260-dayagala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can say smooth, warm, rare, strange and kind.",
+    "assesses": [
+      "TE-LEX-C260-GUNAM260-03",
+      "TE-LEX-C260-GUNAM260-04",
+      "TE-LEX-C260-GUNAM260-05"
+    ]
+  }
+}

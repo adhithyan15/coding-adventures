@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "Letters From Your First Words",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5cc3abf3752e86f0",
+  "sourceHash": "fnv1a64:1f1d19663ea6fa6a",
   "lessons": [
     {
       "id": "TA-S127-letter-i",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:920d87e0a9993b96",
+      "sourceHash": "fnv1a64:6028ba9cfebde25e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -84,7 +84,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start here: curl around the inner loop."
+              "text": "1. start inside the upper curl and sweep around it."
             },
             {
               "kind": "speech",
@@ -92,27 +92,27 @@
             },
             {
               "kind": "speech",
-              "text": "3. without lifting, carry left and turn through the lower loop."
+              "text": "3. without lifting, carry left down the lower diagonal and turn around the lower-left loop."
             },
             {
               "kind": "speech",
-              "text": "4. without lifting, climb the lower diagonal."
+              "text": "4. without lifting, climb the loop's outer side back to the left crossing."
             },
             {
               "kind": "speech",
-              "text": "5. without lifting, carry right and turn around the lower loop, then lift."
+              "text": "5. without lifting, carry right across the middle and turn around the lower-right loop."
             },
             {
               "kind": "speech",
-              "text": "6. put the pen down again and climb the outer left side."
+              "text": "6. without lifting, climb the other diagonal back across the middle and on up the outer left side."
             },
             {
               "kind": "speech",
-              "text": "7. without lifting, arch over the top and down the right — and only now lift."
+              "text": "7. without lifting, arch over the top and down the far right — and only now lift."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 1."
+              "text": "Pen lifts: 0. The pen never leaves the paper."
             },
             {
               "kind": "speech",

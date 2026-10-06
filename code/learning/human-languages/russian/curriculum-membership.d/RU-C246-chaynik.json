@@ -1,0 +1,11 @@
+{
+  "id": "RU-C246-chaynik",
+  "pathSegment": "RU-PATH-246-VESHCH246",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-246-VESHCH246",
+      "order": 1
+    }
+  ]
+}

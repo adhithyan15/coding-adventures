@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:66f7bcb9fe73976e",
+  "lessonIds": [
+    "TA-C226-arampi",
+    "TA-C226-totu",
+    "TA-C226-tummu",
+    "TA-C226-vilunku",
+    "TA-C226-mel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch226.txt",
+  "json": "tamil/narration/ch226.json",
+  "textHash": "fnv1a64:b43cea56e85e08b6",
+  "jsonHash": "fnv1a64:3558efb453ef47f3",
+  "findings": []
+}

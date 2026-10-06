@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C171-nadiran",
+    "language": "arabic",
+    "chapter": 171,
+    "sequence": 8310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5bb940542af551f"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-183-MESTO183",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a side street, a pavement, a road, a highway and a port.",
+  "prerequisites": []
+}

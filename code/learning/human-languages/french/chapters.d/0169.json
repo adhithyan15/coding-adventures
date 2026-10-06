@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Postcard, Folder, Pay slip, Label, Guide",
+  "label": "ch:fr-postcard-folder-pay-slip-label-guide",
+  "canDo": "I can say a postcard, a folder, a pay slip, a label and a guide.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-R169-second-pass-words-from-chapters-165-169",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say a postcard, a folder, a pay slip, a label and a guide.",
+    "assesses": [
+      "FR-LEX-C169-CHOSES169-03",
+      "FR-LEX-C169-CHOSES169-04",
+      "FR-LEX-C169-CHOSES169-05"
+    ]
+  }
+}

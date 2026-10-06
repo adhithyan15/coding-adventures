@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "Festoon of mango leaves, Kumkum, Holige, Food offered to a god and then shared, Jewellery",
+  "label": "ch:ka-festoon-of-mango-leaves-kumkum-holige-food-offered-to-a-god-and-then-shared-jewellery",
+  "canDo": "I can say a festoon of mango leaves, kumkum, holige, food offered to a god and then shared and jewellery.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C262-abharana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can say a festoon of mango leaves, kumkum, holige, food offered to a god and then shared and jewellery.",
+    "assesses": [
+      "KA-LEX-C262-VASTU262-03",
+      "KA-LEX-C262-VASTU262-04",
+      "KA-LEX-C262-VASTU262-05"
+    ]
+  }
+}

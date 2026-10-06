@@ -324,6 +324,7 @@ def main(argv: list[str] | None = None) -> int:
                         is_starlark=True,
                         declared_srcs=t.srcs,
                         declared_deps=t.deps,
+                        repository_root=root,
                     )
                     starlark_count += 1
                 else:
@@ -336,6 +337,7 @@ def main(argv: list[str] | None = None) -> int:
                         is_starlark=True,
                         declared_srcs=pkg.declared_srcs,
                         declared_deps=pkg.declared_deps,
+                        repository_root=root,
                     )
             except Exception as exc:
                 print(f"Warning: Starlark eval failed for {pkg.name}: {exc}", file=sys.stderr)
@@ -606,6 +608,7 @@ def _run_from_plan(args: argparse.Namespace, root: Path) -> int:
                 is_starlark=pe.is_starlark,
                 declared_srcs=pe.declared_srcs,
                 declared_deps=pe.declared_deps,
+                repository_root=root,
             )
         )
 

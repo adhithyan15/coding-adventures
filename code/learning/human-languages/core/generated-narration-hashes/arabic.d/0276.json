@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:3f1b0617e389e342",
+  "lessonIds": [
+    "AR-C276-hayawan",
+    "AR-C276-tayr",
+    "AR-C276-usfur",
+    "AR-C276-zarafa",
+    "AR-C276-hut"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch276.txt",
+  "json": "arabic/narration/ch276.json",
+  "textHash": "fnv1a64:725fd51c53b67541",
+  "jsonHash": "fnv1a64:32ba6bb5a89670ac",
+  "findings": []
+}

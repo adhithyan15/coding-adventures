@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Place, View, Outing, Griddle, Wok",
+  "label": "ch:mr-place-view-outing-griddle-wok",
+  "canDo": "I can say a place, a view, an outing, a griddle and a wok.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C243-kadhai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say a place, a view, an outing, a griddle and a wok.",
+    "assesses": [
+      "MR-LEX-C243-VASTU243-03",
+      "MR-LEX-C243-VASTU243-04",
+      "MR-LEX-C243-VASTU243-05"
+    ]
+  }
+}

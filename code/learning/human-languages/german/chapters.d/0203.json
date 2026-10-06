@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "A purse, A size, Material, Wool, Silk",
+  "label": "ch:ge-a-purse-a-size-material-wool-silk",
+  "canDo": "I can say a purse, a size, material, wool and silk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C203-seide",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say a purse, a size, material, wool and silk.",
+    "assesses": [
+      "GE-LEX-C203-THING203-03",
+      "GE-LEX-C203-THING203-04",
+      "GE-LEX-C203-THING203-05"
+    ]
+  }
+}

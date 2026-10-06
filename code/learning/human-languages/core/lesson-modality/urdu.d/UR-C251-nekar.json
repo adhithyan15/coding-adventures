@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C251-nekar",
+    "language": "urdu",
+    "chapter": 251,
+    "sequence": 15240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfaa937aaed83c7d"
+  },
+  "findings": []
+}

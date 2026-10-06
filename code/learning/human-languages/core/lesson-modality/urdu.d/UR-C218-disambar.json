@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C218-disambar",
+    "language": "urdu",
+    "chapter": 218,
+    "sequence": 12830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd5d474bb566290d"
+  },
+  "findings": []
+}

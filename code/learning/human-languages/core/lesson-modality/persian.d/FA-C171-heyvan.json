@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C171-heyvan",
+    "language": "persian",
+    "chapter": 171,
+    "sequence": 8770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84c373fedbf9e491"
+  },
+  "findings": []
+}

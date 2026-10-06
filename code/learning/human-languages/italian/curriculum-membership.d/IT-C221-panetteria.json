@@ -1,0 +1,11 @@
+{
+  "id": "IT-C221-panetteria",
+  "pathSegment": "IT-PATH-221-COSE221",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-221-COSE221",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C136-suzushii",
+    "language": "japanese",
+    "chapter": 136,
+    "sequence": 8310,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2fb7304aef18fafc"
+  },
+  "findings": []
+}

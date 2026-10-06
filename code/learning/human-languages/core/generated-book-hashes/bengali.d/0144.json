@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:dbcd617b35173839",
+  "lessonIds": [
+    "BN-C144-lajuk",
+    "BN-C144-mishuk",
+    "BN-C144-chupchap",
+    "BN-C144-molayem",
+    "BN-C144-khoskhose",
+    "BN-R144-first-pass-describing-words",
+    "BN-R144-second-pass-describing-people"
+  ],
+  "tex": "bengali/book/chapters/ch144-shy-sociable-quiet-smooth-rough.tex"
+}

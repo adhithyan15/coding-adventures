@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C156-innu-munde",
+    "language": "kannada",
+    "chapter": 156,
+    "sequence": 6900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9af060869fa2c74"
+  },
+  "findings": []
+}

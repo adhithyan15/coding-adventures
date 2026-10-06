@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:c3d3140c8577846c",
+  "lessonIds": [
+    "RU-C247-radio",
+    "RU-C247-naushniki",
+    "RU-C247-pasport",
+    "RU-C247-viza",
+    "RU-C247-dokument"
+  ],
+  "tex": "russian/book/chapters/ch247-radio-headphones-passport-visa-document.tex"
+}

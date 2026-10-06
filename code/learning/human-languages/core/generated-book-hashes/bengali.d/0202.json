@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:1d69b69e3f756716",
+  "lessonIds": [
+    "BN-C202-bhata",
+    "BN-C202-chor",
+    "BN-C202-dakat",
+    "BN-C202-mamla",
+    "BN-C202-bhot",
+    "BN-R202-first-pass-words-from-chapters-197-199",
+    "BN-R202-second-pass-words-from-chapters-200-202"
+  ],
+  "tex": "bengali/book/chapters/ch202-low-tide-thief-robber-lawsuit-vote.tex"
+}

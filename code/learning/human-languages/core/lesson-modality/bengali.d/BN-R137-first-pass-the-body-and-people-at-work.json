@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R137-first-pass-the-body-and-people-at-work",
+    "language": "bengali",
+    "chapter": 137,
+    "sequence": 7500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c404f82ae38b15a2"
+  },
+  "findings": []
+}

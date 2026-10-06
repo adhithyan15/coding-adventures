@@ -7,7 +7,7 @@ chapter: 440
 type: word
 headword: disfrutar
 gloss: to enjoy — to take the fruit of something, with a prefix that does not undo
-concept_tag: ES-ACT-DISFRUTAR
+concept_tag: ES-VERB-DISFRUTAR
 prerequisites: [ES-C440-celebrar, ES-C367-fruta, ES-C438-descansar]
 sounds: [stress-final, s-t-cluster]
 roots: [fructus-latin]

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C171-aruduga",
+  "pathSegment": "TE-PATH-171-SAMAYAM171",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-171-SAMAYAM171",
+      "order": 3
+    }
+  ]
+}

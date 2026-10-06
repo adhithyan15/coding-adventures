@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C250-vaikkol",
+    "language": "tamil",
+    "chapter": 250,
+    "sequence": 14010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d734dcd9328f8b73"
+  },
+  "findings": []
+}

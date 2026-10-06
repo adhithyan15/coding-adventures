@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "To compare, To fall, To exercise, To act, To draw",
+  "label": "ch:te-to-compare-to-fall-to-exercise-to-act-to-draw",
+  "canDo": "I can say to compare, to fall, to exercise, to act and to draw.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C204-giyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say to compare, to fall, to exercise, to act and to draw.",
+    "assesses": [
+      "TE-LEX-C204-KRIYA204-03",
+      "TE-LEX-C204-KRIYA204-04",
+      "TE-LEX-C204-KRIYA204-05"
+    ]
+  }
+}

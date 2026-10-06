@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C170-mulai",
+    "language": "tamil",
+    "chapter": 170,
+    "sequence": 8220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6a6475edfd79a91"
+  },
+  "findings": []
+}

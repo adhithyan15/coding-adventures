@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C179-erinnern",
+    "language": "german",
+    "chapter": 179,
+    "sequence": 8780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb8b3070cb6c2517"
+  },
+  "findings": []
+}

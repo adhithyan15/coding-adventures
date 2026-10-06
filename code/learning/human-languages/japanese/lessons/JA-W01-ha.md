@@ -44,10 +44,11 @@ tick.
 
 Three strokes. Look at it as a tall left post with a loop tied on its right.
 
-1. the **vertical**, down the left side, with the smallest flick left at the foot
-2. a **short horizontal** crossing that vertical near the top, on its right
-3. the **loop** — down from the right of that crossbar, round to the left, and
-   back up to close
+1. the **vertical**, down the left side, with the smallest flick up to the
+   right at the foot
+2. a **short horizontal** to the right of that vertical, near the top
+3. the **loop** — from above that crossbar, down through it, round to the left
+   at the foot, back up across its own downstroke, and out to the lower right
 
 Read **ha**, breathed rather than hard: the *h* of English *hat*, then the open
 *a* of *father*.

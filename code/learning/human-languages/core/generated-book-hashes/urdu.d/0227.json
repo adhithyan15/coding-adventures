@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:0fb11bd12df41d4e",
+  "lessonIds": [
+    "UR-C227-janvar",
+    "UR-C227-bhains",
+    "UR-C227-chita",
+    "UR-C227-bheriya",
+    "UR-C227-gilahri"
+  ],
+  "tex": "urdu/book/chapters/ch227-animal-buffalo-leopard-wolf-squirrel.tex"
+}

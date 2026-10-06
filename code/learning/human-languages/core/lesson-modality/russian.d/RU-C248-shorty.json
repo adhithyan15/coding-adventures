@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C248-shorty",
+    "language": "russian",
+    "chapter": 248,
+    "sequence": 15210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf25f2456f286cee"
+  },
+  "findings": []
+}

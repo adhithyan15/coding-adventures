@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Wedding, Bridegroom, Bride, Relative, Pensioner",
+  "label": "ch:ru-wedding-bridegroom-bride-relative-pensioner",
+  "canDo": "I can say a wedding, a bridegroom, a bride, a relative and a pensioner.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C168-pensioner",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say a wedding, a bridegroom, a bride, a relative and a pensioner.",
+    "assesses": [
+      "RU-LEX-C168-VESHCH168-03",
+      "RU-LEX-C168-VESHCH168-04",
+      "RU-LEX-C168-VESHCH168-05"
+    ]
+  }
+}

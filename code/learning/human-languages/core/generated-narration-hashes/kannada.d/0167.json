@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:00f9c5d1df06d327",
+  "lessonIds": [
+    "KA-C167-uduru",
+    "KA-C167-sudharisu",
+    "KA-C167-bembalisu",
+    "KA-C167-sidi",
+    "KA-C167-gorake-hode"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch167.txt",
+  "json": "kannada/narration/ch167.json",
+  "textHash": "fnv1a64:e95144c21e2b1868",
+  "jsonHash": "fnv1a64:d7fd09264f5267e9",
+  "findings": []
+}

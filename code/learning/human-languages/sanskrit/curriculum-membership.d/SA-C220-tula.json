@@ -1,0 +1,11 @@
+{
+  "id": "SA-C220-tula",
+  "pathSegment": "SA-PATH-220-THG220",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-220-THG220",
+      "order": 0
+    }
+  ]
+}

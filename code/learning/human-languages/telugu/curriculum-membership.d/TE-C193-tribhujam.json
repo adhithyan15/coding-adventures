@@ -1,0 +1,11 @@
+{
+  "id": "TE-C193-tribhujam",
+  "pathSegment": "TE-PATH-193-VASTUVU193",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-193-VASTUVU193",
+      "order": 3
+    }
+  ]
+}

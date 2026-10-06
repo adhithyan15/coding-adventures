@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:81225574731e3b4b",
+  "lessonIds": [
+    "UR-C160-mehrban",
+    "UR-C160-samajhdar",
+    "UR-C160-bevaquf",
+    "UR-C160-sust",
+    "UR-C160-mehnati"
+  ],
+  "tex": "urdu/book/chapters/ch160-kind-sensible-foolish-lazy-hardworking.tex"
+}

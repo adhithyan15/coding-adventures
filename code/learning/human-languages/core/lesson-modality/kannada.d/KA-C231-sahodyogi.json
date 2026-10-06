@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C231-sahodyogi",
+    "language": "kannada",
+    "chapter": 231,
+    "sequence": 10840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1090129982fb6aab"
+  },
+  "findings": []
+}

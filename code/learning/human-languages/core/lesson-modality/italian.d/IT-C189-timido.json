@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C189-timido",
+    "language": "italian",
+    "chapter": 189,
+    "sequence": 10480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec5d9e8107b9f445"
+  },
+  "findings": []
+}

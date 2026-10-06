@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C167-biskuit",
+    "language": "persian",
+    "chapter": 167,
+    "sequence": 8570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93e3019a62c4b3ac"
+  },
+  "findings": []
+}

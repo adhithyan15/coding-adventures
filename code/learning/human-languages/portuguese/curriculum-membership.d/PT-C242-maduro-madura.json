@@ -1,0 +1,11 @@
+{
+  "id": "PT-C242-maduro-madura",
+  "pathSegment": "PT-PATH-242-QUAL242",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-242-QUAL242",
+      "order": 1
+    }
+  ]
+}

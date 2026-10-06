@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C240-chalana",
+    "language": "urdu",
+    "chapter": 240,
+    "sequence": 14490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe656ea6e2c7fa8a"
+  },
+  "findings": []
+}

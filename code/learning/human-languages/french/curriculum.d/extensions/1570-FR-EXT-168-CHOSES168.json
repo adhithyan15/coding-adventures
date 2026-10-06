@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-168-CHOSES168",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a rule, permission, a ban, safety and advice.",
+  "prerequisites": []
+}

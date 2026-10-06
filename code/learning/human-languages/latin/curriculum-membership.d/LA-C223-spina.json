@@ -1,0 +1,11 @@
+{
+  "id": "LA-C223-spina",
+  "pathSegment": "LA-PATH-223-RES223",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-223-RES223",
+      "order": 3
+    }
+  ]
+}

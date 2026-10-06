@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C146-pautrah",
+    "language": "sanskrit",
+    "chapter": 146,
+    "sequence": 7360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4546cef683dc38fe"
+  },
+  "findings": []
+}

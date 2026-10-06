@@ -1,0 +1,11 @@
+{
+  "id": "LA-C278-littera",
+  "pathSegment": "LA-PATH-278-RES278",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-278-RES278",
+      "order": 2
+    }
+  ]
+}

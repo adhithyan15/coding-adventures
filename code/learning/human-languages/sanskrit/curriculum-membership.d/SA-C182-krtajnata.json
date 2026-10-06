@@ -1,0 +1,11 @@
+{
+  "id": "SA-C182-krtajnata",
+  "pathSegment": "SA-PATH-182-WEL182",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-182-WEL182",
+      "order": 3
+    }
+  ]
+}

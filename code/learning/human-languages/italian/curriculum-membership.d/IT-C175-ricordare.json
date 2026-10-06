@@ -1,0 +1,11 @@
+{
+  "id": "IT-C175-ricordare",
+  "pathSegment": "IT-PATH-175-VERBI175",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-175-VERBI175",
+      "order": 2
+    }
+  ]
+}

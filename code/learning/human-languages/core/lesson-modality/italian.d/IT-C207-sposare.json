@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C207-sposare",
+    "language": "italian",
+    "chapter": 207,
+    "sequence": 11900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bff281c94482dfc3"
+  },
+  "findings": []
+}

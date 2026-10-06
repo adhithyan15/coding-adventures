@@ -1,0 +1,11 @@
+{
+  "id": "LA-C257-spatior",
+  "pathSegment": "LA-PATH-257-ACT257",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-257-ACT257",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C242-vorsicht",
+    "language": "german",
+    "chapter": 242,
+    "sequence": 13350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90f43e84a4a0f5e7"
+  },
+  "findings": []
+}

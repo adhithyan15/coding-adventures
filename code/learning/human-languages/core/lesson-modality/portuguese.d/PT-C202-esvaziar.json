@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C202-esvaziar",
+    "language": "portuguese",
+    "chapter": 202,
+    "sequence": 11600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:798343fc935f0bb8"
+  },
+  "findings": []
+}

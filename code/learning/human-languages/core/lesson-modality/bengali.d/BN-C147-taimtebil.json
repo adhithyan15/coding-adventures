@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C147-taimtebil",
+    "language": "bengali",
+    "chapter": 147,
+    "sequence": 8070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7055e0ac5cf66450"
+  },
+  "findings": []
+}

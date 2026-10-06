@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C219-kilivu",
+    "language": "malayalam",
+    "chapter": 219,
+    "sequence": 9860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b96d8f5d8db0d3e4"
+  },
+  "findings": []
+}

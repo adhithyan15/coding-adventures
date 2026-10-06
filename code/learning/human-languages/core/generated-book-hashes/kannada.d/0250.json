@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:541a82d044a6ef2e",
+  "lessonIds": [
+    "KA-C250-sutta",
+    "KA-C250-gudisalu",
+    "KA-C250-badavane",
+    "KA-C250-ance-kaceri",
+    "KA-C250-kanive"
+  ],
+  "tex": "kannada/book/chapters/ch250-around-hut-residential-area-post-office-valley.tex"
+}

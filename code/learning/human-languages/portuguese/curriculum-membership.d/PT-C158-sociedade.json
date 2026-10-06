@@ -1,0 +1,11 @@
+{
+  "id": "PT-C158-sociedade",
+  "pathSegment": "PT-PATH-158-COISAS158",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-158-COISAS158",
+      "order": 1
+    }
+  ]
+}

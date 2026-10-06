@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:df8a1024420164e8",
+  "lessonIds": [
+    "UR-C202-parti",
+    "UR-C202-tohfa",
+    "UR-C202-musafir",
+    "UR-C202-taiksi",
+    "UR-C202-riksha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch202.txt",
+  "json": "urdu/narration/ch202.json",
+  "textHash": "fnv1a64:2cf63690bd5d3a4d",
+  "jsonHash": "fnv1a64:941d32198fbbd4a7",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Ordinary, Blunt, Smooth, Rough, Sticky",
+  "label": "ch:ka-ordinary-blunt-smooth-rough-sticky",
+  "canDo": "I can say ordinary, blunt, smooth, rough and sticky.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C219-jigutu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say ordinary, blunt, smooth, rough and sticky.",
+    "assesses": [
+      "KA-LEX-C219-GUNA219-03",
+      "KA-LEX-C219-GUNA219-04",
+      "KA-LEX-C219-GUNA219-05"
+    ]
+  }
+}

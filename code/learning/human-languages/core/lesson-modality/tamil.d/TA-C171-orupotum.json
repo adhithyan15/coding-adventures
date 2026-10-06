@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C171-orupotum",
+    "language": "tamil",
+    "chapter": 171,
+    "sequence": 8260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce192a41d77f081d"
+  },
+  "findings": []
+}

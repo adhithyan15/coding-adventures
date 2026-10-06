@@ -1,0 +1,11 @@
+{
+  "id": "UR-C196-bechain",
+  "pathSegment": "UR-PATH-196-SIFAT196",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-196-SIFAT196",
+      "order": 0
+    }
+  ]
+}

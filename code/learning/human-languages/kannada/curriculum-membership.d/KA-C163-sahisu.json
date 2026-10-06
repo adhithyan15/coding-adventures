@@ -1,0 +1,11 @@
+{
+  "id": "KA-C163-sahisu",
+  "pathSegment": "KA-PATH-163-KRIYE163",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-163-KRIYE163",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:856958c1cf3ad7b1",
+  "lessonIds": [
+    "ML-C261-posrrman",
+    "ML-C261-abhimukham",
+    "ML-C261-olivu",
+    "ML-C261-parisilanam",
+    "ML-C261-ripporttu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch261.txt",
+  "json": "malayalam/narration/ch261.json",
+  "textHash": "fnv1a64:eeb784a9cabb3d25",
+  "jsonHash": "fnv1a64:7a30ff4cde2595c4",
+  "findings": []
+}

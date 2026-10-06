@@ -62,7 +62,8 @@ use layout_backgrounds::{
 };
 use layout_effects::{EffectBlendMode, EffectColor, EffectFilter, EffectStyle};
 use layout_ir::{
-    Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent, TextDecorationLines,
+    Color, Content, ExtValue, FontSpec, FontStretch as LayoutFontStretch, PositionedNode, TextAlign,
+    TextContent, TextDecorationLines, TextDecorationStyle, TextUnderlinePosition,
 };
 use layout_positioned::{Position, PositionedStyle};
 use layout_replaced::{object_fit_rect, IntrinsicSize};
@@ -77,7 +78,7 @@ use text_interfaces::{
     ShapeOptions, ShapedText, TextShaper,
 };
 
-pub const VERSION: &str = "0.6.0";
+pub const VERSION: &str = "0.7.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Options
@@ -241,6 +242,24 @@ where
                     abs_y,
                     box_w,
                     dpr,
+                    text_indent(frame.node) * dpr,
+                    text_indent_hanging(frame.node),
+                    text_indent_each_line(frame.node),
+                    text_letter_spacing(frame.node) * dpr,
+                    text_word_spacing(frame.node) * dpr,
+                    text_align_last(frame.node),
+                    text_justifies_last(frame.node),
+                    text_breaks_anywhere(frame.node),
+                    text_word_break(frame.node),
+                    text_line_break(frame.node),
+                    text_hyphens(frame.node),
+                    text_hyphenate_character(frame.node),
+                    text_overflow(frame.node),
+                    text_wraps(frame.node, tc.wrap),
+                    text_wrap_style(frame.node),
+                    text_space_wrapping(frame.node),
+                    text_justifies(frame.node),
+                    text_justification(frame.node),
                     direction,
                     options,
                     &mut font_cache,
@@ -442,6 +461,156 @@ fn node_direction(node: &PositionedNode) -> Option<BaseDirection> {
         "auto" => Some(BaseDirection::Auto),
         _ => None,
     }
+}
+
+fn text_letter_spacing(node: &PositionedNode) -> f64 {
+    match node.ext.get("text.letter-spacing") {
+        Some(ExtValue::Float(value)) if value.is_finite() => *value,
+        Some(ExtValue::Int(value)) => *value as f64,
+        _ => 0.0,
+    }
+}
+
+fn text_indent(node: &PositionedNode) -> f64 {
+    match node.ext.get("text.indent") {
+        Some(ExtValue::Float(value)) if value.is_finite() => *value,
+        Some(ExtValue::Int(value)) => *value as f64,
+        _ => 0.0,
+    }
+}
+
+fn text_indent_hanging(node: &PositionedNode) -> bool {
+    matches!(node.ext.get("text.indent-hanging"), Some(ExtValue::Bool(true)))
+}
+
+fn text_indent_each_line(node: &PositionedNode) -> bool {
+    matches!(node.ext.get("text.indent-each-line"), Some(ExtValue::Bool(true)))
+}
+
+fn text_word_spacing(node: &PositionedNode) -> f64 {
+    match node.ext.get("text.word-spacing") {
+        Some(ExtValue::Float(value)) if value.is_finite() => *value,
+        Some(ExtValue::Int(value)) => *value as f64,
+        _ => 0.0,
+    }
+}
+
+fn text_align_last(node: &PositionedNode) -> Option<TextAlign> {
+    match node.ext.get("text.align-last") {
+        Some(ExtValue::Str(value)) if value == "start" => Some(TextAlign::Start),
+        Some(ExtValue::Str(value)) if value == "center" => Some(TextAlign::Center),
+        Some(ExtValue::Str(value)) if value == "end" => Some(TextAlign::End),
+        _ => None,
+    }
+}
+
+fn text_justifies_last(node: &PositionedNode) -> bool {
+    matches!(node.ext.get("text.align-last"), Some(ExtValue::Str(value)) if value == "justify")
+}
+
+fn text_breaks_anywhere(node: &PositionedNode) -> bool {
+    matches!(node.ext.get("text.overflow-wrap"),
+        Some(ExtValue::Str(value)) if value == "break-word" || value == "anywhere")
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextWordBreak { Normal, BreakAll, KeepAll }
+
+fn text_word_break(node: &PositionedNode) -> TextWordBreak {
+    match node.ext.get("text.word-break") {
+        Some(ExtValue::Str(value)) if value == "break-all" => TextWordBreak::BreakAll,
+        Some(ExtValue::Str(value)) if value == "keep-all" => TextWordBreak::KeepAll,
+        _ => TextWordBreak::Normal,
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextLineBreak { Auto, Loose, Normal, Strict, Anywhere }
+
+fn text_line_break(node: &PositionedNode) -> TextLineBreak {
+    match node.ext.get("text.line-break") {
+        Some(ExtValue::Str(value)) if value == "loose" => TextLineBreak::Loose,
+        Some(ExtValue::Str(value)) if value == "normal" => TextLineBreak::Normal,
+        Some(ExtValue::Str(value)) if value == "strict" => TextLineBreak::Strict,
+        Some(ExtValue::Str(value)) if value == "anywhere" => TextLineBreak::Anywhere,
+        _ => TextLineBreak::Auto,
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextHyphens { None, Manual }
+
+fn text_hyphens(node: &PositionedNode) -> TextHyphens {
+    match node.ext.get("text.hyphens") {
+        Some(ExtValue::Str(value)) if value == "none" => TextHyphens::None,
+        _ => TextHyphens::Manual,
+    }
+}
+
+fn text_hyphenate_character(node: &PositionedNode) -> &str {
+    match node.ext.get("text.hyphenate-character") {
+        Some(ExtValue::Str(value)) => value,
+        _ => "-",
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextOverflow { Clip, Ellipsis }
+
+fn text_overflow(node: &PositionedNode) -> Option<TextOverflow> {
+    match node.ext.get("text.overflow") {
+        Some(ExtValue::Str(value)) if value == "clip" => Some(TextOverflow::Clip),
+        Some(ExtValue::Str(value)) if value == "ellipsis" => Some(TextOverflow::Ellipsis),
+        _ => None,
+    }
+}
+
+fn text_wraps(node: &PositionedNode, fallback: bool) -> bool {
+    match node.ext.get("text.wrap-mode") {
+        Some(ExtValue::Str(value)) if value == "wrap" => true,
+        Some(ExtValue::Str(value)) if value == "nowrap" => false,
+        _ => fallback,
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextWrapStyle { Auto, Balance, Pretty, Stable }
+
+fn text_wrap_style(node: &PositionedNode) -> TextWrapStyle {
+    match node.ext.get("text.wrap-style") {
+        Some(ExtValue::Str(value)) if value == "balance" => TextWrapStyle::Balance,
+        Some(ExtValue::Str(value)) if value == "pretty" => TextWrapStyle::Pretty,
+        Some(ExtValue::Str(value)) if value == "stable" => TextWrapStyle::Stable,
+        _ => TextWrapStyle::Auto,
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextSpaceWrapping { Collapse, PreserveSequences, BreakEverySpace }
+
+fn text_space_wrapping(node: &PositionedNode) -> TextSpaceWrapping {
+    if matches!(node.ext.get("text.break-spaces"), Some(ExtValue::Bool(true))) {
+        TextSpaceWrapping::BreakEverySpace
+    } else if matches!(node.ext.get("text.preserve-spaces"), Some(ExtValue::Bool(true))) {
+        TextSpaceWrapping::PreserveSequences
+    } else {
+        TextSpaceWrapping::Collapse
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextJustify { None, InterWord, InterCharacter }
+
+fn text_justification(node: &PositionedNode) -> TextJustify {
+    match node.ext.get("text.justify-mode") {
+        Some(ExtValue::Str(value)) if value == "none" => TextJustify::None,
+        Some(ExtValue::Str(value)) if value == "inter-character" => TextJustify::InterCharacter,
+        _ => TextJustify::InterWord,
+    }
+}
+
+fn text_justifies(node: &PositionedNode) -> bool {
+    matches!(node.ext.get("text.justify"), Some(ExtValue::Bool(true)))
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1207,6 +1376,24 @@ fn emit_text_content<S, M, R>(
     box_y: f64,
     box_width: f64,
     dpr: f64,
+    text_indent: f64,
+    text_indent_hanging: bool,
+    text_indent_each_line: bool,
+    letter_spacing: f64,
+    word_spacing: f64,
+    text_align_last: Option<TextAlign>,
+    justify_last: bool,
+    breaks_anywhere: bool,
+    word_break: TextWordBreak,
+    line_break: TextLineBreak,
+    hyphens: TextHyphens,
+    hyphenate_character: &str,
+    text_overflow: Option<TextOverflow>,
+    wrap: bool,
+    wrap_style: TextWrapStyle,
+    space_wrapping: TextSpaceWrapping,
+    justify: bool,
+    justify_mode: TextJustify,
     direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
     font_cache: &mut HashMap<FontCacheKey, CachedFont<S::Handle>>,
@@ -1247,30 +1434,94 @@ fn emit_text_content<S, M, R>(
     let box_x_dpr = box_x * dpr;
     let box_y_dpr = box_y * dpr;
     let mut baseline_y = box_y_dpr + ascent_dpr;
+    let mut is_first_line = true;
 
     let fill_css = color_to_css(tc.color);
 
     for segment in tc.value.split('\n') {
-        let wrapped = if tc.wrap {
+        let wrapped = if wrap {
             wrap_line(
                 options.shaper,
                 handle,
                 segment,
                 size_dpr,
                 max_width_dpr,
+                letter_spacing,
+                word_spacing,
+                breaks_anywhere,
+                word_break,
+                line_break,
+                hyphens,
+                hyphenate_character,
+                wrap_style,
+                space_wrapping,
                 direction,
             )
         } else {
-            vec![segment.to_string()]
+            vec![segment.replace('\u{ad}', "")]
         };
-        for line in wrapped {
+        let line_count = wrapped.len();
+        for (line_index, line) in wrapped.into_iter().enumerate() {
+            let indent_target = is_first_line || (text_indent_each_line && line_index == 0);
+            let line_indent = if indent_target != text_indent_hanging { text_indent } else { 0.0 };
+            let line_box_x = box_x_dpr + line_indent;
+            let line_max_width = (max_width_dpr - line_indent).max(0.0);
+            is_first_line = false;
+            let line = match text_overflow {
+                Some(mode) => fit_text_overflow(
+                    options.shaper,
+                    handle,
+                    &line,
+                    size_dpr,
+                    line_max_width,
+                    letter_spacing,
+                    word_spacing,
+                    direction,
+                    mode,
+                ),
+                None => line,
+            };
             // Shape the line once. This gives us total_advance for
             // alignment AND the glyph IDs/positions for emission.
             if line.is_empty() {
                 baseline_y += line_height_dpr;
                 continue;
             }
-            let shaped = match shape_visual_line(options.shaper, handle, &line, size_dpr, direction)
+            let is_final_line = line_index + 1 == line_count;
+            let justify_line = justify_mode != TextJustify::None
+                && ((justify && !is_final_line) || (justify_last && is_final_line));
+            let line_word_spacing = if justify_line && justify_mode == TextJustify::InterWord {
+                let separator_count = line.chars().filter(|character| *character == ' ').count();
+                if separator_count == 0 {
+                    word_spacing
+                } else {
+                    let base_width = shape_visual_line(
+                        options.shaper, handle, &line, size_dpr, word_spacing, direction,
+                    ).map(|shaped| shaped_advance(&shaped, letter_spacing)).unwrap_or(line_max_width);
+                    word_spacing + ((line_max_width - base_width) / separator_count as f64).max(0.0)
+                }
+            } else {
+                word_spacing
+            };
+            let line_letter_spacing = if justify_line && justify_mode == TextJustify::InterCharacter {
+                let shaped = shape_visual_line(
+                    options.shaper, handle, &line, size_dpr, word_spacing, direction,
+                );
+                let base_width = shaped.as_ref().map(|shaped| shaped_advance(shaped, letter_spacing))
+                    .unwrap_or(line_max_width);
+                let gap_count = shaped.as_ref().map(|shaped| shaped.runs.iter()
+                    .map(|run| run.glyphs.len()).sum::<usize>().saturating_sub(1)).unwrap_or(0);
+                if gap_count == 0 {
+                    letter_spacing
+                } else {
+                    letter_spacing + ((line_max_width - base_width) / gap_count as f64).max(0.0)
+                }
+            } else {
+                letter_spacing
+            };
+            let shaped = match shape_visual_line(
+                options.shaper, handle, &line, size_dpr, line_word_spacing, direction,
+            )
             {
                 Ok(s) => s,
                 Err(_) => {
@@ -1280,19 +1531,27 @@ fn emit_text_content<S, M, R>(
             };
 
             // Compute the starting x position based on text alignment.
-            let line_advance = shaped.total_advance() as f64;
-            let baseline_x = match tc.text_align {
-                TextAlign::Center => box_x_dpr + (max_width_dpr - line_advance) / 2.0,
-                TextAlign::End => box_x_dpr + max_width_dpr - line_advance,
-                TextAlign::Start => box_x_dpr,
+            let line_advance = shaped_advance(&shaped, line_letter_spacing);
+            let alignment = if is_final_line {
+                text_align_last.unwrap_or(tc.text_align)
+            } else {
+                tc.text_align
+            };
+            let baseline_x = match alignment {
+                TextAlign::Center => line_box_x + (line_max_width - line_advance) / 2.0,
+                TextAlign::End => line_box_x + line_max_width - line_advance,
+                TextAlign::Start => line_box_x,
             };
 
-            emit_glyph_runs_from_shaped(&shaped, size_dpr, baseline_x, baseline_y, &fill_css, out);
+            emit_glyph_runs_from_shaped(
+                &shaped, size_dpr, baseline_x, baseline_y, line_letter_spacing, &fill_css, out,
+            );
             emit_text_decorations(
                 tc,
                 handle,
                 options.metrics,
                 &shaped,
+                line_letter_spacing,
                 size_dpr,
                 baseline_x,
                 baseline_y,
@@ -1310,6 +1569,7 @@ fn shape_visual_line<S: TextShaper>(
     handle: &S::Handle,
     line: &str,
     size: f32,
+    word_spacing: f64,
     direction: BaseDirection,
 ) -> Result<ShapedText, text_interfaces::ShapingError> {
     let flow = TextFlow::analyze(line, direction);
@@ -1323,13 +1583,61 @@ fn shape_visual_line<S: TextShaper>(
             },
             ..ShapeOptions::default()
         };
-        runs.extend(
-            shaper
-                .shape(&line[run.bytes.clone()], handle, size, &options)?
-                .runs,
-        );
+        let source = &line[run.bytes.clone()];
+        if word_spacing == 0.0 || !source.contains(' ') {
+            runs.extend(shaper.shape(source, handle, size, &options)?.runs);
+            continue;
+        }
+        let mut pieces = split_word_spacing_pieces(source);
+        if run.direction == FlowDirection::Rtl {
+            pieces.reverse();
+        }
+        for piece in pieces {
+            let mut shaped = shaper.shape(piece, handle, size, &options)?;
+            if piece == " " {
+                add_word_spacing(&mut shaped, word_spacing);
+            }
+            runs.extend(shaped.runs);
+        }
     }
     Ok(ShapedText { runs })
+}
+
+fn split_word_spacing_pieces(source: &str) -> Vec<&str> {
+    let mut pieces = Vec::new();
+    let mut start = 0;
+    for (index, character) in source.char_indices() {
+        if character != ' ' {
+            continue;
+        }
+        if start < index {
+            pieces.push(&source[start..index]);
+        }
+        pieces.push(&source[index..index + 1]);
+        start = index + 1;
+    }
+    if start < source.len() {
+        pieces.push(&source[start..]);
+    }
+    pieces
+}
+
+fn add_word_spacing(shaped: &mut ShapedText, word_spacing: f64) {
+    let spacing = word_spacing as f32;
+    let Some(run) = shaped.runs.iter_mut().rev().find(|run| !run.glyphs.is_empty()) else {
+        return;
+    };
+    if let Some(glyph) = run.glyphs.last_mut() {
+        glyph.x_advance += spacing;
+        run.x_advance_total += spacing;
+    }
+}
+
+fn shaped_advance(shaped: &ShapedText, letter_spacing: f64) -> f64 {
+    let glyph_count = shaped.runs.iter().map(|run| run.glyphs.len()).sum::<usize>();
+    (shaped.total_advance() as f64
+        + letter_spacing * glyph_count.saturating_sub(1) as f64)
+        .max(0.0)
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -1338,6 +1646,7 @@ fn emit_text_decorations<M>(
     handle: &M::Handle,
     metrics: &M,
     shaped: &ShapedText,
+    letter_spacing: f64,
     size: f32,
     x: f64,
     baseline_y: f64,
@@ -1350,39 +1659,65 @@ fn emit_text_decorations<M>(
     let Some(decoration) = tc.decoration else {
         return;
     };
-    let width = shaped.total_advance() as f64;
+    let width = shaped_advance(shaped, letter_spacing);
     if width <= 0.0 {
         return;
     }
 
     let units_per_em = f64::from(metrics.units_per_em(handle).max(1));
     let scale = f64::from(size) / units_per_em;
-    let thickness = metrics
-        .underline_thickness(handle)
-        .map(|value| f64::from(value.max(1)) * scale)
-        .unwrap_or_else(|| (f64::from(size) * 0.05).max(dpr));
+    let thickness = decoration.thickness.filter(|value| value.is_finite() && *value > 0.0)
+        .unwrap_or_else(|| metrics
+            .underline_thickness(handle)
+            .map(|value| f64::from(value.max(1)) * scale)
+            .unwrap_or_else(|| (f64::from(size) * 0.05).max(dpr)));
     let color = color_to_css(decoration.color.unwrap_or(tc.color));
-    let mut emit_line = |y: f64| {
-        out.push(PaintInstruction::Rect(PaintRect {
-            base: PaintBase::default(),
-            x,
-            y,
-            width,
-            height: thickness,
-            fill: Some(color.clone()),
-            stroke: None,
-            stroke_width: None,
-            corner_radius: None,
-            stroke_dash: None,
-            stroke_dash_offset: None,
-        }));
+    let mut emit_line = |y: f64| match decoration.style {
+        TextDecorationStyle::Solid => emit_decoration_rect(out, x, y, width, thickness, &color),
+        TextDecorationStyle::Double => {
+            let line_thickness = (thickness / 2.0).max(dpr / 2.0);
+            emit_decoration_rect(out, x, y - line_thickness, width, line_thickness, &color);
+            emit_decoration_rect(out, x, y + line_thickness, width, line_thickness, &color);
+        }
+        TextDecorationStyle::Dotted | TextDecorationStyle::Dashed => {
+            let dash = if decoration.style == TextDecorationStyle::Dotted {
+                vec![thickness, thickness * 1.5]
+            } else {
+                vec![thickness * 3.0, thickness * 2.0]
+            };
+            out.push(PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![PathCommand::MoveTo { x, y }, PathCommand::LineTo { x: x + width, y }],
+                fill: None, fill_rule: None, stroke: Some(color.clone()), stroke_width: Some(thickness),
+                stroke_cap: None, stroke_join: None, stroke_dash: Some(dash), stroke_dash_offset: None,
+            }));
+        }
+        TextDecorationStyle::Wavy => {
+            let step = (thickness * 2.0).max(dpr * 2.0);
+            let mut commands = vec![PathCommand::MoveTo { x, y }];
+            let mut cursor = x;
+            let mut up = true;
+            while cursor < x + width {
+                cursor = (cursor + step).min(x + width);
+                commands.push(PathCommand::LineTo { x: cursor, y: y + if up { -thickness } else { thickness } });
+                up = !up;
+            }
+            out.push(PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(), commands, fill: None, fill_rule: None,
+                stroke: Some(color.clone()), stroke_width: Some(thickness), stroke_cap: None,
+                stroke_join: None, stroke_dash: None, stroke_dash_offset: None,
+            }));
+        }
     };
 
     if decoration.lines.contains(TextDecorationLines::UNDERLINE) {
-        let position = metrics
-            .underline_position(handle)
-            .map(|value| f64::from(value) * scale)
-            .unwrap_or_else(|| f64::from(size) * 0.08);
+        let position = decoration.underline_offset.unwrap_or_else(|| match decoration.underline_position {
+            TextUnderlinePosition::Under => f64::from(metrics.descent(handle).max(0)) * scale,
+            TextUnderlinePosition::Auto | TextUnderlinePosition::FromFont => metrics
+                .underline_position(handle)
+                .map(|value| f64::from(value) * scale)
+                .unwrap_or_else(|| f64::from(size) * 0.08),
+        });
         emit_line(baseline_y + position);
     }
     if decoration.lines.contains(TextDecorationLines::OVERLINE) {
@@ -1397,6 +1732,15 @@ fn emit_text_decorations<M>(
     }
 }
 
+fn emit_decoration_rect(
+    out: &mut Vec<PaintInstruction>, x: f64, y: f64, width: f64, height: f64, color: &str,
+) {
+    out.push(PaintInstruction::Rect(PaintRect {
+        base: PaintBase::default(), x, y, width, height, fill: Some(color.into()), stroke: None,
+        stroke_width: None, corner_radius: None, stroke_dash: None, stroke_dash_offset: None,
+    }));
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Emit PaintGlyphRun instructions from a pre-shaped ShapedText
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1408,6 +1752,7 @@ fn emit_glyph_runs_from_shaped(
     size: f32,
     baseline_x: f64,
     baseline_y: f64,
+    letter_spacing: f64,
     fill_css: &str,
     out: &mut Vec<PaintInstruction>,
 ) {
@@ -1419,6 +1764,8 @@ fn emit_glyph_runs_from_shaped(
     let mut line_pen_x: f64 = 0.0;
     let mut line_pen_y: f64 = 0.0;
 
+    let glyph_count = shaped.runs.iter().map(|run| run.glyphs.len()).sum::<usize>();
+    let mut glyph_index = 0usize;
     for run in &shaped.runs {
         if run.glyphs.is_empty() {
             continue;
@@ -1430,6 +1777,7 @@ fn emit_glyph_runs_from_shaped(
         let mut positions: Vec<GlyphPosition> = Vec::with_capacity(run.glyphs.len());
         let mut seg_pen_x: f64 = 0.0;
         let mut seg_pen_y: f64 = 0.0;
+        let mut spacing_advance = 0.0;
         for g in &run.glyphs {
             let gx = baseline_x + line_pen_x + seg_pen_x + g.x_offset as f64;
             let gy = baseline_y + line_pen_y + seg_pen_y + g.y_offset as f64;
@@ -1440,6 +1788,11 @@ fn emit_glyph_runs_from_shaped(
             });
             seg_pen_x += g.x_advance as f64;
             seg_pen_y += g.y_advance as f64;
+            glyph_index += 1;
+            if glyph_index < glyph_count {
+                seg_pen_x += letter_spacing;
+                spacing_advance += letter_spacing;
+            }
         }
 
         out.push(PaintInstruction::GlyphRun(PaintGlyphRun {
@@ -1452,7 +1805,7 @@ fn emit_glyph_runs_from_shaped(
 
         // Advance the line-level pen by this segment's total advance
         // so the next segment starts where this one ended.
-        line_pen_x += run.x_advance_total as f64;
+        line_pen_x += run.x_advance_total as f64 + spacing_advance;
         line_pen_y += run.glyphs.iter().map(|g| g.y_advance as f64).sum::<f64>();
     }
 }
@@ -1461,62 +1814,92 @@ fn emit_glyph_runs_from_shaped(
 // Greedy word-wrap (mirrors the layout-text-measure-native algorithm)
 // ═══════════════════════════════════════════════════════════════════════════
 
+#[allow(clippy::too_many_arguments)]
 fn wrap_line<S: TextShaper>(
     shaper: &S,
     handle: &S::Handle,
     segment: &str,
     size: f32,
     max_width: f64,
+    letter_spacing: f64,
+    word_spacing: f64,
+    breaks_anywhere: bool,
+    word_break: TextWordBreak,
+    line_break: TextLineBreak,
+    hyphens: TextHyphens,
+    hyphenate_character: &str,
+    wrap_style: TextWrapStyle,
+    space_wrapping: TextSpaceWrapping,
     direction: BaseDirection,
 ) -> Vec<String> {
     if segment.is_empty() {
         return vec![String::new()];
     }
+    let visible_segment = segment.replace('\u{ad}', "");
     if max_width <= 0.0 {
-        return vec![segment.to_string()];
+        return vec![visible_segment];
+    }
+    let wrapping_segment = if hyphens == TextHyphens::Manual { segment } else { &visible_segment };
+    if space_wrapping != TextSpaceWrapping::Collapse {
+        return wrap_preserved_spaces(
+            shaper, handle, &visible_segment, size, max_width, letter_spacing, word_spacing,
+            space_wrapping == TextSpaceWrapping::BreakEverySpace, direction,
+        );
+    }
+    if word_break == TextWordBreak::BreakAll || line_break == TextLineBreak::Anywhere {
+        return break_line_anywhere(
+            shaper, handle, &visible_segment, size, max_width, letter_spacing, word_spacing, direction,
+        );
     }
 
     // Preserve source whitespace for fixed-format text when it already fits.
     // The greedy wrapper below intentionally collapses whitespace for paragraph
     // text, but ASCII art/code-like content should not be rewritten just because
     // it passed through UI04.
-    if let Ok(shaped) = shape_visual_line(shaper, handle, segment, size, direction) {
-        if shaped.total_advance() as f64 <= max_width {
-            return vec![segment.to_string()];
+    if let Ok(shaped) = shape_visual_line(shaper, handle, &visible_segment, size, word_spacing, direction) {
+        if shaped_advance(&shaped, letter_spacing) <= max_width {
+            return vec![visible_segment];
         }
     }
-
-    let space_width = shape_visual_line(shaper, handle, " ", size, direction)
-        .map(|r| r.total_advance() as f64)
-        .unwrap_or((size as f64) * 0.25);
 
     let mut lines: Vec<String> = Vec::new();
     let mut current = String::new();
     let mut current_width: f64 = 0.0;
 
-    for piece in paint_wrap_pieces(segment, direction) {
-        let word_width = shape_visual_line(shaper, handle, piece.value, size, direction)
-            .map(|r| r.total_advance() as f64)
+    let mut current_hyphen = false;
+    for piece in paint_wrap_pieces(
+        wrapping_segment,
+        direction,
+        word_break == TextWordBreak::KeepAll,
+        line_break,
+        hyphens == TextHyphens::Manual,
+    ) {
+        let word_width = shape_visual_line(shaper, handle, piece.value, size, word_spacing, direction)
+            .map(|r| shaped_advance(&r, letter_spacing))
             .unwrap_or(piece.value.chars().count() as f64 * (size as f64) * 0.5);
-        let gap = if piece.leading_space && !current.is_empty() {
-            space_width
-        } else {
-            0.0
-        };
-
         if current.is_empty() {
             current.push_str(piece.value);
             current_width = word_width;
-        } else if current_width + gap + word_width <= max_width {
-            if gap > 0.0 {
-                current.push(' ');
-            }
-            current.push_str(piece.value);
-            current_width += gap + word_width;
+            current_hyphen = piece.hyphen_after;
         } else {
-            lines.push(std::mem::take(&mut current));
-            current.push_str(piece.value);
-            current_width = word_width;
+            let separator = if piece.leading_space { " " } else { "" };
+            let candidate = format!("{current}{separator}{}", piece.value);
+            let candidate_width = shape_visual_line(shaper, handle, &candidate, size, word_spacing, direction)
+                .map(|shaped| shaped_advance(&shaped, letter_spacing))
+                .unwrap_or(current_width + word_width);
+            if candidate_width <= max_width {
+                current = candidate;
+                current_width = candidate_width;
+                current_hyphen = piece.hyphen_after;
+            } else {
+                if current_hyphen {
+                    current.push_str(hyphenate_character);
+                }
+                lines.push(std::mem::take(&mut current));
+                current.push_str(piece.value);
+                current_width = word_width;
+                current_hyphen = piece.hyphen_after;
+            }
         }
     }
 
@@ -1526,32 +1909,241 @@ fn wrap_line<S: TextShaper>(
     if lines.is_empty() {
         lines.push(String::new());
     }
+    if wrap_style == TextWrapStyle::Balance && lines.len() > 1 {
+        let full_width = shape_visual_line(shaper, handle, &visible_segment, size, word_spacing, direction)
+            .map(|shaped| shaped_advance(&shaped, letter_spacing))
+            .unwrap_or(max_width);
+        let balanced_width = (full_width / lines.len() as f64).min(max_width);
+        let balanced = wrap_line(
+            shaper,
+            handle,
+            segment,
+            size,
+            balanced_width,
+            letter_spacing,
+            word_spacing,
+            breaks_anywhere,
+            word_break,
+            line_break,
+            hyphens,
+            hyphenate_character,
+            TextWrapStyle::Auto,
+            TextSpaceWrapping::Collapse,
+            direction,
+        );
+        if balanced.len() == lines.len() {
+            return balanced;
+        }
+    }
+    if wrap_style == TextWrapStyle::Pretty && lines.len() > 1 {
+        let previous_index = lines.len() - 2;
+        let last_index = lines.len() - 1;
+        let previous = lines[previous_index].clone();
+        let last = lines[last_index].clone();
+        if let Some((shorter_previous, moved_word)) = previous.rsplit_once(' ') {
+            let fuller_last = format!("{moved_word} {last}");
+            let measure = |value: &str| shape_visual_line(
+                shaper, handle, value, size, word_spacing, direction,
+            ).map(|shaped| shaped_advance(&shaped, letter_spacing)).unwrap_or(max_width);
+            let previous_width = measure(&previous);
+            let last_width = measure(&last);
+            let shorter_width = measure(shorter_previous);
+            let fuller_width = measure(&fuller_last);
+            if fuller_width <= max_width
+                && (shorter_width - fuller_width).abs() < (previous_width - last_width).abs()
+            {
+                lines[previous_index] = shorter_previous.to_string();
+                lines[last_index] = fuller_last;
+            }
+        }
+    }
+    if !breaks_anywhere {
+        return lines;
+    }
+    lines.into_iter().flat_map(|line| break_line_anywhere(
+        shaper, handle, &line, size, max_width, letter_spacing, word_spacing, direction,
+    )).collect()
+}
+
+#[allow(clippy::too_many_arguments)]
+fn wrap_preserved_spaces<S: TextShaper>(
+    shaper: &S,
+    handle: &S::Handle,
+    segment: &str,
+    size: f32,
+    max_width: f64,
+    letter_spacing: f64,
+    word_spacing: f64,
+    break_every_space: bool,
+    direction: BaseDirection,
+) -> Vec<String> {
+    let measure = |value: &str| shape_visual_line(
+        shaper, handle, value, size, word_spacing, direction,
+    ).map(|shaped| shaped_advance(&shaped, letter_spacing)).unwrap_or(max_width);
+    if measure(segment) <= max_width {
+        return vec![segment.to_string()];
+    }
+    let mut lines = Vec::new();
+    let mut current = String::new();
+    let mut sequence_pieces = Vec::new();
+    if !break_every_space {
+        let mut start = 0;
+        let mut previous_was_space = false;
+        for (index, character) in segment.char_indices() {
+            if previous_was_space && character != ' ' {
+                sequence_pieces.push(&segment[start..index]);
+                start = index;
+            }
+            previous_was_space = character == ' ';
+        }
+        sequence_pieces.push(&segment[start..]);
+    }
+    let pieces: Box<dyn Iterator<Item = &str>> = if break_every_space {
+        Box::new(segment.split_inclusive(' '))
+    } else {
+        Box::new(sequence_pieces.into_iter())
+    };
+    for piece in pieces {
+        let candidate = format!("{current}{piece}");
+        if !current.is_empty() && measure(&candidate) > max_width {
+            lines.push(std::mem::take(&mut current));
+        }
+        current.push_str(piece);
+    }
+    if !current.is_empty() {
+        lines.push(current);
+    }
     lines
+}
+
+#[allow(clippy::too_many_arguments)]
+fn break_line_anywhere<S: TextShaper>(
+    shaper: &S,
+    handle: &S::Handle,
+    line: &str,
+    size: f32,
+    max_width: f64,
+    letter_spacing: f64,
+    word_spacing: f64,
+    direction: BaseDirection,
+) -> Vec<String> {
+    let fits = shape_visual_line(shaper, handle, line, size, word_spacing, direction)
+        .map(|shaped| shaped_advance(&shaped, letter_spacing) <= max_width)
+        .unwrap_or(true);
+    if fits {
+        return vec![line.to_string()];
+    }
+    let flow = TextFlow::analyze(line, direction);
+    let mut lines = Vec::new();
+    let mut current = String::new();
+    for grapheme in flow.graphemes {
+        let value = &line[grapheme.bytes];
+        let candidate = format!("{current}{value}");
+        let fits = shape_visual_line(shaper, handle, &candidate, size, word_spacing, direction)
+            .map(|shaped| shaped_advance(&shaped, letter_spacing) <= max_width)
+            .unwrap_or(true);
+        if !fits && !current.is_empty() {
+            lines.push(std::mem::take(&mut current));
+        }
+        current.push_str(value);
+    }
+    if !current.is_empty() {
+        lines.push(current);
+    }
+    lines
+}
+
+#[allow(clippy::too_many_arguments)]
+fn fit_text_overflow<S: TextShaper>(
+    shaper: &S,
+    handle: &S::Handle,
+    line: &str,
+    size: f32,
+    max_width: f64,
+    letter_spacing: f64,
+    word_spacing: f64,
+    direction: BaseDirection,
+    mode: TextOverflow,
+) -> String {
+    let fits = |value: &str| shape_visual_line(shaper, handle, value, size, word_spacing, direction)
+        .map(|shaped| shaped_advance(&shaped, letter_spacing) <= max_width)
+        .unwrap_or(true);
+    if fits(line) {
+        return line.to_string();
+    }
+    let suffix = if mode == TextOverflow::Ellipsis { "…" } else { "" };
+    if !fits(suffix) {
+        return String::new();
+    }
+    let flow = TextFlow::analyze(line, direction);
+    let mut visible = String::new();
+    for grapheme in flow.graphemes {
+        let value = &line[grapheme.bytes];
+        let candidate = format!("{visible}{value}{suffix}");
+        if !fits(&candidate) {
+            break;
+        }
+        visible.push_str(value);
+    }
+    visible.push_str(suffix);
+    visible
 }
 
 struct PaintWrapPiece<'a> {
     value: &'a str,
     leading_space: bool,
+    hyphen_after: bool,
 }
 
-fn paint_wrap_pieces(segment: &str, direction: BaseDirection) -> Vec<PaintWrapPiece<'_>> {
+fn paint_wrap_pieces(
+    segment: &str,
+    direction: BaseDirection,
+    keep_all: bool,
+    line_break: TextLineBreak,
+    manual_hyphens: bool,
+) -> Vec<PaintWrapPiece<'_>> {
     let flow = TextFlow::analyze(segment, direction);
-    let mut boundaries: Vec<_> = flow
-        .breaks
-        .iter()
-        .filter(|opportunity| opportunity.kind == text_flow::BreakKind::Allowed)
-        .map(|opportunity| opportunity.byte_index)
-        .collect();
+    let mut boundaries: Vec<_> = if keep_all {
+        segment.char_indices().filter_map(|(index, character)| {
+            character.is_whitespace().then_some(index + character.len_utf8())
+        }).collect()
+    } else {
+        flow.breaks
+            .iter()
+            .filter(|opportunity| opportunity.kind == text_flow::BreakKind::Allowed)
+            .map(|opportunity| opportunity.byte_index)
+            .collect()
+    };
+    if manual_hyphens {
+        boundaries.extend(segment.char_indices().filter_map(|(index, character)| {
+            (character == '\u{ad}').then_some(index + character.len_utf8())
+        }));
+    }
+    if !keep_all && line_break == TextLineBreak::Loose {
+        boundaries.extend(flow.graphemes.iter().filter_map(|grapheme| {
+            let start = grapheme.bytes.start;
+            segment[start..].chars().next()
+                .filter(|_| start > 0)
+                .filter(|character| is_small_kana_or_iteration_mark(*character))
+                .map(|_| start)
+        }));
+    } else if !keep_all && line_break == TextLineBreak::Strict {
+        boundaries.retain(|boundary| segment[*boundary..].chars().next()
+            .is_none_or(|character| !is_small_kana_or_iteration_mark(character)));
+    }
     if boundaries.last().copied() != Some(segment.len()) {
         boundaries.push(segment.len());
     }
+    boundaries.sort_unstable();
+    boundaries.dedup();
     let mut pieces = Vec::new();
     let mut start = 0;
     let mut pending_space = false;
     for end in boundaries {
         let source = &segment[start..end];
         start = end;
-        let value = source.trim_matches(char::is_whitespace);
+        let hyphen_after = manual_hyphens && source.ends_with('\u{ad}');
+        let value = source.trim_matches(char::is_whitespace).trim_end_matches('\u{ad}');
         if value.is_empty() {
             pending_space = true;
             continue;
@@ -1559,10 +2151,15 @@ fn paint_wrap_pieces(segment: &str, direction: BaseDirection) -> Vec<PaintWrapPi
         pieces.push(PaintWrapPiece {
             value,
             leading_space: pending_space || source.chars().next().is_some_and(char::is_whitespace),
+            hyphen_after,
         });
         pending_space = source.chars().last().is_some_and(char::is_whitespace);
     }
     pieces
+}
+
+fn is_small_kana_or_iteration_mark(character: char) -> bool {
+    "ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮヵヶー々〻ヽヾゝゞ".contains(character)
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1620,7 +2217,17 @@ fn query_from_font(font: &FontSpec) -> FontQuery {
         } else {
             FontStyle::Normal
         },
-        stretch: FontStretch::Normal,
+        stretch: match font.stretch {
+            LayoutFontStretch::UltraCondensed => FontStretch::UltraCondensed,
+            LayoutFontStretch::ExtraCondensed => FontStretch::ExtraCondensed,
+            LayoutFontStretch::Condensed => FontStretch::Condensed,
+            LayoutFontStretch::SemiCondensed => FontStretch::SemiCondensed,
+            LayoutFontStretch::Normal => FontStretch::Normal,
+            LayoutFontStretch::SemiExpanded => FontStretch::SemiExpanded,
+            LayoutFontStretch::Expanded => FontStretch::Expanded,
+            LayoutFontStretch::ExtraExpanded => FontStretch::ExtraExpanded,
+            LayoutFontStretch::UltraExpanded => FontStretch::UltraExpanded,
+        },
     }
 }
 
@@ -1629,6 +2236,7 @@ struct FontCacheKey {
     family: String,
     weight: u16,
     italic: bool,
+    stretch: LayoutFontStretch,
 }
 
 impl From<&FontSpec> for FontCacheKey {
@@ -1641,6 +2249,7 @@ impl From<&FontSpec> for FontCacheKey {
             },
             weight: f.weight,
             italic: f.italic,
+            stretch: f.stretch,
         }
     }
 }
@@ -1959,6 +2568,90 @@ mod tests {
     }
 
     #[test]
+    fn underline_styles_lower_to_backend_neutral_geometry() {
+        for style in [
+            TextDecorationStyle::Double,
+            TextDecorationStyle::Dotted,
+            TextDecorationStyle::Dashed,
+            TextDecorationStyle::Wavy,
+        ] {
+            let mut text = text_content("styled");
+            text.decoration = Some(layout_ir::TextDecoration {
+                lines: TextDecorationLines::UNDERLINE,
+                style,
+                color: Some(rgb(37, 99, 235)),
+                thickness: Some(3.0),
+                underline_offset: None,
+                underline_position: TextUnderlinePosition::Auto,
+            });
+            let root = positioned_leaf(text, 0.0, 0.0, 200.0, 30.0);
+            let shaper = FakeShaper;
+            let metrics = FakeMetrics;
+            let resolver = FakeResolver;
+            let scene = layout_to_paint(&root, &make_options(&shaper, &metrics, &resolver));
+            let has_rect = scene.instructions.iter().any(|instruction| matches!(instruction,
+                PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("rgb(37, 99, 235)")));
+            let has_path = scene.instructions.iter().any(|instruction| matches!(instruction,
+                PaintInstruction::Path(path) if path.stroke.as_deref() == Some("rgb(37, 99, 235)")));
+            assert!(has_rect || has_path);
+        }
+    }
+
+    #[test]
+    fn authored_underline_geometry_overrides_font_metrics() {
+        let mut text = text_content("thick");
+        text.decoration = Some(layout_ir::TextDecoration {
+            lines: TextDecorationLines::UNDERLINE,
+            style: TextDecorationStyle::Solid,
+            color: None,
+            thickness: Some(3.5),
+            underline_offset: Some(5.0),
+            underline_position: TextUnderlinePosition::Under,
+        });
+        let root = positioned_leaf(text, 0.0, 0.0, 200.0, 30.0);
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&root, &make_options(&shaper, &metrics, &resolver));
+        let baseline = scene.instructions.iter().find_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.y),
+            _ => None,
+        }).expect("decorated text should emit glyphs");
+        let underline = scene.instructions.iter().find_map(|instruction| match instruction {
+            PaintInstruction::Rect(rect) if rect.height == 3.5 => Some(rect),
+            _ => None,
+        }).expect("authored underline should emit a rectangle");
+        assert_eq!(underline.y - baseline, 5.0);
+    }
+
+    #[test]
+    fn under_position_places_underline_below_font_descent() {
+        let mut text = text_content("gyp");
+        text.decoration = Some(layout_ir::TextDecoration {
+            lines: TextDecorationLines::UNDERLINE,
+            style: TextDecorationStyle::Solid,
+            color: None,
+            thickness: Some(1.0),
+            underline_offset: None,
+            underline_position: TextUnderlinePosition::Under,
+        });
+        let root = positioned_leaf(text, 0.0, 0.0, 200.0, 30.0);
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&root, &make_options(&shaper, &metrics, &resolver));
+        let baseline = scene.instructions.iter().find_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.y),
+            _ => None,
+        }).expect("decorated text should emit glyphs");
+        let underline = scene.instructions.iter().find_map(|instruction| match instruction {
+            PaintInstruction::Rect(rect) if rect.height == 1.0 => Some(rect),
+            _ => None,
+        }).expect("under-positioned underline should emit a rectangle");
+        assert!(((underline.y - baseline) - 3.2).abs() < f64::EPSILON * 8.0);
+    }
+
+    #[test]
     fn background_color_emits_rect() {
         let mut ext = HashMap::new();
         let mut paint = HashMap::new();
@@ -2062,6 +2755,44 @@ mod tests {
     }
 
     #[test]
+    fn break_spaces_preserves_and_wraps_each_ascii_space() {
+        let mut leaf = positioned_leaf(text_content("A  B"), 0.0, 0.0, 24.0, 40.0);
+        leaf.ext.insert("text.break-spaces".into(), ExtValue::Bool(true));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let runs: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some(run),
+            _ => None,
+        }).collect();
+        assert_eq!(runs.len(), 2);
+        assert_eq!(runs[0].glyphs.len(), 3);
+        assert_eq!(runs[1].glyphs.len(), 1);
+        assert_eq!(runs[0].glyphs[0].x, 0.0);
+        assert_eq!(runs[1].glyphs[0].x, 0.0);
+        assert!(runs[1].glyphs[0].y > runs[0].glyphs[0].y);
+    }
+
+    #[test]
+    fn preserve_spaces_wraps_after_each_space_sequence() {
+        let mut leaf = positioned_leaf(text_content("A  B"), 0.0, 0.0, 16.0, 40.0);
+        leaf.ext.insert("text.preserve-spaces".into(), ExtValue::Bool(true));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let runs: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some(run),
+            _ => None,
+        }).collect();
+        assert_eq!(runs.len(), 2);
+        assert_eq!(runs[0].glyphs.len(), 3);
+        assert_eq!(runs[1].glyphs.len(), 1);
+        assert!(runs[1].glyphs[0].y > runs[0].glyphs[0].y);
+    }
+
+    #[test]
     fn hard_newline_produces_multiple_glyph_runs() {
         let leaf = positioned_leaf(text_content("line one\nline two"), 0.0, 0.0, 500.0, 40.0);
         let shaper = FakeShaper;
@@ -2083,6 +2814,46 @@ mod tests {
         assert_eq!(glyph_runs[1].glyphs.len(), 8); // "line two"
                                                    // Second line's baseline should be strictly greater than the first.
         assert!(glyph_runs[1].glyphs[0].y > glyph_runs[0].glyphs[0].y);
+    }
+
+    #[test]
+    fn text_indent_offsets_only_the_first_formatted_line() {
+        let mut content = text_content("A\nB");
+        content.text_align = TextAlign::Start;
+        let mut leaf = positioned_leaf(content, 0.0, 0.0, 100.0, 40.0);
+        leaf.ext.insert("text.indent".into(), ExtValue::Float(12.0));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let starts: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.x),
+            _ => None,
+        }).collect();
+        assert_eq!(starts, vec![12.0, 0.0]);
+    }
+
+    #[test]
+    fn hanging_and_each_line_control_indent_targets() {
+        let make_starts = |hanging: bool, each_line: bool| {
+            let mut content = text_content("A\nB");
+            content.text_align = TextAlign::Start;
+            let mut leaf = positioned_leaf(content, 0.0, 0.0, 100.0, 40.0);
+            leaf.ext.insert("text.indent".into(), ExtValue::Float(12.0));
+            leaf.ext.insert("text.indent-hanging".into(), ExtValue::Bool(hanging));
+            leaf.ext.insert("text.indent-each-line".into(), ExtValue::Bool(each_line));
+            let shaper = FakeShaper;
+            let metrics = FakeMetrics;
+            let resolver = FakeResolver;
+            layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver)).instructions
+                .into_iter().filter_map(|instruction| match instruction {
+                    PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.x),
+                    _ => None,
+                }).collect::<Vec<_>>()
+        };
+        assert_eq!(make_starts(true, false), vec![0.0, 12.0]);
+        assert_eq!(make_starts(false, true), vec![12.0, 12.0]);
+        assert_eq!(make_starts(true, true), vec![0.0, 0.0]);
     }
 
     #[test]
@@ -2291,6 +3062,14 @@ mod tests {
             a: 128,
         });
         assert!(half.starts_with("rgba(0, 0, 0, 0.50"));
+    }
+
+    #[test]
+    fn font_stretch_reaches_backend_neutral_font_query() {
+        let mut font = font_spec("Helvetica", 16.0);
+        font.stretch = LayoutFontStretch::ExtraExpanded;
+        assert_eq!(query_from_font(&font).stretch, FontStretch::ExtraExpanded);
+        assert!(FontCacheKey::from(&font) != FontCacheKey::from(&font_spec("Helvetica", 16.0)));
     }
 
     #[test]
@@ -2714,5 +3493,294 @@ mod tests {
                 glyph_xs
             );
         }
+    }
+
+    #[test]
+    fn letter_spacing_adjusts_backend_neutral_glyph_positions() {
+        let mut content = text_content("AB");
+        content.text_align = TextAlign::Center;
+        let mut leaf = positioned_leaf(content, 0.0, 0.0, 100.0, 20.0);
+        leaf.ext.insert("text.letter-spacing".into(), ExtValue::Float(2.0));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let PaintInstruction::GlyphRun(run) = &scene.instructions[0] else {
+            panic!("expected glyph run");
+        };
+        assert_eq!(run.glyphs[0].x, 41.0);
+        assert_eq!(run.glyphs[1].x, 51.0);
+    }
+
+    #[test]
+    fn word_spacing_adjusts_backend_neutral_glyph_positions_and_alignment() {
+        let mut content = text_content("A B");
+        content.text_align = TextAlign::Center;
+        let mut leaf = positioned_leaf(content, 0.0, 0.0, 100.0, 20.0);
+        leaf.ext.insert("text.word-spacing".into(), ExtValue::Float(4.0));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let glyphs: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some(run.glyphs.as_slice()),
+            _ => None,
+        }).flatten().collect();
+        assert_eq!(glyphs[0].x, 36.0);
+        assert_eq!(glyphs[1].x, 44.0);
+        assert_eq!(glyphs[2].x, 56.0);
+
+        let content = text_content("A B");
+        let mut narrow = positioned_leaf(content, 0.0, 0.0, 25.0, 40.0);
+        narrow.ext.insert("text.word-spacing".into(), ExtValue::Float(4.0));
+        let scene = layout_to_paint(&narrow, &make_options(&shaper, &metrics, &resolver));
+        let baselines: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.y),
+            _ => None,
+        }).collect();
+        assert_eq!(baselines.len(), 2);
+        assert!(baselines[1] > baselines[0]);
+    }
+
+    #[test]
+    fn last_line_alignment_only_overrides_the_final_wrapped_line() {
+        let mut content = text_content("AA AA");
+        content.text_align = TextAlign::Center;
+        let mut leaf = positioned_leaf(content, 0.0, 0.0, 25.0, 40.0);
+        leaf.ext.insert("text.align-last".into(), ExtValue::Str("end".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let starts: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.x),
+            _ => None,
+        }).collect();
+        assert_eq!(starts, vec![4.5, 9.0]);
+    }
+
+    #[test]
+    fn last_line_justification_distributes_only_the_final_line_space() {
+        let mut leaf = positioned_leaf(text_content("A A A A"), 0.0, 0.0, 48.0, 40.0);
+        leaf.ext.insert("text.align-last".into(), ExtValue::Str("justify".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let mut lines = std::collections::BTreeMap::<i64, Vec<f64>>::new();
+        for glyph in scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some(run.glyphs.iter()),
+            _ => None,
+        }).flatten() {
+            lines.entry(glyph.y.round() as i64).or_default().push(glyph.x);
+        }
+        let positions = lines.into_values().collect::<Vec<_>>();
+        assert_eq!(positions[0], vec![0.0, 8.0, 16.0, 24.0, 32.0]);
+        assert_eq!(positions[1], vec![0.0]);
+    }
+
+    #[test]
+    fn overflow_wrap_breaks_oversized_words_at_grapheme_boundaries() {
+        let content = text_content("abcdef");
+        let normal = positioned_leaf(content.clone(), 0.0, 0.0, 16.0, 60.0);
+        let mut anywhere = positioned_leaf(content, 0.0, 0.0, 16.0, 60.0);
+        anywhere.ext.insert("text.overflow-wrap".into(), ExtValue::Str("anywhere".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let normal_scene = layout_to_paint(&normal, &options);
+        let anywhere_scene = layout_to_paint(&anywhere, &options);
+        let count = |scene: &PaintScene| scene.instructions.iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count();
+        assert_eq!(count(&normal_scene), 1);
+        assert_eq!(count(&anywhere_scene), 3);
+    }
+
+    #[test]
+    fn manual_hyphens_render_only_at_authored_wrap_opportunities() {
+        let content = text_content("extra\u{ad}ordinary");
+        let mut manual = positioned_leaf(content.clone(), 0.0, 0.0, 48.0, 60.0);
+        manual.ext.insert("text.hyphens".into(), ExtValue::Str("manual".into()));
+        let mut none = positioned_leaf(content, 0.0, 0.0, 48.0, 60.0);
+        none.ext.insert("text.hyphens".into(), ExtValue::Str("none".into()));
+        let mut custom = manual.clone();
+        custom.ext.insert("text.hyphenate-character".into(), ExtValue::Str("‐".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let glyph_lines = |node: &PositionedNode| layout_to_paint(node, &options).instructions
+            .into_iter().filter_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => Some(run.glyphs.into_iter()
+                    .map(|glyph| char::from_u32(glyph.glyph_id).expect("fake glyph is a character"))
+                    .collect::<String>()),
+                _ => None,
+            }).collect::<Vec<_>>();
+        assert_eq!(glyph_lines(&manual), vec!["extra-", "ordinary"]);
+        assert_eq!(glyph_lines(&custom), vec!["extra‐", "ordinary"]);
+        assert_eq!(glyph_lines(&none), vec!["extraordinary"]);
+    }
+
+    #[test]
+    fn word_break_controls_grapheme_break_opportunities() {
+        let mut break_all = positioned_leaf(text_content("abcdef"), 0.0, 0.0, 16.0, 60.0);
+        break_all.ext.insert("text.word-break".into(), ExtValue::Str("break-all".into()));
+        let mut keep_all = positioned_leaf(text_content("日本語文"), 0.0, 0.0, 16.0, 40.0);
+        keep_all.ext.insert("text.word-break".into(), ExtValue::Str("keep-all".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let count = |node: &PositionedNode| layout_to_paint(node, &options).instructions.iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count();
+        assert_eq!(count(&break_all), 3);
+        assert_eq!(count(&keep_all), 1);
+    }
+
+    #[test]
+    fn line_break_tailors_small_kana_and_anywhere_opportunities() {
+        let mut loose = positioned_leaf(text_content("あぁあ"), 0.0, 0.0, 8.0, 60.0);
+        loose.ext.insert("text.line-break".into(), ExtValue::Str("loose".into()));
+        let mut strict = positioned_leaf(text_content("あぁあ"), 0.0, 0.0, 8.0, 60.0);
+        strict.ext.insert("text.line-break".into(), ExtValue::Str("strict".into()));
+        let mut anywhere = positioned_leaf(text_content("abcdef"), 0.0, 0.0, 16.0, 60.0);
+        anywhere.ext.insert("text.line-break".into(), ExtValue::Str("anywhere".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let count = |node: &PositionedNode| layout_to_paint(node, &options).instructions.iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count();
+        assert_eq!(count(&loose), 3);
+        assert_eq!(count(&strict), 2);
+        assert_eq!(count(&anywhere), 3);
+    }
+
+    #[test]
+    fn text_overflow_clips_or_inserts_an_ellipsis_at_grapheme_boundaries() {
+        let mut content = text_content("abcdef");
+        content.wrap = false;
+        let mut clip = positioned_leaf(content.clone(), 0.0, 0.0, 16.0, 20.0);
+        clip.ext.insert("text.overflow".into(), ExtValue::Str("clip".into()));
+        let mut ellipsis = positioned_leaf(content, 0.0, 0.0, 16.0, 20.0);
+        ellipsis.ext.insert("text.overflow".into(), ExtValue::Str("ellipsis".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let glyph_ids = |node: &PositionedNode| layout_to_paint(node, &options).instructions.into_iter()
+            .find_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => Some(run.glyphs.into_iter()
+                    .map(|glyph| glyph.glyph_id).collect::<Vec<_>>()),
+                _ => None,
+            }).expect("text must lower to a glyph run");
+        assert_eq!(glyph_ids(&clip), vec!['a' as u32, 'b' as u32]);
+        assert_eq!(glyph_ids(&ellipsis), vec!['a' as u32, '…' as u32]);
+    }
+
+    #[test]
+    fn text_wrap_mode_overrides_soft_wrapping_without_removing_hard_breaks() {
+        let mut nowrap = positioned_leaf(text_content("AA AA\nBB"), 0.0, 0.0, 25.0, 60.0);
+        nowrap.ext.insert("text.wrap-mode".into(), ExtValue::Str("nowrap".into()));
+        let mut wrap = nowrap.clone();
+        wrap.ext.insert("text.wrap-mode".into(), ExtValue::Str("wrap".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let count = |node: &PositionedNode| layout_to_paint(node, &options).instructions.iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count();
+        assert_eq!(count(&nowrap), 2);
+        assert_eq!(count(&wrap), 3);
+    }
+
+    #[test]
+    fn balanced_text_wrap_redistributes_the_existing_line_count() {
+        let mut content = text_content("A A A A");
+        content.text_align = TextAlign::Center;
+        let auto = positioned_leaf(content, 0.0, 0.0, 48.0, 40.0);
+        let mut balance = auto.clone();
+        balance.ext.insert("text.wrap-style".into(), ExtValue::Str("balance".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let starts = |node: &PositionedNode| layout_to_paint(node, &options).instructions.iter()
+            .filter_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.x),
+                _ => None,
+            }).collect::<Vec<_>>();
+        assert_eq!(starts(&auto), vec![4.0, 20.0]);
+        assert_eq!(starts(&balance), vec![12.0, 12.0]);
+    }
+
+    #[test]
+    fn pretty_text_wrap_reduces_final_line_raggedness() {
+        let mut content = text_content("A A A A");
+        content.text_align = TextAlign::Center;
+        let auto = positioned_leaf(content, 0.0, 0.0, 48.0, 40.0);
+        let mut pretty = auto.clone();
+        pretty.ext.insert("text.wrap-style".into(), ExtValue::Str("pretty".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let starts = |node: &PositionedNode| layout_to_paint(node, &options).instructions.iter()
+            .filter_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.x),
+                _ => None,
+            }).collect::<Vec<_>>();
+        assert_eq!(starts(&auto), vec![4.0, 20.0]);
+        assert_eq!(starts(&pretty), vec![12.0, 12.0]);
+    }
+
+    #[test]
+    fn stable_text_wrap_uses_greedy_layout_without_prior_state() {
+        let auto = positioned_leaf(text_content("A A A A"), 0.0, 0.0, 48.0, 40.0);
+        let mut stable = auto.clone();
+        stable.ext.insert("text.wrap-style".into(), ExtValue::Str("stable".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let positions = |node: &PositionedNode| layout_to_paint(node, &options).instructions
+            .into_iter().filter_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => run.glyphs.first()
+                    .map(|glyph| (glyph.x, glyph.y)),
+                _ => None,
+            }).collect::<Vec<_>>();
+        assert_eq!(positions(&stable), positions(&auto));
+    }
+
+    #[test]
+    fn justified_text_distributes_non_final_line_space() {
+        let normal = positioned_leaf(text_content("A A A A"), 0.0, 0.0, 48.0, 40.0);
+        let mut justified = normal.clone();
+        justified.ext.insert("text.justify".into(), ExtValue::Bool(true));
+        let mut inter_character = justified.clone();
+        inter_character.ext.insert("text.justify-mode".into(), ExtValue::Str("inter-character".into()));
+        let mut disabled = justified.clone();
+        disabled.ext.insert("text.justify-mode".into(), ExtValue::Str("none".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let first_line_x = |node: &PositionedNode| {
+            let scene = layout_to_paint(node, &options);
+            let first_y = scene.instructions.iter().find_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.y),
+                _ => None,
+            }).expect("first text line must lower");
+            scene.instructions.iter().filter_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => Some(run.glyphs.iter()),
+                _ => None,
+            }).flatten().filter(|glyph| glyph.y == first_y)
+                .map(|glyph| glyph.x).collect::<Vec<_>>()
+        };
+        assert_eq!(first_line_x(&normal), vec![0.0, 8.0, 16.0, 24.0, 32.0]);
+        assert_eq!(first_line_x(&justified), vec![0.0, 8.0, 20.0, 28.0, 40.0]);
+        assert_eq!(first_line_x(&inter_character), vec![0.0, 10.0, 20.0, 30.0, 40.0]);
+        assert_eq!(first_line_x(&disabled), first_line_x(&normal));
     }
 }

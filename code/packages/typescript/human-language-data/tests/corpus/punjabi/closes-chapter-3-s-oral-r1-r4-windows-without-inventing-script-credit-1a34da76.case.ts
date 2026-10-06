@@ -31,7 +31,7 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   );
   // Punjabi A1: chapter 6's two over-budget lessons split into three -more
   // continuations ahead of this point, so these positions move by 3.
-  expect(checkpoints.map((lesson) => ordered.indexOf(lesson))).toEqual([27, 36, 61, 130]);
+  expect(checkpoints.map((lesson) => ordered.indexOf(lesson))).toEqual([27, 36, 63, 132]); // +2: chapter 7's two continuations (hona, khana)
   expect(checkpoints.map((lesson) => lesson.frontmatter["introduces.knowledge"])).toEqual([
     [],
     [],
@@ -149,5 +149,19 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   //      0 pre-existing windows lost: the splits pushed the top-line clue, the
   //        addak and the tippi past R1, and each is retrieved by name in the
   //        next lesson's warm-up.
-  expect(report.summary.missedByWindow).toEqual({ R1: 55, R2: 560, R3: 484, R4: 531 });
+  // {55, 560, 484, 531} -> {55, 559, 482, 531}: chapter 7's hona and khana each
+  // split an atom-budget continuation off. Decomposed against the corpus without
+  // them: -1 R2 and -1 R3 on PA-COMPARISON-PANJ-MATCH, -1 R3 on the top-line
+  // clue, both closed because the insertions move a later retrieval into the
+  // window; 0 lost, because the two panj atoms the hona insertion pushed past R1
+  // are retrieved by name in PA-C07-hona-two-roots' warm-up.
+  // Chapter 153 extends the tail by 11 short date-writing sessions. One R1
+  // and three R2 windows newly become measurable; all 11 create R3/R4 windows
+  // for earlier atoms in the measured report.
+  // Chapter 154 adds seven short integration sessions after the date runway.
+  // Their new tail makes one R2 and seven R3/R4 windows measurable. The
+  // independent form also revisits date-format repair within its R2 window,
+  // closing that one missed retrieval; the chapter-3 assertions still guard
+  // the original debt.
+  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 562, R3: 500, R4: 549 });
 });

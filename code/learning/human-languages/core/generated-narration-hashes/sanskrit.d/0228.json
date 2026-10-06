@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:1a4f17fa30a2eb1b",
+  "lessonIds": [
+    "SA-C228-itihasah",
+    "SA-C228-bhugolah",
+    "SA-C228-sangitam",
+    "SA-C228-nrtyam",
+    "SA-C228-citrakala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch228.txt",
+  "json": "sanskrit/narration/ch228.json",
+  "textHash": "fnv1a64:bec9a65cd999bc7b",
+  "jsonHash": "fnv1a64:b7ed1449096bfb39",
+  "findings": []
+}

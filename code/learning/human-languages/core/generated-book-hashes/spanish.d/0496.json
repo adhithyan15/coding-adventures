@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:625fd809c111ebe9",
+  "lessonIds": [
+    "ES-C496-hogar",
+    "ES-C496-cerradura",
+    "ES-C496-colocar",
+    "ES-C496-quitar",
+    "ES-C496-llenar"
+  ],
+  "tex": "spanish/book/chapters/ch496-cosas-de-casa.tex"
+}

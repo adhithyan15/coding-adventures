@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:0969e125e96dcf78",
+  "lessonIds": [
+    "KA-C301-gaju",
+    "KA-C301-plastik",
+    "KA-C301-ittige",
+    "KA-C301-patti",
+    "KA-C301-kavali"
+  ],
+  "tex": "kannada/book/chapters/ch301-glass-plastic-brick-list-griddle.tex"
+}

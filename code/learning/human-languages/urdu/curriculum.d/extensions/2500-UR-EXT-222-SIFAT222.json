@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-222-SIFAT222",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say tasty, useless, unusual, fake and truthful.",
+  "prerequisites": []
+}

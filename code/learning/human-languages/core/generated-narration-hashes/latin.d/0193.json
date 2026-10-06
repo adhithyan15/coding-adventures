@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:9c586aba19714475",
+  "lessonIds": [
+    "LA-C193-tympanum",
+    "LA-C193-talus",
+    "LA-C193-tessera",
+    "LA-C193-armilla",
+    "LA-C193-monile"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch193.txt",
+  "json": "latin/narration/ch193.json",
+  "textHash": "fnv1a64:6fbdb29693fbf46d",
+  "jsonHash": "fnv1a64:e7f846d995c38e73",
+  "findings": []
+}

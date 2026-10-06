@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-154-SEHAT154",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a vaccination, a heartbeat, sweat, vomiting and dizziness.",
+  "prerequisites": []
+}

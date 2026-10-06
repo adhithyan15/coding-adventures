@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.128.0";
+pub const VERSION: &str = "0.134.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -568,12 +568,14 @@ fn token_name(token: &Token) -> &str {
 // ============================================================================
 
 use diagram_ir::{
-    ArchitectureServiceMetadata, Axis, AxisKind, ChartDataPoint, ChartDiagram, ChartKind,
+    ArchitectureConfig, ArchitectureServiceMetadata, Axis, AxisKind, ChartDataPoint, ChartDiagram,
+    ChartKind,
     ChartOrientation, ChartSeries,
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
-    EventModelDiagram, EventModelEntityKind, EventModelFrame, GitDiagram, GitEvent, JourneyConfig,
+    EventModelConfig, EventModelDataBlock, EventModelDiagram, EventModelEntity, EventModelEntityKind, EventModelFrame, EventModelGwt, EventModelGwtStatement, EventModelNote, EventModelStyles, GitDiagram, GitEvent, JourneyConfig,
     JourneyDiagram, JourneySection, JourneyTask, PieSlice,
-    QuadrantConfig, QuadrantPoint, RelKind, RequirementElementMetadata, RequirementKind,
+    QuadrantConfig, QuadrantPoint, RadarConfig, RadarGraticule, RelKind,
+    RequirementElementMetadata, RequirementKind,
     RequirementMetadata, RequirementRisk, RequirementVerifyMethod, SankeyFlow, SankeyNode,
     SequenceArrowhead, SequenceBlockKind, SequenceCentralConnection, SequenceDiagram,
     SequenceEvent, SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
@@ -936,6 +938,7 @@ pub fn parse_info(source: &str) -> Result<InfoDiagram, ParseError> {
 
 /// Parse the core Mermaid Architecture service/group/edge subset.
 pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError> {
+    let architecture_config = parse_architecture_config(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_architecture(&prepared).map_err(|message| ParseError {
         message, line: 1, col: 1,
@@ -951,6 +954,7 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
 
     let mut diagram = StructuralDiagram {
         kind: StructuralKind::Architecture,
+        architecture_config: Some(architecture_config),
         title: None,
         accessibility_title: None,
         accessibility_description: None,
@@ -1090,6 +1094,36 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
         return Err(ParseError { message: "architecture diagram requires a service".into(), line: 1, col: 1 });
     }
     Ok(diagram)
+}
+
+fn parse_architecture_config(source: &str) -> ArchitectureConfig {
+    let front_matter = mermaid_front_matter_section(source, &["config", "architecture"]);
+    let architecture_source = mermaid_directive_object(source, "architecture")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |key| {
+        quadrant_directive_value(architecture_source, key).or_else(|| {
+            architecture_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+    };
+    let positive_number = |key| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value > 0.0)
+    };
+    let defaults = ArchitectureConfig::default();
+    ArchitectureConfig {
+        icon_size: positive_number("iconSize").unwrap_or(defaults.icon_size),
+        font_size: positive_number("fontSize").unwrap_or(defaults.font_size),
+        node_separation: positive_number("nodeSeparation")
+            .unwrap_or(defaults.node_separation),
+        padding: positive_number("padding").unwrap_or(defaults.padding),
+        ideal_edge_length_multiplier: positive_number("idealEdgeLengthMultiplier")
+            .unwrap_or(defaults.ideal_edge_length_multiplier),
+    }
 }
 
 fn parse_architecture_alignment(
@@ -2287,7 +2321,7 @@ fn apply_block_style(
 
 fn parse_block_style(token: &Token, source: &str) -> Result<DiagramStyle, ParseError> {
     let mut style = DiagramStyle::default();
-    for declaration in source.split(',').map(str::trim).filter(|value| !value.is_empty()) {
+    for declaration in split_style_declarations(source) {
         let (property, value) = declaration.split_once(':')
             .ok_or_else(|| token_error(token, format!("invalid block style {declaration:?}")))?;
         let value = value.trim().trim_matches(['\'', '"']);
@@ -2301,12 +2335,14 @@ fn parse_block_style(token: &Token, source: &str) -> Result<DiagramStyle, ParseE
             "font-weight" => style.font_weight = Some(match value.to_ascii_lowercase().as_str() {
                 "normal" => 400,
                 "bold" => 700,
+                "lighter" => 300,
+                "bolder" => 700,
                 _ => value.parse().map_err(|_| token_error(token, "invalid block font weight"))?,
             }),
             "font-style" => style.font_italic = Some(match value.to_ascii_lowercase().as_str() {
                 "normal" => false,
-                "italic" => true,
-                _ => return Err(token_error(token, "block font style must be normal or italic")),
+                "italic" | "oblique" => true,
+                _ => return Err(token_error(token, "block font style must be normal, italic, or oblique")),
             }),
             "font-family" => style.font_family = Some(value.into()),
             property => return Err(token_error(token, format!("unsupported block style property {property:?}"))),
@@ -3064,6 +3100,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
     resolve_requirement_styles(&mut nodes, style_events, cursor.current())?;
     Ok(StructuralDiagram {
         kind: StructuralKind::Requirement,
+        architecture_config: None,
         title,
         accessibility_title,
         accessibility_description,
@@ -3877,6 +3914,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
 
     Ok(StructuralDiagram {
         kind: StructuralKind::Class,
+        architecture_config: None,
         title,
         accessibility_title: None,
         accessibility_description: None,
@@ -3951,8 +3989,89 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
 
 // ── eventmodeling parser ──────────────────────────────────────────────────
 
+fn event_model_entity_kind(value: &str) -> EventModelEntityKind {
+    match value {
+        "ui" => EventModelEntityKind::Ui,
+        "pcr" | "processor" => EventModelEntityKind::Processor,
+        "cmd" | "command" => EventModelEntityKind::Command,
+        "rmo" | "readmodel" => EventModelEntityKind::ReadModel,
+        "evt" | "event" => EventModelEntityKind::Event,
+        _ => unreachable!("grammar restricts event-model entity kinds"),
+    }
+}
+
+fn parse_event_model_config(source: &str) -> EventModelConfig {
+    let front_matter = mermaid_front_matter_section(source, &["config", "eventmodeling"]);
+    let config_source = mermaid_directive_object(source, "eventmodeling")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |key| {
+        quadrant_directive_value(config_source, key).or_else(|| {
+            config_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().to_string())
+            })
+        })
+    };
+    let defaults = EventModelConfig::default();
+    let non_negative = |key, fallback| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value >= 0.0)
+            .unwrap_or(fallback)
+    };
+    let positive = |key, fallback| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value > 0.0)
+            .unwrap_or(fallback)
+    };
+    let use_max_width = value("useMaxWidth")
+        .and_then(|value| match value.to_ascii_lowercase().as_str() {
+            "true" => Some(true),
+            "false" => Some(false),
+            _ => None,
+        })
+        .unwrap_or(defaults.use_max_width);
+    let theme_front = mermaid_front_matter_section(source, &["themeVariables"]);
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .or(theme_front.as_deref())
+        .unwrap_or("");
+    let theme_value = |key: &str, fallback: &str| {
+        quadrant_directive_value(theme_source, key)
+            .or_else(|| {
+                theme_source.lines().find_map(|line| {
+                    let (name, value) = line.trim().split_once(':')?;
+                    (name.trim() == key)
+                        .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+                })
+            })
+            .filter(|value| !value.is_empty())
+            .unwrap_or_else(|| fallback.to_string())
+    };
+    let style_defaults = EventModelStyles::default();
+    EventModelConfig {
+        padding: non_negative("padding", defaults.padding),
+        row_height: positive("rowHeight", defaults.row_height),
+        use_max_width,
+        styles: EventModelStyles {
+            ui_fill: theme_value("emUiFill", &style_defaults.ui_fill),
+            ui_stroke: theme_value("emUiStroke", &style_defaults.ui_stroke),
+            processor_fill: theme_value("emProcessorFill", &style_defaults.processor_fill),
+            processor_stroke: theme_value("emProcessorStroke", &style_defaults.processor_stroke),
+            read_model_fill: theme_value("emReadModelFill", &style_defaults.read_model_fill),
+            read_model_stroke: theme_value("emReadModelStroke", &style_defaults.read_model_stroke),
+            command_fill: theme_value("emCommandFill", &style_defaults.command_fill),
+            command_stroke: theme_value("emCommandStroke", &style_defaults.command_stroke),
+            event_fill: theme_value("emEventFill", &style_defaults.event_fill),
+            event_stroke: theme_value("emEventStroke", &style_defaults.event_stroke),
+        },
+    }
+}
+
 /// Parse the Mermaid 11.16.1 event-modeling frame subset into dedicated IR.
 pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseError> {
+    let config = parse_event_model_config(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_eventmodeling(&prepared).map_err(|message| ParseError {
         message,
@@ -3971,12 +4090,41 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
         })?;
 
     let mut diagram = EventModelDiagram {
+        config,
         title: None,
         accessibility_title: None,
         accessibility_description: None,
+        entities: Vec::new(),
+        data_blocks: Vec::new(),
+        notes: Vec::new(),
+        gwt: Vec::new(),
         frames: Vec::new(),
     };
+    let mut data_blocks = HashMap::<String, EventModelDataBlock>::new();
+    for token in tokens.iter().filter(|token| token_name(token) == "DATA_BLOCK") {
+        let open = token.value.find('{').expect("grammar requires data block to open");
+        let close = token.value.rfind('}').expect("grammar requires data block to close");
+        let fields = token.value[..open].split_whitespace().collect::<Vec<_>>();
+        let id = fields[1].to_string();
+        let data_type = fields.get(2).map(|value| value.trim_matches('`').to_string());
+        let block = EventModelDataBlock {
+            id: id.clone(),
+            data_type,
+            data: token.value[open + 1..close].trim().to_string(),
+        };
+        if data_blocks.insert(id.clone(), block.clone()).is_some() {
+            return Err(token_error(token, format!("duplicate event-model data block {id:?}")));
+        }
+        diagram.data_blocks.push(block);
+    }
     let mut frame_ids = HashSet::new();
+    let mut frame_authored_kinds = HashMap::<String, String>::new();
+    let mut explicit_source_checks = Vec::<(
+        usize,
+        usize,
+        EventModelEntityKind,
+        Vec<String>,
+    )>::new();
     let mut previous_id: Option<String> = None;
 
     for token in &tokens {
@@ -3996,33 +4144,66 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
                 diagram.accessibility_description =
                     Some(token.value[open + 1..close].trim().to_string());
             }
+            "ENTITY_STATEMENT" => {
+                let id = token.value["entity".len()..].trim().to_string();
+                let namespace = id.rsplit_once('.').map(|(prefix, _)| prefix.to_string());
+                diagram.entities.push(EventModelEntity { id, namespace });
+            }
             "FRAME_STATEMENT" => {
-                let fields = token.value.split_whitespace().collect::<Vec<_>>();
+                let data_start = [
+                    token.value.find('{'),
+                    token.value.find('"'),
+                    token.value.find('\''),
+                ]
+                .into_iter()
+                .flatten()
+                .min();
+                let inline_data = data_start.map(|start| {
+                    let delimiter = token.value.as_bytes()[start] as char;
+                    let close_delimiter = if delimiter == '{' { '}' } else { delimiter };
+                    let close = token.value.rfind(close_delimiter)
+                        .expect("grammar requires inline data to close");
+                    token.value[start + 1..close].trim().to_string()
+                });
+                let mut frame_end = data_start.unwrap_or(token.value.len());
+                let data_type = data_start.and_then(|start| {
+                    let prefix = token.value[..start].trim_end();
+                    if !prefix.ends_with('`') {
+                        return None;
+                    }
+                    let start = prefix[..prefix.len() - 1].rfind('`')?;
+                    frame_end = start;
+                    Some(prefix[start + 1..prefix.len() - 1].to_string())
+                });
+                let fields = token.value[..frame_end].split_whitespace().collect::<Vec<_>>();
                 let reset = matches!(fields[0], "rf" | "resetframe");
                 let id = fields[1].to_string();
                 if !frame_ids.insert(id.clone()) {
                     return Err(token_error(token, format!("duplicate event-model frame {id:?}")));
                 }
-                let kind = match fields[2] {
-                    "ui" => EventModelEntityKind::Ui,
-                    "pcr" | "processor" => EventModelEntityKind::Processor,
-                    "cmd" | "command" => EventModelEntityKind::Command,
-                    "rmo" | "readmodel" => EventModelEntityKind::ReadModel,
-                    "evt" | "event" => EventModelEntityKind::Event,
-                    _ => unreachable!("grammar restricts event-model entity kinds"),
-                };
+                let kind = event_model_entity_kind(fields[2]);
+                frame_authored_kinds.insert(id.clone(), fields[2].to_string());
                 let entity = fields[3];
                 let namespace = entity.rsplit_once('.').map(|(prefix, _)| prefix.to_string());
-                let mut source_frames = fields[4..]
+                let explicit_source_frames = fields[4..]
                     .iter()
                     .skip(1)
                     .step_by(2)
                     .map(|source| (*source).to_string())
                     .collect::<Vec<_>>();
+                let mut source_frames = explicit_source_frames.clone();
                 if source_frames.is_empty() && !reset {
                     if let Some(previous) = &previous_id {
                         source_frames.push(previous.clone());
                     }
+                }
+                if !explicit_source_frames.is_empty() {
+                    explicit_source_checks.push((
+                        token.line,
+                        token.column,
+                        kind.clone(),
+                        explicit_source_frames,
+                    ));
                 }
                 diagram.frames.push(EventModelFrame {
                     id: id.clone(),
@@ -4032,8 +4213,61 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
                     kind,
                     reset,
                     source_frames,
+                    data_reference: None,
+                    data_type,
+                    data: inline_data,
                 });
                 previous_id = Some(id);
+            }
+            "DATA_REFERENCE" => {
+                let reference = token.value[2..token.value.len() - 2].to_string();
+                let block = data_blocks.get(&reference).ok_or_else(|| {
+                    token_error(token, format!("unknown event-model data block {reference:?}"))
+                })?;
+                let frame = diagram.frames.last_mut().expect("grammar attaches data references to frames");
+                frame.data_reference = Some(reference);
+                frame.data_type = block.data_type.clone();
+                frame.data = Some(block.data.clone());
+            }
+            "NOTE_BLOCK" => {
+                let open = token.value.find('{').expect("grammar requires note block to open");
+                let close = token.value.rfind('}').expect("grammar requires note block to close");
+                let fields = token.value[..open].split_whitespace().collect::<Vec<_>>();
+                diagram.notes.push(EventModelNote {
+                    source_frame: fields[1].to_string(),
+                    data_type: fields.get(2).map(|value| value.trim_matches('`').to_string()),
+                    data: token.value[open + 1..close].trim().to_string(),
+                });
+            }
+            "GWT_BLOCK" => {
+                let fields = token.value.split_whitespace().collect::<Vec<_>>();
+                let mut gwt = EventModelGwt {
+                    source_frame: fields[1].to_string(),
+                    given: Vec::new(),
+                    when: Vec::new(),
+                    then: Vec::new(),
+                };
+                let mut section = "given";
+                let mut index = 3;
+                while index < fields.len() {
+                    if matches!(fields[index], "when" | "then") {
+                        section = fields[index];
+                        index += 1;
+                        continue;
+                    }
+                    let statement = EventModelGwtStatement {
+                        kind: event_model_entity_kind(fields[index]),
+                        entity_id: fields[index + 1].to_string(),
+                    };
+                    match section {
+                        "given" => gwt.given.push(statement),
+                        "when" => gwt.when.push(statement),
+                        "then" => gwt.then.push(statement),
+                        _ => unreachable!("grammar restricts GWT sections"),
+                    }
+                    index += 2;
+                }
+                diagram.gwt.push(gwt);
             }
             _ => {}
         }
@@ -4050,20 +4284,143 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
             }
         }
     }
-    if diagram.frames.is_empty() {
+    let mut source_type_errors = Vec::new();
+    let mut first_source_type_location = None;
+    for (line, col, target_kind, source_ids) in explicit_source_checks {
+        let (target_label, expected_source_label) = match target_kind {
+            EventModelEntityKind::Command => ("command", "ui or processor"),
+            EventModelEntityKind::Event => ("event", "command"),
+            EventModelEntityKind::ReadModel => ("read model", "event"),
+            EventModelEntityKind::Processor => ("processor", "read model"),
+            EventModelEntityKind::Ui => ("ui", "read model"),
+        };
+        for source_id in source_ids {
+            let Some(source_kind) = frame_authored_kinds.get(&source_id) else {
+                continue;
+            };
+            let allowed = match target_kind {
+                EventModelEntityKind::Command => matches!(
+                    source_kind.as_str(),
+                    "ui" | "pcr" | "processor"
+                ),
+                EventModelEntityKind::Event => {
+                    matches!(source_kind.as_str(), "cmd" | "command")
+                }
+                EventModelEntityKind::ReadModel => {
+                    matches!(source_kind.as_str(), "evt" | "event")
+                }
+                EventModelEntityKind::Processor | EventModelEntityKind::Ui => {
+                    matches!(source_kind.as_str(), "rmo" | "readmodel")
+                }
+            };
+            if !allowed {
+                first_source_type_location.get_or_insert((line, col));
+                source_type_errors.push(format!(
+                    "A {target_label} can only receive input from a {expected_source_label}, not from '{source_kind}'."
+                ));
+            }
+        }
+    }
+    if let Some((line, col)) = first_source_type_location {
         return Err(ParseError {
-            message: "event-modeling diagrams require at least one frame".into(),
-            line: 1,
-            col: 1,
+            message: source_type_errors.join("\n"),
+            line,
+            col,
         });
+    }
+    for note in &diagram.notes {
+        if !frame_ids.contains(&note.source_frame) {
+            return Err(ParseError {
+                message: format!("unknown source frame {:?} for event-model note", note.source_frame),
+                line: 1,
+                col: 1,
+            });
+        }
+    }
+    for gwt in &diagram.gwt {
+        if !frame_ids.contains(&gwt.source_frame) {
+            return Err(ParseError {
+                message: format!("unknown source frame {:?} for event-model GWT", gwt.source_frame),
+                line: 1,
+                col: 1,
+            });
+        }
     }
     Ok(diagram)
 }
 
 // ── treemap parser ────────────────────────────────────────────────────────
 
-/// Parse the Mermaid 11.16.1 quoted, indentation-based treemap subset.
+fn parse_treemap_config(source: &str) -> diagram_ir::TreemapConfig {
+    let front_matter = mermaid_front_matter_section(source, &["config", "treemap"]);
+    let config_source = mermaid_directive_object(source, "treemap")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |key| {
+        quadrant_directive_value(config_source, key).or_else(|| {
+            config_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().trim_matches(['\"', '\'']).to_string())
+            })
+        })
+    };
+    let defaults = diagram_ir::TreemapConfig::default();
+    let non_negative = |key, fallback| value(key).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+    let positive = |key, fallback| value(key).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
+    let optional_positive = |key| value(key).and_then(parse_mermaid_font_size)
+        .filter(|value| value.is_finite() && *value > 0.0);
+    let optional_color = |key| value(key).filter(|value| !value.is_empty());
+    let boolean = |key, fallback| value(key).and_then(|value| match value.to_ascii_lowercase().as_str() {
+        "true" => Some(true), "false" => Some(false), _ => None,
+    }).unwrap_or(fallback);
+    let theme_front = mermaid_front_matter_section(source, &["themeVariables"]);
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .or(theme_front.as_deref())
+        .unwrap_or("");
+    let theme_value = |key: &str| {
+        quadrant_directive_value(theme_source, key).or_else(|| {
+            theme_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().trim_matches(['\"', '\'']).to_string())
+            })
+        }).filter(|value| !value.is_empty())
+    };
+    let mut theme = defaults.theme.clone();
+    for index in 0..12 {
+        if let Some(value) = theme_value(&format!("cScale{index}")) { theme.fills[index] = value; }
+        if let Some(value) = theme_value(&format!("cScalePeer{index}")) { theme.strokes[index] = value; }
+        if let Some(value) = theme_value(&format!("cScaleLabel{index}")) { theme.labels[index] = value; }
+    }
+    diagram_ir::TreemapConfig {
+        use_max_width: boolean("useMaxWidth", defaults.use_max_width),
+        padding: non_negative("padding", defaults.padding),
+        diagram_padding: non_negative("diagramPadding", defaults.diagram_padding),
+        show_values: boolean("showValues", defaults.show_values),
+        node_width: positive("nodeWidth", defaults.node_width),
+        node_height: positive("nodeHeight", defaults.node_height),
+        border_width: non_negative("borderWidth", defaults.border_width),
+        value_font_size: positive("valueFontSize", defaults.value_font_size),
+        label_font_size: positive("labelFontSize", defaults.label_font_size),
+        section_stroke_color: optional_color("sectionStrokeColor"),
+        section_stroke_width: optional_positive("sectionStrokeWidth"),
+        section_fill_color: optional_color("sectionFillColor"),
+        leaf_stroke_color: optional_color("leafStrokeColor"),
+        leaf_stroke_width: optional_positive("leafStrokeWidth"),
+        leaf_fill_color: optional_color("leafFillColor"),
+        label_color: optional_color("labelColor"),
+        value_color: optional_color("valueColor"),
+        title_color: optional_color("titleColor"),
+        title_font_size: optional_positive("titleFontSize"),
+        value_format: value("valueFormat").filter(|value| !value.is_empty()).unwrap_or(defaults.value_format),
+        theme,
+    }
+}
+
+/// Parse the Mermaid 11.16.1 quoted, indentation-based treemap syntax.
 pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
+    let config = parse_treemap_config(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_treemap(&prepared).map_err(|message| ParseError {
         message,
@@ -4072,7 +4429,7 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
     })?;
     let grammar = parse_parser_grammar(TREEMAP_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse treemap.grammar: {error}"));
-    GrammarParser::new(tokens, grammar)
+    GrammarParser::new(tokens.clone(), grammar)
         .with_max_depth(MAX_RULE_DEPTH)
         .parse()
         .map_err(|error| ParseError {
@@ -4082,12 +4439,22 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
         })?;
 
     let mut diagram = TreemapDiagram {
+        config,
         title: None,
         accessibility_title: None,
         accessibility_description: None,
         nodes: Vec::new(),
     };
+    let mut class_styles = HashMap::<String, diagram_ir::TreemapStyle>::new();
+    for token in tokens.iter().filter(|token| token_name(token) == "CLASS_DEF_STATEMENT") {
+        let declaration = token.value.trim().trim_end_matches(';').trim();
+        let value = declaration.strip_prefix("classDef").expect("grammar requires classDef").trim();
+        let (name, declarations) = value.split_once(char::is_whitespace)
+            .ok_or_else(|| token_error(token, "treemap classDef requires a name and style"))?;
+        class_styles.insert(name.to_string(), parse_treemap_style(token, declarations)?);
+    }
     let mut ancestors = Vec::<(usize, String)>::new();
+    let mut seen_root = false;
 
     for (line_index, line) in prepared.lines().enumerate() {
         let trimmed = line.trim();
@@ -4121,6 +4488,16 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
             .take_while(|character| character.is_whitespace())
             .map(|character| if character == '\t' { 4 } else { 1 })
             .sum::<usize>();
+        if indentation == 0 {
+            if seen_root {
+                return Err(ParseError {
+                    message: "Multiple root nodes are not allowed in a treemap.".into(),
+                    line: line_index + 1,
+                    col: 1,
+                });
+            }
+            seen_root = true;
+        }
         let quote = trimmed.chars().next().unwrap_or_default();
         let closing = trimmed[1..].find(quote).map(|offset| offset + 1).ok_or_else(|| ParseError {
             message: "unterminated treemap node label".into(),
@@ -4157,24 +4534,637 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
         }
         let id = format!("treemap-{}", diagram.nodes.len() + 1);
         let parent_id = ancestors.last().map(|(_, id)| id.clone());
+        let style = class_selector.as_ref().and_then(|class| class_styles.get(class)).cloned();
         diagram.nodes.push(TreemapNode {
             id: id.clone(),
             label,
             value,
             class_selector,
+            style,
             parent_id,
         });
         ancestors.push((indentation, id));
     }
 
-    if diagram.nodes.is_empty() {
-        return Err(ParseError {
-            message: "treemap requires at least one node".into(),
-            line: 1,
-            col: 1,
-        });
-    }
     Ok(diagram)
+}
+
+fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::TreemapStyle, ParseError> {
+    let mut style = diagram_ir::TreemapStyle::default();
+    for declaration in split_style_declarations(source) {
+        let (property, value) = declaration.split_once(':')
+            .ok_or_else(|| token_error(token, format!("invalid treemap style {declaration:?}")))?;
+        let value = value.trim().trim_matches(['\'', '"']);
+        match property.trim().to_ascii_lowercase().as_str() {
+            "opacity" => style.opacity = Some(parse_treemap_opacity(token, value)?),
+            "fill-opacity" => style.fill_opacity = Some(parse_treemap_opacity(token, value)?),
+            "stroke-opacity" => style.stroke_opacity = Some(parse_treemap_opacity(token, value)?),
+            "stroke-dashoffset" => {
+                style.stroke_dash_offset = Some(value.strip_suffix("px").unwrap_or(value).trim().parse::<f64>().ok()
+                    .filter(|value| value.is_finite())
+                    .ok_or_else(|| token_error(token, "invalid treemap stroke dash offset"))?);
+            }
+            "border-radius" => style.border_radius = Some(parse_treemap_border_radius(token, value)?),
+            "text-align" => style.text_align = Some(match value.to_ascii_lowercase().as_str() {
+                "left" | "start" => diagram_ir::TreemapTextAlign::Start,
+                "center" => diagram_ir::TreemapTextAlign::Center,
+                "right" | "end" => diagram_ir::TreemapTextAlign::End,
+                "justify" => diagram_ir::TreemapTextAlign::Justify,
+                _ => return Err(token_error(token, "treemap text-align must be left, center, right, start, end, or justify")),
+            }),
+            "text-align-last" => style.text_align_last = Some(match value.to_ascii_lowercase().as_str() {
+                "auto" => diagram_ir::TreemapTextAlignLast::Auto,
+                "left" | "start" => diagram_ir::TreemapTextAlignLast::Start,
+                "center" => diagram_ir::TreemapTextAlignLast::Center,
+                "right" | "end" => diagram_ir::TreemapTextAlignLast::End,
+                "justify" => diagram_ir::TreemapTextAlignLast::Justify,
+                _ => return Err(token_error(token, "treemap text-align-last must be auto, left, center, right, start, end, or justify")),
+            }),
+            "text-justify" => style.text_justify = Some(match value.to_ascii_lowercase().as_str() {
+                "auto" => diagram_ir::TreemapTextJustify::Auto,
+                "none" => diagram_ir::TreemapTextJustify::None,
+                "inter-word" => diagram_ir::TreemapTextJustify::InterWord,
+                "inter-character" => diagram_ir::TreemapTextJustify::InterCharacter,
+                _ => return Err(token_error(token, "treemap text-justify must be auto, none, inter-word, or inter-character")),
+            }),
+            "text-transform" => style.text_transform = Some(match value.to_ascii_lowercase().as_str() {
+                "none" => diagram_ir::TreemapTextTransform::None,
+                "uppercase" => diagram_ir::TreemapTextTransform::Uppercase,
+                "lowercase" => diagram_ir::TreemapTextTransform::Lowercase,
+                "capitalize" => diagram_ir::TreemapTextTransform::Capitalize,
+                "full-width" => diagram_ir::TreemapTextTransform::FullWidth,
+                "full-size-kana" => diagram_ir::TreemapTextTransform::FullSizeKana,
+                _ => return Err(token_error(token, "unsupported treemap text-transform")),
+            }),
+            "text-decoration" => parse_treemap_text_decoration(token, value, &mut style)?,
+            "text-decoration-line" => style.text_decoration = Some(
+                parse_treemap_text_decoration_line(token, value)?
+            ),
+            "text-decoration-color" if value.eq_ignore_ascii_case("currentcolor") => {
+                style.text_decoration_color = Some(diagram_ir::TreemapTextDecorationColor::CurrentColor);
+            }
+            "text-decoration-color" if !value.is_empty() => {
+                style.text_decoration_color = Some(diagram_ir::TreemapTextDecorationColor::Color(value.into()));
+            }
+            "text-decoration-color" => return Err(token_error(token, "treemap text-decoration-color cannot be empty")),
+            "text-decoration-style" => style.text_decoration_style = Some(match value.to_ascii_lowercase().as_str() {
+                "solid" => diagram_ir::TreemapTextDecorationStyle::Solid,
+                "double" => diagram_ir::TreemapTextDecorationStyle::Double,
+                "dotted" => diagram_ir::TreemapTextDecorationStyle::Dotted,
+                "dashed" => diagram_ir::TreemapTextDecorationStyle::Dashed,
+                "wavy" => diagram_ir::TreemapTextDecorationStyle::Wavy,
+                _ => return Err(token_error(token, "unsupported treemap text-decoration-style")),
+            }),
+            "text-decoration-thickness" => style.text_decoration_thickness = Some(
+                parse_treemap_text_decoration_thickness(token, value)?
+            ),
+            "text-underline-offset" => style.text_underline_offset = Some(
+                parse_treemap_text_underline_offset(token, value)?
+            ),
+            "text-underline-position" => style.text_underline_position = Some(match value.to_ascii_lowercase().as_str() {
+                "auto" => diagram_ir::TreemapTextUnderlinePosition::Auto,
+                "from-font" => diagram_ir::TreemapTextUnderlinePosition::FromFont,
+                "under" => diagram_ir::TreemapTextUnderlinePosition::Under,
+                _ => return Err(token_error(token, "treemap text-underline-position must be auto, from-font, or under")),
+            }),
+            "line-height" => style.line_height = Some(parse_treemap_line_height(token, value)?),
+            "text-indent" => {
+                let (indent, hanging, each_line) = parse_treemap_text_indent(token, value)?;
+                style.text_indent = Some(indent);
+                style.text_indent_hanging = hanging;
+                style.text_indent_each_line = each_line;
+            }
+            "white-space" => style.white_space = Some(match value.to_ascii_lowercase().as_str() {
+                "normal" => diagram_ir::TreemapWhiteSpace::Normal,
+                "nowrap" => diagram_ir::TreemapWhiteSpace::NoWrap,
+                "pre" => diagram_ir::TreemapWhiteSpace::Pre,
+                "pre-wrap" => diagram_ir::TreemapWhiteSpace::PreWrap,
+                "pre-line" => diagram_ir::TreemapWhiteSpace::PreLine,
+                "break-spaces" => diagram_ir::TreemapWhiteSpace::BreakSpaces,
+                _ => return Err(token_error(token, "unsupported treemap white-space")),
+            }),
+            "white-space-collapse" => style.white_space = Some(match value.to_ascii_lowercase().as_str() {
+                "collapse" => diagram_ir::TreemapWhiteSpace::Normal,
+                "preserve" => diagram_ir::TreemapWhiteSpace::PreWrap,
+                "preserve-breaks" => diagram_ir::TreemapWhiteSpace::PreLine,
+                "preserve-spaces" => diagram_ir::TreemapWhiteSpace::PreserveSpaces,
+                "break-spaces" => diagram_ir::TreemapWhiteSpace::BreakSpaces,
+                _ => return Err(token_error(token, "treemap white-space-collapse must be collapse, preserve, preserve-breaks, preserve-spaces, or break-spaces")),
+            }),
+            "overflow-wrap" | "word-wrap" => style.overflow_wrap = Some(match value.to_ascii_lowercase().as_str() {
+                "normal" => diagram_ir::TreemapOverflowWrap::Normal,
+                "break-word" => diagram_ir::TreemapOverflowWrap::BreakWord,
+                "anywhere" => diagram_ir::TreemapOverflowWrap::Anywhere,
+                _ => return Err(token_error(token, "treemap overflow-wrap must be normal, break-word, or anywhere")),
+            }),
+            "word-break" => style.word_break = Some(match value.to_ascii_lowercase().as_str() {
+                "normal" => diagram_ir::TreemapWordBreak::Normal,
+                "break-all" => diagram_ir::TreemapWordBreak::BreakAll,
+                "keep-all" => diagram_ir::TreemapWordBreak::KeepAll,
+                _ => return Err(token_error(token, "treemap word-break must be normal, break-all, or keep-all")),
+            }),
+            "line-break" => style.line_break = Some(match value.to_ascii_lowercase().as_str() {
+                "auto" => diagram_ir::TreemapLineBreak::Auto,
+                "loose" => diagram_ir::TreemapLineBreak::Loose,
+                "normal" => diagram_ir::TreemapLineBreak::Normal,
+                "strict" => diagram_ir::TreemapLineBreak::Strict,
+                "anywhere" => diagram_ir::TreemapLineBreak::Anywhere,
+                _ => return Err(token_error(token, "treemap line-break must be auto, loose, normal, strict, or anywhere")),
+            }),
+            "hyphens" => style.hyphens = Some(match value.to_ascii_lowercase().as_str() {
+                "none" => diagram_ir::TreemapHyphens::None,
+                "manual" => diagram_ir::TreemapHyphens::Manual,
+                _ => return Err(token_error(token, "treemap hyphens must be none or manual")),
+            }),
+            "hyphenate-character" => {
+                style.hyphenate_character = Some(if value.eq_ignore_ascii_case("auto") {
+                    diagram_ir::TreemapHyphenateCharacter::Auto
+                } else if let Some(character) = value.strip_prefix('"').and_then(|value| value.strip_suffix('"'))
+                    .filter(|value| !value.is_empty()).or_else(|| (!value.is_empty()).then_some(value)) {
+                    diagram_ir::TreemapHyphenateCharacter::Character(character.into())
+                } else {
+                    return Err(token_error(token, "treemap hyphenate-character must be auto or a non-empty quoted string"));
+                });
+            }
+            "text-overflow" => style.text_overflow = Some(match value.to_ascii_lowercase().as_str() {
+                "clip" => diagram_ir::TreemapTextOverflow::Clip,
+                "ellipsis" => diagram_ir::TreemapTextOverflow::Ellipsis,
+                _ => return Err(token_error(token, "treemap text-overflow must be clip or ellipsis")),
+            }),
+            "text-wrap-mode" => style.text_wrap_mode = Some(match value.to_ascii_lowercase().as_str() {
+                "wrap" => diagram_ir::TreemapTextWrapMode::Wrap,
+                "nowrap" => diagram_ir::TreemapTextWrapMode::NoWrap,
+                _ => return Err(token_error(token, "treemap text-wrap-mode must be wrap or nowrap")),
+            }),
+            "text-wrap" => match value.to_ascii_lowercase().as_str() {
+                "wrap" => {
+                    style.text_wrap_mode = Some(diagram_ir::TreemapTextWrapMode::Wrap);
+                    style.text_wrap_style = Some(diagram_ir::TreemapTextWrapStyle::Auto);
+                }
+                "nowrap" => {
+                    style.text_wrap_mode = Some(diagram_ir::TreemapTextWrapMode::NoWrap);
+                    style.text_wrap_style = Some(diagram_ir::TreemapTextWrapStyle::Auto);
+                }
+                "balance" => {
+                    style.text_wrap_mode = Some(diagram_ir::TreemapTextWrapMode::Wrap);
+                    style.text_wrap_style = Some(diagram_ir::TreemapTextWrapStyle::Balance);
+                }
+                "pretty" => {
+                    style.text_wrap_mode = Some(diagram_ir::TreemapTextWrapMode::Wrap);
+                    style.text_wrap_style = Some(diagram_ir::TreemapTextWrapStyle::Pretty);
+                }
+                "stable" => {
+                    style.text_wrap_mode = Some(diagram_ir::TreemapTextWrapMode::Wrap);
+                    style.text_wrap_style = Some(diagram_ir::TreemapTextWrapStyle::Stable);
+                }
+                _ => return Err(token_error(token, "treemap text-wrap must be wrap, nowrap, balance, or pretty")),
+            },
+            "text-wrap-style" => style.text_wrap_style = Some(match value.to_ascii_lowercase().as_str() {
+                "auto" => diagram_ir::TreemapTextWrapStyle::Auto,
+                "balance" => diagram_ir::TreemapTextWrapStyle::Balance,
+                "pretty" => diagram_ir::TreemapTextWrapStyle::Pretty,
+                "stable" => diagram_ir::TreemapTextWrapStyle::Stable,
+                _ => return Err(token_error(token, "treemap text-wrap-style must be auto, balance, pretty, or stable")),
+            }),
+            "letter-spacing" => style.letter_spacing = Some(parse_treemap_letter_spacing(token, value)?),
+            "word-spacing" => style.word_spacing = Some(parse_treemap_word_spacing(token, value)?),
+            "direction" => style.direction = Some(match value.to_ascii_lowercase().as_str() {
+                "ltr" => diagram_ir::TreemapTextDirection::LeftToRight,
+                "rtl" => diagram_ir::TreemapTextDirection::RightToLeft,
+                _ => return Err(token_error(token, "treemap direction must be ltr or rtl")),
+            }),
+            "font-stretch" => style.font_stretch = Some(match value.to_ascii_lowercase().as_str() {
+                "ultra-condensed" => diagram_ir::TreemapFontStretch::UltraCondensed,
+                "extra-condensed" => diagram_ir::TreemapFontStretch::ExtraCondensed,
+                "condensed" => diagram_ir::TreemapFontStretch::Condensed,
+                "semi-condensed" => diagram_ir::TreemapFontStretch::SemiCondensed,
+                "normal" => diagram_ir::TreemapFontStretch::Normal,
+                "semi-expanded" => diagram_ir::TreemapFontStretch::SemiExpanded,
+                "expanded" => diagram_ir::TreemapFontStretch::Expanded,
+                "extra-expanded" => diagram_ir::TreemapFontStretch::ExtraExpanded,
+                "ultra-expanded" => diagram_ir::TreemapFontStretch::UltraExpanded,
+                _ => diagram_ir::TreemapFontStretch::Percentage(
+                    value.strip_suffix('%').and_then(|value| value.trim().parse::<f64>().ok())
+                        .filter(|value| value.is_finite() && *value > 0.0)
+                        .ok_or_else(|| token_error(token, "unsupported treemap font-stretch"))?
+                ),
+            }),
+            "font-size" => style.font_size = Some(parse_treemap_font_size(token, value)?),
+            "font-weight" => {
+                let weight = match value.to_ascii_lowercase().as_str() {
+                    "normal" => 400,
+                    "bold" | "bolder" => 700,
+                    "lighter" => 300,
+                    numeric => numeric.parse::<u16>()
+                        .ok().filter(|weight| (1..=1000).contains(weight))
+                        .ok_or_else(|| token_error(token, "treemap font-weight must be normal, bold, bolder, lighter, or an integer from 1 through 1000"))?,
+                };
+                style.node.font_weight = Some(weight);
+            }
+            "text-shadow" => style.text_shadow = Some(parse_treemap_text_shadow(token, value)?),
+            "tab-size" => style.tab_size = Some(value.parse::<u16>().ok()
+                .filter(|value| *value <= 256)
+                .ok_or_else(|| token_error(token, "treemap tab-size must be an integer from 0 through 256"))?),
+            _ => merge_treemap_node_style(&mut style.node, &parse_block_style(token, declaration)?),
+        }
+    }
+    Ok(style)
+}
+
+fn parse_treemap_font_size(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapFontSize, ParseError> {
+    let source = source.trim();
+    let parsed = match source.to_ascii_lowercase().as_str() {
+        "xx-small" => Some(diagram_ir::TreemapFontSize::Pixels(9.0)),
+        "x-small" => Some(diagram_ir::TreemapFontSize::Pixels(10.0)),
+        "small" => Some(diagram_ir::TreemapFontSize::Pixels(13.0)),
+        "medium" => Some(diagram_ir::TreemapFontSize::Pixels(16.0)),
+        "large" => Some(diagram_ir::TreemapFontSize::Pixels(18.0)),
+        "x-large" => Some(diagram_ir::TreemapFontSize::Pixels(24.0)),
+        "xx-large" => Some(diagram_ir::TreemapFontSize::Pixels(32.0)),
+        "xxx-large" => Some(diagram_ir::TreemapFontSize::Pixels(48.0)),
+        "smaller" => Some(diagram_ir::TreemapFontSize::Factor(5.0 / 6.0)),
+        "larger" => Some(diagram_ir::TreemapFontSize::Factor(1.2)),
+        _ => None,
+    }.or_else(|| if let Some(value) = source.strip_suffix('%') {
+        value.trim().parse::<f64>().ok()
+            .map(|value| diagram_ir::TreemapFontSize::Factor(value / 100.0))
+    } else if let Some(value) = source.strip_suffix("rem") {
+        value.trim().parse::<f64>().ok()
+            .map(|value| diagram_ir::TreemapFontSize::Pixels(value * 16.0))
+    } else if let Some(value) = source.strip_suffix("em") {
+        value.trim().parse::<f64>().ok().map(diagram_ir::TreemapFontSize::Factor)
+    } else {
+        source.strip_suffix("px").unwrap_or(source).trim().parse::<f64>().ok()
+            .map(diagram_ir::TreemapFontSize::Pixels)
+    });
+    parsed.filter(|size| match size {
+        diagram_ir::TreemapFontSize::Pixels(value) | diagram_ir::TreemapFontSize::Factor(value) =>
+            value.is_finite() && *value > 0.0,
+    }).ok_or_else(|| token_error(token, "unsupported treemap font-size"))
+}
+
+fn parse_treemap_border_radius(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapBorderRadius, ParseError> {
+    let source = source.trim();
+    let radius = if let Some(value) = source.strip_suffix('%') {
+        value.trim().parse::<f64>().ok()
+            .map(|value| diagram_ir::TreemapBorderRadius::Factor(value / 100.0))
+    } else {
+        source.strip_suffix("px").unwrap_or(source).trim().parse::<f64>().ok()
+            .map(diagram_ir::TreemapBorderRadius::Pixels)
+    };
+    radius.filter(|radius| match radius {
+        diagram_ir::TreemapBorderRadius::Pixels(value) | diagram_ir::TreemapBorderRadius::Factor(value) =>
+            value.is_finite() && *value >= 0.0,
+    }).ok_or_else(|| token_error(token, "treemap border-radius must be a non-negative pixel or percentage value"))
+}
+
+fn split_style_declarations(source: &str) -> Vec<&str> {
+    let mut declarations = Vec::new();
+    let mut start = 0;
+    let mut depth = 0_u32;
+    let mut quote = None;
+    for (index, character) in source.char_indices() {
+        if let Some(delimiter) = quote {
+            if character == delimiter {
+                quote = None;
+            }
+            continue;
+        }
+        match character {
+            '\'' | '"' => quote = Some(character),
+            '(' => depth += 1,
+            ')' => depth = depth.saturating_sub(1),
+            ',' if depth == 0 => {
+                let next = source[index + 1..].trim_start();
+                let property = next.split_ascii_whitespace().next().unwrap_or_default();
+                if property.contains(':') {
+                    declarations.push(source[start..index].trim());
+                    start = index + 1;
+                }
+            }
+            _ => {}
+        }
+    }
+    declarations.push(source[start..].trim());
+    declarations.into_iter().filter(|value| !value.is_empty()).collect()
+}
+
+fn parse_treemap_opacity(token: &Token, source: &str) -> Result<f64, ParseError> {
+    let value = source.strip_suffix('%').map_or_else(
+        || source.parse::<f64>().ok(),
+        |value| value.trim().parse::<f64>().ok().map(|value| value / 100.0),
+    );
+    value.filter(|value| value.is_finite() && (0.0..=1.0).contains(value))
+        .ok_or_else(|| token_error(token, "treemap opacity must be between 0 and 1 or 0% and 100%"))
+}
+
+fn parse_treemap_letter_spacing(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapLetterSpacing, ParseError> {
+    if source.eq_ignore_ascii_case("normal") {
+        return Ok(diagram_ir::TreemapLetterSpacing::Normal);
+    }
+    let (number, factor) = if let Some(number) = source.strip_suffix("px") {
+        (number, false)
+    } else if let Some(number) = source.strip_suffix("em") {
+        (number, true)
+    } else {
+        return Err(token_error(token, "treemap letter-spacing must be normal or a px or em length"));
+    };
+    let value = number.trim().parse::<f64>().ok().filter(|value| value.is_finite())
+        .ok_or_else(|| token_error(token, "invalid treemap letter-spacing"))?;
+    Ok(if factor {
+        diagram_ir::TreemapLetterSpacing::Factor(value)
+    } else {
+        diagram_ir::TreemapLetterSpacing::Pixels(value)
+    })
+}
+
+fn parse_treemap_word_spacing(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapWordSpacing, ParseError> {
+    let source = source.trim();
+    if source.eq_ignore_ascii_case("normal") {
+        return Ok(diagram_ir::TreemapWordSpacing::Normal);
+    }
+    let (number, is_factor) = if let Some(value) = source.strip_suffix("px") {
+        (value.trim(), false)
+    } else if let Some(value) = source.strip_suffix("em") {
+        (value.trim(), true)
+    } else {
+        return Err(token_error(token, "treemap word-spacing must be normal or a px or em length"));
+    };
+    let value = number.parse::<f64>().ok().filter(|value| value.is_finite())
+        .ok_or_else(|| token_error(token, "invalid treemap word-spacing"))?;
+    Ok(if is_factor {
+        diagram_ir::TreemapWordSpacing::Factor(value)
+    } else {
+        diagram_ir::TreemapWordSpacing::Pixels(value)
+    })
+}
+
+fn parse_treemap_text_shadow(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapTextShadow, ParseError> {
+    if source.eq_ignore_ascii_case("none") {
+        return Ok(diagram_ir::TreemapTextShadow::None);
+    }
+    if source.split(',').any(|shadow| shadow.trim().eq_ignore_ascii_case("none")) {
+        return Err(token_error(token, "treemap text-shadow none cannot be combined with shadow layers"));
+    }
+    let shadows = source.split(',').map(|shadow| parse_treemap_text_shadow_layer(token, shadow.trim()))
+        .collect::<Result<Vec<_>, _>>()?;
+    if shadows.is_empty() {
+        return Err(token_error(token, "treemap text-shadow requires at least one layer"));
+    }
+    Ok(diagram_ir::TreemapTextShadow::Shadows(shadows))
+}
+
+fn parse_treemap_text_shadow_layer(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapTextShadowLayer, ParseError> {
+    let mut lengths = Vec::new();
+    let mut color = None;
+    for value in source.split_ascii_whitespace() {
+        let length = if value == "0" {
+            Some(0.0)
+        } else {
+            value.strip_suffix("px").and_then(|number| number.parse::<f64>().ok())
+        };
+        if let Some(length) = length.filter(|length| length.is_finite()) {
+            lengths.push(length);
+        } else if color.replace(value.to_string()).is_some() {
+            return Err(token_error(token, "treemap text-shadow supports one color"));
+        }
+    }
+    if !(2..=3).contains(&lengths.len()) {
+        return Err(token_error(token, "treemap text-shadow requires x/y px offsets and optional px blur and color"));
+    }
+    let blur_radius = lengths.get(2).copied().unwrap_or(0.0);
+    if blur_radius < 0.0 {
+        return Err(token_error(token, "treemap text-shadow blur radius cannot be negative"));
+    }
+    Ok(diagram_ir::TreemapTextShadowLayer {
+        offset_x: lengths[0],
+        offset_y: lengths[1],
+        blur_radius,
+        color: match color {
+            None => diagram_ir::TreemapTextShadowColor::CurrentColor,
+            Some(color) if color.eq_ignore_ascii_case("currentcolor") =>
+                diagram_ir::TreemapTextShadowColor::CurrentColor,
+            Some(color) => diagram_ir::TreemapTextShadowColor::Color(color),
+        },
+    })
+}
+
+fn parse_treemap_text_decoration(
+    token: &Token,
+    source: &str,
+    style: &mut diagram_ir::TreemapStyle,
+) -> Result<(), ParseError> {
+    let tokens = source.split_ascii_whitespace().collect::<Vec<_>>();
+    if tokens.is_empty() {
+        return Err(token_error(token, "unsupported treemap text-decoration"));
+    }
+    if tokens.iter().any(|value| value.eq_ignore_ascii_case("none")) {
+        if tokens.len() != 1 {
+            return Err(token_error(token, "treemap text-decoration none cannot be combined"));
+        }
+        style.text_decoration = Some(diagram_ir::TreemapTextDecoration::default());
+        style.text_decoration_color = None;
+        style.text_decoration_style = Some(diagram_ir::TreemapTextDecorationStyle::Solid);
+        style.text_decoration_thickness = Some(diagram_ir::TreemapTextDecorationThickness::Auto);
+        return Ok(());
+    }
+
+    let mut decoration = diagram_ir::TreemapTextDecoration::default();
+    let mut saw_line = false;
+    let mut decoration_style = None;
+    let mut thickness = None;
+    let mut color = None;
+    for value in tokens {
+        match value.to_ascii_lowercase().as_str() {
+            "underline" => { decoration.underline = true; saw_line = true; }
+            "overline" => { decoration.overline = true; saw_line = true; }
+            "line-through" => { decoration.line_through = true; saw_line = true; }
+            "solid" => decoration_style = Some(diagram_ir::TreemapTextDecorationStyle::Solid),
+            "double" => decoration_style = Some(diagram_ir::TreemapTextDecorationStyle::Double),
+            "dotted" => decoration_style = Some(diagram_ir::TreemapTextDecorationStyle::Dotted),
+            "dashed" => decoration_style = Some(diagram_ir::TreemapTextDecorationStyle::Dashed),
+            "wavy" => decoration_style = Some(diagram_ir::TreemapTextDecorationStyle::Wavy),
+            "auto" | "from-font" => thickness = Some(parse_treemap_text_decoration_thickness(token, value)?),
+            _ if value.ends_with("px") || value.ends_with('%') => {
+                thickness = Some(parse_treemap_text_decoration_thickness(token, value)?);
+            }
+            _ if color.is_none() => color = Some(value.to_string()),
+            _ => return Err(token_error(token, "unsupported treemap text-decoration")),
+        }
+    }
+    if !saw_line {
+        return Err(token_error(token, "unsupported treemap text-decoration: shorthand requires a line"));
+    }
+    style.text_decoration = Some(decoration);
+    style.text_decoration_color = color.map(|value| {
+        if value.eq_ignore_ascii_case("currentcolor") {
+            diagram_ir::TreemapTextDecorationColor::CurrentColor
+        } else {
+            diagram_ir::TreemapTextDecorationColor::Color(value)
+        }
+    });
+    style.text_decoration_style = Some(decoration_style.unwrap_or(diagram_ir::TreemapTextDecorationStyle::Solid));
+    style.text_decoration_thickness = Some(thickness.unwrap_or(diagram_ir::TreemapTextDecorationThickness::Auto));
+    Ok(())
+}
+
+fn parse_treemap_text_decoration_line(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapTextDecoration, ParseError> {
+    let tokens = source.split_ascii_whitespace().collect::<Vec<_>>();
+    if tokens.is_empty() {
+        return Err(token_error(token, "unsupported treemap text-decoration-line"));
+    }
+    if tokens.iter().any(|value| value.eq_ignore_ascii_case("none")) {
+        return if tokens.len() == 1 {
+            Ok(diagram_ir::TreemapTextDecoration::default())
+        } else {
+            Err(token_error(token, "treemap text-decoration-line none cannot be combined"))
+        };
+    }
+    let mut decoration = diagram_ir::TreemapTextDecoration::default();
+    for value in tokens {
+        match value.to_ascii_lowercase().as_str() {
+            "underline" => decoration.underline = true,
+            "overline" => decoration.overline = true,
+            "line-through" => decoration.line_through = true,
+            _ => return Err(token_error(token, "unsupported treemap text-decoration-line")),
+        }
+    }
+    Ok(decoration)
+}
+
+fn parse_treemap_text_decoration_thickness(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapTextDecorationThickness, ParseError> {
+    match source.to_ascii_lowercase().as_str() {
+        "auto" => Ok(diagram_ir::TreemapTextDecorationThickness::Auto),
+        "from-font" => Ok(diagram_ir::TreemapTextDecorationThickness::FromFont),
+        _ => {
+            let (number, factor) = if let Some(number) = source.strip_suffix('%') {
+                (Some(number), Some(100.0))
+            } else if let Some(number) = source.strip_suffix("em") {
+                (Some(number), Some(1.0))
+            } else {
+                (source.strip_suffix("px"), None)
+            };
+            let value = number.and_then(|number| number.trim().parse::<f64>().ok())
+                .filter(|value| value.is_finite() && *value > 0.0)
+                .ok_or_else(|| token_error(token, "invalid treemap text-decoration-thickness"))?;
+            Ok(if let Some(divisor) = factor {
+                diagram_ir::TreemapTextDecorationThickness::Factor(value / divisor)
+            } else {
+                diagram_ir::TreemapTextDecorationThickness::Pixels(value)
+            })
+        }
+    }
+}
+
+fn parse_treemap_text_underline_offset(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapTextUnderlineOffset, ParseError> {
+    if source.eq_ignore_ascii_case("auto") {
+        return Ok(diagram_ir::TreemapTextUnderlineOffset::Auto);
+    }
+    let (number, factor) = if let Some(number) = source.strip_suffix('%') {
+        (Some(number), Some(100.0))
+    } else if let Some(number) = source.strip_suffix("em") {
+        (Some(number), Some(1.0))
+    } else {
+        (source.strip_suffix("px"), None)
+    };
+    let value = number.and_then(|number| number.trim().parse::<f64>().ok())
+        .filter(|value| value.is_finite())
+        .ok_or_else(|| token_error(token, "invalid treemap text-underline-offset"))?;
+    Ok(if let Some(divisor) = factor {
+        diagram_ir::TreemapTextUnderlineOffset::Factor(value / divisor)
+    } else {
+        diagram_ir::TreemapTextUnderlineOffset::Pixels(value)
+    })
+}
+
+fn parse_treemap_line_height(token: &Token, source: &str) -> Result<diagram_ir::TreemapLineHeight, ParseError> {
+    if source.eq_ignore_ascii_case("normal") {
+        return Ok(diagram_ir::TreemapLineHeight::Factor(1.2));
+    }
+    let (number, pixels, divisor) = if let Some(value) = source.strip_suffix("px") {
+        (value, true, 1.0)
+    } else if let Some(value) = source.strip_suffix('%') {
+        (value, false, 100.0)
+    } else {
+        (source, false, 1.0)
+    };
+    let value = number.trim().parse::<f64>().ok()
+        .filter(|value| value.is_finite() && *value > 0.0)
+        .ok_or_else(|| token_error(token, "treemap line-height must be normal or a positive number, percentage, or pixel length"))?
+        / divisor;
+    Ok(if pixels { diagram_ir::TreemapLineHeight::Pixels(value) } else { diagram_ir::TreemapLineHeight::Factor(value) })
+}
+
+fn parse_treemap_text_indent(
+    token: &Token,
+    source: &str,
+) -> Result<(diagram_ir::TreemapTextIndent, bool, bool), ParseError> {
+    let mut amount = None;
+    let mut hanging = false;
+    let mut each_line = false;
+    for component in source.split_whitespace() {
+        if component.eq_ignore_ascii_case("hanging") && !hanging {
+            hanging = true;
+        } else if component.eq_ignore_ascii_case("each-line") && !each_line {
+            each_line = true;
+        } else if amount.is_none() {
+            amount = Some(component);
+        } else {
+            return Err(token_error(token, "invalid treemap text-indent"));
+        }
+    }
+    let trimmed = amount.ok_or_else(|| token_error(token, "treemap text-indent requires a length"))?;
+    if let Some(value) = trimmed.strip_suffix('%') {
+        let indent = value.trim().parse::<f64>().ok().filter(|value| value.is_finite())
+            .map(|value| diagram_ir::TreemapTextIndent::Factor(value / 100.0))
+            .ok_or_else(|| token_error(token, "invalid treemap text-indent"))?;
+        return Ok((indent, hanging, each_line));
+    }
+    let number = trimmed.strip_suffix("px").or_else(|| (trimmed == "0").then_some(trimmed))
+        .ok_or_else(|| token_error(token, "treemap text-indent must use pixels or a percentage"))?;
+    let value = number.trim().parse::<f64>().ok().filter(|value| value.is_finite())
+        .ok_or_else(|| token_error(token, "invalid treemap text-indent"))?;
+    Ok((diagram_ir::TreemapTextIndent::Pixels(value), hanging, each_line))
+}
+
+fn merge_treemap_node_style(target: &mut DiagramStyle, source: &DiagramStyle) {
+    if source.fill.is_some() { target.fill.clone_from(&source.fill); }
+    if source.stroke.is_some() { target.stroke.clone_from(&source.stroke); }
+    if source.stroke_width.is_some() { target.stroke_width = source.stroke_width; }
+    if source.stroke_dash.is_some() { target.stroke_dash.clone_from(&source.stroke_dash); }
+    if source.text_color.is_some() { target.text_color.clone_from(&source.text_color); }
+    if source.font_size.is_some() { target.font_size = source.font_size; }
+    if source.font_weight.is_some() { target.font_weight = source.font_weight; }
+    if source.font_italic.is_some() { target.font_italic = source.font_italic; }
+    if source.font_family.is_some() { target.font_family.clone_from(&source.font_family); }
+    if source.corner_radius.is_some() { target.corner_radius = source.corner_radius; }
 }
 
 // ── venn-beta parser ──────────────────────────────────────────────────────
@@ -4981,6 +5971,213 @@ fn parse_radar_number(raw: &str, token: &Token) -> Result<f64, ParseError> {
     Ok(value)
 }
 
+fn parse_radar_config(source: &str) -> RadarConfig {
+    let front_matter = mermaid_front_matter_section(source, &["config", "radar"]);
+    let radar_source = mermaid_directive_object(source, "radar")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |key| {
+        quadrant_directive_value(radar_source, key).or_else(|| {
+            radar_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().to_string())
+            })
+        })
+    };
+    let positive = |key| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value > 0.0)
+    };
+    let non_negative = |key| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value >= 0.0)
+    };
+    let finite = |key| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite())
+    };
+    let theme_root_front = mermaid_front_matter_section(source, &["themeVariables"]);
+    let theme_root = mermaid_directive_object(source, "themeVariables")
+        .or(theme_root_front.as_deref())
+        .unwrap_or("");
+    let theme_front = mermaid_front_matter_section(source, &["themeVariables", "radar"]);
+    let theme_source = mermaid_directive_object(theme_root, "radar")
+        .or(theme_front.as_deref())
+        .unwrap_or("");
+    let theme_value = |key: &str| {
+        quadrant_directive_value(theme_source, key).or_else(|| {
+            theme_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key)
+                    .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+    };
+    let theme_number = |key| {
+        theme_value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value >= 0.0)
+    };
+    let opacity = |key| theme_number(key).filter(|value| *value <= 1.0);
+    let root_value = |key: &str| {
+        quadrant_directive_value(theme_root, key).or_else(|| {
+            theme_root.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key)
+                    .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+    };
+    RadarConfig {
+        width: positive("width"),
+        height: positive("height"),
+        margin_top: non_negative("marginTop"),
+        margin_bottom: non_negative("marginBottom"),
+        margin_left: non_negative("marginLeft"),
+        margin_right: non_negative("marginRight"),
+        axis_scale_factor: positive("axisScaleFactor"),
+        axis_label_factor: positive("axisLabelFactor"),
+        curve_tension: finite("curveTension"),
+        axis_color: theme_value("axisColor"),
+        axis_stroke_width: theme_number("axisStrokeWidth"),
+        axis_label_font_size: theme_number("axisLabelFontSize"),
+        curve_opacity: opacity("curveOpacity"),
+        curve_stroke_width: theme_number("curveStrokeWidth"),
+        graticule_color: theme_value("graticuleColor"),
+        graticule_stroke_width: theme_number("graticuleStrokeWidth"),
+        graticule_opacity: opacity("graticuleOpacity"),
+        legend_font_size: theme_number("legendFontSize"),
+        series_colors: {
+            let colors = (0..12)
+                .map(|index| root_value(&format!("cScale{index}")))
+                .collect::<Vec<_>>();
+            colors
+                .iter()
+                .rposition(Option::is_some)
+                .map_or_else(Vec::new, |last| {
+                    colors[..=last]
+                        .iter()
+                        .map(|color| color.clone().unwrap_or_default())
+                        .collect()
+                })
+        },
+        ..RadarConfig::default()
+    }
+}
+
+fn parse_radar_curve_specs<'a>(
+    raw: &'a str,
+    token: &Token,
+) -> Result<Vec<(&'a str, &'a str)>, ParseError> {
+    let mut remainder = raw["curve".len()..].trim();
+    let mut curves = Vec::new();
+    loop {
+        let open = remainder
+            .find('{')
+            .ok_or_else(|| token_error(token, "radar curve requires entries"))?;
+        let close = remainder[open + 1..]
+            .find('}')
+            .map(|index| open + 1 + index)
+            .ok_or_else(|| token_error(token, "unterminated radar curve entries"))?;
+        curves.push((
+            remainder[..open].trim(),
+            remainder[open + 1..close].trim(),
+        ));
+        remainder = remainder[close + 1..].trim();
+        if remainder.is_empty() {
+            return Ok(curves);
+        }
+        remainder = remainder
+            .strip_prefix(',')
+            .ok_or_else(|| token_error(token, "expected ',' between radar curves"))?
+            .trim_start();
+    }
+}
+
+fn parse_radar_curve(
+    curve: &str,
+    body: &str,
+    axis_ids: &[String],
+    token: &Token,
+) -> Result<ChartSeries, ParseError> {
+    let (id, label) = parse_radar_labeled_id(curve, token)?;
+    let entries = body
+        .split(',')
+        .map(str::trim)
+        .filter(|entry| !entry.is_empty())
+        .collect::<Vec<_>>();
+    if entries.is_empty() {
+        return Err(token_error(token, "radar curves require entries"));
+    }
+    let detailed = entries
+        .iter()
+        .any(|entry| entry.contains(':') || entry.split_whitespace().count() == 2);
+    let values = if detailed {
+        let mut by_axis = HashMap::<String, f64>::new();
+        for entry in entries {
+            let parts = entry
+                .split_once(':')
+                .map(|(axis, value)| (axis.trim(), value.trim()))
+                .or_else(|| {
+                    let mut parts = entry.split_whitespace();
+                    Some((parts.next()?, parts.next()?))
+                })
+                .ok_or_else(|| {
+                    token_error(token, "cannot mix positional and keyed radar entries")
+                })?;
+            if !axis_ids.iter().any(|axis| axis == parts.0) {
+                return Err(token_error(
+                    token,
+                    format!("unknown radar axis {:?}", parts.0),
+                ));
+            }
+            if by_axis
+                .insert(parts.0.to_string(), parse_radar_number(parts.1, token)?)
+                .is_some()
+            {
+                return Err(token_error(
+                    token,
+                    format!("duplicate radar entry for {:?}", parts.0),
+                ));
+            }
+        }
+        axis_ids
+            .iter()
+            .map(|axis| {
+                by_axis.get(axis).copied().ok_or_else(|| {
+                    token_error(token, format!("missing radar entry for {axis:?}"))
+                })
+            })
+            .collect::<Result<Vec<_>, _>>()?
+    } else {
+        entries
+            .iter()
+            .map(|entry| parse_radar_number(entry, token))
+            .collect::<Result<Vec<_>, _>>()?
+    };
+    if values.len() != axis_ids.len() {
+        return Err(token_error(
+            token,
+            format!(
+                "radar curve {id:?} has {} values for {} axes",
+                values.len(),
+                axis_ids.len()
+            ),
+        ));
+    }
+    Ok(ChartSeries {
+        kind: SeriesKind::Line,
+        label: Some(label),
+        data: values
+            .into_iter()
+            .map(|value| ChartDataPoint { value, label: None })
+            .collect(),
+    })
+}
+
 /// Parse the Mermaid 11.16.1 radar axes-and-curves subset into chart IR.
 pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
     let prepared = prepare_line_grammar_source(source)?;
@@ -5006,6 +6203,7 @@ pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
     let mut axis_ids = Vec::<String>::new();
     let mut axis_labels = Vec::<String>::new();
     let mut series = Vec::<ChartSeries>::new();
+    let mut radar_config = parse_radar_config(source);
 
     for token in &tokens {
         match token_name(token) {
@@ -5037,82 +6235,38 @@ pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
                 if axis_ids.is_empty() {
                     return Err(token_error(token, "radar curves require declared axes"));
                 }
-                let open = token.value.find('{').expect("grammar requires '{'");
-                let close = token.value.rfind('}').expect("grammar requires '}'");
-                let (id, label) =
-                    parse_radar_labeled_id(token.value["curve".len()..open].trim(), token)?;
-                let entries = token.value[open + 1..close]
-                    .split(',')
-                    .map(str::trim)
-                    .filter(|entry| !entry.is_empty())
-                    .collect::<Vec<_>>();
-                if entries.is_empty() {
-                    return Err(token_error(token, "radar curves require entries"));
+                for (curve, body) in parse_radar_curve_specs(&token.value, token)? {
+                    series.push(parse_radar_curve(curve, body, &axis_ids, token)?);
                 }
-                let detailed = entries
-                    .iter()
-                    .any(|entry| entry.contains(':') || entry.split_whitespace().count() == 2);
-                let values = if detailed {
-                    let mut by_axis = HashMap::<String, f64>::new();
-                    for entry in entries {
-                        let parts = entry
-                            .split_once(':')
-                            .map(|(axis, value)| (axis.trim(), value.trim()))
-                            .or_else(|| {
-                                let mut parts = entry.split_whitespace();
-                                Some((parts.next()?, parts.next()?))
-                            })
-                            .ok_or_else(|| {
-                                token_error(token, "cannot mix positional and keyed radar entries")
-                            })?;
-                        if !axis_ids.iter().any(|axis| axis == parts.0) {
-                            return Err(token_error(
-                                token,
-                                format!("unknown radar axis {:?}", parts.0),
-                            ));
+            }
+            "OPTION_STATEMENT" => {
+                for option in token.value.split(',') {
+                    let mut parts = option.split_whitespace();
+                    let name = parts.next().expect("grammar requires option name");
+                    let value = parts.next().expect("grammar requires option value");
+                    match name.to_ascii_lowercase().as_str() {
+                        "showlegend" => {
+                            radar_config.show_legend = value.eq_ignore_ascii_case("true")
                         }
-                        if by_axis
-                            .insert(parts.0.to_string(), parse_radar_number(parts.1, token)?)
-                            .is_some()
-                        {
-                            return Err(token_error(
-                                token,
-                                format!("duplicate radar entry for {:?}", parts.0),
-                            ));
+                        "ticks" => {
+                            let parsed = parse_radar_number(value, token)?;
+                            if parsed <= 0.0 {
+                                return Err(token_error(token, "radar ticks must be positive"));
+                            }
+                            radar_config.ticks = parsed;
                         }
+                        "min" => radar_config.min = parse_radar_number(value, token)?,
+                        "max" => radar_config.max = Some(parse_radar_number(value, token)?),
+                        "graticule" => {
+                            radar_config.graticule = if value.eq_ignore_ascii_case("polygon") {
+                                RadarGraticule::Polygon
+                            } else {
+                                RadarGraticule::Circle
+                            };
+                        }
+                        _ => unreachable!("grammar restricts radar option names"),
                     }
-                    axis_ids
-                        .iter()
-                        .map(|axis| {
-                            by_axis.get(axis).copied().ok_or_else(|| {
-                                token_error(token, format!("missing radar entry for {axis:?}"))
-                            })
-                        })
-                        .collect::<Result<Vec<_>, _>>()?
-                } else {
-                    entries
-                        .iter()
-                        .map(|entry| parse_radar_number(entry, token))
-                        .collect::<Result<Vec<_>, _>>()?
-                };
-                if values.len() != axis_ids.len() {
-                    return Err(token_error(
-                        token,
-                        format!(
-                            "radar curve {id:?} has {} values for {} axes",
-                            values.len(),
-                            axis_ids.len()
-                        ),
-                    ));
                 }
-                series.push(ChartSeries {
-                    kind: SeriesKind::Line,
-                    label: Some(label),
-                    data: values
-                        .into_iter()
-                        .map(|value| ChartDataPoint { value, label: None })
-                        .collect(),
-                });
             }
             _ => {}
         }
@@ -5130,6 +6284,14 @@ pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
         .flat_map(|plot| plot.data.iter().map(|point| point.value))
         .fold(0.0_f64, f64::max)
         .max(1.0);
+    let resolved_maximum = radar_config.max.unwrap_or(maximum);
+    if resolved_maximum <= radar_config.min {
+        return Err(ParseError {
+            message: "radar max must be greater than min".into(),
+            line: 1,
+            col: 1,
+        });
+    }
     Ok(ChartDiagram {
         title,
         accessibility_title,
@@ -5147,8 +6309,8 @@ pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
             kind: AxisKind::Numeric,
             title: None,
             categories: Vec::new(),
-            min: 0.0,
-            max: maximum,
+            min: radar_config.min,
+            max: resolved_maximum,
         }),
         series,
         slices: vec![],
@@ -5158,6 +6320,7 @@ pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
         xy_config: XyChartConfig::default(),
+        radar_config,
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -5299,6 +6462,7 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
         xy_config,
+        radar_config: RadarConfig::default(),
         orientation,
     })
 }
@@ -5880,6 +7044,7 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_points,
         quadrant_config,
         xy_config: XyChartConfig::default(),
+        radar_config: RadarConfig::default(),
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -8346,6 +9511,7 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
         xy_config: XyChartConfig::default(),
+        radar_config: RadarConfig::default(),
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -8479,6 +9645,7 @@ pub fn parse_sankey(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
         xy_config: XyChartConfig::default(),
+        radar_config: RadarConfig::default(),
         orientation: ChartOrientation::Horizontal,
     })
 }
@@ -9061,6 +10228,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
 
     Ok(StructuralDiagram {
         kind: StructuralKind::Er,
+        architecture_config: None,
         title,
         accessibility_title: None,
         accessibility_description: None,
@@ -9276,6 +10444,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
 
     Ok(StructuralDiagram {
         kind: StructuralKind::C4,
+        architecture_config: None,
         title,
         accessibility_title: None,
         accessibility_description: None,
@@ -10635,6 +11804,35 @@ mod tests_dg04 {
             Some(StructuralNodeMetadata::ArchitectureService(metadata))
                 if metadata.icon_name.as_deref() == Some("aws:lambda")
         ));
+    }
+
+    #[test]
+    fn architecture_preserves_size_and_separation_configuration() {
+        let diagram = parse_architecture(
+            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25}}}%%\narchitecture-beta\nservice api(server)[API]",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.architecture_config,
+            Some(ArchitectureConfig {
+                icon_size: 104.0,
+                font_size: 19.0,
+                node_separation: 112.0,
+                padding: 48.0,
+                ideal_edge_length_multiplier: 1.25,
+            })
+        );
+
+        let diagram = parse_architecture(
+            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n    idealEdgeLengthMultiplier: 1.75\n---\narchitecture-beta\nservice api(server)[API]",
+        )
+        .unwrap();
+        let config = diagram.architecture_config.unwrap();
+        assert_eq!(config.icon_size, 96.0);
+        assert_eq!(config.font_size, 18.0);
+        assert_eq!(config.node_separation, 104.0);
+        assert_eq!(config.padding, 52.0);
+        assert_eq!(config.ideal_edge_length_multiplier, 1.75);
     }
 
     #[test]
@@ -13427,6 +14625,1005 @@ B//-A: reverse stick top
             ] if label == "Ping"
         ));
     }
+
+    #[test]
+    fn treemap_parses_init_configuration_into_semantic_ir() {
+        let diagram = parse_treemap(
+            "%%{init: {\"treemap\": {\"padding\": 4, \"diagramPadding\": 12, \"showValues\": false, \"nodeWidth\": 64, \"nodeHeight\": 48, \"borderWidth\": 2, \"valueFontSize\": 10, \"labelFontSize\": 16, \"sectionStrokeColor\": \"#111111\", \"sectionStrokeWidth\": \"2px\", \"sectionFillColor\": \"#222222\", \"leafStrokeColor\": \"#333333\", \"leafStrokeWidth\": 3, \"leafFillColor\": \"#444444\", \"labelColor\": \"#555555\", \"valueColor\": \"#666666\", \"titleColor\": \"#777777\", \"titleFontSize\": \"18px\", \"valueFormat\": \"$0,0\", \"useMaxWidth\": false}, \"themeVariables\": {\"cScale0\": \"#123456\", \"cScalePeer0\": \"#654321\", \"cScaleLabel0\": \"#abcdef\"}}}%%\ntreemap\n\"Root\": 1200",
+        ).unwrap();
+        assert_eq!(diagram.config.padding, 4.0);
+        assert_eq!(diagram.config.diagram_padding, 12.0);
+        assert!(!diagram.config.show_values);
+        assert_eq!((diagram.config.node_width, diagram.config.node_height), (64.0, 48.0));
+        assert_eq!((diagram.config.value_font_size, diagram.config.label_font_size), (10.0, 16.0));
+        assert_eq!(diagram.config.section_stroke_color.as_deref(), Some("#111111"));
+        assert_eq!(diagram.config.section_stroke_width, Some(2.0));
+        assert_eq!(diagram.config.section_fill_color.as_deref(), Some("#222222"));
+        assert_eq!(diagram.config.leaf_stroke_color.as_deref(), Some("#333333"));
+        assert_eq!(diagram.config.leaf_stroke_width, Some(3.0));
+        assert_eq!(diagram.config.leaf_fill_color.as_deref(), Some("#444444"));
+        assert_eq!(diagram.config.label_color.as_deref(), Some("#555555"));
+        assert_eq!(diagram.config.value_color.as_deref(), Some("#666666"));
+        assert_eq!(diagram.config.title_color.as_deref(), Some("#777777"));
+        assert_eq!(diagram.config.title_font_size, Some(18.0));
+        assert_eq!(diagram.config.value_format, "$0,0");
+        assert!(!diagram.config.use_max_width);
+        assert_eq!(diagram.config.theme.fills[0], "#123456");
+        assert_eq!(diagram.config.theme.strokes[0], "#654321");
+        assert_eq!(diagram.config.theme.labels[0], "#abcdef");
+    }
+
+    #[test]
+    fn treemap_parses_yaml_configuration_and_uses_defaults_for_invalid_values() {
+        let diagram = parse_treemap(
+            "---\nconfig:\n  treemap:\n    padding: -1\n    nodeWidth: 72\n    showValues: false\n    valueFormat: '.2f'\nthemeVariables:\n  cScale11: '#102030'\n  cScalePeer11: '#405060'\n  cScaleLabel11: '#708090'\n---\ntreemap\n\"Root\": 5",
+        ).unwrap();
+        assert_eq!(diagram.config.padding, 10.0);
+        assert_eq!(diagram.config.node_width, 72.0);
+        assert!(!diagram.config.show_values);
+        assert_eq!(diagram.config.value_format, ".2f");
+        assert_eq!(diagram.config.theme.fills[11], "#102030");
+        assert_eq!(diagram.config.theme.strokes[11], "#405060");
+        assert_eq!(diagram.config.theme.labels[11], "#708090");
+    }
+
+    #[test]
+    fn treemap_resolves_class_definitions_declared_after_nodes() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,border-radius:9px,color:#78350f,font-size:16px,font-weight:bolder,font-style:oblique,font-family:Avenir,text-align:right,text-transform:full-width,text-decoration:underline overline line-through,text-decoration-color:#2563eb,text-decoration-style:wavy,text-decoration-thickness:3px,text-underline-offset:25%,line-height:150%",
+        ).unwrap();
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.fill.as_deref(), Some("#fef3c7"));
+        assert_eq!(style.node.stroke.as_deref(), Some("#b45309"));
+        assert_eq!(style.node.text_color.as_deref(), Some("#78350f"));
+        assert_eq!(style.node.stroke_width, Some(3.0));
+        assert_eq!(style.node.stroke_dash.as_deref(), Some(&[5.0, 2.0][..]));
+        assert_eq!(style.font_size, Some(diagram_ir::TreemapFontSize::Pixels(16.0)));
+        assert_eq!(style.node.font_size, None);
+        assert_eq!(style.node.font_weight, Some(700));
+        assert_eq!(style.node.font_italic, Some(true));
+        assert_eq!(style.node.font_family.as_deref(), Some("Avenir"));
+        assert_eq!(style.border_radius, Some(diagram_ir::TreemapBorderRadius::Pixels(9.0)));
+        assert_eq!(style.node.corner_radius, None);
+        assert_eq!((style.opacity, style.fill_opacity, style.stroke_opacity), (Some(0.8), Some(0.7), Some(0.5)));
+        assert_eq!(style.stroke_dash_offset, Some(-1.0));
+        assert_eq!(style.text_align, Some(diagram_ir::TreemapTextAlign::End));
+        assert_eq!(style.text_transform, Some(diagram_ir::TreemapTextTransform::FullWidth));
+        assert_eq!(style.text_decoration, Some(diagram_ir::TreemapTextDecoration {
+            underline: true, overline: true, line_through: true,
+        }));
+        assert_eq!(style.text_decoration_color, Some(diagram_ir::TreemapTextDecorationColor::Color("#2563eb".into())));
+        assert_eq!(style.text_decoration_style, Some(diagram_ir::TreemapTextDecorationStyle::Wavy));
+        assert_eq!(style.text_decoration_thickness, Some(diagram_ir::TreemapTextDecorationThickness::Pixels(3.0)));
+        assert_eq!(style.text_underline_offset, Some(diagram_ir::TreemapTextUnderlineOffset::Factor(0.25)));
+        assert_eq!(style.line_height, Some(diagram_ir::TreemapLineHeight::Factor(1.5)));
+    }
+
+    #[test]
+    fn treemap_parses_justified_text_alignment() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-align:justify",
+        ).expect("justified text alignment must parse");
+        assert_eq!(
+            diagram.nodes[1].style.as_ref().and_then(|style| style.text_align),
+            Some(diagram_ir::TreemapTextAlign::Justify),
+        );
+    }
+
+    #[test]
+    fn treemap_parses_full_size_kana_text_transform() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-transform:full-size-kana",
+        ).expect("full-size-kana text transform must parse");
+        assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_transform),
+            Some(diagram_ir::TreemapTextTransform::FullSizeKana));
+    }
+
+    #[test]
+    fn treemap_rejects_unsupported_text_decoration() {
+        let error = parse_treemap(
+            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent text-decoration:blink",
+        ).expect_err("unsupported text decoration must fail");
+        assert!(error.message.contains("unsupported treemap text-decoration"));
+    }
+
+    #[test]
+    fn treemap_parses_text_decoration_shorthand() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:underline overline wavy #2563eb 12.5%",
+        ).expect("text decoration shorthand must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.text_decoration, Some(diagram_ir::TreemapTextDecoration {
+            underline: true, overline: true, line_through: false,
+        }));
+        assert_eq!(style.text_decoration_style, Some(diagram_ir::TreemapTextDecorationStyle::Wavy));
+        assert_eq!(style.text_decoration_color, Some(diagram_ir::TreemapTextDecorationColor::Color("#2563eb".into())));
+        assert_eq!(style.text_decoration_thickness, Some(diagram_ir::TreemapTextDecorationThickness::Factor(0.125)));
+
+        let none = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:none",
+        ).expect("none shorthand must parse");
+        assert_eq!(none.nodes[1].style.as_ref().and_then(|style| style.text_decoration),
+            Some(diagram_ir::TreemapTextDecoration::default()));
+    }
+
+    #[test]
+    fn treemap_parses_text_decoration_line_longhand() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration-line:underline line-through",
+        ).expect("text decoration line longhand must parse");
+        assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_decoration),
+            Some(diagram_ir::TreemapTextDecoration {
+                underline: true, overline: false, line_through: true,
+            }));
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration-line:none underline",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_preserves_current_decoration_color_semantics() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:underline,text-decoration-color:currentColor",
+        ).expect("currentColor must parse");
+        assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_decoration_color.clone()),
+            Some(diagram_ir::TreemapTextDecorationColor::CurrentColor));
+    }
+
+    #[test]
+    fn treemap_rejects_invalid_text_decoration_thickness() {
+        for value in ["0", "0px", "0%", "0em", "thick"] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration-thickness:{value}");
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_text_decoration_thickness_forms() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapTextDecorationThickness::Auto),
+            ("from-font", diagram_ir::TreemapTextDecorationThickness::FromFont),
+            ("2.5px", diagram_ir::TreemapTextDecorationThickness::Pixels(2.5)),
+            ("12.5%", diagram_ir::TreemapTextDecorationThickness::Factor(0.125)),
+            ("0.2em", diagram_ir::TreemapTextDecorationThickness::Factor(0.2)),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:underline,text-decoration-thickness:{value}");
+            let diagram = parse_treemap(&source).expect("supported decoration thickness must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_decoration_thickness), Some(expected));
+        }
+    }
+
+    #[test]
+    fn treemap_parses_text_underline_offset_forms() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapTextUnderlineOffset::Auto),
+            ("3.5px", diagram_ir::TreemapTextUnderlineOffset::Pixels(3.5)),
+            ("-25%", diagram_ir::TreemapTextUnderlineOffset::Factor(-0.25)),
+            ("0.4em", diagram_ir::TreemapTextUnderlineOffset::Factor(0.4)),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:underline,text-underline-offset:{value}");
+            let diagram = parse_treemap(&source).expect("supported underline offset must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_underline_offset), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-underline-offset:2rem",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_text_underline_positions() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapTextUnderlinePosition::Auto),
+            ("from-font", diagram_ir::TreemapTextUnderlinePosition::FromFont),
+            ("under", diagram_ir::TreemapTextUnderlinePosition::Under),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:underline,text-underline-position:{value}");
+            let diagram = parse_treemap(&source).expect("supported underline position must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_underline_position), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-underline-position:left",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_line_height_forms_and_rejects_non_positive_values() {
+        for (value, expected) in [
+            ("normal", diagram_ir::TreemapLineHeight::Factor(1.2)),
+            ("1.5", diagram_ir::TreemapLineHeight::Factor(1.5)),
+            ("150%", diagram_ir::TreemapLineHeight::Factor(1.5)),
+            ("24px", diagram_ir::TreemapLineHeight::Pixels(24.0)),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent line-height:{value}");
+            let diagram = parse_treemap(&source).expect("supported line height must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.line_height), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent line-height:0",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_text_indent_lengths_and_percentages() {
+        for (value, expected, hanging, each_line) in [
+            ("0", diagram_ir::TreemapTextIndent::Pixels(0.0), false, false),
+            ("hanging 18px", diagram_ir::TreemapTextIndent::Pixels(18.0), true, false),
+            ("-10% each-line", diagram_ir::TreemapTextIndent::Factor(-0.1), false, true),
+            ("each-line 5% hanging", diagram_ir::TreemapTextIndent::Factor(0.05), true, true),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-indent:{value}");
+            let diagram = parse_treemap(&source).expect("supported text indent must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_indent), Some(expected));
+            assert_eq!(diagram.nodes[1].style.as_ref().is_some_and(|style| style.text_indent_hanging), hanging);
+            assert_eq!(diagram.nodes[1].style.as_ref().is_some_and(|style| style.text_indent_each_line), each_line);
+        }
+        for value in ["2", "1em", "auto", "10px hanging hanging", "each-line"] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-indent:{value}");
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_white_space_modes() {
+        for (value, expected) in [
+            ("normal", diagram_ir::TreemapWhiteSpace::Normal),
+            ("nowrap", diagram_ir::TreemapWhiteSpace::NoWrap),
+            ("pre", diagram_ir::TreemapWhiteSpace::Pre),
+            ("pre-wrap", diagram_ir::TreemapWhiteSpace::PreWrap),
+            ("pre-line", diagram_ir::TreemapWhiteSpace::PreLine),
+            ("break-spaces", diagram_ir::TreemapWhiteSpace::BreakSpaces),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space:{value}");
+            let diagram = parse_treemap(&source).expect("supported white-space mode must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.white_space), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space:collapse",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_white_space_collapse_modes() {
+        for (value, expected) in [
+            ("collapse", diagram_ir::TreemapWhiteSpace::Normal),
+            ("preserve", diagram_ir::TreemapWhiteSpace::PreWrap),
+            ("preserve-breaks", diagram_ir::TreemapWhiteSpace::PreLine),
+            ("preserve-spaces", diagram_ir::TreemapWhiteSpace::PreserveSpaces),
+            ("break-spaces", diagram_ir::TreemapWhiteSpace::BreakSpaces),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space-collapse:{value}");
+            let diagram = parse_treemap(&source).expect("supported whitespace collapsing must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.white_space), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space-collapse:discard",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_letter_spacing_lengths() {
+        for (value, expected) in [
+            ("normal", diagram_ir::TreemapLetterSpacing::Normal),
+            ("2.5px", diagram_ir::TreemapLetterSpacing::Pixels(2.5)),
+            ("-0.1em", diagram_ir::TreemapLetterSpacing::Factor(-0.1)),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent letter-spacing:{value}");
+            let diagram = parse_treemap(&source).expect("supported letter spacing must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.letter_spacing), Some(expected));
+        }
+        for value in ["2", "10%", "0.25rem", "wide"] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent letter-spacing:{value}");
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_word_spacing_lengths() {
+        for (value, expected) in [
+            ("normal", diagram_ir::TreemapWordSpacing::Normal),
+            ("4px", diagram_ir::TreemapWordSpacing::Pixels(4.0)),
+            ("-0.25em", diagram_ir::TreemapWordSpacing::Factor(-0.25)),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-spacing:{value}");
+            let diagram = parse_treemap(&source).expect("supported word spacing must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.word_spacing), Some(expected));
+        }
+        for value in ["4", "1rem", "calc(1px)"] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-spacing:{value}");
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_last_line_alignment() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapTextAlignLast::Auto),
+            ("left", diagram_ir::TreemapTextAlignLast::Start),
+            ("start", diagram_ir::TreemapTextAlignLast::Start),
+            ("center", diagram_ir::TreemapTextAlignLast::Center),
+            ("right", diagram_ir::TreemapTextAlignLast::End),
+            ("end", diagram_ir::TreemapTextAlignLast::End),
+            ("justify", diagram_ir::TreemapTextAlignLast::Justify),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-align-last:{value}");
+            let diagram = parse_treemap(&source).expect("supported last-line alignment must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_align_last), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-align-last:match-parent",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_text_justify_modes() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapTextJustify::Auto),
+            ("none", diagram_ir::TreemapTextJustify::None),
+            ("inter-word", diagram_ir::TreemapTextJustify::InterWord),
+            ("inter-character", diagram_ir::TreemapTextJustify::InterCharacter),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-justify:{value}");
+            let diagram = parse_treemap(&source).expect("supported text justification must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_justify), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-justify:distribute",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_overflow_wrap_modes() {
+        for (value, expected) in [
+            ("normal", diagram_ir::TreemapOverflowWrap::Normal),
+            ("break-word", diagram_ir::TreemapOverflowWrap::BreakWord),
+            ("anywhere", diagram_ir::TreemapOverflowWrap::Anywhere),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent overflow-wrap:{value}");
+            let diagram = parse_treemap(&source).expect("supported overflow wrapping must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.overflow_wrap), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent overflow-wrap:pretty",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_word_wrap_alias() {
+        for (value, expected) in [
+            ("normal", diagram_ir::TreemapOverflowWrap::Normal),
+            ("break-word", diagram_ir::TreemapOverflowWrap::BreakWord),
+            ("anywhere", diagram_ir::TreemapOverflowWrap::Anywhere),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-wrap:{value}");
+            let diagram = parse_treemap(&source).expect("supported word-wrap alias must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.overflow_wrap), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-wrap:pretty",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_word_break_modes() {
+        for (value, expected) in [
+            ("normal", diagram_ir::TreemapWordBreak::Normal),
+            ("break-all", diagram_ir::TreemapWordBreak::BreakAll),
+            ("keep-all", diagram_ir::TreemapWordBreak::KeepAll),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-break:{value}");
+            let diagram = parse_treemap(&source).expect("supported word-break mode must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.word_break), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-break:auto-phrase",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_line_break_modes() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapLineBreak::Auto),
+            ("loose", diagram_ir::TreemapLineBreak::Loose),
+            ("normal", diagram_ir::TreemapLineBreak::Normal),
+            ("strict", diagram_ir::TreemapLineBreak::Strict),
+            ("anywhere", diagram_ir::TreemapLineBreak::Anywhere),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent line-break:{value}");
+            let diagram = parse_treemap(&source).expect("supported line-break mode must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.line_break), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent line-break:initial",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_manual_hyphenation_modes() {
+        for (value, expected) in [
+            ("none", diagram_ir::TreemapHyphens::None),
+            ("manual", diagram_ir::TreemapHyphens::Manual),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent hyphens:{value}");
+            let diagram = parse_treemap(&source).expect("supported hyphenation mode must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.hyphens), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent hyphens:auto",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_hyphenate_characters() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapHyphenateCharacter::Auto),
+            ("\"‐\"", diagram_ir::TreemapHyphenateCharacter::Character("‐".into())),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent hyphenate-character:{value}");
+            let diagram = parse_treemap(&source).expect("supported hyphenate character must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.hyphenate_character.clone()), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent hyphenate-character:\"\"",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_text_overflow_modes() {
+        for (value, expected) in [
+            ("clip", diagram_ir::TreemapTextOverflow::Clip),
+            ("ellipsis", diagram_ir::TreemapTextOverflow::Ellipsis),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-overflow:{value}");
+            let diagram = parse_treemap(&source).expect("supported text-overflow mode must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_overflow), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-overflow:fade",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_text_wrap_modes() {
+        for (value, expected) in [
+            ("wrap", diagram_ir::TreemapTextWrapMode::Wrap),
+            ("nowrap", diagram_ir::TreemapTextWrapMode::NoWrap),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-wrap-mode:{value}");
+            let diagram = parse_treemap(&source).expect("supported text-wrap mode must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_wrap_mode), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-wrap-mode:balance",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_text_wrap_styles() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapTextWrapStyle::Auto),
+            ("balance", diagram_ir::TreemapTextWrapStyle::Balance),
+            ("pretty", diagram_ir::TreemapTextWrapStyle::Pretty),
+            ("stable", diagram_ir::TreemapTextWrapStyle::Stable),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-wrap-style:{value}");
+            let diagram = parse_treemap(&source).expect("supported text-wrap style must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_wrap_style), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-wrap-style:avoid-orphans",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_text_wrap_shorthand() {
+        for (value, expected_mode, expected_style) in [
+            ("wrap", diagram_ir::TreemapTextWrapMode::Wrap, diagram_ir::TreemapTextWrapStyle::Auto),
+            ("nowrap", diagram_ir::TreemapTextWrapMode::NoWrap, diagram_ir::TreemapTextWrapStyle::Auto),
+            ("balance", diagram_ir::TreemapTextWrapMode::Wrap, diagram_ir::TreemapTextWrapStyle::Balance),
+            ("pretty", diagram_ir::TreemapTextWrapMode::Wrap, diagram_ir::TreemapTextWrapStyle::Pretty),
+            ("stable", diagram_ir::TreemapTextWrapMode::Wrap, diagram_ir::TreemapTextWrapStyle::Stable),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-wrap:{value}");
+            let diagram = parse_treemap(&source).expect("supported text-wrap shorthand must parse");
+            let style = diagram.nodes[1].style.as_ref().expect("class style must resolve");
+            assert_eq!(style.text_wrap_mode, Some(expected_mode));
+            assert_eq!(style.text_wrap_style, Some(expected_style));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-wrap:avoid-orphans",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_text_directions() {
+        for (value, expected) in [
+            ("ltr", diagram_ir::TreemapTextDirection::LeftToRight),
+            ("rtl", diagram_ir::TreemapTextDirection::RightToLeft),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent direction:{value}");
+            let diagram = parse_treemap(&source).expect("supported text direction must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.direction), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent direction:auto",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_font_stretch_keywords() {
+        for (value, expected) in [
+            ("ultra-condensed", diagram_ir::TreemapFontStretch::UltraCondensed),
+            ("extra-condensed", diagram_ir::TreemapFontStretch::ExtraCondensed),
+            ("condensed", diagram_ir::TreemapFontStretch::Condensed),
+            ("semi-condensed", diagram_ir::TreemapFontStretch::SemiCondensed),
+            ("normal", diagram_ir::TreemapFontStretch::Normal),
+            ("semi-expanded", diagram_ir::TreemapFontStretch::SemiExpanded),
+            ("expanded", diagram_ir::TreemapFontStretch::Expanded),
+            ("extra-expanded", diagram_ir::TreemapFontStretch::ExtraExpanded),
+            ("ultra-expanded", diagram_ir::TreemapFontStretch::UltraExpanded),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-stretch:{value}");
+            let diagram = parse_treemap(&source).expect("font stretch keyword must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.font_stretch), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-stretch:wide",
+        ).is_err());
+        let percentage = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-stretch:80%",
+        ).expect("positive percentage font stretch must parse");
+        assert_eq!(percentage.nodes[1].style.as_ref().and_then(|style| style.font_stretch),
+            Some(diagram_ir::TreemapFontStretch::Percentage(80.0)));
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-stretch:0%",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_text_shadow_layers() {
+        for (value, expected) in [
+            ("none", diagram_ir::TreemapTextShadow::None),
+            ("#334155 2px -3px", diagram_ir::TreemapTextShadow::Shadows(vec![
+                diagram_ir::TreemapTextShadowLayer {
+                    offset_x: 2.0, offset_y: -3.0, blur_radius: 0.0,
+                    color: diagram_ir::TreemapTextShadowColor::Color("#334155".into()),
+                },
+            ])),
+            ("1px 2px 4px, -2px 0 currentColor", diagram_ir::TreemapTextShadow::Shadows(vec![
+                diagram_ir::TreemapTextShadowLayer {
+                    offset_x: 1.0, offset_y: 2.0, blur_radius: 4.0,
+                    color: diagram_ir::TreemapTextShadowColor::CurrentColor,
+                },
+                diagram_ir::TreemapTextShadowLayer {
+                    offset_x: -2.0, offset_y: 0.0, blur_radius: 0.0,
+                    color: diagram_ir::TreemapTextShadowColor::CurrentColor,
+                },
+            ])),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-shadow:{value},color:#123456");
+            let diagram = parse_treemap(&source).expect("supported text shadow must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_shadow.clone()), Some(expected));
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.node.text_color.as_deref()), Some("#123456"));
+        }
+        for value in ["2px", "1px 2px -3px red", "1px 2px red blue", "none, 1px 2px red"] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-shadow:{value}");
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_bounded_integer_tab_sizes() {
+        for value in [0, 4, 256] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent tab-size:{value}");
+            let diagram = parse_treemap(&source).expect("supported tab size must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.tab_size), Some(value));
+        }
+        for value in ["-1", "2.5", "257", "4px"] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent tab-size:{value}");
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_resolves_relative_font_weights() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Heavy\": 1:::heavy\n  \"Light\": 1:::light\nclassDef heavy font-weight:bolder\nclassDef light font-weight:lighter",
+        ).expect("relative font weights must parse");
+        assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.node.font_weight), Some(700));
+        assert_eq!(diagram.nodes[2].style.as_ref().and_then(|style| style.node.font_weight), Some(300));
+    }
+
+    #[test]
+    fn treemap_preserves_variable_font_weights() {
+        for weight in [1, 575, 1000] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-weight:{weight}"
+            );
+            let diagram = parse_treemap(&source).expect("CSS variable font weight must parse");
+            assert_eq!(
+                diagram.nodes[1].style.as_ref().and_then(|style| style.node.font_weight),
+                Some(weight)
+            );
+        }
+        for weight in ["0", "1001", "575.5", "heavy"] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-weight:{weight}"
+            );
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_relative_font_sizes() {
+        for (value, expected) in [
+            ("18px", diagram_ir::TreemapFontSize::Pixels(18.0)),
+            ("1.25rem", diagram_ir::TreemapFontSize::Pixels(20.0)),
+            ("1.5em", diagram_ir::TreemapFontSize::Factor(1.5)),
+            ("125%", diagram_ir::TreemapFontSize::Factor(1.25)),
+        ] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-size:{value}"
+            );
+            let diagram = parse_treemap(&source).expect("relative font size must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.font_size), Some(expected));
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.node.font_size), None);
+        }
+        for value in ["0", "-1em", "0%", "giant"] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-size:{value}"
+            );
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_font_size_keywords() {
+        for (value, expected) in [
+            ("xx-small", diagram_ir::TreemapFontSize::Pixels(9.0)),
+            ("small", diagram_ir::TreemapFontSize::Pixels(13.0)),
+            ("medium", diagram_ir::TreemapFontSize::Pixels(16.0)),
+            ("large", diagram_ir::TreemapFontSize::Pixels(18.0)),
+            ("xxx-large", diagram_ir::TreemapFontSize::Pixels(48.0)),
+            ("smaller", diagram_ir::TreemapFontSize::Factor(5.0 / 6.0)),
+            ("larger", diagram_ir::TreemapFontSize::Factor(1.2)),
+        ] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-size:{value}"
+            );
+            let diagram = parse_treemap(&source).expect("font-size keyword must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.font_size), Some(expected));
+        }
+    }
+
+    #[test]
+    fn treemap_parses_percentage_opacity() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent opacity:80%,fill-opacity:70%,stroke-opacity:50%",
+        ).expect("percentage opacity must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!((style.opacity, style.fill_opacity, style.stroke_opacity),
+            (Some(0.8), Some(0.7), Some(0.5)));
+        for value in ["-1%", "101%", "50px"] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent opacity:{value}"
+            );
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_percentage_border_radii() {
+        for (value, expected) in [
+            ("9px", diagram_ir::TreemapBorderRadius::Pixels(9.0)),
+            ("0", diagram_ir::TreemapBorderRadius::Pixels(0.0)),
+            ("25%", diagram_ir::TreemapBorderRadius::Factor(0.25)),
+        ] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent border-radius:{value}"
+            );
+            let diagram = parse_treemap(&source).expect("border radius must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.border_radius), Some(expected));
+        }
+        for value in ["-1px", "-1%", "round"] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent border-radius:{value}"
+            );
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_preserves_current_color_for_node_paint() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:#123456,fill:currentColor,stroke:CURRENTCOLOR",
+        ).expect("currentColor node paint must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("#123456"));
+        assert_eq!(style.node.fill.as_deref(), Some("currentColor"));
+        assert_eq!(style.node.stroke.as_deref(), Some("CURRENTCOLOR"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_alpha_colors() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:#369c,fill:#336699cc,stroke:transparent",
+        ).expect("CSS alpha colors must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("#369c"));
+        assert_eq!(style.node.fill.as_deref(), Some("#336699cc"));
+        assert_eq!(style.node.stroke.as_deref(), Some("transparent"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_rgb_colors() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:rgb(20% 40% 60% / 80%),fill:rgb(51 102 153 / 80%)",
+        ).expect("CSS rgb colors must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("rgb(20% 40% 60% / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("rgb(51 102 153 / 80%)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_hsl_colors() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:hsl(210deg 50% 40% / 80%),fill:hsl(0.5turn 60% 70% / 75%)",
+        ).expect("CSS hsl colors must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("hsl(210deg 50% 40% / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("hsl(0.5turn 60% 70% / 75%)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_hwb_colors() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:hwb(210 20% 40% / 80%),fill:hwb(0.5turn 10% 20% / 75%)",
+        ).expect("CSS hwb colors must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("hwb(210 20% 40% / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("hwb(0.5turn 10% 20% / 75%)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_lab_colors() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:lab(29.2345% 39.3825 20.0664 / 80%),fill:lch(52.2345% 72.2 56.2 / 75%)",
+        ).expect("CSS Lab colors must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("lab(29.2345% 39.3825 20.0664 / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("lch(52.2345% 72.2 56.2 / 75%)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_oklab_colors() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:oklab(40.1% 0.1143 0.045 / 80%),fill:oklch(62% 0.1442 326.31 / 75%)",
+        ).expect("CSS OKLab colors must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("oklab(40.1% 0.1143 0.045 / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("oklch(62% 0.1442 326.31 / 75%)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_color_srgb_profiles() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color(srgb 0.2 0.4 0.6 / 80%),fill:color(srgb-linear 0.0331 0.1329 0.3185 / 75%)",
+        ).expect("CSS color() sRGB profiles must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color(srgb 0.2 0.4 0.6 / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color(srgb-linear 0.0331 0.1329 0.3185 / 75%)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_color_display_p3_profile() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color(display-p3 0.2 0.4 0.6 / 80%),fill:color(display-p3 80% 20% 20% / 75%)",
+        ).expect("CSS color() Display P3 profile must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color(display-p3 0.2 0.4 0.6 / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color(display-p3 80% 20% 20% / 75%)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_color_a98_rgb_profile() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color(a98-rgb 0.2 0.4 0.6 / 80%),fill:color(a98-rgb 80% 20% 20% / 75%)",
+        ).expect("CSS color() A98 RGB profile must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color(a98-rgb 0.2 0.4 0.6 / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color(a98-rgb 80% 20% 20% / 75%)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_color_prophoto_rgb_profile() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color(prophoto-rgb 0.2 0.4 0.6 / 80%),fill:color(prophoto-rgb 80% 20% 20% / 75%)",
+        ).expect("CSS color() ProPhoto RGB profile must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color(prophoto-rgb 0.2 0.4 0.6 / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color(prophoto-rgb 80% 20% 20% / 75%)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_color_rec2020_profile() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color(rec2020 0.2 0.4 0.6 / 80%),fill:color(rec2020 80% 20% 20% / 75%)",
+        ).expect("CSS color() Rec. 2020 profile must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color(rec2020 0.2 0.4 0.6 / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color(rec2020 80% 20% 20% / 75%)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_color_xyz_profiles() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color(xyz-d65 0.2 0.3 0.4 / 80%),fill:color(xyz-d50 40% 30% 20% / 75%)",
+        ).expect("CSS color() XYZ profiles must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color(xyz-d65 0.2 0.3 0.4 / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color(xyz-d50 40% 30% 20% / 75%)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_missing_color_components() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:oklch(62% 0.1442 none / 80%),fill:color(display-p3 none 40% 60% / 75%),stroke:rgb(none 20% 40%)",
+        ).expect("CSS missing color components must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("oklch(62% 0.1442 none / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color(display-p3 none 40% 60% / 75%)"));
+        assert_eq!(style.node.stroke.as_deref(), Some("rgb(none 20% 40%)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in srgb, red 20%, transparent),fill:color-mix(in srgb, rgb(255, 0, 0) 25%, blue)",
+        ).expect("CSS color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in srgb, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in srgb, rgb(255, 0, 0) 25%, blue)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_linear_srgb_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in srgb-linear, red 20%, transparent),fill:color-mix(in srgb-linear, black, white)",
+        ).expect("CSS linear-sRGB color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in srgb-linear, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in srgb-linear, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_display_p3_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in display-p3, red 20%, transparent),fill:color-mix(in display-p3, black, white)",
+        ).expect("CSS Display P3 color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in display-p3, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in display-p3, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_a98_rgb_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in a98-rgb, red 20%, transparent),fill:color-mix(in a98-rgb, black, white)",
+        ).expect("CSS A98 RGB color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in a98-rgb, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in a98-rgb, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_prophoto_rgb_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in prophoto-rgb, red 20%, transparent),fill:color-mix(in prophoto-rgb, black, white)",
+        ).expect("CSS ProPhoto RGB color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in prophoto-rgb, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in prophoto-rgb, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_hsl_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in hsl, red 20%, transparent),fill:color-mix(in hsl, black, white)",
+        ).expect("CSS HSL color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in hsl, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in hsl, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_hwb_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in hwb, red 20%, transparent),fill:color-mix(in hwb, black, white)",
+        ).expect("CSS HWB color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in hwb, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in hwb, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_lab_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in lab, red 20%, transparent),fill:color-mix(in lab, black, white)",
+        ).expect("CSS Lab color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in lab, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in lab, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_lch_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in lch, red 20%, transparent),fill:color-mix(in lch, black, white)",
+        ).expect("CSS LCH color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in lch, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in lch, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_oklab_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in oklab, red 20%, transparent),fill:color-mix(in oklab, black, white)",
+        ).expect("CSS OKLab color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in oklab, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in oklab, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_css_oklch_color_mix() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in oklch, red 20%, transparent),fill:color-mix(in oklch, black, white)",
+        ).expect("CSS OKLCH color-mix() must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in oklch, red 20%, transparent)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in oklch, black, white)"));
+    }
+
+    #[test]
+    fn treemap_preserves_basic_named_colors() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:teal,fill:orange,stroke:navy",
+        ).expect("basic named colors must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("teal"));
+        assert_eq!(style.node.fill.as_deref(), Some("orange"));
+        assert_eq!(style.node.stroke.as_deref(), Some("navy"));
+    }
+
+    #[test]
+    fn treemap_preserves_extended_named_colors() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:cornflowerblue,fill:papayawhip,stroke:rebeccapurple",
+        ).expect("extended named colors must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("cornflowerblue"));
+        assert_eq!(style.node.fill.as_deref(), Some("papayawhip"));
+        assert_eq!(style.node.stroke.as_deref(), Some("rebeccapurple"));
+    }
+
+    #[test]
+    fn treemap_preserves_none_node_paint() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::unpainted\nclassDef unpainted fill:none,stroke:NONE",
+        ).expect("none node paint must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.fill.as_deref(), Some("none"));
+        assert_eq!(style.node.stroke.as_deref(), Some("NONE"));
+    }
+
+    #[test]
+    fn treemap_rejects_unsupported_font_style() {
+        let error = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-style:slanted",
+        ).expect_err("unsupported font style must fail");
+        assert!(error.message.contains("normal, italic, or oblique"));
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -13443,7 +15640,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.128.0");
+        assert_eq!(crate::VERSION, "0.134.0");
     }
 
     #[test]

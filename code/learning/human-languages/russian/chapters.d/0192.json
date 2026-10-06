@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Newspaper, Magazine, Dictionary, Ruler, Folder",
+  "label": "ch:ru-newspaper-magazine-dictionary-ruler-folder",
+  "canDo": "I can say a newspaper, a magazine, a dictionary, a ruler and a folder.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C192-papka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say a newspaper, a magazine, a dictionary, a ruler and a folder.",
+    "assesses": [
+      "RU-LEX-C192-VESHCH192-03",
+      "RU-LEX-C192-VESHCH192-04",
+      "RU-LEX-C192-VESHCH192-05"
+    ]
+  }
+}

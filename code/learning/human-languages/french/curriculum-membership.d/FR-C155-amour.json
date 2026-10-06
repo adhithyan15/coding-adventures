@@ -1,0 +1,11 @@
+{
+  "id": "FR-C155-amour",
+  "pathSegment": "FR-PATH-155-SANTE155",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-155-SANTE155",
+      "order": 4
+    }
+  ]
+}

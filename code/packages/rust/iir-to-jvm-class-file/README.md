@@ -45,6 +45,11 @@ load/store opcodes:
 | `ret` (i32)           | `iload result; ireturn`                        |
 | `ret_void`            | `return`                                       |
 | `call fn`             | `iload args…; invokestatic; istore dest`       |
+| `global_load/store`   | Typed `getstatic` / `putstatic` field access   |
+
+Module globals preserve their scalar JVM descriptors: integer storage remains
+`long`, while `f32` and `f64` use `float` and `double`; strings and arrays keep
+their reference descriptors.
 
 ## Quick start
 

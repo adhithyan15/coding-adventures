@@ -1,0 +1,11 @@
+{
+  "id": "BN-C180-jol-deoya",
+  "pathSegment": "BN-PATH-180-ACT180",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-180-ACT180",
+      "order": 3
+    }
+  ]
+}

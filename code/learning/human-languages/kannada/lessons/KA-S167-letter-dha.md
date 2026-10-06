@@ -65,14 +65,22 @@ You already say these:
 ## Writing: ಧ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-167] -->
 
-Put your pen on ಧ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** start at the upper left and go down the left side into the left lobe, rising into the middle point
+- **2.** without lifting, drop from the point around the right lobe and climb the right side
+- **3.** without lifting, close the bowl leftward along the top
+- **4.** lift, then draw the top bar from left to right
+- **5.** without lifting, curl up into the hook
+- **6.** lift, then draw the tail downward
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 2.** This is ದ with a tail: the body, then the curled bar,
+then the tail below the point, each after a lift.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-dhha.gif', 42 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
+
+> The animation is filed as 'dhha': that series spells ದ as 'dha'.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-167, KA-SCRIPT-RECOG-166] -->

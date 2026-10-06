@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Coach terminal, Post, Counter window, Valley, Peak",
+  "label": "ch:fa-coach-terminal-post-counter-window-valley-peak",
+  "canDo": "I can say a coach terminal, the post, a counter window, a valley and a peak.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-C194-qolle",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say a coach terminal, the post, a counter window, a valley and a peak.",
+    "assesses": [
+      "FA-LEX-C194-MAKAN194-03",
+      "FA-LEX-C194-MAKAN194-04",
+      "FA-LEX-C194-MAKAN194-05"
+    ]
+  }
+}

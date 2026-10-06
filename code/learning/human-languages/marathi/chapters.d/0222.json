@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Career, Magazine, Dictionary, University, Mistake",
+  "label": "ch:mr-career-monthly-magazine-dictionary-university-mistake",
+  "canDo": "I can say a career, a monthly magazine, a dictionary, a university and a mistake.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-R222-second-pass-words-from-chapters-220-222",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say a career, a monthly magazine, a dictionary, a university and a mistake.",
+    "assesses": [
+      "MR-LEX-C222-KAAM222-03",
+      "MR-LEX-C222-KAAM222-04",
+      "MR-LEX-C222-KAAM222-05"
+    ]
+  }
+}

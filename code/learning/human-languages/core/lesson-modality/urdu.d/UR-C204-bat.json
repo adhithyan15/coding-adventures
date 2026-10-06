@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C204-bat",
+    "language": "urdu",
+    "chapter": 204,
+    "sequence": 11780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:474089940348ac00"
+  },
+  "findings": []
+}

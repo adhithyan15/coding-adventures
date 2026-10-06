@@ -2,16 +2,25 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
 ### Added
 
+- `TerminalBuffer` v1.0 and `TerminalDegradation` make ANSI output,
+  backend losses, exact style usage, assets, a content/config revision, and
+  canonical source provenance first-class.
 - `AssetRef.sourcePath` optionally carries the normalized storage-root-relative
   locator produced by filesystem reference resolvers.
 - `AssetRef.urlSuffix` preserves authored query strings and fragments across
   fingerprinted emission without folding them into filesystem identity.
 - `ProvenanceContributor` and `OutputProvenance` model every logical/revision
-  input behind a rendered output. `RenderedPage` now accepts revision-aware
-  provenance while preserving the legacy single-source producer shape during
-  migration; the kind descriptor advances compatibly to `1.1`.
+  input behind a rendered output. `RenderedPage.provenance` is required, the
+  temporary `source` producer field is removed, and the kind descriptor
+  advances incompatibly to `2.0` with kernel API v2 refusal at host boundaries.
+- `AssetRole` now includes `script`, and `RenderedPage.islandModules` pairs
+  exact `IslandId` usage with reviewed module identity and SHA-256 bindings.
 
 ## 0.1.0 — 2026-05-14
 
@@ -20,7 +29,7 @@ Initial release. Implements the FM01 §2 kernel types.
 ### Added
 
 - `KERNEL_API_VERSION = 1` — the kernel-API stability marker.
-- `KINDS` tuple and `KindName` union covering all 13 built-in kind names.
+- `KINDS` tuple and `KindName` union covering the original 13 built-in kind names.
 - `KindDescriptor` interface — the runtime type tag for a kind.
 - `Kinds` canonical descriptor object (one per built-in non-Stream kind).
 - `streamOf(inner)` and `isStreamDescriptor(d)` — Stream meta-kind helpers.

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:58c89310df854fa8",
+  "lessonIds": [
+    "HI-C239-camakdar",
+    "HI-C239-dhudhla",
+    "HI-C239-sunsan",
+    "HI-C239-bhirbhar",
+    "HI-C239-abad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch239.txt",
+  "json": "hindi/narration/ch239.json",
+  "textHash": "fnv1a64:1f0de6fcd6e17796",
+  "jsonHash": "fnv1a64:4dfecd39abea91a3",
+  "findings": []
+}

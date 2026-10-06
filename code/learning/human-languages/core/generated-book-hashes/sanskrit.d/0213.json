@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:ceaf475ef72bb02f",
+  "lessonIds": [
+    "SA-C213-sadyah",
+    "SA-C213-tatksanam",
+    "SA-C213-prak",
+    "SA-C213-anantaram",
+    "SA-C213-yavat"
+  ],
+  "tex": "sanskrit/book/chapters/ch213-at-once-instantly-formerly-afterwards-as-long-as.tex"
+}

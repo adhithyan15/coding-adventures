@@ -1,0 +1,11 @@
+{
+  "id": "LA-C221-casus",
+  "pathSegment": "LA-PATH-221-RES221",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-221-RES221",
+      "order": 4
+    }
+  ]
+}

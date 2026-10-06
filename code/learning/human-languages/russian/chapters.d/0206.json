@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "To put out, To build, To break, To paint, To clean",
+  "label": "ch:ru-to-put-out-to-build-to-break-to-paint-to-clean",
+  "canDo": "I can say to put out, to build, to break, to paint and to clean.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C206-chistit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say to put out, to build, to break, to paint and to clean.",
+    "assesses": [
+      "RU-LEX-C206-ACT206-03",
+      "RU-LEX-C206-ACT206-04",
+      "RU-LEX-C206-ACT206-05"
+    ]
+  }
+}

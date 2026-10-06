@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C269-samasye",
+    "language": "kannada",
+    "chapter": 269,
+    "sequence": 12850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e89f2bf0851ef8b"
+  },
+  "findings": []
+}

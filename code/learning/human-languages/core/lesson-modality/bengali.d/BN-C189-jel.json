@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C189-jel",
+    "language": "bengali",
+    "chapter": 189,
+    "sequence": 11210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83f5da50bf4df380"
+  },
+  "findings": []
+}

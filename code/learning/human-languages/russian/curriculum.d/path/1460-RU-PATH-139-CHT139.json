@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-139-CHT139",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-139-CHT139"
+  ],
+  "after": []
+}

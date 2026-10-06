@@ -115,8 +115,11 @@ npm run check:filmstrip-ledger      # fail if it is stale
 
 The check also runs as part of `npm test`, so a stroke edited here and not
 regenerated fails this package rather than the book. Which letters get an entry is
-decided by the curriculum's `core/figure-generation.json`, not here: the generator
-emits one entry per `script-filmstrip` target declared there.
+decided by the curriculum, not here: the generator emits one entry per letter a
+`script-filmstrip` target in `core/figure-generation.json` draws, plus every letter
+of the lesson targets `human-language-data` derives. A sequence target (a list of
+letters, or a word whose letters stand apart) contributes each of its `letters`,
+and only when all of them are cited.
 
 `DuctusOptions.highlightSegment` is what the printed strip turns on. Frames sit
 side by side and nothing animates, so the part of the current stroke travelled
@@ -150,6 +153,24 @@ one level deeper: every existing record and both evidence suites use the same
 ASCII `U-<CODEPOINT>` owner below `tamil/`, while `tamil.ts` remains assembly
 only. Adding an ordinary glyph changes only its owner files; `strokes.ts`
 remains the bounded public facade and duplicate-rejecting assembly point.
+The six Tamil vowel signs written as separate symbols beside their consonant
+(ா ி ீ ெ ே ை) are owners of the same kind, cited to the native-writer pen
+traces in HP Labs India's LipiTk Tamil recognizer; the book decides where each
+is drawn in a word (`human-language-data`'s `WRITTEN_SIGN_SIDES`).
+Gujarati's eleven signs (ા િ ી ુ ૂ ે ૈ ો ૌ ં ઃ) sit at the end of the Gujarati
+owner, keyed `gujarati:<sign>` like its letters, and take their source from the
+sign's mark record (`gujaratiMarkSource`): order, start, direction and lifts
+from KanoAI's hand-made barakhadi templates, paths fitted to Noto Sans
+Gujarati. `tests/strokes/gujarati-marks.test.ts` and
+`tests/ductusview/gujarati-marks.test.ts` hold their evidence.
+Eight Devanagari signs (ु ू े ं ़ ् ृ ँ) sit at the end of the Devanagari
+owner the same way, sourced through `devanagariMarkSource` to native writers'
+pen traces in HP Labs India's LipiTk Devanagari recognizer (counts and shares
+only). Those writers wrote each sign alone, so the entries draw the sign by
+itself and say nothing about its order against a consonant or the headline;
+ा ि ी ो ौ ै and ः are left out because Noto prints a headline piece the traces
+never draw, or the traces split. `tests/strokes/devanagari-marks.test.ts` and
+`tests/ductusview/devanagari-marks.test.ts` hold their evidence.
 
 More than 2,200 tests cover the registry, paths, font fit, provenance, and
 rendering. `jsdom` is a devDependency for exactly two of them: the SVG

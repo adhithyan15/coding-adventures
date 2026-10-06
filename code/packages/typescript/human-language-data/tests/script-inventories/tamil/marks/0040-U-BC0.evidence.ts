@@ -6,23 +6,34 @@ export const scriptInventoryEvidence = tamilInventoryEvidence({
   name: "Tamil U-BC0",
   section: "marks",
   id: "U-BC0",
-  digest: "7982eccb6453371e0c73c1859b7ac6d3f787543d9dadb8dd513eecbf678fe347",
+  digest: "3c67f7d92e8f1253d3cf63b185156d1192d5f701a3719d04a3791b5b19eee867",
   assert(entry) {
     const tamilIi = entry as Mark;
     expect(tamilIi.role).toBe("vowel-sign");
-    expect(tamilIi.compositionOrder).toEqual([
-      "write the Tamil consonant carrier first",
-      "add the ī vowel sign to replace its inherent vowel",
-    ]);
     expect(tamilIi.example).toEqual({ base: "ட", combined: "டீ", sound: "ṭī" });
+    // Written position: its own symbol, to the right, AFTER the
+    // consonant. figure-targets.ts' WRITTEN_SIGN_SIDES is held to this record.
+    expect(tamilIi.compositionOrder).toEqual(["write the Tamil consonant carrier first", "write the ii sign after it, as a symbol of its own at the right"]);
     expect(tamilIi.compositionSource?.url).toBe(
-      "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+      "https://lipitk.sourceforge.net/docs/LipiRecognizers/lipi-indic-character-recognizers_4_0_user_manual.pdf",
     );
     expect(tamilIi.compositionSource?.citation).toMatch(
-      /Unicode Standard.*Version 17\.0.*12\.6\.3.*Figure 12-21.*U\+0BC0.*ட \+ ீ → டீ.*ல \+ ீ → லீ/i,
+      /HP Labs India.*Lipi Indic Character Recognizers 4\.0 User Manual.*Table 3.*distinct characters to the left or right of the base consonant.*written from left to right/,
     );
     expect(tamilIi.compositionSource?.variation).toMatch(
-      /encoded carrier-first composition.*change shape or position.*join cursively.*not a universal handwriting direction.*no standalone ductus claim/i,
+      /U\+0BBE, U\+0BBF, U\+0BC0, U\+0BC6, U\+0BC7 and U\+0BC8.*written linearly as a sequence of visually discrete symbols.*left of its consonant is written before it.*right of it is written after it/,
     );
+    // One continuous stroke of three movements, from native writers' traces.
+    expect(tamilIi.penLifts).toBe(0);
+    expect(tamilIi.strokeOrder).toEqual([
+      "start at the foot of the tail and curl up to the left",
+      "without lifting, arch over the top to the right",
+      "without lifting, curl down and back into the small loop — and only now lift",
+    ]);
+    expect(tamilIi.strokeOrderSource?.url).toBe("https://lipitk.sourceforge.net/lipi-reco.htm");
+    expect(tamilIi.strokeOrderSource?.citation).toMatch(
+      /HP Labs India.*Lipi Indic Character Recognizers 4\.0.*Tamil recognizer.*class 38 \(ீ, ii sign\).*native Tamil writers.*MIT licence/,
+    );
+    expect(tamilIi.strokeOrderSource?.variation).toMatch(/one pen-down stroke.*scaled to a square.*Noto Sans Tamil/);
   },
 });

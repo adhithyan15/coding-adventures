@@ -1,0 +1,11 @@
+{
+  "id": "LA-C184-facundus",
+  "pathSegment": "LA-PATH-184-QUAL184",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-184-QUAL184",
+      "order": 2
+    }
+  ]
+}

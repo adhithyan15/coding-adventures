@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:1768e3f6ca38c946",
+  "lessonIds": [
+    "UR-C177-mulazim",
+    "UR-C177-sathi",
+    "UR-C177-mazdur",
+    "UR-C177-kisan",
+    "UR-C177-darzi"
+  ],
+  "tex": "urdu/book/chapters/ch177-employee-colleague-labourer-farmer-tailor.tex"
+}

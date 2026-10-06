@@ -1,0 +1,11 @@
+{
+  "id": "UR-C148-badalna",
+  "pathSegment": "UR-PATH-148-ACT148",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-148-ACT148",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:08e4dd514c241edb",
+  "lessonIds": [
+    "KA-C225-bevu",
+    "KA-C225-mallige",
+    "KA-C225-suryakanti",
+    "KA-C225-kabbu",
+    "KA-C225-pataki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch225.txt",
+  "json": "kannada/narration/ch225.json",
+  "textHash": "fnv1a64:390c07917e2f739f",
+  "jsonHash": "fnv1a64:2c2dbf0ad60c0889",
+  "findings": []
+}

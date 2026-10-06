@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "Ruddy goose, Hawk, Breakfast, Dinner, Cooked food",
+  "label": "ch:sa-ruddy-goose-hawk-breakfast-dinner-cooked-food",
+  "canDo": "I can say a ruddy goose, a hawk, breakfast, dinner and cooked food.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C254-pakvannam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say a ruddy goose, a hawk, breakfast, dinner and cooked food.",
+    "assesses": [
+      "SA-LEX-C254-THG254-03",
+      "SA-LEX-C254-THG254-04",
+      "SA-LEX-C254-THG254-05"
+    ]
+  }
+}

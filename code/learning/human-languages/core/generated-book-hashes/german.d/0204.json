@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:6b79d1cebe14d473",
+  "lessonIds": [
+    "GE-C204-leder",
+    "GE-C204-holz",
+    "GE-C204-metall",
+    "GE-C204-kunststoff",
+    "GE-C204-koerper"
+  ],
+  "tex": "german/book/chapters/ch204-leather-wood-metal-plastic-the-body.tex"
+}

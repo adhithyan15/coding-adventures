@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:e16a46b5f8435867",
+  "lessonIds": [
+    "PT-C252-derrota",
+    "PT-C252-campeonato",
+    "PT-C252-jogador",
+    "PT-C252-treinador",
+    "PT-C252-adepto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch252.txt",
+  "json": "portuguese/narration/ch252.json",
+  "textHash": "fnv1a64:7415a45f683a3c6b",
+  "jsonHash": "fnv1a64:c085ab0548e9daf6",
+  "findings": []
+}

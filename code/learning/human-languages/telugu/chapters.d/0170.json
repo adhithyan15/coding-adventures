@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Time, Sometimes, Often, Date, Weekend",
+  "label": "ch:te-time-sometimes-often-date-weekend",
+  "canDo": "I can say time, sometimes, often, a date and a weekend.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C170-varantam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say time, sometimes, often, a date and a weekend.",
+    "assesses": [
+      "TE-LEX-C170-SAMAYAM170-03",
+      "TE-LEX-C170-SAMAYAM170-04",
+      "TE-LEX-C170-SAMAYAM170-05"
+    ]
+  }
+}

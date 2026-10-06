@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C287-appil",
+    "language": "malayalam",
+    "chapter": 287,
+    "sequence": 13420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84f3bb69a8c4bc06"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:a090f7c28adf24ab",
+  "lessonIds": [
+    "IT-C256-fiamma",
+    "IT-C256-fulmine",
+    "IT-C256-tuono",
+    "IT-C256-arcobaleno",
+    "IT-C256-clima"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch256.txt",
+  "json": "italian/narration/ch256.json",
+  "textHash": "fnv1a64:a409fc27b70ad4e5",
+  "jsonHash": "fnv1a64:8159cbe2690f0ef1",
+  "findings": []
+}

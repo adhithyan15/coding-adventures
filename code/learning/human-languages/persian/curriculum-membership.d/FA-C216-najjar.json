@@ -1,0 +1,11 @@
+{
+  "id": "FA-C216-najjar",
+  "pathSegment": "FA-PATH-216-KAR216",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-216-KAR216",
+      "order": 1
+    }
+  ]
+}

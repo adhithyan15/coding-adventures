@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C163-pak",
+    "language": "urdu",
+    "chapter": 163,
+    "sequence": 8820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0576791ade778bdb"
+  },
+  "findings": []
+}

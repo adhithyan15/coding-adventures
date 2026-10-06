@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-498-DEPORTE",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-498-DEPORTE"
+  ],
+  "after": []
+}

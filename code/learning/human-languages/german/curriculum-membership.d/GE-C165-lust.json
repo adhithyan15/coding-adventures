@@ -1,0 +1,11 @@
+{
+  "id": "GE-C165-lust",
+  "pathSegment": "GE-PATH-165-THING165",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-165-THING165",
+      "order": 3
+    }
+  ]
+}

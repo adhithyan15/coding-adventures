@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C247-arret",
+    "language": "french",
+    "chapter": 247,
+    "sequence": 14300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e38d08769fc5c25"
+  },
+  "findings": []
+}

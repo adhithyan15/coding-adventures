@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "To wake up, To go up, To arrive, To travel, To cross",
+  "label": "ch:ar-to-wake-up-to-go-up-to-arrive-to-travel-to-cross",
+  "canDo": "I can say to wake up, to go up, to arrive, to travel and to cross.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C159-abara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can say to wake up, to go up, to arrive, to travel and to cross.",
+    "assesses": [
+      "AR-LEX-C159-ACT159-03",
+      "AR-LEX-C159-ACT159-04",
+      "AR-LEX-C159-ACT159-05"
+    ]
+  }
+}

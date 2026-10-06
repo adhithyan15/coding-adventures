@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C236-eccaragollu",
+    "language": "kannada",
+    "chapter": 236,
+    "sequence": 11130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d08ce94c8d717a6b"
+  },
+  "findings": []
+}

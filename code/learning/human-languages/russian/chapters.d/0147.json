@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "Ill, Cold, Flu, Runny nose, Pill",
+  "label": "ch:ru-ill-cold-flu-runny-nose-pill",
+  "canDo": "I can say ill, a cold, flu, a runny nose and a pill.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C147-tabletka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: I can say ill, a cold, flu, a runny nose and a pill.",
+    "assesses": [
+      "RU-LEX-C147-ZDOROV147-03",
+      "RU-LEX-C147-ZDOROV147-04",
+      "RU-LEX-C147-ZDOROV147-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-S173-letter-jha",
+  "pathSegment": "TE-PATH-152-STREAM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-152-STREAM",
+      "order": 1
+    }
+  ]
+}

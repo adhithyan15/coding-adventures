@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C268-cendu",
+    "language": "marathi",
+    "chapter": 268,
+    "sequence": 15360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83f2c22a50e5f228"
+  },
+  "findings": []
+}

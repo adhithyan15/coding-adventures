@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:d7150a018c074cbd",
+  "lessonIds": [
+    "TE-C260-nunupaina",
+    "TE-C260-veccani",
+    "TE-C260-arudaina",
+    "TE-C260-vinta",
+    "TE-C260-dayagala"
+  ],
+  "tex": "telugu/book/chapters/ch260-smooth-warm-rare-strange-kind.tex"
+}

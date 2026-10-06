@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C183-jina",
+    "language": "urdu",
+    "chapter": 183,
+    "sequence": 10350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9f7835ccdd0a8fb"
+  },
+  "findings": []
+}

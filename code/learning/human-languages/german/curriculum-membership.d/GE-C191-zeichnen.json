@@ -1,0 +1,11 @@
+{
+  "id": "GE-C191-zeichnen",
+  "pathSegment": "GE-PATH-191-VERB191",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-191-VERB191",
+      "order": 4
+    }
+  ]
+}

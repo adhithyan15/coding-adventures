@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C189-malgre",
+    "language": "french",
+    "chapter": 189,
+    "sequence": 10000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5442ae508d8db99"
+  },
+  "findings": []
+}

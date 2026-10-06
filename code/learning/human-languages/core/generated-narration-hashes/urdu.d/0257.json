@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:d70633f2bb50c4ed",
+  "lessonIds": [
+    "UR-C257-asu",
+    "UR-C257-muskurahat",
+    "UR-C257-mohabbat",
+    "UR-C257-dosti",
+    "UR-C257-sharm"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch257.txt",
+  "json": "urdu/narration/ch257.json",
+  "textHash": "fnv1a64:ed61aa12a7d28723",
+  "jsonHash": "fnv1a64:cc06cc51b8c52397",
+  "findings": []
+}

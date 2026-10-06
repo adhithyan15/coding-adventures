@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R319-first-pass-words-from-chapters-311-314",
+    "language": "malayalam",
+    "chapter": 319,
+    "sequence": 15110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c053589b5a065cf"
+  },
+  "findings": []
+}

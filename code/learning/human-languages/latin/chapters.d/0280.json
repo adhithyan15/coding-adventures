@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "Tower, Column, City walls, Ditch, Rampart",
+  "label": "ch:la-tower-column-city-walls-ditch-rampart",
+  "canDo": "I can say a tower, a column, city walls, a ditch and a rampart.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-R280-second-pass-words-from-chapters-277-280",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can say a tower, a column, city walls, a ditch and a rampart.",
+    "assesses": [
+      "LA-LEX-C280-RES280-03",
+      "LA-LEX-C280-RES280-04",
+      "LA-LEX-C280-RES280-05"
+    ]
+  }
+}

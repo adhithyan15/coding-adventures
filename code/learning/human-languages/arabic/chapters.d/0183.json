@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "Postage stamp, Parcel, Cheque, Form, Document",
+  "label": "ch:ar-postage-stamp-parcel-cheque-form-document",
+  "canDo": "I can say a postage stamp, a parcel, a cheque, a form and a document.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C183-wathiqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can say a postage stamp, a parcel, a cheque, a form and a document.",
+    "assesses": [
+      "AR-LEX-C183-SHAY183-03",
+      "AR-LEX-C183-SHAY183-04",
+      "AR-LEX-C183-SHAY183-05"
+    ]
+  }
+}

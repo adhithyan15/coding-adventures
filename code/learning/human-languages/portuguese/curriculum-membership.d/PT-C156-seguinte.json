@@ -1,0 +1,11 @@
+{
+  "id": "PT-C156-seguinte",
+  "pathSegment": "PT-PATH-156-QUAL156",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-156-QUAL156",
+      "order": 1
+    }
+  ]
+}

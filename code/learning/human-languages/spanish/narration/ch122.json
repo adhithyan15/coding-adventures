@@ -4,7 +4,7 @@
   "chapter": 122,
   "title": "The Future --- Saying What Will Happen",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:62bcd219ddfc2570",
+  "sourceHash": "fnv1a64:a10c7b270fd68068",
   "lessons": [
     {
       "id": "ES-C17-futuro",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a0f48d12eb63dea",
+      "sourceHash": "fnv1a64:7f5ff529af9dff01",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Voy a hablar español uses the near-future frame you already know. Spanish also has a one-word future: Hablaré español — “I will speak Spanish.” It can present a future prediction or intention without adding a new subject or object."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two things from the perfect before the future. Something that happened today: hoy he hablado con Ana in Spain, hoy hablé con Ana in most of Latin America, and both are right. And the four participles that refused the ending: he hecho, he dicho, he visto, he puesto."
             }
           ]
         },
@@ -215,7 +225,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:711933d02227ba9d",
+      "sourceHash": "fnv1a64:dfebfae6e1a8211e",
       "notice": null,
       "blocks": [
         {
@@ -232,6 +242,16 @@
             {
               "kind": "speech",
               "text": "You built hablaré without removing -ar. Keep comer just as intact: comeré — “I will eat.”"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "He hablado español. He carries the person and the tense; hablado carries the meaning. Say it once before the future."
             }
           ]
         },

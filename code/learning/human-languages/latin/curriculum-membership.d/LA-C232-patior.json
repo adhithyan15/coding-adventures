@@ -1,0 +1,11 @@
+{
+  "id": "LA-C232-patior",
+  "pathSegment": "LA-PATH-232-ACT232",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-232-ACT232",
+      "order": 4
+    }
+  ]
+}

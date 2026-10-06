@@ -1,0 +1,11 @@
+{
+  "id": "KA-C230-hundi",
+  "pathSegment": "KA-PATH-230-VASTU230",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-230-VASTU230",
+      "order": 1
+    }
+  ]
+}

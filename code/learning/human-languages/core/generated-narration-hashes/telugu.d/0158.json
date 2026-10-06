@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:51876e03a8e31c32",
+  "lessonIds": [
+    "TE-C158-tondarapadu",
+    "TE-C158-tomu",
+    "TE-C158-marcu",
+    "TE-C158-vippu",
+    "TE-C158-kolucu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch158.txt",
+  "json": "telugu/narration/ch158.json",
+  "textHash": "fnv1a64:7d42e4c47f49af2e",
+  "jsonHash": "fnv1a64:822b22515f8ad566",
+  "findings": []
+}

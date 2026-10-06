@@ -1,0 +1,11 @@
+{
+  "id": "ES-C489-gasolina",
+  "pathSegment": "ES-PATH-489-CIUDAD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-489-CIUDAD",
+      "order": 2
+    }
+  ]
+}

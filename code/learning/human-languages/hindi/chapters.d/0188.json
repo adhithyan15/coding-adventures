@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "A button, A pocket, An enemy, An aunt (father's brother's wife), A nephew (brother's son)",
+  "label": "ch:hi-a-button-a-pocket-an-enemy-an-aunt-father-s-brother-s-wife-a-nephew-brother-s-son",
+  "canDo": "I can say a button, a pocket, an enemy, an aunt (father's brother's wife) and a nephew (brother's son).",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C188-bhatija",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say a button, a pocket, an enemy, an aunt (father's brother's wife) and a nephew (brother's son).",
+    "assesses": [
+      "HI-LEX-C188-THG188-03",
+      "HI-LEX-C188-THG188-04",
+      "HI-LEX-C188-THG188-05"
+    ]
+  }
+}

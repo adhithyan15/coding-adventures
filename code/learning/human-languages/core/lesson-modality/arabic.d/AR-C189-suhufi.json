@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C189-suhufi",
+    "language": "arabic",
+    "chapter": 189,
+    "sequence": 9570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:320638c895633e00"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C257-equipe",
+  "pathSegment": "FR-PATH-257-TRAV257",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-257-TRAV257",
+      "order": 3
+    }
+  ]
+}

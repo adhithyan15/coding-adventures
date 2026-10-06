@@ -1,0 +1,11 @@
+{
+  "id": "ML-C325-ceruppakkaran",
+  "pathSegment": "ML-PATH-325-VASTU325",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-325-VASTU325",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-201-COSE201",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say electricity, timber, iron, gold and silver.",
+  "prerequisites": []
+}

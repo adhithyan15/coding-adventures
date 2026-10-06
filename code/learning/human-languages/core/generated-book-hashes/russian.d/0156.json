@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:7fb8cac817e42be9",
+  "lessonIds": [
+    "RU-C156-bogatyy",
+    "RU-C156-bednyy",
+    "RU-C156-chistyy",
+    "RU-C156-gryaznyy",
+    "RU-C156-pustoy"
+  ],
+  "tex": "russian/book/chapters/ch156-rich-poor-clean-dirty-empty.tex"
+}

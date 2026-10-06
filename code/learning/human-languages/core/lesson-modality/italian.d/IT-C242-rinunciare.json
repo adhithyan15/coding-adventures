@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C242-rinunciare",
+    "language": "italian",
+    "chapter": 242,
+    "sequence": 14530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a372548303637346"
+  },
+  "findings": []
+}

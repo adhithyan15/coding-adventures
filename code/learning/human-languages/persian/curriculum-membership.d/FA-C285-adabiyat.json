@@ -1,0 +1,11 @@
+{
+  "id": "FA-C285-adabiyat",
+  "pathSegment": "FA-PATH-285-KAR285",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-285-KAR285",
+      "order": 2
+    }
+  ]
+}

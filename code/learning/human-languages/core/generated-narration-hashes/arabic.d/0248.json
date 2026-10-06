@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:ceb2d2104a2bdbb4",
+  "lessonIds": [
+    "AR-C248-intarnit",
+    "AR-C248-mawqi",
+    "AR-C248-tatbiq",
+    "AR-C248-jihaz",
+    "AR-C248-musalsal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch248.txt",
+  "json": "arabic/narration/ch248.json",
+  "textHash": "fnv1a64:056f788070e9c76e",
+  "jsonHash": "fnv1a64:7971dbe28330934f",
+  "findings": []
+}

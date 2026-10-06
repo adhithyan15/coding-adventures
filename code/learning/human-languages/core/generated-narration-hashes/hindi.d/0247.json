@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:b7248bff5c485bef",
+  "lessonIds": [
+    "HI-C247-resam",
+    "HI-C247-camra",
+    "HI-C247-isliye",
+    "HI-C247-agar",
+    "HI-C247-ya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch247.txt",
+  "json": "hindi/narration/ch247.json",
+  "textHash": "fnv1a64:92761dbe2408946e",
+  "jsonHash": "fnv1a64:71fe6547d3231fdf",
+  "findings": []
+}

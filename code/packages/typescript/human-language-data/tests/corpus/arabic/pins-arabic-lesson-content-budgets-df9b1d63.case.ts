@@ -51,7 +51,14 @@ it("pins Arabic lesson-content budgets", () =>
     // (places, ability, wanting, things and qualities) and twelve reviews.
     // RE-MEASURED against the tree. None introduces an idiom, a sense or a
     // culture claim, so those stay at 2 / 3 / 14.
-    lessons: 713,
+    // 713 -> 730: chapters 156-158 realize the last three A2 spine nodes (the
+    // past, the future, practical texts) with fifteen word lessons and two
+    // reviews. No idiom, sense or culture claim.
+    // 730 -> 903: chapters 159-191, 165 A2 words and eight reviews. No idiom, sense or culture claim.
+    // 903 -> 1066: chapters 192-222, 155 A2 words and eight reviews. No idiom, sense or culture claim.
+    // 1066 -> 1229: chapters 223-253, 155 A2 words and eight reviews. No idiom, sense or culture claim.
+    // 1229 -> 1382: chapters 254-282, 145 A2 words and eight reviews; Arabic attains A2. No idiom, sense or culture claim.
+    lessons: 1382,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,

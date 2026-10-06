@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "Advice, Moreover, By the way, Almost, All in all",
+  "label": "ch:te-advice-moreover-by-the-way-almost-all-in-all",
+  "canDo": "I can say advice, moreover, by the way, almost and all in all.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TE-C294-mottaniki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can say advice, moreover, by the way, almost and all in all.",
+    "assesses": [
+      "TE-LEX-C294-KARANAM294-03",
+      "TE-LEX-C294-KARANAM294-04",
+      "TE-LEX-C294-KARANAM294-05"
+    ]
+  }
+}

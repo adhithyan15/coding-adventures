@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "Vase, Plant, Seed, Root, Branch",
+  "label": "ch:fr-vase-plant-seed-root-branch",
+  "canDo": "I can say a vase, a plant, a seed, a root and a branch.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C228-branche",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say a vase, a plant, a seed, a root and a branch.",
+    "assesses": [
+      "FR-LEX-C228-CHOSES228-03",
+      "FR-LEX-C228-CHOSES228-04",
+      "FR-LEX-C228-CHOSES228-05"
+    ]
+  }
+}

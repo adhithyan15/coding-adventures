@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C213-mitha",
+    "language": "hindi",
+    "chapter": 213,
+    "sequence": 10920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12e2be02dbe85dcf"
+  },
+  "findings": []
+}

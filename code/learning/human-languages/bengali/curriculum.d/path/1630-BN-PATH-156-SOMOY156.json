@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-156-SOMOY156",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "BN-EXT-156-SOMOY156"
+  ],
+  "after": []
+}

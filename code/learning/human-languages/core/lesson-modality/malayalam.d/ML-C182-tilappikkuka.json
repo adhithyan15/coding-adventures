@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C182-tilappikkuka",
+    "language": "malayalam",
+    "chapter": 182,
+    "sequence": 7910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3db2ae0b0dd87189"
+  },
+  "findings": []
+}

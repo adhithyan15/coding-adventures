@@ -1,0 +1,11 @@
+{
+  "id": "MR-C169-mendu",
+  "pathSegment": "MR-PATH-169-AAROGYA169",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-169-AAROGYA169",
+      "order": 1
+    }
+  ]
+}

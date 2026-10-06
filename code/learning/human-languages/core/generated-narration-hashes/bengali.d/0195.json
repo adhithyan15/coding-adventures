@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:ad5792203b9fe910",
+  "lessonIds": [
+    "BN-C195-jket",
+    "BN-C195-renkot",
+    "BN-C195-belt",
+    "BN-C195-botam",
+    "BN-C195-dul"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch195.txt",
+  "json": "bengali/narration/ch195.json",
+  "textHash": "fnv1a64:1394ec4e8dee7a0b",
+  "jsonHash": "fnv1a64:6326e669e6697a15",
+  "findings": []
+}

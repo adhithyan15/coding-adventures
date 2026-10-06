@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:958fe53587fed224",
+  "lessonIds": [
+    "PT-C242-cozido-cozida",
+    "PT-C242-maduro-madura",
+    "PT-C242-escuro-escura",
+    "PT-C242-claro-clara",
+    "PT-C242-distante"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch242.txt",
+  "json": "portuguese/narration/ch242.json",
+  "textHash": "fnv1a64:e33296f8128eeed9",
+  "jsonHash": "fnv1a64:b6a4912b7ccac9f3",
+  "findings": []
+}

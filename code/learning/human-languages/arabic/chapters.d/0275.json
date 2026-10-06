@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Bride, Person, People, Party, Wedding",
+  "label": "ch:ar-bride-person-people-party-wedding",
+  "canDo": "I can say a bride, a person, people, a party and a wedding.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C275-zifaf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say a bride, a person, people, a party and a wedding.",
+    "assesses": [
+      "AR-LEX-C275-SHAY275-03",
+      "AR-LEX-C275-SHAY275-04",
+      "AR-LEX-C275-SHAY275-05"
+    ]
+  }
+}

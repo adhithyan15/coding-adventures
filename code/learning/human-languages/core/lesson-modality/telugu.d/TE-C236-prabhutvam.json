@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C236-prabhutvam",
+    "language": "telugu",
+    "chapter": 236,
+    "sequence": 11000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad9e48a63fc1a095"
+  },
+  "findings": []
+}

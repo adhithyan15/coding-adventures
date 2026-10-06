@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:24ebf88ec4618a60",
+  "lessonIds": [
+    "TE-C215-edari",
+    "TE-C215-banda",
+    "TE-C215-maidanam",
+    "TE-C215-thiyetaru",
+    "TE-C215-stediyam"
+  ],
+  "tex": "telugu/book/chapters/ch215-desert-rock-open-ground-theatre-stadium.tex"
+}

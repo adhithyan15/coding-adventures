@@ -1,0 +1,10 @@
+# build-tool: deps=typescript/forme-plugin-runner-ts
+(cd ../document-ast && npm ci --quiet)
+(cd ../forme-types && npm ci --quiet && npm run build)
+(cd ../forme-errors && npm ci --quiet && npm run build)
+(cd ../forme-capability && npm ci --quiet)
+(cd ../forme-stage && npm ci --quiet && npm run build)
+(cd ../forme-plugin-runner-ts && npm ci --quiet && npm run build)
+npm ci --quiet
+npm run build
+npx vitest run --coverage

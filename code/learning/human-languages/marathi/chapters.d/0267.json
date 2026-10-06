@@ -1,0 +1,19 @@
+{
+  "chapter": 267,
+  "title": "Volcano, Plateau, Pebble, Mud, Dust",
+  "label": "ch:mr-volcano-plateau-pebble-mud-dust",
+  "canDo": "I can say a volcano, a plateau, a pebble, mud and dust.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C267-dhul",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can say a volcano, a plateau, a pebble, mud and dust.",
+    "assesses": [
+      "MR-LEX-C267-VASTU267-03",
+      "MR-LEX-C267-VASTU267-04",
+      "MR-LEX-C267-VASTU267-05"
+    ]
+  }
+}

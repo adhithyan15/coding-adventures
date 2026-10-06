@@ -1,0 +1,11 @@
+{
+  "id": "GE-C203-stoff",
+  "pathSegment": "GE-PATH-203-THING203",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-203-THING203",
+      "order": 2
+    }
+  ]
+}

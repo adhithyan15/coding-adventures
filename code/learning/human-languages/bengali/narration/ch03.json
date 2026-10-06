@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2b07af12ef9e2284",
+  "sourceHash": "fnv1a64:79708e17987d75a5",
   "lessons": [
     {
       "id": "BN-C02-naam",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8b164ff6f3a1ea7d",
+      "sourceHash": "fnv1a64:dbc7ad43b0de5a43",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -189,7 +189,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "আমার (āmār, \"my\") is the possessive of আমি (āmi, \"I\"), on the first-person stem ām- from Sanskrit asmad (the \"we/I\" stem). Buried in it is the same ancient first-person m- that runs through English me, my, mine and Latin mē — so Bengali's \"my\" and English's \"my\" share, at the root, one first-person sound."
+              "text": "আমার (āmār, \"my\") is the possessive of āmi (\"I\"), on the first-person stem ām- from Sanskrit asmad (the \"we/I\" stem). Buried in it is the same ancient first-person m- that runs through English me, my, mine and Latin mē — so Bengali's \"my\" and English's \"my\" share, at the root, one first-person sound."
             }
           ]
         },
@@ -618,7 +618,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6c3f08e64113ef97",
+      "sourceHash": "fnv1a64:b3fe49178ec12b73",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -673,7 +673,7 @@
             },
             {
               "kind": "speech",
-              "text": "তুই (tui) — intimate: close friends, children, family."
+              "text": "tui — intimate: close friends, children, family."
             },
             {
               "kind": "speech",
@@ -770,7 +770,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e6c1b3906d82489",
+      "sourceHash": "fnv1a64:1a8a0acd1ee1432b",
       "notice": null,
       "blocks": [
         {
@@ -808,7 +808,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Answer with the sentence you built: Āmār nām Arun. The respectful version swaps tomār (from tumi) for আপনার (āpnār, \"your,\" from āpni): āpnār nām ki? — the one to use with a stranger."
+              "text": "Answer with the sentence you built: Āmār nām Arun. The respectful version swaps tomār (from tumi) for āpnār (\"your,\" from āpni): āpnār nām ki? — the one to use with a stranger."
             }
           ]
         },

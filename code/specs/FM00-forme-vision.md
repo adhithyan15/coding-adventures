@@ -12,10 +12,10 @@
 | Surface | Status | Evidence / next step |
 |---|---|---|
 | Headless build/check/preview | Implemented | FM01, FM03, FM04, FM06, and FM07 have live product coverage. |
-| Headless deployment | Active | [FM08](FM08-forme-deploy-runner.md) and FM-B044–FM-B047 feed the FM-B012 completion milestone. |
-| Third-party plugin runtime | Pending | [FM02](FM02-forme-plugin-host.md) is specified; FM-B014/FM-B015 own implementation. |
-| Interactivity IR | Pending | [FM05](FM05-forme-interactivity-ir.md) reserves the contract; FM-B013 owns implementation. |
-| Authoring shell and multi-backend proof | Pending | Tracked by FM-B016–FM-B018 in the [roadmap](FM00-forme-completion-roadmap.md). |
+| Headless deployment | Implemented | [FM08](FM08-forme-deploy-runner.md) and FM-B044–FM-B047 close the FM-B012 milestone with live product publication. |
+| Third-party plugin runtime | Implemented | [FM02](FM02-forme-plugin-host.md)'s host, runners, installation, grants, sandboxes, product composition, and live storage-watch mediation close FM-B015 and Extensible v1. |
+| Interactivity IR | Implemented | [FM05](FM05-forme-interactivity-ir.md) defines the normative v1 contract; FM-B059–FM-B061 deliver validation, exact per-page selection, and the live progressive-enhancement proof. |
+| Authoring shell and multi-backend proof | Authoring v1 implemented | [FM09](FM09-forme-authoring-shell.md) defines the completed authoring product boundary; FM-B017 proves the live HTML/terminal fan-out, and FM-B018 closes the supported-platform release-quality contract. |
 
 This document remains the long-range vision. The implementation ledger and
 ordered delivery state live in the companion completion roadmap; numbered
@@ -272,7 +272,7 @@ selectors, not through cascading-inheritance-as-side-effect the way CSS
 does it. This makes it tractable to compile to LaTeX (which does not have
 CSS-style cascade) without losing expressiveness.
 
-### 3.3 Interactivity IR — new, to be designed
+### 3.3 Interactivity IR — design sketch superseded by FM05
 
 Interactivity is the smallest of the three IRs for most documents — many
 posts have none at all — but it is the one that costs the most bytes when
@@ -280,7 +280,8 @@ it is present. Getting it right is what makes the AOT-compiler thesis
 work: if interactivity is explicit in the IR, the compiler can know which
 pages need any JavaScript and which do not.
 
-Proposed shape:
+The original proposed shape follows for historical context. The normative,
+bounded v1 schema is now [FM05](FM05-forme-interactivity-ir.md).
 
 ```typescript
 type InteractivityDocument = {
@@ -523,6 +524,7 @@ outputs in this vocabulary.
 | `Asset`           | image / video / font / binary with metadata and references     |
 | `RenderedPage`    | HTML/CSS/JS bundle + metadata for one output page              |
 | `PrintForme`      | backend-neutral composed page ready for a print backend        |
+| `TerminalBuffer`  | ANSI text plus explicit style/interactivity degradation records |
 | `RequestHandler`  | executable handler for dynamic per-request rendering           |
 | `SearchIndex`     | serialised search index (format depends on indexer)            |
 | `Feed`            | serialised feed (RSS, JSON Feed, Atom, sitemap, …)             |
@@ -757,6 +759,19 @@ an ESP or a `notify-email` for a mailing list backend.
 Consumes content + minimal style (ANSI colors + dim/bold). Produces a
 buffer of styled text for CLI help, man pages, terminal-based readers.
 
+The v1 terminal boundary is deliberately observable. `render-terminal`
+produces one `TerminalBuffer` per routed document. The buffer carries the ANSI
+text, an exact content/config revision, exact Style IR rule usage, canonical
+source provenance, and deterministic degradation records for unsupported
+style, interactivity, raw nodes, and asset references. Authored fallback
+content remains in the text.
+
+`package-terminal` collects those buffers into a capability-free
+`DeployArtifact` containing one `.ansi` file and one canonical
+`.degradations.json` file per route. The Coding Adventures blog is the first
+product proof: its routed Markdown stream fans out to HTML and terminal
+renderers that receive the same resolved theme and per-route Interactivity IR.
+
 ### 6.7 Slides
 
 Two sub-backends from the same upstream:
@@ -937,14 +952,14 @@ plugins declare the `apiVersion` they target.
 [plugin]
 name        = "@forme/embed-youtube"
 version     = "0.1.0"
-api-version = 1
+api-version = 2
 entry       = "./dist/index.js"
 description = "YouTube embed block"
 license     = "MIT"
 homepage    = "https://github.com/foo/forme-youtube"
 
 [requires]
-forme   = ">=0.1"
+forme   = ">=1.0"
 
 [capabilities]
 declared = ["content:extend", "network:youtube-oembed"]

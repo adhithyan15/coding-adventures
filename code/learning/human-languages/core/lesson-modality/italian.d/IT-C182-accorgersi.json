@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C182-accorgersi",
+    "language": "italian",
+    "chapter": 182,
+    "sequence": 9970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bcce595fc9c4876c"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:75ba985c99ffa2d2",
+  "lessonIds": [
+    "TE-C219-ninda",
+    "TE-C219-adharam",
+    "TE-C219-rujuvu",
+    "TE-C219-parinamam",
+    "TE-C219-prerana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch219.txt",
+  "json": "telugu/narration/ch219.json",
+  "textHash": "fnv1a64:2b975663364bc6e2",
+  "jsonHash": "fnv1a64:7827c763c93de887",
+  "findings": []
+}

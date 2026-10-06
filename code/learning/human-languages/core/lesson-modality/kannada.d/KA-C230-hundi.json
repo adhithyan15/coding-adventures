@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C230-hundi",
+    "language": "kannada",
+    "chapter": 230,
+    "sequence": 10800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a0ae487f9ff4c30"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C241-trembler",
+  "pathSegment": "FR-PATH-241-VERBES241",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-241-VERBES241",
+      "order": 1
+    }
+  ]
+}

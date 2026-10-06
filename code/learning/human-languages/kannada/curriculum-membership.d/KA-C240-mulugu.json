@@ -1,0 +1,11 @@
+{
+  "id": "KA-C240-mulugu",
+  "pathSegment": "KA-PATH-240-KRIYE240",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-240-KRIYE240",
+      "order": 2
+    }
+  ]
+}

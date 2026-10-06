@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:26ecb0fd2ebb6792",
+  "lessonIds": [
+    "ES-C493-opinar",
+    "ES-C493-convencer",
+    "ES-C493-insistir",
+    "ES-C493-sugerir",
+    "ES-C493-duda",
+    "ES-R493-repaso-palabras-de-los-capitulos-485-489",
+    "ES-R493-repaso-palabras-de-los-capitulos-490-493"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch493.txt",
+  "json": "spanish/narration/ch493.json",
+  "textHash": "fnv1a64:155ef8926fd5bf40",
+  "jsonHash": "fnv1a64:f43bfade1e8570cd",
+  "findings": []
+}

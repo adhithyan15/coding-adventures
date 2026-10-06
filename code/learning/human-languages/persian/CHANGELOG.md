@@ -1,5 +1,74 @@
 # Changelog
 
+## Chapters 253-286: 170 more A2 headwords
+
+The last of four Persian A2 vocabulary tranches: thirty-four chapters of five
+words, in four runs, each closed by two review lessons; fifty are verbs.
+Persian reached A2 with the third tranche, 2 headwords over the floor; this
+one takes it to 1,372 headwords and 268 verbs at or below A2, so a later
+re-tagging cannot drop it back, and its verbs close the B1 verb gap (250) as
+well. The lesson-content pin goes from 1304 to 1482, and the integration
+chapter list from 252 to 286.
+
+## Chapters 217-252: 180 more headwords, and Persian attains A2
+
+The third of four Persian A2 vocabulary tranches: thirty-six chapters of five
+words, in four runs, each closed by two review lessons; fifty are verbs.
+
+Persian attains A2: at or below A2 it teaches 1,202 distinct headwords (target
+1,200) and 218 verbs (target 120), and every A2 spine node is realized.
+Chapters 136-252 add 585 headwords, 153 of them verbs.
+`tests/level-gate-attainment/persian.json` moves from A1 to A2, and the
+level-gate climb history records Persian as the fifteenth track to reach A2.
+The lesson-content pin goes from 1116 to 1304, and the integration chapter
+list from 216 to 252.
+
+## Chapters 179-216: 190 more A2 headwords
+
+The second of four Persian A2 vocabulary tranches: thirty-eight chapters of
+five words, in five runs, each closed by two review lessons. Fifty are verbs,
+which closes the A2 verb gap. Level gate: 178 headwords short of A2. The
+lesson-content pin goes from 916 to 1116, and the integration chapter list
+from 178 to 216.
+
+## Chapters 140-178: 195 A2 headwords, fifty of them verbs
+
+The first of four Persian A2 vocabulary tranches: thirty-nine chapters of five
+words, in five runs, each closed by two review lessons. The word list was
+drafted by theme, checked against every headword the course already teaches,
+and reviewed by a native-level reader. Every word is written in letters the
+track already teaches (no ع ث ذ ض غ ژ ئ ء, no zero-width non-joiner), and
+words an earlier lesson already uses in its text were left out, so the track
+gains no forward reference. Level gate: 368 headwords and 2 verbs short of A2.
+The Persian lesson-content pin goes from 711 to 916, and the integration
+chapter list from 139 to 178.
+
+## Chapters 136-139: negation and questions, the past, the future and practical texts
+
+Persian had realized one of its five A2 spine nodes. Four chapters realize the
+other four, so the A2 gate reports no missing spine node.
+
+- Chapter 136 (`SPINE-NEGATE-AND-ASK`): هنوز, آیا, اصلا, مگر, چه وقت. The notes
+  show the negative prefix na- / ne- (نیستم) and the yes-or-no question.
+- Chapter 137 (`SPINE-TALK-ABOUT-PAST`): به تازگی, قبلا, پارسال, یک بار, سپری
+  کردن. The notes show the past for "I" in -am (خواندم, رفتم).
+- Chapter 138 (`SPINE-TALK-ABOUT-FUTURE`): آینده, از حالا, طرح, تصمیم گرفتن,
+  امیدوار بودن. The notes show the future with خواهم (خواهم رفت).
+- Chapter 139 (`SPINE-READ-PRACTICAL-TEXTS`): جدول زمانی, تابلو, اجاره, آگهی,
+  رسید, each with a short board or sign to read and act on.
+- Every headword and example uses only letters the course has taught (no ع,
+  ث, ذ, ض, غ or ژ), and none needs the zero-width non-joiner. Extensions carry
+  stage A2. The Persian chapter pin goes from 135 to 139 and the lesson pin
+  from 689 to 711.
+
+## Chapter payoffs say "I can", not "i can"
+
+The payoff line under each chapter's goal lowercased the goal's first letter,
+so 114 chapters printed "Complete the last lesson of chapter N: i can say …".
+Every one now keeps the capital: "…: I can say …", and a new test
+(`payoff-summary-case.test.ts`) fails if the lowercase pronoun comes back. Only
+the payoff summary changed; no lesson, word or atom moved.
+
 ## Chapters 79-135: 285 headwords, eight spine nodes, and Persian attains A1
 
 Persian had three A1 gaps. It was 276 headwords and 8 verbs short. Eight A1

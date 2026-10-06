@@ -1,0 +1,11 @@
+{
+  "id": "SA-C154-yadyapi",
+  "pathSegment": "SA-PATH-154-WHY154",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-154-WHY154",
+      "order": 3
+    }
+  ]
+}

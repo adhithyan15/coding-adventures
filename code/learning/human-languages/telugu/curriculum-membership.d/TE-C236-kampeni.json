@@ -1,0 +1,11 @@
+{
+  "id": "TE-C236-kampeni",
+  "pathSegment": "TE-PATH-236-PANI236",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-236-PANI236",
+      "order": 2
+    }
+  ]
+}

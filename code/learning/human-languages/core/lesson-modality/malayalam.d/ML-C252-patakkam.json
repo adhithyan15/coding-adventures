@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C252-patakkam",
+    "language": "malayalam",
+    "chapter": 252,
+    "sequence": 11590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb1ba843cc3cd0cc"
+  },
+  "findings": []
+}

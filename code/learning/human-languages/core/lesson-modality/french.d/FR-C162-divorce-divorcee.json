@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C162-divorce-divorcee",
+    "language": "french",
+    "chapter": 162,
+    "sequence": 8160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:014b95e98fff239b"
+  },
+  "findings": []
+}

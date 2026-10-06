@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C177-namra",
+    "language": "marathi",
+    "chapter": 177,
+    "sequence": 8710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6153f64c080098d6"
+  },
+  "findings": []
+}

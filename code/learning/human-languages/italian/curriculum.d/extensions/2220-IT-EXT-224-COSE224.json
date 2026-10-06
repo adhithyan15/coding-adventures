@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-224-COSE224",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an adult, an elderly person, a newborn, a twin and a grandson.",
+  "prerequisites": []
+}

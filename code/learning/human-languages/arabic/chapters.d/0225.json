@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "To pull, To prepare, To repair, To use, To bring",
+  "label": "ch:ar-to-pull-to-prepare-to-repair-to-use-to-bring",
+  "canDo": "I can say to pull, to prepare, to repair, to use and to bring.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C225-ahdara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say to pull, to prepare, to repair, to use and to bring.",
+    "assesses": [
+      "AR-LEX-C225-ACT225-03",
+      "AR-LEX-C225-ACT225-04",
+      "AR-LEX-C225-ACT225-05"
+    ]
+  }
+}

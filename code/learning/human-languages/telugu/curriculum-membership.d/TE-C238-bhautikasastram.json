@@ -1,0 +1,11 @@
+{
+  "id": "TE-C238-bhautikasastram",
+  "pathSegment": "TE-PATH-238-PANI238",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-238-PANI238",
+      "order": 4
+    }
+  ]
+}

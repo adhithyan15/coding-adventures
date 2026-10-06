@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:627aa8c36b92b2f8",
+  "lessonIds": [
+    "FR-C200-portail",
+    "FR-C200-cloture",
+    "FR-C200-cave",
+    "FR-C200-grenier",
+    "FR-C200-potager"
+  ],
+  "tex": "french/book/chapters/ch200-gate-fence-cellar-attic-vegetable-garden.tex"
+}

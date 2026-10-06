@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:030931c41b8da29d",
+  "lessonIds": [
+    "IT-C147-ridurre",
+    "IT-C147-rifiutare",
+    "IT-C147-rimanere",
+    "IT-C147-ringiovanire",
+    "IT-C147-riscaldare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch147.txt",
+  "json": "italian/narration/ch147.json",
+  "textHash": "fnv1a64:2038b06f752333c1",
+  "jsonHash": "fnv1a64:3965dc600857075d",
+  "findings": []
+}

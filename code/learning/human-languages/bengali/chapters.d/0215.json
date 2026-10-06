@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Ointment, Doctor's surgery, Patient, Pulse, Breath",
+  "label": "ch:bn-ointment-doctor-s-surgery-patient-pulse-breath",
+  "canDo": "I can say an ointment, a doctor's surgery, a patient, a pulse and breath.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C215-nihshvas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say an ointment, a doctor's surgery, a patient, a pulse and breath.",
+    "assesses": [
+      "BN-LEX-C215-SVASTHYO215-03",
+      "BN-LEX-C215-SVASTHYO215-04",
+      "BN-LEX-C215-SVASTHYO215-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-239-THING239",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an atmosphere, an argument, university studies, a step and a fact.",
+  "prerequisites": []
+}

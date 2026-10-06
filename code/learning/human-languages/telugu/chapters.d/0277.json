@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "Complaint, Barber, Washerman, Potter, Blacksmith",
+  "label": "ch:te-complaint-barber-washerman-potter-blacksmith",
+  "canDo": "I can say a complaint, a barber, a washerman, a potter and a blacksmith.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-R277-second-pass-words-from-chapters-275-277",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say a complaint, a barber, a washerman, a potter and a blacksmith.",
+    "assesses": [
+      "TE-LEX-C277-PANI277-03",
+      "TE-LEX-C277-PANI277-04",
+      "TE-LEX-C277-PANI277-05"
+    ]
+  }
+}

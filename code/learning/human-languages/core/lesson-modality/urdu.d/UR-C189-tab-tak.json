@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C189-tab-tak",
+    "language": "urdu",
+    "chapter": 189,
+    "sequence": 10830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8aba3d8a7c57624d"
+  },
+  "findings": []
+}

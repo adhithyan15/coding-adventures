@@ -1,0 +1,11 @@
+{
+  "id": "RU-C170-nalog",
+  "pathSegment": "RU-PATH-170-RABOTA170",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-170-RABOTA170",
+      "order": 2
+    }
+  ]
+}

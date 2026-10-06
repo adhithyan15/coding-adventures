@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-256-RABOTA256",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a professor, a journalist, an artist, a musician and an actor.",
+  "prerequisites": []
+}

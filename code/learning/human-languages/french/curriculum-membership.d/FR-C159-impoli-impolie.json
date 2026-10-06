@@ -1,0 +1,11 @@
+{
+  "id": "FR-C159-impoli-impolie",
+  "pathSegment": "FR-PATH-159-QUAL159",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-159-QUAL159",
+      "order": 3
+    }
+  ]
+}

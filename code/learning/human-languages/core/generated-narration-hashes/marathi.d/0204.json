@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:b14a41744c23259a",
+  "lessonIds": [
+    "MR-C204-gambhir",
+    "MR-C204-lajalu",
+    "MR-C204-sur",
+    "MR-C204-bhitra",
+    "MR-C204-utsuk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch204.txt",
+  "json": "marathi/narration/ch204.json",
+  "textHash": "fnv1a64:ff1a7ae8fed25a6b",
+  "jsonHash": "fnv1a64:5265651374b9d86f",
+  "findings": []
+}

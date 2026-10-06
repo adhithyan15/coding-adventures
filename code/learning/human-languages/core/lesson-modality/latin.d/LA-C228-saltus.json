@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C228-saltus",
+    "language": "latin",
+    "chapter": 228,
+    "sequence": 11580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b31c06124d4b3799"
+  },
+  "findings": []
+}

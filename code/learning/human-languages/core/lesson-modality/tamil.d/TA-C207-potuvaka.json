@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C207-potuvaka",
+    "language": "tamil",
+    "chapter": 207,
+    "sequence": 10790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9eaa6e24efe7647"
+  },
+  "findings": []
+}

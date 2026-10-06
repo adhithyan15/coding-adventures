@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "Previously, Finally, During, Century, Weekly",
+  "label": "ch:ar-previously-finally-during-century-weekly",
+  "canDo": "I can say previously, finally, during, a century and weekly.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C203-usbui",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say previously, finally, during, a century and weekly.",
+    "assesses": [
+      "AR-LEX-C203-WAQT203-03",
+      "AR-LEX-C203-WAQT203-04",
+      "AR-LEX-C203-WAQT203-05"
+    ]
+  }
+}

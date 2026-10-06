@@ -1,8 +1,8 @@
 Sanskrit, chapter 10: What You'd Ask For.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+9 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 9.
 पानीयम् (pānīyam) — "water," the thing to be drunk.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -14,7 +14,7 @@ Say "Sanskrit is dear to me." (Saṁskṛtaṁ mama priyam.) Every word so far h
 You'll want to know: पानीयम्.
 [a table of 2 rows, read aloud]
 Sanskrit: पानीयम्. sound: pānīyam. meaning: water.
-Sanskrit: पिबति. sound: pibati. meaning: he, she, or it drinks.
+Sanskrit: —. sound: pibati. meaning: he, she, or it drinks.
 पानीयम् (pānīyam) is neuter, and its final -म् marks that — a whole family of everyday nouns ends this way, and it will keep coming back this chapter.
 
 The letters in this word.
@@ -23,7 +23,7 @@ The letters in this word.
 The word, taken apart — the thing to be drunk.
 पानीयम् (pānīyam) is built on the root पा (pā), "to drink," plus -अनीय (-anīya), a suffix meaning "fit to be ed." Literally: the thing that is to be drunk.
 The root is PIE peh3-, "to drink." Latin took it into potare, and from that English has potion and poison — a drink, and a drink gone wrong.
-Eastward, पानीयम् (pānīyam) wore down through Prakrit pāṇīya into the everyday water-word of the daughter languages: Hindi पानी (pānī), Gujarati pāṇī, and, in the Bangladesh register of Bengali, pani — every one तद्भव, worn down by ordinary speech, not carried over whole. Sanskrit's own oldest water-words, जल and उदक, took a different road entirely; this is not that word.
+Eastward, पानीयम् (pānīyam) wore down through Prakrit pāṇīya into the everyday water-word of the daughter languages: Hindi पानी (pānī), Gujarati pāṇī, and, in the Bangladesh register of Bengali, pani — every one तद्भव, worn down by ordinary speech, not carried over whole. Sanskrit's own oldest water-words, jala and udaka, took a different road entirely; this is not that word.
 
 Guided Practice.
 [pause 1 second]
@@ -39,7 +39,7 @@ Wrap-up Recall.
 What does पानीयम् (pānīyam) literally mean, and from which two pieces? ("The thing to be drunk" — pā "drink" plus -anīya "fit to be".) Name two English words from the same PIE root. (Potion, poison.) Is Hindi pānī तत्सम or तद्भव? (तद्भव.) And how did you say "dear to me" last chapter? (Priyam.)
 
 
-Lesson 2 of 5.
+Lesson 2 of 9.
 स — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: स and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -67,17 +67,18 @@ You already say these, and every one of them has स somewhere inside it:
 Writing: स.
 1. start just below the headline, descend the left stem, curve left around the central hook, and continue diagonally down-right through the tail without lifting.
 2. lift at the central junction and draw the middle crossbar left-to-right.
-3. lift and draw the right stem top-to-bottom.
-4. lift and draw the top shirorekhā left-to-right.
-Pen lifts: 3. The pen comes up 3 times and no more.
-verified four-stroke teaching form; the corroborating deskbook stages the left curve and diagonal tail separately.
+3. without lifting, climb up the right stem to the headline.
+4. descend the right stem top-to-bottom.
+5. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+The source shows four movements; most native writers draw स in three strokes (71% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the crossbar and the headline.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari s स (sa).gif’, strokes 1–4, Wikimedia Commons, 29 March 2009.
 
 Guided Practice.
 [pause 1 second]
 [your turn — look: at this, and find स (sa) in it]
 [pause 8 seconds for the answer]
-नमस्ते, नमस्कारः, अस्ति.
+नमस्ते, नमस्कारः, अस्ति (asti).
 [once you have stopped driving — trace: स three times, saying sa as you finish each one]
 [your turn — look: back at any page of this chapter and find स (sa) once more]
 [pause 8 seconds for the answer]
@@ -87,7 +88,7 @@ Wrap-up Recall.
 Which character is this — स? What sound does it carry? (sa.) Name one word you already say that contains it.
 
 
-Lesson 3 of 5.
+Lesson 3 of 9.
 क्षीरम् (kṣīram) — "milk," and the dessert it left behind.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -124,7 +125,7 @@ Wrap-up Recall.
 Is क्षीरम्'s own origin settled or disputed? (Disputed — inherited, or borrowed from a substrate.) Are Persian šir and Sanskrit kṣīram parent and child, or relatives? (Relatives, from one shared ancestor.) What English word for a dessert comes from Hindi khīr? (Kheer.) And what does pānīyam literally mean? ("The thing to be drunk.")
 
 
-Lesson 4 of 5.
+Lesson 4 of 9.
 अन्नम् (annam) — "food," the eaten thing.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -163,7 +164,7 @@ Wrap-up Recall.
 What does annam literally mean, and which root is it built on? ("Eaten"; अद्, the cousin of English eat.) Which everyday verb shares that root without being it? (Khādati.) Which gender have all three nouns this chapter shared? (Neuter, marked by -म्.) And which gendered form did the numerals hand the daughter languages back in Chapter 6? (The neuter one — trīṇi, catvāri.) Name this chapter's three words. (Pānīyam, kṣīram, annam — the things you would ask for.)
 
 
-Lesson 5 of 5.
+Lesson 5 of 9.
 ◌ी (ī) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ी and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -198,3 +199,68 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — ◌ी? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts ī on; takes the built-in a off.) Name one word you already say that contains it.
+
+
+Lesson 6 of 9.
+स्त (sta) — two known consonants, now joined.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Read अस्ति and say its meaning: asti, “is.” Point to स, the virama ◌्, and त. Every sign and the word itself are already known; this lesson only makes their join visible.
+
+Writing — observe and trace the conjunct.
+Watch the pieces close up: स (sa) + ◌् + त becomes स्त (sta). The virama removes the a from स (sa), so the consonants touch: s followed by ta.
+Keep स्त (sta) visible. Trace the printed join once with a fingertip, then once with a pencil on tracing paper. Preserve the headline and the smaller first consonant; do not add an a between the two sounds.
+
+Wrap-up recall.
+What does the join inside अस्ति (asti) say? (s + ta, with no vowel after the first consonant.)
+
+
+Lesson 7 of 9.
+अस्ति (asti) — copy one known word with its joined middle.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Read अस्ति (asti) aloud and say “is.” This is not new vocabulary. Find its three parts: अ + स्त (sta) + ि. The short-i sign is written before the joined shape you read it after: स्ति, sti.
+
+Writing — guided conjunct copy.
+Keep अस्ति (asti) visible and copy it once. Pause after अ, then copy the joined स्त (sta), then place the short-i sign to make स्ति. Keep one continuous headline across the joined cluster.
+Compare your word with अस्ति (asti). Check the independent अ, the smaller first consonant in स्त (sta), and the short-i sign. Read the finished word and say its meaning.
+
+Wrap-up recall.
+Which part of अस्ति (asti) is a conjunct? (स्त (sta), s joined to ta.)
+
+
+Lesson 8 of 9.
+अस्ति (asti) — cover the model, keep the join.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Look at अस्ति for five seconds. Say asti, “is,” and point to the conjunct स्त (sta). Then cover the whole word and every romanized answer.
+
+Writing — delayed conjunct copy.
+Wait ten seconds. With no visible answer, write अस्ति (asti) from memory. Do not split स (sa) and त with a vowel: preserve the joined स्त (sta) in the middle.
+Only after the word is complete, uncover अस्ति (asti). Compare the independent vowel, the conjunct, and the short-i sign. Repair only the first difference, then read the word and give its meaning.
+
+Wrap-up recall.
+Why does स not say sa inside this word? (Its vowel is removed so it can join त in स्त (sta).)
+
+
+Lesson 9 of 9.
+A heard word — write “is” with its conjunct.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Cover every answer below this line. You will hear one old word and its old meaning. There is no visible Devanagari model and no romanized answer.
+
+Writing — conjunct dictation.
+[your turn — hear: asti, “is”]
+[pause 8 seconds for the answer]
+Write the word from sound and meaning alone. Stop after one attempt. Now uncover and compare: अस्ति (asti). Check अ, joined स्त (sta), and the short-i sign. Repair only the first difference. Credit requires the whole Devanagari word; a Latin-letter transliteration or separated consonants do not count.
+
+Wrap-up recall.
+This known word has now moved from observing a conjunct to independent transcription. Which writing-runway debts remain? (Connected text and broader independent recall.)

@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Doll, Vase, Jeans, Shorts, Raincoat",
+  "label": "ch:ur-doll-vase-jeans-shorts-raincoat",
+  "canDo": "I can say a doll, a vase, jeans, shorts and a raincoat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C251-barsati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can say a doll, a vase, jeans, shorts and a raincoat.",
+    "assesses": [
+      "UR-LEX-C251-CHIZ251-03",
+      "UR-LEX-C251-CHIZ251-04",
+      "UR-LEX-C251-CHIZ251-05"
+    ]
+  }
+}

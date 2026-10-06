@@ -1,0 +1,11 @@
+{
+  "id": "TE-C246-tirigi-ivvu",
+  "pathSegment": "TE-PATH-246-KRIYA246",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-246-KRIYA246",
+      "order": 1
+    }
+  ]
+}

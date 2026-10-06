@@ -1,0 +1,11 @@
+{
+  "id": "IT-C208-applaudire",
+  "pathSegment": "IT-PATH-208-VERBI208",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-208-VERBI208",
+      "order": 0
+    }
+  ]
+}

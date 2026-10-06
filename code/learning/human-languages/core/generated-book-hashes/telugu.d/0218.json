@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:4923d2d9f680f92e",
+  "lessonIds": [
+    "TE-C218-phalitam",
+    "TE-C218-laksyam",
+    "TE-C218-udaharana",
+    "TE-C218-teda",
+    "TE-C218-srama"
+  ],
+  "tex": "telugu/book/chapters/ch218-result-goal-example-difference-effort.tex"
+}

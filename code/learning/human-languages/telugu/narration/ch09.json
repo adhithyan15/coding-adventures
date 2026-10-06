@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1d514e637da17e8f",
+  "sourceHash": "fnv1a64:181cab5b315ef9f6",
   "lessons": [
     {
       "id": "TE-C09-kshaminchandi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03a06a36a1644baf",
+      "sourceHash": "fnv1a64:a8cb393af1189dd3",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "‑ఇంచు (‑in̄cu) = a verb-making suffix: kṣamā + ‑in̄cu becomes క్షమించు (kṣamin̄cu), \"to forgive.\" (The same pattern gives ప్రారంభించు prārambhin̄cu, \"to begin,\" from Sanskrit prārambha.)"
+              "text": "‑ించు (‑in̄cu) = a verb-making suffix: kṣamā + ‑in̄cu becomes క్షమించు (kṣamin̄cu), \"to forgive.\" (The same pattern gives prārambhin̄cu, \"to begin,\" from Sanskrit prārambha.)"
             },
             {
               "kind": "speech",

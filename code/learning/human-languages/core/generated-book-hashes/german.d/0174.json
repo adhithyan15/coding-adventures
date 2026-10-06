@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:785e3bdb5a54bfc0",
+  "lessonIds": [
+    "GE-C174-abholen",
+    "GE-C174-abfahren",
+    "GE-C174-ankommen",
+    "GE-C174-ausziehen",
+    "GE-C174-aufraeumen"
+  ],
+  "tex": "german/book/chapters/ch174-to-pick-up-to-depart-to-arrive-to-take-off-to-tidy-up.tex"
+}

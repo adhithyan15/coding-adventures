@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C199-vinne",
+    "language": "marathi",
+    "chapter": 199,
+    "sequence": 10330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca88e6d1ace01c9e"
+  },
+  "findings": []
+}

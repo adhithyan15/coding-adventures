@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:d8d7fd3a20ff80e8",
+  "lessonIds": [
+    "KA-C195-sulka",
+    "KA-C195-khate",
+    "KA-C195-baddi",
+    "KA-C195-terige",
+    "KA-C195-bil"
+  ],
+  "tex": "kannada/book/chapters/ch195-fee-account-interest-tax-bill.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Treatment, Prescription, Clinic, Pharmacy, Nurse",
+  "label": "ch:ar-treatment-prescription-clinic-pharmacy-nurse",
+  "canDo": "I can say treatment, a prescription, a clinic, a pharmacy and a nurse.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-R231-second-pass-words-from-chapters-227-231",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say treatment, a prescription, a clinic, a pharmacy and a nurse.",
+    "assesses": [
+      "AR-LEX-C231-SIHHA231-03",
+      "AR-LEX-C231-SIHHA231-04",
+      "AR-LEX-C231-SIHHA231-05"
+    ]
+  }
+}

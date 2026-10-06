@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C260-pili",
+    "language": "tamil",
+    "chapter": 260,
+    "sequence": 14660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:553edfef03e33a4f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C211-nirnay",
+    "language": "marathi",
+    "chapter": 211,
+    "sequence": 11310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37743cc2c951ee42"
+  },
+  "findings": []
+}

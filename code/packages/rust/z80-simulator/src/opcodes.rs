@@ -1,11 +1,13 @@
 //! Opcode / register / condition-code constant tables for the Zilog Z80 ISA.
 //!
-//! # The Z80 is an Intel 8080 superset
+//! # The Z80 preserves the Intel 8080 opcode map
 //!
-//! Every valid 8080 opcode is a valid Z80 opcode with **identical**
-//! semantics and **identical** byte encoding — the Z80 (1976) was designed
-//! for source (and largely binary) compatibility with 8080 software.  This
-//! module therefore reuses the exact same 3-bit register field, 2-bit
+//! Every documented 8080 instruction byte sequence remains valid on the Z80
+//! for the corresponding core data or control operation, with byte-identical
+//! encoding.  Complete machine state is not identical: Z80 arithmetic uses
+//! `P/V` for signed overflow where the 8080 uses `P` for parity, and the Z80
+//! exposes additional flag state.  This module therefore reuses the exact
+//! same 3-bit register field, 2-bit
 //! register-pair field, 3-bit ALU-operation field, and 3-bit condition-code
 //! field the 8080 uses (compare `intel8080_simulator::opcodes`) — only the
 //! *names* differ (Zilog's assembler mnemonics vs Intel's), and a handful

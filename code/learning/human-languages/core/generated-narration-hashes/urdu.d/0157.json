@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:a41564af8055bf61",
+  "lessonIds": [
+    "UR-C157-jagah",
+    "UR-C157-mohalla",
+    "UR-C157-futpath",
+    "UR-C157-chauk",
+    "UR-C157-nahar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch157.txt",
+  "json": "urdu/narration/ch157.json",
+  "textHash": "fnv1a64:b9d2a2b5738d5ffd",
+  "jsonHash": "fnv1a64:796b7c9833cee80d",
+  "findings": []
+}

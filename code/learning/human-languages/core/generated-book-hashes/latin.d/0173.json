@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:49a2c9305a092377",
+  "lessonIds": [
+    "LA-C173-valetudo",
+    "LA-C173-cerebrum",
+    "LA-C173-pulmo",
+    "LA-C173-iecur",
+    "LA-C173-ren",
+    "LA-R173-first-pass-words-from-chapters-165-168",
+    "LA-R173-second-pass-words-from-chapters-169-173"
+  ],
+  "tex": "latin/book/chapters/ch173-health-brain-lung-liver-kidney.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C235-coiffer",
+  "pathSegment": "FR-PATH-235-VERBES235",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-235-VERBES235",
+      "order": 4
+    }
+  ]
+}

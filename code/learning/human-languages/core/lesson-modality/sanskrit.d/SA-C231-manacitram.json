@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C231-manacitram",
+    "language": "sanskrit",
+    "chapter": 231,
+    "sequence": 13570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbabdab77d161b27"
+  },
+  "findings": []
+}

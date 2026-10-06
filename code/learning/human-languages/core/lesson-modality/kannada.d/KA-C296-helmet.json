@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C296-helmet",
+    "language": "kannada",
+    "chapter": 296,
+    "sequence": 14280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31e3807143f5f34c"
+  },
+  "findings": []
+}

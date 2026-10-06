@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "To endure, To crawl, To bend down, To stretch out, To stack",
+  "label": "ch:te-to-endure-to-crawl-to-bend-down-to-stretch-out-to-stack",
+  "canDo": "I can say to endure, to crawl, to bend down, to stretch out and to stack.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C249-percu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say to endure, to crawl, to bend down, to stretch out and to stack.",
+    "assesses": [
+      "TE-LEX-C249-KRIYA249-03",
+      "TE-LEX-C249-KRIYA249-04",
+      "TE-LEX-C249-KRIYA249-05"
+    ]
+  }
+}

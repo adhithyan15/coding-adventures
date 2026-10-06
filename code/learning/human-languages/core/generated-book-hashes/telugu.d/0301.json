@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:3ed1e644ecaa1f89",
+  "lessonIds": [
+    "TE-C301-nighantuvu",
+    "TE-C301-bandi",
+    "TE-C301-ato",
+    "TE-C301-taksi",
+    "TE-C301-petrolu"
+  ],
+  "tex": "telugu/book/chapters/ch301-dictionary-cart-auto-rickshaw-taxi-petrol.tex"
+}

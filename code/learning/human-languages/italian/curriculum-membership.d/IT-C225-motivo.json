@@ -1,0 +1,11 @@
+{
+  "id": "IT-C225-motivo",
+  "pathSegment": "IT-PATH-225-COSE225",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-225-COSE225",
+      "order": 3
+    }
+  ]
+}

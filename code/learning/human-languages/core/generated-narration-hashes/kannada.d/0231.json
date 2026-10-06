@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:cb02081564812880",
+  "lessonIds": [
+    "KA-C231-sahodyogi",
+    "KA-C231-sabhe",
+    "KA-C231-sandarsana",
+    "KA-C231-gumasta",
+    "KA-C231-adhikari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch231.txt",
+  "json": "kannada/narration/ch231.json",
+  "textHash": "fnv1a64:7a610b7f557b4582",
+  "jsonHash": "fnv1a64:f521c5d50f7fe1f5",
+  "findings": []
+}

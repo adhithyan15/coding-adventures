@@ -1,0 +1,11 @@
+{
+  "id": "GE-C233-lebenslauf",
+  "pathSegment": "GE-PATH-233-THING233",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-233-THING233",
+      "order": 2
+    }
+  ]
+}

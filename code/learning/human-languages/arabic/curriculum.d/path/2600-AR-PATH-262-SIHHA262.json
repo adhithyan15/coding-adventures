@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-262-SIHHA262",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "AR-EXT-262-SIHHA262"
+  ],
+  "after": []
+}

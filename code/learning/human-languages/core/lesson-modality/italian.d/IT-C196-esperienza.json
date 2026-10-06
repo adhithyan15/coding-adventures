@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C196-esperienza",
+    "language": "italian",
+    "chapter": 196,
+    "sequence": 11010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:706ea64f50a4edad"
+  },
+  "findings": []
+}

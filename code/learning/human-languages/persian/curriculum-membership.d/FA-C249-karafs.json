@@ -1,0 +1,11 @@
+{
+  "id": "FA-C249-karafs",
+  "pathSegment": "FA-PATH-249-CHIZ249",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-249-CHIZ249",
+      "order": 3
+    }
+  ]
+}

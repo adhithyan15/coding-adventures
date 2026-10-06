@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C196-pauk",
+    "language": "russian",
+    "chapter": 196,
+    "sequence": 11380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e1cf8ad26cce17c"
+  },
+  "findings": []
+}

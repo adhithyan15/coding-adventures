@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:14636abe69a09bb6",
+  "lessonIds": [
+    "SA-C210-acaryah",
+    "SA-C210-pradhanacaryah",
+    "SA-C210-vidyarthi",
+    "SA-C210-sahapathi",
+    "SA-C210-cikitsakah"
+  ],
+  "tex": "sanskrit/book/chapters/ch210-preceptor-head-teacher-pupil-classmate-doctor.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "Moreover, Suddenly, Except, Without, Anyway",
+  "label": "ch:ka-moreover-suddenly-except-without-anyway",
+  "canDo": "I can say moreover, suddenly, except, without and anyway.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "KA-C288-hegu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can say moreover, suddenly, except, without and anyway.",
+    "assesses": [
+      "KA-LEX-C288-KARANA288-03",
+      "KA-LEX-C288-KARANA288-04",
+      "KA-LEX-C288-KARANA288-05"
+    ]
+  }
+}

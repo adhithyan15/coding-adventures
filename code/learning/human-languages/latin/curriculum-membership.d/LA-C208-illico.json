@@ -1,0 +1,11 @@
+{
+  "id": "LA-C208-illico",
+  "pathSegment": "LA-PATH-208-TEMP208",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-208-TEMP208",
+      "order": 2
+    }
+  ]
+}

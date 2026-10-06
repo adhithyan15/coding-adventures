@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:7d2b5c740c86a210",
+  "lessonIds": [
+    "KA-C241-tikisu",
+    "KA-C241-hancikollu",
+    "KA-C241-dvesisu",
+    "KA-C241-kanduhidi",
+    "KA-C241-sala-pade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch241.txt",
+  "json": "kannada/narration/ch241.json",
+  "textHash": "fnv1a64:20d9f8ec514137fb",
+  "jsonHash": "fnv1a64:4010ba5411bace01",
+  "findings": []
+}

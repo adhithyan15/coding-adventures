@@ -1,0 +1,11 @@
+{
+  "id": "JA-R132-this-and-that",
+  "pathSegment": "JA-PATH-132-WRITE132",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "JA-EXT-132-WRITE132",
+      "order": 8
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C201-skidka",
+    "language": "russian",
+    "chapter": 201,
+    "sequence": 11820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3662f7d84e21347e"
+  },
+  "findings": []
+}

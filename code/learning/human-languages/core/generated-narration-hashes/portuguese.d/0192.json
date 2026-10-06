@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:69c7648c6ed94a9b",
+  "lessonIds": [
+    "PT-C192-mentira",
+    "PT-C192-regra",
+    "PT-C192-autorizacao",
+    "PT-C192-proibicao",
+    "PT-C192-seguranca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch192.txt",
+  "json": "portuguese/narration/ch192.json",
+  "textHash": "fnv1a64:4df037d601bc2c15",
+  "jsonHash": "fnv1a64:fd34ce26f335f92b",
+  "findings": []
+}

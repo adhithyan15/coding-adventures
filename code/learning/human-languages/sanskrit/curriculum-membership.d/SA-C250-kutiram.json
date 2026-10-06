@@ -1,0 +1,11 @@
+{
+  "id": "SA-C250-kutiram",
+  "pathSegment": "SA-PATH-250-THG250",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-250-THG250",
+      "order": 2
+    }
+  ]
+}

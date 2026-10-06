@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:484d16080478fbaf",
+  "lessonIds": [
+    "KA-C187-sankhye",
+    "KA-C187-kamanabillu",
+    "KA-C187-hima",
+    "KA-C187-neralu",
+    "KA-C187-kattale"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch187.txt",
+  "json": "kannada/narration/ch187.json",
+  "textHash": "fnv1a64:06ea42546aa2e101",
+  "jsonHash": "fnv1a64:53663834ebe1acf2",
+  "findings": []
+}

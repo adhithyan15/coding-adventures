@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:3e7e71bf932a95f5",
+  "lessonIds": [
+    "KA-C185-notu",
+    "KA-C185-nanya",
+    "KA-C185-riyayiti",
+    "KA-C185-kilo",
+    "KA-C185-pars"
+  ],
+  "tex": "kannada/book/chapters/ch185-banknote-coin-discount-kilogram-purse.tex"
+}

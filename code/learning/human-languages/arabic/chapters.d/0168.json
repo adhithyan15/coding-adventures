@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Arm, Body, Ankle, Throat, Headache",
+  "label": "ch:ar-arm-body-ankle-throat-headache",
+  "canDo": "I can say an arm, the body, an ankle, the throat and a headache.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C168-suda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say an arm, the body, an ankle, the throat and a headache.",
+    "assesses": [
+      "AR-LEX-C168-SIHHA168-03",
+      "AR-LEX-C168-SIHHA168-04",
+      "AR-LEX-C168-SIHHA168-05"
+    ]
+  }
+}

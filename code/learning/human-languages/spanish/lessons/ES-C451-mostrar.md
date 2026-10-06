@@ -7,7 +7,7 @@ chapter: 451
 type: word
 headword: mostrar
 gloss: to show — the verb on the sign, with a monster somewhere in its family
-concept_tag: ES-TURN-MOSTRAR
+concept_tag: ES-VERB-MOSTRAR
 prerequisites: [ES-C451-carne, ES-C16-ver, ES-C449-rueda]
 sounds: [diphthong-ue, s-t-cluster, stress-final]
 roots: [monstrare-latin]

@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "Barber, Cook, Gardener, Fisherman, Cowherd",
+  "label": "ch:sa-barber-cook-gardener-fisherman-cowherd",
+  "canDo": "I can say a barber, a cook, a gardener, a fisherman and a cowherd.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C148-gopalah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: I can say a barber, a cook, a gardener, a fisherman and a cowherd.",
+    "assesses": [
+      "SA-LEX-C148-PPL148-03",
+      "SA-LEX-C148-PPL148-04",
+      "SA-LEX-C148-PPL148-05"
+    ]
+  }
+}

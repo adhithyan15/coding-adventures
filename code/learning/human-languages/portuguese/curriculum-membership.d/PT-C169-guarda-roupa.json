@@ -1,0 +1,11 @@
+{
+  "id": "PT-C169-guarda-roupa",
+  "pathSegment": "PT-PATH-169-COISAS169",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-169-COISAS169",
+      "order": 4
+    }
+  ]
+}

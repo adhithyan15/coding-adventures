@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C172-yatri",
+    "language": "sanskrit",
+    "chapter": 172,
+    "sequence": 9230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03a26968b4266899"
+  },
+  "findings": []
+}

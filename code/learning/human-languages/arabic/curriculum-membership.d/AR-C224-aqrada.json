@@ -1,0 +1,11 @@
+{
+  "id": "AR-C224-aqrada",
+  "pathSegment": "AR-PATH-224-ACT224",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-224-ACT224",
+      "order": 2
+    }
+  ]
+}

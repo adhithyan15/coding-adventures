@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:cf40d60b2afd6361",
+  "lessonIds": [
+    "IT-C215-influenza",
+    "IT-C215-ricetta",
+    "IT-C215-pillola",
+    "IT-C215-sciroppo",
+    "IT-C215-pomata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch215.txt",
+  "json": "italian/narration/ch215.json",
+  "textHash": "fnv1a64:23b92c38d5fa89d6",
+  "jsonHash": "fnv1a64:fe4579053473a734",
+  "findings": []
+}

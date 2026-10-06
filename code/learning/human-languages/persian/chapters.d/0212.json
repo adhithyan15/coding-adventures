@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Lid, Cardboard box, Bag, Clay jar, Small tea glass",
+  "label": "ch:fa-lid-cardboard-box-bag-clay-jar-small-tea-glass",
+  "canDo": "I can say a lid, a cardboard box, a bag, a clay jar and a small tea glass.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C212-estekan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say a lid, a cardboard box, a bag, a clay jar and a small tea glass.",
+    "assesses": [
+      "FA-LEX-C212-CHIZ212-03",
+      "FA-LEX-C212-CHIZ212-04",
+      "FA-LEX-C212-CHIZ212-05"
+    ]
+  }
+}

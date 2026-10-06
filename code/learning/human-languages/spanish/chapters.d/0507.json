@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "La sociedad",
+  "label": "ch:es-la-sociedad",
+  "canDo": "I can read about an election, taxes, the population, the inhabitants and a debate.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C507-debate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can read about an election, taxes, the population, the inhabitants and a debate.",
+    "assesses": [
+      "ES-LEX-C507-SOCIEDAD-03",
+      "ES-LEX-C507-SOCIEDAD-04",
+      "ES-LEX-C507-SOCIEDAD-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C91-brihospotibar",
+    "language": "bengali",
+    "chapter": 91,
+    "sequence": 4780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f94426bc38e98ae"
+  },
+  "findings": []
+}

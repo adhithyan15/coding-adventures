@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C259-porichoypotro",
+    "language": "bengali",
+    "chapter": 259,
+    "sequence": 16310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4fa0a98a49eabb1"
+  },
+  "findings": []
+}

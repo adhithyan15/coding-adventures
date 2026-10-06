@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C208-khau",
+    "language": "marathi",
+    "chapter": 208,
+    "sequence": 10960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:691aa90728d52b4b"
+  },
+  "findings": []
+}

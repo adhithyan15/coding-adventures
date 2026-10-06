@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C259-phorm",
+    "language": "bengali",
+    "chapter": 259,
+    "sequence": 16290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6da268677aa6907d"
+  },
+  "findings": []
+}

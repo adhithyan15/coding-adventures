@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:e2176bba68673280",
+  "lessonIds": [
+    "BN-C255-rod",
+    "BN-C255-jhor",
+    "BN-C255-bonya",
+    "BN-C255-dhoya",
+    "BN-C255-chhai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch255.txt",
+  "json": "bengali/narration/ch255.json",
+  "textHash": "fnv1a64:aa194a1dcda13414",
+  "jsonHash": "fnv1a64:2e100eb83ef7d740",
+  "findings": []
+}

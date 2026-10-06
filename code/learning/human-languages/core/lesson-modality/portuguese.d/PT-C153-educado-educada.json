@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C153-educado-educada",
+    "language": "portuguese",
+    "chapter": 153,
+    "sequence": 7900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d04647f036b659af"
+  },
+  "findings": []
+}

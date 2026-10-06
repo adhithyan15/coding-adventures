@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C217-parutti",
+    "language": "malayalam",
+    "chapter": 217,
+    "sequence": 9720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cf9a3ab2160f7aa"
+  },
+  "findings": []
+}

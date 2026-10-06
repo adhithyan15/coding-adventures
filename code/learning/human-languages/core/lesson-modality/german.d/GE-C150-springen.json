@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C150-springen",
+    "language": "german",
+    "chapter": 150,
+    "sequence": 6680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4435f179ac9ad57b"
+  },
+  "findings": []
+}

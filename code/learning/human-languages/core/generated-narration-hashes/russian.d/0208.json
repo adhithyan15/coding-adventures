@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:05700adfe68d7eb7",
+  "lessonIds": [
+    "RU-C208-chuvstvovat",
+    "RU-C208-zamechat",
+    "RU-C208-slyshat",
+    "RU-C208-nyukhat",
+    "RU-C208-trogat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch208.txt",
+  "json": "russian/narration/ch208.json",
+  "textHash": "fnv1a64:928029c469d255c3",
+  "jsonHash": "fnv1a64:da8ec430f90d5d57",
+  "findings": []
+}

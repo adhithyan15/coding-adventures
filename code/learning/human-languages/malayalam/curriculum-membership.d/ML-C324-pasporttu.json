@@ -1,0 +1,11 @@
+{
+  "id": "ML-C324-pasporttu",
+  "pathSegment": "ML-PATH-324-VASTU324",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-324-VASTU324",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C219-prerana",
+  "pathSegment": "TE-PATH-219-KARANAM219",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-219-KARANAM219",
+      "order": 4
+    }
+  ]
+}

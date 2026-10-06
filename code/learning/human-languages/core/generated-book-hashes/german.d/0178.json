@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:51f17ea6209d9fd7",
+  "lessonIds": [
+    "GE-C178-duschen",
+    "GE-C178-einschlafen",
+    "GE-C178-einsteigen",
+    "GE-C178-aussteigen",
+    "GE-C178-umsteigen"
+  ],
+  "tex": "german/book/chapters/ch178-to-shower-to-fall-asleep-to-get-on-to-get-off-to-change.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C270-dhotar",
+    "language": "marathi",
+    "chapter": 270,
+    "sequence": 15640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9afb6ddbd713832"
+  },
+  "findings": []
+}

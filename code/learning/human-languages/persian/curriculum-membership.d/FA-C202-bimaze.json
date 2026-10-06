@@ -1,0 +1,11 @@
+{
+  "id": "FA-C202-bimaze",
+  "pathSegment": "FA-PATH-202-SEFAT202",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-202-SEFAT202",
+      "order": 4
+    }
+  ]
+}

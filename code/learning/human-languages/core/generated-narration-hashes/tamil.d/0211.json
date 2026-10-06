@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:d0489bdbac22031d",
+  "lessonIds": [
+    "TA-C211-inimaiyana",
+    "TA-C211-natpana",
+    "TA-C211-muttal",
+    "TA-C211-ilancivappu",
+    "TA-C211-paluppu",
+    "TA-R211-first-pass-words-from-chapters-203-206",
+    "TA-R211-second-pass-words-from-chapters-207-211"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch211.txt",
+  "json": "tamil/narration/ch211.json",
+  "textHash": "fnv1a64:881020b27ecf716a",
+  "jsonHash": "fnv1a64:ca8eb7446c997052",
+  "findings": []
+}

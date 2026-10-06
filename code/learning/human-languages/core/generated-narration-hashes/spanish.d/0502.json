@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:32bec1e00e61b311",
+  "lessonIds": [
+    "ES-C502-presentar",
+    "ES-C502-mencionar",
+    "ES-C502-charlar",
+    "ES-C502-chiste",
+    "ES-C502-traducir",
+    "ES-R502-repaso-palabras-de-los-capitulos-494-498",
+    "ES-R502-repaso-palabras-de-los-capitulos-499-502"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch502.txt",
+  "json": "spanish/narration/ch502.json",
+  "textHash": "fnv1a64:00f456ec0b627000",
+  "jsonHash": "fnv1a64:7854b435bef6a1dd",
+  "findings": []
+}

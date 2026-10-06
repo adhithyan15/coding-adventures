@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:0d58998b0aa334d3",
+  "lessonIds": [
+    "BN-C209-dhar-neoya",
+    "BN-C209-dhar-deoya",
+    "BN-C209-jomano",
+    "BN-C209-khoroch-kora",
+    "BN-C209-ojon-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch209.txt",
+  "json": "bengali/narration/ch209.json",
+  "textHash": "fnv1a64:c56b36a49e3a8510",
+  "jsonHash": "fnv1a64:728ec74c10a7d3e3",
+  "findings": []
+}

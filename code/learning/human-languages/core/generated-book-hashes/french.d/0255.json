@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:3401646b416d70a4",
+  "lessonIds": [
+    "FR-C255-dechets",
+    "FR-C255-recyclage",
+    "FR-C255-energie",
+    "FR-C255-electricite",
+    "FR-C255-gaz"
+  ],
+  "tex": "french/book/chapters/ch255-rubbish-recycling-energy-electricity-gas.tex"
+}

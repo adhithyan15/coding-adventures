@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C280-ceppu",
+    "language": "telugu",
+    "chapter": 280,
+    "sequence": 13310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:980b303b1c43a0fb"
+  },
+  "findings": []
+}

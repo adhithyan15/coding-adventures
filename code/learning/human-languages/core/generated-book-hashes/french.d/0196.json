@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:15444533f20d5cd7",
+  "lessonIds": [
+    "FR-C196-boucher",
+    "FR-C196-mecanicien",
+    "FR-C196-electricien",
+    "FR-C196-plombier",
+    "FR-C196-ouvrier"
+  ],
+  "tex": "french/book/chapters/ch196-butcher-mechanic-electrician-plumber-worker.tex"
+}

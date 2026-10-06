@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-128-THINGS128",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a salary, a port, a ship, a train and a ticket.",
+  "prerequisites": []
+}

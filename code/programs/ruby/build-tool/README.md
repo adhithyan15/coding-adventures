@@ -68,10 +68,10 @@ other build-tool implementations.
 
 Both extension-based and declared-source collection prune exact generated,
 dependency, VCS, cache, and temporary-directory components before matching
-files. The 26-name registry is case-sensitive: `_build`, `dist-newstyle`, and
-`build` are generated output, while `_Build`, `_build-example`,
-`Dist-newstyle`, `dist-newstyle-example`, and discovery-only `specs`
-directories remain eligible source. Top-down pruning avoids enumerating
+files. The 27-name registry is case-sensitive: `_build`, `blib`,
+`dist-newstyle`, and `build` are generated output, while `_Build`, `Blib`,
+`blib-example`, `_build-example`, `Dist-newstyle`, `dist-newstyle-example`, and
+discovery-only `specs` directories remain eligible source. Top-down pruning avoids enumerating
 generated descendants, and lexical `lstat` checks keep stable file and
 directory links outside collection and package hashing.
 
@@ -93,6 +93,22 @@ invalidation, and the stable no-follow boundary. Ruby does not expose the
 descriptor-relative primitives needed to claim an atomic adversarial TOCTOU
 boundary, so the implementation and documentation deliberately make no such
 claim.
+
+## Portable Glob Matching
+
+Declared Starlark source globs are compiled and validated as a complete list
+before the hasher walks the filesystem or Git-diff selection examines changed
+files. The matcher implements the build-tool v1 portable grammar directly:
+whole-segment `**`, segment-local `*` and `?`, and strict character classes
+with Python `fnmatchcase` semantics. It treats unmatched `[` literally and
+rejects descending ranges plus the ambiguous `--`, `&&`, `~~`, and `||`
+operators with a stable typed error.
+
+Both path and segment matching use rolling-row dynamic programs over Unicode
+scalars. Compiled patterns are reused across candidates, avoiding recursive
+suffix slicing, host `File.fnmatch` differences, and repeated parsing. This
+also makes leading-dot matching portable and bounds adversarial near misses by
+the pattern-by-input state grid.
 
 ## Extra CI Toolchain Declarations
 

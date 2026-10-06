@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:129860441ef9c329",
+  "lessonIds": [
+    "SA-C231-manacitram",
+    "SA-C231-sthanam",
+    "SA-C231-nivasah",
+    "SA-C231-atithigrham",
+    "SA-C231-pravasah",
+    "SA-R231-first-pass-words-from-chapters-227-228",
+    "SA-R231-second-pass-words-from-chapters-229-231"
+  ],
+  "tex": "sanskrit/book/chapters/ch231-map-place-stay-guest-house-stay-abroad.tex"
+}

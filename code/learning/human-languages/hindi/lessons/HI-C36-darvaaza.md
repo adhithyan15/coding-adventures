@@ -38,7 +38,7 @@ reviews_of: [HI-C36-ghar, HI-W03-matras-naam, HI-W05-write-namaste, HI-C27-shubh
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C36-GHAR-01, HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-SCRIPT-RECOG-146] -->
 
 [PAUSE 2s] You have a house. This is what you stand at to be let into one —
-and it is where **नमस्ते** is said and where **शुभ रात्रि** is said back.
+and it is where **नमस्ते** is said and where *śubh rātri* is said back.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C36-DARVAAZA-03]; assesses=[HI-CONCEPT-W03-MATRAS-NAAM-01, HI-CONCEPT-W03-MATRAS-NAAM-02, HI-CONCEPT-W03-MATRAS-NAAM-03, HI-CONCEPT-W05-WRITE-NAMASTE-02] -->

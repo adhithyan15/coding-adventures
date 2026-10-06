@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "UR-W11-a2-connected-composition",
+    "language": "urdu",
+    "chapter": 143,
+    "sequence": 7530,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:22b7b9fb88347682",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-289-VASTU289",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a boy, an aunt, a niece, a mother-in-law and a father-in-law.",
+  "prerequisites": []
+}

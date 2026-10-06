@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "To warn, To be enough, To burn, To knock, To compare",
+  "label": "ch:mr-to-warn-to-be-enough-to-burn-to-knock-to-compare",
+  "canDo": "I can say to warn, to be enough, to burn, to knock and to compare.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C195-tulna-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say to warn, to be enough, to burn, to knock and to compare.",
+    "assesses": [
+      "MR-LEX-C195-ACT195-03",
+      "MR-LEX-C195-ACT195-04",
+      "MR-LEX-C195-ACT195-05"
+    ]
+  }
+}

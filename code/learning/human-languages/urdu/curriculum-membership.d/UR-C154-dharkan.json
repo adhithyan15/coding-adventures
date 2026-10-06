@@ -1,0 +1,11 @@
+{
+  "id": "UR-C154-dharkan",
+  "pathSegment": "UR-PATH-154-SEHAT154",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-154-SEHAT154",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Ball, Flute, Tabla, Guitar, Camera",
+  "label": "ch:bn-ball-flute-tabla-guitar-camera",
+  "canDo": "I can say a ball, a flute, a tabla, a guitar and a camera.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C131-kyamera",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: I can say a ball, a flute, a tabla, a guitar and a camera.",
+    "assesses": [
+      "BN-LEX-C131-THINGS131-03",
+      "BN-LEX-C131-THINGS131-04",
+      "BN-LEX-C131-THINGS131-05"
+    ]
+  }
+}

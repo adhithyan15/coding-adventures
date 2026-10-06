@@ -1,0 +1,11 @@
+{
+  "id": "UR-C147-chikhna",
+  "pathSegment": "UR-PATH-147-ACT147",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-147-ACT147",
+      "order": 2
+    }
+  ]
+}

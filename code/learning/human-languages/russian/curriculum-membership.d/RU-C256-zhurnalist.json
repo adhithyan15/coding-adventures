@@ -1,0 +1,11 @@
+{
+  "id": "RU-C256-zhurnalist",
+  "pathSegment": "RU-PATH-256-RABOTA256",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-256-RABOTA256",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C240-pracin",
+  "pathSegment": "HI-PATH-240-QUAL240",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-240-QUAL240",
+      "order": 1
+    }
+  ]
+}

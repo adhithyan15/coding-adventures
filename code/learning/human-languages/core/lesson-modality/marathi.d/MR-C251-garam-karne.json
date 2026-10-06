@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C251-garam-karne",
+    "language": "marathi",
+    "chapter": 251,
+    "sequence": 14320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ca1ad17a44c4d8d"
+  },
+  "findings": []
+}

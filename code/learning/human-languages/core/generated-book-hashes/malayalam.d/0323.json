@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:166e9d7559275112",
+  "lessonIds": [
+    "ML-C323-tannimattan",
+    "ML-C323-cira",
+    "ML-C323-kararru",
+    "ML-C323-vellarikka",
+    "ML-C323-malli"
+  ],
+  "tex": "malayalam/book/chapters/ch323-watermelon-spinach-carrot-cucumber-coriander.tex"
+}

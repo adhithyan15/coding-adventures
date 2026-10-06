@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C173-divar-ghari",
+    "language": "urdu",
+    "chapter": 173,
+    "sequence": 9480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c32e77e316469f6"
+  },
+  "findings": []
+}

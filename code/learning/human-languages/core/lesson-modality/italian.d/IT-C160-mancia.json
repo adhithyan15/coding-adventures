@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C160-mancia",
+    "language": "italian",
+    "chapter": 160,
+    "sequence": 8480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0843c1d249ac222a"
+  },
+  "findings": []
+}

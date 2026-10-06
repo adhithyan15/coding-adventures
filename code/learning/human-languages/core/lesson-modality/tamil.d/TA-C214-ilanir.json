@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C214-ilanir",
+    "language": "tamil",
+    "chapter": 214,
+    "sequence": 11320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fae5ad4bb93dab7d"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C245-sangrahalay",
+    "language": "marathi",
+    "chapter": 245,
+    "sequence": 13720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ac09ac93a37ccda"
+  },
+  "findings": []
+}

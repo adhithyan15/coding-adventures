@@ -1,0 +1,11 @@
+{
+  "id": "HI-C183-rasoi",
+  "pathSegment": "HI-PATH-183-THG183",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-183-THG183",
+      "order": 4
+    }
+  ]
+}

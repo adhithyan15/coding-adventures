@@ -1,0 +1,11 @@
+{
+  "id": "ML-C316-prakrti",
+  "pathSegment": "ML-PATH-316-STHALAM316",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-316-STHALAM316",
+      "order": 1
+    }
+  ]
+}

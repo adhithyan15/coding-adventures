@@ -1,0 +1,11 @@
+{
+  "id": "BN-C216-opore",
+  "pathSegment": "BN-PATH-216-JAYGA216",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-216-JAYGA216",
+      "order": 3
+    }
+  ]
+}

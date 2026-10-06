@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:ca5347f80460e619",
+  "lessonIds": [
+    "ML-C200-venti",
+    "ML-C200-pakaram",
+    "ML-C200-prasnam",
+    "ML-C200-pariharam",
+    "ML-C200-anusariccu"
+  ],
+  "tex": "malayalam/book/chapters/ch200-for-the-sake-of-instead-problem-solution-according-to.tex"
+}

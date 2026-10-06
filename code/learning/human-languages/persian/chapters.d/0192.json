@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Yearly, Gradually, Again, Immediately, Soon",
+  "label": "ch:fa-yearly-gradually-again-immediately-soon",
+  "canDo": "I can say yearly, gradually, again, immediately and soon.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FA-C192-be-zudi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say yearly, gradually, again, immediately and soon.",
+    "assesses": [
+      "FA-LEX-C192-ZAMAN192-03",
+      "FA-LEX-C192-ZAMAN192-04",
+      "FA-LEX-C192-ZAMAN192-05"
+    ]
+  }
+}

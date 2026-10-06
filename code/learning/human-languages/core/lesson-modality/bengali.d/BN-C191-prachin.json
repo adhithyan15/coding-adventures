@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C191-prachin",
+    "language": "bengali",
+    "chapter": 191,
+    "sequence": 11330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97908a5303b6d3ad"
+  },
+  "findings": []
+}

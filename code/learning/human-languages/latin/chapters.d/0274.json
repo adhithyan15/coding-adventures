@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Leisure, Business, Profit, Loss, Debt",
+  "label": "ch:la-leisure-business-profit-loss-debt",
+  "canDo": "I can say leisure, business, profit, loss and a debt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C274-debitum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can say leisure, business, profit, loss and a debt.",
+    "assesses": [
+      "LA-LEX-C274-RES274-03",
+      "LA-LEX-C274-RES274-04",
+      "LA-LEX-C274-RES274-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:f70227bb74afc376",
+  "lessonIds": [
+    "FA-C286-khoshkshuyi",
+    "FA-C286-pishkhan",
+    "FA-C286-sanduqdar",
+    "FA-C286-faktor",
+    "FA-C286-khodpardaz",
+    "FA-R286-first-pass-words-from-chapters-280-282",
+    "FA-R286-second-pass-words-from-chapters-283-286"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch286.txt",
+  "json": "persian/narration/ch286.json",
+  "textHash": "fnv1a64:04707d5ec2a46222",
+  "jsonHash": "fnv1a64:7f4680687bd6ab99",
+  "findings": []
+}

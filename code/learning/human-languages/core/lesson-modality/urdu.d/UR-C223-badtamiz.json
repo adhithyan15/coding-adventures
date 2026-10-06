@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C223-badtamiz",
+    "language": "urdu",
+    "chapter": 223,
+    "sequence": 13260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb705f8f5bec3e1c"
+  },
+  "findings": []
+}

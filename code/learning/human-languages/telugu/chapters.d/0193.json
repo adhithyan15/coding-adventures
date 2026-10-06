@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Line, Circle, Square, Triangle, Wheel",
+  "label": "ch:te-line-circle-square-triangle-wheel",
+  "canDo": "I can say a line, a circle, a square, a triangle and a wheel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C193-cakram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say a line, a circle, a square, a triangle and a wheel.",
+    "assesses": [
+      "TE-LEX-C193-VASTUVU193-03",
+      "TE-LEX-C193-VASTUVU193-04",
+      "TE-LEX-C193-VASTUVU193-05"
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-aot-css-slicer",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Per-page CSS slicer for the Forme AOT compiler (FM06 §3).  Takes a StyleDocument + a per-page usedRuleIds map and emits scoped CSS artefacts ready for static-site emission.",
   "type": "module",
   "main": "src/index.ts",

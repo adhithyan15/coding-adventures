@@ -1,0 +1,11 @@
+{
+  "id": "TE-C233-budaga",
+  "pathSegment": "TE-PATH-233-VASTUVU233",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-233-VASTUVU233",
+      "order": 1
+    }
+  ]
+}

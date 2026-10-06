@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C171-joyar",
+    "language": "bengali",
+    "chapter": 171,
+    "sequence": 9820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12fa13ca192c09b6"
+  },
+  "findings": []
+}

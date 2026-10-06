@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:319399747191a7e6",
+  "lessonIds": [
+    "MR-C267-jvalamukhi",
+    "MR-C267-pathar",
+    "MR-C267-gota",
+    "MR-C267-cikhal",
+    "MR-C267-dhul"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch267.txt",
+  "json": "marathi/narration/ch267.json",
+  "textHash": "fnv1a64:6f1517ca8bb7808a",
+  "jsonHash": "fnv1a64:e6f74b8c21fedd17",
+  "findings": []
+}

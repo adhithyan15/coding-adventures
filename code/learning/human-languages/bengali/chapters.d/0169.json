@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Joy, Shame, Fear, Anger, Peace",
+  "label": "ch:bn-joy-shame-fear-anger-peace",
+  "canDo": "I can say joy, shame, fear, anger and peace.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C169-shanti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say joy, shame, fear, anger and peace.",
+    "assesses": [
+      "BN-LEX-C169-JINIS169-03",
+      "BN-LEX-C169-JINIS169-04",
+      "BN-LEX-C169-JINIS169-05"
+    ]
+  }
+}

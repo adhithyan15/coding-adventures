@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:f554d8e2775c55e0",
+  "lessonIds": [
+    "FA-C232-kashi",
+    "FA-C232-zirzamin",
+    "FA-C232-rahpelle",
+    "FA-C232-pagard",
+    "FA-C232-narde"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch232.txt",
+  "json": "persian/narration/ch232.json",
+  "textHash": "fnv1a64:09a7a6b9c37afe4d",
+  "jsonHash": "fnv1a64:118df939862b4779",
+  "findings": []
+}

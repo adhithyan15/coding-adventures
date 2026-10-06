@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C174-collegue",
+    "language": "french",
+    "chapter": 174,
+    "sequence": 8920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29ec6921a6770f2d"
+  },
+  "findings": []
+}

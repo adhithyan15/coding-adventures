@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:d59e98d02498568f",
+  "lessonIds": [
+    "SA-C256-prasiksanam",
+    "SA-C256-sammelanam",
+    "SA-C256-nirnayah",
+    "SA-C256-vicarah",
+    "SA-C256-matam"
+  ],
+  "tex": "sanskrit/book/chapters/ch256-training-conference-decision-thought-opinion.tex"
+}

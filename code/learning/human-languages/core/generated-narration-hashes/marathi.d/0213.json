@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:46b583f2eff45588",
+  "lessonIds": [
+    "MR-C213-karanje",
+    "MR-C213-phatak",
+    "MR-C213-kumpan",
+    "MR-C213-talghar",
+    "MR-C213-mala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch213.txt",
+  "json": "marathi/narration/ch213.json",
+  "textHash": "fnv1a64:e8470e872bfc9bd5",
+  "jsonHash": "fnv1a64:e7d7943c26854366",
+  "findings": []
+}

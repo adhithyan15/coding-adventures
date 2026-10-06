@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:1a4410ee3d9e6a30",
+  "lessonIds": [
+    "MR-C165-cukne",
+    "MR-C165-sudharne",
+    "MR-C165-bighadne",
+    "MR-C165-niriksan-karne",
+    "MR-C165-bhag-ghene"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch165.txt",
+  "json": "marathi/narration/ch165.json",
+  "textHash": "fnv1a64:00af69582e0996af",
+  "jsonHash": "fnv1a64:5c788f64a0c16840",
+  "findings": []
+}

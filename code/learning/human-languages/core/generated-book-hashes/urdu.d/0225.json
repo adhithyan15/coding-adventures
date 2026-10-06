@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:356f5eea40a91c50",
+  "lessonIds": [
+    "UR-C225-lifafa",
+    "UR-C225-parsal",
+    "UR-C225-risala",
+    "UR-C225-rabar",
+    "UR-C225-fail"
+  ],
+  "tex": "urdu/book/chapters/ch225-envelope-parcel-magazine-rubber-file.tex"
+}

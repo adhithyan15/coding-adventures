@@ -4,7 +4,18 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Regenerated the embedded source-input registry for the exact lowercase
+  `blib` exclusion and advanced the canonical registry digest.
+
 ### Added
+
+- A typed, process-free graph and diff-selection core consuming the exact
+  eight graph and twelve diff-selection neutral fixtures through Hspec, with
+  canonical levels and closures, portable source-glob matching, checked
+  repository-boundary digest and shared-input fanout, deterministic structural
+  diagnostics, and the 50,000,000-unit Unicode-scalar match-work ceiling.
 
 - Extended the embedded source-input registry and neutral fixture coverage with
   the two exact TypeScript site roots and their 13 reviewed authored inputs;

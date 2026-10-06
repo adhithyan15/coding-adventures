@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C143-hasikhushi",
+    "language": "bengali",
+    "chapter": 143,
+    "sequence": 7890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43c9e5647c9d41b5"
+  },
+  "findings": []
+}

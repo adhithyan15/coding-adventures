@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:28bfdc6c82990ebd",
+  "lessonIds": [
+    "LA-C217-tegula",
+    "LA-C217-fornax",
+    "LA-C217-lectica",
+    "LA-C217-vehiculum",
+    "LA-C217-currus"
+  ],
+  "tex": "latin/book/chapters/ch217-roof-tile-furnace-litter-vehicle-chariot.tex"
+}

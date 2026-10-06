@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:5b6e8e712a665ba6",
+  "lessonIds": [
+    "RU-C240-noyabr",
+    "RU-C240-dekabr",
+    "RU-C240-sezon",
+    "RU-C240-srazu",
+    "RU-C240-obychno",
+    "RU-R240-first-pass-words-from-chapters-232-235",
+    "RU-R240-second-pass-words-from-chapters-236-240"
+  ],
+  "tex": "russian/book/chapters/ch240-november-december-season-at-once-usually.tex"
+}

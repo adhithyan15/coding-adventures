@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "Chickpeas, Mustard seeds, Coriander leaves, Curry leaves, Buttermilk",
+  "label": "ch:te-chickpeas-mustard-seeds-coriander-leaves-curry-leaves-buttermilk",
+  "canDo": "I can say chickpeas, mustard seeds, coriander leaves, curry leaves and buttermilk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C299-majjiga",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can say chickpeas, mustard seeds, coriander leaves, curry leaves and buttermilk.",
+    "assesses": [
+      "TE-LEX-C299-VASTUVU299-03",
+      "TE-LEX-C299-VASTUVU299-04",
+      "TE-LEX-C299-VASTUVU299-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C482-justo",
+    "language": "spanish",
+    "chapter": 482,
+    "sequence": 13620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a69d9cd7ec66fd1"
+  },
+  "findings": []
+}

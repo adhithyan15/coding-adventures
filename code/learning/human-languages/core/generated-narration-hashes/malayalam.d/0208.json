@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:e3cd9d313f32b37c",
+  "lessonIds": [
+    "ML-C208-accar",
+    "ML-C208-moru",
+    "ML-C208-neyyu",
+    "ML-C208-venna",
+    "ML-C208-ten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch208.txt",
+  "json": "malayalam/narration/ch208.json",
+  "textHash": "fnv1a64:15e6e47a874a88ea",
+  "jsonHash": "fnv1a64:9359c1094b90afb6",
+  "findings": []
+}

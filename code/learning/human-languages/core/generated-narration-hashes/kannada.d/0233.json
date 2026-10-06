@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:f4202014163010fc",
+  "lessonIds": [
+    "KA-C233-dinasi",
+    "KA-C233-labha",
+    "KA-C233-nasta",
+    "KA-C233-vijnana",
+    "KA-C233-itihasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch233.txt",
+  "json": "kannada/narration/ch233.json",
+  "textHash": "fnv1a64:147ecceffd0f52dd",
+  "jsonHash": "fnv1a64:3f33e4a3e24849db",
+  "findings": []
+}

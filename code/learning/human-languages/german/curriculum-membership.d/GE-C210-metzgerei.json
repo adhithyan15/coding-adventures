@@ -1,0 +1,11 @@
+{
+  "id": "GE-C210-metzgerei",
+  "pathSegment": "GE-PATH-210-THING210",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-210-THING210",
+      "order": 3
+    }
+  ]
+}

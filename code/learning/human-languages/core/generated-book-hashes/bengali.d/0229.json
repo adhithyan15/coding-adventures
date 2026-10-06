@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:0343adac8411944e",
+  "lessonIds": [
+    "BN-C229-torch",
+    "BN-C229-shikol",
+    "BN-C229-korat",
+    "BN-C229-phite",
+    "BN-C229-abohaoya"
+  ],
+  "tex": "bengali/book/chapters/ch229-torch-chain-saw-ribbon-weather.tex"
+}

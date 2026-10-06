@@ -1,0 +1,11 @@
+{
+  "id": "AR-C228-istamaa",
+  "pathSegment": "AR-PATH-228-ACT228",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-228-ACT228",
+      "order": 1
+    }
+  ]
+}

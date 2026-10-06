@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:b25455b6e3dd1582",
+  "lessonIds": [
+    "HI-C237-caukor",
+    "HI-C237-tikona",
+    "HI-C237-sankara",
+    "HI-C237-uthla",
+    "HI-C237-basi"
+  ],
+  "tex": "hindi/book/chapters/ch237-square-triangular-narrow-shallow-stale.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R178-second-pass-words-from-chapters-174-178",
+    "language": "tamil",
+    "chapter": 178,
+    "sequence": 8640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e15ac5e8c7cacc3d"
+  },
+  "findings": []
+}

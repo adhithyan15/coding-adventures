@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Rather, Perhaps, Certainly, Unfortunately, Result",
+  "label": "ch:bn-rather-perhaps-certainly-unfortunately-result",
+  "canDo": "I can say rather, perhaps, certainly, unfortunately and a result.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "BN-C190-pholaphol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say rather, perhaps, certainly, unfortunately and a result.",
+    "assesses": [
+      "BN-LEX-C190-KARON190-03",
+      "BN-LEX-C190-KARON190-04",
+      "BN-LEX-C190-KARON190-05"
+    ]
+  }
+}

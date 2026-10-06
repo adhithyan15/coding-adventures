@@ -1,0 +1,11 @@
+{
+  "id": "HI-C213-narm",
+  "pathSegment": "HI-PATH-213-QUAL213",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-213-QUAL213",
+      "order": 4
+    }
+  ]
+}

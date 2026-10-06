@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "To admire, To act, To move forward, To move back, To lower",
+  "label": "ch:fr-to-admire-to-act-to-move-forward-to-move-back-to-lower",
+  "canDo": "I can say to admire, to act, to move forward, to move back and to lower.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C152-baisser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: I can say to admire, to act, to move forward, to move back and to lower.",
+    "assesses": [
+      "FR-LEX-C152-VERBES152-03",
+      "FR-LEX-C152-VERBES152-04",
+      "FR-LEX-C152-VERBES152-05"
+    ]
+  }
+}

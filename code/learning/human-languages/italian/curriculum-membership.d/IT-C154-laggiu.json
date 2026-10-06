@@ -1,0 +1,11 @@
+{
+  "id": "IT-C154-laggiu",
+  "pathSegment": "IT-PATH-154-LUOGO154",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-154-LUOGO154",
+      "order": 4
+    }
+  ]
+}

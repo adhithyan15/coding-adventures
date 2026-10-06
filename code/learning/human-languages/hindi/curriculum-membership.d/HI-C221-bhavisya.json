@@ -1,0 +1,11 @@
+{
+  "id": "HI-C221-bhavisya",
+  "pathSegment": "HI-PATH-221-THG221",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-221-THG221",
+      "order": 1
+    }
+  ]
+}

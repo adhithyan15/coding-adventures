@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "The Mind and the Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2adf17a2e627ca88",
+  "sourceHash": "fnv1a64:6678f089b801e971",
   "lessons": [
     {
       "id": "BN-C08-bhaba",
@@ -379,7 +379,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5a9eab9bafab9f42",
+      "sourceHash": "fnv1a64:dfc68ca38292a5be",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -469,7 +469,7 @@
             },
             {
               "kind": "speech",
-              "text": "Third verb, third pair, one law: the high -i of \"I\" pulls the stem vowel up after it. দেখি against দেখে, বুঝি against বোঝে, পড়ি against পড়ে."
+              "text": "Third verb, third pair, one law: the high -i of \"I\" pulls the stem vowel up after it. দেখি against দেখে, bujhi against bojhe, পড়ি against পড়ে."
             }
           ]
         },
@@ -545,7 +545,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b272a965bc5ac6f8",
+      "sourceHash": "fnv1a64:aa686243e8a16dce",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -585,7 +585,7 @@
             },
             {
               "kind": "speech",
-              "text": "আমি লিখি (āmi likhi), \"I write.\" সে লেখে (se lekhe), \"he writes.\" The harmony, written down as in বুঝি: -i lifts ে to ি."
+              "text": "আমি লিখি (āmi likhi), \"I write.\" সে লেখে (se lekhe), \"he writes.\" The harmony, written down as in bujhi: -i lifts ে to ি."
             }
           ]
         },
@@ -631,13 +631,13 @@
               "rowCount": 3,
               "utterances": [
                 "the same word: লেখা (lekhā). as a verb: to write. as a noun: a piece of writing.",
-                "the same word: পড়া (pôṛā). as a verb: to read. as a noun: study, homework.",
+                "the same word: pôṛā. as a verb: to read. as a noun: study, homework.",
                 "the same word: দেখা. as a verb: to see. as a noun: a seeing, a meeting."
               ]
             },
             {
               "kind": "speech",
-              "text": "Every -া form you have met does this. That is what Chapter 7's দেখা হবে was: not \"we will see\" but \"a seeing will happen.\" It also builds nouns straight out of verbs — লেখাপড়া (lekhāpôṛā), \"writing-reading,\" is the ordinary word for education. And the causative from three lessons back still runs on top: লেখানো (lekhāno), \"to get something written.\""
+              "text": "Every -া form you have met does this. That is what Chapter 7's দেখা হবে was: not \"we will see\" but \"a seeing will happen.\" It also builds nouns straight out of verbs — lekhāpôṛā, \"writing-reading,\" is the ordinary word for education. And the causative from three lessons back still runs on top: লেখানো (lekhāno), \"to get something written.\""
             }
           ]
         },
@@ -673,11 +673,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "education, flapping the ড় — \"lekhāpôṛā\" — then \"lekhāno,\" get it written",
+              "instruction": "education, flapping the ṛ — \"lekhāpôṛā\" — then \"lekhāno,\" get it written",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: education, flapping the ড় — \"lekhāpôṛā\" — then \"lekhāno,\" get it written]"
+              "source": "[YOU SAY: education, flapping the *ṛ* — \"lekhāpôṛā\" — then \"lekhāno,\" get it written]"
             },
             {
               "kind": "prompt",

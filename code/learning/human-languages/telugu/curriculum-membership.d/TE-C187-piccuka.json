@@ -1,0 +1,11 @@
+{
+  "id": "TE-C187-piccuka",
+  "pathSegment": "TE-PATH-187-VASTUVU187",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-187-VASTUVU187",
+      "order": 3
+    }
+  ]
+}

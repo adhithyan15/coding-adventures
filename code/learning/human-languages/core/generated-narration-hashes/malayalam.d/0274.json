@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:e9080598608ba814",
+  "lessonIds": [
+    "ML-C274-niru",
+    "ML-C274-ulukku",
+    "ML-C274-otivu",
+    "ML-C274-pollal",
+    "ML-C274-prameham"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch274.txt",
+  "json": "malayalam/narration/ch274.json",
+  "textHash": "fnv1a64:b7429da2b30dddea",
+  "jsonHash": "fnv1a64:359436ccca5560f8",
+  "findings": []
+}

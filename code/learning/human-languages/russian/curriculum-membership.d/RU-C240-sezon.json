@@ -1,0 +1,11 @@
+{
+  "id": "RU-C240-sezon",
+  "pathSegment": "RU-PATH-240-VREMYA240",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-240-VREMYA240",
+      "order": 2
+    }
+  ]
+}

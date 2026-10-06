@@ -1,0 +1,11 @@
+{
+  "id": "FR-C142-lannonce",
+  "pathSegment": "FR-PATH-142-LIRE142",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-142-LIRE142",
+      "order": 3
+    }
+  ]
+}

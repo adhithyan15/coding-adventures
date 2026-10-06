@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:b2d974f744702c7f",
+  "lessonIds": [
+    "AR-C233-mundhu",
+    "AR-C233-fajr",
+    "AR-C233-shuruq",
+    "AR-C233-ghurub",
+    "AR-C233-milad"
+  ],
+  "tex": "arabic/book/chapters/ch233-since-dawn-sunrise-sunset-birth.tex"
+}

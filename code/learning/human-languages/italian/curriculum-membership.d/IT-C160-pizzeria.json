@@ -1,0 +1,11 @@
+{
+  "id": "IT-C160-pizzeria",
+  "pathSegment": "IT-PATH-160-COSE160",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-160-COSE160",
+      "order": 2
+    }
+  ]
+}

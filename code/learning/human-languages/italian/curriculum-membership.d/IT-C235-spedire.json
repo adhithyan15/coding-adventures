@@ -1,0 +1,11 @@
+{
+  "id": "IT-C235-spedire",
+  "pathSegment": "IT-PATH-235-VERBI235",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-235-VERBI235",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "Sheep, Crocodile, House lizard, Bee, Spider",
+  "label": "ch:ml-sheep-crocodile-house-lizard-bee-spider",
+  "canDo": "I can say a sheep, a crocodile, a house lizard, a bee and a spider.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C327-cilanti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can say a sheep, a crocodile, a house lizard, a bee and a spider.",
+    "assesses": [
+      "ML-LEX-C327-VASTU327-03",
+      "ML-LEX-C327-VASTU327-04",
+      "ML-LEX-C327-VASTU327-05"
+    ]
+  }
+}

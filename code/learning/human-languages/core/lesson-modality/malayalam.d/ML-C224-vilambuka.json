@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C224-vilambuka",
+    "language": "malayalam",
+    "chapter": 224,
+    "sequence": 10100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2aee21037adeb268"
+  },
+  "findings": []
+}

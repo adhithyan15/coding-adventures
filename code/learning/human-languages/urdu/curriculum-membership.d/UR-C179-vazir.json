@@ -1,0 +1,11 @@
+{
+  "id": "UR-C179-vazir",
+  "pathSegment": "UR-PATH-179-KAM179",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-179-KAM179",
+      "order": 3
+    }
+  ]
+}

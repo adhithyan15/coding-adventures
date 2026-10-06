@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C256-sorangam",
+    "language": "telugu",
+    "chapter": 256,
+    "sequence": 12020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ee9f229d06a46c4"
+  },
+  "findings": []
+}

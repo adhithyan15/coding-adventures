@@ -1,5 +1,20 @@
 # Changelog — @coding-adventures/forme-deploy-runner-fs-adapter
 
+## Unreleased
+
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
+- Exercise disappearing nested-target races with native paths on every
+  supported operating system, including Windows.
+- Add a zero-write target inspection API for `forme deploy --dry-run`; it
+  preflights content and verifies existing target state without locks, staging,
+  root creation, or transaction residue.
+- Allow callers that already walked a trusted directory chain to bind the
+  canonical parent device/inode identity into inspection and publication,
+  rejecting a parent swap before staging.
+
 ## 0.1.0 — 2026-09-20
 
 Initial FM-B045 release.

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:4237b255ac3f7f14",
+  "lessonIds": [
+    "AR-C263-laqah",
+    "AR-C263-araq",
+    "AR-C263-misam",
+    "AR-C263-ibham",
+    "AR-C263-adala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch263.txt",
+  "json": "arabic/narration/ch263.json",
+  "textHash": "fnv1a64:740e41b25afc3a92",
+  "jsonHash": "fnv1a64:01ad74846a49e402",
+  "findings": []
+}

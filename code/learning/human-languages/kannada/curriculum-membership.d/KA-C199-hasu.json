@@ -1,0 +1,11 @@
+{
+  "id": "KA-C199-hasu",
+  "pathSegment": "KA-PATH-199-KRIYE199",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-199-KRIYE199",
+      "order": 1
+    }
+  ]
+}

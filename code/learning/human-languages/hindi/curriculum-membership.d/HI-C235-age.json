@@ -1,0 +1,11 @@
+{
+  "id": "HI-C235-age",
+  "pathSegment": "HI-PATH-235-LOC235",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-235-LOC235",
+      "order": 2
+    }
+  ]
+}

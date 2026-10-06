@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C181-pala",
+    "language": "tamil",
+    "chapter": 181,
+    "sequence": 8940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb6a36dca5744fbe"
+  },
+  "findings": []
+}

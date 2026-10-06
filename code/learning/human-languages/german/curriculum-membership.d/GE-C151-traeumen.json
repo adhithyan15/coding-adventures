@@ -1,0 +1,11 @@
+{
+  "id": "GE-C151-traeumen",
+  "pathSegment": "GE-PATH-151-VERB151",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-151-VERB151",
+      "order": 1
+    }
+  ]
+}

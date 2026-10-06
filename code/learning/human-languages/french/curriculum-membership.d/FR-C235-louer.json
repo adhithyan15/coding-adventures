@@ -1,0 +1,11 @@
+{
+  "id": "FR-C235-louer",
+  "pathSegment": "FR-PATH-235-VERBES235",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-235-VERBES235",
+      "order": 1
+    }
+  ]
+}

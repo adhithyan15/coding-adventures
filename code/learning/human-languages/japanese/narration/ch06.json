@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Coffee in Katakana, Three Shapes",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3c3914237ff34f56",
+  "sourceHash": "fnv1a64:d325c6e7d898be8a",
   "lessons": [
     {
       "id": "JA-W06-ko-katakana",
@@ -332,7 +332,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:73a7c60d0b4e494b",
+      "sourceHash": "fnv1a64:dea5d4d6875838b7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -378,7 +378,7 @@
             },
             {
               "kind": "speech",
-              "text": "a short stroke from right toward left."
+              "text": "a short stroke from left to right, rising a little."
             },
             {
               "kind": "speech",

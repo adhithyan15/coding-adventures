@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Hacer y parecer",
+  "label": "ch:es-hacer-y-parecer",
+  "canDo": "I can say that something seems a certain way, is kept up, is about a topic, is carried out or usually happens.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-R511-repaso-palabras-de-los-capitulos-508-511",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can say that something seems a certain way, is kept up, is about a topic, is carried out or usually happens.",
+    "assesses": [
+      "ES-LEX-C511-HACER-03",
+      "ES-LEX-C511-HACER-04",
+      "ES-LEX-C511-HACER-05"
+    ]
+  }
+}

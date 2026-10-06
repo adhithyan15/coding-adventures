@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "Fountain, Gate, Fence, Cellar, Loft",
+  "label": "ch:mr-fountain-gate-fence-cellar-loft",
+  "canDo": "I can say a fountain, a gate, a fence, a cellar and a loft.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C213-mala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say a fountain, a gate, a fence, a cellar and a loft.",
+    "assesses": [
+      "MR-LEX-C213-VASTU213-03",
+      "MR-LEX-C213-VASTU213-04",
+      "MR-LEX-C213-VASTU213-05"
+    ]
+  }
+}

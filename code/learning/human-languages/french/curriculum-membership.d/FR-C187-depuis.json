@@ -1,0 +1,11 @@
+{
+  "id": "FR-C187-depuis",
+  "pathSegment": "FR-PATH-187-TEMPS187",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-187-TEMPS187",
+      "order": 4
+    }
+  ]
+}

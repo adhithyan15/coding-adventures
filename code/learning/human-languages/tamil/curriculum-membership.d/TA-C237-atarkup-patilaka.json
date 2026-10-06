@@ -1,0 +1,11 @@
+{
+  "id": "TA-C237-atarkup-patilaka",
+  "pathSegment": "TA-PATH-237-KARANAM237",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-237-KARANAM237",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:e6e28200eba8eafb",
+  "lessonIds": [
+    "SA-C145-nandati",
+    "SA-C145-krandati",
+    "SA-C145-garjati",
+    "SA-C145-kujati",
+    "SA-C145-jalpati"
+  ],
+  "tex": "sanskrit/book/chapters/ch145-is-glad-cries-out-roars-coos-chatters.tex"
+}

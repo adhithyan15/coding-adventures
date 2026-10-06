@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:47c4d02d354285f1",
+  "lessonIds": [
+    "FA-C230-shomal",
+    "FA-C230-jonub",
+    "FA-C230-sharq",
+    "FA-C230-mostaqim",
+    "FA-C230-rubaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch230.txt",
+  "json": "persian/narration/ch230.json",
+  "textHash": "fnv1a64:163fdbea26ef22cb",
+  "jsonHash": "fnv1a64:dbb5029a175431a6",
+  "findings": []
+}

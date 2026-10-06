@@ -9,7 +9,7 @@ headword: লেখা
 romanization: lekhā
 gloss: to write — and the dictionary form that is quietly a noun
 concept_tag: VERB-WRITE
-prerequisites: [BN-C08-pora, BN-C06-numbers-1-5]
+prerequisites: [BN-C08-pora, BN-C06-numbers-1-5, BN-C06-numbers-1-5-dui]
 sounds: [kha-aspirate, e-to-i-harmony]
 roots: [likh-scratch]
 etymology_hook: "লেখা is Sanskrit √likh 'to scratch, to engrave' — and Latin scrībere and Germanic wrītan also began as scratching, three unrelated roots that had the same idea, so the resemblance is convergence and not kinship and is named as such; the lesson's own point is that লেখা is simultaneously a verb and a noun, which is what Chapter 7's দেখা হবে was doing all along"
@@ -43,7 +43,7 @@ seeing will happen." This word explains why that was not a flourish.
 > **লেখা** — *lekhā* — **to write**
 
 আমি লিখি (*āmi likhi*), "I write." সে লেখে (*se lekhe*), "he writes." The
-harmony, written down as in বুঝি: *-i* lifts **ে** to **ি**.
+harmony, written down as in *bujhi*: *-i* lifts **ে** to **ি**.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -70,12 +70,12 @@ finding here is a shared idea, not a family tree.
 | the same word | as a verb | as a noun |
 |---|---|---|
 | লেখা | to write | a piece of writing |
-| পড়া | to read | study, homework |
+| *pôṛā* | to read | study, homework |
 | দেখা | to see | a seeing, a meeting |
 
 Every **-া** form you have met does this. That is what Chapter 7's **দেখা হবে**
 was: not "we will see" but "**a seeing** will happen." It also builds nouns
-straight out of verbs — **লেখাপড়া** (*lekhāpôṛā*), "writing-reading," is the
+straight out of verbs — *lekhāpôṛā*, "writing-reading," is the
 ordinary word for **education**. And the causative from three lessons back still
 runs on top: **লেখানো** (*lekhāno*), "to get something written."
 
@@ -85,7 +85,7 @@ runs on top: **লেখানো** (*lekhāno*), "to get something written."
 [PAUSE 1s]
 - [YOU SAY: "lekhā" — write — then "āmi likhi … se lekhe"]
 - [YOU SAY: the chapter's four — "bhābā, bojhā, pôṛā, lekhā"]
-- [YOU SAY: education, flapping the ড় — "lekhāpôṛā" — then "lekhāno," get it written]
+- [YOU SAY: education, flapping the *ṛ* — "lekhāpôṛā" — then "lekhāno," get it written]
 - [YOU SAY: the five you could already write — "ek, dui, tin, chār, pā̃ch" — and
   which one wears the chandrabindu]
 

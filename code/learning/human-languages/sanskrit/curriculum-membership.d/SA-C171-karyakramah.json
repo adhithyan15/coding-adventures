@@ -1,0 +1,11 @@
+{
+  "id": "SA-C171-karyakramah",
+  "pathSegment": "SA-PATH-171-WRK171",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-171-WRK171",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "To watch, To listen, To draw, To sing, To photograph",
+  "label": "ch:ar-to-watch-to-listen-to-draw-to-sing-to-photograph",
+  "canDo": "I can say to watch, to listen, to draw, to sing and to photograph.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C228-sawwara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say to watch, to listen, to draw, to sing and to photograph.",
+    "assesses": [
+      "AR-LEX-C228-ACT228-03",
+      "AR-LEX-C228-ACT228-04",
+      "AR-LEX-C228-ACT228-05"
+    ]
+  }
+}

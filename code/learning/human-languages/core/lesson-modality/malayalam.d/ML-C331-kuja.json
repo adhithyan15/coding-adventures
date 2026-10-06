@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C331-kuja",
+    "language": "malayalam",
+    "chapter": 331,
+    "sequence": 15720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a3d63e7b2aea5ff"
+  },
+  "findings": []
+}

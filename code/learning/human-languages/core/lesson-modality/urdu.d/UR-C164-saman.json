@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C164-saman",
+    "language": "urdu",
+    "chapter": 164,
+    "sequence": 8840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3fdb762840d3cb88"
+  },
+  "findings": []
+}

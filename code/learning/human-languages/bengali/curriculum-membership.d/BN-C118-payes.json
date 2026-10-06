@@ -1,0 +1,11 @@
+{
+  "id": "BN-C118-payes",
+  "pathSegment": "BN-PATH-118-THINGS118",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-118-THINGS118",
+      "order": 1
+    }
+  ]
+}

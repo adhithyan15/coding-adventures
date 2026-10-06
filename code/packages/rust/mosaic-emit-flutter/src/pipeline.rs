@@ -24,7 +24,7 @@
 //! | `HostButton`         | `ElevatedButton(onPressed: ..., child: Text(...))`  |
 //! | `HostScroll`         | `SingleChildScrollView(child: ...)`                 |
 //! | `HostNavigationSplit` | `LayoutBuilder` + regular `Row` / compact `Drawer` |
-//! | `HostDialog`         | `Builder(builder: (context) { ... showDialog ... })` — see below |
+//! | `HostDialog`         | `_MosaicDialogHost(open: ..., builder: (context) => AlertDialog(...))` — see below |
 //! | `HostCheckbox`       | `Checkbox(value: ..., onChanged: ...)`              |
 //! | `HostRadio`          | `Radio<String>(value: ..., groupValue: ..., onChanged: ...)` |
 //! | `HostTable`          | `DataTable(columns: [...], rows: [...])`            |
@@ -36,16 +36,14 @@
 //! | `If` / `Else`        | Dart `if ... else ...` expression in widget tree    |
 //! | `For`                | Spread `...list.map((x) => Widget(x))`              |
 //!
-//! ## HostDialog — anchor + imperative show
+//! ## HostDialog — anchor + imperative route
 //!
-//! Flutter's `showDialog` is imperative — you call it from a
-//! callback, it doesn't sit in the widget tree. We follow the same
-//! pattern as `mosaic-emit-swiftui`'s `Color.clear` anchor: emit a
-//! zero-size `SizedBox.shrink()` placeholder that carries the dialog
-//! logic via a `useEffect`-shaped Flutter hook (`useEffect` from the
-//! `flutter_hooks` package, or a `StatefulWidget` wrapper if the
-//! host prefers vanilla Flutter). v1 ships the `flutter_hooks` shape;
-//! the host imports `package:flutter_hooks/flutter_hooks.dart` once.
+//! A Flutter dialog is a route pushed on a `Navigator`, not a widget in
+//! the tree. Each `HostDialog` lowers to `_MosaicDialogHost`, a private
+//! zero-size `StatefulWidget` written once per file that watches `open`
+//! and pushes or removes a `DialogRoute` (UI29-1 §3.3) -- the same anchor
+//! idea as `mosaic-emit-swiftui`'s `Color.clear`. It never calls
+//! `showDialog`, whose desktop windowing path breaks macOS AOT builds.
 //!
 //! ## What is NOT in this first cut
 //!
@@ -206,6 +204,28 @@ pub struct EmitOptions {
     /// `require_runtime` emits `mosaicRequiredValue`, which by design has no
     /// preview value at all. Default empty keeps the generated sample.
     pub slot_values: HashMap<String, String>,
+
+    /// The root component's layout variants the app switches between at run
+    /// time, in rule order (UI48 §7.9, ENV3). Empty -- the default -- mounts
+    /// the default layout only and leaves every project file byte-for-byte
+    /// as before. Each variant's widget must be in the app's `lib/` as
+    /// `<Component>.<variant>.dart` (see [`from_pipeline_variant`]).
+    pub layout_variants: Vec<LayoutChoice>,
+}
+
+/// One run-time layout choice (UI48 §7.9): show `variant` when every
+/// condition holds.
+///
+/// Conditions are keyed by `mosaic-app-runtime`'s **wire names** -- the keys
+/// of the report `MosaicHost.environmentReport` builds (`sizeClass`,
+/// `pointer`, ...) -- not the manifest's kebab-case axis keys, because the
+/// generated selector tests them against that report. The package builder
+/// translates them (`EnvironmentAxis::wire_name`); both halves are checked
+/// again here before they are written into Dart.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LayoutChoice {
+    pub variant: String,
+    pub conditions: Vec<(String, String)>,
 }
 
 impl Default for EmitOptions {
@@ -217,6 +237,7 @@ impl Default for EmitOptions {
             pinned_dart_sdk: ">=3.5.0 <4.0.0".to_string(),
             package_name: None,
             slot_values: HashMap::new(),
+            layout_variants: Vec::new(),
         }
     }
 }
@@ -261,6 +282,10 @@ pub enum ProjectShellError {
     /// MUST start with a letter, no leading underscore.
     /// Per UI32 spec §3.6.2 Flutter row.
     InvalidDartPubName(String),
+    /// A layout choice (UI48 §7.9) that cannot be written into the shell:
+    /// a variant that cannot name a Dart widget, one chosen twice, or a
+    /// condition that is not a wire-name key and a lowercase value.
+    InvalidLayoutChoice(String),
 }
 
 impl std::fmt::Display for ProjectShellError {
@@ -270,6 +295,9 @@ impl std::fmt::Display for ProjectShellError {
                 f,
                 "derived Dart pub name '{n}' violates the pub naming convention (snake_case: lowercase + digits + underscores, must start with letter)"
             ),
+            ProjectShellError::InvalidLayoutChoice(detail) => {
+                write!(f, "invalid layout choice: {detail}")
+            }
         }
     }
 }
@@ -328,6 +356,7 @@ fn build_flutter_project_files(
     if !is_valid_dart_pub_name(&pub_name) {
         return Err(ProjectShellError::InvalidDartPubName(pub_name));
     }
+    validate_layout_choices(name, &options.layout_variants)?;
 
     Ok(ProjectFiles {
         pubspec_yaml: build_pubspec_yaml(&pub_name, options),
@@ -337,14 +366,62 @@ fn build_flutter_project_files(
             &interface.slots,
             options.require_runtime,
             &options.slot_values,
+            &options.layout_variants,
         ),
-        mosaic_host_dart: build_mosaic_host_dart(options.require_runtime),
+        mosaic_host_dart: build_mosaic_host_dart(
+            options.require_runtime,
+            !options.layout_variants.is_empty(),
+        ),
         widget_test_dart: build_widget_test_dart(&pub_name, options.require_runtime),
         readme: format!(
             "{}\n## Analyze and test\n\nMosaic supplies `analysis_options.yaml`, the matching `flutter_lints` dependency, and `test/widget_test.dart` before Flutter creates platform runners. The bootstrap therefore preserves a package-name-correct smoke test instead of installing the stock counter-app test.\n\n```sh\nflutter analyze\nflutter test\n```\n",
             build_flutter_readme(&pub_name, name, options.require_runtime)
         ),
     })
+}
+
+/// Check every layout choice before any of it is spliced into Dart
+/// (UI48 §7.9). The variant becomes a widget class name and a string
+/// literal, each condition a map entry `'<axis>': '<value>'`, so each must
+/// be exactly the shape the manifest produces: a variant
+/// [`variant_widget_name`] accepts, whose widget is chosen once and is not
+/// a shell name, an axis that is a camelCase wire name (ASCII letters only)
+/// and a value of lowercase letters and `-`. Nothing here can carry a
+/// quote, a backslash or a `$`.
+///
+/// "Chosen once" is keyed on the WIDGET, not the variant string: `touch`
+/// and `Touch`, or `task-list` and `task_list`, are two strings but one
+/// class (`CardTouch`, `CardTaskList`), which two imports would make
+/// ambiguous. (`discover_variants` refuses such pairs of files; this is the
+/// same guard for a caller that builds the options itself.)
+fn validate_layout_choices(
+    component: &str,
+    choices: &[LayoutChoice],
+) -> Result<(), ProjectShellError> {
+    let mut seen = HashSet::new();
+    for choice in choices {
+        let axis_ok =
+            |axis: &str| !axis.is_empty() && axis.chars().all(|c| c.is_ascii_alphabetic());
+        let value_ok = |value: &str| {
+            !value.is_empty() && value.chars().all(|c| c.is_ascii_lowercase() || c == '-')
+        };
+        let widget_ok = match variant_widget_name(component, &choice.variant) {
+            Some(widget) => !SHELL_RESERVED_NAMES.contains(&widget.as_str()) && seen.insert(widget),
+            None => false,
+        };
+        if !widget_ok
+            || !choice
+                .conditions
+                .iter()
+                .all(|(axis, value)| axis_ok(axis) && value_ok(value))
+        {
+            return Err(ProjectShellError::InvalidLayoutChoice(format!(
+                "layout variant `{}` of {component}",
+                choice.variant
+            )));
+        }
+    }
+    Ok(())
 }
 
 /// PascalCase → snake_case for Dart pub naming. `Hello` → `hello`;
@@ -412,19 +489,179 @@ fn build_main_dart(
     slots: &[SlotDecl],
     require_runtime: bool,
     slot_values: &HashMap<String, String>,
+    layout_variants: &[LayoutChoice],
 ) -> String {
     if require_runtime {
-        return build_runtime_required_main_dart(component_name, slots);
+        return build_runtime_required_main_dart(component_name, slots, layout_variants);
     }
-    build_permissive_main_dart(component_name, slots, slot_values)
+    build_permissive_main_dart(component_name, slots, slot_values, layout_variants)
+}
+
+// =====================================================================
+// UI48 ENV3 (§7.9) — the layout selector a shell with variants carries
+//
+// Without variants every piece below is the empty string, so a package
+// with one layout gets exactly the shell it always had. With them:
+//
+//   import 'EngramApp.touch.dart';            <- every selectable variant
+//
+//   class _MosaicAppState ... {
+//     Widget _mosaicLayoutRoot(BuildContext context) {
+//       ...environment from MediaQuery, reduced by MosaicHost...
+//       switch (mosaicLayoutVariant(environment)) {
+//         case 'touch':
+//           return EngramAppTouch(...same arguments...);
+//         default:
+//           return EngramApp(...);
+//       }
+//     }
+//     ... home: ... Builder(builder: _mosaicLayoutRoot) ...
+//   }
+//
+//   const mosaicLayoutRules = [('touch', {'pointer': 'coarse'})];
+//   String? mosaicLayoutVariant(Map<String, String> environment) { ... }
+//
+// The `Builder` is what makes the swap happen on the frame the window
+// changes. The shell's own `build` only runs on setState; the Builder's
+// context sits below MaterialApp's MediaQuery, so reading the size there
+// registers it for exactly the aspects it read, and a resize across a
+// threshold rebuilds it -- and only it -- with the other root.
+// =====================================================================
+
+/// `import '<Component>.<variant>.dart';` for each selectable variant.
+/// Only those: an import of a variant nothing switches to would be unused,
+/// which the generated `analysis_options.yaml` makes an error.
+fn layout_variant_imports(component_name: &str, layout_variants: &[LayoutChoice]) -> String {
+    layout_variants
+        .iter()
+        .map(|choice| format!("import '{component_name}.{}.dart';\n", choice.variant))
+        .collect()
+}
+
+/// The `_mosaicLayoutRoot` method of the shell's state: the environment the
+/// window shows, the variant it selects, and that variant's widget built
+/// with the same arguments as the default's. `root_for(widget)` writes one
+/// constructor call; the shells differ only in how they read props.
+fn layout_root_method(
+    component_name: &str,
+    layout_variants: &[LayoutChoice],
+    root_for: impl Fn(&str) -> String,
+) -> String {
+    if layout_variants.is_empty() {
+        return String::new();
+    }
+    let mut cases = String::new();
+    for choice in layout_variants {
+        let widget = variant_widget_name(component_name, &choice.variant)
+            .expect("layout choices are validated before the shell is built");
+        write!(
+            cases,
+            "      case '{}':\n        return {};\n",
+            choice.variant,
+            root_for(&widget)
+        )
+        .unwrap();
+    }
+    format!(
+        concat!(
+            "  // UI48 ENV3 (§7.9): the layout the window's environment selects.\n",
+            "  //\n",
+            "  // Built by a Builder below MaterialApp's MediaQuery, reading the same\n",
+            "  // aspects the environment report does, so a change to exactly those\n",
+            "  // rebuilds just this and mounts the other root with the same props.\n",
+            "  // The app's state lives in the runtime (or, with no runtime, in this\n",
+            "  // State), so swapping roots loses nothing but the old root's own\n",
+            "  // widget-local state. The keys are mosaic-app-runtime's wire names --\n",
+            "  // what MosaicHost.environmentReport answers and the rules test.\n",
+            "  Widget _mosaicLayoutRoot(BuildContext context) {{\n",
+            "    final size = MediaQuery.sizeOf(context);\n",
+            "    final environment = MosaicHost.environmentReport(\n",
+            "      size.width,\n",
+            "      size.height,\n",
+            "      MediaQuery.platformBrightnessOf(context) == Brightness.dark,\n",
+            "      reduceMotion: MediaQuery.disableAnimationsOf(context),\n",
+            "    );\n",
+            "    switch (mosaicLayoutVariant(environment)) {{\n",
+            "{cases}",
+            "      default:\n",
+            "        return {default_root};\n",
+            "    }}\n",
+            "  }}\n\n",
+        ),
+        cases = cases,
+        default_root = root_for(component_name),
+    )
+}
+
+/// The rules as data, in rule order, and the pure function that applies
+/// them: `select_variant`'s semantics (`mosaic-package-manifest`) -- the
+/// first rule whose conditions all hold, else `null` for the default
+/// layout. A rule with no conditions always holds. Public, so a widget test
+/// can ask the selector directly.
+fn layout_selector_dart(layout_variants: &[LayoutChoice]) -> String {
+    if layout_variants.is_empty() {
+        return String::new();
+    }
+    let mut rules = String::new();
+    for choice in layout_variants {
+        let conditions = choice
+            .conditions
+            .iter()
+            .map(|(axis, value)| format!("'{axis}': '{value}'"))
+            .collect::<Vec<_>>()
+            .join(", ");
+        writeln!(
+            rules,
+            "  ('{}', <String, String>{{{conditions}}}),",
+            choice.variant
+        )
+        .unwrap();
+    }
+    format!(
+        concat!(
+            "/// Which layout variant the window's environment selects (UI48 §7.9):\n",
+            "/// the package's `[[app.layouts]]` rules, or the conventional ones, in\n",
+            "/// rule order, keyed by mosaic-app-runtime's wire names.\n",
+            "const List<(String, Map<String, String>)> mosaicLayoutRules =\n",
+            "    <(String, Map<String, String>)>[\n",
+            "{rules}",
+            "];\n\n",
+            "/// The first variant whose conditions all hold, or null for the default\n",
+            "/// layout.\n",
+            "String? mosaicLayoutVariant(Map<String, String> environment) {{\n",
+            "  for (final (variant, conditions) in mosaicLayoutRules) {{\n",
+            "    if (conditions.entries.every(\n",
+            "      (condition) => environment[condition.key] == condition.value,\n",
+            "    )) {{\n",
+            "      return variant;\n",
+            "    }}\n",
+            "  }}\n",
+            "  return null;\n",
+            "}}\n\n",
+        ),
+        rules = rules,
+    )
 }
 
 fn build_permissive_main_dart(
     component_name: &str,
     slots: &[SlotDecl],
     slot_values: &HashMap<String, String>,
+    layout_variants: &[LayoutChoice],
 ) -> String {
-    let root_widget = build_root_widget_constructor(component_name, slots, slot_values);
+    // With layout variants the root is chosen at run time (UI48 §7.9); a
+    // sample shell has no runtime to report to, but it still reads the
+    // window to choose.
+    let root_widget = if layout_variants.is_empty() {
+        build_root_widget_constructor(component_name, slots, slot_values)
+    } else {
+        "Builder(builder: _mosaicLayoutRoot)".to_string()
+    };
+    let layout_root = layout_root_method(component_name, layout_variants, |widget| {
+        build_root_widget_constructor(widget, slots, slot_values)
+    });
+    let variant_imports = layout_variant_imports(component_name, layout_variants);
+    let layout_selector = layout_selector_dart(layout_variants);
     let host_props_field = if slots.is_empty() {
         String::new()
     } else {
@@ -449,6 +686,7 @@ fn build_permissive_main_dart(
             "import 'dart:async';\n",
             "import 'package:flutter/material.dart';\n",
             "import '{component_name}.dart';\n",
+            "{variant_imports}",
             "import 'mosaic_host.dart';\n\n",
             "void main() {{\n",
             "  runApp(const MosaicApp());\n",
@@ -498,6 +736,7 @@ fn build_permissive_main_dart(
             "      debugPrint('host error: $error');\n",
             "    }}\n",
             "  }}\n\n",
+            "{layout_root}",
             "  @override\n",
             "  Widget build(BuildContext context) {{\n",
             "    return MaterialApp(\n",
@@ -511,6 +750,7 @@ fn build_permissive_main_dart(
             "    );\n",
             "  }}\n",
             "}}\n\n",
+            "{layout_selector}",
             "Map<String, Object?> mosaicMap(Object? value) {{\n",
             "  if (value is Map<String, Object?>) return value;\n",
             "  if (value is Map) {{\n",
@@ -613,11 +853,29 @@ fn build_permissive_main_dart(
         root_widget = root_widget,
         host_props_field = host_props_field,
         apply_host_props = apply_host_props,
+        variant_imports = variant_imports,
+        layout_root = layout_root,
+        layout_selector = layout_selector,
     )
 }
 
-fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
-    let root_widget = build_runtime_required_root_widget_constructor(component_name, slots);
+fn build_runtime_required_main_dart(
+    component_name: &str,
+    slots: &[SlotDecl],
+    layout_variants: &[LayoutChoice],
+) -> String {
+    // With layout variants the root is chosen at run time (UI48 §7.9), from
+    // the same MediaQuery aspects `_observeEnvironment` reports.
+    let root_widget = if layout_variants.is_empty() {
+        build_runtime_required_root_widget_constructor(component_name, slots)
+    } else {
+        "Builder(builder: _mosaicLayoutRoot)".to_string()
+    };
+    let layout_root = layout_root_method(component_name, layout_variants, |widget| {
+        build_runtime_required_root_widget_constructor(widget, slots)
+    });
+    let variant_imports = layout_variant_imports(component_name, layout_variants);
+    let layout_selector = layout_selector_dart(layout_variants);
     let host_props_field = if slots.is_empty() {
         String::new()
     } else {
@@ -639,6 +897,7 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "import 'dart:async';\n",
             "import 'package:flutter/material.dart';\n",
             "import '{component_name}.dart';\n",
+            "{variant_imports}",
             "import 'mosaic_host.dart';\n\n",
             "void main() {{\n",
             "  runApp(MosaicApp());\n",
@@ -660,7 +919,11 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "  bool _usedProvidedHost = false;\n",
             "{host_props_field}",
             "  bool _hostReady = false;\n",
-            "  String? _startupFailure;\n\n",
+            "  String? _startupFailure;\n",
+            "  // UI48 ENV4 (§7.8): the window's environment as the last build saw it,\n",
+            "  // and whether a report of it is already waiting for the end of a frame.\n",
+            "  Map<String, String>? _environment;\n",
+            "  bool _environmentReportQueued = false;\n\n",
             "  @override\n",
             "  void initState() {{\n",
             "    super.initState();\n",
@@ -740,6 +1003,69 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "      debugPrint('host error: $error');\n",
             "    }}\n",
             "  }}\n\n",
+            "  // UI48 ENV4 (§7.8): tell the runtime the window's size class,\n",
+            "  // orientation, colour scheme and reduce-motion setting once it has\n",
+            "  // started, then whenever one of them changes.\n",
+            "  //\n",
+            "  // MaterialApp's builder runs below the MediaQuery the app provides and\n",
+            "  // above every route, so it sees the whole window. Reading only the\n",
+            "  // aspects the report needs (size, platform brightness -- the rendered\n",
+            "  // theme, since themeMode is system -- and disableAnimations) makes a\n",
+            "  // change to exactly those rebuild it, and nothing else. It only records\n",
+            "  // and queues: dispatching here would call into the runtime, and\n",
+            "  // setState, in the middle of a build.\n",
+            "  Widget _observeEnvironment(BuildContext context, Widget? child) {{\n",
+            "    final size = MediaQuery.sizeOf(context);\n",
+            "    _environment = MosaicHost.environmentReport(\n",
+            "      size.width,\n",
+            "      size.height,\n",
+            "      MediaQuery.platformBrightnessOf(context) == Brightness.dark,\n",
+            "      reduceMotion: MediaQuery.disableAnimationsOf(context),\n",
+            "    );\n",
+            "    _queueEnvironmentReport();\n",
+            "    return child ?? const SizedBox.shrink();\n",
+            "  }}\n\n",
+            "  // Reports once the frame being built is done, never during it. One report\n",
+            "  // is queued at a time and it sends whatever the LAST build saw, so a burst\n",
+            "  // of resize frames costs one.\n",
+            "  void _queueEnvironmentReport() {{\n",
+            "    if (_environmentReportQueued) return;\n",
+            "    _environmentReportQueued = true;\n",
+            "    WidgetsBinding.instance.addPostFrameCallback((_) {{\n",
+            "      _environmentReportQueued = false;\n",
+            "      _reportEnvironment();\n",
+            "    }});\n",
+            "  }}\n\n",
+            "  // The host sends only a report that differs from the last one the runtime\n",
+            "  // took (or refused), so dragging an edge sends nothing until a threshold\n",
+            "  // is crossed, and a retried start reports afresh to its new host. Nothing\n",
+            "  // is reported before the runtime is up and showing.\n",
+            "  void _reportEnvironment() {{\n",
+            "    final host = _mosaicHost;\n",
+            "    final environment = _environment;\n",
+            "    if (!mounted || !_hostReady || host == null || environment == null) {{\n",
+            "      return;\n",
+            "    }}\n",
+            "    try {{\n",
+            "      // Null: nothing new to show -- the app did not react, or nothing\n",
+            "      // was sent. An answer with props is shown like an event's; a\n",
+            "      // failure is only logged. A resize is not something the user did,\n",
+            "      // so it never replaces the screen with a startup failure.\n",
+            "      final answer = host.reportEnvironment(environment);\n",
+            "      if (answer == null) return;\n",
+            "      if (answer['props'] is Map) {{\n",
+            "        _applyMosaicResponse(answer);\n",
+            "        return;\n",
+            "      }}\n",
+            "      final error = answer['error'];\n",
+            "      if (error != null) {{\n",
+            "        debugPrint('host error: $error');\n",
+            "      }}\n",
+            "    }} on Object catch (error) {{\n",
+            "      debugPrint('host error: Mosaic environment report failed: $error');\n",
+            "    }}\n",
+            "  }}\n\n",
+            "{layout_root}",
             "  @override\n",
             "  Widget build(BuildContext context) {{\n",
             "    return MaterialApp(\n",
@@ -747,6 +1073,7 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "      theme: ThemeData.light(),\n",
             "      darkTheme: ThemeData.dark(),\n",
             "      themeMode: ThemeMode.system,\n",
+            "      builder: _observeEnvironment,\n",
             "      home: Scaffold(\n",
             "        appBar: AppBar(title: const Text('{component_name}')),\n",
             "        body: Center(\n",
@@ -794,6 +1121,7 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "    );\n",
             "  }}\n",
             "}}\n\n",
+            "{layout_selector}",
             "Map<String, Object?> mosaicMap(Object? value) {{\n",
             "  if (value is Map<String, Object?>) return value;\n",
             "  if (value is Map) {{\n",
@@ -1058,6 +1386,9 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
         host_props_field = host_props_field,
         next_props = next_props,
         assign_host_props = assign_host_props,
+        variant_imports = variant_imports,
+        layout_root = layout_root,
+        layout_selector = layout_selector,
     )
 }
 
@@ -1246,7 +1577,7 @@ fn host_value_for_slot(slot: &SlotDecl, slot_values: &HashMap<String, String>) -
     }
 }
 
-fn build_mosaic_host_dart(require_runtime: bool) -> String {
+fn build_mosaic_host_dart(require_runtime: bool, has_layout_variants: bool) -> String {
     let mut out = String::from(BANNER_DART);
     out.push_str("import 'dart:async';\n\n");
     out.push_str("class MosaicHost {\n");
@@ -1258,6 +1589,26 @@ fn build_mosaic_host_dart(require_runtime: bool) -> String {
             "    throw StateError('native-complete requires the Mosaic Rust application runtime');\n",
         );
         out.push_str("  }\n\n");
+    }
+    // UI48 ENV4 (§7.8): the native-complete `main.dart` reports the window's
+    // environment through `environmentReport` and `reportEnvironment`; a
+    // shell with layout variants (§7.9) also chooses its root from
+    // `environmentReport`. This placeholder has no runtime to tell and no
+    // platform to read, so it answers "nothing to show" and an empty
+    // environment (which selects the default layout); the builder replaces
+    // it with the standard binding, which reduces and sends.
+    if require_runtime || has_layout_variants {
+        out.push_str("  static Map<String, String> environmentReport(\n");
+        out.push_str("    double width,\n");
+        out.push_str("    double height,\n");
+        out.push_str("    bool dark, {\n");
+        out.push_str("    bool reduceMotion = false,\n");
+        out.push_str("  }) => const <String, String>{};\n\n");
+    }
+    if require_runtime {
+        out.push_str(
+            "  Map<String, Object?>? reportEnvironment(Map<String, String> environment) => null;\n\n",
+        );
     }
     out.push_str("  FutureOr<Map<String, Object?>?> props() => null;\n\n");
     out.push_str(
@@ -1394,6 +1745,143 @@ pub fn from_pipeline(
     layout: &LayoutDef,
     style: &StyleDef,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
+    emit_component(interface, layout, style, None)
+}
+
+/// The Dart widget class a layout **variant**'s root is named (UI48 §7.9,
+/// ENV2): `EngramApp` + `touch` → `EngramAppTouch`. The same rule as
+/// Compose's `<Component><Variant>` composable and SwiftUI's
+/// `<Component><Variant>View`, so one variant has one name on every
+/// backend; `None` for a variant name that could not become part of a Dart
+/// identifier.
+///
+/// ```text
+/// variant        widget class (component EngramApp)
+/// touch          EngramAppTouch
+/// task-list      EngramAppTaskList
+/// big_screen     EngramAppBigScreen
+/// a--b, a b, é   (refused)
+/// ```
+pub fn variant_widget_name(component: &str, variant: &str) -> Option<String> {
+    // `-` and `_` both separate words (`discover_variants` admits both).
+    let separator = |character: char| character == '-' || character == '_';
+    let valid = !variant.is_empty()
+        && variant
+            .chars()
+            .all(|character| character.is_ascii_alphanumeric() || separator(character))
+        && variant.split(separator).all(|part| !part.is_empty());
+    if !valid {
+        return None;
+    }
+    let pascal: String = variant
+        .split(separator)
+        .map(|part| {
+            let mut characters = part.chars();
+            let first = characters.next().expect("parts are non-empty");
+            first.to_ascii_uppercase().to_string() + characters.as_str()
+        })
+        .collect();
+    Some(format!("{component}{pascal}"))
+}
+
+/// Emit one layout **variant** so it can share an app with the default
+/// (UI48 §7.9, ENV2).
+///
+/// The file carries only what differs between layouts:
+///
+/// - its widget, named by [`variant_widget_name`] (`EngramAppTouch`);
+/// - the private helpers its own tree uses (`_MosaicDragScope`,
+///   `_MosaicInputController`, ...). A leading underscore makes a Dart
+///   name private to its *library* -- its file -- so two files may each
+///   declare one without colliding.
+///
+/// It declares none of the component's interface. The `<C>Event` sealed
+/// class and its `<C>Event<Case>` subclasses are the same for every variant
+/// (UI30 §2.2 puts the variant on the layout, never the interface), so the
+/// default layout's file declares them once and this file imports it:
+///
+/// ```dart
+/// import 'EngramApp.dart';          // EngramAppEvent and its cases
+///
+/// class EngramAppTouch extends StatelessWidget {
+///   final void Function(EngramAppEvent) dispatch;
+///   ...
+/// }
+/// ```
+///
+/// Dart resolves nothing across files without an import, so the import is
+/// what lets the variant dispatch the default's events -- and it is always
+/// used, because every widget's `dispatch` field names `<C>Event`. The
+/// widget takes exactly the default's constructor arguments (the slots are
+/// the interface too), so a shell can build either with the same call.
+pub fn from_pipeline_variant(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    variant: &str,
+) -> Result<PipelineEmitResult, PipelineEmitError> {
+    emit_component(interface, layout, style, Some(variant))
+}
+
+/// The PascalCase public names a generated Flutter project's shell already
+/// declares, in the files `main.dart` imports beside the variants:
+///
+/// | file                               | names                                   |
+/// |------------------------------------|-----------------------------------------|
+/// | `main.dart`                        | `MosaicApp`, `MosaicHostLoader`, `MosaicValueDecoder` |
+/// | `mosaic_host.dart`                 | `MosaicHost`, `MosaicRuntimeException`, `MosaicEffectHandler`, `MosaicOpenFlags` |
+/// | `mosaic_platform_effects(_core).dart` | `MosaicFileDialogs`, `MosaicFileSelectorDialogs`, `MosaicReplaceQuestion`, `MosaicPlatformEffectHost`, `MosaicHostEffects`, `MosaicPlatformRouter` |
+///
+/// A layout variant's widget must not take one (component `Mosaic` +
+/// variant `host` would name `MosaicHost`): `main.dart` imports both, so
+/// the name would be ambiguous there. The shell names are pinned here by
+/// an emitter test against the generated `main.dart`, and the binding's by
+/// a builder test against `mosaic-app-bindings`' templates, so a new public
+/// class in either fails a test until it is listed.
+pub const SHELL_RESERVED_NAMES: &[&str] = &[
+    "MosaicApp",
+    "MosaicHostLoader",
+    "MosaicValueDecoder",
+    "MosaicHost",
+    "MosaicRuntimeException",
+    "MosaicEffectHandler",
+    "MosaicOpenFlags",
+    "MosaicFileDialogs",
+    "MosaicFileSelectorDialogs",
+    "MosaicReplaceQuestion",
+    "MosaicPlatformEffectHost",
+    "MosaicHostEffects",
+    "MosaicPlatformRouter",
+];
+
+/// The public Dart names a variant's widget must not take: the shell's
+/// ([`SHELL_RESERVED_NAMES`]) and the ones the default layout's file
+/// declares -- the widget, the sealed `<C>Event` and one `<C>Event<Case>`
+/// per emit. `Card.event-tap.mll` would name `CardEventTap`, which is the
+/// `onTap` event, so the variant file would declare a name its own import
+/// already brings in.
+fn interface_type_names(component: &str, emits: &[EmitDecl]) -> Vec<String> {
+    let mut names: Vec<String> = SHELL_RESERVED_NAMES
+        .iter()
+        .map(|name| name.to_string())
+        .collect();
+    names.push(component.to_string());
+    names.push(format!("{component}Event"));
+    for emit in emits {
+        names.push(format!(
+            "{component}Event{}",
+            pascalize(&strip_on_prefix(&emit.name))
+        ));
+    }
+    names
+}
+
+fn emit_component(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    variant: Option<&str>,
+) -> Result<PipelineEmitResult, PipelineEmitError> {
     // #15464 -- `$` inside an Expr string literal is Dart interpolation.
     let layout = &layout_with_escaped_expr_strings(layout);
     if interface.component != layout.component_name {
@@ -1405,6 +1893,26 @@ pub fn from_pipeline(
 
     validate_font_sizes(&layout.root, &interface.slots)?;
     let name = &interface.component;
+    // The widget class this file declares: the component's own name for the
+    // default layout, `<C><Variant>` for a variant (see
+    // `from_pipeline_variant`).
+    let widget_name = match variant {
+        None => name.clone(),
+        Some(variant) => {
+            let widget = variant_widget_name(name, variant).ok_or_else(|| {
+                PipelineEmitError::UnsafeSlotName(format!(
+                    "layout variant `{variant}` cannot name a Dart widget class"
+                ))
+            })?;
+            if interface_type_names(name, &interface.emits).contains(&widget) {
+                return Err(PipelineEmitError::UnsafeSlotName(format!(
+                    "layout variant `{variant}` would name its widget `{widget}`, which \
+                     {name}'s default layout or the Flutter shell already declares"
+                )));
+            }
+            widget
+        }
+    };
     let mut out = String::new();
 
     // 1. Header: do-not-edit marker + imports.
@@ -1479,11 +1987,20 @@ pub fn from_pipeline(
         writeln!(out, "import 'package:flutter/services.dart';").unwrap();
         writeln!(out, "import 'package:flutter/semantics.dart';").unwrap();
     }
+    // A variant takes the component's interface from the default layout's
+    // file, which sits beside it (flat in the package, and in `lib/` of a
+    // project), rather than declaring a second copy.
+    if variant.is_some() {
+        writeln!(out, "import '{name}.dart';").unwrap();
+    }
     writeln!(out).unwrap();
 
-    // 2. Event union — sealed base class + one subclass per emit.
-    out.push_str(&emit_event_union(name, &interface.emits)?);
-    writeln!(out).unwrap();
+    // 2. Event union — sealed base class + one subclass per emit. Only in
+    //    the default layout's file; a variant imports it (see above).
+    if variant.is_none() {
+        out.push_str(&emit_event_union(name, &interface.emits)?);
+        writeln!(out).unwrap();
+    }
     if uses_drag {
         out.push_str(&emit_drag_helpers());
         writeln!(out).unwrap();
@@ -1509,6 +2026,7 @@ pub fn from_pipeline(
     // 3. The widget class itself.
     out.push_str(&emit_widget_class(
         name,
+        &widget_name,
         &interface.slots,
         &interface.emits,
         &layout.root,
@@ -2056,15 +2574,19 @@ pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> 
         .collect()
 }
 
+/// `component` names the interface -- the `<C>Event` types the tree
+/// dispatches -- and `widget_name` the class declared here: the same name
+/// for the default layout, `<C><Variant>` for a variant (UI48 §7.9).
 fn emit_widget_class(
     component: &str,
+    widget_name: &str,
     slots: &[SlotDecl],
     emits: &[EmitDecl],
     layout_root: &LayoutNode,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
-    writeln!(out, "class {component} extends StatelessWidget {{").unwrap();
+    writeln!(out, "class {widget_name} extends StatelessWidget {{").unwrap();
 
     // 1. Fields — one `final` per slot, plus dispatch.
     for s in slots {
@@ -2082,7 +2604,7 @@ fn emit_widget_class(
 
     // 2. Constructor.
     writeln!(out).unwrap();
-    writeln!(out, "  const {component}({{").unwrap();
+    writeln!(out, "  const {widget_name}({{").unwrap();
     writeln!(out, "    super.key,").unwrap();
     for s in slots {
         let field = to_camel_case_first_lower(&s.name);
@@ -3274,11 +3796,16 @@ fn emit_container(
         .or_else(|| style_prop(&props, "background-color"))
         .and_then(|value| css_color_to_dart(value));
     let base_foreground = style_prop(&props, "color").and_then(|value| css_color_to_dart(value));
+    let base_font_size = props
+        .get("font-size")
+        .and_then(|value| strict_pixel_length(value))
+        .inspect(|_| record_style_read("font-size"));
     let base_padding = style_prop(&props, "padding").map(|value| parse_pixel_value(value));
     let has_background =
         base_background.is_some() || state_layers.iter().any(|layer| layer.background.is_some());
     let has_foreground =
         base_foreground.is_some() || state_layers.iter().any(|layer| layer.text_color.is_some());
+    let has_typography = has_foreground || base_font_size.is_some();
     let has_border = flutter_has_border(&props, &state_layers);
     // Asks about the SHORTHAND, the longhands and the state layers. It used
     // to ask only about the shorthand, so a part authoring nothing but
@@ -3292,7 +3819,7 @@ fn emit_container(
         || height.is_some()
         || elevation.is_some()
         || has_background
-        || has_foreground
+        || has_typography
         || has_border
         || has_padding
     {
@@ -3302,7 +3829,7 @@ fn emit_container(
         // its child, and it's the more idiomatic Flutter shape anyway.
         let wrapper = if elevation.is_none()
             && !has_background
-            && !has_foreground
+            && !has_typography
             && !has_border
             && !has_padding
         {
@@ -3356,14 +3883,22 @@ fn emit_container(
             .map(|a| format!("{inner_pad}{a},\n"))
             .collect();
         let body_trimmed = body.trim_start().trim_end_matches('\n');
-        let child = if has_foreground {
-            let foreground = state_color_expr(
-                &state_layers,
-                |layer| layer.text_color.as_ref(),
-                base_foreground.as_deref().unwrap_or("null"),
-            );
+        let child = if has_typography {
+            let mut text_style_parts = Vec::new();
+            if has_foreground {
+                let foreground = state_color_expr(
+                    &state_layers,
+                    |layer| layer.text_color.as_ref(),
+                    base_foreground.as_deref().unwrap_or("null"),
+                );
+                text_style_parts.push(format!("color: {foreground}"));
+            }
+            if let Some(size) = base_font_size {
+                text_style_parts.push(format!("fontSize: {size}"));
+            }
             format!(
-                "DefaultTextStyle.merge(style: TextStyle(color: {foreground}), child: {body_trimmed})"
+                "DefaultTextStyle.merge(style: TextStyle({}), child: {body_trimmed})",
+                text_style_parts.join(", ")
             )
         } else {
             body_trimmed.to_string()
@@ -4908,8 +5443,10 @@ fn emit_styled_box(
 
 fn authored_font_size(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Option<String> {
     let props = parse_style_props(part_styles.get(node.part_name.as_deref()?)?);
-    style_prop(&props, "font-size")
+    props
+        .get("font-size")
         .and_then(|s| strict_pixel_length(s))
+        .inspect(|_| record_style_read("font-size"))
         .map(|s| s.to_string())
 }
 
@@ -5040,9 +5577,9 @@ fn emit_text(
     };
 
     let size = effective_font_size(node, part_styles, ctx)?;
-    let text = if size.is_some() || ctx.table_font_size.is_some() {
-        let base = table_text_style(host_input_text_style_arg(node, part_styles), ctx)
-            .unwrap_or_else(|| "const TextStyle()".into());
+    let base = table_text_style(host_input_text_style_arg(node, part_styles), ctx);
+    let text = if size.is_some() || base.is_some() {
+        let base = base.unwrap_or_else(|| "const TextStyle()".into());
         let style = size
             .map(|size| format!("({base}).copyWith(fontSize: {size})"))
             .unwrap_or(base);
@@ -5052,6 +5589,30 @@ fn emit_text(
         )
     } else {
         text
+    };
+
+    // A Flutter `Text` has no padding argument. Preserve CSS-shaped padding
+    // by wrapping the visual widget, using the same per-edge resolver as
+    // containers and host buttons. Keeping this before the accessibility
+    // wrappers means Semantics/ExcludeSemantics still describe the entire
+    // padded visual node rather than only its glyph child (#16241).
+    let text_props = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(String::as_str)
+        .map(parse_style_props)
+        .unwrap_or_default();
+    let text = match flutter_padding_edges(&text_props) {
+        Some(edges) => {
+            let insets = flutter_edge_insets(&edges, false);
+            if let Some(child) = text.strip_prefix("const ") {
+                format!("const Padding(padding: {insets}, child: {child})")
+            } else {
+                format!("Padding(padding: const {insets}, child: {text})")
+            }
+        }
+        None => text,
     };
     let hidden = matches!(find_prop_value(node, "a11y-role"), Some(LayoutPropValue::Keyword(value)) if value == "none")
         || matches!(find_prop_value(node, "a11y-hidden"), Some(LayoutPropValue::Keyword(value)) if value == "true");
@@ -5755,15 +6316,21 @@ fn emit_host_button(
         Some(disabled) => format!("{disabled} ? null : {callback}"),
     };
 
-    let label_expr = if let Some(size) = font_size_expression(node)? {
-        let base = host_input_text_style_arg(node, part_styles)
-            .unwrap_or_else(|| "const TextStyle()".into());
-        format!(
-            "{}, style: ({base}).copyWith(fontSize: {size}))",
+    let part_font_size = authored_font_size(node, part_styles);
+    let label_expr = match (font_size_expression(node)?, part_font_size) {
+        (Some(size), _) => {
+            let base = host_input_text_style_arg(node, part_styles)
+                .unwrap_or_else(|| "const TextStyle()".into());
+            format!(
+                "{}, style: ({base}).copyWith(fontSize: {size}))",
+                label_expr.strip_suffix(')').unwrap()
+            )
+        }
+        (None, Some(size)) => format!(
+            "{}, style: TextStyle(fontSize: {size}))",
             label_expr.strip_suffix(')').unwrap()
-        )
-    } else {
-        label_expr
+        ),
+        (None, None) => label_expr,
     };
 
     let style_arg = host_button_style_arg(node, part_styles);
@@ -5900,21 +6467,26 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
             tier.button_elevation()
         ));
     }
-    let base_padding = style_prop(&props, "padding").map(|v| parse_pixel_value(v));
+    let base_padding = flutter_padding_edges(&props);
     if base_padding.is_some() || layers.iter().any(|layer| layer.padding.is_some()) {
         if layers.iter().all(|layer| layer.padding.is_none()) {
+            let edges = base_padding.unwrap_or_else(|| std::array::from_fn(|_| "0".into()));
             style_parts.push(format!(
-                "padding: WidgetStatePropertyAll(const EdgeInsets.all({}))",
-                base_padding.as_deref().unwrap_or("0")
+                "padding: WidgetStatePropertyAll({})",
+                flutter_edge_insets(&edges, true)
             ));
         } else {
-            let padding = state_color_expr(
-                &layers,
-                |layer| layer.padding.as_ref(),
-                base_padding.as_deref().unwrap_or("0"),
-            );
+            let edges = base_padding.unwrap_or_else(|| std::array::from_fn(|_| "0".into()));
+            let padding = std::array::from_fn(|index| {
+                state_color_expr(
+                    &layers,
+                    |layer| layer.padding.as_ref(),
+                    edges[index].as_str(),
+                )
+            });
             style_parts.push(format!(
-                "padding: WidgetStatePropertyAll(EdgeInsets.all({padding}))"
+                "padding: WidgetStatePropertyAll({})",
+                flutter_edge_insets(&padding, false)
             ));
         }
     }
@@ -6780,7 +7352,7 @@ fn emit_host_scroll(
 /// #13010: does this `HostDialog` node lower to a real native dialog on
 /// the Flutter backend, or does it still fall back to the zero-size
 /// placeholder? `modal: false` is the one case still unimplemented --
-/// Flutter's `showDialog` is inherently modal (a full-screen barrier +
+/// a Flutter dialog route is inherently modal (a full-screen barrier +
 /// route), with no vanilla-Flutter equivalent to SwiftUI's `.popover`/
 /// Qt's non-modal `Popup` short of a custom `Overlay`, which is out of
 /// scope here. `modal: true` (the default, and the only value the
@@ -6789,13 +7361,13 @@ pub fn host_dialog_has_native_semantics(node: &LayoutNode) -> bool {
     !matches!(find_keyword_prop(node, "modal"), Some("false"))
 }
 
-/// `HostDialog` -> a declarative-triggered imperative `showDialog`,
+/// `HostDialog` -> a declaratively triggered `DialogRoute` push,
 /// wrapped in the shared `_MosaicDialogHost` `StatefulWidget` (emitted
-/// once per file, see [`emit_dialog_helper`]). Flutter's `showDialog`
+/// once per file, see [`emit_dialog_helper`]). Pushing a route
 /// is an imperative call, not a widget that sits in the tree the way
 /// SwiftUI's `.sheet` modifier or Compose's conditional composition
 /// does -- `_MosaicDialogHost` bridges the two: it watches its `open`
-/// property and calls `showDialog`/`Navigator.pop` from lifecycle
+/// property and pushes or removes its route from lifecycle
 /// callbacks so the rest of this emitter can still treat `HostDialog`
 /// as an ordinary declarative tree node.
 ///
@@ -6935,22 +7507,44 @@ fn emit_host_dialog(
 }
 
 /// Shared `StatefulWidget` bridging a declarative `open: bool` to
-/// Flutter's imperative `showDialog`/`Navigator` API. Emitted once per
+/// Flutter's imperative `Navigator` API (UI29-1 §3.3). Emitted once per
 /// file (gated on `uses_dialog`, mirroring [`emit_drag_helpers`]'s
 /// `uses_drag` gate), reused by every `HostDialog` in that file.
 ///
-/// - `open` flips false -> true: schedules `showDialog` on the next
-///   frame (an `addPostFrameCallback`, since `showDialog` needs a
-///   `BuildContext` already in the tree -- calling it synchronously
-///   from `didUpdateWidget`/`initState` can race the current build).
-/// - `open` flips true -> false while the dialog is still showing
-///   (the host closed it via its own slot, not via backdrop-tap or an
-///   in-dialog control): pops the route programmatically.
-/// - Either dismissal path (backdrop tap or host-driven pop) resolves
-///   `showDialog`'s returned `Future`, which is where `onClose` fires
-///   -- exactly once per open/close cycle, regardless of which side
-///   initiated the close.
-fn emit_dialog_helper() -> String {
+/// - `open` is true (first build, or a false -> true change): pushes a
+///   `DialogRoute` on the root navigator after the frame -- a route needs
+///   a `BuildContext` already in the tree, so pushing synchronously from
+///   `initState`/`didUpdateWidget` would race the current build. `_route`
+///   is set as the push happens, so however many rebuilds schedule an
+///   open before the frame, only one dialog is pushed.
+/// - `open` flips true -> false while the dialog is showing (the host
+///   closed it through its own slot): after the frame, removes *this*
+///   route -- popped,
+///   with its exit animation, when it is on top; taken out from under
+///   anything pushed above it otherwise, rather than popping that.
+/// - Either way it closes, `onClose` fires exactly once per open, and
+///   never for a component that has left the tree; a component that
+///   leaves with its dialog showing takes the dialog with it.
+///
+/// Not `showDialog`: that goes through `showRawDialog`, which can open a
+/// dialog as a window of its own and so reaches Flutter's desktop
+/// windowing code, whose macOS FFI structs abort the AOT snapshotter
+/// ("Class with illegal cid") -- an app carrying the call fails every
+/// macOS release build. The route is what `showDialog` pushes when
+/// windowing is off, with the same barrier colour and focus traversal.
+///
+/// Truth table for a close (`_route` is this host's route, if pushed):
+///
+/// | how it closes            | route on top? | what happens                  |
+/// |--------------------------|---------------|-------------------------------|
+/// | barrier, Escape, `pop`   | yes           | push's future -> `_closed`    |
+/// | host sets `open: false`  | yes           | after the frame: `pop` -> push's future |
+/// | host sets `open: false`  | no            | after the frame: `removeRoute` -> `_closed` |
+/// | component disposed       | either        | removed after the frame; no `onClose` |
+///
+/// Public so `tests/flutter_dialog_host.rs` can drive exactly this text
+/// with Flutter's widget tester.
+pub fn emit_dialog_helper() -> String {
     r#"class _MosaicDialogHost extends StatefulWidget {
   final bool open;
   final bool barrierDismissible;
@@ -6967,7 +7561,8 @@ fn emit_dialog_helper() -> String {
 }
 
 class _MosaicDialogHostState extends State<_MosaicDialogHost> {
-  bool _isShowing = false;
+  // The route this host pushed, from the push until it closes.
+  DialogRoute<void>? _route;
 
   @override
   void initState() {
@@ -6980,22 +7575,64 @@ class _MosaicDialogHostState extends State<_MosaicDialogHost> {
   @override
   void didUpdateWidget(covariant _MosaicDialogHost oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.open && !_isShowing) {
+    if (widget.open && _route == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _open());
-    } else if (!widget.open && _isShowing) {
-      Navigator.of(context).maybePop();
+    } else if (!widget.open && _route != null) {
+      // After the frame too: changing the navigator's routes from inside
+      // this build would rebuild widgets the framework is building.
+      WidgetsBinding.instance.addPostFrameCallback((_) => _close());
     }
   }
 
-  Future<void> _open() async {
-    _isShowing = true;
-    await showDialog<void>(
+  void _open() {
+    // Re-checked after the frame: the host may have closed again, left
+    // the tree, or already pushed.
+    if (!mounted || !widget.open || _route != null) return;
+    final route = DialogRoute<void>(
       context: context,
       barrierDismissible: widget.barrierDismissible,
+      barrierColor: DialogTheme.of(context).barrierColor ??
+          Theme.of(context).dialogTheme.barrierColor ??
+          Colors.black54,
+      traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
       builder: widget.builder,
     );
-    _isShowing = false;
-    widget.onClose?.call();
+    _route = route;
+    Navigator.of(context, rootNavigator: true)
+        .push<void>(route)
+        .then((_) => _closed(route));
+  }
+
+  void _close() {
+    final route = _route;
+    // Re-checked after the frame: the host may have reopened it.
+    if (!mounted || widget.open || route == null || !route.isActive) return;
+    if (route.isCurrent) {
+      route.navigator!.pop();
+    } else {
+      route.navigator!.removeRoute(route);
+      _closed(route);
+    }
+  }
+
+  void _closed(DialogRoute<void> route) {
+    if (!identical(_route, route)) return;
+    _route = null;
+    if (mounted) widget.onClose?.call();
+  }
+
+  @override
+  void dispose() {
+    final route = _route;
+    _route = null;
+    if (route != null) {
+      // Not from inside the tree's teardown: the navigator may be
+      // rebuilding too.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (route.isActive) route.navigator?.removeRoute(route);
+      });
+    }
+    super.dispose();
   }
 
   @override
@@ -9593,6 +10230,55 @@ mod tests {
     }
 
     #[test]
+    fn host_button_padding_resolves_each_edge_with_longhand_precedence() {
+        let style = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "directional".into(),
+                base: vec![
+                    StyleProp {
+                        name: "padding".into(),
+                        value: "8px".into(),
+                    },
+                    StyleProp {
+                        name: "padding-left".into(),
+                        value: "18px".into(),
+                    },
+                    StyleProp {
+                        name: "padding-top".into(),
+                        value: "6px".into(),
+                    },
+                    StyleProp {
+                        name: "padding-right".into(),
+                        value: "7px".into(),
+                    },
+                ],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            LayoutNode {
+                tag: "HostButton".into(),
+                part_name: Some("directional".into()),
+                props: vec![LayoutProp {
+                    name: "label".into(),
+                    value: LayoutPropValue::String("Edges".into()),
+                }],
+                children: vec![],
+            },
+        );
+
+        let out = from_pipeline(&m, &l, &style).expect("emit ok").output;
+        assert!(
+            out.contains("padding: WidgetStatePropertyAll(const EdgeInsets.fromLTRB(18, 6, 7, 8))"),
+            "directional padding did not reach the host button:\n{out}"
+        );
+    }
+
+    #[test]
     fn ui49_slot_states_follow_model_order_and_reach_containers_and_buttons() {
         let m = component(
             "VariantCard",
@@ -9662,6 +10348,10 @@ mod tests {
                             name: "padding".into(),
                             value: "8px".into(),
                         },
+                        StyleProp {
+                            name: "padding-left".into(),
+                            value: "12px".into(),
+                        },
                     ],
                     transitions: vec![],
                     // Deliberately not model order: the emitted cascade must
@@ -9724,8 +10414,19 @@ mod tests {
             .expect("variant state must be the inner enum axis");
         assert!(variant > 0, "variant condition must follow size:\n{out}");
         assert!(
-            out.contains("EdgeInsets.all(_mosaicTruthy(( (size == \"compact\") )) ? 4 : 8)"),
-            "size state did not reach button padding:\n{out}"
+            out.contains("EdgeInsets.fromLTRB("),
+            "directional base padding did not survive a state override:\n{out}"
+        );
+        let state_prefix = "_mosaicTruthy(( (size == \"compact\") )) ? 4 : ";
+        assert_eq!(
+            out.matches(&format!("{state_prefix}12")).count(),
+            1,
+            "left-edge base value did not survive the state fallback:\n{out}"
+        );
+        assert_eq!(
+            out.matches(&format!("{state_prefix}8")).count(),
+            3,
+            "state shorthand did not override all four edges:\n{out}"
         );
     }
 
@@ -13070,6 +13771,98 @@ mod tests {
             .contains("never substitutes preview/sample values"));
     }
 
+    /// UI48 ENV4 (§7.8): the strict shell observes the window through
+    /// MaterialApp's builder and hands each change to the host, which dedupes,
+    /// sends and answers.
+    #[test]
+    fn native_complete_shell_reports_its_environment_to_the_runtime() {
+        let m = component("Card", vec![slot("label", SlotType::Text, true)], vec![]);
+        let opts = EmitOptions {
+            emit_project: true,
+            require_runtime: true,
+            ..EmitOptions::default()
+        };
+        let project = from_pipeline_with_options(
+            &m,
+            &layout("Card", node("Box")),
+            &empty_style("Card"),
+            &opts,
+        )
+        .unwrap()
+        .project
+        .expect("strict project shell");
+        let main = &project.main_dart;
+
+        // Observed below MaterialApp's MediaQuery, for every route.
+        assert!(
+            main.contains("      themeMode: ThemeMode.system,\n      builder: _observeEnvironment,\n"),
+            "{main}"
+        );
+        assert!(main.contains("Widget _observeEnvironment(BuildContext context, Widget? child) {"));
+        // The aspects the report needs, through the host's reducer.
+        assert!(main.contains("final size = MediaQuery.sizeOf(context);"));
+        assert!(main.contains(
+            "_environment = MosaicHost.environmentReport(\n      size.width,\n      size.height,\n      MediaQuery.platformBrightnessOf(context) == Brightness.dark,\n      reduceMotion: MediaQuery.disableAnimationsOf(context),\n    );"
+        ));
+        assert!(main.contains("return child ?? const SizedBox.shrink();"));
+        // Never during build: after the frame, one queued at a time.
+        let observe = main.find("Widget _observeEnvironment(").unwrap();
+        let queue = main[observe..].find("_queueEnvironmentReport();").unwrap() + observe;
+        let report_call = main[observe..].find("host.reportEnvironment(").unwrap() + observe;
+        assert!(queue < report_call, "{main}");
+        assert!(main.contains("if (_environmentReportQueued) return;"));
+        assert!(main.contains(
+            "WidgetsBinding.instance.addPostFrameCallback((_) {\n      _environmentReportQueued = false;\n      _reportEnvironment();\n    });"
+        ));
+        assert_eq!(main.matches("builder: _observeEnvironment").count(), 1);
+        // Nothing before the runtime is up and showing.
+        assert!(main.contains(
+            "if (!mounted || !_hostReady || host == null || environment == null) {"
+        ));
+        // An answer with props is shown like an event's; a failure is only
+        // logged and never reaches the startup-failure screen.
+        let body = &main[main.find("void _reportEnvironment() {").unwrap()..];
+        let body = &body[..body.find("\n  }\n").unwrap()];
+        assert!(body.contains("final answer = host.reportEnvironment(environment);"));
+        assert!(body.contains("if (answer == null) return;"));
+        assert!(body.contains("if (answer['props'] is Map) {\n        _applyMosaicResponse(answer);"));
+        assert!(body.contains("debugPrint('host error: $error');"));
+        assert!(body.contains("} on Object catch (error) {"));
+        assert!(!body.contains("_showStartupFailure"), "{body}");
+
+        // The emit-only placeholder host answers both calls, so the shell
+        // type-checks before the builder installs the standard binding.
+        assert!(project
+            .mosaic_host_dart
+            .contains("  static Map<String, String> environmentReport(\n"));
+        assert!(project.mosaic_host_dart.contains(
+            "  Map<String, Object?>? reportEnvironment(Map<String, String> environment) => null;\n"
+        ));
+    }
+
+    /// A sample-props shell has no runtime to tell, and its host may be a
+    /// package's own (Venture's replaces `mosaic_host.dart`), so it does not
+    /// observe and its placeholder host is unchanged.
+    #[test]
+    fn only_the_native_complete_shell_observes_the_environment() {
+        let m = component("Card", vec![slot("label", SlotType::Text, true)], vec![]);
+        let opts = EmitOptions {
+            emit_project: true,
+            ..EmitOptions::default()
+        };
+        let project = from_pipeline_with_options(
+            &m,
+            &layout("Card", node("Box")),
+            &empty_style("Card"),
+            &opts,
+        )
+        .unwrap()
+        .project
+        .expect("sample project shell");
+        assert!(!project.main_dart.contains("Environment"), "{}", project.main_dart);
+        assert!(!project.mosaic_host_dart.contains("Environment"));
+    }
+
     #[test]
     fn native_complete_shell_rebuilds_nested_json_lists_with_declared_types() {
         let required_rows = slot(
@@ -14722,7 +15515,7 @@ mod tests {
     }
 
     // ---------------------------------------------------------------------
-    // #13010 — HostDialog: real showDialog wiring, not a placeholder
+    // #13010 — HostDialog: a real dialog route, not a placeholder
     // ---------------------------------------------------------------------
 
     /// A `HostDialog` with `open: slot: x`, a literal `title`, an
@@ -14792,6 +15585,49 @@ mod tests {
             out.contains("class _MosaicDialogHost extends StatefulWidget"),
             "expected the shared dialog helper class to be emitted, got:\n{out}"
         );
+    }
+
+    /// UI29-1 §3.3: the dialog is a `DialogRoute` this host pushes and
+    /// removes itself, never `showDialog`/`showRawDialog`, whose desktop
+    /// windowing path aborts macOS AOT builds of any app carrying it.
+    #[test]
+    fn host_dialog_pushes_its_own_route_and_never_calls_show_dialog() {
+        let helper = emit_dialog_helper();
+        for call in [
+            "showDialog",
+            "showRawDialog",
+            "showGeneralDialog",
+            "maybePop",
+        ] {
+            assert!(
+                !helper.contains(call),
+                "the dialog helper calls {call}:\n{helper}"
+            );
+        }
+        let required = [
+            // A route of its own, on the root navigator, as showDialog uses.
+            "final route = DialogRoute<void>(",
+            "Navigator.of(context, rootNavigator: true)\n        .push<void>(route)",
+            // What showDialog would have given the route.
+            "DialogTheme.of(context).barrierColor ??",
+            "traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,",
+            "barrierDismissible: widget.barrierDismissible,",
+            // One route per open, however many rebuilds ask before the frame.
+            "if (!mounted || !widget.open || _route != null) return;",
+            // A host-driven close runs after the frame and removes this
+            // route, never one pushed above it.
+            "WidgetsBinding.instance.addPostFrameCallback((_) => _close());",
+            "if (route.isCurrent) {\n      route.navigator!.pop();",
+            "route.navigator!.removeRoute(route);",
+            // onClose once per open, never for a component that is gone,
+            // which takes its dialog with it.
+            "if (!identical(_route, route)) return;",
+            "if (mounted) widget.onClose?.call();",
+            "void dispose() {",
+        ];
+        for needle in required {
+            assert!(helper.contains(needle), "missing {needle:?}:\n{helper}");
+        }
     }
 
     /// `dismiss-on-backdrop: false` maps to `barrierDismissible: false`.
@@ -14877,7 +15713,7 @@ mod tests {
     }
 
     /// #13010's documented scope decision: `modal: false` is NOT
-    /// implemented (Flutter's `showDialog` is inherently modal) --
+    /// implemented (a Flutter dialog route is inherently modal) --
     /// it must keep the old placeholder rather than emit a
     /// wrong-shaped (still-modal) dialog silently.
     #[test]
@@ -15030,6 +15866,209 @@ mod tests {
         assert_eq!(drops.len(), 1, "got: {drops:?}");
         assert_eq!(drops[0].part, "shared");
         assert_eq!(drops[0].name, "background-color");
+    }
+
+    // ====================================================================
+    // #15285 -- Text parts keep their authored Flutter typography
+    // ====================================================================
+
+    #[test]
+    fn text_part_colour_size_and_weight_reach_text_style() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("Text", "label", vec![]));
+        let s = style_with_part(
+            "X",
+            "label",
+            vec![
+                StyleProp {
+                    name: "color".into(),
+                    value: "#e3eee4".into(),
+                },
+                StyleProp {
+                    name: "font-size".into(),
+                    value: "13px".into(),
+                },
+                StyleProp {
+                    name: "font-weight".into(),
+                    value: "600".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains(
+                "Text(\"\", style: TextStyle(color: const Color(0xFFE3EEE4), fontSize: 13, fontWeight: FontWeight.w600))"
+            ),
+            "authored Text-part typography must reach TextStyle, got:\n{out}"
+        );
+
+        let drops = dropped_style_properties(&m, &l, &s);
+        assert!(
+            drops.is_empty(),
+            "implemented typography was reported dropped: {drops:?}"
+        );
+    }
+
+    // ====================================================================
+    // #16241 -- Text parts keep authored directional padding
+    // ====================================================================
+
+    #[test]
+    fn text_padding_resolves_each_edge_with_longhand_precedence() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("Text", "label", vec![]));
+        let s = style_with_part(
+            "X",
+            "label",
+            vec![
+                StyleProp {
+                    name: "padding".into(),
+                    value: "8px".into(),
+                },
+                StyleProp {
+                    name: "padding-left".into(),
+                    value: "18px".into(),
+                },
+                StyleProp {
+                    name: "padding-top".into(),
+                    value: "6px".into(),
+                },
+                StyleProp {
+                    name: "padding-right".into(),
+                    value: "7px".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains(
+                "const Padding(padding: EdgeInsets.fromLTRB(18, 6, 7, 8), child: Text(\"\"))"
+            ),
+            "directional padding did not wrap the Text widget:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented Text padding was reported dropped"
+        );
+    }
+
+    #[test]
+    fn uniform_text_padding_keeps_compact_insets_inside_semantics() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            LayoutNode {
+                tag: "Text".into(),
+                part_name: Some("label".into()),
+                props: vec![LayoutProp {
+                    name: "a11y-role".into(),
+                    value: LayoutPropValue::Keyword("heading".into()),
+                }],
+                children: vec![],
+            },
+        );
+        let s = style_with_part(
+            "X",
+            "label",
+            vec![StyleProp {
+                name: "padding".into(),
+                value: "4px".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains(
+                "Semantics(header: true, child: const Padding(padding: EdgeInsets.all(4), child: Text(\"\")))"
+            ),
+            "Semantics must wrap the padded Text widget:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented Text padding was reported dropped"
+        );
+    }
+
+    // ====================================================================
+    // #16201 -- button and container parts keep authored font sizes
+    // ====================================================================
+
+    #[test]
+    fn host_button_part_font_size_reaches_its_text_label() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("HostButton", "action", vec![]));
+        let s = style_with_part(
+            "X",
+            "action",
+            vec![StyleProp {
+                name: "font-size".into(),
+                value: "13px".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("child: Text(\"\", style: TextStyle(fontSize: 13))"),
+            "authored HostButton font size must reach its Text label, got:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented HostButton font size was reported dropped"
+        );
+    }
+
+    #[test]
+    fn container_part_font_size_reaches_descendant_text() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "pill", vec![text_node("Status")]),
+        );
+        let s = style_with_part(
+            "X",
+            "pill",
+            vec![StyleProp {
+                name: "font-size".into(),
+                value: "12".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("DefaultTextStyle.merge(style: TextStyle(fontSize: 12), child: Row("),
+            "container font size must be inherited by descendant Text widgets, got:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented container font size was reported dropped"
+        );
+    }
+
+    #[test]
+    fn invalid_part_font_sizes_remain_dropped_without_zero_size_text() {
+        for tag in ["HostButton", "Row"] {
+            let m = component("X", vec![], vec![]);
+            let l = layout("X", flex_node_with_part(tag, "invalid", vec![]));
+            let s = style_with_part(
+                "X",
+                "invalid",
+                vec![StyleProp {
+                    name: "font-size".into(),
+                    value: "90%".into(),
+                }],
+            );
+
+            let out = from_pipeline(&m, &l, &s).expect("ok").output;
+            assert!(
+                !out.contains("fontSize:"),
+                "got zero-size text for {tag}:\n{out}"
+            );
+            let drops = dropped_style_properties(&m, &l, &s);
+            assert_eq!(drops.len(), 1, "got: {drops:?}");
+            assert_eq!(drops[0].name, "font-size");
+        }
     }
 
     // ====================================================================
@@ -17329,5 +18368,368 @@ mod relative_length_tests {
             out.contains("0xFF123456"),
             "the background still applies: {out}"
         );
+    }
+}
+
+/// UI48 §7.9 (ENV2/ENV3 on Flutter): a layout variant compiles beside the
+/// default, and a shell with variants selects one at run time.
+#[cfg(test)]
+mod layout_variant_tests {
+    use super::*;
+
+    fn compile(mil: &str, mll: &str) -> (MosmodelComponent, LayoutDef, StyleDef) {
+        let model = mosmodel_compiler::compile(mil).expect("mil");
+        let layout = moslayout_compiler::compile(mll, Some(&model.descriptor_json)).expect("mll");
+        let style = mosstyle_compiler::compile("style Card { }", Some(&layout.part_map_json))
+            .expect("msl")
+            .def;
+        (model.component, layout.def, style)
+    }
+
+    fn card() -> (MosmodelComponent, LayoutDef, StyleDef) {
+        compile(
+            "component Card { slot label : text ; emit onTap ; }",
+            "layout Card { Column [ root ] { Text [ heading ] ( content : slot: label ) \
+             HostButton [ tap ] ( label : \"Tap\" , onClick : emit: onTap ) } }",
+        )
+    }
+
+    fn touch() -> LayoutChoice {
+        LayoutChoice {
+            variant: "touch".to_string(),
+            conditions: vec![("pointer".to_string(), "coarse".to_string())],
+        }
+    }
+
+    fn project(require_runtime: bool, layout_variants: Vec<LayoutChoice>) -> ProjectFiles {
+        let (model, layout, style) = card();
+        let options = EmitOptions {
+            emit_project: true,
+            require_runtime,
+            layout_variants,
+            ..EmitOptions::default()
+        };
+        from_pipeline_with_options(&model, &layout, &style, &options)
+            .expect("project")
+            .project
+            .expect("project files")
+    }
+
+    #[test]
+    fn variant_widget_names_are_pascal_case_and_refuse_unusable_names() {
+        assert_eq!(
+            variant_widget_name("EngramApp", "touch").as_deref(),
+            Some("EngramAppTouch")
+        );
+        assert_eq!(
+            variant_widget_name("Card", "task-list").as_deref(),
+            Some("CardTaskList")
+        );
+        assert_eq!(
+            variant_widget_name("Card", "big_screen").as_deref(),
+            Some("CardBigScreen")
+        );
+        assert_eq!(variant_widget_name("Card", "x2").as_deref(), Some("CardX2"));
+        for bad in ["", "-", "_", "a--b", "a-", "a b", "a.b", "a$b", "é"] {
+            assert_eq!(variant_widget_name("Card", bad), None, "{bad:?}");
+        }
+    }
+
+    #[test]
+    fn a_variant_names_its_own_widget_and_reuses_the_default_interface() {
+        let (model, layout, style) = card();
+        let default = from_pipeline(&model, &layout, &style).unwrap().output;
+        let variant = from_pipeline_variant(&model, &layout, &style, "touch")
+            .unwrap()
+            .output;
+
+        // The default declares the interface and the widget, as it always has.
+        assert!(default.contains("sealed class CardEvent {"), "{default}");
+        assert!(
+            default.contains("class CardEventTap extends CardEvent {"),
+            "{default}"
+        );
+        assert!(
+            default.contains("\nclass Card extends StatelessWidget {\n"),
+            "{default}"
+        );
+        assert!(!default.contains("import 'Card.dart';"), "{default}");
+
+        // The variant declares only its widget, under its own name ...
+        assert!(
+            variant.contains("\nclass CardTouch extends StatelessWidget {\n"),
+            "{variant}"
+        );
+        assert!(
+            variant.contains("\n  const CardTouch({\n    super.key,\n"),
+            "{variant}"
+        );
+        assert!(!variant.contains("class Card extends"), "{variant}");
+        assert!(!variant.contains("const Card({"), "{variant}");
+        // ... none of the interface ...
+        assert!(!variant.contains("class CardEvent"), "{variant}");
+        assert!(!variant.contains("sealed class"), "{variant}");
+        // ... which it imports from the default and uses as its own.
+        assert!(variant.contains("\nimport 'Card.dart';\n"), "{variant}");
+        assert!(
+            variant.contains("  final void Function(CardEvent) dispatch;\n"),
+            "{variant}"
+        );
+        assert!(variant.contains("dispatch(CardEventTap())"), "{variant}");
+        // The same constructor arguments, so a shell can build either.
+        let arguments = |source: &str, widget: &str| {
+            let start = source.find(&format!("  const {widget}({{")).unwrap();
+            let end = source[start..].find("  });").unwrap() + start;
+            source[start..end].replacen(widget, "W", 1)
+        };
+        assert_eq!(
+            arguments(&default, "Card"),
+            arguments(&variant, "CardTouch")
+        );
+    }
+
+    #[test]
+    fn an_unusable_or_colliding_variant_name_is_an_error() {
+        let (model, layout, style) = card();
+        assert!(from_pipeline_variant(&model, &layout, &style, "a b").is_err());
+        // `CardEventTap` is the `onTap` event the imported default declares.
+        let error = from_pipeline_variant(&model, &layout, &style, "event-tap").unwrap_err();
+        assert!(error.to_string().contains("CardEventTap"), "{error}");
+        // `event` alone would name the sealed base class itself.
+        assert!(from_pipeline_variant(&model, &layout, &style, "event").is_err());
+    }
+
+    #[test]
+    fn a_shell_with_variants_imports_them_and_switches_on_the_selector() {
+        for require_runtime in [false, true] {
+            let main = project(require_runtime, vec![touch()]).main_dart;
+            assert!(
+                main.contains("import 'Card.dart';\nimport 'Card.touch.dart';\n"),
+                "{main}"
+            );
+            // The root is built below MaterialApp's MediaQuery, from the same
+            // aspects the ENV4 report reads, through the host's reducer.
+            assert!(
+                main.contains("Builder(builder: _mosaicLayoutRoot)"),
+                "{main}"
+            );
+            assert!(main.contains("  Widget _mosaicLayoutRoot(BuildContext context) {\n"));
+            assert!(main.contains(
+                "    final size = MediaQuery.sizeOf(context);\n    final environment = MosaicHost.environmentReport(\n      size.width,\n      size.height,\n      MediaQuery.platformBrightnessOf(context) == Brightness.dark,\n      reduceMotion: MediaQuery.disableAnimationsOf(context),\n    );\n"
+            ));
+            assert!(main.contains("    switch (mosaicLayoutVariant(environment)) {\n"));
+            assert!(
+                main.contains("      case 'touch':\n        return CardTouch(\n"),
+                "{main}"
+            );
+            assert!(
+                main.contains("      default:\n        return Card(\n"),
+                "{main}"
+            );
+            // Both roots get the same props and dispatch through the host.
+            assert_eq!(main.matches("\n            label: ").count(), 2, "{main}");
+            assert_eq!(
+                main.matches("handleEvent(event.mosaicEnvelope)").count(),
+                2,
+                "{main}"
+            );
+            // The rules as data, in order, and select_variant's semantics.
+            assert!(main.contains(
+                "const List<(String, Map<String, String>)> mosaicLayoutRules =\n    <(String, Map<String, String>)>[\n  ('touch', <String, String>{'pointer': 'coarse'}),\n];\n"
+            ), "{main}");
+            assert!(main.contains("String? mosaicLayoutVariant(Map<String, String> environment) {"));
+            assert!(main.contains("environment[condition.key] == condition.value"));
+            assert!(main.contains("      return variant;\n"));
+            assert!(main.contains("  return null;\n}\n"));
+            // Only the strict shell reports (ENV4); a sample shell has no
+            // runtime to tell, so it chooses and reports to nobody.
+            assert_eq!(
+                main.contains("builder: _observeEnvironment"),
+                require_runtime,
+                "{main}"
+            );
+        }
+    }
+
+    #[test]
+    fn rules_keep_their_order_and_an_unconditional_rule_always_holds() {
+        let main = project(
+            false,
+            vec![
+                LayoutChoice {
+                    variant: "compact".to_string(),
+                    conditions: vec![
+                        ("sizeClass".to_string(), "compact".to_string()),
+                        ("orientation".to_string(), "portrait".to_string()),
+                    ],
+                },
+                LayoutChoice {
+                    variant: "wide".to_string(),
+                    conditions: vec![],
+                },
+            ],
+        )
+        .main_dart;
+        assert!(main.contains(
+            "  ('compact', <String, String>{'sizeClass': 'compact', 'orientation': 'portrait'}),\n  ('wide', <String, String>{}),\n"
+        ), "{main}");
+        let compact = main.find("case 'compact':").unwrap();
+        let wide = main.find("case 'wide':").unwrap();
+        assert!(compact < wide);
+        assert!(main.contains("import 'Card.compact.dart';\nimport 'Card.wide.dart';\n"));
+    }
+
+    /// The sample shell's placeholder host answers `environmentReport` once
+    /// a shell selects from it; without variants it stays as it was.
+    #[test]
+    fn the_placeholder_host_answers_the_selector() {
+        let host = project(false, vec![touch()]).mosaic_host_dart;
+        assert!(
+            host.contains("  static Map<String, String> environmentReport(\n"),
+            "{host}"
+        );
+        assert!(!host.contains("reportEnvironment"), "{host}");
+        assert!(!host.contains("loadRequired"), "{host}");
+        assert!(!project(false, vec![])
+            .mosaic_host_dart
+            .contains("environmentReport"));
+        // The strict placeholder is unchanged by variants.
+        assert_eq!(
+            project(true, vec![touch()]).mosaic_host_dart,
+            project(true, vec![]).mosaic_host_dart
+        );
+    }
+
+    #[test]
+    fn a_layout_choice_that_cannot_be_written_into_dart_is_refused() {
+        let (model, layout, style) = card();
+        let refused = |choices: Vec<LayoutChoice>| {
+            let options = EmitOptions {
+                emit_project: true,
+                layout_variants: choices,
+                ..EmitOptions::default()
+            };
+            from_pipeline_with_options(&model, &layout, &style, &options).is_err()
+        };
+        let choice = |variant: &str, axis: &str, value: &str| LayoutChoice {
+            variant: variant.to_string(),
+            conditions: vec![(axis.to_string(), value.to_string())],
+        };
+        assert!(!refused(vec![choice("touch", "pointer", "coarse")]));
+        assert!(refused(vec![choice("a'b", "pointer", "coarse")]));
+        assert!(
+            refused(vec![choice("touch", "size-class", "compact")]),
+            "a manifest key, not a wire name"
+        );
+        assert!(refused(vec![choice("touch", "pointer", "co'arse")]));
+        assert!(refused(vec![choice("touch", "pointer", "$x")]));
+        assert!(refused(vec![choice("touch", "pointer", "")]));
+        assert!(
+            refused(vec![touch(), touch()]),
+            "a variant chosen twice would repeat a `case`"
+        );
+        // Two strings, one widget class: `CardTouch`, `CardTaskList`.
+        let bare = |variant: &str| LayoutChoice {
+            variant: variant.to_string(),
+            conditions: vec![],
+        };
+        assert!(refused(vec![touch(), choice("Touch", "pointer", "coarse")]));
+        assert!(refused(vec![bare("task-list"), bare("task_list")]));
+        assert!(!refused(vec![bare("task-list"), bare("tasks")]));
+    }
+
+    /// A variant's widget may not take a name the shell's own files
+    /// declare: `main.dart` imports them beside the variant.
+    #[test]
+    fn a_variant_may_not_take_a_shell_name() {
+        let (model, layout, style) = compile(
+            "component Mosaic { slot label : text ; }",
+            "layout Mosaic { Text [ root ] ( content : slot: label ) }",
+        );
+        for variant in ["host", "app", "host-loader", "platform-router"] {
+            let error = from_pipeline_variant(&model, &layout, &style, variant).unwrap_err();
+            assert!(
+                error.to_string().contains("Flutter shell"),
+                "{variant}: {error}"
+            );
+            let options = EmitOptions {
+                emit_project: true,
+                layout_variants: vec![LayoutChoice {
+                    variant: variant.to_string(),
+                    conditions: vec![],
+                }],
+                ..EmitOptions::default()
+            };
+            assert!(
+                from_pipeline_with_options(&model, &layout, &style, &options).is_err(),
+                "{variant}"
+            );
+        }
+        assert!(from_pipeline_variant(&model, &layout, &style, "touch").is_ok());
+    }
+
+    /// Every PascalCase top-level name either generated `main.dart`
+    /// declares is reserved, so a new public class there cannot silently
+    /// become a name a variant may take.
+    #[test]
+    fn every_public_shell_class_is_reserved() {
+        for require_runtime in [false, true] {
+            let main = project(require_runtime, vec![touch()]).main_dart;
+            for line in main.lines() {
+                let declared = ["class ", "typedef ", "enum ", "mixin "]
+                    .iter()
+                    .find_map(|keyword| line.strip_prefix(keyword));
+                let Some(rest) = declared else { continue };
+                let name: String = rest
+                    .chars()
+                    .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                    .collect();
+                if name.starts_with(|c: char| c.is_ascii_uppercase()) {
+                    assert!(SHELL_RESERVED_NAMES.contains(&name.as_str()), "{name}");
+                }
+            }
+        }
+    }
+
+    /// A package without variants gets exactly the shell it always had: take
+    /// the variant shell, remove what ENV3 adds, and the two are equal byte
+    /// for byte -- so variants add only the selector, and the empty case adds
+    /// nothing. (What is removed is pinned by the tests above.)
+    #[test]
+    fn without_variants_the_shell_is_the_variant_shell_minus_the_selector() {
+        for require_runtime in [false, true] {
+            let plain = project(require_runtime, vec![]).main_dart;
+            let chosen = project(require_runtime, vec![touch()]).main_dart;
+            assert!(!plain.contains("mosaicLayout"), "{plain}");
+            assert!(!plain.contains("Card.touch"), "{plain}");
+
+            let method_start = chosen
+                .find("  // UI48 ENV3 (§7.9): the layout the window's")
+                .unwrap();
+            let method_end = chosen[method_start..].find("\n  }\n\n").unwrap() + method_start + 6;
+            // The default root, exactly as the method builds it.
+            let method = &chosen[method_start..method_end];
+            let default_start =
+                method.find("        return Card(\n").unwrap() + "        return ".len();
+            let default_end = method[default_start..].find(";\n    }").unwrap() + default_start;
+            let default_root = &method[default_start..default_end];
+            let selector_start = chosen
+                .find("/// Which layout variant the window's environment")
+                .unwrap();
+            let selector_end = chosen[selector_start..]
+                .find("  return null;\n}\n\n")
+                .unwrap()
+                + selector_start
+                + "  return null;\n}\n\n".len();
+
+            let mut stripped = String::new();
+            stripped.push_str(&chosen[..method_start]);
+            stripped.push_str(&chosen[method_end..selector_start]);
+            stripped.push_str(&chosen[selector_end..]);
+            let stripped = stripped
+                .replacen("import 'Card.touch.dart';\n", "", 1)
+                .replacen("Builder(builder: _mosaicLayoutRoot)", default_root, 1);
+            assert_eq!(stripped, plain, "require_runtime = {require_runtime}");
+        }
     }
 }

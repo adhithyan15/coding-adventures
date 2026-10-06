@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C240-vasam",
+    "language": "malayalam",
+    "chapter": 240,
+    "sequence": 10950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c4f812e9b856796"
+  },
+  "findings": []
+}

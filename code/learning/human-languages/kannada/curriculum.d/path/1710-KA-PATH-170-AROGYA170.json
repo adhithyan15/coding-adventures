@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-170-AROGYA170",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "KA-EXT-170-AROGYA170"
+  ],
+  "after": []
+}

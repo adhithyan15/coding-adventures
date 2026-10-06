@@ -1,0 +1,11 @@
+{
+  "id": "AR-C225-istamala",
+  "pathSegment": "AR-PATH-225-ACT225",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-225-ACT225",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C149-sembler",
+  "pathSegment": "FR-PATH-149-VERBES149",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-149-VERBES149",
+      "order": 1
+    }
+  ]
+}

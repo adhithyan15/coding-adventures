@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Wallet, Coin, Envelope, Stamp, Doll",
+  "label": "ch:bn-wallet-coin-envelope-stamp-doll",
+  "canDo": "I can say a wallet, a coin, an envelope, a stamp and a doll.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C130-putul",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: I can say a wallet, a coin, an envelope, a stamp and a doll.",
+    "assesses": [
+      "BN-LEX-C130-THINGS130-03",
+      "BN-LEX-C130-THINGS130-04",
+      "BN-LEX-C130-THINGS130-05"
+    ]
+  }
+}

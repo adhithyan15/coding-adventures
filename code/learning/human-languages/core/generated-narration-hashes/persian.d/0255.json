@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:06c1a41184a4e69c",
+  "lessonIds": [
+    "FA-C255-dad-zadan",
+    "FA-C255-mesvak-zadan",
+    "FA-C255-vazn-kardan",
+    "FA-C255-gaz-gereftan",
+    "FA-C255-javidan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch255.txt",
+  "json": "persian/narration/ch255.json",
+  "textHash": "fnv1a64:a949583658393bf4",
+  "jsonHash": "fnv1a64:824bd338cf0f014b",
+  "findings": []
+}

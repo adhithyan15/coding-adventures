@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:5c12d096806f20d2",
+  "lessonIds": [
+    "HI-C202-gufa",
+    "HI-C202-mahal",
+    "HI-C202-qila",
+    "HI-C202-minar",
+    "HI-C202-bag"
+  ],
+  "tex": "hindi/book/chapters/ch202-a-cave-a-palace-a-fort-a-tower-a-garden.tex"
+}

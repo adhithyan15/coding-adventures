@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C189-upkar",
+    "language": "marathi",
+    "chapter": 189,
+    "sequence": 9670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0fdb98d722f8315"
+  },
+  "findings": []
+}

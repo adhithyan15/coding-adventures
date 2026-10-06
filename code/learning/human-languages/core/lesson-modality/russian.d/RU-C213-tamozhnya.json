@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C213-tamozhnya",
+    "language": "russian",
+    "chapter": 213,
+    "sequence": 12750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db6c95e36990ec2a"
+  },
+  "findings": []
+}

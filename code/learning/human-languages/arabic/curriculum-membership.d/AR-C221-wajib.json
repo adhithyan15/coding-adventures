@@ -1,0 +1,11 @@
+{
+  "id": "AR-C221-wajib",
+  "pathSegment": "AR-PATH-221-AMAL221",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-221-AMAL221",
+      "order": 4
+    }
+  ]
+}

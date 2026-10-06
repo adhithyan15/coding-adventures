@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C196-unar",
+    "language": "tamil",
+    "chapter": 196,
+    "sequence": 10050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c11f766224ca8573"
+  },
+  "findings": []
+}

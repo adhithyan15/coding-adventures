@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:d1fb332d525ca6a7",
+  "lessonIds": [
+    "LA-C214-saevus",
+    "LA-C214-ferus",
+    "LA-C214-domesticus",
+    "LA-C214-rarus",
+    "LA-C214-creber",
+    "LA-R214-first-pass-words-from-chapters-206-209",
+    "LA-R214-second-pass-words-from-chapters-210-214"
+  ],
+  "tex": "latin/book/chapters/ch214-savage-wild-of-the-home-rare-frequent.tex"
+}

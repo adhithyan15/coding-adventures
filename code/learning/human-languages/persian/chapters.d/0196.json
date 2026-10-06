@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "Drainpipe, Column, Surroundings, Edge, Ground floor",
+  "label": "ch:fa-drainpipe-column-surroundings-edge-ground-floor",
+  "canDo": "I can say a drainpipe, a column, the surroundings, an edge and the ground floor.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-R196-second-pass-words-from-chapters-192-196",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say a drainpipe, a column, the surroundings, an edge and the ground floor.",
+    "assesses": [
+      "FA-LEX-C196-MAKAN196-03",
+      "FA-LEX-C196-MAKAN196-04",
+      "FA-LEX-C196-MAKAN196-05"
+    ]
+  }
+}

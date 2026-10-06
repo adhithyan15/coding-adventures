@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C268-darvaze",
+    "language": "persian",
+    "chapter": 268,
+    "sequence": 13840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03d730e51421f20e"
+  },
+  "findings": []
+}

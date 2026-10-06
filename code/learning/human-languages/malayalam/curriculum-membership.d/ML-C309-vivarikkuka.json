@@ -1,0 +1,11 @@
+{
+  "id": "ML-C309-vivarikkuka",
+  "pathSegment": "ML-PATH-309-KRIYA309",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-309-KRIYA309",
+      "order": 3
+    }
+  ]
+}

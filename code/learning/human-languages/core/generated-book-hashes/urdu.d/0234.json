@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:e02331d8b9c25901",
+  "lessonIds": [
+    "UR-C234-papar",
+    "UR-C234-puri",
+    "UR-C234-halim",
+    "UR-C234-nihari",
+    "UR-C234-qima"
+  ],
+  "tex": "urdu/book/chapters/ch234-poppadom-puri-haleem-nihari-minced-meat.tex"
+}

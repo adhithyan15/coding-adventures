@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C225-siddha-karne",
+    "language": "marathi",
+    "chapter": 225,
+    "sequence": 12320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df81e4745097f319"
+  },
+  "findings": []
+}

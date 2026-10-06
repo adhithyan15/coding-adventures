@@ -1,0 +1,7 @@
+// The interface every layout of the probe shares (UI48 §7.11). Its slots are
+// two of the conformance runtime's props, so a native-complete build runs
+// against that runtime and mounts each root strictly: both are required.
+component LayoutProbe {
+  slot platform : text ;
+  slot status : text ;
+}

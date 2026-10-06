@@ -7,7 +7,7 @@ chapter: 108
 type: word
 headword: ver
 gloss: to see — veo, ves, ve
-concept_tag: ES-VER
+concept_tag: ES-VERB-VER
 prerequisites: [ES-C16-vivir-imperfecto, ES-C07-comer]
 sounds: [v-b-merger]
 roots: [videre-latin]

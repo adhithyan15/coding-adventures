@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:5e5bc15e4ece3180",
+  "lessonIds": [
+    "AR-C256-rasaba",
+    "AR-C256-ijtaza",
+    "AR-C256-sharaha",
+    "AR-C256-tarjama",
+    "AR-C256-aada"
+  ],
+  "tex": "arabic/book/chapters/ch256-to-fail-to-pass-to-explain-to-translate-to-give-back.tex"
+}

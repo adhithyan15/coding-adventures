@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C296-petrol",
+    "language": "kannada",
+    "chapter": 296,
+    "sequence": 14270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cda9941e4a62e5a4"
+  },
+  "findings": []
+}

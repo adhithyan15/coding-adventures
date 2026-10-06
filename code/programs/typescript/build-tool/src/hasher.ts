@@ -40,7 +40,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import type { Package } from "./discovery.js";
 import type { DirectedGraph } from "./resolver.js";
-import { matchPath } from "./glob-match.js";
+import { compilePatterns, matchCompiledPath } from "./glob-match.js";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -130,6 +130,7 @@ const SOURCE_HASH_EXCLUDED_DIRECTORIES = new Set([
   "dist",
   "dist-newstyle",
   "_build",
+  "blib",
   "build",
   "target",
   ".claude",
@@ -306,6 +307,9 @@ export function collectSourceFilesGlob(
   pkg: Package,
   patterns: string[],
 ): string[] {
+  // Validate the complete declaration before walking the filesystem. A bad
+  // later pattern must not be hidden by an earlier match or an empty tree.
+  const compiledPatterns = compilePatterns(patterns);
   const files: string[] = [];
   const specialNames = SPECIAL_FILENAMES[pkg.language] ?? new Set<string>();
   const manifestExtensions =
@@ -346,8 +350,8 @@ export function collectSourceFilesGlob(
     // always use forward slashes regardless of platform.
     const relPath = portableRelativePath(pkg.path, filepath);
 
-    for (const pattern of patterns) {
-      if (matchPath(pattern, relPath)) {
+    for (const pattern of compiledPatterns) {
+      if (matchCompiledPath(pattern, relPath)) {
         files.push(filepath);
         break; // No need to check more patterns once we have a match.
       }

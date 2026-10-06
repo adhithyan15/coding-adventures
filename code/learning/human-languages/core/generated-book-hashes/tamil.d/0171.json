@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:58a48e55e4276b99",
+  "lessonIds": [
+    "TA-C171-atikkati",
+    "TA-C171-cila-nerankalil",
+    "TA-C171-eppotum",
+    "TA-C171-orupotum",
+    "TA-C171-tamatam"
+  ],
+  "tex": "tamil/book/chapters/ch171-often-sometimes-always-never-delay.tex"
+}

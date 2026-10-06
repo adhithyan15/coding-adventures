@@ -7,7 +7,7 @@ chapter: 437
 type: word
 headword: equivocarse
 gloss: to get it wrong — two Latin pieces meaning "equal voice", and the verb a shop uses to admit a mistake
-concept_tag: ES-ACT-EQUIVOCARSE
+concept_tag: ES-VERB-EQUIVOCARSE
 prerequisites: [ES-C437-coincidir, ES-C431-pedido]
 sounds: []
 roots: []

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:9a8c99902d1bb73f",
+  "lessonIds": [
+    "RU-C239-ves",
+    "RU-C239-rost",
+    "RU-C239-brov",
+    "RU-C239-resnitsa",
+    "RU-C239-lob"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch239.txt",
+  "json": "russian/narration/ch239.json",
+  "textHash": "fnv1a64:56dd921cae1b047c",
+  "jsonHash": "fnv1a64:85744345eb9c56b5",
+  "findings": []
+}

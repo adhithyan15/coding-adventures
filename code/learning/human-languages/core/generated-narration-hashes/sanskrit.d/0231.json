@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:37d1e2c8d31e5c56",
+  "lessonIds": [
+    "SA-C231-manacitram",
+    "SA-C231-sthanam",
+    "SA-C231-nivasah",
+    "SA-C231-atithigrham",
+    "SA-C231-pravasah",
+    "SA-R231-first-pass-words-from-chapters-227-228",
+    "SA-R231-second-pass-words-from-chapters-229-231"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch231.txt",
+  "json": "sanskrit/narration/ch231.json",
+  "textHash": "fnv1a64:196807ad49af899b",
+  "jsonHash": "fnv1a64:58c0f537dd004593",
+  "findings": []
+}

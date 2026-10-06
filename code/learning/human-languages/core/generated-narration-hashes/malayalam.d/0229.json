@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:b0806c9c463ecd2f",
+  "lessonIds": [
+    "ML-C229-astamikkuka",
+    "ML-C229-tilannuka",
+    "ML-C229-vatuka",
+    "ML-C229-samsayikkuka",
+    "ML-C229-yojikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch229.txt",
+  "json": "malayalam/narration/ch229.json",
+  "textHash": "fnv1a64:b94629355e9649d0",
+  "jsonHash": "fnv1a64:e61db305721fdcaa",
+  "findings": []
+}

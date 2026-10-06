@@ -1,0 +1,11 @@
+{
+  "id": "AR-C192-istalama",
+  "pathSegment": "AR-PATH-192-ACT192",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-192-ACT192",
+      "order": 3
+    }
+  ]
+}

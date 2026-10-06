@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C204-trak",
+    "language": "hindi",
+    "chapter": 204,
+    "sequence": 10260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16d4ac0ff16ce32c"
+  },
+  "findings": []
+}

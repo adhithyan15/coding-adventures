@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Enthusiasm, Confusion, Smile, Gentle, Honest",
+  "label": "ch:ta-enthusiasm-confusion-smile-gentle-honest",
+  "canDo": "I can say enthusiasm, confusion, a smile, gentle and honest.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C268-nermaiyana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can say enthusiasm, confusion, a smile, gentle and honest.",
+    "assesses": [
+      "TA-LEX-C268-GUNAM268-03",
+      "TA-LEX-C268-GUNAM268-04",
+      "TA-LEX-C268-GUNAM268-05"
+    ]
+  }
+}

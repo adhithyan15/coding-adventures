@@ -1,0 +1,11 @@
+{
+  "id": "LA-C205-unguentum",
+  "pathSegment": "LA-PATH-205-VALE205",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-205-VALE205",
+      "order": 4
+    }
+  ]
+}

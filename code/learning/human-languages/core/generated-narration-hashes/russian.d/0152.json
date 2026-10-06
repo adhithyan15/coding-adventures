@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:2684544ee804bb24",
+  "lessonIds": [
+    "RU-C152-okolo",
+    "RU-C152-vokrug",
+    "RU-C152-vnutri",
+    "RU-C152-snaruzhi",
+    "RU-C152-szadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch152.txt",
+  "json": "russian/narration/ch152.json",
+  "textHash": "fnv1a64:6e8a653ef95d640b",
+  "jsonHash": "fnv1a64:54e10a1a1060b693",
+  "findings": []
+}

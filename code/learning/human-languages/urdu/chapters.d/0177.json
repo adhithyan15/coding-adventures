@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "Employee, Colleague, Labourer, Farmer, Tailor",
+  "label": "ch:ur-employee-colleague-labourer-farmer-tailor",
+  "canDo": "I can say an employee, a colleague, a labourer, a farmer and a tailor.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C177-darzi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say an employee, a colleague, a labourer, a farmer and a tailor.",
+    "assesses": [
+      "UR-LEX-C177-KAM177-03",
+      "UR-LEX-C177-KAM177-04",
+      "UR-LEX-C177-KAM177-05"
+    ]
+  }
+}

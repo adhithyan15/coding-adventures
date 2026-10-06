@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "To insist, To interrupt, To tie, To mix, To obey",
+  "label": "ch:fr-to-insist-to-interrupt-to-tie-to-mix-to-obey",
+  "canDo": "I can say to insist, to interrupt, to tie, to mix and to obey.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C240-obeir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say to insist, to interrupt, to tie, to mix and to obey.",
+    "assesses": [
+      "FR-LEX-C240-VERBES240-03",
+      "FR-LEX-C240-VERBES240-04",
+      "FR-LEX-C240-VERBES240-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C195-ricercatore",
+  "pathSegment": "IT-PATH-195-COSE195",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-195-COSE195",
+      "order": 3
+    }
+  ]
+}

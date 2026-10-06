@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:d7c516f7b898c599",
+  "lessonIds": [
+    "MR-C178-sadnika",
+    "MR-C178-jevanghar",
+    "MR-C178-sajja",
+    "MR-C178-ghanta",
+    "MR-C178-kappa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch178.txt",
+  "json": "marathi/narration/ch178.json",
+  "textHash": "fnv1a64:c95e6d8159d4a213",
+  "jsonHash": "fnv1a64:892b5c482d66adfe",
+  "findings": []
+}

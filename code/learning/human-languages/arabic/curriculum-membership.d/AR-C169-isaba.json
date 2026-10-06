@@ -1,0 +1,11 @@
+{
+  "id": "AR-C169-isaba",
+  "pathSegment": "AR-PATH-169-SIHHA169",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-169-SIHHA169",
+      "order": 3
+    }
+  ]
+}

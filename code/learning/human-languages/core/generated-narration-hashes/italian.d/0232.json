@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:2d950cc0a6ef91e1",
+  "lessonIds": [
+    "IT-C232-numero",
+    "IT-C232-foglio",
+    "IT-C232-giornale",
+    "IT-C232-rivista",
+    "IT-C232-dizionario",
+    "IT-R232-first-pass-words-from-chapters-228-229",
+    "IT-R232-second-pass-words-from-chapters-230-232"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch232.txt",
+  "json": "italian/narration/ch232.json",
+  "textHash": "fnv1a64:8ee8100dbc93eb34",
+  "jsonHash": "fnv1a64:f0e51e544a49a825",
+  "findings": []
+}

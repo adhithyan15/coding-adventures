@@ -1,5 +1,14 @@
 # Changelog — @coding-adventures/forme-aot-page-emitter
 
+## Unreleased
+
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
+- Make the injected-filesystem tests compare host-native paths so the same
+  production path contract is exercised on POSIX and Windows.
+
 ## 0.1.0 — 2026-05-17
 
 Initial release.  Fourth FM06 AOT compiler family package.  Turns

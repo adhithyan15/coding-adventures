@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:1c2976552e4a497c",
+  "lessonIds": [
+    "PT-C145-flutuar",
+    "PT-C145-perseguir",
+    "PT-C145-insistir",
+    "PT-C145-interromper",
+    "PT-C145-amarrar"
+  ],
+  "tex": "portuguese/book/chapters/ch145-to-float-to-chase-to-insist-to-interrupt-to-tie.tex"
+}

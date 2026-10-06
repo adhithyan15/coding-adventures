@@ -12,6 +12,7 @@ use coding_adventures_source_preprocessor::{
     diag::PpError,
     dialect::{Dialect, Directive},
     fs::{IncludeRequest, MemoryFs},
+    macros::MacroTable,
     preprocess,
     source_map::FileId,
 };
@@ -48,6 +49,9 @@ fn program(lines: &[&str]) -> Vec<Token> {
 #[derive(Default)]
 struct TestDialect {
     evals: Cell<u32>,
+    preparations: Cell<u32>,
+    grow_condition: bool,
+    grow_condition_spelling: bool,
 }
 
 impl Dialect for TestDialect {
@@ -77,6 +81,54 @@ impl Dialect for TestDialect {
         }
     }
 
+    fn prepare_condition(
+        &self,
+        tokens: Vec<Token>,
+        macros: &MacroTable,
+    ) -> Result<Vec<Token>, PpError> {
+        self.preparations.set(self.preparations.get() + 1);
+        let mut prepared = Vec::with_capacity(tokens.len());
+        let mut index = 0;
+        while index < tokens.len() {
+            if tokens[index].value != "defined" {
+                prepared.push(tokens[index].clone());
+                index += 1;
+                continue;
+            }
+
+            let operator = &tokens[index];
+            let parenthesized = tokens.get(index + 1).is_some_and(|token| token.value == "(");
+            let operand_index = index + if parenthesized { 2 } else { 1 };
+            let name = tokens
+                .get(operand_index)
+                .ok_or_else(|| PpError::new("malformed `defined` operator"))?;
+            let mut chars = name.value.chars();
+            if !chars.next().is_some_and(|ch| ch.is_ascii_alphabetic() || ch == '_')
+                || !chars.all(|ch| ch.is_ascii_alphanumeric() || ch == '_')
+            {
+                return Err(PpError::new("defined needs an identifier operand"));
+            }
+            if parenthesized
+                && tokens.get(operand_index + 1).is_none_or(|token| token.value != ")")
+            {
+                return Err(PpError::new("malformed `defined` operator"));
+            }
+            let consumed = if parenthesized { 4 } else { 2 };
+
+            let mut truth = operator.clone();
+            truth.value = if macros.is_defined(&name.value) { "1" } else { "0" }.into();
+            prepared.push(truth);
+            index += consumed;
+        }
+        if self.grow_condition {
+            prepared.push(tok("extra", 1));
+        }
+        if self.grow_condition_spelling {
+            prepared[0].value.push_str("extra");
+        }
+        Ok(prepared)
+    }
+
     fn eval_condition(&self, tokens: &[Token]) -> Result<bool, PpError> {
         self.evals.set(self.evals.get() + 1);
         // A numeric literal is its own truth value; anything else -- an
@@ -89,11 +141,13 @@ impl Dialect for TestDialect {
         // expansion actually happened, since the unexpanded name is truthy
         // too. The toy dialect has to model undefined-is-false or the property
         // it is used to test becomes unfalsifiable.
-        Ok(tokens
-            .first()
-            .and_then(|t| t.value.parse::<i64>().ok())
-            .map(|n| n != 0)
-            .unwrap_or(false))
+        let number = |token: &Token| token.value.parse::<i64>().ok();
+        if let [left, operator, right] = tokens {
+            if operator.value == "==" {
+                return Ok(number(left).zip(number(right)).is_some_and(|(l, r)| l == r));
+            }
+        }
+        Ok(tokens.first().and_then(number).is_some_and(|n| n != 0))
     }
 
     fn lex(&self, text: &str, _file: FileId) -> Result<Vec<Token>, PpError> {
@@ -189,6 +243,107 @@ fn a_nested_conditional_inside_a_skipped_group_is_never_evaluated() {
         1,
         "only the outer condition may be evaluated; the buried one must not be"
     );
+    assert_eq!(
+        dialect.preparations.get(),
+        1,
+        "a skipped condition must not reach the dialect's preparation hook"
+    );
+}
+
+#[test]
+fn a_defined_operand_is_resolved_before_other_condition_macros_expand() {
+    let mut fs = MemoryFs::new();
+    let out = run(
+        &[
+            "@define FLAG 0",
+            "@define EXPECTED 1",
+            "@if defined ( FLAG ) == EXPECTED",
+            "kept",
+            "@else",
+            "dropped",
+            "@end",
+        ],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+
+    assert_eq!(out, ["kept"]);
+}
+
+#[test]
+fn an_undefined_operand_is_false_without_becoming_a_macro_candidate() {
+    let mut fs = MemoryFs::new();
+    let out = run(
+        &[
+            "@define EXPECTED 0",
+            "@if defined MISSING == EXPECTED",
+            "kept",
+            "@else",
+            "dropped",
+            "@end",
+        ],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+
+    assert_eq!(out, ["kept"]);
+}
+
+#[test]
+fn a_bare_defined_operand_can_end_the_condition() {
+    let mut fs = MemoryFs::new();
+    let out = run(
+        &["@define FLAG 0", "@if defined FLAG", "kept", "@end"],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+    assert_eq!(out, ["kept"]);
+}
+
+#[test]
+fn defined_rejects_a_non_identifier_operand() {
+    let mut fs = MemoryFs::new();
+    let error = run(&["@if defined 123", "@end"], &mut fs, Bounds::default())
+        .expect_err("a numeric operand must fail");
+    assert!(error.to_string().contains("identifier"), "{error}");
+    assert_eq!(error.position().map(|position| position.line), Some(1));
+}
+
+#[test]
+fn malformed_pre_expansion_condition_syntax_is_a_dialect_error() {
+    let mut fs = MemoryFs::new();
+    let e = run(&["@if defined ( FLAG", "@end"], &mut fs, Bounds::default()).unwrap_err();
+    assert!(e.to_string().contains("malformed `defined`"), "{e}");
+    assert_eq!(e.position().map(|position| position.line), Some(1));
+}
+
+#[test]
+fn condition_preparation_cannot_be_an_unmetered_token_producer() {
+    let dialect = TestDialect {
+        grow_condition: true,
+        ..TestDialect::default()
+    };
+    let mut fs = MemoryFs::new();
+    let e = run_with(&["@if 1", "body", "@end"], &mut fs, Bounds::default(), &dialect)
+        .unwrap_err();
+    assert!(e.to_string().contains("must not increase the token count"), "{e}");
+    assert_eq!(dialect.evals.get(), 0, "the oversized result must not reach evaluation");
+}
+
+#[test]
+fn condition_preparation_cannot_grow_text_at_a_fixed_token_count() {
+    let dialect = TestDialect {
+        grow_condition_spelling: true,
+        ..TestDialect::default()
+    };
+    let mut fs = MemoryFs::new();
+    let e = run_with(&["@if 1", "body", "@end"], &mut fs, Bounds::default(), &dialect)
+        .unwrap_err();
+    assert!(e.to_string().contains("must not increase the text bytes"), "{e}");
+    assert_eq!(dialect.evals.get(), 0, "the enlarged result must not reach evaluation");
 }
 
 #[test]
@@ -267,19 +422,15 @@ fn a_definition_inside_a_skipped_group_never_takes_effect() {
 }
 
 #[test]
-fn an_expanded_token_points_at_its_invocation_not_at_unrelated_text() {
+fn an_expanded_token_records_its_definition_and_invocation() {
     // A macro defined in an included file used to surface with the BODY's
     // line and the INCLUDING file's id — so a token from `defs.oct` was
     // reported at a position inside `main`'s `@include` line, pointing at text
     // that had nothing to do with it. Confidently wrong provenance is worse
     // than none: a reader follows it and lands somewhere unrelated.
     //
-    // The interim contract this pins: an expanded token carries the position
-    // of the INVOCATION, which is real text in the file that really produced
-    // it. Full fidelity ("in expansion of FOO, defined at defs.oct:1") needs
-    // the expansion arena wired through and is tracked as VM-069.
     let mut fs = MemoryFs::new();
-    fs.insert("defs.oct", "@define ANSWER 42");
+    let defs = fs.insert("defs.oct", "@define ANSWER 42");
     let main = fs.insert("<main>", "");
 
     let out = preprocess(
@@ -294,18 +445,52 @@ fn an_expanded_token_points_at_its_invocation_not_at_unrelated_text() {
     let values: Vec<&str> = out.tokens.iter().map(|t| t.value.as_str()).collect();
     assert_eq!(values, ["value", "=", "42", ";"]);
 
-    // The `42` came from defs.oct's body but is reported where it was USED.
+    // The token's physical position is the macro body in defs.oct.
     let expanded = out.map.locus(2).unwrap();
-    assert_eq!(expanded.position.file, main, "attributed to the file that used it");
-    assert_eq!(
-        expanded.position.line, 2,
-        "the invocation's line, not the macro body's line 1"
-    );
+    assert_eq!(expanded.position.file, defs);
+    assert_eq!(expanded.position.line, 1);
 
-    // And it agrees with its neighbours on that line, rather than pointing off
-    // into the `@include`.
+    // The interned expansion records both ends of the diagnostic story.
+    let expansion = expanded.expansion.expect("the substituted token names its expansion");
+    let (name, invoked_at) = out.map.expansion_site(expansion).unwrap();
+    assert_eq!(name, "ANSWER");
+    assert_eq!(invoked_at.file, main);
+    assert_eq!(invoked_at.line, 2);
+    assert_eq!(out.map.expansion_definition(expansion).unwrap().file, defs);
+    assert_eq!(out.map.expansion_definition(expansion).unwrap().line, 1);
+    assert_eq!(out.map.expansion_parent(expansion), None);
+
+    // Ordinary neighbours still point directly into main and have no chain.
     assert_eq!(out.map.locus(0).unwrap().position.line, 2);
+    assert_eq!(out.map.locus(0).unwrap().expansion, None);
     assert_eq!(out.map.locus(3).unwrap().position.line, 2);
+}
+
+#[test]
+fn nested_object_macros_form_an_innermost_to_outermost_chain() {
+    let mut fs = MemoryFs::new();
+    let main = fs.insert("<main>", "");
+    let out = preprocess(
+        program(&["@define INNER 42", "@define OUTER INNER", "OUTER"]),
+        main,
+        &TestDialect::default(),
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+
+    assert_eq!(out.tokens[0].value, "42");
+    assert_eq!(out.map.expansion_count(), 2, "one node per actual substitution");
+
+    let inner = out.map.locus(0).unwrap().expansion.unwrap();
+    let outer = out.map.expansion_parent(inner).expect("INNER was expanded inside OUTER");
+    assert_eq!(out.map.expansion_site(inner).unwrap().0, "INNER");
+    assert_eq!(out.map.expansion_site(inner).unwrap().1.line, 2);
+    assert_eq!(out.map.expansion_definition(inner).unwrap().line, 1);
+    assert_eq!(out.map.expansion_site(outer).unwrap().0, "OUTER");
+    assert_eq!(out.map.expansion_site(outer).unwrap().1.line, 3);
+    assert_eq!(out.map.expansion_definition(outer).unwrap().line, 2);
+    assert_eq!(out.map.expansion_parent(outer), None);
 }
 
 #[test]

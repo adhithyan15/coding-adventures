@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "To oppose, To guess, To compare, To argue, To pay attention",
+  "label": "ch:ml-to-oppose-to-guess-to-compare-to-argue-to-pay-attention",
+  "canDo": "I can say to oppose, to guess, to compare, to argue and to pay attention.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C270-sraddhikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say to oppose, to guess, to compare, to argue and to pay attention.",
+    "assesses": [
+      "ML-LEX-C270-KRIYA270-03",
+      "ML-LEX-C270-KRIYA270-04",
+      "ML-LEX-C270-KRIYA270-05"
+    ]
+  }
+}

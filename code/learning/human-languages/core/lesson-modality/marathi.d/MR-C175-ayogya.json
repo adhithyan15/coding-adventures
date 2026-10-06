@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C175-ayogya",
+    "language": "marathi",
+    "chapter": 175,
+    "sequence": 8620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aeb4a423a9c63d7b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:e9eb9144188ab44e",
+  "lessonIds": [
+    "LA-C202-suadeo",
+    "LA-C202-tremo",
+    "LA-C202-excipio",
+    "LA-C202-ago",
+    "LA-C202-procedo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch202.txt",
+  "json": "latin/narration/ch202.json",
+  "textHash": "fnv1a64:ce4570f5a77f7d73",
+  "jsonHash": "fnv1a64:5e38bcfeb946b936",
+  "findings": []
+}

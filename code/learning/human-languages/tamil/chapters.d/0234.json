@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Post office, City, Country, Capital city, Crossroads",
+  "label": "ch:ta-post-office-city-country-capital-city-crossroads",
+  "canDo": "I can say a post office, a city, a country, a capital city and a crossroads.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C234-narcanti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say a post office, a city, a country, a capital city and a crossroads.",
+    "assesses": [
+      "TA-LEX-C234-IDAM234-03",
+      "TA-LEX-C234-IDAM234-04",
+      "TA-LEX-C234-IDAM234-05"
+    ]
+  }
+}

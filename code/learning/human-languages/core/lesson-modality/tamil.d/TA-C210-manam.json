@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C210-manam",
+    "language": "tamil",
+    "chapter": 210,
+    "sequence": 10910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04ad7364fae28ea3"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:b23e6ae56575e3a3",
+  "lessonIds": [
+    "SA-C212-buddhih",
+    "SA-C212-manah",
+    "SA-C212-atma",
+    "SA-C212-svapnah",
+    "SA-C212-trptih"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch212.txt",
+  "json": "sanskrit/narration/ch212.json",
+  "textHash": "fnv1a64:ce78485ddaece727",
+  "jsonHash": "fnv1a64:a96f8dfbfd9fb0e4",
+  "findings": []
+}

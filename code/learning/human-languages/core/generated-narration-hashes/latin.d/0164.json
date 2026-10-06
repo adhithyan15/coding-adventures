@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:ab9bd43681539d67",
+  "lessonIds": [
+    "LA-C164-titulus",
+    "LA-C164-inscriptio",
+    "LA-C164-pretium",
+    "LA-C164-venalis",
+    "LA-C164-merx",
+    "LA-R164-first-pass-saying-no-and-looking-back",
+    "LA-R164-second-pass-looking-ahead-and-reading-signs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch164.txt",
+  "json": "latin/narration/ch164.json",
+  "textHash": "fnv1a64:562fb43629f3b8ab",
+  "jsonHash": "fnv1a64:b1291c34d029a155",
+  "findings": []
+}

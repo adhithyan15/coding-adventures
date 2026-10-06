@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C481-vigilar",
+    "language": "spanish",
+    "chapter": 481,
+    "sequence": 13590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a680236d8b29c7a6"
+  },
+  "findings": []
+}

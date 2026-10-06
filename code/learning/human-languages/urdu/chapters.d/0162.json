@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "Local, English, Pakistani, Indian, Grey",
+  "label": "ch:ur-local-english-pakistani-indian-grey",
+  "canDo": "I can say local, English, Pakistani, Indian and grey.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C162-surmai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say local, English, Pakistani, Indian and grey.",
+    "assesses": [
+      "UR-LEX-C162-SIFAT162-03",
+      "UR-LEX-C162-SIFAT162-04",
+      "UR-LEX-C162-SIFAT162-05"
+    ]
+  }
+}

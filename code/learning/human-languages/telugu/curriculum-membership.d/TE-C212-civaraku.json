@@ -1,0 +1,11 @@
+{
+  "id": "TE-C212-civaraku",
+  "pathSegment": "TE-PATH-212-SAMAYAM212",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-212-SAMAYAM212",
+      "order": 2
+    }
+  ]
+}

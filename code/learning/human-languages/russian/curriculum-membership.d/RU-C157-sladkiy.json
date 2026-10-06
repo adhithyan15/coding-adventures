@@ -1,0 +1,11 @@
+{
+  "id": "RU-C157-sladkiy",
+  "pathSegment": "RU-PATH-157-KACH157",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-157-KACH157",
+      "order": 1
+    }
+  ]
+}

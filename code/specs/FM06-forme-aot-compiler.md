@@ -14,8 +14,8 @@
 | Incremental slice cache | Implemented | `forme-aot-incremental-cache` plus `forme-aot-fs-cache`. |
 | Page/style/script emission | Implemented | Page, HTML document, style-tag, script-tag, and bundle emitters exist. |
 | Site metadata emission | Implemented | Sitemap, robots, discovery links, and deploy-manifest emitters exist. |
-| Interactivity tree shaking | Blocked | Requires the normative FM05 schema and usage tracking in FM-B013. |
-| Multi-backend release proof | Blocked | FM-B017 owns the non-HTML backend boundary. |
+| Interactivity tree shaking | Active | FM05 is implemented; FM-B060 composes exact renderer, script-asset, and deploy-route usage. |
+| Multi-backend release proof | Implemented | FM-B017 adds terminal buffers and a capability-free terminal artifact packager to the live blog fan-out. |
 
 ## 1. Purpose
 
@@ -46,8 +46,20 @@ content hash. Unknown identifiers are diagnostics, not an invitation to retain
 unrelated rules silently. Aggregate pages that cannot expose an inspectable AST
 may deliberately retain a complete trusted theme, as documented by FM04.
 
-FM-B013 will extend this section with the equivalent `usedInteractivity`
-contract after FM05 is normative.
+For Interactivity IR, the web renderer validates the route's document, resolves
+every authored element reference against the rendered body, and preserves
+declaration order in `usedIslands`. An explicitly authorized, reviewed-content
+allowlist maps each selected `(packageName, export)` pair to one script `Asset`
+identity and exact SHA-256 bytes; this stage does not claim FM02 authentication.
+Neither the renderer nor the AOT layer imports executable code while deciding.
+
+`RenderedPage` carries the exact `IslandId` to script-asset and digest bindings.
+The static-site emitter verifies that list against `usedIslands`, recomputes the
+reviewed digest, fingerprints only the referenced script assets, emits one
+external module tag per distinct selected asset, and copies
+the IDs unchanged into the deploy route. Script assets present in the input but
+unused by every page are omitted. When `usedIslands` is empty, no module tag or
+script asset is emitted.
 
 ## 4. Incremental cache
 
@@ -83,6 +95,6 @@ authority.
 - [FM01](FM01-forme-kernel.md) — kinds, artifacts, revisions, and usage records
 - [FM03](FM03-forme-orchestrator.md) — execution, caching, and reproducibility
 - [FM04](FM04-forme-style-ir.md) — Style IR and `usedStyle`
-- [FM05](FM05-forme-interactivity-ir.md) — future interactivity usage contract
+- [FM05](FM05-forme-interactivity-ir.md) — normative interactivity contract
 - [FM07](FM07-forme-cli-dev-server.md) — user-facing build and preview commands
 - [FM08](FM08-forme-deploy-runner.md) — external publication boundary

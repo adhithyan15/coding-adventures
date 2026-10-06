@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C257-muskurahat",
+    "language": "urdu",
+    "chapter": 257,
+    "sequence": 15710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ea688dd839c029d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "To rub, To receive, To tell, To admit, To deposit",
+  "label": "ch:te-to-rub-to-receive-to-tell-to-admit-to-deposit",
+  "canDo": "I can say to rub, to receive, to tell, to admit and to deposit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C280-jama-ceyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can say to rub, to receive, to tell, to admit and to deposit.",
+    "assesses": [
+      "TE-LEX-C280-KRIYA280-03",
+      "TE-LEX-C280-KRIYA280-04",
+      "TE-LEX-C280-KRIYA280-05"
+    ]
+  }
+}

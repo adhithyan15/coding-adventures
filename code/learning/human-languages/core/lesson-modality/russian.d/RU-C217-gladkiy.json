@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C217-gladkiy",
+    "language": "russian",
+    "chapter": 217,
+    "sequence": 12950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bcf76f97e2286f71"
+  },
+  "findings": []
+}

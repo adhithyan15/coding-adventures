@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Ir in the Plural --- a Verb That Is Not Ir",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a2df87f5bf916e10",
+  "sourceHash": "fnv1a64:4d4f29a3cb032b88",
   "lessons": [
     {
       "id": "ES-C10-vamos",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9c0d3cede4f8f31",
+      "sourceHash": "fnv1a64:17851275a040b82b",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Say \"I go.\" (Voy.) And \"we speak.\" (Hablamos.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tienen: the stress is back on the stem, and so is the break."
             }
           ]
         },

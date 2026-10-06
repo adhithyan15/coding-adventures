@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:7cd230f73a0f182d",
+  "lessonIds": [
+    "GE-C144-aendern",
+    "GE-C144-anrufen",
+    "GE-C144-aufhoeren",
+    "GE-C144-ausgehen",
+    "GE-C144-aussehen"
+  ],
+  "tex": "german/book/chapters/ch144-to-change-to-phone-to-stop-to-go-out-to-look.tex"
+}

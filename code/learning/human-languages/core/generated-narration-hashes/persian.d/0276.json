@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:7a65de743c92ca0f",
+  "lessonIds": [
+    "FA-C276-serke",
+    "FA-C276-ard",
+    "FA-C276-shomare",
+    "FA-C276-payamak",
+    "FA-C276-imeyl"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch276.txt",
+  "json": "persian/narration/ch276.json",
+  "textHash": "fnv1a64:980815423a36b623",
+  "jsonHash": "fnv1a64:34af805198d30a10",
+  "findings": []
+}

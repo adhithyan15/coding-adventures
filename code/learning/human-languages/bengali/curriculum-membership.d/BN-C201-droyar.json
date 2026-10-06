@@ -1,0 +1,11 @@
+{
+  "id": "BN-C201-droyar",
+  "pathSegment": "BN-PATH-201-JINIS201",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-201-JINIS201",
+      "order": 2
+    }
+  ]
+}

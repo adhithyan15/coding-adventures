@@ -1,0 +1,11 @@
+{
+  "id": "HI-C257-ghrna",
+  "pathSegment": "HI-PATH-257-THG257",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-257-THG257",
+      "order": 2
+    }
+  ]
+}

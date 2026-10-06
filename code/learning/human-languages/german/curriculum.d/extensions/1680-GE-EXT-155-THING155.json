@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-155-THING155",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a salary, an identity card, a visa, a traffic jam and an accident.",
+  "prerequisites": []
+}

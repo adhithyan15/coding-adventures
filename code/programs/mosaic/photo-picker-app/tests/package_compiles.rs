@@ -1,9 +1,8 @@
 //! Compile-check for the PhotoPickerApp Mosaic package: the interface
 //! (.mil), layout (.mll), and both style themes (.msl) must compile, and
-//! the manifest must declare the exported component and the
-//! XAML/Qt/Flutter `[host_effects]` handlers (Compose and SwiftUI answer
-//! `files.open` from Mosaic's platform library, UI87 §7). Same shape of smoke
-//! test `task-app`/`engram-app` use.
+//! the manifest must declare the exported component and no effect handler of
+//! its own (every backend answers `files.open` from Mosaic's platform
+//! library, UI87 §7). Same shape of smoke test `task-app`/`engram-app` use.
 
 use std::fs;
 use std::path::PathBuf;
@@ -38,7 +37,7 @@ fn photo_picker_app_sources_compile() {
 }
 
 #[test]
-fn manifest_declares_photo_picker_app_and_the_xaml_qt_and_flutter_files_open_handlers() {
+fn manifest_declares_photo_picker_app_and_no_handler_of_its_own() {
     let manifest_src =
         fs::read_to_string(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("mosaic-package.toml"))
             .expect("mosaic-package.toml must exist");
@@ -47,158 +46,29 @@ fn manifest_declares_photo_picker_app_and_the_xaml_qt_and_flutter_files_open_han
     assert_eq!(package.package.name, "photo-picker-app");
     assert_eq!(package.components.exports, ["PhotoPickerApp"]);
 
-    let xaml_file = package
-        .host_effects
-        .files
-        .iter()
-        .find(|file| file.backend == "xaml")
-        .expect("must declare the XAML handler source file");
-    assert_eq!(xaml_file.source, "host/xaml/PhotoPickerEffects.cs");
-    assert_eq!(xaml_file.target, "PhotoPickerEffects.cs");
+    // No handler on any backend: Mosaic's platform library answers
+    // `files.open` on Compose, SwiftUI, Qt, XAML and Flutter (UI87 §7), and a
+    // package handler would never be reached -- this app claims no kinds, so
+    // the router sends the standard ones to the library (UI87 §7.2, §7.4).
+    assert!(
+        package.host_effects.files.is_empty(),
+        "no handler files: the platform library answers files.open"
+    );
+    assert!(package.host_effects.handlers.is_empty(), "no handlers: the platform library answers files.open");
 
-    let xaml_handler = package
-        .host_effects
-        .handlers
-        .iter()
-        .find(|handler| handler.backend == "xaml")
-        .expect("must declare the XAML effect handler");
-    assert_eq!(xaml_handler.install, "PhotoPickerHost.PhotoPickerEffects.Install");
-    // No `include` for XAML -- the emitter refuses one outright (UI47
-    // §5.5.2, confirmed against `xaml_main_with_host_effects`'s own error
-    // message). A regression here would mean the manifest asks for
-    // something the build will hard-fail on.
-    assert_eq!(xaml_handler.include, None);
-
-    // Qt names both its header and source under `files` (unlike SwiftUI/
-    // Compose, which compile whole directories) -- matching engram-app's own
-    // Qt `[host_effects]` entry exactly.
-    let qt_header = package
-        .host_effects
-        .files
-        .iter()
-        .find(|file| file.backend == "qt" && file.target == "PhotoPickerEffects.h")
-        .expect("must declare the Qt header file");
-    assert_eq!(qt_header.source, "host/qt/PhotoPickerEffects.h");
-    let qt_source = package
-        .host_effects
-        .files
-        .iter()
-        .find(|file| file.backend == "qt" && file.target == "PhotoPickerEffects.cpp")
-        .expect("must declare the Qt source file");
-    assert_eq!(qt_source.source, "host/qt/PhotoPickerEffects.cpp");
-
-    let qt_handler = package
-        .host_effects
-        .handlers
-        .iter()
-        .find(|handler| handler.backend == "qt")
-        .expect("must declare the Qt effect handler");
-    assert_eq!(qt_handler.install, "installPhotoPickerEffects");
-    assert_eq!(qt_handler.include.as_deref(), Some("PhotoPickerEffects.h"));
-
-    // No Compose or SwiftUI handler: Mosaic's platform library answers
-    // `files.open` on those backends (UI87 §7), and a package handler for a
-    // backend would wrap it for nothing (UI87 §7.4).
-    for backend in ["compose", "swiftui"] {
-        assert!(
-            package.host_effects.files.iter().all(|file| file.backend != backend),
-            "no {backend} handler file: the platform library answers files.open"
-        );
-        assert!(
-            package.host_effects.handlers.iter().all(|handler| handler.backend != backend),
-            "no {backend} handler: the platform library answers files.open"
-        );
-    }
-
-    // Dart resolves nothing across files without an import, so `include`
-    // names the file relative to `lib/` -- matching engram-app's own
-    // Flutter `[host_effects]` entry exactly.
-    let flutter_file = package
-        .host_effects
-        .files
-        .iter()
-        .find(|file| file.backend == "flutter")
-        .expect("must declare the Flutter handler source file");
-    assert_eq!(flutter_file.source, "host/flutter/PhotoPickerEffects.dart");
-    assert_eq!(flutter_file.target, "lib/PhotoPickerEffects.dart");
-
-    let flutter_handler = package
-        .host_effects
-        .handlers
-        .iter()
-        .find(|handler| handler.backend == "flutter")
-        .expect("must declare the Flutter effect handler");
-    assert_eq!(flutter_handler.install, "installPhotoPickerEffects");
-    assert_eq!(flutter_handler.include.as_deref(), Some("PhotoPickerEffects.dart"));
-
-    // `[host_assets]` exists here ONLY for the Flutter handler's pub
-    // dependency -- no `[host_assets].files` entries, unlike Engram.
+    // The Flutter handler's `file_selector` coordinate went with it: every
+    // generated Flutter project pins `file_selector` for the library itself
+    // (UI87 §7.7), and this app has no other host asset.
     assert!(package.host_assets.files.is_empty());
-    let flutter_dependency = package
-        .host_assets
-        .dependencies
-        .iter()
-        .find(|dependency| dependency.backend == "flutter")
-        .expect("must declare file_selector as a Flutter host_assets dependency");
-    assert_eq!(flutter_dependency.coordinate, "file_selector: '>=1.0.0 <2.0.0'");
+    assert!(package.host_assets.dependencies.is_empty());
+}
 
-    // No other backend is declared -- SwiftUI is out of scope for this
-    // environment (UI59 §2), not silently half-wired here.
-    for backend in ["swiftui"] {
-        assert!(
-            !package.host_effects.files.iter().any(|f| f.backend == backend),
-            "{backend} should not have a host_effects file"
-        );
-        assert!(
-            !package.host_effects.handlers.iter().any(|h| h.backend == backend),
-            "{backend} should not have a host_effects handler"
-        );
+/// UI87 §7.4: every backend's copy is gone for good, not merely unwired.
+#[test]
+fn every_backend_handler_is_retired_for_the_platform_library() {
+    let host = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("host");
+    for backend in ["compose", "qt", "xaml", "flutter"] {
+        assert!(!host.join(backend).exists(), "host/{backend} is retired");
     }
-}
-
-#[test]
-fn xaml_handler_source_exists_and_declares_install() {
-    let source = fs::read_to_string(
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("host/xaml/PhotoPickerEffects.cs"),
-    )
-    .expect("host/xaml/PhotoPickerEffects.cs must exist");
-    assert!(source.contains("public static void Install()"));
-    assert!(source.contains("MosaicRuntimeHost.EffectHandler"));
-    assert!(source.contains("\"files.open\""));
-}
-
-#[test]
-fn qt_handler_sources_exist_and_declare_install() {
-    let header = fs::read_to_string(
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("host/qt/PhotoPickerEffects.h"),
-    )
-    .expect("host/qt/PhotoPickerEffects.h must exist");
-    assert!(header.contains("void installPhotoPickerEffects(MosaicHost &host)"));
-
-    let source = fs::read_to_string(
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("host/qt/PhotoPickerEffects.cpp"),
-    )
-    .expect("host/qt/PhotoPickerEffects.cpp must exist");
-    assert!(source.contains("void installPhotoPickerEffects(MosaicHost &host)"));
-    assert!(source.contains("effectRequested"));
-    assert!(source.contains("\"files.open\""));
-}
-
-/// UI87 §7.4: the Compose copy is gone for good, not merely unwired.
-#[test]
-fn the_compose_handler_is_retired_for_the_platform_library() {
-    assert!(!PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("host/compose")
-        .exists());
-}
-
-#[test]
-fn flutter_handler_source_exists_and_declares_install() {
-    let source = fs::read_to_string(
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("host/flutter/PhotoPickerEffects.dart"),
-    )
-    .expect("host/flutter/PhotoPickerEffects.dart must exist");
-    assert!(source.contains("void installPhotoPickerEffects(MosaicHost host)"));
-    assert!(source.contains("effectHandler"));
-    assert!(source.contains("'files.open'"));
+    assert!(!host.exists(), "host/ is gone: the app carries no host code");
 }

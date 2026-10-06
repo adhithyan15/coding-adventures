@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:6cf4a83667b5df56",
+  "lessonIds": [
+    "AR-C257-rafada",
+    "AR-C257-takharraja",
+    "AR-C257-fariha",
+    "AR-C257-khafa",
+    "AR-C257-ibtasama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch257.txt",
+  "json": "arabic/narration/ch257.json",
+  "textHash": "fnv1a64:69ffeefe77e7a387",
+  "jsonHash": "fnv1a64:ae8cc2dc45b652da",
+  "findings": []
+}

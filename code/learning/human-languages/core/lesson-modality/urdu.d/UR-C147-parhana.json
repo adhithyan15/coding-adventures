@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C147-parhana",
+    "language": "urdu",
+    "chapter": 147,
+    "sequence": 7800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf75bf694e3ab302"
+  },
+  "findings": []
+}

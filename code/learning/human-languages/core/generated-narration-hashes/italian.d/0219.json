@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:2e5ae983bf1b64d2",
+  "lessonIds": [
+    "IT-C219-uguale",
+    "IT-C219-simile",
+    "IT-C219-falso",
+    "IT-C219-gratuito",
+    "IT-C219-moderno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch219.txt",
+  "json": "italian/narration/ch219.json",
+  "textHash": "fnv1a64:32ae637e4bfd8f14",
+  "jsonHash": "fnv1a64:18d83e36660fec6f",
+  "findings": []
+}

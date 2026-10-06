@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "To weave, To hit, To fight, To be afraid, To shout",
+  "label": "ch:hi-to-weave-to-hit-to-fight-to-be-afraid-to-shout",
+  "canDo": "I can say to weave, to hit, to fight, to be afraid and to shout.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C178-cillana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say to weave, to hit, to fight, to be afraid and to shout.",
+    "assesses": [
+      "HI-LEX-C178-ACT178-03",
+      "HI-LEX-C178-ACT178-04",
+      "HI-LEX-C178-ACT178-05"
+    ]
+  }
+}

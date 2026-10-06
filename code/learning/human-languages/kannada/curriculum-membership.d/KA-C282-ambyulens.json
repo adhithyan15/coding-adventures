@@ -1,0 +1,11 @@
+{
+  "id": "KA-C282-ambyulens",
+  "pathSegment": "KA-PATH-282-AROGYA282",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-282-AROGYA282",
+      "order": 1
+    }
+  ]
+}

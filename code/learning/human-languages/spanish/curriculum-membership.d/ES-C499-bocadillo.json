@@ -1,0 +1,11 @@
+{
+  "id": "ES-C499-bocadillo",
+  "pathSegment": "ES-PATH-499-MERIENDA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-499-MERIENDA",
+      "order": 0
+    }
+  ]
+}

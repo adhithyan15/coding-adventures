@@ -1,0 +1,11 @@
+{
+  "id": "IT-C148-tentare",
+  "pathSegment": "IT-PATH-148-VERBI148",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-148-VERBI148",
+      "order": 2
+    }
+  ]
+}

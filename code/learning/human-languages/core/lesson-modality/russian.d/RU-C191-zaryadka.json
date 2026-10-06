@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C191-zaryadka",
+    "language": "russian",
+    "chapter": 191,
+    "sequence": 11150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00f019b9a07e78f2"
+  },
+  "findings": []
+}

@@ -11,7 +11,7 @@ internal static class SourceInputRegistryProjection
   "schema_version": 1,
   "universal_inputs": {
     "build_filenames": ["BUILD", "BUILD_linux", "BUILD_mac", "BUILD_mac_and_linux", "BUILD_windows"],
-    "generated_directory_components": [".build", ".cargo", ".claude", ".dart_tool", ".git", ".gradle", ".hg", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".stack-work", ".svn", ".tox", ".venv", "Pods", "__pycache__", "_build", "build", "cover", "deps", "dist", "dist-newstyle", "gradle-build", "node_modules", "target", "vendor"],
+    "generated_directory_components": [".build", ".cargo", ".claude", ".dart_tool", ".git", ".gradle", ".hg", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".stack-work", ".svn", ".tox", ".venv", "Pods", "__pycache__", "_build", "blib", "build", "cover", "deps", "dist", "dist-newstyle", "gradle-build", "node_modules", "target", "vendor"],
     "root_exact_basenames": ["required_capabilities.json"]
   },
   "languages": [
@@ -881,8 +881,8 @@ internal static class SourceInputRegistryProjection
         {
           "id": "typescript-blog-authored-inputs",
           "package_root": "code/sites/blog",
-          "paths": ["data/.2026-05-08-capability-typed-stages.md.id.json", "data/.2026-05-12-why-forme.md.id.json", "data/.2026-05-15-hello-forme.md.id.json", "data/2026-05-08-capability-typed-stages.md", "data/2026-05-12-why-forme.md", "data/2026-05-15-hello-forme.md", "data/assets/.forme-pipeline.svg.id.json", "data/assets/forme-pipeline.svg"],
-          "reason": "The blog Forme pipeline consumes exactly the three reviewed posts, their persisted identities, and the checked SVG asset with its identity sidecar.",
+          "paths": ["data/.2026-05-08-capability-typed-stages.md.id.json", "data/.2026-05-12-why-forme.md.id.json", "data/.2026-05-15-hello-forme.md.id.json", "data/2026-05-08-capability-typed-stages.md", "data/2026-05-12-why-forme.md", "data/2026-05-15-hello-forme.md", "data/assets/.forme-pipeline.svg.id.json", "data/assets/.pipeline-steps.js.id.json", "data/assets/forme-pipeline.svg"],
+          "reason": "The blog Forme pipeline consumes exactly the three reviewed posts, their persisted identities, the checked SVG asset, and the progressive module identity sidecar; TypeScript code remains suffix-selected.",
           "owner": "build-tool-site-authored-resource-source-input-extension"
         },
         {
@@ -1024,7 +1024,7 @@ internal static class SourceInputRegistryProjection
     internal const string RepositoryBoundaryJson = """
 {
   "schema_version": 1,
-  "language_source_input_registry_sha256": "190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530",
+  "language_source_input_registry_sha256": "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621",
   "boundaries": [
     {
       "id": "haskell-workspace-project",
@@ -1032,28 +1032,18 @@ internal static class SourceInputRegistryProjection
       "applies_to": {
         "exact_roots": [
           "code/packages/haskell/arithmetic",
-          "code/packages/haskell/aztec-code",
-          "code/packages/haskell/barcode-2d",
           "code/packages/haskell/block-ram",
           "code/packages/haskell/clock",
-          "code/packages/haskell/data-matrix",
           "code/packages/haskell/discrete-waveform",
           "code/packages/haskell/electronics",
           "code/packages/haskell/fpga",
-          "code/packages/haskell/gf256",
           "code/packages/haskell/graph",
           "code/packages/haskell/image-geometric-transforms",
           "code/packages/haskell/image-point-ops",
           "code/packages/haskell/logic-gates",
-          "code/packages/haskell/micro-qr",
           "code/packages/haskell/note-frequency",
-          "code/packages/haskell/paint-instructions",
-          "code/packages/haskell/pdf417",
           "code/packages/haskell/pixel-container",
-          "code/packages/haskell/polynomial",
           "code/packages/haskell/power-supply",
-          "code/packages/haskell/qr-code",
-          "code/packages/haskell/reed-solomon",
           "code/packages/haskell/single-layer-network",
           "code/packages/haskell/two-layer-network"
         ],
@@ -1071,9 +1061,11 @@ internal static class SourceInputRegistryProjection
       "input_origin": "lua",
       "applies_to": {
         "exact_roots": [
+          "code/packages/lua/der_asn1",
           "code/packages/lua/der_tlv",
           "code/packages/lua/image-codec-png",
           "code/packages/lua/pixel-container",
+          "code/packages/lua/x509_extension",
           "code/packages/lua/zip"
         ],
         "descendant_roots": [],
@@ -1598,13 +1590,19 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/forme-feeds",
           "code/packages/typescript/forme-identity",
           "code/packages/typescript/forme-index-renderer",
+          "code/packages/typescript/forme-interactivity-ir",
           "code/packages/typescript/forme-load-assets-fs",
           "code/packages/typescript/forme-manifest",
           "code/packages/typescript/forme-opengraph",
           "code/packages/typescript/forme-orchestrator",
           "code/packages/typescript/forme-parse-markdown",
           "code/packages/typescript/forme-pipeline-config",
+          "code/packages/typescript/forme-plugin-host",
+          "code/packages/typescript/forme-plugin-installer-core",
+          "code/packages/typescript/forme-plugin-runner-conformance",
+          "code/packages/typescript/forme-plugin-runner-ts",
           "code/packages/typescript/forme-render-static",
+          "code/packages/typescript/forme-render-terminal",
           "code/packages/typescript/forme-resolve-asset-refs-fs",
           "code/packages/typescript/forme-router",
           "code/packages/typescript/forme-source-fs",

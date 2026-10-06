@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C198-cantai-potu",
+    "language": "tamil",
+    "chapter": 198,
+    "sequence": 10150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9474166551603032"
+  },
+  "findings": []
+}

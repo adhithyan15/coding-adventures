@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C233-masi",
+    "language": "telugu",
+    "chapter": 233,
+    "sequence": 10830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17ead849d0753d5c"
+  },
+  "findings": []
+}

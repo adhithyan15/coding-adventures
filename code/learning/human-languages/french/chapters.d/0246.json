@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Generous, Lazy, Hard-working, Talkative, Angry",
+  "label": "ch:fr-generous-lazy-hard-working-talkative-angry",
+  "canDo": "I can say generous, lazy, hard-working, talkative and angry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C246-fache-fachee",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say generous, lazy, hard-working, talkative and angry.",
+    "assesses": [
+      "FR-LEX-C246-QUAL246-03",
+      "FR-LEX-C246-QUAL246-04",
+      "FR-LEX-C246-QUAL246-05"
+    ]
+  }
+}

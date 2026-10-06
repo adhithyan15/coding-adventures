@@ -1,0 +1,11 @@
+{
+  "id": "TE-C203-potladu",
+  "pathSegment": "TE-PATH-203-KRIYA203",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-203-KRIYA203",
+      "order": 1
+    }
+  ]
+}

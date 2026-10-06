@@ -1,0 +1,11 @@
+{
+  "id": "BN-C153-boka",
+  "pathSegment": "BN-PATH-153-ACT153",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-153-ACT153",
+      "order": 2
+    }
+  ]
+}

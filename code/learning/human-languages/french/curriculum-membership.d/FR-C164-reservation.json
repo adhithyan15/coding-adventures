@@ -1,0 +1,11 @@
+{
+  "id": "FR-C164-reservation",
+  "pathSegment": "FR-PATH-164-CHOSES164",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-164-CHOSES164",
+      "order": 2
+    }
+  ]
+}

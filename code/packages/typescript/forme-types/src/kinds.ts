@@ -47,9 +47,9 @@ import type { JsonValue, ReadonlyRecord } from "./utility.js";
  * adding a new Kind that defaults gracefully — none of these bump the
  * API version.
  *
- * Initial value: 1.
+ * Initial value: 1. Current stable value: 2.
  */
-export const KERNEL_API_VERSION = 1 as const;
+export const KERNEL_API_VERSION = 2 as const;
 
 export type KernelApiVersion = typeof KERNEL_API_VERSION;
 
@@ -75,6 +75,7 @@ export const KINDS = Object.freeze([
   "Document",
   "RenderedPage",
   "PrintForme",
+  "TerminalBuffer",
   "RequestHandler",
   "SearchIndex",
   "Feed",
@@ -162,8 +163,9 @@ export const Kinds = Object.freeze({
   Collection:     Object.freeze({ name: "Collection",     version: "1.0" }),
   Asset:          Object.freeze({ name: "Asset",          version: "1.0" }),
   Document:       Object.freeze({ name: "Document",       version: "1.0" }),
-  RenderedPage:   Object.freeze({ name: "RenderedPage",   version: "1.1" }),
+  RenderedPage:   Object.freeze({ name: "RenderedPage",   version: "2.0" }),
   PrintForme:     Object.freeze({ name: "PrintForme",     version: "1.0" }),
+  TerminalBuffer: Object.freeze({ name: "TerminalBuffer", version: "1.0" }),
   RequestHandler: Object.freeze({ name: "RequestHandler", version: "1.0" }),
   SearchIndex:    Object.freeze({ name: "SearchIndex",    version: "1.0" }),
   Feed:           Object.freeze({ name: "Feed",           version: "1.0" }),

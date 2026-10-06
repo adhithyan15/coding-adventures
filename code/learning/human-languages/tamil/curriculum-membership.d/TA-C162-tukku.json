@@ -1,0 +1,11 @@
+{
+  "id": "TA-C162-tukku",
+  "pathSegment": "TA-PATH-162-ACT162",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-162-ACT162",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:c2fba0d0a5cb40a0",
+  "lessonIds": [
+    "PT-C184-felizmente",
+    "PT-C184-certamente",
+    "PT-C184-realmente",
+    "PT-C184-quase",
+    "PT-C184-cerca-de"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch184.txt",
+  "json": "portuguese/narration/ch184.json",
+  "textHash": "fnv1a64:3e249005fd872734",
+  "jsonHash": "fnv1a64:38f24c217523fb00",
+  "findings": []
+}

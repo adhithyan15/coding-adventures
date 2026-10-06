@@ -1,0 +1,11 @@
+{
+  "id": "GE-C168-unmoeglich",
+  "pathSegment": "GE-PATH-168-QUAL168",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-168-QUAL168",
+      "order": 0
+    }
+  ]
+}

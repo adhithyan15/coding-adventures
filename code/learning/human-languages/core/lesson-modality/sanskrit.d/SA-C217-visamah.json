@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C217-visamah",
+    "language": "sanskrit",
+    "chapter": 217,
+    "sequence": 12560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7587d0424e8c7aee"
+  },
+  "findings": []
+}

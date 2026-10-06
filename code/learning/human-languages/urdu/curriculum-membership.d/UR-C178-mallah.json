@@ -1,0 +1,11 @@
+{
+  "id": "UR-C178-mallah",
+  "pathSegment": "UR-PATH-178-KAM178",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-178-KAM178",
+      "order": 2
+    }
+  ]
+}

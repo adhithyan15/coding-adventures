@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C278-hintirugisu",
+    "language": "kannada",
+    "chapter": 278,
+    "sequence": 13320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72310426e640a06b"
+  },
+  "findings": []
+}

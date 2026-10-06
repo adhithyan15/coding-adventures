@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C183-nastappetuka",
+    "language": "malayalam",
+    "chapter": 183,
+    "sequence": 7980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40a732e718b31bcc"
+  },
+  "findings": []
+}

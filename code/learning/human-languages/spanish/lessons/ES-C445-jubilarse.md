@@ -7,7 +7,7 @@ chapter: 445
 type: word
 headword: jubilarse
 gloss: to retire — the verb behind a word you were given, and it names a shout of joy
-concept_tag: ES-WORK-JUBILARSE
+concept_tag: ES-VERB-JUBILARSE
 prerequisites: [ES-C444-sintesis-casa, ES-C435-jubilado, ES-C394-trabajo]
 sounds: [j-jota, stress-final]
 roots: [iubilare-latin]

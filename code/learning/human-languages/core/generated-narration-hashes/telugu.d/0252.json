@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:edce5fea95eaffbc",
+  "lessonIds": [
+    "TE-C252-ugadi",
+    "TE-C252-dipavali",
+    "TE-C252-dasara",
+    "TE-C252-vinayaka-caviti",
+    "TE-C252-batukamma"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch252.txt",
+  "json": "telugu/narration/ch252.json",
+  "textHash": "fnv1a64:0a35d40d3acf6cda",
+  "jsonHash": "fnv1a64:9d59bc50d6965930",
+  "findings": []
+}

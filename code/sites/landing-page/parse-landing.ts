@@ -4,6 +4,7 @@ import type {
   InlineNode,
 } from "@coding-adventures/document-ast";
 import {
+  KERNEL_API_VERSION,
   Kinds,
   streamOf,
   type ContentNode,
@@ -18,7 +19,7 @@ const decoder = new TextDecoder("utf-8", { fatal: true });
 const parseLanding = defineStage({
   name: "@coding-adventures/site-landing-parse",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: KERNEL_API_VERSION,
   description: "Parse the declarative landing-page model into Content IR.",
   consumes: streamOf(Kinds.ContentSource),
   produces: streamOf(Kinds.ContentNode),

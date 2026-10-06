@@ -1,0 +1,11 @@
+{
+  "id": "PT-C206-servir",
+  "pathSegment": "PT-PATH-206-VERBOS206",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-206-VERBOS206",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C276-imeyl",
+    "language": "persian",
+    "chapter": 276,
+    "sequence": 14300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acf5574c5d70b25e"
+  },
+  "findings": []
+}

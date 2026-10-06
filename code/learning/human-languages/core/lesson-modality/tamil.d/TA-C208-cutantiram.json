@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C208-cutantiram",
+    "language": "tamil",
+    "chapter": 208,
+    "sequence": 10830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5dedcc9848b9c8de"
+  },
+  "findings": []
+}

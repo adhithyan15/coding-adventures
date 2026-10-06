@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C151-umziehen",
+    "language": "german",
+    "chapter": 151,
+    "sequence": 6760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79e19590e163e35e"
+  },
+  "findings": []
+}

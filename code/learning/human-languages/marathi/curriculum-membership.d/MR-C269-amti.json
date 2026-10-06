@@ -1,0 +1,11 @@
+{
+  "id": "MR-C269-amti",
+  "pathSegment": "MR-PATH-269-VASTU269",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-269-VASTU269",
+      "order": 2
+    }
+  ]
+}

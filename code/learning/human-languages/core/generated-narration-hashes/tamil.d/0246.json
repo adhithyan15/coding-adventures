@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:9896b3850915c29a",
+  "lessonIds": [
+    "TA-C246-kontattam",
+    "TA-C246-pattacu",
+    "TA-C246-kalaccaram",
+    "TA-C246-palakkam",
+    "TA-C246-parampariyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch246.txt",
+  "json": "tamil/narration/ch246.json",
+  "textHash": "fnv1a64:2e7cd9be4d38c574",
+  "jsonHash": "fnv1a64:bdf779e41001eb27",
+  "findings": []
+}

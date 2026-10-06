@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C177-piraccinai",
+    "language": "tamil",
+    "chapter": 177,
+    "sequence": 8540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eaccfaa107ebe7e8"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C192-adhovastram",
+  "pathSegment": "SA-PATH-192-THG192",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-192-THG192",
+      "order": 2
+    }
+  ]
+}

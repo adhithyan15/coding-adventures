@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C229-lahze",
+    "language": "persian",
+    "chapter": 229,
+    "sequence": 11830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6eee17549aeac1f"
+  },
+  "findings": []
+}

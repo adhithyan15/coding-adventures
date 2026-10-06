@@ -52,17 +52,17 @@ You already say these, and every one of them has ల somewhere inside it:
 - **పరవాలేదు** *paravālēdu* — it's okay / no problem / you're welcome
 - **రేపు కలుద్దాం** *rēpu kaluddām* — see you tomorrow
 
-## Writing: ల — copy what you see
+## Writing: ల — two calm movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-114] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on ల and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the numbered filmstrip once before your pen moves. Movement 1 loops
+counterclockwise around the small upper bowl. Lift, then movement 2 sweeps down
+and around the broad lower bowl.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Trace the same route slowly. This is one attested school-style order fitted to
+the printed shape here; Telugu handwriting varies, so keep the two movements
+clear instead of closing the pen lift.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-114] -->

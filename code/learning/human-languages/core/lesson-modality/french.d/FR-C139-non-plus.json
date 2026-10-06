@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C139-non-plus",
+    "language": "french",
+    "chapter": 139,
+    "sequence": 6490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02d765392ee19ff6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C235-ticai",
+  "pathSegment": "TA-PATH-235-IDAM235",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-235-IDAM235",
+      "order": 0
+    }
+  ]
+}

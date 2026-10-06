@@ -1,0 +1,11 @@
+{
+  "id": "BN-C208-sochib",
+  "pathSegment": "BN-PATH-208-KAJ208",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-208-KAJ208",
+      "order": 3
+    }
+  ]
+}

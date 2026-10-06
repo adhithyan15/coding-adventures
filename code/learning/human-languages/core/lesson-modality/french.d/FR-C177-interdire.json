@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C177-interdire",
+    "language": "french",
+    "chapter": 177,
+    "sequence": 9230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92541979588b2e69"
+  },
+  "findings": []
+}

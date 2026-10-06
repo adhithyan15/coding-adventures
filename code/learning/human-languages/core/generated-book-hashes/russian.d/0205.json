@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:556fd3e7a2c39b59",
+  "lessonIds": [
+    "RU-C205-zabyvat",
+    "RU-C205-uchitsya",
+    "RU-C205-izuchat",
+    "RU-C205-prepodavat",
+    "RU-C205-sdavat"
+  ],
+  "tex": "russian/book/chapters/ch205-to-forget-to-be-a-student-to-study-to-teach-to-hand-in.tex"
+}

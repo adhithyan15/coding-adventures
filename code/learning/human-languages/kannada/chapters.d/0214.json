@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Edge, Tip, Bottom, Cross street, Fork",
+  "label": "ch:ka-edge-tip-bottom-cross-street-fork",
+  "canDo": "I can say an edge, a tip, the bottom, a cross street and a fork.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C214-kavalu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say an edge, a tip, the bottom, a cross street and a fork.",
+    "assesses": [
+      "KA-LEX-C214-STHALA214-03",
+      "KA-LEX-C214-STHALA214-04",
+      "KA-LEX-C214-STHALA214-05"
+    ]
+  }
+}

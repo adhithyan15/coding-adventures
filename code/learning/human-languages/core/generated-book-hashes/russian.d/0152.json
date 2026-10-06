@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:1bd973a9c9a9fad8",
+  "lessonIds": [
+    "RU-C152-okolo",
+    "RU-C152-vokrug",
+    "RU-C152-vnutri",
+    "RU-C152-snaruzhi",
+    "RU-C152-szadi"
+  ],
+  "tex": "russian/book/chapters/ch152-beside-around-inside-outside-behind.tex"
+}

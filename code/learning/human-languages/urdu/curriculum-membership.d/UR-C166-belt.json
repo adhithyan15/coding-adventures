@@ -1,0 +1,11 @@
+{
+  "id": "UR-C166-belt",
+  "pathSegment": "UR-PATH-166-CHIZ166",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-166-CHIZ166",
+      "order": 1
+    }
+  ]
+}

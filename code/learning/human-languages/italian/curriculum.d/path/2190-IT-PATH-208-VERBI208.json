@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-208-VERBI208",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-208-VERBI208"
+  ],
+  "after": []
+}

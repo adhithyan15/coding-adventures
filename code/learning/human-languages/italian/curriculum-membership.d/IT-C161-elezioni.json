@@ -1,0 +1,11 @@
+{
+  "id": "IT-C161-elezioni",
+  "pathSegment": "IT-PATH-161-COSE161",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-161-COSE161",
+      "order": 4
+    }
+  ]
+}

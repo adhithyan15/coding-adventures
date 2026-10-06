@@ -1,0 +1,11 @@
+{
+  "id": "KA-C204-maja-madu",
+  "pathSegment": "KA-PATH-204-KRIYE204",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-204-KRIYE204",
+      "order": 3
+    }
+  ]
+}

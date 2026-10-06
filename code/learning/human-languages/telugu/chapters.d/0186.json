@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Grandson, Granddaughter, Parents, Twins, Baby",
+  "label": "ch:te-grandson-granddaughter-parents-twins-baby",
+  "canDo": "I can say a grandson, a granddaughter, parents, twins and a baby.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C186-papa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say a grandson, a granddaughter, parents, twins and a baby.",
+    "assesses": [
+      "TE-LEX-C186-VASTUVU186-03",
+      "TE-LEX-C186-VASTUVU186-04",
+      "TE-LEX-C186-VASTUVU186-05"
+    ]
+  }
+}

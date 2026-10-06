@@ -779,6 +779,40 @@ func TestGrammarSourceChangeFiresRubyGrammarGate(t *testing.T) {
 	}
 }
 
+// MacroOct and Nib are the first Rust grammars reconciled for byte-for-byte
+// regeneration. Their sources are outside packages, so path clauses are
+// essential; the generator packages must also fire the shared gate.
+func TestRustGrammarGateCoversSourcesArtifactsAndGenerator(t *testing.T) {
+	reg := loadRealRegistry(t)
+	cases := []struct {
+		name     string
+		affected map[string]bool
+		changed  []string
+		want     bool
+	}{
+		{"token source", map[string]bool{}, []string{"code/grammars/macrooct/macrooct.tokens"}, true},
+		{"compiled artifact", map[string]bool{}, []string{"code/packages/rust/macrooct-lexer/src/_grammar.rs"}, true},
+		{"lexer package", map[string]bool{"rust/macrooct-lexer": true}, nil, true},
+		{"Nib token source", map[string]bool{}, []string{"code/grammars/nib/nib.tokens"}, true},
+		{"Nib parser source", map[string]bool{}, []string{"code/grammars/nib/nib.grammar"}, true},
+		{"Nib lexer artifact", map[string]bool{}, []string{"code/packages/rust/nib-lexer/src/_grammar.rs"}, true},
+		{"Nib parser artifact", map[string]bool{}, []string{"code/packages/rust/nib-parser/src/_grammar.rs"}, true},
+		{"Nib lexer package", map[string]bool{"rust/nib-lexer": true}, nil, true},
+		{"Nib parser package", map[string]bool{"rust/nib-parser": true}, nil, true},
+		{"generator library", map[string]bool{"rust/grammar-tools": true}, nil, true},
+		{"generator CLI", map[string]bool{"rust/programs/grammar-tools": true}, nil, true},
+		{"unrelated grammar", map[string]bool{}, []string{"code/grammars/other/other.tokens"}, false},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := mustEvaluate(t, reg, tc.affected, tc.changed, false)
+			if got["rust-grammar-regen-check"] != tc.want {
+				t.Errorf("Rust grammar gate = %v, want %v", got["rust-grammar-regen-check"], tc.want)
+			}
+		})
+	}
+}
+
 func TestD18FManifestChangeFiresOnlyD18F(t *testing.T) {
 	reg := loadRealRegistry(t)
 	got := mustEvaluate(t, reg, map[string]bool{}, []string{"code/fixtures/chief-of-staff-message/v1/manifest.json"}, false)

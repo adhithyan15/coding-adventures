@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:e7e2ed7a9d144e71",
+  "lessonIds": [
+    "TE-C214-bastandu",
+    "TE-C214-vimanasrayam",
+    "TE-C214-kudali",
+    "TE-C214-rajadhani",
+    "TE-C214-jilla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch214.txt",
+  "json": "telugu/narration/ch214.json",
+  "textHash": "fnv1a64:b9100e37f1df7e10",
+  "jsonHash": "fnv1a64:7a877291dd23a586",
+  "findings": []
+}

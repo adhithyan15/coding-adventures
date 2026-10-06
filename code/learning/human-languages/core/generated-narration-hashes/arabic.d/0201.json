@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:5c5755c80d49d362",
+  "lessonIds": [
+    "AR-C201-huqna",
+    "AR-C201-amaliyya",
+    "AR-C201-kadma",
+    "AR-C201-harq",
+    "AR-C201-maghas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch201.txt",
+  "json": "arabic/narration/ch201.json",
+  "textHash": "fnv1a64:d5ad4df116cfc113",
+  "jsonHash": "fnv1a64:84f32975f8519d45",
+  "findings": []
+}

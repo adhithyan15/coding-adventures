@@ -1,0 +1,11 @@
+{
+  "id": "SA-C255-jnanam",
+  "pathSegment": "SA-PATH-255-SCH255",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-255-SCH255",
+      "order": 1
+    }
+  ]
+}

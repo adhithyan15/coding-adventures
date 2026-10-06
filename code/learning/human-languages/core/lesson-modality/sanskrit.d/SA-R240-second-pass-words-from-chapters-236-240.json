@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R240-second-pass-words-from-chapters-236-240",
+    "language": "sanskrit",
+    "chapter": 240,
+    "sequence": 14230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d12b95715e771e4"
+  },
+  "findings": []
+}

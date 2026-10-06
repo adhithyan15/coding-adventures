@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C161-nupuram",
+    "language": "sanskrit",
+    "chapter": 161,
+    "sequence": 8520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5031e72bb9d1d46"
+  },
+  "findings": []
+}

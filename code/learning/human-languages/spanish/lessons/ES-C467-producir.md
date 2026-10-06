@@ -7,7 +7,7 @@ chapter: 467
 type: word
 headword: producir
 gloss: to produce — the second -ducir verb, and it conjugates exactly like the one you already have
-concept_tag: ES-ASK-PRODUCIR
+concept_tag: ES-VERB-PRODUCIR
 prerequisites: [ES-C466-sintesis-informe, ES-C462-reducir, ES-C310-ducha]
 sounds: [soft-c, stress-final, r-tap]
 roots: [ducere-latin]

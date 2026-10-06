@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C234-prayacchati",
+    "language": "sanskrit",
+    "chapter": 234,
+    "sequence": 13910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd29a92bc4731f72"
+  },
+  "findings": []
+}

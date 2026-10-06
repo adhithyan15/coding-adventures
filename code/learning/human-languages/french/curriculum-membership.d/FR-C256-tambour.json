@@ -1,0 +1,11 @@
+{
+  "id": "FR-C256-tambour",
+  "pathSegment": "FR-PATH-256-CHOSES256",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-256-CHOSES256",
+      "order": 4
+    }
+  ]
+}

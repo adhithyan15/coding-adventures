@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "Thing, Object, Furniture, Armchair, Chest of drawers",
+  "label": "ch:ru-thing-object-furniture-armchair-chest-of-drawers",
+  "canDo": "I can say a thing, an object, furniture, an armchair and a chest of drawers.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C159-komod",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can say a thing, an object, furniture, an armchair and a chest of drawers.",
+    "assesses": [
+      "RU-LEX-C159-VESHCH159-03",
+      "RU-LEX-C159-VESHCH159-04",
+      "RU-LEX-C159-VESHCH159-05"
+    ]
+  }
+}

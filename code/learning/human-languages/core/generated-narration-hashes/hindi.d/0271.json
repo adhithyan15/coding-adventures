@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:8697951b9f69e646",
+  "lessonIds": [
+    "HI-C271-karyalay",
+    "HI-C271-bima",
+    "HI-C271-byaj",
+    "HI-C271-kirayedar",
+    "HI-C271-mohalla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch271.txt",
+  "json": "hindi/narration/ch271.json",
+  "textHash": "fnv1a64:73b548f52a38467c",
+  "jsonHash": "fnv1a64:3d68d1a0d9653419",
+  "findings": []
+}

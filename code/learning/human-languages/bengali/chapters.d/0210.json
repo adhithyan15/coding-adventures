@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "To sign, To phone, To meet, To marry, To survive",
+  "label": "ch:bn-to-sign-to-phone-to-meet-to-marry-to-survive",
+  "canDo": "I can say to sign, to phone, to meet, to marry and to survive.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C210-bacha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say to sign, to phone, to meet, to marry and to survive.",
+    "assesses": [
+      "BN-LEX-C210-ACT210-03",
+      "BN-LEX-C210-ACT210-04",
+      "BN-LEX-C210-ACT210-05"
+    ]
+  }
+}

@@ -855,7 +855,7 @@ enum Builder {
         template: Box<Wrapper>,
         children: Vec<Builder>,
     },
-    Leaf(PositionedNode),
+    Leaf(Box<PositionedNode>),
 }
 
 fn rebuild_wrappers(atoms: Vec<PlacedAtom>) -> Vec<PositionedNode> {
@@ -897,7 +897,7 @@ fn rebuild_wrappers(atoms: Vec<PlacedAtom>) -> Vec<PositionedNode> {
 
 fn insert_builder(target: &mut Vec<Builder>, path: &[Wrapper], leaf: PositionedNode) {
     let Some((head, tail)) = path.split_first() else {
-        target.push(Builder::Leaf(leaf));
+        target.push(Builder::Leaf(Box::new(leaf)));
         return;
     };
     if let Some(Builder::Wrapper { template, children }) = target.last_mut() {
@@ -933,7 +933,7 @@ fn finalize_builder(
     seen_fragments: &mut HashMap<usize, usize>,
 ) -> PositionedNode {
     match builder {
-        Builder::Leaf(node) => node,
+        Builder::Leaf(node) => *node,
         Builder::Wrapper { template, children } => {
             let mut children =
                 finalize_forest(children, emitted_ids, fragment_totals, seen_fragments);

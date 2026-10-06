@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C216-kusalah",
+    "language": "sanskrit",
+    "chapter": 216,
+    "sequence": 12470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:010b17d94219cf9b"
+  },
+  "findings": []
+}

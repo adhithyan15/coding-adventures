@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C196-achar",
+    "language": "bengali",
+    "chapter": 196,
+    "sequence": 11580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66af0fe338b5fe3f"
+  },
+  "findings": []
+}

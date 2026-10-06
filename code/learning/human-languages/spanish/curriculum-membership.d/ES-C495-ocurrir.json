@@ -1,0 +1,11 @@
+{
+  "id": "ES-C495-ocurrir",
+  "pathSegment": "ES-PATH-495-NOTICIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-495-NOTICIA",
+      "order": 1
+    }
+  ]
+}

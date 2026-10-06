@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C213-pade-pade",
+    "language": "telugu",
+    "chapter": 213,
+    "sequence": 9770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d8802cd3c1c248a"
+  },
+  "findings": []
+}

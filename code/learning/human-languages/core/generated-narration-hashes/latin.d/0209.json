@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:7f2cc6561446393f",
+  "lessonIds": [
+    "LA-C209-regio",
+    "LA-C209-provincia",
+    "LA-C209-inde",
+    "LA-C209-obviam",
+    "LA-C209-usque"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch209.txt",
+  "json": "latin/narration/ch209.json",
+  "textHash": "fnv1a64:2e4f6d0b0f41bb46",
+  "jsonHash": "fnv1a64:f549c8428f0f044b",
+  "findings": []
+}

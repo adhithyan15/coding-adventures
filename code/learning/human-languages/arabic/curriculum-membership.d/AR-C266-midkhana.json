@@ -1,0 +1,11 @@
+{
+  "id": "AR-C266-midkhana",
+  "pathSegment": "AR-PATH-266-MAKAN266",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-266-MAKAN266",
+      "order": 1
+    }
+  ]
+}

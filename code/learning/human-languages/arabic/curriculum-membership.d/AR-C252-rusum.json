@@ -1,0 +1,11 @@
+{
+  "id": "AR-C252-rusum",
+  "pathSegment": "AR-PATH-252-AMAL252",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-252-AMAL252",
+      "order": 3
+    }
+  ]
+}

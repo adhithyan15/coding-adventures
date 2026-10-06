@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:d656f341de1cfd29",
+  "lessonIds": [
+    "RU-C236-schitat",
+    "RU-C236-izmeryat",
+    "RU-C236-sravnivat",
+    "RU-C236-proveryat",
+    "RU-C236-zapolnyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch236.txt",
+  "json": "russian/narration/ch236.json",
+  "textHash": "fnv1a64:68e97952198f61f7",
+  "jsonHash": "fnv1a64:927eb176adc1b70d",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:dd4b7696309d9957",
+  "lessonIds": [
+    "RU-C183-pereulok",
+    "RU-C183-trotuar",
+    "RU-C183-doroga",
+    "RU-C183-shosse",
+    "RU-C183-port"
+  ],
+  "tex": "russian/book/chapters/ch183-side-street-pavement-road-highway-port.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C145-kujati",
+    "language": "sanskrit",
+    "chapter": 145,
+    "sequence": 7340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1387335636948c9"
+  },
+  "findings": []
+}

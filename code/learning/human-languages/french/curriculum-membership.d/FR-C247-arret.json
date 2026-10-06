@@ -1,0 +1,11 @@
+{
+  "id": "FR-C247-arret",
+  "pathSegment": "FR-PATH-247-CHOSES247",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-247-CHOSES247",
+      "order": 2
+    }
+  ]
+}

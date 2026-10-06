@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C264-sasre",
+    "language": "marathi",
+    "chapter": 264,
+    "sequence": 15150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c55d672737027b1b"
+  },
+  "findings": []
+}

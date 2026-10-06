@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:18bad2abcdb895ad",
+  "sourceHash": "fnv1a64:943d7162fde05526",
   "lessons": [
     {
       "id": "BN-C05-bola",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fce68b032d9412c5",
+      "sourceHash": "fnv1a64:307ea6dcf5efb0f9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -342,7 +342,7 @@
             },
             {
               "kind": "speech",
-              "text": "কথা বলা (kôthā bôlā) = \"to converse\" (using bôlā from earlier)."
+              "text": "kôthā bôlā = \"to converse\" (using bôlā from earlier)."
             },
             {
               "kind": "speech",

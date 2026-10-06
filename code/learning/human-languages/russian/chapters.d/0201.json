@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Change, Discount, Purchase, Colleague, Director",
+  "label": "ch:ru-change-discount-purchase-colleague-director",
+  "canDo": "I can say change, a discount, a purchase, a colleague and a director.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C201-direktor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say change, a discount, a purchase, a colleague and a director.",
+    "assesses": [
+      "RU-LEX-C201-RABOTA201-03",
+      "RU-LEX-C201-RABOTA201-04",
+      "RU-LEX-C201-RABOTA201-05"
+    ]
+  }
+}

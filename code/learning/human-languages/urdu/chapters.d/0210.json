@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Barber, Washerman, Cobbler, Blacksmith, Carpenter",
+  "label": "ch:ur-barber-washerman-cobbler-blacksmith-carpenter",
+  "canDo": "I can say a barber, a washerman, a cobbler, a blacksmith and a carpenter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C210-barhai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say a barber, a washerman, a cobbler, a blacksmith and a carpenter.",
+    "assesses": [
+      "UR-LEX-C210-KAM210-03",
+      "UR-LEX-C210-KAM210-04",
+      "UR-LEX-C210-KAM210-05"
+    ]
+  }
+}

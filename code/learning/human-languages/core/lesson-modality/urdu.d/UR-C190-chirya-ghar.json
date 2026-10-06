@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C190-chirya-ghar",
+    "language": "urdu",
+    "chapter": 190,
+    "sequence": 10880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16b83d8f261d1578"
+  },
+  "findings": []
+}

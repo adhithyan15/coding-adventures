@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C275-arus",
+    "language": "arabic",
+    "chapter": 275,
+    "sequence": 15820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6785b5108547cdb0"
+  },
+  "findings": []
+}

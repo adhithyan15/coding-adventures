@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:b44ede6fb17b29e4",
+  "lessonIds": [
+    "PT-C255-corredor",
+    "PT-C255-quintal",
+    "PT-C255-oceano",
+    "PT-C255-selva",
+    "PT-C255-chinelo",
+    "PT-R255-first-pass-words-from-chapters-249-251",
+    "PT-R255-second-pass-words-from-chapters-252-255"
+  ],
+  "tex": "portuguese/book/chapters/ch255-corridor-back-yard-ocean-jungle-slipper.tex"
+}

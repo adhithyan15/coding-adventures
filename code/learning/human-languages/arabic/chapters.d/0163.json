@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "To celebrate, To invite, To marry, To shake hands with, To hug",
+  "label": "ch:ar-to-celebrate-to-invite-to-marry-to-shake-hands-with-to-hug",
+  "canDo": "I can say to celebrate, to invite, to marry, to shake hands with and to hug.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C163-anaqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say to celebrate, to invite, to marry, to shake hands with and to hug.",
+    "assesses": [
+      "AR-LEX-C163-ACT163-03",
+      "AR-LEX-C163-ACT163-04",
+      "AR-LEX-C163-ACT163-05"
+    ]
+  }
+}

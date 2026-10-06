@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:2206638c41b08ce4",
+  "lessonIds": [
+    "FA-C269-faqat",
+    "FA-C269-hatta",
+    "FA-C269-kamelan",
+    "FA-C269-daqiqan",
+    "FA-C269-khoshbakhtane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch269.txt",
+  "json": "persian/narration/ch269.json",
+  "textHash": "fnv1a64:b181b3ef9e6f5982",
+  "jsonHash": "fnv1a64:d38a83af68023eda",
+  "findings": []
+}

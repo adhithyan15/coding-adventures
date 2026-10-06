@@ -1,0 +1,11 @@
+{
+  "id": "BN-C110-hariken",
+  "pathSegment": "BN-PATH-110-THINGS110",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-110-THINGS110",
+      "order": 1
+    }
+  ]
+}

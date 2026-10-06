@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C183-sramikkuka",
+    "language": "malayalam",
+    "chapter": 183,
+    "sequence": 7960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09e043e377aa023e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C214-mavu",
+    "language": "tamil",
+    "chapter": 214,
+    "sequence": 11330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a2b37ae704c6151"
+  },
+  "findings": []
+}

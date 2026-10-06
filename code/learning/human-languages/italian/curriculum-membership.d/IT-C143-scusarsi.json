@@ -1,0 +1,11 @@
+{
+  "id": "IT-C143-scusarsi",
+  "pathSegment": "IT-PATH-143-VERBI143",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-143-VERBI143",
+      "order": 3
+    }
+  ]
+}

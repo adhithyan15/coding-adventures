@@ -1,0 +1,11 @@
+{
+  "id": "TE-C167-cemata",
+  "pathSegment": "TE-PATH-167-AROGYAM167",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-167-AROGYAM167",
+      "order": 3
+    }
+  ]
+}

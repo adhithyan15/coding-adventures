@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C273-perukkuka",
+    "language": "malayalam",
+    "chapter": 273,
+    "sequence": 12660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5355d449f61c17c"
+  },
+  "findings": []
+}

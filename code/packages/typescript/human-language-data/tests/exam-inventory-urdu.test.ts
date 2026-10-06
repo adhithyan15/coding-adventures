@@ -80,18 +80,16 @@ describe("the committed Urdu A1 inventory", () => {
     ]);
   });
 
-  it("says the A1 task shape is DECLARED and absent, unlike Arabic's", () => {
-    // Each `about` has to state its own envelope. Arabic's A1 task shape carries
-    // `basis: external` and cites Avant STAMP 4S; Bengali has no task-shapes/ at
-    // all. Urdu's assessment.json declares an A1 level and points all four
-    // skills at task-shapes/a1.json, which is not on disk — worse than having
-    // nothing, because a declaration reads like an envelope until somebody
-    // looks. Copying either sibling's sentence here would have been wrong.
+  it("says the A1 task shape exists while its mocks remain absent", () => {
+    // Each `about` has to state its own envelope. Urdu now owns the executable
+    // task boundary, but it still has no mock prompts from which to infer that
+    // a particular paper item demands a particular word.
     expect(inventory.about).toMatch(/PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS/);
     expect(inventory.about).toMatch(
-      /EXAM ENVELOPE: AN A1 PAPER IS DECLARED AND IS NOT ON DISK/,
+      /EXAM ENVELOPE: AN A1 TASK SHAPE EXISTS, AND THE MOCKS DO NOT/,
     );
     expect(inventory.about).toMatch(/task-shapes\/a1\.json/);
+    expect(inventory.about).toMatch(/urdu\/mocks\/ still does not exist/);
     expect(inventory.about).toMatch(/NOT SEARCHED, BY INSTRUCTION/);
     expect(inventory.source).toMatch(/^PROJECT-DEFINED\./);
     expect(isExamInventoryComplete(inventory)).toBe(false);

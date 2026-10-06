@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Vial, Memory, Thought, Looks, Behaviour",
+  "label": "ch:bn-vial-memory-thought-looks-behaviour",
+  "canDo": "I can say a vial, a memory, a thought, looks and behaviour.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C234-bbohar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say a vial, a memory, a thought, looks and behaviour.",
+    "assesses": [
+      "BN-LEX-C234-JINIS234-03",
+      "BN-LEX-C234-JINIS234-04",
+      "BN-LEX-C234-JINIS234-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C219-adharam",
+  "pathSegment": "TE-PATH-219-KARANAM219",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-219-KARANAM219",
+      "order": 1
+    }
+  ]
+}

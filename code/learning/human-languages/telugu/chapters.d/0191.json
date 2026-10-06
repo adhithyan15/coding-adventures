@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Rubber, Light bulb, Firewood, Net, Weighing scale",
+  "label": "ch:te-rubber-light-bulb-firewood-net-weighing-scale",
+  "canDo": "I can say rubber, a light bulb, firewood, a net and a weighing scale.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C191-trasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say rubber, a light bulb, firewood, a net and a weighing scale.",
+    "assesses": [
+      "TE-LEX-C191-VASTUVU191-03",
+      "TE-LEX-C191-VASTUVU191-04",
+      "TE-LEX-C191-VASTUVU191-05"
+    ]
+  }
+}

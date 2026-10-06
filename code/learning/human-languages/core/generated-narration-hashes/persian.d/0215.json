@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:13e545160725ecdb",
+  "lessonIds": [
+    "FA-C215-nomre",
+    "FA-C215-mashq",
+    "FA-C215-khabarnegar",
+    "FA-C215-bazigar",
+    "FA-C215-khanande"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch215.txt",
+  "json": "persian/narration/ch215.json",
+  "textHash": "fnv1a64:4ee246f8a972e9a0",
+  "jsonHash": "fnv1a64:4487891e8457a83d",
+  "findings": []
+}

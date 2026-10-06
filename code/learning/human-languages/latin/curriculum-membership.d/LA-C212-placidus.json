@@ -1,0 +1,11 @@
+{
+  "id": "LA-C212-placidus",
+  "pathSegment": "LA-PATH-212-QUAL212",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-212-QUAL212",
+      "order": 3
+    }
+  ]
+}

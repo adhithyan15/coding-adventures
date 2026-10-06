@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C254-marsuppium",
+    "language": "latin",
+    "chapter": 254,
+    "sequence": 13430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e48d8a4096b685d9"
+  },
+  "findings": []
+}

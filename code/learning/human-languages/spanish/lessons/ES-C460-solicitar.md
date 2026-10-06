@@ -7,7 +7,7 @@ chapter: 460
 type: word
 headword: solicitar
 gloss: to apply for, to request — the formal verb on the form
-concept_tag: ES-ASK-SOLICITAR
+concept_tag: ES-VERB-SOLICITAR
 prerequisites: [ES-C460-herramienta, ES-C356-cita, ES-C458-entregar]
 sounds: [soft-c, s-clear, stress-final]
 roots: [citare-latin]

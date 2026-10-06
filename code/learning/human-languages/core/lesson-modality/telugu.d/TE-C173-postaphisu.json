@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C173-postaphisu",
+    "language": "telugu",
+    "chapter": 173,
+    "sequence": 7700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce1971f01f63f683"
+  },
+  "findings": []
+}

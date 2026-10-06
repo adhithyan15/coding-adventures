@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C220-jornalista",
+    "language": "portuguese",
+    "chapter": 220,
+    "sequence": 12850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a534535875d5843"
+  },
+  "findings": []
+}

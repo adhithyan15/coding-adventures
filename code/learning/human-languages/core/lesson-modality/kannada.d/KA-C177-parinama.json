@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C177-parinama",
+    "language": "kannada",
+    "chapter": 177,
+    "sequence": 8030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d4d43e4a6e51180"
+  },
+  "findings": []
+}

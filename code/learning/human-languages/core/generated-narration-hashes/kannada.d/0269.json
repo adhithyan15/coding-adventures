@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:f45b599513383001",
+  "lessonIds": [
+    "KA-C269-varadi",
+    "KA-C269-samasye",
+    "KA-C269-suddi",
+    "KA-C269-mahiti",
+    "KA-C269-anka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch269.txt",
+  "json": "kannada/narration/ch269.json",
+  "textHash": "fnv1a64:5c85e0601b12b931",
+  "jsonHash": "fnv1a64:2f84d3a33396d6ef",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:39a91ad10153d356",
+  "lessonIds": [
+    "TE-C255-myuziyam",
+    "TE-C255-vyayamasala",
+    "TE-C255-vedika",
+    "TE-C255-nagaram",
+    "TE-C255-raccabanda"
+  ],
+  "tex": "telugu/book/chapters/ch255-museum-gym-stage-city-village-meeting-platform.tex"
+}

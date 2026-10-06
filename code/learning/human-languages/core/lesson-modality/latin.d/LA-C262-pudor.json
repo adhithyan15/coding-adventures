@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C262-pudor",
+    "language": "latin",
+    "chapter": 262,
+    "sequence": 14010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c666a87fb3b3321"
+  },
+  "findings": []
+}

@@ -78,7 +78,7 @@ front when you want to underline the courtesy.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-C08-DAYAVITTU-04] -->
 
 Look at **ಟ್ಟು** — a **doubled** *ṭ*, stacked exactly the way **ತ್ತು** was in
-**ಒಂಬತ್ತು**. The first **ಟ್** is *ṭa* silenced by the **virama**, tucked **under**
+*ombattu* ("nine"). The first **ಟ್** is *ṭa* silenced by the **virama**, tucked **under**
 **ಟು** *ṭu* as an *ottu*. Same rule, a new letter.
 
 ## Guided Practice

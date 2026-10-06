@@ -4423,13 +4423,19 @@ fn lower_function(
                 let fref = cp.add_fieldref(class_name, field_name, descriptor);
                 code.push(GETSTATIC);
                 code.extend_from_slice(&fref.to_be_bytes());
-                if descriptor == "J" && dest_type != JvmType::Long {
+                if descriptor == "J" && dest_type == JvmType::Int {
                     code.push(L2I);
-                } else if descriptor != "J" && dest_type != JvmType::Ref {
+                } else if (!matches!(dest_type, JvmType::Ref)
+                    && descriptor != dest_type.descriptor())
+                    || (matches!(dest_type, JvmType::Ref)
+                        && !descriptor.starts_with('L')
+                        && !descriptor.starts_with('['))
+                {
                     return Err(IIRJvmError::InvalidOperand {
                         function: fname.clone(),
                         detail: format!(
-                            "global_load of reference field {gname:?} requires a Ref destination"
+                            "global_load of field {gname:?} with descriptor {descriptor} has incompatible destination type {}",
+                            dest_type.descriptor()
                         ),
                     });
                 }
@@ -4458,13 +4464,19 @@ fn lower_function(
                 })?;
                 let (val_slot, val_type) = lookup_var(&val_src)?;
                 emit_typed_load(&mut code, val_slot, val_type);
-                if descriptor == "J" && val_type != JvmType::Long {
+                if descriptor == "J" && val_type == JvmType::Int {
                     code.push(I2L);
-                } else if descriptor != "J" && val_type != JvmType::Ref {
+                } else if (!matches!(val_type, JvmType::Ref)
+                    && descriptor != val_type.descriptor())
+                    || (matches!(val_type, JvmType::Ref)
+                        && !descriptor.starts_with('L')
+                        && !descriptor.starts_with('['))
+                {
                     return Err(IIRJvmError::InvalidOperand {
                         function: fname.clone(),
                         detail: format!(
-                            "global_store of reference field {gname:?} requires a Ref value"
+                            "global_store of field {gname:?} with descriptor {descriptor} has incompatible value type {}",
+                            val_type.descriptor()
                         ),
                     });
                 }
@@ -5286,8 +5298,8 @@ pub fn lower_iir_to_jvm(
 
 /// Collect every distinct module-global name (read or written) into
 /// `(name → "G_N", [JvmFieldInfo])`, numbered in first-seen order across all
-/// functions (LANG-FULL E6 layer 1). Numeric globals remain `long`; string and
-/// array globals retain their concrete reference descriptor. Field names are
+/// functions (LANG-FULL E6 layer 1). Integer globals remain `long`; floating,
+/// string and array globals retain their concrete descriptor. Field names are
 /// index-based so an arbitrary source identifier can never collide.
 fn collect_global_fields(module: &IIRModule) -> (HashMap<String, (String, String)>, Vec<JvmFieldInfo>) {
     let mut map: HashMap<String, (String, String)> = HashMap::new();
@@ -5316,7 +5328,9 @@ fn collect_global_fields(module: &IIRModule) -> (HashMap<String, (String, String
                                 _ => "i64",
                             }
                         };
-                        let descriptor = if is_array_type(type_hint) || type_hint == "str" {
+                        let descriptor = if is_array_type(type_hint)
+                            || matches!(type_hint, "str" | "f32" | "f64")
+                        {
                             type_to_jvm_descriptor(type_hint).to_string()
                         } else {
                             "J".to_string()

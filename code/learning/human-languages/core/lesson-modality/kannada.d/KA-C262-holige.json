@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C262-holige",
+    "language": "kannada",
+    "chapter": 262,
+    "sequence": 12490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0035e4a22b6e748e"
+  },
+  "findings": []
+}

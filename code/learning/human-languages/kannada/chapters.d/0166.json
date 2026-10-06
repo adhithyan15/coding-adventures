@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "To plough, To sprinkle, To drip, To leak, To float",
+  "label": "ch:ka-to-plough-to-sprinkle-to-drip-to-leak-to-float",
+  "canDo": "I can say to plough, to sprinkle, to drip, to leak and to float.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-R166-second-pass-words-from-chapters-162-166",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say to plough, to sprinkle, to drip, to leak and to float.",
+    "assesses": [
+      "KA-LEX-C166-KRIYE166-03",
+      "KA-LEX-C166-KRIYE166-04",
+      "KA-LEX-C166-KRIYE166-05"
+    ]
+  }
+}

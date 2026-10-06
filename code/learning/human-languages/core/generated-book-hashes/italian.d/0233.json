@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:6c3af03fc11e2194",
+  "lessonIds": [
+    "IT-C233-ordinare",
+    "IT-C233-tagliare",
+    "IT-C233-asciugare",
+    "IT-C233-stirare",
+    "IT-C233-costruire"
+  ],
+  "tex": "italian/book/chapters/ch233-to-order-to-cut-to-dry-to-iron-to-build.tex"
+}

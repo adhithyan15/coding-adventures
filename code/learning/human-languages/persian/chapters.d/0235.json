@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "Sharp, Available, Enough, Free of charge, Unemployed",
+  "label": "ch:fa-sharp-available-enough-free-of-charge-unemployed",
+  "canDo": "I can say sharp, available, enough, free of charge and unemployed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C235-bikar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say sharp, available, enough, free of charge and unemployed.",
+    "assesses": [
+      "FA-LEX-C235-SEFAT235-03",
+      "FA-LEX-C235-SEFAT235-04",
+      "FA-LEX-C235-SEFAT235-05"
+    ]
+  }
+}

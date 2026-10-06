@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "To swim, To slip, To rest, To hurry, To delay",
+  "label": "ch:bn-to-swim-to-slip-to-rest-to-hurry-to-delay",
+  "canDo": "I can say to swim, to slip, to rest, to hurry and to delay.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C149-deri-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: I can say to swim, to slip, to rest, to hurry and to delay.",
+    "assesses": [
+      "BN-LEX-C149-ACT149-03",
+      "BN-LEX-C149-ACT149-04",
+      "BN-LEX-C149-ACT149-05"
+    ]
+  }
+}

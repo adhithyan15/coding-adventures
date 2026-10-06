@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:b6c856a26bf0e3dc",
+  "lessonIds": [
+    "HI-C240-adhunik",
+    "HI-C240-pracin",
+    "HI-C240-sthaniya",
+    "HI-C240-videsi",
+    "HI-C240-desi"
+  ],
+  "tex": "hindi/book/chapters/ch240-modern-ancient-local-foreign-local.tex"
+}

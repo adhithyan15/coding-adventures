@@ -1,0 +1,11 @@
+{
+  "id": "LA-C175-adhuc",
+  "pathSegment": "LA-PATH-175-TEMP175",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-175-TEMP175",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "To translate, To forget, To remember, To decide, To choose",
+  "label": "ch:it-to-translate-to-forget-to-remember-to-decide-to-choose",
+  "canDo": "I can say to translate, to forget, to remember, to decide and to choose.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C175-scegliere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say to translate, to forget, to remember, to decide and to choose.",
+    "assesses": [
+      "IT-LEX-C175-VERBI175-03",
+      "IT-LEX-C175-VERBI175-04",
+      "IT-LEX-C175-VERBI175-05"
+    ]
+  }
+}

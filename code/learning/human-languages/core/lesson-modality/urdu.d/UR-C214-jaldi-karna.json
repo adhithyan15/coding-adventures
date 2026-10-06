@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C214-jaldi-karna",
+    "language": "urdu",
+    "chapter": 214,
+    "sequence": 12600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf4ff6e798865621"
+  },
+  "findings": []
+}

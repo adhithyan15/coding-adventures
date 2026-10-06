@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Moreover, Indeed, Surely, About, Only",
+  "label": "ch:la-moreover-indeed-surely-about-only",
+  "canDo": "I can say moreover, indeed, surely, about and only.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "LA-C210-tantum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say moreover, indeed, surely, about and only.",
+    "assesses": [
+      "LA-LEX-C210-CAUSA210-03",
+      "LA-LEX-C210-CAUSA210-04",
+      "LA-LEX-C210-CAUSA210-05"
+    ]
+  }
+}

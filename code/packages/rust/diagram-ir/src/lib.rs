@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.68.0";
+pub const VERSION: &str = "0.74.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -922,6 +922,72 @@ pub struct QuadrantConfig {
     pub title_fill: Option<String>,
 }
 
+#[derive(Clone, Debug, Default, PartialEq)]
+pub enum RadarGraticule {
+    #[default]
+    Circle,
+    Polygon,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct RadarConfig {
+    pub show_legend: bool,
+    pub ticks: f64,
+    pub min: f64,
+    pub max: Option<f64>,
+    pub graticule: RadarGraticule,
+    pub width: Option<f64>,
+    pub height: Option<f64>,
+    pub margin_top: Option<f64>,
+    pub margin_bottom: Option<f64>,
+    pub margin_left: Option<f64>,
+    pub margin_right: Option<f64>,
+    pub axis_scale_factor: Option<f64>,
+    pub axis_label_factor: Option<f64>,
+    pub curve_tension: Option<f64>,
+    pub axis_color: Option<String>,
+    pub axis_stroke_width: Option<f64>,
+    pub axis_label_font_size: Option<f64>,
+    pub curve_opacity: Option<f64>,
+    pub curve_stroke_width: Option<f64>,
+    pub graticule_color: Option<String>,
+    pub graticule_stroke_width: Option<f64>,
+    pub graticule_opacity: Option<f64>,
+    pub legend_font_size: Option<f64>,
+    pub series_colors: Vec<String>,
+}
+
+impl Default for RadarConfig {
+    fn default() -> Self {
+        Self {
+            show_legend: true,
+            ticks: 5.0,
+            min: 0.0,
+            max: None,
+            graticule: RadarGraticule::Circle,
+            width: None,
+            height: None,
+            margin_top: None,
+            margin_bottom: None,
+            margin_left: None,
+            margin_right: None,
+            axis_scale_factor: None,
+            axis_label_factor: None,
+            curve_tension: None,
+            axis_color: None,
+            axis_stroke_width: None,
+            axis_label_font_size: None,
+            curve_opacity: None,
+            curve_stroke_width: None,
+            graticule_color: None,
+            graticule_stroke_width: None,
+            graticule_opacity: None,
+            legend_font_size: None,
+            series_colors: Vec::new(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct ChartDiagram {
     pub title: Option<String>,
@@ -939,6 +1005,7 @@ pub struct ChartDiagram {
     pub quadrant_points: Vec<QuadrantPoint>,
     pub quadrant_config: QuadrantConfig,
     pub xy_config: XyChartConfig,
+    pub radar_config: RadarConfig,
     pub orientation: ChartOrientation,
 }
 
@@ -959,6 +1026,27 @@ pub struct LayoutedLabel {
     pub x: f64,
     pub y: f64,
     pub text: String,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct CubicCurveSegment {
+    pub control1: Point,
+    pub control2: Point,
+    pub end: Point,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ChartTextAnchor {
+    Start,
+    Middle,
+    End,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ChartTextBaseline {
+    Top,
+    Middle,
+    Bottom,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1005,6 +1093,38 @@ pub enum LayoutedChartItem {
     LinePath {
         points: Vec<Point>,
         color: String,
+    },
+    CubicPath {
+        start: Point,
+        segments: Vec<CubicCurveSegment>,
+        color: String,
+        fill: Option<String>,
+        fill_opacity: Option<f64>,
+        stroke_width: f64,
+    },
+    FilledLinePath {
+        points: Vec<Point>,
+        fill: String,
+        fill_opacity: f64,
+        stroke: String,
+        stroke_width: f64,
+    },
+    StyledLine {
+        x1: f64,
+        y1: f64,
+        x2: f64,
+        y2: f64,
+        color: String,
+        stroke_width: f64,
+    },
+    AnchoredLabel {
+        x: f64,
+        y: f64,
+        text: String,
+        font_size: f64,
+        color: String,
+        anchor: ChartTextAnchor,
+        baseline: ChartTextBaseline,
     },
     PointLabel {
         x: f64,
@@ -1095,6 +1215,15 @@ pub enum LayoutedChartItem {
         entries: Vec<LegendEntry>,
         font_size: Option<f64>,
     },
+    VerticalLegend {
+        x: f64,
+        y: f64,
+        entries: Vec<LegendEntry>,
+        box_size: f64,
+        font_size: f64,
+        line_height: f64,
+        fill_opacity: f64,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1119,6 +1248,90 @@ pub enum EventModelEntityKind {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct EventModelStyles {
+    pub ui_fill: String,
+    pub ui_stroke: String,
+    pub processor_fill: String,
+    pub processor_stroke: String,
+    pub read_model_fill: String,
+    pub read_model_stroke: String,
+    pub command_fill: String,
+    pub command_stroke: String,
+    pub event_fill: String,
+    pub event_stroke: String,
+}
+
+impl Default for EventModelStyles {
+    fn default() -> Self {
+        Self {
+            ui_fill: "#ffffff".into(),
+            ui_stroke: "#dbdada".into(),
+            processor_fill: "#edb3f6".into(),
+            processor_stroke: "#b88cbf".into(),
+            read_model_fill: "#d3f1a2".into(),
+            read_model_stroke: "#a3b732".into(),
+            command_fill: "#bcd6fe".into(),
+            command_stroke: "#679ac3".into(),
+            event_fill: "#ffb778".into(),
+            event_stroke: "#c19a0f".into(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct EventModelConfig {
+    pub padding: f64,
+    pub row_height: f64,
+    pub use_max_width: bool,
+    pub styles: EventModelStyles,
+}
+
+impl Default for EventModelConfig {
+    fn default() -> Self {
+        Self {
+            padding: 30.0,
+            row_height: 32.0,
+            use_max_width: true,
+            styles: EventModelStyles::default(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct EventModelEntity {
+    pub id: String,
+    pub namespace: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct EventModelDataBlock {
+    pub id: String,
+    pub data_type: Option<String>,
+    pub data: String,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct EventModelNote {
+    pub source_frame: String,
+    pub data_type: Option<String>,
+    pub data: String,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct EventModelGwtStatement {
+    pub kind: EventModelEntityKind,
+    pub entity_id: String,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct EventModelGwt {
+    pub source_frame: String,
+    pub given: Vec<EventModelGwtStatement>,
+    pub when: Vec<EventModelGwtStatement>,
+    pub then: Vec<EventModelGwtStatement>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct EventModelFrame {
     pub id: String,
     pub entity_id: String,
@@ -1127,13 +1340,21 @@ pub struct EventModelFrame {
     pub kind: EventModelEntityKind,
     pub reset: bool,
     pub source_frames: Vec<String>,
+    pub data_reference: Option<String>,
+    pub data_type: Option<String>,
+    pub data: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct EventModelDiagram {
+    pub config: EventModelConfig,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub entities: Vec<EventModelEntity>,
+    pub data_blocks: Vec<EventModelDataBlock>,
+    pub notes: Vec<EventModelNote>,
+    pub gwt: Vec<EventModelGwt>,
     pub frames: Vec<EventModelFrame>,
 }
 
@@ -1153,7 +1374,11 @@ pub enum LayoutedEventModelItem {
         width: f64,
         height: f64,
         label: String,
+        data_reference: Option<String>,
+        data_label: Option<String>,
         kind: EventModelEntityKind,
+        fill: String,
+        stroke: String,
     },
     Relation {
         from: Point,
@@ -1165,24 +1390,250 @@ pub enum LayoutedEventModelItem {
 pub struct LayoutedEventModelDiagram {
     pub width: f64,
     pub height: f64,
+    pub config: EventModelConfig,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub entities: Vec<EventModelEntity>,
+    pub notes: Vec<EventModelNote>,
+    pub gwt: Vec<EventModelGwt>,
     pub items: Vec<LayoutedEventModelItem>,
 }
 
 // HIERARCHY FAMILY
+#[derive(Clone, Debug, PartialEq)]
+pub struct TreemapTheme {
+    pub fills: Vec<String>,
+    pub strokes: Vec<String>,
+    pub labels: Vec<String>,
+}
+
+impl Default for TreemapTheme {
+    fn default() -> Self {
+        let fills = ["#dbeafe", "#dcfce7", "#fef3c7", "#fee2e2", "#e0e7ff"];
+        Self {
+            fills: (0..12).map(|index| fills[index % fills.len()].into()).collect(),
+            strokes: vec!["#475569".into(); 12],
+            labels: vec!["#0f172a".into(); 12],
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct TreemapConfig {
+    pub use_max_width: bool,
+    pub padding: f64,
+    pub diagram_padding: f64,
+    pub show_values: bool,
+    pub node_width: f64,
+    pub node_height: f64,
+    pub border_width: f64,
+    pub value_font_size: f64,
+    pub label_font_size: f64,
+    pub section_stroke_color: Option<String>,
+    pub section_stroke_width: Option<f64>,
+    pub section_fill_color: Option<String>,
+    pub leaf_stroke_color: Option<String>,
+    pub leaf_stroke_width: Option<f64>,
+    pub leaf_fill_color: Option<String>,
+    pub label_color: Option<String>,
+    pub value_color: Option<String>,
+    pub title_color: Option<String>,
+    pub title_font_size: Option<f64>,
+    pub value_format: String,
+    pub theme: TreemapTheme,
+}
+
+impl Default for TreemapConfig {
+    fn default() -> Self {
+        Self {
+            use_max_width: true,
+            padding: 10.0,
+            diagram_padding: 8.0,
+            show_values: true,
+            node_width: 100.0,
+            node_height: 40.0,
+            border_width: 1.0,
+            value_font_size: 12.0,
+            label_font_size: 14.0,
+            section_stroke_color: None,
+            section_stroke_width: None,
+            section_fill_color: None,
+            leaf_stroke_color: None,
+            leaf_stroke_width: None,
+            leaf_fill_color: None,
+            label_color: None,
+            value_color: None,
+            title_color: None,
+            title_font_size: None,
+            value_format: ",".into(),
+            theme: TreemapTheme::default(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct TreemapStyle {
+    pub node: DiagramStyle,
+    pub font_size: Option<TreemapFontSize>,
+    pub border_radius: Option<TreemapBorderRadius>,
+    pub opacity: Option<f64>,
+    pub fill_opacity: Option<f64>,
+    pub stroke_opacity: Option<f64>,
+    pub stroke_dash_offset: Option<f64>,
+    pub text_align: Option<TreemapTextAlign>,
+    pub text_align_last: Option<TreemapTextAlignLast>,
+    pub text_justify: Option<TreemapTextJustify>,
+    pub text_transform: Option<TreemapTextTransform>,
+    pub text_decoration: Option<TreemapTextDecoration>,
+    pub text_decoration_color: Option<TreemapTextDecorationColor>,
+    pub text_decoration_style: Option<TreemapTextDecorationStyle>,
+    pub text_decoration_thickness: Option<TreemapTextDecorationThickness>,
+    pub text_underline_offset: Option<TreemapTextUnderlineOffset>,
+    pub text_underline_position: Option<TreemapTextUnderlinePosition>,
+    pub line_height: Option<TreemapLineHeight>,
+    pub text_indent: Option<TreemapTextIndent>,
+    pub text_indent_hanging: bool,
+    pub text_indent_each_line: bool,
+    pub white_space: Option<TreemapWhiteSpace>,
+    pub overflow_wrap: Option<TreemapOverflowWrap>,
+    pub word_break: Option<TreemapWordBreak>,
+    pub line_break: Option<TreemapLineBreak>,
+    pub hyphens: Option<TreemapHyphens>,
+    pub hyphenate_character: Option<TreemapHyphenateCharacter>,
+    pub text_overflow: Option<TreemapTextOverflow>,
+    pub text_wrap_mode: Option<TreemapTextWrapMode>,
+    pub text_wrap_style: Option<TreemapTextWrapStyle>,
+    pub letter_spacing: Option<TreemapLetterSpacing>,
+    pub word_spacing: Option<TreemapWordSpacing>,
+    pub direction: Option<TreemapTextDirection>,
+    pub text_shadow: Option<TreemapTextShadow>,
+    pub tab_size: Option<u16>,
+    pub font_stretch: Option<TreemapFontStretch>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapFontSize { Pixels(f64), Factor(f64) }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapBorderRadius { Pixels(f64), Factor(f64) }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextAlign { Start, Center, End, Justify }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextAlignLast { Auto, Start, Center, End, Justify }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextJustify { Auto, None, InterWord, InterCharacter }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextTransform { None, Uppercase, Lowercase, Capitalize, FullWidth, FullSizeKana }
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct TreemapTextDecoration {
+    pub underline: bool,
+    pub overline: bool,
+    pub line_through: bool,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextDecorationStyle { Solid, Double, Dotted, Dashed, Wavy }
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum TreemapTextDecorationColor { CurrentColor, Color(String) }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapTextDecorationThickness { Auto, FromFont, Pixels(f64), Factor(f64) }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapTextUnderlineOffset { Auto, Pixels(f64), Factor(f64) }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextUnderlinePosition { Auto, FromFont, Under }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapLineHeight {
+    Factor(f64),
+    Pixels(f64),
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapTextIndent { Pixels(f64), Factor(f64) }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapWhiteSpace { Normal, NoWrap, Pre, PreWrap, PreLine, PreserveSpaces, BreakSpaces }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapOverflowWrap { Normal, BreakWord, Anywhere }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapWordBreak { Normal, BreakAll, KeepAll }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapLineBreak { Auto, Loose, Normal, Strict, Anywhere }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapHyphens { None, Manual }
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum TreemapHyphenateCharacter { Auto, Character(String) }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextOverflow { Clip, Ellipsis }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextWrapMode { Wrap, NoWrap }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextWrapStyle { Auto, Balance, Pretty, Stable }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapLetterSpacing { Normal, Pixels(f64), Factor(f64) }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapWordSpacing { Normal, Pixels(f64), Factor(f64) }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextDirection { LeftToRight, RightToLeft }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapFontStretch {
+    UltraCondensed, ExtraCondensed, Condensed, SemiCondensed, Normal,
+    SemiExpanded, Expanded, ExtraExpanded, UltraExpanded,
+    Percentage(f64),
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum TreemapTextShadow {
+    None,
+    Shadows(Vec<TreemapTextShadowLayer>),
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct TreemapTextShadowLayer {
+    pub offset_x: f64,
+    pub offset_y: f64,
+    pub blur_radius: f64,
+    pub color: TreemapTextShadowColor,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum TreemapTextShadowColor { CurrentColor, Color(String) }
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct TreemapNode {
     pub id: String,
     pub label: String,
     pub value: Option<f64>,
     pub class_selector: Option<String>,
+    pub style: Option<TreemapStyle>,
     pub parent_id: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct TreemapDiagram {
+    pub config: TreemapConfig,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
@@ -1195,17 +1646,21 @@ pub struct LayoutedTreemapNode {
     pub label: String,
     pub value: f64,
     pub depth: usize,
+    pub has_children: bool,
+    pub palette_index: Option<usize>,
     pub x: f64,
     pub y: f64,
     pub width: f64,
     pub height: f64,
     pub class_selector: Option<String>,
+    pub style: Option<TreemapStyle>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedTreemapDiagram {
     pub width: f64,
     pub height: f64,
+    pub config: TreemapConfig,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
@@ -1470,6 +1925,27 @@ pub struct ArchitectureServiceMetadata {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct ArchitectureConfig {
+    pub icon_size: f64,
+    pub font_size: f64,
+    pub node_separation: f64,
+    pub padding: f64,
+    pub ideal_edge_length_multiplier: f64,
+}
+
+impl Default for ArchitectureConfig {
+    fn default() -> Self {
+        Self {
+            icon_size: 80.0,
+            font_size: 16.0,
+            node_separation: 75.0,
+            padding: 40.0,
+            ideal_edge_length_multiplier: 1.5,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub enum StructuralNodeMetadata {
     ArchitectureService(ArchitectureServiceMetadata),
     Requirement(RequirementMetadata),
@@ -1559,6 +2035,7 @@ pub struct StructuralAlignment {
 #[derive(Clone, Debug, PartialEq)]
 pub struct StructuralDiagram {
     pub kind: StructuralKind,
+    pub architecture_config: Option<ArchitectureConfig>,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
@@ -2214,7 +2691,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.68.0");
+        assert_eq!(VERSION, "0.74.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -2327,6 +2804,7 @@ mod tests {
             quadrant_points: vec![],
             quadrant_config: QuadrantConfig::default(),
             xy_config: XyChartConfig::default(),
+            radar_config: RadarConfig::default(),
             orientation: ChartOrientation::Vertical,
         };
         assert_eq!(d.series[0].data.len(), 2);
@@ -2346,6 +2824,7 @@ mod tests {
         };
         let d = StructuralDiagram {
             kind: StructuralKind::Class,
+            architecture_config: None,
             title: None,
             accessibility_title: None,
             accessibility_description: None,

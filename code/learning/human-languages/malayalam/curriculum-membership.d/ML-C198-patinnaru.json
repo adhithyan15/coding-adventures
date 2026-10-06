@@ -1,0 +1,11 @@
+{
+  "id": "ML-C198-patinnaru",
+  "pathSegment": "ML-PATH-198-STHALAM198",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-198-STHALAM198",
+      "order": 2
+    }
+  ]
+}

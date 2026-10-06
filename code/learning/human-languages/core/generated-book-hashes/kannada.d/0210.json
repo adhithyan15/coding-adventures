@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:b7674061b8399ef2",
+  "lessonIds": [
+    "KA-C210-konege",
+    "KA-C210-samanyavagi",
+    "KA-C210-taksana",
+    "KA-C210-biduvu",
+    "KA-C210-yugadi"
+  ],
+  "tex": "kannada/book/chapters/ch210-finally-usually-immediately-free-time-ugadi.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:6654958b1f47ba69",
+  "lessonIds": [
+    "BN-C177-bicharok",
+    "BN-C177-chhatro",
+    "BN-C177-injiniyar",
+    "BN-C177-bigyani",
+    "BN-C177-gayok"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch177.txt",
+  "json": "bengali/narration/ch177.json",
+  "textHash": "fnv1a64:9659a666c779735c",
+  "jsonHash": "fnv1a64:7a1eee68a2de76c8",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C140-avant-hier",
+  "pathSegment": "FR-PATH-140-PAS140",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-140-PAS140",
+      "order": 2
+    }
+  ]
+}

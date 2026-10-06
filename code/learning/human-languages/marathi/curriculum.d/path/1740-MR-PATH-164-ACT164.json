@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-164-ACT164",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "MR-EXT-164-ACT164"
+  ],
+  "after": []
+}

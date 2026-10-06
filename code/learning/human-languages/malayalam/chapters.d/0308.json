@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "To hit, To kick, To collect, To take a photo, To type",
+  "label": "ch:ml-to-hit-to-kick-to-collect-to-take-a-photo-to-type",
+  "canDo": "I can say to hit, to kick, to collect, to take a photo and to type.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C308-taippu-ceyyuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can say to hit, to kick, to collect, to take a photo and to type.",
+    "assesses": [
+      "ML-LEX-C308-KRIYA308-03",
+      "ML-LEX-C308-KRIYA308-04",
+      "ML-LEX-C308-KRIYA308-05"
+    ]
+  }
+}

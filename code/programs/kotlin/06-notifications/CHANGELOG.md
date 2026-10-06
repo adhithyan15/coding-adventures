@@ -2,6 +2,12 @@
 
 All notable changes to **WaterNotify** (06-notifications) are documented here.
 
+## Unreleased
+
+- **Gradle wrapper pins its download.** `gradle-wrapper.properties` gains
+  `distributionSha256Sum` (gradle-8.11.1-bin.zip), Gradle's published checksum for the zip it
+  names, so the wrapper refuses a download that does not match.
+
 ## [1.0.0] — 2026-03-29
 
 ### Added

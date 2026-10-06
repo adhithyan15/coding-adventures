@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:2b25ba4184fb8b31",
+  "lessonIds": [
+    "GE-C201-dose",
+    "GE-C201-topf",
+    "GE-C201-pfanne",
+    "GE-C201-ofen",
+    "GE-C201-spuelmaschine"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch201.txt",
+  "json": "german/narration/ch201.json",
+  "textHash": "fnv1a64:f5dfc1c926b585d7",
+  "jsonHash": "fnv1a64:5b5c35f7a232e2c8",
+  "findings": []
+}

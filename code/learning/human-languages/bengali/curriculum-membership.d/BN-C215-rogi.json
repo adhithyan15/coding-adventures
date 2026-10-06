@@ -1,0 +1,11 @@
+{
+  "id": "BN-C215-rogi",
+  "pathSegment": "BN-PATH-215-SVASTHYO215",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-215-SVASTHYO215",
+      "order": 2
+    }
+  ]
+}

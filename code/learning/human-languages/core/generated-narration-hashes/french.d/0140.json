@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:b508fb5dfd857538",
+  "lessonIds": [
+    "FR-C140-deja",
+    "FR-C140-recemment",
+    "FR-C140-avant-hier",
+    "FR-C140-autrefois",
+    "FR-C140-se-produire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch140.txt",
+  "json": "french/narration/ch140.json",
+  "textHash": "fnv1a64:9781ac0ba8d8fb34",
+  "jsonHash": "fnv1a64:b2abccfef1756d74",
+  "findings": []
+}

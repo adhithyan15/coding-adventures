@@ -1,0 +1,11 @@
+{
+  "id": "AR-C234-munabbih",
+  "pathSegment": "AR-PATH-234-WAQT234",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-234-WAQT234",
+      "order": 3
+    }
+  ]
+}

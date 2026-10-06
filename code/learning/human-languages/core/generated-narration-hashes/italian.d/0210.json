@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:e48d94cce23313a6",
+  "lessonIds": [
+    "IT-C210-preparare",
+    "IT-C210-prestare",
+    "IT-C210-produrre",
+    "IT-C210-proporre",
+    "IT-C210-raccogliere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch210.txt",
+  "json": "italian/narration/ch210.json",
+  "textHash": "fnv1a64:a8c44d5c849e3bc8",
+  "jsonHash": "fnv1a64:2493a9ebe296af01",
+  "findings": []
+}

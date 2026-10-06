@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Tasty, Kind, Relaxed, Thin, Brave",
+  "label": "ch:ge-tasty-kind-relaxed-thin-brave",
+  "canDo": "I can say tasty, kind, relaxed, thin and brave.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C218-mutig",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say tasty, kind, relaxed, thin and brave.",
+    "assesses": [
+      "GE-LEX-C218-QUAL218-03",
+      "GE-LEX-C218-QUAL218-04",
+      "GE-LEX-C218-QUAL218-05"
+    ]
+  }
+}

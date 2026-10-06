@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:57d6a0e1a9cbff46",
+  "lessonIds": [
+    "AR-C273-shukulata",
+    "AR-C273-halwa",
+    "AR-C273-makaruna",
+    "AR-C273-daqiq",
+    "AR-C273-tawabil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch273.txt",
+  "json": "arabic/narration/ch273.json",
+  "textHash": "fnv1a64:b608497fd285fd4a",
+  "jsonHash": "fnv1a64:fdc6612c048dd678",
+  "findings": []
+}

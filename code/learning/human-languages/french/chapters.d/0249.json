@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Actor, Actress, Poem, Writer, Painter",
+  "label": "ch:fr-actor-actress-poem-writer-painter",
+  "canDo": "I can say an actor, an actress, a poem, a writer and a painter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C249-peintre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say an actor, an actress, a poem, a writer and a painter.",
+    "assesses": [
+      "FR-LEX-C249-CHOSES249-03",
+      "FR-LEX-C249-CHOSES249-04",
+      "FR-LEX-C249-CHOSES249-05"
+    ]
+  }
+}

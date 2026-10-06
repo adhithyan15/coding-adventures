@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R188-second-pass-words-from-chapters-184-188",
+    "language": "urdu",
+    "chapter": 188,
+    "sequence": 10640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dec7a46280561d90"
+  },
+  "findings": []
+}

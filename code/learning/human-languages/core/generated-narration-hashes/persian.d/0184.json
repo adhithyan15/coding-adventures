@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:851290009e723766",
+  "lessonIds": [
+    "FA-C184-qabul-kardan",
+    "FA-C184-rad-kardan",
+    "FA-C184-vazidan",
+    "FA-C184-tabidan",
+    "FA-C184-ruyidan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch184.txt",
+  "json": "persian/narration/ch184.json",
+  "textHash": "fnv1a64:5eebc22e5fb24518",
+  "jsonHash": "fnv1a64:e657b3de314cf3bb",
+  "findings": []
+}

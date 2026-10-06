@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C162-krossovki",
+    "language": "russian",
+    "chapter": 162,
+    "sequence": 8970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99d0b5e35819b65a"
+  },
+  "findings": []
+}

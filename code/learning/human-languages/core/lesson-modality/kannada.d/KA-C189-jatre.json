@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C189-jatre",
+    "language": "kannada",
+    "chapter": 189,
+    "sequence": 8630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fd2bde7a123a31c"
+  },
+  "findings": []
+}

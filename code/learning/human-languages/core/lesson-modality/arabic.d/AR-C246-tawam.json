@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C246-tawam",
+    "language": "arabic",
+    "chapter": 246,
+    "sequence": 13690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ab5e32708f925c4"
+  },
+  "findings": []
+}

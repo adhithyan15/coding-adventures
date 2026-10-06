@@ -1,0 +1,21 @@
+{
+  "glyph": "ら",
+  "sound": "ra",
+  "role": "hiragana",
+  "components": [
+    "a short top stroke slanting down to the right",
+    "a short left stroke that turns at its foot into a broad open bowl"
+  ],
+  "strokeOrder": [
+    "draw the short top stroke from left to right",
+    "lift, begin below the top stroke on the left, run down the left side, then without lifting turn up and to the right and round the open bowl to its finish at the lower left"
+  ],
+  "strokeOrderNote": "KanjiVG's 03089 file records ら as two stroke paths in this order and direction: the short top stroke, then the left stroke that turns into the open bowl; so there is one pen lift.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03089.svg",
+    "citation": "KanjiVG, kanji/03089.svg, hiragana ら (U+3089 HIRAGANA LETTER RA), two stroke paths kvg:03089-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the short top stroke drawn from left to right, ending in a small turn down that the print glyph does not show; s2 starts on the left below it, runs down, turns at its foot without lifting, rises to the right over the top of the bowl, rounds its right side and finishes at the lower left. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
+  "notes": "The ra of さようなら, goodbye, written since chapter 8. The short top stroke stands apart; the lower stroke turns at its foot and opens into a bowl rather than closing into a circle."
+}

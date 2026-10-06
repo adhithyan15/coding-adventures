@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "Pilot, Accountant, Scientist, Researcher, Tourist",
+  "label": "ch:it-pilot-accountant-scientist-researcher-tourist",
+  "canDo": "I can say a pilot, an accountant, a scientist, a researcher and a tourist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C195-turista",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say a pilot, an accountant, a scientist, a researcher and a tourist.",
+    "assesses": [
+      "IT-LEX-C195-COSE195-03",
+      "IT-LEX-C195-COSE195-04",
+      "IT-LEX-C195-COSE195-05"
+    ]
+  }
+}

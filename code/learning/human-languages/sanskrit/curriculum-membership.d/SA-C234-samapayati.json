@@ -1,0 +1,11 @@
+{
+  "id": "SA-C234-samapayati",
+  "pathSegment": "SA-PATH-234-ACT234",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-234-ACT234",
+      "order": 3
+    }
+  ]
+}

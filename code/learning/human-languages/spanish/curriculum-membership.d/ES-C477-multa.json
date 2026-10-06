@@ -1,0 +1,11 @@
+{
+  "id": "ES-C477-multa",
+  "pathSegment": "ES-PATH-477-DINERO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-477-DINERO",
+      "order": 2
+    }
+  ]
+}

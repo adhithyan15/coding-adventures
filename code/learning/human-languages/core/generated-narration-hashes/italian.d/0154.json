@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:28b5eb09a1d59136",
+  "lessonIds": [
+    "IT-C154-intorno",
+    "IT-C154-dappertutto",
+    "IT-C154-da-nessuna-parte",
+    "IT-C154-altrove",
+    "IT-C154-laggiu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch154.txt",
+  "json": "italian/narration/ch154.json",
+  "textHash": "fnv1a64:cc903aa1f7b39865",
+  "jsonHash": "fnv1a64:618c0e8de5374b08",
+  "findings": []
+}

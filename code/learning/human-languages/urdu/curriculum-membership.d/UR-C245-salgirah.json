@@ -1,0 +1,11 @@
+{
+  "id": "UR-C245-salgirah",
+  "pathSegment": "UR-PATH-245-VAQT245",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-245-VAQT245",
+      "order": 4
+    }
+  ]
+}

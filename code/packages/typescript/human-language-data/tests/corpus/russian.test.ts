@@ -40,7 +40,23 @@ it("pins Russian lesson-content budgets", () =>
     // 418 -> 695: the A1 vocabulary tranche, chapters 82-135: 265 word lessons,
     // eight reviews, and chapter 93's two letter lessons and two reviews. No idiom,
     // sense or culture claim.
-    lessons: 695,
+    // 695 -> 696: RU-C03-govorit-false-friend, the atom-budget continuation that
+    // carries the govorit/govern etymology. No idiom, sense or culture claim.
+    // 696 -> 718: the A2 spine chapters 136-139 (saying no, the past, the
+    // future, reading practical texts): twenty word lessons and two reviews. No
+    // idiom, sense or culture claim.
+    // 718 -> 891: the first A2 vocabulary tranche, chapters 140-172: 165 word
+    // lessons (thirty-five verbs) and eight reviews. No idiom, sense or culture
+    // claim.
+    // 891 -> 1054: the second A2 vocabulary tranche, chapters 173-203: 155 word
+    // lessons (thirty verbs) and eight reviews. No idiom, sense or culture
+    // claim.
+    // 1054 -> 1202: the third A2 vocabulary tranche, chapters 204-231: 140 word
+    // lessons (thirty verbs) and eight reviews. No idiom, sense or culture
+    // claim.
+    // 1202 -> 1338: the fourth A2 vocabulary tranche, chapters 232-257: 130 word
+    // lessons (thirty verbs) and six reviews. No idiom, sense or culture claim.
+    lessons: 1338,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,

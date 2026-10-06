@@ -9,7 +9,7 @@
   "payoff": {
     "lesson": "ML-C123-wrong",
     "kind": "production",
-    "summary": "Complete the last lesson of chapter 123: i can say it is not possible, not like that, maybe, other, and wrong.",
+    "summary": "Complete the last lesson of chapter 123: I can say it is not possible, not like that, maybe, other, and wrong.",
     "assesses": [
       "ML-LEX-C123-MAYBE-03",
       "ML-LEX-C123-MAYBE-04",

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C237-svarnakarah",
+  "pathSegment": "SA-PATH-237-PPL237",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-237-PPL237",
+      "order": 1
+    }
+  ]
+}

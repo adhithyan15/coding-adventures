@@ -1,0 +1,11 @@
+{
+  "id": "FA-C272-porru",
+  "pathSegment": "FA-PATH-272-SEFAT272",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-272-SEFAT272",
+      "order": 1
+    }
+  ]
+}

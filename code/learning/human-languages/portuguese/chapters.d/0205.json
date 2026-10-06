@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "To get worse, To offer, To observe, To take part, To go for a walk",
+  "label": "ch:pt-to-get-worse-to-offer-to-observe-to-take-part-to-go-for-a-walk",
+  "canDo": "I can say to get worse, to offer, to observe, to take part and to go for a walk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C205-passear",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say to get worse, to offer, to observe, to take part and to go for a walk.",
+    "assesses": [
+      "PT-LEX-C205-VERBOS205-03",
+      "PT-LEX-C205-VERBOS205-04",
+      "PT-LEX-C205-VERBOS205-05"
+    ]
+  }
+}

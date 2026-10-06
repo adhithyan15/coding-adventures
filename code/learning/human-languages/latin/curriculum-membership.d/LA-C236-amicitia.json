@@ -1,0 +1,11 @@
+{
+  "id": "LA-C236-amicitia",
+  "pathSegment": "LA-PATH-236-VALE236",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-236-VALE236",
+      "order": 4
+    }
+  ]
+}

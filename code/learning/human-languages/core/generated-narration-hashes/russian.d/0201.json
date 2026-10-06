@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:4681185b6e5a7e64",
+  "lessonIds": [
+    "RU-C201-sdacha",
+    "RU-C201-skidka",
+    "RU-C201-pokupka",
+    "RU-C201-kollega",
+    "RU-C201-direktor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch201.txt",
+  "json": "russian/narration/ch201.json",
+  "textHash": "fnv1a64:646be071e6ca7d71",
+  "jsonHash": "fnv1a64:95620059c0774456",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:c0ead276d5dcbcf5",
+  "lessonIds": [
+    "GE-C225-abenteuer",
+    "GE-C225-ahnung",
+    "GE-C225-alltag",
+    "GE-C225-ausbildung",
+    "GE-C225-ausstellung"
+  ],
+  "tex": "german/book/chapters/ch225-an-adventure-an-idea-everyday-life-training-an-exhibition.tex"
+}

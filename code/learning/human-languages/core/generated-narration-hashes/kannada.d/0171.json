@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:0f1acc6eb605d715",
+  "lessonIds": [
+    "KA-C171-yavagalu",
+    "KA-C171-agaga",
+    "KA-C171-dinanka",
+    "KA-C171-varantya",
+    "KA-C171-munce"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch171.txt",
+  "json": "kannada/narration/ch171.json",
+  "textHash": "fnv1a64:a00cc0b96d9df4db",
+  "jsonHash": "fnv1a64:c8c1415c610a1625",
+  "findings": []
+}

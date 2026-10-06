@@ -1,0 +1,11 @@
+{
+  "id": "SA-C239-daya",
+  "pathSegment": "SA-PATH-239-WEL239",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-239-WEL239",
+      "order": 3
+    }
+  ]
+}

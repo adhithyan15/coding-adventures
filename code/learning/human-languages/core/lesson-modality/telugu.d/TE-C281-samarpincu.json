@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C281-samarpincu",
+    "language": "telugu",
+    "chapter": 281,
+    "sequence": 13350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:736bef4ac2026482"
+  },
+  "findings": []
+}

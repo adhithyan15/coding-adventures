@@ -7,7 +7,7 @@ chapter: 473
 type: word
 headword: recomendar
 gloss: to recommend — aconsejar's near twin, an e that breaks to ie like pensar's, and a root about entrusting
-concept_tag: ES-ASK-RECOMENDAR
+concept_tag: ES-VERB-RECOMENDAR
 prerequisites: [ES-C473-aconsejar, ES-C34-pensar, ES-C321-consejo]
 sounds: [diphthong-ie, nasal-n, stress-final]
 roots: [mandare-latin]

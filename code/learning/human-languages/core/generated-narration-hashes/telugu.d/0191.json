@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:3b4dbd017bc6c9da",
+  "lessonIds": [
+    "TE-C191-rabbaru",
+    "TE-C191-balbu",
+    "TE-C191-kattelu",
+    "TE-C191-vala",
+    "TE-C191-trasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch191.txt",
+  "json": "telugu/narration/ch191.json",
+  "textHash": "fnv1a64:8127bcf91e4b0ee9",
+  "jsonHash": "fnv1a64:4b026e748adab875",
+  "findings": []
+}

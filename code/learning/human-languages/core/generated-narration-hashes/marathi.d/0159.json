@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:fc397fc0329ae46e",
+  "lessonIds": [
+    "MR-C159-alikade",
+    "MR-C159-purvi",
+    "MR-C159-adhic",
+    "MR-C159-bhutkal",
+    "MR-C159-ghadne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch159.txt",
+  "json": "marathi/narration/ch159.json",
+  "textHash": "fnv1a64:aabc217dc22ec95a",
+  "jsonHash": "fnv1a64:10a43dd114c4ff83",
+  "findings": []
+}

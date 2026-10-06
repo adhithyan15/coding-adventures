@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "Border, Customs, Capital, Flat, Floor",
+  "label": "ch:ru-border-customs-capital-flat-floor",
+  "canDo": "I can say a border, customs, a capital, a flat and a floor.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C213-etazh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say a border, customs, a capital, a flat and a floor.",
+    "assesses": [
+      "RU-LEX-C213-MESTO213-03",
+      "RU-LEX-C213-MESTO213-04",
+      "RU-LEX-C213-MESTO213-05"
+    ]
+  }
+}

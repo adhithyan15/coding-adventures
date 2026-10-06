@@ -24,7 +24,7 @@ language**, and each frontend was a **deliberate subset**:
 | FLOW-MATIC | Unified `MOVE` plus `WRITE-ITEM` baseline on the seven standard engines (VM-020) | One baseline is not full feature coverage; VM-027 audits the remaining implemented control-flow and field operations |
 | COBOL-60 | Unified PICTURE/data/arithmetic rows, including scale-12 JVM decimal intermediates (VM-001) | VM-027 maps implemented grammar/features to the actual corpus; this is not a full COBOL implementation claim |
 | Macsyma | Dedicated integer arithmetic/assignment conformance on VM, native AOT, LLVM, WASM, JVM, CLR, and universal JIT (VM-021) | Dedicated v0 numeric proofs do not establish every symbolic operation on every backend; VM-027 owns that inventory |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures including `real` returns and `boolean` results feeding control flow ✅ (AL13, all 7 backends), direct name- and value-mode formal procedures including declared, nested-capturing, self- and mutually-recursively-forwarded, implemented-standard-function, and implementation-defined standard-output-procedure actuals plus direct call-by-name scalars (including Jensen-style expression thunks and strings), scalar forwarding/remapping recursion, and rank-inferred arrays with forwarding plus direct/mutual array recursion ✅ (AL7, all 7 backends), nested procedures capturing scalar and array value formals ✅, switches including conditional/nested designators, rank-inferred array value parameters with isolated element copies ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays with per-coordinate and declaration-extent validation ✅ (AL-multidim / AL-multidim-real, all 7 backends), `boolean array` declarations and value formals ✅ (all 7 standard backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), right-associative `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus finite literal-only real `+`/`-`/`*`/`/`, exact checked straight-line integer and real scalar snapshots including path-independent conditional integer subexpressions, capped side-effect-free tracked integer powers with checked arithmetic and integer-valued standard-function exponents, checked tracked-arithmetic and pure `abs`/`sign` plus exact-widening `entier`, exact integral tracked `sqrt` including nesting, checked `+`/`-`/`*` composition, path-independent pure conditionals including pure real selectors around equal exact built-in branches and distinct tracked real operands whose exact mapped result may compose through further pure built-ins, exact tracked scalar arithmetic, and bounded literal powers, canonical exact tracked `sin`/`cos`/`ln`/`exp`/`arctan` identities over integer snapshots, exact integral built-ins over tracked real snapshots, path-independent pure conditional real-power exponent unrolling, tracked real arithmetic powers including path-independent pure conditionals over plain real bases, and exact mixed tracked integer/real arithmetic power exponents including path-independent pure conditionals over plain real bases, plus bounded tracked integer, tracked-function, and path-independent conditional exponents in real-value metadata, integer-valued standard functions, and path-independent equal conditional assignments, capped signed integral arithmetic real power exponents, conditional/composed static standard-function output including canonical transcendental identities and exact integer-valued results, and initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); runtime real formatting, changed recursive scalar actuals requiring a thunk ABI, and dynamic procedure descriptors remain follow-up work |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures including `real` returns and `boolean` results feeding control flow ✅ (AL13, all 7 backends), direct name- and value-mode formal procedures including declared, nested-capturing, self- and mutually-recursively-forwarded, implemented-standard-function, and implementation-defined standard-output-procedure actuals plus direct call-by-name scalars (including Jensen-style expression thunks and strings), scalar forwarding/remapping recursion, and rank-inferred arrays with forwarding plus direct/mutual array recursion ✅ (AL7, all 7 backends), nested procedures capturing scalar and array value formals ✅, switches including conditional/nested designators, rank-inferred array value parameters with isolated element copies ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays with per-coordinate and declaration-extent validation ✅ (AL-multidim / AL-multidim-real, all 7 backends), `boolean array` declarations and value formals ✅ (all 7 standard backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), right-associative `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus finite literal-only real `+`/`-`/`*`/`/`, direct zero-argument and value-scalar-parameter runtime real procedure results, straight-line procedure-result-backed local scalar variables, real value formals including nested-procedure captures, real name formals backed by runtime-real actuals including assignable array elements, and side-effect-free path-independent conditional runtime-real values, exact checked straight-line integer and real scalar snapshots including path-independent conditional integer subexpressions, capped side-effect-free tracked integer powers with checked arithmetic and integer-valued standard-function exponents, checked tracked-arithmetic and pure `abs`/`sign` plus exact-widening `entier`, exact integral tracked `sqrt` including nesting, checked `+`/`-`/`*` composition, path-independent pure conditionals including pure real selectors around equal exact built-in branches and distinct tracked real operands whose exact mapped result may compose through further pure built-ins, exact tracked scalar arithmetic, and bounded literal powers, canonical exact tracked `sin`/`cos`/`ln`/`exp`/`arctan` identities over integer snapshots, exact integral built-ins over tracked real snapshots, path-independent pure conditional real-power exponent unrolling, tracked real arithmetic powers including path-independent pure conditionals over plain real bases, and exact mixed tracked integer/real arithmetic power exponents including path-independent pure conditionals over plain real bases, plus bounded tracked integer, tracked-function, and path-independent conditional exponents in real-value metadata, integer-valued standard functions, and path-independent equal conditional assignments, capped signed integral arithmetic real power exponents, conditional/composed static standard-function output including canonical transcendental identities and exact integer-valued results, and initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); broader dynamic real formatting, changed recursive scalar actuals requiring a thunk ABI, and dynamic procedure descriptors remain follow-up work |
 
 The ALGOL power inventory also includes direct initialized tracked-real
 snapshot exponents and nested pure conditionals whose tracked snapshot and
@@ -1046,13 +1046,68 @@ backend immediately) come before the enabler-dependent items.
   recurrences. That graph may contain unconditional cross-assignment cycles
   because capped abstract execution evaluates each recognized local scalar
   write in source order. A cycle may contain conditional expressions selected
-  by the exact loop control or exact ordinary local snapshots unchanged by the
-  body. Those stable snapshots may also select conditional statement branches
-  containing cycle writes; cycles selected by changing values remain
-  conservative. A recurrence
+  by the exact loop control or exact ordinary local snapshots, including
+  snapshots that evolve through another supported recurrence in the graph or
+  recursively through their own supported recurrence, or through an exact
+  mutually recursive selector cycle. A selector recurrence may itself contain
+  a conditional expression selected by an exact snapshot in that graph,
+  including a direct self-reference in one selected leaf. A selector that
+  changes during capped execution may choose different leaves when every leaf
+  retains that direct self-reference; partial dynamic self-recursion remains
+  conservative.
+  Those exact snapshots may also select conditional statement branches
+  containing cycle writes, including selector-cycle assignments whose other
+  dependencies are written elsewhere in the loop body. Statement selectors
+  are control dependencies of their branch writes, so an exact statement
+  selector may itself close a cycle whose selected boolean assignments contain
+  exact conditional expressions. Unsupported selector
+  writes remain conservative. A recurrence
   in the graph may use a conditional
   expression selected by the controlled scalar or another exact local
   snapshot; capped execution re-evaluates the selected leaf on every pass.
+  An acyclic boolean recurrence may likewise use an exact conditional
+  expression to choose different values on successive passes before selecting
+  recurrence-cycle statements or expressions. Such an exact evolving selector
+  may choose between a directly self-recursive boolean leaf and a non-recursive
+  exact leaf. A finite chain of distinct exact boolean identity copies may sit
+  between that selector recurrence and the partial self-recursive assignment,
+  including bare variables, neutral boolean operations, and even `not` chains;
+  copy cycles, changing expressions, and unknown conditional inputs remain
+  conservative. A conditional identity copy may have a dynamic selector when
+  both branches preserve the same unique forwarded selector. A boolean
+  projection of the form `if selector then true else false` is also an exact
+  selector copy, as is its complemented form
+  `if not selector then false else true`. Either literal branch may instead be
+  the selector itself, yielding a one-sided guarded projection. Literal-only
+  boolean combinations may supply projection constants and neutral identity
+  operands. Literal integer predicates, including checked literal arithmetic
+  operands, finite binary64 literal predicates, and literal string predicates
+  may also supply boolean identity operands. Variable-free literal string
+  predicates may select statement or expression branches in bounded recurrence
+  bodies, including preserving leaves of conditional dependency or selector
+  assignments, bounded controlled-scalar recurrences, conditional value
+  expressions and predicates of bounded `while` elements, finite step-loop
+  header expressions, and values sequenced across bounded multi-element `for`
+  lists, including mixed finite-step and single-value elements in either order,
+  adjacent real single-value elements, and real single-value snapshots that
+  seed exactly simulated finite binary64 steps or bounded real `while`
+  elements, including a three-element real chain that traverses single-value,
+  finite-step, and bounded `while` shapes in either direction, plus a
+  finite-step-to-single-value-to-bounded-`while` permutation and its reverse,
+  plus a single-value-to-bounded-`while`-to-finite-step permutation, exactly
+  simulated finite binary64
+  step exits that seed following
+  single-value elements, and finite-step exits that seed following bounded
+  `while` elements when the body only reads the controlled variable, including
+  exactly simulated finite binary64 steps. A terminating bounded `while` exit
+  may symmetrically seed a following finite-step or single-value element under
+  the same read-only body rule, including for exactly simulated real controls
+  with either successor shape,
+  and one finite-step exit may seed another
+  finite-step element likewise, including for exactly simulated real controls.
+  Two bounded `while` elements may chain their
+  exact terminating snapshots under that rule as well, including for exactly
+  simulated real controls.
   The recurrence assignment may instead occur in one or both branches of a
   conditional statement selected by those exact snapshots. A branch without
   the assignment preserves the dependency for that pass; unknown selectors
@@ -1227,7 +1282,7 @@ backend immediately) come before the enabler-dependent items.
   boundaries clear it. Unknown statement conditions still intersect both
   exits. Numeric conditional assignments likewise retain the selected branch's
   snapshot when their selector is statically known; unknown selectors still
-  require equal branch values. Formatter-free conditional real output also
+  require equal branch values for static propagation. Formatter-free conditional real output also
   lowers only the selected branch for a statically known selector, while a
   dynamic selector still requires both branches to be static. The conditional predicate proof runs on native/LLVM/WASM/JVM/CLR/VM/JIT. LLVM preserves the
   comparison's `i1` sidecar when moving into a boolean merge slot, and WASM
@@ -1239,8 +1294,28 @@ backend immediately) come before the enabler-dependent items.
   integer and real snapshots as straight-line repetitions; any dynamic loop
   element keeps snapshot tracking disabled. Each plain element updates the
   controlled local's snapshot before its body is analyzed. Labels, gotos, calls, dynamic
-  reassignment, differing branches, and captured globals invalidate the tracked value. General computed/runtime
-  `f64` formatting remains a follow-up requiring a portable typed formatter ABI.
+  reassignment, differing branches, and captured globals invalidate the tracked value. Direct zero-argument
+  real-procedure results, their straight-line bare local copies, and
+  specialised real name formals backed by runtime-real actual expressions,
+  including assignable real array elements and direct name-formal forwarding, use the
+  portable six-significant-digit IIR formatter
+  shared with Dartmouth BASIC on native/LLVM/WASM/JVM/CLR/VM/JIT. Conditional
+  statements retain that provenance only when every reachable exit proves the
+  same slot; conditional value expressions retain it when their selector has no
+  procedure call and every reachable branch is independently proven. Unary plus
+  and unary minus preserve the same runtime-real proof. Additive composition,
+  multiplication, division, and exponentiation preserve it when every operand
+  is independently runtime-real or a finite static numeric expression. The
+  real-valued standard functions `abs`, `sqrt`, `sin`, `cos`, `ln`, `exp`, and
+  `arctan` preserve it for a proven runtime-real operand while user-declared
+  overrides remain conservative. Reads from real array elements and real value
+  formals also carry the proof through assignment and composition, including
+  value formals promoted into the existing nested-procedure capture globals.
+  Ordinary real scalars captured through E6 typed globals likewise carry the
+  proof into nested sibling procedures. Real procedure results preserve the
+  proof when finite call-by-name specialisation binds each real scalar name
+  formal to a proven runtime-real actual; no dynamic thunk ABI is introduced.
+  Broader computed scalar `f64` formatting remains a follow-up.
   Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across
@@ -1284,7 +1359,9 @@ backend immediately) come before the enabler-dependent items.
   and returns 42 after observing all three loop values. Forwarded scalar name
   formals are substituted and rebound to generated lexical aliases before the
   next direct sibling lowers, preserving the original caller binding across
-  nested calls even when the callee reuses the same spelling. A recursive call
+  nested calls even when the callee reuses the same spelling. This substitution
+  also preserves bounded runtime-real formatter provenance when the original
+  actual is non-assignable. A recursive call
   may forward a scalar name formal unchanged or remap it directly to another
   active same-typed scalar formal. The compiler keys in-flight siblings by
   their captured binding map, so direct and mutual recursion can cycle through

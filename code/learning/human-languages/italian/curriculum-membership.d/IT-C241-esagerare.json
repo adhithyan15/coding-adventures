@@ -1,0 +1,11 @@
+{
+  "id": "IT-C241-esagerare",
+  "pathSegment": "IT-PATH-241-VERBI241",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-241-VERBI241",
+      "order": 4
+    }
+  ]
+}

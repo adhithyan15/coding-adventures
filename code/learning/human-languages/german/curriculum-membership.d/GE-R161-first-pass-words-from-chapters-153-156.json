@@ -1,0 +1,11 @@
+{
+  "id": "GE-R161-first-pass-words-from-chapters-153-156",
+  "pathSegment": "GE-PATH-161-THING161",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-161-THING161",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Mother-in-law, Bridegroom, Bride, Wedding, Relative",
+  "label": "ch:bn-mother-in-law-bridegroom-bride-wedding-relative",
+  "canDo": "I can say a mother-in-law, a bridegroom, a bride, a wedding and a relative.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C168-atmiyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say a mother-in-law, a bridegroom, a bride, a wedding and a relative.",
+    "assesses": [
+      "BN-LEX-C168-JINIS168-03",
+      "BN-LEX-C168-JINIS168-04",
+      "BN-LEX-C168-JINIS168-05"
+    ]
+  }
+}

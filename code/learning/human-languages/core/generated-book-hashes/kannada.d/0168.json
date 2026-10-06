@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:cb5d268780352f57",
+  "lessonIds": [
+    "KA-C168-hane",
+    "KA-C168-gantalu",
+    "KA-C168-himmadi",
+    "KA-C168-tode",
+    "KA-C168-angai"
+  ],
+  "tex": "kannada/book/chapters/ch168-forehead-throat-heel-thigh-palm.tex"
+}

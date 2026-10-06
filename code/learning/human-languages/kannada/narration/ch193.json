@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 193,
+  "title": "Cardboard, Shape, Circle, Square, Triangle",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:4870080ee3abff3e",
+  "lessons": [
+    {
+      "id": "KA-C193-rattu",
+      "sequence": 8820,
+      "title": "ರಟ್ಟು (raṭṭu) — cardboard",
+      "headword": "ರಟ್ಟು",
+      "romanization": "raṭṭu",
+      "gloss": "cardboard",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:456dd5d0bd92065a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a sieve, then the Kannada for a coconut grater."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ರಟ್ಟು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಟ್ಟು — raṭṭu — \"cardboard\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say raṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *raṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a sieve, then the Kannada for a coconut grater, then say raṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a sieve, then the Kannada for a coconut grater, then say *raṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ರಟ್ಟು (raṭṭu) mean? (\"Cardboard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C193-akara",
+      "sequence": 8830,
+      "title": "ಆಕಾರ (ākāra) — a shape",
+      "headword": "ಆಕಾರ",
+      "romanization": "ākāra",
+      "gloss": "a shape",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0d9b7cba408c44c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a coconut grater, then the Kannada for cardboard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆಕಾರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಕಾರ — ākāra — \"a shape\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ākāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ākāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a coconut grater, then the Kannada for cardboard, then say ākāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a coconut grater, then the Kannada for cardboard, then say *ākāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆಕಾರ (ākāra) mean? (\"A shape\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C193-vrtta",
+      "sequence": 8840,
+      "title": "ವೃತ್ತ (vṛtta) — a circle; a traffic circle",
+      "headword": "ವೃತ್ತ",
+      "romanization": "vṛtta",
+      "gloss": "a circle; a traffic circle",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34ffd4e956894161",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for cardboard, then the Kannada for a shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವೃತ್ತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವೃತ್ತ — vṛtta — \"a circle; a traffic circle\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛtta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛtta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛtta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛtta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vṛtta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vṛtta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for cardboard, then the Kannada for a shape, then say vṛtta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for cardboard, then the Kannada for a shape, then say *vṛtta* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವೃತ್ತ (vṛtta) mean? (\"A circle; a traffic circle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C193-cauka",
+      "sequence": 8850,
+      "title": "ಚೌಕ (cauka) — a square",
+      "headword": "ಚೌಕ",
+      "romanization": "cauka",
+      "gloss": "a square",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5eb6c5580ada24d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a shape, then the Kannada for a circle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಚೌಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚೌಕ — cauka — \"a square\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cauka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cauka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cauka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cauka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say cauka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *cauka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a shape, then the Kannada for a circle, then say cauka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a shape, then the Kannada for a circle, then say *cauka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಚೌಕ (cauka) mean? (\"A square\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C193-trikona",
+      "sequence": 8860,
+      "title": "ತ್ರಿಕೋನ (trikōna) — a triangle",
+      "headword": "ತ್ರಿಕೋನ",
+      "romanization": "trikōna",
+      "gloss": "a triangle",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c08f15526321cef5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a circle, then the Kannada for a square."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತ್ರಿಕೋನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತ್ರಿಕೋನ — trikōna — \"a triangle\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trikōna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trikōna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trikōna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trikōna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say trikōna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *trikōna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a circle, then the Kannada for a square, then say trikōna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a circle, then the Kannada for a square, then say *trikōna* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತ್ರಿಕೋನ (trikōna) mean? (\"A triangle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R193-first-pass-words-from-chapters-185-188",
+      "sequence": 8870,
+      "title": "Words from chapters 185-188 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 185-188",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6fc5819d587628d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a square and a triangle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a banknote, a coin, a discount, a kilogram, a purse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a banknote, a coin, a discount, a kilogram, a purse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a message, an email, a pencil, a file, a document",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a message, an email, a pencil, a file, a document]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a number, a rainbow, snow, shade, darkness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a number, a rainbow, snow, shade, darkness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a nest, a creeper, a bud, a thorn, holy basil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a nest, a creeper, a bud, a thorn, holy basil]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A banknote? (ನೋಟು, nōṭu.) A coin? (ನಾಣ್ಯ, nāṇya.) A discount? (ರಿಯಾಯಿತಿ, riyāyiti.) A kilogram? (ಕಿಲೋ, kilō.) A purse? (ಪರ್ಸ್, pars.) A message? (ಸಂದೇಶ, sandēśa.) An email? (ಇಮೇಲ್, imēl.) A pencil? (ಪೆನ್ಸಿಲ್, pensil.) A file? (ಕಡತ, kaḍata.) A document? (ದಾಖಲೆ, dākhale.) A number? (ಸಂಖ್ಯೆ, saṅkhye.) A rainbow? (ಕಾಮನಬಿಲ್ಲು, kāmanabillu.) Snow? (ಹಿಮ, hima.) Shade? (ನೆರಳು, neraḷu.) Darkness? (ಕತ್ತಲೆ, kattale.) A nest? (ಗೂಡು, gūḍu.) A creeper? (ಬಳ್ಳಿ, baḷḷi.) A bud? (ಮೊಗ್ಗು, moggu.) A thorn? (ಮುಳ್ಳು, muḷḷu.) Holy basil? (ತುಳಸಿ, tuḷasi.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R193-second-pass-words-from-chapters-189-193",
+      "sequence": 8880,
+      "title": "Words from chapters 189-193 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 189-193",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c123deb4fd40965c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a group and a village fair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a group, a village fair, worship, god, fasting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a group, a village fair, worship, god, fasting]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sofa, a bench, a stool, a mattress, an axe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sofa, a bench, a stool, a mattress, an axe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a picture, sport, a match, a team, cricket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a picture, sport, a match, a team, cricket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a grinding stone, a pestle, a mixer-grinder, a sieve, a coconut grater",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a grinding stone, a pestle, a mixer-grinder, a sieve, a coconut grater]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cardboard, a shape, a circle, a square, a triangle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cardboard, a shape, a circle, a square, a triangle]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A group? (ಗುಂಪು, gumpu.) A village fair? (ಜಾತ್ರೆ, jātre.) Worship? (ಪೂಜೆ, pūje.) God? (ದೇವರು, dēvaru.) Fasting? (ಉಪವಾಸ, upavāsa.) A sofa? (ಸೋಫಾ, sōphā.) A bench? (ಬೆಂಚು, beñcu.) A stool? (ಸ್ಟೂಲು, sṭūlu.) A mattress? (ಹಾಸಿಗೆ, hāsige.) An axe? (ಕೊಡಲಿ, koḍali.) A picture? (ಚಿತ್ರ, citra.) Sport? (ಕ್ರೀಡೆ, krīḍe.) A match? (ಪಂದ್ಯ, pandya.) A team? (ತಂಡ, taṇḍa.) Cricket? (ಕ್ರಿಕೆಟ್, krikeṭ.) A grinding stone? (ಒರಳು, oraḷu.) A pestle? (ಒನಕೆ, onake.) A mixer-grinder? (ಮಿಕ್ಸಿ, miksi.) A sieve? (ಜರಡಿ, jaraḍi.) A coconut grater? (ತುರಿಮಣೆ, turimaṇe.) Cardboard? (ರಟ್ಟು, raṭṭu.) A shape? (ಆಕಾರ, ākāra.) A circle? (ವೃತ್ತ, vṛtta.) A square? (ಚೌಕ, cauka.) A triangle? (ತ್ರಿಕೋನ, trikōna.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

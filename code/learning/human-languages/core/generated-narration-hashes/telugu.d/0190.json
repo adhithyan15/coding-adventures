@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:025615a9281c9490",
+  "lessonIds": [
+    "TE-C190-karentu",
+    "TE-C190-yantram",
+    "TE-C190-sopha",
+    "TE-C190-uyyala",
+    "TE-C190-tivaci"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch190.txt",
+  "json": "telugu/narration/ch190.json",
+  "textHash": "fnv1a64:31182fe3b4af8b79",
+  "jsonHash": "fnv1a64:7045df48f895f258",
+  "findings": []
+}

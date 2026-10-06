@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R190-second-pass-words-from-chapters-186-190",
+    "language": "sanskrit",
+    "chapter": 190,
+    "sequence": 10530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30de4d23e587cf4c"
+  },
+  "findings": []
+}

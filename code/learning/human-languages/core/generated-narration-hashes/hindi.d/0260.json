@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:1a72cb105a23b906",
+  "lessonIds": [
+    "HI-C260-suvidha",
+    "HI-C260-asuvidha",
+    "HI-C260-niyam",
+    "HI-C260-suci",
+    "HI-C260-ummidvar",
+    "HI-R260-first-pass-words-from-chapters-252-255",
+    "HI-R260-second-pass-words-from-chapters-256-260"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch260.txt",
+  "json": "hindi/narration/ch260.json",
+  "textHash": "fnv1a64:a407b268a079871e",
+  "jsonHash": "fnv1a64:f4f5e743edff495c",
+  "findings": []
+}

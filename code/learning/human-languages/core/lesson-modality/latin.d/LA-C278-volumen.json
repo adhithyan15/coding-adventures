@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C278-volumen",
+    "language": "latin",
+    "chapter": 278,
+    "sequence": 15170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0caf194bb6f92d3"
+  },
+  "findings": []
+}

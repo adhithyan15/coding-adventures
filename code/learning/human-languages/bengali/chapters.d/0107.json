@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "Bowl, Cooking pot, Wok, Water pot, Bucket",
+  "label": "ch:bn-bowl-cooking-pot-wok-water-pot-bucket",
+  "canDo": "I can say a bowl, a cooking pot, a wok, a water pot and a bucket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C107-balti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: I can say a bowl, a cooking pot, a wok, a water pot and a bucket.",
+    "assesses": [
+      "BN-LEX-C107-THINGS107-03",
+      "BN-LEX-C107-THINGS107-04",
+      "BN-LEX-C107-THINGS107-05"
+    ]
+  }
+}

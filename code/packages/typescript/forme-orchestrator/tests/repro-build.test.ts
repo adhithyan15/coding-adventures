@@ -41,11 +41,11 @@ function clockStampingSource() {
     async *run(_input, _config, ctx) {
       yield {
         path: "stamp",
-        bytes: new TextEncoder().encode(String(ctx.time.nowMs())),
+        bytes: new TextEncoder().encode(String(await ctx.time.nowMs())),
         mimeType: "text/plain",
         identity: "01952c0d-7e63-7000-8000-000000000000" as never,
         revision: "blake2b:00" as never,
-        providerMeta: { stampedAt: ctx.time.nowMs() },
+        providerMeta: { stampedAt: await ctx.time.nowMs() },
       } as never;
     },
   });
@@ -69,7 +69,7 @@ function clockStampingSink() {
         manifest: {
           routes: [],
           assets: [],
-          buildTime: ctx.time.nowIso(),
+          buildTime: await ctx.time.nowIso(),
           buildId: "blake2b:00" as never,
         },
       } as never;
@@ -187,13 +187,13 @@ describe("reproducible-build mode (FM03 §8)", () => {
           files: {},
           manifest: {
             routes: [], assets: [],
-            buildTime: ctx.time.nowIso(),
+            buildTime: await ctx.time.nowIso(),
             buildId: "blake2b:00" as never,
           },
         } as never;
       },
       async dispose(ctx) {
-        disposeStampSpy(ctx.time.nowMs());
+        disposeStampSpy(await ctx.time.nowMs());
       },
     });
 

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C210-kunam",
+  "pathSegment": "TA-PATH-210-GUNAM210",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-210-GUNAM210",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:4a079ee40592f393",
+  "lessonIds": [
+    "TA-C212-palavinamana",
+    "TA-C212-cuyanalamana",
+    "TA-C212-peruntanmaiyana",
+    "TA-C212-olukkamana",
+    "TA-C212-acinkamana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch212.txt",
+  "json": "tamil/narration/ch212.json",
+  "textHash": "fnv1a64:a51144ab63f60708",
+  "jsonHash": "fnv1a64:7bc054de2e6aadc2",
+  "findings": []
+}

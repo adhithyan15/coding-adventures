@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:558ad83e7f0b32b4",
+  "lessonIds": [
+    "PT-C149-sonho",
+    "PT-C149-ansiedade",
+    "PT-C149-amor",
+    "PT-C149-amizade",
+    "PT-C149-esperanca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch149.txt",
+  "json": "portuguese/narration/ch149.json",
+  "textHash": "fnv1a64:5e0367adf0ae00a7",
+  "jsonHash": "fnv1a64:b1d4cf61de12bf3c",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C239-propter",
+  "pathSegment": "LA-PATH-239-CAUSA239",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-239-CAUSA239",
+      "order": 4
+    }
+  ]
+}

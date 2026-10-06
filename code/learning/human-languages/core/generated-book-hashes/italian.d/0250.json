@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:0aa97a559223e762",
+  "lessonIds": [
+    "IT-C250-giornalista",
+    "IT-C250-architetto",
+    "IT-C250-dentista",
+    "IT-C250-farmacista",
+    "IT-C250-macellaio",
+    "IT-R250-first-pass-words-from-chapters-242-245",
+    "IT-R250-second-pass-words-from-chapters-246-250"
+  ],
+  "tex": "italian/book/chapters/ch250-journalist-architect-dentist-pharmacist-butcher.tex"
+}

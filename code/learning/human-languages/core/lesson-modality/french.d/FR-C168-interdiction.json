@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C168-interdiction",
+    "language": "french",
+    "chapter": 168,
+    "sequence": 8440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f9497c5264f6dc1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C241-naprotiv",
+  "pathSegment": "RU-PATH-241-MESTO241",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-241-MESTO241",
+      "order": 3
+    }
+  ]
+}

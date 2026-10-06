@@ -1,0 +1,11 @@
+{
+  "id": "TE-C269-jalleda",
+  "pathSegment": "TE-PATH-269-VASTUVU269",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-269-VASTUVU269",
+      "order": 2
+    }
+  ]
+}

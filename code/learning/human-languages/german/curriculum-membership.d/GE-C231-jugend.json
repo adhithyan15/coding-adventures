@@ -1,0 +1,11 @@
+{
+  "id": "GE-C231-jugend",
+  "pathSegment": "GE-PATH-231-THING231",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-231-THING231",
+      "order": 4
+    }
+  ]
+}

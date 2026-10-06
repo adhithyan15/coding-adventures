@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:df1a261478c14c47",
+  "lessonIds": [
+    "UR-C247-nata",
+    "UR-C247-mumkin",
+    "UR-C247-namumkin",
+    "UR-C247-mufid",
+    "UR-C247-khatarnak",
+    "UR-R247-first-pass-words-from-chapters-239-242",
+    "UR-R247-second-pass-words-from-chapters-243-247"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch247.txt",
+  "json": "urdu/narration/ch247.json",
+  "textHash": "fnv1a64:bab1f0b0f75b94f0",
+  "jsonHash": "fnv1a64:4d294954ca94f181",
+  "findings": []
+}

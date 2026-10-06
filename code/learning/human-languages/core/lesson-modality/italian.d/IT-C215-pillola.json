@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C215-pillola",
+    "language": "italian",
+    "chapter": 215,
+    "sequence": 12490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5abdf8001aac0792"
+  },
+  "findings": []
+}

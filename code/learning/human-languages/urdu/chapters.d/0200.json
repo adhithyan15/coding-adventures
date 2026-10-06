@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "Pakora, Korma, Pickle, Raita, Salad",
+  "label": "ch:ur-pakora-korma-pickle-raita-salad",
+  "canDo": "I can say a pakora, korma, pickle, raita and a salad.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C200-salad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say a pakora, korma, pickle, raita and a salad.",
+    "assesses": [
+      "UR-LEX-C200-CHIZ200-03",
+      "UR-LEX-C200-CHIZ200-04",
+      "UR-LEX-C200-CHIZ200-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:4338f2648403a6c9",
+  "lessonIds": [
+    "ML-C177-arum",
+    "ML-C177-orikkalum",
+    "ML-C177-eviteyum",
+    "ML-C177-arenkilum",
+    "ML-C177-entenkilum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch177.txt",
+  "json": "malayalam/narration/ch177.json",
+  "textHash": "fnv1a64:815224036771e1eb",
+  "jsonHash": "fnv1a64:573ee59bd8b13f2e",
+  "findings": []
+}

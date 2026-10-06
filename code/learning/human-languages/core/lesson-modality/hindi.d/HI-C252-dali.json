@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C252-dali",
+    "language": "hindi",
+    "chapter": 252,
+    "sequence": 13710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65898d13d260c46c"
+  },
+  "findings": []
+}

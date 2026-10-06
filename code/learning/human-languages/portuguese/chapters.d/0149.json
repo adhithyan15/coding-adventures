@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "Dream, Anxiety, Love, Friendship, Hope",
+  "label": "ch:pt-dream-anxiety-love-friendship-hope",
+  "canDo": "I can say a dream, anxiety, love, friendship and hope.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C149-esperanca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: I can say a dream, anxiety, love, friendship and hope.",
+    "assesses": [
+      "PT-LEX-C149-SAUDE149-03",
+      "PT-LEX-C149-SAUDE149-04",
+      "PT-LEX-C149-SAUDE149-05"
+    ]
+  }
+}

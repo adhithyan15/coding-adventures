@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:9c9387afd9fd0856",
+  "lessonIds": [
+    "TA-C280-aracu",
+    "TA-C280-viti",
+    "TA-C280-aparatam",
+    "TA-C280-pukar",
+    "TA-C280-virar",
+    "TA-R280-first-pass-words-from-chapters-272-275",
+    "TA-R280-second-pass-words-from-chapters-276-280"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch280.txt",
+  "json": "tamil/narration/ch280.json",
+  "textHash": "fnv1a64:9533b5b1e81cf029",
+  "jsonHash": "fnv1a64:1f4efbdae389555e",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "Best, Different, Boring, Simple, Comfortable",
+  "label": "ch:ta-best-different-boring-simple-comfortable",
+  "canDo": "I can say best, different, boring, simple and comfortable.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C269-vacatiyana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can say best, different, boring, simple and comfortable.",
+    "assesses": [
+      "TA-LEX-C269-GUNAM269-03",
+      "TA-LEX-C269-GUNAM269-04",
+      "TA-LEX-C269-GUNAM269-05"
+    ]
+  }
+}

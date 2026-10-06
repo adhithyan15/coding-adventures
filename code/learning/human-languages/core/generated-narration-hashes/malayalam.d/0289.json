@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:5024c8c844505394",
+  "lessonIds": [
+    "ML-C289-ankutti",
+    "ML-C289-ammayi",
+    "ML-C289-marumakal",
+    "ML-C289-ammayiyamma",
+    "ML-C289-ammayiyappan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch289.txt",
+  "json": "malayalam/narration/ch289.json",
+  "textHash": "fnv1a64:080561d77720762a",
+  "jsonHash": "fnv1a64:e1f8b4cbd75b1f6b",
+  "findings": []
+}

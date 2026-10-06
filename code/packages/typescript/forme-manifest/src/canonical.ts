@@ -100,10 +100,11 @@ function appendTable(
 }
 
 function appendCapabilities(lines: string[], block: CapabilityBlock): void {
-  for (const [bucket, entries] of [
+  const buckets: ReadonlyArray<readonly ["required" | "optional", readonly CapabilityEntry[]]> = [
     ["required" as const, block.required],
     ["optional" as const, block.optional],
-  ]) {
+  ];
+  for (const [bucket, entries] of buckets) {
     for (const cap of entries) {
       lines.push(`[[capabilities.${bucket}]]`);
       for (const [k, v] of capabilityEntries(cap)) {

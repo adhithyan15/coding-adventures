@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Altogether, Hardly, Of one's own accord, In vain, Back again",
+  "label": "ch:la-altogether-hardly-of-one-s-own-accord-in-vain-back-again",
+  "canDo": "I can say altogether, hardly, of one's own accord, in vain and back again.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "LA-C211-rursus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say altogether, hardly, of one's own accord, in vain and back again.",
+    "assesses": [
+      "LA-LEX-C211-CAUSA211-03",
+      "LA-LEX-C211-CAUSA211-04",
+      "LA-LEX-C211-CAUSA211-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-221-GUN221",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say private, national, international, urban and regular.",
+  "prerequisites": []
+}

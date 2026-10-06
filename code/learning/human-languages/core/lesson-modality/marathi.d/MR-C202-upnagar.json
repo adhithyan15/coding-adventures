@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C202-upnagar",
+    "language": "marathi",
+    "chapter": 202,
+    "sequence": 10670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4c115496ab6502a"
+  },
+  "findings": []
+}

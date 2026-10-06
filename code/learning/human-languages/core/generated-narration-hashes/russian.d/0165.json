@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:51df7d46378d191f",
+  "lessonIds": [
+    "RU-C165-vorona",
+    "RU-C165-oryol",
+    "RU-C165-popugay",
+    "RU-C165-khomyak",
+    "RU-C165-yozh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch165.txt",
+  "json": "russian/narration/ch165.json",
+  "textHash": "fnv1a64:03b374b5ce4871ab",
+  "jsonHash": "fnv1a64:2b64967401eade09",
+  "findings": []
+}

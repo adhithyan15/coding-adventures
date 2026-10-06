@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "Thread, Needle, Nail for hammering, Hammer, Ladder",
+  "label": "ch:fr-thread-needle-nail-for-hammering-hammer-ladder",
+  "canDo": "I can say a thread, a needle, a nail for hammering, a hammer and a ladder.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C230-echelle",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say a thread, a needle, a nail for hammering, a hammer and a ladder.",
+    "assesses": [
+      "FR-LEX-C230-CHOSES230-03",
+      "FR-LEX-C230-CHOSES230-04",
+      "FR-LEX-C230-CHOSES230-05"
+    ]
+  }
+}

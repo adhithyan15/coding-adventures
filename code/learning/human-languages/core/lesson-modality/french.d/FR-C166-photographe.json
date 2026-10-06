@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C166-photographe",
+    "language": "french",
+    "chapter": 166,
+    "sequence": 8320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7865d6b357bf23b4"
+  },
+  "findings": []
+}

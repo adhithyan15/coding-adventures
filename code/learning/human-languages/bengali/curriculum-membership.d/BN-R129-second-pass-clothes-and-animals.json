@@ -1,0 +1,11 @@
+{
+  "id": "BN-R129-second-pass-clothes-and-animals",
+  "pathSegment": "BN-PATH-129-THINGS129",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "BN-EXT-129-THINGS129",
+      "order": 6
+    }
+  ]
+}

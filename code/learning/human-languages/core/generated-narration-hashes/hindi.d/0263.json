@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:e1637d4bcc2f91f1",
+  "lessonIds": [
+    "HI-C263-jhumka",
+    "HI-C263-bindi",
+    "HI-C263-curi",
+    "HI-C263-payal",
+    "HI-C263-basuri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch263.txt",
+  "json": "hindi/narration/ch263.json",
+  "textHash": "fnv1a64:4d725ef87f8e6435",
+  "jsonHash": "fnv1a64:fa9093d7a6cbdd59",
+  "findings": []
+}

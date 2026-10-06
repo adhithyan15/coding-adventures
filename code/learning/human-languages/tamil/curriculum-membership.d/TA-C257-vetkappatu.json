@@ -1,0 +1,11 @@
+{
+  "id": "TA-C257-vetkappatu",
+  "pathSegment": "TA-PATH-257-ACT257",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-257-ACT257",
+      "order": 2
+    }
+  ]
+}

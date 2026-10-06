@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:fd86242c7f1acad6",
+  "lessonIds": [
+    "GE-C201-dose",
+    "GE-C201-topf",
+    "GE-C201-pfanne",
+    "GE-C201-ofen",
+    "GE-C201-spuelmaschine"
+  ],
+  "tex": "german/book/chapters/ch201-a-tin-a-pot-a-frying-pan-an-oven-a-dishwasher.tex"
+}

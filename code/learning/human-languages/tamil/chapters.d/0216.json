@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Internet, Password, Newspaper, Ticket, Map",
+  "label": "ch:ta-internet-password-newspaper-ticket-map",
+  "canDo": "I can say the internet, a password, a newspaper, a ticket and a map.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C216-varaipatam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say the internet, a password, a newspaper, a ticket and a map.",
+    "assesses": [
+      "TA-LEX-C216-PORUL216-03",
+      "TA-LEX-C216-PORUL216-04",
+      "TA-LEX-C216-PORUL216-05"
+    ]
+  }
+}

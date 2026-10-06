@@ -1,0 +1,11 @@
+{
+  "id": "KA-C195-terige",
+  "pathSegment": "KA-PATH-195-KELASA195",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-195-KELASA195",
+      "order": 3
+    }
+  ]
+}

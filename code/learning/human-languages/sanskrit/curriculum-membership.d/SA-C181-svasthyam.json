@@ -1,0 +1,11 @@
+{
+  "id": "SA-C181-svasthyam",
+  "pathSegment": "SA-PATH-181-WEL181",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-181-WEL181",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C249-ergaenzen",
+  "pathSegment": "GE-PATH-249-VERB249",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-249-VERB249",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "Dictionary, Cart, Auto-rickshaw, Taxi, Petrol",
+  "label": "ch:te-dictionary-cart-auto-rickshaw-taxi-petrol",
+  "canDo": "I can say a dictionary, a cart, an auto-rickshaw, a taxi and petrol.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C301-petrolu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can say a dictionary, a cart, an auto-rickshaw, a taxi and petrol.",
+    "assesses": [
+      "TE-LEX-C301-VASTUVU301-03",
+      "TE-LEX-C301-VASTUVU301-04",
+      "TE-LEX-C301-VASTUVU301-05"
+    ]
+  }
+}

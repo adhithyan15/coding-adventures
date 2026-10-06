@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "Butcher, Innkeeper, Banker, Envoy, Clerk",
+  "label": "ch:la-butcher-innkeeper-banker-envoy-clerk",
+  "canDo": "I can say a butcher, an innkeeper, a banker, an envoy and a clerk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-R272-second-pass-words-from-chapters-268-272",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can say a butcher, an innkeeper, a banker, an envoy and a clerk.",
+    "assesses": [
+      "LA-LEX-C272-RES272-03",
+      "LA-LEX-C272-RES272-04",
+      "LA-LEX-C272-RES272-05"
+    ]
+  }
+}

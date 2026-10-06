@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:e265a4cb01cf50ab",
+  "lessonIds": [
+    "BN-C230-neta",
+    "BN-C230-montri",
+    "BN-C230-rajkumar",
+    "BN-C230-somaj",
+    "BN-C230-dhormo"
+  ],
+  "tex": "bengali/book/chapters/ch230-leader-minister-prince-society-religion.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:eed60c9934c611cc",
+  "lessonIds": [
+    "ES-C480-afirmar",
+    "ES-C480-comunicar",
+    "ES-C480-interrumpir",
+    "ES-C480-prometer",
+    "ES-C480-quejarse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch480.txt",
+  "json": "spanish/narration/ch480.json",
+  "textHash": "fnv1a64:7fcd8f37b5251306",
+  "jsonHash": "fnv1a64:8fc15e487afe29eb",
+  "findings": []
+}

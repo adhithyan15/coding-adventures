@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:a3eac6c619ddf342",
+  "lessonIds": [
+    "BN-C136-gobhir",
+    "BN-C136-choora",
+    "BN-C136-soru",
+    "BN-C136-gol",
+    "BN-C136-beguni"
+  ],
+  "tex": "bengali/book/chapters/ch136-deep-wide-narrow-round-purple.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C184-stringere",
+  "pathSegment": "IT-PATH-184-VERBI184",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-184-VERBI184",
+      "order": 4
+    }
+  ]
+}

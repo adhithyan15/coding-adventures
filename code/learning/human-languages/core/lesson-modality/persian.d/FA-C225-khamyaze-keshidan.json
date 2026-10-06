@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C225-khamyaze-keshidan",
+    "language": "persian",
+    "chapter": 225,
+    "sequence": 11610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a3ded7e5b50d767"
+  },
+  "findings": []
+}

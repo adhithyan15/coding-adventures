@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:6674640919665aac",
+  "lessonIds": [
+    "SA-C143-pratyagacchati",
+    "SA-C143-sete",
+    "SA-C143-aste",
+    "SA-C143-bibheti",
+    "SA-C143-dhyayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch143.txt",
+  "json": "sanskrit/narration/ch143.json",
+  "textHash": "fnv1a64:b82b8c1dcef9cbf9",
+  "jsonHash": "fnv1a64:7c5c7255eb76b5e6",
+  "findings": []
+}

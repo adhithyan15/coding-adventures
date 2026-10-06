@@ -1,0 +1,11 @@
+{
+  "id": "IT-C201-legno",
+  "pathSegment": "IT-PATH-201-COSE201",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-201-COSE201",
+      "order": 1
+    }
+  ]
+}

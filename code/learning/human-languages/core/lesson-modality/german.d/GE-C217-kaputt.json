@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C217-kaputt",
+    "language": "german",
+    "chapter": 217,
+    "sequence": 11500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7fbe9bf2b430bbf2"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:977d6482353ddc1b",
+  "lessonIds": [
+    "LA-C248-occasio",
+    "LA-C248-periculum",
+    "LA-C248-beneficium",
+    "LA-C248-officium",
+    "LA-C248-labor2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch248.txt",
+  "json": "latin/narration/ch248.json",
+  "textHash": "fnv1a64:ccb0f43d19d5d9c4",
+  "jsonHash": "fnv1a64:25bc3eec8088d6b4",
+  "findings": []
+}

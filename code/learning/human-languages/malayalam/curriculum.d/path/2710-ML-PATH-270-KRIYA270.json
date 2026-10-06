@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-270-KRIYA270",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "ML-EXT-270-KRIYA270"
+  ],
+  "after": []
+}

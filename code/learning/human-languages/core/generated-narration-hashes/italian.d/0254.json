@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:1ee00bab4fe83660",
+  "lessonIds": [
+    "IT-C254-sedile",
+    "IT-C254-volante",
+    "IT-C254-ruota",
+    "IT-C254-motore",
+    "IT-C254-benzina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch254.txt",
+  "json": "italian/narration/ch254.json",
+  "textHash": "fnv1a64:1f51a0cf3ee911c4",
+  "jsonHash": "fnv1a64:413a1f4ecc37de0e",
+  "findings": []
+}

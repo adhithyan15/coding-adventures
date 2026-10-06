@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C189-jab-tak",
+    "language": "urdu",
+    "chapter": 189,
+    "sequence": 10820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2c43e34feaa19b0"
+  },
+  "findings": []
+}

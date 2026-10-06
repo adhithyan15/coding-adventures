@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Crocodile, Giraffe, Zebra, Spider, Kite",
+  "label": "ch:bn-crocodile-giraffe-zebra-spider-kite",
+  "canDo": "I can say a crocodile, a giraffe, a zebra, a spider and a kite.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C250-chil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say a crocodile, a giraffe, a zebra, a spider and a kite.",
+    "assesses": [
+      "BN-LEX-C250-JINIS250-03",
+      "BN-LEX-C250-JINIS250-04",
+      "BN-LEX-C250-JINIS250-05"
+    ]
+  }
+}

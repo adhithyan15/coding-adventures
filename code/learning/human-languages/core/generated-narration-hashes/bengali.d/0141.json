@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:2ac8224ea2657db3",
+  "lessonIds": [
+    "BN-C141-paka",
+    "BN-C141-mojar",
+    "BN-C141-aramdayok",
+    "BN-C141-bipojjonok",
+    "BN-C141-nirapod"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch141.txt",
+  "json": "bengali/narration/ch141.json",
+  "textHash": "fnv1a64:6bd00a1f08dd447a",
+  "jsonHash": "fnv1a64:780f50d4cebb0816",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:4a2b059a97dbd534",
+  "lessonIds": [
+    "LA-C250-vitis",
+    "LA-C250-quercus",
+    "LA-C250-pinus",
+    "LA-C250-laurus",
+    "LA-C250-viola"
+  ],
+  "tex": "latin/book/chapters/ch250-vine-oak-pine-laurel-violet.tex"
+}

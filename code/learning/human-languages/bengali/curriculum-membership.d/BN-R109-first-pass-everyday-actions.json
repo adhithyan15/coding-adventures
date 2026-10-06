@@ -1,0 +1,11 @@
+{
+  "id": "BN-R109-first-pass-everyday-actions",
+  "pathSegment": "BN-PATH-109-THINGS109",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "BN-EXT-109-THINGS109",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C277-kummari",
+    "language": "telugu",
+    "chapter": 277,
+    "sequence": 13150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3a09c1331268d2e"
+  },
+  "findings": []
+}

@@ -32,7 +32,19 @@ it("pins German lesson-content budgets", () =>
     // 606 -> 804: the A1 vocabulary tranche, chapters 104-141. 190 word lessons
     // (nineteen verbs) in four runs of nine or ten chapters, each closing on two
     // reviews. No idiom, sense or culture claim.
-    lessons: 804,
+    // 804 -> 816: chapters 142-143, the future and reading practical texts (the
+    // last two A2 spine nodes), ten word lessons and two reviews. No idiom,
+    // sense or culture claim.
+    // 816 -> 974: the first A2 vocabulary tranche, chapters 144-173. 150 word
+    // lessons (fifty verbs) in four runs of six to nine chapters, each closing
+    // on two reviews. No idiom, sense or culture claim.
+    // 974 -> 1169: the second A2 vocabulary tranche, chapters 174-210. 185
+    // word lessons (ninety verbs) in five runs of five to nine chapters, each
+    // closing on two reviews. No idiom, sense or culture claim.
+    // 1169 -> 1384: the third A2 vocabulary tranche, chapters 211-251. 205
+    // word lessons in five runs of five to nine chapters, each closing on two
+    // reviews. No idiom, sense or culture claim.
+    lessons: 1384,
     idioms: 1,
     senses: 5,
     cultureClaims: 32,

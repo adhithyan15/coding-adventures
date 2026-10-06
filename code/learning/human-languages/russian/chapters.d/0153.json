@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "Gym, Mosque, Temple, Monument, Fountain",
+  "label": "ch:ru-gym-mosque-temple-monument-fountain",
+  "canDo": "I can say a gym, a mosque, a temple, a monument and a fountain.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C153-fontan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: I can say a gym, a mosque, a temple, a monument and a fountain.",
+    "assesses": [
+      "RU-LEX-C153-MESTO153-03",
+      "RU-LEX-C153-MESTO153-04",
+      "RU-LEX-C153-MESTO153-05"
+    ]
+  }
+}

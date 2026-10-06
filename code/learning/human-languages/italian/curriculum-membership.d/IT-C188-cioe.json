@@ -1,0 +1,11 @@
+{
+  "id": "IT-C188-cioe",
+  "pathSegment": "IT-PATH-188-PERCHE188",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-188-PERCHE188",
+      "order": 2
+    }
+  ]
+}

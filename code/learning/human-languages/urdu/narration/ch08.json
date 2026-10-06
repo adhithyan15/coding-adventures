@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Four Verbs Between People",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f2cb33c4c76403bf",
+  "sourceHash": "fnv1a64:d058612ae5198a8a",
   "lessons": [
     {
       "id": "UR-W08-vao",
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:727673a4d1b2e3ef",
+      "sourceHash": "fnv1a64:362a07d4cfd89135",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -499,7 +499,7 @@
             },
             {
               "kind": "speech",
-              "text": "Here is the part that is Urdu's alone. Persian asks with پرسیدن porsīdan, and porsīdan is the same root, carried west into Iran rather than east into India. Urdu borrowed it back: پرسش pursish is “inquiry, asking after someone's health,” and پرسانِ حال pursān-e-ḥāl is “one who asks how you are.”"
+              "text": "Here is the part that is Urdu's alone. Persian asks with porsīdan, and porsīdan is the same root, carried west into Iran rather than east into India. Urdu borrowed it back: پرسش pursish is “inquiry, asking after someone's health,” and pursān-e-ḥāl is “one who asks how you are.”"
             },
             {
               "kind": "speech",
@@ -576,7 +576,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: پوچھنا (pūchhnā); Wiktionary: پرسیدن; Rekhta Dictionary: pursish."
+              "text": "Sources: Wiktionary: پوچھنا (pūchhnā); Wiktionary: porsīdan; Rekhta Dictionary: pursish."
             }
           ]
         }

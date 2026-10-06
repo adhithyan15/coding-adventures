@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C274-ulukku",
+    "language": "malayalam",
+    "chapter": 274,
+    "sequence": 12720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bb79382026313c0"
+  },
+  "findings": []
+}

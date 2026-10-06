@@ -1,0 +1,11 @@
+{
+  "id": "PT-C226-vitoria",
+  "pathSegment": "PT-PATH-226-COISAS226",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-226-COISAS226",
+      "order": 4
+    }
+  ]
+}

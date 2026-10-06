@@ -1,0 +1,11 @@
+{
+  "id": "IT-C188-nonostante",
+  "pathSegment": "IT-PATH-188-PERCHE188",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-188-PERCHE188",
+      "order": 4
+    }
+  ]
+}

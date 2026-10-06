@@ -1,0 +1,11 @@
+{
+  "id": "FA-C240-chatr",
+  "pathSegment": "FA-PATH-240-CHIZ240",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-240-CHIZ240",
+      "order": 2
+    }
+  ]
+}

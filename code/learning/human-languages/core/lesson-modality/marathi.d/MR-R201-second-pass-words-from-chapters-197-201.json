@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R201-second-pass-words-from-chapters-197-201",
+    "language": "marathi",
+    "chapter": 201,
+    "sequence": 10460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:620dff76411c3e37"
+  },
+  "findings": []
+}

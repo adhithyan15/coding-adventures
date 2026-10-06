@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Environment, Pollution, Waste, Recycling, Energy",
+  "label": "ch:it-environment-pollution-waste-recycling-energy",
+  "canDo": "I can say the environment, pollution, waste, recycling and energy.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C169-energia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say the environment, pollution, waste, recycling and energy.",
+    "assesses": [
+      "IT-LEX-C169-COSE169-03",
+      "IT-LEX-C169-COSE169-04",
+      "IT-LEX-C169-COSE169-05"
+    ]
+  }
+}

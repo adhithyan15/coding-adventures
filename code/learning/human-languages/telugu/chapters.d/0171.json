@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Sunset, Every day, Usually, Rarely, Constantly",
+  "label": "ch:te-sunset-every-day-usually-rarely-constantly",
+  "canDo": "I can say sunset, every day, usually, rarely and constantly.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C171-nirantaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say sunset, every day, usually, rarely and constantly.",
+    "assesses": [
+      "TE-LEX-C171-SAMAYAM171-03",
+      "TE-LEX-C171-SAMAYAM171-04",
+      "TE-LEX-C171-SAMAYAM171-05"
+    ]
+  }
+}

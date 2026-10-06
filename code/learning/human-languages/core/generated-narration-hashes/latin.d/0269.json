@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:48a7802bfe15a1df",
+  "lessonIds": [
+    "LA-C269-maestus",
+    "LA-C269-ebrius",
+    "LA-C269-sobrius",
+    "LA-C269-avarus",
+    "LA-C269-parcus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch269.txt",
+  "json": "latin/narration/ch269.json",
+  "textHash": "fnv1a64:9f3bd3444e58dc16",
+  "jsonHash": "fnv1a64:98b79079e49f8eb6",
+  "findings": []
+}

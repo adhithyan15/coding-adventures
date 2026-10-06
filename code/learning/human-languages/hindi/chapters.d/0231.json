@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "To flow, To drip, To sneeze, To yawn, To cough",
+  "label": "ch:hi-to-flow-to-drip-to-sneeze-to-yawn-to-cough",
+  "canDo": "I can say to flow, to drip, to sneeze, to yawn and to cough.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C231-khasna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say to flow, to drip, to sneeze, to yawn and to cough.",
+    "assesses": [
+      "HI-LEX-C231-ACT231-03",
+      "HI-LEX-C231-ACT231-04",
+      "HI-LEX-C231-ACT231-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:23d9f8517b03a9c2",
+  "lessonIds": [
+    "RU-C211-myshtsa",
+    "RU-C211-kost",
+    "RU-C211-puls",
+    "RU-C211-davleniye",
+    "RU-C211-sila"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch211.txt",
+  "json": "russian/narration/ch211.json",
+  "textHash": "fnv1a64:f17d1574b12ae0a6",
+  "jsonHash": "fnv1a64:0061c015d54aa166",
+  "findings": []
+}

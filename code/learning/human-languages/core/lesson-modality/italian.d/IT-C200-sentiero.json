@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C200-sentiero",
+    "language": "italian",
+    "chapter": 200,
+    "sequence": 11410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f2a7042969300c7"
+  },
+  "findings": []
+}

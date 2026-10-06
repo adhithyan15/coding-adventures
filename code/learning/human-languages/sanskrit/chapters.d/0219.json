@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Bael fruit, Orange, Wood apple, Apple, Flattened rice",
+  "label": "ch:sa-bael-fruit-orange-wood-apple-apple-flattened-rice",
+  "canDo": "I can say a bael fruit, an orange, a wood apple, an apple and flattened rice.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C219-cipitakah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say a bael fruit, an orange, a wood apple, an apple and flattened rice.",
+    "assesses": [
+      "SA-LEX-C219-THG219-03",
+      "SA-LEX-C219-THG219-04",
+      "SA-LEX-C219-THG219-05"
+    ]
+  }
+}

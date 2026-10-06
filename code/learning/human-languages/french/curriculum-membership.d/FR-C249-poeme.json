@@ -1,0 +1,11 @@
+{
+  "id": "FR-C249-poeme",
+  "pathSegment": "FR-PATH-249-CHOSES249",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-249-CHOSES249",
+      "order": 2
+    }
+  ]
+}

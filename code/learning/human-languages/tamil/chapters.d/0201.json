@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Forehead, Beard, Moustache, Palm of the hand, Stomach ache",
+  "label": "ch:ta-forehead-beard-moustache-palm-of-the-hand-stomach-ache",
+  "canDo": "I can say the forehead, a beard, a moustache, the palm of the hand and a stomach ache.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-C201-vayirruvali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say the forehead, a beard, a moustache, the palm of the hand and a stomach ache.",
+    "assesses": [
+      "TA-LEX-C201-NALAM201-03",
+      "TA-LEX-C201-NALAM201-04",
+      "TA-LEX-C201-NALAM201-05"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 150,
+  "title": "A Word for Literature — Then the Letter Inside It",
+  "label": "ch:te-vangmayam-nga",
+  "canDo": "I can say the Telugu word for literature, recognise the rare letter inside it, and write that letter in a source-backed order.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "TE-S171-letter-nga",
+    "kind": "production",
+    "summary": "Take ఙ from the already-known word వాఙ్మయం and write its five movements in three pen-down runs.",
+    "assesses": [
+      "TE-LEX-C150-LITERATURE-01",
+      "TE-SCRIPT-RECOG-171"
+    ]
+  }
+}

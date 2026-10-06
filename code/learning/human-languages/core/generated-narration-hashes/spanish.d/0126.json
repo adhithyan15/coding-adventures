@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 126,
-  "sourceHash": "fnv1a64:39420c060c47c28a",
+  "sourceHash": "fnv1a64:cb4dc31506d84ab5",
   "lessonIds": [
     "ES-C18-quiero-que"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch126.txt",
   "json": "spanish/narration/ch126.json",
-  "textHash": "fnv1a64:0a660f2c129367c0",
-  "jsonHash": "fnv1a64:b03270ee4ba3b8e0",
+  "textHash": "fnv1a64:60159dcb874f7167",
+  "jsonHash": "fnv1a64:6b403eb7327539a4",
   "findings": []
 }

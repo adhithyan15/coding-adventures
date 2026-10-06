@@ -1,0 +1,11 @@
+{
+  "id": "MR-C238-samsodhak",
+  "pathSegment": "MR-PATH-238-VASTU238",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-238-VASTU238",
+      "order": 1
+    }
+  ]
+}

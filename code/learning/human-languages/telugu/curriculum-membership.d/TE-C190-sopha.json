@@ -1,0 +1,11 @@
+{
+  "id": "TE-C190-sopha",
+  "pathSegment": "TE-PATH-190-VASTUVU190",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-190-VASTUVU190",
+      "order": 2
+    }
+  ]
+}

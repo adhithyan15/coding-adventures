@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R216-second-pass-words-from-chapters-212-216",
+    "language": "telugu",
+    "chapter": 216,
+    "sequence": 9970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e97cbd3b6865e3ec"
+  },
+  "findings": []
+}

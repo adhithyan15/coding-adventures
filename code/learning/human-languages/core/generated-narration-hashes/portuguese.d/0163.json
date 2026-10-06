@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:3849da5808898b64",
+  "lessonIds": [
+    "PT-C163-tunel",
+    "PT-C163-obras",
+    "PT-C163-predio",
+    "PT-C163-castelo",
+    "PT-C163-torre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch163.txt",
+  "json": "portuguese/narration/ch163.json",
+  "textHash": "fnv1a64:b5aaeb933813daab",
+  "jsonHash": "fnv1a64:7055b161735a655b",
+  "findings": []
+}

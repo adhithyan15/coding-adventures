@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C268-hasaba",
+    "language": "arabic",
+    "chapter": 268,
+    "sequence": 15290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3672c4609b8dd272"
+  },
+  "findings": []
+}

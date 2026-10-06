@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "To float, To chase, To insist, To interrupt, To tie",
+  "label": "ch:pt-to-float-to-chase-to-insist-to-interrupt-to-tie",
+  "canDo": "I can say to float, to chase, to insist, to interrupt and to tie.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C145-amarrar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: I can say to float, to chase, to insist, to interrupt and to tie.",
+    "assesses": [
+      "PT-LEX-C145-VERBOS145-03",
+      "PT-LEX-C145-VERBOS145-04",
+      "PT-LEX-C145-VERBOS145-05"
+    ]
+  }
+}

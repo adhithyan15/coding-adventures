@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C261-karkhana",
+    "language": "urdu",
+    "chapter": 261,
+    "sequence": 15910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea5affc994a944d3"
+  },
+  "findings": []
+}

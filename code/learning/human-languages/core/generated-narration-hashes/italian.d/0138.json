@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:40167450b86c7087",
+  "lessonIds": [
+    "IT-C138-il-futuro",
+    "IT-C138-stasera",
+    "IT-C138-il-progetto",
+    "IT-C138-prevedere",
+    "IT-C138-organizzare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch138.txt",
+  "json": "italian/narration/ch138.json",
+  "textHash": "fnv1a64:85616677057d76d8",
+  "jsonHash": "fnv1a64:33933f97e596ba0b",
+  "findings": []
+}

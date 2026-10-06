@@ -51,17 +51,18 @@ You already say these, and every one of them has ప somewhere inside it:
 - **పరవాలేదు** *paravālēdu* — it's okay / no problem / you're welcome
 - **రేపు కలుద్దాం** *rēpu kaluddām* — see you tomorrow
 
-## Writing: ప — copy what you see
+## Writing: ప — four calm curves
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-113] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on ప and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left
+across the upper part of the small bowl. Lift, then movement 2 turns around its
+lower half. Movement 3 makes the broad bowl on the right. Lift once more for
+movement 4, the small rising flourish above.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Trace the same route slowly. This is one attested school-style order fitted to
+the printed shape here; Telugu handwriting varies, so keep the four clear
+movements instead of closing the small gaps.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-113] -->

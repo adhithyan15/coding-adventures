@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "Festival, Invitation, Occasion, Decorations, Film",
+  "label": "ch:ar-festival-invitation-occasion-decorations-film",
+  "canDo": "I can say a festival, an invitation, an occasion, decorations and a film.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C184-film",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say a festival, an invitation, an occasion, decorations and a film.",
+    "assesses": [
+      "AR-LEX-C184-SHAY184-03",
+      "AR-LEX-C184-SHAY184-04",
+      "AR-LEX-C184-SHAY184-05"
+    ]
+  }
+}

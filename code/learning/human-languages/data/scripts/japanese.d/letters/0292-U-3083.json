@@ -1,0 +1,23 @@
+{
+  "glyph": "ゃ",
+  "sound": "small ya, which joins to the preceding sign and makes one mora with it",
+  "role": "hiragana",
+  "components": [
+    "a small や-shaped sweep curling into a hook on the right",
+    "a short tick at the top",
+    "a small descender crossing the sweep"
+  ],
+  "strokeOrder": [
+    "begin on the left and sweep right, curling clockwise into the hook",
+    "lift; add the short tick at the top",
+    "lift; draw the descender from the upper left down across the sweep to the lower right"
+  ],
+  "strokeOrderNote": "Sirgazil's 28-frame や animation supplies the three-run order, sweep first and descender last; KanjiVG's 03083 file holds the same three strokes in the same order for U+3083 itself, and Unicode names U+3083 HIRAGANA LETTER SMALL YA, so the movement is fitted to the smaller bundled glyph exactly as small ゅ is fitted from ゆ.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%84_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana や stroke order animation.gif, hiragana や, 28 frames, 2.8 seconds (Wikimedia Commons, 1 October 2009); KanjiVG kanji/03083.svg, three stroke paths in the same order; the Unicode Standard names U+3083 HIRAGANA LETTER SMALL YA",
+    "variation": "The CC0 animation draws full-size や in three pen-down runs with two lifts: the long sweep and its hook first, then the short tick, then the descender. KanjiVG records U+3083 with the same three strokes in the same order. Unicode separately identifies U+3083 as small ya. This learner path therefore preserves the source's three-run movement while scaling and fitting it to the bundled Noto Sans JP small ゃ outline; the cited animation demonstrates や rather than a separately animated ゃ, so the size adaptation is explicit rather than presented as independent handwriting evidence."
+  },
+  "notes": "A yōon sign: it does not take a beat of its own but fuses with the sign before it, so ち + ゃ is one mora cha, as in おちゃ, tea. Its full-size twin や takes a beat of its own."
+}

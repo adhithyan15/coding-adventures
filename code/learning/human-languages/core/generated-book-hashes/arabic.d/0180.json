@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:4eb9e0ca1de98804",
+  "lessonIds": [
+    "AR-C180-musab",
+    "AR-C180-rifi",
+    "AR-C180-taqlidi",
+    "AR-C180-ajnabi",
+    "AR-C180-musattah"
+  ],
+  "tex": "arabic/book/chapters/ch180-injured-rural-traditional-foreign-flat.tex"
+}

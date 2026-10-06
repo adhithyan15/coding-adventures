@@ -1,0 +1,11 @@
+{
+  "id": "BN-C206-miksi",
+  "pathSegment": "BN-PATH-206-JINIS206",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-206-JINIS206",
+      "order": 2
+    }
+  ]
+}

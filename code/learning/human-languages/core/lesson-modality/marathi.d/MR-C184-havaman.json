@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C184-havaman",
+    "language": "marathi",
+    "chapter": 184,
+    "sequence": 9240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:447a9c58de6f2cb4"
+  },
+  "findings": []
+}

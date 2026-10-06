@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C232-chhola",
+    "language": "bengali",
+    "chapter": 232,
+    "sequence": 14420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e7a3076e7fafb2f"
+  },
+  "findings": []
+}

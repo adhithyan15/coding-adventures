@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C258-tifoso",
+    "language": "italian",
+    "chapter": 258,
+    "sequence": 15500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5a321040a03ae5e"
+  },
+  "findings": []
+}

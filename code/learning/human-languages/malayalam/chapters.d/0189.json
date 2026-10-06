@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "To spit, To wring, To shake, To roll, To crawl",
+  "label": "ch:ml-to-spit-to-wring-to-shake-to-roll-to-crawl",
+  "canDo": "I can say to spit, to wring, to shake, to roll and to crawl.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-R189-second-pass-words-from-chapters-185-189",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say to spit, to wring, to shake, to roll and to crawl.",
+    "assesses": [
+      "ML-LEX-C189-KRIYA189-03",
+      "ML-LEX-C189-KRIYA189-04",
+      "ML-LEX-C189-KRIYA189-05"
+    ]
+  }
+}

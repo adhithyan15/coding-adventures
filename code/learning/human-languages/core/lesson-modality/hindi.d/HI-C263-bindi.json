@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C263-bindi",
+    "language": "hindi",
+    "chapter": 263,
+    "sequence": 14450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f169e69941930cf"
+  },
+  "findings": []
+}

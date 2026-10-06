@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:2189704f32b1398e",
+  "lessonIds": [
+    "AR-C235-mathaf",
+    "AR-C235-malab",
+    "AR-C235-rasif",
+    "AR-C235-taqatu",
+    "AR-C235-sifara"
+  ],
+  "tex": "arabic/book/chapters/ch235-museum-stadium-pavement-crossroads-embassy.tex"
+}

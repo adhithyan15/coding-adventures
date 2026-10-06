@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:5464342d51708d3e",
+  "lessonIds": [
+    "TA-C177-vilaivu",
+    "TA-C177-piraccinai",
+    "TA-C177-tirvu",
+    "TA-C177-nokkam",
+    "TA-C177-anupavam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch177.txt",
+  "json": "tamil/narration/ch177.json",
+  "textHash": "fnv1a64:7c9eecbd9dd156c4",
+  "jsonHash": "fnv1a64:57a85cd8deb20149",
+  "findings": []
+}

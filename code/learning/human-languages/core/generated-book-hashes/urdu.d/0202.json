@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:cccf0189e7afa0ad",
+  "lessonIds": [
+    "UR-C202-parti",
+    "UR-C202-tohfa",
+    "UR-C202-musafir",
+    "UR-C202-taiksi",
+    "UR-C202-riksha"
+  ],
+  "tex": "urdu/book/chapters/ch202-party-gift-traveller-taxi-rickshaw.tex"
+}

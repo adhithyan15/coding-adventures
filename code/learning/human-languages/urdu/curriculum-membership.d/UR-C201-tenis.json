@@ -1,0 +1,11 @@
+{
+  "id": "UR-C201-tenis",
+  "pathSegment": "UR-PATH-201-CHIZ201",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-201-CHIZ201",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:57885b1fa15237ed",
+  "lessonIds": [
+    "GE-C193-fahrplan",
+    "GE-C193-rueckfahrt",
+    "GE-C193-unterkunft",
+    "GE-C193-jugendherberge",
+    "GE-C193-gepaeck"
+  ],
+  "tex": "german/book/chapters/ch193-a-timetable-a-return-journey-accommodation-a-youth-hostel-luggage.tex"
+}

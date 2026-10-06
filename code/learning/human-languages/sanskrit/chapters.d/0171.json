@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Message, Facility, Arrangement, Programme, Competition",
+  "label": "ch:sa-message-convenience-arrangement-programme-competition",
+  "canDo": "I can say a message, a convenience, an arrangement, a programme and a competition.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C171-pratiyogita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say a message, a convenience, an arrangement, a programme and a competition.",
+    "assesses": [
+      "SA-LEX-C171-WRK171-03",
+      "SA-LEX-C171-WRK171-04",
+      "SA-LEX-C171-WRK171-05"
+    ]
+  }
+}

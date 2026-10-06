@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:72665e206900d08e",
+  "lessonIds": [
+    "KA-C290-ardha",
+    "KA-C290-purti",
+    "KA-C290-kasta",
+    "KA-C290-sulabha",
+    "KA-C290-mukhya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch290.txt",
+  "json": "kannada/narration/ch290.json",
+  "textHash": "fnv1a64:15435cab058e2d62",
+  "jsonHash": "fnv1a64:54d569e5f0addb62",
+  "findings": []
+}

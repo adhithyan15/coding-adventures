@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Court of law, Prison, Cave, Ravine, Waterfall",
+  "label": "ch:bn-court-of-law-prison-cave-ravine-waterfall",
+  "canDo": "I can say a court of law, a prison, a cave, a ravine and a waterfall.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "BN-C189-jhorna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say a court of law, a prison, a cave, a ravine and a waterfall.",
+    "assesses": [
+      "BN-LEX-C189-JAYGA189-03",
+      "BN-LEX-C189-JAYGA189-04",
+      "BN-LEX-C189-JAYGA189-05"
+    ]
+  }
+}

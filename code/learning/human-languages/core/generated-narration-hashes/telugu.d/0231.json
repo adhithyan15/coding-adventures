@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:8be6460e343784d9",
+  "lessonIds": [
+    "TE-C231-phyanu",
+    "TE-C231-patakaru",
+    "TE-C231-niccena",
+    "TE-C231-jiguru",
+    "TE-C231-kolabadda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch231.txt",
+  "json": "telugu/narration/ch231.json",
+  "textHash": "fnv1a64:590b6c427a5d0170",
+  "jsonHash": "fnv1a64:69c162527a11b0bb",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "Vomiting, A wound, A bandage, An injection, A pill",
+  "label": "ch:hi-vomiting-a-wound-a-bandage-an-injection-a-pill",
+  "canDo": "I can say vomiting, a wound, a bandage, an injection and a pill.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C256-goli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say vomiting, a wound, a bandage, an injection and a pill.",
+    "assesses": [
+      "HI-LEX-C256-THG256-03",
+      "HI-LEX-C256-THG256-04",
+      "HI-LEX-C256-THG256-05"
+    ]
+  }
+}

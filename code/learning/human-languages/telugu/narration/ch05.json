@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f0692f569738a59f",
+  "sourceHash": "fnv1a64:79fb848cd9b16329",
   "lessons": [
     {
       "id": "TE-S01-letter-ta",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d1be88d775f31bde",
+      "sourceHash": "fnv1a64:88447c2836650b08",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -92,15 +92,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: త — copy what you see",
+          "title": "Writing: త — observe, then trace",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on త (ta) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Watch the numbered filmstrip once before your pen moves. The first pen-down run uses six small movements: curl up inside the left shoulder, turn down around the left bowl, sweep right around the broad bottom, curve up around the right bowl, turn down inside it, then curve left across the upper shoulder. Lift once. The second run sweeps up through the separate top flourish."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "Trace the same route slowly. The numbers divide a long connected body into manageable turns; they do not ask you to lift until the top flourish."
             }
           ]
         },
@@ -829,7 +829,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:37ce8b84d085090c",
+      "sourceHash": "fnv1a64:cbb30bab2a60c351",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -904,15 +904,23 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: స — copy what you see",
+          "title": "Writing: స — two calm movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on స (sa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Watch the guide once before your hand moves. స (sa) arrives in two calm movements, with one lift between them:"
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "Loop around the left bowl, then keep sweeping around the broad right body."
+            },
+            {
+              "kind": "speech",
+              "text": "Lift once, then draw down and up through the separate chevron above."
+            },
+            {
+              "kind": "speech",
+              "text": "Trace the filmstrip slowly. Let the long first movement settle before you lift for the small upper mark. Then copy the whole shape once without rushing."
             }
           ]
         },
@@ -999,7 +1007,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:90a741f19b9b09d8",
+      "sourceHash": "fnv1a64:cb63386990af218f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1071,15 +1079,31 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ష — copy what you see",
+          "title": "Writing: ష — four calm movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ష (ṣa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed. Then write స (sa) beside it and look at the two."
+              "text": "Watch the guide once before your hand moves. ష (ṣa) arrives in four calm movements, with a small lift between each one:"
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "Loop around the small bowl at the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "Sweep around the broad lower and right body."
+            },
+            {
+              "kind": "speech",
+              "text": "Add the short tail at the lower right."
+            },
+            {
+              "kind": "speech",
+              "text": "Lift once more, then draw down and up through the separate chevron above."
+            },
+            {
+              "kind": "speech",
+              "text": "Trace the filmstrip slowly. Let each movement finish before you lift. Then write స (sa) beside ష (ṣa) and notice how different the two silhouettes feel."
             }
           ]
         },
@@ -1159,7 +1183,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cd8ae71a8ebc67ef",
+      "sourceHash": "fnv1a64:b9f4cde0557d9c1f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1206,7 +1230,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ఉండు (uṇḍu, \"to be, to exist, to stay, to live\") is native Dravidian and does an enormous amount of work. It is the verb behind Chapter 3's unnāru (\"you are\") and bāgunnānu (\"I'm well\") — and it also means \"to reside\": నేను హైదరాబాద్లో ఉంటాను (nēnu Hyderābādlō uṇṭānu, \"I live in Hyderabad\"). One verb covers \"be,\" \"stay,\" and \"live.\""
+              "text": "ఉండు (uṇḍu, \"to be, to exist, to stay, to live\") is native Dravidian and does an enormous amount of work. It is the verb behind Chapter 3's unnāru (\"you are\") and bāgunnānu (\"I'm well\") — and it also means \"to reside\": nēnu Hyderābādlō uṇṭānu (\"I live in Hyderabad\"). One verb covers \"be,\" \"stay,\" and \"live.\""
             }
           ]
         },
@@ -1217,7 +1241,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "హైదరాబాద్లో (Hyderābādlō) = Hyderabad + -లో (-lō, \"in\"). The little word for \"in\" is glued to the end of the noun — Telugu uses postpositions (really, case-suffixes) where English uses prepositions. \"Hyderabad-in I stay,\" the verb last."
+              "text": "Hyderābādlō = Hyderabad + -లో (-lō, \"in\"). The little word for \"in\" is glued to the end of the noun — Telugu uses postpositions (really, case-suffixes) where English uses prepositions. \"Hyderabad-in I stay,\" the verb last."
             }
           ]
         },
@@ -1400,7 +1424,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d31ce33d4f65cdaa",
+      "sourceHash": "fnv1a64:3ae4cc22882fa96f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1471,15 +1495,31 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: హ — copy what you see",
+          "title": "Writing: హ — four calm movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on హ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Watch the guide once before your hand moves. హ arrives in four calm movements, with a small lift between each one:"
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "Loop around the small bowl at the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "Sweep around the broad lower and right body."
+            },
+            {
+              "kind": "speech",
+              "text": "Draw right across the middle bar and curl around its far end."
+            },
+            {
+              "kind": "speech",
+              "text": "Lift once more, then draw down and up through the separate chevron above."
+            },
+            {
+              "kind": "speech",
+              "text": "Trace the filmstrip slowly. Let every movement finish before you lift, then copy the whole shape once without rushing."
             }
           ]
         },
@@ -1866,7 +1906,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c71b9c5468c407b",
+      "sourceHash": "fnv1a64:f04f7586ddeecf9b",
       "notice": null,
       "blocks": [
         {
@@ -1907,12 +1947,12 @@
               "utterances": [
                 "Telugu: నేను తెలుగు మాట్లాడతాను., nēnu telugu māṭlāḍatānu. English: I speak Telugu.",
                 "Telugu: నేను హైదరాబాద్లో ఉంటాను., nēnu Hyderābādlō uṇṭānu. English: I live in Hyderabad.",
-                "Telugu: నేను పని చేస్తాను., nēnu pani cēstānu. English: I work."
+                "Telugu: —, nēnu pani cēstānu. English: I work."
               ]
             },
             {
               "kind": "speech",
-              "text": "A few of these characters have not had their own lesson yet. They are here to be recognised, not decoded — the romanization beside each line is what you read from. The letters catch up in the chapters ahead."
+              "text": "One of these stays in romanization for now: its c has not had its own lesson yet, and a line you cannot decode is not a line to read from. The others are read straight off the page; the romanization is there to check against."
             },
             {
               "kind": "pause",

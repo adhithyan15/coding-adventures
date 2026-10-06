@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C250-sutta",
+    "language": "kannada",
+    "chapter": 250,
+    "sequence": 11830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1efeeeb5f593f79c"
+  },
+  "findings": []
+}

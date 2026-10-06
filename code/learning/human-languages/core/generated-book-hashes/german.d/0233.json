@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:0564598631427bb3",
+  "lessonIds": [
+    "GE-C233-laerm",
+    "GE-C233-laune",
+    "GE-C233-lebenslauf",
+    "GE-C233-leistung",
+    "GE-C233-lektion"
+  ],
+  "tex": "german/book/chapters/ch233-noise-a-mood-a-cv-an-achievement-a-lesson.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:2b92a5edf5337363",
+  "lessonIds": [
+    "TE-C166-konasagu",
+    "TE-C166-patincu",
+    "TE-C166-diddu",
+    "TE-C166-gonugu",
+    "TE-C166-vidipovu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch166.txt",
+  "json": "telugu/narration/ch166.json",
+  "textHash": "fnv1a64:5eb993cdc76077f9",
+  "jsonHash": "fnv1a64:00155f3d8dbc7e3b",
+  "findings": []
+}

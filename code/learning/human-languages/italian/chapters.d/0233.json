@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "To order, To cut, To dry, To iron, To build",
+  "label": "ch:it-to-order-to-cut-to-dry-to-iron-to-build",
+  "canDo": "I can say to order, to cut, to dry, to iron and to build.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C233-costruire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say to order, to cut, to dry, to iron and to build.",
+    "assesses": [
+      "IT-LEX-C233-VERBI233-03",
+      "IT-LEX-C233-VERBI233-04",
+      "IT-LEX-C233-VERBI233-05"
+    ]
+  }
+}

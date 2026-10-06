@@ -18,12 +18,18 @@ set -e
 #
 #     document-ast            ← Content IR (no Forme deps)
 #     forme-types             ← kind vocabulary
+#     forme-interactivity-ir  ← hostile-data FM05 validation and snapshots
 #     forme-errors            ← StageError / CapabilityError / CancellationError
 #     forme-capability        ← capability parser+matcher
 #     forme-stage             ← Stage<In,Out> + StageContext
 #     forme-aot-meta-link-tags ← canonical + description head tags
 #     forme-aot-rss-discovery-link ← RSS/Atom discovery head tags
 #     blake2b                 ← hash primitive
+#     sha512                  ← Ed25519 hash primitive
+#     ed25519                 ← manifest signature verification
+#     forme-manifest          ← plugin manifest parser and verifier
+#     forme-plugin-runner-ts  ← plugin-side FM02 runner SDK
+#     forme-plugin-host       ← sandboxed StageRef plugin loading
 #     forme-identity          ← LogicalId + RevisionId
 #     forme-cache             ← orchestrator cache backend
 #     forme-pipeline-config   ← PipelineConfig types + validateConfig
@@ -46,6 +52,7 @@ set -e
 
 cd ../../../packages/typescript/document-ast && npm install --silent
 cd ../../../packages/typescript/forme-types && npm install --silent
+cd ../../../packages/typescript/forme-interactivity-ir && npm install --silent
 cd ../../../packages/typescript/forme-errors && npm install --silent
 cd ../../../packages/typescript/forme-capability && npm install --silent
 cd ../../../packages/typescript/forme-stage && npm install --silent
@@ -55,6 +62,11 @@ cd ../../../packages/typescript/forme-style-ir && npm install --silent
 cd ../../../packages/typescript/forme-style-to-css && npm install --silent
 cd ../../../packages/typescript/forme-aot-css-slicer && npm install --silent
 cd ../../../packages/typescript/blake2b && npm install --silent
+cd ../../../packages/typescript/sha512 && npm install --silent
+cd ../../../packages/typescript/ed25519 && npm install --silent
+cd ../../../packages/typescript/forme-manifest && npm install --silent
+cd ../../../packages/typescript/forme-plugin-runner-ts && npm install --silent
+cd ../../../packages/typescript/forme-plugin-host && npm install --silent
 cd ../../../packages/typescript/forme-identity && npm install --silent
 cd ../../../packages/typescript/forme-cache && npm install --silent
 cd ../../../packages/typescript/forme-pipeline-config && npm install --silent

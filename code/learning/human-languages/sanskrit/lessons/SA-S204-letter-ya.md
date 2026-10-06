@@ -64,13 +64,14 @@ You already say these words, and य is one of the shapes inside them — the re
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-204] -->
 
 - **1.** start beneath the headline, curve clockwise around the inner curl, and finish at the left waist
-- **2.** lift at that waist, curve down and right around the lower bowl, and rise to the right-stem junction
-- **3.** lift and draw the right stem top-to-bottom
-- **4.** lift and draw the top shirorekhā left-to-right
+- **2.** without lifting, curve down and right around the lower bowl, and rise to the right-stem junction
+- **3.** climb up the right stem to the headline
+- **4.** descend the right stem top-to-bottom
+- **5.** lift and draw the top shirorekhā left-to-right
 
-**Pen lifts: 3.** The pen comes up 3 times and no more.
+**Pen lifts: 1.** The pen comes up once.
 
-> verified four-stroke teaching form; another animated learner source joins the inner curl and lower bowl
+> The source shows four movements; most native writers draw य in two strokes (89% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline.
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-य-order.gif’, strokes 1–4, Wikimedia Commons, 10 May 2009.

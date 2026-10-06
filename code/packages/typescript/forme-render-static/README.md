@@ -2,8 +2,8 @@
 
 Forme render stage: `Stream<ContentNode>` → `Stream<RenderedPage>`.
 It wraps [`@coding-adventures/document-ast-to-html`](../document-ast-to-html),
-matches a resolved Style IR document, and compiles only the matched rules
-through Forme's AOT CSS slicer.
+matches resolved Style and Interactivity IR documents, and compiles only the
+per-page style rules and reviewed, content-bound island modules that the page uses.
 
 Page-rendering branch of the Forme blog DAG. It consumes routed nodes
 and feeds the `forme-emit-fs` writer.
@@ -34,12 +34,14 @@ For each input `ContentNode`:
    rule IDs in `RenderedPage.usedStyle`.
 5. **Slice CSS** through `forme-aot-css-slicer`, with only matched rules and
    active contexts compiled for this page.
-6. **Compose public metadata** when `siteUrl` is configured: description,
+6. **Resolve interactivity** by requiring each authored element ID exactly
+   once, then record declaration-ordered `usedIslands` and their reviewed
+   script-asset mappings.
+7. **Compose public metadata** when `siteUrl` is configured: description,
    canonical URL, project-page-safe site navigation, and RSS/Atom discovery.
-7. **Wrap** the body in a theme-agnostic HTML5 shell with sliced CSS inlined.
-8. **Emit** a `RenderedPage` carrying the route, full HTML, derived title,
-   and revision-aware provenance for the input node. The legacy `source`
-   identity is retained temporarily for v1.0 consumers.
+8. **Wrap** the body in a theme-agnostic HTML5 shell with sliced CSS inlined.
+9. **Emit** a `RenderedPage` carrying the route, full HTML, derived title,
+   and required revision-aware provenance for the input node.
 
 ## Routing contract
 
@@ -59,9 +61,21 @@ to `forme-router`.
   a `StyleDocument` with non-null `theme` is rejected rather than guessed.
 - **Routed input is required.** This keeps one canonical URL decision across
   all product branches.
-- **`usedIslands` remains empty.** Resolved `AssetRef` images render as
-  collision-free `forme-asset:` placeholders and populate `usedAssets`; the
-  asset-aware emitter replaces those placeholders with fingerprinted paths.
+- **Interactivity is explicit.** `interactivity` is a per-route list of FM05
+  documents. `islandModules` is a product-reviewed allowlist from package/export
+  pairs to exact script asset identities and SHA-256 bytes;
+  `allowExecutableAssets: true` explicitly authorizes executable output and
+  does not claim FM02 authentication. Missing or ambiguous element
+  IDs and unresolved module mappings fail closed. Routes without a document
+  retain the zero-JavaScript path; configured routes that match no rendered
+  page fail at stream completion.
+  Composition accepts at most 1,024 route documents with a 16 MiB aggregate
+  canonical-document budget. Interactive rendered bodies are limited to 8 MiB
+  and one million parsed nodes before HTML5 element-ID resolution; static pages
+  bypass this parsing path.
+- Resolved `AssetRef` images render as collision-free `forme-asset:`
+  placeholders and populate `usedAssets`; selected island module assets join
+  the same exact usage list for the asset-aware emitter.
 - **OpenGraph / structured metadata still empty.** Description and canonical
   URL are populated when configured; social cards and structured data remain
   later work.
@@ -101,6 +115,9 @@ contexts. Dark rules compile to `prefers-color-scheme: dark` media queries.
 interface RenderStaticConfig {
   style?:               StyleDocument; // resolved (`theme: null`)
   activeStyleContexts?: string[];      // defaults to screen + dark
+  interactivity?: RouteInteractivity[]; // route + hostile-data-validated FM05 document
+  islandModules?: ReviewedIslandModule[]; // package/export → exact script Asset ID + SHA-256
+  allowExecutableAssets?: boolean;         // must be true when the allowlist is non-empty
   siteTitle?:     string;   // header anchor text; empty → no header
   siteUrl?:       string;   // public deployment base, including project prefix
   siteHomeRoute?: string;   // route used by the site-title link
@@ -115,6 +132,8 @@ interface RenderStaticConfig {
   `ContentNode`, `RenderedPage`, `PageMeta`.
 - `@coding-adventures/forme-stage` — `defineStage`, `StageContext`.
 - `@coding-adventures/forme-identity` — deterministic output provenance.
+- `@coding-adventures/forme-interactivity-ir` — bounded validation and typed
+  FM05 documents.
 - `@coding-adventures/document-ast-to-html` — `toHtml`.
 - `@coding-adventures/document-ast` — `DocumentNode` type only.
 - `@coding-adventures/forme-aot-meta-link-tags` — description and canonical

@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "To hurry, To brush, To change, To take off, To measure",
+  "label": "ch:te-to-hurry-to-brush-to-change-to-take-off-to-measure",
+  "canDo": "I can say to hurry, to brush, to change, to take off and to measure.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C158-kolucu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can say to hurry, to brush, to change, to take off and to measure.",
+    "assesses": [
+      "TE-LEX-C158-KRIYA158-03",
+      "TE-LEX-C158-KRIYA158-04",
+      "TE-LEX-C158-KRIYA158-05"
+    ]
+  }
+}

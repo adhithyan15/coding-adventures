@@ -1,0 +1,11 @@
+{
+  "id": "ML-C293-sanketikavidya",
+  "pathSegment": "ML-PATH-293-VASTU293",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-293-VASTU293",
+      "order": 1
+    }
+  ]
+}

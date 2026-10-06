@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:136610552bd553cc",
+  "lessonIds": [
+    "IT-C181-rischiare",
+    "IT-C181-risolvere",
+    "IT-C181-rubare",
+    "IT-C181-scappare",
+    "IT-C181-scoprire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch181.txt",
+  "json": "italian/narration/ch181.json",
+  "textHash": "fnv1a64:f66088ba68831d8d",
+  "jsonHash": "fnv1a64:e5703b26a067c572",
+  "findings": []
+}

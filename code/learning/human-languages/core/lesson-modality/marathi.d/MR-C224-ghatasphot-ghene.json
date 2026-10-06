@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C224-ghatasphot-ghene",
+    "language": "marathi",
+    "chapter": 224,
+    "sequence": 12260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:018887720908ef34"
+  },
+  "findings": []
+}

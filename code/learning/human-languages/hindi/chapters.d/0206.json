@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "Advice, An opinion, A thought, A lie, A promise",
+  "label": "ch:hi-advice-an-opinion-a-thought-a-lie-a-promise",
+  "canDo": "I can say advice, an opinion, a thought, a lie and a promise.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C206-vada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say advice, an opinion, a thought, a lie and a promise.",
+    "assesses": [
+      "HI-LEX-C206-THG206-03",
+      "HI-LEX-C206-THG206-04",
+      "HI-LEX-C206-THG206-05"
+    ]
+  }
+}

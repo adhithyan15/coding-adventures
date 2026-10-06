@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:8b2945cd64818d1d",
+  "lessonIds": [
+    "ML-C240-arram",
+    "ML-C240-kuruke",
+    "ML-C240-annottu",
+    "ML-C240-innottu",
+    "ML-C240-vasam",
+    "ML-R240-first-pass-words-from-chapters-232-235",
+    "ML-R240-second-pass-words-from-chapters-236-240"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch240.txt",
+  "json": "malayalam/narration/ch240.json",
+  "textHash": "fnv1a64:f5aeacca6651c0bf",
+  "jsonHash": "fnv1a64:24ff268f14eebca5",
+  "findings": []
+}

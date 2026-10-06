@@ -16,7 +16,8 @@
 | Identity and revision primitives | Implemented | `forme-identity` covers logical IDs, UUIDv7 identities, and canonical revisions. |
 | Manifest validation | Implemented | `forme-manifest` validates first-party manifest data; FM02 owns host enforcement. |
 | Shared diagnostics | Implemented | `forme-errors` supplies the common error surface. |
-| Interactivity shape | Placeholder | The normative contract is reserved at [FM05](FM05-forme-interactivity-ir.md). |
+| Interactivity shape | Placeholder active for compatibility | [FM05](FM05-forme-interactivity-ir.md) defines the normative v1 contract; FM-B059 supplies its dedicated package before a later kernel migration. |
+| Terminal output shape | Implemented | `TerminalBuffer` carries bounded ANSI text, exact usage, canonical provenance, a content/config revision, and explicit non-web degradation records in the live FM-B017 product path. |
 
 ---
 
@@ -75,7 +76,9 @@ source-compatible because consumers do exhaustiveness checks that
 default gracefully) do not bump `apiVersion` — they are captured in the
 kernel package's semver minor.
 
-The initial `apiVersion` is `1`.
+The initial `apiVersion` was `1`. The stable Forme package line targets
+`apiVersion` `2`; v2 removes the temporary `RenderedPage.source` producer
+shape and requires revision-aware provenance on every rendered page.
 
 ---
 
@@ -129,7 +132,7 @@ the orchestrator must check compatibility with runtime data.
 
 ### 2.2 Kind taxonomy
 
-The kernel defines exactly twelve built-in kinds. Everything downstream
+The kernel defines the built-in kinds below. Everything downstream
 either targets one of these or registers a new kind at manifest-load
 time (§2.5).
 
@@ -142,6 +145,7 @@ export const KINDS = [
   "Document",
   "RenderedPage",
   "PrintForme",
+  "TerminalBuffer",
   "RequestHandler",
   "SearchIndex",
   "Feed",
@@ -236,6 +240,7 @@ export type AssetRole =
   | "video"
   | "audio"
   | "font"
+  | "script"
   | "embed"
   | "binary";
 ```
@@ -401,25 +406,23 @@ export interface RenderedPageFields {
    * uses this to bundle per-island JS.
    */
   readonly usedIslands: readonly IslandId[];
+  /** Exact reviewed, content-bound script asset for each used island, in the same order. */
+  readonly islandModules?: readonly {
+    readonly island: IslandId;
+    readonly asset: LogicalId;
+    readonly packageName: string;
+    readonly export: string;
+    readonly sha256: string;
+  }[];
   /** Asset IDs referenced by this page. */
   readonly usedAssets: readonly LogicalId[];
+  /** Exact source revisions behind this output. */
+  readonly provenance: OutputProvenance;
   /** Meta tags (title, description, OG, etc.). */
   readonly meta: PageMeta;
 }
 
-export type RenderedPage = RenderedPageFields & (
-  | {
-      /** Exact source revisions behind this output; required for new producers. */
-      readonly provenance: OutputProvenance;
-      /** Optional compatibility hint for a single-source page. */
-      readonly source?: LogicalId;
-    }
-  | {
-      /** Legacy v1.0 producer shape; new producers attach provenance. */
-      readonly source: LogicalId;
-      readonly provenance?: never;
-    }
-);
+export type RenderedPage = RenderedPageFields;
 
 export interface PageMeta {
   readonly title: string;
@@ -602,7 +605,41 @@ export interface DeployAssetEntry {
 }
 ```
 
-#### 2.3.12 `Stream<K>`
+#### 2.3.12 `TerminalBuffer`
+
+The immutable per-route output of a terminal renderer. Terminal backends
+preserve authored fallback text and expose unsupported backend features as
+data, so tests and packagers never need to scrape logs.
+
+```typescript
+export type TerminalDegradation =
+  | { readonly code: "style-property-dropped"; readonly ruleId: StyleRuleId; readonly propertyKind: string; readonly message: string }
+  | { readonly code: "interactivity-dropped"; readonly islandId: IslandId | null; readonly message: string }
+  | { readonly code: "raw-node-dropped"; readonly format: string; readonly nodePath: readonly number[]; readonly message: string }
+  | { readonly code: "asset-reference-dropped"; readonly asset: LogicalId; readonly nodePath: readonly number[]; readonly message: string };
+
+export interface TerminalBuffer {
+  readonly route: string;
+  readonly text: string;
+  readonly usedStyle: readonly StyleRuleId[];
+  readonly usedAssets: readonly LogicalId[];
+  readonly degradations: readonly TerminalDegradation[];
+  /** Content/config revision of this exact terminal payload. */
+  readonly revision: RevisionId;
+  /** Canonical source-contributor provenance; its revision is not repurposed. */
+  readonly provenance: OutputProvenance;
+}
+```
+
+`text` may contain only renderer-generated ANSI SGR sequences; authored text
+and raw nodes must never inject terminal controls. Degradations are ordered by
+document traversal and then Style IR source order. `revision` hashes the source
+revision, resolved backend configuration, route, terminal text, exact usage,
+and degradation data. `provenance` retains the ordinary FM01 contributor-set
+semantics: its revision hashes only the normalized source contributors. The
+kind is version `1.0`.
+
+#### 2.3.13 `Stream<K>`
 
 A meta-kind wrapping another kind to represent a lazy stream of values.
 Stages declaring `Stream<K>` as input are called once per value
@@ -648,8 +685,9 @@ export const Kinds = {
   Collection:      { name: "Collection",      version: "1.0" },
   Asset:           { name: "Asset",           version: "1.0" },
   Document:        { name: "Document",        version: "1.0" },
-  RenderedPage:    { name: "RenderedPage",    version: "1.1" },
+  RenderedPage:    { name: "RenderedPage",    version: "2.0" },
   PrintForme:      { name: "PrintForme",      version: "1.0" },
+  TerminalBuffer:  { name: "TerminalBuffer",  version: "1.0" },
   RequestHandler:  { name: "RequestHandler",  version: "1.0" },
   SearchIndex:     { name: "SearchIndex",     version: "1.0" },
   Feed:            { name: "Feed",            version: "1.0" },
@@ -668,7 +706,11 @@ Version semantics:
   the new minor can feed consumers of the old minor (the consumer
   ignores the new field).
 
-The kernel's initial kinds are all `"1.0"`.
+The kernel's initial kinds were all `"1.0"`. `RenderedPage` is `"2.0"`
+because requiring `provenance` and removing the temporary `source` field is a
+breaking shape change. The major-version compatibility rule therefore refuses
+to connect a v1.x producer or consumer to the v2 contract without an explicit
+adapter.
 
 ### 2.5 Kind extensibility
 
@@ -865,7 +907,7 @@ import { defineStage, Kinds } from "@coding-adventures/forme-types";
 export default defineStage({
   name: "@forme/parse-markdown",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: 2,
   description: "Parses CommonMark + GFM into a ContentNode.",
   consumes: Kinds.ContentSource,
   produces: Kinds.ContentNode,
@@ -1064,9 +1106,9 @@ The logger is always available and never fails. Output routing
 ```typescript
 export interface Clock {
   /** Current UTC time in milliseconds since epoch. */
-  nowMs(): number;
+  nowMs(): Promise<number>;
   /** Current UTC time as RFC 3339. */
-  nowIso(): string;
+  nowIso(): Promise<string>;
   /** Monotonic timestamp in milliseconds. */
   monotonicMs(): number;
 }
@@ -1182,6 +1224,13 @@ export interface StorageApi {
   /** Read bytes at `path`. Throws if the file does not exist. */
   read(path: string): Promise<Uint8Array>;
 
+  /**
+   * Return the complete file only when it is at most `maxBytes`.
+   * Implementations MUST reject larger content after reading at most
+   * `maxBytes + 1` bytes; truncation is forbidden.
+   */
+  readBounded(path: string, maxBytes: number): Promise<Uint8Array>;
+
   /** Write bytes at `path`. Creates parent directories as needed. */
   write(path: string, bytes: Uint8Array): Promise<void>;
 
@@ -1225,6 +1274,11 @@ The `path` here is relative to the pipeline's **configured storage
 root**, not the process working directory. Escape attempts
 (`../../../etc/passwd`) are refused by the host.
 
+Host adapters that mediate untrusted runtimes MUST use `readBounded`, not
+`read` followed by a size check. This prevents FIFOs, device files, concurrent
+growth, and very large regular files from allocating unbounded trusted-host
+memory. Exactly `maxBytes` is accepted; `maxBytes + 1` is rejected.
+
 #### 4.8.2 NetworkApi (capability: `network:*` or `network:<host>`)
 
 ```typescript
@@ -1247,8 +1301,8 @@ reject unauthorised origins before the request is dispatched.
 
 ```typescript
 export interface EnvApi {
-  get(name: string): string | undefined;
-  getOrThrow(name: string): string;
+  get(name: string): Promise<string | undefined>;
+  getOrThrow(name: string): Promise<string>;
 }
 ```
 
@@ -1266,11 +1320,17 @@ this are a strong install-time warning.
 ```typescript
 export interface FilesystemApi {
   readAbsolute(path: string): Promise<Uint8Array>;
+  /** Same complete-or-reject, maxBytes+1 read bound as StorageApi.readBounded. */
+  readAbsoluteBounded(path: string, maxBytes: number): Promise<Uint8Array>;
   writeAbsolute(path: string, bytes: Uint8Array): Promise<void>;
-  homeDir(): string;
-  tempDir(): string;
+  homeDir(): Promise<string>;
+  tempDir(): Promise<string>;
 }
 ```
+
+Untrusted adapters MUST use `readAbsoluteBounded`. Implementations MUST reject
+oversized content rather than truncate it, and MUST decide after reading no
+more than `maxBytes + 1` bytes.
 
 #### 4.8.5 ShellApi (capability: `system:shell`)
 
@@ -1637,7 +1697,7 @@ the plugin host uses `package.json` only for the JavaScript loader
 [plugin]
 name        = "@forme/embed-youtube"       # package-qualified name
 version     = "0.1.0"                      # semver
-api-version = 1                            # kernel API version targeted
+api-version = 2                            # kernel API version targeted
 entry       = "./dist/index.js"            # JS entry point (ES module)
 description = "YouTube embed block"
 license     = "MIT"
@@ -1726,7 +1786,7 @@ A plugin that does nothing is rejected at load time.
 The kernel exposes a version constant:
 
 ```typescript
-export const KERNEL_API_VERSION = 1;
+export const KERNEL_API_VERSION = 2;
 ```
 
 A plugin loads only if `plugin.api-version === KERNEL_API_VERSION`.
@@ -1945,7 +2005,7 @@ const configSchema = { /* JSON Schema */ };
 export default defineStage<typeof Kinds.ContentSource, typeof Kinds.ContentNode>({
   name: "@forme/parse-markdown",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: 2,
   description: "Parses CommonMark (+ optional GFM) into a ContentNode.",
   consumes: Kinds.ContentSource,
   produces: Kinds.ContentNode,
@@ -2013,7 +2073,7 @@ interface Config {
 export default defineStage({
   name: "@forme/source-fs",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: 2,
   description: "Reads files from a local directory.",
   consumes: Kinds.Void,
   produces: { ...Kinds.ContentSource, kind: "Stream" },
@@ -2063,7 +2123,7 @@ A plugin that adds a YouTube embed block.
 [plugin]
 name        = "@forme/embed-youtube"
 version     = "0.1.0"
-api-version = 1
+api-version = 2
 entry       = "./dist/index.js"
 description = "Embed YouTube videos as a block."
 license     = "MIT"
@@ -2177,6 +2237,7 @@ export type KindPayload<K extends KindDescriptor> =
   K extends { name: "Document" }        ? Document       :
   K extends { name: "RenderedPage" }    ? RenderedPage   :
   K extends { name: "PrintForme" }      ? PrintForme     :
+  K extends { name: "TerminalBuffer" }  ? TerminalBuffer :
   K extends { name: "RequestHandler" }  ? RequestHandler :
   K extends { name: "SearchIndex" }     ? SearchIndex    :
   K extends { name: "Feed" }            ? Feed           :

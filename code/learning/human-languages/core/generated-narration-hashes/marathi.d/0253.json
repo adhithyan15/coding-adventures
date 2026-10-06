@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:ecd012d37297d283",
+  "lessonIds": [
+    "MR-C253-valne",
+    "MR-C253-anand-ghene",
+    "MR-C253-kalpana-karne",
+    "MR-C253-kalavne",
+    "MR-C253-takrar-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch253.txt",
+  "json": "marathi/narration/ch253.json",
+  "textHash": "fnv1a64:7d0098f2b39889db",
+  "jsonHash": "fnv1a64:c9460823bda19da8",
+  "findings": []
+}

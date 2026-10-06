@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C230-appareo",
+    "language": "latin",
+    "chapter": 230,
+    "sequence": 11870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:706410e802e4b209"
+  },
+  "findings": []
+}

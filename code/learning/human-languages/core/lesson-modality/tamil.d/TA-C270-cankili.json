@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C270-cankili",
+    "language": "tamil",
+    "chapter": 270,
+    "sequence": 15330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9c57b935b43ce6d"
+  },
+  "findings": []
+}

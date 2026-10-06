@@ -1,0 +1,11 @@
+{
+  "id": "TE-C298-vankara",
+  "pathSegment": "TE-PATH-298-GUNAM298",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-298-GUNAM298",
+      "order": 1
+    }
+  ]
+}

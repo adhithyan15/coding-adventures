@@ -1,8 +1,8 @@
 Sanskrit, chapter 5: The First Verbs.
-8 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+11 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 8.
+Lesson 1 of 11.
 वदामि (vadāmi) — "I speak," and the Sanskrit verb.
 
 Warm-up.
@@ -37,7 +37,7 @@ Wrap-up Recall.
 What root is vadāmi from, and what third "number" does Sanskrit have that English lacks? (Vad, "to speak"; the dual, for exactly two — vadāvaḥ, "we two speak.")
 
 
-Lesson 2 of 8.
+Lesson 2 of 11.
 य (ya) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: य and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -62,11 +62,12 @@ punardarśanāya — until we meet again (lit. "for seeing again").
 
 Writing: य.
 1. start beneath the headline, curve clockwise around the inner curl, and finish at the left waist.
-2. lift at that waist, curve down and right around the lower bowl, and rise to the right-stem junction.
-3. lift and draw the right stem top-to-bottom.
-4. lift and draw the top shirorekhā left-to-right.
-Pen lifts: 3. The pen comes up 3 times and no more.
-verified four-stroke teaching form; another animated learner source joins the inner curl and lower bowl.
+2. without lifting, curve down and right around the lower bowl, and rise to the right-stem junction.
+3. climb up the right stem to the headline.
+4. descend the right stem top-to-bottom.
+5. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 1. The pen comes up once.
+The source shows four movements; most native writers draw य (ya) in two strokes (89% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-य (ya)-order.gif’, strokes 1–4, Wikimedia Commons, 10 May 2009.
 
 Guided Practice.
@@ -83,7 +84,7 @@ Wrap-up Recall.
 Which character is this — य? What sound does it carry? (ya.) Name one word you already say that contains it.
 
 
-Lesson 3 of 8.
+Lesson 3 of 11.
 अहं संस्कृतं वदामि (ahaṁ saṁskṛtaṁ vadāmi) — "I speak Sanskrit".
 
 Warm-up.
@@ -113,7 +114,7 @@ Wrap-up Recall.
 Say "I speak Sanskrit," and unpack the name. (Ahaṁ saṁskṛtaṁ vadāmi; saṁskṛta = sam "together" + kṛta "made" — "the perfected language.")
 
 
-Lesson 4 of 8.
+Lesson 4 of 11.
 वसामि (vasāmi) — "I live, I dwell".
 
 Warm-up.
@@ -145,7 +146,7 @@ Wrap-up Recall.
 What PIE root is vasāmi from, its English cousin, and how does Sanskrit say "in"? (wes- "to dwell"; English was; with a case-ending, the locative -e.)
 
 
-Lesson 5 of 8.
+Lesson 5 of 11.
 ◌ृ (ṛ) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ृ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -182,7 +183,56 @@ Wrap-up Recall.
 Which character is this — ◌ृ? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts ṛ on; takes the built-in a off.) Name one word you already say that contains it.
 
 
-Lesson 6 of 8.
+Lesson 6 of 11.
+◌ृ (ṛ) — the known vocalic-r sign, now copied with support.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Point to ◌ृ and say what it does. It puts the vowel ṛ on a consonant and replaces that consonant's built-in a. This is the same sign you traced in the previous lesson, not a new word or a new shape.
+
+Writing — guided vocalic-r copy.
+Keep ◌ृ (ṛ) visible and copy the mark once, slowly and larger than print. The dotted circle only shows where a consonant would stand; copy the small hook below it, not the dotted circle.
+Compare your mark with ◌ृ. Check that the hook sits below the place where a consonant would be. Read its sound aloud: ṛ.
+
+Wrap-up recall.
+What does ◌ृ add, and what does it remove? (It adds vocalic ṛ and removes the consonant's built-in a.)
+
+
+Lesson 7 of 11.
+◌ृ (ṛ) — cover the model, keep the hook in mind.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Look at ◌ृ for five seconds. Say its sound and job: vocalic ṛ, replacing the consonant's built-in a. Then cover the model.
+
+Writing — delayed vocalic-r copy.
+Wait ten seconds. With no visible answer and no romanization, write only the vowel mark from memory. Leave an empty place above it for the consonant that would carry it; do not draw the dotted teaching circle.
+Only after the mark is complete, uncover ◌ृ (ṛ). Compare its size, position, and direction with your mark. Repair only the first difference.
+
+Wrap-up recall.
+Where does this dependent vowel sign sit? (Below the consonant it changes.)
+
+
+Lesson 8 of 11.
+A heard vowel sign — write vocalic r independently.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Cover every answer below this line. You will hear the name and function of one known vowel sign. There is no visible Devanagari model and no romanized answer.
+
+Writing — vocalic-r dictation.
+[your turn — hear: the dependent vowel sign vocalic r, which replaces a consonant's built-in a]
+[pause 8 seconds for the answer]
+Write the sign from sound and function alone. Stop after one attempt. Now uncover and compare: ◌ृ (ṛ). Check its below-consonant position and hook. Repair only the first difference. Credit requires the Devanagari mark; a Latin-letter transliteration does not count.
+
+Wrap-up recall.
+The vocalic-r sign has now moved from trace to independent transcription. Which later debts remain? (Conjuncts, connected text, and independent recall across a longer passage.)
+
+
+Lesson 9 of 11.
 करोमि (karomi) — "I do," from the root behind karma and namaskāra.
 
 Warm-up.
@@ -215,7 +265,7 @@ Wrap-up Recall.
 What root is karomi from, and name three words built on it. (Kṛ, "to do," PIE kʷer-; namaskāra, karma, saṁskṛta — among many.)
 
 
-Lesson 7 of 8.
+Lesson 10 of 11.
 Chapter 5 — The first verbs.
 
 Warm-up.
@@ -254,7 +304,7 @@ Wrap-up Recall.
 In one breath, say your language, your city, and your work in Sanskrit — then say "we two speak." (Ahaṁ saṁskṛtaṁ vadāmi. Ahaṁ nagare vasāmi. Ahaṁ kāryaṁ karomi. Vadāvaḥ.)
 
 
-Lesson 8 of 8.
+Lesson 11 of 11.
 अ — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: अ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -270,7 +320,7 @@ Script you'll notice: अ.
 It is an independent vowel: the full-size letter a vowel wears when it opens a word and has no consonant to lean on. Inside a word the same vowel is written as a small sign instead.
 What it is made of:
 a joined upper-and-lower left body.
-a middle shoulder.
+a middle shoulder running into the right stem.
 a right vertical stem.
 the top shirorekhā.
 You already say these words, and अ is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:
@@ -282,10 +332,11 @@ aham — I.
 Writing: अ.
 1. curve around the upper bowl, then continue down and around the lower bowl without lifting.
 2. lift and sweep the middle shoulder right.
-3. lift and draw the right stem top-to-bottom.
-4. lift and draw the top shirorekhā left-to-right.
-Pen lifts: 3. The pen comes up 3 times and no more.
-verified modern printed teaching form; other Devanagari traditions split the body into more strokes.
+3. without lifting, climb up the right stem to the headline.
+4. descend the right stem top-to-bottom.
+5. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+The source shows four movements; most native writers draw अ in three strokes (74% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the shoulder and the headline.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari अ stroke order.svg’, frames 1–4, Wikimedia Commons, 5 August 2023.
 
 Guided Practice.

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:7e0eff8a04b680e2",
+  "lessonIds": [
+    "TE-C160-sampadincu",
+    "TE-C160-vivarincu",
+    "TE-C160-anuvadincu",
+    "TE-C160-gurtupettuko",
+    "TE-C160-oppuko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch160.txt",
+  "json": "telugu/narration/ch160.json",
+  "textHash": "fnv1a64:692a9efaa9b3347f",
+  "jsonHash": "fnv1a64:4808224da23ee3e6",
+  "findings": []
+}

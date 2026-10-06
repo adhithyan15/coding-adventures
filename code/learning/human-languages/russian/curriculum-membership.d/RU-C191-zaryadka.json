@@ -1,0 +1,11 @@
+{
+  "id": "RU-C191-zaryadka",
+  "pathSegment": "RU-PATH-191-VESHCH191",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-191-VESHCH191",
+      "order": 3
+    }
+  ]
+}

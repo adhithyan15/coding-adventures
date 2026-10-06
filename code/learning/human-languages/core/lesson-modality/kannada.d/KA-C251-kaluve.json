@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C251-kaluve",
+    "language": "kannada",
+    "chapter": 251,
+    "sequence": 11890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08d64d7fc61a9da3"
+  },
+  "findings": []
+}

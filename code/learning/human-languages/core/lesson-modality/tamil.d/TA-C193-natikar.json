@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C193-natikar",
+    "language": "tamil",
+    "chapter": 193,
+    "sequence": 9720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f41cdfdd77adafb5"
+  },
+  "findings": []
+}

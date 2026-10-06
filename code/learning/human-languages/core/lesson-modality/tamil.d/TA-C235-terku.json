@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C235-terku",
+    "language": "tamil",
+    "chapter": 235,
+    "sequence": 12890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5784778138df7171"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C244-yarkiy",
+  "pathSegment": "RU-PATH-244-KACH244",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-244-KACH244",
+      "order": 2
+    }
+  ]
+}

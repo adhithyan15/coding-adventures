@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:003689743c922573",
+  "lessonIds": [
+    "KA-C202-duru-kodu",
+    "KA-C202-nondayisu",
+    "KA-C202-munduvarisu",
+    "KA-C202-samparkisu",
+    "KA-C202-carcisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch202.txt",
+  "json": "kannada/narration/ch202.json",
+  "textHash": "fnv1a64:c5f061e20ff4310f",
+  "jsonHash": "fnv1a64:7d7d6d01b24fcc78",
+  "findings": []
+}

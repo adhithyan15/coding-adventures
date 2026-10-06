@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C207-kali-mirch",
+    "language": "urdu",
+    "chapter": 207,
+    "sequence": 12130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb2c42b5ced020c7"
+  },
+  "findings": []
+}

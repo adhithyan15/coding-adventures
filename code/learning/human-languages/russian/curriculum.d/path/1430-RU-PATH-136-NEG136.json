@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-136-NEG136",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "RU-EXT-136-NEG136"
+  ],
+  "after": []
+}

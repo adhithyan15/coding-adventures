@@ -43,7 +43,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const cmd = process.argv[2] ?? "validate";
   if (cmd !== "validate") {
     process.stderr.write(`unknown command '${cmd}'\n`);
-    process.exit(2);
+    process.exitCode = 2;
+  } else {
+    process.exitCode = runValidate();
   }
-  process.exit(runValidate());
 }

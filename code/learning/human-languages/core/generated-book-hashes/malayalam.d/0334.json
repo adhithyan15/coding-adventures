@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:7c5a9a9eb093af0f",
+  "lessonIds": [
+    "ML-C334-jivanakkaran",
+    "ML-C334-mutalali",
+    "ML-C334-manejar",
+    "ML-C334-kampani",
+    "ML-C334-yogam"
+  ],
+  "tex": "malayalam/book/chapters/ch334-employee-boss-manager-company-meeting.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C185-naprimer",
+    "language": "russian",
+    "chapter": 185,
+    "sequence": 10670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac25b3fedc885495"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R173-first-pass-words-from-chapters-167-169",
+    "language": "italian",
+    "chapter": 173,
+    "sequence": 9360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87a9ee521046192b"
+  },
+  "findings": []
+}

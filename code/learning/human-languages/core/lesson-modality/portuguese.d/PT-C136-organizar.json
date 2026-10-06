@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C136-organizar",
+    "language": "portuguese",
+    "chapter": 136,
+    "sequence": 6860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:872d16146f321b93"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C238-termometr",
+  "pathSegment": "RU-PATH-238-ZDOROV238",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-238-ZDOROV238",
+      "order": 2
+    }
+  ]
+}

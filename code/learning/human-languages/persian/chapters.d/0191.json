@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "On time, Appointment, Deadline, Nowruz, Yalda",
+  "label": "ch:fa-on-time-appointment-deadline-nowruz-yalda",
+  "canDo": "I can say on time, an appointment, a deadline, Nowruz and Yalda.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FA-C191-yalda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say on time, an appointment, a deadline, Nowruz and Yalda.",
+    "assesses": [
+      "FA-LEX-C191-ZAMAN191-03",
+      "FA-LEX-C191-ZAMAN191-04",
+      "FA-LEX-C191-ZAMAN191-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C238-taqriban",
+  "pathSegment": "AR-PATH-238-SABAB238",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-238-SABAB238",
+      "order": 3
+    }
+  ]
+}

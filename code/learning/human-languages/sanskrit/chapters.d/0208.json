@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "Household, Relative, Companion, Enemy, Neighbour",
+  "label": "ch:sa-household-relative-companion-enemy-neighbour",
+  "canDo": "I can say a household, a relative, a companion, an enemy and a neighbour.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C208-prativesi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say a household, a relative, a companion, an enemy and a neighbour.",
+    "assesses": [
+      "SA-LEX-C208-PPL208-03",
+      "SA-LEX-C208-PPL208-04",
+      "SA-LEX-C208-PPL208-05"
+    ]
+  }
+}

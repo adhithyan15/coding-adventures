@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:bff07459f4291df9",
+  "lessonIds": [
+    "IT-C239-raggiungere",
+    "IT-C239-realizzare",
+    "IT-C239-regalare",
+    "IT-C239-restituire",
+    "IT-C239-riconoscere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch239.txt",
+  "json": "italian/narration/ch239.json",
+  "textHash": "fnv1a64:a14db6cbae6f0aa2",
+  "jsonHash": "fnv1a64:5284cd5eb587da03",
+  "findings": []
+}

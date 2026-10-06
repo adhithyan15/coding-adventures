@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C301-srraplar",
+    "language": "malayalam",
+    "chapter": 301,
+    "sequence": 14150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8d5dc9099d8c0cd"
+  },
+  "findings": []
+}

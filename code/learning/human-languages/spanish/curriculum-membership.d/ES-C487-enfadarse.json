@@ -1,0 +1,11 @@
+{
+  "id": "ES-C487-enfadarse",
+  "pathSegment": "ES-PATH-487-ANIMO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-487-ANIMO",
+      "order": 1
+    }
+  ]
+}

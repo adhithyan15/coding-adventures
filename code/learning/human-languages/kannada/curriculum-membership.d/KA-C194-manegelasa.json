@@ -1,0 +1,11 @@
+{
+  "id": "KA-C194-manegelasa",
+  "pathSegment": "KA-PATH-194-KELASA194",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-194-KELASA194",
+      "order": 3
+    }
+  ]
+}

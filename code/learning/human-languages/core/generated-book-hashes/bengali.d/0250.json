@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:eefe32814a2527f5",
+  "lessonIds": [
+    "BN-C250-kumir",
+    "BN-C250-jiraph",
+    "BN-C250-jebra",
+    "BN-C250-makorsa",
+    "BN-C250-chil"
+  ],
+  "tex": "bengali/book/chapters/ch250-crocodile-giraffe-zebra-spider-kite.tex"
+}

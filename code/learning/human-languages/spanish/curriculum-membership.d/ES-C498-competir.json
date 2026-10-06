@@ -1,0 +1,11 @@
+{
+  "id": "ES-C498-competir",
+  "pathSegment": "ES-PATH-498-DEPORTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-498-DEPORTE",
+      "order": 2
+    }
+  ]
+}

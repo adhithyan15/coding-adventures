@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C243-ghamandi",
+    "language": "hindi",
+    "chapter": 243,
+    "sequence": 13070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12beba760f322f9e"
+  },
+  "findings": []
+}

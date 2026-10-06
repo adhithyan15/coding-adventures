@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "To slip, To accelerate, To harvest, To save, To deposit",
+  "label": "ch:fa-to-slip-to-accelerate-to-harvest-to-save-to-deposit",
+  "canDo": "I can say to slip, to accelerate, to harvest, to save and to deposit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-R187-second-pass-words-from-chapters-183-187",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say to slip, to accelerate, to harvest, to save and to deposit.",
+    "assesses": [
+      "FA-LEX-C187-KONESH187-03",
+      "FA-LEX-C187-KONESH187-04",
+      "FA-LEX-C187-KONESH187-05"
+    ]
+  }
+}

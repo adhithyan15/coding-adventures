@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C147-muskurana",
+    "language": "urdu",
+    "chapter": 147,
+    "sequence": 7830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43dff958a0e208f2"
+  },
+  "findings": []
+}

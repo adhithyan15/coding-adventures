@@ -1,0 +1,11 @@
+{
+  "id": "FR-C202-sachet",
+  "pathSegment": "FR-PATH-202-CHOSES202",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-202-CHOSES202",
+      "order": 3
+    }
+  ]
+}

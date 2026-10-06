@@ -1,0 +1,11 @@
+{
+  "id": "KA-C229-gantu",
+  "pathSegment": "KA-PATH-229-VASTU229",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-229-VASTU229",
+      "order": 3
+    }
+  ]
+}

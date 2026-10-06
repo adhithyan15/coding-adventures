@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C279-myusiyam",
+    "language": "malayalam",
+    "chapter": 279,
+    "sequence": 12970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7fd7d232a90f6924"
+  },
+  "findings": []
+}

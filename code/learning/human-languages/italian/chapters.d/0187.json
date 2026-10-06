@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "Still, Then, During, While, Decade",
+  "label": "ch:it-still-then-during-while-decade",
+  "canDo": "I can say still, then, during, while and a decade.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "IT-C187-decennio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say still, then, during, while and a decade.",
+    "assesses": [
+      "IT-LEX-C187-TEMPO187-03",
+      "IT-LEX-C187-TEMPO187-04",
+      "IT-LEX-C187-TEMPO187-05"
+    ]
+  }
+}

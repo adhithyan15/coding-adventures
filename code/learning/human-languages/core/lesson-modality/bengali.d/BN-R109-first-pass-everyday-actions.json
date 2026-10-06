@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R109-first-pass-everyday-actions",
+    "language": "bengali",
+    "chapter": 109,
+    "sequence": 5800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5ffcd6db46184e7"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C222-nyayamaina",
+    "language": "telugu",
+    "chapter": 222,
+    "sequence": 10270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7425bfc7bb3a5309"
+  },
+  "findings": []
+}

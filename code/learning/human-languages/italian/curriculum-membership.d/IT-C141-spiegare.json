@@ -1,0 +1,11 @@
+{
+  "id": "IT-C141-spiegare",
+  "pathSegment": "IT-PATH-141-VERBI141",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-141-VERBI141",
+      "order": 4
+    }
+  ]
+}

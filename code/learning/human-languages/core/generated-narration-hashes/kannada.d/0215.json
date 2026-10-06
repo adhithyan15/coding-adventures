@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:0a00d9939a266292",
+  "lessonIds": [
+    "KA-C215-mulaka",
+    "KA-C215-prakara",
+    "KA-C215-bagge",
+    "KA-C215-sampradaya",
+    "KA-C215-samskrti",
+    "KA-R215-first-pass-words-from-chapters-207-210",
+    "KA-R215-second-pass-words-from-chapters-211-215"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch215.txt",
+  "json": "kannada/narration/ch215.json",
+  "textHash": "fnv1a64:9a1c5b0c4f47d37f",
+  "jsonHash": "fnv1a64:baf030f629ac06ff",
+  "findings": []
+}

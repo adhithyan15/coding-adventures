@@ -1,0 +1,11 @@
+{
+  "id": "LA-C206-memoria",
+  "pathSegment": "LA-PATH-206-VALE206",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-206-VALE206",
+      "order": 1
+    }
+  ]
+}

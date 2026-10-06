@@ -1,0 +1,11 @@
+{
+  "id": "AR-C188-khasm",
+  "pathSegment": "AR-PATH-188-AMAL188",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-188-AMAL188",
+      "order": 2
+    }
+  ]
+}

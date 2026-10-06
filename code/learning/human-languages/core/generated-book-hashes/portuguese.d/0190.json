@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:d728653de5193ea9",
+  "lessonIds": [
+    "PT-C190-atriz",
+    "PT-C190-poema",
+    "PT-C190-escritor-a-escritora",
+    "PT-C190-pintor-a-pintora",
+    "PT-C190-fotografo"
+  ],
+  "tex": "portuguese/book/chapters/ch190-actress-poem-writer-painter-photographer.tex"
+}

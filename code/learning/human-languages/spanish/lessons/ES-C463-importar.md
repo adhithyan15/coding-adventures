@@ -7,7 +7,7 @@ chapter: 463
 type: word
 headword: importar
 gloss: to matter — the verb behind *importante*, and it works like *gustar*
-concept_tag: ES-TRIP-IMPORTAR
+concept_tag: ES-VERB-IMPORTAR
 prerequisites: [ES-C463-guia, ES-C398-importante, ES-C443-interesar]
 sounds: [p-b-hard, r-tap, stress-final]
 roots: [importare-latin]

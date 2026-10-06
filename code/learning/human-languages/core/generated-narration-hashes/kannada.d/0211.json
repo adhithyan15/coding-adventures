@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:3179534c12432e53",
+  "lessonIds": [
+    "KA-C211-niyamitavagi",
+    "KA-C211-illiyavarege",
+    "KA-C211-varege",
+    "KA-C211-sadyakke",
+    "KA-C211-avadhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch211.txt",
+  "json": "kannada/narration/ch211.json",
+  "textHash": "fnv1a64:ecb960b856eb1140",
+  "jsonHash": "fnv1a64:63475834ba47fa5e",
+  "findings": []
+}

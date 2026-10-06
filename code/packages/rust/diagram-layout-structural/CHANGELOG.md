@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.25.0
+
+- Resolve Mermaid Architecture padding configuration into group insets as well as outer canvas margins.
+
+## 0.24.0
+
+- Route orthogonal structural relationships around unrelated group bounds as well as node bounds.
+
+## 0.23.0
+
+- Resolve Mermaid Architecture ideal-edge-length configuration into deterministic alignment-hint spacing.
+
+## 0.22.0
+
+- Resolve Mermaid Architecture padding configuration into deterministic outer canvas margins.
+
+## 0.21.0
+
+- Resolve Mermaid Architecture node-separation configuration into deterministic row and column spacing.
+
+## 0.20.0
+
+- Resolve Mermaid Architecture icon and font size configuration into node geometry and service typography.
+
 ## 0.19.0
 
 - Route orthogonal structural relationships around unrelated node bounds with deterministic clearance.

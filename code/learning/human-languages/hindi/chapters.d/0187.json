@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "A church, A police station, A postman, The cinema, A park",
+  "label": "ch:hi-a-church-a-police-station-a-postman-the-cinema-a-park",
+  "canDo": "I can say a church, a police station, a postman, the cinema and a park.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C187-park",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say a church, a police station, a postman, the cinema and a park.",
+    "assesses": [
+      "HI-LEX-C187-THG187-03",
+      "HI-LEX-C187-THG187-04",
+      "HI-LEX-C187-THG187-05"
+    ]
+  }
+}

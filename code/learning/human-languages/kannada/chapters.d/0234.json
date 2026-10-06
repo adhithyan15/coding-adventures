@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Staff, Employee, Attendance, Work shift, Advance",
+  "label": "ch:ka-staff-employee-attendance-work-shift-advance",
+  "canDo": "I can say staff, an employee, attendance, a work shift and an advance.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-R234-second-pass-words-from-chapters-232-234",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say staff, an employee, attendance, a work shift and an advance.",
+    "assesses": [
+      "KA-LEX-C234-KELASA234-03",
+      "KA-LEX-C234-KELASA234-04",
+      "KA-LEX-C234-KELASA234-05"
+    ]
+  }
+}

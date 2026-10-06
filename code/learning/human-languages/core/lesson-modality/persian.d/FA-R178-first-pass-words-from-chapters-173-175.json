@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R178-first-pass-words-from-chapters-173-175",
+    "language": "persian",
+    "chapter": 178,
+    "sequence": 9170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:101c4c037beac250"
+  },
+  "findings": []
+}

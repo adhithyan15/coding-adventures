@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R173-second-pass-words-from-chapters-170-173",
+    "language": "italian",
+    "chapter": 173,
+    "sequence": 9370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd0959afad50ac9a"
+  },
+  "findings": []
+}

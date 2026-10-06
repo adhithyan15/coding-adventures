@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:1212f36f2099cde8",
+  "lessonIds": [
+    "FA-C210-radiyo",
+    "FA-C210-rasane",
+    "FA-C210-mosahebe",
+    "FA-C210-internet",
+    "FA-C210-mobayl"
+  ],
+  "tex": "persian/book/chapters/ch210-radio-media-interview-internet-mobile-phone.tex"
+}

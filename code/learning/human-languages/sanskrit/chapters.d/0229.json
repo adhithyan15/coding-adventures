@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "Rule, Righteousness, Obligation, Authority, Question paper",
+  "label": "ch:sa-rule-righteousness-obligation-authority-question-paper",
+  "canDo": "I can say a rule, righteousness, an obligation, authority and a question paper.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C229-prasnapatram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say a rule, righteousness, an obligation, authority and a question paper.",
+    "assesses": [
+      "SA-LEX-C229-SCH229-03",
+      "SA-LEX-C229-SCH229-04",
+      "SA-LEX-C229-SCH229-05"
+    ]
+  }
+}

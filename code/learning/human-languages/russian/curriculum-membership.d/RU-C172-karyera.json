@@ -1,0 +1,11 @@
+{
+  "id": "RU-C172-karyera",
+  "pathSegment": "RU-PATH-172-RABOTA172",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-172-RABOTA172",
+      "order": 1
+    }
+  ]
+}

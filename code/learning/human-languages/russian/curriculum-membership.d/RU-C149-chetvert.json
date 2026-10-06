@@ -1,0 +1,11 @@
+{
+  "id": "RU-C149-chetvert",
+  "pathSegment": "RU-PATH-149-VREMYA149",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-149-VREMYA149",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C187-dagina",
+  "pathSegment": "MR-PATH-187-VASTU187",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-187-VASTU187",
+      "order": 3
+    }
+  ]
+}

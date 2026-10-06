@@ -1,0 +1,11 @@
+{
+  "id": "KA-C186-kadata",
+  "pathSegment": "KA-PATH-186-VASTU186",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-186-VASTU186",
+      "order": 3
+    }
+  ]
+}

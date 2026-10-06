@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:dad70d16564a8d96",
+  "lessonIds": [
+    "PT-C151-em-cima",
+    "PT-C151-em-baixo",
+    "PT-C151-ao-fundo",
+    "PT-C151-noutro-lado",
+    "PT-C151-la-em-cima"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch151.txt",
+  "json": "portuguese/narration/ch151.json",
+  "textHash": "fnv1a64:803ec3caeb53b573",
+  "jsonHash": "fnv1a64:17d89ff89163c2b3",
+  "findings": []
+}

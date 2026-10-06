@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "To raise, To grow, To act, To burst, To praise",
+  "label": "ch:ml-to-raise-to-grow-to-act-to-burst-to-praise",
+  "canDo": "I can say to raise, to grow, to act, to burst and to praise.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C307-pukalttuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can say to raise, to grow, to act, to burst and to praise.",
+    "assesses": [
+      "ML-LEX-C307-KRIYA307-03",
+      "ML-LEX-C307-KRIYA307-04",
+      "ML-LEX-C307-KRIYA307-05"
+    ]
+  }
+}

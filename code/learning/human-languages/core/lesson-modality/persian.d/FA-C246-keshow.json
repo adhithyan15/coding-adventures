@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C246-keshow",
+    "language": "persian",
+    "chapter": 246,
+    "sequence": 12720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff7a455dfb142f9a"
+  },
+  "findings": []
+}

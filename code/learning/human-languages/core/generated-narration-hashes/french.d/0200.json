@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:9d152c8040678d35",
+  "lessonIds": [
+    "FR-C200-portail",
+    "FR-C200-cloture",
+    "FR-C200-cave",
+    "FR-C200-grenier",
+    "FR-C200-potager"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch200.txt",
+  "json": "french/narration/ch200.json",
+  "textHash": "fnv1a64:dd1160b58af8c0fa",
+  "jsonHash": "fnv1a64:a0f2429e7b14c3f4",
+  "findings": []
+}

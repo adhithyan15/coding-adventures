@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C220-calze",
+    "language": "italian",
+    "chapter": 220,
+    "sequence": 12730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2038c132a7f0fc7b"
+  },
+  "findings": []
+}

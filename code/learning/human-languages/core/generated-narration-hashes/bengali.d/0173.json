@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:db55a0d7f67a82b4",
+  "lessonIds": [
+    "BN-C173-jilipi",
+    "BN-C173-laddu",
+    "BN-C173-gur",
+    "BN-C173-jam",
+    "BN-C173-lichu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch173.txt",
+  "json": "bengali/narration/ch173.json",
+  "textHash": "fnv1a64:c42c90df74c24ffd",
+  "jsonHash": "fnv1a64:cadc80fb280ad565",
+  "findings": []
+}

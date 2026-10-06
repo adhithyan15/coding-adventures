@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "To accept, To refuse, To blow, To shine, To grow",
+  "label": "ch:fa-to-accept-to-refuse-to-blow-to-shine-to-grow",
+  "canDo": "I can say to accept, to refuse, to blow, to shine and to grow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C184-ruyidan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say to accept, to refuse, to blow, to shine and to grow.",
+    "assesses": [
+      "FA-LEX-C184-KONESH184-03",
+      "FA-LEX-C184-KONESH184-04",
+      "FA-LEX-C184-KONESH184-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:ff04b770c203d270",
+  "lessonIds": [
+    "FA-C283-shen",
+    "FA-C283-lastik",
+    "FA-C283-zanjir",
+    "FA-C283-pich-gushti",
+    "FA-C283-anbor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch283.txt",
+  "json": "persian/narration/ch283.json",
+  "textHash": "fnv1a64:2d29137bcfdeb201",
+  "jsonHash": "fnv1a64:c4020f1c63d4821d",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-222-VELAI222",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "TA-EXT-222-VELAI222"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "To suggest, To cough, To tremble, To scream, To vote",
+  "label": "ch:it-to-suggest-to-cough-to-tremble-to-scream-to-vote",
+  "canDo": "I can say to suggest, to cough, to tremble, to scream and to vote.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C214-votare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say to suggest, to cough, to tremble, to scream and to vote.",
+    "assesses": [
+      "IT-LEX-C214-VERBI214-03",
+      "IT-LEX-C214-VERBI214-04",
+      "IT-LEX-C214-VERBI214-05"
+    ]
+  }
+}

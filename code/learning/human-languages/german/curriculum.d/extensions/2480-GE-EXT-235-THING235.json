@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-235-THING235",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a piece of news, a number, the public, order and a couple.",
+  "prerequisites": []
+}

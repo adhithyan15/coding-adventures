@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:7597c0be4a61087f",
+  "lessonIds": [
+    "ES-C507-votar",
+    "ES-C507-impuesto",
+    "ES-C507-poblacion",
+    "ES-C507-habitante",
+    "ES-C507-debate"
+  ],
+  "tex": "spanish/book/chapters/ch507-la-sociedad.tex"
+}

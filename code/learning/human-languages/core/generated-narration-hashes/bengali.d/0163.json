@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:37a8a59afc73cfd7",
+  "lessonIds": [
+    "BN-C163-malpotro",
+    "BN-C163-asbab",
+    "BN-C163-shmpu",
+    "BN-C163-toyale",
+    "BN-C163-tuthpest"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch163.txt",
+  "json": "bengali/narration/ch163.json",
+  "textHash": "fnv1a64:922317936fd28474",
+  "jsonHash": "fnv1a64:65496016c610af98",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "To phone, To discuss, To quarrel, To apologise, To forgive",
+  "label": "ch:it-to-phone-to-discuss-to-quarrel-to-apologise-to-forgive",
+  "canDo": "I can say to phone, to discuss, to quarrel, to apologise and to forgive.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C143-perdonare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: I can say to phone, to discuss, to quarrel, to apologise and to forgive.",
+    "assesses": [
+      "IT-LEX-C143-VERBI143-03",
+      "IT-LEX-C143-VERBI143-04",
+      "IT-LEX-C143-VERBI143-05"
+    ]
+  }
+}

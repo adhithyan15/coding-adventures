@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "To advise, To describe, To repeat, To translate, To remember",
+  "label": "ch:ru-to-advise-to-describe-to-repeat-to-translate-to-remember",
+  "canDo": "I can say to advise, to describe, to repeat, to translate and to remember.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C174-pomnit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say to advise, to describe, to repeat, to translate and to remember.",
+    "assesses": [
+      "RU-LEX-C174-ACT174-03",
+      "RU-LEX-C174-ACT174-04",
+      "RU-LEX-C174-ACT174-05"
+    ]
+  }
+}

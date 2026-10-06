@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:f95dacf445b9a72c",
+  "lessonIds": [
+    "TE-C247-gillu",
+    "TE-C247-goku",
+    "TE-C247-gusagusaladu",
+    "TE-C247-oppincu",
+    "TE-C247-batimalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch247.txt",
+  "json": "telugu/narration/ch247.json",
+  "textHash": "fnv1a64:94916ee290d3dd9c",
+  "jsonHash": "fnv1a64:dd195af47bfe3240",
+  "findings": []
+}

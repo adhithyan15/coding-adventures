@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C311-talotuka",
+    "language": "malayalam",
+    "chapter": 311,
+    "sequence": 14660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aaec45c8af7524db"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C194-meladhikari",
+  "pathSegment": "KA-PATH-194-KELASA194",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-194-KELASA194",
+      "order": 4
+    }
+  ]
+}

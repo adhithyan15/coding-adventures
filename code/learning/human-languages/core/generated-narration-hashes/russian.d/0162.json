@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:31adfba55b8d041c",
+  "lessonIds": [
+    "RU-C162-bluzka",
+    "RU-C162-futbolka",
+    "RU-C162-kolgotki",
+    "RU-C162-krossovki",
+    "RU-C162-tapochki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch162.txt",
+  "json": "russian/narration/ch162.json",
+  "textHash": "fnv1a64:17944e2a25865123",
+  "jsonHash": "fnv1a64:858baa3a62df551c",
+  "findings": []
+}

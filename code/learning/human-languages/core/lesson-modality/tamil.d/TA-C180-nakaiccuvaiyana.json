@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C180-nakaiccuvaiyana",
+    "language": "tamil",
+    "chapter": 180,
+    "sequence": 8900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60b2884e1b123834"
+  },
+  "findings": []
+}

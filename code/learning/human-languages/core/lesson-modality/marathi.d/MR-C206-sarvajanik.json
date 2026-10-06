@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C206-sarvajanik",
+    "language": "marathi",
+    "chapter": 206,
+    "sequence": 10840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30dd7a9468f3e960"
+  },
+  "findings": []
+}

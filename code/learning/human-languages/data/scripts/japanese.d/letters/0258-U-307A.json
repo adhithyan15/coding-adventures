@@ -1,0 +1,22 @@
+{
+  "glyph": "ぺ",
+  "sound": "pe",
+  "role": "hiragana",
+  "components": [
+    "へ",
+    "the handakuten ゜"
+  ],
+  "strokeOrder": [
+    "start low on the left and rise to the low peak",
+    "without lifting, turn over the peak and run down to the right",
+    "lift, draw the small circle of the handakuten clockwise, starting and ending at its foot"
+  ],
+  "strokeOrderNote": "KanjiVG's 0307a file records ぺ as two stroke paths in this order and direction: へ's stroke (the one stroke), then the handakuten, one small circle drawn clockwise from its foot; so there are one pen lift.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0307a.svg",
+    "citation": "KanjiVG, kanji/0307a.svg, hiragana ぺ (U+307A HIRAGANA LETTER PE), two stroke paths kvg:0307a-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is へ's stroke, the same paths as in its file for へ, kanji/03078.svg; s2 is the handakuten, one closed ring that starts at its foot and runs clockwise, round the left side, over the top and down the right side back to the foot. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
+  "notes": "へ with the handakuten, read pe. The first and third signs of ぺらぺら; with it every sign of the p row is written."
+}

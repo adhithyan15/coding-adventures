@@ -1,0 +1,11 @@
+{
+  "id": "GE-C172-wahrscheinlich",
+  "pathSegment": "GE-PATH-172-ADV172",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-172-ADV172",
+      "order": 2
+    }
+  ]
+}

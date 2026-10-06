@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:6bab910badc5b47b",
+  "lessonIds": [
+    "MR-C245-mala2",
+    "MR-C245-gotha",
+    "MR-C245-masid",
+    "MR-C245-mahavidyalay",
+    "MR-C245-sangrahalay",
+    "MR-R245-first-pass-words-from-chapters-241-242",
+    "MR-R245-second-pass-words-from-chapters-243-245"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch245.txt",
+  "json": "marathi/narration/ch245.json",
+  "textHash": "fnv1a64:0282c32a5a7f3693",
+  "jsonHash": "fnv1a64:5d3bca4d4ab657d3",
+  "findings": []
+}

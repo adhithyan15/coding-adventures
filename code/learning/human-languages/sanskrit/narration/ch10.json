@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "What You'd Ask For",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b6e189881231b8de",
+  "sourceHash": "fnv1a64:fa228301d7be826f",
   "lessons": [
     {
       "id": "SA-C10-paniyam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3e23560ee2418a95",
+      "sourceHash": "fnv1a64:339f02a239849b05",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -64,7 +64,7 @@
               "rowCount": 2,
               "utterances": [
                 "Sanskrit: पानीयम्. sound: pānīyam. meaning: water.",
-                "Sanskrit: पिबति. sound: pibati. meaning: he, she, or it drinks."
+                "Sanskrit: —. sound: pibati. meaning: he, she, or it drinks."
               ]
             },
             {
@@ -99,7 +99,7 @@
             },
             {
               "kind": "speech",
-              "text": "Eastward, पानीयम् (pānīyam) wore down through Prakrit pāṇīya into the everyday water-word of the daughter languages: Hindi पानी (pānī), Gujarati pāṇī, and, in the Bangladesh register of Bengali, pani — every one तद्भव, worn down by ordinary speech, not carried over whole. Sanskrit's own oldest water-words, जल and उदक, took a different road entirely; this is not that word."
+              "text": "Eastward, पानीयम् (pānīyam) wore down through Prakrit pāṇīya into the everyday water-word of the daughter languages: Hindi पानी (pānī), Gujarati pāṇī, and, in the Bangladesh register of Bengali, pani — every one तद्भव, worn down by ordinary speech, not carried over whole. Sanskrit's own oldest water-words, jala and udaka, took a different road entirely; this is not that word."
             }
           ]
         },
@@ -177,7 +177,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:122c3ef9ef80a9cb",
+      "sourceHash": "fnv1a64:b1768471baa0b3cd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -288,19 +288,23 @@
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the right stem top-to-bottom."
+              "text": "3. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "5. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "verified four-stroke teaching form; the corroborating deskbook stages the left curve and diagonal tail separately."
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw स in three strokes (71% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the crossbar and the headline."
             },
             {
               "kind": "speech",
@@ -330,7 +334,7 @@
             },
             {
               "kind": "speech",
-              "text": "नमस्ते, नमस्कारः, अस्ति."
+              "text": "नमस्ते, नमस्कारः, अस्ति (asti)."
             },
             {
               "kind": "prompt",
@@ -850,6 +854,265 @@
             {
               "kind": "speech",
               "text": "Which character is this — ◌ी? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts ī on; takes the built-in a off.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-W10-st-conjunct-observe-trace",
+      "sequence": 502,
+      "title": "स्त (sta) — two known consonants, now joined",
+      "headword": "स्त",
+      "romanization": "sta",
+      "gloss": "observe and trace the known s-t conjunct from asti",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:58724b43898ba7ff",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read अस्ति and say its meaning: asti, “is.” Point to स, the virama ◌्, and त. Every sign and the word itself are already known; this lesson only makes their join visible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — observe and trace the conjunct",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Watch the pieces close up: स (sa) + ◌् + त becomes स्त (sta). The virama removes the a from स (sa), so the consonants touch: s followed by ta."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep स्त (sta) visible. Trace the printed join once with a fingertip, then once with a pencil on tracing paper. Preserve the headline and the smaller first consonant; do not add an a between the two sounds."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What does the join inside अस्ति (asti) say? (s + ta, with no vowel after the first consonant.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-W10-asti-guided-copy",
+      "sequence": 503,
+      "title": "अस्ति (asti) — copy one known word with its joined middle",
+      "headword": "अस्ति",
+      "romanization": "asti",
+      "gloss": "copy the known word asti while its conjunct stays visible",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:8881ce1579f5b984",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read अस्ति (asti) aloud and say “is.” This is not new vocabulary. Find its three parts: अ + स्त (sta) + ि. The short-i sign is written before the joined shape you read it after: स्ति, sti."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided conjunct copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep अस्ति (asti) visible and copy it once. Pause after अ, then copy the joined स्त (sta), then place the short-i sign to make स्ति. Keep one continuous headline across the joined cluster."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare your word with अस्ति (asti). Check the independent अ, the smaller first consonant in स्त (sta), and the short-i sign. Read the finished word and say its meaning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which part of अस्ति (asti) is a conjunct? (स्त (sta), s joined to ta.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-W10-asti-delayed-copy",
+      "sequence": 504,
+      "title": "अस्ति (asti) — cover the model, keep the join",
+      "headword": "अस्ति",
+      "romanization": "asti",
+      "gloss": "write the known word asti after its conjunct model is covered",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:749f270d081bd16f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at अस्ति for five seconds. Say asti, “is,” and point to the conjunct स्त (sta). Then cover the whole word and every romanized answer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed conjunct copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Wait ten seconds. With no visible answer, write अस्ति (asti) from memory. Do not split स (sa) and त with a vowel: preserve the joined स्त (sta) in the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "Only after the word is complete, uncover अस्ति (asti). Compare the independent vowel, the conjunct, and the short-i sign. Repair only the first difference, then read the word and give its meaning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Why does स not say sa inside this word? (Its vowel is removed so it can join त in स्त (sta).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-W10-asti-dictation",
+      "sequence": 505,
+      "title": "A heard word — write “is” with its conjunct",
+      "headword": "अस्ति",
+      "romanization": "asti",
+      "gloss": "write the known word asti from sound and meaning alone",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:9f7876e815f4a40a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every answer below this line. You will hear one old word and its old meaning. There is no visible Devanagari model and no romanized answer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — conjunct dictation",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "asti, “is”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *asti*, “is”]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the word from sound and meaning alone. Stop after one attempt. Now uncover and compare: अस्ति (asti). Check अ, joined स्त (sta), and the short-i sign. Repair only the first difference. Credit requires the whole Devanagari word; a Latin-letter transliteration or separated consonants do not count."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This known word has now moved from observing a conjunct to independent transcription. Which writing-runway debts remain? (Connected text and broader independent recall.)"
             }
           ]
         }

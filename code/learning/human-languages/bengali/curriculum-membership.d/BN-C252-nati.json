@@ -1,0 +1,11 @@
+{
+  "id": "BN-C252-nati",
+  "pathSegment": "BN-PATH-252-JINIS252",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-252-JINIS252",
+      "order": 2
+    }
+  ]
+}

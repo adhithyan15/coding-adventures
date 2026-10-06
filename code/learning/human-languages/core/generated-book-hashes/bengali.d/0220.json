@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:bbe3c27727e5a9d2",
+  "lessonIds": [
+    "BN-C220-soman",
+    "BN-C220-prodhan",
+    "BN-C220-bhoyongkor",
+    "BN-C220-durdanto",
+    "BN-C220-ager"
+  ],
+  "tex": "bengali/book/chapters/ch220-equal-main-terrible-excellent-previous.tex"
+}

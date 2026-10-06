@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:a259f4f3695693b0",
+  "lessonIds": [
+    "BN-C90-bikel",
+    "BN-C90-bhor",
+    "BN-C90-majhrat",
+    "BN-C90-porshu",
+    "BN-C90-gotokal"
+  ],
+  "tex": "bengali/book/chapters/ch90-late-afternoon-dawn-midnight-day-after-tomorrow-yesterday.tex"
+}

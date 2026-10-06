@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C103-nama",
+    "language": "bengali",
+    "chapter": 103,
+    "sequence": 5450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d26116756a13e00f"
+  },
+  "findings": []
+}

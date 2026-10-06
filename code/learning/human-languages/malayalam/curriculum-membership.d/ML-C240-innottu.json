@@ -1,0 +1,11 @@
+{
+  "id": "ML-C240-innottu",
+  "pathSegment": "ML-PATH-240-STHALAM240",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-240-STHALAM240",
+      "order": 3
+    }
+  ]
+}

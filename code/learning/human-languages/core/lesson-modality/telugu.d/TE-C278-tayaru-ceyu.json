@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C278-tayaru-ceyu",
+    "language": "telugu",
+    "chapter": 278,
+    "sequence": 13210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2640a91a7d10245c"
+  },
+  "findings": []
+}

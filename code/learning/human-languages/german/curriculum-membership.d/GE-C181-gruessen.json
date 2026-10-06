@@ -1,0 +1,11 @@
+{
+  "id": "GE-C181-gruessen",
+  "pathSegment": "GE-PATH-181-VERB181",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-181-VERB181",
+      "order": 3
+    }
+  ]
+}

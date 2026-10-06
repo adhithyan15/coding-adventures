@@ -1,0 +1,11 @@
+{
+  "id": "AR-C222-kimiya",
+  "pathSegment": "AR-PATH-222-AMAL222",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-222-AMAL222",
+      "order": 1
+    }
+  ]
+}

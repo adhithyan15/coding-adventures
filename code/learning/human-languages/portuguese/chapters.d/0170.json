@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Company, Colleague, Salary, Meeting, Contract",
+  "label": "ch:pt-company-colleague-salary-meeting-contract",
+  "canDo": "I can say a company, a colleague, a salary, a meeting and a contract.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-R170-second-pass-words-from-chapters-168-170",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say a company, a colleague, a salary, a meeting and a contract.",
+    "assesses": [
+      "PT-LEX-C170-TRAB170-03",
+      "PT-LEX-C170-TRAB170-04",
+      "PT-LEX-C170-TRAB170-05"
+    ]
+  }
+}

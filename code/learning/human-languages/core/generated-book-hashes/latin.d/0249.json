@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:732582a5748193f1",
+  "lessonIds": [
+    "LA-C249-lignum",
+    "LA-C249-marmor",
+    "LA-C249-vitrum",
+    "LA-C249-corium",
+    "LA-C249-linum"
+  ],
+  "tex": "latin/book/chapters/ch249-wood-marble-glass-hide-linen.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C291-asaktikara",
+  "pathSegment": "KA-PATH-291-GUNA291",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-291-GUNA291",
+      "order": 4
+    }
+  ]
+}

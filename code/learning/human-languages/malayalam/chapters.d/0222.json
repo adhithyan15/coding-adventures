@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Geography, Literature, Grammar, Barber, Tailor",
+  "label": "ch:ml-geography-literature-grammar-barber-tailor",
+  "canDo": "I can say geography, literature, grammar, a barber and a tailor.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-R222-second-pass-words-from-chapters-220-222",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say geography, literature, grammar, a barber and a tailor.",
+    "assesses": [
+      "ML-LEX-C222-JOLI222-03",
+      "ML-LEX-C222-JOLI222-04",
+      "ML-LEX-C222-JOLI222-05"
+    ]
+  }
+}

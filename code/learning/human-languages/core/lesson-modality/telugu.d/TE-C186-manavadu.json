@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C186-manavadu",
+    "language": "telugu",
+    "chapter": 186,
+    "sequence": 8350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b01e781d2cc5ba2"
+  },
+  "findings": []
+}

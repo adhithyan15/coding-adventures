@@ -1,0 +1,11 @@
+{
+  "id": "IT-C165-sicurezza",
+  "pathSegment": "IT-PATH-165-COSE165",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-165-COSE165",
+      "order": 4
+    }
+  ]
+}

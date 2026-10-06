@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Mechanic, Electrician, Plumber, Factory worker, Pilot",
+  "label": "ch:pt-mechanic-electrician-plumber-factory-worker-pilot",
+  "canDo": "I can say a mechanic, an electrician, a plumber, a factory worker and a pilot.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C246-piloto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say a mechanic, an electrician, a plumber, a factory worker and a pilot.",
+    "assesses": [
+      "PT-LEX-C246-COISAS246-03",
+      "PT-LEX-C246-COISAS246-04",
+      "PT-LEX-C246-COISAS246-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:1497cbe32f660f2e",
+  "lessonIds": [
+    "RU-C222-yeda",
+    "RU-C222-blyudo",
+    "RU-C222-menyu",
+    "RU-C222-bulka",
+    "RU-C222-kefir"
+  ],
+  "tex": "russian/book/chapters/ch222-food-dish-menu-bun-kefir.tex"
+}

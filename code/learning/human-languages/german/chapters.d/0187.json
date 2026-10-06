@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "To rinse, To start, To put, To steal, To climb",
+  "label": "ch:ge-to-rinse-to-start-to-put-to-steal-to-climb",
+  "canDo": "I can say to rinse, to start, to put, to steal and to climb.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C187-steigen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say to rinse, to start, to put, to steal and to climb.",
+    "assesses": [
+      "GE-LEX-C187-VERB187-03",
+      "GE-LEX-C187-VERB187-04",
+      "GE-LEX-C187-VERB187-05"
+    ]
+  }
+}

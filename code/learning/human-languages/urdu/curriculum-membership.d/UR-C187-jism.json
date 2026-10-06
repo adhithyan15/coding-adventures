@@ -1,0 +1,11 @@
+{
+  "id": "UR-C187-jism",
+  "pathSegment": "UR-PATH-187-SEHAT187",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-187-SEHAT187",
+      "order": 4
+    }
+  ]
+}

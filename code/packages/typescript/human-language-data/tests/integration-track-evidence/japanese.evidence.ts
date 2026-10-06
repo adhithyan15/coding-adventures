@@ -14,9 +14,33 @@ export const integrationTrackEvidence: IntegrationTrackEvidence = {
     const japanese = lessons.filter((lesson) => lesson.language === "japanese");
     // 427 -> 734: chapters 72-130 (295 word lessons and twelve reviews) take
     // Japanese to A1.
-    expect(japanese).toHaveLength(734);
+    // 734 -> 743: chapter 131 writes small ゃ, small ょ and を, each one lesson
+    // after the word that holds it, with two more words and one review.
+    // 743 -> 752: chapter 132 writes そ, れ and る the same way, each one lesson
+    // after the word that holds it (そこ, これ, くるま), with two more words
+    // (そと, それ) and one review.
+    // 752 -> 764: chapter 133 writes the last four basic hiragana, き, け, ぬ
+    // and へ, the same way (えき, いけ, いぬ, へや), with three more words
+    // (きのう, けさ, ぬの) and one review.
+    // 764 -> 788: chapters 134 and 135 write eight voiced kana, で, ば, べ, ぶ
+    // and び, ぐ, げ, ぎ, the same way: each one lesson after the word that
+    // holds it (でんわ, かばん, たべる, しんぶん, びょういん, いりぐち,
+    // げつようび, ぎんこう), with six more words (でんしゃ, ばしょ, べんきょう,
+    // どようび, でぐち, げんき) and one review per chapter. A2 words such as
+    // でんわ and べんきょう needed these signs.
+    // 788 -> 809: chapters 136 and 137 write the rest of the z row, ぞ, ず
+    // and ぜ, and the p row, ぱ, ぴ, ぷ and ぺ, the same way: each one lesson
+    // after the word that holds it (かぞく, みず, かぜ, いっぱい, えんぴつ,
+    // きっぷ, ぺらぺら), with five more words (かぞえる, すずしい, しんぱい,
+    // いっぴき, てんぷら) and one review per chapter.
+    // 809 -> 837: chapters 138-142 are the A2 spine, one chapter per A2 node
+    // the track had not realized: what I do (five polite -masu verbs),
+    // negation and questions (six), the past (five), the future (five) and
+    // practical texts (five notices), 26 word and phrase lessons, then a
+    // first-pass and a second-pass review at the end of chapter 142.
+    expect(japanese).toHaveLength(837);
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter)))
-      .toEqual(new Set(Array.from({ length: 130 }, (_, index) => index + 1)));
+      .toEqual(new Set(Array.from({ length: 142 }, (_, index) => index + 1)));
     expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(japanese.map((lesson) => [
       lesson.realization.lessonId,

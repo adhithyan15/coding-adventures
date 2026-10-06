@@ -1,0 +1,11 @@
+{
+  "id": "IT-C139-lappuntamento",
+  "pathSegment": "IT-PATH-139-READ139",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-139-READ139",
+      "order": 4
+    }
+  ]
+}

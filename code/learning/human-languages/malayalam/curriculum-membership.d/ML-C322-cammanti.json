@@ -1,0 +1,11 @@
+{
+  "id": "ML-C322-cammanti",
+  "pathSegment": "ML-PATH-322-VASTU322",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-322-VASTU322",
+      "order": 4
+    }
+  ]
+}

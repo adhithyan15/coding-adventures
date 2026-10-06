@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C252-tamasa",
+    "language": "malayalam",
+    "chapter": 252,
+    "sequence": 11550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c144e9d4d91c034"
+  },
+  "findings": []
+}

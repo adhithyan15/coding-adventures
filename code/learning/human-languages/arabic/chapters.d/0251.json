@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Waiter, Manager, Employee, Colleague, Company",
+  "label": "ch:ar-waiter-manager-employee-colleague-company",
+  "canDo": "I can say a waiter, a manager, an employee, a colleague and a company.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C251-sharika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can say a waiter, a manager, an employee, a colleague and a company.",
+    "assesses": [
+      "AR-LEX-C251-AMAL251-03",
+      "AR-LEX-C251-AMAL251-04",
+      "AR-LEX-C251-AMAL251-05"
+    ]
+  }
+}

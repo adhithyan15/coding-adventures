@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "To spill, To shave, To tighten, To prick, To knit",
+  "label": "ch:te-to-spill-to-shave-to-tighten-to-prick-to-knit",
+  "canDo": "I can say to spill, to shave, to tighten, to prick and to knit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-R165-second-pass-words-from-chapters-161-165",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say to spill, to shave, to tighten, to prick and to knit.",
+    "assesses": [
+      "TE-LEX-C165-KRIYA165-03",
+      "TE-LEX-C165-KRIYA165-04",
+      "TE-LEX-C165-KRIYA165-05"
+    ]
+  }
+}

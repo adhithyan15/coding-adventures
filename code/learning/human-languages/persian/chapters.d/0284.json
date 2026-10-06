@@ -1,0 +1,19 @@
+{
+  "chapter": 284,
+  "title": "Mechanic, Hairdresser, Postman, Librarian, Accountant",
+  "label": "ch:fa-mechanic-hairdresser-postman-librarian-accountant",
+  "canDo": "I can say a mechanic, a hairdresser, a postman, a librarian and an accountant.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C284-hesabdar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can say a mechanic, a hairdresser, a postman, a librarian and an accountant.",
+    "assesses": [
+      "FA-LEX-C284-KAR284-03",
+      "FA-LEX-C284-KAR284-04",
+      "FA-LEX-C284-KAR284-05"
+    ]
+  }
+}

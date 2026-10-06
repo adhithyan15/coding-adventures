@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "Jar, Sack, Tub, Barrel, Mug",
+  "label": "ch:te-jar-sack-tub-barrel-mug",
+  "canDo": "I can say a jar, a sack, a tub, a barrel and a mug.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C232-maggu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say a jar, a sack, a tub, a barrel and a mug.",
+    "assesses": [
+      "TE-LEX-C232-VASTUVU232-03",
+      "TE-LEX-C232-VASTUVU232-04",
+      "TE-LEX-C232-VASTUVU232-05"
+    ]
+  }
+}

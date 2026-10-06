@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Valley, Zoo, University, College, Dwelling",
+  "label": "ch:ur-valley-zoo-university-college-dwelling",
+  "canDo": "I can say a valley, a zoo, a university, a college and a dwelling.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-C190-makan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say a valley, a zoo, a university, a college and a dwelling.",
+    "assesses": [
+      "UR-LEX-C190-JAGAH190-03",
+      "UR-LEX-C190-JAGAH190-04",
+      "UR-LEX-C190-JAGAH190-05"
+    ]
+  }
+}

@@ -7,7 +7,7 @@ chapter: 443
 type: word
 headword: acercarse
 gloss: to approach — a preposition turned into a verb, and the date that comes closer on its own
-concept_tag: ES-MOVE-ACERCARSE
+concept_tag: ES-VERB-ACERCARSE
 prerequisites: [ES-C443-interesar, ES-C340-cerca, ES-C340-lejos]
 sounds: [soft-c, stress-final]
 roots: [circa-latin]

@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "Kettle, Tray, Strainer, Ladle, Barrel",
+  "label": "ch:ar-kettle-tray-strainer-ladle-barrel",
+  "canDo": "I can say a kettle, a tray, a strainer, a ladle and a barrel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C278-barmil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can say a kettle, a tray, a strainer, a ladle and a barrel.",
+    "assesses": [
+      "AR-LEX-C278-SHAY278-03",
+      "AR-LEX-C278-SHAY278-04",
+      "AR-LEX-C278-SHAY278-05"
+    ]
+  }
+}

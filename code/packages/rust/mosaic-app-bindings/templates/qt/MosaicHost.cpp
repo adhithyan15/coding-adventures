@@ -79,6 +79,11 @@ MosaicHost::MosaicHost(QObject *parent)
             {QStringLiteral("platform"), platformName()},
             {QStringLiteral("restoredSnapshot"), snapshot},
         };
+        // The window's size class and orientation arrive with the shell's
+        // first environment report (UI48 §7.6).
+        const auto environment = initialEnvironment();
+        for (auto axis = environment.cbegin(); axis != environment.cend(); ++axis)
+            context.insert(axis.key(), axis.value());
         // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time"). Left out when outside -840..=840 (a custom TZ string can say anything): the runtime would refuse it and the app would not start; without it the app uses UTC.
         const int utcOffsetMinutes = QDateTime::currentDateTime().offsetFromUtc() / 60;
         if (utcOffsetMinutes >= -840 && utcOffsetMinutes <= 840)
@@ -106,7 +111,7 @@ MosaicHost::MosaicHost(QObject *parent)
             const QPointer<MosaicHost> self(this);
             const auto settled = settleEffects(latestUpdate_);
             if (!self) return;
-            latestUpdate_ = withPersistenceWarning(settled);
+            showUpdate(settled);
         }
         if (!app_) throw std::runtime_error("Mosaic runtime returned a null application handle");
     } catch (const std::exception &exception) {
@@ -145,6 +150,7 @@ void MosaicHost::configureRequiredProps(const QVariantMap &slotNames,
     requireRuntime();
     requiredSlotNames_ = slotNames;
     requiredProps_ = requiredProps;
+    requiredMode_ = true;
 }
 
 QVariantMap MosaicHost::propsRequired() const
@@ -212,10 +218,25 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
         // cross the call boundary, not stop inside it: settleEffects returning
         // an empty map is not enough, because everything below touches members.
         const QPointer<MosaicHost> self(this);
-        const auto settled = settleEffects(update);
+        const auto settled = keepShowingProps(settleEffects(update));
         if (!self) return {};
-        persistSnapshot();
-        latestUpdate_ = withPersistenceWarning(settled);
+        // An answer at the revision the state file already holds -- an
+        // environment the app ignored (UI48 §7.1) -- changed nothing the app
+        // would save, so the file is not rewritten: a resize storm costs no
+        // disk writes. Compared with the revision SAVED, not the one showing:
+        // a fresh install's first answer is often an ignored environment, and
+        // must still write the state. Unless an earlier save failed (a
+        // warning is pending): then the ignored report retries it, so a kill
+        // before the next event does not lose that revision. Either way the
+        // warning, set or cleared, is folded into the answer below, as an
+        // event's is. Unreadable revisions persist.
+        if (!sameRevision(settled, savedRevision_) || !persistenceWarning_.isEmpty()) {
+            persistSnapshot();
+            savedRevision_ = persistenceWarning_.isEmpty()
+                ? settled.value(QStringLiteral("revision"))
+                : QVariant();
+        }
+        showUpdate(settled);
         if (deferredAnswered_) {
             deferredAnswered_ = false;
             const auto pushed = latestUpdate_;
@@ -227,6 +248,107 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
     } catch (const std::exception &exception) {
         return failure(QString::fromUtf8(exception.what()));
     }
+}
+
+// An update without props AT THE REVISION ALREADY SHOWING (an environment the
+// app did not react to, UI48 §7.1) carries nothing to render: keep the props
+// showing rather than handing the view nothing. Only then -- a props-less
+// update that moves the revision is a defect, and is left as it is so it
+// surfaces instead of being hidden.
+QVariantMap MosaicHost::keepShowingProps(const QVariantMap &update) const
+{
+    if (!update.contains(QStringLiteral("props"))
+        || !update.value(QStringLiteral("props")).isNull()) {
+        return update;
+    }
+    // The runtime's own props, not the ones shown: those may carry a
+    // persistence warning that has since cleared.
+    const auto showing = shownRuntimeProps_;
+    if (showing.isNull() || showing.typeId() != QMetaType::QVariantMap) return update;
+    bool revisionOk = false;
+    bool shownOk = false;
+    const auto revision = update.value(QStringLiteral("revision")).toLongLong(&revisionOk);
+    const auto shown = latestUpdate_.value(QStringLiteral("revision")).toLongLong(&shownOk);
+    if (!revisionOk || !shownOk || revision != shown) return update;
+    auto kept = update;
+    kept.insert(QStringLiteral("props"), showing);
+    return kept;
+}
+
+// Whether `update` answers at `shown`, the revision showing before it. Either
+// unreadable reads as "moved": when in doubt, persist.
+bool MosaicHost::sameRevision(const QVariantMap &update, const QVariant &saved)
+{
+    bool revisionOk = false;
+    bool savedOk = false;
+    const auto revision = update.value(QStringLiteral("revision")).toLongLong(&revisionOk);
+    const auto before = saved.toLongLong(&savedOk);
+    return revisionOk && savedOk && revision == before;
+}
+
+QVariantMap MosaicHost::reportEnvironment(const QVariantMap &environment)
+{
+    if (!app_ || environment == lastReportedEnvironment_ || environment == lastRefusedEnvironment_) {
+        return {};
+    }
+    // A handler may delete this host during the settle, as for any event.
+    const QPointer<MosaicHost> self(this);
+    const auto response = handleEvent(QVariantMap{
+        {QStringLiteral("name"), QStringLiteral("environmentChanged")},
+        {QStringLiteral("payload"), environment},
+    });
+    if (!self) return {};
+    // Remembered only once the runtime took it, so a failed report does not
+    // stand in for the environment the runtime has. A report refused as
+    // invalid is not sent again on every pixel of a window drag -- it would
+    // be refused every time. Any other failure (an app error, which may be
+    // transient) says nothing about the report, so the same report is sent
+    // again: holding it back would leave the app on a stale environment
+    // until the window changed to a third one.
+    if (response.contains(QStringLiteral("error"))) {
+        if (response.value(QStringLiteral("error")).toString().startsWith(
+                QLatin1String(InvalidEnvironmentDiagnostic))) {
+            lastRefusedEnvironment_ = environment;
+        }
+        return response;
+    }
+    lastReportedEnvironment_ = environment;
+    lastRefusedEnvironment_.clear();
+    if (!requiredMode_ || response.isEmpty()) return response;
+    // A native-complete shell's QML takes its props checked and under their
+    // QML names, as every other event's answer reaches it.
+    try {
+        return requireAndMapUpdate(response, "environment update");
+    } catch (const std::exception &exception) {
+        return failure(QString::fromUtf8(exception.what()));
+    }
+}
+
+QVariantMap MosaicHost::initialEnvironment()
+{
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+    const bool touch = true;
+#else
+    const bool touch = false;
+#endif
+    return {
+        {QStringLiteral("pointer"), touch ? QStringLiteral("coarse") : QStringLiteral("fine")},
+        {QStringLiteral("hover"), touch ? QStringLiteral("none") : QStringLiteral("hover")},
+        {QStringLiteral("reducedMotion"), QStringLiteral("no-preference")},
+    };
+}
+
+QVariantMap MosaicHost::environmentReport(double width, double height, bool dark)
+{
+    auto report = initialEnvironment();
+    report.insert(QStringLiteral("colorScheme"), dark ? QStringLiteral("dark") : QStringLiteral("light"));
+    report.insert(QStringLiteral("sizeClass"),
+                  width < 600 ? QStringLiteral("compact")
+                  : width < 1024 ? QStringLiteral("regular")
+                                 : QStringLiteral("expanded"));
+    report.insert(QStringLiteral("orientation"),
+                  height > width ? QStringLiteral("portrait") : QStringLiteral("landscape"));
+    return report;
 }
 
 QVariantMap MosaicHost::handleRequiredEvent(const QVariantMap &event)
@@ -272,6 +394,7 @@ QVariantMap MosaicHost::restore(const QVariantMap &snapshot)
             requireMap(consume(status, output), "restore update"));
         if (!self) return {};
         latestUpdate_ = settled;
+        shownRuntimeProps_ = settled.value(QStringLiteral("props"));
         return latestUpdate_;
     } catch (const std::exception &exception) {
         return failure(QString::fromUtf8(exception.what()));
@@ -487,7 +610,7 @@ QVariantMap MosaicHost::completeEffect(const QVariant &effectId, const QVariantM
         const auto settled = settleEffects(update);
         if (!self) return {};
         persistSnapshot();
-        latestUpdate_ = withPersistenceWarning(settled);
+        showUpdate(settled);
         // A deferred answer is the return value of no call the UI made -- it
         // arrives whenever the dialog closed -- so the UI has to be told.
         //
@@ -919,6 +1042,12 @@ void MosaicHost::persistSnapshot()
             .arg(QString::fromUtf8(exception.what()));
         qWarning().noquote() << persistenceWarning_;
     }
+}
+
+void MosaicHost::showUpdate(const QVariantMap &settled)
+{
+    shownRuntimeProps_ = settled.value(QStringLiteral("props"));
+    latestUpdate_ = withPersistenceWarning(settled);
 }
 
 QVariantMap MosaicHost::withPersistenceWarning(const QVariantMap &update) const

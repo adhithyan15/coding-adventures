@@ -9,7 +9,7 @@ Last big package of the FM03 orchestrator stack.
 ```typescript
 import { createOrchestrator } from "@coding-adventures/forme-orchestrator";
 
-const o = createOrchestrator();
+const o = createOrchestrator({ pluginHost }); // omit for direct-import-only pipelines
 const pipeline = await o.buildPipeline(config);
 const result = await o.runOnce(pipeline);
 console.log(result.outcome, result.outputs);
@@ -55,6 +55,13 @@ These limits remain after the concurrent scheduler milestone:
   per statically known edge and one source traversal across fan-out
 - Replayable `AsyncIterable` inputs at named fan-in boundaries; a multi-input
   join is invoked exactly once
+- Same-turn reads across a stage's default and named live inputs are batched
+  into one permit yield, so sibling bounded branches can make concurrent
+  progress without exceeding the stage's single scheduler permit
+- Input wrappers reject overlapping operations on one iterator and cap active
+  iterators plus pending operations; no result is delivered while either a
+  batched read or direct cleanup has yielded the stage permit, and cancellation
+  retires queued reads before a non-reacquired cleanup yield releases its guard
 - Per-stage `StageContext` construction with denied-by-default capability APIs
 - `init` / `dispose` lifecycle hooks (init failure aborts before any `run`; dispose always runs)
 - Fail-fast and best-effort error handling
@@ -92,6 +99,8 @@ These limits remain after the concurrent scheduler milestone:
   propagation, and cancellation-safe teardown
 - `buildId` derived from the observed external state (or materialized output)
   of every source plus the pipeline sink set
+- Optional FM02 `PluginStageLoader` resolution of `StageRef`s before config
+  validation; unresolved references remain a hard error without a host
 
 ## Coverage
 

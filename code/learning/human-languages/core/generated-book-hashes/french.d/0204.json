@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:63940c5a6713323a",
+  "lessonIds": [
+    "FR-C204-entretien",
+    "FR-C204-carriere",
+    "FR-C204-imprimante",
+    "FR-C204-telephone-portable",
+    "FR-C204-feuille-de-papier",
+    "FR-R204-first-pass-words-from-chapters-199-201",
+    "FR-R204-second-pass-words-from-chapters-202-204"
+  ],
+  "tex": "french/book/chapters/ch204-interview-career-printer-mobile-phone-sheet-of-paper.tex"
+}

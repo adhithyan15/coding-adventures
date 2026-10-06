@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "A sitar, A tabla, A bell, A toy, A doll",
+  "label": "ch:hi-a-sitar-a-tabla-a-bell-a-toy-a-doll",
+  "canDo": "I can say a sitar, a tabla, a bell, a toy and a doll.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C264-guriya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can say a sitar, a tabla, a bell, a toy and a doll.",
+    "assesses": [
+      "HI-LEX-C264-THG264-03",
+      "HI-LEX-C264-THG264-04",
+      "HI-LEX-C264-THG264-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:88211b0840e046a0",
+  "lessonIds": [
+    "KA-C236-biccu",
+    "KA-C236-ebbisu",
+    "KA-C236-eccaragollu",
+    "KA-C236-caukasi-madu",
+    "KA-C236-eru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch236.txt",
+  "json": "kannada/narration/ch236.json",
+  "textHash": "fnv1a64:db58bfb495e2ee34",
+  "jsonHash": "fnv1a64:ca5700d3d4f75665",
+  "findings": []
+}

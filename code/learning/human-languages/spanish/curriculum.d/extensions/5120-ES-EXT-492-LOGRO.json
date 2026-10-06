@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-492-LOGRO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone tries, manages, avoids, chooses or keeps a promise.",
+  "prerequisites": []
+}

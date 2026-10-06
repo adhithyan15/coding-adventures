@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C202-vara-iruti",
+    "language": "tamil",
+    "chapter": 202,
+    "sequence": 10320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fcfaf157a966e9d8"
+  },
+  "findings": []
+}

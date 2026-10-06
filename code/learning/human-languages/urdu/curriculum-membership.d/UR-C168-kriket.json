@@ -1,0 +1,11 @@
+{
+  "id": "UR-C168-kriket",
+  "pathSegment": "UR-PATH-168-CHIZ168",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-168-CHIZ168",
+      "order": 3
+    }
+  ]
+}

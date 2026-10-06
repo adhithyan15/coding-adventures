@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:9a09557094785e76",
+  "lessonIds": [
+    "SA-C205-ksamate",
+    "SA-C205-nindati",
+    "SA-C205-prasamsati",
+    "SA-C205-svikaroti",
+    "SA-C205-vikasati"
+  ],
+  "tex": "sanskrit/book/chapters/ch205-forgives-blames-praises-accepts-blossoms.tex"
+}

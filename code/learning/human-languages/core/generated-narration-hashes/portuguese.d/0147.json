@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:ff68272167d80ed5",
+  "lessonIds": [
+    "PT-C147-substituir",
+    "PT-C147-corar",
+    "PT-C147-sangrar",
+    "PT-C147-enganar-se",
+    "PT-C147-aguentar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch147.txt",
+  "json": "portuguese/narration/ch147.json",
+  "textHash": "fnv1a64:54d0d7be9518550d",
+  "jsonHash": "fnv1a64:da61572c88ef43e2",
+  "findings": []
+}

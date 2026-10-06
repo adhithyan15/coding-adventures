@@ -1,0 +1,11 @@
+{
+  "id": "SA-C188-ujjvalah",
+  "pathSegment": "SA-PATH-188-QUAL188",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-188-QUAL188",
+      "order": 4
+    }
+  ]
+}

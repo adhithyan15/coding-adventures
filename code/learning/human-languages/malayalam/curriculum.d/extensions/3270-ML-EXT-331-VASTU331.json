@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-331-VASTU331",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a coconut scraper, a spatula, a clay water jug, a wire and wool.",
+  "prerequisites": []
+}

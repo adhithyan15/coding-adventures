@@ -1,0 +1,11 @@
+{
+  "id": "BN-C233-bosta",
+  "pathSegment": "BN-PATH-233-JINIS233",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-233-JINIS233",
+      "order": 3
+    }
+  ]
+}

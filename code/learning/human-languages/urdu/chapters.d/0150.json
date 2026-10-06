@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "To dye, To rub out, To print, To sign, To phone",
+  "label": "ch:ur-to-dye-to-rub-out-to-print-to-sign-to-phone",
+  "canDo": "I can say to dye, to rub out, to print, to sign and to phone.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C150-fon-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: I can say to dye, to rub out, to print, to sign and to phone.",
+    "assesses": [
+      "UR-LEX-C150-ACT150-03",
+      "UR-LEX-C150-ACT150-04",
+      "UR-LEX-C150-ACT150-05"
+    ]
+  }
+}

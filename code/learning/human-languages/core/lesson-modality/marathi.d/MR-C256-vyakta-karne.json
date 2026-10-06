@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C256-vyakta-karne",
+    "language": "marathi",
+    "chapter": 256,
+    "sequence": 14550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f1b428dded1e374"
+  },
+  "findings": []
+}

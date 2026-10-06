@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "Physics, Chemistry, Literature, English, Geometry",
+  "label": "ch:fa-physics-chemistry-literature-english-geometry",
+  "canDo": "I can say physics, chemistry, literature, English and geometry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C285-hendese",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can say physics, chemistry, literature, English and geometry.",
+    "assesses": [
+      "FA-LEX-C285-KAR285-03",
+      "FA-LEX-C285-KAR285-04",
+      "FA-LEX-C285-KAR285-05"
+    ]
+  }
+}

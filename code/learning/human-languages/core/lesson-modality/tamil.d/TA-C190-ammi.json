@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C190-ammi",
+    "language": "tamil",
+    "chapter": 190,
+    "sequence": 9590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40272ed3c4cd166c"
+  },
+  "findings": []
+}

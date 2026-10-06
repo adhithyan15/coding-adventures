@@ -7,7 +7,7 @@ chapter: 409
 type: word
 headword: incluir
 gloss: to include
-concept_tag: ES-PLAN-INCLUIR
+concept_tag: ES-VERB-INCLUIR
 prerequisites: [ES-C409-reservar, ES-C367-desayuno, ES-C311-precio]
 sounds: [stress-final, diphthong-ui]
 roots: [includere-latin]

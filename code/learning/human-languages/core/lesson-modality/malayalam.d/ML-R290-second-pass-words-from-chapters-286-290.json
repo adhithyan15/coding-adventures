@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R290-second-pass-words-from-chapters-286-290",
+    "language": "malayalam",
+    "chapter": 290,
+    "sequence": 13590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63ca654bad1c7b9f"
+  },
+  "findings": []
+}

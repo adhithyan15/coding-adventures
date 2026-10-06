@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 257,
+  "title": "Promise, Secret, Friendship, Quarrel, Culture",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:6ca4136096c56f1e",
+  "lessons": [
+    {
+      "id": "TE-C257-vagdanam",
+      "sequence": 12060,
+      "title": "వాగ్దానం (vāgdānaṁ) — a promise",
+      "headword": "వాగ్దానం",
+      "romanization": "vāgdānaṁ",
+      "gloss": "a promise",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc19810e6fddef40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a warehouse, then the Telugu for a court."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వాగ్దానం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాగ్దానం — vāgdānaṁ — \"a promise\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāgdānaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāgdānaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāgdānaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāgdānaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vāgdānaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vāgdānaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a warehouse, then the Telugu for a court, then say vāgdānaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a warehouse, then the Telugu for a court, then say *vāgdānaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వాగ్దానం (vāgdānaṁ) mean? (\"A promise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C257-rahasyam",
+      "sequence": 12070,
+      "title": "రహస్యం (rahasyaṁ) — a secret",
+      "headword": "రహస్యం",
+      "romanization": "rahasyaṁ",
+      "gloss": "a secret",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb93d4f294dbc53b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a court, then the Telugu for a promise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రహస్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రహస్యం — rahasyaṁ — \"a secret\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rahasyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rahasyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rahasyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rahasyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say rahasyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *rahasyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a court, then the Telugu for a promise, then say rahasyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a court, then the Telugu for a promise, then say *rahasyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రహస్యం (rahasyaṁ) mean? (\"A secret\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C257-sneham",
+      "sequence": 12080,
+      "title": "స్నేహం (snēhaṁ) — friendship",
+      "headword": "స్నేహం",
+      "romanization": "snēhaṁ",
+      "gloss": "friendship",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65ba6803e74a436b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a promise, then the Telugu for a secret."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: స్నేహం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్నేహం — snēhaṁ — \"friendship\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "snēhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *snēhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "snēhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *snēhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say snēhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *snēhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a promise, then the Telugu for a secret, then say snēhaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a promise, then the Telugu for a secret, then say *snēhaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does స్నేహం (snēhaṁ) mean? (\"Friendship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C257-godava",
+      "sequence": 12090,
+      "title": "గొడవ (goḍava) — a quarrel, a fuss",
+      "headword": "గొడవ",
+      "romanization": "goḍava",
+      "gloss": "a quarrel, a fuss",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5662d6d2d440649b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a secret, then the Telugu for friendship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గొడవ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గొడవ — goḍava — \"a quarrel, a fuss\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goḍava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goḍava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goḍava, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goḍava*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say goḍava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *goḍava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a secret, then the Telugu for friendship, then say goḍava again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a secret, then the Telugu for friendship, then say *goḍava* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గొడవ (goḍava) mean? (\"A quarrel, a fuss\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C257-samskrti",
+      "sequence": 12100,
+      "title": "సంస్కృతి (saṁskṛti) — culture",
+      "headword": "సంస్కృతి",
+      "romanization": "saṁskṛti",
+      "gloss": "culture",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:943ee581c0aa2923",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for friendship, then the Telugu for a quarrel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంస్కృతి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంస్కృతి — saṁskṛti — \"culture\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁskṛti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁskṛti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁskṛti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁskṛti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say saṁskṛti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *saṁskṛti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for friendship, then the Telugu for a quarrel, then say saṁskṛti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for friendship, then the Telugu for a quarrel, then say *saṁskṛti* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంస్కృతి (saṁskṛti) mean? (\"Culture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R257-first-pass-words-from-chapters-249-252",
+      "sequence": 12110,
+      "title": "Words from chapters 249-252 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 249-252",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa3a1ae8c99994e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a quarrel and culture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to endure, to crawl, to bend down, to stretch out, to stack",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to endure, to crawl, to bend down, to stretch out, to stack]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the palm of the hand, the heel, the ankle, the thigh, the waist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the palm of the hand, the heel, the ankle, the thigh, the waist]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the mind, breathlessness, a muscle, an injection, a vaccination",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the mind, breathlessness, a muscle, an injection, a vaccination]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ugadi, Diwali, Dasara, Vinayaka Chavithi, Bathukamma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Ugadi, Diwali, Dasara, Vinayaka Chavithi, Bathukamma]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To endure? (భరించు, bhariñcu.) To crawl? (పాకు, pāku.) To bend down? (వంగు, vaṅgu.) To stretch out? (చాచు, cācu.) To stack? (పేర్చు, pērcu.) The palm of the hand? (అరచెయ్యి, araceyyi.) The heel? (మడమ, maḍama.) The ankle? (చీలమండ, cīlamaṇḍa.) The thigh? (తొడ, toḍa.) The waist? (నడుము, naḍumu.) The mind? (మనసు, manasu.) Breathlessness? (ఆయాసం, āyāsaṁ.) A muscle? (కండరం, kaṇḍaraṁ.) An injection? (ఇంజెక్షను, iñjekṣanu.) A vaccination? (టీకా, ṭīkā.) Ugadi? (ఉగాది, ugādi.) Diwali? (దీపావళి, dīpāvaḷi.) Dasara? (దసరా, dasarā.) Vinayaka Chavithi? (వినాయక చవితి, vināyaka caviti.) Bathukamma? (బతుకమ్మ, batukamma.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R257-second-pass-words-from-chapters-253-257",
+      "sequence": 12120,
+      "title": "Words from chapters 253-257 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 253-257",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8e18547bf2ebb86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for the end and ever."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the end, ever, at present, in the past, dawn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the end, ever, at present, in the past, dawn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a state, an area, a direction, east, west",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a state, an area, a direction, east, west]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a museum, a gym, a stage, a city, the village meeting platform",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a museum, a gym, a stage, a city, the village meeting platform]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lane, a tunnel, the outskirts, a warehouse, a court",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lane, a tunnel, the outskirts, a warehouse, a court]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a promise, a secret, friendship, a quarrel, culture",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a promise, a secret, friendship, a quarrel, culture]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The end? (చివర, civara.) Ever? (ఎప్పుడైనా, eppuḍainā.) At present? (ప్రస్తుతం, prastutaṁ.) In the past? (పూర్వం, pūrvaṁ.) Dawn? (తెల్లవారుజాము, tellavārujāmu.) A state? (రాష్ట్రం, rāṣṭraṁ.) An area? (ప్రాంతం, prāntaṁ.) A direction? (దిక్కు, dikku.) East? (తూర్పు, tūrpu.) West? (పడమర, paḍamara.) A museum? (మ్యూజియం, myūziyaṁ.) A gym? (వ్యాయామశాల, vyāyāmaśāla.) A stage? (వేదిక, vēdika.) A city? (నగరం, nagaraṁ.) The village meeting platform? (రచ్చబండ, raccabaṇḍa.) A lane? (సందు, sandu.) A tunnel? (సొరంగం, soraṅgaṁ.) The outskirts? (శివారు, śivāru.) A warehouse? (గోదాము, gōdāmu.) A court? (కోర్టు, kōrṭu.) A promise? (వాగ్దానం, vāgdānaṁ.) A secret? (రహస్యం, rahasyaṁ.) Friendship? (స్నేహం, snēhaṁ.) A quarrel? (గొడవ, goḍava.) Culture? (సంస్కృతి, saṁskṛti.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

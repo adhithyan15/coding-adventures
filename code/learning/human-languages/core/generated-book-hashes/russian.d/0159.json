@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:562bf1aa5b9e485a",
+  "lessonIds": [
+    "RU-C159-veshch",
+    "RU-C159-predmet",
+    "RU-C159-mebel",
+    "RU-C159-kreslo",
+    "RU-C159-komod"
+  ],
+  "tex": "russian/book/chapters/ch159-thing-object-furniture-armchair-chest-of-drawers.tex"
+}

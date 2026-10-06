@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:aa8a5bd70d4365f5",
+  "lessonIds": [
+    "SA-C194-paritosikam",
+    "SA-C194-nimantranam",
+    "SA-C194-sabha",
+    "SA-C194-gosthi",
+    "SA-C194-melakah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch194.txt",
+  "json": "sanskrit/narration/ch194.json",
+  "textHash": "fnv1a64:e273fe2cbc2ef303",
+  "jsonHash": "fnv1a64:f33cbb9e452ebd5a",
+  "findings": []
+}

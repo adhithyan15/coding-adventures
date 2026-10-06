@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Charger, Passport, Visa, Parcel, Magazine",
+  "label": "ch:bn-charger-passport-visa-parcel-magazine",
+  "canDo": "I can say a charger, a passport, a visa, a parcel and a magazine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C248-potrika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say a charger, a passport, a visa, a parcel and a magazine.",
+    "assesses": [
+      "BN-LEX-C248-JINIS248-03",
+      "BN-LEX-C248-JINIS248-04",
+      "BN-LEX-C248-JINIS248-05"
+    ]
+  }
+}

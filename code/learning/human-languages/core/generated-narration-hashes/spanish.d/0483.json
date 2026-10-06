@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:9bc46d8e5771641f",
+  "lessonIds": [
+    "ES-C483-infancia",
+    "ES-C483-costumbre",
+    "ES-C483-finalidad",
+    "ES-C483-mejora",
+    "ES-C483-acudir"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch483.txt",
+  "json": "spanish/narration/ch483.json",
+  "textHash": "fnv1a64:fcfe5987b685c853",
+  "jsonHash": "fnv1a64:abcaa5f6c5c1ccd4",
+  "findings": []
+}

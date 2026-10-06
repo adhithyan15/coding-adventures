@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C242-khatm-karna",
+    "language": "urdu",
+    "chapter": 242,
+    "sequence": 14600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:935580c986469179"
+  },
+  "findings": []
+}

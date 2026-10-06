@@ -19,6 +19,9 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/mosaic-compile",
         "rust/mosaic-emit-xaml",
         "rust/mosaic-package-artifact-builder",
+        # UI48 §7.11: the `[[app.layouts]]` rules (and the conventions) the
+        # WinUI window switches layouts by, which the resize gate exercises.
+        "rust/mosaic-package-manifest",
         "rust/moslayout-compiler",
         "rust/mosmodel-compiler",
         "rust/mosstyle-compiler",
@@ -28,6 +31,15 @@ ACCEPTANCE_PACKAGES = frozenset(
 )
 ACCEPTANCE_PACKAGE_PREFIXES = ("mosaic/mosaic-pkg-",)
 CI_WORKFLOW_PATH = ".github/workflows/ci.yml"
+# Files the Windows XAML lane runs directly that belong to no build package:
+# a change to any of them must run the lane that would catch its breakage.
+LANE_SCRIPT_PATHS = (
+    "code/scripts/mosaic-xaml-layout-variants-smoke.ps1",
+    "code/scripts/taskapp-xaml-smoke.ps1",
+    "code/scripts/taskapp-xaml-startup-smoke.ps1",
+)
+
+
 def requires_mosaic_xaml_windows(
     plan: dict[str, Any], *, workflow_changed: bool = False
 ) -> bool:
@@ -48,7 +60,8 @@ def requires_mosaic_xaml_windows(
 
 
 def workflow_changed(repo_root: Path, diff_base: str) -> bool:
-    """Return whether the main CI workflow differs from the selected base."""
+    """Return whether the main CI workflow, or a script the lane runs,
+    differs from the selected base."""
 
     result = subprocess.run(
         [
@@ -58,6 +71,7 @@ def workflow_changed(repo_root: Path, diff_base: str) -> bool:
             f"{diff_base}...HEAD",
             "--",
             CI_WORKFLOW_PATH,
+            *LANE_SCRIPT_PATHS,
         ],
         cwd=repo_root,
         check=False,

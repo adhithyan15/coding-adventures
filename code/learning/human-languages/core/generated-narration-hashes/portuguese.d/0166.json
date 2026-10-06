@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:946dfe2fffef8f4b",
+  "lessonIds": [
+    "PT-C166-ligacao",
+    "PT-C166-regresso",
+    "PT-C166-chegada",
+    "PT-C166-partida",
+    "PT-C166-destino"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch166.txt",
+  "json": "portuguese/narration/ch166.json",
+  "textHash": "fnv1a64:6f996856186d08a4",
+  "jsonHash": "fnv1a64:41dc2891e5a0267b",
+  "findings": []
+}

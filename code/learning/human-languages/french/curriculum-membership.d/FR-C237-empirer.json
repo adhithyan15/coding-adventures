@@ -1,0 +1,11 @@
+{
+  "id": "FR-C237-empirer",
+  "pathSegment": "FR-PATH-237-VERBES237",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-237-VERBES237",
+      "order": 3
+    }
+  ]
+}

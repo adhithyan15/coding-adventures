@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R210-second-pass-words-from-chapters-208-210",
+    "language": "german",
+    "chapter": 210,
+    "sequence": 11100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e40ad1d4f857c31"
+  },
+  "findings": []
+}

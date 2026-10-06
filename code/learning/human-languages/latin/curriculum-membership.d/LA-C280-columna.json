@@ -1,0 +1,11 @@
+{
+  "id": "LA-C280-columna",
+  "pathSegment": "LA-PATH-280-RES280",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-280-RES280",
+      "order": 1
+    }
+  ]
+}

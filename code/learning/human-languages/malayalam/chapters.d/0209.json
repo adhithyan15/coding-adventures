@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "Curry leaves, Mustard seeds, Spice mix, Prawn, Message",
+  "label": "ch:ml-curry-leaves-mustard-seeds-spice-mix-prawn-message",
+  "canDo": "I can say curry leaves, mustard seeds, spice mix, a prawn and a message.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C209-sandesam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say curry leaves, mustard seeds, spice mix, a prawn and a message.",
+    "assesses": [
+      "ML-LEX-C209-VASTU209-03",
+      "ML-LEX-C209-VASTU209-04",
+      "ML-LEX-C209-VASTU209-05"
+    ]
+  }
+}

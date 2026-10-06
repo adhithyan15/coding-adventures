@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Rainbow, Hail, Springtime, Planet, Freedom",
+  "label": "ch:mr-rainbow-hail-springtime-planet-freedom",
+  "canDo": "I can say a rainbow, hail, springtime, a planet and freedom.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C246-svatantrya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say a rainbow, hail, springtime, a planet and freedom.",
+    "assesses": [
+      "MR-LEX-C246-VASTU246-03",
+      "MR-LEX-C246-VASTU246-04",
+      "MR-LEX-C246-VASTU246-05"
+    ]
+  }
+}

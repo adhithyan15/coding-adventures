@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:22abca115e21c416",
+  "lessonIds": [
+    "LA-C239-simul",
+    "LA-C239-fortasse",
+    "LA-C239-quoque",
+    "LA-C239-quasi",
+    "LA-C239-propter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch239.txt",
+  "json": "latin/narration/ch239.json",
+  "textHash": "fnv1a64:4553d33aa5d1535b",
+  "jsonHash": "fnv1a64:aa8f97dbeab03433",
+  "findings": []
+}

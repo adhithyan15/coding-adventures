@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C152-sar-dard",
+    "language": "urdu",
+    "chapter": 152,
+    "sequence": 8080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:314e180a86f4460d"
+  },
+  "findings": []
+}

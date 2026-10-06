@@ -1,5 +1,17 @@
 # Changelog — @coding-adventures/forme-style-to-terminal
 
+## Unreleased
+
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
+### Added
+
+- `compileTerminalStyles` returns immutable runtime ANSI wrappers, emitted
+  rule ids, and the same explicit warnings used by generated modules. Terminal
+  renderers no longer need to parse or evaluate generated TypeScript.
+
 ## 0.1.0 — 2026-05-17
 
 Initial release.  Fifth package of the FM04 Style IR family —

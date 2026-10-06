@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "Vivir juntos",
+  "label": "ch:es-vivir-juntos",
+  "canDo": "I can read house rules about respect, noise that bothers people, what is forbidden, the law and freedom.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C500-libertad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can read house rules about respect, noise that bothers people, what is forbidden, the law and freedom.",
+    "assesses": [
+      "ES-LEX-C500-NORMAS-03",
+      "ES-LEX-C500-NORMAS-04",
+      "ES-LEX-C500-NORMAS-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C156-naya-sal",
+  "pathSegment": "UR-PATH-156-VAQT156",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-156-VAQT156",
+      "order": 1
+    }
+  ]
+}

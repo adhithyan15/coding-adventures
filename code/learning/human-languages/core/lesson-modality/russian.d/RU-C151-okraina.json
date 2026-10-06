@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C151-okraina",
+    "language": "russian",
+    "chapter": 151,
+    "sequence": 8220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97bf28dc023cc267"
+  },
+  "findings": []
+}

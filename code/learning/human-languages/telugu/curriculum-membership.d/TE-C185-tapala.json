@@ -1,0 +1,11 @@
+{
+  "id": "TE-C185-tapala",
+  "pathSegment": "TE-PATH-185-VASTUVU185",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-185-VASTUVU185",
+      "order": 3
+    }
+  ]
+}

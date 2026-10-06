@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Muscle, Thumb, Wound, Scar, Cold",
+  "label": "ch:pt-muscle-thumb-wound-scar-cold",
+  "canDo": "I can say a muscle, a thumb, a wound, a scar and a cold.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C180-constipacao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say a muscle, a thumb, a wound, a scar and a cold.",
+    "assesses": [
+      "PT-LEX-C180-SAUDE180-03",
+      "PT-LEX-C180-SAUDE180-04",
+      "PT-LEX-C180-SAUDE180-05"
+    ]
+  }
+}

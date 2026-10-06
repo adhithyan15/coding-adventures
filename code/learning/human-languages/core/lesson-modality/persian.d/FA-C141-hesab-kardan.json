@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C141-hesab-kardan",
+    "language": "persian",
+    "chapter": 141,
+    "sequence": 7220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f10c8acfa3200534"
+  },
+  "findings": []
+}

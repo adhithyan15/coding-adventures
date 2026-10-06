@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "To earn, To explain, To translate, To remember, To agree",
+  "label": "ch:te-to-earn-to-explain-to-translate-to-remember-to-agree",
+  "canDo": "I can say to earn, to explain, to translate, to remember and to agree.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C160-oppuko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can say to earn, to explain, to translate, to remember and to agree.",
+    "assesses": [
+      "TE-LEX-C160-KRIYA160-03",
+      "TE-LEX-C160-KRIYA160-04",
+      "TE-LEX-C160-KRIYA160-05"
+    ]
+  }
+}

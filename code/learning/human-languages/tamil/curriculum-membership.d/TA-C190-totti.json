@@ -1,0 +1,11 @@
+{
+  "id": "TA-C190-totti",
+  "pathSegment": "TA-PATH-190-PORUL190",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-190-PORUL190",
+      "order": 4
+    }
+  ]
+}

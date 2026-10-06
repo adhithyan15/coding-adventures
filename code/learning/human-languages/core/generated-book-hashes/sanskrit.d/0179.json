@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:4d787c735fb197bd",
+  "lessonIds": [
+    "SA-C179-sainikah",
+    "SA-C179-raksakah",
+    "SA-C179-nyayadhisah",
+    "SA-C179-adhivakta",
+    "SA-C179-lekhakah"
+  ],
+  "tex": "sanskrit/book/chapters/ch179-soldier-guard-judge-lawyer-writer.tex"
+}

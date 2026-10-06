@@ -1,0 +1,11 @@
+{
+  "id": "FR-C201-boue",
+  "pathSegment": "FR-PATH-201-CHOSES201",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-201-CHOSES201",
+      "order": 1
+    }
+  ]
+}

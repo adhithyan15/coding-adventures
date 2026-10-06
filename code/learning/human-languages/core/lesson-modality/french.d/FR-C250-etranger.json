@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C250-etranger",
+    "language": "french",
+    "chapter": 250,
+    "sequence": 14430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d91b56609fb8b4ae"
+  },
+  "findings": []
+}

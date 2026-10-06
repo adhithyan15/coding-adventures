@@ -18,7 +18,7 @@
  *   identity.ts — LogicalId, RevisionId branded aliases
  *   kinds.ts    — KIND name set, KindDescriptor, canonical Kinds object,
  *                 Stream helpers, KERNEL_API_VERSION
- *   shapes.ts   — Each kind's TypeScript interface (12 kernel kinds)
+ *   shapes.ts   — Each built-in kind's TypeScript interface
  *                 plus stub StyleDocument / Interactivity that FM04 / FM05
  *                 will replace.
  *   payload.ts  — KindPayload mapped type that infers the value type
@@ -61,6 +61,7 @@ export type {
   Document,
   StyleRuleId,
   IslandId,
+  IslandModuleUse,
   PageMeta,
   ProvenanceContributor,
   OutputProvenance,
@@ -73,6 +74,8 @@ export type {
   PageSettings,
   RunningElement,
   PrintForme,
+  TerminalDegradation,
+  TerminalBuffer,
   RuntimeRequirement,
   RequestHandler,
   SearchIndex,

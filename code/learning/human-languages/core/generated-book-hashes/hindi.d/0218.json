@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:7670726997911316",
+  "lessonIds": [
+    "HI-C218-samaj",
+    "HI-C218-sarkar",
+    "HI-C218-kanun",
+    "HI-C218-adalat",
+    "HI-C218-cunav"
+  ],
+  "tex": "hindi/book/chapters/ch218-society-the-government-a-law-a-court-an-election.tex"
+}

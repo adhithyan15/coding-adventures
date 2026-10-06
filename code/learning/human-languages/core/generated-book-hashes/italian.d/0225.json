@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:f441e1bb41ddf115",
+  "lessonIds": [
+    "IT-C225-decisione",
+    "IT-C225-possibilita",
+    "IT-C225-occasione",
+    "IT-C225-motivo",
+    "IT-C225-risultato"
+  ],
+  "tex": "italian/book/chapters/ch225-decision-possibility-opportunity-reason-result.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C249-citrapatah",
+    "language": "sanskrit",
+    "chapter": 249,
+    "sequence": 14840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a1512afaf42c913"
+  },
+  "findings": []
+}

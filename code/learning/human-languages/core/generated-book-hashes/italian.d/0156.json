@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:fed912f3f518c273",
+  "lessonIds": [
+    "IT-C156-comodo",
+    "IT-C156-scomodo",
+    "IT-C156-cortese",
+    "IT-C156-maleducato",
+    "IT-C156-antipatico"
+  ],
+  "tex": "italian/book/chapters/ch156-comfortable-uncomfortable-polite-rude-unpleasant.tex"
+}

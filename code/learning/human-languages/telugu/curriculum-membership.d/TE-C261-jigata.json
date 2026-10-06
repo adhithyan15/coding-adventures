@@ -1,0 +1,11 @@
+{
+  "id": "TE-C261-jigata",
+  "pathSegment": "TE-PATH-261-GUNAM261",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-261-GUNAM261",
+      "order": 3
+    }
+  ]
+}

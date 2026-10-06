@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:1d8dd45f3f348fe2",
+  "lessonIds": [
+    "FA-C227-band",
+    "FA-C227-mosakken",
+    "FA-C227-bime",
+    "FA-C227-tasadof",
+    "FA-C227-dandanpezeshk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch227.txt",
+  "json": "persian/narration/ch227.json",
+  "textHash": "fnv1a64:d39d2d384d4736f9",
+  "jsonHash": "fnv1a64:418bd97e72889aae",
+  "findings": []
+}

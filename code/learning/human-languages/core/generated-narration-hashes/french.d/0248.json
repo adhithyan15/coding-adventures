@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:b2e3f6410d0260f3",
+  "lessonIds": [
+    "FR-C248-maire",
+    "FR-C248-elections",
+    "FR-C248-vote",
+    "FR-C248-politique",
+    "FR-C248-economie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch248.txt",
+  "json": "french/narration/ch248.json",
+  "textHash": "fnv1a64:32c8da2f97720082",
+  "jsonHash": "fnv1a64:e8ac36050852233e",
+  "findings": []
+}

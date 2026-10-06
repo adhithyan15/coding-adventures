@@ -1,0 +1,11 @@
+{
+  "id": "UR-C195-zyada",
+  "pathSegment": "UR-PATH-195-SIFAT195",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-195-SIFAT195",
+      "order": 2
+    }
+  ]
+}

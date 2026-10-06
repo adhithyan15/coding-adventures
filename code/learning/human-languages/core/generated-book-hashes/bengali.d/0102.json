@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:85c075a9fb4f7bce",
+  "lessonIds": [
+    "BN-C102-bona",
+    "BN-C102-lagano",
+    "BN-C102-sorano",
+    "BN-C102-jagano",
+    "BN-C102-bachano"
+  ],
+  "tex": "bengali/book/chapters/ch102-to-weave-to-attach-to-move-aside-to-wake-someone-to-save.tex"
+}

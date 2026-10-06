@@ -1,0 +1,11 @@
+{
+  "id": "FR-C218-jaloux-jalouse",
+  "pathSegment": "FR-PATH-218-QUAL218",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-218-QUAL218",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C475-jardinero",
+    "language": "spanish",
+    "chapter": 475,
+    "sequence": 13290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4205e698b5f0d72b"
+  },
+  "findings": []
+}

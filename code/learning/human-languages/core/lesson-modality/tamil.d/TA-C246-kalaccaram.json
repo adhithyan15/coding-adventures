@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C246-kalaccaram",
+    "language": "tamil",
+    "chapter": 246,
+    "sequence": 13630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fad8aa02cf6d0a93"
+  },
+  "findings": []
+}

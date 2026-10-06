@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:c5a500d4a566a818",
+  "lessonIds": [
+    "AR-C193-khalaa",
+    "AR-C193-jarraba",
+    "AR-C193-qasa",
+    "AR-C193-sawama",
+    "AR-C193-tasawwaqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch193.txt",
+  "json": "arabic/narration/ch193.json",
+  "textHash": "fnv1a64:dfbf14904c1485d7",
+  "jsonHash": "fnv1a64:8af443faba2cd5a2",
+  "findings": []
+}

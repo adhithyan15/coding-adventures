@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:385f4b6d3416e42e",
+  "lessonIds": [
+    "IT-C245-liscio",
+    "IT-C245-ruvido",
+    "IT-C245-profondo",
+    "IT-C245-grasso",
+    "IT-C245-sconosciuto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch245.txt",
+  "json": "italian/narration/ch245.json",
+  "textHash": "fnv1a64:3d85f3ce10497fd6",
+  "jsonHash": "fnv1a64:51b1bde7d4a8ee68",
+  "findings": []
+}

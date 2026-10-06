@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:9ad52067303af016",
+  "lessonIds": [
+    "ML-C190-pakarttuka",
+    "ML-C190-olikkuka2",
+    "ML-C190-nekkuka",
+    "ML-C190-kulaykkuka",
+    "ML-C190-arruka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch190.txt",
+  "json": "malayalam/narration/ch190.json",
+  "textHash": "fnv1a64:74ac261130cfe93b",
+  "jsonHash": "fnv1a64:889a5b052bbc662b",
+  "findings": []
+}

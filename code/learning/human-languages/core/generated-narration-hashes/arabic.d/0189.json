@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:a86275bd66524f25",
+  "lessonIds": [
+    "AR-C189-muhasib",
+    "AR-C189-suhufi",
+    "AR-C189-amil",
+    "AR-C189-mutarjim",
+    "AR-C189-muqabala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch189.txt",
+  "json": "arabic/narration/ch189.json",
+  "textHash": "fnv1a64:2b784c461e5b84f8",
+  "jsonHash": "fnv1a64:2c7f1c3b4941fac0",
+  "findings": []
+}

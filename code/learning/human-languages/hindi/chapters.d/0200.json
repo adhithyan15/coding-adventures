@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "Skin, A state, A capital city, A border, An island",
+  "label": "ch:hi-skin-a-state-a-capital-city-a-border-an-island",
+  "canDo": "I can say skin, a state, a capital city, a border and an island.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C200-dvip",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say skin, a state, a capital city, a border and an island.",
+    "assesses": [
+      "HI-LEX-C200-THG200-03",
+      "HI-LEX-C200-THG200-04",
+      "HI-LEX-C200-THG200-05"
+    ]
+  }
+}

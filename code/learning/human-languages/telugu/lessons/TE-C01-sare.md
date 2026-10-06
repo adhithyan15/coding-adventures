@@ -54,8 +54,8 @@ Left to right: **స · రే** = *sa-rē* →
 <!-- hl-knowledge: introduces=[TE-ETYMON-C01-SARE-02]; assesses=[] -->
 
 **సరే** (*sarē*) is native Dravidian "correct, right → okay, agreed" — the
-verbal nod of Telugu. It is the same family word as Tamil and Kannada
-**సరి/ಸರಿ/சரி** (*sari*), worn to *sarē* in Telugu. Say it once to agree; say
+verbal nod of Telugu. It is the same family word as Kannada **ಸರಿ** and
+Tamil **சரி** (*sari*), worn to *sarē* in Telugu. Say it once to agree; say
 *sarē sarē* to mean "yes yes, fine, enough."
 
 ## Grammar Lens: one Dravidian word, three scripts

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:cbcefe947d9eed65",
+  "lessonIds": [
+    "GE-C241-umwelt",
+    "GE-C241-unterricht",
+    "GE-C241-unterschied",
+    "GE-C241-ursache",
+    "GE-C241-verhalten"
+  ],
+  "tex": "german/book/chapters/ch241-the-environment-lessons-a-difference-a-cause-behaviour.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:e1d3b438468a512a",
+  "lessonIds": [
+    "SA-C235-pidadhati",
+    "SA-C235-aropayati",
+    "SA-C235-calayati",
+    "SA-C235-alingati",
+    "SA-C235-cumbati"
+  ],
+  "tex": "sanskrit/book/chapters/ch235-covers-plants-drives-embraces-kisses.tex"
+}

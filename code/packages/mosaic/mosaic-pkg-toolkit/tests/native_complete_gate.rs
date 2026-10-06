@@ -65,44 +65,17 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // emptiness is now a measurement rather than an absence of looking.
     //
     // Qt gained reporting in #15245 and named 60 drops that had always been
-    // there. 16 are fixed: `border-color`, `border-width` and `border-radius`
+    // there. All are now fixed: `border-color`, `border-width` and
+    // `border-radius`
     // were read from the base part only, so an Alert or a Toast wore the base
     // variant's border whatever its `variant` — the background beside them was
-    // already conditional, and the border was not. The 44 below are real, and
-    // each points at the issue that will retire it.
+    // already conditional, and the border was not.
     //
-    // #15276 — a `Text` part cannot paint. `background`, `border-color`,
-    // `border-width` and `padding` on `$style.tabs-panel`,
-    // `$style.input-group-prefix`/`-suffix` and `$style.accordion-body` reach
-    // a bare QML `Text`, which has no fill, no `border.*` and no padding.
-    // Its comment thread also covers Badge's `font-weight`, dropped because a
-    // `Rectangle` has no font group and nothing carries the value to the
-    // `Text` inside it.
-    (Backend::Qt, "background"),
-    (Backend::Qt, "border-color"),
-    (Backend::Qt, "border-width"),
-    (Backend::Qt, "font-weight"),
-    // #15276 and #15277 both — `padding` is dropped on Text parts (Accordion,
-    // InputGroup, Tabs) AND on host controls (Button, Field, Input, Navbar).
-    // It takes both fixes to retire this one entry, which is an argument for
-    // the finer-grained pin this list does not yet have.
-    (Backend::Qt, "padding"),
-    // #15277 — state-layer overrides are ignored outside the Rectangle
-    // builders. Spinner authors `width`/`height` per size variant and renders
-    // all three at the base's 24px. Extending the Rectangle path to
-    // `width`/`height` was tried and changed zero bytes of output, which is
-    // how we know those parts never traverse it -- Spinner is a `Stack` and
-    // lowers to a QML `Item`.
-    //
-    // `border-radius` was pinned here and is NOT any more: the fourth site
-    // that assembles a Rectangle (a host control's `background: Rectangle`)
-    // had a conditional `border.color` beside a base-only `radius`, so Button
-    // and Input rendered every size with the base corner. The inverse ratchet
-    // below is what caught it -- the pin was written, the site was fixed, and
-    // the assertion refused to let the stale entry stand.
-    (Backend::Qt, "font-size"),
-    (Backend::Qt, "height"),
-    (Backend::Qt, "width"),
+    // #15276 is fixed: paint/padding on Text parts now reaches a conditional
+    // Rectangle wrapper, and a Box part's font-weight reaches its descendant
+    // Text. #15277 then retired the last four pins: Stack geometry and host
+    // control padding/font size now retain size-variant state layers too. The
+    // inverse ratchet below keeps these fixes from silently regressing.
     // Flutter gained reporting in #12022 and exposed these pre-existing
     // control-decoration and typography losses. The inverse-ratchet test
     // below requires every pin to be removed when the emitter learns it.
@@ -158,6 +131,7 @@ fn is_allowed(backend: Backend, component: &str, code: &str) -> bool {
 
 #[test]
 fn toolkit_atoms_are_native_complete_or_explicitly_tracked() {
+    let mut failures = Vec::new();
     for backend in [
         Backend::Xaml,
         Backend::SwiftUI,
@@ -183,11 +157,12 @@ fn toolkit_atoms_are_native_complete_or_explicitly_tracked() {
             .iter()
             .filter(|d| !is_allowed(backend, &d.component, &d.code))
             .collect();
-        assert!(
-            unexpected.is_empty(),
-            "{backend:?}: untracked degradation(s) — either fix them, or add an \
-             allowlist entry in this file pointing at a tracking issue: {unexpected:#?}"
-        );
+        if !unexpected.is_empty() {
+            failures.push(format!(
+                "{backend:?}: untracked degradation(s) — either fix them, or add an \
+                 allowlist entry in this file pointing at a tracking issue: {unexpected:#?}"
+            ));
+        }
 
         // The toolkit was never "clean" here — until #12022 reporting reached a
         // backend, that backend said nothing, and silence read as cleanliness.
@@ -206,13 +181,19 @@ fn toolkit_atoms_are_native_complete_or_explicitly_tracked() {
                     .is_none_or(|p| !is_allowed_style_drop(backend, p))
             })
             .collect();
-        assert!(
-            unexpected_drops.is_empty(),
-            "{backend:?}: style properties were dropped that this test's allowlist \
-             doesn't expect — either fix them, or add an entry pointing at a \
-             tracking issue: {unexpected_drops:#?}"
-        );
+        if !unexpected_drops.is_empty() {
+            failures.push(format!(
+                "{backend:?}: style properties were dropped that this test's allowlist \
+                 doesn't expect — either fix them, or add an entry pointing at a \
+                 tracking issue: {unexpected_drops:#?}"
+            ));
+        }
     }
+    assert!(
+        failures.is_empty(),
+        "toolkit native-completeness failures across all backends:\n\n{}",
+        failures.join("\n\n")
+    );
 }
 
 /// Every allowed degradation is still a degradation.

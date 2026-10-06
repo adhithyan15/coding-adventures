@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "Wedding, Husband or wife, Parent, Grandson, Granddaughter",
+  "label": "ch:la-wedding-husband-or-wife-parent-grandson-granddaughter",
+  "canDo": "I can say a wedding, a husband or wife, a parent, a grandson and a granddaughter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C273-neptis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can say a wedding, a husband or wife, a parent, a grandson and a granddaughter.",
+    "assesses": [
+      "LA-LEX-C273-RES273-03",
+      "LA-LEX-C273-RES273-04",
+      "LA-LEX-C273-RES273-05"
+    ]
+  }
+}

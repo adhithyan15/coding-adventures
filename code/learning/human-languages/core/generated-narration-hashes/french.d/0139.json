@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:bc0cf19b25a2882d",
+  "lessonIds": [
+    "FR-C139-rien",
+    "FR-C139-aucun",
+    "FR-C139-non-plus",
+    "FR-C139-lequel",
+    "FR-C139-nimporte-quoi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch139.txt",
+  "json": "french/narration/ch139.json",
+  "textHash": "fnv1a64:5a1cf3b1aab21ca5",
+  "jsonHash": "fnv1a64:b91f9712b3ff9750",
+  "findings": []
+}

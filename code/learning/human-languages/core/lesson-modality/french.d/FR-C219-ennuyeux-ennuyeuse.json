@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C219-ennuyeux-ennuyeuse",
+    "language": "french",
+    "chapter": 219,
+    "sequence": 12200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c43ea2fb2e20582a"
+  },
+  "findings": []
+}

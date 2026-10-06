@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:2e650f10d0699ae8",
+  "lessonIds": [
+    "IT-C248-temperatura",
+    "IT-C248-mosca",
+    "IT-C248-zanzara",
+    "IT-C248-societa",
+    "IT-C248-governo"
+  ],
+  "tex": "italian/book/chapters/ch248-temperature-fly-mosquito-society-government.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C224-nipote",
+  "pathSegment": "IT-PATH-224-COSE224",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-224-COSE224",
+      "order": 4
+    }
+  ]
+}

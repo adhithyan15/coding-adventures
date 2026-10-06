@@ -3,5 +3,5 @@
   "version": 1,
   "package": "python/barcode-layout-1d",
   "capabilities": [],
-  "justification": "Pure 1D barcode layout and paint-scene generation. No filesystem, network, process, or environment access needed."
+  "justification": "Pure integer barcode layout and rectangle projection. Production code performs no filesystem, network, process, environment, font, shaping, clock, entropy, console, or credential access."
 }

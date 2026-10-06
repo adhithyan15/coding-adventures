@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:cf0801f19a8b2179",
+  "lessonIds": [
+    "RU-C159-veshch",
+    "RU-C159-predmet",
+    "RU-C159-mebel",
+    "RU-C159-kreslo",
+    "RU-C159-komod"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch159.txt",
+  "json": "russian/narration/ch159.json",
+  "textHash": "fnv1a64:d9a4a2d34a947aa5",
+  "jsonHash": "fnv1a64:0e6225c06bee45a6",
+  "findings": []
+}

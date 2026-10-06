@@ -1,0 +1,19 @@
+{
+  "chapter": 265,
+  "title": "A kite, A swing, A curtain, A cotton rug, A carpet",
+  "label": "ch:hi-a-kite-a-swing-a-curtain-a-cotton-rug-a-carpet",
+  "canDo": "I can say a kite, a swing, a curtain, a cotton rug and a carpet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C265-qalin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 265: I can say a kite, a swing, a curtain, a cotton rug and a carpet.",
+    "assesses": [
+      "HI-LEX-C265-THG265-03",
+      "HI-LEX-C265-THG265-04",
+      "HI-LEX-C265-THG265-05"
+    ]
+  }
+}

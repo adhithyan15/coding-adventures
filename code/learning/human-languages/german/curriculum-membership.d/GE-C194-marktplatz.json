@@ -1,0 +1,11 @@
+{
+  "id": "GE-C194-marktplatz",
+  "pathSegment": "GE-PATH-194-THING194",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-194-THING194",
+      "order": 4
+    }
+  ]
+}

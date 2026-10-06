@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-186-VASTU186",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a message, an email, a pencil, a file and a document.",
+  "prerequisites": []
+}

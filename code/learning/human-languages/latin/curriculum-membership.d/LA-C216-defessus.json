@@ -1,0 +1,11 @@
+{
+  "id": "LA-C216-defessus",
+  "pathSegment": "LA-PATH-216-QUAL216",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-216-QUAL216",
+      "order": 3
+    }
+  ]
+}

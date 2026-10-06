@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-187-VASTUVU187",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a bee, a lizard, an insect, a sparrow and a koel.",
+  "prerequisites": []
+}

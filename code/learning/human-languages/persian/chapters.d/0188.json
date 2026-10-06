@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "To note down, To pronounce, To spell, To swing, To install",
+  "label": "ch:fa-to-note-down-to-pronounce-to-spell-to-swing-to-install",
+  "canDo": "I can say to note down, to pronounce, to spell, to swing and to install.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C188-nasb-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say to note down, to pronounce, to spell, to swing and to install.",
+    "assesses": [
+      "FA-LEX-C188-KONESH188-03",
+      "FA-LEX-C188-KONESH188-04",
+      "FA-LEX-C188-KONESH188-05"
+    ]
+  }
+}

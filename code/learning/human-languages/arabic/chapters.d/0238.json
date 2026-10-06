@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "Like, Completely, Of course, Almost, Especially",
+  "label": "ch:ar-like-completely-of-course-almost-especially",
+  "canDo": "I can say like, completely, of course, almost and especially.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-C238-khususan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say like, completely, of course, almost and especially.",
+    "assesses": [
+      "AR-LEX-C238-SABAB238-03",
+      "AR-LEX-C238-SABAB238-04",
+      "AR-LEX-C238-SABAB238-05"
+    ]
+  }
+}

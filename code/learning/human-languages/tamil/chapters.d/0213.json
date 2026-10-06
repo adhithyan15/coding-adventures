@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "Cupboard, Electricity, Rubbish, Toothpaste, Toothbrush",
+  "label": "ch:ta-cupboard-electricity-rubbish-toothpaste-toothbrush",
+  "canDo": "I can say a cupboard, electricity, rubbish, toothpaste and a toothbrush.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C213-paltulakki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say a cupboard, electricity, rubbish, toothpaste and a toothbrush.",
+    "assesses": [
+      "TA-LEX-C213-PORUL213-03",
+      "TA-LEX-C213-PORUL213-04",
+      "TA-LEX-C213-PORUL213-05"
+    ]
+  }
+}

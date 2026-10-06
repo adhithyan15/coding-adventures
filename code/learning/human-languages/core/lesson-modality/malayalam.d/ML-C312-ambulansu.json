@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C312-ambulansu",
+    "language": "malayalam",
+    "chapter": 312,
+    "sequence": 14750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:53a814caf147d451"
+  },
+  "findings": []
+}

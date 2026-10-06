@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "Dry cleaner's, Counter, Cashier, Invoice, Cash machine",
+  "label": "ch:fa-dry-cleaner-s-counter-cashier-invoice-cash-machine",
+  "canDo": "I can say a dry cleaner's, a counter, a cashier, an invoice and a cash machine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-R286-second-pass-words-from-chapters-283-286",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can say a dry cleaner's, a counter, a cashier, an invoice and a cash machine.",
+    "assesses": [
+      "FA-LEX-C286-KAR286-03",
+      "FA-LEX-C286-KAR286-04",
+      "FA-LEX-C286-KAR286-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "To suggest, To give back, To refuse, To take a risk, To solve",
+  "label": "ch:mr-to-suggest-to-give-back-to-refuse-to-take-a-risk-to-solve",
+  "canDo": "I can say to suggest, to give back, to refuse, to take a risk and to solve.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C226-sodavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say to suggest, to give back, to refuse, to take a risk and to solve.",
+    "assesses": [
+      "MR-LEX-C226-ACT226-03",
+      "MR-LEX-C226-ACT226-04",
+      "MR-LEX-C226-ACT226-05"
+    ]
+  }
+}

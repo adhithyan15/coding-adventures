@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C511-tratar",
+    "language": "spanish",
+    "chapter": 511,
+    "sequence": 15130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:288fadd646f04243"
+  },
+  "findings": []
+}

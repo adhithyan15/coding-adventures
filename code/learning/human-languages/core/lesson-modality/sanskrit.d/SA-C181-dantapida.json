@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C181-dantapida",
+    "language": "sanskrit",
+    "chapter": 181,
+    "sequence": 9830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa6def9b246a6f8f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:d1e49cb3f780dca1",
+  "lessonIds": [
+    "ES-C509-planear",
+    "ES-C509-desear",
+    "ES-C509-meta",
+    "ES-C509-esperanza",
+    "ES-C509-acuerdo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch509.txt",
+  "json": "spanish/narration/ch509.json",
+  "textHash": "fnv1a64:47abaec7c9fb9ea3",
+  "jsonHash": "fnv1a64:befde96d2ef35743",
+  "findings": []
+}

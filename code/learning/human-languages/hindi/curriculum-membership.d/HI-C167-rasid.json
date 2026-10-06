@@ -1,0 +1,11 @@
+{
+  "id": "HI-C167-rasid",
+  "pathSegment": "HI-PATH-167-READ167",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-167-READ167",
+      "order": 4
+    }
+  ]
+}

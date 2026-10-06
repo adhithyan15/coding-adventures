@@ -1,0 +1,11 @@
+{
+  "id": "TE-C300-cetirumalu",
+  "pathSegment": "TE-PATH-300-VASTUVU300",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-300-VASTUVU300",
+      "order": 4
+    }
+  ]
+}

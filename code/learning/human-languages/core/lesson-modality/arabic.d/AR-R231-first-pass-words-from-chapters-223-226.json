@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R231-first-pass-words-from-chapters-223-226",
+    "language": "arabic",
+    "chapter": 231,
+    "sequence": 12580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:912697a34ff5304f"
+  },
+  "findings": []
+}

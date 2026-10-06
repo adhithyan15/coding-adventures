@@ -1,0 +1,11 @@
+{
+  "id": "TE-C297-curukaina",
+  "pathSegment": "TE-PATH-297-GUNAM297",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-297-GUNAM297",
+      "order": 2
+    }
+  ]
+}

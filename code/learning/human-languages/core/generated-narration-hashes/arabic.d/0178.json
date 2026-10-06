@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:ecea80b7dd2f2fd2",
+  "lessonIds": [
+    "AR-C178-rasmi",
+    "AR-C178-khass",
+    "AR-C178-mustajil",
+    "AR-C178-wadih",
+    "AR-C178-mujtahid"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch178.txt",
+  "json": "arabic/narration/ch178.json",
+  "textHash": "fnv1a64:61f46c3fc82b8573",
+  "jsonHash": "fnv1a64:58c5362976425999",
+  "findings": []
+}

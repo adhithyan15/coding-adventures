@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "Clove, Cardamom, Cinnamon, Black pepper, Vinegar",
+  "label": "ch:ur-clove-cardamom-cinnamon-black-pepper-vinegar",
+  "canDo": "I can say a clove, cardamom, cinnamon, black pepper and vinegar.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C207-sirka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say a clove, cardamom, cinnamon, black pepper and vinegar.",
+    "assesses": [
+      "UR-LEX-C207-CHIZ207-03",
+      "UR-LEX-C207-CHIZ207-04",
+      "UR-LEX-C207-CHIZ207-05"
+    ]
+  }
+}

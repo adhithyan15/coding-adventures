@@ -65,8 +65,6 @@ private func failedOutcome(_ message: String) -> [String: Any] {
 // the far end of all of it.
 private let maxImportBytes: Int = 256 * 1024 * 1024
 
-#if os(macOS)
-
 // The extensions the application sent, so the picker shows what this build can
 // actually read rather than a hardcoded guess that drifts from the engine.
 //
@@ -110,6 +108,59 @@ private func allowedExtensions(
   return accepted.isEmpty ? fallback.map(bare) : accepted
 }
 
+// The name an export is offered under: the payload's `suggestedName` reduced
+// to its last path component (a separator would otherwise open the dialog in
+// a different directory with only the basename visible), never `.` or `..`,
+// and `engram.apkg` when there is none. Shared by the macOS panel and the
+// iOS picker (UI89 §2.6).
+private func suggestedExportName(_ payload: Any) -> String {
+  var suggested = ((payload as? [String: Any])?["suggestedName"] as? String)
+    .map { ($0 as NSString).lastPathComponent } ?? ""
+  if suggested == "." || suggested == ".." {
+    suggested = ""
+  }
+  return suggested.isEmpty ? "engram.apkg" : suggested
+}
+
+// The package an export carries, decoded and checked, or the message to fail
+// with. Shared by the macOS panel and the iOS picker (UI89 §2.6).
+//
+// Strict decoding -- `options: []`, not `.ignoreUnknownCharacters`. Verified
+// rather than assumed: with `[]`, a bad character, embedded whitespace, a
+// newline and a truncated group all return nil, matching Qt's
+// `AbortOnBase64DecodingErrors`. Silently discarding a bad character would
+// write a corrupt `.apkg` that only fails later, inside Anki, where nothing
+// points back here.
+//
+// Then the zip local file header an `.apkg` begins with. Not "is it empty":
+// in strict mode the only input decoding to zero bytes is `""`, already
+// refused, but padding-only input -- `"===="` -- decodes SUCCESSFULLY to a
+// single zero byte (measured), which would otherwise be written out as a real
+// `.apkg` and reported `ok`. Four bytes are not a validity check, and are not
+// meant to be: the exporter cannot produce an entry-less archive --
+// `write_legacy_apkg` adds the collection before it finishes, so `PK 05 06` at
+// offset 0 is not reachable -- which is why this cannot reject a legitimate
+// export.
+private func decodedExportPackage(_ payload: Any) -> Result<Data, EngramExportRefusal> {
+  guard let encoded = (payload as? [String: Any])?["apkg"] as? String, !encoded.isEmpty else {
+    return .failure(EngramExportRefusal("the export carried no package"))
+  }
+  guard let decoded = Data(base64Encoded: encoded, options: []) else {
+    return .failure(EngramExportRefusal("the export package was not valid base64"))
+  }
+  guard decoded.count >= 4, decoded.prefix(4).elementsEqual([0x50, 0x4B, 0x03, 0x04]) else {
+    return .failure(EngramExportRefusal("the export package was not a valid Anki package"))
+  }
+  return .success(decoded)
+}
+
+private struct EngramExportRefusal: Error {
+  let message: String
+  init(_ message: String) { self.message = message }
+}
+
+#if os(macOS)
+
 private func applyFilter(_ panel: NSSavePanel, _ extensions: [String]) {
   if #available(macOS 11.0, *) {
     let types = extensions.compactMap { UTType(filenameExtension: $0) }
@@ -136,18 +187,9 @@ private func applyFilter(_ panel: NSSavePanel, _ extensions: [String]) {
 // runtime gates snapshot and restore on nothing being pending.
 @MainActor
 private func runExport(_ payload: Any) -> [String: Any] {
-  // Forced to a bare filename. A suggestion of `../.ssh/authorized_keys` would
-  // otherwise open the dialog in a different directory with only the basename
-  // visible. Nothing sends this key today; that is not a reason to trust it.
-  var suggested = ((payload as? [String: Any])?["suggestedName"] as? String)
-    .map { ($0 as NSString).lastPathComponent } ?? ""
-  if suggested == "." || suggested == ".." {
-    suggested = ""
-  }
-
   let panel = NSSavePanel()
   panel.title = "Export Anki package"
-  panel.nameFieldStringValue = suggested.isEmpty ? "engram.apkg" : suggested
+  panel.nameFieldStringValue = suggestedExportName(payload)
   applyFilter(panel, allowedExtensions(payload, "extensions", fallback: ["apkg"]))
 
   guard panel.runModal() == .OK, var url = panel.url else {
@@ -157,38 +199,10 @@ private func runExport(_ payload: Any) -> [String: Any] {
     url = url.appendingPathExtension("apkg")
   }
 
-  guard let encoded = (payload as? [String: Any])?["apkg"] as? String, !encoded.isEmpty else {
-    return failedOutcome("the export carried no package")
-  }
-  // Strict decoding -- `options: []`, not `.ignoreUnknownCharacters`. Verified
-  // rather than assumed: with `[]`, a bad character, embedded whitespace, a
-  // newline and a truncated group all return nil, matching Qt's
-  // `AbortOnBase64DecodingErrors`. Silently discarding a bad character would
-  // write a corrupt `.apkg` that only fails later, inside Anki, where nothing
-  // points back here.
-  guard let decoded = Data(base64Encoded: encoded, options: []) else {
-    return failedOutcome("the export package was not valid base64")
-  }
-  // Not "is it empty" -- that guard was redundant, and its first version of
-  // this comment was wrong about why. In strict mode the only input decoding to
-  // zero bytes is `""`, which `!encoded.isEmpty` above already rejects.
-  //
-  // The case that actually slips through is padding-only input: `"===="`
-  // decodes SUCCESSFULLY to a single zero byte (measured), so it clears both a
-  // nil check and an empty check and gets written out as a real `.apkg`,
-  // reported `ok`. The person then hands Anki a file it cannot open, with
-  // nothing pointing back here -- which is the same argument the strict-decode
-  // guard above already makes for itself.
-  //
-  // So check it begins a zip local file header, which is what an `.apkg` does.
-  // Cheap and unambiguous, and it rejects payloads that are not archives at all
-  // rather than the one degenerate shape that happened to be enumerated. It is
-  // not a validity check: four bytes and nothing after them still pass. The
-  // exporter cannot produce an entry-less archive -- `write_legacy_apkg` adds
-  // the collection before it finishes, so `PK 05 06` at offset 0 is not
-  // reachable -- which is why this cannot reject a legitimate export.
-  guard decoded.count >= 4, decoded.prefix(4).elementsEqual([0x50, 0x4B, 0x03, 0x04]) else {
-    return failedOutcome("the export package was not a valid Anki package")
+  let decoded: Data
+  switch decodedExportPackage(payload) {
+  case .success(let package): decoded = package
+  case .failure(let refusal): return failedOutcome(refusal.message)
   }
 
   do {
@@ -323,13 +337,58 @@ func installEngramEffects(_ host: MosaicRuntimeHost) {
       break
     }
     #else
-    // Not left to the sweep, because these are kinds this host DOES know and
-    // simply cannot serve here: the modal panels are AppKit-only, and the iOS
-    // document picker would need a presenting view controller this file has no
-    // handle on. Saying so beats a generic "unanswered".
+    // No AppKit panels here. On iOS the platform library lends its document
+    // picker (UI89 §2.6): its router -- the one that passed this kind on --
+    // defers the effect, keeps the one-file-operation rule, reads or writes
+    // off the main queue and answers exactly once. So this handler neither
+    // defers nor answers once it has handed a request over.
     switch kind {
     case "importAnki", "exportAnki":
-      _ = host.completeEffect(id, failedOutcome("file dialogs are not available on this platform"))
+      // No router (the library was never installed on this host) or no
+      // picker on this OS: these are kinds this host DOES know and cannot
+      // serve, and saying so beats a generic "unanswered".
+      guard let router = mosaicPlatformRouter(for: host) else {
+        _ = host.completeEffect(id, failedOutcome("file dialogs are not available on this platform"))
+        return
+      }
+      if kind == "importAnki" {
+        let accept = MosaicAccept(
+          mimeTypes: [],
+          extensions: allowedExtensions(payload, "accept", fallback: ["apkg", "colpkg"])
+            .map { $0.lowercased() })
+        // The application decodes and merges; the host's whole job is the
+        // bytes, bounded by what the engine will accept.
+        router.openForApp(id, accept: accept, limit: maxImportBytes) { _, bytes in
+          ["apkg": bytes.base64EncodedString()]
+        }
+      } else {
+        let package: Data
+        switch decodedExportPackage(payload) {
+        case .success(let decoded): package = decoded
+        case .failure(let refusal):
+          _ = host.completeEffect(id, failedOutcome(refusal.message))
+          return
+        }
+        // Always `.apkg` here, not the payload's list: an export IS an Anki
+        // package, and a fixed list leaves nothing for a payload to widen.
+        // The picker cannot add an extension the way the macOS panel's
+        // `appendingPathExtension` does, and the library refuses a name whose
+        // extension is not an accepted one, so supply it here.
+        var name = suggestedExportName(payload)
+        if (name as NSString).pathExtension.lowercased() != "apkg" {
+          name += ".apkg"
+        }
+        // Only a suggestion: one the library would refuse (`.hidden`, `CON`,
+        // a colon) falls back to the default rather than failing the export,
+        // as the macOS panel would simply show it for editing.
+        if !mosaicIsPlainFileName(name) || mosaicIsReservedDeviceName(name) {
+          name = "engram.apkg"
+        }
+        router.saveForApp(
+          id, suggestedName: name, bytes: package,
+          accept: MosaicAccept(mimeTypes: [], extensions: ["apkg"])
+        ) { _ in [:] }
+      }
     default:
       break
     }

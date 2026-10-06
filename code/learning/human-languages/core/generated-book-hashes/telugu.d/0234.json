@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:3618852b7c8a262f",
+  "lessonIds": [
+    "TE-C234-kuppa",
+    "TE-C234-eruvu",
+    "TE-C234-peda",
+    "TE-C234-nagali",
+    "TE-C234-kodavali",
+    "TE-R234-first-pass-words-from-chapters-226-229",
+    "TE-R234-second-pass-words-from-chapters-230-234"
+  ],
+  "tex": "telugu/book/chapters/ch234-heap-fertilizer-cow-dung-plough-sickle.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C203-tittu",
+    "language": "telugu",
+    "chapter": 203,
+    "sequence": 9240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a89c49c2449400f3"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C206-kottu",
+    "language": "telugu",
+    "chapter": 206,
+    "sequence": 9430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3b440a99824d5b2"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C176-amantrayati",
+  "pathSegment": "SA-PATH-176-ACT176",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-176-ACT176",
+      "order": 2
+    }
+  ]
+}

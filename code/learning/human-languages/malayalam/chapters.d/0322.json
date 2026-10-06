@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "Biryani, Chapati, Parotta, Tapioca, Chutney",
+  "label": "ch:ml-biryani-chapati-parotta-tapioca-chutney",
+  "canDo": "I can say biryani, a chapati, a parotta, tapioca and a chutney.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C322-cammanti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can say biryani, a chapati, a parotta, tapioca and a chutney.",
+    "assesses": [
+      "ML-LEX-C322-VASTU322-03",
+      "ML-LEX-C322-VASTU322-04",
+      "ML-LEX-C322-VASTU322-05"
+    ]
+  }
+}

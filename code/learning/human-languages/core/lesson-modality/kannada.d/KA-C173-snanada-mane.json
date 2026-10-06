@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C173-snanada-mane",
+    "language": "kannada",
+    "chapter": 173,
+    "sequence": 7790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49b16c2902a12477"
+  },
+  "findings": []
+}

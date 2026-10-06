@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:31d2d710f8384cd5",
+  "lessonIds": [
+    "LA-C214-saevus",
+    "LA-C214-ferus",
+    "LA-C214-domesticus",
+    "LA-C214-rarus",
+    "LA-C214-creber",
+    "LA-R214-first-pass-words-from-chapters-206-209",
+    "LA-R214-second-pass-words-from-chapters-210-214"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch214.txt",
+  "json": "latin/narration/ch214.json",
+  "textHash": "fnv1a64:368bf4ee1160c98d",
+  "jsonHash": "fnv1a64:f0dfa02b04c1c534",
+  "findings": []
+}

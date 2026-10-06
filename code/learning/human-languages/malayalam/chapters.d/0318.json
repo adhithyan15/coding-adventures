@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "Failure, Evidence, Thought, Memory, Suggestion",
+  "label": "ch:ml-failure-evidence-thought-memory-suggestion",
+  "canDo": "I can say failure, evidence, a thought, a memory and a suggestion.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ML-C318-nirddesam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can say failure, evidence, a thought, a memory and a suggestion.",
+    "assesses": [
+      "ML-LEX-C318-KARANAM318-03",
+      "ML-LEX-C318-KARANAM318-04",
+      "ML-LEX-C318-KARANAM318-05"
+    ]
+  }
+}

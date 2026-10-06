@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:4321cc03a5f8586b",
+  "lessonIds": [
+    "FA-C272-rostgu",
+    "FA-C272-porru",
+    "FA-C272-hasas",
+    "FA-C272-surati",
+    "FA-C272-tarik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch272.txt",
+  "json": "persian/narration/ch272.json",
+  "textHash": "fnv1a64:474731d6c5aaed6d",
+  "jsonHash": "fnv1a64:997c9343d5dde5ac",
+  "findings": []
+}

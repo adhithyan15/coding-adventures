@@ -1,0 +1,11 @@
+{
+  "id": "RU-R139-first-pass-saying-no-and-looking-back",
+  "pathSegment": "RU-PATH-139-CHT139",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-139-CHT139",
+      "order": 5
+    }
+  ]
+}

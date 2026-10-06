@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "Illness, Head cold, Cough, Headache, Stomach ache",
+  "label": "ch:ur-illness-head-cold-cough-headache-stomach-ache",
+  "canDo": "I can say an illness, a head cold, a cough, a headache and a stomach ache.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C152-pet-dard",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: I can say an illness, a head cold, a cough, a headache and a stomach ache.",
+    "assesses": [
+      "UR-LEX-C152-SEHAT152-03",
+      "UR-LEX-C152-SEHAT152-04",
+      "UR-LEX-C152-SEHAT152-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:67a5dc684a32ef35",
+  "lessonIds": [
+    "KA-C243-gurutisu",
+    "KA-C243-uccarisu",
+    "KA-C243-kudisu",
+    "KA-C243-nibhayisu",
+    "KA-C243-alladisu",
+    "KA-R243-first-pass-words-from-chapters-235-238",
+    "KA-R243-second-pass-words-from-chapters-239-243"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch243.txt",
+  "json": "kannada/narration/ch243.json",
+  "textHash": "fnv1a64:54911fa45cc409a3",
+  "jsonHash": "fnv1a64:662fb4907a61b6ef",
+  "findings": []
+}

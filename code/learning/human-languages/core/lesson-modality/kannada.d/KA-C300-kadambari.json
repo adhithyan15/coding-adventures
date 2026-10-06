@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C300-kadambari",
+    "language": "kannada",
+    "chapter": 300,
+    "sequence": 14510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db493ba921daead0"
+  },
+  "findings": []
+}

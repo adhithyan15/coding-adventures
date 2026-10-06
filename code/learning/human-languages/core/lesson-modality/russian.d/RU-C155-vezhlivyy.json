@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C155-vezhlivyy",
+    "language": "russian",
+    "chapter": 155,
+    "sequence": 8440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac03f5dfef326dcc"
+  },
+  "findings": []
+}

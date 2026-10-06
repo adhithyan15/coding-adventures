@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C198-passazhir",
+    "language": "russian",
+    "chapter": 198,
+    "sequence": 11470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0823fd5b6615e150"
+  },
+  "findings": []
+}

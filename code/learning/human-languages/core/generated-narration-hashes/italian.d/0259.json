@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:cf003c3b8dcbae3c",
+  "lessonIds": [
+    "IT-C259-universita",
+    "IT-C259-voto",
+    "IT-C259-insegnante",
+    "IT-C259-errore",
+    "IT-C259-storia",
+    "IT-R259-first-pass-words-from-chapters-251-254",
+    "IT-R259-second-pass-words-from-chapters-255-259"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch259.txt",
+  "json": "italian/narration/ch259.json",
+  "textHash": "fnv1a64:e5c0d5c933fb1e27",
+  "jsonHash": "fnv1a64:82d132bcb6354467",
+  "findings": []
+}

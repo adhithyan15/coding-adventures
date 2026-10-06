@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "To paint, To share, To talk on the phone, To separate, To cross",
+  "label": "ch:ge-to-paint-to-share-to-talk-on-the-phone-to-separate-to-cross",
+  "canDo": "I can say to paint, to share, to talk on the phone, to separate and to cross.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C188-ueberqueren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say to paint, to share, to talk on the phone, to separate and to cross.",
+    "assesses": [
+      "GE-LEX-C188-VERB188-03",
+      "GE-LEX-C188-VERB188-04",
+      "GE-LEX-C188-VERB188-05"
+    ]
+  }
+}

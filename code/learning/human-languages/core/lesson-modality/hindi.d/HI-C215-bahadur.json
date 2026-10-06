@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C215-bahadur",
+    "language": "hindi",
+    "chapter": 215,
+    "sequence": 11020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9038c4978ab348f"
+  },
+  "findings": []
+}

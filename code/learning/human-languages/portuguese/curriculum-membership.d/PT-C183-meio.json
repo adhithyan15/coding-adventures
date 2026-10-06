@@ -1,0 +1,11 @@
+{
+  "id": "PT-C183-meio",
+  "pathSegment": "PT-PATH-183-LUGAR183",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-183-LUGAR183",
+      "order": 4
+    }
+  ]
+}

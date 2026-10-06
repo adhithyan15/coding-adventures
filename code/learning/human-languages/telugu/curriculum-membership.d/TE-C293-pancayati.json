@@ -1,0 +1,11 @@
+{
+  "id": "TE-C293-pancayati",
+  "pathSegment": "TE-PATH-293-STHALAM293",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-293-STHALAM293",
+      "order": 3
+    }
+  ]
+}

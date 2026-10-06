@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C156-pustoy",
+    "language": "russian",
+    "chapter": 156,
+    "sequence": 8490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce2f57d05a199cd6"
+  },
+  "findings": []
+}

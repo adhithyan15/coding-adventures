@@ -81,7 +81,7 @@ The letters in this word.
 The word, taken apart.
 করা (kôrā, "to do, to make") is from Sanskrit √kṛ ("to do"), from PIE kʷer- — the same root you met in Chapter 1's নমস্কার (nômoshkar = namas + kāra, "the making of a bow") and in karma. And কাজ (kāj, "work") is itself from Sanskrit kārya ("work, task," also from √kṛ) — so "work- do" is, at root, "kṛ-thing kṛ-do." Like Hindi, Bengali builds compound verbs as noun + করা:
 কাজ করা (kāj kôrā) = "work-do" = "to work".
-কথা বলা (kôthā bôlā) = "to converse" (using bôlā from earlier).
+kôthā bôlā = "to converse" (using bôlā from earlier).
 So āmi kāj kôri = "I work" — the -i "I" ending, no gender.
 
 Guided Practice.

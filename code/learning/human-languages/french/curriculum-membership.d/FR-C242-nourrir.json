@@ -1,0 +1,11 @@
+{
+  "id": "FR-C242-nourrir",
+  "pathSegment": "FR-PATH-242-VERBES242",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-242-VERBES242",
+      "order": 1
+    }
+  ]
+}

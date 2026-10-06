@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C235-surekh",
+    "language": "marathi",
+    "chapter": 235,
+    "sequence": 12990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b74d7ef9b2ede84"
+  },
+  "findings": []
+}

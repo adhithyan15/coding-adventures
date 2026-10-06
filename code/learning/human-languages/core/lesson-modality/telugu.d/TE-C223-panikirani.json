@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C223-panikirani",
+    "language": "telugu",
+    "chapter": 223,
+    "sequence": 10300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c99834fd18c1973"
+  },
+  "findings": []
+}

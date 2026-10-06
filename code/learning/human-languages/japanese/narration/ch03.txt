@@ -85,14 +85,14 @@ Write り. Short left, long right, gap between.
 Script — the shape.
 か (ka).
 Three strokes:
-a hooked left stroke — down, curving right at the foot into a small hook.
-a short vertical, crossing the first stroke near its top and falling to the right of it.
+a hooked stroke — across to the right, down the right side, and a small hook back to the left at the foot.
+a long falling stroke, crossing the first stroke left of its middle and falling away to the lower left.
 a short dot, up at the right, slanting down-right.
 Read ka: a clean k, then the short a of あ. One beat.
 Remember this shape more carefully than the others. You are about to get a second sign out of it for free — か (ka) is the base of が, and the difference between them is two small marks rather than a new character to learn.
 
 Guided Practice.
-[once you have stopped driving — write: か (ka) — hooked stroke, vertical, then the dot at the right]
+[once you have stopped driving — write: か (ka) — hooked stroke, falling stroke, then the dot at the right]
 [your turn — say: ka, one beat]
 [pause 8 seconds for the answer]
 
@@ -145,7 +145,7 @@ What do the two small marks of the dakuten do to a hiragana sign?
 
 
 Lesson 5 of 8.
-と (to) — two strokes, and they never meet.
+と (to) — two strokes, and the first ends on the second.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
 
@@ -155,14 +155,14 @@ Write が. Then say what the two ticks did to it.
 
 Script — the shape.
 と (to).
-Two strokes, and like り (ri) they stay apart:
+Two strokes, and unlike り (ri) they touch:
 a short stroke at the upper left, little more than a tick leaning down-right.
-a long sweeping stroke starting above and to the right of it, falling down and left, then curving out to the right at the bottom.
+a long sweeping stroke starting above and to the right of it, falling down and left past the end of the short stroke, then curving out to the right at the bottom.
 The second stroke does the work. It should look like a single confident sweep, not a corner — the change of direction is a curve, not a bend.
 Read to: a clean t, then the o of more, shortened. One beat.
 
 Guided Practice.
-[once you have stopped driving — write: と (to) — the small tick, then the long sweep. Do not join them.]
+[once you have stopped driving — write: と (to) — the small tick, then the long sweep, passing the tick's end.]
 [your turn — say: a, ri, ga, to — four beats, and the word is nearly yours]
 [pause 8 seconds for the answer]
 

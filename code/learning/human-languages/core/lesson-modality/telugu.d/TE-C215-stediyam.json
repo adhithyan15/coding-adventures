@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C215-stediyam",
+    "language": "telugu",
+    "chapter": 215,
+    "sequence": 9900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:750c28fd0410d231"
+  },
+  "findings": []
+}

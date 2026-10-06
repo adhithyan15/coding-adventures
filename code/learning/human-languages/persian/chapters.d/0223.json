@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "To rescue, To hide, To explain, To carry, To move",
+  "label": "ch:fa-to-rescue-to-hide-to-explain-to-carry-to-move",
+  "canDo": "I can say to rescue, to hide, to explain, to carry and to move.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C223-harakat-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say to rescue, to hide, to explain, to carry and to move.",
+    "assesses": [
+      "FA-LEX-C223-KONESH223-03",
+      "FA-LEX-C223-KONESH223-04",
+      "FA-LEX-C223-KONESH223-05"
+    ]
+  }
+}

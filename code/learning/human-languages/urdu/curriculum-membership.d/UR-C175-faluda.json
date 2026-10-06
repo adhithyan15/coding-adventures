@@ -1,0 +1,11 @@
+{
+  "id": "UR-C175-faluda",
+  "pathSegment": "UR-PATH-175-CHIZ175",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-175-CHIZ175",
+      "order": 1
+    }
+  ]
+}

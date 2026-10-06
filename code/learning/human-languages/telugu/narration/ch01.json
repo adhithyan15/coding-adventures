@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6fae855e79445ced",
+  "sourceHash": "fnv1a64:42dd7035e6f84b16",
   "lessons": [
     {
       "id": "TE-C01-namaskaram",
@@ -418,7 +418,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:76c234ad3ed84e05",
+      "sourceHash": "fnv1a64:51ef8d307c5b64b0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -483,15 +483,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: మ — copy what you see",
+          "title": "Writing: మ — seven calm movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on మ (ma) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left around the upper-left arch. Movements 2 and 3 turn right around the two lower bowls. Movement 4 rises around the central shoulder. Lift for movement 5, the separate flourish above. Movement 6 turns around the lower-right bowl, and movement 7 rises around the outer-right shoulder."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the seven clear movements instead of rushing their joins."
             }
           ]
         },
@@ -573,7 +573,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:42a924478114327b",
+      "sourceHash": "fnv1a64:c8105c05e5dc72f0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -640,15 +640,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ధ — copy what you see",
+          "title": "Writing: ధ — six deliberate movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ధ (dha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movements 1–4 build the round body in four short curves: upper left, lower left, lower right, then upper right. Lift between each curve. Movement 5 adds the rising top flourish. Lift once more for movement 6, the short lower stem."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so preserve the six clear movements rather than trying to join the gaps."
             }
           ]
         },
@@ -1574,7 +1574,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8bfe2cabbf99297d",
+      "sourceHash": "fnv1a64:f360fe6f99911f2f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1637,7 +1637,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "సరే (sarē) is native Dravidian \"correct, right becomes okay, agreed\" — the verbal nod of Telugu. It is the same family word as Tamil and Kannada సరి/ಸರಿ/சரி (sari), worn to sarē in Telugu. Say it once to agree; say sarē sarē to mean \"yes yes, fine, enough.\""
+              "text": "సరే (sarē) is native Dravidian \"correct, right becomes okay, agreed\" — the verbal nod of Telugu. It is the same family word as Kannada ಸರಿ and Tamil சரி (sari), worn to sarē in Telugu. Say it once to agree; say sarē sarē to mean \"yes yes, fine, enough.\""
             }
           ]
         },

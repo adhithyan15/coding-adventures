@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Firm, Company, Colleague, Salary, Meeting",
+  "label": "ch:it-firm-company-colleague-salary-meeting",
+  "canDo": "I can say a firm, a company, a colleague, a salary and a meeting.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C172-riunione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say a firm, a company, a colleague, a salary and a meeting.",
+    "assesses": [
+      "IT-LEX-C172-LAV172-03",
+      "IT-LEX-C172-LAV172-04",
+      "IT-LEX-C172-LAV172-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C263-pansari",
+    "language": "urdu",
+    "chapter": 263,
+    "sequence": 16020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6302e25638506e3"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:19acc4006e449b8b",
+  "lessonIds": [
+    "RU-C246-mikrovolnovka",
+    "RU-C246-chaynik",
+    "RU-C246-miska",
+    "RU-C246-blyudtse",
+    "RU-C246-kruzhka"
+  ],
+  "tex": "russian/book/chapters/ch246-microwave-kettle-bowl-saucer-mug.tex"
+}

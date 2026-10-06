@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C180-golovnaya-bol",
+    "language": "russian",
+    "chapter": 180,
+    "sequence": 10190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb501132d5e5a815"
+  },
+  "findings": []
+}

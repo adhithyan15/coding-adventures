@@ -1,0 +1,11 @@
+{
+  "id": "FA-C222-pars-kardan",
+  "pathSegment": "FA-PATH-222-KONESH222",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-222-KONESH222",
+      "order": 1
+    }
+  ]
+}

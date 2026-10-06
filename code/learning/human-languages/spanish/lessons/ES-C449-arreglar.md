@@ -7,7 +7,7 @@ chapter: 449
 type: word
 headword: arreglar
 gloss: to fix, to sort out — putting a thing back to the straight edge it came off
-concept_tag: ES-FIX-ARREGLAR
+concept_tag: ES-VERB-ARREGLAR
 prerequisites: [ES-C448-sintesis-mudanza, ES-C396-reparar, ES-C04-regular]
 sounds: [rolled-rr, stress-final]
 roots: [regula-latin]

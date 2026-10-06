@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C256-muzykant",
+    "language": "russian",
+    "chapter": 256,
+    "sequence": 15790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:866a50432c4e5ba4"
+  },
+  "findings": []
+}

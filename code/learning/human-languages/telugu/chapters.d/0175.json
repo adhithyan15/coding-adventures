@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "Crowd, World, Earthquake, Dust, Smoke",
+  "label": "ch:te-crowd-world-earthquake-dust-smoke",
+  "canDo": "I can say a crowd, the world, an earthquake, dust and smoke.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C175-poga",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say a crowd, the world, an earthquake, dust and smoke.",
+    "assesses": [
+      "TE-LEX-C175-STHALAM175-03",
+      "TE-LEX-C175-STHALAM175-04",
+      "TE-LEX-C175-STHALAM175-05"
+    ]
+  }
+}

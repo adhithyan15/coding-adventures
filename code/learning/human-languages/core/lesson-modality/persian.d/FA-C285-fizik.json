@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C285-fizik",
+    "language": "persian",
+    "chapter": 285,
+    "sequence": 14730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2df87ca1f01b73e3"
+  },
+  "findings": []
+}

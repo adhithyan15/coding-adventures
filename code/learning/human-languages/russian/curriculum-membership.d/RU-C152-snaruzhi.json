@@ -1,0 +1,11 @@
+{
+  "id": "RU-C152-snaruzhi",
+  "pathSegment": "RU-PATH-152-MESTO152",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-152-MESTO152",
+      "order": 3
+    }
+  ]
+}

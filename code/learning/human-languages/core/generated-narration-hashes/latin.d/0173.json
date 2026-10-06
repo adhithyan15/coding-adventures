@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:8cdacddc739103b0",
+  "lessonIds": [
+    "LA-C173-valetudo",
+    "LA-C173-cerebrum",
+    "LA-C173-pulmo",
+    "LA-C173-iecur",
+    "LA-C173-ren",
+    "LA-R173-first-pass-words-from-chapters-165-168",
+    "LA-R173-second-pass-words-from-chapters-169-173"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch173.txt",
+  "json": "latin/narration/ch173.json",
+  "textHash": "fnv1a64:918b566b9bad3979",
+  "jsonHash": "fnv1a64:6b05a28cd3d59db5",
+  "findings": []
+}

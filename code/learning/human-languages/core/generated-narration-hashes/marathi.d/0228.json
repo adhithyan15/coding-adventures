@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:626597e418f7726d",
+  "lessonIds": [
+    "MR-C228-kautuk-karne",
+    "MR-C228-pudhe-jane",
+    "MR-C228-mage-jane",
+    "MR-C228-bacav-karne",
+    "MR-C228-nahise-hone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch228.txt",
+  "json": "marathi/narration/ch228.json",
+  "textHash": "fnv1a64:004be3c0e9156c4b",
+  "jsonHash": "fnv1a64:b30d1d3a4d0e07a5",
+  "findings": []
+}

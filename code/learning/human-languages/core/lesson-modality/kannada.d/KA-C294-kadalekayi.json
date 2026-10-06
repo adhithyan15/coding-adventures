@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C294-kadalekayi",
+    "language": "kannada",
+    "chapter": 294,
+    "sequence": 14150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3be1e54399759d0c"
+  },
+  "findings": []
+}

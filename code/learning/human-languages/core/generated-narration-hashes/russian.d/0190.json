@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:3118bb88b27f4f72",
+  "lessonIds": [
+    "RU-C190-shtora",
+    "RU-C190-rakovina",
+    "RU-C190-kran",
+    "RU-C190-tualet",
+    "RU-C190-shampun",
+    "RU-R190-first-pass-words-from-chapters-182-185",
+    "RU-R190-second-pass-words-from-chapters-186-190"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch190.txt",
+  "json": "russian/narration/ch190.json",
+  "textHash": "fnv1a64:1f99122bb78259f5",
+  "jsonHash": "fnv1a64:f4f8ff144fd086b3",
+  "findings": []
+}

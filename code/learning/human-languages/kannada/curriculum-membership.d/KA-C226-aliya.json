@@ -1,0 +1,11 @@
+{
+  "id": "KA-C226-aliya",
+  "pathSegment": "KA-PATH-226-VASTU226",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-226-VASTU226",
+      "order": 3
+    }
+  ]
+}

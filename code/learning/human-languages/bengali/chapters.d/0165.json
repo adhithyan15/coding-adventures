@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "Raisin, Jam, Cake, Sandesh, Paratha",
+  "label": "ch:bn-raisin-jam-cake-sandesh-paratha",
+  "canDo": "I can say a raisin, jam, a cake, sandesh and a paratha.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-R165-second-pass-words-from-chapters-161-165",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say a raisin, jam, a cake, sandesh and a paratha.",
+    "assesses": [
+      "BN-LEX-C165-JINIS165-03",
+      "BN-LEX-C165-JINIS165-04",
+      "BN-LEX-C165-JINIS165-05"
+    ]
+  }
+}

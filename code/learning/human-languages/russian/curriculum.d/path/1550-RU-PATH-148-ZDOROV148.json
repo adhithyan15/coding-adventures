@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-148-ZDOROV148",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "RU-EXT-148-ZDOROV148"
+  ],
+  "after": []
+}

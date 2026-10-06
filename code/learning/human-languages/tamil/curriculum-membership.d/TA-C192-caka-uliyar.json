@@ -1,0 +1,11 @@
+{
+  "id": "TA-C192-caka-uliyar",
+  "pathSegment": "TA-PATH-192-VELAI192",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-192-VELAI192",
+      "order": 4
+    }
+  ]
+}

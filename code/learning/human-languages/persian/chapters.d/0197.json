@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "Condition, Law, Nevertheless, Although, Or",
+  "label": "ch:fa-condition-law-nevertheless-although-or",
+  "canDo": "I can say a condition, a law, nevertheless, although and or.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-C197-ya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say a condition, a law, nevertheless, although and or.",
+    "assesses": [
+      "FA-LEX-C197-CHERA197-03",
+      "FA-LEX-C197-CHERA197-04",
+      "FA-LEX-C197-CHERA197-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C215-orgulhoso-orgulhosa",
+  "pathSegment": "PT-PATH-215-QUAL215",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-215-QUAL215",
+      "order": 1
+    }
+  ]
+}

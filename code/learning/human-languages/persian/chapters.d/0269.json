@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "Only, Even, Completely, Exactly, Fortunately",
+  "label": "ch:fa-only-even-completely-exactly-fortunately",
+  "canDo": "I can say only, even, completely, exactly and fortunately.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-C269-khoshbakhtane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can say only, even, completely, exactly and fortunately.",
+    "assesses": [
+      "FA-LEX-C269-CHERA269-03",
+      "FA-LEX-C269-CHERA269-04",
+      "FA-LEX-C269-CHERA269-05"
+    ]
+  }
+}

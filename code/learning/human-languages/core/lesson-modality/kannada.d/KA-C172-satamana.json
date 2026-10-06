@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C172-satamana",
+    "language": "kannada",
+    "chapter": 172,
+    "sequence": 7760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:138b8393f10cd295"
+  },
+  "findings": []
+}

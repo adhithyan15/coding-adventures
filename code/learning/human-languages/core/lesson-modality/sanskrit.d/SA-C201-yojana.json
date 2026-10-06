@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C201-yojana",
+    "language": "sanskrit",
+    "chapter": 201,
+    "sequence": 11370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:613fe54380a0c3d4"
+  },
+  "findings": []
+}

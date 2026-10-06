@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:7bd0ffa2fa060f02",
+  "lessonIds": [
+    "ML-C324-rekha",
+    "ML-C324-sarttiphikkarru",
+    "ML-C324-pasporttu",
+    "ML-C324-visa",
+    "ML-C324-insuransu"
+  ],
+  "tex": "malayalam/book/chapters/ch324-document-certificate-passport-visa-insurance.tex"
+}

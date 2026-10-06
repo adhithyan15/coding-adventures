@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "War, Peace, Army, Soldier, Tradition",
+  "label": "ch:fr-war-peace-army-soldier-tradition",
+  "canDo": "I can say war, peace, an army, a soldier and a tradition.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C165-tradition",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say war, peace, an army, a soldier and a tradition.",
+    "assesses": [
+      "FR-LEX-C165-CHOSES165-03",
+      "FR-LEX-C165-CHOSES165-04",
+      "FR-LEX-C165-CHOSES165-05"
+    ]
+  }
+}

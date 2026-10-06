@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Duck, Owl, Whale, Cricket, Football",
+  "label": "ch:ur-duck-owl-whale-cricket-football",
+  "canDo": "I can say a duck, an owl, a whale, cricket and football.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C168-futbal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say a duck, an owl, a whale, cricket and football.",
+    "assesses": [
+      "UR-LEX-C168-CHIZ168-03",
+      "UR-LEX-C168-CHIZ168-04",
+      "UR-LEX-C168-CHIZ168-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:86354bfbd5a9f8af",
+  "lessonIds": [
+    "LA-C242-pauci",
+    "LA-C242-omnis",
+    "LA-C242-totus",
+    "LA-C242-ceteri",
+    "LA-C242-alius"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch242.txt",
+  "json": "latin/narration/ch242.json",
+  "textHash": "fnv1a64:5532b3a01e46b723",
+  "jsonHash": "fnv1a64:1210e239a6b718a3",
+  "findings": []
+}

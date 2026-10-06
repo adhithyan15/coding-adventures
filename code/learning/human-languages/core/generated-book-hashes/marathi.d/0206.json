@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:50fe55e46f2b71ff",
+  "lessonIds": [
+    "MR-C206-sarvajanik",
+    "MR-C206-khajgi",
+    "MR-C206-vaiyaktik",
+    "MR-C206-samanya",
+    "MR-C206-khas"
+  ],
+  "tex": "marathi/book/chapters/ch206-public-private-personal-ordinary-special.tex"
+}

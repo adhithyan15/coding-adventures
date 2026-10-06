@@ -1,0 +1,11 @@
+{
+  "id": "TE-C225-jidipappu",
+  "pathSegment": "TE-PATH-225-VASTUVU225",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-225-VASTUVU225",
+      "order": 4
+    }
+  ]
+}

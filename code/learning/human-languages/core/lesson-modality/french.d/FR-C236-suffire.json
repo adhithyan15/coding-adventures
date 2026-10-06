@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C236-suffire",
+    "language": "french",
+    "chapter": 236,
+    "sequence": 13540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d338fda88e249fe"
+  },
+  "findings": []
+}

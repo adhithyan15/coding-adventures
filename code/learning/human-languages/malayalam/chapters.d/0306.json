@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "To correct, To translate, To cancel, To postpone, To feel",
+  "label": "ch:ml-to-correct-to-translate-to-cancel-to-postpone-to-feel",
+  "canDo": "I can say to correct, to translate, to cancel, to postpone and to feel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C306-tonnuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can say to correct, to translate, to cancel, to postpone and to feel.",
+    "assesses": [
+      "ML-LEX-C306-KRIYA306-03",
+      "ML-LEX-C306-KRIYA306-04",
+      "ML-LEX-C306-KRIYA306-05"
+    ]
+  }
+}

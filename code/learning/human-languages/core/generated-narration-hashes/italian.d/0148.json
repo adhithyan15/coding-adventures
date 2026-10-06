@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:64173212d1120121",
+  "lessonIds": [
+    "IT-C148-tacere",
+    "IT-C148-temere",
+    "IT-C148-tentare",
+    "IT-C148-trascorrere",
+    "IT-C148-trasportare",
+    "IT-R148-first-pass-words-from-chapters-140-143",
+    "IT-R148-second-pass-words-from-chapters-144-148"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch148.txt",
+  "json": "italian/narration/ch148.json",
+  "textHash": "fnv1a64:3c6039b9b7e237a9",
+  "jsonHash": "fnv1a64:3d966d202e26fcd5",
+  "findings": []
+}

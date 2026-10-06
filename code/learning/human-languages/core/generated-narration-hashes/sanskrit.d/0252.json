@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:ea053d4d2dd76727",
+  "lessonIds": [
+    "SA-C252-valli",
+    "SA-C252-kantakah",
+    "SA-C252-kalika",
+    "SA-C252-mallika",
+    "SA-C252-tulasi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch252.txt",
+  "json": "sanskrit/narration/ch252.json",
+  "textHash": "fnv1a64:2c5f768b42d30401",
+  "jsonHash": "fnv1a64:81f9aba762d1abdd",
+  "findings": []
+}

@@ -1,5 +1,169 @@
 # Changelog
 
+## Chapters 503-511 — and Spanish attains A2
+
+```
+level gate, A2 vocabulary              1160 -> 1205 (target 1200)
+level gate, A2 verb vocabulary          256 -> 280
+level gate, attained                    A1 -> A2
+```
+
+Nine chapters of five words, all on `SPINE-READ-PRACTICAL-TEXTS`:
+
+- **503** getting fit: adelgazar, aguantar, el esfuerzo, la presión, paciente.
+- **504** the planet: reciclar, la contaminación, proteger, la fábrica, dañar.
+- **505** studying: la educación, asistir, la explicación, ensayar, el éxito.
+- **506** a birthday: regalar, envolver, el juguete, felicitar, abrazar.
+- **507** society: votar, el impuesto, la población, el habitante, el debate.
+- **508** qualities: increíble, independiente, conocido, actual, aceptable.
+- **509** plans: planear, desear, la meta, la esperanza, el acuerdo.
+- **510** people: disculparse, fiarse, pelear, odiar, sorprender.
+- **511** doing and seeming: parecer, mantener, tratar, realizar, soler.
+
+Twenty-four are verbs. The false friends (asistir, éxito, actual, realizar,
+fábrica) say so. Chapter 511 closes with two review lessons.
+
+With these, Spanish clears every A2 criterion of the level gate: all five A2
+spine nodes realized, 1,205 distinct headwords at or below A2 (target 1,200),
+280 verbs (target 120), and every atom revisited twice.
+`tests/level-gate-attainment/spanish.json` moves from A1 to A2, and Spanish is
+the twelfth track to reach A2.
+
+## Chapters 494-502 — mornings, the news, home, a life, sport, snacks, house rules, travel and talk
+
+```
+level gate, A2 vocabulary              1115 -> 1160 (target 1200)
+level gate, A2 verb vocabulary          226 -> 256
+```
+
+Nine chapters of five words, all on `SPINE-READ-PRACTICAL-TEXTS`:
+
+- **494** the morning: despertarse, arreglarse, bajar, encender, calentar.
+- **495** the news: la noticia, ocurrir, suceder, desaparecer, el ladrón.
+- **496** home: el hogar, la cerradura, colocar, quitar, llenar.
+- **497** a life: nacer, fallecer, heredar, cuidar, la amistad.
+- **498** sport: el campeonato, el deportista, competir, montar, dibujar.
+- **499** a snack: el bocadillo, el batido, añadir, apetecer, compartir.
+- **500** house rules: respetar, molestar, prohibir, la ley, la libertad.
+- **501** travel: el viajero, conducir, regresar, la señal, la fuente.
+- **502** talking: presentar, mencionar, charlar, el chiste, traducir.
+
+Thirty are verbs. Where Spain and Latin America differ (bocadillo, batido,
+apetecer, montar en bici, conducir) the note says so. Chapter 502 closes with
+two review lessons.
+
+## Chapters 485-493 — housework, the doctor, feelings, the town, work and opinions
+
+```
+level gate, A2 vocabulary              1070 -> 1115 (target 1200)
+level gate, A2 verb vocabulary          199 -> 226
+```
+
+Nine chapters of five words, all on `SPINE-READ-PRACTICAL-TEXTS`:
+
+- **485** housework: barrer, fregar, limpiar, secar, la basura.
+- **486** at the doctor's: afeitarse, toser, respirar, la aspirina, la vacuna.
+- **487** feelings: alegrarse, enfadarse, preocuparse, relajarse, divertirse.
+- **488** people: casarse, divorciarse, enamorarse, despedirse, saludar.
+- **489** the town: aparcar, el atasco, la gasolina, el ayuntamiento, el buzón.
+- **490** looking for work: el empleo, el sueldo, la entrevista, la huelga, el negocio.
+- **491** paying: el recibo, la oferta, el cajero, la cartera, la propina.
+- **492** trying: intentar, lograr, evitar, elegir, cumplir.
+- **493** opinions: opinar, convencer, insistir, sugerir, la duda.
+
+Twenty-seven are verbs, tagged `ES-VERB-*`. Where Spain and Latin America
+differ (aparcar or estacionar, enfadarse or enojarse) the note says so.
+Chapter 493 closes with two review lessons.
+
+## Chapters 475-484 — the 46 words the A2 mocks still needed, and four more
+
+```
+level gate, A2 vocabulary              1020 -> 1070 (target 1200)
+level gate, A2 verb vocabulary          177 -> 199  (target 120)
+A2 mock audit, objectiveFailed           48 -> 7
+A2 mock audit, missingObjectiveLexemes   51 -> 5
+```
+
+The A2 mock audit had named 46 words that are not a headword at or below A2:
+aburrido, acudir, adelantado, afirmar, ahorro, alquiler, alumno, calzado,
+cancelar, comprender, comunicar, concreto, costumbre, descartar, disponible,
+equipaje, error, espacio, finalidad, ganar, infancia, iniciativa, inscribirse,
+interrumpir, jardinero, justo, material, mejora, multa, obligatorio, parecido,
+practicar, prever, profesional, prometer, quejarse, recuperar, resolver,
+rápido, sitio, sustituir, trescientos, título, utilizar, variedad and vigilar.
+Ten chapters of five words teach all 46, plus aprovechar, apoyar, agradecer
+and ahorrar.
+
+- Every chapter sits on `SPINE-READ-PRACTICAL-TEXTS`, the A2 node chapters
+  431-474 use, so the words count at A2 and never enter the A1 taught set.
+- Each lesson gives the headword, its gloss, one short example sentence with
+  its English, and a usage note. Twenty-two of the fifty are verbs, tagged
+  `ES-VERB-*`.
+- Chapter 484 closes with two review lessons, so every new word comes back
+  twice.
+- The seven mock items still failing all turn on words that are taught but
+  derive above A2: explicar, problema, creer, mejor and responder. Those are
+  the open decisions in HL-C418, HL-C420 and HL-C422, not vocabulary to write.
+
+## Verb tags — 86 verbs taught at or below A2 are now tagged as verbs
+
+```
+level gate, A2 verb vocabulary         91 -> 177 (target 120)
+level gate, A2 blockers left           vocabulary 180
+```
+
+The level gate counts a headword as a verb when its concept tag names a verb
+(`VERB-*` or `ES-VERB-*`). HL23 had already called Spanish's low count
+"genuine tagging misses": many verbs were tagged by the chapter's topic rather
+than by what the word is. Eighty-six infinitive headwords taught at or below
+A2 carried tags such as `ES-ACT-CENAR`, `ES-ASK-ENCONTRAR`, `ES-PLAN-PREPARAR`
+or `ES-VER`. Each is now `ES-VERB-<HEADWORD>` (for example `ES-VERB-CENAR`,
+`ES-VERB-ENCONTRAR`, `ES-VERB-VER`).
+
+- No lesson text, headword, gloss or chapter changed, and no lesson moved to a
+  different spine node. Only the `concept_tag` line changed.
+- None was moved onto a canonical `VERB-*` concept, so no other track gains a
+  concept it has to answer for.
+- No other file referred to the old tags.
+- `regular` ("so-so", chapter 9) has an infinitive-like ending but is an
+  adjective, so it keeps its tag.
+- The generated book, narration and modality hashes for the 44 chapters
+  involved were regenerated.
+
+## A2 reinforcement — every atom at or below A2 is revisited twice
+
+```
+level gate, A2 reinforcement blocker   32 -> 0
+level gate, A2 blockers left           vocabulary 180, verb vocabulary 29
+```
+
+The level gate asks that every atom a track introduces at or below a level is
+revisited at least twice; etymology hooks are waived. Thirty-two A2 atoms
+missed that: fifteen were never revisited at all, and seventeen only once.
+Each now comes back as a one-line retrieval in the Warm-up of a later lesson.
+Where an atom needed two revisits, the second host sits further on, so the
+retrieval is spaced rather than stacked.
+
+| atom(s) | revisited in |
+|---|---|
+| command register (*come* / *coma, por favor*) | `ES-C20-perdon`, `ES-C26-pan` |
+| false friends (*éxito* is success) | `ES-C11-querer`, `ES-C13-salir` |
+| negation and yes-or-no questions (chapter 267) | `ES-C268-billete`, `ES-C268-problema`, `ES-C270-en-mi-opinion`, `ES-C271-quizas` |
+| the perfect on two shores; irregular participles; *he hablado* | `ES-C17-futuro`, `ES-C17-comer-futuro`, `ES-C50-habla` |
+| stem-changers and *-go* verbs in the plural | `ES-C43-comida`, `ES-C45-nos` |
+| the simple future; *ir a* as motion toward | `ES-C10-mi-tu-su`, `ES-C44-las` |
+| *tenemos*, *tenéis*, *tienen* | `ES-C08-tienen`, `ES-C12-yo-go`, `ES-C10-vamos` |
+| *ayer* as a past time frame | `ES-C14-hablar-preterite`, `ES-C16-imperfecto` |
+| the *-ar* preterite and the Latin perfect | `ES-C15-comer-preterite` |
+| connected composition with *y* and *porque* | `ES-C422-pagina-web`, `ES-C423-antipatico` |
+| *f- → h-* and *cl- → ll-* | `ES-C57-es-inicial` |
+| *estáis*, *sois*, *artista* | `ES-C09-grande`, `ES-C09-profesor`, `ES-C43-casa` |
+| future and conditional stems; *viviría* | `ES-C18-quiero-que`, `ES-C18-subjuntivo` |
+| *contestar* and *responder* | `ES-C41-deber` |
+
+Each retrieval uses only forms the course has taught by then, and the lessons
+that introduce the atoms join the host's prerequisites.
+
 ## HL-C417 — the A2 chapters now stand on an A2 rung
 
 ```

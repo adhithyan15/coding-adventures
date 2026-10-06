@@ -1,0 +1,19 @@
+# build-tool: deps=typescript/forme-plugin-runner-conformance
+(cd ../../typescript/document-ast && npm ci --quiet)
+(cd ../../typescript/forme-types && npm ci --quiet && npm run build)
+(cd ../../typescript/forme-errors && npm ci --quiet && npm run build)
+(cd ../../typescript/forme-capability && npm ci --quiet)
+(cd ../../typescript/forme-stage && npm ci --quiet && npm run build)
+(cd ../../typescript/forme-plugin-runner-ts && npm ci --quiet && npm run build)
+(cd ../../typescript/forme-plugin-runner-conformance && npm ci --quiet && npm run build)
+uv venv .venv --quiet --no-project --clear --python 3.13
+uv pip install --python .venv -e .[dev] --quiet
+.venv\Scripts\python.exe -m ruff check src tests
+.venv\Scripts\python.exe -m ruff format --check src tests
+.venv\Scripts\python.exe -m mypy src
+.venv\Scripts\python.exe -m coverage erase
+.venv\Scripts\python.exe -m coverage run --parallel-mode -m pytest tests -v
+node tests/conformance.mjs .venv\Scripts\python.exe
+.venv\Scripts\python.exe -m coverage combine
+.venv\Scripts\python.exe -m coverage report --fail-under=85
+.venv\Scripts\python.exe -m coverage erase

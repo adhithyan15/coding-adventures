@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Hacer, Decir, and the -go Verb Club",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e855a8fe180ee066",
+  "sourceHash": "fnv1a64:3e03257315f2e5b4",
   "lessons": [
     {
       "id": "ES-C12-hacer",
@@ -443,7 +443,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:79f3a62524b38865",
+      "sourceHash": "fnv1a64:d4577f886cee4e2b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -469,6 +469,16 @@
             {
               "kind": "speech",
               "text": "Three learned verbs now place g in the yo form: tengo, hago, digo. Compare those three without guessing the form of any unseen verb."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say tenemos and tenéis once more, stress on the ending, before tengo goes its own way."
             }
           ]
         },

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:b92860e25ba563fc",
+  "lessonIds": [
+    "TE-C250-araceyyi",
+    "TE-C250-madama",
+    "TE-C250-cilamanda",
+    "TE-C250-toda",
+    "TE-C250-nadumu"
+  ],
+  "tex": "telugu/book/chapters/ch250-palm-of-the-hand-heel-ankle-thigh-waist.tex"
+}

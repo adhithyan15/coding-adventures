@@ -1,0 +1,11 @@
+{
+  "id": "BN-C221-shohure",
+  "pathSegment": "BN-PATH-221-GUN221",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-221-GUN221",
+      "order": 3
+    }
+  ]
+}

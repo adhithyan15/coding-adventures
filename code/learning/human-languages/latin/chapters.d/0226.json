@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Grammar, Philosophy, Eagerness, Question, Answer",
+  "label": "ch:la-grammar-philosophy-eagerness-question-answer",
+  "canDo": "I can say grammar, philosophy, eagerness, a question and an answer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C226-responsum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say grammar, philosophy, eagerness, a question and an answer.",
+    "assesses": [
+      "LA-LEX-C226-RES226-03",
+      "LA-LEX-C226-RES226-04",
+      "LA-LEX-C226-RES226-05"
+    ]
+  }
+}

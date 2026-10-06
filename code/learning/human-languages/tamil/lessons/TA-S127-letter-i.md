@@ -52,15 +52,15 @@ with the sound.
 ## Writing: இ
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-RECOG-127] -->
 
-- **1.** start here: curl around the inner loop
+- **1.** start inside the upper curl and sweep around it
 - **2.** without lifting, sweep down the inner right curve
-- **3.** without lifting, carry left and turn through the lower loop
-- **4.** without lifting, climb the lower diagonal
-- **5.** without lifting, carry right and turn around the lower loop, then lift
-- **6.** put the pen down again and climb the outer left side
-- **7.** without lifting, arch over the top and down the right — and only now lift
+- **3.** without lifting, carry left down the lower diagonal and turn around the lower-left loop
+- **4.** without lifting, climb the loop's outer side back to the left crossing
+- **5.** without lifting, carry right across the middle and turn around the lower-right loop
+- **6.** without lifting, climb the other diagonal back across the middle and on up the outer left side
+- **7.** without lifting, arch over the top and down the far right — and only now lift
 
-**Pen lifts: 1.**
+**Pen lifts: 0.** The pen never leaves the paper.
 
 > Stroke order is one attested teaching order, not a national standard —
 > Tamil handwriting is taught with school-to-school variation. Source:

@@ -8,9 +8,27 @@
     "口 (mouth)"
   ],
   "strokeOrder": [
-    "言 on the left",
-    "五 above 口 on the right"
+    "言 on the left, narrow: draw the short top mark from left to right",
+    "lift, draw the long bar from left to right",
+    "lift, draw the upper short bar from left to right",
+    "lift, draw the lower short bar from left to right",
+    "lift, draw the box's left side from top to bottom",
+    "lift, draw its top from left to right, then without lifting turn down its right side",
+    "lift, close its base from left to right",
+    "lift, 五 at the upper right: draw its top bar from left to right",
+    "lift, begin on the top bar and draw a short stroke down, leaning a little to the left",
+    "lift, draw the middle bar from left to right, then without lifting turn down at its right end",
+    "lift, draw the long base bar from left to right",
+    "lift, 口 under 五: draw its left side from top to bottom",
+    "lift, draw the top from left to right, then without lifting turn down the right side",
+    "lift, close the base from left to right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 08a9e file records 語 as fourteen stroke paths in this order and direction: 言 (seven paths), then 五 (four), then 口 (three); so there are thirteen pen lifts.",
+  "penLifts": 13,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/08a9e.svg",
+    "citation": "KanjiVG, kanji/08a9e.svg, kanji 語 (U+8A9E CJK UNIFIED IDEOGRAPH-8A9E), fourteen stroke paths kvg:08a9e-s1 to s14 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 to s7 are 言, s8 to s11 五 and s12 to s14 口, each drawn in the same order and directions as KanjiVG's own files for those three, kanji/08a00.svg, 04e94.svg and 053e3.svg. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. As in 言, KanjiVG's first path is a dot drawn down to the right (kvg:type ㇔). The Japanese print glyph draws that mark as a short bar, so the path runs along the bar from left to right."
+  },
   "notes": "Language, word. Japanese kept the full traditional form; simplified Chinese writes the same character with a reduced speech radical."
 }

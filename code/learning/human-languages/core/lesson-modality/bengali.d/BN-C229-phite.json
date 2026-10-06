@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C229-phite",
+    "language": "bengali",
+    "chapter": 229,
+    "sequence": 14120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77b54564b4ee7954"
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 445,
   "title": "El Puesto",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:bf9028169886a54c",
+  "sourceHash": "fnv1a64:beab591e058e4075",
   "lessons": [
     {
       "id": "ES-C445-jubilarse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:102a3d830542f94a",
+      "sourceHash": "fnv1a64:2400949357c7b4ee",
       "notice": null,
       "blocks": [
         {
@@ -501,7 +501,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1fdcd39233e4936",
+      "sourceHash": "fnv1a64:842b38ee05abe51d",
       "notice": null,
       "blocks": [
         {
@@ -664,7 +664,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f11cfb5e33004707",
+      "sourceHash": "fnv1a64:14ec678ce6f222fe",
       "notice": null,
       "blocks": [
         {

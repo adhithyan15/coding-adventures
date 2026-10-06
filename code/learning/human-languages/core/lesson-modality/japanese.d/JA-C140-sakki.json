@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C140-sakki",
+    "language": "japanese",
+    "chapter": 140,
+    "sequence": 8610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a8870ca669a3270"
+  },
+  "findings": []
+}

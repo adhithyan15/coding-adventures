@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C200-tronco",
+    "language": "italian",
+    "chapter": 200,
+    "sequence": 11380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c102e02a561b4141"
+  },
+  "findings": []
+}

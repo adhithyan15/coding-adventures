@@ -1,0 +1,11 @@
+{
+  "id": "TE-C154-ippatike",
+  "pathSegment": "TE-PATH-154-GATAM154",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-154-GATAM154",
+      "order": 1
+    }
+  ]
+}

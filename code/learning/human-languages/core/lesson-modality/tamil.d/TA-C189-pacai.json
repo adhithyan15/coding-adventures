@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C189-pacai",
+    "language": "tamil",
+    "chapter": 189,
+    "sequence": 9510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f883cb9ecd4e3fe"
+  },
+  "findings": []
+}

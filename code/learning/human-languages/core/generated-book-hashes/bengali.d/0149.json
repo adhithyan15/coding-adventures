@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:e03b1e882ebaa629",
+  "lessonIds": [
+    "BN-C149-satar-kata",
+    "BN-C149-pichhle-pora",
+    "BN-C149-bishram-neoya",
+    "BN-C149-taratari-kora",
+    "BN-C149-deri-kora"
+  ],
+  "tex": "bengali/book/chapters/ch149-to-swim-to-slip-to-rest-to-hurry-to-delay.tex"
+}

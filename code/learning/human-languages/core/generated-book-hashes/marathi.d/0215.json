@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:536ff64201dc70d8",
+  "lessonIds": [
+    "MR-C215-kheladu",
+    "MR-C215-prasiksak",
+    "MR-C215-cahta",
+    "MR-C215-agaman",
+    "MR-C215-prasthan"
+  ],
+  "tex": "marathi/book/chapters/ch215-player-coach-supporter-arrival-departure.tex"
+}

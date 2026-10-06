@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:de0955b95008c242",
+  "lessonIds": [
+    "RU-C176-vozvrashchatsya",
+    "RU-C176-opazdyvat",
+    "RU-C176-speshit",
+    "RU-C176-otdykhat",
+    "RU-C176-ustavat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch176.txt",
+  "json": "russian/narration/ch176.json",
+  "textHash": "fnv1a64:bf283cc3904e1de5",
+  "jsonHash": "fnv1a64:123d8f443381c855",
+  "findings": []
+}

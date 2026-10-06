@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:d75c3ce215be44da",
+  "lessonIds": [
+    "AR-C246-usra",
+    "AR-C246-hafid",
+    "AR-C246-amma",
+    "AR-C246-tawam",
+    "AR-C246-aris"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch246.txt",
+  "json": "arabic/narration/ch246.json",
+  "textHash": "fnv1a64:9e304e33c7b36ff5",
+  "jsonHash": "fnv1a64:0d57f2365559cf4b",
+  "findings": []
+}

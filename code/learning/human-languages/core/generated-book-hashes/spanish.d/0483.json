@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:bfed9fc9d627b3c9",
+  "lessonIds": [
+    "ES-C483-infancia",
+    "ES-C483-costumbre",
+    "ES-C483-finalidad",
+    "ES-C483-mejora",
+    "ES-C483-acudir"
+  ],
+  "tex": "spanish/book/chapters/ch483-recuerdos-y-costumbres.tex"
+}

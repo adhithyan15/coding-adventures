@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:a01a11383a3e0635",
+  "lessonIds": [
+    "UR-C158-qaum",
+    "UR-C158-basti",
+    "UR-C158-bandargah",
+    "UR-C158-restorent",
+    "UR-C158-kaife"
+  ],
+  "tex": "urdu/book/chapters/ch158-nation-settlement-port-restaurant-cafe.tex"
+}

@@ -809,9 +809,10 @@ fn validate_app(raw: Option<RawApp>) -> Result<AppSection, ManifestError> {
     })
 }
 
-/// Reverse DNS as Apple and Android both accept it: two or more non-empty
-/// dot-separated parts of ASCII letters, digits and `-`, 155 characters at
-/// most.
+/// Reverse DNS as Apple accepts it: two or more non-empty dot-separated parts
+/// of ASCII letters, digits and `-`, 155 characters at most. Android is
+/// stricter (no `-`, each part starts with a letter); the artifact builder
+/// derives an Android application id from this (UI89 §3.5).
 fn is_bundle_identifier(identifier: &str) -> bool {
     identifier.len() <= 155
         && identifier.split('.').count() >= 2

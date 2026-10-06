@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:4a08860646c65bcb",
+  "lessonIds": [
+    "AR-C190-mughanni",
+    "AR-C190-laib",
+    "AR-C190-mudarrib",
+    "AR-C190-riyadiyyat",
+    "AR-C190-jughrafiya"
+  ],
+  "tex": "arabic/book/chapters/ch190-singer-player-coach-mathematics-geography.tex"
+}

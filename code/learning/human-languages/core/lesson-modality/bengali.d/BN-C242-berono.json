@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C242-berono",
+    "language": "bengali",
+    "chapter": 242,
+    "sequence": 15040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8794a082b0d3eca"
+  },
+  "findings": []
+}

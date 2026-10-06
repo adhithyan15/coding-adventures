@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:f9c360cda138feaa",
+  "lessonIds": [
+    "RU-C153-sportzal",
+    "RU-C153-mechet",
+    "RU-C153-khram",
+    "RU-C153-pamyatnik",
+    "RU-C153-fontan"
+  ],
+  "tex": "russian/book/chapters/ch153-gym-mosque-temple-monument-fountain.tex"
+}

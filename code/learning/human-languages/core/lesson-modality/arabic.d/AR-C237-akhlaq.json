@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C237-akhlaq",
+    "language": "arabic",
+    "chapter": 237,
+    "sequence": 13050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c06d13aae343af18"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "A class, An examination, A lesson, Practice, A mark",
+  "label": "ch:hi-a-class-an-examination-a-lesson-practice-a-mark",
+  "canDo": "I can say a class, an examination, a lesson, practice and a mark.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C197-ank",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say a class, an examination, a lesson, practice and a mark.",
+    "assesses": [
+      "HI-LEX-C197-THG197-03",
+      "HI-LEX-C197-THG197-04",
+      "HI-LEX-C197-THG197-05"
+    ]
+  }
+}

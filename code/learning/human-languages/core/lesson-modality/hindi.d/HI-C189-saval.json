@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C189-saval",
+    "language": "hindi",
+    "chapter": 189,
+    "sequence": 9230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acbbecb7cca7ee1b"
+  },
+  "findings": []
+}

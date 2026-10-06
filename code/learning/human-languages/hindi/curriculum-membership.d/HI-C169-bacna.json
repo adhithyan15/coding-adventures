@@ -1,0 +1,11 @@
+{
+  "id": "HI-C169-bacna",
+  "pathSegment": "HI-PATH-169-ACT169",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-169-ACT169",
+      "order": 4
+    }
+  ]
+}

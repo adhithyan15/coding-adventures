@@ -1,0 +1,11 @@
+{
+  "id": "ML-C326-paramparyam",
+  "pathSegment": "ML-PATH-326-VASTU326",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-326-VASTU326",
+      "order": 3
+    }
+  ]
+}

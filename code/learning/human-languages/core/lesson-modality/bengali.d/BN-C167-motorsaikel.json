@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C167-motorsaikel",
+    "language": "bengali",
+    "chapter": 167,
+    "sequence": 9610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a36405dd6196702"
+  },
+  "findings": []
+}

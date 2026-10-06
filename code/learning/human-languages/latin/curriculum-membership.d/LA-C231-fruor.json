@@ -1,0 +1,11 @@
+{
+  "id": "LA-C231-fruor",
+  "pathSegment": "LA-PATH-231-ACT231",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-231-ACT231",
+      "order": 1
+    }
+  ]
+}

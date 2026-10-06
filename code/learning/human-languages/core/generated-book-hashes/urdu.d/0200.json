@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:b68eef2633af8321",
+  "lessonIds": [
+    "UR-C200-pakora",
+    "UR-C200-qorma",
+    "UR-C200-achar",
+    "UR-C200-rayta",
+    "UR-C200-salad"
+  ],
+  "tex": "urdu/book/chapters/ch200-pakora-korma-pickle-raita-salad.tex"
+}

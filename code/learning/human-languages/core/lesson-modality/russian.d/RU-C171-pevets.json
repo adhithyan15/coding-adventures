@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C171-pevets",
+    "language": "russian",
+    "chapter": 171,
+    "sequence": 9580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cef4dacf1aefbc9"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:6970b80461bcbd15",
+  "lessonIds": [
+    "TA-C230-karpanai-cey",
+    "TA-C230-cantekappatu",
+    "TA-C230-kurai-col",
+    "TA-C230-pativirakku",
+    "TA-C230-pativerru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch230.txt",
+  "json": "tamil/narration/ch230.json",
+  "textHash": "fnv1a64:da8e6805766d1982",
+  "jsonHash": "fnv1a64:845c67952f019b48",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C154-enadaru",
+    "language": "kannada",
+    "chapter": 154,
+    "sequence": 6830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d507bd26e8b2bc4"
+  },
+  "findings": []
+}

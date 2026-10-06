@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Singer, Player, Coach, Mathematics, Geography",
+  "label": "ch:ar-singer-player-coach-mathematics-geography",
+  "canDo": "I can say a singer, a player, a coach, mathematics and geography.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C190-jughrafiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say a singer, a player, a coach, mathematics and geography.",
+    "assesses": [
+      "AR-LEX-C190-AMAL190-03",
+      "AR-LEX-C190-AMAL190-04",
+      "AR-LEX-C190-AMAL190-05"
+    ]
+  }
+}

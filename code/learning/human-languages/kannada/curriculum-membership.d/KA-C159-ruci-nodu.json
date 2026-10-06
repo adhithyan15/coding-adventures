@@ -1,0 +1,11 @@
+{
+  "id": "KA-C159-ruci-nodu",
+  "pathSegment": "KA-PATH-159-KRIYE159",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-159-KRIYE159",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C479-adelantado",
+  "pathSegment": "ES-PATH-479-TRAMITE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-479-TRAMITE",
+      "order": 3
+    }
+  ]
+}

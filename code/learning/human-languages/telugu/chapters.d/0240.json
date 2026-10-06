@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "To lift, To carry, To pull, To push, To throw",
+  "label": "ch:te-to-lift-to-carry-to-pull-to-push-to-throw",
+  "canDo": "I can say to lift, to carry, to pull, to push and to throw.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C240-visuru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say to lift, to carry, to pull, to push and to throw.",
+    "assesses": [
+      "TE-LEX-C240-KRIYA240-03",
+      "TE-LEX-C240-KRIYA240-04",
+      "TE-LEX-C240-KRIYA240-05"
+    ]
+  }
+}

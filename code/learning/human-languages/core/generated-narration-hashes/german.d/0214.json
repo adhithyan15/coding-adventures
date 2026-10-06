@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:c75525918e7137e9",
+  "lessonIds": [
+    "GE-C214-froehlich",
+    "GE-C214-furchtbar",
+    "GE-C214-geduldig",
+    "GE-C214-geizig",
+    "GE-C214-gemuetlich"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch214.txt",
+  "json": "german/narration/ch214.json",
+  "textHash": "fnv1a64:b990fb0aa64baf3a",
+  "jsonHash": "fnv1a64:d5babc6dd3c54ecb",
+  "findings": []
+}

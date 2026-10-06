@@ -1,0 +1,11 @@
+{
+  "id": "SA-C163-dyutam",
+  "pathSegment": "SA-PATH-163-THG163",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-163-THG163",
+      "order": 1
+    }
+  ]
+}

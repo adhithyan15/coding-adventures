@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:57ace918608ba2a1",
+  "lessonIds": [
+    "TA-C190-yocanai",
+    "TA-C190-tippetti",
+    "TA-C190-panai",
+    "TA-C190-ammi",
+    "TA-C190-totti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch190.txt",
+  "json": "tamil/narration/ch190.json",
+  "textHash": "fnv1a64:52d8d7cf1ea00805",
+  "jsonHash": "fnv1a64:39886886d2ff56c3",
+  "findings": []
+}

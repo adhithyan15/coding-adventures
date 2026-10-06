@@ -1,0 +1,11 @@
+{
+  "id": "FR-C254-sentier",
+  "pathSegment": "FR-PATH-254-CHOSES254",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-254-CHOSES254",
+      "order": 3
+    }
+  ]
+}

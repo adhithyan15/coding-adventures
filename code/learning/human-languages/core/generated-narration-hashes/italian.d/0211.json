@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:dc121f7dc2fd24bb",
+  "lessonIds": [
+    "IT-C211-sembrare",
+    "IT-C211-servire",
+    "IT-C211-soffrire",
+    "IT-C211-sognare",
+    "IT-C211-somigliare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch211.txt",
+  "json": "italian/narration/ch211.json",
+  "textHash": "fnv1a64:bf46d764bb8b0799",
+  "jsonHash": "fnv1a64:c237e0533ba40d5b",
+  "findings": []
+}

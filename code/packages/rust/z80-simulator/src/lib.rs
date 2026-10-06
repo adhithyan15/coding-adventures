@@ -18,12 +18,15 @@
 //! simulator.rs -- top-level Z80Simulator with fetch-decode-execute
 //! ```
 //!
-//! ## The Z80 is an Intel 8080 superset
+//! ## The Z80 preserves the Intel 8080 opcode map
 //!
-//! Every valid 8080 opcode is a valid Z80 opcode with **identical**
-//! semantics and **identical** byte encoding.  This crate's base
-//! (unprefixed, non-`EX`/`EXX`/`DJNZ`/`JR`) instruction set is therefore a
-//! direct structural port of `intel8080_simulator` (same register/pair/
+//! Every documented 8080 instruction byte sequence remains valid on the Z80
+//! for the corresponding core data or control operation, with byte-identical
+//! encoding.  That does not imply identical complete-state semantics: the Z80
+//! adds flag state, and arithmetic writes signed overflow to `P/V` where the
+//! 8080 writes parity to `P`, so a later parity/overflow condition can diverge.
+//! This crate's base (unprefixed, non-`EX`/`EXX`/`DJNZ`/`JR`) instruction set
+//! is a direct structural port of `intel8080_simulator` (same register/pair/
 //! ALU/condition-code field encodings), renamed to Zilog's assembler
 //! mnemonics (`LD` instead of `MOV`/`MVI`/`LXI`/…, `JP` instead of `JMP`,
 //! `CP` instead of `CMP`, …).  See `code/specs/z80-encoder.md` for the

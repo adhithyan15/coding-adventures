@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "To park, To look after, To pick, To test, To clean",
+  "label": "ch:ge-to-park-to-look-after-to-pick-to-test-to-clean",
+  "canDo": "I can say to park, to look after, to pick, to test and to clean.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C184-reinigen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say to park, to look after, to pick, to test and to clean.",
+    "assesses": [
+      "GE-LEX-C184-VERB184-03",
+      "GE-LEX-C184-VERB184-04",
+      "GE-LEX-C184-VERB184-05"
+    ]
+  }
+}

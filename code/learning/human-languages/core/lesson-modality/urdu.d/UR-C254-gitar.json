@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C254-gitar",
+    "language": "urdu",
+    "chapter": 254,
+    "sequence": 15390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7777a88361e1c3a9"
+  },
+  "findings": []
+}

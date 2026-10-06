@@ -1,0 +1,11 @@
+{
+  "id": "UR-C246-garaj",
+  "pathSegment": "UR-PATH-246-JAGAH246",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-246-JAGAH246",
+      "order": 0
+    }
+  ]
+}

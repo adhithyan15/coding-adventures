@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:31d91a58d442a055",
+  "lessonIds": [
+    "RU-C172-rezyume",
+    "RU-C172-karyera",
+    "RU-C172-pensiya",
+    "RU-C172-komandirovka",
+    "RU-C172-dogovor",
+    "RU-R172-first-pass-words-from-chapters-167-169",
+    "RU-R172-second-pass-words-from-chapters-170-172"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch172.txt",
+  "json": "russian/narration/ch172.json",
+  "textHash": "fnv1a64:2fc073dc29a8a800",
+  "jsonHash": "fnv1a64:7ffcb344729f42ff",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "Disease, Patient, Nurse, Injection, Ambulance",
+  "label": "ch:ml-disease-patient-nurse-injection-ambulance",
+  "canDo": "I can say a disease, a patient, a nurse, an injection and an ambulance.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C312-ambulansu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can say a disease, a patient, a nurse, an injection and an ambulance.",
+    "assesses": [
+      "ML-LEX-C312-AROGYAM312-03",
+      "ML-LEX-C312-AROGYAM312-04",
+      "ML-LEX-C312-AROGYAM312-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C182-koleta",
+  "pathSegment": "KA-PATH-182-GUNA182",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-182-GUNA182",
+      "order": 2
+    }
+  ]
+}

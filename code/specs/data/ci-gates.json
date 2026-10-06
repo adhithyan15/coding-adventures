@@ -176,6 +176,26 @@
         "code/programs/rust/grammar-tools/**"
       ]
     },
+    "rust-grammar-regen-check": {
+      "scope": "job",
+      "description": "Regenerates reconciled MacroOct and Nib Rust _grammar.rs artifacts from canonical sources and rejects stale committed output (#14202).",
+      "packages": [
+        "rust/grammar-tools",
+        "rust/programs/grammar-tools",
+        "rust/macrooct-lexer",
+        "rust/nib-lexer",
+        "rust/nib-parser"
+      ],
+      "paths": [
+        "code/grammars/macrooct/**",
+        "code/grammars/nib/**",
+        "code/packages/rust/grammar-tools/**",
+        "code/programs/rust/grammar-tools/**",
+        "code/packages/rust/macrooct-lexer/src/_grammar.rs",
+        "code/packages/rust/nib-lexer/src/_grammar.rs",
+        "code/packages/rust/nib-parser/src/_grammar.rs"
+      ]
+    },
     "unicode17-elixir-conformance": {
       "scope": "job",
       "description": "Generated Elixir Unicode 17 tables against every official normalization/casing vector.",
@@ -405,24 +425,64 @@
         "code/scripts/tests/test_ocaml_capability_gate.py"
       ]
     },
+    "forme-release-platform": {
+      "scope": "job",
+      "description": "FM-B072 benchmark, browser, API-v2, product, and reviewed release evidence on every supported host.",
+      "packages": [
+        "typescript/forme-cli",
+        "typescript/programs/forme-shell-desktop"
+      ],
+      "paths": [
+        ".github/workflows/ci.yml",
+        "code/packages/typescript/forme-*/**",
+        "code/sites/landing-page/**",
+        "code/sites/blog/**",
+        "code/programs/typescript/forme-shell-desktop/**",
+        "code/specs/FM0*-forme-*.md",
+        "code/specs/data/ci-gates.json",
+        "code/scripts/forme_release_gate.py",
+        "code/scripts/setup_msvc_dev_cmd.py",
+        "code/scripts/tests/test_forme_release_gate.py",
+        "code/scripts/tests/test_setup_msvc_dev_cmd.py"
+      ]
+    },
+    "build-linux-os-suites": {
+      "scope": "step",
+      "description": "Suites that require Linux kernel isolation primitives and a delegated cgroup-v2 root.",
+      "packages": [
+        "typescript/forme-sandbox-core",
+        "typescript/forme-sandbox-linux"
+      ],
+      "paths": [
+        "code/specs/FM02-forme-plugin-host.md"
+      ]
+    },
     "build-macos-os-suites": {
       "scope": "step",
       "description": "Suites that run only on the macOS build leg, independent of any toolchain flag.",
-      "packages": [],
+      "packages": [
+        "typescript/forme-sandbox-core",
+        "typescript/forme-sandbox-macos"
+      ],
       "paths": [
         "code/scripts/adj_stdlib_provenance.py",
-        "code/scripts/tests/test_adj_stdlib_provenance.py"
+        "code/scripts/tests/test_adj_stdlib_provenance.py",
+        "code/specs/FM02-forme-plugin-host.md"
       ]
     },
     "build-windows-os-suites": {
       "scope": "step",
       "description": "Suites that run only on the Windows build leg, independent of any toolchain flag.",
-      "packages": [],
+      "packages": [
+        "typescript/forme-sandbox-core",
+        "typescript/forme-sandbox-windows"
+      ],
       "paths": [
         "code/scripts/adj_stdlib_provenance.py",
         "code/scripts/tests/test_adj_stdlib_provenance.py",
         "code/scripts/setup_msvc_dev_cmd.py",
-        "code/scripts/tests/test_setup_msvc_dev_cmd.py"
+        "code/scripts/tests/test_setup_msvc_dev_cmd.py",
+        "code/specs/FM02-forme-plugin-host.md"
       ]
     }
   }

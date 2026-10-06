@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:e79a5e8dbec361db",
+  "lessonIds": [
+    "IT-C175-tradurre",
+    "IT-C175-dimenticare",
+    "IT-C175-ricordare",
+    "IT-C175-decidere",
+    "IT-C175-scegliere"
+  ],
+  "tex": "italian/book/chapters/ch175-to-translate-to-forget-to-remember-to-decide-to-choose.tex"
+}

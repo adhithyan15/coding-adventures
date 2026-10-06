@@ -1,0 +1,11 @@
+{
+  "id": "AR-C248-jihaz",
+  "pathSegment": "AR-PATH-248-SHAY248",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-248-SHAY248",
+      "order": 3
+    }
+  ]
+}

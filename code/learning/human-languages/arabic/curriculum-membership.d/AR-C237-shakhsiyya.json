@@ -1,0 +1,11 @@
+{
+  "id": "AR-C237-shakhsiyya",
+  "pathSegment": "AR-PATH-237-SABAB237",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-237-SABAB237",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "To repair, To take a photo, To explain, To translate, To make a decision",
+  "label": "ch:mr-to-repair-to-take-a-photo-to-explain-to-translate-to-make-a-decision",
+  "canDo": "I can say to repair, to take a photo, to explain, to translate and to make a decision.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C223-nirnay-ghene",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say to repair, to take a photo, to explain, to translate and to make a decision.",
+    "assesses": [
+      "MR-LEX-C223-ACT223-03",
+      "MR-LEX-C223-ACT223-04",
+      "MR-LEX-C223-ACT223-05"
+    ]
+  }
+}

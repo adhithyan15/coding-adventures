@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:ac6039cf01c5e93d",
+  "lessonIds": [
+    "FA-C165-van",
+    "FA-C165-tualet",
+    "FA-C165-dastshuyi",
+    "FA-C165-khamirdandan",
+    "FA-C165-shampu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch165.txt",
+  "json": "persian/narration/ch165.json",
+  "textHash": "fnv1a64:caf4197b3eace673",
+  "jsonHash": "fnv1a64:9a2ffd347331cd63",
+  "findings": []
+}

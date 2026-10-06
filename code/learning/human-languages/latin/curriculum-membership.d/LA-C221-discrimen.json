@@ -1,0 +1,11 @@
+{
+  "id": "LA-C221-discrimen",
+  "pathSegment": "LA-PATH-221-RES221",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-221-RES221",
+      "order": 1
+    }
+  ]
+}

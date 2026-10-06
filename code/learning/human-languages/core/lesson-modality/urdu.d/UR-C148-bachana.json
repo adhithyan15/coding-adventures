@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C148-bachana",
+    "language": "urdu",
+    "chapter": 148,
+    "sequence": 7890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c782225e82174b2f"
+  },
+  "findings": []
+}

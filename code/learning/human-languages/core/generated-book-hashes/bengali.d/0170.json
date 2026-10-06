@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:7ad17370e7d46107",
+  "lessonIds": [
+    "BN-C170-akar",
+    "BN-C170-tukro",
+    "BN-C170-lain",
+    "BN-C170-michhil",
+    "BN-C170-kol"
+  ],
+  "tex": "bengali/book/chapters/ch170-shape-piece-queue-procession-tap.tex"
+}

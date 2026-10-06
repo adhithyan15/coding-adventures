@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-503-FORMA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-503-FORMA"
+  ],
+  "after": []
+}

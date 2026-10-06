@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-186-SVASTHYO186",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "BN-EXT-186-SVASTHYO186"
+  ],
+  "after": []
+}

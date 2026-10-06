@@ -1,0 +1,11 @@
+{
+  "id": "AR-C176-akthar",
+  "pathSegment": "AR-PATH-176-SABAB176",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-176-SABAB176",
+      "order": 2
+    }
+  ]
+}

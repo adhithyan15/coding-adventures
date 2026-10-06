@@ -192,7 +192,20 @@ it("pins French lesson-content budgets", () =>
     // (ten verbs) in three runs of eleven chapters, each run closing on two
     // reviews so no review passes the 300-second ceiling. No idiom, sense or
     // culture claim.
-    lessons: 749,
+    // 749 -> 771: chapters 139-142 realize French's last four A2 spine
+    // nodes: saying no and asking which, the past, the future and reading
+    // practical texts. Twenty word lessons and two reviews, with no idiom,
+    // sense or culture claim.
+    // 771 -> 939: the first French A2 vocabulary tranche, chapters 143-174.
+    // 160 word lessons (fifty-five verbs) and two reviews per run of at most
+    // nine chapters. No idiom, sense or culture claim.
+    // 939 -> 1097: the second tranche, chapters 175-204: 150 word lessons and
+    // two reviews per run.
+    // 1097 -> 1245: the third tranche, chapters 205-232: 140 word lessons and
+    // two reviews per run.
+    // 1245 -> 1376: the fourth and last tranche, chapters 233-257: 125 word
+    // lessons and two reviews per run. French attains A2 here.
+    lessons: 1376,
     idioms: 3,
     senses: 7,
     cultureClaims: 27,

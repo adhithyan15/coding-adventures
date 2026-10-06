@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Watermelon, Aubergine, Garlic, Ginger, Tomato",
+  "label": "ch:bn-watermelon-aubergine-garlic-ginger-tomato",
+  "canDo": "I can say a watermelon, an aubergine, garlic, ginger and a tomato.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C116-tometo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: I can say a watermelon, an aubergine, garlic, ginger and a tomato.",
+    "assesses": [
+      "BN-LEX-C116-THINGS116-03",
+      "BN-LEX-C116-THINGS116-04",
+      "BN-LEX-C116-THINGS116-05"
+    ]
+  }
+}

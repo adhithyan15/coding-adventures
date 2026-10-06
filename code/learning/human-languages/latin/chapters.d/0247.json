@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "A Twin and the In-Laws",
+  "label": "ch:la-twin-father-in-law-mother-in-law-son-in-law-daughter-in-law",
+  "canDo": "I can say a twin, a father-in-law, a mother-in-law, a son-in-law and a daughter-in-law.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C247-nurus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say a twin, a father-in-law, a mother-in-law, a son-in-law and a daughter-in-law.",
+    "assesses": [
+      "LA-LEX-C247-RES247-03",
+      "LA-LEX-C247-RES247-04",
+      "LA-LEX-C247-RES247-05"
+    ]
+  }
+}

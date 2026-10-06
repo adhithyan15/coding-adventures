@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C167-zapravka",
+    "language": "russian",
+    "chapter": 167,
+    "sequence": 9420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a1a4e5d3016ab26"
+  },
+  "findings": []
+}

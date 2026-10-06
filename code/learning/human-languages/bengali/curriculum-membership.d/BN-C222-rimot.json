@@ -1,0 +1,11 @@
+{
+  "id": "BN-C222-rimot",
+  "pathSegment": "BN-PATH-222-JINIS222",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-222-JINIS222",
+      "order": 2
+    }
+  ]
+}

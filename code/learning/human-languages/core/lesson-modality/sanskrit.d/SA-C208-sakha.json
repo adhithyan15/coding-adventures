@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C208-sakha",
+    "language": "sanskrit",
+    "chapter": 208,
+    "sequence": 11900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94423462053a3a26"
+  },
+  "findings": []
+}

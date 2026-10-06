@@ -1,0 +1,11 @@
+{
+  "id": "FR-C173-ballon",
+  "pathSegment": "FR-PATH-173-CHOSES173",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-173-CHOSES173",
+      "order": 0
+    }
+  ]
+}

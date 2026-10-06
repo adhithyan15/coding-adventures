@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R185-second-pass-words-from-chapters-181-185",
+    "language": "arabic",
+    "chapter": 185,
+    "sequence": 9230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1c29a94344bfad6"
+  },
+  "findings": []
+}

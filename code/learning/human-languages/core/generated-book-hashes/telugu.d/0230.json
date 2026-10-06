@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:39ccb41a6eead5bb",
+  "lessonIds": [
+    "TE-C230-kavita",
+    "TE-C230-citram",
+    "TE-C230-kemera",
+    "TE-C230-vinodam",
+    "TE-C230-natudu"
+  ],
+  "tex": "telugu/book/chapters/ch230-poem-painting-camera-entertainment-actor.tex"
+}

@@ -1,0 +1,6 @@
+cd ..\..\..\packages\python\single-layer-network && uv run --no-project --with pytest python -m pytest tests
+cd ..\..\..\packages\python\two-layer-network && uv run --no-project --with pytest python -m pytest tests
+cd ..\..\..\packages\python\multi-directed-graph && uv run --no-project --with pytest python -m pytest tests
+cd ..\..\..\packages\python\neural-network && set "PYTHONPATH=src;..\multi-directed-graph\src" && uv run --no-project --with pytest python -m pytest tests
+cd ..\..\..\packages\python\neural-graph-vm && set "PYTHONPATH=..\multi-directed-graph\src;..\neural-network\src;src" && uv run --no-project --with pytest python -m pytest tests
+set "PYTHONPATH=..\..\..\packages\python\two-layer-network\src;..\..\..\packages\python\single-layer-network\src;..\..\..\packages\python\multi-directed-graph\src;..\..\..\packages\python\neural-network\src;..\..\..\packages\python\neural-graph-vm\src" && uv run --no-project python main.py

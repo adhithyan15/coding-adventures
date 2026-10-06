@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "Useful, Special, Favourite, Modern, Traditional",
+  "label": "ch:ka-useful-special-favourite-modern-traditional",
+  "canDo": "I can say useful, special, favourite, modern and traditional.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C181-sampradayika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say useful, special, favourite, modern and traditional.",
+    "assesses": [
+      "KA-LEX-C181-GUNA181-03",
+      "KA-LEX-C181-GUNA181-04",
+      "KA-LEX-C181-GUNA181-05"
+    ]
+  }
+}

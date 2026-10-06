@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "To carry, To put, To wear, To take off, To change",
+  "label": "ch:ml-to-carry-to-put-to-wear-to-take-off-to-change",
+  "canDo": "I can say to carry, to put, to wear, to take off and to change.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C223-marruka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say to carry, to put, to wear, to take off and to change.",
+    "assesses": [
+      "ML-LEX-C223-KRIYA223-03",
+      "ML-LEX-C223-KRIYA223-04",
+      "ML-LEX-C223-KRIYA223-05"
+    ]
+  }
+}

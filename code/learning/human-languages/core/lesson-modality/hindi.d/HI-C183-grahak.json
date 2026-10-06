@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C183-grahak",
+    "language": "hindi",
+    "chapter": 183,
+    "sequence": 8830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4a484be5572dc75"
+  },
+  "findings": []
+}

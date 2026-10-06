@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C183-pereulok",
+    "language": "russian",
+    "chapter": 183,
+    "sequence": 10530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f678f83768591596"
+  },
+  "findings": []
+}

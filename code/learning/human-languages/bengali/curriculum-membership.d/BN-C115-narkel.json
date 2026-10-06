@@ -1,0 +1,11 @@
+{
+  "id": "BN-C115-narkel",
+  "pathSegment": "BN-PATH-115-THINGS115",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-115-THINGS115",
+      "order": 2
+    }
+  ]
+}

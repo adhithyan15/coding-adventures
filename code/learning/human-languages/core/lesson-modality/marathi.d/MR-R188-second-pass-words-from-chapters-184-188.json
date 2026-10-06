@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R188-second-pass-words-from-chapters-184-188",
+    "language": "marathi",
+    "chapter": 188,
+    "sequence": 9480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ba0f3db41abe7ce"
+  },
+  "findings": []
+}

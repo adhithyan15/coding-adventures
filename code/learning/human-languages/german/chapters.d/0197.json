@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "A coast, Fog, Heat, Cold, Lightning",
+  "label": "ch:ge-a-coast-fog-heat-cold-lightning",
+  "canDo": "I can say a coast, fog, heat, cold and lightning.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C197-blitz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say a coast, fog, heat, cold and lightning.",
+    "assesses": [
+      "GE-LEX-C197-THING197-03",
+      "GE-LEX-C197-THING197-04",
+      "GE-LEX-C197-THING197-05"
+    ]
+  }
+}

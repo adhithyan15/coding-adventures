@@ -1,0 +1,11 @@
+{
+  "id": "RU-C149-sutki",
+  "pathSegment": "RU-PATH-149-VREMYA149",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-149-VREMYA149",
+      "order": 2
+    }
+  ]
+}

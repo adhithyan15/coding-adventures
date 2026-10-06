@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:5e16f57dfd248930",
+  "lessonIds": [
+    "ML-C221-vakku",
+    "ML-C221-vakyam",
+    "ML-C221-phisu",
+    "ML-C221-sahapathi",
+    "ML-C221-vidyabhyasam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch221.txt",
+  "json": "malayalam/narration/ch221.json",
+  "textHash": "fnv1a64:cd2d266bc85552ae",
+  "jsonHash": "fnv1a64:f102418fa341ee1c",
+  "findings": []
+}

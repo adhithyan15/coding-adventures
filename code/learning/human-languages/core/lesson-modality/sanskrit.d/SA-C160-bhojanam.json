@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C160-bhojanam",
+    "language": "sanskrit",
+    "chapter": 160,
+    "sequence": 8440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb9bac919310ad66"
+  },
+  "findings": []
+}

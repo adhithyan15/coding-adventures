@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C276-iyantiram",
+    "language": "tamil",
+    "chapter": 276,
+    "sequence": 15820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e5fc231645a73a0"
+  },
+  "findings": []
+}

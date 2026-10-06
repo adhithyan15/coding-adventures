@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "Meaning, Example, Freedom, Rule, Way",
+  "label": "ch:ar-meaning-example-freedom-rule-way",
+  "canDo": "I can say a meaning, an example, freedom, a rule and a way.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-C208-tariqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say a meaning, an example, freedom, a rule and a way.",
+    "assesses": [
+      "AR-LEX-C208-SABAB208-03",
+      "AR-LEX-C208-SABAB208-04",
+      "AR-LEX-C208-SABAB208-05"
+    ]
+  }
+}

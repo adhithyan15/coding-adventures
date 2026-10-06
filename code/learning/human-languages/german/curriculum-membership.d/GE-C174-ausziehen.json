@@ -1,0 +1,11 @@
+{
+  "id": "GE-C174-ausziehen",
+  "pathSegment": "GE-PATH-174-VERB174",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-174-VERB174",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "Faithful, Typical, Impatient, Unhappy, Married",
+  "label": "ch:ge-faithful-typical-impatient-unhappy-married",
+  "canDo": "I can say faithful, typical, impatient, unhappy and married.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C223-verheiratet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say faithful, typical, impatient, unhappy and married.",
+    "assesses": [
+      "GE-LEX-C223-QUAL223-03",
+      "GE-LEX-C223-QUAL223-04",
+      "GE-LEX-C223-QUAL223-05"
+    ]
+  }
+}

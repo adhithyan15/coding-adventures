@@ -1,0 +1,11 @@
+{
+  "id": "ML-C308-taippu-ceyyuka",
+  "pathSegment": "ML-PATH-308-KRIYA308",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-308-KRIYA308",
+      "order": 4
+    }
+  ]
+}

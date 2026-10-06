@@ -1,0 +1,11 @@
+{
+  "id": "MR-C205-pracin",
+  "pathSegment": "MR-PATH-205-GUN205",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-205-GUN205",
+      "order": 2
+    }
+  ]
+}

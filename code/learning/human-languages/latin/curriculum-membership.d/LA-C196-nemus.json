@@ -1,0 +1,11 @@
+{
+  "id": "LA-C196-nemus",
+  "pathSegment": "LA-PATH-196-RES196",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-196-RES196",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:82f36a7ec6fc5301",
+  "lessonIds": [
+    "BN-C179-chakha",
+    "BN-C179-gela",
+    "BN-C179-chibano",
+    "BN-C179-takano",
+    "BN-C179-bachha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch179.txt",
+  "json": "bengali/narration/ch179.json",
+  "textHash": "fnv1a64:5bcd41f1b77b9cb8",
+  "jsonHash": "fnv1a64:ff33afda9c314281",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C210-samanyavagi",
+  "pathSegment": "KA-PATH-210-KALA210",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-210-KALA210",
+      "order": 1
+    }
+  ]
+}

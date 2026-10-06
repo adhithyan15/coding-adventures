@@ -1,0 +1,11 @@
+{
+  "id": "IT-C196-pensiero",
+  "pathSegment": "IT-PATH-196-COSE196",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-196-COSE196",
+      "order": 1
+    }
+  ]
+}

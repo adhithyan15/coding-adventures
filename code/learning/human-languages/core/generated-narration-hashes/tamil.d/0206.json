@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:fe4bd98d021e75ee",
+  "lessonIds": [
+    "TA-C206-tevalayam",
+    "TA-C206-macuti",
+    "TA-C206-kutam",
+    "TA-C206-maitanam",
+    "TA-C206-niccal-kulam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch206.txt",
+  "json": "tamil/narration/ch206.json",
+  "textHash": "fnv1a64:0d591a5513514aa6",
+  "jsonHash": "fnv1a64:f9e0300e3d2bcd9f",
+  "findings": []
+}

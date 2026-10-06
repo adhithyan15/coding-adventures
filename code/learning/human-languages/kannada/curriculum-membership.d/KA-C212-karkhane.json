@@ -1,0 +1,11 @@
+{
+  "id": "KA-C212-karkhane",
+  "pathSegment": "KA-PATH-212-STHALA212",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-212-STHALA212",
+      "order": 1
+    }
+  ]
+}

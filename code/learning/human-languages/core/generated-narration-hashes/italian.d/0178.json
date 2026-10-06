@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:2014649cc91112d1",
+  "lessonIds": [
+    "IT-C178-piovere",
+    "IT-C178-accompagnare",
+    "IT-C178-aggiungere",
+    "IT-C178-annunciare",
+    "IT-C178-apparire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch178.txt",
+  "json": "italian/narration/ch178.json",
+  "textHash": "fnv1a64:f4d8d1dd1136dd57",
+  "jsonHash": "fnv1a64:2f06ac65dcfe8130",
+  "findings": []
+}

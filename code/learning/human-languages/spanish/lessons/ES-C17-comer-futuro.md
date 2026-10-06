@@ -7,18 +7,18 @@ chapter: 122
 type: pattern
 headword: comeré
 gloss: the singular simple future of comer — comeré, comerás, comerá
-prerequisites: [ES-C17-futuro, ES-C07-comer]
+prerequisites: [ES-C17-futuro, ES-C07-comer, ES-C49-he-hablado]
 sounds: [accent-acute, stress-final]
 roots: [latin-infinitive-habere]
 etymology_hook: "comeré keeps the complete infinitive comer before the same Romance future endings introduced with hablaré"
 duration:
   max_seconds: 260
 requires:
-  knowledge: [ES-LEX-COMER, ES-LEX-BEBER, ES-LEX-CAFE, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL]
+  knowledge: [ES-LEX-COMER, ES-LEX-BEBER, ES-LEX-CAFE, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-GRAMMAR-PERFECT-FIRST-PERSON]
 introduces:
   knowledge: [ES-PATTERN-ER-FUTURE-SINGULAR]
 practises:
-  knowledge: [ES-LEX-COMER, ES-LEX-BEBER, ES-LEX-CAFE, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-PATTERN-ER-FUTURE-SINGULAR]
+  knowledge: [ES-LEX-COMER, ES-LEX-BEBER, ES-LEX-CAFE, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-PATTERN-ER-FUTURE-SINGULAR, ES-GRAMMAR-PERFECT-FIRST-PERSON]
 slots:
   infinitive: [ES-LEX-COMER, ES-LEX-BEBER]
   object: [ES-LEX-CAFE]
@@ -33,10 +33,12 @@ reviews_of: [ES-C17-futuro, ES-C07-comer, ES-C07-beber, ES-C06-cafe]
 # comeré — the same endings keep -er
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-GRAMMAR-PERFECT-FIRST-PERSON] -->
 
 [PAUSE 2s] You built **hablaré** without removing **-ar**. Keep **comer** just
 as intact: **comeré** — “I will eat.”
+
+[PAUSE 2s] *He hablado español.* **He** carries the person and the tense; **hablado** carries the meaning. Say it once before the future.
 
 ## Grammar Lens: the singular -er row
 <!-- hl-knowledge: introduces=[ES-PATTERN-ER-FUTURE-SINGULAR]; assesses=[ES-LEX-COMER, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR] -->

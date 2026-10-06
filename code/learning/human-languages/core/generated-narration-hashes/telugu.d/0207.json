@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:90ab403a8dc35660",
+  "lessonIds": [
+    "TE-C207-callarcu",
+    "TE-C207-tattu",
+    "TE-C207-tempu",
+    "TE-C207-dunnu",
+    "TE-C207-pandincu",
+    "TE-R207-first-pass-words-from-chapters-199-202",
+    "TE-R207-second-pass-words-from-chapters-203-207"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch207.txt",
+  "json": "telugu/narration/ch207.json",
+  "textHash": "fnv1a64:e2f7dba4346dacbf",
+  "jsonHash": "fnv1a64:dbbd11b995c9f878",
+  "findings": []
+}

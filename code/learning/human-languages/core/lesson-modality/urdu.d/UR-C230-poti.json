@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C230-poti",
+    "language": "urdu",
+    "chapter": 230,
+    "sequence": 13780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1cfc433a6d43f3e"
+  },
+  "findings": []
+}

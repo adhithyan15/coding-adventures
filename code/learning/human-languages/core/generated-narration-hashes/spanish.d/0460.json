@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 460,
-  "sourceHash": "fnv1a64:98310057bf21cc47",
+  "sourceHash": "fnv1a64:3aab2f58482522e2",
   "lessonIds": [
     "ES-C460-herramienta",
     "ES-C460-solicitar",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch460.txt",
   "json": "spanish/narration/ch460.json",
   "textHash": "fnv1a64:2d9e794e483258b8",
-  "jsonHash": "fnv1a64:c355d81468377bc8",
+  "jsonHash": "fnv1a64:ef263793b8e561a8",
   "findings": []
 }

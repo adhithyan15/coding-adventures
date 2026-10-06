@@ -1,0 +1,11 @@
+{
+  "id": "SA-R220-second-pass-words-from-chapters-216-220",
+  "pathSegment": "SA-PATH-220-THG220",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "SA-EXT-220-THG220",
+      "order": 6
+    }
+  ]
+}

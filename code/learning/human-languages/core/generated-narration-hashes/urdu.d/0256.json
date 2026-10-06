@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:b21c9b7da2fdfcec",
+  "lessonIds": [
+    "UR-C256-shadi",
+    "UR-C256-rishtedar",
+    "UR-C256-saheli",
+    "UR-C256-mezban",
+    "UR-C256-log",
+    "UR-R256-first-pass-words-from-chapters-248-251",
+    "UR-R256-second-pass-words-from-chapters-252-256"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch256.txt",
+  "json": "urdu/narration/ch256.json",
+  "textHash": "fnv1a64:c7a6f0ae0fee8355",
+  "jsonHash": "fnv1a64:fcaee920d6fed4ef",
+  "findings": []
+}

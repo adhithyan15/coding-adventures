@@ -1,0 +1,11 @@
+{
+  "id": "LA-C236-somnium",
+  "pathSegment": "LA-PATH-236-VALE236",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-236-VALE236",
+      "order": 2
+    }
+  ]
+}

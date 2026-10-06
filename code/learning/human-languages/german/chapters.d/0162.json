@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "A sofa, A radio, The weather, The wind, A thunderstorm",
+  "label": "ch:ge-a-sofa-a-radio-the-weather-the-wind-a-thunderstorm",
+  "canDo": "I can say a sofa, a radio, the weather, the wind and a thunderstorm.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C162-gewitter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say a sofa, a radio, the weather, the wind and a thunderstorm.",
+    "assesses": [
+      "GE-LEX-C162-THING162-03",
+      "GE-LEX-C162-THING162-04",
+      "GE-LEX-C162-THING162-05"
+    ]
+  }
+}

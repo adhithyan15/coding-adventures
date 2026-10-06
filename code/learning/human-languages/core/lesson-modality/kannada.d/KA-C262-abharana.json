@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C262-abharana",
+    "language": "kannada",
+    "chapter": 262,
+    "sequence": 12510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27e65c12fff92b7b"
+  },
+  "findings": []
+}

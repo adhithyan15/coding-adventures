@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:627dcf4bdeb38078",
+  "lessonIds": [
+    "FA-C178-mangane",
+    "FA-C178-pushe",
+    "FA-C178-pakkon",
+    "FA-C178-jamedadi",
+    "FA-C178-karname",
+    "FA-R178-first-pass-words-from-chapters-173-175",
+    "FA-R178-second-pass-words-from-chapters-176-178"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch178.txt",
+  "json": "persian/narration/ch178.json",
+  "textHash": "fnv1a64:b96c0afa3c87ef36",
+  "jsonHash": "fnv1a64:5adaca2408f0b868",
+  "findings": []
+}

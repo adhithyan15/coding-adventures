@@ -1,16 +1,19 @@
 {
   "chapter": 40,
-  "title": "Reading — Words, Lines, and a First Passage",
+  "title": "Reading — Words, Lines, a First Passage, and Timed Writing",
   "label": "ch:bn-prothom-path",
-  "canDo": "I can read a Bengali word by its shape under the head-line, read the lines I would say to a stranger, and hold a whole passage without translating it word by word.",
+  "canDo": "I can read a Bengali word, line, and short passage, then complete the A1 writing paper within 20 minutes.",
   "payoff": {
-    "lesson": "BN-C40-prothom-path",
-    "kind": "four-skill-function-map",
-    "summary": "Thirty-six words of Bengali with no new word in them, carried by three joiners of which only one is borrowed, and with the verb last in every line that has one.",
+    "lesson": "BN-W40-a1-timed-production",
+    "kind": "production",
+    "summary": "Complete the chapter's final lesson: fill a six-field form and write a 30–40 word named-reader message within the A1 paper's 20-minute limit.",
     "assesses": [
       "BN-SKILL-CONNECTED-READING",
       "BN-SKILL-READ-LINES",
-      "BN-SKILL-READ-WORDS"
+      "BN-SKILL-READ-WORDS",
+      "BN-CONCEPT-C02-AMARNAAM-01",
+      "BN-CONCEPT-C05-AMIBANGLABOLI-01",
+      "BN-LEX-C26-KOTHAY-01"
     ]
   }
 }

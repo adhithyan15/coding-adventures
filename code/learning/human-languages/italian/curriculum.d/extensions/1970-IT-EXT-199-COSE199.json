@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-199-COSE199",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a helmet, a tunnel, a roundabout, a building site and a building.",
+  "prerequisites": []
+}

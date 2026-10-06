@@ -1,0 +1,11 @@
+{
+  "id": "TE-C157-cellincu",
+  "pathSegment": "TE-PATH-157-KRIYA157",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-157-KRIYA157",
+      "order": 0
+    }
+  ]
+}

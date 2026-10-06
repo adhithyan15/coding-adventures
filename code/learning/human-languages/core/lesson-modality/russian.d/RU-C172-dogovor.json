@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C172-dogovor",
+    "language": "russian",
+    "chapter": 172,
+    "sequence": 9670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbda4ee27fc0f73c"
+  },
+  "findings": []
+}

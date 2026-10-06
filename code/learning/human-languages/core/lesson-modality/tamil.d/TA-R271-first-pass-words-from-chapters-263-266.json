@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R271-first-pass-words-from-chapters-263-266",
+    "language": "tamil",
+    "chapter": 271,
+    "sequence": 15410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00d443cfb9741cfc"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C253-trolleybus",
+    "language": "russian",
+    "chapter": 253,
+    "sequence": 15650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f0ebcda4abb5447"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:54e1bbcec688247b",
+  "lessonIds": [
+    "GE-C230-gegenteil",
+    "GE-C230-geschichte",
+    "GE-C230-gespraech",
+    "GE-C230-gewicht",
+    "GE-C230-gewohnheit"
+  ],
+  "tex": "german/book/chapters/ch230-the-opposite-a-story-a-conversation-weight-a-habit.tex"
+}

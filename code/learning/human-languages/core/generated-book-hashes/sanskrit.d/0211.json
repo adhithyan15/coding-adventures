@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:6b291bc6d794b9bd",
+  "lessonIds": [
+    "SA-C211-vyayamah",
+    "SA-C211-yogah",
+    "SA-C211-sramah",
+    "SA-C211-klantih",
+    "SA-C211-snanam",
+    "SA-R211-first-pass-words-from-chapters-203-206",
+    "SA-R211-second-pass-words-from-chapters-207-211"
+  ],
+  "tex": "sanskrit/book/chapters/ch211-exercise-yoga-toil-tiredness-bath.tex"
+}

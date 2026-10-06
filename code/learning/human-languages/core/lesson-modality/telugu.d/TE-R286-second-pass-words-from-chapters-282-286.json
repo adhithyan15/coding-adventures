@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R286-second-pass-words-from-chapters-282-286",
+    "language": "telugu",
+    "chapter": 286,
+    "sequence": 13650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51e7db6f3fbf6cf2"
+  },
+  "findings": []
+}

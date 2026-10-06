@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C159-telefonnummer",
+    "language": "german",
+    "chapter": 159,
+    "sequence": 7320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48072b518929b5ea"
+  },
+  "findings": []
+}

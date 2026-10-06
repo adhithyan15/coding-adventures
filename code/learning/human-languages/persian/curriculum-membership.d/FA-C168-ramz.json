@@ -1,0 +1,11 @@
+{
+  "id": "FA-C168-ramz",
+  "pathSegment": "FA-PATH-168-CHIZ168",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-168-CHIZ168",
+      "order": 1
+    }
+  ]
+}

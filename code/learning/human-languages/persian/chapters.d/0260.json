@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "To grate, To make a hole in, To tie a knot, To knock at the door, To whistle",
+  "label": "ch:fa-to-grate-to-make-a-hole-in-to-tie-a-knot-to-knock-at-the-door-to-whistle",
+  "canDo": "I can say to grate, to make a hole in, to tie a knot, to knock at the door and to whistle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C260-sut-zadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can say to grate, to make a hole in, to tie a knot, to knock at the door and to whistle.",
+    "assesses": [
+      "FA-LEX-C260-KONESH260-03",
+      "FA-LEX-C260-KONESH260-04",
+      "FA-LEX-C260-KONESH260-05"
+    ]
+  }
+}

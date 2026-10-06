@@ -415,6 +415,10 @@ struct ProcSig {
 struct ByNameBinding {
     actual: GrammarASTNode,
     ty: ScalarType,
+    /// The stored actual is a bounded runtime-real expression. This lets a
+    /// specialised name formal retain formatter provenance without introducing
+    /// a runtime thunk ABI; assignability only affects the separate write path.
+    runtime_real: bool,
     /// Stable representation of the actual after forwarded formals resolve to
     /// their captured caller storage. This identifies a finite recursive
     /// remapping even when each lexical use receives a fresh local alias.
@@ -537,10 +541,17 @@ struct Compiler {
     /// a literal-only model, this also covers runtime results such as a string
     /// procedure call copied into a scalar local.
     initialized_string_slots: HashSet<String>,
+    /// Local real slots whose latest straight-line assignment is a
+    /// formatter-safe real-procedure result, or a copy of another such slot.
+    runtime_real_slots: HashSet<String>,
+    /// Module-global slots for captured real scalars and captured real value
+    /// formals. Their concrete f64 representation remains formatter-safe in
+    /// both the enclosing block and its nested functions.
+    runtime_real_global_slots: HashSet<String>,
     /// Canonical text for local real scalars assigned a finite compile-time
     /// expression along a straight-line path. This deliberately stops tracking
-    /// at control flow or procedure calls; a general runtime f64 formatter is
-    /// still required once the source value can vary at run time.
+    /// at control flow or procedure calls; direct runtime real values use the
+    /// portable formatter, while composed dynamic expressions remain separate.
     static_real_slots: HashMap<String, String>,
     /// Exact values for local integer scalars assigned a literal or another
     /// tracked integer along the same straight-line path. These snapshots may
@@ -549,6 +560,7 @@ struct Compiler {
     /// Static values for local boolean scalars along the current path.
     static_boolean_slots: HashMap<String, bool>,
     static_real_tracking_disabled: bool,
+    needs_real_print_helpers: bool,
 }
 
 impl Default for Compiler {
@@ -586,10 +598,13 @@ impl Default for Compiler {
             switch_expansion_steps: 0,
             block_captured: HashSet::new(),
             initialized_string_slots: HashSet::new(),
+            runtime_real_slots: HashSet::new(),
+            runtime_real_global_slots: HashSet::new(),
             static_real_slots: HashMap::new(),
             static_integer_slots: HashMap::new(),
             static_boolean_slots: HashMap::new(),
             static_real_tracking_disabled: false,
+            needs_real_print_helpers: false,
         }
     }
 }
@@ -659,6 +674,11 @@ impl Compiler {
         // a same-module `call` resolves the callee's signature by name.
         for proc in self.functions {
             module.functions.push(proc);
+        }
+        if self.needs_real_print_helpers {
+            module.functions.extend(
+                dartmouth_basic_iir_compiler::portable_numeric_print_helpers(),
+            );
         }
         module.entry_point = Some("main".to_string());
 
@@ -865,6 +885,12 @@ impl Compiler {
             .map(|t| t.value.clone())
         {
             let slot = self.declare_var(&name, ty, is_own)?;
+            // An ordinary captured real scalar is stored as a concrete f64 in
+            // the existing E6 global slot. Nested sibling functions may format
+            // reads from that slot directly; no closure or thunk ABI is needed.
+            if ty == ScalarType::Real && self.block_captured.contains(&name) {
+                self.runtime_real_global_slots.insert(slot.clone());
+            }
             // A global (an `own` variable, or an E6-captured block scalar) is
             // zero-initialised once at module load — exactly the `own`
             // lifetime semantics — so it must NOT get a per-declaration `const`
@@ -1822,6 +1848,7 @@ impl Compiler {
         let saved_switch_expansion_steps = std::mem::replace(&mut self.switch_expansion_steps, 0);
         let saved_initialized_string_slots =
             std::mem::take(&mut self.initialized_string_slots);
+        let saved_runtime_real_slots = std::mem::take(&mut self.runtime_real_slots);
         let saved_static_real_slots = std::mem::take(&mut self.static_real_slots);
         let saved_static_integer_slots = std::mem::take(&mut self.static_integer_slots);
         let saved_static_boolean_slots = std::mem::take(&mut self.static_boolean_slots);
@@ -1887,6 +1914,13 @@ impl Compiler {
                 ProcedureParamType::Scalar(pty) => {
                     // Parameters and the result slot are real registers, never `own`.
                     let slot = self.declare_var(pname, *pty, false)?;
+                    // A non-captured real value formal is already a concrete f64
+                    // in this frame. It can therefore use the same portable
+                    // formatter as other proven runtime-real producers without
+                    // requiring a closure or thunk ABI.
+                    if *pty == ScalarType::Real && !captured_scalar_formals.contains(pname) {
+                        self.runtime_real_slots.insert(slot.clone());
+                    }
                     // A string parameter is initialized by the caller, but can carry
                     // a runtime handle. It is deliberately not literal-backed: only
                     // direct `str_const` producers support ordering comparisons.
@@ -2064,6 +2098,7 @@ impl Compiler {
         self.switch_scope_names = saved_switch_scope_names;
         self.switch_expansion_steps = saved_switch_expansion_steps;
         self.initialized_string_slots = saved_initialized_string_slots;
+        self.runtime_real_slots = saved_runtime_real_slots;
         self.static_real_slots = saved_static_real_slots;
         self.static_integer_slots = saved_static_integer_slots;
         self.static_boolean_slots = saved_static_boolean_slots;
@@ -2099,6 +2134,9 @@ impl Compiler {
         }
         binding.slot = capture_slot.clone();
         binding.is_global = true;
+        if ty == ScalarType::Real {
+            self.runtime_real_global_slots.insert(capture_slot.clone());
+        }
 
         self.emit(IIRInstr::new(
             "global_store",
@@ -2266,7 +2304,14 @@ impl Compiler {
                 continue;
             }
 
-            if let Some(var_name) = expr_variable_name(actual) {
+            if let Some(var_name) = exact_bare_variable_expression_name(actual) {
+                if let Some(binding) = self.active_by_name_binding(&var_name) {
+                    let allow_runtime_real = binding.ty == ScalarType::Real
+                        && binding.runtime_real;
+                    let value = self.emit_by_name_read(&var_name, binding)?;
+                    self.emit_standard_output_value(name, value, allow_runtime_real)?;
+                    continue;
+                }
                 let binding = self.require_var(&var_name)?;
                 if binding.ty == ScalarType::Real && !binding.is_global {
                     if let Some(text) = self.static_real_slots.get(&binding.slot).cloned() {
@@ -2282,8 +2327,11 @@ impl Compiler {
                         "standard output procedure {name:?} requires initialized string variable {var_name:?}"
                     )));
                 }
+                let allow_runtime_real = self.runtime_real_slots.contains(&binding.slot)
+                    || (binding.is_global
+                        && self.runtime_real_global_slots.contains(&binding.slot));
                 let value = self.read_scalar(binding);
-                self.emit_standard_output_value(name, value)?;
+                self.emit_standard_output_value(name, value, allow_runtime_real)?;
                 continue;
             }
 
@@ -2294,10 +2342,15 @@ impl Compiler {
             // `print_str` of a runtime string on all seven columns, so — unlike
             // the literal/variable fast paths above — no literal-backing is
             // required. Integer expressions use the shared numeric stdout
-            // builtin, while booleans select typed string literals. Real
-            // formatting remains an explicit type error.
+            // builtin, booleans select typed string literals, and direct
+            // Formatter-safe real-procedure results and path-independent
+            // conditional values over proven runtime-real branches use the
+            // portable formatter.
+            // Provenance-backed real scalar variables take the bounded path
+            // above; composed dynamic real expressions still fail closed here.
+            let allow_runtime_real = self.is_runtime_real_assignment_value(actual);
             let value = self.emit_expr(actual)?;
-            self.emit_standard_output_value(name, value)?;
+            self.emit_standard_output_value(name, value, allow_runtime_real)?;
         }
 
         Ok(true)
@@ -3383,59 +3436,81 @@ impl Compiler {
                 .any(|child| self.contains_conditional_expression(child))
     }
 
-    fn conditional_expression_selectors_are_cycle_stable(
+    fn conditional_expression_selectors_are_cycle_exact(
         &self,
         node: &GrammarASTNode,
         actions: &[StaticBodyAction<'_>],
         target_name: &str,
+        visiting: &mut HashSet<String>,
     ) -> bool {
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
-            return self.recurrence_selector_is_cycle_stable(
+            return self.recurrence_selector_is_cycle_exact(
                 condition,
                 actions,
                 target_name,
+                visiting,
             )
-                && self.conditional_expression_selectors_are_cycle_stable(
+                && self.conditional_expression_selectors_are_cycle_exact(
                     then_node,
                     actions,
                     target_name,
+                    visiting,
                 )
-                && self.conditional_expression_selectors_are_cycle_stable(
+                && self.conditional_expression_selectors_are_cycle_exact(
                     else_node,
                     actions,
                     target_name,
+                    visiting,
                 );
         }
         direct_nodes(node).into_iter().all(|child| {
-            self.conditional_expression_selectors_are_cycle_stable(child, actions, target_name)
+            self.conditional_expression_selectors_are_cycle_exact(
+                child,
+                actions,
+                target_name,
+                visiting,
+            )
         })
     }
 
-    fn recurrence_selector_is_cycle_stable(
+    fn recurrence_selector_is_cycle_exact(
         &self,
         selector: &GrammarASTNode,
         actions: &[StaticBodyAction<'_>],
         target_name: &str,
+        visiting: &mut HashSet<String>,
     ) -> bool {
         let mut dependencies = HashSet::new();
         collect_expression_dependency_names(selector, target_name, &mut dependencies);
         dependencies.iter().all(|name| {
-            !Self::static_body_actions_write_name(actions, name)
-                && self.require_var(name).is_ok_and(|binding| {
-                    !binding.is_global
-                        && binding.array.is_none()
-                        && self.active_by_name_binding(name).is_none()
-                        && match binding.ty {
-                            ScalarType::Integer => {
-                                self.static_integer_slots.contains_key(&binding.slot)
-                            }
-                            ScalarType::Real => self.static_real_slots.contains_key(&binding.slot),
-                            ScalarType::Boolean => {
-                                self.static_boolean_slots.contains_key(&binding.slot)
-                            }
-                            ScalarType::String => false,
+            let exact_local = self.require_var(name).is_ok_and(|binding| {
+                !binding.is_global
+                    && binding.array.is_none()
+                    && self.active_by_name_binding(name).is_none()
+                    && match binding.ty {
+                        ScalarType::Integer => {
+                            self.static_integer_slots.contains_key(&binding.slot)
                         }
-                })
+                        ScalarType::Real => self.static_real_slots.contains_key(&binding.slot),
+                        ScalarType::Boolean => {
+                            self.static_boolean_slots.contains_key(&binding.slot)
+                        }
+                        ScalarType::String => false,
+                    }
+            });
+            exact_local
+                && (!Self::static_body_actions_write_name(actions, name)
+                    // A dependency already on this proof path closes an exact
+                    // self- or mutually-recursive selector recurrence. Capped
+                    // execution still applies every write in source order.
+                    || visiting.contains(name)
+                    || self.static_body_actions_have_supported_dependency_recurrence_inner(
+                        actions,
+                        name,
+                        target_name,
+                        visiting,
+                        false,
+                    ))
         })
     }
 
@@ -3646,6 +3721,7 @@ impl Compiler {
         &mut self,
         name: &str,
         value: ExprValue,
+        allow_runtime_real: bool,
     ) -> Result<(), CompileError> {
         match value.ty {
             ScalarType::String => self.emit(IIRInstr::new(
@@ -3665,10 +3741,23 @@ impl Compiler {
             )),
             ScalarType::Boolean => self.emit_standard_output_boolean(value.slot),
             ScalarType::Real => {
-                return Err(CompileError::Type(format!(
-                    "standard output procedure {name:?} cannot print a {} value",
-                    value.ty.name()
-                )))
+                if !allow_runtime_real {
+                    return Err(CompileError::Type(format!(
+                        "standard output procedure {name:?} cannot print a {} value",
+                        value.ty.name()
+                    )));
+                }
+                self.needs_real_print_helpers = true;
+                let result = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "call",
+                    Some(result),
+                    vec![
+                        Operand::Var("__basic_print_real".to_string()),
+                        Operand::Var(value.slot),
+                    ],
+                    "i64",
+                ));
             }
         }
         Ok(())
@@ -3695,7 +3784,196 @@ impl Compiler {
         self.emit_label(&end_label);
     }
 
+    fn is_direct_formatter_safe_real_procedure_call(&self, node: &GrammarASTNode) -> bool {
+        if node.rule_name == "proc_call" {
+            let Some(source_name) = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone())
+            else {
+                return false;
+            };
+            let target_name = self.resolve_procedure_identity(&source_name);
+            let Some(sig) = self.proc_sigs.get(&target_name) else {
+                return false;
+            };
+            if sig.ret != Some(ScalarType::Real) {
+                return false;
+            }
+            let actuals = self.standard_fn_actuals(node);
+            return actuals.len() == sig.params.len()
+                && sig.params.iter().zip(actuals).all(|(param, actual)| {
+                    match (param.mode, &param.ty) {
+                        (ProcedureParamMode::Value, ProcedureParamType::Scalar(_)) => true,
+                        (ProcedureParamMode::Name, ProcedureParamType::Scalar(ScalarType::Real)) => {
+                            self.is_runtime_real_assignment_value(actual)
+                        }
+                        _ => false,
+                    }
+                });
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_direct_formatter_safe_real_procedure_call(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1 && self.is_direct_formatter_safe_real_procedure_call(children[0])
+    }
+
+    fn is_runtime_real_assignment_value(&self, node: &GrammarASTNode) -> bool {
+        if self.is_direct_formatter_safe_real_procedure_call(node) {
+            return true;
+        }
+        if node.rule_name == "variable" && array_subscripts(node).is_some() {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone());
+            return source_name.is_some_and(|source_name| {
+                self.require_var(&source_name).is_ok_and(|binding| {
+                    binding.ty == ScalarType::Real && binding.array.is_some()
+                })
+            });
+        }
+        if node.rule_name == "proc_call" {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone());
+            if let Some(source_name) = source_name {
+                let target_name = self.resolve_procedure_identity(&source_name);
+                if !self.proc_sigs.contains_key(&target_name)
+                    && matches!(
+                        target_name.as_str(),
+                        "abs" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+                    )
+                {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self.is_runtime_real_assignment_value(actuals[0]);
+                }
+            }
+        }
+        if let Some((sign, child)) = single_signed_child(node) {
+            return matches!(sign, "+" | "-") && self.is_runtime_real_assignment_value(child);
+        }
+        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut saw_runtime_real = false;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_runtime_real_assignment_value(operand) {
+                            saw_runtime_real = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                        return false;
+                    }
+                }
+                if saw_runtime_real {
+                    return true;
+                }
+            }
+        }
+        if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut saw_runtime_real = false;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_runtime_real_assignment_value(operand) {
+                            saw_runtime_real = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "*" | "/")) {
+                        return false;
+                    }
+                }
+                if saw_runtime_real {
+                    return true;
+                }
+            }
+        }
+        if node.rule_name == "expr_pow" {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut saw_runtime_real = false;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_runtime_real_assignment_value(operand) {
+                            saw_runtime_real = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(
+                        piece,
+                        Piece::Op(op) if matches!(op.as_str(), "^" | "**")
+                    ) {
+                        return false;
+                    }
+                }
+                if saw_runtime_real {
+                    return true;
+                }
+            }
+        }
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            if self.contains_procedure_call(condition) {
+                return false;
+            }
+            return match self.static_boolean_value(condition) {
+                Some(true) => self.is_runtime_real_assignment_value(then_node),
+                Some(false) => self.is_runtime_real_assignment_value(else_node),
+                None => {
+                    self.is_runtime_real_assignment_value(then_node)
+                        && self.is_runtime_real_assignment_value(else_node)
+                }
+            };
+        }
+        if direct_tokens(node).is_empty() {
+            let children = direct_nodes(node);
+            if children.len() == 1 {
+                return self.is_runtime_real_assignment_value(children[0]);
+            }
+        }
+        let Some(source_name) = exact_bare_variable_expression_name(node) else {
+            return false;
+        };
+        if let Some(binding) = self.active_by_name_binding(&source_name) {
+            return binding.ty == ScalarType::Real && binding.runtime_real;
+        }
+        self.require_var(&source_name).is_ok_and(|binding| {
+            binding.ty == ScalarType::Real
+                && if binding.is_global {
+                    self.runtime_real_global_slots.contains(&binding.slot)
+                } else {
+                    self.runtime_real_slots.contains(&binding.slot)
+                }
+        })
+    }
+
     fn disable_static_tracking(&mut self) {
+        self.runtime_real_slots.clear();
         self.static_real_slots.clear();
         self.static_integer_slots.clear();
         self.static_boolean_slots.clear();
@@ -4048,8 +4326,18 @@ impl Compiler {
         for (param, actual) in sig.params.iter().zip(actuals) {
             match param.ty {
                 ProcedureParamType::Scalar(ty) if param.mode == ProcedureParamMode::Name => {
+                    let runtime_real = ty == ScalarType::Real
+                        && self.is_runtime_real_assignment_value(actual);
                     let (actual, key) = self.prepare_by_name_actual(actual)?;
-                    by_name_bindings.insert(param.name.clone(), ByNameBinding { actual, ty, key });
+                    by_name_bindings.insert(
+                        param.name.clone(),
+                        ByNameBinding {
+                            actual,
+                            ty,
+                            runtime_real,
+                            key,
+                        },
+                    );
                 }
                 ProcedureParamType::Procedure { expected_ret } => {
                     let binding = self.prepare_procedure_actual(
@@ -5062,6 +5350,7 @@ impl Compiler {
         let static_boolean_value = (!self.static_real_tracking_disabled)
             .then(|| self.static_boolean_value(expr))
             .flatten();
+        let runtime_real_value = self.is_runtime_real_assignment_value(expr);
 
         if let Some(literal) = expr_string_literal(expr) {
             let mut saw_string_target = false;
@@ -5314,6 +5603,11 @@ impl Compiler {
                 continue;
             }
             if binding.ty == ScalarType::Real && !binding.is_global {
+                if runtime_real_value {
+                    self.runtime_real_slots.insert(binding.slot.clone());
+                } else {
+                    self.runtime_real_slots.remove(&binding.slot);
+                }
                 if let Some(text) = &static_real_text {
                     self.static_real_slots
                         .insert(binding.slot.clone(), text.clone());
@@ -5653,6 +5947,7 @@ impl Compiler {
         let entry_boolean_slots = self.static_boolean_slots.clone();
         let entry_tracking_disabled = self.static_real_tracking_disabled;
         let entry_initialized_string_slots = self.initialized_string_slots.clone();
+        let entry_runtime_real_slots = self.runtime_real_slots.clone();
 
         let branches: Vec<&GrammarASTNode> = children
             .into_iter()
@@ -5679,6 +5974,7 @@ impl Compiler {
         let mut then_boolean_slots = self.static_boolean_slots.clone();
         let then_tracking_disabled = self.static_real_tracking_disabled;
         let then_initialized_string_slots = self.initialized_string_slots.clone();
+        let then_runtime_real_slots = self.runtime_real_slots.clone();
         self.emit(IIRInstr::new(
             "jmp",
             None,
@@ -5691,6 +5987,7 @@ impl Compiler {
         self.static_boolean_slots = entry_boolean_slots;
         self.static_real_tracking_disabled = entry_tracking_disabled;
         self.initialized_string_slots = entry_initialized_string_slots;
+        self.runtime_real_slots = entry_runtime_real_slots;
         if let Some(branch) = else_branch {
             self.emit_branch_node(branch)?;
         }
@@ -5699,6 +5996,7 @@ impl Compiler {
         let else_boolean_slots = self.static_boolean_slots.clone();
         let else_tracking_disabled = self.static_real_tracking_disabled;
         let else_initialized_string_slots = self.initialized_string_slots.clone();
+        let else_runtime_real_slots = self.runtime_real_slots.clone();
         self.emit_label(&end_label);
 
         match static_condition {
@@ -5708,6 +6006,7 @@ impl Compiler {
                 self.static_integer_slots = then_integer_slots;
                 self.static_boolean_slots = then_boolean_slots;
                 self.static_real_tracking_disabled = then_tracking_disabled;
+                self.runtime_real_slots = then_runtime_real_slots;
             }
             Some(false) => {
                 self.initialized_string_slots = else_initialized_string_slots;
@@ -5715,8 +6014,13 @@ impl Compiler {
                 self.static_integer_slots = else_integer_slots;
                 self.static_boolean_slots = else_boolean_slots;
                 self.static_real_tracking_disabled = else_tracking_disabled;
+                self.runtime_real_slots = else_runtime_real_slots;
             }
             None => {
+                let merged_runtime_real_slots = then_runtime_real_slots
+                    .intersection(&else_runtime_real_slots)
+                    .cloned()
+                    .collect();
                 self.initialized_string_slots = then_initialized_string_slots
                     .intersection(&else_initialized_string_slots)
                     .cloned()
@@ -5734,6 +6038,7 @@ impl Compiler {
                     self.static_boolean_slots = then_boolean_slots;
                     self.static_real_tracking_disabled = false;
                 }
+                self.runtime_real_slots = merged_runtime_real_slots;
             }
         }
         Ok(())
@@ -5751,6 +6056,7 @@ impl Compiler {
 
     fn emit_for(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
+        self.runtime_real_slots.clear();
         let target = first_direct_node(node, "variable")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
         let var_ty = self.for_target_type(target)?;
@@ -5823,7 +6129,7 @@ impl Compiler {
             let tracks_while_body = is_while_element
                 && executes == Some(true)
                 && !entry_tracking_disabled
-                && (self.for_body_avoids_target(target, body)
+                && (self.for_body_preserves_target(target, body)
                     || static_while_exit_real.is_some()
                     || static_while_exit_integer.is_some()
                     || static_while_body_assignments.is_some());
@@ -5856,7 +6162,7 @@ impl Compiler {
                     )?;
                 }
             } else if tracks_step_body && !self.static_real_tracking_disabled {
-                if !step_executes_exactly_once && !self.for_body_avoids_target(target, body) {
+                if !step_executes_exactly_once && !self.for_body_preserves_target(target, body) {
                     self.static_real_slots.clear();
                     self.static_integer_slots.clear();
                     self.static_boolean_slots.clear();
@@ -5904,6 +6210,7 @@ impl Compiler {
                 }
             }
         }
+        self.runtime_real_slots.clear();
         Ok(())
     }
 
@@ -6022,7 +6329,7 @@ impl Compiler {
                     self.static_boolean_slots = saved_booleans;
                     return (None, exit);
                 }
-                if !self.for_body_avoids_target(target, body) {
+                if !self.for_body_preserves_target(target, body) {
                     return (None, None);
                 }
                 let start = i128::from(start);
@@ -6132,7 +6439,7 @@ impl Compiler {
                     self.static_boolean_slots = saved_booleans;
                     return (exit.map(|value| value.to_string()), None);
                 }
-                if !self.for_body_avoids_target(target, body) {
+                if !self.for_body_preserves_target(target, body) {
                     return (None, None);
                 }
                 let mut control = start;
@@ -6309,7 +6616,7 @@ impl Compiler {
         succeeded.then_some(snapshots)
     }
 
-    fn for_body_avoids_target(
+    fn for_body_preserves_target(
         &self,
         target: &GrammarASTNode,
         body: &GrammarASTNode,
@@ -6317,9 +6624,7 @@ impl Compiler {
         let Ok(target_name) = self.simple_variable_name(target) else {
             return false;
         };
-        !recursive_tokens(body).iter().any(|token| {
-            token.effective_type_name() == "NAME" && token.value == target_name
-        })
+        !self.for_body_writes_name(body, &target_name, &target_name, body)
     }
 
     fn for_body_static_target_expression<'a>(
@@ -6779,6 +7084,15 @@ impl Compiler {
         actions: &[StaticBodyAction<'_>],
         snapshots: &mut Vec<(String, StaticScalarSnapshot)>,
     ) -> Option<()> {
+        self.evaluate_static_body_actions_inner(actions, actions, snapshots)
+    }
+
+    fn evaluate_static_body_actions_inner(
+        &mut self,
+        actions: &[StaticBodyAction<'_>],
+        all_actions: &[StaticBodyAction<'_>],
+        snapshots: &mut Vec<(String, StaticScalarSnapshot)>,
+    ) -> Option<()> {
         for action in actions {
             match action {
                 StaticBodyAction::Assignment(assignment) => {
@@ -6790,9 +7104,38 @@ impl Compiler {
                             .static_assigned_real_value(assignment.expression)
                             .filter(|value| value.is_finite())
                             .map(|value| StaticScalarSnapshot::Real(value.to_string())),
-                        ScalarType::Boolean => self
-                            .static_boolean_value(assignment.expression)
-                            .map(StaticScalarSnapshot::Boolean),
+                        ScalarType::Boolean => {
+                            let contains_conditional =
+                                self.contains_conditional_expression(assignment.expression);
+                            if contains_conditional
+                                && !self.static_body_actions_name_is_in_dependency_cycle(
+                                    all_actions,
+                                    &assignment.name,
+                                )
+                            {
+                                // Exact acyclic conditionals are evaluated from
+                                // the current snapshot. Unproven direct
+                                // self-reference still requires a known cycle.
+                                let mut dependencies = HashSet::new();
+                                collect_expression_dependency_names(
+                                    assignment.expression,
+                                    "",
+                                    &mut dependencies,
+                                );
+                                if dependencies.contains(&assignment.name)
+                                    && !self
+                                        .conditional_expression_selectors_have_exact_acyclic_recurrence(
+                                        assignment.expression,
+                                        all_actions,
+                                        &assignment.name,
+                                    )
+                                {
+                                    return None;
+                                }
+                            }
+                            self.static_recurrence_boolean_value(assignment.expression)
+                                .map(StaticScalarSnapshot::Boolean)
+                        }
                         ScalarType::String => None,
                     }?;
                     match &value {
@@ -6827,11 +7170,329 @@ impl Compiler {
                         true => then_actions,
                         false => else_actions,
                     };
-                    self.evaluate_static_body_actions(selected, snapshots)?;
+                    self.evaluate_static_body_actions_inner(selected, all_actions, snapshots)?;
                 }
             }
         }
         Some(())
+    }
+
+    fn static_body_actions_name_is_in_dependency_cycle(
+        &self,
+        actions: &[StaticBodyAction<'_>],
+        name: &str,
+    ) -> bool {
+        self.static_body_actions_dependency_path(
+            actions,
+            actions,
+            name,
+            name,
+            &mut HashSet::new(),
+        )
+    }
+
+    fn static_body_actions_dependency_path(
+        &self,
+        actions: &[StaticBodyAction<'_>],
+        all_actions: &[StaticBodyAction<'_>],
+        current: &str,
+        goal: &str,
+        visiting: &mut HashSet<String>,
+    ) -> bool {
+        if !visiting.insert(current.to_string()) {
+            return false;
+        }
+        let found = actions.iter().any(|action| match action {
+            StaticBodyAction::Assignment(assignment) if assignment.name == current => {
+                let mut dependencies = HashSet::new();
+                collect_expression_dependency_names(
+                    assignment.expression,
+                    current,
+                    &mut dependencies,
+                );
+                (current == goal
+                    && self.conditional_paths_have_supported_self_reference(
+                        assignment.expression,
+                        current,
+                        all_actions,
+                    ))
+                    || dependencies.into_iter().any(|dependency| {
+                        dependency == goal
+                            || (Self::static_body_actions_write_name(all_actions, &dependency)
+                                && self.static_body_actions_dependency_path(
+                                    all_actions,
+                                    all_actions,
+                                    &dependency,
+                                    goal,
+                                    visiting,
+                                ))
+                    })
+            }
+            StaticBodyAction::Conditional {
+                condition,
+                then_actions,
+                else_actions,
+            } => {
+                let branches_write_current = Self::static_body_actions_write_name(
+                    then_actions,
+                    current,
+                ) || Self::static_body_actions_write_name(else_actions, current);
+                // A statement selector controls whether and which write reaches
+                // `current`, so its scalar inputs are dependency edges too.
+                let condition_closes_cycle = branches_write_current && {
+                    let mut dependencies = HashSet::new();
+                    collect_expression_dependency_names(condition, "", &mut dependencies);
+                    dependencies.into_iter().any(|dependency| {
+                        dependency == goal
+                            || (Self::static_body_actions_write_name(all_actions, &dependency)
+                                && self.static_body_actions_dependency_path(
+                                    all_actions,
+                                    all_actions,
+                                    &dependency,
+                                    goal,
+                                    visiting,
+                                ))
+                    })
+                };
+                condition_closes_cycle
+                    || self.static_body_actions_dependency_path(
+                        then_actions,
+                        all_actions,
+                        current,
+                        goal,
+                        visiting,
+                    )
+                    || self.static_body_actions_dependency_path(
+                        else_actions,
+                        all_actions,
+                        current,
+                        goal,
+                        visiting,
+                    )
+            }
+            _ => false,
+        });
+        visiting.remove(current);
+        found
+    }
+
+    fn conditional_paths_have_supported_self_reference(
+        &self,
+        expression: &GrammarASTNode,
+        name: &str,
+        actions: &[StaticBodyAction<'_>],
+    ) -> bool {
+        if let Some((condition, then_node, else_node)) =
+            self.conditional_expression_parts(expression)
+        {
+            let mut selectors = HashSet::new();
+            collect_expression_dependency_names(condition, "", &mut selectors);
+            let selector_is_written = selectors
+                .iter()
+                .any(|selector| Self::static_body_actions_write_name(actions, selector));
+            // A stable selector needs only its selected path. An evolving or
+            // unknown selector must retain the recurrence edge on both paths.
+            if !selector_is_written {
+                match self.static_boolean_value(condition) {
+                    Some(true) => {
+                        return self.conditional_paths_have_supported_self_reference(
+                            then_node, name, actions,
+                        );
+                    }
+                    Some(false) => {
+                        return self.conditional_paths_have_supported_self_reference(
+                            else_node, name, actions,
+                        );
+                    }
+                    None => {}
+                }
+            }
+            return self.conditional_paths_have_supported_self_reference(
+                then_node, name, actions,
+            ) && self.conditional_paths_have_supported_self_reference(
+                else_node, name, actions,
+            );
+        }
+        let mut dependencies = HashSet::new();
+        collect_expression_dependency_names(expression, "", &mut dependencies);
+        dependencies.contains(name)
+    }
+
+    fn conditional_expression_selectors_have_exact_acyclic_recurrence(
+        &self,
+        expression: &GrammarASTNode,
+        actions: &[StaticBodyAction<'_>],
+        target_name: &str,
+    ) -> bool {
+        if let Some((condition, then_node, else_node)) =
+            self.conditional_expression_parts(expression)
+        {
+            if !self.recurrence_selector_is_cycle_exact(
+                condition,
+                actions,
+                target_name,
+                &mut HashSet::new(),
+            ) {
+                return false;
+            }
+            let mut dependencies = HashSet::new();
+            collect_expression_dependency_names(condition, target_name, &mut dependencies);
+            if !dependencies.iter().any(|name| {
+                self.static_body_actions_name_has_acyclic_conditional_assignment_or_copies(
+                    actions,
+                    name,
+                    &HashSet::new(),
+                )
+            })
+            {
+                return false;
+            }
+            if dependencies.iter().any(|name| {
+                self.static_body_actions_dependency_path(
+                    actions,
+                    actions,
+                    name,
+                    target_name,
+                    &mut HashSet::new(),
+                )
+            }) {
+                return false;
+            }
+            return self.conditional_expression_selectors_have_exact_acyclic_recurrence(
+                then_node,
+                actions,
+                target_name,
+            ) && self.conditional_expression_selectors_have_exact_acyclic_recurrence(
+                else_node,
+                actions,
+                target_name,
+            );
+        }
+        direct_nodes(expression).into_iter().all(|child| {
+            self.conditional_expression_selectors_have_exact_acyclic_recurrence(
+                child,
+                actions,
+                target_name,
+            )
+        })
+    }
+
+    fn static_body_actions_name_has_acyclic_conditional_assignment(
+        &self,
+        actions: &[StaticBodyAction<'_>],
+        all_actions: &[StaticBodyAction<'_>],
+        name: &str,
+    ) -> bool {
+        actions.iter().any(|action| match action {
+            StaticBodyAction::Assignment(assignment) => {
+                if assignment.name != name
+                    || !self.contains_conditional_expression(assignment.expression)
+                {
+                    return false;
+                }
+                let mut dependencies = HashSet::new();
+                collect_expression_dependency_names(
+                    assignment.expression,
+                    name,
+                    &mut dependencies,
+                );
+                !dependencies.is_empty()
+                    && dependencies.iter().all(|dependency| {
+                        !Self::static_body_actions_write_name(all_actions, dependency)
+                    })
+            }
+            StaticBodyAction::Conditional {
+                then_actions,
+                else_actions,
+                ..
+            } => {
+                self.static_body_actions_name_has_acyclic_conditional_assignment(
+                    then_actions,
+                    all_actions,
+                    name,
+                ) || self.static_body_actions_name_has_acyclic_conditional_assignment(
+                    else_actions,
+                    all_actions,
+                    name,
+                )
+            }
+        })
+    }
+
+    fn static_body_actions_name_has_acyclic_conditional_assignment_or_copies(
+        &self,
+        all_actions: &[StaticBodyAction<'_>],
+        name: &str,
+        visited_names: &HashSet<String>,
+    ) -> bool {
+        if visited_names.contains(name) {
+            return false;
+        }
+        let mut visited_names = visited_names.clone();
+        visited_names.insert(name.to_string());
+        self.static_body_actions_name_has_acyclic_conditional_assignment(
+            all_actions,
+            all_actions,
+            name,
+        ) || self.static_body_actions_name_has_acyclic_copy_path(
+            all_actions,
+            all_actions,
+            name,
+            &visited_names,
+        )
+    }
+
+    fn exact_boolean_identity_expression_name(
+        &self,
+        expression: &GrammarASTNode,
+    ) -> Option<String> {
+        let mut dependencies = HashSet::new();
+        collect_expression_dependency_names(expression, "", &mut dependencies);
+        let mut preserving_dependencies = dependencies.into_iter().filter(|dependency| {
+            self.selector_expression_unconditionally_preserves_name(expression, dependency)
+        });
+        let dependency = preserving_dependencies.next()?;
+        preserving_dependencies.next().is_none().then_some(dependency)
+    }
+
+    fn static_body_actions_name_has_acyclic_copy_path(
+        &self,
+        actions: &[StaticBodyAction<'_>],
+        all_actions: &[StaticBodyAction<'_>],
+        name: &str,
+        visited_names: &HashSet<String>,
+    ) -> bool {
+        actions.iter().any(|action| match action {
+            StaticBodyAction::Assignment(assignment) if assignment.name == name => {
+                self.exact_boolean_identity_expression_name(assignment.expression).is_some_and(
+                    |dependency| {
+                        self.static_body_actions_name_has_acyclic_conditional_assignment_or_copies(
+                            all_actions,
+                            &dependency,
+                            visited_names,
+                        )
+                    },
+                )
+            }
+            StaticBodyAction::Conditional {
+                then_actions,
+                else_actions,
+                ..
+            } => {
+                self.static_body_actions_name_has_acyclic_copy_path(
+                    then_actions,
+                    all_actions,
+                    name,
+                    visited_names,
+                ) || self.static_body_actions_name_has_acyclic_copy_path(
+                    else_actions,
+                    all_actions,
+                    name,
+                    visited_names,
+                )
+            }
+            _ => false,
+        })
     }
 
     fn static_body_actions_write_name(actions: &[StaticBodyAction<'_>], name: &str) -> bool {
@@ -6924,20 +7585,21 @@ impl Compiler {
                         {
                             return None;
                         }
+                        let selectors_are_exact = !self
+                            .contains_conditional_expression(assignment.expression)
+                            || self.conditional_expression_selectors_are_cycle_exact(
+                                assignment.expression,
+                                all_actions,
+                                target_name,
+                                visiting,
+                            );
                         if Self::static_body_actions_write_name(all_actions, &dependency)
                             && !self.static_body_actions_have_supported_dependency_recurrence_inner(
                                 all_actions,
                                 &dependency,
                                 target_name,
                                 visiting,
-                                conditional_path
-                                    || (self.contains_conditional_expression(
-                                        assignment.expression,
-                                    ) && !self.conditional_expression_selectors_are_cycle_stable(
-                                        assignment.expression,
-                                        all_actions,
-                                        target_name,
-                                    )),
+                                conditional_path || !selectors_are_exact,
                             )
                         {
                             return None;
@@ -6951,10 +7613,11 @@ impl Compiler {
                     else_actions,
                 } => {
                     let conditional_path = conditional_path
-                        || !self.recurrence_selector_is_cycle_stable(
+                        || !self.recurrence_selector_is_cycle_exact(
                             condition,
                             all_actions,
                             target_name,
+                            visiting,
                         );
                     let then_found = self
                         .static_body_actions_have_supported_dependency_recurrence_in_actions(
@@ -7465,7 +8128,7 @@ impl Compiler {
             }
         }
         if node.rule_name == "for_stmt"
-            && first_direct_node(node, "variable").is_some_and(&targets_name)
+            && first_direct_node(node, "variable").is_some_and(targets_name)
         {
             return true;
         }
@@ -7505,7 +8168,7 @@ impl Compiler {
             }
         }
         if node.rule_name == "for_stmt"
-            && first_direct_node(node, "variable").is_some_and(&targets_name)
+            && first_direct_node(node, "variable").is_some_and(targets_name)
         {
             return true;
         }
@@ -7530,19 +8193,31 @@ impl Compiler {
         if preserves_name {
             return true;
         }
-        if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
-            || !direct_tokens(node).iter().any(|token| token.value == "if")
-        {
+        let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node)
+        else {
             return false;
+        };
+        let is_boolean = self
+            .require_var(name)
+            .is_ok_and(|binding| binding.ty == ScalarType::Boolean);
+        let then_value = literal_boolean_value(then_node);
+        let else_value = literal_boolean_value(else_node);
+        let then_preserves =
+            self.selector_expression_unconditionally_preserves_name(then_node, name);
+        let else_preserves =
+            self.selector_expression_unconditionally_preserves_name(else_node, name);
+        if is_boolean
+            && ((self.boolean_identity_expression_preserves_name(condition, name)
+                && (then_value == Some(true) || then_preserves)
+                && (else_value == Some(false) || else_preserves))
+                || (self.boolean_identity_expression_preserves_name_with_negation(
+                    condition, name, true,
+                ) && (then_value == Some(false) || then_preserves)
+                    && (else_value == Some(true) || else_preserves)))
+        {
+            return true;
         }
-        let branches: Vec<&GrammarASTNode> = direct_nodes(node)
-            .into_iter()
-            .filter(|child| child.rule_name == node.rule_name)
-            .collect();
-        branches.len() == 2
-            && branches.into_iter().all(|branch| {
-                self.selector_expression_unconditionally_preserves_name(branch, name)
-            })
+        then_preserves && else_preserves
     }
 
     fn selector_expression_intrinsically_preserves_name(
@@ -7932,12 +8607,26 @@ impl Compiler {
         Some(())
     }
 
+    fn static_recurrence_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            let selected = match self.static_boolean_value(condition)? {
+                true => then_node,
+                false => else_node,
+            };
+            return self.static_recurrence_boolean_value(selected);
+        }
+        self.static_boolean_value(node)
+    }
+
     fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
         if let Some(name) = exact_bare_variable_expression_name(node) {
             let binding = self.require_var(&name).ok()?;
             if binding.ty == ScalarType::Boolean && !binding.is_global {
                 return self.static_boolean_slots.get(&binding.slot).copied();
             }
+        }
+        if let Some(value) = literal_boolean_value(node) {
+            return Some(value);
         }
         let tokens = direct_tokens(node);
         if tokens.len() == 1 && tokens[0].effective_type_name() == "KEYWORD" {
@@ -10200,6 +10889,30 @@ fn compare_static_values<T: PartialEq + PartialOrd>(op: &str, lhs: T, rhs: T) ->
     }
 }
 
+fn compare_literal_values(
+    op: &str,
+    lhs: &GrammarASTNode,
+    rhs: &GrammarASTNode,
+) -> Option<bool> {
+    if let (Some(lhs), Some(rhs)) = (
+        literal_checked_integer_arithmetic_value(lhs),
+        literal_checked_integer_arithmetic_value(rhs),
+    ) {
+        return Some(compare_static_values(op, lhs, rhs));
+    }
+    if let (Some(lhs), Some(rhs)) = (
+        expr_static_real_arithmetic_value_with(lhs, &|_| None),
+        expr_static_real_arithmetic_value_with(rhs, &|_| None),
+    ) {
+        return Some(compare_static_values(op, lhs, rhs));
+    }
+    Some(compare_static_values(
+        op,
+        expr_string_literal(lhs)?,
+        expr_string_literal(rhs)?,
+    ))
+}
+
 fn expr_real_literal_text(node: &GrammarASTNode) -> Option<String> {
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "REAL_LIT" {
@@ -10449,16 +11162,44 @@ fn literal_boolean_value(node: &GrammarASTNode) -> Option<bool> {
     }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "KEYWORD" {
-        return match tokens[0].value.as_str() {
-            "true" => Some(true),
-            "false" => Some(false),
-            _ => None,
-        };
+        match tokens[0].value.as_str() {
+            "true" => return Some(true),
+            "false" => return Some(false),
+            _ => {}
+        }
+    }
+    if tokens.len() == 1 && tokens[0].value == "not" {
+        let child_nodes = direct_nodes(node);
+        if child_nodes.len() != 1 {
+            return None;
+        }
+        return literal_boolean_value(child_nodes[0]).map(|value| !value);
     }
     let child_nodes = direct_nodes(node);
-    (tokens.is_empty() && child_nodes.len() == 1)
-        .then(|| literal_boolean_value(child_nodes[0]))
-        .flatten()
+    if tokens.is_empty() && child_nodes.len() == 1 {
+        return literal_boolean_value(child_nodes[0]);
+    }
+    let sequence = pieces(node);
+    let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() else {
+        return None;
+    };
+    match op.as_str() {
+        "and" | "or" | "impl" | "eqv" => {
+            let lhs = literal_boolean_value(lhs)?;
+            let rhs = literal_boolean_value(rhs)?;
+            Some(match op.as_str() {
+                "and" => lhs && rhs,
+                "or" => lhs || rhs,
+                "impl" => !lhs || rhs,
+                "eqv" => lhs == rhs,
+                _ => unreachable!(),
+            })
+        }
+        "=" | "!=" | "<>" | "<" | "<=" | ">" | ">=" => {
+            compare_literal_values(op, lhs, rhs)
+        }
+        _ => None,
+    }
 }
 
 fn literal_integer_value(node: &GrammarASTNode) -> Option<i64> {
@@ -11552,16 +12293,421 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_reassigned_dynamic_real_still_rejects_without_formatter_abi() {
-        let err = compile_source(
-            "begin real x; x := 4.2; x := sin(1.0); print(x) end",
+    fn al4_print_reassigned_dynamic_real_uses_portable_formatter() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; real x; x := pick(); print(x) end",
             "test",
         )
-        .expect_err("a dynamically reassigned real still needs a portable formatter");
+        .expect("a direct runtime real scalar uses the portable formatter");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+        assert!(module.get_function("__basic_print_real").is_some());
+    }
+
+    #[test]
+    fn al4_print_copied_runtime_real_scalar_uses_portable_formatter() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := x; x := 1.0; output(y) end",
+            "test",
+        )
+        .expect("a copied runtime real scalar retains formatter provenance");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+        assert!(module.get_function("__basic_print_real").is_some());
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_intersects_statement_branches() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; boolean flag; real x; if flag then x := pick() else x := pick(); output(x) end",
+            "test",
+        )
+        .expect("equal runtime-real branch provenance survives the join");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_intersects_conditional_value_branches() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; boolean flag; output(if flag then pick() else pick()) end",
+            "test",
+        )
+        .expect("equal runtime-real conditional values retain formatter provenance");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_unary_signs() {
+        for source in [
+            "begin real procedure pick; pick := 2.25; output(-pick()) end",
+            "begin real procedure pick; pick := 2.25; real x; x := -pick(); output(x) end",
+            "begin real procedure pick; pick := 2.25; real x; x := pick(); output(-x) end",
+            "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := -x; output(y) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "unary minus must preserve runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_additive_composition() {
+        for source in [
+            "begin real procedure pick; pick := 2.25; output(pick() + 1.25) end",
+            "begin real procedure pick; pick := 2.25; real x; x := pick() + 1.25; output(x) end",
+            "begin real procedure pick; pick := 2.25; real x; x := pick() + 1.25; output(10.0 - x + pick()) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "additive composition must preserve runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_scalar_copy_provenance_does_not_admit_wrappers() {
+        for source in [
+            "begin real procedure pick; pick := 2.25; boolean flag; real x; x := if flag then pick() else 1.0; output(x) end",
+            "begin real procedure pick; pick := 2.25; boolean procedure choose; choose := true; real x; x := pick(); output(if choose() then x else x) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("computed copies must not inherit formatter provenance");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_multiplicative_composition() {
+        for source in [
+            "begin real procedure pick; pick := 2.25; output(pick() * 2.0) end",
+            "begin real procedure pick; pick := 2.25; real x; x := pick() * 2.0; output(x) end",
+            "begin real procedure pick; pick := 2.25; real x; x := pick() * 2.0; output(2.0 * x * pick()) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "multiplicative composition must preserve runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_division_composition() {
+        for source in [
+            "begin real procedure pick; pick := 2.25; output(18.0 / pick()) end",
+            "begin real procedure pick; pick := 2.25; real x; x := 18.0 / pick(); output(x) end",
+            "begin real procedure pick; pick := 2.25; real x; x := 18.0 / pick(); output(x / 2.0) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "division composition must preserve runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_power_composition() {
+        for source in [
+            "begin real procedure pick; pick := 2.0; output(pick() ^ 3) end",
+            "begin real procedure pick; pick := 2.0; real x; x := pick() ^ 3; output(x) end",
+            "begin real procedure pick; pick := 2.0; real x; x := pick() ^ 3; output(x ^ 2) end",
+            "begin real procedure pick; pick := 3.0; output(2.0 ^ pick()) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "power composition must preserve runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_real_standard_functions() {
+        for source in [
+            "begin real procedure pick; pick := 9.0; output(sqrt(pick())) end",
+            "begin real procedure pick; pick := 0.0; output(sin(pick())) end",
+            "begin real procedure pick; pick := 0.0; output(cos(pick())) end",
+            "begin real procedure pick; pick := 1.0; output(ln(pick())) end",
+            "begin real procedure pick; pick := 0.0; output(exp(pick())) end",
+            "begin real procedure pick; pick := 0.0; output(arctan(pick())) end",
+            "begin real procedure pick; pick := -2.25; output(abs(pick())) end",
+            "begin real procedure pick; pick := 9.0; real x; x := sqrt(pick()); output(abs(-x)) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "real standard functions must preserve runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_standard_function_overrides_use_declared_call_provenance() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 9.0; real procedure sqrt(x); value x; real x; sqrt := x; output(sqrt(pick())) end",
+            "test",
+        )
+        .expect("a user-declared override uses declared value-scalar call provenance");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_includes_real_array_elements() {
+        for source in [
+            "begin real array values[1:2]; values[1] := 2.25; output(values[1]) end",
+            "begin real procedure pick; pick := 2.25; real array values[1:2]; integer i; i := 2; values[2] := pick(); output(values[i] * 2.0) end",
+            "begin real procedure pick; pick := 2.25; real array values[1:2]; real x; values[1] := pick(); x := values[1]; output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "real array elements must carry runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_includes_value_formals() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; procedure show(x); value x; real x; output(x * 2.0); show(pick()) end",
+            "test",
+        )
+        .expect("a real value formal carries runtime-real formatter provenance");
+        let show = module.get_function("show").expect("has show procedure");
+        assert!(show.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+        assert!(module.get_function("__basic_print_real").is_some());
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_includes_value_scalar_procedure_results() {
+        let module = compile_source(
+            "begin real procedure scale(x); value x; real x; scale := x * 2.0; real result; result := scale(1.125); output(result) end",
+            "test",
+        )
+        .expect("a value-scalar real procedure result carries formatter provenance");
+        let main = module.get_function("main").expect("has main procedure");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_procedure_result_provenance_includes_real_name_formals() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; output(relay(pick())) end",
+            "test",
+        )
+        .expect("a specialised real name-formal result retains formatter provenance");
+        let main = module.get_function("main").expect("has main procedure");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_procedure_result_provenance_rejects_unproven_name_actuals() {
+        let error = compile_source(
+            "begin real procedure relay(x); real x; relay := x; output(relay(sin(1.0))) end",
+            "test",
+        )
+        .expect_err("an unproven real name actual remains outside the bounded formatter proof");
         assert!(
-            format!("{err:?}").contains("cannot print a real value"),
-            "expected a real-type rejection, got: {err:?}"
+            format!("{error:?}").contains("cannot print a real value"),
+            "unexpected rejection: {error:?}"
         );
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_includes_captured_value_formals() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; procedure show(x); value x; real x; begin procedure nested; output(x * 2.0); nested() end; show(pick()) end",
+            "test",
+        )
+        .expect("a captured real value formal carries runtime-real formatter provenance");
+        let nested = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("nested"))
+            .expect("has nested procedure");
+        assert!(nested.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_includes_ordinary_captured_globals() {
+        let module = compile_source(
+            "begin real x; procedure show; output(x); x := 2.25; show() end",
+            "test",
+        )
+        .expect("ordinary captured real globals carry formatter provenance");
+        let show = module.get_function("show").expect("has show procedure");
+        assert!(show.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_includes_nonassignable_name_actuals() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; procedure show(x); real x; output(x); show(pick()) end",
+            "test",
+        )
+        .expect("a non-assignable runtime-real name actual retains formatter provenance");
+        let show = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_show"))
+            .expect("has specialised name-formal procedure");
+        assert!(show.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_survives_name_formal_forwarding() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; procedure sink(y); real y; output(y); procedure relay(x); real x; sink(x); relay(pick()) end",
+            "test",
+        )
+        .expect("forwarding retains the original non-assignable runtime-real actual");
+        let sink = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_sink"))
+            .expect("has specialised forwarded name-formal procedure");
+        assert!(sink.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_name_provenance_includes_assignable_array_actuals() {
+        let module = compile_source(
+            "begin real array a[1:1]; procedure show(x); real x; output(x); a[1] := 2.25; show(a[1]) end",
+            "test",
+        )
+        .expect("an assignable real array-element actual retains formatter provenance");
+        let show = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_show"))
+            .expect("has specialised name-formal procedure");
+        assert!(show.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_name_provenance_forwards_assignable_array_actuals() {
+        let module = compile_source(
+            "begin real array a[1:1]; procedure sink(y); real y; output(y); procedure relay(x); real x; sink(x); a[1] := 2.25; relay(a[1]) end",
+            "test",
+        )
+        .expect("forwarding retains assignable real array-element formatter provenance");
+        let sink = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_sink"))
+            .expect("has specialised forwarded name-formal procedure");
+        assert!(sink.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_scalar_provenance_invalidates_conservatively() {
+        for source in [
+            "begin real procedure pick; pick := 2.25; real x; x := pick(); x := sin(1.0); output(x) end",
+            "begin real procedure pick; pick := 2.25; boolean flag; real x; x := pick(); if flag then x := 1.0; output(x) end",
+            "begin real procedure pick; pick := 2.25; procedure touch; begin end; real x; x := pick(); touch(); output(x) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("reassignment, control flow, and calls invalidate provenance");
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "unexpected rejection for {source:?}: {err:?}"
+            );
+        }
     }
 
     #[test]
@@ -11575,6 +12721,36 @@ mod tests {
             format!("{err:?}").contains("cannot print a real value"),
             "unexpected rejection: {err:?}"
         );
+    }
+
+    #[test]
+    fn al4_print_runtime_real_procedure_result_uses_portable_formatter() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; output(pick()) end",
+            "test",
+        )
+        .expect("a runtime real procedure result uses the portable formatter");
+        let main = module.get_function("main").expect("has main");
+        assert!(
+            main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }),
+            "main instructions: {:#?}",
+            main.instructions
+        );
+        assert!(module.get_function("__basic_print_real").is_some());
+    }
+
+    #[test]
+    fn al4_runtime_real_formatter_does_not_admit_dynamic_scalar_composition() {
+        let err = compile_source(
+            "begin real procedure pick; pick := 0.0; real x; x := sin(1.0); output(pick() + x) end",
+            "test",
+        )
+        .expect_err("the bounded formatter gate must not admit dynamic scalar arithmetic");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
@@ -13266,13 +14442,17 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_static_standard_function_respects_user_override() {
-        let err = compile_source(
+    fn al4_print_standard_function_override_uses_runtime_formatter() {
+        let module = compile_source(
             "begin real procedure abs(x); value x; real x; abs := x + 1.0; print(abs(2.0)) end",
             "test",
         )
-        .expect_err("a user-defined abs result still requires runtime formatting");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a user-defined abs result uses runtime formatting");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
     }
 
     #[test]
@@ -13298,13 +14478,17 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_nested_static_standard_function_respects_user_override() {
-        let err = compile_source(
+    fn al4_print_nested_standard_function_override_uses_runtime_formatter() {
+        let module = compile_source(
             "begin real procedure abs(x); value x; real x; abs := x + 1.0; print(abs(2.0) + 0.5) end",
             "test",
         )
-        .expect_err("a nested user-defined abs result still requires runtime formatting");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a nested user-defined abs result uses runtime formatting");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
     }
 
     #[test]
@@ -13335,13 +14519,17 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_conditional_static_standard_function_respects_user_override() {
-        let err = compile_source(
+    fn al4_print_conditional_standard_function_override_uses_runtime_formatter() {
+        let module = compile_source(
             "begin real procedure abs(x); value x; real x; abs := x + 1.0; boolean flag; flag := true; print(if flag then abs(2.0) else 1.5) end",
             "test",
         )
-        .expect_err("a conditional user-defined abs result still requires runtime formatting");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a conditional user-defined abs result uses runtime formatting");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        }));
     }
 
     #[test]
@@ -13602,6 +14790,22 @@ mod tests {
             "test",
         )
         .expect("tracked straight-line bounds prove a nonempty step loop");
+    }
+
+    #[test]
+    fn al4_literal_string_predicates_select_step_loop_bounds() {
+        let module = compile_source(
+            "begin integer i, total; total := 0; for i := if 'ALPHA' < 'BETA' then 1 else 4 step if 'ALPHA' < 'BETA' then 1 else 2 until if 'ALPHA' < 'BETA' then 3 else 4 do total := total + i; print(total + 0.25); total := 0; for i := if 'BETA' < 'ALPHA' then 1 else 2 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'BETA' < 'ALPHA' then 5 else 4 do total := total + i; print(total + 0.25) end",
+            "test",
+        )
+        .expect("literal string predicates may select exact finite step-loop bounds");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["6.25", "9.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
     }
 
     #[test]
@@ -13990,6 +15194,25 @@ mod tests {
     }
 
     #[test]
+    fn al4_literal_string_predicate_selects_preserving_transitive_dependency_branch() {
+        compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if 'ALPHA' < 'BETA' then limit else limit + 1 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a literal string predicate may choose a preserving transitive dependency leaf");
+    }
+
+    #[test]
+    fn al4_false_literal_string_predicate_transitive_dependency_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if 'BETA' < 'ALPHA' then limit else limit + 1 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a literal string predicate that selects a changing dependency leaf must stay conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
     fn al4_stable_assignment_selector_preserves_transitive_dependency() {
         compile_source(
             "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else n end; print(i + 0.25) end",
@@ -14023,6 +15246,25 @@ mod tests {
             "test",
         )
         .expect("a static selector may discard a changing selector-assignment leaf");
+    }
+
+    #[test]
+    fn al4_literal_string_predicate_selector_assignment_selects_preserving_leaf() {
+        compile_source(
+            "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := if 'ALPHA' < 'BETA' then choose else false end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a literal string predicate may select the preserving selector-assignment leaf");
+    }
+
+    #[test]
+    fn al4_false_literal_string_predicate_selector_assignment_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := if 'BETA' < 'ALPHA' then choose else false end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a literal string predicate that selects a changing leaf must stay conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
@@ -14760,6 +16002,752 @@ mod tests {
                     && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
             }));
         }
+    }
+
+    #[test]
+    fn al4_evolving_statement_selected_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := i < 2; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an acyclic exact recurrence may select statements in a cross-assigned cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_evolving_expression_selected_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := i < 2; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an acyclic exact recurrence may select leaves in a cross-assigned cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_cycle_dependent_statement_selector_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := n > 0; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact selector recurrence may consume earlier writes from its selected cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_recursive_statement_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact recursive selector may select statements in a recurrence cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_recursive_expression_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := not choose; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact recursive selector may select expressions in a recurrence cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_self_recursive_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact conditional self-recursive selector may drive a recurrence cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_self_recursive_selector_selects_recurrence_cycle_expression() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if flag then not choose else false; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact conditional self-recursive selector may select a recurrence-cycle expression");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_unknown_conditional_self_recursive_selector_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an unknown conditional selector must keep self-recursion conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_dynamic_all_branch_self_recursive_selector_tracks_recurrence_cycle() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := i < 2; choose := if flag then not choose else choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a dynamic conditional may retain self-recursion through every branch");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_dynamic_all_branch_self_recursive_selector_selects_cycle_expression() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := i < 2; choose := if flag then not choose else choose; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a dynamic all-branch self-recursive selector may choose a cycle expression");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_dynamic_partial_self_recursive_selector_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := i < 2; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a non-conditional partial self-recursive selector remains conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_acyclic_conditional_selector_tracks_recurrence_cycle_statements() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if i < 2 then true else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact acyclic conditional selector may drive recurrence-cycle statements");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_acyclic_conditional_selector_selects_recurrence_cycle_expression() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if i < 2 then true else false; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact acyclic conditional selector may choose a recurrence-cycle expression");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_unknown_acyclic_conditional_selector_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, other; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if other then true else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an unknown acyclic conditional selector must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_exact_partial_self_recursive_selector_tracks_cycle_statements() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact evolving selector may choose a partial self-recursive update");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_exact_partial_self_recursive_selector_selects_cycle_expression() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; choose := if flag then not choose else false; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact partial self-recursive selector may choose a cycle expression");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_transitive_exact_partial_self_recursive_selector_tracks_cycle_statements() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("one exact selector copy may choose a partial self-recursive update");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_second_exact_partial_self_recursive_selector_copy_tracks_cycle_statements() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate, key; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag; key := gate; choose := if key then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("two exact selector copies may choose a partial self-recursive update");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_acyclic_partial_self_recursive_selector_copy_chain_tracks_cycle_statements() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate, key, last; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; last := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag; key := gate; last := key; choose := if last then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a finite acyclic selector copy chain may choose a partial self-recursive update");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_partial_self_recursive_selector_copy_cycle_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate, key; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; for i := i + 1 while i <= n do begin n := n - delta; flag := gate; gate := key; key := flag; choose := if key then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a selector copy cycle without an exact source must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_boolean_identity_partial_self_recursive_selector_copy_chain_tracks_cycle_statements() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate, key; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and true; key := not not gate; choose := if key then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("exact boolean identity selector copies may choose a partial self-recursive update");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_boolean_identity_partial_self_recursive_selector_copy_cycle_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := gate and true; gate := flag or false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a boolean identity selector copy cycle without an exact source must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_changing_boolean_selector_copy_expression_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a changing boolean selector copy expression must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_conditional_identity_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate, other; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; other := false; for i := i + 1 while i <= n do begin n := n - delta; other := not other; flag := if i < 2 then true else false; gate := if other then flag and true else not not flag; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a conditional whose branches preserve one selector may forward it");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_projection_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then true else false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a conditional projection may forward its boolean selector");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_complemented_projection_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if not flag then false else true; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a complemented conditional projection may forward its boolean selector");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_guarded_projection_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then flag else false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a one-sided guarded conditional projection may forward its selector");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_mismatched_guarded_projection_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then false else flag; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a mismatched guarded projection must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_literal_boolean_projection_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate, key; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (false impl true); key := if gate then (false or true) eqv not false else true and false; choose := if key then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("literal-only boolean expressions may supply projection constants");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_inverted_literal_boolean_projection_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then not true else true and false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an inverted literal-only projection must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_literal_integer_predicate_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (1 < 2); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("literal integer predicates may supply neutral selector identity operands");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_false_literal_integer_predicate_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (2 < 1); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a false literal-predicate operand must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_literal_arithmetic_predicate_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (1 + 2 < 4); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("literal checked arithmetic predicates may supply neutral selector identity operands");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_false_literal_arithmetic_predicate_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (1 + 2 < 3); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a false literal-arithmetic predicate operand must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_literal_real_predicate_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (1.5 + 0.5 < 3.0); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("finite literal real predicates may supply neutral selector identity operands");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_false_literal_real_predicate_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (1.5 + 0.5 < 2.0); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a false literal-real predicate operand must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_literal_string_predicate_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and ('ALPHA' < 'BETA'); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("literal string predicates may supply neutral selector identity operands");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_false_literal_string_predicate_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and ('BETA' < 'ALPHA'); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a false literal-string predicate operand must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_literal_string_predicate_selects_recurrence_cycle_statement() {
+        let module = compile_source(
+            "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; if 'ALPHA' < 'BETA' then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a literal string predicate may select a recurrence-cycle statement");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_literal_string_predicate_selects_recurrence_cycle_expression() {
+        let module = compile_source(
+            "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; delta := if 'ALPHA' < 'BETA' then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a literal string predicate may select a recurrence-cycle expression");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_unbalanced_complemented_projection_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if not flag then true else false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an unbalanced complemented projection must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_negated_conditional_projection_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then false else true; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a negated conditional projection must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_differing_conditional_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate, other; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; other := false; for i := i + 1 while i <= n do begin n := n - delta; other := not other; flag := if i < 2 then true else false; gate := if other then flag and true else false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("conditional selector copies with a changing branch must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_unknown_partial_self_recursive_selector_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, other; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if other then true else false; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an unknown partial self-recursive selector must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_mutually_recursive_statement_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; choose := guard; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact mutually recursive selector may select statements in a recurrence cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_mutually_recursive_expression_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; choose := guard; guard := not choose; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact mutually recursive selector may select expressions in a recurrence cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_recursive_statement_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; choose := if guard then not choose else guard; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact conditional recursive selector may select statements in a recurrence cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_recursive_expression_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; choose := if guard then not choose else guard; guard := not choose; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact conditional recursive selector may select expressions in a recurrence cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_statement_assigned_recursive_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := not choose else choose := guard; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact statement-assigned recursive selector may select recurrence-cycle statements");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_statement_assigned_recursive_selector_selects_recurrence_cycle_expression() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := not choose else choose := guard; guard := not choose; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact statement-assigned recursive selector may select a recurrence-cycle expression");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_statement_control_recursive_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard, flag; i := 0; n := 4; delta := 2; choose := true; guard := false; flag := true; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := if flag then true else false else choose := if flag then false else true; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact statement-control cycle may select recursive boolean assignments");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_statement_control_recursive_selector_selects_recurrence_cycle_expression() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard, flag; i := 0; n := 4; delta := 2; choose := true; guard := false; flag := true; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := if flag then true else false else choose := if flag then false else true; guard := not choose; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact statement-control cycle may select a recurrence-cycle expression");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_unknown_statement_control_recursive_selector_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, guard, flag; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := if flag then true else false else choose := if flag then false else true; guard := not choose; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an unknown nested selector must keep statement-control cycles conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
@@ -15692,6 +17680,376 @@ mod tests {
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "12.5")
+        }));
+    }
+
+    #[test]
+    fn al4_step_loop_tracks_literal_string_selected_control_recurrences() {
+        let module = compile_source(
+            "begin integer i, j; for i := 1 step 1 until 10 do if 'ALPHA' < 'BETA' then i := i * 2 else i := i + 3; print(i + 0.25); for j := 1 step 1 until 10 do if 'BETA' < 'ALPHA' then j := j * 2 else j := j + 3; print(j + 0.25) end",
+            "test",
+        )
+        .expect("literal string predicates may select bounded control recurrences");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["15.25", "13.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_while_loop_tracks_literal_string_selected_predicates() {
+        let module = compile_source(
+            "begin integer i, j; real x, y; i := 0; x := 0.25; for i := i + 1 while if 'ALPHA' < 'BETA' then i <= 3 else i <= 1 do x := x + i; print(x); j := 0; y := 0.25; for j := j + 1 while if 'BETA' < 'ALPHA' then j <= 1 else j <= 2 do y := y + j; print(y) end",
+            "test",
+        )
+        .expect("literal string predicates may select bounded while predicates");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["6.25", "3.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_while_loop_tracks_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i, j; real x, y; i := 0; x := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 3 do x := x + i; print(x); j := 0; y := 0.25; for j := if 'BETA' < 'ALPHA' then j + 2 else j + 1 while j <= 2 do y := y + j; print(y) end",
+            "test",
+        )
+        .expect("literal string predicates may select bounded while values");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["6.25", "3.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_for_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9, if 'BETA' < 'ALPHA' then 8 else 2, if 'ALPHA' < 'BETA' then i + 1 else i + 3 while i <= 4 do total := total + i; print(total) end",
+            "test",
+        )
+        .expect("literal string predicates may select values across a bounded for list");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "10.25")
+        }));
+    }
+
+    #[test]
+    fn al4_mixed_for_list_sequences_literal_string_selected_headers() {
+        let module = compile_source(
+            "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then 8 else 4 do total := total + i; print(total) end",
+            "test",
+        )
+        .expect("literal string predicates may select headers across mixed for elements");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
+        }));
+    }
+
+    #[test]
+    fn al4_step_while_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then i + 3 else i + 1 while i <= 4 do total := total + i; print(total) end",
+            "test",
+        )
+        .expect("literal string predicates may select values across step and while elements");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
+        }));
+    }
+
+    #[test]
+    fn al4_real_step_while_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then x + 1.5 else x + 0.5 while x <= 3.0 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("a real finite step exit may seed a following bounded while element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.75")
+        }));
+    }
+
+    #[test]
+    fn al4_real_while_step_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.5 else 0.0 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("a bounded real while exit may seed a following finite step element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "6.25")
+        }));
+    }
+
+    #[test]
+    fn al4_real_step_step_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 4.0 else 0.0 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("a finite real step exit may seed another finite step element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "15.25")
+        }));
+    }
+
+    #[test]
+    fn al4_real_step_single_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("a finite real step exit may seed a following single-value element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.75")
+        }));
+    }
+
+    #[test]
+    fn al4_real_single_single_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 0.5 else 9.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("a real single-value snapshot may seed a following single-value element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "1.75")
+        }));
+    }
+
+    #[test]
+    fn al4_real_single_step_while_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 0.5 else 9.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 4.0 else x <= 1.0 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("real single, step, and while elements may propagate one exact snapshot chain");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "15.75")
+        }));
+    }
+
+    #[test]
+    fn al4_real_while_step_single_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while if 'ALPHA' < 'BETA' then x <= 1.0 else x <= 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.5 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("real while, step, and single elements may propagate one exact snapshot chain");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "9.75")
+        }));
+    }
+
+    #[test]
+    fn al4_real_step_single_while_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 4.5 else x <= 1.0 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("real step, single, and while elements may propagate one exact snapshot chain");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "19.75")
+        }));
+    }
+
+    #[test]
+    fn al4_real_while_single_step_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while if 'ALPHA' < 'BETA' then x <= 1.0 else x <= 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 4.0 else 0.0 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("real while, single, and step elements may propagate one exact snapshot chain");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "16.75")
+        }));
+    }
+
+    #[test]
+    fn al4_real_single_while_step_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 0.5 else 9.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 2.0 else x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 4.5 else 0.0 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("real single, while, and step elements may propagate one exact snapshot chain");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "20.25")
+        }));
+    }
+
+    #[test]
+    fn al4_real_step_while_single_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 4.0 else x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("real step, while, and single elements may propagate one exact snapshot chain");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "20.25")
+        }));
+    }
+
+    #[test]
+    fn al4_real_single_step_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.5 else 0.0 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("a real single-value snapshot may seed a following finite step element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
+        }));
+    }
+
+    #[test]
+    fn al4_real_single_while_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 0.5 else 9.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 2.0 else x <= 1.0 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("a real single-value snapshot may seed a following bounded while element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "5.25")
+        }));
+    }
+
+    #[test]
+    fn al4_real_while_while_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then x + 1.5 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 2.5 else x <= 1.5 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("a bounded real while exit may seed another bounded while element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "6.25")
+        }));
+    }
+
+    #[test]
+    fn al4_real_while_single_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("a bounded real while exit may seed a following single-value element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "3.75")
+        }));
+    }
+
+    #[test]
+    fn al4_while_step_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i; real total; i := 0; total := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 2, if 'BETA' < 'ALPHA' then 9 else i + 1 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 5 else 0 do total := total + i; print(total) end",
+            "test",
+        )
+        .expect("a read-only while body may seed a following finite step element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "12.25")
+        }));
+    }
+
+    #[test]
+    fn al4_step_step_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then 9 else i + 1 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 5 else 0 do total := total + i; print(total) end",
+            "test",
+        )
+        .expect("a read-only finite step body may seed another finite step element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "12.25")
+        }));
+    }
+
+    #[test]
+    fn al4_while_while_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i; real total; i := 0; total := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 2, if 'BETA' < 'ALPHA' then i + 2 else i + 1 while if 'ALPHA' < 'BETA' then i <= 5 else i <= 3 do total := total + i; print(total) end",
+            "test",
+        )
+        .expect("a read-only bounded while body may seed another while element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "12.25")
+        }));
+    }
+
+    #[test]
+    fn al4_while_single_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i; real total; i := 0; total := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 2, if 'BETA' < 'ALPHA' then 9 else i + 1 do total := total + i; print(total) end",
+            "test",
+        )
+        .expect("a read-only bounded while body may seed a single-value element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
+        }));
+    }
+
+    #[test]
+    fn al4_single_step_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9, if 'BETA' < 'ALPHA' then 9 else i + 1 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 4 else 0 do total := total + i; print(total) end",
+            "test",
+        )
+        .expect("a single-value element may seed a following finite step element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "10.25")
         }));
     }
 

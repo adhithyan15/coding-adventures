@@ -1,0 +1,11 @@
+{
+  "id": "FR-C203-joueur",
+  "pathSegment": "FR-PATH-203-CHOSES203",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-203-CHOSES203",
+      "order": 2
+    }
+  ]
+}

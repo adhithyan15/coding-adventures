@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Injection, Operation, Bruise, Burn, Stomach cramp",
+  "label": "ch:ar-injection-operation-bruise-burn-stomach-cramp",
+  "canDo": "I can say an injection, an operation, a bruise, a burn and a stomach cramp.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C201-maghas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say an injection, an operation, a bruise, a burn and a stomach cramp.",
+    "assesses": [
+      "AR-LEX-C201-SIHHA201-03",
+      "AR-LEX-C201-SIHHA201-04",
+      "AR-LEX-C201-SIHHA201-05"
+    ]
+  }
+}

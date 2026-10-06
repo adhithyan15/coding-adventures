@@ -1,0 +1,11 @@
+{
+  "id": "AR-C172-ittijah",
+  "pathSegment": "AR-PATH-172-MAKAN172",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-172-MAKAN172",
+      "order": 3
+    }
+  ]
+}

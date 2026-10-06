@@ -1,0 +1,11 @@
+{
+  "id": "MR-C225-avlambun-asne",
+  "pathSegment": "MR-PATH-225-ACT225",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-225-ACT225",
+      "order": 3
+    }
+  ]
+}

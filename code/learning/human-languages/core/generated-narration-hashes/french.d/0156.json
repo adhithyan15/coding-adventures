@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:54ff53765e94591a",
+  "lessonIds": [
+    "FR-C156-rarement",
+    "FR-C156-ensuite",
+    "FR-C156-enfin",
+    "FR-C156-desormais",
+    "FR-C156-encore"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch156.txt",
+  "json": "french/narration/ch156.json",
+  "textHash": "fnv1a64:edb0d6b66bf0a40e",
+  "jsonHash": "fnv1a64:ecc8d1c9bda58a0e",
+  "findings": []
+}

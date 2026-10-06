@@ -1,0 +1,11 @@
+{
+  "id": "TE-C209-vaidyam",
+  "pathSegment": "TE-PATH-209-AROGYAM209",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-209-AROGYAM209",
+      "order": 3
+    }
+  ]
+}

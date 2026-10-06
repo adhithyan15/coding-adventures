@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:2143b4362d01e0f5",
+  "lessonIds": [
+    "BN-C175-durgondho",
+    "BN-C175-jharon",
+    "BN-C175-boti",
+    "BN-C175-shilnora",
+    "BN-C175-gs"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch175.txt",
+  "json": "bengali/narration/ch175.json",
+  "textHash": "fnv1a64:39be7ab192b391eb",
+  "jsonHash": "fnv1a64:b340531b19d2ac78",
+  "findings": []
+}

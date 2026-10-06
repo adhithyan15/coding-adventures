@@ -1,0 +1,11 @@
+{
+  "id": "BN-C109-saban",
+  "pathSegment": "BN-PATH-109-THINGS109",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-109-THINGS109",
+      "order": 1
+    }
+  ]
+}

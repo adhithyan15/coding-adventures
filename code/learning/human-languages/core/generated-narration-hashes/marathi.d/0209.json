@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:736c6aa299bfa99f",
+  "lessonIds": [
+    "MR-C209-arthavyavastha",
+    "MR-C209-yuddha",
+    "MR-C209-santata",
+    "MR-C209-sainya",
+    "MR-C209-sainik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch209.txt",
+  "json": "marathi/narration/ch209.json",
+  "textHash": "fnv1a64:0aa95a6ef9c2d656",
+  "jsonHash": "fnv1a64:5b886acb18036194",
+  "findings": []
+}

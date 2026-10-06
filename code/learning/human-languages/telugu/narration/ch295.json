@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 295,
+  "title": "Success, Shape, In case, For some reason, Somehow",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:1f3aa01c8e345efc",
+  "lessons": [
+    {
+      "id": "TE-C295-vijayam",
+      "sequence": 14060,
+      "title": "విజయం (vijayaṁ) — success",
+      "headword": "విజయం",
+      "romanization": "vijayaṁ",
+      "gloss": "success",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1986a7bf7fe02076",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for almost, then the Telugu for all in all."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విజయం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విజయం — vijayaṁ — \"success\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vijayaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vijayaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vijayaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vijayaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vijayaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vijayaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for almost, then the Telugu for all in all, then say vijayaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for almost, then the Telugu for all in all, then say *vijayaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విజయం (vijayaṁ) mean? (\"Success\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C295-akaram",
+      "sequence": 14070,
+      "title": "ఆకారం (ākāraṁ) — a shape",
+      "headword": "ఆకారం",
+      "romanization": "ākāraṁ",
+      "gloss": "a shape",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa5c997256040627",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for all in all, then the Telugu for success."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆకారం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆకారం — ākāraṁ — \"a shape\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākāraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākāraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ākāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ākāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for all in all, then the Telugu for success, then say ākāraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for all in all, then the Telugu for success, then say *ākāraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆకారం (ākāraṁ) mean? (\"A shape\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C295-endukaina",
+      "sequence": 14080,
+      "title": "ఎందుకైనా (endukainā) — in case, to be on the safe side",
+      "headword": "ఎందుకైనా",
+      "romanization": "endukainā",
+      "gloss": "in case, to be on the safe side",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7eac0596b1c70ced",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for success, then the Telugu for a shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎందుకైనా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎందుకైనా — endukainā — \"in case, to be on the safe side\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "endukainā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *endukainā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "endukainā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *endukainā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say endukainā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *endukainā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for success, then the Telugu for a shape, then say endukainā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for success, then the Telugu for a shape, then say *endukainā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఎందుకైనా (endukainā) mean? (\"In case, to be on the safe side\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C295-enduko",
+      "sequence": 14090,
+      "title": "ఎందుకో (endukō) — for some reason",
+      "headword": "ఎందుకో",
+      "romanization": "endukō",
+      "gloss": "for some reason",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2389731ee40102a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a shape, then the Telugu for in case."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎందుకో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎందుకో — endukō — \"for some reason\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "endukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *endukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "endukō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *endukō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say endukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *endukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a shape, then the Telugu for in case, then say endukō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a shape, then the Telugu for in case, then say *endukō* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఎందుకో (endukō) mean? (\"For some reason\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C295-elagaina",
+      "sequence": 14100,
+      "title": "ఎలాగైనా (elāgainā) — somehow, by any means",
+      "headword": "ఎలాగైనా",
+      "romanization": "elāgainā",
+      "gloss": "somehow, by any means",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9a8820dbc47666f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for in case, then the Telugu for for some reason."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎలాగైనా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎలాగైనా — elāgainā — \"somehow, by any means\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "elāgainā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *elāgainā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "elāgainā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *elāgainā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say elāgainā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *elāgainā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for in case, then the Telugu for for some reason, then say elāgainā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for in case, then the Telugu for for some reason, then say *elāgainā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఎలాగైనా (elāgainā) mean? (\"Somehow, by any means\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R295-first-pass-words-from-chapters-287-290",
+      "sequence": 14110,
+      "title": "Words from chapters 287-290 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 287-290",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9838163ec3e1bb97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for for some reason and somehow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chest, an accident, an ambulance, insurance, an emergency",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chest, an accident, an ambulance, insurance, an emergency]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an operation, indigestion, constipation, diabetes, blood pressure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an operation, indigestion, constipation, diabetes, blood pressure]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Bhogi, a festival, a village fair, a celebration, sunrise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Bhogi, a festival, a village fair, a celebration, sunrise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daytime, a half of the day, a decade, a century, childhood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: daytime, a half of the day, a decade, a century, childhood]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chest? (ఛాతీ, chātī.) An accident? (ప్రమాదం, pramādaṁ.) An ambulance? (అంబులెన్సు, ambulensu.) Insurance? (బీమా, bīmā.) An emergency? (అత్యవసరం, atyavasaraṁ.) An operation? (ఆపరేషను, āparēṣanu.) Indigestion? (అజీర్ణం, ajīrṇaṁ.) Constipation? (మలబద్ధకం, malabaddhakaṁ.) Diabetes? (మధుమేహం, madhumēhaṁ.) Blood pressure? (రక్తపోటు, raktapōṭu.) Bhogi? (భోగి, bhōgi.) A festival? (పండుగ, paṇḍuga.) A village fair? (జాతర, jātara.) A celebration? (వేడుక, vēḍuka.) Sunrise? (సూర్యోదయం, sūryōdayaṁ.) Daytime? (పగలు, pagalu.) A half of the day? (పూట, pūṭa.) A decade? (దశాబ్దం, daśābdaṁ.) A century? (శతాబ్దం, śatābdaṁ.) Childhood? (బాల్యం, bālyaṁ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R295-second-pass-words-from-chapters-291-295",
+      "sequence": 14120,
+      "title": "Words from chapters 291-295 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 291-295",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db97fe1301a8bb0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for south and a place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "south, a place, a border, opposite, around",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: south, a place, a border, opposite, around]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hut, a canal, a building, a fort, a factory",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hut, a canal, a building, a fort, a factory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a jail, a mosque, a church, the village council, a loft",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a jail, a mosque, a church, the village council, a loft]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "advice, moreover, by the way, almost, all in all",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: advice, moreover, by the way, almost, all in all]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "success, a shape, in case, for some reason, somehow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: success, a shape, in case, for some reason, somehow]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "South? (దక్షిణం, dakṣiṇaṁ.) A place? (ప్రదేశం, pradēśaṁ.) A border? (సరిహద్దు, sarihaddu.) Opposite? (ఎదురుగా, edurugā.) Around? (చుట్టూ, cuṭṭū.) A hut? (గుడిసె, guḍise.) A canal? (కాలువ, kāluva.) A building? (భవనం, bhavanaṁ.) A fort? (కోట, kōṭa.) A factory? (కార్ఖానా, kārkhānā.) A jail? (జైలు, jailu.) A mosque? (మసీదు, masīdu.) A church? (చర్చి, carci.) The village council? (పంచాయతీ, pañcāyatī.) A loft? (అటక, aṭaka.) Advice? (సలహా, salahā.) Moreover? (పైగా, paigā.) By the way? (అన్నట్టు, annaṭṭu.) Almost? (దాదాపు, dādāpu.) All in all? (మొత్తానికి, mottāniki.) Success? (విజయం, vijayaṁ.) A shape? (ఆకారం, ākāraṁ.) In case? (ఎందుకైనా, endukainā.) For some reason? (ఎందుకో, endukō.) Somehow? (ఎలాగైనా, elāgainā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

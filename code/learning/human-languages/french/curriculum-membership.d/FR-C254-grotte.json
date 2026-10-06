@@ -1,0 +1,11 @@
+{
+  "id": "FR-C254-grotte",
+  "pathSegment": "FR-PATH-254-CHOSES254",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-254-CHOSES254",
+      "order": 4
+    }
+  ]
+}

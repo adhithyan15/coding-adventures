@@ -46,7 +46,7 @@ Two stacked strokes with a gap. Write the sign read ko.
 
 Script — the shape, and the exception.
 ん (n).
-One stroke. Start with a small tick down-left, then sweep down, round to the right and up in a single unbroken movement, finishing with a rise.
+One stroke. Start at the top and cut down to the lower left, climb back up the same line, turn over a small hump and down, then round to the right and up, all in a single unbroken movement, finishing with a rise.
 Now the part that matters more than the shape. Every sign you have met so far is a consonant plus a vowel, or a vowel alone. This one is a consonant with no vowel at all — and it still takes a full beat, exactly as long as any other sign.
 That is why Japanese counts morae rather than syllables, and it is the clearest evidence you will get. An English speaker hears the n at the end of a word as a tail on the vowel before it. Japanese does not. It is its own beat, held its own length, and shortening it is one of the most audible foreign-accent tells there is.
 
@@ -78,7 +78,7 @@ Write the three-stroke sign read ha. Vertical, crossbar, loop.
 Script — the shape.
 に (ni).
 Three strokes, and the first one you have already practised:
-the vertical down the left, with the same small flick left at the foot as the sign read ha.
+the vertical down the left, with the same small flick up to the right at the foot as the sign read ha.
 a short horizontal to its right, upper area.
 a longer horizontal below it, sweeping right.
 Read ni: the n of knee, then the tight i you learned first.
@@ -113,7 +113,7 @@ Script — the shape.
 ち (chi).
 Two strokes:
 a short horizontal across the top.
-the body — down from the middle of that bar, curving left, then round into a full belly to the right and up.
+the body — down through that bar from above it, falling to the left, then a sharp turn up to the right and round into a full belly that finishes low on the left.
 Read chi: the ch of English cheese, then the tight i.
 Count what just happened. One sign. One beat. Four roman letters to describe it. The romanization is a pronunciation aid written for people who do not read the script yet — it is not a smaller version of the writing system, and the number of letters in it tells you nothing about the number of beats in the word.
 This is the moment the roman spelling starts costing you more than it pays, and it is why the signs are worth the effort.

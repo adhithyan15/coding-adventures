@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:f24bbca8f35470fa",
+  "lessonIds": [
+    "UR-C245-barsat",
+    "UR-C245-rozana",
+    "UR-C245-aj-kal",
+    "UR-C245-akhir",
+    "UR-C245-salgirah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch245.txt",
+  "json": "urdu/narration/ch245.json",
+  "textHash": "fnv1a64:34de6aa13e556204",
+  "jsonHash": "fnv1a64:710c848c7310551a",
+  "findings": []
+}

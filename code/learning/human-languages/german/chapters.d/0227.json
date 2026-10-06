@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "An application, A relationship, An impression, Admission, An admission ticket",
+  "label": "ch:ge-an-application-a-relationship-an-impression-admission-an-admission-ticket",
+  "canDo": "I can say an application, a relationship, an impression, admission and an admission ticket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C227-eintrittskarte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say an application, a relationship, an impression, admission and an admission ticket.",
+    "assesses": [
+      "GE-LEX-C227-THING227-03",
+      "GE-LEX-C227-THING227-04",
+      "GE-LEX-C227-THING227-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "Museum, Stadium, Pavement, Crossroads, Embassy",
+  "label": "ch:ar-museum-stadium-pavement-crossroads-embassy",
+  "canDo": "I can say a museum, a stadium, a pavement, a crossroads and an embassy.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "AR-C235-sifara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say a museum, a stadium, a pavement, a crossroads and an embassy.",
+    "assesses": [
+      "AR-LEX-C235-MAKAN235-03",
+      "AR-LEX-C235-MAKAN235-04",
+      "AR-LEX-C235-MAKAN235-05"
+    ]
+  }
+}

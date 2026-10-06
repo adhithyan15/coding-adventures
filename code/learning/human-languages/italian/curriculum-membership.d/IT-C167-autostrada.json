@@ -1,0 +1,11 @@
+{
+  "id": "IT-C167-autostrada",
+  "pathSegment": "IT-PATH-167-COSE167",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-167-COSE167",
+      "order": 1
+    }
+  ]
+}

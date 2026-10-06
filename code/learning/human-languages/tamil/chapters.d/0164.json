@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "To describe, To hand over, To practise, To pass, To pay attention",
+  "label": "ch:ta-to-describe-to-hand-over-to-practise-to-pass-to-pay-attention",
+  "canDo": "I can say to describe, to hand over, to practise, to pass and to pay attention.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C164-kavani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say to describe, to hand over, to practise, to pass and to pay attention.",
+    "assesses": [
+      "TA-LEX-C164-ACT164-03",
+      "TA-LEX-C164-ACT164-04",
+      "TA-LEX-C164-ACT164-05"
+    ]
+  }
+}

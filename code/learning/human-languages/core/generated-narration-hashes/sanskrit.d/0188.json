@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:a31e469de3c7ec7c",
+  "lessonIds": [
+    "SA-C188-trsitah",
+    "SA-C188-sajjah",
+    "SA-C188-vyastah",
+    "SA-C188-nirmalah",
+    "SA-C188-ujjvalah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch188.txt",
+  "json": "sanskrit/narration/ch188.json",
+  "textHash": "fnv1a64:cc392da3ab2e5901",
+  "jsonHash": "fnv1a64:a8b8fb58ba1b9a60",
+  "findings": []
+}

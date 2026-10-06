@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:99ae685ec70456c1",
+  "lessonIds": [
+    "PT-C160-contabilista",
+    "PT-C160-cientista",
+    "PT-C160-investigador",
+    "PT-C160-estrangeiro",
+    "PT-C160-turista"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch160.txt",
+  "json": "portuguese/narration/ch160.json",
+  "textHash": "fnv1a64:2e30ea0130767956",
+  "jsonHash": "fnv1a64:6bcb4d1199af3f29",
+  "findings": []
+}

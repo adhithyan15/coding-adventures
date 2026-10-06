@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:d045660dee2745a0",
+  "lessonIds": [
+    "IT-C171-arrivo",
+    "IT-C171-partenza",
+    "IT-C171-destinazione",
+    "IT-C171-paesaggio",
+    "IT-C171-vista"
+  ],
+  "tex": "italian/book/chapters/ch171-arrival-departure-destination-landscape-view.tex"
+}

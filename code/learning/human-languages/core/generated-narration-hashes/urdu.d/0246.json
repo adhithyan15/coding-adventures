@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:a48e409c76663a3f",
+  "lessonIds": [
+    "UR-C246-garaj",
+    "UR-C246-har-jagah",
+    "UR-C246-age",
+    "UR-C246-sarhad",
+    "UR-C246-hukumat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch246.txt",
+  "json": "urdu/narration/ch246.json",
+  "textHash": "fnv1a64:3d36cfd2a73b0204",
+  "jsonHash": "fnv1a64:c358038e0e6f1526",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C251-tigris",
+  "pathSegment": "LA-PATH-251-RES251",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-251-RES251",
+      "order": 1
+    }
+  ]
+}

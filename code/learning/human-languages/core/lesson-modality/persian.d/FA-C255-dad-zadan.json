@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C255-dad-zadan",
+    "language": "persian",
+    "chapter": 255,
+    "sequence": 13170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0a441397c8a2771"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C198-promesse",
+    "language": "french",
+    "chapter": 198,
+    "sequence": 10640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3f99edd1545f32e"
+  },
+  "findings": []
+}

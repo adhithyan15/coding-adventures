@@ -1,0 +1,11 @@
+{
+  "id": "TE-C197-abhiprayam",
+  "pathSegment": "TE-PATH-197-PANI197",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-197-PANI197",
+      "order": 4
+    }
+  ]
+}

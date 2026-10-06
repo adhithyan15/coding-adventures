@@ -14,9 +14,9 @@ how the effect result is rendered) lives in the separate
 `UI47`'s `[host_effects]` mechanism wires a package-declared handler
 into each backend's generated entry point, but until now no *generic*
 (non-Engram-specific) effect kind had a real handler on any backend.
-This package is that first one. XAML, Qt and Flutter answer `files.open`
-with this package's own handlers (`UI59` §2); Compose and SwiftUI answer it
-from Mosaic's platform library (`UI87` §7).
+This package was that first one. Every backend now answers `files.open`
+from Mosaic's platform library instead (`UI87` §7), so the package carries no
+host code of its own.
 
 ## Layout
 
@@ -24,123 +24,28 @@ from Mosaic's platform library (`UI87` §7).
 src/PhotoPickerApp.mil          -- interface: status/picking slots, onPickPhoto emit
 src/PhotoPickerApp.mll          -- layout: status text + "Pick a Photo" button
 src/PhotoPickerApp.{light,dark}.msl -- styling (native controls pick up dark mode themselves)
-host/xaml/PhotoPickerEffects.cs -- the XAML files.open handler ([host_effects])
-host/qt/PhotoPickerEffects.{h,cpp} -- the Qt files.open handler ([host_effects])
-host/flutter/PhotoPickerEffects.dart -- the Flutter files.open handler ([host_effects])
-mosaic-package.toml             -- exports + [host_effects]/[host_assets] wiring
+mosaic-package.toml             -- exports; no [host_effects] or [host_assets]
 ```
 
-## The XAML handler
+## Every backend: Mosaic's platform library
 
-`host/xaml/PhotoPickerEffects.cs`'s `PhotoPickerHost.PhotoPickerEffects
-.Install()` sets `MosaicRuntimeHost.EffectHandler`, defers the effect
-(`FileOpenPicker.PickSingleFileAsync()` is necessarily async; the
-handler itself must return synchronously), and completes it as
-`ok`/`cancelled`/`failed` once the user's picker interaction resolves.
-Full design rationale — the namespace choice, the `GetForegroundWindow()`
-owner-window approach, the MIME-type/extension mapping — is documented
-inline in the file itself and in `UI59` §4.
+This app carries no effect handler of its own. Every generated Compose,
+SwiftUI, Qt, XAML and Flutter project gets Mosaic's platform library
+(`MosaicPlatformEffects.kt` / `.swift` / `.{h,cpp}` / `.cs`,
+`mosaic_platform_effects.dart`, UI87 §7), which answers `files.open` with the
+same UI59 contract -- the native file dialog, the picked file's name, MIME
+type and bytes, never its path -- so the generated entry point installs only
+the library.
 
-Two non-obvious build errors this file's real `dotnet build` caught,
-both now guarded by inline comments so a future edit doesn't
-reintroduce them:
-
-- **Namespace collision (CS0117).** The handler's C# namespace cannot
-  be `PhotoPickerApp` — the generated component class is
-  `Mosaic.Generated.PhotoPickerApp` (from this package's own
-  `component PhotoPickerApp`), and the generated `Install();` call
-  site lives inside `namespace Mosaic.Generated`, where an unqualified
-  `PhotoPickerApp` resolves to that class first. The handler's
-  namespace is `PhotoPickerHost` instead.
-- **Lexical variable scoping (CS0136).** Two `var mimeType = ...`
-  declarations in the same method — one building the request filter,
-  one building the result's MIME type — collide even though their
-  runtime lifetimes never overlap, because C# scoping is lexical
-  across the whole method. The filter-building one is named
-  `candidateMimeType`.
-
-## The Qt handler
-
-`host/qt/PhotoPickerEffects.cpp`'s `installPhotoPickerEffects(MosaicHost
-&host)` connects to `MosaicHost::effectRequested` (`Qt::DirectConnection`
-— a queued connection would let the host's sweep fail the effect as
-unanswered before the dialog opened) and answers **inline** via
-`QFileDialog::getOpenFileName`, which blocks synchronously — no
-`deferEffect` needed, unlike XAML's necessarily-async picker. This
-mirrors Engram's own Qt effect handler (`installEngramEffects`) in
-structure, the one other real `[host_effects]` Qt handler in this repo.
-Full design rationale is documented inline in the file itself and in
-`UI59` §7.
-
-Two things this handler deliberately does differently from Engram's Qt
-precedent, both informed by `/security-review` findings against this
-same effect kind's XAML implementation (PR #15218):
-
-- **Bounded reads from the start.** Rather than checking
-  `QFileInfo::size()` once before opening the file (which XAML's first
-  cut did, and which `/security-review` found was TOCTOU — the check
-  and the read are separate operations, so a file growing in between
-  isn't actually bounded), the Qt handler reads in 64 KiB chunks and
-  fails the moment the running total exceeds the 50 MiB cap. There was
-  never a window where the check and the read could disagree.
-- **Generic `failed.message`.** Never a raw `QFile::errorString()` or
-  `std::exception::what()` — both can embed local filesystem paths,
-  and `failed.message` is app-visible data. `installEngramEffects`
-  does surface those directly for its own already-merged handler; this
-  one doesn't, applying the same lesson XAML's security review taught.
-
-## Compose and SwiftUI: Mosaic's platform library
-
-This app carries no Compose or SwiftUI handler. Every generated Compose and
-SwiftUI project gets Mosaic's platform library (`MosaicPlatformEffects.kt` /
-`MosaicPlatformEffects.swift`, UI87 §7), which answers `files.open` with the
-same UI59 contract — the native file dialog, the picked file's name, MIME type
-and bytes, never its path — so the generated entry point installs only
-`installMosaicPlatformEffects`. The Compose handler this app used to carry
-(`host/compose/PhotoPickerEffects.kt`) was retired for it (UI87 §7.4); the
-XAML, Qt and Flutter handlers follow as those backends' libraries land.
-
-## The Flutter handler
-
-`host/flutter/PhotoPickerEffects.dart`'s
-`installPhotoPickerEffects(MosaicHost host)` sets `host.effectHandler`,
-**defers** the effect (`host.deferEffect(id)`), and runs the dialog +
-I/O inside an unawaited async closure — deferred for the simplest and
-most inescapable reason of the four backends: `openFile` returns a
-`Future`, and `effectHandler` is a synchronous callback, so there is
-no answer to give inline at all. Unlike Qt/Compose there's nothing to
-marshal either: a Dart isolate is single-threaded, so the eventual
-`completeEffect` call never races anything — it just arrives on a
-later turn of the event loop. This mirrors Engram's own Flutter effect
-handler (`installEngramEffects`) in structure, the one other real
-`[host_effects]` Flutter handler in this repo. Full design rationale
-is documented inline in the file itself and in `UI59` §13.
-
-This is the only backend needing a new manifest table:
-`package:file_selector` (the pub package that opens the platform file
-dialog) isn't a default Flutter project dependency, so
-`mosaic-package.toml` gains a `[host_assets].dependencies` entry —
-this package's only `[host_assets]` content (no `.files` entries,
-unlike Engram, which has no legacy host file to retire here).
-
-Same two departures from Engram's precedent as Qt and Compose:
-
-- **Bounded reads from the start.** Rather than checking
-  `FileStat.size` once via `File.stat()` before calling
-  `readAsBytes()` (which Engram's own Flutter handler does, the same
-  TOCTOU-vulnerable shape XAML's first cut used), the Flutter handler
-  opens a `RandomAccessFile` and reads in 64 KiB chunks, failing once
-  the running total exceeds the 50 MiB cap.
-- **Generic `failed.message`.** Never Engram's own `_reason(error,
-  fallback)` helper's `error.toString()` output — for a
-  `FileSystemException` that routinely embeds the full local
-  filesystem path.
-
-One thing this handler *doesn't* need to fix, unlike Compose: Engram's
-own Flutter handler already catches `on Object` (not a narrower
-`Exception`-only type) at every completion point — Dart's `catch` has
-no Exception-vs-Error split the way Kotlin's does, so there was never
-a narrower clause here to widen.
+The handlers this app used to carry (`host/compose/PhotoPickerEffects.kt`,
+`host/qt/PhotoPickerEffects.{h,cpp}`, `host/xaml/PhotoPickerEffects.cs`,
+`host/flutter/PhotoPickerEffects.dart`) were retired for it (UI87 §7.4): the
+app claims no effect kinds, so the router sends `files.open` to the library
+and a package handler would never be reached. The Flutter handler's
+`file_selector` `[host_assets]` coordinate went with it, because every
+generated Flutter project pins `file_selector` for the library (UI87 §7.7).
+Their designs are kept as a record in UI59 §4, §7, §10 and §13; UI87 §7.6 and
+§7.7 describe what the XAML and Flutter libraries do instead.
 
 ## Testing
 
@@ -149,59 +54,30 @@ cargo test
 ```
 
 `tests/package_compiles.rs` (mirrors `task-app`'s/`engram-app`'s own
-harness), 6 tests:
+harness), 3 tests:
 
 1. `.mil`/`.mll`/both `.msl` themes compile, and the component's
    slots/emits match what's expected.
-2. The manifest declares `PhotoPickerApp` as the sole export, the XAML
-   `[host_effects]` file and handler exactly as documented (no
-   `include` — the XAML emitter refuses one outright), the Qt
-   `[host_effects]` files (header + source) and handler (with
-   `include`), the Flutter `[host_effects]` file and handler (with
-   `include`, since Dart resolves nothing across files without one) plus
-   the `[host_assets].dependencies` entry for `file_selector`, and that
-   neither Compose nor SwiftUI has a `[host_effects]` entry (the platform
-   library answers there).
-3. `PhotoPickerEffects.cs` exists and declares `Install()`,
-   `MosaicRuntimeHost.EffectHandler`, and the `"files.open"` kind
-   string.
-4. `PhotoPickerEffects.h`/`.cpp` exist and declare
-   `installPhotoPickerEffects(MosaicHost &host)`, `effectRequested`,
-   and the `"files.open"` kind string.
-5. There is no Compose or SwiftUI handler, and `host/compose/` is gone
-   (the platform library answers `files.open` there).
-6. `PhotoPickerEffects.dart` exists and declares
-   `installPhotoPickerEffects(MosaicHost host)`, `effectHandler`, and
-   the `'files.open'` kind string.
+2. The manifest declares `PhotoPickerApp` as the sole export and no
+   `[host_effects]` or `[host_assets]` entry on any backend (the platform
+   library answers everywhere).
+3. There is no handler on any backend: `host/compose/`, `host/qt/`,
+   `host/xaml/`, `host/flutter/` and `host/` itself are gone.
 
 ### Real builds (manual, not part of `cargo test`)
 
-- **XAML**: a real `dotnet build` of the emitted `--profile
-  native-complete` project — succeeds with 0 errors, 0 warnings.
-  Interactively exercising the native `FileOpenPicker` dialog itself
-  isn't something this environment can automate; that gap is stated
-  explicitly rather than silently skipped (`UI59` §5).
-- **Qt**: a real `cmake --build` (Ninja generator, MSVC 19.44 via
-  `vcvars64.bat`, Qt 6.8.1) of the emitted `--profile native-complete`
-  project — succeeds with 0 errors (the only warning is in the
-  generated `MosaicHost.cpp` template, not this package's own code).
-  Same limitation on interactively exercising `QFileDialog` (`UI59`
-  §8).
+- **XAML**: no handler of its own any more; the platform library's
+  `files.open` is exercised by its headless conformance harness in
+  `mosaic-app-bindings` (UI87 §7.6).
+- **Qt**: no handler of its own any more; the platform library's
+  `files.open` is exercised by the Qt effect driver in
+  `mosaic-app-bindings` (UI87 §7.4a).
 - **Compose**: a real `gradle build` (Gradle 8.10.2, JDK 21) of the
   emitted `--profile native-complete` project — succeeds with 0 errors
   (the one warning, "No cast needed" on the generated `Main.kt`'s
   splice line, is in generated scaffolding, not this package's own
   code). Same limitation on interactively exercising `JFileChooser`
   (`UI59` §11).
-- **Flutter**: `flutter pub get` (resolves `file_selector` and its
-  platform plugins cleanly), `flutter analyze` (0 issues), and
-  `flutter test` (the generated smoke test passes) on the emitted
-  `--profile native-complete` project — all real, unqualified
-  successes on the actual Flutter 3.47.0 toolchain installed here.
-  `flutter build windows` itself wasn't exercised: Flutter's Windows
-  plugin build needs OS-level symlink support gated behind Windows
-  Developer Mode, which isn't enabled in this environment — a
-  system-settings change out of scope for what this session enables
-  on its own, stated explicitly rather than silently skipped (`UI59`
-  §14). Same limitation on interactively exercising the platform file
-  dialog as the other three backends.
+- **Flutter**: no handler of its own any more; the platform library's
+  `files.open` is exercised by its conformance harness in
+  `mosaic-app-bindings` and the Flutter runtime CI lane (UI87 §7.7).

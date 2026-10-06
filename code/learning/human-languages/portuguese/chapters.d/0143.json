@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "To propose, To pick up, To reach, To give back, To recognise",
+  "label": "ch:pt-to-propose-to-pick-up-to-reach-to-give-back-to-recognise",
+  "canDo": "I can say to propose, to pick up, to reach, to give back and to recognise.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C143-reconhecer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: I can say to propose, to pick up, to reach, to give back and to recognise.",
+    "assesses": [
+      "PT-LEX-C143-VERBOS143-03",
+      "PT-LEX-C143-VERBOS143-04",
+      "PT-LEX-C143-VERBOS143-05"
+    ]
+  }
+}

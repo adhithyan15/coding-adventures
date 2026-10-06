@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:34ab797388c520f8",
+  "lessonIds": [
+    "BN-C93-bosonto",
+    "BN-C93-hemonto",
+    "BN-C93-sekend",
+    "BN-C93-shuru",
+    "BN-C93-ajkal"
+  ],
+  "tex": "bengali/book/chapters/ch93-spring-late-autumn-second-beginning-nowadays.tex"
+}

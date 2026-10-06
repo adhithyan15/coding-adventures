@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C173-noqre",
+    "language": "persian",
+    "chapter": 173,
+    "sequence": 8870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b7be40091c14fe9"
+  },
+  "findings": []
+}

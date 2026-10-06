@@ -1,0 +1,11 @@
+{
+  "id": "BN-C250-kumir",
+  "pathSegment": "BN-PATH-250-JINIS250",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "BN-EXT-250-JINIS250",
+      "order": 0
+    }
+  ]
+}

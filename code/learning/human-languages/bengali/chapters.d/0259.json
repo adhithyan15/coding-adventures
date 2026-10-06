@@ -1,0 +1,19 @@
+{
+  "chapter": 259,
+  "title": "Rate, Discount, Form, Application, Identity card",
+  "label": "ch:bn-rate-discount-form-application-identity-card",
+  "canDo": "I can say a rate, a discount, a form, an application and an identity card.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C259-porichoypotro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can say a rate, a discount, a form, an application and an identity card.",
+    "assesses": [
+      "BN-LEX-C259-JINIS259-03",
+      "BN-LEX-C259-JINIS259-04",
+      "BN-LEX-C259-JINIS259-05"
+    ]
+  }
+}

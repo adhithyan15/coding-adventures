@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-142-WRITING-CONJUNCT-BRIDGE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can observe and trace the conjunct स्त, then write the already-known word अस्ति with a model, after a delay, and finally from sound and meaning alone, without using romanization as the answer.",
+  "prerequisites": [
+    "SA-EXT-141-WRITING-VOCALIC-R-BRIDGE"
+  ]
+}

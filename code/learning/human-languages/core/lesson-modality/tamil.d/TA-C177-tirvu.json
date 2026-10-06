@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C177-tirvu",
+    "language": "tamil",
+    "chapter": 177,
+    "sequence": 8550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a293da7e7c387424"
+  },
+  "findings": []
+}

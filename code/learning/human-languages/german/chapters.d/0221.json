@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Slim, Dreadful, Shy, Independent, Sunny",
+  "label": "ch:ge-slim-dreadful-shy-independent-sunny",
+  "canDo": "I can say slim, dreadful, shy, independent and sunny.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C221-sonnig",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say slim, dreadful, shy, independent and sunny.",
+    "assesses": [
+      "GE-LEX-C221-QUAL221-03",
+      "GE-LEX-C221-QUAL221-04",
+      "GE-LEX-C221-QUAL221-05"
+    ]
+  }
+}

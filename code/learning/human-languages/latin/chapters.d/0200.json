@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "To lift, To reach, To recognise, To refuse, To fly about",
+  "label": "ch:la-to-lift-to-reach-to-recognise-to-refuse-to-fly-about",
+  "canDo": "I can say to lift, to reach, to recognise, to refuse and to fly about.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C200-volito",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say to lift, to reach, to recognise, to refuse and to fly about.",
+    "assesses": [
+      "LA-LEX-C200-ACT200-03",
+      "LA-LEX-C200-ACT200-04",
+      "LA-LEX-C200-ACT200-05"
+    ]
+  }
+}

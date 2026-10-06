@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "Greed, Liking, Hobby, Pleading request, Demand",
+  "label": "ch:bn-greed-liking-hobby-pleading-request-demand",
+  "canDo": "I can say greed, a liking, a hobby, a pleading request and a demand.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "BN-C97-dabi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: I can say greed, a liking, a hobby, a pleading request and a demand.",
+    "assesses": [
+      "BN-LEX-C97-WANT97-03",
+      "BN-LEX-C97-WANT97-04",
+      "BN-LEX-C97-WANT97-05"
+    ]
+  }
+}

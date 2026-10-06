@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C208-regierung",
+    "language": "german",
+    "chapter": 208,
+    "sequence": 10960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdcd976ea66ec0cc"
+  },
+  "findings": []
+}

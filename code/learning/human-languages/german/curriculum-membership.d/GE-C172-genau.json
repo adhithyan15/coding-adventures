@@ -1,0 +1,11 @@
+{
+  "id": "GE-C172-genau",
+  "pathSegment": "GE-PATH-172-ADV172",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-172-ADV172",
+      "order": 4
+    }
+  ]
+}

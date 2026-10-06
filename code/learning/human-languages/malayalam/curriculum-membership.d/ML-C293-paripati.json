@@ -1,0 +1,11 @@
+{
+  "id": "ML-C293-paripati",
+  "pathSegment": "ML-PATH-293-VASTU293",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-293-VASTU293",
+      "order": 4
+    }
+  ]
+}

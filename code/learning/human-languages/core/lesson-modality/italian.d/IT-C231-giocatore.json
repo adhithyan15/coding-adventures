@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C231-giocatore",
+    "language": "italian",
+    "chapter": 231,
+    "sequence": 13650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15c9b3c4b9314269"
+  },
+  "findings": []
+}

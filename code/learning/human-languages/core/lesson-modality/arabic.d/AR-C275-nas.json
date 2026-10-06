@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C275-nas",
+    "language": "arabic",
+    "chapter": 275,
+    "sequence": 15840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a6619ff1b7971bf"
+  },
+  "findings": []
+}

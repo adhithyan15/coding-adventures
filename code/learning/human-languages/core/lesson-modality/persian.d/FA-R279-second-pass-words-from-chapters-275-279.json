@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R279-second-pass-words-from-chapters-275-279",
+    "language": "persian",
+    "chapter": 279,
+    "sequence": 14470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0129fb66de0a755f"
+  },
+  "findings": []
+}

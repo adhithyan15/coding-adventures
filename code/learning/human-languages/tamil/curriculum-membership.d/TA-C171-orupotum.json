@@ -1,0 +1,11 @@
+{
+  "id": "TA-C171-orupotum",
+  "pathSegment": "TA-PATH-171-NERAM171",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-171-NERAM171",
+      "order": 3
+    }
+  ]
+}

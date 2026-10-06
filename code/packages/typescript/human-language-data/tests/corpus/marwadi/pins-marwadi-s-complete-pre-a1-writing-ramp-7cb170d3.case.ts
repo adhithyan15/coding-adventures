@@ -189,10 +189,11 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
     // 171 -> 173. Chapters 41-42 add the two A1 stages Marwadi could honestly
     // prove: a composition with no model, then the same under the clock.
     //
-    // The third A1-and-above stage, connected-composition, is NOT here, and its
-    // absence is the finding rather than an oversight: this track teaches no
-    // conjunction at all -- no and, but, because or or -- so a lesson asking for
-    // connected sentences would ask for something the book has not paid for.
+    // The third A1-and-above stage was not available here: at chapter 42 the
+    // track had no conjunction or reason language, so connected sentences would
+    // have asked for something the book had not paid for. Chapter 150 can add
+    // it only after chapters 90-117 teach time anchors, actions, preference,
+    // question and reason language; it remains model-free and introduces no atom.
     // HL-C428's second-pass refusal lesson: it asks the hand to write
     // कोनी। and पाछे मिलसू। from the sound with the page covered, which is the
     // stage the chapter's own four-skill lesson already marks. A stage may
@@ -200,5 +201,6 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
     "dictation-transcription",
     "controlled-composition",
     "timed-assessment-production",
+    "connected-composition",
   ]);
 });

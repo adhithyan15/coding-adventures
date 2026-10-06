@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R220-second-pass-words-from-chapters-216-220",
+    "language": "tamil",
+    "chapter": 220,
+    "sequence": 11660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54ad8e638b293a2b"
+  },
+  "findings": []
+}

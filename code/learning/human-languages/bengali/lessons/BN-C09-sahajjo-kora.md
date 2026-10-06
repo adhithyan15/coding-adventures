@@ -78,7 +78,7 @@ holds the pieces without ever building the word.
 ## Grammar Lens: asking for help is where the respect ladder bites
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Another noun + করা, like জিজ্ঞাসা করা. The respect sits where Chapter 13 put it —
+Another noun + করা, like *jijñāsā kôrā*. The respect sits where Chapter 13 put it —
 in করা’s ending:
 
 | who you are asking | "help" |

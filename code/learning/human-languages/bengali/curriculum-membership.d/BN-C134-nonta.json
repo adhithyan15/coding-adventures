@@ -1,0 +1,11 @@
+{
+  "id": "BN-C134-nonta",
+  "pathSegment": "BN-PATH-134-QUAL134",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-134-QUAL134",
+      "order": 2
+    }
+  ]
+}

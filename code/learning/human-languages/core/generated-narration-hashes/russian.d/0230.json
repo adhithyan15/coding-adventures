@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:ac6484b3d390be5e",
+  "lessonIds": [
+    "RU-C230-sadovnik",
+    "RU-C230-kassir",
+    "RU-C230-parikmakher",
+    "RU-C230-okhrannik",
+    "RU-C230-nyanya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch230.txt",
+  "json": "russian/narration/ch230.json",
+  "textHash": "fnv1a64:04afa5bb238d5ef8",
+  "jsonHash": "fnv1a64:f77b9769bff0ccc6",
+  "findings": []
+}

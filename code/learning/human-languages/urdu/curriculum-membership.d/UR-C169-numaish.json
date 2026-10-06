@@ -1,0 +1,11 @@
+{
+  "id": "UR-C169-numaish",
+  "pathSegment": "UR-PATH-169-CHIZ169",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-169-CHIZ169",
+      "order": 2
+    }
+  ]
+}

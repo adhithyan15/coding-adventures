@@ -1,0 +1,11 @@
+{
+  "id": "FR-C211-taire",
+  "pathSegment": "FR-PATH-211-VERBES211",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-211-VERBES211",
+      "order": 0
+    }
+  ]
+}

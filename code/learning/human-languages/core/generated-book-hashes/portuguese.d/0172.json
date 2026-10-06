@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:3f760e60b3a0632f",
+  "lessonIds": [
+    "PT-C172-mover",
+    "PT-C172-tirar",
+    "PT-C172-segurar",
+    "PT-C172-partir",
+    "PT-C172-provar"
+  ],
+  "tex": "portuguese/book/chapters/ch172-to-move-to-take-off-to-hold-to-break-to-taste.tex"
+}

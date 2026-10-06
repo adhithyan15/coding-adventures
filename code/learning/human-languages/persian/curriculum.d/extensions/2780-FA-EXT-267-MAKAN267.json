@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-267-MAKAN267",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a stadium, a capital city, a border, a rock and an ocean.",
+  "prerequisites": []
+}

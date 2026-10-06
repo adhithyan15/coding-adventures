@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "Swelling, Dose, Diet, Exercise, Body",
+  "label": "ch:ur-swelling-dose-diet-exercise-body",
+  "canDo": "I can say a swelling, a dose, a diet, exercise and the body.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C187-jism",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say a swelling, a dose, a diet, exercise and the body.",
+    "assesses": [
+      "UR-LEX-C187-SEHAT187-03",
+      "UR-LEX-C187-SEHAT187-04",
+      "UR-LEX-C187-SEHAT187-05"
+    ]
+  }
+}

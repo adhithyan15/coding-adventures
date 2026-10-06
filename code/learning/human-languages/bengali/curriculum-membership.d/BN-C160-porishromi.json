@@ -1,0 +1,11 @@
+{
+  "id": "BN-C160-porishromi",
+  "pathSegment": "BN-PATH-160-GUN160",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-160-GUN160",
+      "order": 1
+    }
+  ]
+}

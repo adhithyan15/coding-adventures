@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:8c90a957de02211a",
+  "lessonIds": [
+    "ML-C307-valarttuka",
+    "ML-C307-valaruka",
+    "ML-C307-abhinayikkuka",
+    "ML-C307-pottikkuka",
+    "ML-C307-pukalttuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch307.txt",
+  "json": "malayalam/narration/ch307.json",
+  "textHash": "fnv1a64:bd8197257083abfd",
+  "jsonHash": "fnv1a64:b1cc4d6a0d4555c2",
+  "findings": []
+}

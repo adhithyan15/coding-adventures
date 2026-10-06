@@ -1,0 +1,11 @@
+{
+  "id": "TA-C254-terntetu",
+  "pathSegment": "TA-PATH-254-ACT254",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-254-ACT254",
+      "order": 2
+    }
+  ]
+}

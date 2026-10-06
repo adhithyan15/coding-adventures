@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C160-yashchik",
+    "language": "russian",
+    "chapter": 160,
+    "sequence": 8870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:600e22dc667a3123"
+  },
+  "findings": []
+}

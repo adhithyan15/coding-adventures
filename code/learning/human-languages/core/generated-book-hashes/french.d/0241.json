@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:59e3af1e82375a7d",
+  "lessonIds": [
+    "FR-C241-tousser",
+    "FR-C241-trembler",
+    "FR-C241-hurler",
+    "FR-C241-voter",
+    "FR-C241-accueillir",
+    "FR-R241-first-pass-words-from-chapters-233-236",
+    "FR-R241-second-pass-words-from-chapters-237-241"
+  ],
+  "tex": "french/book/chapters/ch241-to-cough-to-tremble-to-scream-to-vote-to-welcome.tex"
+}

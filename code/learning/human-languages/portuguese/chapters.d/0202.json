@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "To heat, To cool down, To fill, To empty, To measure",
+  "label": "ch:pt-to-heat-to-cool-down-to-fill-to-empty-to-measure",
+  "canDo": "I can say to heat, to cool down, to fill, to empty and to measure.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C202-medir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say to heat, to cool down, to fill, to empty and to measure.",
+    "assesses": [
+      "PT-LEX-C202-VERBOS202-03",
+      "PT-LEX-C202-VERBOS202-04",
+      "PT-LEX-C202-VERBOS202-05"
+    ]
+  }
+}

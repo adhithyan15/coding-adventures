@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 220,
+  "title": "Keyboard, Camera, Radio, Programme, Film",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:72a751e1ded46813",
+  "lessons": [
+    {
+      "id": "TA-C220-vicaippalakai",
+      "sequence": 11600,
+      "title": "விசைப்பலகை (vicaippalakai) — a keyboard",
+      "headword": "விசைப்பலகை",
+      "romanization": "vicaippalakai",
+      "gloss": "a keyboard",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a5909e96b5c134a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a gentle breeze, then the Tamil for a flood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விசைப்பலகை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விசைப்பலகை — vicaippalakai — \"a keyboard\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicaippalakai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicaippalakai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicaippalakai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicaippalakai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vicaippalakai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vicaippalakai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a gentle breeze, then the Tamil for a flood, then say vicaippalakai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a gentle breeze, then the Tamil for a flood, then say *vicaippalakai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விசைப்பலகை (vicaippalakai) mean? (\"A keyboard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C220-kemara",
+      "sequence": 11610,
+      "title": "கேமரா (kēmarā) — a camera",
+      "headword": "கேமரா",
+      "romanization": "kēmarā",
+      "gloss": "a camera",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36b38e6f6277b5de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a flood, then the Tamil for a keyboard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கேமரா",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கேமரா — kēmarā — \"a camera\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēmarā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēmarā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēmarā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēmarā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kēmarā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kēmarā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a flood, then the Tamil for a keyboard, then say kēmarā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a flood, then the Tamil for a keyboard, then say *kēmarā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கேமரா (kēmarā) mean? (\"A camera\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C220-vanoli",
+      "sequence": 11620,
+      "title": "வானொலி (vāṉoli) — the radio",
+      "headword": "வானொலி",
+      "romanization": "vāṉoli",
+      "gloss": "the radio",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10d5b63882bee521",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a keyboard, then the Tamil for a camera."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வானொலி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வானொலி — vāṉoli — \"the radio\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṉoli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṉoli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṉoli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṉoli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vāṉoli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vāṉoli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a keyboard, then the Tamil for a camera, then say vāṉoli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a keyboard, then the Tamil for a camera, then say *vāṉoli* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வானொலி (vāṉoli) mean? (\"The radio\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C220-nikalcci",
+      "sequence": 11630,
+      "title": "நிகழ்ச்சி (nikaḻcci) — a programme, an event",
+      "headword": "நிகழ்ச்சி",
+      "romanization": "nikaḻcci",
+      "gloss": "a programme, an event",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8d01c3d0f6a7165",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a camera, then the Tamil for the radio."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிகழ்ச்சி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிகழ்ச்சி — nikaḻcci — \"a programme, an event\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikaḻcci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikaḻcci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikaḻcci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikaḻcci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nikaḻcci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nikaḻcci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a camera, then the Tamil for the radio, then say nikaḻcci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a camera, then the Tamil for the radio, then say *nikaḻcci* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிகழ்ச்சி (nikaḻcci) mean? (\"A programme, an event\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C220-tiraippatam",
+      "sequence": 11640,
+      "title": "திரைப்படம் (tiraippaṭam) — a film, a movie",
+      "headword": "திரைப்படம்",
+      "romanization": "tiraippaṭam",
+      "gloss": "a film, a movie",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e55574804d128a7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the radio, then the Tamil for a programme."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: திரைப்படம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திரைப்படம் — tiraippaṭam — \"a film, a movie\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraippaṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraippaṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraippaṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraippaṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tiraippaṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tiraippaṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the radio, then the Tamil for a programme, then say tiraippaṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the radio, then the Tamil for a programme, then say *tiraippaṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does திரைப்படம் (tiraippaṭam) mean? (\"A film, a movie\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R220-first-pass-words-from-chapters-212-215",
+      "sequence": 11650,
+      "title": "Words from chapters 212-215 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 212-215",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d389e21edf2ee40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a programme and a film."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "weak, selfish, generous, well-behaved, ugly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: weak, selfish, generous, well-behaved, ugly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cupboard, electricity, rubbish, toothpaste, a toothbrush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cupboard, electricity, rubbish, toothpaste, a toothbrush]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buttermilk, fruit juice, tender coconut water, flour; batter, bread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: buttermilk, fruit juice, tender coconut water, flour; batter, bread]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pencil, a dictionary, a fee, a letter, an envelope; a cover",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pencil, a dictionary, a fee, a letter, an envelope; a cover]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Weak? (பலவீனமான, palavīṉamāṉa.) Selfish? (சுயநலமான, cuyanalamāṉa.) Generous? (பெருந்தன்மையான, peruntaṉmaiyāṉa.) Well-behaved? (ஒழுக்கமான, oḻukkamāṉa.) Ugly? (அசிங்கமான, aciṅkamāṉa.) A cupboard? (அலமாரி, alamāri.) Electricity? (மின்சாரம், miṉcāram.) Rubbish? (குப்பை, kuppai.) Toothpaste? (பற்பசை, paṟpacai.) A toothbrush? (பல்துலக்கி, paltulakki.) Buttermilk? (மோர், mōr.) Fruit juice? (பழச்சாறு, paḻaccāṟu.) Tender coconut water? (இளநீர், iḷanīr.) Flour; batter? (மாவு, māvu.) Bread? (ரொட்டி, roṭṭi.) A pencil? (பென்சில், peṉcil.) A dictionary? (அகராதி, akarāti.) A fee? (கட்டணம், kaṭṭaṇam.) A letter? (கடிதம், kaṭitam.) An envelope; a cover? (உறை, uṟai.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R220-second-pass-words-from-chapters-216-220",
+      "sequence": 11660,
+      "title": "Words from chapters 216-220 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 216-220",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54ad8e638b293a2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for the internet and a password."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the internet, a password, a newspaper, a ticket; a slip of paper, a map",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the internet, a password, a newspaper, a ticket; a slip of paper, a map]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bride, a bridegroom, an engagement, a feast, a festival",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bride, a bridegroom, an engagement, a feast, a festival]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a giraffe, a zebra, a crocodile, a butterfly, a bee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a giraffe, a zebra, a crocodile, a butterfly, a bee]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bamboo, a rainbow, fog, a gentle breeze, a flood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bamboo, a rainbow, fog, a gentle breeze, a flood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a keyboard, a camera, the radio, a programme, a film",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a keyboard, a camera, the radio, a programme, a film]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The internet? (இணையம், iṇaiyam.) A password? (கடவுச்சொல், kaṭavuccol.) A newspaper? (நாளிதழ், nāḷitaḻ.) A ticket; a slip of paper? (சீட்டு, cīṭṭu.) A map? (வரைபடம், varaipaṭam.) A bride? (மணமகள், maṇamakaḷ.) A bridegroom? (மணமகன், maṇamakaṉ.) An engagement? (நிச்சயதார்த்தம், niccayatārttam.) A feast? (விருந்து, viruntu.) A festival? (விழா, viḻā.) A giraffe? (ஒட்டகச்சிவிங்கி, oṭṭakacciviṅki.) A zebra? (வரிக்குதிரை, varikkutirai.) A crocodile? (முதலை, mutalai.) A butterfly? (பட்டாம்பூச்சி, paṭṭāmpūcci.) A bee? (தேனீ, tēṉī.) Bamboo? (மூங்கில், mūṅkil.) A rainbow? (வானவில், vāṉavil.) Fog? (மூடுபனி, mūṭupaṉi.) A gentle breeze? (தென்றல், teṉṟal.) A flood? (வெள்ளம், veḷḷam.) A keyboard? (விசைப்பலகை, vicaippalakai.) A camera? (கேமரா, kēmarā.) The radio? (வானொலி, vāṉoli.) A programme? (நிகழ்ச்சி, nikaḻcci.) A film? (திரைப்படம், tiraippaṭam.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

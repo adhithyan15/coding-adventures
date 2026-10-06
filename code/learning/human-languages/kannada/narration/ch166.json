@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 166,
+  "title": "To plough, To sprinkle, To drip, To leak, To float",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:6ffec9a5b75b56c6",
+  "lessons": [
+    {
+      "id": "KA-C166-ulu",
+      "sequence": 7410,
+      "title": "ಉಳು (uḷu) — to plough",
+      "headword": "ಉಳು",
+      "romanization": "uḷu",
+      "gloss": "to plough",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8449a728d7bdb64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to remain, then the Kannada for to heat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಳು — uḷu — \"to plough\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say uḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *uḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to remain, then the Kannada for to heat, then say uḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to remain, then the Kannada for to heat, then say *uḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉಳು (uḷu) mean? (\"To plough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C166-cimukisu",
+      "sequence": 7420,
+      "title": "ಚಿಮುಕಿಸು (cimukisu) — to sprinkle",
+      "headword": "ಚಿಮುಕಿಸು",
+      "romanization": "cimukisu",
+      "gloss": "to sprinkle",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b026390d8943169f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to heat, then the Kannada for to plough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಚಿಮುಕಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚಿಮುಕಿಸು — cimukisu — \"to sprinkle\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cimukisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cimukisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cimukisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cimukisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say cimukisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *cimukisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to heat, then the Kannada for to plough, then say cimukisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to heat, then the Kannada for to plough, then say *cimukisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಚಿಮುಕಿಸು (cimukisu) mean? (\"To sprinkle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C166-tottikku",
+      "sequence": 7430,
+      "title": "ತೊಟ್ಟಿಕ್ಕು (toṭṭikku) — to drip",
+      "headword": "ತೊಟ್ಟಿಕ್ಕು",
+      "romanization": "toṭṭikku",
+      "gloss": "to drip",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94bc8a51c3c53ed0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to plough, then the Kannada for to sprinkle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತೊಟ್ಟಿಕ್ಕು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತೊಟ್ಟಿಕ್ಕು — toṭṭikku — \"to drip\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṭṭikku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṭṭikku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṭṭikku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṭṭikku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say toṭṭikku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *toṭṭikku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to plough, then the Kannada for to sprinkle, then say toṭṭikku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to plough, then the Kannada for to sprinkle, then say *toṭṭikku* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತೊಟ್ಟಿಕ್ಕು (toṭṭikku) mean? (\"To drip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C166-soru",
+      "sequence": 7440,
+      "title": "ಸೋರು (sōru) — to leak",
+      "headword": "ಸೋರು",
+      "romanization": "sōru",
+      "gloss": "to leak",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35ba55a12e7c2b0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to sprinkle, then the Kannada for to drip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸೋರು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೋರು — sōru — \"to leak\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sōru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sōru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sōru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sōru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sōru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sōru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to sprinkle, then the Kannada for to drip, then say sōru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to sprinkle, then the Kannada for to drip, then say *sōru* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸೋರು (sōru) mean? (\"To leak\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C166-telu",
+      "sequence": 7450,
+      "title": "ತೇಲು (tēlu) — to float",
+      "headword": "ತೇಲು",
+      "romanization": "tēlu",
+      "gloss": "to float",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7e5a0881e67720d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to drip, then the Kannada for to leak."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತೇಲು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತೇಲು — tēlu — \"to float\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēlu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēlu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēlu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēlu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tēlu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tēlu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to drip, then the Kannada for to leak, then say tēlu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to drip, then the Kannada for to leak, then say *tēlu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತೇಲು (tēlu) mean? (\"To float\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R166-first-pass-words-from-chapters-158-161",
+      "sequence": 7460,
+      "title": "Words from chapters 158-161 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 158-161",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:277814e9a11d9b21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to leak and to float."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to boil, to cook, to buy, to pay, to bathe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to boil, to cook, to buy, to pay, to bathe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to peel, to grind, to serve, to taste, to chew",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to peel, to grind, to serve, to taste, to chew]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to bend down, to carry, to exercise, to sneeze, to shiver",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to bend down, to carry, to exercise, to sneeze, to shiver]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stick, to inform, to meet, to reserve, to cancel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stick, to inform, to meet, to reserve, to cancel]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To boil? (ಬೇಯಿಸು, bēyisu.) To cook? (ಅಡುಗೆ ಮಾಡು, aḍuge māḍu.) To buy? (ಖರೀದಿಸು, kharīdisu.) To pay? (ಪಾವತಿಸು, pāvatisu.) To bathe? (ಸ್ನಾನ ಮಾಡು, snāna māḍu.) To peel? (ಸುಲಿ, suli.) To grind? (ಅರೆ, are.) To serve? (ಬಡಿಸು, baḍisu.) To taste? (ರುಚಿ ನೋಡು, ruci nōḍu.) To chew? (ಅಗಿ, agi.) To bend down? (ಬಗ್ಗು, baggu.) To carry? (ಹೊರು, horu.) To exercise? (ವ್ಯಾಯಾಮ ಮಾಡು, vyāyāma māḍu.) To sneeze? (ಸೀನು, sīnu.) To shiver? (ನಡುಗು, naḍugu.) To stick? (ಅಂಟಿಸು, aṇṭisu.) To inform? (ತಿಳಿಸು, tiḷisu.) To meet? (ಭೇಟಿ ಮಾಡು, bhēṭi māḍu.) To reserve? (ಕಾಯ್ದಿರಿಸು, kāydirisu.) To cancel? (ರದ್ದು ಮಾಡು, raddu māḍu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R166-second-pass-words-from-chapters-162-166",
+      "sequence": 7470,
+      "title": "Words from chapters 162-166 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 162-166",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c154527e749d711a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to correct and to copy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to correct, to copy, to warn, to take part, to transfer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to correct, to copy, to warn, to take part, to transfer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to doubt, to put up with, to cheat, to get along, to plant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to doubt, to put up with, to cheat, to get along, to plant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to upload, to click, to delete, to switch on, to switch off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to upload, to click, to delete, to switch on, to switch off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to steal, to recall, to roll, to remain, to heat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to steal, to recall, to roll, to remain, to heat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to plough, to sprinkle, to drip, to leak, to float",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to plough, to sprinkle, to drip, to leak, to float]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To correct? (ತಿದ್ದು, tiddu.) To copy? (ನಕಲು ಮಾಡು, nakalu māḍu.) To warn? (ಎಚ್ಚರಿಸು, eccarisu.) To take part? (ಭಾಗವಹಿಸು, bhāgavahisu.) To transfer? (ವರ್ಗಾಯಿಸು, vargāyisu.) To doubt? (ಅನುಮಾನಪಡು, anumānapaḍu.) To put up with? (ಸಹಿಸು, sahisu.) To cheat? (ಮೋಸ ಮಾಡು, mōsa māḍu.) To get along? (ಹೊಂದಿಕೊ, hondiko.) To plant? (ನೆಡು, neḍu.) To upload? (ಅಪ್ಲೋಡ್ ಮಾಡು, aplōḍ māḍu.) To click? (ಕ್ಲಿಕ್ ಮಾಡು, klik māḍu.) To delete? (ಅಳಿಸು, aḷisu.) To switch on? (ಆನ್ ಮಾಡು, ān māḍu.) To switch off? (ಆಫ್ ಮಾಡು, āph māḍu.) To steal? (ಕದಿ, kadi.) To recall? (ನೆನಪಿಸಿಕೊಳ್ಳು, nenapisikoḷḷu.) To roll? (ಉರುಳು, uruḷu.) To remain? (ಉಳಿ, uḷi.) To heat? (ಕಾಯಿಸು, kāyisu.) To plough? (ಉಳು, uḷu.) To sprinkle? (ಚಿಮುಕಿಸು, cimukisu.) To drip? (ತೊಟ್ಟಿಕ್ಕು, toṭṭikku.) To leak? (ಸೋರು, sōru.) To float? (ತೇಲು, tēlu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

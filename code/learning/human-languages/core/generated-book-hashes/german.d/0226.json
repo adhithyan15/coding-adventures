@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:6f018b6fb09cffda",
+  "lessonIds": [
+    "GE-C226-aussprache",
+    "GE-C226-bedeutung",
+    "GE-C226-begruessung",
+    "GE-C226-beschreibung",
+    "GE-C226-besuch"
+  ],
+  "tex": "german/book/chapters/ch226-pronunciation-a-meaning-a-greeting-a-description-a-visit.tex"
+}

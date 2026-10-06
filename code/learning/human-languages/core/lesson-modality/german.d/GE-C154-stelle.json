@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C154-stelle",
+    "language": "german",
+    "chapter": 154,
+    "sequence": 7100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b773db5a347d420a"
+  },
+  "findings": []
+}

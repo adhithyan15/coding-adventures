@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:97ada2347a39a899",
+  "lessonIds": [
+    "IT-C230-plastica",
+    "IT-C230-vetro",
+    "IT-C230-cotone",
+    "IT-C230-lana",
+    "IT-C230-seta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch230.txt",
+  "json": "italian/narration/ch230.json",
+  "textHash": "fnv1a64:4c00308fe0795290",
+  "jsonHash": "fnv1a64:1d7009f11c9dac91",
+  "findings": []
+}

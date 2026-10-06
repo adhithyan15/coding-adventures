@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:743ffa2d3d627a86",
+  "lessonIds": [
+    "PT-C244-alfandega",
+    "PT-C244-reserva",
+    "PT-C244-vale",
+    "PT-C244-temperatura",
+    "PT-C244-mosca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch244.txt",
+  "json": "portuguese/narration/ch244.json",
+  "textHash": "fnv1a64:d8e2cfdcb5d22951",
+  "jsonHash": "fnv1a64:1e38dd55301f0901",
+  "findings": []
+}

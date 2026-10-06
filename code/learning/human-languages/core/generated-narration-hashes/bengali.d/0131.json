@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:37f7a223c9e53418",
+  "lessonIds": [
+    "BN-C131-bol",
+    "BN-C131-bashi",
+    "BN-C131-tobla",
+    "BN-C131-gitar",
+    "BN-C131-kyamera"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch131.txt",
+  "json": "bengali/narration/ch131.json",
+  "textHash": "fnv1a64:b26e6279d5b60824",
+  "jsonHash": "fnv1a64:c97508ab598690ea",
+  "findings": []
+}

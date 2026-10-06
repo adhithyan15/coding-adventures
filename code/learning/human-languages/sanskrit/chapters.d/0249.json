@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "News, Drama, Poem, Film, Game",
+  "label": "ch:sa-news-drama-poem-film-game",
+  "canDo": "I can say news, a drama, a poem, a film and a game.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R249-second-pass-words-from-chapters-245-249",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say news, a drama, a poem, a film and a game.",
+    "assesses": [
+      "SA-LEX-C249-THG249-03",
+      "SA-LEX-C249-THG249-04",
+      "SA-LEX-C249-THG249-05"
+    ]
+  }
+}

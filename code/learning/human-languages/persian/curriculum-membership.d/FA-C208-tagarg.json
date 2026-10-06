@@ -1,0 +1,11 @@
+{
+  "id": "FA-C208-tagarg",
+  "pathSegment": "FA-PATH-208-CHIZ208",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-208-CHIZ208",
+      "order": 2
+    }
+  ]
+}

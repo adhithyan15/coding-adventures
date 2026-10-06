@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "To translate, To hug, To arrange, To forbid, To connect",
+  "label": "ch:ge-to-translate-to-hug-to-arrange-to-forbid-to-connect",
+  "canDo": "I can say to translate, to hug, to arrange, to forbid and to connect.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C189-verbinden",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say to translate, to hug, to arrange, to forbid and to connect.",
+    "assesses": [
+      "GE-LEX-C189-VERB189-03",
+      "GE-LEX-C189-VERB189-04",
+      "GE-LEX-C189-VERB189-05"
+    ]
+  }
+}

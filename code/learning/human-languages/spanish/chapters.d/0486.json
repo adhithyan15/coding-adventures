@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "En la consulta",
+  "label": "ch:es-en-la-consulta",
+  "canDo": "I can follow a doctor's advice about coughing, breathing, an aspirin and a vaccine, and read a note about shaving before an operation.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C486-vacuna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can follow a doctor's advice about coughing, breathing, an aspirin and a vaccine, and read a note about shaving before an operation.",
+    "assesses": [
+      "ES-LEX-C486-MEDICO-03",
+      "ES-LEX-C486-MEDICO-04",
+      "ES-LEX-C486-MEDICO-05"
+    ]
+  }
+}

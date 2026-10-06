@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Around, Everywhere, Elsewhere, Up there, Suburbs",
+  "label": "ch:fr-around-everywhere-elsewhere-up-there-suburbs",
+  "canDo": "I can say around, everywhere, elsewhere, up there and the suburbs.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FR-C216-banlieue",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say around, everywhere, elsewhere, up there and the suburbs.",
+    "assesses": [
+      "FR-LEX-C216-LIEU216-03",
+      "FR-LEX-C216-LIEU216-04",
+      "FR-LEX-C216-LIEU216-05"
+    ]
+  }
+}

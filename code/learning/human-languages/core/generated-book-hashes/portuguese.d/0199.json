@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:9a19a63167e99d4c",
+  "lessonIds": [
+    "PT-C199-milho",
+    "PT-C199-canela",
+    "PT-C199-ementa",
+    "PT-C199-aquecimento",
+    "PT-C199-torneira"
+  ],
+  "tex": "portuguese/book/chapters/ch199-maize-cinnamon-menu-heating-tap.tex"
+}

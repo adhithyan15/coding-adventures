@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:9e6ca09240c6d024",
+  "lessonIds": [
+    "IT-C171-arrivo",
+    "IT-C171-partenza",
+    "IT-C171-destinazione",
+    "IT-C171-paesaggio",
+    "IT-C171-vista"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch171.txt",
+  "json": "italian/narration/ch171.json",
+  "textHash": "fnv1a64:2dc03ed908854e0b",
+  "jsonHash": "fnv1a64:d1b293541fb728e1",
+  "findings": []
+}

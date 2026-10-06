@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:f8f23a8b3374b3ea",
+  "lessonIds": [
+    "BN-C167-jatri",
+    "BN-C167-tksi",
+    "BN-C167-riksha",
+    "BN-C167-motorsaikel",
+    "BN-C167-trak"
+  ],
+  "tex": "bengali/book/chapters/ch167-passenger-taxi-rickshaw-motorbike-lorry.tex"
+}

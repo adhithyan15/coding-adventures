@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Antes del viaje",
+  "label": "ch:es-antes-del-viaje",
+  "canDo": "I can read travel information about luggage, footwear, the place and the space available.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C478-disponible",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can read travel information about luggage, footwear, the place and the space available.",
+    "assesses": [
+      "ES-LEX-C478-MALETA-03",
+      "ES-LEX-C478-MALETA-04",
+      "ES-LEX-C478-MALETA-05"
+    ]
+  }
+}

@@ -66,8 +66,8 @@ const DEFAULT_SLUG_FIELD = "slug";
 
 const router = defineStage({
   name: "@coding-adventures/forme-router",
-  version: "0.1.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Derive a URL route per ContentNode (frontmatter.slug → sourcePath fallback) and set ContentNode.route.",
   consumes: streamOf(Kinds.ContentNode),
   produces: streamOf(Kinds.ContentNode),

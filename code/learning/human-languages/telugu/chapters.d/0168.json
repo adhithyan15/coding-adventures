@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Jealousy, Pride, Enthusiasm, Peace, Patience",
+  "label": "ch:te-jealousy-pride-enthusiasm-peace-patience",
+  "canDo": "I can say jealousy, pride, enthusiasm, peace and patience.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C168-sahanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say jealousy, pride, enthusiasm, peace and patience.",
+    "assesses": [
+      "TE-LEX-C168-AROGYAM168-03",
+      "TE-LEX-C168-AROGYAM168-04",
+      "TE-LEX-C168-AROGYAM168-05"
+    ]
+  }
+}

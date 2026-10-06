@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-sandbox-macos",
+  "capabilities": [
+    { "category": "fs", "action": "read", "target": "$trustedRuntimeAndSystemLibraries", "justification": "Builds an exact Seatbelt read allow-list for the selected runtime and system loader libraries." },
+    { "category": "fs", "action": "write", "target": "$pluginWorkingDirectory", "justification": "Stages and permits writes only inside the private host-created plugin directory." },
+    { "category": "proc", "action": "exec", "target": "$trustedNativeLauncher", "justification": "Starts the checked-in native launcher that installs Seatbelt before executing the plugin runtime." },
+    { "category": "proc", "action": "fork", "target": "$singleSandboxChild", "justification": "Creates exactly one child before the installed Seatbelt profile denies subsequent process creation." },
+    { "category": "proc", "action": "signal", "target": "$singleSandboxChild", "justification": "Forwards cancellation and enforces resident-memory limits from the trusted parent." }
+  ],
+  "justification": "Applies the explicit macOS Seatbelt and resource isolation boundary around an exact host-verified plugin snapshot."
+}

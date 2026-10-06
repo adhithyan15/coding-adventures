@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:9f4a6126f26723dc",
+  "lessonIds": [
+    "FA-C243-marasem",
+    "FA-C243-mosabeqe",
+    "FA-C243-film",
+    "FA-C243-sargarmi",
+    "FA-C243-khatere",
+    "FA-R243-first-pass-words-from-chapters-235-238",
+    "FA-R243-second-pass-words-from-chapters-239-243"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch243.txt",
+  "json": "persian/narration/ch243.json",
+  "textHash": "fnv1a64:5f4b736cf607337c",
+  "jsonHash": "fnv1a64:5e59ee8177be88cf",
+  "findings": []
+}

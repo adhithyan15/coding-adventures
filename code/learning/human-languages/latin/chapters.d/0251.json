@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Puppy, Tiger, Club, Chain, Shield",
+  "label": "ch:la-puppy-tiger-club-chain-shield",
+  "canDo": "I can say a puppy, a tiger, a club, a chain and a shield.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C251-scutum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can say a puppy, a tiger, a club, a chain and a shield.",
+    "assesses": [
+      "LA-LEX-C251-RES251-03",
+      "LA-LEX-C251-RES251-04",
+      "LA-LEX-C251-RES251-05"
+    ]
+  }
+}

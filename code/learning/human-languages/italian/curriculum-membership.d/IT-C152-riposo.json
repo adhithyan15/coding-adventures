@@ -1,0 +1,11 @@
+{
+  "id": "IT-C152-riposo",
+  "pathSegment": "IT-PATH-152-SAL152",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-152-SAL152",
+      "order": 2
+    }
+  ]
+}

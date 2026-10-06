@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:4dea5e10618bd68d",
+  "lessonIds": [
+    "PT-C168-polvo",
+    "PT-C168-alface",
+    "PT-C168-espinafres",
+    "PT-C168-abobora",
+    "PT-C168-ervilha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch168.txt",
+  "json": "portuguese/narration/ch168.json",
+  "textHash": "fnv1a64:e2f29e02294e8604",
+  "jsonHash": "fnv1a64:4bb3f60eba2c8669",
+  "findings": []
+}

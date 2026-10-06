@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:8dc3e3dcac1c87c9",
+  "lessonIds": [
+    "AR-C282-hasiba",
+    "AR-C282-miqlama",
+    "AR-C282-safha",
+    "AR-C282-jumla",
+    "AR-C282-hallaq",
+    "AR-R282-first-pass-words-from-chapters-278-279",
+    "AR-R282-second-pass-words-from-chapters-280-282"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch282.txt",
+  "json": "arabic/narration/ch282.json",
+  "textHash": "fnv1a64:01b306cd62c663b9",
+  "jsonHash": "fnv1a64:f391fc7558fbea91",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C295-miksi",
+    "language": "malayalam",
+    "chapter": 295,
+    "sequence": 13810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55e45fbb1b105a27"
+  },
+  "findings": []
+}

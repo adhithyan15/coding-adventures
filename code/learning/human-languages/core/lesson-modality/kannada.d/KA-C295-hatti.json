@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C295-hatti",
+    "language": "kannada",
+    "chapter": 295,
+    "sequence": 14200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9259f8a09d789d9"
+  },
+  "findings": []
+}

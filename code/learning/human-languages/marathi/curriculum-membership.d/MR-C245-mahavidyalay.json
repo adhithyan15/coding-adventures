@@ -1,0 +1,11 @@
+{
+  "id": "MR-C245-mahavidyalay",
+  "pathSegment": "MR-PATH-245-VASTU245",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-245-VASTU245",
+      "order": 3
+    }
+  ]
+}

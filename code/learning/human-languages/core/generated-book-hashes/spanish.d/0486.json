@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:d3736bd2b2295b14",
+  "lessonIds": [
+    "ES-C486-afeitarse",
+    "ES-C486-toser",
+    "ES-C486-respirar",
+    "ES-C486-aspirina",
+    "ES-C486-vacuna"
+  ],
+  "tex": "spanish/book/chapters/ch486-en-la-consulta.tex"
+}

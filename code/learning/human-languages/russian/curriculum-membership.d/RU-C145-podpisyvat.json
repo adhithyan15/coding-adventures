@@ -1,0 +1,11 @@
+{
+  "id": "RU-C145-podpisyvat",
+  "pathSegment": "RU-PATH-145-ACT145",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-145-ACT145",
+      "order": 0
+    }
+  ]
+}

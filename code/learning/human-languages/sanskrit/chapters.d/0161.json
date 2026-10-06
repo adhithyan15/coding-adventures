@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "Conch, Flute, Mridanga drum, Anklet, Earring",
+  "label": "ch:sa-conch-flute-mridanga-drum-anklet-earring",
+  "canDo": "I can say a conch, a flute, a mridanga drum, an anklet and an earring.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C161-kundalam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say a conch, a flute, a mridanga drum, an anklet and an earring.",
+    "assesses": [
+      "SA-LEX-C161-THG161-03",
+      "SA-LEX-C161-THG161-04",
+      "SA-LEX-C161-THG161-05"
+    ]
+  }
+}

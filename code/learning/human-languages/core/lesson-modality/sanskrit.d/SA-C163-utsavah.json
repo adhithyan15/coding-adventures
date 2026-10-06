@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C163-utsavah",
+    "language": "sanskrit",
+    "chapter": 163,
+    "sequence": 8610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c284ca738fef133"
+  },
+  "findings": []
+}

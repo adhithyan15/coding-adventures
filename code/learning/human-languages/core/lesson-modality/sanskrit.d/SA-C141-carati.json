@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C141-carati",
+    "language": "sanskrit",
+    "chapter": 141,
+    "sequence": 7130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2561c5dfbb9db881"
+  },
+  "findings": []
+}

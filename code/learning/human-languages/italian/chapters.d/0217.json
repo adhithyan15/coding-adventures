@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Unfortunately, Perhaps, Maybe, Certainly, Really",
+  "label": "ch:it-unfortunately-perhaps-maybe-certainly-really",
+  "canDo": "I can say unfortunately, perhaps, maybe, certainly and really.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "IT-C217-davvero",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say unfortunately, perhaps, maybe, certainly and really.",
+    "assesses": [
+      "IT-LEX-C217-PERCHE217-03",
+      "IT-LEX-C217-PERCHE217-04",
+      "IT-LEX-C217-PERCHE217-05"
+    ]
+  }
+}

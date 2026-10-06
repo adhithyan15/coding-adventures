@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:8944731527b25cfe",
+  "lessonIds": [
+    "FA-C188-yaddasht-kardan",
+    "FA-C188-talaffoz-kardan",
+    "FA-C188-hejji-kardan",
+    "FA-C188-tab-khordan",
+    "FA-C188-nasb-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch188.txt",
+  "json": "persian/narration/ch188.json",
+  "textHash": "fnv1a64:ccd95a8ab1771850",
+  "jsonHash": "fnv1a64:d4dfc96814e04142",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C152-jhari",
+  "pathSegment": "TE-PATH-152-STREAM",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-152-STREAM",
+      "order": 0
+    }
+  ]
+}

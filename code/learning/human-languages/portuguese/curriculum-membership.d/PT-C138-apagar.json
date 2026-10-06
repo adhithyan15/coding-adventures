@@ -1,0 +1,11 @@
+{
+  "id": "PT-C138-apagar",
+  "pathSegment": "PT-PATH-138-VERBOS138",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-138-VERBOS138",
+      "order": 1
+    }
+  ]
+}

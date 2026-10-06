@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C183-snan-kora",
+    "language": "bengali",
+    "chapter": 183,
+    "sequence": 10750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:995a02d4fa6f2884"
+  },
+  "findings": []
+}

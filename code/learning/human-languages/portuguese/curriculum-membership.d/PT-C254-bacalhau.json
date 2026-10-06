@@ -1,0 +1,11 @@
+{
+  "id": "PT-C254-bacalhau",
+  "pathSegment": "PT-PATH-254-COISAS254",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-254-COISAS254",
+      "order": 3
+    }
+  ]
+}

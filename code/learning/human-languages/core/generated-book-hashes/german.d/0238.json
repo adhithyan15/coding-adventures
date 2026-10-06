@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:dfea0051c113b28b",
+  "lessonIds": [
+    "GE-C238-schwierigkeit",
+    "GE-C238-sicherheit",
+    "GE-C238-sinn",
+    "GE-C238-sorge",
+    "GE-C238-stimme"
+  ],
+  "tex": "german/book/chapters/ch238-a-difficulty-safety-sense-a-worry-a-voice.tex"
+}

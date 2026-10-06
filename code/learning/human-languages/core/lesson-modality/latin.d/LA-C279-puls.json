@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C279-puls",
+    "language": "latin",
+    "chapter": 279,
+    "sequence": 15260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41b1e2bb8ce5abe2"
+  },
+  "findings": []
+}

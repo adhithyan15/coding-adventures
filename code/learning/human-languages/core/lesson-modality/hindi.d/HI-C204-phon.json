@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C204-phon",
+    "language": "hindi",
+    "chapter": 204,
+    "sequence": 10300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:680116aa6b977b83"
+  },
+  "findings": []
+}

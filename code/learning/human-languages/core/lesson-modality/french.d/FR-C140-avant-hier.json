@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C140-avant-hier",
+    "language": "french",
+    "chapter": 140,
+    "sequence": 6540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b1230cc57959a44"
+  },
+  "findings": []
+}

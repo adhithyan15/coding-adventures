@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:b7e82f7ec30bea49",
+  "lessonIds": [
+    "KA-C225-bevu",
+    "KA-C225-mallige",
+    "KA-C225-suryakanti",
+    "KA-C225-kabbu",
+    "KA-C225-pataki"
+  ],
+  "tex": "kannada/book/chapters/ch225-neem-jasmine-sunflower-sugarcane-firecracker.tex"
+}

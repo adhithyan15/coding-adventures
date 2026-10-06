@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C192-rakiba",
+    "language": "arabic",
+    "chapter": 192,
+    "sequence": 9870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4aae382bb9e25c59"
+  },
+  "findings": []
+}

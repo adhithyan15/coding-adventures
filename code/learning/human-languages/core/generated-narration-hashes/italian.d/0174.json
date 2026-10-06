@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:0135b2c3b679ee5e",
+  "lessonIds": [
+    "IT-C174-baciare",
+    "IT-C174-abbracciare",
+    "IT-C174-salutare",
+    "IT-C174-ringraziare",
+    "IT-C174-invitare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch174.txt",
+  "json": "italian/narration/ch174.json",
+  "textHash": "fnv1a64:b162c3a4995b0f13",
+  "jsonHash": "fnv1a64:ca4e884e5f8c1c2c",
+  "findings": []
+}

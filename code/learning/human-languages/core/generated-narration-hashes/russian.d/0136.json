@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:d1b2c6bf30966fa6",
+  "lessonIds": [
+    "RU-C136-nikto",
+    "RU-C136-nichego",
+    "RU-C136-nigde",
+    "RU-C136-nikuda",
+    "RU-C136-zachem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch136.txt",
+  "json": "russian/narration/ch136.json",
+  "textHash": "fnv1a64:01b6c359ee652ca5",
+  "jsonHash": "fnv1a64:dfc34f5e09d084ea",
+  "findings": []
+}

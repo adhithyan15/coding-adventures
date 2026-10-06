@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C249-qimti",
+    "language": "urdu",
+    "chapter": 249,
+    "sequence": 15150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2894a73759b8485e"
+  },
+  "findings": []
+}

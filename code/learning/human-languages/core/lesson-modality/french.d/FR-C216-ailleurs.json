@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C216-ailleurs",
+    "language": "french",
+    "chapter": 216,
+    "sequence": 12070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ce9d54452325eb8"
+  },
+  "findings": []
+}

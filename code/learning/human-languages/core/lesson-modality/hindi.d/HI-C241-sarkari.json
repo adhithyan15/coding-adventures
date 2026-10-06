@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C241-sarkari",
+    "language": "hindi",
+    "chapter": 241,
+    "sequence": 12770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc9bbedcfe90f56c"
+  },
+  "findings": []
+}

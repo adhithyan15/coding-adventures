@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Black gram, Barley, Date palm's fruit, Amla, Rose apple",
+  "label": "ch:sa-black-gram-barley-date-palm-s-fruit-amla-rose-apple",
+  "canDo": "I can say black gram, barley, a date palm's fruit, an amla and a rose apple.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R190-second-pass-words-from-chapters-186-190",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say black gram, barley, a date palm's fruit, an amla and a rose apple.",
+    "assesses": [
+      "SA-LEX-C190-THG190-03",
+      "SA-LEX-C190-THG190-04",
+      "SA-LEX-C190-THG190-05"
+    ]
+  }
+}

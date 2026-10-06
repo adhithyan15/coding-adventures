@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-228-VASTUVU228",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a crab, a scorpion, a bat, a nest and a tail.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C259-desisto",
+  "pathSegment": "LA-PATH-259-ACT259",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-259-ACT259",
+      "order": 3
+    }
+  ]
+}

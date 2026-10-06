@@ -7,7 +7,7 @@ chapter: 446
 type: word
 headword: acompañar
 gloss: to go with somebody — built on the one you share bread with
-concept_tag: ES-ACT-ACOMPANAR
+concept_tag: ES-VERB-ACOMPANAR
 prerequisites: [ES-C446-mover, ES-C436-companero, ES-C26-pan]
 sounds: [enye, stress-final]
 roots: [panis-latin]

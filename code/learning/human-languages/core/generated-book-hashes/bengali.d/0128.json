@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:6618782afe112590",
+  "lessonIds": [
+    "BN-C128-maine",
+    "BN-C128-bondor",
+    "BN-C128-jahaj",
+    "BN-C128-tren",
+    "BN-C128-tikit"
+  ],
+  "tex": "bengali/book/chapters/ch128-salary-port-ship-train-ticket.tex"
+}

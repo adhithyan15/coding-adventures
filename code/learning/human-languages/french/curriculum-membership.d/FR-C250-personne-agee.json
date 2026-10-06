@@ -1,0 +1,11 @@
+{
+  "id": "FR-C250-personne-agee",
+  "pathSegment": "FR-PATH-250-CHOSES250",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-250-CHOSES250",
+      "order": 3
+    }
+  ]
+}

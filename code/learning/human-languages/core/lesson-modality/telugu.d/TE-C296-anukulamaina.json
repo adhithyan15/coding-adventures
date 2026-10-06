@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C296-anukulamaina",
+    "language": "telugu",
+    "chapter": 296,
+    "sequence": 14150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cc154282eb3d5d0"
+  },
+  "findings": []
+}

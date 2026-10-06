@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:16d1fca56615626e",
+  "lessonIds": [
+    "SA-C230-saphalata",
+    "SA-C230-viphalata",
+    "SA-C230-prayatnah",
+    "SA-C230-avasarah",
+    "SA-C230-anubhavah"
+  ],
+  "tex": "sanskrit/book/chapters/ch230-success-failure-effort-opportunity-experience.tex"
+}

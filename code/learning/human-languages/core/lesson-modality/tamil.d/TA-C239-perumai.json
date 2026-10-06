@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C239-perumai",
+    "language": "tamil",
+    "chapter": 239,
+    "sequence": 13080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db8e984fd91acfb9"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:aad2502a9612c8bd",
+  "lessonIds": [
+    "FA-C158-agar",
+    "FA-C158-vali",
+    "FA-C158-be-khater-e",
+    "FA-C158-natije",
+    "FA-C158-moshkel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch158.txt",
+  "json": "persian/narration/ch158.json",
+  "textHash": "fnv1a64:433b97ae0a389806",
+  "jsonHash": "fnv1a64:07004df4f5b404d8",
+  "findings": []
+}

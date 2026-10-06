@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "To sign, To print, To keep, To download, To be beaten",
+  "label": "ch:ru-to-sign-to-print-to-keep-to-download-to-be-beaten",
+  "canDo": "I can say to sign, to print, to keep, to download and to be beaten.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C145-proigryvat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: I can say to sign, to print, to keep, to download and to be beaten.",
+    "assesses": [
+      "RU-LEX-C145-ACT145-03",
+      "RU-LEX-C145-ACT145-04",
+      "RU-LEX-C145-ACT145-05"
+    ]
+  }
+}

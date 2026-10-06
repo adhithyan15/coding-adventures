@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C243-kurram",
+    "language": "malayalam",
+    "chapter": 243,
+    "sequence": 11090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:295e0b7dbfbdac0f"
+  },
+  "findings": []
+}

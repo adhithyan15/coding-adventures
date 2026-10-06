@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:6778cafcf70836d9",
+  "lessonIds": [
+    "TE-C239-nivedika",
+    "TE-C239-samstha",
+    "TE-C239-citi",
+    "TE-C239-pinchanu",
+    "TE-C239-oppandam",
+    "TE-R239-first-pass-words-from-chapters-235-236",
+    "TE-R239-second-pass-words-from-chapters-237-239"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch239.txt",
+  "json": "telugu/narration/ch239.json",
+  "textHash": "fnv1a64:1d7044b1e80bc457",
+  "jsonHash": "fnv1a64:dc0dda86bb1d3dae",
+  "findings": []
+}

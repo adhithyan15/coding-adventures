@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:38f033539e36401f",
+  "lessonIds": [
+    "SA-C212-buddhih",
+    "SA-C212-manah",
+    "SA-C212-atma",
+    "SA-C212-svapnah",
+    "SA-C212-trptih"
+  ],
+  "tex": "sanskrit/book/chapters/ch212-intelligence-mind-self-dream-satisfaction.tex"
+}

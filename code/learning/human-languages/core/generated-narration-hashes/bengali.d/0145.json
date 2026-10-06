@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:3a82648db29d1854",
+  "lessonIds": [
+    "BN-C145-somproti",
+    "BN-C145-agei",
+    "BN-C145-goto",
+    "BN-C145-ekshomoy",
+    "BN-C145-katano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch145.txt",
+  "json": "bengali/narration/ch145.json",
+  "textHash": "fnv1a64:9893e64538bf736a",
+  "jsonHash": "fnv1a64:e738c0cb5a38ecbd",
+  "findings": []
+}

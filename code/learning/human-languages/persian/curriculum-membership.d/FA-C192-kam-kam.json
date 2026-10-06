@@ -1,0 +1,11 @@
+{
+  "id": "FA-C192-kam-kam",
+  "pathSegment": "FA-PATH-192-ZAMAN192",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-192-ZAMAN192",
+      "order": 1
+    }
+  ]
+}

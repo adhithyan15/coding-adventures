@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C286-faktor",
+    "language": "persian",
+    "chapter": 286,
+    "sequence": 14810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2c7effcd7d75ed5"
+  },
+  "findings": []
+}

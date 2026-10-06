@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C191-campanello",
+    "language": "italian",
+    "chapter": 191,
+    "sequence": 10590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:184f3f92f0b5d2d3"
+  },
+  "findings": []
+}

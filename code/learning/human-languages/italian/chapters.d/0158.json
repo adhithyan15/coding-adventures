@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "Ripe, Dark, Clear, Dark-coloured, Punctual",
+  "label": "ch:it-ripe-dark-clear-dark-coloured-punctual",
+  "canDo": "I can say ripe, dark, clear, dark-coloured and punctual.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C158-puntuale",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can say ripe, dark, clear, dark-coloured and punctual.",
+    "assesses": [
+      "IT-LEX-C158-QUAL158-03",
+      "IT-LEX-C158-QUAL158-04",
+      "IT-LEX-C158-QUAL158-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "Government, Private, Free, Valuable, Unusual",
+  "label": "ch:hi-government-private-free-valuable-unusual",
+  "canDo": "I can say government, private, free, valuable and unusual.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-C241-anokha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say government, private, free, valuable and unusual.",
+    "assesses": [
+      "HI-LEX-C241-QUAL241-03",
+      "HI-LEX-C241-QUAL241-04",
+      "HI-LEX-C241-QUAL241-05"
+    ]
+  }
+}

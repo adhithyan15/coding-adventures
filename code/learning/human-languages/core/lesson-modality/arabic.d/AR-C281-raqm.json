@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C281-raqm",
+    "language": "arabic",
+    "chapter": 281,
+    "sequence": 16280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00135e8172aa9897"
+  },
+  "findings": []
+}

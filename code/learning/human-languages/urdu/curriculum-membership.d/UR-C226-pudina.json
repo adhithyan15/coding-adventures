@@ -1,0 +1,11 @@
+{
+  "id": "UR-C226-pudina",
+  "pathSegment": "UR-PATH-226-CHIZ226",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-226-CHIZ226",
+      "order": 1
+    }
+  ]
+}

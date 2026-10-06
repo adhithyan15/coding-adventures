@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-165-CHIZ165",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "UR-EXT-165-CHIZ165"
+  ],
+  "after": []
+}

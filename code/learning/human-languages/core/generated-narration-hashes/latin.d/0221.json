@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:0b4466fd75e7ad2e",
+  "lessonIds": [
+    "LA-C221-regula",
+    "LA-C221-discrimen",
+    "LA-C221-eventus",
+    "LA-C221-fortuna",
+    "LA-C221-casus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch221.txt",
+  "json": "latin/narration/ch221.json",
+  "textHash": "fnv1a64:4bb7ffa18b0d990d",
+  "jsonHash": "fnv1a64:b6e7ca792176975f",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C188-trsitah",
+  "pathSegment": "SA-PATH-188-QUAL188",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-188-QUAL188",
+      "order": 0
+    }
+  ]
+}

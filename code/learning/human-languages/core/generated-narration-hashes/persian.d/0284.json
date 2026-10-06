@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:e2d80badd3a77d38",
+  "lessonIds": [
+    "FA-C284-mekanik",
+    "FA-C284-arayeshgar",
+    "FA-C284-postchi",
+    "FA-C284-ketabdar",
+    "FA-C284-hesabdar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch284.txt",
+  "json": "persian/narration/ch284.json",
+  "textHash": "fnv1a64:60ec3c3185aac47d",
+  "jsonHash": "fnv1a64:e6f3c50be0f09edb",
+  "findings": []
+}

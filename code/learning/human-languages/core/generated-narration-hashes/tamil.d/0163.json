@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:9d23a9efe27e8a75",
+  "lessonIds": [
+    "TA-C163-tayar-cey",
+    "TA-C163-parimaru",
+    "TA-C163-pakir",
+    "TA-C163-peram-pecu",
+    "TA-C163-caripar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch163.txt",
+  "json": "tamil/narration/ch163.json",
+  "textHash": "fnv1a64:129b07ccedae0024",
+  "jsonHash": "fnv1a64:4120574443781131",
+  "findings": []
+}

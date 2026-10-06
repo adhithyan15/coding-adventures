@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:dd46c0e8d3acf63d",
+  "lessonIds": [
+    "KA-C259-gundi",
+    "KA-C259-svetar",
+    "KA-C259-salu2",
+    "KA-C259-karavastra",
+    "KA-C259-sara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch259.txt",
+  "json": "kannada/narration/ch259.json",
+  "textHash": "fnv1a64:e2259dd89e1e974b",
+  "jsonHash": "fnv1a64:0224f763b60b04e0",
+  "findings": []
+}

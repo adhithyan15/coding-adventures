@@ -82,7 +82,14 @@ void main() {
         isNotNull,
         reason: 'the direct Flutter gate requires the shared Rust bridge',
       );
-      await tester.binding.setSurfaceSize(const Size(1400, 960));
+      // Big enough for the whole generated chrome with every panel open. The
+      // chrome is a plain Column: toolbars, then the bookmark, history,
+      // page-info and source panels as the test opens them, then the fixed
+      // 1024x640 content surface, so its height grows with each panel. At
+      // 1400 px wide the toolbar row overflowed by 173 px; at 960 and 1200 px
+      // tall the column overflowed by 107 and 203 px. A RenderFlex overflow
+      // fails the test on its own.
+      await tester.binding.setSurfaceSize(const Size(1800, 2400));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       DynamicLibrary.open(libraryPath!);
       final setup = await tester.runAsync(() async {
@@ -104,6 +111,8 @@ void main() {
       await _pumpLiveVentureShell(tester, host);
       debugPrint('flutter-live-stage=shell-pumped');
       expect(find.text('Stop'), findsOneWidget);
+      // `find.byType` matches the exact runtime type, so the generated
+      // `ElevatedButton` is never found as a `ButtonStyleButton`.
       final stopButton = tester.widget<ElevatedButton>(
         find.widgetWithText(ElevatedButton, 'Stop'),
       );

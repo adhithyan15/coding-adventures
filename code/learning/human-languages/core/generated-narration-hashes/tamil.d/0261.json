@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:f312ec8e02e3e72d",
+  "lessonIds": [
+    "TA-C261-carkkarai-noy",
+    "TA-C261-utarpayirci",
+    "TA-C261-yoka",
+    "TA-C261-arippu",
+    "TA-C261-talaiccurral"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch261.txt",
+  "json": "tamil/narration/ch261.json",
+  "textHash": "fnv1a64:b17ff8036f627f01",
+  "jsonHash": "fnv1a64:ffc735c37ce176cb",
+  "findings": []
+}

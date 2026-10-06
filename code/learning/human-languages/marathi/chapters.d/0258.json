@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "Nowadays, Century, Era, All night, All day",
+  "label": "ch:mr-nowadays-century-era-all-night-all-day",
+  "canDo": "I can say nowadays, a century, an era, all night and all day.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MR-C258-divasbhar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can say nowadays, a century, an era, all night and all day.",
+    "assesses": [
+      "MR-LEX-C258-VEL258-03",
+      "MR-LEX-C258-VEL258-04",
+      "MR-LEX-C258-VEL258-05"
+    ]
+  }
+}

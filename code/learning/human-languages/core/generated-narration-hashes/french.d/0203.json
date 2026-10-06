@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:edaad2ff7b9ca526",
+  "lessonIds": [
+    "FR-C203-defaite",
+    "FR-C203-championnat",
+    "FR-C203-joueur",
+    "FR-C203-entraineur",
+    "FR-C203-correspondance"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch203.txt",
+  "json": "french/narration/ch203.json",
+  "textHash": "fnv1a64:f4f26fc740a2eaab",
+  "jsonHash": "fnv1a64:89b0f6a35c1645bb",
+  "findings": []
+}

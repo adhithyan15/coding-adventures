@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C179-kharidaina",
+    "language": "telugu",
+    "chapter": 179,
+    "sequence": 8010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46a5d6935b1d973a"
+  },
+  "findings": []
+}

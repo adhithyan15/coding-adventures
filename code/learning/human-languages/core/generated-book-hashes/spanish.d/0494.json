@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:64b1adbfe099aa0b",
+  "lessonIds": [
+    "ES-C494-despertarse",
+    "ES-C494-arreglarse",
+    "ES-C494-bajar",
+    "ES-C494-encender",
+    "ES-C494-calentar"
+  ],
+  "tex": "spanish/book/chapters/ch494-por-la-manana.tex"
+}

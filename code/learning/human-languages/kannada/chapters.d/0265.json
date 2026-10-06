@@ -1,0 +1,19 @@
+{
+  "chapter": 265,
+  "title": "Tin, Water pitcher, Jar, Packet, Steel",
+  "label": "ch:ka-tin-water-pitcher-jar-packet-steel",
+  "canDo": "I can say a tin, a water pitcher, a jar, a packet and steel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C265-ukku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 265: I can say a tin, a water pitcher, a jar, a packet and steel.",
+    "assesses": [
+      "KA-LEX-C265-VASTU265-03",
+      "KA-LEX-C265-VASTU265-04",
+      "KA-LEX-C265-VASTU265-05"
+    ]
+  }
+}

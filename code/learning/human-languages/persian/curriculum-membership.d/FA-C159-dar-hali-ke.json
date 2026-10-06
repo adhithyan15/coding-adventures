@@ -1,0 +1,11 @@
+{
+  "id": "FA-C159-dar-hali-ke",
+  "pathSegment": "FA-PATH-159-CHERA159",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-159-CHERA159",
+      "order": 3
+    }
+  ]
+}

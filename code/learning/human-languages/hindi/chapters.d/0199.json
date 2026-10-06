@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "History, Mathematics, A crow, The heart, A bone",
+  "label": "ch:hi-history-mathematics-a-crow-the-heart-a-bone",
+  "canDo": "I can say history, mathematics, a crow, the heart and a bone.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C199-haddi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say history, mathematics, a crow, the heart and a bone.",
+    "assesses": [
+      "HI-LEX-C199-THG199-03",
+      "HI-LEX-C199-THG199-04",
+      "HI-LEX-C199-THG199-05"
+    ]
+  }
+}

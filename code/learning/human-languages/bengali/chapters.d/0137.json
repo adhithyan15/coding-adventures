@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Pink, Sad, Angry, Tired, Healthy",
+  "label": "ch:bn-pink-sad-angry-tired-healthy",
+  "canDo": "I can say pink, sad, angry, tired and healthy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-R137-second-pass-the-town-and-describing-words",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: I can say pink, sad, angry, tired and healthy.",
+    "assesses": [
+      "BN-LEX-C137-QUAL137-03",
+      "BN-LEX-C137-QUAL137-04",
+      "BN-LEX-C137-QUAL137-05"
+    ]
+  }
+}

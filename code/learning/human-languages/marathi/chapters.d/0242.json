@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "Leather, Metal, Brick, Fine thread, Ladder",
+  "label": "ch:mr-leather-metal-brick-fine-thread-ladder",
+  "canDo": "I can say leather, metal, a brick, a fine thread and a ladder.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C242-sidi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say leather, metal, a brick, a fine thread and a ladder.",
+    "assesses": [
+      "MR-LEX-C242-VASTU242-03",
+      "MR-LEX-C242-VASTU242-04",
+      "MR-LEX-C242-VASTU242-05"
+    ]
+  }
+}

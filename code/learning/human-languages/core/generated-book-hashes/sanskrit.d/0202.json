@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:eb2dc11755399af0",
+  "lessonIds": [
+    "SA-C202-pathikah",
+    "SA-C202-disa",
+    "SA-C202-purva",
+    "SA-C202-pascima",
+    "SA-C202-uttara",
+    "SA-R202-first-pass-words-from-chapters-197-199",
+    "SA-R202-second-pass-words-from-chapters-200-202"
+  ],
+  "tex": "sanskrit/book/chapters/ch202-wayfarer-direction-east-west-north.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "To drive, To move, To arrive, To return, To take",
+  "label": "ch:ml-to-drive-to-move-to-arrive-to-return-to-take",
+  "canDo": "I can say to drive, to move, to arrive, to return and to take.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C225-kontupokuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say to drive, to move, to arrive, to return and to take.",
+    "assesses": [
+      "ML-LEX-C225-KRIYA225-03",
+      "ML-LEX-C225-KRIYA225-04",
+      "ML-LEX-C225-KRIYA225-05"
+    ]
+  }
+}

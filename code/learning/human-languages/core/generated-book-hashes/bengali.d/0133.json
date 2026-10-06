@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:4d8200a6e14f3f8d",
+  "lessonIds": [
+    "BN-C133-moshari",
+    "BN-C133-kombol",
+    "BN-C133-porda",
+    "BN-C133-phuldani",
+    "BN-C133-kap"
+  ],
+  "tex": "bengali/book/chapters/ch133-mosquito-net-blanket-curtain-vase-cup.tex"
+}

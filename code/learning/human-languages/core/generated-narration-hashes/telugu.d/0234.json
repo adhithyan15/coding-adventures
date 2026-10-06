@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:4ac07043a43f1cac",
+  "lessonIds": [
+    "TE-C234-kuppa",
+    "TE-C234-eruvu",
+    "TE-C234-peda",
+    "TE-C234-nagali",
+    "TE-C234-kodavali",
+    "TE-R234-first-pass-words-from-chapters-226-229",
+    "TE-R234-second-pass-words-from-chapters-230-234"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch234.txt",
+  "json": "telugu/narration/ch234.json",
+  "textHash": "fnv1a64:87009f26beed04af",
+  "jsonHash": "fnv1a64:8ca4b8272e2f8946",
+  "findings": []
+}

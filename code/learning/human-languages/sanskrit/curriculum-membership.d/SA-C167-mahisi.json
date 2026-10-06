@@ -1,0 +1,11 @@
+{
+  "id": "SA-C167-mahisi",
+  "pathSegment": "SA-PATH-167-THG167",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-167-THG167",
+      "order": 1
+    }
+  ]
+}

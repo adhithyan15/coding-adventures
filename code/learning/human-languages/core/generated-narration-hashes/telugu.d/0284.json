@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:20c24a09aa3ae514",
+  "lessonIds": [
+    "TE-C284-vadulu",
+    "TE-C284-tavvu",
+    "TE-C284-jarugu",
+    "TE-C284-cimmu",
+    "TE-C284-pisuku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch284.txt",
+  "json": "telugu/narration/ch284.json",
+  "textHash": "fnv1a64:c264ccf71f45f44b",
+  "jsonHash": "fnv1a64:d2c87698ee257548",
+  "findings": []
+}

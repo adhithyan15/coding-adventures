@@ -1,0 +1,11 @@
+{
+  "id": "HI-C270-matka",
+  "pathSegment": "HI-PATH-270-THG270",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-270-THG270",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:c22e1b5abd632ee6",
+  "lessonIds": [
+    "ML-C216-cempu",
+    "ML-C216-plasrriku",
+    "ML-C216-palaka",
+    "ML-C216-istika",
+    "ML-C216-simanru",
+    "ML-R216-first-pass-words-from-chapters-208-211",
+    "ML-R216-second-pass-words-from-chapters-212-216"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch216.txt",
+  "json": "malayalam/narration/ch216.json",
+  "textHash": "fnv1a64:55b86e8f7ec9ad31",
+  "jsonHash": "fnv1a64:d6e20c6a8f169b0a",
+  "findings": []
+}

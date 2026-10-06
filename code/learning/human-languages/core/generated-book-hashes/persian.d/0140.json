@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:5edd63a18aee48a5",
+  "lessonIds": [
+    "FA-C140-baz-kardan",
+    "FA-C140-pak-kardan",
+    "FA-C140-roshan-kardan",
+    "FA-C140-khamush-kardan",
+    "FA-C140-bidar-shodan"
+  ],
+  "tex": "persian/book/chapters/ch140-to-open-to-wipe-to-switch-on-to-switch-off-to-wake-up.tex"
+}

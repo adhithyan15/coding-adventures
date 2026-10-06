@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:7253a54ede815324",
+  "lessonIds": [
+    "FA-C152-emsal",
+    "FA-C152-ruzane",
+    "FA-C152-mahane",
+    "FA-C152-akhar",
+    "FA-C152-pas-az"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch152.txt",
+  "json": "persian/narration/ch152.json",
+  "textHash": "fnv1a64:af477a2246410281",
+  "jsonHash": "fnv1a64:e0144a9e84a92c42",
+  "findings": []
+}

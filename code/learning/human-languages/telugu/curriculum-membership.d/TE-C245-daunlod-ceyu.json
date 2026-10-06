@@ -1,0 +1,11 @@
+{
+  "id": "TE-C245-daunlod-ceyu",
+  "pathSegment": "TE-PATH-245-KRIYA245",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-245-KRIYA245",
+      "order": 3
+    }
+  ]
+}

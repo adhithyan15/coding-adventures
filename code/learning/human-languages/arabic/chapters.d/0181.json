@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "Washing machine, Air conditioner, Tin, Sink, Shelf",
+  "label": "ch:ar-washing-machine-air-conditioner-tin-sink-shelf",
+  "canDo": "I can say a washing machine, an air conditioner, a tin, a sink and a shelf.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C181-raff",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say a washing machine, an air conditioner, a tin, a sink and a shelf.",
+    "assesses": [
+      "AR-LEX-C181-SHAY181-03",
+      "AR-LEX-C181-SHAY181-04",
+      "AR-LEX-C181-SHAY181-05"
+    ]
+  }
+}

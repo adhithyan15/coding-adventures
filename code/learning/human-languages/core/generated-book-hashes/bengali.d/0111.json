@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:8ba41ad3930c89b4",
+  "lessonIds": [
+    "BN-C111-dori",
+    "BN-C111-perek",
+    "BN-C111-haturi",
+    "BN-C111-kurul",
+    "BN-C111-chhata"
+  ],
+  "tex": "bengali/book/chapters/ch111-rope-nail-hammer-axe-umbrella.tex"
+}

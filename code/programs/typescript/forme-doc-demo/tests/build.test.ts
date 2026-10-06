@@ -20,8 +20,9 @@
  *   - safeJoin rejects path-escape attacks.
  */
 
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import * as fs from "node:fs/promises";
+import { linkSync, symlinkSync } from "node:fs";
 import * as path from "node:path";
 import { generatePageBundle } from "@coding-adventures/forme-aot-page-bundle-emitter";
 
@@ -282,16 +283,22 @@ describe("build — full pipeline", () => {
 // ─────────────────────────────────────────────────────────────────────
 
 describe("writeBundle", () => {
+  let sandbox: string;
   let tmpDir: string;
 
   beforeAll(async () => {
-    tmpDir = await fs.mkdtemp(path.join(REPO_ROOT, ".tmp-write-"));
+    sandbox = await fs.mkdtemp(path.join(REPO_ROOT, ".tmp-write-"));
+    tmpDir = path.join(sandbox, "out");
     const files = await readCorpus(CORPUS);
     const bundle = build(files, {
       siteTitle: "Acme Docs",
       copyright: "© 2026 Acme",
     });
     await writeBundle(bundle, tmpDir);
+  });
+
+  afterAll(async () => {
+    await fs.rm(sandbox, { recursive: true, force: true });
   });
 
   it("writes index.html at the output root", async () => {
@@ -313,6 +320,99 @@ describe("writeBundle", () => {
   it("writes sidebar.json", async () => {
     const stat = await fs.stat(path.join(tmpDir, "sidebar.json"));
     expect(stat.isFile()).toBe(true);
+  });
+});
+
+describe("writeBundle link safety", () => {
+  const page = { pages: [{ route: "/", html: "replacement" }] };
+  const directoryLinkType = process.platform === "win32" ? "junction" : "dir";
+
+  it("rejects a symbolic-link or junction output root", async () => {
+    const sandbox = await fs.mkdtemp(path.join(REPO_ROOT, ".tmp-write-root-link-"));
+    const outside = path.join(sandbox, "outside");
+    const linkedRoot = path.join(sandbox, "linked");
+    await fs.mkdir(outside);
+    await fs.symlink(outside, linkedRoot, directoryLinkType);
+    try {
+      await expect(writeBundle(page, linkedRoot)).rejects.toThrow(/link|reparse/i);
+      await expect(fs.stat(path.join(outside, "index.html"))).rejects.toMatchObject({ code: "ENOENT" });
+    } finally {
+      await fs.rm(sandbox, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects a symbolic-link or junction directory below the output root", async () => {
+    const sandbox = await fs.mkdtemp(path.join(REPO_ROOT, ".tmp-write-child-link-"));
+    const outDir = path.join(sandbox, "out");
+    const outside = path.join(sandbox, "outside");
+    await fs.mkdir(outside);
+    let injected = false;
+    const linkedPage = {
+      get route(): string {
+        if (!injected) {
+          symlinkSync(outside, path.join(outDir, "nested"), directoryLinkType);
+          injected = true;
+        }
+        return "/nested";
+      },
+      html: "replacement",
+    };
+    try {
+      await expect(writeBundle({ pages: [linkedPage] }, outDir)).rejects.toThrow(/link|reparse/i);
+      await expect(fs.stat(path.join(outside, "index.html"))).rejects.toMatchObject({ code: "ENOENT" });
+    } finally {
+      await fs.rm(sandbox, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects an existing multiply-linked output file before truncation", async () => {
+    const sandbox = await fs.mkdtemp(path.join(REPO_ROOT, ".tmp-write-hard-link-"));
+    const outDir = path.join(sandbox, "out");
+    const authority = path.join(sandbox, "authority.txt");
+    let injected = false;
+    const linkedPage = {
+      route: "/",
+      get html(): string {
+        if (!injected) {
+          linkSync(path.join(outDir, "index.html"), authority);
+          injected = true;
+        }
+        return "replacement";
+      },
+    };
+    try {
+      await expect(
+        writeBundle({ pages: [{ route: "/", html: "preserve" }, linkedPage] }, outDir),
+      ).rejects.toThrow(/link/i);
+      await expect(fs.readFile(authority, "utf8")).resolves.toBe("preserve");
+    } finally {
+      await fs.rm(sandbox, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects a linked ancestor below the trusted working directory", async () => {
+    const sandbox = await fs.mkdtemp(path.join(REPO_ROOT, ".tmp-write-ancestor-link-"));
+    const outside = path.join(sandbox, "outside");
+    const linkedAncestor = path.join(sandbox, "linked-parent");
+    await fs.mkdir(outside);
+    await fs.symlink(outside, linkedAncestor, directoryLinkType);
+    try {
+      await expect(writeBundle(page, path.join(linkedAncestor, "out"))).rejects.toThrow(/link|reparse/i);
+      await expect(fs.stat(path.join(outside, "out", "index.html"))).rejects.toMatchObject({ code: "ENOENT" });
+    } finally {
+      await fs.rm(sandbox, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects a pre-existing root to enforce one private writer", async () => {
+    const sandbox = await fs.mkdtemp(path.join(REPO_ROOT, ".tmp-write-existing-root-"));
+    const outDir = path.join(sandbox, "out");
+    await fs.mkdir(outDir);
+    try {
+      await expect(writeBundle(page, outDir)).rejects.toThrow(/already exists|private root/i);
+    } finally {
+      await fs.rm(sandbox, { recursive: true, force: true });
+    }
   });
 });
 
@@ -406,7 +506,8 @@ describe("plainText", () => {
 
 describe("safeJoin", () => {
   it("joins a normal relative path under the base", () => {
-    expect(safeJoin("/tmp/site", "page/index.html")).toBe(path.join("/tmp/site", "page/index.html"));
+    const base = path.join("tmp", "site");
+    expect(safeJoin(base, "page/index.html")).toBe(path.resolve(base, "page/index.html"));
   });
   it("rejects ../ escape", () => {
     expect(() => safeJoin("/tmp/site", "../etc/passwd")).toThrow(/escapes/);

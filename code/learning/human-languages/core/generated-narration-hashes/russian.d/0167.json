@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:63f735c975805e75",
+  "lessonIds": [
+    "RU-C167-elektrichka",
+    "RU-C167-mototsikl",
+    "RU-C167-gruzovik",
+    "RU-C167-benzin",
+    "RU-C167-zapravka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch167.txt",
+  "json": "russian/narration/ch167.json",
+  "textHash": "fnv1a64:595ac0fcf921e8c6",
+  "jsonHash": "fnv1a64:84290b9ccdd8ef2a",
+  "findings": []
+}

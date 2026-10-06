@@ -1,0 +1,11 @@
+{
+  "id": "MR-C237-kalphalak",
+  "pathSegment": "MR-PATH-237-VASTU237",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-237-VASTU237",
+      "order": 4
+    }
+  ]
+}

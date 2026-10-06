@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C267-gota",
+    "language": "marathi",
+    "chapter": 267,
+    "sequence": 15290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d5f1afd89923639"
+  },
+  "findings": []
+}

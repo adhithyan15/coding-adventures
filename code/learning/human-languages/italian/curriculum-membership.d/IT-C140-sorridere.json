@@ -1,0 +1,11 @@
+{
+  "id": "IT-C140-sorridere",
+  "pathSegment": "IT-PATH-140-VERBI140",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-140-VERBI140",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C170-jina",
+    "language": "hindi",
+    "chapter": 170,
+    "sequence": 8070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:378771e0d69805cd"
+  },
+  "findings": []
+}

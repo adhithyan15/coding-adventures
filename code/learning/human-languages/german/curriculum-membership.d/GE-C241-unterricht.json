@@ -1,0 +1,11 @@
+{
+  "id": "GE-C241-unterricht",
+  "pathSegment": "GE-PATH-241-THING241",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-241-THING241",
+      "order": 1
+    }
+  ]
+}

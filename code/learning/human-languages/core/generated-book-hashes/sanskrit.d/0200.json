@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:07ec1ca1d44a715e",
+  "lessonIds": [
+    "SA-C200-pathanam",
+    "SA-C200-sravanam",
+    "SA-C200-bhasanam",
+    "SA-C200-carca",
+    "SA-C200-vivadah"
+  ],
+  "tex": "sanskrit/book/chapters/ch200-reading-listening-speech-discussion-dispute.tex"
+}

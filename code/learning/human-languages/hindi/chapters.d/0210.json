@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "A paratha, Khichri, Halwa, A laddu, Pickle",
+  "label": "ch:hi-a-paratha-khichri-halwa-a-laddu-pickle",
+  "canDo": "I can say a paratha, khichri, halwa, a laddu and pickle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C210-achar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say a paratha, khichri, halwa, a laddu and pickle.",
+    "assesses": [
+      "HI-LEX-C210-THG210-03",
+      "HI-LEX-C210-THG210-04",
+      "HI-LEX-C210-THG210-05"
+    ]
+  }
+}

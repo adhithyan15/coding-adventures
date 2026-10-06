@@ -7,7 +7,7 @@ chapter: 462
 type: word
 headword: reducir
 gloss: to cut back — to lead a thing back, and a shower is its cousin
-concept_tag: ES-WORK-REDUCIR
+concept_tag: ES-VERB-REDUCIR
 prerequisites: [ES-C461-sintesis-donar, ES-C310-ducha, ES-C456-coste]
 sounds: [d-soft, soft-c, stress-final]
 roots: [ducere-latin]

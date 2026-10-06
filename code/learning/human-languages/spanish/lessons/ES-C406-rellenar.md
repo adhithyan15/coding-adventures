@@ -7,7 +7,7 @@ chapter: 406
 type: word
 headword: rellenar
 gloss: to fill in; to fill out — especially a form or document
-concept_tag: ES-ACTION-RELLENAR
+concept_tag: ES-VERB-RELLENAR
 prerequisites: [ES-C406-impreso, ES-C406-dato, ES-C365-lleno]
 sounds: [stress-final, ll-y]
 roots: [re-llenar-spanish]

@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Tail, Wing, Camera, Headphones, Battery",
+  "label": "ch:ar-tail-wing-camera-headphones-battery",
+  "canDo": "I can say a tail, a wing, a camera, headphones and a battery.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C217-battariyya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say a tail, a wing, a camera, headphones and a battery.",
+    "assesses": [
+      "AR-LEX-C217-SHAY217-03",
+      "AR-LEX-C217-SHAY217-04",
+      "AR-LEX-C217-SHAY217-05"
+    ]
+  }
+}

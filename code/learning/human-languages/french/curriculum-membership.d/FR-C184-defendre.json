@@ -1,0 +1,11 @@
+{
+  "id": "FR-C184-defendre",
+  "pathSegment": "FR-PATH-184-VERBES184",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-184-VERBES184",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:ce5b06b78ea7c5a7",
+  "lessonIds": [
+    "FR-C221-ciseaux",
+    "FR-C221-montre",
+    "FR-C221-pyjama",
+    "FR-C221-bouton",
+    "FR-C221-peche"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch221.txt",
+  "json": "french/narration/ch221.json",
+  "textHash": "fnv1a64:d11bc7a9bf9108fb",
+  "jsonHash": "fnv1a64:7659d2c3e6880437",
+  "findings": []
+}

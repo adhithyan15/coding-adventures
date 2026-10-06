@@ -1,0 +1,11 @@
+{
+  "id": "TA-C204-palporul-ankati",
+  "pathSegment": "TA-PATH-204-IDAM204",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-204-IDAM204",
+      "order": 3
+    }
+  ]
+}

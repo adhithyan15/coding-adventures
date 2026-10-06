@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Answering, Meeting, and Three Ways to Play",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:379d4d0865686ab4",
+  "sourceHash": "fnv1a64:7ae0074831a82ef7",
   "lessons": [
     {
       "id": "PT-C22-responder",
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b2b07679c1224d4",
+      "sourceHash": "fnv1a64:eab631bc90081c76",
       "notice": null,
       "blocks": [
         {
@@ -330,6 +330,16 @@
             {
               "kind": "speech",
               "text": "You know encontrar, “to find.” With people, it can also describe meeting up."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "First the finding: encontro o livro, encontramos o café. The object comes straight after the verb."
             }
           ]
         },

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:552e330db423bf38",
+  "lessonIds": [
+    "BN-C246-bideshi",
+    "BN-C246-ingreji",
+    "BN-C246-bharotiyo",
+    "BN-C246-sonali",
+    "BN-C246-akashi"
+  ],
+  "tex": "bengali/book/chapters/ch246-foreign-english-indian-golden-sky-blue.tex"
+}

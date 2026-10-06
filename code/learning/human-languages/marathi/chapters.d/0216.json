@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Shrikhand, Buttermilk, Spice mix, Turmeric, Cumin",
+  "label": "ch:mr-shrikhand-buttermilk-spice-mix-turmeric-cumin",
+  "canDo": "I can say shrikhand, buttermilk, a spice mix, turmeric and cumin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-R216-second-pass-words-from-chapters-214-216",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say shrikhand, buttermilk, a spice mix, turmeric and cumin.",
+    "assesses": [
+      "MR-LEX-C216-VASTU216-03",
+      "MR-LEX-C216-VASTU216-04",
+      "MR-LEX-C216-VASTU216-05"
+    ]
+  }
+}

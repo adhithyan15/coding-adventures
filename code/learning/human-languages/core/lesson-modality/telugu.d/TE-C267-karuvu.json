@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C267-karuvu",
+    "language": "telugu",
+    "chapter": 267,
+    "sequence": 12620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1744a1b922e12d9"
+  },
+  "findings": []
+}

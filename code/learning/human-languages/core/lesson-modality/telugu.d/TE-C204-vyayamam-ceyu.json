@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C204-vyayamam-ceyu",
+    "language": "telugu",
+    "chapter": 204,
+    "sequence": 9310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93127458a90bd001"
+  },
+  "findings": []
+}

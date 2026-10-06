@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:e4a49fae31c37677",
+  "lessonIds": [
+    "BN-C176-pesha",
+    "BN-C176-dhar",
+    "BN-C176-bil",
+    "BN-C176-khoroch",
+    "BN-C176-sonchoy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch176.txt",
+  "json": "bengali/narration/ch176.json",
+  "textHash": "fnv1a64:ec05f934777e38c8",
+  "jsonHash": "fnv1a64:7bd3db003bd34df4",
+  "findings": []
+}

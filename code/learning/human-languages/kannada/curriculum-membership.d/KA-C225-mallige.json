@@ -1,0 +1,11 @@
+{
+  "id": "KA-C225-mallige",
+  "pathSegment": "KA-PATH-225-VASTU225",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-225-VASTU225",
+      "order": 1
+    }
+  ]
+}

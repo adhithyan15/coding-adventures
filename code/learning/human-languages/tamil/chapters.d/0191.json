@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Shopkeeper, Customer, Cashier, Tailor, Small change",
+  "label": "ch:ta-shopkeeper-customer-cashier-tailor-small-change",
+  "canDo": "I can say a shopkeeper, a customer, a cashier, a tailor and small change.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C191-cillarai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say a shopkeeper, a customer, a cashier, a tailor and small change.",
+    "assesses": [
+      "TA-LEX-C191-VELAI191-03",
+      "TA-LEX-C191-VELAI191-04",
+      "TA-LEX-C191-VELAI191-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:411dc3575b78fd9a",
+  "lessonIds": [
+    "TA-C237-kurippaka",
+    "TA-C237-atarkup-patilaka",
+    "TA-C237-mattumallamal",
+    "TA-C237-onraka",
+    "TA-C237-kavanamaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch237.txt",
+  "json": "tamil/narration/ch237.json",
+  "textHash": "fnv1a64:d89ddaead6cdb3db",
+  "jsonHash": "fnv1a64:da5e96a073cb0979",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:ee931a5746540e47",
+  "lessonIds": [
+    "FA-C249-tekke",
+    "FA-C249-zardchube",
+    "FA-C249-tahdig",
+    "FA-C249-karafs",
+    "FA-C249-albalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch249.txt",
+  "json": "persian/narration/ch249.json",
+  "textHash": "fnv1a64:c453bdb7a7160aa0",
+  "jsonHash": "fnv1a64:22b5005f580786d2",
+  "findings": []
+}

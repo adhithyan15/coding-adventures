@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C255-oceano",
+    "language": "portuguese",
+    "chapter": 255,
+    "sequence": 15320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d2b0b50093accf7"
+  },
+  "findings": []
+}

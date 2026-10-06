@@ -1,0 +1,11 @@
+{
+  "id": "SA-C245-lavangam",
+  "pathSegment": "SA-PATH-245-THG245",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-245-THG245",
+      "order": 3
+    }
+  ]
+}

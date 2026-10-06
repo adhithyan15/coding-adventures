@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:c5a23c4dad2103a9",
+  "lessonIds": [
+    "ML-C330-muti",
+    "ML-C330-bharani",
+    "ML-C330-kutam",
+    "ML-C330-cakku",
+    "ML-C330-svarnnam"
+  ],
+  "tex": "malayalam/book/chapters/ch330-lid-jar-water-pot-sack-gold.tex"
+}

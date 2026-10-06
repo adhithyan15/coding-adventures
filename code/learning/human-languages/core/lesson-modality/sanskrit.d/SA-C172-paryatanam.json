@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C172-paryatanam",
+    "language": "sanskrit",
+    "chapter": 172,
+    "sequence": 9260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8cd9fd03fa9a3d3"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "A boat, A seat, A salary, An owner, A labourer",
+  "label": "ch:hi-a-boat-a-seat-a-salary-an-owner-a-labourer",
+  "canDo": "I can say a boat, a seat, a salary, an owner and a labourer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C182-mazdur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say a boat, a seat, a salary, an owner and a labourer.",
+    "assesses": [
+      "HI-LEX-C182-THG182-03",
+      "HI-LEX-C182-THG182-04",
+      "HI-LEX-C182-THG182-05"
+    ]
+  }
+}

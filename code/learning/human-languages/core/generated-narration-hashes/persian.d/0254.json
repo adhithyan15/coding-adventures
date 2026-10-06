@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:05d84073e0260b0b",
+  "lessonIds": [
+    "FA-C254-daravardan",
+    "FA-C254-amade-kardan",
+    "FA-C254-otu-kardan",
+    "FA-C254-ta-kardan",
+    "FA-C254-avizan-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch254.txt",
+  "json": "persian/narration/ch254.json",
+  "textHash": "fnv1a64:cf2e67b5b3e0ab1b",
+  "jsonHash": "fnv1a64:5c8a026227530192",
+  "findings": []
+}

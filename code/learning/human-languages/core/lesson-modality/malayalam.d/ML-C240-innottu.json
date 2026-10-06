@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C240-innottu",
+    "language": "malayalam",
+    "chapter": 240,
+    "sequence": 10940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c809606d790a1d1"
+  },
+  "findings": []
+}

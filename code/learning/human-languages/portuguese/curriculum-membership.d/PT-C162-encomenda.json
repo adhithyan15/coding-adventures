@@ -1,0 +1,11 @@
+{
+  "id": "PT-C162-encomenda",
+  "pathSegment": "PT-PATH-162-COISAS162",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-162-COISAS162",
+      "order": 4
+    }
+  ]
+}

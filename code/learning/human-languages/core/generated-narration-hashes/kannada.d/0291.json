@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:41c04ab67a1ee521",
+  "lessonIds": [
+    "KA-C291-tannage",
+    "KA-C291-beccage",
+    "KA-C291-vicitra",
+    "KA-C291-adbhuta",
+    "KA-C291-asaktikara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch291.txt",
+  "json": "kannada/narration/ch291.json",
+  "textHash": "fnv1a64:6ac5ab0420f0e96e",
+  "jsonHash": "fnv1a64:a80f981178b75004",
+  "findings": []
+}

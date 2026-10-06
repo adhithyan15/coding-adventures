@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:38f85f5e8b0776c7",
+  "lessonIds": [
+    "GE-C219-neugierig",
+    "GE-C219-nuetzlich",
+    "GE-C219-oeffentlich",
+    "GE-C219-ordentlich",
+    "GE-C219-persoenlich",
+    "GE-R219-first-pass-words-from-chapters-211-214",
+    "GE-R219-second-pass-words-from-chapters-215-219"
+  ],
+  "tex": "german/book/chapters/ch219-curious-useful-public-tidy-personal.tex"
+}

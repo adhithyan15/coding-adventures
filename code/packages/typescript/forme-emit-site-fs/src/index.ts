@@ -3,6 +3,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { lstat, mkdir, realpath, rename, unlink, writeFile } from "node:fs/promises";
 import { isAbsolute, posix, relative, resolve, sep } from "node:path";
+import { types as utilTypes } from "node:util";
 import {
   Kinds,
   streamOf,
@@ -14,7 +15,11 @@ import {
   type LogicalId,
   type RenderedPage,
 } from "@coding-adventures/forme-types";
-import { computeRevisionId } from "@coding-adventures/forme-identity";
+import {
+  computeRevisionId,
+  isLogicalIdShape,
+  validateOutputProvenance,
+} from "@coding-adventures/forme-identity";
 import { defineStage, type StageContext } from "@coding-adventures/forme-stage";
 
 export interface EmitSiteFsConfig {
@@ -30,6 +35,20 @@ interface PlannedAsset {
   readonly entry: DeployAssetEntry;
   readonly bytes: Uint8Array;
   readonly publicPath: string;
+  readonly role: Asset["role"];
+}
+
+interface PageSnapshot {
+  readonly route: string;
+  readonly html: string;
+  readonly usedAssets: readonly LogicalId[];
+  readonly usedIslands: readonly RenderedPage["usedIslands"][number][];
+  readonly islandModules: readonly NonNullable<RenderedPage["islandModules"]>[number][];
+}
+
+interface PageCollectionBudget {
+  contentBytes: number;
+  usageEntries: number;
 }
 
 const encoder = new TextEncoder();
@@ -68,8 +87,15 @@ export function rewriteAssetPlaceholders(
   page: RenderedPage,
   publicPathById: ReadonlyMap<LogicalId, string>,
 ): string {
-  let html = page.html;
+  return rewriteAssetPlaceholdersFromSnapshot(snapshotPage(page), publicPathById);
+}
+
+function rewriteAssetPlaceholdersFromSnapshot(
+  page: PageSnapshot,
+  publicPathById: ReadonlyMap<LogicalId, string>,
+): string {
   const seen = new Set<LogicalId>();
+  const replacements = new Map<string, string>();
   for (const id of page.usedAssets) {
     if (seen.has(id)) continue;
     seen.add(id);
@@ -79,8 +105,12 @@ export function rewriteAssetPlaceholders(
         `forme-emit-site-fs: page ${JSON.stringify(page.route)} references missing asset ${JSON.stringify(id)}`,
       );
     }
-    html = html.split(`${PLACEHOLDER_PREFIX}${encodeURIComponent(id)}`).join(publicPath);
+    replacements.set(id, publicPath);
   }
+  const html = page.html.replace(
+    /forme-asset:([0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/g,
+    (match, id: string) => replacements.get(id) ?? match,
+  );
   if (html.includes(PLACEHOLDER_PREFIX)) {
     throw new Error(
       `forme-emit-site-fs: page ${JSON.stringify(page.route)} contains an undeclared or malformed Forme asset placeholder`,
@@ -91,8 +121,8 @@ export function rewriteAssetPlaceholders(
 
 const emitSiteFs = defineStage({
   name: "@coding-adventures/forme-emit-site-fs",
-  version: "0.2.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Join rendered pages with Asset IR and emit a fingerprinted static site.",
   consumes: streamOf(Kinds.RenderedPage),
   inputPorts: { assets: streamOf(Kinds.Asset) },
@@ -118,47 +148,103 @@ const emitSiteFs = defineStage({
 
     const assetsById = new Map<LogicalId, PlannedAsset>();
     const files = new Map<string, Uint8Array>();
-    for await (const asset of assetStream) {
-      ctx.cancellation.throwIfCancelled();
-      const planned = planAsset(asset, assetDir, publicPathPrefix);
-      if (assetsById.has(asset.identity)) {
-        throw new Error(
-          `forme-emit-site-fs: duplicate asset identity ${JSON.stringify(asset.identity)}`,
-        );
+    const assetsByPath = new Map<string, PlannedAsset>();
+    const outputPaths = new Map<string, string>();
+    const assetIterator = assetStream[Symbol.asyncIterator]();
+    const pageIterator = pageStream[Symbol.asyncIterator]();
+    const collectAssets = (async () => {
+      for await (const asset of { [Symbol.asyncIterator]: () => assetIterator }) {
+        ctx.cancellation.throwIfCancelled();
+        const planned = planAsset(asset, assetDir, publicPathPrefix);
+        if (assetsById.has(asset.identity)) {
+          throw new Error(
+            `forme-emit-site-fs: duplicate asset identity ${JSON.stringify(asset.identity)}`,
+          );
+        }
+        const existingAsset = assetsByPath.get(planned.entry.path);
+        const collisionKey = portableCollisionKey(planned.entry.path);
+        const existingPortablePath = outputPaths.get(collisionKey);
+        if (existingPortablePath !== undefined && existingPortablePath !== planned.entry.path) {
+          throw new Error(
+            `forme-emit-site-fs: portable asset path collision between ${JSON.stringify(existingPortablePath)} and ${JSON.stringify(planned.entry.path)}`,
+          );
+        }
+        if (existingAsset !== undefined && (
+          !sameBytes(existingAsset.bytes, planned.bytes) ||
+          existingAsset.role !== planned.role ||
+          existingAsset.entry.mime !== planned.entry.mime
+        )) {
+          throw new Error(`forme-emit-site-fs: incompatible asset path collision at ${JSON.stringify(planned.entry.path)}`);
+        }
+        assetsById.set(asset.identity, planned);
+        if (existingAsset === undefined) {
+          assetsByPath.set(planned.entry.path, planned);
+          outputPaths.set(collisionKey, planned.entry.path);
+        }
+        if (asset.role !== "script" && !files.has(planned.entry.path)) files.set(planned.entry.path, planned.bytes);
       }
-      const existing = files.get(planned.entry.path);
-      if (existing !== undefined && !sameBytes(existing, planned.bytes)) {
-        throw new Error(
-          `forme-emit-site-fs: fingerprint path collision at ${JSON.stringify(planned.entry.path)}`,
-        );
+    })();
+    const collectPages = (async () => {
+      const pages: PageSnapshot[] = [];
+      const budget: PageCollectionBudget = { contentBytes: 0, usageEntries: 0 };
+      for await (const page of { [Symbol.asyncIterator]: () => pageIterator }) {
+        ctx.cancellation.throwIfCancelled();
+        if (pages.length >= MAX_SITE_PAGES) {
+          throw new Error(`forme-emit-site-fs: site exceeds the ${MAX_SITE_PAGES}-page safety limit`);
+        }
+        pages.push(snapshotPage(page, budget));
       }
-      assetsById.set(asset.identity, planned);
-      if (existing === undefined) files.set(planned.entry.path, planned.bytes);
+      return pages;
+    })();
+    let pageSnapshots: PageSnapshot[];
+    try {
+      [, pageSnapshots] = await Promise.all([collectAssets, collectPages]);
+    } catch (error) {
+      try { await assetIterator.return?.(); } catch { /* preserve the collection failure */ }
+      try { await pageIterator.return?.(); } catch { /* preserve the collection failure */ }
+      throw error;
     }
 
     const publicPathById = new Map(
       [...assetsById].map(([id, planned]) => [id, planned.publicPath] as const),
     );
     const routes: DeployRoute[] = [];
+    const selectedScriptAssets = new Set<LogicalId>();
     let pageCount = 0;
-    for await (const page of pageStream) {
+    for (const snapshot of pageSnapshots) {
       ctx.cancellation.throwIfCancelled();
-      const html = rewriteAssetPlaceholders(page, publicPathById);
+      const rewrittenHtml = rewriteAssetPlaceholdersFromSnapshot(snapshot, publicPathById);
+      const moduleTags = islandModuleTags(snapshot, assetsById, selectedScriptAssets);
+      const html = appendModuleTags(rewrittenHtml, moduleTags, snapshot.route);
       const bytes = encoder.encode(html);
-      const path = routeToArtifactPath(config.outDir, page.route);
-      if (files.has(path)) {
+      const path = routeToArtifactPath(config.outDir, snapshot.route);
+      const collisionKey = portableCollisionKey(path);
+      const existingPath = outputPaths.get(collisionKey);
+      if (files.has(path) || assetsByPath.has(path) || existingPath !== undefined) {
         throw new Error(
-          `forme-emit-site-fs: page route ${JSON.stringify(page.route)} collides with output ${JSON.stringify(path)}`,
+          `forme-emit-site-fs: page route ${JSON.stringify(snapshot.route)} collides with output ${JSON.stringify(existingPath ?? path)}`,
         );
       }
+      outputPaths.set(collisionKey, path);
       files.set(path, bytes);
       routes.push({
-        pattern: page.route,
+        pattern: snapshot.route,
         target: { kind: "file", path },
-        islands: page.usedIslands,
+        islands: [...snapshot.usedIslands],
         css: [],
       });
       pageCount += 1;
+    }
+
+    for (const id of selectedScriptAssets) {
+      const planned = assetsById.get(id)!;
+      const existing = files.get(planned.entry.path);
+      if (existing !== undefined && !sameBytes(existing, planned.bytes)) {
+        throw new Error(
+          `forme-emit-site-fs: fingerprint path collision at ${JSON.stringify(planned.entry.path)}`,
+        );
+      }
+      if (existing === undefined) files.set(planned.entry.path, planned.bytes);
     }
 
     const orderedFiles = [...files].sort(([left], [right]) => compareCodeUnits(left, right));
@@ -167,14 +253,16 @@ const emitSiteFs = defineStage({
       await writeContainedFile(config.outDir, validatedArtifactPath(path), bytes);
     }
 
-    const fileHashes: Record<string, string> = {};
-    const fileRecord: Record<string, Uint8Array> = {};
+    const fileHashes: Record<string, string> = Object.create(null);
+    const fileRecord: Record<string, Uint8Array> = Object.create(null);
     for (const [path, bytes] of orderedFiles) {
       fileHashes[path] = sha256Hex(bytes);
       fileRecord[path] = new Uint8Array(bytes);
     }
     const buildId = computeRevisionId({ files: fileHashes } as JsonValue);
-    const assets = [...assetsById.values()]
+    const assets = [...assetsById.entries()]
+      .filter(([id, planned]) => planned.role !== "script" || selectedScriptAssets.has(id))
+      .map(([, planned]) => planned)
       .map(planned => planned.entry)
       .sort((left, right) => compareCodeUnits(left.path, right.path) || compareCodeUnits(left.id, right.id));
     const artifact: DeployArtifact = {
@@ -183,7 +271,7 @@ const emitSiteFs = defineStage({
       manifest: {
         routes,
         assets,
-        buildTime: ctx.time.nowIso(),
+        buildTime: await ctx.time.nowIso(),
         buildId,
       },
     };
@@ -215,17 +303,27 @@ async function materializeArtifact(
   if (artifact?.variant?.kind !== "dist-tree" || !isPlainObject(artifact.files)) {
     throw new Error("forme-emit-site-fs: replay requires a dist-tree DeployArtifact");
   }
+  const collisionPaths = new Map<string, string>();
   const files = Object.entries(artifact.files)
-    .sort(([left], [right]) => compareCodeUnits(left, right))
     .map(([path, bytes]) => {
       if (!(bytes instanceof Uint8Array)) {
         throw new Error(`forme-emit-site-fs: replay file ${JSON.stringify(path)} is not bytes`);
       }
+      const portablePath = validatedArtifactPath(path);
+      const collisionKey = portableCollisionKey(portablePath);
+      const existing = collisionPaths.get(collisionKey);
+      if (existing !== undefined) {
+        throw new Error(
+          `forme-emit-site-fs: replay paths ${JSON.stringify(existing)} and ${JSON.stringify(portablePath)} collide on portable filesystems`,
+        );
+      }
+      collisionPaths.set(collisionKey, portablePath);
       return {
-        path: validatedArtifactPath(path),
+        path: portablePath,
         bytes,
       };
-    });
+    })
+    .sort((left, right) => compareCodeUnits(left.path, right.path));
   for (const { path, bytes } of files) {
     ctx.cancellation.throwIfCancelled();
     await writeContainedFile(outDir, path, bytes);
@@ -329,6 +427,7 @@ function validatedArtifactPath(path: string): string {
       `forme-emit-site-fs: replay path ${JSON.stringify(path)} is not a normalized portable relative path`,
     );
   }
+  validateWindowsPortableSegments(path, "replay path");
   return path;
 }
 
@@ -377,7 +476,242 @@ function planAsset(asset: Asset, assetDir: string, publicPathPrefix: string): Pl
     bytes,
     publicPath,
     entry: { id: asset.identity, path, mime: asset.mimeType, sha256 },
+    role: asset.role,
   };
+}
+
+function islandModuleTags(
+  page: PageSnapshot,
+  assetsById: ReadonlyMap<LogicalId, PlannedAsset>,
+  selected: Set<LogicalId>,
+): string {
+  const uses = page.islandModules;
+  if (uses.length !== page.usedIslands.length) {
+    throw new Error(
+      `forme-emit-site-fs: page ${JSON.stringify(page.route)} islandModules must match usedIslands exactly`,
+    );
+  }
+  const seenIslands = new Set<string>();
+  const taggedAssets = new Set<LogicalId>();
+  const usedAssets = new Set(page.usedAssets);
+  const tags: string[] = [];
+  for (let index = 0; index < page.usedIslands.length; index++) {
+    const island = page.usedIslands[index]!;
+    const use = uses[index];
+    if (use === undefined || use.island !== island || seenIslands.has(island)) {
+      throw new Error(
+        `forme-emit-site-fs: page ${JSON.stringify(page.route)} islandModules must match usedIslands exactly`,
+      );
+    }
+    seenIslands.add(island);
+    if (!usedAssets.has(use.asset)) {
+      throw new Error(
+        `forme-emit-site-fs: page ${JSON.stringify(page.route)} island ${JSON.stringify(island)} module asset is absent from usedAssets`,
+      );
+    }
+    const planned = assetsById.get(use.asset);
+    if (planned === undefined) {
+      throw new Error(
+        `forme-emit-site-fs: page ${JSON.stringify(page.route)} references missing island module asset ${JSON.stringify(use.asset)}`,
+      );
+    }
+    if (planned.role !== "script" || !isJavaScriptMime(planned.entry.mime)) {
+      throw new Error(
+        `forme-emit-site-fs: page ${JSON.stringify(page.route)} island ${JSON.stringify(island)} must reference a script asset with a JavaScript MIME type`,
+      );
+    }
+    if (planned.entry.sha256 !== use.sha256) {
+      throw new Error(
+        `forme-emit-site-fs: page ${JSON.stringify(page.route)} island ${JSON.stringify(island)} executable bytes do not match the reviewed SHA-256`,
+      );
+    }
+    selected.add(use.asset);
+    if (!taggedAssets.has(use.asset)) {
+      taggedAssets.add(use.asset);
+      tags.push(`<script type="module" src="${planned.publicPath}"></script>`);
+    }
+  }
+  return tags.join("\n");
+}
+
+const MAX_PAGE_ISLANDS = 256;
+const MAX_PAGE_ASSETS = 65_536;
+const MAX_SITE_PAGES = 65_536;
+const MAX_PAGE_CONTENT_BYTES = 16 * 1024 * 1024;
+const MAX_SITE_CONTENT_BYTES = 32 * 1024 * 1024;
+const MAX_SITE_USAGE_ENTRIES = 65_536;
+const MAX_PACKAGE_NAME_LENGTH = 214;
+const PACKAGE_NAME = /^(?:@[a-z0-9][a-z0-9._-]*\/[a-z0-9][a-z0-9._-]*|[a-z0-9][a-z0-9._-]*)$/;
+const EXPORT_NAME = /^[A-Za-z_][A-Za-z0-9_]{0,63}$/;
+const SHA256 = /^[0-9a-f]{64}$/;
+
+function snapshotPage(
+  page: RenderedPage,
+  budget?: PageCollectionBudget,
+): PageSnapshot {
+  if (typeof page !== "object" || page === null || utilTypes.isProxy(page)) {
+    throw new TypeError("forme-emit-site-fs: page must be a non-proxy object");
+  }
+  const route = dataProperty(page, "route");
+  const html = dataProperty(page, "html");
+  if (typeof route !== "string" || route.length === 0 || route.length > 2_048) {
+    throw new TypeError("forme-emit-site-fs: page.route must be a non-empty string of at most 2048 characters");
+  }
+  if (typeof html !== "string") throw new TypeError("forme-emit-site-fs: page.html must be a string");
+  const rawAssets = dataProperty(page, "usedAssets");
+  const rawIslands = dataProperty(page, "usedIslands");
+  const rawModules = dataProperty(page, "islandModules", false);
+  const provenance = validateOutputProvenance(
+    dataProperty(page, "provenance"),
+    utilTypes.isProxy,
+  );
+  const modules = rawModules === undefined ? [] : rawModules;
+  const contentBytes = Buffer.byteLength(route, "utf8") + Buffer.byteLength(html, "utf8");
+  if (contentBytes > MAX_PAGE_CONTENT_BYTES) {
+    throw new TypeError(
+      `forme-emit-site-fs: page content exceeds the ${MAX_PAGE_CONTENT_BYTES}-byte UTF-8 limit`,
+    );
+  }
+  const usageEntries = validatedExactArrayLength(rawAssets, "page.usedAssets", MAX_PAGE_ASSETS)
+    + validatedExactArrayLength(rawIslands, "page.usedIslands", MAX_PAGE_ISLANDS)
+    + validatedExactArrayLength(modules, "page.islandModules", MAX_PAGE_ISLANDS)
+    + provenance.contributors.length;
+  if (budget !== undefined) {
+    if (budget.contentBytes > MAX_SITE_CONTENT_BYTES - contentBytes) {
+      throw new TypeError(
+        `forme-emit-site-fs: site page content exceeds the ${MAX_SITE_CONTENT_BYTES}-byte UTF-8 limit`,
+      );
+    }
+    if (budget.usageEntries > MAX_SITE_USAGE_ENTRIES - usageEntries) {
+      throw new TypeError(
+        `forme-emit-site-fs: site page usage exceeds the ${MAX_SITE_USAGE_ENTRIES}-entry limit`,
+      );
+    }
+    budget.contentBytes += contentBytes;
+    budget.usageEntries += usageEntries;
+  }
+  const usedAssets = logicalIdArray(rawAssets, "page.usedAssets", MAX_PAGE_ASSETS);
+  const usedIslands = islandIdArray(rawIslands, "page.usedIslands");
+  const islandModules = moduleUseArray(modules);
+  return Object.freeze({ route, html, usedAssets, usedIslands, islandModules });
+}
+
+function dataProperty(value: object, key: string, required = true): unknown {
+  const descriptor = Object.getOwnPropertyDescriptor(value, key);
+  if (descriptor === undefined) {
+    if (!required) return undefined;
+    throw new TypeError(`forme-emit-site-fs: page.${key} is required`);
+  }
+  if (!("value" in descriptor)) throw new TypeError(`forme-emit-site-fs: page.${key} must not be an accessor`);
+  return descriptor.value;
+}
+
+function exactArray(value: unknown, path: string, maximum: number): readonly unknown[] {
+  validatedExactArrayLength(value, path, maximum);
+  const array = value as readonly unknown[];
+  const copy: unknown[] = [];
+  for (let index = 0; index < array.length; index++) {
+    const descriptor = Object.getOwnPropertyDescriptor(array, String(index))!;
+    copy.push((descriptor as PropertyDescriptor & { value: unknown }).value);
+  }
+  return copy;
+}
+
+function validatedExactArrayLength(value: unknown, path: string, maximum: number): number {
+  if (!Array.isArray(value) || utilTypes.isProxy(value) || value.length > maximum) {
+    throw new TypeError(`forme-emit-site-fs: ${path} must be an array of at most ${maximum} entries`);
+  }
+  if (Object.getOwnPropertySymbols(value).length !== 0) {
+    throw new TypeError(`forme-emit-site-fs: ${path} must not contain symbol keys`);
+  }
+  for (let index = 0; index < value.length; index++) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+    if (descriptor === undefined) throw new TypeError(`forme-emit-site-fs: ${path}[${index}] is sparse`);
+    if (!("value" in descriptor)) throw new TypeError(`forme-emit-site-fs: ${path}[${index}] must not be an accessor`);
+  }
+  for (const key of Object.getOwnPropertyNames(value)) {
+    if (key === "length") continue;
+    const index = Number(key);
+    if (!Number.isInteger(index) || index < 0 || index >= value.length || String(index) !== key) {
+      throw new TypeError(`forme-emit-site-fs: ${path} has an unknown property`);
+    }
+  }
+  return value.length;
+}
+
+function logicalIdArray(value: unknown, path: string, maximum: number): readonly LogicalId[] {
+  return Object.freeze(exactArray(value, path, maximum).map((entry, index) => {
+    if (typeof entry !== "string" || !isLogicalIdShape(entry)) {
+      throw new TypeError(`forme-emit-site-fs: ${path}[${index}] must be a lowercase UUIDv7 LogicalId`);
+    }
+    return entry as LogicalId;
+  }));
+}
+
+function islandIdArray(value: unknown, path: string): readonly RenderedPage["usedIslands"][number][] {
+  const seen = new Set<string>();
+  return Object.freeze(exactArray(value, path, MAX_PAGE_ISLANDS).map((entry, index) => {
+    if (typeof entry !== "string" || !/^[A-Za-z_][A-Za-z0-9_-]{0,63}$/.test(entry) || seen.has(entry)) {
+      throw new TypeError(`forme-emit-site-fs: ${path}[${index}] must be a unique IslandId`);
+    }
+    seen.add(entry);
+    return entry as RenderedPage["usedIslands"][number];
+  }));
+}
+
+function moduleUseArray(value: unknown): readonly NonNullable<RenderedPage["islandModules"]>[number][] {
+  return Object.freeze(exactArray(value, "page.islandModules", MAX_PAGE_ISLANDS).map((entry, index) => {
+    const path = `page.islandModules[${index}]`;
+    if (typeof entry !== "object" || entry === null || Array.isArray(entry) || utilTypes.isProxy(entry)) {
+      throw new TypeError(`forme-emit-site-fs: ${path} must be a plain object`);
+    }
+    const prototype = Object.getPrototypeOf(entry);
+    if (prototype !== Object.prototype && prototype !== null) {
+      throw new TypeError(`forme-emit-site-fs: ${path} must be a plain object`);
+    }
+    const allowed = new Set(["island", "asset", "packageName", "export", "sha256"]);
+    if (Object.getOwnPropertySymbols(entry).length !== 0 || Object.getOwnPropertyNames(entry).some(key => !allowed.has(key))) {
+      throw new TypeError(`forme-emit-site-fs: ${path} contains unknown keys`);
+    }
+    const island = dataField(entry, "island", path);
+    const asset = dataField(entry, "asset", path);
+    const packageName = dataField(entry, "packageName", path);
+    const exportName = dataField(entry, "export", path);
+    const sha256 = dataField(entry, "sha256", path);
+    if (typeof island !== "string" || !/^[A-Za-z_][A-Za-z0-9_-]{0,63}$/.test(island) ||
+        typeof asset !== "string" || !isLogicalIdShape(asset) ||
+        typeof packageName !== "string" || packageName.length > MAX_PACKAGE_NAME_LENGTH ||
+        !PACKAGE_NAME.test(packageName) ||
+        typeof exportName !== "string" || !EXPORT_NAME.test(exportName) ||
+        typeof sha256 !== "string" || !SHA256.test(sha256)) {
+      throw new TypeError(`forme-emit-site-fs: ${path} is not a reviewed island-module binding`);
+    }
+    return Object.freeze({ island, asset, packageName, export: exportName, sha256 }) as NonNullable<RenderedPage["islandModules"]>[number];
+  }));
+}
+
+function dataField(value: object, key: string, path: string): unknown {
+  const descriptor = Object.getOwnPropertyDescriptor(value, key);
+  if (descriptor === undefined || !("value" in descriptor)) {
+    throw new TypeError(`forme-emit-site-fs: ${path}.${key} must be a data property`);
+  }
+  return descriptor.value;
+}
+
+function appendModuleTags(html: string, tags: string, route: string): string {
+  if (tags.length === 0) return html;
+  const bodyClose = html.lastIndexOf("</body>");
+  if (bodyClose < 0) {
+    throw new Error(
+      `forme-emit-site-fs: interactive page ${JSON.stringify(route)} has no closing </body> tag`,
+    );
+  }
+  return `${html.slice(0, bodyClose)}${tags}${html.slice(bodyClose)}`;
+}
+
+function isJavaScriptMime(mime: string): boolean {
+  const essence = mime.split(";", 1)[0]!.trim().toLowerCase();
+  return essence === "text/javascript" || essence === "application/javascript";
 }
 
 function validateAssetDir(assetDir: string): void {
@@ -391,6 +725,7 @@ function validateAssetDir(assetDir: string): void {
   ) {
     throw new Error("forme-emit-site-fs: config.assetDir must be a normalized portable relative path");
   }
+  validateWindowsPortableSegments(assetDir, "config.assetDir");
 }
 
 function validatePublicPathPrefix(prefix: string): void {
@@ -419,6 +754,7 @@ function validatePortableSourcePath(sourcePath: string): void {
       `forme-emit-site-fs: asset sourcePath ${JSON.stringify(sourcePath)} is not a normalized portable path`,
     );
   }
+  validateWindowsPortableSegments(sourcePath, "asset sourcePath");
 }
 
 function routeToArtifactPath(outDir: string, route: string): string {
@@ -438,7 +774,9 @@ function routeToArtifactPath(outDir: string, route: string): string {
   if (!absolutePath.startsWith(guard)) {
     throw new Error(`forme-emit-site-fs: route ${JSON.stringify(route)} would escape outDir`);
   }
-  return relative(absoluteRoot, absolutePath).split(sep).join("/");
+  const portablePath = relative(absoluteRoot, absolutePath).split(sep).join("/");
+  validateWindowsPortableSegments(portablePath, "page route");
+  return portablePath;
 }
 
 function sameBytes(left: Uint8Array, right: Uint8Array): boolean {
@@ -453,6 +791,22 @@ function hasWindowsDrivePrefix(value: string): boolean {
 
 function compareCodeUnits(left: string, right: string): number {
   return left < right ? -1 : left > right ? 1 : 0;
+}
+
+function portableCollisionKey(path: string): string {
+  return path.normalize("NFC").toLowerCase();
+}
+
+function validateWindowsPortableSegments(path: string, label: string): void {
+  const reserved = /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i;
+  for (const segment of path.split("/")) {
+    if (
+      segment.endsWith(".") || segment.endsWith(" ") ||
+      /[\u0000-\u001f<>:"|?*]/.test(segment) || reserved.test(segment)
+    ) {
+      throw new Error(`forme-emit-site-fs: ${label} is not portable across filesystems`);
+    }
+  }
 }
 
 export default emitSiteFs;

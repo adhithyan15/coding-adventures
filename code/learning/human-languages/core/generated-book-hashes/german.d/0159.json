@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:2e3e01534fc6b88f",
+  "lessonIds": [
+    "GE-C159-adresse",
+    "GE-C159-telefonnummer",
+    "GE-C159-internet",
+    "GE-C159-e-mail",
+    "GE-C159-nachricht"
+  ],
+  "tex": "german/book/chapters/ch159-an-address-a-phone-number-the-internet-an-email-a-message.tex"
+}

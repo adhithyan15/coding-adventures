@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "Polite, Gentle, Strict, Contented, Annoyed",
+  "label": "ch:bn-polite-gentle-strict-contented-annoyed",
+  "canDo": "I can say polite, gentle, strict, contented and annoyed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C161-birokto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say polite, gentle, strict, contented and annoyed.",
+    "assesses": [
+      "BN-LEX-C161-GUN161-03",
+      "BN-LEX-C161-GUN161-04",
+      "BN-LEX-C161-GUN161-05"
+    ]
+  }
+}

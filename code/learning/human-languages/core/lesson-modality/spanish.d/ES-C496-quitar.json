@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C496-quitar",
+    "language": "spanish",
+    "chapter": 496,
+    "sequence": 14370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b4e6ee470803be9"
+  },
+  "findings": []
+}

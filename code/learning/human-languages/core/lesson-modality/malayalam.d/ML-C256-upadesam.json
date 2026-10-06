@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C256-upadesam",
+    "language": "malayalam",
+    "chapter": 256,
+    "sequence": 11790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ff0c0e9dd1a6ac5"
+  },
+  "findings": []
+}

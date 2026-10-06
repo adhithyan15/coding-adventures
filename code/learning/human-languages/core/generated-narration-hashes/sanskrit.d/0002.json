@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 2,
-  "sourceHash": "fnv1a64:522c24f7d195ce6c",
+  "sourceHash": "fnv1a64:cf33330582b27701",
   "lessonIds": [
     "SA-C02-nama",
     "SA-C02-mama",
@@ -22,7 +22,7 @@
   "drivablePrefix": 2,
   "text": "sanskrit/narration/ch02.txt",
   "json": "sanskrit/narration/ch02.json",
-  "textHash": "fnv1a64:660113853d06b328",
-  "jsonHash": "fnv1a64:70259f65b0040cee",
+  "textHash": "fnv1a64:fde85ef33a10bad3",
+  "jsonHash": "fnv1a64:d3091caf874c62f0",
   "findings": []
 }

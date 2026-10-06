@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:d5582c7dddc64e68",
+  "lessonIds": [
+    "KA-C285-mukkalu",
+    "KA-C285-marudina",
+    "KA-C285-balya",
+    "KA-C285-amavasye",
+    "KA-C285-madhyantara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch285.txt",
+  "json": "kannada/narration/ch285.json",
+  "textHash": "fnv1a64:971f9a6722da6269",
+  "jsonHash": "fnv1a64:f5d814a3ed558378",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C222-khab-didan",
+    "language": "persian",
+    "chapter": 222,
+    "sequence": 11460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70aef2261b01296d"
+  },
+  "findings": []
+}

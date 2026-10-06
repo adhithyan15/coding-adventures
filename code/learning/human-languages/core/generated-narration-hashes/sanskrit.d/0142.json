@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:0728e95e1a9be54e",
+  "lessonIds": [
+    "SA-C142-tusyati",
+    "SA-C142-sramyati",
+    "SA-C142-racayati",
+    "SA-C142-darsayati",
+    "SA-C142-pujayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch142.txt",
+  "json": "sanskrit/narration/ch142.json",
+  "textHash": "fnv1a64:c1853e249c97c4b1",
+  "jsonHash": "fnv1a64:0705f3d8f8e67b61",
+  "findings": []
+}

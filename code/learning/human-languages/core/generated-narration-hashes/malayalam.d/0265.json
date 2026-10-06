@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:f96372652e05e308",
+  "lessonIds": [
+    "ML-C265-potiyuka",
+    "ML-C265-kattikkuka",
+    "ML-C265-ketuttuka",
+    "ML-C265-kettuka",
+    "ML-C265-alakkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch265.txt",
+  "json": "malayalam/narration/ch265.json",
+  "textHash": "fnv1a64:11dd72a4ffab762a",
+  "jsonHash": "fnv1a64:8bba0abb367c220c",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C216-lulekesh",
+  "pathSegment": "FA-PATH-216-KAR216",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-216-KAR216",
+      "order": 2
+    }
+  ]
+}

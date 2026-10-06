@@ -9,7 +9,7 @@ type: writing
 headword: "ਣ · ਜ · ਵ"
 romanization: "ṇa · ja · va"
 gloss: "three pieces of Gurmukhi, met inside a word you already say"
-prerequisites: [PA-S06-kakka-aira-aara, PA-C06-numbers-1-5, PA-C06-panj-convergence, PA-C07-hona, PA-C06-numbers-1-5-more, PA-C06-panj-convergence-homegrown, PA-C06-panj-convergence-homegrown-persian]
+prerequisites: [PA-S06-kakka-aira-aara, PA-C06-numbers-1-5, PA-C06-panj-convergence, PA-C07-hona, PA-C06-numbers-1-5-more, PA-C06-panj-convergence-homegrown, PA-C06-panj-convergence-homegrown-persian, PA-C07-hona-two-roots]
 sounds: []
 roots: []
 duration:

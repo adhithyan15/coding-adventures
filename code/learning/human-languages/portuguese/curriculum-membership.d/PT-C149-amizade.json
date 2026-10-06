@@ -1,0 +1,11 @@
+{
+  "id": "PT-C149-amizade",
+  "pathSegment": "PT-PATH-149-SAUDE149",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-149-SAUDE149",
+      "order": 3
+    }
+  ]
+}

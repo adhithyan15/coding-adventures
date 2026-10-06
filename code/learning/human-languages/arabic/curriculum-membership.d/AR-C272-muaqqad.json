@@ -1,0 +1,11 @@
+{
+  "id": "AR-C272-muaqqad",
+  "pathSegment": "AR-PATH-272-SIFA272",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-272-SIFA272",
+      "order": 3
+    }
+  ]
+}

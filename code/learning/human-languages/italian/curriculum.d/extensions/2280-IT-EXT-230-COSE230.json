@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-230-COSE230",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say plastic, sheet glass, cotton, wool and silk.",
+  "prerequisites": []
+}

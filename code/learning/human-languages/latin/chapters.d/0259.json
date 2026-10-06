@@ -1,0 +1,19 @@
+{
+  "chapter": 259,
+  "title": "To pray, To recommend, To breathe, To give up, To exchange",
+  "label": "ch:la-to-pray-to-recommend-to-breathe-to-give-up-to-exchange",
+  "canDo": "I can say to pray, to recommend, to breathe, to give up and to exchange.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C259-permuto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can say to pray, to recommend, to breathe, to give up and to exchange.",
+    "assesses": [
+      "LA-LEX-C259-ACT259-03",
+      "LA-LEX-C259-ACT259-04",
+      "LA-LEX-C259-ACT259-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-R139-second-pass-looking-ahead-and-reading-signs",
+  "pathSegment": "FA-PATH-139-KHANDAN139",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "FA-EXT-139-KHANDAN139",
+      "order": 6
+    }
+  ]
+}

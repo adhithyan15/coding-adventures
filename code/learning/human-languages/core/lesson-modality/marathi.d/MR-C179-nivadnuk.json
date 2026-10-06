@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C179-nivadnuk",
+    "language": "marathi",
+    "chapter": 179,
+    "sequence": 8810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f51f02a983a95b0"
+  },
+  "findings": []
+}

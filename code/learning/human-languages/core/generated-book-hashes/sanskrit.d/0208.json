@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:0c834d2ed4e4b8de",
+  "lessonIds": [
+    "SA-C208-parivarah",
+    "SA-C208-bandhuh",
+    "SA-C208-sakha",
+    "SA-C208-satruh",
+    "SA-C208-prativesi"
+  ],
+  "tex": "sanskrit/book/chapters/ch208-household-relative-companion-enemy-neighbour.tex"
+}

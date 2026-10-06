@@ -2,11 +2,34 @@
 
 ## Unreleased
 
+- Added a typed, process-free graph and diff-selection core with all eight
+  graph and twelve diff-selection neutral fixture cases, exact caller-supplied
+  source-boundary digest/fanout, canonical closures, structural diagnostics,
+  and operation-wide Unicode-scalar match-work preflight. Native tests also
+  cover malformed graph structure, portable-path and glob rejection, root
+  aliases, and boundary-error precedence. The existing Git-facing CLI remains
+  unchanged.
+
+- Added the `forme-plugin-installer-core`, `forme-plugin-runner-conformance`, and `forme-plugin-runner-ts`
+  TypeScript roots to the repository source-input boundary projection. Digest updated to
+  `3370c811b51962c87757b01e98ad3db5206cad2c75e74c6853bf5209548bd18e`.
+
+- Regenerated both source-input projections for exact lowercase `blib`, the
+  current Lua and Forme boundary consumers, and the new canonical registry and
+  boundary digests.
+
+- Regenerated the repository source-input boundary projection against the
+  neutral fixture: removed the ten Haskell roots that now carry their own
+  `cabal.project` (#16153) and added the `lua/der_asn1` and
+  `lua/x509_extension` lint roots the fixture gained earlier without this
+  projection being regenerated. Digest updated to
+  `4b1830332a5e4510d8195ceb8266e0bfec1610ff680d8a319b6c4513a8bd466e`.
+
 - Regenerated the repository source-input boundary projection to pick up the
-  `forme-deploy-runner-fs-adapter` and `forme-deploy-runner-github-pages-adapter`
-  TypeScript roots (added on main without regenerating this checked
-  projection, which broke the neutral conformance test). Digest updated to
-  `c36bb88a03fa6bd7585e22139f59f4c64e1f8547dbe64bad234483cc2a7b4566`.
+  `forme-deploy-runner-fs-adapter`, `forme-deploy-runner-github-pages-adapter`,
+  and `forme-plugin-host` TypeScript roots plus the shared Lua lint consumers
+  added on main without a complete projection refresh. Digest updated to
+  `7983f42a84dc9905f50729798a5d7d4000a4356016eb2b9cfd42217b15070b59`.
 
 - Added the two exact registered TypeScript site roots and their 13 reviewed
   authored inputs to the generated source-input projection and neutral tests.

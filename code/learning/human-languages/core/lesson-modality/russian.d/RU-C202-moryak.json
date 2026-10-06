@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C202-moryak",
+    "language": "russian",
+    "chapter": 202,
+    "sequence": 11890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2157cb008ecf9e2c"
+  },
+  "findings": []
+}

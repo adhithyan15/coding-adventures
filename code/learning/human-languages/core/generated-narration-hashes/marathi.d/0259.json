@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:628a8078fbe89fa2",
+  "lessonIds": [
+    "MR-C259-anolkhi",
+    "MR-C259-sadha",
+    "MR-C259-guntaguntica",
+    "MR-C259-avasyak",
+    "MR-C259-nirupyogi",
+    "MR-R259-first-pass-words-from-chapters-251-254",
+    "MR-R259-second-pass-words-from-chapters-255-259"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch259.txt",
+  "json": "marathi/narration/ch259.json",
+  "textHash": "fnv1a64:bf1ce1053718c9b9",
+  "jsonHash": "fnv1a64:a044869a2e25a8fc",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "Region, Province, From there, In the way, All the way",
+  "label": "ch:la-region-province-from-there-in-the-way-all-the-way",
+  "canDo": "I can say a region, a province, from there, in the way and all the way.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "LA-C209-usque",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say a region, a province, from there, in the way and all the way.",
+    "assesses": [
+      "LA-LEX-C209-LOC209-03",
+      "LA-LEX-C209-LOC209-04",
+      "LA-LEX-C209-LOC209-05"
+    ]
+  }
+}

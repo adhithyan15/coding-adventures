@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:5c9b444f6d8dc271",
+  "lessonIds": [
+    "BN-C257-chhana",
+    "BN-C257-ponir",
+    "BN-C257-aiskrim",
+    "BN-C257-chire",
+    "BN-C257-phuchka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch257.txt",
+  "json": "bengali/narration/ch257.json",
+  "textHash": "fnv1a64:0370e71b5aeebe9f",
+  "jsonHash": "fnv1a64:8952452f5a183f08",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:a4d5176be52e915b",
+  "lessonIds": [
+    "RU-C144-boyatsya",
+    "RU-C144-nravitsya",
+    "RU-C144-nenavidet",
+    "RU-C144-khvalit",
+    "RU-C144-rugat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch144.txt",
+  "json": "russian/narration/ch144.json",
+  "textHash": "fnv1a64:81e55b7feabcc3db",
+  "jsonHash": "fnv1a64:c4ad8c51c1d03947",
+  "findings": []
+}

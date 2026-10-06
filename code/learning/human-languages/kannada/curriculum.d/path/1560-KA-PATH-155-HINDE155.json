@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-155-HINDE155",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "KA-EXT-155-HINDE155"
+  ],
+  "after": []
+}

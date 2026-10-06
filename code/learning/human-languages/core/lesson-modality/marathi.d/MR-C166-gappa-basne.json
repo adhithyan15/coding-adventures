@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C166-gappa-basne",
+    "language": "marathi",
+    "chapter": 166,
+    "sequence": 7950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:935c54d76bd3f207"
+  },
+  "findings": []
+}

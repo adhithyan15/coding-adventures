@@ -1,0 +1,11 @@
+{
+  "id": "TE-C263-pyantu",
+  "pathSegment": "TE-PATH-263-VASTUVU263",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-263-VASTUVU263",
+      "order": 2
+    }
+  ]
+}

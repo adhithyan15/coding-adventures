@@ -1,0 +1,11 @@
+{
+  "id": "PT-C159-carregador",
+  "pathSegment": "PT-PATH-159-COISAS159",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-159-COISAS159",
+      "order": 1
+    }
+  ]
+}

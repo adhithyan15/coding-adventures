@@ -1,0 +1,11 @@
+{
+  "id": "ML-C330-bharani",
+  "pathSegment": "ML-PATH-330-VASTU330",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-330-VASTU330",
+      "order": 1
+    }
+  ]
+}

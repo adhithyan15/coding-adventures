@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-248-COSE248",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say temperature, a fly, a mosquito, society and the government.",
+  "prerequisites": []
+}

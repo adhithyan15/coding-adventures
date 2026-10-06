@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C234-verifier",
+    "language": "french",
+    "chapter": 234,
+    "sequence": 13480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3eda33593586d18b"
+  },
+  "findings": []
+}

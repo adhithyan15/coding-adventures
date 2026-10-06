@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "That is exactly why, Bed, Pillow, Blanket, Curtain",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:24724420564e767a",
+  "sourceHash": "fnv1a64:0c2b55a82648909c",
   "lessons": [
     {
       "id": "TE-C109-anduke",
@@ -634,7 +634,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79243c5886966ba3",
+      "sourceHash": "fnv1a64:081b8301138cfc43",
       "notice": null,
       "blocks": [
         {
@@ -725,7 +725,7 @@
             },
             {
               "kind": "speech",
-              "text": "Right? (కుడి, kuḍi.) Left? (ఎడమ, eḍama.) Straight ahead? (తిన్నగా, tinnagā.) Near? (దగ్గర, daggara.) Far; distance? (దూరం, dūraṁ.) Above? (పైన, paina.) Below? (కింద, kinda.) Inside? (లోపల, lōpala.) Outside? (బయట, bayaṭa.) Behind? (వెనక, venaka.) In the middle? (మధ్యలో, madhyalō.) A street? (వీధి, vīdhi.) A road? (రోడ్డు, rōḍḍu.) A bridge? (వంతెన, vantena.) A park? (పార్కు, pārku.) A temple? (గుడి, guḍi.) A school? (బడి, baḍi.) A library? (గ్రంథాలయం, grandhālayaṁ.) A bank? (బ్యాంకు, byāṅku.) A market? (సంత, santa.) A shore? (తీరం, tīraṁ.) An office? (కార్యాలయం, kāryālayaṁ.) A garden? (తోట, tōṭa.) A corner? (మూల, mūla.) A turn? (మలుపు, malupu.)"
+              "text": "Right? (కుడి, kuḍi.) Left? (ఎడమ, eḍama.) Straight ahead? (తిన్నగా, tinnagā.) Near? (దగ్గర, daggara.) Far; distance? (దూరం, dūraṁ.) Above? (పైన, paina.) Below? (కింద, kinda.) Inside? (లోపల, lōpala.) Outside? (బయట, bayaṭa.) Behind? (వెనక, venaka.) In the middle? (మధ్యలో, madhyalō.) A street? (వీధి, vīdhi.) A road? (రోడ్డు, rōḍḍu.) A bridge? (వంతెన, vantena.) A park? (పార్కు, pārku.) A temple? (గుడి, guḍi.) A school? (బడి, baḍi.) A library? (గ్రంథాలయం, granthālayaṁ.) A bank? (బ్యాంకు, byāṅku.) A market? (సంత, santa.) A shore? (తీరం, tīraṁ.) An office? (కార్యాలయం, kāryālayaṁ.) A garden? (తోట, tōṭa.) A corner? (మూల, mūla.) A turn? (మలుపు, malupu.)"
             }
           ]
         }

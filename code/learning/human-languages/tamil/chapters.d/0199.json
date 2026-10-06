@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "To believe, To agree, To refuse, To discuss, To compare",
+  "label": "ch:ta-to-believe-to-agree-to-refuse-to-discuss-to-compare",
+  "canDo": "I can say to believe, to agree, to refuse, to discuss and to compare.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C199-oppitu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say to believe, to agree, to refuse, to discuss and to compare.",
+    "assesses": [
+      "TA-LEX-C199-ACT199-03",
+      "TA-LEX-C199-ACT199-04",
+      "TA-LEX-C199-ACT199-05"
+    ]
+  }
+}

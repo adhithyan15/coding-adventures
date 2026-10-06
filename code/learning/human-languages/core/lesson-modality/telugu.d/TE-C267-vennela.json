@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C267-vennela",
+    "language": "telugu",
+    "chapter": 267,
+    "sequence": 12630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:621fdf9623320f60"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C274-malaff",
+  "pathSegment": "AR-PATH-274-SHAY274",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-274-SHAY274",
+      "order": 4
+    }
+  ]
+}

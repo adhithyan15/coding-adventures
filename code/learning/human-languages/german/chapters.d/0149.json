@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "To name, To smell, To collect, To give, To shout",
+  "label": "ch:ge-to-name-to-smell-to-collect-to-give-to-shout",
+  "canDo": "I can say to name, to smell, to collect, to give and to shout.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C149-schreien",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: I can say to name, to smell, to collect, to give and to shout.",
+    "assesses": [
+      "GE-LEX-C149-VERB149-03",
+      "GE-LEX-C149-VERB149-04",
+      "GE-LEX-C149-VERB149-05"
+    ]
+  }
+}

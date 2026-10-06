@@ -1,5 +1,68 @@
 # Changelog
 
+## Chapters 254-282: 145 more headwords, and Arabic attains A2
+
+The last of four Arabic A2 vocabulary tranches: twenty-nine chapters of five
+words, in four runs, each closed by two review lessons; forty are verbs.
+
+Arabic attains A2: at or below A2 it teaches 1,262 distinct headwords (target
+1,200) and more than 120 verbs, and every A2 spine node is realized. Chapters
+156-282 add 635 headwords, 168 of them verbs. `tests/level-gate-
+attainment/arabic.json` moves from A1 to A2, and the level-gate climb history
+records Arabic as the fourteenth track to reach A2. The lesson-content pin
+goes from 1229 to 1382.
+
+## Chapters 223-253: 155 more A2 headwords
+
+The third of four Arabic A2 vocabulary tranches: thirty-one chapters of five
+words, in four runs, each closed by two review lessons; forty are verbs. Level
+gate: 83 headwords short of A2. The lesson-content pin goes from 1066 to 1229.
+
+## Chapters 192-222: 155 more A2 headwords
+
+The second of four Arabic A2 vocabulary tranches: thirty-one chapters of five
+words, in four runs, each closed by two review lessons. Forty are verbs, which
+closes the A2 verb gap. Level gate: 238 headwords short of A2. The lesson-
+content pin goes from 903 to 1066.
+
+These chapters take the book past page 999, so the preamble widens the contents
+page-number box to 2.4em (and the right margin to 3.4em), as the Bengali, Tamil
+and other long books already do; without it every four-digit contents line was
+an overfull \hbox.
+
+## Chapters 159-191: 165 A2 headwords, forty-five of them verbs
+
+The first of four Arabic A2 vocabulary tranches: thirty-three chapters of five
+words, in four runs, each closed by two review lessons. The word list was
+drafted by theme, checked against every headword the course already teaches,
+and reviewed by a native-level reader; words an earlier lesson already uses in
+its text were left out, so the track gains no forward reference. Level gate:
+393 headwords and 3 verbs short of A2. The Arabic lesson-content pin goes from
+730 to 903.
+
+## Chapters 156-158: the past, the future and practical texts
+
+Arabic had realized two of its five A2 spine nodes. Three chapters realize the
+other three, so the A2 gate reports no missing spine node.
+
+- Chapter 156 (`SPINE-TALK-ABOUT-PAST`): حديثا, بالفعل, الماضي, ذات مرة, قضى.
+  The notes show the past for "I" in -tu (قرأت, أكلت, قضيت).
+- Chapter 157 (`SPINE-TALK-ABOUT-FUTURE`): القادم, من الآن فصاعدا, برنامج, قرر, نوى.
+  The notes show the future with sa- (سأسافر, سأمشي).
+- Chapter 158 (`SPINE-READ-PRACTICAL-TEXTS`): جدول, لافتة, إيجار, إعلان, إيصال,
+  each with a short board or sign to read and act on.
+- Every headword and example uses only letters the course has taught (no ئ or
+  ؤ, no tatweel, no Arabic question mark). The extensions carry stage A2.
+  The Arabic lesson-content pin goes from 713 to 730.
+
+## Chapter payoffs say "I can", not "i can"
+
+The payoff line under each chapter's goal lowercased the goal's first letter,
+so 110 chapters printed "Complete the last lesson of chapter N: i can say …".
+Every one now keeps the capital: "…: I can say …", and a new test
+(`payoff-summary-case.test.ts`) fails if the lowercase pronoun comes back. Only
+the payoff summary changed; no lesson, word or atom moved.
+
 ## Chapters 100-155: 280 headwords, and Arabic attains A1
 
 Arabic had three kinds of A1 gap:

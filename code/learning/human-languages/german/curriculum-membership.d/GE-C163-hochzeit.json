@@ -1,0 +1,11 @@
+{
+  "id": "GE-C163-hochzeit",
+  "pathSegment": "GE-PATH-163-THING163",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-163-THING163",
+      "order": 2
+    }
+  ]
+}

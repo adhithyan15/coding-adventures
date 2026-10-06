@@ -93,6 +93,11 @@ export interface Stage<
   readonly name: string;
   /** Semver of this stage package. */
   readonly version: string;
+  /**
+   * Optional immutable implementation identity used by caches and revision
+   * ledgers when semver alone does not identify executable bytes.
+   */
+  readonly implementationIdentity?: string;
   /** Forme kernel `apiVersion` this stage targets. */
   readonly apiVersion: number;
   /** Short human description for logs and tool UI. */
@@ -195,8 +200,8 @@ export interface Stage<
  *
  *   export default defineStage({
  *     name:        "@forme/parse-markdown",
- *     version:     "0.1.0",
- *     apiVersion:  1,
+ *     version:     "1.0.0",
+ *     apiVersion:  2,
  *     description: "Parses CommonMark + GFM into a ContentNode.",
  *     consumes:    Kinds.ContentSource,
  *     produces:    Kinds.ContentNode,

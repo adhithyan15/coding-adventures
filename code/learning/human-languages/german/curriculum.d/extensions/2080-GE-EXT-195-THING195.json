@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-195-THING195",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a pedestrian zone, a cathedral, a monument, a tower and a castle.",
+  "prerequisites": []
+}

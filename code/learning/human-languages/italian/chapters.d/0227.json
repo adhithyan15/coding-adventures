@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "Guide, Entrance, Exit, Luggage, Place",
+  "label": "ch:it-guide-entrance-exit-luggage-place",
+  "canDo": "I can say a guide, an entrance, an exit, luggage and a place.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-R227-second-pass-words-from-chapters-225-227",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say a guide, an entrance, an exit, luggage and a place.",
+    "assesses": [
+      "IT-LEX-C227-COSE227-03",
+      "IT-LEX-C227-COSE227-04",
+      "IT-LEX-C227-COSE227-05"
+    ]
+  }
+}

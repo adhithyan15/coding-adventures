@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Childbirth, Surgical operation, Hearing, Health, Eyelid",
+  "label": "ch:ml-childbirth-surgical-operation-hearing-health-eyelid",
+  "canDo": "I can say childbirth, a surgical operation, hearing, health and an eyelid.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C194-kanpola",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say childbirth, a surgical operation, hearing, health and an eyelid.",
+    "assesses": [
+      "ML-LEX-C194-AROGYAM194-03",
+      "ML-LEX-C194-AROGYAM194-04",
+      "ML-LEX-C194-AROGYAM194-05"
+    ]
+  }
+}

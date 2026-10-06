@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Despite, Unfortunately, Luckily, Certainly, Really",
+  "label": "ch:fr-despite-unfortunately-luckily-certainly-really",
+  "canDo": "I can say despite, unfortunately, luckily, certainly and really.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FR-C189-vraiment",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say despite, unfortunately, luckily, certainly and really.",
+    "assesses": [
+      "FR-LEX-C189-POURQUOI189-03",
+      "FR-LEX-C189-POURQUOI189-04",
+      "FR-LEX-C189-POURQUOI189-05"
+    ]
+  }
+}

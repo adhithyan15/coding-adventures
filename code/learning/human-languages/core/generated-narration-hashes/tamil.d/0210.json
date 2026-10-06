@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:8be617c76aa1f4af",
+  "lessonIds": [
+    "TA-C210-manam",
+    "TA-C210-kunam",
+    "TA-C210-poramai",
+    "TA-C210-vetkam",
+    "TA-C210-accariyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch210.txt",
+  "json": "tamil/narration/ch210.json",
+  "textHash": "fnv1a64:144f713a91d042f7",
+  "jsonHash": "fnv1a64:d8d483502f992343",
+  "findings": []
+}

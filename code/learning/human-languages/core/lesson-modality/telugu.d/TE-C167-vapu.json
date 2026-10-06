@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C167-vapu",
+    "language": "telugu",
+    "chapter": 167,
+    "sequence": 7400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63e86c3005bb6db8"
+  },
+  "findings": []
+}

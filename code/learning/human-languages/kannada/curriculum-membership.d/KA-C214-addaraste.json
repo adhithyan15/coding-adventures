@@ -1,0 +1,11 @@
+{
+  "id": "KA-C214-addaraste",
+  "pathSegment": "KA-PATH-214-STHALA214",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-214-STHALA214",
+      "order": 3
+    }
+  ]
+}

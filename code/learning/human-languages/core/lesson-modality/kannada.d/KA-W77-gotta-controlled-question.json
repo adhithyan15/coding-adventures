@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "KA-W77-gotta-controlled-question",
+    "language": "kannada",
+    "chapter": 77,
+    "sequence": 2735,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:49db0b3475d639dc",
+    "detachableSegments": [
+      "Writing — assemble one familiar question"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C218-wazn",
+    "language": "arabic",
+    "chapter": 218,
+    "sequence": 11590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6b8ebd88f85e93d"
+  },
+  "findings": []
+}

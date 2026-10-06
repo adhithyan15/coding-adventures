@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Decision, Possibility, Opportunity, Reason, Result",
+  "label": "ch:it-decision-possibility-opportunity-reason-result",
+  "canDo": "I can say a decision, a possibility, an opportunity, a reason and a result.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C225-risultato",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say a decision, a possibility, an opportunity, a reason and a result.",
+    "assesses": [
+      "IT-LEX-C225-COSE225-03",
+      "IT-LEX-C225-COSE225-04",
+      "IT-LEX-C225-COSE225-05"
+    ]
+  }
+}

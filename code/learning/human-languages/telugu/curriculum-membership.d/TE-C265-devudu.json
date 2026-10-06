@@ -1,0 +1,11 @@
+{
+  "id": "TE-C265-devudu",
+  "pathSegment": "TE-PATH-265-VASTUVU265",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-265-VASTUVU265",
+      "order": 2
+    }
+  ]
+}

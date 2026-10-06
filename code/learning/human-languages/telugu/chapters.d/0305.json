@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "App, Keyboard, Laptop, Battery, Video",
+  "label": "ch:te-app-keyboard-laptop-battery-video",
+  "canDo": "I can say an app, a keyboard, a laptop, a battery and a video.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C305-vidiyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can say an app, a keyboard, a laptop, a battery and a video.",
+    "assesses": [
+      "TE-LEX-C305-VASTUVU305-03",
+      "TE-LEX-C305-VASTUVU305-04",
+      "TE-LEX-C305-VASTUVU305-05"
+    ]
+  }
+}

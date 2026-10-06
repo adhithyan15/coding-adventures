@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "People, State, Homeland, Enemy, War",
+  "label": "ch:la-people-state-homeland-enemy-war",
+  "canDo": "I can say a people, a state, a homeland, an enemy and war.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C271-bellum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say a people, a state, a homeland, an enemy and war.",
+    "assesses": [
+      "LA-LEX-C271-RES271-03",
+      "LA-LEX-C271-RES271-04",
+      "LA-LEX-C271-RES271-05"
+    ]
+  }
+}

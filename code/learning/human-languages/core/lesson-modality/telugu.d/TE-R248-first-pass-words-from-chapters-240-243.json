@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R248-first-pass-words-from-chapters-240-243",
+    "language": "telugu",
+    "chapter": 248,
+    "sequence": 11640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cb43f5f92a14ad1"
+  },
+  "findings": []
+}

@@ -46,7 +46,7 @@ done. Now for the face you would check on someone with.
 | Sanskrit | sound | meaning |
 |---|---|---|
 | अक्षि | *akṣi* | **eye** |
-| अक्षिणी | *akṣiṇī* | **the two eyes** |
+| — | *akṣiṇī* | **the two eyes** |
 
 Neuter, like most of this book's shortest nouns.
 
@@ -62,13 +62,13 @@ Neuter, like most of this book's shortest nouns.
 **अक्षि** is PIE **h3ekw-**, and the descent runs almost as clean as
 *bhrātā*'s: English **eye**, Latin **oculus** (→ *ocular*, *monocle*),
 Lithuanian **akìs** — one root, barely disguised anywhere. It carries
-straight into Hindi **आँख** and Gujarati *āṅkh*, both inherited, not
+straight into Hindi and Gujarati *āṅkh*, both inherited, not
 borrowed back the way **मित्र** was.
 
 And eyes are exactly the reason Sanskrit keeps a **dual number** at all —
-the exactly-two form Chapter 6 built around **द्वौ**, "two," rather than an
+the exactly-two form Chapter 6 built around *dvau*, "two," rather than an
 ordinary count word. A single eye is **अक्षि**; the two you were born with
-are not a small plural, they are **अक्षिणी** — grammar built for a body
+are not a small plural, they are *akṣiṇī* — grammar built for a body
 that comes in pairs.
 
 ## Guided Practice
@@ -84,6 +84,6 @@ that comes in pairs.
 
 [PAUSE 3s] Name two English words from the same root as अक्षि. (**Eye**,
 and, through Latin, **ocular** or **monocle**.) What is the dual form for
-"two eyes," and what grammatical number is that? (**अक्षिणी**; the **dual**,
+"two eyes," and what grammatical number is that? (*akṣiṇī*; the **dual**,
 the same category as *dvau*.) And what did you learn just before this?
 (*Bhaginī*, sister.)

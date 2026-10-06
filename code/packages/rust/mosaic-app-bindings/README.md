@@ -16,31 +16,87 @@ semantic events, and return decoded updates to the generated view.
 
 Beside each runtime binding, this crate ships the operating-system
 capabilities every generated app gets, so no app carries its own copy. The
-first is Compose's `MosaicPlatformEffects.kt` (`compose_platform_effects()`):
-`files.open` and `files.save` through the native file dialog, and a router that
-sends each effect to the app's own `[host_effects]` handler or to this library
-by kind. Its behaviour is tested with fake dialogs by
+first is Compose's, in two files. `MosaicFileEffects.kt`
+(`compose_file_effects()`) is the half every Compose target shares: the rules
+a request must meet, the MIME table, a router that sends each effect to the
+app's own `[host_effects]` handler or to this library by kind, and the
+asynchronous path from a picker's answer to the effect's outcome (UI89 §3.8).
+`MosaicPlatformEffects.kt` is each target's own half: the desktop's
+(`compose_platform_effects()`) answers through the native file dialog,
+Android's (`compose_android_platform_effects()`) through the Storage Access
+Framework's document picker. Android's reads and writes are watched by the
+shared `MosaicStallWatch`: a provider that moves no byte for a minute, or never
+finishes opening the document, is stopped and the request fails, instead of
+holding the one file operation (UI89 §3.8). A package's `[host_effects]` handler
+can borrow the picker for the app's own kinds. It calls
+`mosaicPlatformRouter(host)`, the router installed as the host's handler,
+then `openForApp` / `saveForApp`, under `files.*`'s rules, with the app's
+own extensions, limit and `ok` answer (UI89 §3.11). On Android that handler
+is the package's `compose-android` one, which `MosaicActivity` installs
+first; `installMosaicPlatformEffects(host, picker, appKinds)` then wraps it
+and routes the kinds it claims to it (UI89 §3.12). The shared half and the desktop's are tested with
+fake dialogs, pickers and hosts by
 `conformance/compose/MosaicPlatformEffectsTest.kt`.
 
 SwiftUI's `MosaicPlatformEffects.swift` (`swift_platform_effects()`) answers
-the same contract through `NSOpenPanel` / `NSSavePanel` on macOS; on iOS and
-iPadOS it fails each request with a message until UI89 step 6 adds the
-document picker, so an `Await` never wedges. It is tested with a fake host and
-fake panels by `conformance/swiftui/Sources/Conformance/PlatformEffectsChecks.swift`
-(`--platform-effects`).
+the same contract through `NSOpenPanel` / `NSSavePanel` on macOS and
+`UIDocumentPickerViewController` on iOS and iPadOS (UI89 §3.8), behind the
+same asynchronous picker seam as Compose. It is tested with a fake host, fake
+panels and fake pickers by
+`conformance/swiftui/Sources/Conformance/PlatformEffectsChecks.swift`
+(`--platform-effects`). A package's `[host_effects]` handler can borrow its
+picker for the app's own kinds: `mosaicPlatformRouter(for: host)` returns
+the router, whose `openForApp` and `saveForApp` keep `files.*`'s rules. The
+app supplies its own accepted extensions, size limit and `ok` answer
+(UI89 §2.6). This is how Engram's Anki import and export work on iOS.
 
 Qt's `MosaicPlatformEffects.{h,cpp}` (`qt_platform_effects()`) answers the same
 contract through `QFileDialog`. The Qt host delivers effects through one
 routed handler (`MosaicHost::setEffectHandler`) that the library's router
 occupies, falling back to the `effectRequested` signal for the app's own kinds
 (UI87 §7.4a). It is tested headless, with fake dialogs, by
-`tests/qt_effect_driver`. XAML and Flutter follow (UI87 §7.3).
+`tests/qt_effect_driver`.
+
+XAML's `MosaicPlatformEffects.cs` (`xaml_platform_effects(namespace)`) answers
+the same contract through WinUI 3's `FileOpenPicker` / `FileSavePicker`, owned
+by the app's window. Each standard effect is deferred and answered from the
+window's `DispatcherQueue`, because the static host runs its handler inside
+the settle (UI87 §7.6). The WinUI half sits behind `#if !MOSAIC_HEADLESS_TEST`,
+so `conformance/xaml-platform-effects/` runs everything else on plain .NET
+with a fake host and a fake picker; `tests/xaml_platform_effects.rs` builds
+and runs that harness wherever `dotnet` is installed.
+
+Flutter's library (`flutter_platform_effects()`, UI87 §7.7) is two files,
+because Dart has no conditional compilation: `mosaic_platform_effects_core.dart`
+is the contract, the file I/O and the router in plain Dart, and
+`mosaic_platform_effects.dart` adds `package:file_selector`'s native dialogs
+(Linux, macOS, Windows) and `installMosaicPlatformEffects(host, appKinds:)`,
+which the generated `main.dart` calls. Each standard effect is deferred, its
+dialog run after the settle, and the file read or written in a background
+isolate; the router holds the `MosaicHost` it was installed on, so a late
+answer after a retried start meets the disposed host and is dropped. Every
+generated project depends on `file_selector` pinned exactly
+(`FLUTTER_FILE_SELECTOR_VERSION`, added by
+`flutter_pubspec_with_platform_effects`); a package's `[host_assets]`
+coordinate for a package the project already declares is left out rather
+than duplicated. `conformance/flutter-platform-effects/` runs the core on the
+plain Dart VM with a fake host and fake dialogs, and
+`tests/flutter_platform_effects.rs` runs it wherever `dart` is installed. On
+Linux the library asks "Replace it?" before a save goes onto an existing name,
+because GTK's chooser (as `file_selector` opens it) does not;
+`conformance/flutter-replace-dialog/` drives that dialog with the widget
+tester. On Android and iOS each request fails with a message until UI89.
 
 ## Persistence
 
 Emitted applications also persist the runtime's opaque snapshot after every
-successful dispatch and supply it as `restoredSnapshot` before the first visible
-render. Writes use a same-directory temporary file plus the platform's atomic
+successful dispatch whose revision the state file does not already hold (the
+first answer after launch always writes), and supply it as
+`restoredSnapshot` before the first visible render. An environment report the
+app ignored (UI48 §7.1: an answer at the revision already showing, and so
+already saved) changed nothing the app saves, so it writes nothing -- a window
+drag costs no disk writes -- unless an earlier save failed: while a `persistenceWarning` is
+pending, each ignored report retries the save (UI48 §7.12). Writes use a same-directory temporary file plus the platform's atomic
 replacement facility. Invalid JSON and runtime-incompatible snapshots are moved
 to `mosaic-state.v1.json.corrupt`; the app starts clean and exposes a
 `persistenceWarning` (or native status warning) instead of becoming unusable.

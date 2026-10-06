@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C148-cerebro",
+    "language": "portuguese",
+    "chapter": 148,
+    "sequence": 7640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:912c7e99f933512e"
+  },
+  "findings": []
+}

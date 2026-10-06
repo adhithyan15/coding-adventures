@@ -7,7 +7,7 @@ chapter: 401
 type: word
 headword: cambiar
 gloss: to change — Latin cambiāre, itself a word of Gaulish origin, for exchanging one thing for another
-concept_tag: ES-ACTION-CAMBIAR
+concept_tag: ES-VERB-CAMBIAR
 prerequisites: [ES-C401-seguir]
 sounds: [stress-final, p-b-hard, vowel-a, vowel-i]
 roots: [cambiare-latin]

@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "Period, Turn, Lunar day, Calendar date, Century",
+  "label": "ch:sa-period-turn-lunar-day-calendar-date-century",
+  "canDo": "I can say a period, a turn, a lunar day, a calendar date and a century.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "SA-C152-satabdi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: I can say a period, a turn, a lunar day, a calendar date and a century.",
+    "assesses": [
+      "SA-LEX-C152-TIME152-03",
+      "SA-LEX-C152-TIME152-04",
+      "SA-LEX-C152-TIME152-05"
+    ]
+  }
+}

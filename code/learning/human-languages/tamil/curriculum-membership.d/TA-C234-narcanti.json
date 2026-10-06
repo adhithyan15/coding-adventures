@@ -1,0 +1,11 @@
+{
+  "id": "TA-C234-narcanti",
+  "pathSegment": "TA-PATH-234-IDAM234",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-234-IDAM234",
+      "order": 4
+    }
+  ]
+}

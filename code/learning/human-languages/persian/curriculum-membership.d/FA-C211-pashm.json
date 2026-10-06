@@ -1,0 +1,11 @@
+{
+  "id": "FA-C211-pashm",
+  "pathSegment": "FA-PATH-211-CHIZ211",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-211-CHIZ211",
+      "order": 1
+    }
+  ]
+}

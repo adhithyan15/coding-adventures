@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "To sign, To fill in a form, To phone, To discuss, To quarrel",
+  "label": "ch:fr-to-sign-to-fill-in-a-form-to-phone-to-discuss-to-quarrel",
+  "canDo": "I can say to sign, to fill in a form, to phone, to discuss and to quarrel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C145-disputer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: I can say to sign, to fill in a form, to phone, to discuss and to quarrel.",
+    "assesses": [
+      "FR-LEX-C145-VERBES145-03",
+      "FR-LEX-C145-VERBES145-04",
+      "FR-LEX-C145-VERBES145-05"
+    ]
+  }
+}

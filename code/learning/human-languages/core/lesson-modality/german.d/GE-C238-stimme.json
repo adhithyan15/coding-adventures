@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C238-stimme",
+    "language": "german",
+    "chapter": 238,
+    "sequence": 13160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56d3ac7c49dc7f08"
+  },
+  "findings": []
+}

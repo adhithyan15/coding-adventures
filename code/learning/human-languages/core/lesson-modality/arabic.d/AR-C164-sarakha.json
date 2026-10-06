@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C164-sarakha",
+    "language": "arabic",
+    "chapter": 164,
+    "sequence": 7740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14a0ab3efb931899"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-224-VELAI224",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a fisherman, a potter, a barber, a mason and a scientist.",
+  "prerequisites": []
+}

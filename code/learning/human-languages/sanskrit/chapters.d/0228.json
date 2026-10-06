@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "History, Geography, Music, Dance, Painting",
+  "label": "ch:sa-history-geography-music-dance-painting",
+  "canDo": "I can say history, geography, music, dance and painting.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C228-citrakala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say history, geography, music, dance and painting.",
+    "assesses": [
+      "SA-LEX-C228-SCH228-03",
+      "SA-LEX-C228-SCH228-04",
+      "SA-LEX-C228-SCH228-05"
+    ]
+  }
+}

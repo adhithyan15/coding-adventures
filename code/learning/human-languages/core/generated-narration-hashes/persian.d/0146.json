@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:ea26a312a144cbcb",
+  "lessonIds": [
+    "FA-C146-be-yad-avardan",
+    "FA-C146-hads-zadan",
+    "FA-C146-tarjih-dadan",
+    "FA-C146-be-nazar-residan",
+    "FA-C146-negaran-budan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch146.txt",
+  "json": "persian/narration/ch146.json",
+  "textHash": "fnv1a64:e1a3dab24f1ff61d",
+  "jsonHash": "fnv1a64:145ccbf53d9c2871",
+  "findings": []
+}

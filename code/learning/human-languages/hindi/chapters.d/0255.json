@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "A daughter-in-law, A son-in-law, A husband's younger brother, A husband's sister, A sister's husband",
+  "label": "ch:hi-a-daughter-in-law-a-son-in-law-a-husband-s-younger-brother-a-husband-s-sister-a-sister-s-husband",
+  "canDo": "I can say a daughter-in-law, a son-in-law, a husband's younger brother, a husband's sister and a sister's husband.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C255-jija",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say a daughter-in-law, a son-in-law, a husband's younger brother, a husband's sister and a sister's husband.",
+    "assesses": [
+      "HI-LEX-C255-THG255-03",
+      "HI-LEX-C255-THG255-04",
+      "HI-LEX-C255-THG255-05"
+    ]
+  }
+}

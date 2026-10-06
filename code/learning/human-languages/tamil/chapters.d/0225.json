@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "To taste, To fill, To fold, To take off, To change",
+  "label": "ch:ta-to-taste-to-fill-to-fold-to-take-off-to-change",
+  "canDo": "I can say to taste, to fill, to fold, to take off and to change.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C225-marru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say to taste, to fill, to fold, to take off and to change.",
+    "assesses": [
+      "TA-LEX-C225-ACT225-03",
+      "TA-LEX-C225-ACT225-04",
+      "TA-LEX-C225-ACT225-05"
+    ]
+  }
+}

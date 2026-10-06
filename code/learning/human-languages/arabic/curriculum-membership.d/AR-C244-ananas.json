@@ -1,0 +1,11 @@
+{
+  "id": "AR-C244-ananas",
+  "pathSegment": "AR-PATH-244-SHAY244",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-244-SHAY244",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Papaya, Apricot, Pineapple, Coconut, Cashew",
+  "label": "ch:ur-papaya-apricot-pineapple-coconut-cashew",
+  "canDo": "I can say a papaya, an apricot, a pineapple, a coconut and a cashew.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C252-kaju",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say a papaya, an apricot, a pineapple, a coconut and a cashew.",
+    "assesses": [
+      "UR-LEX-C252-CHIZ252-03",
+      "UR-LEX-C252-CHIZ252-04",
+      "UR-LEX-C252-CHIZ252-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C256-sahityo",
+  "pathSegment": "BN-PATH-256-JINIS256",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-256-JINIS256",
+      "order": 4
+    }
+  ]
+}

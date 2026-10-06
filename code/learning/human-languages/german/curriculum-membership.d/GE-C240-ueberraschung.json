@@ -1,0 +1,11 @@
+{
+  "id": "GE-C240-ueberraschung",
+  "pathSegment": "GE-PATH-240-THING240",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-240-THING240",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-256-COSE256",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a flame, lightning, thunder, a rainbow and the climate.",
+  "prerequisites": []
+}

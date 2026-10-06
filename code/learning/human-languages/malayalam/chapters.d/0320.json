@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "Famous, Ordinary, Dear, Terrible, Awesome",
+  "label": "ch:ml-famous-ordinary-dear-terrible-awesome",
+  "canDo": "I can say famous, ordinary, dear, terrible and awesome.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C320-atipoli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can say famous, ordinary, dear, terrible and awesome.",
+    "assesses": [
+      "ML-LEX-C320-GUNAM320-03",
+      "ML-LEX-C320-GUNAM320-04",
+      "ML-LEX-C320-GUNAM320-05"
+    ]
+  }
+}

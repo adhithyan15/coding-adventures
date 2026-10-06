@@ -1,0 +1,11 @@
+{
+  "id": "FR-C238-voler",
+  "pathSegment": "FR-PATH-238-VERBES238",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-238-VERBES238",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C195-balkon",
+  "pathSegment": "FA-PATH-195-MAKAN195",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-195-MAKAN195",
+      "order": 2
+    }
+  ]
+}

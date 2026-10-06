@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C157-bonbast",
+    "language": "persian",
+    "chapter": 157,
+    "sequence": 8010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf5dcb77272344c0"
+  },
+  "findings": []
+}

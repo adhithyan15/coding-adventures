@@ -1,0 +1,11 @@
+{
+  "id": "BN-C232-bhutta",
+  "pathSegment": "BN-PATH-232-JINIS232",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-232-JINIS232",
+      "order": 2
+    }
+  ]
+}

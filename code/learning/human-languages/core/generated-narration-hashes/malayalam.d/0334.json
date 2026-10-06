@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:e492843efa4de96c",
+  "lessonIds": [
+    "ML-C334-jivanakkaran",
+    "ML-C334-mutalali",
+    "ML-C334-manejar",
+    "ML-C334-kampani",
+    "ML-C334-yogam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch334.txt",
+  "json": "malayalam/narration/ch334.json",
+  "textHash": "fnv1a64:61d5418f3caa1fe9",
+  "jsonHash": "fnv1a64:c6f08f5464c3d8e2",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:3e6559da726a08ac",
+  "lessonIds": [
+    "PT-C220-jornalista",
+    "PT-C220-arquiteto",
+    "PT-C220-dentista",
+    "PT-C220-farmaceutico",
+    "PT-C220-talhante"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch220.txt",
+  "json": "portuguese/narration/ch220.json",
+  "textHash": "fnv1a64:ca3bd70195d3bcd7",
+  "jsonHash": "fnv1a64:89f83e9df548d757",
+  "findings": []
+}

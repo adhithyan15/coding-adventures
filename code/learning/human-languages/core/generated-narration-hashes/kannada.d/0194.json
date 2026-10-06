@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:da0766c89e516f12",
+  "lessonIds": [
+    "KA-C194-sambala",
+    "KA-C194-grahaka",
+    "KA-C194-darji",
+    "KA-C194-manegelasa",
+    "KA-C194-meladhikari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch194.txt",
+  "json": "kannada/narration/ch194.json",
+  "textHash": "fnv1a64:b48aebdb594d0d1e",
+  "jsonHash": "fnv1a64:1bdaa2a9900a2d50",
+  "findings": []
+}

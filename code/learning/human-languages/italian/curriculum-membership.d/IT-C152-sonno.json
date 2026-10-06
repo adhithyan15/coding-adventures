@@ -1,0 +1,11 @@
+{
+  "id": "IT-C152-sonno",
+  "pathSegment": "IT-PATH-152-SAL152",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-152-SAL152",
+      "order": 3
+    }
+  ]
+}

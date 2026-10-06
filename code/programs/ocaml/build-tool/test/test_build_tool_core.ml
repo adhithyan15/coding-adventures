@@ -17,6 +17,7 @@ let expected_cases =
       "diff-selection/match-work-over-limit";
       "diff-selection/package-prefix";
       "diff-selection/repository-boundary-reverse-index";
+      "diff-selection/shared-input-multiconsumer";
       "diff-selection/strict-glob-character-classes";
       "diff-selection/transitive-package-change";
       "diff-selection/unknown-path-all";
@@ -722,7 +723,7 @@ let () =
     [
       ( "shared fixtures",
         [
-          Alcotest.test_case "all 19 cases" `Quick consumes_every_shared_fixture;
+          Alcotest.test_case "all 20 cases" `Quick consumes_every_shared_fixture;
         ] );
       ( "fail closed",
         [

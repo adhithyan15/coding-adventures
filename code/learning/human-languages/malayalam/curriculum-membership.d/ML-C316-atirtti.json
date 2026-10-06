@@ -1,0 +1,11 @@
+{
+  "id": "ML-C316-atirtti",
+  "pathSegment": "ML-PATH-316-STHALAM316",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-316-STHALAM316",
+      "order": 2
+    }
+  ]
+}

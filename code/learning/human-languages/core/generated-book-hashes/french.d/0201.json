@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:ec37b8ea5437ce4e",
+  "lessonIds": [
+    "FR-C201-terre",
+    "FR-C201-boue",
+    "FR-C201-poussiere",
+    "FR-C201-fumee",
+    "FR-C201-flamme"
+  ],
+  "tex": "french/book/chapters/ch201-earth-mud-dust-smoke-flame.tex"
+}

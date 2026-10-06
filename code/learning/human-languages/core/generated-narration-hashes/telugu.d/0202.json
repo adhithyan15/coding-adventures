@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:486aa1a93faece12",
+  "lessonIds": [
+    "TE-C202-carcincu",
+    "TE-C202-sampradincu",
+    "TE-C202-tanikhi-ceyu",
+    "TE-C202-namodu-ceyu",
+    "TE-C202-sadhana-ceyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch202.txt",
+  "json": "telugu/narration/ch202.json",
+  "textHash": "fnv1a64:ab8b12920cc5a1c9",
+  "jsonHash": "fnv1a64:e731170a6012f9e6",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C218-cena",
+    "language": "malayalam",
+    "chapter": 218,
+    "sequence": 9800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00b1de589d973e3c"
+  },
+  "findings": []
+}

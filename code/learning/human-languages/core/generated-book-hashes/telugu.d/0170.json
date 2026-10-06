@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:406116a9f087cd6b",
+  "lessonIds": [
+    "TE-C170-samayam",
+    "TE-C170-appudappudu",
+    "TE-C170-taracuga",
+    "TE-C170-tedi",
+    "TE-C170-varantam"
+  ],
+  "tex": "telugu/book/chapters/ch170-time-sometimes-often-date-weekend.tex"
+}

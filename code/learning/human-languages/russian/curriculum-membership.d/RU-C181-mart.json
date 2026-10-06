@@ -1,0 +1,11 @@
+{
+  "id": "RU-C181-mart",
+  "pathSegment": "RU-PATH-181-VREMYA181",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-181-VREMYA181",
+      "order": 2
+    }
+  ]
+}

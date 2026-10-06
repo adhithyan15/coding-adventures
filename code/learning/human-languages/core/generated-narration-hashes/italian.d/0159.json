@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:5135523f26478689",
+  "lessonIds": [
+    "IT-C159-appartamento",
+    "IT-C159-soggiorno",
+    "IT-C159-corridoio",
+    "IT-C159-balcone",
+    "IT-C159-parete"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch159.txt",
+  "json": "italian/narration/ch159.json",
+  "textHash": "fnv1a64:ba32e97bfe40f72d",
+  "jsonHash": "fnv1a64:733ab0885a500ca8",
+  "findings": []
+}

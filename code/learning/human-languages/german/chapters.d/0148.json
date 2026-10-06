@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "To cost, To lend, To love, To bring along, To take along",
+  "label": "ch:ge-to-cost-to-lend-to-love-to-bring-along-to-take-along",
+  "canDo": "I can say to cost, to lend, to love, to bring along and to take along.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C148-mitnehmen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: I can say to cost, to lend, to love, to bring along and to take along.",
+    "assesses": [
+      "GE-LEX-C148-VERB148-03",
+      "GE-LEX-C148-VERB148-04",
+      "GE-LEX-C148-VERB148-05"
+    ]
+  }
+}

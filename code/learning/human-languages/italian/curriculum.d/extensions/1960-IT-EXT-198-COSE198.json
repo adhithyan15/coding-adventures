@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-198-COSE198",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a folder, a pay slip, a label, a sign and a map.",
+  "prerequisites": []
+}

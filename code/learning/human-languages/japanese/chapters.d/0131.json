@@ -1,0 +1,25 @@
+{
+  "chapter": 131,
+  "title": "Tea, Please: Small Ya, Small Yo and Wo",
+  "label": "ch:ja-tea-please-small-ya-small-yo-wo",
+  "canDo": "I can write small ya, small yo and wo, read words that use them, and ask for tea politely.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "JA-R131-tea-please",
+    "kind": "production",
+    "summary": "Read ocha, isha, chotto and toshokan with their beats, write ocha o kudasai from memory with を for the particle, and write the three new signs once each.",
+    "assesses": [
+      "JA-LEX-ANCHOR-OCHA",
+      "JA-SCRIPT-SMALL-YA-01",
+      "JA-LEX-C131-ISHA",
+      "JA-LEX-ANCHOR-CHOTTO",
+      "JA-SCRIPT-SMALL-YO-01",
+      "JA-LEX-C131-TOSHOKAN",
+      "JA-GRAMMAR-OBJECT-WO",
+      "JA-SCRIPT-WO-01"
+    ],
+    "note": "Word before sign, every time. Each of the three signs is first SEEN inside a word taught one lesson earlier -- ocha for small ya, chotto for small yo, ocha o kudasai for wo -- and only then written, so every letter lesson is anchored (HL-C443) rather than building toward a later word. Two lessons separate each writing lesson from the next, and each new sign is spent at once in a second word (isha, toshokan) or in the review."
+  }
+}

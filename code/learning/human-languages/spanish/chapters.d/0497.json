@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Una vida",
+  "label": "ch:es-una-vida",
+  "canDo": "I can read a short life story: being born, dying, inheriting, looking after someone and friendship.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C497-amistad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can read a short life story: being born, dying, inheriting, looking after someone and friendship.",
+    "assesses": [
+      "ES-LEX-C497-FAMILIA-03",
+      "ES-LEX-C497-FAMILIA-04",
+      "ES-LEX-C497-FAMILIA-05"
+    ]
+  }
+}

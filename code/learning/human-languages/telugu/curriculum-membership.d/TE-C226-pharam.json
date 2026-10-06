@@ -1,0 +1,11 @@
+{
+  "id": "TE-C226-pharam",
+  "pathSegment": "TE-PATH-226-VASTUVU226",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-226-VASTUVU226",
+      "order": 3
+    }
+  ]
+}

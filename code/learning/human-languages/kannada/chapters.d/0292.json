@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "Deserted, Crisp, Tidy, Messy, Convenient",
+  "label": "ch:ka-deserted-crisp-tidy-messy-convenient",
+  "canDo": "I can say deserted, crisp, tidy, messy and convenient.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C292-anukula",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can say deserted, crisp, tidy, messy and convenient.",
+    "assesses": [
+      "KA-LEX-C292-GUNA292-03",
+      "KA-LEX-C292-GUNA292-04",
+      "KA-LEX-C292-GUNA292-05"
+    ]
+  }
+}

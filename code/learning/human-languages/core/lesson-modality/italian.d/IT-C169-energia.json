@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C169-energia",
+    "language": "italian",
+    "chapter": 169,
+    "sequence": 9150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfe0f7a4aca59570"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:5b5def9708a2d065",
+  "lessonIds": [
+    "UR-C231-rae",
+    "UR-C231-jhut",
+    "UR-C231-raz",
+    "UR-C231-latifa",
+    "UR-C231-hasi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch231.txt",
+  "json": "urdu/narration/ch231.json",
+  "textHash": "fnv1a64:0e3ca8b23505c062",
+  "jsonHash": "fnv1a64:c5fe77e7f73ad36c",
+  "findings": []
+}

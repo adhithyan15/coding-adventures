@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Poppadom, Puri, Haleem, Nihari, Minced meat",
+  "label": "ch:ur-poppadom-puri-haleem-nihari-minced-meat",
+  "canDo": "I can say a poppadom, a puri, haleem, nihari and minced meat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C234-qima",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say a poppadom, a puri, haleem, nihari and minced meat.",
+    "assesses": [
+      "UR-LEX-C234-CHIZ234-03",
+      "UR-LEX-C234-CHIZ234-04",
+      "UR-LEX-C234-CHIZ234-05"
+    ]
+  }
+}

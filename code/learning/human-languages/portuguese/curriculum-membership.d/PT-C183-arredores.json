@@ -1,0 +1,11 @@
+{
+  "id": "PT-C183-arredores",
+  "pathSegment": "PT-PATH-183-LUGAR183",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-183-LUGAR183",
+      "order": 0
+    }
+  ]
+}

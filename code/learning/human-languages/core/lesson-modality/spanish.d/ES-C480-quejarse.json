@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C480-quejarse",
+    "language": "spanish",
+    "chapter": 480,
+    "sequence": 13540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55440ea1a50e4ff1"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "Nail clippers, Stool, Wall niche, Circle, Dot",
+  "label": "ch:fa-nail-clippers-stool-wall-niche-circle-dot",
+  "canDo": "I can say nail clippers, a stool, a wall niche, a circle and a dot.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C213-noqte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say nail clippers, a stool, a wall niche, a circle and a dot.",
+    "assesses": [
+      "FA-LEX-C213-CHIZ213-03",
+      "FA-LEX-C213-CHIZ213-04",
+      "FA-LEX-C213-CHIZ213-05"
+    ]
+  }
+}

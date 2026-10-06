@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:e573e7ba90af4b7d",
+  "lessonIds": [
+    "GE-C177-bewerben",
+    "GE-C177-biegen",
+    "GE-C177-braten",
+    "GE-C177-buchstabieren",
+    "GE-C177-drucken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch177.txt",
+  "json": "german/narration/ch177.json",
+  "textHash": "fnv1a64:83c20e551eb42522",
+  "jsonHash": "fnv1a64:ffd0a4bc6f428b87",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Barber, Tailor, Washerman, Grocer, Nurse",
+  "label": "ch:bn-barber-tailor-washerman-grocer-nurse",
+  "canDo": "I can say a barber, a tailor, a washerman, a grocer and a nurse.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C126-nars",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: I can say a barber, a tailor, a washerman, a grocer and a nurse.",
+    "assesses": [
+      "BN-LEX-C126-THINGS126-03",
+      "BN-LEX-C126-THINGS126-04",
+      "BN-LEX-C126-THINGS126-05"
+    ]
+  }
+}

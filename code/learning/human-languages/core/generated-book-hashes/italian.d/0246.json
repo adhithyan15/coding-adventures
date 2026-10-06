@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:779d8125e4e67317",
+  "lessonIds": [
+    "IT-C246-antico",
+    "IT-C246-giovane",
+    "IT-C246-piccante",
+    "IT-C246-crudo",
+    "IT-C246-cotto"
+  ],
+  "tex": "italian/book/chapters/ch246-ancient-young-spicy-raw-cooked.tex"
+}

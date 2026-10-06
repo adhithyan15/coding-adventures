@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:24b33ed64287c578",
+  "lessonIds": [
+    "TA-C263-pokkuvarattu",
+    "TA-C263-nataipatai",
+    "TA-C263-vimanam",
+    "TA-C263-vimana-nilaiyam",
+    "TA-C263-kappal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch263.txt",
+  "json": "tamil/narration/ch263.json",
+  "textHash": "fnv1a64:cd67fe708266bb53",
+  "jsonHash": "fnv1a64:b3ce6c309e5a348c",
+  "findings": []
+}

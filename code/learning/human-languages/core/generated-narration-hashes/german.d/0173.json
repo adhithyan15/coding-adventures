@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:5ee474f9370eccfd",
+  "lessonIds": [
+    "GE-C173-ziemlich",
+    "GE-C173-besonders",
+    "GE-C173-ungefaehr",
+    "GE-C173-zusammen",
+    "GE-C173-allein",
+    "GE-R173-first-pass-words-from-chapters-168-170",
+    "GE-R173-second-pass-words-from-chapters-171-173"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch173.txt",
+  "json": "german/narration/ch173.json",
+  "textHash": "fnv1a64:3a1d8340d1dac2b8",
+  "jsonHash": "fnv1a64:29fd53ea8628e028",
+  "findings": []
+}

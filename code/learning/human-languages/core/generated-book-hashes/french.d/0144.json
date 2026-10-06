@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:3caf8d594764ff67",
+  "lessonIds": [
+    "FR-C144-expliquer",
+    "FR-C144-traduire",
+    "FR-C144-decider",
+    "FR-C144-essayer",
+    "FR-C144-continuer"
+  ],
+  "tex": "french/book/chapters/ch144-to-explain-to-translate-to-decide-to-try-to-continue.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:6c06a78dd03fb7d2",
+  "lessonIds": [
+    "RU-C170-dolzhnost",
+    "RU-C170-zarplata",
+    "RU-C170-nalog",
+    "RU-C170-schyot",
+    "RU-C170-nalichnyye"
+  ],
+  "tex": "russian/book/chapters/ch170-post-salary-tax-bill-cash.tex"
+}

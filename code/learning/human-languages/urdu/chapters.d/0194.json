@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Square, Crooked, Shallow, Stale, Spicy",
+  "label": "ch:ur-square-crooked-shallow-stale-spicy",
+  "canDo": "I can say square, crooked, shallow, stale and spicy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C194-tikha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say square, crooked, shallow, stale and spicy.",
+    "assesses": [
+      "UR-LEX-C194-SIFAT194-03",
+      "UR-LEX-C194-SIFAT194-04",
+      "UR-LEX-C194-SIFAT194-05"
+    ]
+  }
+}

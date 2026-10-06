@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:9303ea4e68fdeb9f",
+  "lessonIds": [
+    "ES-C487-alegrarse",
+    "ES-C487-enfadarse",
+    "ES-C487-preocuparse",
+    "ES-C487-relajarse",
+    "ES-C487-divertirse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch487.txt",
+  "json": "spanish/narration/ch487.json",
+  "textHash": "fnv1a64:a299b460c0744d4c",
+  "jsonHash": "fnv1a64:95d69f988185d004",
+  "findings": []
+}

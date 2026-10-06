@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C218-kutharah",
+    "language": "sanskrit",
+    "chapter": 218,
+    "sequence": 12580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ad73ceac8d395bd"
+  },
+  "findings": []
+}

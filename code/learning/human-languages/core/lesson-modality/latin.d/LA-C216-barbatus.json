@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C216-barbatus",
+    "language": "latin",
+    "chapter": 216,
+    "sequence": 10800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46a1b36d942993a9"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C178-jamedadi",
+  "pathSegment": "FA-PATH-178-KAR178",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-178-KAR178",
+      "order": 3
+    }
+  ]
+}

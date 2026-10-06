@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:96301926602ffa8d",
+  "sourceHash": "fnv1a64:2d9d1bca6152e467",
   "lessons": [
     {
       "id": "HI-C06-numbers-1-5",
@@ -606,7 +606,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1afa702e7706712a",
+      "sourceHash": "fnv1a64:b1cf2797b0718c9a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -709,7 +709,7 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift at that junction and draw the diagonal tail down-right."
+              "text": "2. without lifting, draw the diagonal tail down-right."
             },
             {
               "kind": "speech",
@@ -717,11 +717,11 @@
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "Pen lifts: 1. The pen comes up once."
             },
             {
               "kind": "speech",
-              "text": "Verified three-stroke teaching form; another animated learner source joins the loop and diagonal tail."
+              "text": "The source shows three movements; most native writers draw र in two strokes (96% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

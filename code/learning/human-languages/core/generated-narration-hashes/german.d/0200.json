@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:f74da5bfc1458912",
+  "lessonIds": [
+    "GE-C200-speisekarte",
+    "GE-C200-bestellung",
+    "GE-C200-trinkgeld",
+    "GE-C200-kellnerin",
+    "GE-C200-besteck",
+    "GE-R200-first-pass-words-from-chapters-192-195",
+    "GE-R200-second-pass-words-from-chapters-196-200"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch200.txt",
+  "json": "german/narration/ch200.json",
+  "textHash": "fnv1a64:66b0d8285fd2eff7",
+  "jsonHash": "fnv1a64:2ce3ec51fec6d81a",
+  "findings": []
+}

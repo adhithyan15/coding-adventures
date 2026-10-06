@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:ecf89ac3e21cacd0",
+  "lessonIds": [
+    "AR-C220-bitaqa",
+    "AR-C220-qard",
+    "AR-C220-bidaa",
+    "AR-C220-hisab",
+    "AR-C220-jazzar"
+  ],
+  "tex": "arabic/book/chapters/ch220-card-loan-goods-account-butcher.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C160-qasd",
+  "pathSegment": "FA-PATH-160-CHERA160",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-160-CHERA160",
+      "order": 2
+    }
+  ]
+}

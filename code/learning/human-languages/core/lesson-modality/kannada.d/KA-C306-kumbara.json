@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C306-kumbara",
+    "language": "kannada",
+    "chapter": 306,
+    "sequence": 14780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7797e839a19ec4b1"
+  },
+  "findings": []
+}

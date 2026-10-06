@@ -1,0 +1,11 @@
+{
+  "id": "AR-C208-mana",
+  "pathSegment": "AR-PATH-208-SABAB208",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-208-SABAB208",
+      "order": 0
+    }
+  ]
+}

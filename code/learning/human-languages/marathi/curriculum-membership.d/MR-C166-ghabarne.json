@@ -1,0 +1,11 @@
+{
+  "id": "MR-C166-ghabarne",
+  "pathSegment": "MR-PATH-166-ACT166",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-166-ACT166",
+      "order": 2
+    }
+  ]
+}

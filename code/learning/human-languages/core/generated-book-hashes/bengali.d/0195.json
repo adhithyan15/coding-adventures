@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:eb42dd8a22e6a5ba",
+  "lessonIds": [
+    "BN-C195-jket",
+    "BN-C195-renkot",
+    "BN-C195-belt",
+    "BN-C195-botam",
+    "BN-C195-dul"
+  ],
+  "tex": "bengali/book/chapters/ch195-jacket-raincoat-belt-button-earring.tex"
+}

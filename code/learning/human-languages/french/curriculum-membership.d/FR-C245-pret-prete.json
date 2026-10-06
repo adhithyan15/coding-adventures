@@ -1,0 +1,11 @@
+{
+  "id": "FR-C245-pret-prete",
+  "pathSegment": "FR-PATH-245-QUAL245",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-245-QUAL245",
+      "order": 3
+    }
+  ]
+}

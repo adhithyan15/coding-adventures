@@ -1,0 +1,11 @@
+{
+  "id": "UR-C179-dai",
+  "pathSegment": "UR-PATH-179-KAM179",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-179-KAM179",
+      "order": 0
+    }
+  ]
+}

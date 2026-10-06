@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:717a2622a63b590b",
+  "lessonIds": [
+    "FR-C182-corriger",
+    "FR-C182-diriger",
+    "FR-C182-detruire",
+    "FR-C182-exagerer",
+    "FR-C182-feter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch182.txt",
+  "json": "french/narration/ch182.json",
+  "textHash": "fnv1a64:06edae3c5cdca558",
+  "jsonHash": "fnv1a64:41aa601be5d9a097",
+  "findings": []
+}

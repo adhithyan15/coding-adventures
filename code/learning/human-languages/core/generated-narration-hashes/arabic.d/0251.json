@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:794ce93b6b33413a",
+  "lessonIds": [
+    "AR-C251-nadil",
+    "AR-C251-mudir",
+    "AR-C251-muwazzaf",
+    "AR-C251-zamil",
+    "AR-C251-sharika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch251.txt",
+  "json": "arabic/narration/ch251.json",
+  "textHash": "fnv1a64:7d4f857e5eca1d63",
+  "jsonHash": "fnv1a64:45bd0cef5a464e5a",
+  "findings": []
+}

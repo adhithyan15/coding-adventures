@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Likewise, Except, Fortunately, Unfortunately, Somehow",
+  "label": "ch:ml-likewise-except-fortunately-unfortunately-somehow",
+  "canDo": "I can say likewise, except, fortunately, unfortunately and somehow.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ML-C201-ennaneyenkilum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say likewise, except, fortunately, unfortunately and somehow.",
+    "assesses": [
+      "ML-LEX-C201-KARANAM201-03",
+      "ML-LEX-C201-KARANAM201-04",
+      "ML-LEX-C201-KARANAM201-05"
+    ]
+  }
+}

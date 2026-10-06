@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-162-PAS162",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "LA-EXT-162-PAS162"
+  ],
+  "after": []
+}

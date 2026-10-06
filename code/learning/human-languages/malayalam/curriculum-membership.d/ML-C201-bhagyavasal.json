@@ -1,0 +1,11 @@
+{
+  "id": "ML-C201-bhagyavasal",
+  "pathSegment": "ML-PATH-201-KARANAM201",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-201-KARANAM201",
+      "order": 2
+    }
+  ]
+}

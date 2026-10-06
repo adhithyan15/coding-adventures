@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Slippers, Scarf, Necklace, Jackal, Bat",
+  "label": "ch:bn-slippers-scarf-necklace-jackal-bat",
+  "canDo": "I can say slippers, a scarf, a necklace, a jackal and a bat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C120-badur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: I can say slippers, a scarf, a necklace, a jackal and a bat.",
+    "assesses": [
+      "BN-LEX-C120-THINGS120-03",
+      "BN-LEX-C120-THINGS120-04",
+      "BN-LEX-C120-THINGS120-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:7fe4b2dba767784c",
+  "lessonIds": [
+    "FR-C229-eclair",
+    "FR-C229-tonnerre",
+    "FR-C229-climat",
+    "FR-C229-environnement",
+    "FR-C229-pollution"
+  ],
+  "tex": "french/book/chapters/ch229-lightning-thunder-climate-environment-pollution.tex"
+}

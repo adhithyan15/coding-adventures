@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R286-second-pass-words-from-chapters-283-286",
+    "language": "persian",
+    "chapter": 286,
+    "sequence": 14840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd018b321d7d4400"
+  },
+  "findings": []
+}

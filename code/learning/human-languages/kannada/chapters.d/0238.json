@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "To type, To get lost, To agree, To refuse, To earn",
+  "label": "ch:ka-to-type-to-get-lost-to-agree-to-refuse-to-earn",
+  "canDo": "I can say to type, to get lost, to agree, to refuse and to earn.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C238-sampadisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say to type, to get lost, to agree, to refuse and to earn.",
+    "assesses": [
+      "KA-LEX-C238-KRIYE238-03",
+      "KA-LEX-C238-KRIYE238-04",
+      "KA-LEX-C238-KRIYE238-05"
+    ]
+  }
+}

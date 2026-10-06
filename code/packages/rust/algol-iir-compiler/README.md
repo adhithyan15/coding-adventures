@@ -175,8 +175,8 @@ across calls. A captured string still requires assignment before its first
 read, just like a local string.
 
 Direct real literals also use the shared string output path, preserving their
-source spelling and an exact unary `+` or `-` without requiring a runtime `f64`
-formatter. An arithmetic conditional whose leaves are all direct real literals
+source spelling and an exact unary `+` or `-`. An arithmetic conditional whose
+leaves are all direct real literals
 branches to the selected source-spelled string at run time. Exact parentheses
 around a direct signed literal are ignored while preserving that spelling.
 Finite literal-only addition, subtraction, multiplication, and division are
@@ -191,6 +191,40 @@ Integer literals also enter that real evaluator when their magnitude is within
 binary64's exact integer range; larger widenings remain unsupported.
 Labels, branches, loops,
 gotos, calls, dynamic reassignment, and captured globals invalidate that shortcut.
+Direct real-procedure results with zero parameters, only value-mode scalar
+parameters, or a finitely specialised real scalar name formal bound to a proven
+runtime-real actual, and local real scalar variables whose latest straight-line
+assignment is such a result or a bare copy of another
+provenance-backed local call the portable six-significant-digit
+IIR formatter shared with Dartmouth BASIC; its helper
+functions use only typed arithmetic, control flow, calls, conversions, and
+`putchar`, so the same path runs on every standard backend. A runtime procedure
+result may therefore migrate through local real copies and be printed later.
+Conditional statements preserve that runtime provenance only for slots proven
+on every reachable exit. Conditional value expressions likewise preserve it
+when the selector contains no procedure call and every reachable value branch
+is a direct runtime real result or a provenance-backed local. One-sided
+reassignment, selector calls, intervening calls without a subsequent proven
+assignment and loops remain conservative. Unary plus, unary minus, additive
+composition, multiplication, division, and exponentiation whose operands are
+proven runtime-real values or finite static numeric expressions preserve the
+same provenance. The real-valued standard functions `abs`, `sqrt`, `sin`,
+`cos`, `ln`, `exp`, and `arctan` preserve runtime-real provenance for a proven
+runtime-real operand while respecting user-declared overrides. Reads from real
+array elements and real value formals, including formals promoted into the
+existing nested-procedure capture globals, also carry runtime-real provenance
+through assignment and composition. A specialised real name formal also
+retains the proof when its actual is a runtime-real expression. This includes
+assignable real array elements: reads re-evaluate the stored actual while
+writes continue through the existing specialised caller-storage path. Direct
+forwarding into another name formal preserves that original actual and its
+proof. Ordinary real scalars captured through the existing E6 typed-global
+path likewise remain concrete f64 values and retain formatter provenance in
+nested sibling procedures. A real procedure specialised for a proven
+runtime-real scalar name actual also retains formatter provenance on its result;
+the existing finite specialisation supplies the caller expression directly, so
+no runtime thunk ABI is introduced. Broader computed scalar formatting remains
+outside this bounded proof.
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.
@@ -218,11 +252,23 @@ through a graph of supported recurrences. Capped source-order execution also
 handles unconditional cross-assigned dependency cycles when every participating
 write is a supported local scalar assignment. Such a cycle may also contain
 conditional expressions whose selectors use the exact loop control or exact
-ordinary local snapshots unchanged by the body; cycles selected by changing
-values remain conservative. The same stable snapshots may select conditional
-statement branches containing recurrence-cycle writes. Those changing
-dependency recurrences may contain conditional expressions when their selectors
-are the controlled scalar or other exact local snapshots in that graph. The
+ordinary local snapshots, including snapshots that evolve through another
+supported recurrence in the graph, recursively through their own supported
+recurrence, or through an exact mutually recursive selector cycle. The same
+selector recurrence may itself contain a conditional expression selected by
+an exact snapshot in that graph, including a direct self-reference in one of
+the selected leaves. A selector that changes during capped execution may also
+choose among conditional leaves when every leaf retains that direct
+self-reference; a dynamic leaf without it remains conservative. The same exact
+snapshots may select conditional statement branches containing recurrence-cycle
+writes. Those changing selector-cycle assignments may themselves appear in statically selected
+conditional statement branches while still resolving dependencies across the
+whole loop body. A conditional statement selector is also treated as a control
+dependency of writes in its branches, so it may close an exact selector cycle
+whose selected boolean assignments contain their own exact conditional
+expressions. Changing dependency recurrences may contain conditional
+expressions when their selectors are the controlled scalar or other exact
+local snapshots in that graph. The
 recurrence assignment itself may also appear in one or both branches of a
 conditional statement selected by those snapshots; a branch without the
 assignment leaves the dependency unchanged for that pass. The controlled
@@ -231,7 +277,41 @@ recurrences. A dependency may be assigned repeatedly in one body pass; bounded
 execution applies every supported write in source order. The next `while`
 element expression consumes all resulting exact dependency and control
 snapshots, and terminating sibling snapshots remain available after the loop.
-Unknown selectors, unsupported dependency writes, string targets, overflow,
+An acyclic boolean recurrence may use an exact conditional expression to choose
+different boolean values on successive passes and then select recurrence-cycle
+statements or expressions. Such an exact evolving selector may also choose
+between a directly self-recursive boolean leaf and a non-recursive exact leaf;
+a finite chain of distinct exact boolean identity copies may sit between that
+selector recurrence and the partial self-recursive assignment. These include
+bare variables, neutral boolean operations, and even `not` chains. Copy cycles,
+changing expressions, and unknown conditional inputs still fail closed. A
+conditional identity copy may have a dynamic selector when both branches
+preserve the same unique forwarded selector. A boolean projection of the form
+`if selector then true else false` is also an exact selector copy, as is its
+complemented form `if not selector then false else true`. Either literal branch
+may instead be the selector itself, yielding a one-sided guarded projection.
+Literal-only boolean combinations may supply projection constants and neutral
+identity operands. Literal integer predicates, including checked literal
+arithmetic operands, finite binary64 literal predicates, and literal string
+predicates may also supply boolean identity operands. Variable-free literal
+string predicates may select statement or expression branches in bounded
+recurrence bodies, including preserving leaves of conditional dependency or
+selector assignments, bounded controlled-scalar recurrences, conditional value
+expressions and predicates of bounded `while` elements, finite step-loop header
+expressions, and values sequenced across bounded multi-element `for` lists,
+including mixed finite-step and single-value elements in either order and
+finite-step exits that seed following bounded `while` elements when the body
+only reads the controlled variable. That cross-element exit propagation also
+applies to exactly simulated finite binary64 steps. A terminating bounded
+`while` element likewise retains its exact exit snapshot when that shared body
+only reads the control, allowing a following finite-step or single-value
+element to derive its initial value from the exit, including real-controlled
+elements with exactly simulated binary64 progress. A finite-step element may
+also derive its initial value from an earlier finite-step exit under the same
+read-only body rule, including for exactly simulated real controls. Bounded
+`while` elements may likewise chain exact terminating snapshots when the shared
+body only reads the control.
+Unknown selectors, unsupported selector or dependency writes, string targets, overflow,
 non-finite values, and loops that do not reach false within 4,096 evaluations
 fail closed.
 A conditional predicate is also evaluated when its selector is statically

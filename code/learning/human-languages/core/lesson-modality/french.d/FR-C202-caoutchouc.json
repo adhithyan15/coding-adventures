@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C202-caoutchouc",
+    "language": "french",
+    "chapter": 202,
+    "sequence": 11000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dab4a8cfe9614370"
+  },
+  "findings": []
+}

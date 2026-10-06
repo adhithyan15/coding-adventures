@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Shape, Piece, Queue, Procession, Tap",
+  "label": "ch:bn-shape-piece-queue-procession-tap",
+  "canDo": "I can say a shape, a piece, a queue, a procession and a tap.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C170-kol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say a shape, a piece, a queue, a procession and a tap.",
+    "assesses": [
+      "BN-LEX-C170-JINIS170-03",
+      "BN-LEX-C170-JINIS170-04",
+      "BN-LEX-C170-JINIS170-05"
+    ]
+  }
+}

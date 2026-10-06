@@ -1,0 +1,11 @@
+{
+  "id": "BN-C148-selai-kora",
+  "pathSegment": "BN-PATH-148-ACT148",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-148-ACT148",
+      "order": 1
+    }
+  ]
+}

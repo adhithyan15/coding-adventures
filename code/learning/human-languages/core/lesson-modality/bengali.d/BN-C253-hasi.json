@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C253-hasi",
+    "language": "bengali",
+    "chapter": 253,
+    "sequence": 15810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f767afcf611c3c30"
+  },
+  "findings": []
+}

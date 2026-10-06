@@ -1,0 +1,11 @@
+{
+  "id": "IT-C230-cotone",
+  "pathSegment": "IT-PATH-230-COSE230",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-230-COSE230",
+      "order": 2
+    }
+  ]
+}

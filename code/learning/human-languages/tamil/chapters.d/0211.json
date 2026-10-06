@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Pleasant, Friendly, Fool, Pink, Brown",
+  "label": "ch:ta-pleasant-friendly-fool-pink-brown",
+  "canDo": "I can say pleasant, friendly, a fool, pink and brown.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-R211-second-pass-words-from-chapters-207-211",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say pleasant, friendly, a fool, pink and brown.",
+    "assesses": [
+      "TA-LEX-C211-GUNAM211-03",
+      "TA-LEX-C211-GUNAM211-04",
+      "TA-LEX-C211-GUNAM211-05"
+    ]
+  }
+}

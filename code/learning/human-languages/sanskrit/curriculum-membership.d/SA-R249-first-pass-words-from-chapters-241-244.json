@@ -1,0 +1,11 @@
+{
+  "id": "SA-R249-first-pass-words-from-chapters-241-244",
+  "pathSegment": "SA-PATH-249-THG249",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-249-THG249",
+      "order": 5
+    }
+  ]
+}

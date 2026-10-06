@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:e2c6c6301a30e696",
+  "lessonIds": [
+    "UR-C262-jaj",
+    "UR-C262-shagird",
+    "UR-C262-injiniyar",
+    "UR-C262-sainsdan",
+    "UR-C262-adakar"
+  ],
+  "tex": "urdu/book/chapters/ch262-judge-pupil-engineer-scientist-actor.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Accountant, Journalist, Worker, Translator, Interview",
+  "label": "ch:ar-accountant-journalist-worker-translator-interview",
+  "canDo": "I can say an accountant, a journalist, a worker, a translator and an interview.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C189-muqabala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say an accountant, a journalist, a worker, a translator and an interview.",
+    "assesses": [
+      "AR-LEX-C189-AMAL189-03",
+      "AR-LEX-C189-AMAL189-04",
+      "AR-LEX-C189-AMAL189-05"
+    ]
+  }
+}

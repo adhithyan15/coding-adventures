@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C140-gladit",
+    "language": "russian",
+    "chapter": 140,
+    "sequence": 7500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23b8edb20181e124"
+  },
+  "findings": []
+}

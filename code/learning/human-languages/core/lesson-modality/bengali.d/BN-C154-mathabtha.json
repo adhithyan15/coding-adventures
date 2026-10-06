@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C154-mathabtha",
+    "language": "bengali",
+    "chapter": 154,
+    "sequence": 8580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7313cda8916c65c1"
+  },
+  "findings": []
+}

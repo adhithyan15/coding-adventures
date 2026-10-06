@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:31cc6846643a075b",
+  "lessonIds": [
+    "UR-C166-sari",
+    "UR-C166-belt",
+    "UR-C166-bali",
+    "UR-C166-har",
+    "UR-C166-churi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch166.txt",
+  "json": "urdu/narration/ch166.json",
+  "textHash": "fnv1a64:df894381f26d3cf5",
+  "jsonHash": "fnv1a64:7ba99fe02edc09fb",
+  "findings": []
+}

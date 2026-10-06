@@ -1,0 +1,11 @@
+{
+  "id": "JA-R135-hospital-and-bank",
+  "pathSegment": "JA-PATH-135-WRITE135",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "JA-EXT-135-WRITE135",
+      "order": 11
+    }
+  ]
+}

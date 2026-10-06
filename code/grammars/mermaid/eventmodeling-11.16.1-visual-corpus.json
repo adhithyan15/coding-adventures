@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source_corpus": "eventmodeling-11.16.1-corpus.json",
+  "fixtures": [
+    "state-change",
+    "reset-and-namespaces",
+    "multiple-sources",
+    "validated-source-types",
+    "data-blocks",
+    "frame-notes",
+    "given-when-then",
+    "init-theme-colors",
+    "separated-block-opening-and-data-types"
+  ]
+}

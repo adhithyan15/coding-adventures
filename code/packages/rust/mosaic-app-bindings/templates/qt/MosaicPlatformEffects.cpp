@@ -33,7 +33,9 @@
 #endif
 
 #ifdef QT_WIDGETS_LIB
+#include <QDir>
 #include <QFileDialog>
+#include <QStandardPaths>
 #endif
 
 #include "MosaicHost.h"
@@ -287,7 +289,18 @@ class QtFileDialogs final : public MosaicFileDialogs
 public:
     QString chooseFileToOpen(const QStringList &extensions) override
     {
-        return QFileDialog::getOpenFileName(nullptr, QObject::tr("Open"), QString(),
+        // Images only: open in Pictures, as a photo picker should. Anything
+        // else -- and a Pictures folder this system does not have -- keeps
+        // Qt's default start (an empty directory).
+        QString start;
+        if (mosaicOnlyImages(extensions)) {
+            const QString pictures =
+                QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+            if (!pictures.isEmpty() && QDir(pictures).exists()) {
+                start = pictures;
+            }
+        }
+        return QFileDialog::getOpenFileName(nullptr, QObject::tr("Open"), start,
                                             filterFor(extensions));
     }
 
@@ -300,6 +313,26 @@ public:
 #endif
 
 } // namespace
+
+bool mosaicOnlyImages(const QStringList &extensions)
+{
+    if (extensions.isEmpty()) {
+        return false;
+    }
+    for (const QString &extension : extensions) {
+        bool image = false;
+        for (const auto &row : mimeExtensions()) {
+            if (row.first.startsWith(QStringLiteral("image/")) && row.second.contains(extension)) {
+                image = true;
+                break;
+            }
+        }
+        if (!image) {
+            return false;
+        }
+    }
+    return true;
+}
 
 QSet<QString> mosaicStandardEffectKinds()
 {
@@ -361,13 +394,74 @@ QSet<QString> mosaicExecutableExtensions()
         QStringLiteral("desktop"), QStringLiteral("sh"), QStringLiteral("run"),
         QStringLiteral("appimage"), QStringLiteral("deb"), QStringLiteral("rpm"),
         QStringLiteral("flatpakref"),
+        // Documents that run code when opened: web pages and SVG (their script
+        // runs from the local file), saved web archives and shortcuts, and Office
+        // files that carry macros.
+        QStringLiteral("html"), QStringLiteral("htm"), QStringLiteral("xhtml"), QStringLiteral("xht"),
+        QStringLiteral("shtml"), QStringLiteral("svg"), QStringLiteral("svgz"), QStringLiteral("mht"),
+        QStringLiteral("mhtml"), QStringLiteral("website"), QStringLiteral("docm"), QStringLiteral("dotm"),
+        QStringLiteral("xlsm"), QStringLiteral("xltm"), QStringLiteral("xlam"), QStringLiteral("pptm"),
+        QStringLiteral("potm"), QStringLiteral("ppam"), QStringLiteral("ppsm"), QStringLiteral("sldm"),
+        QStringLiteral("xlsb"), QStringLiteral("xla"),
+        // Scripts an installed interpreter runs on a double-click.
+        QStringLiteral("py"), QStringLiteral("pyw"), QStringLiteral("pyz"), QStringLiteral("pyzw"),
+        QStringLiteral("pyc"),
+        // Shortcuts that fetch or connect: Excel web queries, SYLK, Remote Desktop.
+        QStringLiteral("iqy"), QStringLiteral("slk"), QStringLiteral("rdp"),
     };
     return extensions;
 }
 
 bool mosaicHasExecutableExtension(const QString &name)
 {
-    return name.contains(QLatin1Char('.')) && mosaicExecutableExtensions().contains(fileExtension(name));
+    if (!name.contains(QLatin1Char('.'))) {
+        return false;
+    }
+    // A non-ASCII extension counts as one: a lookalike letter (Cyrillic `е` in
+    // `ехе`) or a combining mark after `.exe` makes an extension no list can
+    // name but a reader takes for an executable one.
+    const QString raw = name.mid(name.lastIndexOf(QLatin1Char('.')) + 1);
+    for (const QChar unit : raw) {
+        if (unit.unicode() > 0x7F) {
+            return true;
+        }
+    }
+    return mosaicExecutableExtensions().contains(fileExtension(name));
+}
+
+QSet<QString> mosaicReservedDeviceNames()
+{
+    // Windows device names: `CON`, `NUL.txt` or `com1.json` is the console,
+    // the null device or a serial port there, never a file. Refused on every
+    // host, so a name saves the same everywhere. Compared on the part before
+    // the first dot, trailing spaces removed, ASCII letters folded to upper case (only those: a host's own upper-casing differs on `ı`).
+    static const QSet<QString> names{
+        QStringLiteral("CON"), QStringLiteral("PRN"), QStringLiteral("AUX"), QStringLiteral("NUL"), QStringLiteral("CONIN$"),
+        QStringLiteral("CONOUT$"), QStringLiteral("COM0"), QStringLiteral("COM1"), QStringLiteral("COM2"), QStringLiteral("COM3"),
+        QStringLiteral("COM4"), QStringLiteral("COM5"), QStringLiteral("COM6"), QStringLiteral("COM7"), QStringLiteral("COM8"),
+        QStringLiteral("COM9"), QStringLiteral("COM\u00B9"), QStringLiteral("COM\u00B2"), QStringLiteral("COM\u00B3"), QStringLiteral("LPT0"),
+        QStringLiteral("LPT1"), QStringLiteral("LPT2"), QStringLiteral("LPT3"), QStringLiteral("LPT4"), QStringLiteral("LPT5"),
+        QStringLiteral("LPT6"), QStringLiteral("LPT7"), QStringLiteral("LPT8"), QStringLiteral("LPT9"), QStringLiteral("LPT\u00B9"),
+        QStringLiteral("LPT\u00B2"), QStringLiteral("LPT\u00B3"),
+    };
+    return names;
+}
+
+bool mosaicIsReservedDeviceName(const QString &name)
+{
+    const qsizetype dot = name.indexOf(QLatin1Char('.'));
+    QString stem = dot < 0 ? name : name.left(dot);
+    while (stem.endsWith(QLatin1Char(' '))) {
+        stem.chop(1);
+    }
+    // ASCII letters only: every host's own upper-casing differs on some
+    // character (.NET's leaves `ı` alone, the others make it `I`).
+    for (QChar &unit : stem) {
+        if (unit >= QLatin1Char('a') && unit <= QLatin1Char('z')) {
+            unit = QChar(unit.unicode() - 0x20);
+        }
+    }
+    return mosaicReservedDeviceNames().contains(stem);
 }
 
 bool mosaicIsPlainFileName(const QString &name)
@@ -413,7 +507,7 @@ bool mosaicIsPlainFileName(const QString &name)
             return false;
         }
     }
-    return true;
+    return !mosaicIsReservedDeviceName(name);
 }
 
 QVariantMap mosaicRunFilesOpen(const QVariant &payload, MosaicFileDialogs &dialogs)

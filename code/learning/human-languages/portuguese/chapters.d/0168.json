@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Octopus, Lettuce, Spinach, Pumpkin, Pea",
+  "label": "ch:pt-octopus-lettuce-spinach-pumpkin-pea",
+  "canDo": "I can say an octopus, lettuce, spinach, a pumpkin and a pea.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C168-ervilha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say an octopus, lettuce, spinach, a pumpkin and a pea.",
+    "assesses": [
+      "PT-LEX-C168-COISAS168-03",
+      "PT-LEX-C168-COISAS168-04",
+      "PT-LEX-C168-COISAS168-05"
+    ]
+  }
+}

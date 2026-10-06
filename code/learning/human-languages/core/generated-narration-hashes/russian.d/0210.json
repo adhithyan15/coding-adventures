@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:44adbd942d0b03ba",
+  "lessonIds": [
+    "RU-C210-ozhog",
+    "RU-C210-allergiya",
+    "RU-C210-stomatolog",
+    "RU-C210-plastyr",
+    "RU-C210-bint"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch210.txt",
+  "json": "russian/narration/ch210.json",
+  "textHash": "fnv1a64:b594b734a0a4a36b",
+  "jsonHash": "fnv1a64:5ea6c64e9b0bdb7d",
+  "findings": []
+}

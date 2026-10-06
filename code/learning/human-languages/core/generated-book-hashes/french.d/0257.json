@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:46ee941b1aa73320",
+  "lessonIds": [
+    "FR-C257-geographie",
+    "FR-C257-mathematiques",
+    "FR-C257-art",
+    "FR-C257-equipe",
+    "FR-C257-anniversaire",
+    "FR-R257-first-pass-words-from-chapters-251-253",
+    "FR-R257-second-pass-words-from-chapters-254-257"
+  ],
+  "tex": "french/book/chapters/ch257-geography-mathematics-art-team-birthday.tex"
+}

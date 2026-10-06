@@ -1,0 +1,11 @@
+{
+  "id": "TA-C270-puri",
+  "pathSegment": "TA-PATH-270-PORUL270",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-270-PORUL270",
+      "order": 4
+    }
+  ]
+}

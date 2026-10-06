@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "To promise, To allow, To forbid, To protect, To rescue",
+  "label": "ch:it-to-promise-to-allow-to-forbid-to-protect-to-rescue",
+  "canDo": "I can say to promise, to allow, to forbid, to protect and to rescue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C177-salvare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say to promise, to allow, to forbid, to protect and to rescue.",
+    "assesses": [
+      "IT-LEX-C177-VERBI177-03",
+      "IT-LEX-C177-VERBI177-04",
+      "IT-LEX-C177-VERBI177-05"
+    ]
+  }
+}

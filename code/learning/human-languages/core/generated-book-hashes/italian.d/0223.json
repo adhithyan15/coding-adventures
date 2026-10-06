@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:79e3d801f3025722",
+  "lessonIds": [
+    "IT-C223-poesia",
+    "IT-C223-quadro",
+    "IT-C223-scrittore",
+    "IT-C223-pittore",
+    "IT-C223-fotografo"
+  ],
+  "tex": "italian/book/chapters/ch223-poem-painting-writer-painter-photographer.tex"
+}

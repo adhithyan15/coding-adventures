@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:acb61669b486480b",
+  "lessonIds": [
+    "TE-C260-nunupaina",
+    "TE-C260-veccani",
+    "TE-C260-arudaina",
+    "TE-C260-vinta",
+    "TE-C260-dayagala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch260.txt",
+  "json": "telugu/narration/ch260.json",
+  "textHash": "fnv1a64:676122735a13c559",
+  "jsonHash": "fnv1a64:7bf780cebe598509",
+  "findings": []
+}

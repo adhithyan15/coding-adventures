@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Broom, Pillow, Sheet, Quilt, Mat",
+  "label": "ch:bn-broom-pillow-sheet-quilt-mat",
+  "canDo": "I can say a broom, a pillow, a sheet, a quilt and a mat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C108-madur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: I can say a broom, a pillow, a sheet, a quilt and a mat.",
+    "assesses": [
+      "BN-LEX-C108-THINGS108-03",
+      "BN-LEX-C108-THINGS108-04",
+      "BN-LEX-C108-THINGS108-05"
+    ]
+  }
+}

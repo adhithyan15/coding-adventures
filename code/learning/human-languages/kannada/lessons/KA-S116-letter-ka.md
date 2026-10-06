@@ -51,17 +51,24 @@ You already say these, and every one of them has ಕ somewhere inside it:
 - **ಕೆಲಸ ಮಾಡು** *kelasa māḍu* — to work (lit. "work-do")
 - **ನಾಲ್ಕು** *nālku* — four
 
-## Writing: ಕ — copy what you see
+## Writing: ಕ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-116] -->
 
-Put your pen on ಕ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** start at the upper left and go down the left side and round the base
+- **2.** without lifting, climb the right side and close the bowl leftward along the top
+- **3.** lift, then draw the lower bar from left to right
+- **4.** lift, then draw the short link up from the lower bar
+- **5.** lift, then draw the upper bar from left to right
+- **6.** without lifting, curl up into the hook
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 3.** The round bowl comes first, then the lower bar, then the
+short link that rises from it, then the upper bar with its hook, each one
+started fresh.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-ka.gif', 44 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-116] -->

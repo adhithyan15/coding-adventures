@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:769bedbaacf0fe38",
+  "lessonIds": [
+    "KA-C268-vakila",
+    "KA-C268-enjiniyar",
+    "KA-C268-anceyavanu",
+    "KA-C268-kampani",
+    "KA-C268-taragati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch268.txt",
+  "json": "kannada/narration/ch268.json",
+  "textHash": "fnv1a64:8527057b02a71ef0",
+  "jsonHash": "fnv1a64:3c0affac61e334c1",
+  "findings": []
+}

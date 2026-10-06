@@ -1,0 +1,11 @@
+{
+  "id": "TA-C194-pori",
+  "pathSegment": "TA-PATH-194-ACT194",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-194-ACT194",
+      "order": 3
+    }
+  ]
+}

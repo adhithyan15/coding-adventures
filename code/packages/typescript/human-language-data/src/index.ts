@@ -410,7 +410,7 @@ export {
   type LevelBlocker,
 } from "./level-gate.js";
 export { runValidate } from "./cli.js";
-export { runCurriculumGapReport } from "./report-cli.js";
+export { runCurriculumGapReport, buildCurriculumGapReportOutputs } from "./report-cli.js";
 export {
   measureGlossedNotTaught,
   renderGlossedNotTaught,

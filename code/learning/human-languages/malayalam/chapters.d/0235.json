@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "Wrist, Heel, Spine, Liver, Kidney",
+  "label": "ch:ml-wrist-heel-spine-liver-kidney",
+  "canDo": "I can say a wrist, a heel, the spine, the liver and a kidney.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C235-vrkka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say a wrist, a heel, the spine, the liver and a kidney.",
+    "assesses": [
+      "ML-LEX-C235-AROGYAM235-03",
+      "ML-LEX-C235-AROGYAM235-04",
+      "ML-LEX-C235-AROGYAM235-05"
+    ]
+  }
+}

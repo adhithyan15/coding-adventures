@@ -1,0 +1,11 @@
+{
+  "id": "IT-C212-avvicinarsi",
+  "pathSegment": "IT-PATH-212-VERBI212",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-212-VERBI212",
+      "order": 2
+    }
+  ]
+}

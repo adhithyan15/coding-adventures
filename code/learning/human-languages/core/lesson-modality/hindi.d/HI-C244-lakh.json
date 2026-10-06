@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C244-lakh",
+    "language": "hindi",
+    "chapter": 244,
+    "sequence": 13120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d735e047f9646cc3"
+  },
+  "findings": []
+}

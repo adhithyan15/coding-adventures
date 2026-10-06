@@ -1,0 +1,11 @@
+{
+  "id": "ES-C501-conducir",
+  "pathSegment": "ES-PATH-501-CAMINO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-501-CAMINO",
+      "order": 1
+    }
+  ]
+}

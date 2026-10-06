@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:a5e166e744c51bae",
+  "lessonIds": [
+    "TE-C281-raddu-ceyu",
+    "TE-C281-samarpincu",
+    "TE-C281-nokku",
+    "TE-C281-tappipovu",
+    "TE-C281-premincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch281.txt",
+  "json": "telugu/narration/ch281.json",
+  "textHash": "fnv1a64:4e31abc7bdc27060",
+  "jsonHash": "fnv1a64:21c7cbd1a797f4ed",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:1358aa99b97ff70f",
+  "lessonIds": [
+    "TA-C191-kataikkarar",
+    "TA-C191-vatikkaiyalar",
+    "TA-C191-kacalar",
+    "TA-C191-taiyalkarar",
+    "TA-C191-cillarai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch191.txt",
+  "json": "tamil/narration/ch191.json",
+  "textHash": "fnv1a64:626256f565d338a2",
+  "jsonHash": "fnv1a64:36a2cd49768052d8",
+  "findings": []
+}

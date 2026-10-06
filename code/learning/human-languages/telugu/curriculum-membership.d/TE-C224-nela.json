@@ -1,0 +1,11 @@
+{
+  "id": "TE-C224-nela",
+  "pathSegment": "TE-PATH-224-VASTUVU224",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-224-VASTUVU224",
+      "order": 2
+    }
+  ]
+}

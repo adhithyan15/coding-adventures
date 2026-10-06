@@ -1,0 +1,11 @@
+{
+  "id": "ML-C206-sthiramaya",
+  "pathSegment": "ML-PATH-206-GUNAM206",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-206-GUNAM206",
+      "order": 3
+    }
+  ]
+}

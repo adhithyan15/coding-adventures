@@ -1,0 +1,11 @@
+{
+  "id": "IT-C257-metallo",
+  "pathSegment": "IT-PATH-257-COSE257",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-257-COSE257",
+      "order": 0
+    }
+  ]
+}

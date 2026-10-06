@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C250-quercus",
+    "language": "latin",
+    "chapter": 250,
+    "sequence": 13220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9418191920292fb3"
+  },
+  "findings": []
+}

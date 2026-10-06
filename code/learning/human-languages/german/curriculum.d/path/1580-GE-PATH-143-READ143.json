@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-143-READ143",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-143-READ143"
+  ],
+  "after": []
+}

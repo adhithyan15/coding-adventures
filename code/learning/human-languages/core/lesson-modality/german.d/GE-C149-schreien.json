@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C149-schreien",
+    "language": "german",
+    "chapter": 149,
+    "sequence": 6660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2481b5a775d8dbf1"
+  },
+  "findings": []
+}

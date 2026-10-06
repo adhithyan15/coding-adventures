@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Experience, Choice, Decision, Possibility, Reason",
+  "label": "ch:fr-experience-choice-decision-possibility-reason",
+  "canDo": "I can say experience, a choice, a decision, a possibility and a reason.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C225-raison",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say experience, a choice, a decision, a possibility and a reason.",
+    "assesses": [
+      "FR-LEX-C225-CHOSES225-03",
+      "FR-LEX-C225-CHOSES225-04",
+      "FR-LEX-C225-CHOSES225-05"
+    ]
+  }
+}

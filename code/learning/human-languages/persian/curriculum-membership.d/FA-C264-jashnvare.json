@@ -1,0 +1,11 @@
+{
+  "id": "FA-C264-jashnvare",
+  "pathSegment": "FA-PATH-264-ZAMAN264",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-264-ZAMAN264",
+      "order": 1
+    }
+  ]
+}

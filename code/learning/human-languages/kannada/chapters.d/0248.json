@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Decade, Anniversary, Deadline, Auspicious time, One and a half",
+  "label": "ch:ka-decade-anniversary-deadline-auspicious-time-one-and-a-half",
+  "canDo": "I can say a decade, an anniversary, a deadline, an auspicious time and one and a half.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C248-onduvare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say a decade, an anniversary, a deadline, an auspicious time and one and a half.",
+    "assesses": [
+      "KA-LEX-C248-KALA248-03",
+      "KA-LEX-C248-KALA248-04",
+      "KA-LEX-C248-KALA248-05"
+    ]
+  }
+}

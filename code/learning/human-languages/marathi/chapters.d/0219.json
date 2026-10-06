@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Rate, Income, Trade, Shopkeeper, Customer",
+  "label": "ch:mr-rate-income-trade-shopkeeper-customer",
+  "canDo": "I can say a rate, income, trade, a shopkeeper and a customer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C219-grahak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say a rate, income, trade, a shopkeeper and a customer.",
+    "assesses": [
+      "MR-LEX-C219-VASTU219-03",
+      "MR-LEX-C219-VASTU219-04",
+      "MR-LEX-C219-VASTU219-05"
+    ]
+  }
+}

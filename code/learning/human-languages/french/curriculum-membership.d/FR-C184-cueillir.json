@@ -1,0 +1,11 @@
+{
+  "id": "FR-C184-cueillir",
+  "pathSegment": "FR-PATH-184-VERBES184",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-184-VERBES184",
+      "order": 1
+    }
+  ]
+}

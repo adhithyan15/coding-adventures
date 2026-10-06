@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C247-agar",
+    "language": "hindi",
+    "chapter": 247,
+    "sequence": 13290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:533cffef1113b856"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C219-nuntius",
+  "pathSegment": "LA-PATH-219-RES219",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-219-RES219",
+      "order": 1
+    }
+  ]
+}

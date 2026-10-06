@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C205-reserver",
+    "language": "french",
+    "chapter": 205,
+    "sequence": 11310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bed0bcc7b2c797b4"
+  },
+  "findings": []
+}

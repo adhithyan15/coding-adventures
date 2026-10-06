@@ -1,0 +1,11 @@
+{
+  "id": "BN-C165-sondesh",
+  "pathSegment": "BN-PATH-165-JINIS165",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-165-JINIS165",
+      "order": 3
+    }
+  ]
+}

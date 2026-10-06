@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:3788709baf204c6b",
+  "lessonIds": [
+    "RU-C225-krokodil",
+    "RU-C225-zhiraf",
+    "RU-C225-zebra",
+    "RU-C225-verblyud",
+    "RU-C225-olen"
+  ],
+  "tex": "russian/book/chapters/ch225-crocodile-giraffe-zebra-camel-deer.tex"
+}

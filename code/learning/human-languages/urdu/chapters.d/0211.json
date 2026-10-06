@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Secretary, Manager, Class, Servant, Passer-by",
+  "label": "ch:ur-secretary-manager-class-servant-passer-by",
+  "canDo": "I can say a secretary, a manager, a class, a servant and a passer-by.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R211-second-pass-words-from-chapters-209-211",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say a secretary, a manager, a class, a servant and a passer-by.",
+    "assesses": [
+      "UR-LEX-C211-KAM211-03",
+      "UR-LEX-C211-KAM211-04",
+      "UR-LEX-C211-KAM211-05"
+    ]
+  }
+}

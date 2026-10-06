@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C209-roti",
+    "language": "hindi",
+    "chapter": 209,
+    "sequence": 10550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a00127a43071c472"
+  },
+  "findings": []
+}

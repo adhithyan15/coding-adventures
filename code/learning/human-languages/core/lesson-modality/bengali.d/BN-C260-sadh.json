@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C260-sadh",
+    "language": "bengali",
+    "chapter": 260,
+    "sequence": 16320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22c692bec7e65759"
+  },
+  "findings": []
+}

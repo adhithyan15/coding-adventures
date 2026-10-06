@@ -1,0 +1,11 @@
+{
+  "id": "LA-C210-vero",
+  "pathSegment": "LA-PATH-210-CAUSA210",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-210-CAUSA210",
+      "order": 1
+    }
+  ]
+}

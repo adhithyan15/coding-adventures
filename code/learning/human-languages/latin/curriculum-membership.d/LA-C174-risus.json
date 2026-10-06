@@ -1,0 +1,11 @@
+{
+  "id": "LA-C174-risus",
+  "pathSegment": "LA-PATH-174-VALE174",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-174-VALE174",
+      "order": 2
+    }
+  ]
+}

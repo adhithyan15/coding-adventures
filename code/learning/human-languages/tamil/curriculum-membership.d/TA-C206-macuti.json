@@ -1,0 +1,11 @@
+{
+  "id": "TA-C206-macuti",
+  "pathSegment": "TA-PATH-206-IDAM206",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-206-IDAM206",
+      "order": 1
+    }
+  ]
+}

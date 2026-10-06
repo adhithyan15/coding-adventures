@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R211-second-pass-words-from-chapters-207-211",
+    "language": "tamil",
+    "chapter": 211,
+    "sequence": 11020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d279e8aebb0c935d"
+  },
+  "findings": []
+}

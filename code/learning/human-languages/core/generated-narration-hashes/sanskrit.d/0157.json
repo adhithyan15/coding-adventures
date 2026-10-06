@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:bdf03cac832d3f16",
+  "lessonIds": [
+    "SA-C157-kupitah",
+    "SA-C157-bhitah",
+    "SA-C157-cakitah",
+    "SA-C157-srantah",
+    "SA-C157-ksudhitah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch157.txt",
+  "json": "sanskrit/narration/ch157.json",
+  "textHash": "fnv1a64:1e9113dfe831af7c",
+  "jsonHash": "fnv1a64:dd77d441dc924066",
+  "findings": []
+}

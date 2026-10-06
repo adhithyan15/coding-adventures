@@ -1,0 +1,19 @@
+{
+  "chapter": 283,
+  "title": "Pulse, Cramp, Fracture, Operation, Pregnant",
+  "label": "ch:ka-pulse-cramp-fracture-operation-pregnant",
+  "canDo": "I can say the pulse, a cramp, a fracture, an operation and pregnant.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C283-garbhini",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 283: I can say the pulse, a cramp, a fracture, an operation and pregnant.",
+    "assesses": [
+      "KA-LEX-C283-AROGYA283-03",
+      "KA-LEX-C283-AROGYA283-04",
+      "KA-LEX-C283-AROGYA283-05"
+    ]
+  }
+}

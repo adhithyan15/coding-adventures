@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:d3455fe80f2237d4",
+  "lessonIds": [
+    "TE-C217-kalisi",
+    "TE-C217-tappa",
+    "TE-C217-sampradayam",
+    "TE-C217-acaram",
+    "TE-C217-alavatu"
+  ],
+  "tex": "telugu/book/chapters/ch217-together-except-tradition-custom-habit.tex"
+}

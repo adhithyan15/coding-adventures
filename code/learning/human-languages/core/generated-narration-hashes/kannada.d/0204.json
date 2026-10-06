@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:07d751fec6b4fa7b",
+  "lessonIds": [
+    "KA-C204-prakatisu",
+    "KA-C204-jodisu",
+    "KA-C204-ale",
+    "KA-C204-maja-madu",
+    "KA-C204-spardhisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch204.txt",
+  "json": "kannada/narration/ch204.json",
+  "textHash": "fnv1a64:31556c5e3edcd827",
+  "jsonHash": "fnv1a64:4c3cba72fcf085f9",
+  "findings": []
+}

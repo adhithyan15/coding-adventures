@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C202-lyotchik",
+    "language": "russian",
+    "chapter": 202,
+    "sequence": 11880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99b16e2ba3825147"
+  },
+  "findings": []
+}

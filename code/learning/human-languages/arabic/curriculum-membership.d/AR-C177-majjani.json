@@ -1,0 +1,11 @@
+{
+  "id": "AR-C177-majjani",
+  "pathSegment": "AR-PATH-177-SIFA177",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-177-SIFA177",
+      "order": 1
+    }
+  ]
+}

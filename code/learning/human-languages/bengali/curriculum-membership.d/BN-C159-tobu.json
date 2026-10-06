@@ -1,0 +1,11 @@
+{
+  "id": "BN-C159-tobu",
+  "pathSegment": "BN-PATH-159-KARON159",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-159-KARON159",
+      "order": 3
+    }
+  ]
+}

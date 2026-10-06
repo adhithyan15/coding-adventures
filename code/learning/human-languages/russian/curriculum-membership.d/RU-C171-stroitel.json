@@ -1,0 +1,11 @@
+{
+  "id": "RU-C171-stroitel",
+  "pathSegment": "RU-PATH-171-RABOTA171",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-171-RABOTA171",
+      "order": 4
+    }
+  ]
+}

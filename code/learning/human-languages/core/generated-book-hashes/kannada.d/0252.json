@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:04fb2542ff522c68",
+  "lessonIds": [
+    "KA-C252-adrsta",
+    "KA-C252-salahe",
+    "KA-C252-sumaru",
+    "KA-C252-jotege",
+    "KA-C252-ottige",
+    "KA-R252-first-pass-words-from-chapters-244-247",
+    "KA-R252-second-pass-words-from-chapters-248-252"
+  ],
+  "tex": "kannada/book/chapters/ch252-luck-advice-approximately-along-with-together.tex"
+}

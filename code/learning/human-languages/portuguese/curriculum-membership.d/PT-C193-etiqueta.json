@@ -1,0 +1,11 @@
+{
+  "id": "PT-C193-etiqueta",
+  "pathSegment": "PT-PATH-193-COISAS193",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-193-COISAS193",
+      "order": 2
+    }
+  ]
+}

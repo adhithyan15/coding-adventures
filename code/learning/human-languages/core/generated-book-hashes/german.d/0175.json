@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:74b49a3545641f9a",
+  "lessonIds": [
+    "GE-C175-ausfuellen",
+    "GE-C175-ausruhen",
+    "GE-C175-backen",
+    "GE-C175-baden",
+    "GE-C175-bauen"
+  ],
+  "tex": "german/book/chapters/ch175-to-fill-in-to-rest-to-bake-to-bathe-to-build.tex"
+}

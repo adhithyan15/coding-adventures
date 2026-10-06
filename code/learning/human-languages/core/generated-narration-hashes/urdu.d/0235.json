@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:a239229b64474309",
+  "lessonIds": [
+    "UR-C235-kira",
+    "UR-C235-jugnu",
+    "UR-C235-khatmal",
+    "UR-C235-kekra",
+    "UR-C235-jhinga"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch235.txt",
+  "json": "urdu/narration/ch235.json",
+  "textHash": "fnv1a64:272b7173d5f2f8a0",
+  "jsonHash": "fnv1a64:51382bb7de323d12",
+  "findings": []
+}

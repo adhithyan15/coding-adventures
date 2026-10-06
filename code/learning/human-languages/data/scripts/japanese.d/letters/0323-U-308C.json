@@ -1,0 +1,22 @@
+{
+  "glyph": "れ",
+  "sound": "re",
+  "role": "hiragana",
+  "components": [
+    "a long left vertical",
+    "a short bar crossing the vertical and turning sharply into a diagonal down to the left",
+    "an arch that rises to the right and drops into a flick out to the right"
+  ],
+  "strokeOrder": [
+    "draw the long vertical from top to bottom",
+    "lift, draw the short bar from the left across the vertical, turn sharply and cut the diagonal down and left, climb back up it, rise right over the arch, come down its right side and flick up to the right"
+  ],
+  "strokeOrderNote": "KanjiVG's 0308c file records れ as two stroke paths in this order and direction: the vertical, then the bar, zigzag, arch and flick in one run; so there is one pen lift.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0308c.svg",
+    "citation": "KanjiVG, kanji/0308c.svg, hiragana れ (U+308C HIRAGANA LETTER RE), two stroke paths kvg:0308c-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the vertical drawn top to bottom; s2 starts at the left of the short bar, runs right across the vertical, turns sharply down and left, returns up and right without lifting, rises over the arch, descends its right side and ends in a flick to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs; where the print glyph has no separate ink for the climb back from the diagonal, the path retraces the diagonal."
+  },
+  "notes": "The re of これ, this, and それ, that. Its first stroke and zigzag are the ones わ and ね begin with; わ ends in a broad belly, ね in a small loop, and れ in a flick out to the right."
+}

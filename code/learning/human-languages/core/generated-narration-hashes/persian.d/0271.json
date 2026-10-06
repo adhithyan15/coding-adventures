@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:8fcc7073690e09a2",
+  "lessonIds": [
+    "FA-C271-azad",
+    "FA-C271-khareji",
+    "FA-C271-mahalli",
+    "FA-C271-rasmi",
+    "FA-C271-khosusi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch271.txt",
+  "json": "persian/narration/ch271.json",
+  "textHash": "fnv1a64:5e782426541e3857",
+  "jsonHash": "fnv1a64:8f8dfe0e9a57b62a",
+  "findings": []
+}

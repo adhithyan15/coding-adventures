@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C231-camali",
+    "language": "tamil",
+    "chapter": 231,
+    "sequence": 12520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4db972d4d5b9a8b7"
+  },
+  "findings": []
+}

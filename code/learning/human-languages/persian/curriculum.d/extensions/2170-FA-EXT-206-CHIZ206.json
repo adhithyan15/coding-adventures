@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-206-CHIZ206",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a document, a birth certificate, a file, a printer and an address.",
+  "prerequisites": []
+}

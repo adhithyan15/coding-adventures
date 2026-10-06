@@ -1,0 +1,11 @@
+{
+  "id": "ML-C285-culinna",
+  "pathSegment": "ML-PATH-285-GUNAM285",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-285-GUNAM285",
+      "order": 1
+    }
+  ]
+}

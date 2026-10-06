@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:1858ccdc5724219f",
+  "lessonIds": [
+    "IT-C244-proprio",
+    "IT-C244-quasi",
+    "IT-C244-circa",
+    "IT-C244-soltanto",
+    "IT-C244-insieme"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch244.txt",
+  "json": "italian/narration/ch244.json",
+  "textHash": "fnv1a64:6755086411106d07",
+  "jsonHash": "fnv1a64:b917be0b2585aa1f",
+  "findings": []
+}

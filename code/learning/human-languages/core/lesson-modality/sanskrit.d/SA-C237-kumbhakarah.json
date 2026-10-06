@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C237-kumbhakarah",
+    "language": "sanskrit",
+    "chapter": 237,
+    "sequence": 14020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb0b4f7a6347c371"
+  },
+  "findings": []
+}

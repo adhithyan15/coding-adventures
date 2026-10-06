@@ -1,0 +1,11 @@
+{
+  "id": "FR-C206-gouter",
+  "pathSegment": "FR-PATH-206-VERBES206",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-206-VERBES206",
+      "order": 2
+    }
+  ]
+}

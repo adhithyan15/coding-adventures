@@ -36,6 +36,9 @@ on:
       - "code/sites/blog/**"
       - "code/packages/typescript/forme-types/**"
       - "code/packages/typescript/forme-cli/**"
+      - "code/packages/typescript/forme-deploy-runner-core/**"
+      - "code/packages/typescript/forme-deploy-runner-fs-adapter/**"
+      - "code/packages/typescript/forme-deploy-runner-github-pages-adapter/**"
       - "code/packages/typescript/forme-errors/**"
       - "code/packages/typescript/forme-capability/**"
       - "code/packages/typescript/forme-stage/**"
@@ -70,6 +73,9 @@ on:
       - "code/sites/blog/**"
       - "code/packages/typescript/forme-types/**"
       - "code/packages/typescript/forme-cli/**"
+      - "code/packages/typescript/forme-deploy-runner-core/**"
+      - "code/packages/typescript/forme-deploy-runner-fs-adapter/**"
+      - "code/packages/typescript/forme-deploy-runner-github-pages-adapter/**"
       - "code/packages/typescript/forme-errors/**"
       - "code/packages/typescript/forme-capability/**"
       - "code/packages/typescript/forme-stage/**"
@@ -101,19 +107,29 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: forme-pages-${{ github.event.pull_request.number || 'publish' }}
+  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: "20"
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: code/sites/blog/package-lock.json
 
       - name: Test clean-checkout blog build
         run: |
@@ -132,11 +148,71 @@ jobs:
           test -n "$(find code/sites/blog/dist/blog/assets -type f -name 'forme-pipeline.*.svg' -print -quit)"
           ! grep -R "forme-asset:" code/sites/blog/dist/blog
 
-      - name: Deploy to GitHub Pages (blog/ on gh-pages, served at <user>.github.io/<repo>/blog/)
+      - name: Prove write-free target plan
+        working-directory: code/sites/blog
+        env:
+          # The dry run only reads repository metadata, but authenticating its
+          # GitHub API requests avoids the shared unauthenticated rate limit.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run deploy:dry-run
+
+      - name: Prove filesystem rollback contract
+        working-directory: code/packages/typescript/forme-deploy-runner-fs-adapter
+        run: npm test
+
+      - name: Checksum exact deploy input
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
+        working-directory: code/sites/blog/.forme/deploy-input
+        run: find . -type f ! -name CHECKSUMS.sha256 -print0 | sort -z | xargs -0 sha256sum > CHECKSUMS.sha256
+
+      - name: Upload exact deploy input
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: code/sites/blog/dist/blog
-          destination_dir: blog
-          keep_files: true
+          name: forme-blog-deploy-input
+          path: code/sites/blog/.forme/deploy-input
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "22"
+
+      - name: Bootstrap reviewed local dependency graph
+        working-directory: code/sites/blog
+        run: npm run bootstrap
+
+      - name: Download exact deploy input
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: forme-blog-deploy-input
+          path: code/sites/blog/.forme/deploy-input
+
+      - name: Verify deploy input checksum
+        working-directory: code/sites/blog/.forme/deploy-input
+        run: sha256sum -c CHECKSUMS.sha256
+
+      - name: Publish through Forme
+        working-directory: code/sites/blog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run deploy
+
+      - name: Assert bounded live availability
+        run: |
+          curl --fail --location --retry 6 --retry-delay 10 --max-time 20 https://adhithyan15.github.io/coding-adventures/blog/ -o /tmp/forme-blog.html
+          grep -q '<title>Coding Adventures</title>' /tmp/forme-blog.html

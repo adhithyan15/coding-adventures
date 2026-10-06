@@ -1,0 +1,11 @@
+{
+  "id": "TA-C188-veppamaram",
+  "pathSegment": "TA-PATH-188-PORUL188",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-188-PORUL188",
+      "order": 3
+    }
+  ]
+}

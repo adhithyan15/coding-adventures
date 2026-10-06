@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C207-asvadayati",
+    "language": "sanskrit",
+    "chapter": 207,
+    "sequence": 11850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c072e7a57fdfbab"
+  },
+  "findings": []
+}

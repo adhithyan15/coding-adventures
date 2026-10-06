@@ -6,7 +6,7 @@ The user-authored description of *what to build* — `PipelineConfig` types, val
 
 | Group       | Exports                                                                                         |
 | ----------- | ----------------------------------------------------------------------------------------------- |
-| Types       | `PipelineConfig`, `PipelineSettings`, `StageInstanceSpec`, `StageRef`, `EdgeSpec`, `OutputSpec` |
+| Types       | `PipelineConfig`, `PipelineSettings`, `PluginRuntimeConfig`, `StageInstanceSpec`, `StageRef`, `EdgeSpec`, `OutputSpec` |
 | Predicates  | `isStageRef(value)`                                                                             |
 | Validation  | `validateConfig(config)` → `ResolvedPipelineConfig` (or throws `ConfigError`)                    |
 | Errors      | `ConfigError`, `ConfigErrorEntry`, `ConfigErrorCode`, `CONFIG_ERROR_CODES`                       |
@@ -29,6 +29,10 @@ The user-authored description of *what to build* — `PipelineConfig` types, val
 11. **`OUTPUT_PORT_UNSUPPORTED`** — `from.port` is set; stages currently expose one output.
 12. **`MULTIPLE_OUTPUTS_UNNAMED`** — pipeline has 2+ terminal stages but doesn't name them in `outputs`.
 13. **`MALFORMED`** — top-level fields or settings have wrong types.
+
+`settings.pluginRuntimes` optionally maps `deno`, `bun`, or `python` to an
+absolute `{ executable, root }` pair. Both paths are validated before the
+native sandbox can resolve a referenced plugin stage.
 
 The validator collects ALL violations rather than stopping at the first. `ConfigError.errors` carries the full list; `ConfigError.message` is a multi-line summary.
 

@@ -7,7 +7,7 @@ chapter: 469
 type: word
 headword: imprimir
 gloss: to print — the verb el impreso was the participle of, handed back with its own lesson
-concept_tag: ES-ASK-IMPRIMIR
+concept_tag: ES-VERB-IMPRIMIR
 prerequisites: [ES-C468-sintesis-abrigo, ES-C406-impreso, ES-C333-prisa]
 sounds: [stress-final, r-tap]
 roots: [impressus-latin]

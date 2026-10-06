@@ -1,0 +1,11 @@
+{
+  "id": "TA-C212-cuyanalamana",
+  "pathSegment": "TA-PATH-212-GUNAM212",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-212-GUNAM212",
+      "order": 1
+    }
+  ]
+}

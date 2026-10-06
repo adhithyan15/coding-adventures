@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "Nowhere, From all sides, Here and there, Upwards, Downwards",
+  "label": "ch:la-nowhere-from-all-sides-here-and-there-upwards-downwards",
+  "canDo": "I can say nowhere, from all sides, here and there, upwards and downwards.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "LA-C264-deorsum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can say nowhere, from all sides, here and there, upwards and downwards.",
+    "assesses": [
+      "LA-LEX-C264-LOC264-03",
+      "LA-LEX-C264-LOC264-04",
+      "LA-LEX-C264-LOC264-05"
+    ]
+  }
+}

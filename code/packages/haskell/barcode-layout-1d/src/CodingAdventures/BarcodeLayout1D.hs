@@ -16,6 +16,9 @@ module CodingAdventures.BarcodeLayout1D
   , RunsFromBinaryPatternOptions (..)
   , RunsFromWidthPatternOptions (..)
   , Barcode1DError (..)
+  , Barcode1DV1Error (..)
+  , Barcode1DV1RenderConfig (..)
+  , Barcode1DV1Options (..)
   , defaultBarcode1DRenderConfig
   , defaultPaintBarcode1DOptions
   , defaultBinaryPatternOptions
@@ -26,10 +29,17 @@ module CodingAdventures.BarcodeLayout1D
   , runsFromWidthPattern
   , layoutBarcode1D
   , drawBarcode1D
+  , runsFromBinaryPatternV1
+  , runsFromWidthPatternV1
+  , computeBarcode1DLayoutV1
+  , projectBarcode1DSceneV1
+  , barcode1DErrorId
+  , barcode1DV1ErrorId
   , version
   ) where
 
 import Data.Aeson (Value, toJSON)
+import Data.Char (ord)
 import Data.List (find, group)
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
@@ -152,7 +162,56 @@ data Barcode1DError
   | SymbolWidthMismatch Int Int
   | InvalidRenderConfiguration String Double
   | HumanReadableTextUnsupported
+  | PatternTooLong
+  | InvalidMarkerConfiguration
+  | TooManyRuns
+  | ContentTooWide
+  | InvalidSourceAttribution
+  | TooManySymbols
+  | MetadataTooLarge
   deriving (Eq, Show)
+
+-- | Payload-blind, closed failures returned by the portable-v1 API.
+--
+-- The historical API above keeps its diagnostic payloads. Portable callers
+-- receive only one of the contract's stable error identities, so unsupported
+-- tokens, indices, and numeric values cannot leak through the error surface.
+data Barcode1DV1Error
+  = V1PatternTooLong
+  | V1EmptyPattern
+  | V1InvalidBinaryToken
+  | V1InvalidWidthToken
+  | V1InvalidMarkerConfiguration
+  | V1InvalidModuleCount
+  | V1InvalidSourceAttribution
+  | V1TooManyRuns
+  | V1ContentTooWide
+  | V1NonAlternatingRuns
+  | V1InvalidQuietZone
+  | V1TooManySymbols
+  | V1SymbolWidthMismatch
+  | V1InvalidRenderConfig
+  | V1MetadataTooLarge
+  | V1HumanReadableTextUnsupported
+  deriving (Eq, Show)
+
+-- | Integer-only configuration for the language-neutral v1 projection.
+data Barcode1DV1RenderConfig = Barcode1DV1RenderConfig
+  { v1ModuleWidth :: Int
+  , v1BarHeight :: Int
+  , v1Foreground :: String
+  , v1Background :: String
+  , v1IncludeHumanReadableText :: Bool
+  } deriving (Eq, Show)
+
+-- | Closed options for the language-neutral v1 projection.
+data Barcode1DV1Options = Barcode1DV1Options
+  { v1RenderConfig :: Barcode1DV1RenderConfig
+  , v1Label :: String
+  , v1Metadata :: Map String String
+  , v1HumanReadableText :: Maybe String
+  , v1Symbols :: Maybe [Barcode1DSymbolDescriptor]
+  } deriving (Eq, Show)
 
 -- | Shared rendering defaults from the barcode contract.
 defaultBarcode1DRenderConfig :: Barcode1DRenderConfig
@@ -476,3 +535,309 @@ standardMetadata options layout sceneWidth sceneHeight = Map.fromList
   , ("sceneHeightPx", toJSON sceneHeight)
   , ("symbolCount", toJSON (length (layoutSymbolLayouts layout)))
   ]
+
+-- Strict language-neutral v1 adapter.  The historical functions above retain
+-- their established types and behaviour for the symbology packages.
+
+maxPatternScalars, maxRuns, maxContentModules, maxQuietZoneModules :: Int
+maxPatternScalars = 65567
+maxRuns = 40979
+maxContentModules = 65567
+maxQuietZoneModules = 4096
+
+maxSymbols, maxLabelScalars, maxMetadataEntries, maxMetadataKeyScalars :: Int
+maxSymbols = 40979
+maxLabelScalars = 4096
+maxMetadataEntries = 64
+maxMetadataKeyScalars = 128
+
+maxMetadataValueScalars, maxMetadataUtf8Bytes, maxModuleWidth :: Int
+maxMetadataValueScalars = 4096
+maxMetadataUtf8Bytes = 65536
+maxModuleWidth = 8192
+
+maxBarHeight, maxColorScalars :: Int
+maxBarHeight = 8192
+maxColorScalars = 128
+
+barcode1DErrorId :: Barcode1DError -> String
+barcode1DErrorId err = case err of
+  PatternTooLong -> "pattern-too-long"
+  EmptyPattern _ -> "empty-pattern"
+  UnsupportedBinaryToken _ -> "invalid-binary-token"
+  UnsupportedWidthToken _ -> "invalid-width-token"
+  InvalidMarkerConfiguration -> "invalid-marker-configuration"
+  InvalidModuleCount _ _ -> "invalid-module-count"
+  InvalidSourceAttribution -> "invalid-source-attribution"
+  TooManyRuns -> "too-many-runs"
+  ContentTooWide -> "content-too-wide"
+  NonAlternatingRuns _ -> "non-alternating-runs"
+  InvalidQuietZoneModules _ -> "invalid-quiet-zone"
+  TooManySymbols -> "too-many-symbols"
+  SymbolWidthMismatch _ _ -> "symbol-width-mismatch"
+  InvalidRenderConfiguration _ _ -> "invalid-render-config"
+  MetadataTooLarge -> "metadata-too-large"
+  HumanReadableTextUnsupported -> "human-readable-text-unsupported"
+
+-- | Stable identifier for a closed portable-v1 failure.
+barcode1DV1ErrorId :: Barcode1DV1Error -> String
+barcode1DV1ErrorId err = case err of
+  V1PatternTooLong -> "pattern-too-long"
+  V1EmptyPattern -> "empty-pattern"
+  V1InvalidBinaryToken -> "invalid-binary-token"
+  V1InvalidWidthToken -> "invalid-width-token"
+  V1InvalidMarkerConfiguration -> "invalid-marker-configuration"
+  V1InvalidModuleCount -> "invalid-module-count"
+  V1InvalidSourceAttribution -> "invalid-source-attribution"
+  V1TooManyRuns -> "too-many-runs"
+  V1ContentTooWide -> "content-too-wide"
+  V1NonAlternatingRuns -> "non-alternating-runs"
+  V1InvalidQuietZone -> "invalid-quiet-zone"
+  V1TooManySymbols -> "too-many-symbols"
+  V1SymbolWidthMismatch -> "symbol-width-mismatch"
+  V1InvalidRenderConfig -> "invalid-render-config"
+  V1MetadataTooLarge -> "metadata-too-large"
+  V1HumanReadableTextUnsupported -> "human-readable-text-unsupported"
+
+validScalar :: Char -> Bool
+validScalar value = let point = ord value in point < 0xd800 || point > 0xdfff
+
+validString :: Int -> String -> Bool
+validString limit value = length value <= limit && all validScalar value
+
+validSource :: String -> Int -> Bool
+validSource label index =
+  validString maxLabelScalars label
+    && toInteger index >= (-2147483648)
+    && toInteger index <= 2147483647
+
+checkedAddContent :: Int -> Int -> Either Barcode1DV1Error Int
+checkedAddContent current addition
+  | addition <= 0 = Left V1InvalidModuleCount
+  | addition > maxContentModules - current = Left V1ContentTooWide
+  | otherwise = Right (current + addition)
+
+runsFromBinaryPatternV1
+  :: String
+  -> RunsFromBinaryPatternOptions
+  -> Either Barcode1DV1Error [Barcode1DRun]
+runsFromBinaryPatternV1 patternText options
+  | length patternText > maxPatternScalars = Left V1PatternTooLong
+  | null patternText = Left V1EmptyPattern
+  | Just _ <- find (`notElem` "01") patternText = Left V1InvalidBinaryToken
+  | not (validSource (binarySourceLabel options) (binarySourceIndex options)) =
+      Left V1InvalidSourceAttribution
+  | otherwise = emitRuns (head patternText) 1 0 [] (tail patternText)
+  where
+    makeRun token modules = Barcode1DRun
+      { runColor = if token == '1' then Bar else Space
+      , runModules = modules
+      , runSourceLabel = binarySourceLabel options
+      , runSourceIndex = binarySourceIndex options
+      , runRole = binaryRole options
+      }
+    emitRuns token modules emitted result []
+      | emitted >= maxRuns = Left V1TooManyRuns
+      | otherwise = Right (reverse (makeRun token modules : result))
+    emitRuns token modules emitted result (next : rest)
+      | next == token = emitRuns token (modules + 1) emitted result rest
+      | emitted >= maxRuns = Left V1TooManyRuns
+      | otherwise = emitRuns next 1 (emitted + 1)
+          (makeRun token modules : result) rest
+
+runsFromWidthPatternV1
+  :: String
+  -> RunsFromWidthPatternOptions
+  -> Either Barcode1DV1Error [Barcode1DRun]
+runsFromWidthPatternV1 patternText options
+  | length patternText > maxPatternScalars = Left V1PatternTooLong
+  | null patternText = Left V1EmptyPattern
+  | not (validScalar (widthNarrowMarker options))
+      || not (validScalar (widthWideMarker options))
+      || widthNarrowMarker options == widthWideMarker options =
+          Left V1InvalidMarkerConfiguration
+  | Just _ <- find unsupported patternText = Left V1InvalidWidthToken
+  | not (validSource (widthSourceLabel options) (widthSourceIndex options)) =
+      Left V1InvalidSourceAttribution
+  | widthNarrowModules options <= 0 =
+      Left V1InvalidModuleCount
+  | widthWideModules options <= 0 =
+      Left V1InvalidModuleCount
+  | length patternText > maxRuns = Left V1TooManyRuns
+  | otherwise = go 0 0 [] patternText
+  where
+    unsupported token =
+      token /= widthNarrowMarker options && token /= widthWideMarker options
+    go _ _ result [] = Right (reverse result)
+    go index content result (token : rest) = do
+      let modules = if token == widthNarrowMarker options
+            then widthNarrowModules options else widthWideModules options
+      next <- checkedAddContent content modules
+      let run = Barcode1DRun
+            { runColor = colorAt index (widthStartingColor options)
+            , runModules = modules
+            , runSourceLabel = widthSourceLabel options
+            , runSourceIndex = widthSourceIndex options
+            , runRole = widthRole options
+            }
+      go (index + 1) next (run : result) rest
+
+computeBarcode1DLayoutV1
+  :: [Barcode1DRun]
+  -> Int
+  -> Maybe [Barcode1DSymbolDescriptor]
+  -> Either Barcode1DV1Error Barcode1DLayout
+computeBarcode1DLayoutV1 runs quiet descriptors = do
+  content <- validateV1Runs runs
+  if quiet < 1 || quiet > maxQuietZoneModules
+    then Left V1InvalidQuietZone
+    else do
+      layouts <- case descriptors of
+        Just values -> explicitV1Layouts values content
+        Nothing -> inferV1Layouts runs
+      Right Barcode1DLayout
+        { layoutLeftQuietZoneModules = quiet
+        , layoutRightQuietZoneModules = quiet
+        , layoutContentModules = content
+        , layoutTotalModules = quiet + content + quiet
+        , layoutSymbolLayouts = layouts
+        }
+
+validateV1Runs :: [Barcode1DRun] -> Either Barcode1DV1Error Int
+validateV1Runs runs
+  | length runs > maxRuns = Left V1TooManyRuns
+  | otherwise = go Nothing 0 runs
+  where
+    go _ content [] = Right content
+    go previous content (run : rest)
+      | runModules run <= 0 =
+          Left V1InvalidModuleCount
+      | not (validSource (runSourceLabel run) (runSourceIndex run)) =
+          Left V1InvalidSourceAttribution
+      | runModules run > maxContentModules - content = Left V1ContentTooWide
+      | previous == Just (runColor run) = Left V1NonAlternatingRuns
+      | otherwise = do
+          next <- checkedAddContent content (runModules run)
+          go (Just (runColor run)) next rest
+
+explicitV1Layouts
+  :: [Barcode1DSymbolDescriptor]
+  -> Int
+  -> Either Barcode1DV1Error [Barcode1DSymbolLayout]
+explicitV1Layouts descriptors content
+  | length descriptors > maxSymbols = Left V1TooManySymbols
+  | otherwise = go 0 [] descriptors
+  where
+    go cursor result []
+      | cursor == content = Right (reverse result)
+      | otherwise = Left V1SymbolWidthMismatch
+    go cursor result (descriptor : rest)
+      | descriptorModules descriptor <= 0 =
+          Left V1InvalidModuleCount
+      | not (validSource (descriptorLabel descriptor) (descriptorSourceIndex descriptor)) =
+          Left V1InvalidSourceAttribution
+      | descriptorModules descriptor > maxContentModules - cursor =
+          Left V1SymbolWidthMismatch
+      | otherwise =
+          let next = cursor + descriptorModules descriptor
+              layout = Barcode1DSymbolLayout
+                (descriptorLabel descriptor) cursor next
+                (descriptorSourceIndex descriptor) (descriptorRole descriptor)
+          in go next (layout : result) rest
+
+inferV1Layouts :: [Barcode1DRun] -> Either Barcode1DV1Error [Barcode1DSymbolLayout]
+inferV1Layouts runs =
+  let layouts = inferSymbolLayouts runs
+  in if length layouts > maxSymbols then Left V1TooManySymbols else Right layouts
+
+utf8Length :: String -> Int
+utf8Length = sum . map width
+  where
+    width value
+      | ord value <= 0x7f = 1
+      | ord value <= 0x7ff = 2
+      | ord value <= 0xffff = 3
+      | otherwise = 4
+
+validateV1Metadata :: Map String String -> Either Barcode1DV1Error ()
+validateV1Metadata metadata
+  | Map.size metadata > maxMetadataEntries = Left V1MetadataTooLarge
+  | any invalidEntry (Map.toList metadata) = Left V1MetadataTooLarge
+  | sum (map encodedSize (Map.toList metadata)) > maxMetadataUtf8Bytes =
+      Left V1MetadataTooLarge
+  | otherwise = Right ()
+  where
+    invalidEntry (key, value) =
+      not (validString maxMetadataKeyScalars key)
+        || not (validString maxMetadataValueScalars value)
+    encodedSize (key, value) = utf8Length key + utf8Length value
+
+projectBarcode1DSceneV1
+  :: [Barcode1DRun]
+  -> Int
+  -> Barcode1DV1Options
+  -> Either Barcode1DV1Error PaintScene
+projectBarcode1DSceneV1 runs quiet options
+  | v1IncludeHumanReadableText config || isJust (v1HumanReadableText options) =
+      Left V1HumanReadableTextUnsupported
+  | v1ModuleWidth config < 1 || v1ModuleWidth config > maxModuleWidth =
+      Left V1InvalidRenderConfig
+  | v1BarHeight config < 1 || v1BarHeight config > maxBarHeight =
+      Left V1InvalidRenderConfig
+  | not (validString maxColorScalars (v1Foreground config)) =
+      Left V1InvalidRenderConfig
+  | not (validString maxColorScalars (v1Background config)) =
+      Left V1InvalidRenderConfig
+  | otherwise = do
+      layout <- computeBarcode1DLayoutV1 runs quiet (v1Symbols options)
+      validateV1Metadata (v1Metadata options)
+      if not (validString maxLabelScalars (v1Label options))
+        then Left V1MetadataTooLarge
+        else
+          let sceneWidth = layoutTotalModules layout * v1ModuleWidth config
+              canonical = Map.fromList
+                [ ("label", v1Label options)
+                , ("leftQuietZoneModules", show (layoutLeftQuietZoneModules layout))
+                , ("rightQuietZoneModules", show (layoutRightQuietZoneModules layout))
+                , ("contentModules", show (layoutContentModules layout))
+                , ("totalModules", show (layoutTotalModules layout))
+                , ("moduleWidthPx", show (v1ModuleWidth config))
+                , ("barHeightPx", show (v1BarHeight config))
+                , ("sceneWidthPx", show sceneWidth)
+                , ("sceneHeightPx", show (v1BarHeight config))
+                , ("symbolCount", show (length (layoutSymbolLayouts layout)))
+                ]
+          in Right PaintScene
+            { psWidth = fromIntegral sceneWidth
+            , psHeight = fromIntegral (v1BarHeight config)
+            , psInstructions = v1RenderRuns config quiet runs
+            , psBg = v1Background config
+            , psMeta = Map.map toJSON (Map.union canonical (v1Metadata options))
+            }
+  where
+    config = v1RenderConfig options
+
+v1RenderRuns :: Barcode1DV1RenderConfig -> Int -> [Barcode1DRun] -> [PaintInstruction]
+v1RenderRuns config quiet = reverse . snd . foldl render (quiet, [])
+  where
+    render (cursor, result) run =
+      let next = cursor + runModules run
+          rectangle = PaintRect
+            { prX = fromIntegral (cursor * v1ModuleWidth config)
+            , prY = 0
+            , prW = fromIntegral (runModules run * v1ModuleWidth config)
+            , prH = fromIntegral (v1BarHeight config)
+            , prFill = v1Foreground config
+            , prStroke = ""
+            , prStrokeWidth = 0
+            , prMeta = Map.fromList
+                [ ("sourceLabel", toJSON (runSourceLabel run))
+                , ("sourceIndex", toJSON (show (runSourceIndex run)))
+                , ("role", toJSON (runRoleName (runRole run)))
+                , ("moduleStart", toJSON (show cursor))
+                , ("moduleEnd", toJSON (show next))
+                ]
+            }
+      in if runColor run == Bar
+          then (next, rectangle : result)
+          else (next, result)

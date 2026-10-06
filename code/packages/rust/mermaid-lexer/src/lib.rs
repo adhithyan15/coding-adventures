@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.72.0";
+pub const VERSION: &str = "0.74.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -665,23 +665,32 @@ mod tests {
     #[test]
     fn tokenizes_radar_axes_and_curves_as_complete_statements() {
         let tokens = try_tokenize_mermaid_radar(
-            "radar-beta\naxis speed[\"Speed\"], quality\ncurve product{80, 60}\n",
+            "radar-beta\naxis speed[\"Speed\"], quality\ncurve product{80, 60}, baseline{\n50,\n40\n}\nshowLegend false, ticks 4\ngraticule polygon\n",
         )
         .unwrap();
         let values = tokens.iter().map(|token| token.value.as_str()).collect::<Vec<_>>();
         assert!(values.contains(&"axis speed[\"Speed\"], quality"));
-        assert!(values.contains(&"curve product{80, 60}"));
+        assert!(values.contains(&"curve product{80, 60}, baseline{\n50,\n40\n}"));
+        assert!(values.contains(&"showLegend false, ticks 4"));
+        assert!(values.contains(&"graticule polygon"));
     }
 
     #[test]
     fn tokenizes_eventmodeling_frames_as_complete_statements() {
         let tokens = try_tokenize_mermaid_eventmodeling(
-            "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem ->> 01\n",
+            "eventmodeling\nentity Sales.CartUI\nentity AddItem\ntf 01 ui CartUI\ntf 02 cmd AddItem ->> 01 [[AddItemData]]\ntf 03 evt ItemAdded `text`\"accepted\"\ndata AddItemData `json`{\n  \"quantity\": 2\n}\nnote 02 `md` {\n  Order reviewed\n}\ngwt 02\n  given evt CartCreated\n  when ui CartUI\n  then evt ItemAdded\n",
         )
         .unwrap();
         let values = tokens.iter().map(|token| token.value.as_str()).collect::<Vec<_>>();
+        assert!(values.contains(&"entity Sales.CartUI"));
+        assert!(values.contains(&"entity AddItem"));
         assert!(values.contains(&"tf 01 ui CartUI"));
         assert!(values.contains(&"tf 02 cmd AddItem ->> 01"));
+        assert!(values.contains(&"[[AddItemData]]"));
+        assert!(values.contains(&"tf 03 evt ItemAdded `text`\"accepted\""));
+        assert!(values.contains(&"data AddItemData `json`{\n  \"quantity\": 2\n}"));
+        assert!(values.contains(&"note 02 `md` {\n  Order reviewed\n}"));
+        assert!(values.contains(&"gwt 02\n  given evt CartCreated\n  when ui CartUI\n  then evt ItemAdded"));
     }
 
     #[test]
@@ -705,7 +714,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.72.0");
+        assert_eq!(VERSION, "0.74.0");
     }
 
     #[test]

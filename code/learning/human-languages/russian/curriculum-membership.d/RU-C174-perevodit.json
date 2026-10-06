@@ -1,0 +1,11 @@
+{
+  "id": "RU-C174-perevodit",
+  "pathSegment": "RU-PATH-174-ACT174",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-174-ACT174",
+      "order": 3
+    }
+  ]
+}

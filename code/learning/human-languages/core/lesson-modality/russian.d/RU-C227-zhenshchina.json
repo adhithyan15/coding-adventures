@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C227-zhenshchina",
+    "language": "russian",
+    "chapter": 227,
+    "sequence": 13810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57c2a2e8c236d4fd"
+  },
+  "findings": []
+}

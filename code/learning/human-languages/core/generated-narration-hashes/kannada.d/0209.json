@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:c79c8864747e550a",
+  "lessonIds": [
+    "KA-C209-manassu",
+    "KA-C209-nirase",
+    "KA-C209-tamase",
+    "KA-C209-yoga",
+    "KA-C209-dhyana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch209.txt",
+  "json": "kannada/narration/ch209.json",
+  "textHash": "fnv1a64:b3abcbed3ba2e3d6",
+  "jsonHash": "fnv1a64:f6fb00e1767233c4",
+  "findings": []
+}

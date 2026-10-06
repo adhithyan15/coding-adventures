@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "Ball, Match, Team, Race, Sport",
+  "label": "ch:ar-ball-match-team-race-sport",
+  "canDo": "I can say a ball, a match, a team, a race and sport.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-R277-second-pass-words-from-chapters-275-277",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say a ball, a match, a team, a race and sport.",
+    "assesses": [
+      "AR-LEX-C277-SHAY277-03",
+      "AR-LEX-C277-SHAY277-04",
+      "AR-LEX-C277-SHAY277-05"
+    ]
+  }
+}

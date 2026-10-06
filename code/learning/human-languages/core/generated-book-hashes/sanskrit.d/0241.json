@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:b65b079a19ea59e0",
+  "lessonIds": [
+    "SA-C241-krte",
+    "SA-C241-yena",
+    "SA-C241-tena",
+    "SA-C241-yat",
+    "SA-C241-parantu"
+  ],
+  "tex": "sanskrit/book/chapters/ch241-for-the-sake-of-by-which-by-that-that-however.tex"
+}

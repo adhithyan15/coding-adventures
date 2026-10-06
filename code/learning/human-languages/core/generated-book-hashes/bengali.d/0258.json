@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:5410e6b9efd199b6",
+  "lessonIds": [
+    "BN-C258-imel",
+    "BN-C258-barta",
+    "BN-C258-pasoyard",
+    "BN-C258-btari",
+    "BN-C258-suich"
+  ],
+  "tex": "bengali/book/chapters/ch258-email-message-password-battery-switch.tex"
+}

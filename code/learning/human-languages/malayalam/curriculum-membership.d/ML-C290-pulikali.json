@@ -1,0 +1,11 @@
+{
+  "id": "ML-C290-pulikali",
+  "pathSegment": "ML-PATH-290-VASTU290",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-290-VASTU290",
+      "order": 2
+    }
+  ]
+}

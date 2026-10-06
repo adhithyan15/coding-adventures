@@ -1,0 +1,11 @@
+{
+  "id": "TA-C198-poy-col",
+  "pathSegment": "TA-PATH-198-ACT198",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-198-ACT198",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Number, App, News, Newspaper, Stamp",
+  "label": "ch:ml-number-app-news-newspaper-stamp",
+  "canDo": "I can say a number, an app, news, a newspaper and a stamp.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C250-srrampu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say a number, an app, news, a newspaper and a stamp.",
+    "assesses": [
+      "ML-LEX-C250-VASTU250-03",
+      "ML-LEX-C250-VASTU250-04",
+      "ML-LEX-C250-VASTU250-05"
+    ]
+  }
+}

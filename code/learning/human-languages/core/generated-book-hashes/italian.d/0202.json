@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:0c9256fdd4b83439",
+  "lessonIds": [
+    "IT-C202-racchetta",
+    "IT-C202-palestra",
+    "IT-C202-corsa",
+    "IT-C202-nuoto",
+    "IT-C202-sci"
+  ],
+  "tex": "italian/book/chapters/ch202-racket-gym-race-swimming-skiing.tex"
+}

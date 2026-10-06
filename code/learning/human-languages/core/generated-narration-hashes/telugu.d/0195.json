@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:208741e7db717845",
+  "lessonIds": [
+    "TE-C195-adhikari",
+    "TE-C195-gumasta",
+    "TE-C195-menejaru",
+    "TE-C195-sahodyogi",
+    "TE-C195-samavesam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch195.txt",
+  "json": "telugu/narration/ch195.json",
+  "textHash": "fnv1a64:b0dd6a2219c26a53",
+  "jsonHash": "fnv1a64:9afafbf244f3ed20",
+  "findings": []
+}

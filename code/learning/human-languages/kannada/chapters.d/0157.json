@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
+  "label": "ch:ka-a-timetable-a-notice-the-rent-an-advert-a-receipt",
+  "canDo": "I can read a timetable, a notice, an advert and a receipt, and act on what they say.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "KA-R157-second-pass-looking-ahead-and-reading-signs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: I can read a timetable, a notice, an advert and a receipt, and act on what they say.",
+    "assesses": [
+      "KA-LEX-C157-ODU157-03",
+      "KA-LEX-C157-ODU157-04",
+      "KA-LEX-C157-ODU157-05"
+    ]
+  }
+}

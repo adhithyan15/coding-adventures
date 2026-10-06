@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C241-unterricht",
+    "language": "german",
+    "chapter": 241,
+    "sequence": 13280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3abf37f7170ee022"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:811413d1391fe7a8",
+  "lessonIds": [
+    "RU-C170-dolzhnost",
+    "RU-C170-zarplata",
+    "RU-C170-nalog",
+    "RU-C170-schyot",
+    "RU-C170-nalichnyye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch170.txt",
+  "json": "russian/narration/ch170.json",
+  "textHash": "fnv1a64:f07ed9f75d37759f",
+  "jsonHash": "fnv1a64:fe143d4375673c33",
+  "findings": []
+}

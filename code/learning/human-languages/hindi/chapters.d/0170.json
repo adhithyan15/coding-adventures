@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "To die, To live, To pass (of time), To lift, To tell (a story)",
+  "label": "ch:hi-to-die-to-live-to-pass-of-time-to-lift-to-tell-a-story",
+  "canDo": "I can say to die, to live, to pass (of time), to lift and to tell (a story).",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C170-sunana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say to die, to live, to pass (of time), to lift and to tell (a story).",
+    "assesses": [
+      "HI-LEX-C170-ACT170-03",
+      "HI-LEX-C170-ACT170-04",
+      "HI-LEX-C170-ACT170-05"
+    ]
+  }
+}

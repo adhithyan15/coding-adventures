@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:dd2ad4de8740f24d",
+  "lessonIds": [
+    "ML-C238-natuvil",
+    "ML-C238-vimanattavalam",
+    "ML-C238-reyilve",
+    "ML-C238-yatrakkaran",
+    "ML-C238-kavala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch238.txt",
+  "json": "malayalam/narration/ch238.json",
+  "textHash": "fnv1a64:408ea4c5aec33c99",
+  "jsonHash": "fnv1a64:f600cb6c6ff3d2e6",
+  "findings": []
+}

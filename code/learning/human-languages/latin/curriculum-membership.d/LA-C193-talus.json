@@ -1,0 +1,11 @@
+{
+  "id": "LA-C193-talus",
+  "pathSegment": "LA-PATH-193-RES193",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-193-RES193",
+      "order": 1
+    }
+  ]
+}

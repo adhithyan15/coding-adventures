@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C229-sarapali",
+    "language": "kannada",
+    "chapter": 229,
+    "sequence": 10760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14cf2f1139a98078"
+  },
+  "findings": []
+}

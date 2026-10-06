@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "Cylinder, Pressure cooker, Blender, Tray, Strainer",
+  "label": "ch:bn-cylinder-pressure-cooker-blender-tray-strainer",
+  "canDo": "I can say a cylinder, a pressure cooker, a blender, a tray and a strainer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C206-chhakni",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say a cylinder, a pressure cooker, a blender, a tray and a strainer.",
+    "assesses": [
+      "BN-LEX-C206-JINIS206-03",
+      "BN-LEX-C206-JINIS206-04",
+      "BN-LEX-C206-JINIS206-05"
+    ]
+  }
+}

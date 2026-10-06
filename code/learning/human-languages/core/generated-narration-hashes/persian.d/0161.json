@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:765c17ebe1b23394",
+  "lessonIds": [
+    "FA-C161-khoshmaze",
+    "FA-C161-khonak",
+    "FA-C161-kham",
+    "FA-C161-tang",
+    "FA-C161-goshad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch161.txt",
+  "json": "persian/narration/ch161.json",
+  "textHash": "fnv1a64:15f7f8b05fbc868a",
+  "jsonHash": "fnv1a64:e72cf9957538893f",
+  "findings": []
+}

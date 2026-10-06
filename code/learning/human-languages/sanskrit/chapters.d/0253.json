@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "Insect, Spider, Scorpion, Lizard, Crocodile",
+  "label": "ch:sa-insect-spider-scorpion-lizard-crocodile",
+  "canDo": "I can say an insect, a spider, a scorpion, a lizard and a crocodile.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C253-nakrah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say an insect, a spider, a scorpion, a lizard and a crocodile.",
+    "assesses": [
+      "SA-LEX-C253-THG253-03",
+      "SA-LEX-C253-THG253-04",
+      "SA-LEX-C253-THG253-05"
+    ]
+  }
+}

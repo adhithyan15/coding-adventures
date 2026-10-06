@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-189-SALAMAT189",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "FA-EXT-189-SALAMAT189"
+  ],
+  "after": []
+}

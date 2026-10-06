@@ -1,0 +1,11 @@
+{
+  "id": "HI-C225-pochna",
+  "pathSegment": "HI-PATH-225-ACT225",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-225-ACT225",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:0f671f9371591ead",
+  "lessonIds": [
+    "GE-C237-rolle",
+    "GE-C237-ruhe",
+    "GE-C237-sache",
+    "GE-C237-schatten",
+    "GE-C237-schritt",
+    "GE-R237-first-pass-words-from-chapters-229-232",
+    "GE-R237-second-pass-words-from-chapters-233-237"
+  ],
+  "tex": "german/book/chapters/ch237-a-role-quiet-a-thing-a-shadow-a-step.tex"
+}

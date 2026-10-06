@@ -56,6 +56,10 @@ const EVENTMODELING_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/eventmodeling-11.16.1-corpus.json"
 ));
+const EVENTMODELING_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/eventmodeling-11.16.1-visual-corpus.json"
+));
 const TREEMAP_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/treemap-11.16.1-corpus.json"
@@ -175,26 +179,157 @@ fn pinned_treemap_subset_corpus_parses_to_hierarchy_ir() {
         let source = fixture["source"].as_str().expect("fixture source");
         let diagram = parse_treemap(source)
             .unwrap_or_else(|error| panic!("treemap fixture {name} failed: {error}"));
-        assert!(!diagram.nodes.is_empty());
+        if name == "empty" {
+            assert!(diagram.nodes.is_empty());
+        } else {
+            assert!(!diagram.nodes.is_empty());
+        }
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let name = fixture["name"].as_str().expect("fixture name");
+        let source = fixture["source"].as_str().expect("fixture source");
+        let error = match parse_treemap(source) {
+            Ok(_) => panic!("invalid treemap fixture {name} parsed"),
+            Err(error) => error,
+        };
+        assert!(error.message.contains("Multiple root nodes"));
     }
 }
 
 #[test]
-fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
+fn pinned_event_modeling_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(EVENTMODELING_CORPUS)
         .expect("event modeling corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
         let id = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
         let diagram = parse_event_modeling(source)
             .unwrap_or_else(|error| panic!("event modeling fixture {id} failed: {error}"));
-        assert!(!diagram.frames.is_empty());
+        if id == "inline-data" {
+            assert_eq!(diagram.frames[1].data.as_deref(), Some("description: string"));
+            assert_eq!(diagram.frames[2].data_type.as_deref(), Some("json"));
+            assert_eq!(diagram.frames[2].data.as_deref(), Some("\"description\": \"book\""));
+        } else if id == "data-blocks" {
+            assert_eq!(diagram.data_blocks.len(), 2);
+            assert_eq!(diagram.frames[1].data_reference.as_deref(), Some("AddItemData"));
+            assert_eq!(diagram.frames[1].data_type.as_deref(), Some("json"));
+            assert!(diagram.frames[1].data.as_deref().is_some_and(|data| data.contains("quantity")));
+            assert_eq!(diagram.frames[2].data_reference.as_deref(), Some("ItemAddedData"));
+        } else if id == "quoted-inline-data" {
+            assert_eq!(diagram.frames[0].data.as_deref(), Some("shopping cart"));
+            assert_eq!(diagram.frames[1].data_type.as_deref(), Some("json"));
+            assert_eq!(diagram.frames[1].data.as_deref(), Some("{ \"quantity\": 2 }"));
+            assert_eq!(diagram.frames[2].data.as_deref(), Some("accepted"));
+        } else if id == "frame-notes" {
+            assert_eq!(diagram.notes.len(), 2);
+            assert_eq!(diagram.notes[0].source_frame, "01");
+            assert_eq!(diagram.notes[0].data_type.as_deref(), Some("md"));
+            assert!(diagram.notes[0].data.contains("Shows pending items"));
+        } else if id == "given-when-then" {
+            assert_eq!(diagram.gwt.len(), 2);
+            assert_eq!(diagram.gwt[0].source_frame, "02");
+            assert_eq!(diagram.gwt[0].given.len(), 2);
+            assert_eq!(diagram.gwt[0].when.len(), 2);
+            assert_eq!(diagram.gwt[0].then[0].entity_id, "ItemAdded");
+            assert_eq!(diagram.gwt[1].source_frame, "03");
+            assert!(diagram.gwt[1].when.is_empty());
+        } else if id == "standalone-entities" {
+            assert_eq!(diagram.entities.len(), 3);
+            assert_eq!(diagram.entities[0].id, "Sales.CartUI");
+            assert_eq!(diagram.entities[0].namespace.as_deref(), Some("Sales"));
+            assert_eq!(diagram.entities[1].id, "AddItem");
+            assert_eq!(diagram.entities[1].namespace, None);
+        } else if id == "init-layout-config" {
+            assert_eq!(diagram.config.padding, 18.0);
+            assert_eq!(diagram.config.row_height, 40.0);
+            assert!(!diagram.config.use_max_width);
+        } else if id == "front-matter-layout-config" {
+            assert_eq!(diagram.config.padding, 22.0);
+            assert_eq!(diagram.config.row_height, 36.0);
+            assert!(!diagram.config.use_max_width);
+        } else if id == "init-theme-colors" {
+            assert_eq!(diagram.config.styles.ui_fill, "#102030");
+            assert_eq!(diagram.config.styles.command_stroke, "#405060");
+            assert_eq!(diagram.config.styles.event_fill, "#506070");
+        } else if id == "front-matter-theme-colors" {
+            assert_eq!(diagram.config.styles.processor_fill, "#112233");
+            assert_eq!(diagram.config.styles.processor_stroke, "#223344");
+            assert_eq!(diagram.config.styles.read_model_fill, "#334455");
+            assert_eq!(diagram.config.styles.read_model_stroke, "#445566");
+        } else if id == "header-only" {
+            assert!(diagram.frames.is_empty());
+        } else if id == "upstream-complex-model" {
+            assert_eq!(diagram.frames.len(), 6);
+            assert_eq!(diagram.data_blocks.len(), 3);
+            assert_eq!(diagram.notes.len(), 2);
+            assert_eq!(diagram.gwt.len(), 2);
+        } else if id == "separated-block-opening-and-data-types" {
+            assert_eq!(diagram.data_blocks[0].data_type.as_deref(), Some("html"));
+            assert_eq!(diagram.notes[0].data_type.as_deref(), Some("json"));
+        }
     }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(parse_event_modeling(source).is_err(), "invalid fixture {id} parsed");
+    }
+    let error = parse_event_modeling(
+        "eventmodeling\nrf 01 evt Changed\nrf 02 cmd Update\nrf 03 pcr Projector ->> 01 ->> 02",
+    )
+    .expect_err("processor must reject every non-read-model source");
+    assert_eq!(error.message.lines().count(), 2);
+    assert!(error.message.contains("not from 'evt'"));
+    assert!(error.message.contains("not from 'cmd'"));
 }
 
 #[test]
-fn pinned_radar_subset_corpus_parses_to_chart_ir() {
+fn event_modeling_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let family = manifest["families"]
+        .as_array()
+        .expect("families array")
+        .iter()
+        .find(|family| family["id"] == "eventmodeling")
+        .expect("event modeling family");
+    assert_eq!(family["status"].as_str(), Some("full"));
+
+    let syntax: Value =
+        serde_json::from_str(EVENTMODELING_CORPUS).expect("event modeling corpus must be JSON");
+    let visual: Value = serde_json::from_str(EVENTMODELING_VISUAL_CORPUS)
+        .expect("event modeling visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let valid_ids = syntax["valid"]
+        .as_array()
+        .expect("valid fixture array")
+        .iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let visual_ids = visual["fixtures"]
+        .as_array()
+        .expect("visual fixture array")
+        .iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert!(!syntax["invalid"].as_array().expect("invalid fixture array").is_empty());
+    assert!(!visual_ids.is_empty());
+    assert!(visual_ids.is_subset(&valid_ids));
+}
+
+#[test]
+fn radar_full_status_is_backed_by_the_pinned_corpus() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let radar = manifest["families"]
+        .as_array()
+        .expect("families array")
+        .iter()
+        .find(|family| family["id"] == "radar")
+        .expect("radar family");
+    assert_eq!(radar["status"].as_str(), Some("full"));
+
     let corpus: Value = serde_json::from_str(RADAR_CORPUS).expect("radar corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
     for fixture in corpus["fixtures"].as_array().expect("fixture array") {
@@ -203,6 +338,53 @@ fn pinned_radar_subset_corpus_parses_to_chart_ir() {
         let chart = parse_radar(source)
             .unwrap_or_else(|error| panic!("radar fixture {id} failed: {error}"));
         assert!(!chart.series.is_empty());
+        if id == "angular-label-anchors" {
+            assert_eq!(
+                chart.x_axis.as_ref().map(|axis| axis.categories.len()),
+                Some(8)
+            );
+            assert_eq!(chart.series[0].data.len(), 8);
+        } else if id == "core-options" {
+            assert!(!chart.radar_config.show_legend);
+            assert_eq!(chart.radar_config.ticks, 4.0);
+            assert_eq!(
+                chart.y_axis.as_ref().map(|axis| (axis.min, axis.max)),
+                Some((10.0, 90.0))
+            );
+        } else if id == "curve-list-and-multiline" {
+            assert_eq!(chart.series.len(), 2);
+            assert_eq!(chart.series[1].label.as_deref(), Some("Second"));
+            assert_eq!(chart.series[1].data[2].value, 1.0);
+        } else if id == "init-layout-config" {
+            assert_eq!(
+                (chart.radar_config.width, chart.radar_config.height),
+                (Some(520.0), Some(480.0))
+            );
+            assert_eq!(
+                (
+                    chart.radar_config.margin_left,
+                    chart.radar_config.margin_right
+                ),
+                (Some(25.0), Some(35.0))
+            );
+            assert_eq!(chart.radar_config.axis_label_factor, Some(1.1));
+            assert_eq!(chart.radar_config.curve_tension, Some(0.25));
+        } else if id == "front-matter-layout-config" {
+            assert_eq!(chart.radar_config.width, Some(440.0));
+            assert_eq!(chart.radar_config.axis_scale_factor, Some(0.8));
+        } else if id == "init-theme-style" {
+            assert_eq!(chart.radar_config.axis_color.as_deref(), Some("#203040"));
+            assert_eq!(chart.radar_config.axis_stroke_width, Some(3.0));
+            assert_eq!(chart.radar_config.curve_opacity, Some(0.4));
+            assert_eq!(chart.radar_config.graticule_stroke_width, Some(2.0));
+            assert_eq!(chart.radar_config.series_colors, vec!["#102030"]);
+        } else if id == "front-matter-theme-style" {
+            assert_eq!(chart.radar_config.axis_color.as_deref(), Some("#506070"));
+            assert_eq!(chart.radar_config.curve_opacity, Some(0.35));
+            assert_eq!(chart.radar_config.series_colors, vec!["#405060"]);
+        } else if id == "sparse-theme-palette" {
+            assert_eq!(chart.radar_config.series_colors, vec!["", "#708090"]);
+        }
     }
 }
 

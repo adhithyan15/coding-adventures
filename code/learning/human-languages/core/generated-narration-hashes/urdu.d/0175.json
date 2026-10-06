@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:7381cad88c17b412",
+  "lessonIds": [
+    "UR-C175-ras-malai",
+    "UR-C175-faluda",
+    "UR-C175-qulfi",
+    "UR-C175-bater",
+    "UR-C175-fakhta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch175.txt",
+  "json": "urdu/narration/ch175.json",
+  "textHash": "fnv1a64:724a31ee70caac6d",
+  "jsonHash": "fnv1a64:df01989321beeef6",
+  "findings": []
+}

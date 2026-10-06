@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C214-qutn",
+    "language": "arabic",
+    "chapter": 214,
+    "sequence": 11380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17b7908dcf5f248b"
+  },
+  "findings": []
+}

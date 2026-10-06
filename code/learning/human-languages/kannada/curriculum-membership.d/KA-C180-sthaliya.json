@@ -1,0 +1,11 @@
+{
+  "id": "KA-C180-sthaliya",
+  "pathSegment": "KA-PATH-180-GUNA180",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-180-GUNA180",
+      "order": 3
+    }
+  ]
+}

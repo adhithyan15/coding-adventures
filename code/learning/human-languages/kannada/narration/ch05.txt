@@ -58,9 +58,15 @@ You already say these, and every one of them has ತ (ta) somewhere inside it:
 ಮತ್ತೆ ಸಿಗೋಣ matte sigōṇa — we'll meet again.
 ಮಾತನಾಡು mātanāḍu — to speak.
 
-Writing: ತ — copy what you see.
-Put your pen on ತ (ta) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
-This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+Writing: ತ.
+1. start at the upper-left end and sweep down around the broad bowl and up its right side.
+2. without lifting, turn left over the top and curl down into the inner loop.
+3. without lifting, close the small loop and rise to the top bar.
+4. lift, then draw the top bar from left to right.
+5. without lifting, curl up into the hook.
+Pen lifts: 1. The broad bowl, the arc over its top and the small loop inside are one run; the curled bar on top comes after the only lift, as it does for ನ.
+This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-tha.gif', 43 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0.
+The animation is filed as 'tha': that series spells dental ತ with an h and keeps 'ta' for a different letter, ಟ.
 
 Guided Practice.
 [pause 1 second]
@@ -121,10 +127,10 @@ The letters in this word.
 ಇ (independent i) + ರು (ru) becomes ಇರು (iru).
 
 The word, taken apart.
-ಇರು (iru, "to be, to exist, to stay, to live") is native Dravidian — the very same iru Tamil uses, and the verb behind Chapter 3's hēgiddīrā ("how are you") and cennāgiddēne ("I'm well"). It also means "to reside": ನಾನು ಬೆಂಗಳೂರಿನಲ್ಲಿ ಇದ್ದೇನೆ (nānu Beṅgaḷūrinalli iddēne, "I live in Bangalore"). One verb covers "be," "stay," and "live."
+ಇರು (iru, "to be, to exist, to stay, to live") is native Dravidian — the very same iru Tamil uses, and the verb behind Chapter 3's hēgiddīrā ("how are you") and cennāgiddēne ("I'm well"). It also means "to reside": nānu Beṅgaḷūrinalli iddēne ("I live in Bangalore"). One verb covers "be," "stay," and "live."
 
 Grammar Lens: "in" comes after the noun.
-ಬೆಂಗಳೂರಿನಲ್ಲಿ (Beṅgaḷūrinalli) = Bengaḷūru + -ಅಲ್ಲಿ (-alli, "in"), glued to the end of the noun. Kannada uses postpositions (case-suffixes) where English uses prepositions: "Bangalore-in I am," the verb last.
+Beṅgaḷūrinalli = Bengaḷūru + -alli ("in"), glued to the end of the noun. Kannada uses postpositions (case-suffixes) where English uses prepositions: "Bangalore-in I am," the verb last.
 
 Guided Practice.
 [pause 1 second]
@@ -157,7 +163,7 @@ The letters in this word.
 The word, taken apart.
 ಮಾಡು (māḍu, "to do, to make") is a core native Dravidian verb, and Kannada — like Hindi with karnā, Tamil with sey, and Telugu with cēyu — builds compound verbs by putting a noun in front of it:
 ಕೆಲಸ ಮಾಡು (kelasa māḍu) = "work-do" = "to work" (kelasa, "work").
-ಅಡುಗೆ ಮಾಡು (aḍuge māḍu) = "to cook".
+aḍuge māḍu = "to cook".
 ಸಹಾಯ ಮಾಡು (sahāya māḍu) = "to help" (sahāya from Sanskrit).
 So "I work" is ನಾನು ಕೆಲಸ ಮಾಡುತ್ತೇನೆ (nānu kelasa māḍuttēne). Notice sahāya māḍu ("to help") pairs a Sanskrit noun with the native māḍu — Kannada's two vocabularies working together in one verb.
 

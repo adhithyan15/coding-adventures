@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:737641b5577c92ab",
+  "lessonIds": [
+    "FA-C201-shabih",
+    "FA-C201-khoshbu",
+    "FA-C201-aftabi",
+    "FA-C201-abri",
+    "FA-C201-barani"
+  ],
+  "tex": "persian/book/chapters/ch201-similar-fragrant-sunny-cloudy-rainy.tex"
+}

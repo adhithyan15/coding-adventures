@@ -1,0 +1,11 @@
+{
+  "id": "TE-C189-navala",
+  "pathSegment": "TE-PATH-189-VASTUVU189",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-189-VASTUVU189",
+      "order": 4
+    }
+  ]
+}

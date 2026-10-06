@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:7ee13d3fb2506e4d",
+  "lessonIds": [
+    "SA-C171-sandesah",
+    "SA-C171-suvidha",
+    "SA-C171-vyavastha",
+    "SA-C171-karyakramah",
+    "SA-C171-pratiyogita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch171.txt",
+  "json": "sanskrit/narration/ch171.json",
+  "textHash": "fnv1a64:09057279dadec8e5",
+  "jsonHash": "fnv1a64:f03eb4521ec14239",
+  "findings": []
+}

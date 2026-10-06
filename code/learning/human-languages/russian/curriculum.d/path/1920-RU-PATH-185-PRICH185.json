@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-185-PRICH185",
+  "spine_node": "SPINE-SAY-WHY",
+  "before": [],
+  "inline": [
+    "RU-EXT-185-PRICH185"
+  ],
+  "after": []
+}

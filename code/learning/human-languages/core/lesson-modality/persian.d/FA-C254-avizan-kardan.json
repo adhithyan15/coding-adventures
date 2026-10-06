@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C254-avizan-kardan",
+    "language": "persian",
+    "chapter": 254,
+    "sequence": 13160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea8c9e33168b644d"
+  },
+  "findings": []
+}

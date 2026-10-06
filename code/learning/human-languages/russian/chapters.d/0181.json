@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "January, February, March, April, May",
+  "label": "ch:ru-january-february-march-april-may",
+  "canDo": "I can say January, February, March, April and May.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "RU-R181-second-pass-words-from-chapters-177-181",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say January, February, March, April and May.",
+    "assesses": [
+      "RU-LEX-C181-VREMYA181-03",
+      "RU-LEX-C181-VREMYA181-04",
+      "RU-LEX-C181-VREMYA181-05"
+    ]
+  }
+}

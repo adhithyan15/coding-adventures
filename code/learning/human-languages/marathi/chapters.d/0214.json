@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Energy, Plastic, Cotton, Wool, Silk",
+  "label": "ch:mr-energy-plastic-cotton-wool-silk",
+  "canDo": "I can say energy, plastic, cotton, wool and silk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C214-resim",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say energy, plastic, cotton, wool and silk.",
+    "assesses": [
+      "MR-LEX-C214-VASTU214-03",
+      "MR-LEX-C214-VASTU214-04",
+      "MR-LEX-C214-VASTU214-05"
+    ]
+  }
+}

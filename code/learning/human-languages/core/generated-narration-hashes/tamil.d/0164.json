@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:d992d84982046e60",
+  "lessonIds": [
+    "TA-C164-vivari",
+    "TA-C164-oppatai",
+    "TA-C164-payirci-cey",
+    "TA-C164-tercci-peru",
+    "TA-C164-kavani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch164.txt",
+  "json": "tamil/narration/ch164.json",
+  "textHash": "fnv1a64:3bb7f4a99109d729",
+  "jsonHash": "fnv1a64:4125b11703f7754c",
+  "findings": []
+}

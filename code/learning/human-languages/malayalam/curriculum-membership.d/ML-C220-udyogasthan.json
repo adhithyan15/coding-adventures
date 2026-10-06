@@ -1,0 +1,11 @@
+{
+  "id": "ML-C220-udyogasthan",
+  "pathSegment": "ML-PATH-220-JOLI220",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-220-JOLI220",
+      "order": 1
+    }
+  ]
+}

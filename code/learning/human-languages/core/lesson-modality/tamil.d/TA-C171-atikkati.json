@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C171-atikkati",
+    "language": "tamil",
+    "chapter": 171,
+    "sequence": 8230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:613e0aa5dd95e121"
+  },
+  "findings": []
+}

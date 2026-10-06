@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Cómo nos sentimos",
+  "label": "ch:es-como-nos-sentimos",
+  "canDo": "I can say that someone is glad, gets angry, worries, relaxes or has fun.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C487-divertirse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can say that someone is glad, gets angry, worries, relaxes or has fun.",
+    "assesses": [
+      "ES-LEX-C487-ANIMO-03",
+      "ES-LEX-C487-ANIMO-04",
+      "ES-LEX-C487-ANIMO-05"
+    ]
+  }
+}

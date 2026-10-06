@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "Granddaughter, Father-in-law, Mother-in-law, Bridegroom, Bride",
+  "label": "ch:ur-granddaughter-father-in-law-mother-in-law-bridegroom-bride",
+  "canDo": "I can say a granddaughter, a father-in-law, a mother-in-law, a bridegroom and a bride.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C230-dulhan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say a granddaughter, a father-in-law, a mother-in-law, a bridegroom and a bride.",
+    "assesses": [
+      "UR-LEX-C230-CHIZ230-03",
+      "UR-LEX-C230-CHIZ230-04",
+      "UR-LEX-C230-CHIZ230-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C272-nakal",
+  "pathSegment": "TA-PATH-272-PORUL272",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-272-PORUL272",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R231-first-pass-words-from-chapters-223-226",
+    "language": "marathi",
+    "chapter": 231,
+    "sequence": 12650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7801bec8d9d95afa"
+  },
+  "findings": []
+}

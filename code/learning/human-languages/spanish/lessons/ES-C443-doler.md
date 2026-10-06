@@ -7,7 +7,7 @@ chapter: 443
 type: word
 headword: doler
 gloss: to hurt — the verb that makes the pain the subject and you the one it happens to
-concept_tag: ES-BODY-DOLER
+concept_tag: ES-VERB-DOLER
 prerequisites: [ES-C442-sintesis-gestion, ES-C286-dolor, ES-C24-cabeza, ES-C35-gustar, ES-C36-dormir]
 sounds: [diphthong-ue, stress-final]
 roots: [dolere-latin]

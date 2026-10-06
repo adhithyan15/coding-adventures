@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Face mask, Thermometer, Hygiene, Blood pressure, Listless",
+  "label": "ch:fa-face-mask-thermometer-hygiene-blood-pressure-listless",
+  "canDo": "I can say a face mask, a thermometer, hygiene, blood pressure and listless.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C190-bihal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say a face mask, a thermometer, hygiene, blood pressure and listless.",
+    "assesses": [
+      "FA-LEX-C190-SALAMAT190-03",
+      "FA-LEX-C190-SALAMAT190-04",
+      "FA-LEX-C190-SALAMAT190-05"
+    ]
+  }
+}

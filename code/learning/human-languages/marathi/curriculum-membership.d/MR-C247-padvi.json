@@ -1,0 +1,11 @@
+{
+  "id": "MR-C247-padvi",
+  "pathSegment": "MR-PATH-247-VASTU247",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-247-VASTU247",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C160-aufgabe",
+  "pathSegment": "GE-PATH-160-THING160",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-160-THING160",
+      "order": 2
+    }
+  ]
+}

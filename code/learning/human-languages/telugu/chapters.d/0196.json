@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "Fee, Fine, Deadline, Responsibility, Application",
+  "label": "ch:te-fee-fine-deadline-responsibility-application",
+  "canDo": "I can say a fee, a fine, a deadline, a responsibility and an application.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C196-darakhastu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say a fee, a fine, a deadline, a responsibility and an application.",
+    "assesses": [
+      "TE-LEX-C196-PANI196-03",
+      "TE-LEX-C196-PANI196-04",
+      "TE-LEX-C196-PANI196-05"
+    ]
+  }
+}

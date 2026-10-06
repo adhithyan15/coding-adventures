@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "hashing-cache/shared-input-sha256-native-after",
+  "domain": "hashing_cache",
+  "summary": "The independent SHA-256 consumer's package digest changes with the shared manifest alone.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["hashing_cache"],
+  "workspace": {"files": [
+    {"path": "code/packages/swift/sha256-native/Package.swift", "content_utf8": "// sha256 stable\n"},
+    {"path": "code/packages/rust/Cargo.toml", "content_utf8": "workspace = \"updated\"\n"}
+  ]},
+  "input": {
+    "operation": "hashing_cache",
+    "options": {
+      "algorithm": "sha256-v1",
+      "package": "swift/sha256-native",
+      "include_paths": ["code/packages/swift/sha256-native/Package.swift", "code/packages/rust/Cargo.toml"],
+      "dependency_digests": [{"package": "swift/base", "digest": "0000000000000000000000000000000000000000000000000000000000000000"}],
+      "dependents": [],
+      "prior_cache": {"state": "record", "combined_digest": "325e8e35083a43e131bbf5b0d0fa5e31009a3c59bd03090970b6df4e96923041", "status": "success"}
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "hashing-cache/shared-input-sha256-native-after",
+    "domain": "hashing_cache",
+    "outcome": "ok",
+    "result": {
+      "package_digest": "b66d830aa1bc3a60ce7ea9558f5e6c768eab124e51655b13bd2721c32a47f298",
+      "dependencies_digest": "a269dc93b72686de5270ccbbc41982bb681a91e84a8f4e433b6620a23415044b",
+      "combined_digest": "1ee684caa8adf6f44649f25c0221155f499bfb4cbc79b8d46d8ec64732c14a7c",
+      "cache_status": "miss",
+      "invalidated_packages": ["swift/sha256-native"]
+    },
+    "diagnostics": []
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C236-sisuh",
+    "language": "sanskrit",
+    "chapter": 236,
+    "sequence": 13970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15a7e413a395622f"
+  },
+  "findings": []
+}

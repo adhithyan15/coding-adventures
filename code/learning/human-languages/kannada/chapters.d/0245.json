@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Diarrhoea, Allergy, Swelling, Pimple, Medical treatment",
+  "label": "ch:ka-diarrhoea-allergy-swelling-pimple-medical-treatment",
+  "canDo": "I can say diarrhoea, an allergy, a swelling, a pimple and medical treatment.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C245-cikitse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say diarrhoea, an allergy, a swelling, a pimple and medical treatment.",
+    "assesses": [
+      "KA-LEX-C245-AROGYA245-03",
+      "KA-LEX-C245-AROGYA245-04",
+      "KA-LEX-C245-AROGYA245-05"
+    ]
+  }
+}

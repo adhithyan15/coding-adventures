@@ -1,0 +1,11 @@
+{
+  "id": "TA-C255-pal-tulakku",
+  "pathSegment": "TA-PATH-255-ACT255",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-255-ACT255",
+      "order": 4
+    }
+  ]
+}

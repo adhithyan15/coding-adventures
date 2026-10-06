@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:749c42807fb541a9",
+  "lessonIds": [
+    "AR-C195-istaqala",
+    "AR-C195-adara",
+    "AR-C195-qabala",
+    "AR-C195-dalla",
+    "AR-C195-dalla2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch195.txt",
+  "json": "arabic/narration/ch195.json",
+  "textHash": "fnv1a64:812c8ed003ad3e06",
+  "jsonHash": "fnv1a64:0b777c47e50e7594",
+  "findings": []
+}

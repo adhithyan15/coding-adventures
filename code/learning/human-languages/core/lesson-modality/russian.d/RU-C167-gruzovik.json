@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C167-gruzovik",
+    "language": "russian",
+    "chapter": 167,
+    "sequence": 9400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3162724b7704d0e7"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:bbb624d6c530f61b",
+  "lessonIds": [
+    "AR-C192-rakiba",
+    "AR-C192-dafaa",
+    "AR-C192-waffara",
+    "AR-C192-istalama",
+    "AR-C192-kallafa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch192.txt",
+  "json": "arabic/narration/ch192.json",
+  "textHash": "fnv1a64:e7b529e720b93fd4",
+  "jsonHash": "fnv1a64:e6278e49745dfbc0",
+  "findings": []
+}

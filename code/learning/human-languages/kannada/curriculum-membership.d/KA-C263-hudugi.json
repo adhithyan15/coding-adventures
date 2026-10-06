@@ -1,0 +1,11 @@
+{
+  "id": "KA-C263-hudugi",
+  "pathSegment": "KA-PATH-263-VASTU263",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-263-VASTU263",
+      "order": 1
+    }
+  ]
+}

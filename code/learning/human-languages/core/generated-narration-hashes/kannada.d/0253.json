@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:b8527da14db29097",
+  "lessonIds": [
+    "KA-C253-udaharane",
+    "KA-C253-ghatane",
+    "KA-C253-nenapu",
+    "KA-C253-jivana",
+    "KA-C253-niyama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch253.txt",
+  "json": "kannada/narration/ch253.json",
+  "textHash": "fnv1a64:30ff837157505bc4",
+  "jsonHash": "fnv1a64:9a3839fb81d9f209",
+  "findings": []
+}

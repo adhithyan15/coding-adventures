@@ -1,0 +1,11 @@
+{
+  "id": "IT-C243-incidente",
+  "pathSegment": "IT-PATH-243-SAL243",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-243-SAL243",
+      "order": 4
+    }
+  ]
+}

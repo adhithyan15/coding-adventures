@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "Promise, Discount, Sales, Coin, Banknote",
+  "label": "ch:fr-promise-discount-sales-coin-banknote",
+  "canDo": "I can say a promise, a discount, the sales, a coin and a banknote.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-R198-second-pass-words-from-chapters-196-198",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say a promise, a discount, the sales, a coin and a banknote.",
+    "assesses": [
+      "FR-LEX-C198-CHOSES198-03",
+      "FR-LEX-C198-CHOSES198-04",
+      "FR-LEX-C198-CHOSES198-05"
+    ]
+  }
+}

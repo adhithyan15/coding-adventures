@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "November, December, Season, At once, Usually",
+  "label": "ch:ru-november-december-season-at-once-usually",
+  "canDo": "I can say November, December, a season, at once and usually.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "RU-R240-second-pass-words-from-chapters-236-240",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say November, December, a season, at once and usually.",
+    "assesses": [
+      "RU-LEX-C240-VREMYA240-03",
+      "RU-LEX-C240-VREMYA240-04",
+      "RU-LEX-C240-VREMYA240-05"
+    ]
+  }
+}

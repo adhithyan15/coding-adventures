@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:431023ba6e304f13",
+  "lessonIds": [
+    "BN-C217-hrod",
+    "BN-C217-bastnd",
+    "BN-C217-bimanbondor",
+    "BN-C217-rum",
+    "BN-C217-stediyam",
+    "BN-R217-first-pass-words-from-chapters-209-212",
+    "BN-R217-second-pass-words-from-chapters-213-217"
+  ],
+  "tex": "bengali/book/chapters/ch217-lake-bus-stand-airport-room-stadium.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "To advise, To tremble, To welcome, To do, To go forward",
+  "label": "ch:la-to-advise-to-tremble-to-welcome-to-do-to-go-forward",
+  "canDo": "I can say to advise, to tremble, to welcome, to do and to go forward.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C202-procedo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say to advise, to tremble, to welcome, to do and to go forward.",
+    "assesses": [
+      "LA-LEX-C202-ACT202-03",
+      "LA-LEX-C202-ACT202-04",
+      "LA-LEX-C202-ACT202-05"
+    ]
+  }
+}

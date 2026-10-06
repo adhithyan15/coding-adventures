@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:c09a1f41dc389c1c",
+  "lessonIds": [
+    "GE-C222-sparsam",
+    "GE-C222-sportlich",
+    "GE-C222-streng",
+    "GE-C222-sympathisch",
+    "GE-C222-tot"
+  ],
+  "tex": "german/book/chapters/ch222-thrifty-sporty-strict-likeable-dead.tex"
+}

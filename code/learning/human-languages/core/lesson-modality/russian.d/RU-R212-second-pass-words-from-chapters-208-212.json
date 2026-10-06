@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R212-second-pass-words-from-chapters-208-212",
+    "language": "russian",
+    "chapter": 212,
+    "sequence": 12560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ce3658d79086204"
+  },
+  "findings": []
+}

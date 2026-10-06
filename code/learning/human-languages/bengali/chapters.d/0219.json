@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Fake, Alive, Dead, Deserted, Local",
+  "label": "ch:bn-fake-alive-dead-deserted-local",
+  "canDo": "I can say fake, alive, dead, deserted and local.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C219-sthaniyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say fake, alive, dead, deserted and local.",
+    "assesses": [
+      "BN-LEX-C219-GUN219-03",
+      "BN-LEX-C219-GUN219-04",
+      "BN-LEX-C219-GUN219-05"
+    ]
+  }
+}

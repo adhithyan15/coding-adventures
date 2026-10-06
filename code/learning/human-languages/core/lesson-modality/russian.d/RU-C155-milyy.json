@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C155-milyy",
+    "language": "russian",
+    "chapter": 155,
+    "sequence": 8400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d57deb6dd18c894"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C272-huri",
+    "language": "kannada",
+    "chapter": 272,
+    "sequence": 13050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20f0fd487ee5464e"
+  },
+  "findings": []
+}

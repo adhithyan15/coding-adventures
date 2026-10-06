@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:35df97ab25a21894",
+  "lessonIds": [
+    "SA-C217-raktah",
+    "SA-C217-arunah",
+    "SA-C217-kapilah",
+    "SA-C217-samah",
+    "SA-C217-visamah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch217.txt",
+  "json": "sanskrit/narration/ch217.json",
+  "textHash": "fnv1a64:0479faa93c3ea68b",
+  "jsonHash": "fnv1a64:46f7acc61a378c05",
+  "findings": []
+}

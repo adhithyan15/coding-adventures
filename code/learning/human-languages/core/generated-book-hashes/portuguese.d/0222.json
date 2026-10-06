@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:900fd22662f8816c",
+  "lessonIds": [
+    "PT-C222-conselho",
+    "PT-C222-promessa",
+    "PT-C222-desconto",
+    "PT-C222-saldos",
+    "PT-C222-moeda"
+  ],
+  "tex": "portuguese/book/chapters/ch222-piece-of-advice-promise-discount-sales-coin.tex"
+}

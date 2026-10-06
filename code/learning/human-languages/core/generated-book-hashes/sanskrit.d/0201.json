@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:ea30ab4be03fa7b4",
+  "lessonIds": [
+    "SA-C201-yojana",
+    "SA-C201-laksyam",
+    "SA-C201-upayah",
+    "SA-C201-samasya",
+    "SA-C201-samadhanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch201-plan-goal-way-problem-solution.tex"
+}

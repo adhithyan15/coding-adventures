@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C210-kamgar",
+    "language": "marathi",
+    "chapter": 210,
+    "sequence": 11070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33e06a5e4d567f20"
+  },
+  "findings": []
+}

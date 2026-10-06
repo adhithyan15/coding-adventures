@@ -1,0 +1,11 @@
+{
+  "id": "PT-C229-colchao",
+  "pathSegment": "PT-PATH-229-COISAS229",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-229-COISAS229",
+      "order": 2
+    }
+  ]
+}

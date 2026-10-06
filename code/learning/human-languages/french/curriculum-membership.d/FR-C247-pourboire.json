@@ -1,0 +1,11 @@
+{
+  "id": "FR-C247-pourboire",
+  "pathSegment": "FR-PATH-247-CHOSES247",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-247-CHOSES247",
+      "order": 1
+    }
+  ]
+}

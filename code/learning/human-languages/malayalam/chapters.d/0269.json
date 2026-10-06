@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "To comfort, To pray, To decorate, To be born, To die",
+  "label": "ch:ml-to-comfort-to-pray-to-decorate-to-be-born-to-die",
+  "canDo": "I can say to comfort, to pray, to decorate, to be born and to die.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C269-marikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can say to comfort, to pray, to decorate, to be born and to die.",
+    "assesses": [
+      "ML-LEX-C269-KRIYA269-03",
+      "ML-LEX-C269-KRIYA269-04",
+      "ML-LEX-C269-KRIYA269-05"
+    ]
+  }
+}

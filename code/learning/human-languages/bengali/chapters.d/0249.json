@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Spice, Cumin, Coriander, Mint, Cashew",
+  "label": "ch:bn-spice-cumin-coriander-mint-cashew",
+  "canDo": "I can say spice, cumin, coriander, mint and a cashew.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C249-kaju",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say spice, cumin, coriander, mint and a cashew.",
+    "assesses": [
+      "BN-LEX-C249-JINIS249-03",
+      "BN-LEX-C249-JINIS249-04",
+      "BN-LEX-C249-JINIS249-05"
+    ]
+  }
+}

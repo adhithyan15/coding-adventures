@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C239-bheti-kodu",
+    "language": "kannada",
+    "chapter": 239,
+    "sequence": 11290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0694a59c3036b461"
+  },
+  "findings": []
+}

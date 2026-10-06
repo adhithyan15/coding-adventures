@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:af39a23d7bf68b83",
+  "sourceHash": "fnv1a64:d02a339e1d7178c4",
   "lessons": [
     {
       "id": "TE-C18-ganta",
@@ -150,7 +150,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dddb33e954f02904",
+      "sourceHash": "fnv1a64:0abba2575458b191",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -229,15 +229,31 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ళ — copy what you see",
+          "title": "Writing: ళ — four calm movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ళ (ḷa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Watch the guide once before your hand moves. ళ (ḷa) arrives in four calm movements, with a small lift between each one:"
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "Loop counterclockwise around the small inner bowl."
+            },
+            {
+              "kind": "speech",
+              "text": "Sweep down around the broad left body and loop the lower bowl."
+            },
+            {
+              "kind": "speech",
+              "text": "Sweep right and up around the broad outer body."
+            },
+            {
+              "kind": "speech",
+              "text": "Lift once more, then draw down and up through the separate chevron above."
+            },
+            {
+              "kind": "speech",
+              "text": "Trace the filmstrip slowly. Let every movement finish before you lift, then copy the whole shape once without rushing."
             }
           ]
         },
@@ -323,7 +339,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d1bb9a26997cb366",
+      "sourceHash": "fnv1a64:9039a7a4234cb8db",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -398,15 +414,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ఢ — copy what you see",
+          "title": "Writing: ఢ — six deliberate movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ఢ (ḍha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the filmstrip slowly. Movement 1 sweeps down around the upper-left curve. Movement 2 turns right around the lower-left bowl. Movement 3 restarts and sweeps right and upward around the lower-right bowl. Movement 4 curves left around the upper-right shoulder. Movement 5 draws the separate top flourish. Movement 6 finishes with the separate lower stem."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "This is one attested school-style order. Telugu handwriting varies, so keep the six movements distinct and let the round shape grow from them."
             }
           ]
         },

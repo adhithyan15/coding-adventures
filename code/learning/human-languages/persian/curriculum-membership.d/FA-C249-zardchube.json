@@ -1,0 +1,11 @@
+{
+  "id": "FA-C249-zardchube",
+  "pathSegment": "FA-PATH-249-CHIZ249",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-249-CHIZ249",
+      "order": 1
+    }
+  ]
+}

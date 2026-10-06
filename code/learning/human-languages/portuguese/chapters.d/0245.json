@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Dialect, Piece of news, Advertising, Screen, Keyboard",
+  "label": "ch:pt-dialect-piece-of-news-advertising-screen-keyboard",
+  "canDo": "I can say a dialect, a piece of news, advertising, a screen and a keyboard.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C245-teclado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say a dialect, a piece of news, advertising, a screen and a keyboard.",
+    "assesses": [
+      "PT-LEX-C245-COISAS245-03",
+      "PT-LEX-C245-COISAS245-04",
+      "PT-LEX-C245-COISAS245-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C110-deshlai",
+    "language": "bengali",
+    "chapter": 110,
+    "sequence": 5930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:462df5952b89c03d"
+  },
+  "findings": []
+}

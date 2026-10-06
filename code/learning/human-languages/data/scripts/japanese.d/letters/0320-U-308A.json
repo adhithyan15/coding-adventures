@@ -3,13 +3,19 @@
   "sound": "ri",
   "role": "hiragana",
   "components": [
-    "a short left stroke",
-    "a long right descender"
+    "a short left stroke that flicks up to the right",
+    "a long right stroke that starts higher, comes down and sweeps away to the lower left"
   ],
   "strokeOrder": [
-    "left stroke",
-    "right descender"
+    "draw the short left stroke from top to bottom, then without lifting turn and flick up to the right",
+    "lift, begin at the top of the right stroke, come down the right side and sweep away to the lower left"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 0308a file records り as two stroke paths in this order and direction: the left stroke with its flick, then the long right stroke; so there is one pen lift.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0308a.svg",
+    "citation": "KanjiVG, kanji/0308a.svg, hiragana り (U+308A HIRAGANA LETTER RI), two stroke paths kvg:0308a-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the left stroke drawn top to bottom, which turns at its foot and flicks up to the right without lifting; s2 starts at the top of the right stroke, higher than s1, runs down and sweeps away to the lower left. In KanjiVG the two paths do not touch. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. The print glyph has no flick at the foot of the left stroke: a thin stroke leaves it partway down and rises over an arch into the top of the right stroke, the pen's way from one stroke to the next drawn in ink. So the path goes down to the foot of the left stroke, climbs back up the same ink and follows that rise to the top of the arch, where the right stroke begins; in the print glyph, unlike KanjiVG, the two strokes touch there."
+  },
   "notes": "Second sign of ありがとう. The r is a light tap, near a Spanish r."
 }

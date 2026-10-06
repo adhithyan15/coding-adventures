@@ -1,0 +1,11 @@
+{
+  "id": "PT-C212-epoca",
+  "pathSegment": "PT-PATH-212-TEMPO212",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-212-TEMPO212",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-181-SAUDE181",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say trust, courage, shame, jealousy and boredom.",
+  "prerequisites": []
+}

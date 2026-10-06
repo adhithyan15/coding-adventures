@@ -1,0 +1,19 @@
+{
+  "chapter": 283,
+  "title": "To charge, To remove, To recognize, To oppose, To argue",
+  "label": "ch:te-to-charge-to-remove-to-recognize-to-oppose-to-argue",
+  "canDo": "I can say to charge, to remove, to recognize, to oppose and to argue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C283-vadincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 283: I can say to charge, to remove, to recognize, to oppose and to argue.",
+    "assesses": [
+      "TE-LEX-C283-KRIYA283-03",
+      "TE-LEX-C283-KRIYA283-04",
+      "TE-LEX-C283-KRIYA283-05"
+    ]
+  }
+}

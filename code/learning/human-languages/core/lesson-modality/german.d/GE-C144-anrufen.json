@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C144-anrufen",
+    "language": "german",
+    "chapter": 144,
+    "sequence": 6380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ae09b3907ecc711"
+  },
+  "findings": []
+}

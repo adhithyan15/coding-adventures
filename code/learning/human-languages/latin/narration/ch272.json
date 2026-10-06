@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 272,
+  "title": "Butcher, Innkeeper, Banker, Envoy, Clerk",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:58586badc2ed4795",
+  "lessons": [
+    {
+      "id": "LA-C272-lanius",
+      "sequence": 14680,
+      "title": "lanius, laniī — a butcher",
+      "headword": "lanius, laniī",
+      "romanization": "lanius, laniī",
+      "gloss": "a butcher",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4414a9efd692f2ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an enemy, then the Latin for war."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lanius, laniī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lanius, laniī — \"a butcher\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lanius, laniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lanius, laniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lanius, laniī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lanius, laniī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say lanius, laniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *lanius, laniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an enemy, then the Latin for war, then say lanius, laniī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an enemy, then the Latin for war, then say *lanius, laniī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lanius, laniī mean? (\"A butcher\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C272-caupo",
+      "sequence": 14690,
+      "title": "caupō, caupōnis — an innkeeper",
+      "headword": "caupō, caupōnis",
+      "romanization": "caupō, caupōnis",
+      "gloss": "an innkeeper",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e642cddffd31518f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for war, then the Latin for a butcher."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: caupō, caupōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "caupō, caupōnis — \"an innkeeper\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caupō, caupōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caupō, caupōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caupō, caupōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caupō, caupōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say caupō, caupōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *caupō, caupōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for war, then the Latin for a butcher, then say caupō, caupōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for war, then the Latin for a butcher, then say *caupō, caupōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does caupō, caupōnis mean? (\"An innkeeper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C272-argentarius",
+      "sequence": 14700,
+      "title": "argentārius, argentāriī — a banker",
+      "headword": "argentārius, argentāriī",
+      "romanization": "argentārius, argentāriī",
+      "gloss": "a banker",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebc76523000b71e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a butcher, then the Latin for an innkeeper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: argentārius, argentāriī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "argentārius, argentāriī — \"a banker\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "argentārius, argentāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *argentārius, argentāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "argentārius, argentāriī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *argentārius, argentāriī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say argentārius, argentāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *argentārius, argentāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a butcher, then the Latin for an innkeeper, then say argentārius, argentāriī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a butcher, then the Latin for an innkeeper, then say *argentārius, argentāriī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does argentārius, argentāriī mean? (\"A banker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C272-legatus",
+      "sequence": 14710,
+      "title": "lēgātus, lēgātī — an envoy",
+      "headword": "lēgātus, lēgātī",
+      "romanization": "lēgātus, lēgātī",
+      "gloss": "an envoy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82c0cfa563e04b37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an innkeeper, then the Latin for a banker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lēgātus, lēgātī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lēgātus, lēgātī — \"an envoy\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lēgātus, lēgātī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lēgātus, lēgātī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lēgātus, lēgātī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lēgātus, lēgātī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say lēgātus, lēgātī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *lēgātus, lēgātī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an innkeeper, then the Latin for a banker, then say lēgātus, lēgātī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an innkeeper, then the Latin for a banker, then say *lēgātus, lēgātī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lēgātus, lēgātī mean? (\"An envoy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C272-scriba",
+      "sequence": 14720,
+      "title": "scrība, scrībae — a clerk",
+      "headword": "scrība, scrībae",
+      "romanization": "scrība, scrībae",
+      "gloss": "a clerk",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6507deab6e264315",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a banker, then the Latin for an envoy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: scrība, scrībae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scrība, scrībae — \"a clerk\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scrība, scrībae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *scrība, scrībae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scrība, scrībae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *scrība, scrībae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say scrība, scrībae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *scrība, scrībae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a banker, then the Latin for an envoy, then say scrība, scrībae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a banker, then the Latin for an envoy, then say *scrība, scrībae* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does scrība, scrībae mean? (\"A clerk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R272-first-pass-words-from-chapters-264-267",
+      "sequence": 14730,
+      "title": "Words from chapters 264-267 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 264-267",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77d76945ebacd59a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for an envoy and a clerk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nowhere, from all sides, here and there, upwards, downwards",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nowhere, from all sides, here and there, upwards, downwards]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "even as, as, if only, on the contrary, at least",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: even as, as, if only, on the contrary, at least]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wonderful, different, similar, fair, unjust",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wonderful, different, similar, fair, unjust]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fat, clever, special, former, nearest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fat, clever, special, former, nearest]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nowhere? (nusquam.) From all sides? (undique.) Here and there? (passim.) Upwards? (sūrsum.) Downwards? (deorsum.) Even as? (sīcut.) As? (velut.) If only? (utinam.) On the contrary? (immō.) At least? (saltem.) Wonderful? (mīrus, mīra, mīrum.) Different? (dīversus, dīversa, dīversum.) Similar? (similis, simile.) Fair? (iūstus, iūsta, iūstum.) Unjust? (iniūstus, iniūsta, iniūstum.) Fat? (pinguis, pingue.) Clever? (callidus, callida, callidum.) Special? (praecipuus, praecipua, praecipuum.) Former? (prīstinus, prīstina, prīstinum.) Nearest? (proximus, proxima, proximum.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R272-second-pass-words-from-chapters-268-272",
+      "sequence": 14740,
+      "title": "Words from chapters 268-272 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 268-272",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:441361c4ebff4591",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for the second of two and suitable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the second of two, suitable, fit, ready, facing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the second of two, suitable, fit, ready, facing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gloomy, drunk, sober, greedy, thrifty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gloomy, drunk, sober, greedy, thrifty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a racecourse, a hall of justice, the senate house, an anchor, an oar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a racecourse, a hall of justice, the senate house, an anchor, an oar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a people, a state; citizenship, a homeland, an enemy, war",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a people, a state; citizenship, a homeland, an enemy, war]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a butcher, an innkeeper, a banker, an envoy, a clerk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a butcher, an innkeeper, a banker, an envoy, a clerk]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The second of two? (alter, altera, alterum.) Suitable? (idōneus, idōnea, idōneum.) Fit? (aptus, apta, aptum.) Ready? (parātus, parāta, parātum.) Facing? (adversus, adversa, adversum.) Gloomy? (maestus, maesta, maestum.) Drunk? (ēbrius, ēbria, ēbrium.) Sober? (sōbrius, sōbria, sōbrium.) Greedy? (avārus, avāra, avārum.) Thrifty? (parcus, parca, parcum.) A racecourse? (circus, circī.) A hall of justice? (basilica, basilicae.) The senate house? (cūria, cūriae.) An anchor? (ancora, ancorae.) An oar? (rēmus, rēmī.) A people? (populus, populī.) A state; citizenship? (cīvitās, cīvitātis.) A homeland? (patria, patriae.) An enemy? (hostis, hostis.) War? (bellum, bellī.) A butcher? (lanius, laniī.) An innkeeper? (caupō, caupōnis.) A banker? (argentārius, argentāriī.) An envoy? (lēgātus, lēgātī.) A clerk? (scrība, scrībae.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C169-asuye",
+  "pathSegment": "KA-PATH-169-AROGYA169",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-169-AROGYA169",
+      "order": 1
+    }
+  ]
+}

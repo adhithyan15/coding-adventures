@@ -1,0 +1,11 @@
+{
+  "id": "AR-C235-sifara",
+  "pathSegment": "AR-PATH-235-MAKAN235",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-235-MAKAN235",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:c900d73f69c8a4b7",
+  "lessonIds": [
+    "SA-C245-nalika",
+    "SA-C245-takram",
+    "SA-C245-phalarasah",
+    "SA-C245-lavangam",
+    "SA-C245-ela"
+  ],
+  "tex": "sanskrit/book/chapters/ch245-tube-buttermilk-fruit-juice-clove-cardamom.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "Muscle, Wound, Scar, Head cold, Note",
+  "label": "ch:mr-muscle-wound-scar-head-cold-note",
+  "canDo": "I can say a muscle, a wound, a scar, a head cold and a note.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C200-citthi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say a muscle, a wound, a scar, a head cold and a note.",
+    "assesses": [
+      "MR-LEX-C200-AAROGYA200-03",
+      "MR-LEX-C200-AAROGYA200-04",
+      "MR-LEX-C200-AAROGYA200-05"
+    ]
+  }
+}

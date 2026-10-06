@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Recuerdos y costumbres",
+  "label": "ch:es-recuerdos-y-costumbres",
+  "canDo": "I can talk about childhood, customs, the purpose of something and an improvement, and say where people go for help.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C483-acudir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can talk about childhood, customs, the purpose of something and an improvement, and say where people go for help.",
+    "assesses": [
+      "ES-LEX-C483-VIDA-03",
+      "ES-LEX-C483-VIDA-04",
+      "ES-LEX-C483-VIDA-05"
+    ]
+  }
+}

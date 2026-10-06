@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C247-naushniki",
+    "language": "russian",
+    "chapter": 247,
+    "sequence": 15130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:773d93edb91dcf80"
+  },
+  "findings": []
+}

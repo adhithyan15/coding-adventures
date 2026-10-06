@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "To dance, To celebrate, To greet, To feel shy, To be surprised",
+  "label": "ch:te-to-dance-to-celebrate-to-greet-to-feel-shy-to-be-surprised",
+  "canDo": "I can say to dance, to celebrate, to greet, to feel shy and to be surprised.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C161-ascaryapovu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say to dance, to celebrate, to greet, to feel shy and to be surprised.",
+    "assesses": [
+      "TE-LEX-C161-KRIYA161-03",
+      "TE-LEX-C161-KRIYA161-04",
+      "TE-LEX-C161-KRIYA161-05"
+    ]
+  }
+}

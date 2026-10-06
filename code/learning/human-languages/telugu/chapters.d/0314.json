@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "Mason, Plumber, Mechanic, Watchman, Milkman",
+  "label": "ch:te-mason-plumber-mechanic-watchman-milkman",
+  "canDo": "I can say a mason, a plumber, a mechanic, a watchman and a milkman.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-R314-second-pass-words-from-chapters-312-314",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can say a mason, a plumber, a mechanic, a watchman and a milkman.",
+    "assesses": [
+      "TE-LEX-C314-PANI314-03",
+      "TE-LEX-C314-PANI314-04",
+      "TE-LEX-C314-PANI314-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C280-shatranj",
+    "language": "persian",
+    "chapter": 280,
+    "sequence": 14480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec76e5f9efcfb3ef"
+  },
+  "findings": []
+}

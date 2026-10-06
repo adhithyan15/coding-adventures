@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:3b6572f26d26da6d",
+  "lessonIds": [
+    "BN-C254-nirbachon",
+    "BN-C254-subidha",
+    "BN-C254-bipod",
+    "BN-C254-nirapotta",
+    "BN-C254-aoyaj",
+    "BN-R254-first-pass-words-from-chapters-246-249",
+    "BN-R254-second-pass-words-from-chapters-250-254"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch254.txt",
+  "json": "bengali/narration/ch254.json",
+  "textHash": "fnv1a64:a24069977b2997ad",
+  "jsonHash": "fnv1a64:3c15d43cfb923fe2",
+  "findings": []
+}

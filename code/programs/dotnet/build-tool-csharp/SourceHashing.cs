@@ -224,9 +224,9 @@ public static partial class Hasher
     private const ulong MaximumGlobMatchWork = 50_000_000;
 
     public const string LanguageSourceInputRegistryDigest =
-        "190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530";
+        "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621";
     public const string RepositorySourceInputBoundaryDigest =
-        "c36bb88a03fa6bd7585e22139f59f4c64e1f8547dbe64bad234483cc2a7b4566";
+        "220436e5989c1d3b46770da00de3d5c7d55cc0c4d0535f2940daa9c6daa6d6e3";
 
     private static readonly JsonSerializerOptions RegistryJsonOptions = new()
     {
@@ -611,7 +611,10 @@ public static partial class Hasher
             {
                 throw new SourceHashException("SOURCE_HASH_TRACKED_SNAPSHOT_FAILED");
             }
-            using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+            // Large hosted-runner checkouts can take longer than fifteen seconds
+            // to enumerate while CI is contended. Keep the operation bounded, but
+            // leave enough headroom for a valid repository-index snapshot.
+            using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(60));
             var stdoutTask = ReadBoundedStream(process.StandardOutput.BaseStream, 1024 * 1024, cancellation.Token);
             var stderrTask = ReadBoundedStream(process.StandardError.BaseStream, 1024 * 1024, cancellation.Token);
             process.WaitForExitAsync(cancellation.Token).GetAwaiter().GetResult();
@@ -1027,7 +1030,7 @@ public static partial class Hasher
                rule.Suffixes.Any(suffix => basename.EndsWith(suffix, StringComparison.Ordinal));
     }
 
-    private static bool PortableGlobMatches(string pattern, string path)
+    internal static bool PortableGlobMatches(string pattern, string path)
     {
         var patternParts = pattern.Split('/');
         var pathParts = path.Split('/');
@@ -1178,7 +1181,7 @@ public static partial class Hasher
         return true;
     }
 
-    private static void ValidatePortableGlob(string pattern)
+    internal static void ValidatePortableGlob(string pattern)
     {
         if (string.IsNullOrEmpty(pattern) ||
             pattern.EnumerateRunes().Count() > 512 ||
@@ -1249,7 +1252,7 @@ public static partial class Hasher
         return false;
     }
 
-    private static void ValidatePortablePath(string path)
+    internal static void ValidatePortablePath(string path)
     {
         if (string.IsNullOrEmpty(path) ||
             path.EnumerateRunes().Count() > 512 ||

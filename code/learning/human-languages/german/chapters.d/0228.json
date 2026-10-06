@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "A decision, A memory, Permission, A result, An explanation",
+  "label": "ch:ge-a-decision-a-memory-permission-a-result-an-explanation",
+  "canDo": "I can say a decision, a memory, permission, a result and an explanation.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-R228-second-pass-words-from-chapters-224-228",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say a decision, a memory, permission, a result and an explanation.",
+    "assesses": [
+      "GE-LEX-C228-THING228-03",
+      "GE-LEX-C228-THING228-04",
+      "GE-LEX-C228-THING228-05"
+    ]
+  }
+}

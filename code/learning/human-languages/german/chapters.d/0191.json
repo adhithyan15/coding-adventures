@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "To prepare, To choose, To wake, To weigh, To draw",
+  "label": "ch:ge-to-prepare-to-choose-to-wake-to-weigh-to-draw",
+  "canDo": "I can say to prepare, to choose, to wake, to weigh and to draw.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-R191-second-pass-words-from-chapters-187-191",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say to prepare, to choose, to wake, to weigh and to draw.",
+    "assesses": [
+      "GE-LEX-C191-VERB191-03",
+      "GE-LEX-C191-VERB191-04",
+      "GE-LEX-C191-VERB191-05"
+    ]
+  }
+}

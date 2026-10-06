@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C156-schmerz",
+    "language": "german",
+    "chapter": 156,
+    "sequence": 7170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6362cf0feb8b61a6"
+  },
+  "findings": []
+}

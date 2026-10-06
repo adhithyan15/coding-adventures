@@ -1,0 +1,11 @@
+{
+  "id": "LA-C266-similis",
+  "pathSegment": "LA-PATH-266-QUAL266",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-266-QUAL266",
+      "order": 2
+    }
+  ]
+}

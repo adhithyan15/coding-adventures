@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:0845801ed64132b0",
+  "lessonIds": [
+    "LA-C252-ampulla",
+    "LA-C252-sartago",
+    "LA-C252-furnus",
+    "LA-C252-candelabrum",
+    "LA-C252-tabella"
+  ],
+  "tex": "latin/book/chapters/ch252-small-flask-frying-pan-oven-candlestick-small-tablet.tex"
+}

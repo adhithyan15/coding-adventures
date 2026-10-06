@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R181-second-pass-words-from-chapters-177-181",
+    "language": "sanskrit",
+    "chapter": 181,
+    "sequence": 9890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89e3da76a4fa6cb4"
+  },
+  "findings": []
+}

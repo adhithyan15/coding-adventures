@@ -1,0 +1,11 @@
+{
+  "id": "LA-C248-officium",
+  "pathSegment": "LA-PATH-248-RES248",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-248-RES248",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@coding-adventures/forme-plugin-runner-ts",
+  "version": "1.0.0",
+  "description": "Bounded TypeScript plugin-side runner for the Forme FM02 wire protocol.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-errors": "file:../forme-errors",
+    "@coding-adventures/forme-stage": "file:../forme-stage",
+    "@coding-adventures/forme-types": "file:../forme-types"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "@vitest/coverage-v8": "^4.1.11",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.11"
+  }
+}

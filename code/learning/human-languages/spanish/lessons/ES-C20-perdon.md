@@ -8,18 +8,18 @@ type: phrase
 headword: perdón
 gloss: the other sorry — "give completely" — for fault and for getting past people, where lo siento is for regret
 concept_tag: ES-COURTESY-PARDON
-prerequisites: [ES-C20-lo-siento]
+prerequisites: [ES-C20-lo-siento, ES-C50-sintesis-pedir-bien]
 sounds: [r-tap, accent-mark]
 roots: [perdonare-latin, donare-latin]
 etymology_hook: "perdón ← perdonar ← Latin per- ('thoroughly') + dōnāre ('to give') — literally 'to give completely,' i.e. to forgive; the same dōnāre as English donate and condone"
 duration:
   max_seconds: 220
 requires:
-  knowledge: [ES-LEX-LO-SIENTO-01, ES-ETYMON-SENTIR-02]
+  knowledge: [ES-LEX-LO-SIENTO-01, ES-ETYMON-SENTIR-02, ES-CULTURE-COMMAND-REGISTER]
 introduces:
   knowledge: [ES-PRAGMATICS-SORRY-03, ES-ETYMON-PERDON-04]
 practises:
-  knowledge: [ES-LEX-POR-FAVOR, ES-LEX-LO-SIENTO-01, ES-ETYMON-SENTIR-02, ES-PRAGMATICS-SORRY-03, ES-ETYMON-PERDON-04]
+  knowledge: [ES-LEX-POR-FAVOR, ES-LEX-LO-SIENTO-01, ES-ETYMON-SENTIR-02, ES-PRAGMATICS-SORRY-03, ES-ETYMON-PERDON-04, ES-CULTURE-COMMAND-REGISTER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,11 +31,13 @@ reviews_of: [ES-C20-lo-siento, ES-C06-por-favor]
 # perdón — the sorry that asks for something back
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-POR-FAVOR, ES-LEX-LO-SIENTO-01, ES-ETYMON-SENTIR-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-POR-FAVOR, ES-LEX-LO-SIENTO-01, ES-ETYMON-SENTIR-02, ES-CULTURE-COMMAND-REGISTER] -->
 
 [PAUSE 2s] *Lo siento* names a feeling. Spanish keeps a **second** word for
 a different job — one that is not about your feelings at all, but about
 something you want from the other person.
+
+[PAUSE 2s] One from the commands before you apologise: to a friend, *come*; to a stranger, *coma, por favor*. Spanish spends its politeness on the choice of person, not on padding.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-ETYMON-PERDON-04]; assesses=[] -->

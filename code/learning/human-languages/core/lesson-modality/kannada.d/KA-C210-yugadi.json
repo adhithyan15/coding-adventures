@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C210-yugadi",
+    "language": "kannada",
+    "chapter": 210,
+    "sequence": 9770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6bc16925fd868e31"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C145-telephoner",
+  "pathSegment": "FR-PATH-145-VERBES145",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-145-VERBES145",
+      "order": 2
+    }
+  ]
+}

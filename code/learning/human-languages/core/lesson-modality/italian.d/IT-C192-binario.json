@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C192-binario",
+    "language": "italian",
+    "chapter": 192,
+    "sequence": 10810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21a6b65a183cf385"
+  },
+  "findings": []
+}

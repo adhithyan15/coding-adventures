@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:3132dcaeb22d9b2f",
+  "lessonIds": [
+    "LA-C220-ancilla",
+    "LA-C220-libertus",
+    "LA-C220-advena",
+    "LA-C220-adulescens",
+    "LA-C220-vidua"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch220.txt",
+  "json": "latin/narration/ch220.json",
+  "textHash": "fnv1a64:313086b3665fcb78",
+  "jsonHash": "fnv1a64:171a111c59a1d997",
+  "findings": []
+}

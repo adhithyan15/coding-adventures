@@ -4,7 +4,7 @@
   "chapter": 443,
   "title": "El Animo",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f20a4bbc41f48f06",
+  "sourceHash": "fnv1a64:6ecbea53eb0e39cd",
   "lessons": [
     {
       "id": "ES-C443-doler",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:23040de87a60849d",
+      "sourceHash": "fnv1a64:e9097ff874195e58",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd711b9d139aa9af",
+      "sourceHash": "fnv1a64:06e520cfff7c9be2",
       "notice": null,
       "blocks": [
         {
@@ -351,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c97c812697a03971",
+      "sourceHash": "fnv1a64:87dbb93a203ce329",
       "notice": null,
       "blocks": [
         {
@@ -514,7 +514,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94249522281e0dc7",
+      "sourceHash": "fnv1a64:0e48032a387397b2",
       "notice": null,
       "blocks": [
         {
@@ -677,7 +677,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da90347e246bbf55",
+      "sourceHash": "fnv1a64:f55e3ba92ff85615",
       "notice": null,
       "blocks": [
         {

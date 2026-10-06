@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C243-balavan",
+    "language": "sanskrit",
+    "chapter": 243,
+    "sequence": 14510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f36c33617b71a57d"
+  },
+  "findings": []
+}

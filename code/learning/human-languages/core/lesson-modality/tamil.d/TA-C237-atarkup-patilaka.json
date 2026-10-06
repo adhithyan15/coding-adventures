@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C237-atarkup-patilaka",
+    "language": "tamil",
+    "chapter": 237,
+    "sequence": 12980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fae4f0f445ce6506"
+  },
+  "findings": []
+}

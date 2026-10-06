@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C237-empirer",
+    "language": "french",
+    "chapter": 237,
+    "sequence": 13620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:461f52eb3367098a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R184-first-pass-words-from-chapters-176-179",
+    "language": "kannada",
+    "chapter": 184,
+    "sequence": 8400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a48801a9131ddfdc"
+  },
+  "findings": []
+}

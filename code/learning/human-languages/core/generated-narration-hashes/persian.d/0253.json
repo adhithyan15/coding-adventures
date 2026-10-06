@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:6397e26f923af027",
+  "lessonIds": [
+    "FA-C253-piyade-shodan",
+    "FA-C253-vared-shodan",
+    "FA-C253-kharej-shodan",
+    "FA-C253-hel-dadan",
+    "FA-C253-andakhtan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch253.txt",
+  "json": "persian/narration/ch253.json",
+  "textHash": "fnv1a64:0d4574b28a5373e9",
+  "jsonHash": "fnv1a64:464b7d2e80aa1798",
+  "findings": []
+}

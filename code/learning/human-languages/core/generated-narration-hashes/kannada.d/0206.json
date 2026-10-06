@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:d5830bee7e599394",
+  "lessonIds": [
+    "KA-C206-edavu",
+    "KA-C206-tevalu",
+    "KA-C206-himbalisu",
+    "KA-C206-tappisikollu",
+    "KA-C206-aturapadu",
+    "KA-R206-first-pass-words-from-chapters-198-201",
+    "KA-R206-second-pass-words-from-chapters-202-206"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch206.txt",
+  "json": "kannada/narration/ch206.json",
+  "textHash": "fnv1a64:ab1e5a0bfc675848",
+  "jsonHash": "fnv1a64:46590286132af7fd",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C171-bidaya",
+  "pathSegment": "AR-PATH-171-WAQT171",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-171-WAQT171",
+      "order": 2
+    }
+  ]
+}

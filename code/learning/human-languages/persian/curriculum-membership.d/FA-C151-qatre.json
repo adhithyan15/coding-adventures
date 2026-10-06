@@ -1,0 +1,11 @@
+{
+  "id": "FA-C151-qatre",
+  "pathSegment": "FA-PATH-151-SALAMAT151",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-151-SALAMAT151",
+      "order": 3
+    }
+  ]
+}

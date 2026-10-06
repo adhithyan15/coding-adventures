@@ -11,6 +11,7 @@ build-type:    Simple
 extra-doc-files:
     README.md
     CHANGELOG.md
+    required_capabilities.json
 
 library
     exposed-modules:  CodingAdventures.BarcodeLayout1D
@@ -26,12 +27,19 @@ test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
     other-modules:    BarcodeLayout1DSpec
+                    , BarcodeLayout1DConformanceSpec
     hs-source-dirs:   test
     build-depends:    aeson >=2.0 && <3
                     , base >=4.14 && <5
                     , barcode-layout-1d
                     , containers >=0.6 && <0.8
+                    , bytestring >=0.11 && <0.13
+                    , directory >=1.3 && <1.4
+                    , filepath >=1.4 && <1.6
                     , hspec ==2.*
                     , paint-instructions >=0.1 && <0.2
+                    , process >=1.6 && <1.7
+                    , scientific >=0.3 && <0.4
+                    , text >=1.2 && <2.2
     ghc-options:      -Wall
     default-language: Haskell2010

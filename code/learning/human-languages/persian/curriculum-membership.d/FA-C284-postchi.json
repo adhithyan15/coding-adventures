@@ -1,0 +1,11 @@
+{
+  "id": "FA-C284-postchi",
+  "pathSegment": "FA-PATH-284-KAR284",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-284-KAR284",
+      "order": 2
+    }
+  ]
+}

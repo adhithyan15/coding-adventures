@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:9f6e8b232e054b28",
+  "lessonIds": [
+    "TA-C178-cuvaiyana",
+    "TA-C178-malivana",
+    "TA-C178-vilaiyuyarnta",
+    "TA-C178-ilavacam",
+    "TA-C178-palutta",
+    "TA-R178-first-pass-words-from-chapters-170-173",
+    "TA-R178-second-pass-words-from-chapters-174-178"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch178.txt",
+  "json": "tamil/narration/ch178.json",
+  "textHash": "fnv1a64:666085146e645a6c",
+  "jsonHash": "fnv1a64:8b6e25cf0c0a2b36",
+  "findings": []
+}

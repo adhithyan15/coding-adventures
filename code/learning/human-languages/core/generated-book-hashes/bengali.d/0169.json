@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:950e70127c347eea",
+  "lessonIds": [
+    "BN-C169-anondo",
+    "BN-C169-lojja",
+    "BN-C169-bhoy",
+    "BN-C169-rag",
+    "BN-C169-shanti"
+  ],
+  "tex": "bengali/book/chapters/ch169-joy-shame-fear-anger-peace.tex"
+}

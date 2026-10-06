@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:2dd8c8bf61b69ae1",
+  "lessonIds": [
+    "GE-C153-wandern",
+    "GE-C153-wechseln",
+    "GE-C153-werfen",
+    "GE-C153-wiederholen",
+    "GE-C153-ziehen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch153.txt",
+  "json": "german/narration/ch153.json",
+  "textHash": "fnv1a64:5f822c856d2b41b0",
+  "jsonHash": "fnv1a64:8dd67365ae82ec00",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:d3494de5ee0e3682",
+  "lessonIds": [
+    "LA-C278-volumen",
+    "LA-C278-pagina",
+    "LA-C278-littera",
+    "LA-C278-verbum",
+    "LA-C278-nomen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch278.txt",
+  "json": "latin/narration/ch278.json",
+  "textHash": "fnv1a64:c73cfca5126acaff",
+  "jsonHash": "fnv1a64:157bcd273bdca7fa",
+  "findings": []
+}

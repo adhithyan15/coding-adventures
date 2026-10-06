@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "To rain, To go with, To add, To announce, To appear",
+  "label": "ch:it-to-rain-to-go-with-to-add-to-announce-to-appear",
+  "canDo": "I can say to rain, to go with, to add, to announce and to appear.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C178-apparire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say to rain, to go with, to add, to announce and to appear.",
+    "assesses": [
+      "IT-LEX-C178-VERBI178-03",
+      "IT-LEX-C178-VERBI178-04",
+      "IT-LEX-C178-VERBI178-05"
+    ]
+  }
+}

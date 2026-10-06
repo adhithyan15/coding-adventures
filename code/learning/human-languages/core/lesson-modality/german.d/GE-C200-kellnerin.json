@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C200-kellnerin",
+    "language": "german",
+    "chapter": 200,
+    "sequence": 10230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a985936ced8d1e8"
+  },
+  "findings": []
+}

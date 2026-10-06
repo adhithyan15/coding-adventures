@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:73fedd25f568a3b7",
+  "lessonIds": [
+    "UR-C153-nars",
+    "UR-C153-mariz",
+    "UR-C153-ambulans",
+    "UR-C153-palak",
+    "UR-C153-bhau"
+  ],
+  "tex": "urdu/book/chapters/ch153-nurse-patient-ambulance-eyelid-eyebrow.tex"
+}

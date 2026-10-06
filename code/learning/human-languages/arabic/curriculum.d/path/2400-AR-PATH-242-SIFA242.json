@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-242-SIFA242",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "AR-EXT-242-SIFA242"
+  ],
+  "after": []
+}

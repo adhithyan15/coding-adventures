@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Boring, Fun, Strange, Different, Same",
+  "label": "ch:fr-boring-fun-strange-different-same",
+  "canDo": "I can say boring, fun, strange, different and the same.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C219-pareil-pareille",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say boring, fun, strange, different and the same.",
+    "assesses": [
+      "FR-LEX-C219-QUAL219-03",
+      "FR-LEX-C219-QUAL219-04",
+      "FR-LEX-C219-QUAL219-05"
+    ]
+  }
+}

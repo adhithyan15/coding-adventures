@@ -1,0 +1,11 @@
+{
+  "id": "FR-C215-ordonnance",
+  "pathSegment": "FR-PATH-215-SANTE215",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-215-SANTE215",
+      "order": 1
+    }
+  ]
+}

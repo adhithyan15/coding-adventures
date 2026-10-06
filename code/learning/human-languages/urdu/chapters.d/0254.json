@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "Novel, Poem, Sitar, Guitar, Tabla",
+  "label": "ch:ur-novel-poem-sitar-guitar-tabla",
+  "canDo": "I can say a novel, a poem, a sitar, a guitar and a tabla.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C254-tabla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say a novel, a poem, a sitar, a guitar and a tabla.",
+    "assesses": [
+      "UR-LEX-C254-CHIZ254-03",
+      "UR-LEX-C254-CHIZ254-04",
+      "UR-LEX-C254-CHIZ254-05"
+    ]
+  }
+}

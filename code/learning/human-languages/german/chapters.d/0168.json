@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Impossible, Bright, Dark, Full, Old-fashioned",
+  "label": "ch:ge-impossible-bright-dark-full-old-fashioned",
+  "canDo": "I can say impossible, bright, dark, full and old-fashioned.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C168-altmodisch",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say impossible, bright, dark, full and old-fashioned.",
+    "assesses": [
+      "GE-LEX-C168-QUAL168-03",
+      "GE-LEX-C168-QUAL168-04",
+      "GE-LEX-C168-QUAL168-05"
+    ]
+  }
+}

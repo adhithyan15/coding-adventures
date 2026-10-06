@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-192-KAAM192",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a company, a colleague, a meeting, a contract and an interview.",
+  "prerequisites": []
+}

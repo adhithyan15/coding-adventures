@@ -17,6 +17,9 @@ on:
       - "code/packages/typescript/forme-aot-css-slicer/**"
       - "code/packages/typescript/forme-cache/**"
       - "code/packages/typescript/forme-cli/**"
+      - "code/packages/typescript/forme-deploy-runner-core/**"
+      - "code/packages/typescript/forme-deploy-runner-fs-adapter/**"
+      - "code/packages/typescript/forme-deploy-runner-github-pages-adapter/**"
       - "code/packages/typescript/forme-capability/**"
       - "code/packages/typescript/forme-emit-site-fs/**"
       - "code/packages/typescript/forme-errors/**"
@@ -41,6 +44,9 @@ on:
       - "code/packages/typescript/forme-aot-css-slicer/**"
       - "code/packages/typescript/forme-cache/**"
       - "code/packages/typescript/forme-cli/**"
+      - "code/packages/typescript/forme-deploy-runner-core/**"
+      - "code/packages/typescript/forme-deploy-runner-fs-adapter/**"
+      - "code/packages/typescript/forme-deploy-runner-github-pages-adapter/**"
       - "code/packages/typescript/forme-capability/**"
       - "code/packages/typescript/forme-emit-site-fs/**"
       - "code/packages/typescript/forme-errors/**"
@@ -60,21 +66,25 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: deploy-root-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  group: forme-pages-${{ github.event.pull_request.number || 'publish' }}
+  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "22"
           cache: npm
@@ -92,11 +102,67 @@ jobs:
           ! grep -R "forme-asset:" code/sites/landing-page/dist
           ! grep -q "<script" code/sites/landing-page/dist/index.html
 
-      - name: Deploy to GitHub Pages (root)
-        if: github.event_name != 'pull_request'
-        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
+      - name: Prove write-free target plan
+        working-directory: code/sites/landing-page
+        run: npm run deploy:dry-run
+
+      - name: Prove filesystem rollback contract
+        working-directory: code/packages/typescript/forme-deploy-runner-fs-adapter
+        run: npm test
+
+      - name: Checksum exact deploy input
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: code/sites/landing-page/.forme/deploy-input
+        run: find . -type f ! -name CHECKSUMS.sha256 -print0 | sort -z | xargs -0 sha256sum > CHECKSUMS.sha256
+
+      - name: Upload exact deploy input
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: code/sites/landing-page/dist
-          destination_dir: .
-          keep_files: true
+          name: forme-landing-deploy-input
+          path: code/sites/landing-page/.forme/deploy-input
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "22"
+
+      - name: Bootstrap reviewed local dependency graph
+        working-directory: code/sites/landing-page
+        run: npm run bootstrap
+
+      - name: Download exact deploy input
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: forme-landing-deploy-input
+          path: code/sites/landing-page/.forme/deploy-input
+
+      - name: Verify deploy input checksum
+        working-directory: code/sites/landing-page/.forme/deploy-input
+        run: sha256sum -c CHECKSUMS.sha256
+
+      - name: Publish through Forme
+        working-directory: code/sites/landing-page
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run deploy
+
+      - name: Assert bounded live availability
+        run: |
+          curl --fail --location --retry 6 --retry-delay 10 --max-time 20 https://adhithyan15.github.io/coding-adventures/ -o /tmp/forme-landing.html
+          grep -q '<meta name="generator" content="Forme">' /tmp/forme-landing.html

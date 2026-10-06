@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:d28638b4c4bd7b72",
+  "lessonIds": [
+    "KA-C248-dasaka",
+    "KA-C248-varsikotsava",
+    "KA-C248-gaduvu",
+    "KA-C248-muhurta",
+    "KA-C248-onduvare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch248.txt",
+  "json": "kannada/narration/ch248.json",
+  "textHash": "fnv1a64:cb6ce8ef5b9e3b33",
+  "jsonHash": "fnv1a64:bf8104443ca17eed",
+  "findings": []
+}

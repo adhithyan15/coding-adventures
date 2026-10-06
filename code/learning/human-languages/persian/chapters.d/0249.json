@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Piece, Turmeric, Crispy rice from the bottom of the pot, Celery, Sour cherry",
+  "label": "ch:fa-piece-turmeric-crispy-rice-from-the-bottom-of-the-pot-celery-sour-cherry",
+  "canDo": "I can say a piece, turmeric, crispy rice from the bottom of the pot, celery and a sour cherry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C249-albalu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say a piece, turmeric, crispy rice from the bottom of the pot, celery and a sour cherry.",
+    "assesses": [
+      "FA-LEX-C249-CHIZ249-03",
+      "FA-LEX-C249-CHIZ249-04",
+      "FA-LEX-C249-CHIZ249-05"
+    ]
+  }
+}

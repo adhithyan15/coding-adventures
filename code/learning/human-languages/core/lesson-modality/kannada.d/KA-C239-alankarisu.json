@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C239-alankarisu",
+    "language": "kannada",
+    "chapter": 239,
+    "sequence": 11270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:798a74def4de1b40"
+  },
+  "findings": []
+}

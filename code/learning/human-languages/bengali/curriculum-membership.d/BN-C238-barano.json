@@ -1,0 +1,11 @@
+{
+  "id": "BN-C238-barano",
+  "pathSegment": "BN-PATH-238-ACT238",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-238-ACT238",
+      "order": 1
+    }
+  ]
+}

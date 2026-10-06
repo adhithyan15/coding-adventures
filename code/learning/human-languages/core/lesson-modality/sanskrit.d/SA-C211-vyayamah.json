@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C211-vyayamah",
+    "language": "sanskrit",
+    "chapter": 211,
+    "sequence": 12030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9db62455a052962f"
+  },
+  "findings": []
+}

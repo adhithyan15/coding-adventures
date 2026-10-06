@@ -68,8 +68,11 @@ Shard sub-dirs (256 of them) ARE created on demand.
 `put` writes to a temp file then `fs.rename`s onto the final path.
 POSIX guarantees `rename` is atomic within a single filesystem, so
 concurrent puts for the same key never leave a partial-write reader.
-Cost: one extra file create per write.  Set to `false` to skip the
-temp-rename dance when concurrent writes are impossible
+Windows cannot rename over an existing destination, so replacements
+are serialized per key within the process and remove the old complete
+entry before renaming the new one. A concurrent Windows reader may see
+a brief cache miss, but never a partial value. Set to `false` to skip the
+temp-file protocol when concurrent writes are impossible
 (single-process, single-thread, or caller-coordinated).
 
 ## Capabilities — `["fs"]`
@@ -89,9 +92,11 @@ Four concerns addressed:
    match the regex) throws synchronously.  Defence in depth:
    `path.join(cacheDir, key.slice(0, 2), ...)` would normalise
    even if the assertion were bypassed.
-2. **Atomic-write correctness.**  Each `put` uses
+2. **Complete-value write correctness.**  Each `put` uses
    `writeFile(temp) + rename(temp → final)`.  Concurrent puts to
-   the same key never produce a partial-read.  Failed renames
+   the same key never produce a partial read. POSIX replacement is
+   atomic; Windows replacement is process-serialized and may expose a
+   brief miss. Failed renames
    trigger best-effort temp-file unlink for cleanup.  Tests
    pin both the happy-path "no .tmp leftovers" and the
    failure-cleanup paths.
@@ -153,6 +158,9 @@ from `forme-aot-incremental-cache` verbatim.  No spec divergences.
   within one filesystem.  If `cacheDir` straddles a mount point
   (rare for build artefacts) the atomic-write guarantee weakens
   to "almost always atomic in practice."
+- **Windows replacement is not cross-process atomic.** A reader in
+  another process may observe a cache miss between unlink and rename.
+  Cache values remain complete and rebuildable.
 - **No fsync.**  We don't call `fdatasync` on cache entries —
   power-loss-during-write may corrupt the latest entry.  Acceptable
   for build caches (rebuild on next run); not acceptable for

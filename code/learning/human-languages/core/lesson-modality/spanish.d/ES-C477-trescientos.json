@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C477-trescientos",
+    "language": "spanish",
+    "chapter": 477,
+    "sequence": 13390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2fc80ac5a0240f9"
+  },
+  "findings": []
+}

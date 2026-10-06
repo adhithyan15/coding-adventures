@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:df7ae8b3010a7251",
+  "lessonIds": [
+    "RU-C165-vorona",
+    "RU-C165-oryol",
+    "RU-C165-popugay",
+    "RU-C165-khomyak",
+    "RU-C165-yozh"
+  ],
+  "tex": "russian/book/chapters/ch165-crow-eagle-parrot-hamster-hedgehog.tex"
+}

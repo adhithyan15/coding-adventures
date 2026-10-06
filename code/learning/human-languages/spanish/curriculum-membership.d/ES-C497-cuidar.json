@@ -1,0 +1,11 @@
+{
+  "id": "ES-C497-cuidar",
+  "pathSegment": "ES-PATH-497-FAMILIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-497-FAMILIA",
+      "order": 3
+    }
+  ]
+}

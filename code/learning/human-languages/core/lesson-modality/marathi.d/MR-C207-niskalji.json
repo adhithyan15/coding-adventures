@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C207-niskalji",
+    "language": "marathi",
+    "chapter": 207,
+    "sequence": 10910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46f42259d8b6a74a"
+  },
+  "findings": []
+}

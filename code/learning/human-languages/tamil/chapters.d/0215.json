@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Pencil, Dictionary, Fee, Letter, Envelope",
+  "label": "ch:ta-pencil-dictionary-fee-letter-envelope",
+  "canDo": "I can say a pencil, a dictionary, a fee, a letter and an envelope.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C215-urai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say a pencil, a dictionary, a fee, a letter and an envelope.",
+    "assesses": [
+      "TA-LEX-C215-PORUL215-03",
+      "TA-LEX-C215-PORUL215-04",
+      "TA-LEX-C215-PORUL215-05"
+    ]
+  }
+}

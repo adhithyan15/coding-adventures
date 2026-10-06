@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C252-verita",
+    "language": "italian",
+    "chapter": 252,
+    "sequence": 15220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07380fb7a7caa10d"
+  },
+  "findings": []
+}

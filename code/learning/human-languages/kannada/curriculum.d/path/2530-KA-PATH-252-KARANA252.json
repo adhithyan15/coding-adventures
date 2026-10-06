@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-252-KARANA252",
+  "spine_node": "SPINE-SAY-WHY",
+  "before": [],
+  "inline": [
+    "KA-EXT-252-KARANA252"
+  ],
+  "after": []
+}

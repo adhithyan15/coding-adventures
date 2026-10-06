@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C217-klug",
+    "language": "german",
+    "chapter": 217,
+    "sequence": 11510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5fb64064fa26037"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C213-kuppai",
+    "language": "tamil",
+    "chapter": 213,
+    "sequence": 11270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa89971304658e24"
+  },
+  "findings": []
+}

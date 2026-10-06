@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:d411bcbcb9433710",
+  "lessonIds": [
+    "LA-C210-autem",
+    "LA-C210-vero",
+    "LA-C210-profecto",
+    "LA-C210-fere",
+    "LA-C210-tantum"
+  ],
+  "tex": "latin/book/chapters/ch210-moreover-indeed-surely-about-only.tex"
+}

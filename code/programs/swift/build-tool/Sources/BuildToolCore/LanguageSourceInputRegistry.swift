@@ -126,7 +126,7 @@ enum LanguageSourceInputRegistryProjection {
           "schema_version": 1,
           "universal_inputs": {
             "build_filenames": ["BUILD", "BUILD_linux", "BUILD_mac", "BUILD_mac_and_linux", "BUILD_windows"],
-            "generated_directory_components": [".build", ".cargo", ".claude", ".dart_tool", ".git", ".gradle", ".hg", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".stack-work", ".svn", ".tox", ".venv", "Pods", "__pycache__", "_build", "build", "cover", "deps", "dist", "dist-newstyle", "gradle-build", "node_modules", "target", "vendor"],
+            "generated_directory_components": [".build", ".cargo", ".claude", ".dart_tool", ".git", ".gradle", ".hg", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".stack-work", ".svn", ".tox", ".venv", "Pods", "__pycache__", "_build", "blib", "build", "cover", "deps", "dist", "dist-newstyle", "gradle-build", "node_modules", "target", "vendor"],
             "root_exact_basenames": ["required_capabilities.json"]
           },
           "languages": [
@@ -996,8 +996,8 @@ enum LanguageSourceInputRegistryProjection {
                 {
                   "id": "typescript-blog-authored-inputs",
                   "package_root": "code/sites/blog",
-                  "paths": ["data/.2026-05-08-capability-typed-stages.md.id.json", "data/.2026-05-12-why-forme.md.id.json", "data/.2026-05-15-hello-forme.md.id.json", "data/2026-05-08-capability-typed-stages.md", "data/2026-05-12-why-forme.md", "data/2026-05-15-hello-forme.md", "data/assets/.forme-pipeline.svg.id.json", "data/assets/forme-pipeline.svg"],
-                  "reason": "The blog Forme pipeline consumes exactly the three reviewed posts, their persisted identities, and the checked SVG asset with its identity sidecar.",
+                  "paths": ["data/.2026-05-08-capability-typed-stages.md.id.json", "data/.2026-05-12-why-forme.md.id.json", "data/.2026-05-15-hello-forme.md.id.json", "data/2026-05-08-capability-typed-stages.md", "data/2026-05-12-why-forme.md", "data/2026-05-15-hello-forme.md", "data/assets/.forme-pipeline.svg.id.json", "data/assets/.pipeline-steps.js.id.json", "data/assets/forme-pipeline.svg"],
+                  "reason": "The blog Forme pipeline consumes exactly the three reviewed posts, their persisted identities, the checked SVG asset, and the progressive module identity sidecar; TypeScript code remains suffix-selected.",
                   "owner": "build-tool-site-authored-resource-source-input-extension"
                 },
                 {

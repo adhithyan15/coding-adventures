@@ -30,5 +30,82 @@ export const scriptInventoryEvidence = {
     );
     expect(missing).toEqual(new Set());
     expect(scripts.devanagari!.complete).toBe(true);
+    // These eleven once lifted the pen after every run of their Commons
+    // animation or panel diagram (3, 3, 2, 2, 3, 3, 2, 2, 2, 3 and 6 lifts),
+    // a count at most 15% of HP Labs India's native writers use. They now
+    // lift only where those writers do. Each note must cite the source's
+    // movement count, the native stroke count and its share; each variation
+    // must say the data gives counts only.
+    //
+    // The second eleven (3, 4, 5, 3, 3, 3, 2, 2, 2, 2 and 2 lifts) matched 17%
+    // to 39% of those writers; the native mode is one lift fewer, and each now
+    // climbs the stem it then descends instead of lifting before it.
+    const nativeLifts: ReadonlyArray<
+      readonly [string, number, string, string, string, string]
+    > = [
+      ["क", 1, "four", "two", "74", "61 of 82"],
+      ["य", 1, "four", "two", "89", "74 of 83"],
+      ["र", 1, "three", "two", "96", "81 of 84"],
+      ["प", 1, "three", "two", "98", "80 of 82"],
+      ["ध", 1, "four", "two", "81", "64 of 79"],
+      ["ल", 1, "four", "two", "54", "45 of 84"],
+      ["द", 1, "three", "two", "95", "77 of 81"],
+      ["ठ", 1, "three", "two", "89", "73 of 82"],
+      ["घ", 1, "three", "two", "83", "68 of 82"],
+      ["ष", 2, "four", "three", "83", "69 of 83"],
+      ["औ", 5, "seven", "six", "60", "49 of 82"],
+      ["अ", 2, "four", "three", "74", "61 of 82"],
+      ["आ", 3, "five", "four", "71", "59 of 83"],
+      ["ओ", 4, "six", "five", "60", "49 of 82"],
+      ["झ", 2, "four", "three", "53", "44 of 83"],
+      ["स", 2, "four", "three", "71", "58 of 82"],
+      ["ब", 2, "four", "three", "71", "58 of 82"],
+      ["च", 1, "three", "two", "76", "63 of 83"],
+      ["थ", 1, "three", "two", "72", "58 of 80"],
+      ["भ", 1, "three", "two", "72", "59 of 82"],
+      ["म", 1, "three", "two", "80", "67 of 84"],
+      ["व", 1, "three", "two", "69", "57 of 83"],
+    ];
+    for (const [
+      glyph,
+      lifts,
+      movements,
+      strokes,
+      share,
+      samples,
+    ] of nativeLifts) {
+      const letter = scripts.devanagari!.letters.find(
+        (entry) => entry.glyph === glyph,
+      )!;
+      expect(letter.penLifts, glyph).toBe(lifts);
+      expect(letter.strokeOrderNote, glyph).toContain(
+        `The source shows ${movements} movements; native writers draw ${glyph} as ${strokes} pen-down strokes (${share}% of HP Labs India's native-writer samples, ${samples}).`,
+      );
+      expect(letter.strokeOrderSource?.citation, glyph).toMatch(
+        /^(Opiaterein|Saurmandal|JackPotte), ‘De/,
+      );
+      for (const phrase of [
+        "they are not a count of native pen lifts",
+        "hpl-dvng-iso-char, https://lipitk.sourceforge.net/datasets/dvngchardata.htm",
+        "MIT-licensed LipiTk 4.0 Devanagari recognizer",
+        "Those counts say how many strokes writers use, not where they break",
+      ]) {
+        expect(letter.strokeOrderSource?.variation, glyph).toContain(phrase);
+      }
+      expect(
+        (letter.strokeOrder ?? []).filter((step) => step.startsWith("lift")),
+        glyph,
+      ).toHaveLength(lifts);
+      expect(
+        (letter.strokeOrder ?? []).filter((step) =>
+          step.startsWith("without lifting"),
+        ).length,
+        glyph,
+      ).toBeGreaterThan(0);
+      expect(missingByScript.get("devanagari.json")?.has(glyph) ?? false).toBe(
+        false,
+      );
+      expect(affected.get(glyph) ?? 0).toBe(0);
+    }
   },
 };

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C211-sakyata",
+    "language": "marathi",
+    "chapter": 211,
+    "sequence": 11320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e64dee4e4233b5b9"
+  },
+  "findings": []
+}

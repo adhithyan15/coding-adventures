@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:135bbba48b9ac090",
+  "lessonIds": [
+    "LA-C194-sententia",
+    "LA-C194-sermo",
+    "LA-C194-oratio",
+    "LA-C194-rumor",
+    "LA-C194-historia"
+  ],
+  "tex": "latin/book/chapters/ch194-opinion-conversation-speech-rumour-history.tex"
+}

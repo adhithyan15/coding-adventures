@@ -1,0 +1,11 @@
+{
+  "id": "PT-C157-fechadura",
+  "pathSegment": "PT-PATH-157-COISAS157",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-157-COISAS157",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C225-dol",
+    "language": "bengali",
+    "chapter": 225,
+    "sequence": 13700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4c79a60815232d7"
+  },
+  "findings": []
+}

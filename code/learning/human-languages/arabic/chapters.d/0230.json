@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "To bark, To feed, To add, To divide, To kick",
+  "label": "ch:ar-to-bark-to-feed-to-add-to-divide-to-kick",
+  "canDo": "I can say to bark, to feed, to add, to divide and to kick.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C230-rakala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say to bark, to feed, to add, to divide and to kick.",
+    "assesses": [
+      "AR-LEX-C230-ACT230-03",
+      "AR-LEX-C230-ACT230-04",
+      "AR-LEX-C230-ACT230-05"
+    ]
+  }
+}

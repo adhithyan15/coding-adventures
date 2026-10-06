@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:43239db719c6e313",
+  "lessonIds": [
+    "TE-C222-sarada",
+    "TE-C222-adhunika",
+    "TE-C222-spastamaina",
+    "TE-C222-bhinnamaina",
+    "TE-C222-nyayamaina"
+  ],
+  "tex": "telugu/book/chapters/ch222-fun-modern-clear-different-fair.tex"
+}

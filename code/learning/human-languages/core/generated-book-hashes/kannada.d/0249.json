@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:6161e050eaea4ad2",
+  "lessonIds": [
+    "KA-C249-purva",
+    "KA-C249-pascima",
+    "KA-C249-daksina",
+    "KA-C249-eduru",
+    "KA-C249-jille"
+  ],
+  "tex": "kannada/book/chapters/ch249-east-west-south-opposite-district.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C235-kafi",
+  "pathSegment": "FA-PATH-235-SEFAT235",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-235-SEFAT235",
+      "order": 2
+    }
+  ]
+}

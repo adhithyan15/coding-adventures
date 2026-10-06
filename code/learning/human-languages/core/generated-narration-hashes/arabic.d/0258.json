@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:d6e73b60cf0dc83d",
+  "lessonIds": [
+    "AR-C258-ihtarama",
+    "AR-C258-samaha2",
+    "AR-C258-kadhaba",
+    "AR-C258-sharaka",
+    "AR-C258-ikhtalafa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch258.txt",
+  "json": "arabic/narration/ch258.json",
+  "textHash": "fnv1a64:3ceca28587f2b67a",
+  "jsonHash": "fnv1a64:adfdecb39f560bd9",
+  "findings": []
+}

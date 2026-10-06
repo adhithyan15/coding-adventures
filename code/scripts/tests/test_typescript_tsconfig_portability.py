@@ -421,14 +421,31 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-fs-adapter, the atomic publication boundary.
         # +1: forme-deploy-runner-github-pages-adapter, the hosted publication
         # boundary over GitHub's Git Data API.
+        # +1: forme-plugin-host, the FM02 subprocess wire and mediation boundary.
+        # +1: forme-plugin-installer-core, the FM02 atomic install boundary.
+        # +1: forme-plugin-runner-ts, the FM02 TypeScript SDK boundary.
+        # +1: forme-plugin-runner-conformance, the reusable FM02 runner suite.
+        # +4: forme-sandbox-core plus the Linux, macOS, and Windows native
+        # launcher packages that close FM02's operating-system boundary.
+        # +1: forme-interactivity-ir, the bounded FM05 data contract.
+        # +1: forme-authoring-core, the durable FM09 project/session boundary.
+        # +1: forme-authoring-editor, the accessible FM09 React editor boundary.
+        # +1: forme-authoring-preview, the exact FM09 pipeline preview boundary.
+        # +1: forme-authoring-publish, the exact FM09 reviewed publication boundary.
+        # +1: forme-authoring-shell, the capability-free FM09 product composer.
+        # +1: forme-shell-desktop, the native FM09 macOS product host.
         # -1: the standalone checklist-app was retired; checklists live in
         # Trestle (mosaic-pkg-checklist).
-        self.assertEqual(summary.total_projects, 476)
-        self.assertEqual(summary.shared_projects, 296)
+        self.assertEqual(summary.total_projects, 492)
+        self.assertEqual(summary.shared_projects, 302)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
-        self.assertEqual(summary.standalone_emit_projects, 151)
-        self.assertEqual(summary.isolated_standalone_projects, 151)
+        # forme-authoring-core, forme-authoring-editor,
+        # forme-authoring-preview, forme-authoring-publish, and
+        # forme-authoring-shell are isolated standalone emitters, adding five
+        # to both standalone inventories.
+        self.assertEqual(summary.standalone_emit_projects, 160)
+        self.assertEqual(summary.isolated_standalone_projects, 160)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -465,8 +482,23 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-fs-adapter owns its filesystem transaction.
         # +1: forme-deploy-runner-github-pages-adapter encodes verified bytes
         # and ownership manifests through the Node Buffer API.
+        # +1: forme-plugin-host owns subprocess streams, bounded wire buffers,
+        # cryptographic hashes, temporary directories, and discovery paths.
+        # +1: forme-plugin-installer-core owns its atomic filesystem transaction.
+        # +1: forme-plugin-runner-ts owns bounded Node stream and Buffer framing.
+        # +1: forme-plugin-runner-conformance owns subprocess test fixtures.
+        # +4: the sandbox core and OS packages own Node process, stream, path,
+        # filesystem, platform, and native-build orchestration APIs.
+        # +1: forme-interactivity-ir uses Node's non-trapping Proxy detector
+        # before reflecting over hostile validation input.
+        # +1: forme-render-static uses the same detector for hostile
+        # interactivity composition and reviewed module-map config.
+        # +1: forme-authoring-preview uses the same detector before bounded
+        # enumeration of hostile pipeline output tables.
+        # +1: forme-authoring-publish owns canonical manifest hashing.
+        # +1: forme-shell-desktop uses Node APIs in its build and test inputs.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
-        self.assertEqual(summary.node_api_projects, 73)
+        self.assertEqual(summary.node_api_projects, 87)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -486,8 +518,19 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-fs-adapter owns its Node filesystem provider.
         # +1: forme-deploy-runner-github-pages-adapter owns its Node Buffer
         # provider for binary Git blob transport.
+        # +1: forme-plugin-host owns its Node process, stream, crypto,
+        # filesystem, path, OS, and test-fixture type provider.
+        # +1: forme-plugin-installer-core owns its Node filesystem provider.
+        # +1: forme-plugin-runner-ts owns its Node stream and Buffer provider.
+        # +1: forme-plugin-runner-conformance owns its Node process provider.
+        # +4: each sandbox package directly owns its Node type provider.
+        # +1: forme-interactivity-ir owns the Node util type provider.
+        # +1: forme-render-static owns the Node util type provider.
+        # +1: forme-authoring-preview owns the Node util type provider.
+        # +1: forme-authoring-publish owns the Node crypto type provider.
+        # +1: forme-shell-desktop directly owns its Node test/build provider.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
-        self.assertEqual(summary.node_provider_projects, 73)
+        self.assertEqual(summary.node_provider_projects, 87)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -519,8 +562,20 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-fs-adapter locks its compiler and test graph.
         # +1: forme-deploy-runner-github-pages-adapter locks its compiler and
         # test graph.
+        # +1: forme-plugin-host locks its compiler and cross-process test graph.
+        # +1: forme-plugin-installer-core locks its compiler and test graph.
+        # +1: forme-plugin-runner-ts locks its compiler and conformance graph.
+        # +1: forme-plugin-runner-conformance locks its compiler and test graph.
+        # +4: the sandbox core and OS packages lock their compiler/test graphs.
+        # +1: forme-interactivity-ir locks its compiler and test graph.
+        # +1: forme-authoring-core locks its compiler and test graph.
+        # +1: forme-authoring-editor locks its React compiler and browser tests.
+        # +1: forme-authoring-preview locks its compiler and lifecycle tests.
+        # +1: forme-authoring-publish locks its compiler and lifecycle tests.
+        # +1: forme-authoring-shell locks its React compiler and lifecycle tests.
+        # +1: forme-shell-desktop locks its React, Tauri, and test toolchain.
         # -1: the retired checklist-app took its lockfile with it.
-        self.assertEqual(summary.locked_compilers, 475)
+        self.assertEqual(summary.locked_compilers, 491)
 
 
 if __name__ == "__main__":

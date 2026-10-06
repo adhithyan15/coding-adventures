@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Different, Same, Similar, Fair, False",
+  "label": "ch:pt-different-same-similar-fair-false",
+  "canDo": "I can say different, the same, similar, fair and false.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C186-falso-falsa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say different, the same, similar, fair and false.",
+    "assesses": [
+      "PT-LEX-C186-QUAL186-03",
+      "PT-LEX-C186-QUAL186-04",
+      "PT-LEX-C186-QUAL186-05"
+    ]
+  }
+}

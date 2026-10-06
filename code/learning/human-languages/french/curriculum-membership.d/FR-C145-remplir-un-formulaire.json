@@ -1,0 +1,11 @@
+{
+  "id": "FR-C145-remplir-un-formulaire",
+  "pathSegment": "FR-PATH-145-VERBES145",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-145-VERBES145",
+      "order": 1
+    }
+  ]
+}

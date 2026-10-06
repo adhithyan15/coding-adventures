@@ -1,0 +1,11 @@
+{
+  "id": "SA-C253-vrscikah",
+  "pathSegment": "SA-PATH-253-THG253",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-253-THG253",
+      "order": 2
+    }
+  ]
+}

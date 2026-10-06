@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C165-soldat",
+    "language": "french",
+    "chapter": 165,
+    "sequence": 8300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b38f6a9c858ed207"
+  },
+  "findings": []
+}

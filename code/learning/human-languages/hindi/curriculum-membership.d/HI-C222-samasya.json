@@ -1,0 +1,11 @@
+{
+  "id": "HI-C222-samasya",
+  "pathSegment": "HI-PATH-222-THG222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-222-THG222",
+      "order": 3
+    }
+  ]
+}

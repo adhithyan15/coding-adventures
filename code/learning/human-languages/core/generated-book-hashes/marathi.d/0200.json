@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:b4ee3f26b6c426c4",
+  "lessonIds": [
+    "MR-C200-snayu",
+    "MR-C200-jakham",
+    "MR-C200-vran",
+    "MR-C200-sardi",
+    "MR-C200-citthi"
+  ],
+  "tex": "marathi/book/chapters/ch200-muscle-wound-scar-head-cold-note.tex"
+}

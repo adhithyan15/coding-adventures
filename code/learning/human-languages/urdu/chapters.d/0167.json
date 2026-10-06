@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Pistachio, Raisin, Fruit preserve, Cake, Sweets",
+  "label": "ch:ur-pistachio-raisin-fruit-preserve-cake-sweets",
+  "canDo": "I can say a pistachio, a raisin, a fruit preserve, a cake and sweets.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C167-mithai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say a pistachio, a raisin, a fruit preserve, a cake and sweets.",
+    "assesses": [
+      "UR-LEX-C167-CHIZ167-03",
+      "UR-LEX-C167-CHIZ167-04",
+      "UR-LEX-C167-CHIZ167-05"
+    ]
+  }
+}

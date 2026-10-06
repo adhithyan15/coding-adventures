@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 18,
-  "sourceHash": "fnv1a64:85cc3fde23429c76",
+  "sourceHash": "fnv1a64:68b7b0e1f741cecd",
   "lessonIds": [
     "BN-C11-bondhu",
     "BN-C11-poribar",
@@ -13,6 +13,6 @@
   "text": "bengali/narration/ch18.txt",
   "json": "bengali/narration/ch18.json",
   "textHash": "fnv1a64:179ca0dbf1917107",
-  "jsonHash": "fnv1a64:b9ef171230cd9e51",
+  "jsonHash": "fnv1a64:238dc550c7f43d79",
   "findings": []
 }

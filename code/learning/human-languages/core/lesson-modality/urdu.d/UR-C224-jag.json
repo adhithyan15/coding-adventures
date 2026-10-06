@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C224-jag",
+    "language": "urdu",
+    "chapter": 224,
+    "sequence": 13310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0c2033dd4d285f0"
+  },
+  "findings": []
+}

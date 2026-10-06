@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "To refuse, To approve, To renew, To register, To deliver",
+  "label": "ch:ml-to-refuse-to-approve-to-renew-to-register-to-deliver",
+  "canDo": "I can say to refuse, to approve, to renew, to register and to deliver.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C268-ettikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can say to refuse, to approve, to renew, to register and to deliver.",
+    "assesses": [
+      "ML-LEX-C268-KRIYA268-03",
+      "ML-LEX-C268-KRIYA268-04",
+      "ML-LEX-C268-KRIYA268-05"
+    ]
+  }
+}

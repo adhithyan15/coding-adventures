@@ -1,0 +1,11 @@
+{
+  "id": "BN-C168-atmiyo",
+  "pathSegment": "BN-PATH-168-JINIS168",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-168-JINIS168",
+      "order": 4
+    }
+  ]
+}

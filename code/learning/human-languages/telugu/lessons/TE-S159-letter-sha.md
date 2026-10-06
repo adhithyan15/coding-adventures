@@ -63,17 +63,17 @@ Telugu, Kannada and Hindi keep all three apart on the page. Tamil's own
 alphabet has none of them and adds borrowed shapes for Sanskrit words — same
 family, opposite decision.
 
-## Writing: శ — copy what you see
+## Writing: శ — three calm movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-159] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on శ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed. Then write స and ష beside it.
+Watch the numbered filmstrip once before your pen moves. Movement 1 loops
+around the broad lower-left bowl. Lift, then movement 2 sweeps around the tall
+lower and right body. Lift once more for movement 3, the separate chevron above.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Trace the same route slowly. This is one attested school-style order fitted to
+the printed shape here; Telugu handwriting varies, so keep the three movements
+clear instead of closing the two pen lifts. Then write స and ష beside it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-159, TE-SCRIPT-RECOG-111, TE-SCRIPT-RECOG-158] -->

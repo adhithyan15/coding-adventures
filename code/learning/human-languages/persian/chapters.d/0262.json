@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "To pack, To queue, To be fined, To renew, To stick to the pan",
+  "label": "ch:fa-to-pack-to-queue-to-be-fined-to-renew-to-stick-to-the-pan",
+  "canDo": "I can say to pack, to queue, to be fined, to renew and to stick to the pan.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C262-tah-gereftan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can say to pack, to queue, to be fined, to renew and to stick to the pan.",
+    "assesses": [
+      "FA-LEX-C262-KONESH262-03",
+      "FA-LEX-C262-KONESH262-04",
+      "FA-LEX-C262-KONESH262-05"
+    ]
+  }
+}

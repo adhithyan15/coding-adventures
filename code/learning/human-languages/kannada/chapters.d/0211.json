@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Regularly, So far, Until, For now, Period",
+  "label": "ch:ka-regularly-so-far-until-for-now-period",
+  "canDo": "I can say regularly, so far, until, for now and a period.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C211-avadhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say regularly, so far, until, for now and a period.",
+    "assesses": [
+      "KA-LEX-C211-KALA211-03",
+      "KA-LEX-C211-KALA211-04",
+      "KA-LEX-C211-KALA211-05"
+    ]
+  }
+}

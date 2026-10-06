@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R216-first-pass-words-from-chapters-211-213",
+    "language": "marathi",
+    "chapter": 216,
+    "sequence": 11580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb013f7925bd9a46"
+  },
+  "findings": []
+}

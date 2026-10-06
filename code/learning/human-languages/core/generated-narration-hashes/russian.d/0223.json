@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:3d539f06bc093d29",
+  "lessonIds": [
+    "RU-C223-fasol",
+    "RU-C223-apelsin",
+    "RU-C223-limon",
+    "RU-C223-banan",
+    "RU-C223-vinograd"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch223.txt",
+  "json": "russian/narration/ch223.json",
+  "textHash": "fnv1a64:b172042f32c90226",
+  "jsonHash": "fnv1a64:e5fea5b1a8869e5a",
+  "findings": []
+}

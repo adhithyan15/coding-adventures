@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Every day, Sometimes, Always, Often, Never",
+  "label": "ch:hi-every-day-sometimes-always-often-never",
+  "canDo": "I can say every day, sometimes, always, often and never.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "HI-R192-second-pass-town-talk-and-time",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say every day, sometimes, always, often and never.",
+    "assesses": [
+      "HI-LEX-C192-FREQ192-03",
+      "HI-LEX-C192-FREQ192-04",
+      "HI-LEX-C192-FREQ192-05"
+    ]
+  }
+}

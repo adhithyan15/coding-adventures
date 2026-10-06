@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C165-tradition",
+    "language": "french",
+    "chapter": 165,
+    "sequence": 8310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63b891a85d6a12a9"
+  },
+  "findings": []
+}

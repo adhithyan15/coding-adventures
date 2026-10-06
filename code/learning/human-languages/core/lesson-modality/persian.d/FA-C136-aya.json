@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C136-aya",
+    "language": "persian",
+    "chapter": 136,
+    "sequence": 6930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8af3751a2c246031"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "To slip, To lighten, To admire, To suspect, To press",
+  "label": "ch:la-to-slip-to-lighten-to-admire-to-suspect-to-press",
+  "canDo": "I can say to slip, to lighten, to admire, to suspect and to press.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C170-premo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say to slip, to lighten, to admire, to suspect and to press.",
+    "assesses": [
+      "LA-LEX-C170-ACT170-03",
+      "LA-LEX-C170-ACT170-04",
+      "LA-LEX-C170-ACT170-05"
+    ]
+  }
+}

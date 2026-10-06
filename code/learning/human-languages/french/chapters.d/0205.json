@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "To book, To spend, To save, To order, To dry",
+  "label": "ch:fr-to-book-to-spend-to-save-to-order-to-dry",
+  "canDo": "I can say to book, to spend, to save, to order and to dry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C205-secher",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say to book, to spend, to save, to order and to dry.",
+    "assesses": [
+      "FR-LEX-C205-VERBES205-03",
+      "FR-LEX-C205-VERBES205-04",
+      "FR-LEX-C205-VERBES205-05"
+    ]
+  }
+}

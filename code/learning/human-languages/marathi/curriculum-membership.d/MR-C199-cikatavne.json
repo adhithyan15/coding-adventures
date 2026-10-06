@@ -1,0 +1,11 @@
+{
+  "id": "MR-C199-cikatavne",
+  "pathSegment": "MR-PATH-199-ACT199",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-199-ACT199",
+      "order": 0
+    }
+  ]
+}

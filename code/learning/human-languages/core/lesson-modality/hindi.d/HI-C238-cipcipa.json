@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C238-cipcipa",
+    "language": "hindi",
+    "chapter": 238,
+    "sequence": 12650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64d32199672dd4ae"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C220-papni",
+  "pathSegment": "MR-PATH-220-VASTU220",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-220-VASTU220",
+      "order": 1
+    }
+  ]
+}

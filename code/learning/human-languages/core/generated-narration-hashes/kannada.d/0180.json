@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:59d5fedd5a80ba5c",
+  "lessonIds": [
+    "KA-C180-ucita",
+    "KA-C180-sarkari",
+    "KA-C180-khasagi",
+    "KA-C180-sthaliya",
+    "KA-C180-kaddaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch180.txt",
+  "json": "kannada/narration/ch180.json",
+  "textHash": "fnv1a64:78b26fd1ffcfcaf9",
+  "jsonHash": "fnv1a64:076514026340a5cf",
+  "findings": []
+}

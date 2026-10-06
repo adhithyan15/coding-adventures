@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "A harbour, A bank, A beach, A meadow, A valley",
+  "label": "ch:ge-a-harbour-a-bank-a-beach-a-meadow-a-valley",
+  "canDo": "I can say a harbour, a bank, a beach, a meadow and a valley.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C196-tal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say a harbour, a bank, a beach, a meadow and a valley.",
+    "assesses": [
+      "GE-LEX-C196-THING196-03",
+      "GE-LEX-C196-THING196-04",
+      "GE-LEX-C196-THING196-05"
+    ]
+  }
+}

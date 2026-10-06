@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "To clap, To cross, To increase, To lessen, To warn",
+  "label": "ch:la-to-clap-to-cross-to-increase-to-lessen-to-warn",
+  "canDo": "I can say to clap, to cross, to increase, to lessen and to warn.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C256-moneo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say to clap, to cross, to increase, to lessen and to warn.",
+    "assesses": [
+      "LA-LEX-C256-ACT256-03",
+      "LA-LEX-C256-ACT256-04",
+      "LA-LEX-C256-ACT256-05"
+    ]
+  }
+}

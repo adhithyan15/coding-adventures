@@ -1,0 +1,11 @@
+{
+  "id": "ES-C491-cajero",
+  "pathSegment": "ES-PATH-491-COMPRA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-491-COMPRA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:98854977e7fe9796",
+  "lessonIds": [
+    "SA-C189-manjusa",
+    "SA-C189-sikyam",
+    "SA-C189-pitakam",
+    "SA-C189-katah",
+    "SA-C189-astaranam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch189.txt",
+  "json": "sanskrit/narration/ch189.json",
+  "textHash": "fnv1a64:aa06408242f90467",
+  "jsonHash": "fnv1a64:2b314c088de9fc8f",
+  "findings": []
+}

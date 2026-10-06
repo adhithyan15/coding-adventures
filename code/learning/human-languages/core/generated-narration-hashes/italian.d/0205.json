@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:458f03ba46006932",
+  "lessonIds": [
+    "IT-C205-provare",
+    "IT-C205-finire",
+    "IT-C205-continuare",
+    "IT-C205-smettere",
+    "IT-C205-fermare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch205.txt",
+  "json": "italian/narration/ch205.json",
+  "textHash": "fnv1a64:43ac6831a5aca999",
+  "jsonHash": "fnv1a64:3d0d2247c9284a14",
+  "findings": []
+}

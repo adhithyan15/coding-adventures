@@ -1,0 +1,19 @@
+{
+  "chapter": 265,
+  "title": "District, Hut, Tower, Prison, World",
+  "label": "ch:ta-district-hut-tower-prison-world",
+  "canDo": "I can say a district, a hut, a tower, a prison and the world.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C265-ulakam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 265: I can say a district, a hut, a tower, a prison and the world.",
+    "assesses": [
+      "TA-LEX-C265-IDAM265-03",
+      "TA-LEX-C265-IDAM265-04",
+      "TA-LEX-C265-IDAM265-05"
+    ]
+  }
+}

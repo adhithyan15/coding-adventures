@@ -1,0 +1,11 @@
+{
+  "id": "TE-C247-batimalu",
+  "pathSegment": "TE-PATH-247-KRIYA247",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-247-KRIYA247",
+      "order": 4
+    }
+  ]
+}

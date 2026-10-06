@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Encuentros y despedidas",
+  "label": "ch:es-encuentros-y-despedidas",
+  "canDo": "I can read news of people who marry, divorce or fall in love, and say hello or goodbye politely.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C488-saludar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can read news of people who marry, divorce or fall in love, and say hello or goodbye politely.",
+    "assesses": [
+      "ES-LEX-C488-GENTE-03",
+      "ES-LEX-C488-GENTE-04",
+      "ES-LEX-C488-GENTE-05"
+    ]
+  }
+}

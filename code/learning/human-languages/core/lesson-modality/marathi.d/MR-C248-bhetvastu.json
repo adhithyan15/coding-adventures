@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C248-bhetvastu",
+    "language": "marathi",
+    "chapter": 248,
+    "sequence": 14020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63fd0dbb237a3f65"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:a93abbce510cceb0",
+  "lessonIds": [
+    "KA-C234-sibbandi",
+    "KA-C234-naukara",
+    "KA-C234-hajari",
+    "KA-C234-pali",
+    "KA-C234-mungada",
+    "KA-R234-first-pass-words-from-chapters-230-231",
+    "KA-R234-second-pass-words-from-chapters-232-234"
+  ],
+  "tex": "kannada/book/chapters/ch234-staff-employee-attendance-work-shift-advance.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "Side street, Pavement, Road, Highway, Port",
+  "label": "ch:ru-side-street-pavement-road-highway-port",
+  "canDo": "I can say a side street, a pavement, a road, a highway and a port.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C183-port",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can say a side street, a pavement, a road, a highway and a port.",
+    "assesses": [
+      "RU-LEX-C183-MESTO183-03",
+      "RU-LEX-C183-MESTO183-04",
+      "RU-LEX-C183-MESTO183-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C187-kattale",
+  "pathSegment": "KA-PATH-187-VASTU187",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-187-VASTU187",
+      "order": 4
+    }
+  ]
+}

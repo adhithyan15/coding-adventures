@@ -1,0 +1,11 @@
+{
+  "id": "TE-C237-polisu",
+  "pathSegment": "TE-PATH-237-PANI237",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-237-PANI237",
+      "order": 0
+    }
+  ]
+}

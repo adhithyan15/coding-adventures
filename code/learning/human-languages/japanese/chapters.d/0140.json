@@ -1,0 +1,21 @@
+{
+  "chapter": 140,
+  "title": "Last Week, Last Month, Last Year: the Past",
+  "label": "ch:ja-last-week-last-month-last-year-the-past",
+  "canDo": "I can say what I did and did not do, and when: last week, last month, last year, a moment ago.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "JA-C140-owarimashita",
+    "kind": "production",
+    "summary": "Say what you did and did not do with -mashita and -masen deshita, placing each with senshuu, sengetsu, kyonen or sakki, and end with owarimashita.",
+    "assesses": [
+      "JA-LEX-C140-SENSHUU",
+      "JA-LEX-C140-SENGETSU",
+      "JA-LEX-C140-KYONEN",
+      "JA-LEX-C140-SAKKI",
+      "JA-LEX-C140-OWARIMASHITA"
+    ]
+  }
+}

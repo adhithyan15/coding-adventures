@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:16ac2c589b08446a",
+  "lessonIds": [
+    "MR-C268-avjar",
+    "MR-C268-tabla",
+    "MR-C268-basri",
+    "MR-C268-satar",
+    "MR-C268-cendu",
+    "MR-R268-first-pass-words-from-chapters-260-263",
+    "MR-R268-second-pass-words-from-chapters-264-268"
+  ],
+  "tex": "marathi/book/chapters/ch268-tool-tabla-flute-sitar-ball.tex"
+}

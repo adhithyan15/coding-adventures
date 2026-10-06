@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:41a7fc1929283878",
+  "lessonIds": [
+    "HI-C235-upar",
+    "HI-C235-nice",
+    "HI-C235-age",
+    "HI-C235-piche",
+    "HI-C235-andar"
+  ],
+  "tex": "hindi/book/chapters/ch235-up-down-ahead-behind-inside.tex"
+}

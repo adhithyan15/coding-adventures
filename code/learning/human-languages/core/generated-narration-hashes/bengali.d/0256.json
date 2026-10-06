@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:943316452edb368f",
+  "lessonIds": [
+    "BN-C256-songskriti",
+    "BN-C256-itihas",
+    "BN-C256-bigyan",
+    "BN-C256-shilpo",
+    "BN-C256-sahityo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch256.txt",
+  "json": "bengali/narration/ch256.json",
+  "textHash": "fnv1a64:4ca6d6dd32bde0a8",
+  "jsonHash": "fnv1a64:5876c1ba304948c8",
+  "findings": []
+}

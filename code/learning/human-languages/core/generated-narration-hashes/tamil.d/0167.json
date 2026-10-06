@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:f2ba1da907383ff6",
+  "lessonIds": [
+    "TA-C167-totar",
+    "TA-C167-iyakku",
+    "TA-C167-ottu",
+    "TA-C167-tonku",
+    "TA-C167-uruttu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch167.txt",
+  "json": "tamil/narration/ch167.json",
+  "textHash": "fnv1a64:bd1716f93bac6597",
+  "jsonHash": "fnv1a64:c72564f5d8cd3a18",
+  "findings": []
+}

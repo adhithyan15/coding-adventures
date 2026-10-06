@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-175-GUN175",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say strange, different, similar, proper and wrong.",
+  "prerequisites": []
+}

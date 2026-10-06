@@ -1,0 +1,11 @@
+{
+  "id": "TE-C185-pensilu",
+  "pathSegment": "TE-PATH-185-VASTUVU185",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-185-VASTUVU185",
+      "order": 4
+    }
+  ]
+}

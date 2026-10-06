@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Attic, Vegetable garden, Plant, Seed, Root",
+  "label": "ch:it-attic-vegetable-garden-plant-seed-root",
+  "canDo": "I can say an attic, a vegetable garden, a plant, a seed and a root.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C168-radice",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say an attic, a vegetable garden, a plant, a seed and a root.",
+    "assesses": [
+      "IT-LEX-C168-COSE168-03",
+      "IT-LEX-C168-COSE168-04",
+      "IT-LEX-C168-COSE168-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "To receive, To remind, To allow, To feed, To reach",
+  "label": "ch:ge-to-receive-to-remind-to-allow-to-feed-to-reach",
+  "canDo": "I can say to receive, to remind, to allow, to feed and to reach.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C179-erreichen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say to receive, to remind, to allow, to feed and to reach.",
+    "assesses": [
+      "GE-LEX-C179-VERB179-03",
+      "GE-LEX-C179-VERB179-04",
+      "GE-LEX-C179-VERB179-05"
+    ]
+  }
+}

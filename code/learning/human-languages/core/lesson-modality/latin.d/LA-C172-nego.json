@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C172-nego",
+    "language": "latin",
+    "chapter": 172,
+    "sequence": 7530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fa9e54afc11d23d"
+  },
+  "findings": []
+}

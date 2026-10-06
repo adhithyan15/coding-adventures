@@ -1,0 +1,11 @@
+{
+  "id": "IT-C137-laltro-ieri",
+  "pathSegment": "IT-PATH-137-PAST137",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-137-PAST137",
+      "order": 2
+    }
+  ]
+}

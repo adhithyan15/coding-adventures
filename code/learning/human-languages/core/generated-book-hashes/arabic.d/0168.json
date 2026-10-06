@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:8a6a4dec01971b70",
+  "lessonIds": [
+    "AR-C168-dhira",
+    "AR-C168-jism",
+    "AR-C168-kahil",
+    "AR-C168-halq",
+    "AR-C168-suda"
+  ],
+  "tex": "arabic/book/chapters/ch168-arm-body-ankle-throat-headache.tex"
+}

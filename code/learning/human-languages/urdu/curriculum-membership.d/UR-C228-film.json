@@ -1,0 +1,11 @@
+{
+  "id": "UR-C228-film",
+  "pathSegment": "UR-PATH-228-CHIZ228",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-228-CHIZ228",
+      "order": 3
+    }
+  ]
+}

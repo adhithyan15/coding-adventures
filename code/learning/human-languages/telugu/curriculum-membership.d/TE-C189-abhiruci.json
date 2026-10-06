@@ -1,0 +1,11 @@
+{
+  "id": "TE-C189-abhiruci",
+  "pathSegment": "TE-PATH-189-VASTUVU189",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-189-VASTUVU189",
+      "order": 3
+    }
+  ]
+}

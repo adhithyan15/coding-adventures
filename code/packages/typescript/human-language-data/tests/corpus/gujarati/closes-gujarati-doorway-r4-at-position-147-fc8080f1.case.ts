@@ -150,17 +150,21 @@ it("closes Gujarati doorway R4 at position 149", () => {
   //        (ra, da, va, ya, bha, chha, ka, the vocalic-r sign and four chapter-2
   //        courtesy concepts) past a window edge; every one is answered by name
   //        in a new anchor lesson's warm-up at the right distance.
-  // 900 -> 1462. Gujarati A1: chapters 92-143 (260 words, twelve reviews) and
+  // 900 -> 1465. Gujarati A1: chapters 92-143 (260 words, twelve reviews), the
+  // final timed writing paper, and
   // the two chapter-12 continuations, decomposed against the corpus without them:
   //   +465 on the new chapters' own atoms. They sit at the end of the track;
   //        their R3 and R4 windows are measurable and no later lesson exists.
   //    +99 on chapters 76-91, whose R2-R4 windows (3 R2, 18 R3, 78 R4) used to
   //        fall past the end of a 532-lesson track and are now measurable.
   //     -2 PRE-EXISTING closed: be's R1 and the headless clue's R3.
+  //     +3 measurable windows exposed by the final no-new-atom timed lesson.
   //      0 pre-existing windows lost. The continuations pushed four older atoms
   //        (nām, mārũ, kāle, pāchhā) past R3 and the headless clue past R2;
   //        each is retrieved by name in a warm-up at the right distance.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(1462);
+  // Chapter 144's connected-composition retrieval exposes three later
+  // measured windows without changing the pinned A1 doorway boundary.
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(1468);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),

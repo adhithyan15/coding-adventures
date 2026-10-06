@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:6833794e83b1f66c",
+  "lessonIds": [
+    "UR-C174-makai",
+    "UR-C174-gandum",
+    "UR-C174-chane",
+    "UR-C174-rajma",
+    "UR-C174-anjir"
+  ],
+  "tex": "urdu/book/chapters/ch174-maize-wheat-chickpeas-kidney-beans-fig.tex"
+}

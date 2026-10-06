@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:9a3010120a2ea54c",
+  "lessonIds": [
+    "TA-C180-curucuruppana",
+    "TA-C180-kurumpana",
+    "TA-C180-pitivatamana",
+    "TA-C180-nakaiccuvaiyana",
+    "TA-C180-cuvaraciyamana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch180.txt",
+  "json": "tamil/narration/ch180.json",
+  "textHash": "fnv1a64:3e79ea7d084325f3",
+  "jsonHash": "fnv1a64:bd6b058ef713c0d0",
+  "findings": []
+}

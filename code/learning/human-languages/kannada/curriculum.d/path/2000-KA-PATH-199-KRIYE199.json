@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-199-KRIYE199",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "KA-EXT-199-KRIYE199"
+  ],
+  "after": []
+}

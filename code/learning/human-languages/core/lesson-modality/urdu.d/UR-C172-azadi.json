@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C172-azadi",
+    "language": "urdu",
+    "chapter": 172,
+    "sequence": 9470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f90cb700a9873d0"
+  },
+  "findings": []
+}

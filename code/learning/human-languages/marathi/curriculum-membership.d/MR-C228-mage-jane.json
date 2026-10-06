@@ -1,0 +1,11 @@
+{
+  "id": "MR-C228-mage-jane",
+  "pathSegment": "MR-PATH-228-ACT228",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-228-ACT228",
+      "order": 2
+    }
+  ]
+}

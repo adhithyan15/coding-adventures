@@ -1,0 +1,11 @@
+{
+  "id": "FA-C280-konsert",
+  "pathSegment": "FA-PATH-280-CHIZ280",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-280-CHIZ280",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R205-first-pass-words-from-chapters-197-200",
+    "language": "persian",
+    "chapter": 205,
+    "sequence": 10580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79692dd04ad425f5"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:3bf665588922252d",
+  "lessonIds": [
+    "BN-C197-phutbol",
+    "BN-C197-hoki",
+    "BN-C197-tenis",
+    "BN-C197-daba",
+    "BN-C197-tas"
+  ],
+  "tex": "bengali/book/chapters/ch197-football-hockey-tennis-chess-playing-cards.tex"
+}

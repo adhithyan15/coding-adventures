@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:e6b7b83c05dcfa21",
+  "lessonIds": [
+    "BN-C112-bakso",
+    "BN-C112-tak",
+    "BN-C112-deoyal",
+    "BN-C112-baranda",
+    "BN-C112-bagan"
+  ],
+  "tex": "bengali/book/chapters/ch112-box-shelf-wall-veranda-garden.tex"
+}

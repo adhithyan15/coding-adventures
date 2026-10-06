@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:5aac94f332e87485",
+  "lessonIds": [
+    "LA-C227-fatum",
+    "LA-C227-cubile",
+    "LA-C227-hospitium",
+    "LA-C227-deversorium",
+    "LA-C227-viator"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch227.txt",
+  "json": "latin/narration/ch227.json",
+  "textHash": "fnv1a64:158ed84b7cd986f0",
+  "jsonHash": "fnv1a64:48397919ed47ca67",
+  "findings": []
+}

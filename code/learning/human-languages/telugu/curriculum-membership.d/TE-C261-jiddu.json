@@ -1,0 +1,11 @@
+{
+  "id": "TE-C261-jiddu",
+  "pathSegment": "TE-PATH-261-GUNAM261",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-261-GUNAM261",
+      "order": 2
+    }
+  ]
+}

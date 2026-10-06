@@ -1,0 +1,11 @@
+{
+  "id": "JA-C134-shinbun",
+  "pathSegment": "JA-PATH-134-WRITE134",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "JA-EXT-134-WRITE134",
+      "order": 9
+    }
+  ]
+}

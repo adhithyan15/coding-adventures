@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C197-fila",
+    "language": "italian",
+    "chapter": 197,
+    "sequence": 11100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e622b3887ca7d5b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C194-kanpola",
+    "language": "malayalam",
+    "chapter": 194,
+    "sequence": 8550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3c0fd11a02a6894"
+  },
+  "findings": []
+}

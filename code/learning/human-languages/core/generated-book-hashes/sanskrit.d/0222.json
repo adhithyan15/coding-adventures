@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:0efbd9f8d04daf8e",
+  "lessonIds": [
+    "SA-C222-sadhanam",
+    "SA-C222-bharah",
+    "SA-C222-panyam",
+    "SA-C222-apanikah",
+    "SA-C222-patrika"
+  ],
+  "tex": "sanskrit/book/chapters/ch222-instrument-load-goods-for-sale-shopkeeper-newspaper.tex"
+}

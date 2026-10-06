@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "To bark, To shout, To sink, To argue, To imagine",
+  "label": "ch:ka-to-bark-to-shout-to-sink-to-argue-to-imagine",
+  "canDo": "I can say to bark, to shout, to sink, to argue and to imagine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C240-kalpisiko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say to bark, to shout, to sink, to argue and to imagine.",
+    "assesses": [
+      "KA-LEX-C240-KRIYE240-03",
+      "KA-LEX-C240-KRIYE240-04",
+      "KA-LEX-C240-KRIYE240-05"
+    ]
+  }
+}

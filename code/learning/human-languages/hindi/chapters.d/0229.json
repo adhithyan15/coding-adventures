@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "To bend, To gather up, To spread, To spread, To be left behind",
+  "label": "ch:hi-to-bend-to-gather-up-to-spread-to-spread-to-be-left-behind",
+  "canDo": "I can say to bend, to gather up, to spread, to spread and to be left behind.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C229-chutna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say to bend, to gather up, to spread, to spread and to be left behind.",
+    "assesses": [
+      "HI-LEX-C229-ACT229-03",
+      "HI-LEX-C229-ACT229-04",
+      "HI-LEX-C229-ACT229-05"
+    ]
+  }
+}

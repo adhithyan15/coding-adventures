@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:68ff8770cb42b701",
+  "lessonIds": [
+    "BN-C214-chhobi-tola",
+    "BN-C214-pas-kora",
+    "BN-C214-phel-kora",
+    "BN-C214-jhakano",
+    "BN-C214-narano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch214.txt",
+  "json": "bengali/narration/ch214.json",
+  "textHash": "fnv1a64:5419b146a067ec1d",
+  "jsonHash": "fnv1a64:feb6d5010df836f9",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Puzzle, Play, Film, Dance, Stage",
+  "label": "ch:mr-puzzle-play-film-dance-stage",
+  "canDo": "I can say a puzzle, a play, a film, dance and a stage.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-R275-second-pass-words-from-chapters-272-275",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say a puzzle, a play, a film, dance and a stage.",
+    "assesses": [
+      "MR-LEX-C275-VASTU275-03",
+      "MR-LEX-C275-VASTU275-04",
+      "MR-LEX-C275-VASTU275-05"
+    ]
+  }
+}

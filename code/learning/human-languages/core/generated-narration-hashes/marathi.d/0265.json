@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:19d52acaabb813af",
+  "lessonIds": [
+    "MR-C265-parvangi",
+    "MR-C265-bandi",
+    "MR-C265-suraksa",
+    "MR-C265-salla",
+    "MR-C265-vacan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch265.txt",
+  "json": "marathi/narration/ch265.json",
+  "textHash": "fnv1a64:9db91850a2ff59d0",
+  "jsonHash": "fnv1a64:fe3e78902ed08dac",
+  "findings": []
+}

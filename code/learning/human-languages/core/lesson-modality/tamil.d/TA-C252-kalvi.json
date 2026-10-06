@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C252-kalvi",
+    "language": "tamil",
+    "chapter": 252,
+    "sequence": 14090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f0efb52bfc09055"
+  },
+  "findings": []
+}

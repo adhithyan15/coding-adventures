@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:6cfd5e91b668e504",
+  "lessonIds": [
+    "ML-C321-pulliyulla",
+    "ML-C321-sugandhamulla",
+    "ML-C321-narunna",
+    "ML-C321-bahalamulla",
+    "ML-C321-satyasandhamaya"
+  ],
+  "tex": "malayalam/book/chapters/ch321-spotted-fragrant-smelly-noisy-honest.tex"
+}

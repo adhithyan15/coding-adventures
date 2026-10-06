@@ -1,0 +1,11 @@
+{
+  "id": "FR-C211-tuer",
+  "pathSegment": "FR-PATH-211-VERBES211",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-211-VERBES211",
+      "order": 4
+    }
+  ]
+}

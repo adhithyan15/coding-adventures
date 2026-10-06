@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "Full, Deep, Even, Square, Sharp",
+  "label": "ch:ru-full-deep-even-square-sharp",
+  "canDo": "I can say full, deep, even, square and sharp.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C187-ostryy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say full, deep, even, square and sharp.",
+    "assesses": [
+      "RU-LEX-C187-KACH187-03",
+      "RU-LEX-C187-KACH187-04",
+      "RU-LEX-C187-KACH187-05"
+    ]
+  }
+}

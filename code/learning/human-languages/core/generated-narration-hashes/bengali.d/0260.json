@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:16f84247a546bb3f",
+  "lessonIds": [
+    "BN-C260-sadh",
+    "BN-C260-puroskar",
+    "BN-C260-shasti",
+    "BN-C260-protijogita",
+    "BN-C260-joy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch260.txt",
+  "json": "bengali/narration/ch260.json",
+  "textHash": "fnv1a64:38e4b74346dea2e2",
+  "jsonHash": "fnv1a64:72eae03508eafd8f",
+  "findings": []
+}

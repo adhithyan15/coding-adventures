@@ -199,7 +199,22 @@ it("pins Marathi lesson-content budgets", () =>
     // 652 -> 850: the A1 tranche, chapters 121-158. 190 word lessons
     // (thirty-two verbs) in four runs, each closing on two reviews. No idiom,
     // sense or culture claim.
-    lessons: 850,
+    // 850 -> 867: chapters 159-161 realize Marathi's last three A2 spine
+    // nodes: the past, the future and reading practical texts. Fifteen word
+    // lessons and two reviews, with no idiom, sense or culture claim.
+    // 867 -> 1030: the first Marathi A2 vocabulary tranche, chapters 162-192.
+    // 155 word lessons (thirty-five verbs) and two reviews per run of at most
+    // nine chapters. No idiom, sense or culture claim.
+    // 1030 -> 1188: the second Marathi A2 vocabulary tranche, chapters
+    // 193-222. 150 word lessons (thirty-five verbs) and two reviews per run of
+    // at most nine chapters. No idiom, sense or culture claim.
+    // 1188 -> 1336: the third Marathi A2 vocabulary tranche, chapters
+    // 223-250. 140 word lessons (thirty verbs) and two reviews per run of at
+    // most nine chapters. No idiom, sense or culture claim.
+    // 1336 -> 1467: the last Marathi A2 vocabulary tranche, chapters 251-275.
+    // 125 word lessons (thirty verbs) and two reviews per run of at most nine
+    // chapters. No idiom, sense or culture claim. Marathi attains A2 here.
+    lessons: 1467,
     idioms: 5,
     senses: 4,
     // 7 -> 8: MR-CULTURE-SHUBH-FORMAL-WRITTEN-REGISTER-01. The shubh greetings

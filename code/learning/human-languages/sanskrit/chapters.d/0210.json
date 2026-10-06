@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Preceptor, Head teacher, Pupil, Classmate, Doctor",
+  "label": "ch:sa-preceptor-head-teacher-pupil-classmate-doctor",
+  "canDo": "I can say a preceptor, a head teacher, a pupil, a classmate and a doctor.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C210-cikitsakah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say a preceptor, a head teacher, a pupil, a classmate and a doctor.",
+    "assesses": [
+      "SA-LEX-C210-PPL210-03",
+      "SA-LEX-C210-PPL210-04",
+      "SA-LEX-C210-PPL210-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:8a586c42fca51434",
+  "lessonIds": [
+    "GE-C151-treffen",
+    "GE-C151-traeumen",
+    "GE-C151-ueben",
+    "GE-C151-ueberlegen",
+    "GE-C151-umziehen"
+  ],
+  "tex": "german/book/chapters/ch151-to-meet-to-dream-to-practise-to-think-over-to-move.tex"
+}

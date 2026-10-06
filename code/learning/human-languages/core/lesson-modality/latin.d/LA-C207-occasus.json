@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C207-occasus",
+    "language": "latin",
+    "chapter": 207,
+    "sequence": 10170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2a79e45a851c795"
+  },
+  "findings": []
+}

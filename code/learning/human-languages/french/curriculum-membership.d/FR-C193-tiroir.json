@@ -1,0 +1,11 @@
+{
+  "id": "FR-C193-tiroir",
+  "pathSegment": "FR-PATH-193-CHOSES193",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-193-CHOSES193",
+      "order": 1
+    }
+  ]
+}

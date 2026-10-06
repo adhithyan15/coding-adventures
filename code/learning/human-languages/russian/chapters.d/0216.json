@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Calm, Nervous, Happy, Sad, Strict",
+  "label": "ch:ru-calm-nervous-happy-sad-strict",
+  "canDo": "I can say calm, nervous, happy, sad and strict.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C216-strogiy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say calm, nervous, happy, sad and strict.",
+    "assesses": [
+      "RU-LEX-C216-KACH216-03",
+      "RU-LEX-C216-KACH216-04",
+      "RU-LEX-C216-KACH216-05"
+    ]
+  }
+}

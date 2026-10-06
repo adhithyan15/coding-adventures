@@ -1,0 +1,11 @@
+{
+  "id": "KA-C221-capati",
+  "pathSegment": "KA-PATH-221-VASTU221",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-221-VASTU221",
+      "order": 4
+    }
+  ]
+}

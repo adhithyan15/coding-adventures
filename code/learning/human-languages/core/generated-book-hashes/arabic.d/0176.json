@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:0d6d0d833c0c9476",
+  "lessonIds": [
+    "AR-C176-thumma",
+    "AR-C176-baynama",
+    "AR-C176-akthar",
+    "AR-C176-aqall",
+    "AR-C176-farq",
+    "AR-R176-first-pass-words-from-chapters-168-171",
+    "AR-R176-second-pass-words-from-chapters-172-176"
+  ],
+  "tex": "arabic/book/chapters/ch176-then-while-more-less-difference.tex"
+}

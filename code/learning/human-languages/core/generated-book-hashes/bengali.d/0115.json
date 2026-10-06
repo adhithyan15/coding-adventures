@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:b91e8e94191ac8d6",
+  "lessonIds": [
+    "BN-C115-bash",
+    "BN-C115-amgachh",
+    "BN-C115-narkel",
+    "BN-C115-anaros",
+    "BN-C115-pepe"
+  ],
+  "tex": "bengali/book/chapters/ch115-bamboo-mango-tree-coconut-pineapple-papaya.tex"
+}

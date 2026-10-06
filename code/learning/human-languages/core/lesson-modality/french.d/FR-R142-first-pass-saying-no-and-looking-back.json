@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R142-first-pass-saying-no-and-looking-back",
+    "language": "french",
+    "chapter": 142,
+    "sequence": 6670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62e49bb1e14dda95"
+  },
+  "findings": []
+}

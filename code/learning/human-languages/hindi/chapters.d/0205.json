@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "A letter, An envelope, A ticket office, A message, A conversation",
+  "label": "ch:hi-a-letter-an-envelope-a-ticket-office-a-message-a-conversation",
+  "canDo": "I can say a letter, an envelope, a ticket office, a message and a conversation.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C205-batcit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say a letter, an envelope, a ticket office, a message and a conversation.",
+    "assesses": [
+      "HI-LEX-C205-THG205-03",
+      "HI-LEX-C205-THG205-04",
+      "HI-LEX-C205-THG205-05"
+    ]
+  }
+}

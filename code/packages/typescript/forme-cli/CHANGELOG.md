@@ -2,6 +2,66 @@
 
 ## Unreleased
 
+- Launch npm's JavaScript CLI directly through the active Node executable on
+  Windows, retaining literal argument-vector spawning without a command shell
+  so frozen local bootstraps run safely on all supported release platforms.
+
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
+- Back plugin `storage:read` watches with a live contained filesystem iterator.
+  Watch setup reuses storage path containment and reserved-root checks, queues
+  are bounded, and iterator return or host teardown closes the native watcher.
+- Compose installed plugin `StageRef`s with manifest-bound persistent grants,
+  the current platform's native sandbox factory, and lazy orchestrator-owned
+  plugin sessions. Direct-only pipelines retain their process-free path, and
+  a mixed direct/plugin product DAG runs in every supported platform gate.
+  The product host supplies bounded storage plus grant-mediated network,
+  environment, and filesystem backends while hiding host-owned plugin and
+  cache state from every plugin grant. Project config selects trusted
+  non-default runtime distributions; product tests exercise both a granted
+  storage call and a real Python plugin.
+- Enable Windows installation and discovery only after the native verifier
+  proves the complete named tree excludes reparse points and untrusted write
+  authority while retaining stable file identities. Product discovery binds
+  the verified root identity across the host snapshot pass and propagates CLI
+  cancellation into plugin discovery and authority loading.
+- Added `forme install <PACKAGE>` for bounded local plugin directories with
+  preflighted identity/trust classification, control-safe cancellable
+  per-capability review against the configured runtime roots, user trust-store
+  loading, manifest-bound grants, and atomic immutable discovery-root
+  publication. Linked, special, oversized, changing, or package-authority
+  inputs fail closed.
+- Made the install capability-review assertion use the manifest contract's
+  colon-free path representation on Windows as well as native paths on Unix.
+- Let the GET-only GitHub Pages dry-run boundary use the fixed `GITHUB_TOKEN`
+  when available, avoiding shared anonymous API limits while preserving
+  tokenless local inspection.
+- Run the Windows Python product acceptance test against a private runtime copy
+  whose tree passes the production trust verifier. The test first proves that
+  the hosted shared toolcache is rejected and never weakens its ACL or the
+  product's trusted-writer policy.
+
+## 0.5.0 — 2026-09-27
+
+- Added `forme deploy` through CLI Builder with mutually exclusive directory,
+  canonical bundle, and explicit-descriptor inline content stores; strict
+  filesystem and GitHub Pages target configuration; target-aware dry-run;
+  deterministic reporting; and explicit legacy ownership bootstrap.
+  Retained bootstrap configuration becomes a no-op after ownership exists, so
+  subsequent content changes do not require deleting migration evidence.
+- Added `forme build --deploy-input DIR` to merge named in-memory `dist-tree`
+  outputs into one collision-checked manifest-bound content store.
+- Restricted v0 hosted credentials to `GITHUB_TOKEN`, used a GET-only anonymous
+  GitHub boundary for dry-run, and rejected duplicate-key or oversized JSON,
+  unsafe descriptors, linked content files, bundle metadata ambiguity, and
+  manifest/store digest-set drift.
+- Made deploy-input replacement use the filesystem adapter's atomic,
+  caller-parent-bound publication path; bounded directory-store enumeration in
+  one pass; closed bundle handles on every configuration failure; and rejected
+  blocking inline descriptor types before reading.
+
 - Canonicalized nested output summaries in `--report` so fresh stage values and
   values restored from canonical checkpoints produce byte-identical output
   sections when their artifacts are equal.

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C186-visalah",
+  "pathSegment": "SA-PATH-186-QUAL186",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-186-QUAL186",
+      "order": 2
+    }
+  ]
+}

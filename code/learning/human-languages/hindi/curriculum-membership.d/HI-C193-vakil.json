@@ -1,0 +1,11 @@
+{
+  "id": "HI-C193-vakil",
+  "pathSegment": "HI-PATH-193-THG193",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-193-THG193",
+      "order": 1
+    }
+  ]
+}

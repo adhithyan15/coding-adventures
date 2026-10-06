@@ -1,0 +1,11 @@
+{
+  "id": "FR-C253-tunnel",
+  "pathSegment": "FR-PATH-253-CHOSES253",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-253-CHOSES253",
+      "order": 2
+    }
+  ]
+}

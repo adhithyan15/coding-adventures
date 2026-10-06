@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:b1e1bb8e1af81720",
+  "lessonIds": [
+    "RU-C213-granitsa",
+    "RU-C213-tamozhnya",
+    "RU-C213-stolitsa",
+    "RU-C213-kvartira",
+    "RU-C213-etazh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch213.txt",
+  "json": "russian/narration/ch213.json",
+  "textHash": "fnv1a64:bd8ed2c61e2cb1be",
+  "jsonHash": "fnv1a64:e77992bdd7180c0c",
+  "findings": []
+}

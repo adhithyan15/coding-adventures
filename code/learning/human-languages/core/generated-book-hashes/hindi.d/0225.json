@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:0e283ade0ed7a491",
+  "lessonIds": [
+    "HI-C225-safkarna",
+    "HI-C225-jharna",
+    "HI-C225-pochna",
+    "HI-C225-nicorna",
+    "HI-C225-sukhana"
+  ],
+  "tex": "hindi/book/chapters/ch225-to-clean-to-dust-to-wipe-to-wring-to-dry.tex"
+}

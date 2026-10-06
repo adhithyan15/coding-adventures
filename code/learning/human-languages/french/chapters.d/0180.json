@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "To prepare, To introduce, To lend, To propose, To pick up",
+  "label": "ch:fr-to-prepare-to-introduce-to-lend-to-propose-to-pick-up",
+  "canDo": "I can say to prepare, to introduce, to lend, to propose and to pick up.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C180-ramasser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say to prepare, to introduce, to lend, to propose and to pick up.",
+    "assesses": [
+      "FR-LEX-C180-VERBES180-03",
+      "FR-LEX-C180-VERBES180-04",
+      "FR-LEX-C180-VERBES180-05"
+    ]
+  }
+}

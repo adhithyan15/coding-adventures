@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:e357c50468698e7b",
+  "lessonIds": [
+    "TA-C253-kalainar",
+    "TA-C253-atikari",
+    "TA-C253-nitipati",
+    "TA-C253-oyvutiyam",
+    "TA-C253-canrital",
+    "TA-R253-first-pass-words-from-chapters-249-250",
+    "TA-R253-second-pass-words-from-chapters-251-253"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch253.txt",
+  "json": "tamil/narration/ch253.json",
+  "textHash": "fnv1a64:c9f2396dec7cbc2c",
+  "jsonHash": "fnv1a64:0e49f59daa3003da",
+  "findings": []
+}

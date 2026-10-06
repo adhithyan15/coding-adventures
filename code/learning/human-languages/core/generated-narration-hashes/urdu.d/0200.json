@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:162956fa312cf16d",
+  "lessonIds": [
+    "UR-C200-pakora",
+    "UR-C200-qorma",
+    "UR-C200-achar",
+    "UR-C200-rayta",
+    "UR-C200-salad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch200.txt",
+  "json": "urdu/narration/ch200.json",
+  "textHash": "fnv1a64:770901a336d44677",
+  "jsonHash": "fnv1a64:da12276b13795ccc",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "An offer, A bill, A bag, A parcel, A stamp",
+  "label": "ch:ge-an-offer-a-bill-a-bag-a-parcel-a-stamp",
+  "canDo": "I can say an offer, a bill, a bag, a parcel and a stamp.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C158-briefmarke",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can say an offer, a bill, a bag, a parcel and a stamp.",
+    "assesses": [
+      "GE-LEX-C158-THING158-03",
+      "GE-LEX-C158-THING158-04",
+      "GE-LEX-C158-THING158-05"
+    ]
+  }
+}

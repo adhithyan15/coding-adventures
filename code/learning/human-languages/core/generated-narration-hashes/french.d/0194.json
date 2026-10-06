@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:0480c29846f61be1",
+  "lessonIds": [
+    "FR-C194-vallee",
+    "FR-C194-temperature",
+    "FR-C194-papillon",
+    "FR-C194-mouche",
+    "FR-C194-moustique"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch194.txt",
+  "json": "french/narration/ch194.json",
+  "textHash": "fnv1a64:446c4de8e5e658c3",
+  "jsonHash": "fnv1a64:80b39f69ff31c673",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:947ceacb2ff2bd75",
+  "lessonIds": [
+    "IT-C164-fidanzata",
+    "IT-C164-sposo",
+    "IT-C164-sposa",
+    "IT-C164-vedovo",
+    "IT-C164-fallimento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch164.txt",
+  "json": "italian/narration/ch164.json",
+  "textHash": "fnv1a64:ff2ed42251b8c9c5",
+  "jsonHash": "fnv1a64:1642760964befc3c",
+  "findings": []
+}

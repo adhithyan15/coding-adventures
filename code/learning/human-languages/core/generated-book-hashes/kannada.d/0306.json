@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:4a14ecf7c3c2c329",
+  "lessonIds": [
+    "KA-C306-moci",
+    "KA-C306-kumbara",
+    "KA-C306-mestri",
+    "KA-C306-plambar",
+    "KA-C306-totagara"
+  ],
+  "tex": "kannada/book/chapters/ch306-cobbler-potter-mason-plumber-gardener.tex"
+}

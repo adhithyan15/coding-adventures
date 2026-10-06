@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:8b8155b628a2e321",
+  "lessonIds": [
+    "LA-C234-demitto",
+    "LA-C234-colligo",
+    "LA-C234-evanesco",
+    "LA-C234-mando",
+    "LA-C234-retineo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch234.txt",
+  "json": "latin/narration/ch234.json",
+  "textHash": "fnv1a64:c3138942838964bc",
+  "jsonHash": "fnv1a64:ea114329d9a64cd3",
+  "findings": []
+}

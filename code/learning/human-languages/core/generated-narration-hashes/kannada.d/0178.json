@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:f6134f92048824f0",
+  "lessonIds": [
+    "KA-C178-bekantale",
+    "KA-C178-akasmat",
+    "KA-C178-bekadare",
+    "KA-C178-yavudakku",
+    "KA-C178-andahage"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch178.txt",
+  "json": "kannada/narration/ch178.json",
+  "textHash": "fnv1a64:f8ee5461d758183a",
+  "jsonHash": "fnv1a64:cb350408b9237af1",
+  "findings": []
+}

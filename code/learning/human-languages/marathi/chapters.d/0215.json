@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Player, Coach, Supporter, Arrival, Departure",
+  "label": "ch:mr-player-coach-supporter-arrival-departure",
+  "canDo": "I can say a player, a coach, a supporter, arrival and departure.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C215-prasthan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say a player, a coach, a supporter, arrival and departure.",
+    "assesses": [
+      "MR-LEX-C215-VASTU215-03",
+      "MR-LEX-C215-VASTU215-04",
+      "MR-LEX-C215-VASTU215-05"
+    ]
+  }
+}

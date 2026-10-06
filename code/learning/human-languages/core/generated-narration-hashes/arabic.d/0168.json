@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:9ea294ecb68202a5",
+  "lessonIds": [
+    "AR-C168-dhira",
+    "AR-C168-jism",
+    "AR-C168-kahil",
+    "AR-C168-halq",
+    "AR-C168-suda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch168.txt",
+  "json": "arabic/narration/ch168.json",
+  "textHash": "fnv1a64:3856f5a459e67044",
+  "jsonHash": "fnv1a64:fce0999a2f7117c7",
+  "findings": []
+}

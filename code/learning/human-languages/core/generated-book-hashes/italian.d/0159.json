@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:0fda8c0f15234c56",
+  "lessonIds": [
+    "IT-C159-appartamento",
+    "IT-C159-soggiorno",
+    "IT-C159-corridoio",
+    "IT-C159-balcone",
+    "IT-C159-parete"
+  ],
+  "tex": "italian/book/chapters/ch159-flat-living-room-corridor-balcony-inner-wall.tex"
+}

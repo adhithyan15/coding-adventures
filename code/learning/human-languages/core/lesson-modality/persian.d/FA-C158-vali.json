@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C158-vali",
+    "language": "persian",
+    "chapter": 158,
+    "sequence": 8090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5489ba08a12345a"
+  },
+  "findings": []
+}

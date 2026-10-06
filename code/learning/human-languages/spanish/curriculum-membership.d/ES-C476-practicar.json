@@ -1,0 +1,11 @@
+{
+  "id": "ES-C476-practicar",
+  "pathSegment": "ES-PATH-476-AULA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-476-AULA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "Beer, Wine, Climate, Air, Earth",
+  "label": "ch:ru-beer-wine-climate-air-earth",
+  "canDo": "I can say beer, wine, a climate, air and the earth.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C164-zemlya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say beer, wine, a climate, air and the earth.",
+    "assesses": [
+      "RU-LEX-C164-VESHCH164-03",
+      "RU-LEX-C164-VESHCH164-04",
+      "RU-LEX-C164-VESHCH164-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:c0f2017941decf2a",
+  "lessonIds": [
+    "RU-C174-sovetovat",
+    "RU-C174-opisyvat",
+    "RU-C174-povtoryat",
+    "RU-C174-perevodit",
+    "RU-C174-pomnit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch174.txt",
+  "json": "russian/narration/ch174.json",
+  "textHash": "fnv1a64:89e7ebf1b029017f",
+  "jsonHash": "fnv1a64:e28d6dce3515e452",
+  "findings": []
+}

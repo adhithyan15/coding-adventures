@@ -1,0 +1,11 @@
+{
+  "id": "TE-C238-vijnanasastram",
+  "pathSegment": "TE-PATH-238-PANI238",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-238-PANI238",
+      "order": 3
+    }
+  ]
+}

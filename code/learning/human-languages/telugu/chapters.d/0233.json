@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "Shoulder cloth, Bubble, Rust, Soot, Charcoal",
+  "label": "ch:te-shoulder-cloth-bubble-rust-soot-charcoal",
+  "canDo": "I can say a shoulder cloth, a bubble, rust, soot and charcoal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C233-boggu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say a shoulder cloth, a bubble, rust, soot and charcoal.",
+    "assesses": [
+      "TE-LEX-C233-VASTUVU233-03",
+      "TE-LEX-C233-VASTUVU233-04",
+      "TE-LEX-C233-VASTUVU233-05"
+    ]
+  }
+}

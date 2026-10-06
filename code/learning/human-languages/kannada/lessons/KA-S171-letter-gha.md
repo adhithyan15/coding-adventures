@@ -59,14 +59,26 @@ You already say these:
 ## Writing: ಘ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-171] -->
 
-Put your pen on ಘ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** start at the inner tip of the curl and wind up and round it to the left
+- **2.** without lifting, run along the base and rise into the middle point
+- **3.** without lifting, drop round the right lobe and climb the right side
+- **4.** without lifting, carry on up the middle arm to its tip
+- **5.** without lifting, come back down the middle arm to its foot
+- **6.** without lifting, round the right arm and curl in at its top
+- **7.** lift, then draw the top bar from left to right
+- **8.** without lifting, curl up into the hook
+- **9.** lift, then set the dot in the middle
+- **10.** lift, then draw the tail downward
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 3.** After the middle arm the pen comes back down it and
+rounds the right arm; then the curled bar, the dot and the tail each come
+after a lift. The animation also lifts between the arms; most people
+copying ಘ in the Omniglot study used four strokes.
+
+> This is one attested teaching order and not a national standard — Kannada
+> handwriting is taught with school-to-school variation. Source: Gopala Krishna
+> A, 'Kannada-alphabet-gha.gif', 61 frames, Wikimedia Commons, 25 May
+> 2016, CC BY-SA 4.0.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-171, KA-SCRIPT-RECOG-170] -->

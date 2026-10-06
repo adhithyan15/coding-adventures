@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C285-tarumu",
+    "language": "telugu",
+    "chapter": 285,
+    "sequence": 13570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af42d25ef21405d4"
+  },
+  "findings": []
+}

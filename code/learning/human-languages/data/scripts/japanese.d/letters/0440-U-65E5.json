@@ -7,11 +7,17 @@
     "a middle horizontal"
   ],
   "strokeOrder": [
-    "left vertical",
-    "top and right corner",
-    "middle bar",
-    "bottom bar"
+    "draw the left side from top to bottom",
+    "lift, draw the top from left to right, then without lifting turn down the right side",
+    "lift, draw the middle bar from left to right",
+    "lift, close the base from left to right"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 065e5 file records 日 as four stroke paths in this order and direction: the left side, the top turning down the right side, the middle bar, then the base; so there are three pen lifts.",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/065e5.svg",
+    "citation": "KanjiVG, kanji/065e5.svg, kanji 日 (U+65E5 CJK UNIFIED IDEOGRAPH-65E5), four stroke paths kvg:065e5-s1 to s4 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the left side drawn top to bottom (kvg:type ㇑); s2 is the top drawn left to right, turning down the right side without lifting (㇕a); s3 is the middle bar and s4 the base, both drawn left to right (㇐a). Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
   "notes": "Sun, day. Read ni in 日本, nichi in 今日, hi standing alone — the clearest case of a kanji having a set of readings rather than a sound."
 }

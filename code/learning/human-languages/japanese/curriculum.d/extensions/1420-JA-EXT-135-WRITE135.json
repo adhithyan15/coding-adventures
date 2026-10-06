@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-135-WRITE135",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write bi, gu, ge and gi by adding the voicing mark to signs I already write, and read words for places and days that use them, such as byouin, deguchi and ginkou.",
+  "prerequisites": []
+}

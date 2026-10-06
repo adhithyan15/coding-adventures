@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C247-naykkutti",
+    "language": "tamil",
+    "chapter": 247,
+    "sequence": 13680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ddd925de889c50e9"
+  },
+  "findings": []
+}

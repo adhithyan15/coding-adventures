@@ -450,43 +450,239 @@ anchor deterministic orthogonal relationship paths to the requested node or grou
 boundary before backend-neutral PaintScene lowering. Named service and group icons
 lower to canonical backend-neutral glyph geometry. Preserved namespaced identifiers
 use a generic fallback when vendor artwork is unavailable. Orthogonal relationship
-layout routes around unrelated service and junction bounds with deterministic
+layout routes around unrelated service, junction, and group bounds with deterministic
 clearance before the existing backend-neutral PaintScene lowering. Full vendor icon
-artwork, group-boundary obstacle avoidance, and configuration remain unsupported at
-the partial level.
+artwork remains unsupported at the partial level. Architecture `iconSize`, `fontSize`,
+`nodeSeparation`, `padding`, and
+`idealEdgeLengthMultiplier` values from Mermaid init directives or YAML front matter
+survive as typed semantic configuration and resolve into backend-neutral node geometry,
+service typography, deterministic spacing, alignment-hint distances, group insets,
+and outer canvas margins. Randomized layout and the remaining fcose-specific tuning controls remain
+unsupported at the partial level.
 
-### Radar Native Slice
+### Radar Compatibility
 
-The initial Mermaid 11.16.1 Radar slice uses dedicated portable grammars and
+The Mermaid 11.16.1 Radar family uses dedicated portable grammars and
 maps labeled axes plus positional or axis-keyed curves into chart semantic IR.
-The chart layout emits deterministic polygonal graticules, radial spokes, axis
-labels, closed series paths, and legends using backend-neutral PaintScene
-instructions, with a native Metal-to-PNG fixture. Radar options (`showLegend`,
-`ticks`, `min`, `max`, and `graticule`), multiple curves on one statement,
-multiline curve bodies, configuration, and filled or smoothed curve styling
-remain unsupported at the partial level.
+The chart layout emits deterministic polygonal or circular graticules, radial
+spokes, axis labels, closed series paths, and legends using backend-neutral PaintScene
+instructions, with a native Metal-to-PNG fixture. Core Radar options preserve
+`showLegend`, positive numeric `ticks`, numeric `min`/`max`, and circle or
+polygon `graticule` choices in semantic chart IR. Layout applies the configured
+scale and graticule geometry before backend-neutral Paint lowering. Multiple
+curves on one statement and multiline curve bodies lower into ordered semantic
+series through the same grammar-backed path. Radar width, height, four margins,
+axis scale, axis-label factors, and curve tension from init directives or YAML
+front matter survive typed semantic configuration and control deterministic
+native geometry. Circular graticules lower Radar series through backend-neutral
+cubic Paint paths. Core Radar theme variables control axis and graticule
+strokes, label and legend sizing, series palettes, translucent curve fills, and
+stroke widths through the same semantic layout and Paint pipeline. Axis labels
+carry angle-derived horizontal anchors and vertical baselines into backend-neutral
+text layout so text extends away from the chart center. The native layout also
+matches the upstream 600-pixel plot, 50-pixel margins, default series palette,
+top title, and vertical overlaid legend, including sparse authored `cScaleN`
+overrides. The pinned syntax corpus and native Metal-to-PNG fixture pass, so
+Radar is recorded at the `full` compatibility level. Backend font rasterization
+and SVG overflow behavior can differ without creating a Radar semantic
+compatibility gap.
 
-### Event Modeling Native Slice
+### Event Modeling Native Compatibility
 
-The initial Mermaid 11.16.1 Event Modeling slice uses dedicated portable
+Mermaid 11.16.1 Event Modeling compatibility uses dedicated portable
 grammars and semantic event-model IR for numbered time and reset frames,
 entity-kind aliases, qualified namespaces, inferred sequence relations, and
-explicit multi-source relations. Temporal swimlane layout lowers through
-backend-neutral PaintScene instructions and a native Metal-to-PNG fixture.
-Inline and block data, notes, Given/When/Then annotations, standalone entity
-declarations, configuration, and interactive behavior remain unsupported at
-the partial level.
+explicit multi-source relations. Typed and untyped inline frame data in object,
+single-quoted, or double-quoted form plus
+reusable multiline data blocks survive in semantic IR and render as secondary
+frame labels. Typed and untyped frame notes remain semantic annotations and
+lower into backend-neutral PaintScene metadata without changing Mermaid's
+visible frame rendering. Given/When/Then scenarios preserve their source frame
+and typed entity references through semantic IR and backend-neutral PaintScene
+metadata, likewise matching Mermaid's current non-visual treatment. Standalone
+entity declarations preserve qualified identifiers and namespaces through the
+same backend-neutral pipeline. Init directives and YAML front matter preserve
+the Event Modeling `padding`, `rowHeight`, and `useMaxWidth` configuration;
+padding affects native viewport geometry while the currently non-visual row
+height and responsive-width settings remain available in PaintScene metadata.
+All ten upstream `em*Fill` and `em*Stroke` theme variables resolve from init
+directives or YAML front matter into backend-neutral frame paint styles.
+Explicit frame sources enforce Mermaid's entity flow rules for UI, processor,
+command, event, and read-model frames, including every source in a multi-source
+declaration. Empty diagrams, multiline comments, empty metadata, separated
+block delimiters, every data type, and the pinned upstream parser examples are
+covered by the complete syntax corpus. Temporal
+swimlane layout lowers through backend-neutral PaintScene instructions and a
+representative pinned visual corpus rendered through Metal-to-PNG. Event
+Modeling is therefore full at the pinned native compatibility level;
+browser-only responsive resizing remains outside the backend-neutral contract.
 
 ### Treemap Native Slice
 
 The initial Mermaid 11.16.1 Treemap slice recognizes both `treemap` and
 `treemap-beta` and parses quoted parent and leaf nodes, indentation hierarchy,
 colon or comma numeric values, class selectors, titles, and accessibility
-metadata into dedicated hierarchy IR. Deterministic alternating partitions
+metadata into dedicated hierarchy IR. Empty documents match the upstream
+grammar, while semantic validation rejects a second unindented root with the
+pinned Mermaid diagnostic. Deterministic alternating partitions
 lower through backend-neutral rectangles and glyph runs, with native
-Metal-to-PNG validation. `classDef` declarations are grammar-accepted but their
-style bodies, D3 value formats, configuration overrides, and theme-exact color
-matching remain unsupported at the partial level.
+Metal-to-PNG validation. Named `classDef` declarations resolve fill, stroke,
+dash, dash offset, fill/stroke/overall opacity, text color, and font styling
+through semantic IR and backend-neutral paint, including CSS percentage opacity
+values. Pixel and percentage class border radii likewise reach backend-neutral
+rectangle geometry, with percentages resolving against the shorter node edge,
+and `currentColor` node fills and strokes resolve against the final label color
+before opacity composition. Three/four/eight-digit CSS hex colors and transparent
+text colors preserve authored alpha through glyph and node opacity composition;
+modern space/slash `rgb()`/`rgba()` colors survive Mermaid style parsing, while
+backend-neutral color lowering also accepts legacy comma forms. Modern
+space/slash `hsl()`/`hsla()` styles preserve hue units and alpha through semantic
+IR before backend-neutral RGB conversion; lowering also accepts legacy comma
+forms. Modern `hwb()` colors preserve hue units, whiteness, blackness, and alpha
+through the same semantic and backend-neutral conversion path. Perceptual
+`lab()` and cylindrical `lch()` colors preserve their components and alpha through
+semantic IR before conversion from D50 Lab to backend-neutral sRGB paint. The
+corresponding `oklab()` and `oklch()` forms preserve their perceptual components
+and alpha before direct linear-sRGB lowering. CSS `color()` supports both encoded
+`srgb` and linear-light `srgb-linear` profiles through the same semantic and
+backend-neutral path, while `display-p3` components convert through D65 XYZ into
+backend-neutral sRGB paint. The wider-gamut `a98-rgb` profile applies its specified
+transfer curve and D65 matrix before the same backend-neutral conversion. The
+D50-based `prophoto-rgb` profile applies its piecewise transfer curve and chromatic
+adaptation before backend-neutral sRGB lowering. The `rec2020` profile likewise
+uses its standard transfer curve and D65 matrix before backend-neutral lowering.
+Direct `xyz`/`xyz-d65` and chromatically adapted `xyz-d50` profiles complete the
+predefined CSS `color()` spaces on the same backend-neutral path. Across modern
+color functions, the CSS missing-component keyword `none` survives semantic IR
+and resolves to zero when lowered to absolute backend-neutral paint; an omitted
+alpha component remains fully opaque, while an explicit `/ none` resolves to
+transparent alpha. CSS `color-mix()` likewise preserves authored stops through
+semantic IR and supports premultiplied-alpha interpolation in the `srgb` color
+space, including omitted, complementary, and normalized stop percentages. The
+`srgb-linear` interpolation space decodes channels to linear light before the
+same alpha-aware mixing and encodes the result back to backend-neutral sRGB.
+The perceptual `oklab` interpolation space similarly converts sRGB stops into
+OKLab before mixing and lowers the mixed result through linear sRGB paint.
+The cylindrical `oklch` interpolation space preserves the same perceptual
+lightness and chroma while applying shortest-path hue interpolation, including
+powerless achromatic hues, before backend-neutral lowering.
+The cylindrical `hsl` interpolation space likewise applies shortest-path hue
+interpolation and achromatic hue fixup while alpha-premultiplying saturation
+and lightness before conversion to backend-neutral sRGB.
+The `hwb` interpolation space shares that angular behavior while mixing
+whiteness and blackness with premultiplied alpha and treating near-achromatic
+whiteness-plus-blackness sums as powerless hues.
+The rectangular D50 `lab` interpolation space converts sRGB stops through
+chromatic adaptation before premultiplied-alpha mixing and converts the result
+back to backend-neutral sRGB paint.
+The cylindrical D50 `lch` interpolation space adds shortest-path hue
+interpolation and powerless low-chroma hue fixup to that same backend-neutral
+conversion path.
+The encoded `display-p3` interpolation space converts sRGB paint into the
+wider D65 gamut for premultiplied-alpha mixing, then lowers the result back to
+backend-neutral sRGB paint instructions.
+The encoded `a98-rgb` interpolation space applies Adobe RGB's sign-preserving
+gamma around D65 XYZ conversion while retaining the same alpha and
+backend-neutral lowering semantics.
+The encoded `prophoto-rgb` interpolation space applies its piecewise transfer
+function around D50 XYZ conversion, including chromatic adaptation to and from
+the backend-neutral sRGB paint space.
+The complete CSS named-color set likewise resolves to explicit
+backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
+including gray/grey aliases and `rebeccapurple`.
+The SVG/CSS `none` paint keyword remains distinct from text color semantics and
+lowers node fills and strokes to explicit backend-neutral transparency, including
+when opacity declarations are present.
+Relative `bolder` and `lighter`
+font weights resolve against the default weight, integer weights from 1 through
+1000 survive into native variable-font matching, and `oblique` font style lowers
+through the existing backend-neutral italic face selection. Positive pixel,
+em, rem, and percentage font sizes retain their authored absolute or relative
+semantics through label and value layout. CSS absolute-size keywords use stable
+native pixel equivalents, while `smaller` and `larger` preserve relative scaling.
+Nine named font-stretch widths and positive percentages
+flow through nearest-width native font matching without introducing backend-specific paint behavior. Class text alignment and
+none/upper/lower/capitalize/full-width/full-size-kana transforms and none/underline/overline/line-through
+decoration combinations, including independently authored decoration colors,
+solid/double/dotted/dashed/wavy decoration styles, and auto, from-font, pixel,
+em, and percentage decoration thicknesses also survive into shaped
+glyph runs. The CSS decoration shorthand composes those line, style, color, and
+thickness values into the same semantic representation, and the
+`text-decoration-line` longhand supports none and composable underline,
+overline, and line-through values. Decoration `currentColor` remains semantic
+until it resolves against the final label color. Auto, pixel, em, and percentage underline offsets follow the same
+backend-neutral geometry path. Auto, from-font, and under underline positions select metric or descent-based
+backend-neutral placement. Normal, unitless,
+percentage, and pixel line heights flow through the same text layout path.
+Pixel and percentage text indents adjust only the first backend-neutral line box
+before glyph shaping while `hanging` inverts the target and `each-line` restarts
+the target after forced breaks. Subsequent lines otherwise retain the authored box. Normal,
+nowrap, pre, pre-wrap, pre-line,
+and break-spaces white-space modes control collapsing, preservation, and native
+line wrapping. Break-spaces keeps every ASCII separator and exposes each one as
+a backend-neutral wrap opportunity. The white-space-collapse longhand composes
+collapse, preserve, preserve-breaks, preserve-spaces, and break-spaces into the
+same semantic modes. Preserve-spaces converts tabs and segment breaks to spaces,
+retains authored space runs, and wraps only after a complete preserved sequence.
+Auto, left/start, center, right/end, and
+justify last-line alignment overrides flow into backend-neutral line positioning
+and glyph spacing.
+Normal, break-word, and anywhere overflow wrapping preserve ordinary Unicode
+line breaks and optionally split oversized words at grapheme boundaries; the
+legacy `word-wrap` alias maps into the same typed modes.
+Normal, break-all, and keep-all word-breaking modes respectively preserve
+Unicode opportunities, add grapheme opportunities, or suppress CJK-internal breaks.
+Auto, loose, normal, strict, and anywhere line-breaking modes preserve Unicode
+defaults, tailor small-kana opportunities, or add grapheme opportunities.
+None and manual hyphenation modes suppress discretionary breaks or expose
+authored soft hyphens as backend-neutral wrap opportunities. Manual soft
+hyphens remain invisible unless selected as a line ending; dictionary-backed
+automatic hyphenation remains explicitly unsupported. Auto and quoted custom
+hyphenate-character values choose the glyph inserted at an authored break.
+Clip and ellipsis text-overflow modes truncate oversized labels at grapheme
+boundaries, with ellipsis insertion remaining backend-neutral until shaping.
+Wrap and nowrap text-wrap modes independently enable or suppress soft wrapping
+through semantic text metadata while retaining authored hard line breaks.
+Auto, stable, and balance text-wrap styles retain greedy wrapping or redistribute text
+across the existing line count toward even backend-neutral line widths.
+Stable wrapping matches auto for an initial stateless render and preserves its
+typed intent for future incremental layout state.
+Pretty wrapping additionally moves a trailing word when that reduces final-line
+raggedness without exceeding the authored line width.
+The text-wrap shorthand composes wrap, nowrap, balance, pretty, and stable into the
+same typed mode and style fields before backend-neutral lowering.
+Justified text alignment distributes remaining line width across ASCII word
+separators on non-final lines before backend-neutral glyph placement.
+Auto and inter-word justification use those separator advances,
+inter-character justification distributes the width across shaped glyph gaps,
+and none suppresses expansion while retaining the authored alignment.
+Justified last-line alignment applies that distribution to the final line while
+preserving the authored alignment of earlier lines.
+Normal and positive or negative pixel/em letter spacing adjusts shaped glyph
+positions and line measurement through backend-neutral PaintInstructions.
+Normal and positive or negative pixel/em word spacing likewise adjusts ASCII
+word-separator advances, line measurement, wrapping, and alignment before paint.
+Left-to-right and right-to-left class directions select the corresponding
+Unicode text-flow analysis and native shaping direction before glyph lowering.
+Ordered text-shadow lists with pixel offsets and optional blur lower to
+backend-neutral drop-shadow filter layers around the shaped glyph instructions;
+omitted colors and explicit currentColor resolve against the final label color.
+Integer tab sizes from zero through 256 expand preserved tabs before shaping;
+normal/default and pre-line whitespace continue to collapse tabs as CSS spaces.
+All twelve `cScale`,
+`cScalePeer`, and `cScaleLabel` theme-variable slots
+also flow from init directives or YAML front matter through category-aware
+layout into paint, with the hidden root and inherited leaf category behavior of
+the upstream renderer. Common D3 value-format families lower natively, including
+grouped and fixed decimals, currency, significant digits, scientific notation,
+percentages, SI prefixes, radix output, signs, trimmed zeroes, alternate radix
+prefixes, width, fill, and left/right/center/sign-aware alignment. Exact D3
+locale-specific separators and the broader CSS property surface remain
+unsupported at the partial level. Treemap layout, value visibility, font, and
+border configuration also flow through semantic IR, hierarchy layout, and paint.
+Explicit section and leaf fill, stroke, and stroke-width options, independent
+label/value colors, and title color/size follow the same backend-neutral path;
+named class styles retain precedence over those diagram-wide node options.
 
 ### Venn Native Slice
 

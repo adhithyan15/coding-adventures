@@ -1,0 +1,11 @@
+{
+  "id": "AR-C227-taarrafa",
+  "pathSegment": "AR-PATH-227-ACT227",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-227-ACT227",
+      "order": 2
+    }
+  ]
+}

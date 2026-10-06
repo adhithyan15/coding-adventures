@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "To weave, To attach, To move aside, To wake someone, To save",
+  "label": "ch:bn-to-weave-to-attach-to-move-aside-to-wake-someone-to-save",
+  "canDo": "I can say to weave, to attach, to move aside, to wake someone and to save.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C102-bachano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: I can say to weave, to attach, to move aside, to wake someone and to save.",
+    "assesses": [
+      "BN-LEX-C102-ACT102-03",
+      "BN-LEX-C102-ACT102-04",
+      "BN-LEX-C102-ACT102-05"
+    ]
+  }
+}

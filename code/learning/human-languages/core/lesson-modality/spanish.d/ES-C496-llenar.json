@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C496-llenar",
+    "language": "spanish",
+    "chapter": 496,
+    "sequence": 14380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93ff0314d0fdab23"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "To phone, To discuss, To forbid, To protect, To die",
+  "label": "ch:mr-to-phone-to-discuss-to-forbid-to-protect-to-die",
+  "canDo": "I can say to phone, to discuss, to forbid, to protect and to die.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C194-marne2",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say to phone, to discuss, to forbid, to protect and to die.",
+    "assesses": [
+      "MR-LEX-C194-ACT194-03",
+      "MR-LEX-C194-ACT194-04",
+      "MR-LEX-C194-ACT194-05"
+    ]
+  }
+}

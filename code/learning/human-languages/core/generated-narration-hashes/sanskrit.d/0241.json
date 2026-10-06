@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:d86fb13a84b38675",
+  "lessonIds": [
+    "SA-C241-krte",
+    "SA-C241-yena",
+    "SA-C241-tena",
+    "SA-C241-yat",
+    "SA-C241-parantu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch241.txt",
+  "json": "sanskrit/narration/ch241.json",
+  "textHash": "fnv1a64:d769663e1e22319b",
+  "jsonHash": "fnv1a64:e252e1fab7d86906",
+  "findings": []
+}

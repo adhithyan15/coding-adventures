@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "Hollow, Flat, Crooked, Blurred, Crowded",
+  "label": "ch:ka-hollow-flat-crooked-blurred-crowded",
+  "canDo": "I can say hollow, flat, crooked, blurred and crowded.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C256-kikkirida",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say hollow, flat, crooked, blurred and crowded.",
+    "assesses": [
+      "KA-LEX-C256-GUNA256-03",
+      "KA-LEX-C256-GUNA256-04",
+      "KA-LEX-C256-GUNA256-05"
+    ]
+  }
+}

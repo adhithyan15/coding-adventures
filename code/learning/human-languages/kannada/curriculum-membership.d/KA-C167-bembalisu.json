@@ -1,0 +1,11 @@
+{
+  "id": "KA-C167-bembalisu",
+  "pathSegment": "KA-PATH-167-KRIYE167",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-167-KRIYE167",
+      "order": 2
+    }
+  ]
+}

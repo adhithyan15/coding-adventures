@@ -1,0 +1,19 @@
+{
+  "chapter": 138,
+  "title": "Busy, Clever, Foolish, Kind, Brave",
+  "label": "ch:bn-busy-clever-foolish-kind-brave",
+  "canDo": "I can say busy, clever, foolish, kind and brave.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C138-sahosi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 138: I can say busy, clever, foolish, kind and brave.",
+    "assesses": [
+      "BN-LEX-C138-QUAL138-03",
+      "BN-LEX-C138-QUAL138-04",
+      "BN-LEX-C138-QUAL138-05"
+    ]
+  }
+}

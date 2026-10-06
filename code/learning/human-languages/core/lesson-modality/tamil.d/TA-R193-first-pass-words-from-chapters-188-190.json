@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R193-first-pass-words-from-chapters-188-190",
+    "language": "tamil",
+    "chapter": 193,
+    "sequence": 9760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef52e7a3b9654977"
+  },
+  "findings": []
+}

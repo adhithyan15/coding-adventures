@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C483-mejora",
+    "language": "spanish",
+    "chapter": 483,
+    "sequence": 13680,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6f7bf069dfbb50b8"
+  },
+  "findings": []
+}

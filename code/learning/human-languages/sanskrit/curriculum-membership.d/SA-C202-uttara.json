@@ -1,0 +1,11 @@
+{
+  "id": "SA-C202-uttara",
+  "pathSegment": "SA-PATH-202-TRV202",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-202-TRV202",
+      "order": 4
+    }
+  ]
+}

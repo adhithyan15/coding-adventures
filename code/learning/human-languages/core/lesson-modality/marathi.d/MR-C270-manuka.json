@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C270-manuka",
+    "language": "marathi",
+    "chapter": 270,
+    "sequence": 15620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:964137949edacef7"
+  },
+  "findings": []
+}

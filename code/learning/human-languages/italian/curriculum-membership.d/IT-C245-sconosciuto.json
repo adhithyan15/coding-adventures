@@ -1,0 +1,11 @@
+{
+  "id": "IT-C245-sconosciuto",
+  "pathSegment": "IT-PATH-245-QUAL245",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-245-QUAL245",
+      "order": 4
+    }
+  ]
+}

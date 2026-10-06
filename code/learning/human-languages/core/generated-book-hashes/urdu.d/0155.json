@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:ef0533fcdbf02367",
+  "lessonIds": [
+    "UR-C155-savere",
+    "UR-C155-adha-ghanta",
+    "UR-C155-janvari",
+    "UR-C155-farvari",
+    "UR-C155-march",
+    "UR-R155-first-pass-words-from-chapters-147-150",
+    "UR-R155-second-pass-words-from-chapters-151-155"
+  ],
+  "tex": "urdu/book/chapters/ch155-early-in-the-morning-half-an-hour-january-february-march.tex"
+}

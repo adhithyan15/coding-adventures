@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R182-second-pass-words-from-chapters-178-182",
+    "language": "german",
+    "chapter": 182,
+    "sequence": 8980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:743f69a7baed0dd7"
+  },
+  "findings": []
+}

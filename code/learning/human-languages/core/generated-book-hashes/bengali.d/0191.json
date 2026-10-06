@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:784806839c115c62",
+  "lessonIds": [
+    "BN-C191-dorkari",
+    "BN-C191-sombhob",
+    "BN-C191-adhunik",
+    "BN-C191-prachin",
+    "BN-C191-asol"
+  ],
+  "tex": "bengali/book/chapters/ch191-necessary-possible-modern-ancient-real.tex"
+}

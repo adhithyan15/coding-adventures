@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R304-second-pass-words-from-chapters-300-304",
+    "language": "telugu",
+    "chapter": 304,
+    "sequence": 14590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6563a48f36ede256"
+  },
+  "findings": []
+}

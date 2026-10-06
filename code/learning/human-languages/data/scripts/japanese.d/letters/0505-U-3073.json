@@ -1,0 +1,24 @@
+{
+  "glyph": "び",
+  "sound": "bi",
+  "role": "hiragana",
+  "components": [
+    "ひ",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "begin at the upper left and draw the short high shoulder to the right, turning down at the corner",
+    "without lifting, descend and swing left around the broad bottom",
+    "without lifting, rise up the right side and finish with a short flick outward at the top right",
+    "lift, draw the left tick of the dakuten down to the right",
+    "lift, draw the right tick down to the right"
+  ],
+  "strokeOrderNote": "KanjiVG's 03073 file records び as three stroke paths in this order and direction: ひ's stroke (the one stroke), then the dakuten's two ticks, the left one first, each drawn down to the right; so there are two pen lifts.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03073.svg",
+    "citation": "KanjiVG, kanji/03073.svg, hiragana び (U+3073 HIRAGANA LETTER BI), three stroke paths kvg:03073-s1 to s3 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is ひ's stroke, the same paths as in its file for ひ, kanji/03072.svg; s2 and s3 are the dakuten, the left tick first and then the right one, each drawn down to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
+  "notes": "ひ voiced, read bi. Opens びょういん, a hospital, and ends どようび and げつようび."
+}

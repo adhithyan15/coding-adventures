@@ -1,0 +1,11 @@
+{
+  "id": "FA-C221-shukhi-kardan",
+  "pathSegment": "FA-PATH-221-KONESH221",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-221-KONESH221",
+      "order": 3
+    }
+  ]
+}

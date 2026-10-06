@@ -1,0 +1,11 @@
+{
+  "id": "AR-C262-hadith2",
+  "pathSegment": "AR-PATH-262-SIHHA262",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-262-SIHHA262",
+      "order": 3
+    }
+  ]
+}

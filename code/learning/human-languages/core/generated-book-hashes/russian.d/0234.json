@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:08d2ca2619ed796f",
+  "lessonIds": [
+    "RU-C234-podmetat",
+    "RU-C234-sazhat",
+    "RU-C234-polivat",
+    "RU-C234-rasti",
+    "RU-C234-kormit"
+  ],
+  "tex": "russian/book/chapters/ch234-to-sweep-to-plant-to-water-to-grow-to-feed.tex"
+}

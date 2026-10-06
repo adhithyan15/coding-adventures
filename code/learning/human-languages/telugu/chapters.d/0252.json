@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Ugadi, Diwali, Dasara, Vinayaka Chavithi, Bathukamma",
+  "label": "ch:te-ugadi-diwali-dasara-vinayaka-chavithi-bathukamma",
+  "canDo": "I can say Ugadi, Diwali, Dasara, Vinayaka Chavithi and Bathukamma.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C252-batukamma",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say Ugadi, Diwali, Dasara, Vinayaka Chavithi and Bathukamma.",
+    "assesses": [
+      "TE-LEX-C252-SAMAYAM252-03",
+      "TE-LEX-C252-SAMAYAM252-04",
+      "TE-LEX-C252-SAMAYAM252-05"
+    ]
+  }
+}

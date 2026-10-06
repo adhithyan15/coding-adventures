@@ -1,0 +1,11 @@
+{
+  "id": "LA-C194-rumor",
+  "pathSegment": "LA-PATH-194-RES194",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-194-RES194",
+      "order": 3
+    }
+  ]
+}

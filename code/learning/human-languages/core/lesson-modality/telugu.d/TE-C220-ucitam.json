@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C220-ucitam",
+    "language": "telugu",
+    "chapter": 220,
+    "sequence": 10130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b666a88402c69b9a"
+  },
+  "findings": []
+}

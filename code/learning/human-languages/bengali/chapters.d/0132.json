@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Phone, Radio, Light, Bed, Mattress",
+  "label": "ch:bn-phone-radio-light-bed-mattress",
+  "canDo": "I can say a phone, a radio, light, a bed and a mattress.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C132-toshok",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: I can say a phone, a radio, light, a bed and a mattress.",
+    "assesses": [
+      "BN-LEX-C132-THINGS132-03",
+      "BN-LEX-C132-THINGS132-04",
+      "BN-LEX-C132-THINGS132-05"
+    ]
+  }
+}

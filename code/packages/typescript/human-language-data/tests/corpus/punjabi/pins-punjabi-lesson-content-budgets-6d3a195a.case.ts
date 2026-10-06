@@ -71,7 +71,13 @@ it("pins Punjabi lesson-content budgets", () =>
     // 533 -> 818: Punjabi A1. Chapters 99-152, 270 word lessons (28 verbs) and
     // twelve reviews, plus three chapter-6 -more continuations that split the
     // two over-budget number lessons. No idiom, sense or culture claim.
-    lessons: 818,
+    // 818 -> 820: PA-C07-hona-two-roots and PA-C07-khana-tone, the atom-budget
+    // continuations. No idiom, sense or culture claim.
+    // 820 -> 831: the date-field runway, using taught months and digits. No
+    // idiom, sense or culture claim.
+    // 831 -> 838: three-field form integration, using only taught labels and
+    // fictional values. No idiom, sense or culture claim.
+    lessons: 838,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

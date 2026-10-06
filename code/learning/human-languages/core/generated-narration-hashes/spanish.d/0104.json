@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 104,
-  "sourceHash": "fnv1a64:4012f8d574efec0d",
+  "sourceHash": "fnv1a64:f403fc1b97fc4b35",
   "lessonIds": [
     "ES-C15-comer-preterite",
     "ES-C15-comer-vivir-preterite"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "spanish/narration/ch104.txt",
   "json": "spanish/narration/ch104.json",
-  "textHash": "fnv1a64:97ea31edad154e58",
-  "jsonHash": "fnv1a64:f928a23746b6d5b9",
+  "textHash": "fnv1a64:a53ff767caede780",
+  "jsonHash": "fnv1a64:bdc4324195a00a05",
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:5580d7806ab1af2f",
+  "lessonIds": [
+    "FA-C268-darvaze",
+    "FA-C268-sayeban",
+    "FA-C268-golkhane",
+    "FA-C268-jub",
+    "FA-C268-piyaderow"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch268.txt",
+  "json": "persian/narration/ch268.json",
+  "textHash": "fnv1a64:fe26678ef1680b06",
+  "jsonHash": "fnv1a64:9492c1934bd3cafa",
+  "findings": []
+}

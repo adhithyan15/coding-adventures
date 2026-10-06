@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:dfb7208397a5127d",
+  "lessonIds": [
+    "RU-C243-molodoy",
+    "RU-C243-pozhiloy",
+    "RU-C243-vysokiy",
+    "RU-C243-nizkiy",
+    "RU-C243-nekrasivyy"
+  ],
+  "tex": "russian/book/chapters/ch243-young-elderly-tall-low-ugly.tex"
+}

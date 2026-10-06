@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:2dad1681482022b9",
+  "lessonIds": [
+    "KA-C305-arcaka",
+    "KA-C305-kalavida",
+    "KA-C305-gayaka",
+    "KA-C305-nata",
+    "KA-C305-patrakarta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch305.txt",
+  "json": "kannada/narration/ch305.json",
+  "textHash": "fnv1a64:a81ed86f59494c14",
+  "jsonHash": "fnv1a64:faff43da71309435",
+  "findings": []
+}

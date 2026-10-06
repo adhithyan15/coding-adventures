@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C180-preparer",
+    "language": "french",
+    "chapter": 180,
+    "sequence": 9360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86186b1c6772da2d"
+  },
+  "findings": []
+}

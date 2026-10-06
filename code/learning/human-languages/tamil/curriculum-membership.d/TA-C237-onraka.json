@@ -1,0 +1,11 @@
+{
+  "id": "TA-C237-onraka",
+  "pathSegment": "TA-PATH-237-KARANAM237",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-237-KARANAM237",
+      "order": 3
+    }
+  ]
+}

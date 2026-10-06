@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C151-traeumen",
+    "language": "german",
+    "chapter": 151,
+    "sequence": 6730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5150e7c08116fe03"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "Next, From Now On, the Future, To Hope, To Look Forward To",
+  "label": "ch:te-next-from-now-on-the-future-to-hope-to-look-forward-to",
+  "canDo": "I can say what will happen, and when: next week, from now on, and what I hope for.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "TE-C155-edurucudu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: I can say what will happen, and when: next week, from now on, and what I hope for.",
+    "assesses": [
+      "TE-LEX-C155-BHAVISHYAT155-03",
+      "TE-LEX-C155-BHAVISHYAT155-04",
+      "TE-LEX-C155-BHAVISHYAT155-05"
+    ]
+  }
+}

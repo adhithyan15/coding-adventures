@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:4ae4f2fa487f28ff",
+  "lessonIds": [
+    "UR-C221-naraz",
+    "UR-C221-hairan",
+    "UR-C221-sharmila",
+    "UR-C221-khamosh",
+    "UR-C221-shandar"
+  ],
+  "tex": "urdu/book/chapters/ch221-annoyed-surprised-shy-quiet-splendid.tex"
+}

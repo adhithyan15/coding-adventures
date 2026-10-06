@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:be2973ac61826770",
+  "lessonIds": [
+    "KA-C154-yaru",
+    "KA-C154-endigu",
+    "KA-C154-elliyu",
+    "KA-C154-yaradaru",
+    "KA-C154-enadaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch154.txt",
+  "json": "kannada/narration/ch154.json",
+  "textHash": "fnv1a64:c632bc8786ac94c6",
+  "jsonHash": "fnv1a64:a845715a8aa624ec",
+  "findings": []
+}

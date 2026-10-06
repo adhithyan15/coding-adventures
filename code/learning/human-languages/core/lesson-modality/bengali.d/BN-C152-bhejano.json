@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C152-bhejano",
+    "language": "bengali",
+    "chapter": 152,
+    "sequence": 8460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7beb81e2572a6230"
+  },
+  "findings": []
+}

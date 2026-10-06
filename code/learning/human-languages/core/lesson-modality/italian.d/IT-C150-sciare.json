@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C150-sciare",
+    "language": "italian",
+    "chapter": 150,
+    "sequence": 7820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:951c2bd143a0738b"
+  },
+  "findings": []
+}

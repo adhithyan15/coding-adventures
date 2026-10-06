@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:148b6690a31994b9",
+  "lessonIds": [
+    "FR-C202-caoutchouc",
+    "FR-C202-metal",
+    "FR-C202-brique",
+    "FR-C202-sachet",
+    "FR-C202-corde"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch202.txt",
+  "json": "french/narration/ch202.json",
+  "textHash": "fnv1a64:beb989309a5230fe",
+  "jsonHash": "fnv1a64:fb260503e6307faa",
+  "findings": []
+}

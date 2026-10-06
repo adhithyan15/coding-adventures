@@ -1,0 +1,11 @@
+{
+  "id": "JA-C134-kaban",
+  "pathSegment": "JA-PATH-134-WRITE134",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-134-WRITE134",
+      "order": 3
+    }
+  ]
+}

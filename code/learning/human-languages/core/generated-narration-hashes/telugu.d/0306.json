@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:fa3f083d259998c7",
+  "lessonIds": [
+    "TE-C306-ukku",
+    "TE-C306-simentu",
+    "TE-C306-tolu",
+    "TE-C306-patti",
+    "TE-C306-unni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch306.txt",
+  "json": "telugu/narration/ch306.json",
+  "textHash": "fnv1a64:680ac1671b855c18",
+  "jsonHash": "fnv1a64:458aa65d39d81b09",
+  "findings": []
+}

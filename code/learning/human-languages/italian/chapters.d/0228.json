@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "Skyscraper, Castle, Tower, Monument, Statue",
+  "label": "ch:it-skyscraper-castle-tower-monument-statue",
+  "canDo": "I can say a skyscraper, a castle, a tower, a monument and a statue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C228-statua",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say a skyscraper, a castle, a tower, a monument and a statue.",
+    "assesses": [
+      "IT-LEX-C228-COSE228-03",
+      "IT-LEX-C228-COSE228-04",
+      "IT-LEX-C228-COSE228-05"
+    ]
+  }
+}

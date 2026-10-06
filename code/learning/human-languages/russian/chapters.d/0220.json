@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Tablet, Screen, Keyboard, Printer, Remote control",
+  "label": "ch:ru-tablet-screen-keyboard-printer-remote-control",
+  "canDo": "I can say a tablet, a screen, a keyboard, a printer and a remote control.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C220-pult",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say a tablet, a screen, a keyboard, a printer and a remote control.",
+    "assesses": [
+      "RU-LEX-C220-VESHCH220-03",
+      "RU-LEX-C220-VESHCH220-04",
+      "RU-LEX-C220-VESHCH220-05"
+    ]
+  }
+}

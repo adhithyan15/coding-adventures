@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-485-LIMPIEZA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-485-LIMPIEZA"
+  ],
+  "after": []
+}

@@ -52,17 +52,18 @@ You already say these, and every one of them has వ somewhere inside it:
 - **నువ్వు / మీరు** *nuvvu / mīru* — you (familiar / respectful)
 - **పరవాలేదు** *paravālēdu* — it's okay / no problem / you're welcome
 
-## Writing: వ — copy what you see
+## Writing: వ — three calm movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-117] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on వ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the numbered filmstrip once before your pen moves. Movement 1 loops
+counterclockwise around the small lower-left bowl. Lift, then movement 2 sweeps
+around the broad lower and right body. Lift once more for movement 3, the
+separate chevron above.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Trace the same route slowly. This is one attested school-style order fitted to
+the printed shape here; Telugu handwriting varies, so keep the three movements
+clear instead of closing the two pen lifts.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-117] -->

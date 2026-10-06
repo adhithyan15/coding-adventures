@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R109-second-pass-things-in-the-kitchen-and-the-house",
+    "language": "bengali",
+    "chapter": 109,
+    "sequence": 5810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b16d4c3d8c9e9192"
+  },
+  "findings": []
+}

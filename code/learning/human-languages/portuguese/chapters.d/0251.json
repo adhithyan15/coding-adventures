@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Gas, Plastic, Cotton, Wool, Silk",
+  "label": "ch:pt-gas-plastic-cotton-wool-silk",
+  "canDo": "I can say gas, plastic, cotton, wool and silk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C251-seda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can say gas, plastic, cotton, wool and silk.",
+    "assesses": [
+      "PT-LEX-C251-COISAS251-03",
+      "PT-LEX-C251-COISAS251-04",
+      "PT-LEX-C251-COISAS251-05"
+    ]
+  }
+}

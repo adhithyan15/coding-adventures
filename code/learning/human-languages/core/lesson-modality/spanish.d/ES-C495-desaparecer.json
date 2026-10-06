@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C495-desaparecer",
+    "language": "spanish",
+    "chapter": 495,
+    "sequence": 14320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69c7bb8c97a1755c"
+  },
+  "findings": []
+}

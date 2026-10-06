@@ -1,0 +1,11 @@
+{
+  "id": "FA-C238-abdar",
+  "pathSegment": "FA-PATH-238-SEFAT238",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-238-SEFAT238",
+      "order": 1
+    }
+  ]
+}

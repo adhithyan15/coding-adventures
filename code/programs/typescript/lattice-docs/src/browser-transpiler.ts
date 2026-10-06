@@ -49,8 +49,8 @@
 // constant in the bundle. At runtime, LATTICE_TOKENS_TEXT and
 // LATTICE_GRAMMAR_TEXT are already strings — no network requests needed.
 
-import LATTICE_TOKENS_TEXT from "../../../../grammars/lattice.tokens?raw";
-import LATTICE_GRAMMAR_TEXT from "../../../../grammars/lattice.grammar?raw";
+import LATTICE_TOKENS_TEXT from "../../../../grammars/lattice/lattice.tokens?raw";
+import LATTICE_GRAMMAR_TEXT from "../../../../grammars/lattice/lattice.grammar?raw";
 
 // ── Grammar-tools: parse the text into structured grammar objects ─────────────
 

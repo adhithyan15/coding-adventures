@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C148-udhar-lena",
+    "language": "urdu",
+    "chapter": 148,
+    "sequence": 7870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08470aada8bc96ca"
+  },
+  "findings": []
+}

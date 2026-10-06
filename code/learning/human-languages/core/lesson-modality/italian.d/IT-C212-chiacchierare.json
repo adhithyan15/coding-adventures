@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C212-chiacchierare",
+    "language": "italian",
+    "chapter": 212,
+    "sequence": 12160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22b0edf18b8a5b93"
+  },
+  "findings": []
+}

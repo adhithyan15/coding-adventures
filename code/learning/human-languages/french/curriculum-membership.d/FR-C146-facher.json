@@ -1,0 +1,11 @@
+{
+  "id": "FR-C146-facher",
+  "pathSegment": "FR-PATH-146-VERBES146",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-146-VERBES146",
+      "order": 2
+    }
+  ]
+}

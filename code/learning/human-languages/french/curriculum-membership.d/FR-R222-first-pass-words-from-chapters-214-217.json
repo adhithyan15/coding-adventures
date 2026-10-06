@@ -1,0 +1,11 @@
+{
+  "id": "FR-R222-first-pass-words-from-chapters-214-217",
+  "pathSegment": "FR-PATH-222-CHOSES222",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-222-CHOSES222",
+      "order": 5
+    }
+  ]
+}

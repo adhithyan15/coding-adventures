@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "The Rent, an Advert, an Appointment, Opening Hours, a Receipt",
+  "label": "ch:ge-the-rent-an-advert-an-appointment-opening-hours-a-receipt",
+  "canDo": "I can read an advert, an appointment, opening hours and a receipt, and act on what they say.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GE-R143-second-pass-reading-notices",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: I can read an advert, an appointment, opening hours and a receipt, and act on what they say.",
+    "assesses": [
+      "GE-LEX-C143-READ143-03",
+      "GE-LEX-C143-READ143-04",
+      "GE-LEX-C143-READ143-05"
+    ]
+  }
+}

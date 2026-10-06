@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C254-padamara",
+    "language": "telugu",
+    "chapter": 254,
+    "sequence": 11950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:174fba8d16be120f"
+  },
+  "findings": []
+}

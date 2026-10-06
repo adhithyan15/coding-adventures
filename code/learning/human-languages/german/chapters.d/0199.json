@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "Grass, A fruit, A carrot, A chicken, A gateau",
+  "label": "ch:ge-grass-a-fruit-a-carrot-a-chicken-a-gateau",
+  "canDo": "I can say grass, a fruit, a carrot, a chicken and a gateau.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C199-torte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say grass, a fruit, a carrot, a chicken and a gateau.",
+    "assesses": [
+      "GE-LEX-C199-THING199-03",
+      "GE-LEX-C199-THING199-04",
+      "GE-LEX-C199-THING199-05"
+    ]
+  }
+}

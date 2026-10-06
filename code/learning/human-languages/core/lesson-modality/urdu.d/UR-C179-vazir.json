@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C179-vazir",
+    "language": "urdu",
+    "chapter": 179,
+    "sequence": 10000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7ccb58e517c9f51"
+  },
+  "findings": []
+}

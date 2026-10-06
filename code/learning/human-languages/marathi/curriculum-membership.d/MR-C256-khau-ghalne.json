@@ -1,0 +1,11 @@
+{
+  "id": "MR-C256-khau-ghalne",
+  "pathSegment": "MR-PATH-256-ACT256",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-256-ACT256",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C221-khadu",
+    "language": "marathi",
+    "chapter": 221,
+    "sequence": 11960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23cdaf42ceeb3563"
+  },
+  "findings": []
+}

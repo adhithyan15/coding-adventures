@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "To cool, To empty, To weigh, To check, To sign",
+  "label": "ch:mr-to-cool-to-empty-to-weigh-to-check-to-sign",
+  "canDo": "I can say to cool, to empty, to weigh, to check and to sign.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C163-sahi-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say to cool, to empty, to weigh, to check and to sign.",
+    "assesses": [
+      "MR-LEX-C163-ACT163-03",
+      "MR-LEX-C163-ACT163-04",
+      "MR-LEX-C163-ACT163-05"
+    ]
+  }
+}

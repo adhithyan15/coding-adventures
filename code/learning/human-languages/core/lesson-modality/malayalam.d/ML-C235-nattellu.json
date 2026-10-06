@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C235-nattellu",
+    "language": "malayalam",
+    "chapter": 235,
+    "sequence": 10680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a1fdac4d51e3c93"
+  },
+  "findings": []
+}

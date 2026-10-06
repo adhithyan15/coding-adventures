@@ -1,0 +1,11 @@
+{
+  "id": "TE-C204-vyayamam-ceyu",
+  "pathSegment": "TE-PATH-204-KRIYA204",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-204-KRIYA204",
+      "order": 2
+    }
+  ]
+}

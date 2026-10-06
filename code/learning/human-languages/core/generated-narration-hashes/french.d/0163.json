@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:f5a811cafca047fd",
+  "lessonIds": [
+    "FR-C163-appartement",
+    "FR-C163-salle-a-manger",
+    "FR-C163-balcon",
+    "FR-C163-serrure",
+    "FR-C163-sonnette"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch163.txt",
+  "json": "french/narration/ch163.json",
+  "textHash": "fnv1a64:4b508704539a288a",
+  "jsonHash": "fnv1a64:47178aa481d03a7d",
+  "findings": []
+}

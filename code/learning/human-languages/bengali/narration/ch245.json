@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 245,
+  "title": "Cinema hall, Gym, Hair salon, Bakery, Library",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:d20d77ede129c4f5",
+  "lessons": [
+    {
+      "id": "BN-C245-sinema-hol",
+      "sequence": 15190,
+      "title": "সিনেমা হল (sinemā hôl) — a cinema hall",
+      "headword": "সিনেমা হল",
+      "romanization": "sinemā hôl",
+      "gloss": "a cinema hall",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:163d5d14d59f41ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an island, then the Bengali for a restaurant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সিনেমা হল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সিনেমা হল — sinemā hôl — \"a cinema hall\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sinemā hôl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sinemā hôl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sinemā hôl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sinemā hôl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sinemā hôl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sinemā hôl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an island, then the Bengali for a restaurant, then say sinemā hôl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an island, then the Bengali for a restaurant, then say *sinemā hôl* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সিনেমা হল (sinemā hôl) mean? (\"A cinema hall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C245-jim",
+      "sequence": 15200,
+      "title": "জিম (jim) — a gym",
+      "headword": "জিম",
+      "romanization": "jim",
+      "gloss": "a gym",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ecb08722145b0d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a restaurant, then the Bengali for a cinema hall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জিম",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জিম — jim — \"a gym\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jim, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jim*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say jim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *jim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a restaurant, then the Bengali for a cinema hall, then say jim again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a restaurant, then the Bengali for a cinema hall, then say *jim* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জিম (jim) mean? (\"A gym\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C245-selun",
+      "sequence": 15210,
+      "title": "সেলুন (selun) — a hair salon",
+      "headword": "সেলুন",
+      "romanization": "selun",
+      "gloss": "a hair salon",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5141e51e11f51dd8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a cinema hall, then the Bengali for a gym."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সেলুন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সেলুন — selun — \"a hair salon\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "selun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *selun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "selun, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *selun*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say selun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *selun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a cinema hall, then the Bengali for a gym, then say selun again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a cinema hall, then the Bengali for a gym, then say *selun* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সেলুন (selun) mean? (\"A hair salon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C245-bekari",
+      "sequence": 15220,
+      "title": "বেকারি (bekāri) — a bakery",
+      "headword": "বেকারি",
+      "romanization": "bekāri",
+      "gloss": "a bakery",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21d3eb2773b1e03c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a gym, then the Bengali for a hair salon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বেকারি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বেকারি — bekāri — \"a bakery\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bekāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bekāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bekāri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bekāri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bekāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bekāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a gym, then the Bengali for a hair salon, then say bekāri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a gym, then the Bengali for a hair salon, then say *bekāri* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বেকারি (bekāri) mean? (\"A bakery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C245-laibreri",
+      "sequence": 15230,
+      "title": "লাইব্রেরি (lāibreri) — a library",
+      "headword": "লাইব্রেরি",
+      "romanization": "lāibreri",
+      "gloss": "a library",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05a048a0a986f0e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a hair salon, then the Bengali for a bakery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: লাইব্রেরি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লাইব্রেরি — lāibreri — \"a library\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāibreri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāibreri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāibreri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāibreri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say lāibreri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *lāibreri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a hair salon, then the Bengali for a bakery, then say lāibreri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a hair salon, then the Bengali for a bakery, then say *lāibreri* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does লাইব্রেরি (lāibreri) mean? (\"A library\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R245-first-pass-words-from-chapters-237-240",
+      "sequence": 15240,
+      "title": "Words from chapters 237-240 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 237-240",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0cdfa1916d9284a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a bakery and a library."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to put out, to light, to bring to a halt, to cross, to go on an outing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to put out, to light, to bring to a halt, to cross, to go on an outing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to die, to increase, to reduce, to chase, to believe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to die, to increase, to reduce, to chase, to believe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to kiss, to paint, to play music, to give back, to remember",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to kiss, to paint, to play music, to give back, to remember]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to block, to hand in, to dive, to sink, to float",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to block, to hand in, to dive, to sink, to float]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To put out? (নেভানো, nebhāno.) To light? (জ্বালানো, jvālāno.) To bring to a halt? (থামানো, thāmāno.) To cross? (পার হওয়া, pār hôoyā.) To go on an outing? (বেড়ানো, beṛāno.) To die? (মরা, môrā.) To increase? (বাড়ানো, bāṛāno.) To reduce? (কমানো, kômāno.) To chase? (তাড়া করা, tāṛā kôrā.) To believe? (বিশ্বাস করা, bishvās kôrā.) To kiss? (চুমু খাওয়া, chumu khāoyā.) To paint? (রং করা, rông kôrā.) To play music? (বাজানো, bājāno.) To give back? (ফিরিয়ে দেওয়া, phiriye deoyā.) To remember? (মনে রাখা, mône rākhā.) To block? (আটকানো, āṭkāno.) To hand in? (জমা দেওয়া, jômā deoyā.) To dive? (ঝাঁপ দেওয়া, jhā̃p deoyā.) To sink? (ডোবা, ḍobā.) To float? (ভাসা, bhāsā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R245-second-pass-words-from-chapters-241-245",
+      "sequence": 15250,
+      "title": "Words from chapters 241-245 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 241-245",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e71d04774e6fc4c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to get lost and to find."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get lost, to find, to notice, to inform, to chat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get lost, to find, to notice, to inform, to chat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to go out, to scatter, to roll up, to wrap, to dig",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to go out, to scatter, to roll up, to wrap, to dig]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vomiting, an itch, a beard, a moustache, a chin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: vomiting, an itch, a beard, a moustache, a chin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a border, a government, a nation, an island, a restaurant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a border, a government, a nation, an island, a restaurant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cinema hall, a gym, a hair salon, a bakery, a library",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cinema hall, a gym, a hair salon, a bakery, a library]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To get lost? (হারিয়ে যাওয়া, hāriye jāoyā.) To find? (খুঁজে পাওয়া, khũje pāoyā.) To notice? (খেয়াল করা, kheyāl kôrā.) To inform? (জানানো, jānāno.) To chat? (গল্প করা, gôlpô kôrā.) To go out? (বেরোনো, berono.) To scatter? (ছড়ানো, chhôṛāno.) To roll up? (গোটানো, goṭāno.) To wrap? (মোড়া, moṛā.) To dig? (খোঁড়া, khõṛā.) Vomiting? (বমি, bômi.) An itch? (চুলকানি, chulkāni.) A beard? (দাড়ি, dāṛi.) A moustache? (গোঁফ, gõph.) A chin? (চিবুক, chibuk.) A border? (সীমান্ত, sīmāntô.) A government? (সরকার, sôrkār.) A nation? (জাতি, jāti.) An island? (দ্বীপ, dvīp.) A restaurant? (রেস্তোরাঁ, restorā̃.) A cinema hall? (সিনেমা হল, sinemā hôl.) A gym? (জিম, jim.) A hair salon? (সেলুন, selun.) A bakery? (বেকারি, bekāri.) A library? (লাইব্রেরি, lāibreri.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

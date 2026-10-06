@@ -1,0 +1,11 @@
+{
+  "id": "LA-C279-prunum",
+  "pathSegment": "LA-PATH-279-RES279",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-279-RES279",
+      "order": 1
+    }
+  ]
+}

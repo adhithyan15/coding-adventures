@@ -1,0 +1,11 @@
+{
+  "id": "SA-C153-paritah",
+  "pathSegment": "SA-PATH-153-LOC153",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-153-LOC153",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C274-prameham",
+    "language": "malayalam",
+    "chapter": 274,
+    "sequence": 12750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acd56cdf1a9cc8c0"
+  },
+  "findings": []
+}

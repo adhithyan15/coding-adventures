@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:5bbc091579785c26",
+  "lessonIds": [
+    "SA-C182-vismayah",
+    "SA-C182-sokah",
+    "SA-C182-santosah",
+    "SA-C182-krtajnata",
+    "SA-C182-smrtih"
+  ],
+  "tex": "sanskrit/book/chapters/ch182-wonder-grief-contentment-gratitude-memory.tex"
+}

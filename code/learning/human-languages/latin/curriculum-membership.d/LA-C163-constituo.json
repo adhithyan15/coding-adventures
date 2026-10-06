@@ -1,0 +1,11 @@
+{
+  "id": "LA-C163-constituo",
+  "pathSegment": "LA-PATH-163-FUT163",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-163-FUT163",
+      "order": 3
+    }
+  ]
+}

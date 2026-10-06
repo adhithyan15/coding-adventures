@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R216-first-pass-words-from-chapters-208-211",
+    "language": "malayalam",
+    "chapter": 216,
+    "sequence": 9700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9c879be1b528ab9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C306-tolu",
+    "language": "telugu",
+    "chapter": 306,
+    "sequence": 14670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4efb6e29b42b1f8c"
+  },
+  "findings": []
+}

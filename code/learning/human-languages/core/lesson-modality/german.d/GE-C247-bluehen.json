@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C247-bluehen",
+    "language": "german",
+    "chapter": 247,
+    "sequence": 13780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00b9350ac3540d71"
+  },
+  "findings": []
+}

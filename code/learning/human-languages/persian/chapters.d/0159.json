@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "Anyway, Without, Otherwise, While, Especially",
+  "label": "ch:fa-anyway-without-otherwise-while-especially",
+  "canDo": "I can say anyway, without, otherwise, while and especially.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-C159-makhsusan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can say anyway, without, otherwise, while and especially.",
+    "assesses": [
+      "FA-LEX-C159-CHERA159-03",
+      "FA-LEX-C159-CHERA159-04",
+      "FA-LEX-C159-CHERA159-05"
+    ]
+  }
+}

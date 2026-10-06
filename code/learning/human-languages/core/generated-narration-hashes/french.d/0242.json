@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:8f981dd92ab2e1d3",
+  "lessonIds": [
+    "FR-C242-maigrir",
+    "FR-C242-nourrir",
+    "FR-C242-partir-en-vacances",
+    "FR-C242-plaisanter",
+    "FR-C242-ranger"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch242.txt",
+  "json": "french/narration/ch242.json",
+  "textHash": "fnv1a64:c4d05c6517dae0b5",
+  "jsonHash": "fnv1a64:55662acfba712108",
+  "findings": []
+}

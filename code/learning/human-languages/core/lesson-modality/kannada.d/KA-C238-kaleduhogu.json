@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C238-kaleduhogu",
+    "language": "kannada",
+    "chapter": 238,
+    "sequence": 11220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a42ffdb6360b0ece"
+  },
+  "findings": []
+}

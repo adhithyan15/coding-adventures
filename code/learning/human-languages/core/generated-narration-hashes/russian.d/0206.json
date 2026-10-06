@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:0cb21a7dcf86750a",
+  "lessonIds": [
+    "RU-C206-gasit",
+    "RU-C206-stroit",
+    "RU-C206-lomat",
+    "RU-C206-krasit",
+    "RU-C206-chistit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch206.txt",
+  "json": "russian/narration/ch206.json",
+  "textHash": "fnv1a64:e0bc6f524ee23b3c",
+  "jsonHash": "fnv1a64:f3c566c1cdfc61f2",
+  "findings": []
+}

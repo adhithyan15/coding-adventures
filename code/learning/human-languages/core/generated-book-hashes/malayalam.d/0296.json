@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:6ba8c6eccd7a96c7",
+  "lessonIds": [
+    "ML-C296-kattila",
+    "ML-C296-toluttu",
+    "ML-C296-balbu",
+    "ML-C296-paravatani",
+    "ML-C296-virippu",
+    "ML-R296-first-pass-words-from-chapters-291-293",
+    "ML-R296-second-pass-words-from-chapters-294-296"
+  ],
+  "tex": "malayalam/book/chapters/ch296-door-frame-cowshed-light-bulb-carpet-bedsheet.tex"
+}

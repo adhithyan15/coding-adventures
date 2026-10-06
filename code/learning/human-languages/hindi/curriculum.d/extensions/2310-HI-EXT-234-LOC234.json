@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-234-LOC234",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say left, straight, upside down, the middle and a corner.",
+  "prerequisites": []
+}

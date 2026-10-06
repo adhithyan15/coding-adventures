@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:7aef5124637ec5d0",
+  "lessonIds": [
+    "TE-C251-manasu",
+    "TE-C251-ayasam",
+    "TE-C251-kandaram",
+    "TE-C251-injeksanu",
+    "TE-C251-tika"
+  ],
+  "tex": "telugu/book/chapters/ch251-mind-breathlessness-muscle-injection-vaccination.tex"
+}

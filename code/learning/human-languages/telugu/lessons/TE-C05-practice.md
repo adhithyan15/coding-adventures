@@ -44,11 +44,11 @@ Three sentences about yourself, read off the page before you say them:
 |---|---|---|
 | **నేను తెలుగు మాట్లాడతాను.** | *nēnu telugu māṭlāḍatānu* | I speak Telugu. |
 | **నేను హైదరాబాద్లో ఉంటాను.** | *nēnu Hyderābādlō uṇṭānu* | I live in Hyderabad. |
-| **నేను పని చేస్తాను.** | *nēnu pani cēstānu* | I work. |
+| — | *nēnu pani cēstānu* | I work. |
 
-A few of these characters have not had their own lesson yet. They are here to
-be **recognised**, not decoded — the romanization beside each line is what
-you read from. The letters catch up in the chapters ahead.
+One of these stays in romanization for now: its *c* has not had its own lesson
+yet, and a line you cannot decode is not a line to read from. The others are
+read straight off the page; the romanization is there to check against.
 [PAUSE 1s each]
 - [YOU SAY: "I speak Telugu" — *nēnu telugu māṭlāḍatānu*]
 - [YOU SAY: "I live in Hyderabad" — *nēnu Hyderābādlō uṇṭānu*]

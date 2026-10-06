@@ -1,0 +1,11 @@
+{
+  "id": "PT-C225-eletricidade",
+  "pathSegment": "PT-PATH-225-COISAS225",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-225-COISAS225",
+      "order": 4
+    }
+  ]
+}

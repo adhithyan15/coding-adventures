@@ -7,7 +7,7 @@ chapter: 436
 type: word
 headword: prestar
 gloss: to lend — the other half of devolver, and the verb that decides which way the object is moving
-concept_tag: ES-ACT-PRESTAR
+concept_tag: ES-VERB-PRESTAR
 prerequisites: [ES-C436-ofrecer, ES-C431-devolver]
 sounds: []
 roots: [praestare-latin]

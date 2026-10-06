@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R193-first-pass-words-from-chapters-185-188",
+    "language": "kannada",
+    "chapter": 193,
+    "sequence": 8870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fc5819d587628d3"
+  },
+  "findings": []
+}

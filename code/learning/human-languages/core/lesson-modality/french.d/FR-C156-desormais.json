@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C156-desormais",
+    "language": "french",
+    "chapter": 156,
+    "sequence": 7660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af1f436ab7f18c51"
+  },
+  "findings": []
+}

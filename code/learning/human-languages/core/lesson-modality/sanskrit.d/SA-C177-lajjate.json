@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C177-lajjate",
+    "language": "sanskrit",
+    "chapter": 177,
+    "sequence": 9670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b1f82492e7379dd"
+  },
+  "findings": []
+}

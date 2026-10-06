@@ -1,0 +1,11 @@
+{
+  "id": "UR-C204-batchit",
+  "pathSegment": "UR-PATH-204-CHIZ204",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-204-CHIZ204",
+      "order": 3
+    }
+  ]
+}

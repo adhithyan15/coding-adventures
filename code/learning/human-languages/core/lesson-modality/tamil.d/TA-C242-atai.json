@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C242-atai",
+    "language": "tamil",
+    "chapter": 242,
+    "sequence": 13220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50c4a1d9f71c4a23"
+  },
+  "findings": []
+}

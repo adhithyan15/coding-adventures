@@ -1,0 +1,11 @@
+{
+  "id": "PT-C233-preocupar-se",
+  "pathSegment": "PT-PATH-233-VERBOS233",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-233-VERBOS233",
+      "order": 2
+    }
+  ]
+}

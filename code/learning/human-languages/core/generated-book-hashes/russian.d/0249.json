@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:0d722a8964c7ef8a",
+  "lessonIds": [
+    "RU-C249-smetana",
+    "RU-C249-tvorog",
+    "RU-C249-svinina",
+    "RU-C249-baranina",
+    "RU-C249-vetchina",
+    "RU-R249-first-pass-words-from-chapters-241-244",
+    "RU-R249-second-pass-words-from-chapters-245-249"
+  ],
+  "tex": "russian/book/chapters/ch249-sour-cream-cottage-cheese-pork-lamb-ham.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:08d0c95a27e8db9b",
+  "lessonIds": [
+    "TE-C240-ettu",
+    "TE-C240-moyu",
+    "TE-C240-lagu",
+    "TE-C240-nettu",
+    "TE-C240-visuru"
+  ],
+  "tex": "telugu/book/chapters/ch240-to-lift-to-carry-to-pull-to-push-to-throw.tex"
+}

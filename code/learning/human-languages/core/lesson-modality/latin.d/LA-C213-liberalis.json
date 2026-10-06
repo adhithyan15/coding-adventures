@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C213-liberalis",
+    "language": "latin",
+    "chapter": 213,
+    "sequence": 10480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f29a17426e2ca91"
+  },
+  "findings": []
+}

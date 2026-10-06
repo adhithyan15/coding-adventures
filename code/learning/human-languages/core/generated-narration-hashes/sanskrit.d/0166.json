@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:0cb4d412f6424705",
+  "lessonIds": [
+    "SA-C166-asvatthah",
+    "SA-C166-nimbah",
+    "SA-C166-amravrksah",
+    "SA-C166-vatah",
+    "SA-C166-talah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch166.txt",
+  "json": "sanskrit/narration/ch166.json",
+  "textHash": "fnv1a64:3b50f0b72c572f22",
+  "jsonHash": "fnv1a64:91ead89b521952f3",
+  "findings": []
+}

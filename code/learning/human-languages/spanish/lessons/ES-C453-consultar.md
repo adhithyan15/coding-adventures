@@ -7,7 +7,7 @@ chapter: 453
 type: word
 headword: consultar
 gloss: to check, to look up, to consult — asking a document rather than a person
-concept_tag: ES-WORK-CONSULTAR
+concept_tag: ES-VERB-CONSULTAR
 prerequisites: [ES-C453-rotativo, ES-C451-revisar, ES-C406-documento]
 sounds: [nasal-n, s-clear, stress-final]
 roots: [consultare-latin]

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C497-amistad",
+    "language": "spanish",
+    "chapter": 497,
+    "sequence": 14430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a6b69971fdc7e42"
+  },
+  "findings": []
+}

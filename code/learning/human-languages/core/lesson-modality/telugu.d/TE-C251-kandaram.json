@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C251-kandaram",
+    "language": "telugu",
+    "chapter": 251,
+    "sequence": 11780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0d1a9443ffc8ddf"
+  },
+  "findings": []
+}

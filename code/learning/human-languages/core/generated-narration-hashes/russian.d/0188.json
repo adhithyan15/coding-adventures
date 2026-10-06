@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:a078c2e992a7dd51",
+  "lessonIds": [
+    "RU-C188-poleznyy",
+    "RU-C188-vrednyy",
+    "RU-C188-nuzhnyy",
+    "RU-C188-vozmozhnyy",
+    "RU-C188-slozhnyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch188.txt",
+  "json": "russian/narration/ch188.json",
+  "textHash": "fnv1a64:0943ee2080c9c657",
+  "jsonHash": "fnv1a64:ea648fb0dab3ac4e",
+  "findings": []
+}

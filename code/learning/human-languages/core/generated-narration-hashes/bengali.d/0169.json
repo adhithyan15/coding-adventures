@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:1aa56bbf234aab18",
+  "lessonIds": [
+    "BN-C169-anondo",
+    "BN-C169-lojja",
+    "BN-C169-bhoy",
+    "BN-C169-rag",
+    "BN-C169-shanti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch169.txt",
+  "json": "bengali/narration/ch169.json",
+  "textHash": "fnv1a64:5318fa75c6d1f8f4",
+  "jsonHash": "fnv1a64:2616489031be1457",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "To praise, To scold, To dream, To separate, To throw",
+  "label": "ch:ta-to-praise-to-scold-to-dream-to-separate-to-throw",
+  "canDo": "I can say to praise, to scold, to dream, to separate and to throw.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C229-vicu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say to praise, to scold, to dream, to separate and to throw.",
+    "assesses": [
+      "TA-LEX-C229-ACT229-03",
+      "TA-LEX-C229-ACT229-04",
+      "TA-LEX-C229-ACT229-05"
+    ]
+  }
+}

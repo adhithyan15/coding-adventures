@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:77fa4d5c68be4514",
+  "lessonIds": [
+    "FR-C186-amitie",
+    "FR-C186-espoir",
+    "FR-C186-confiance",
+    "FR-C186-courage",
+    "FR-C186-honte"
+  ],
+  "tex": "french/book/chapters/ch186-friendship-hope-trust-courage-shame.tex"
+}

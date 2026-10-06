@@ -1,0 +1,11 @@
+{
+  "id": "LA-C243-beatus",
+  "pathSegment": "LA-PATH-243-QUAL243",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-243-QUAL243",
+      "order": 4
+    }
+  ]
+}

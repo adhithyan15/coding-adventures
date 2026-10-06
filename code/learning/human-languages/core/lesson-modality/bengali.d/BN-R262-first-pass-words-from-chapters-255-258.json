@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R262-first-pass-words-from-chapters-255-258",
+    "language": "bengali",
+    "chapter": 262,
+    "sequence": 16470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4126227392188f9c"
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 406,
   "title": "Clients, Documents and Data",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9161252e62c56336",
+  "sourceHash": "fnv1a64:1a58f27f32acebea",
   "lessons": [
     {
       "id": "ES-C406-cliente",
@@ -539,7 +539,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:784d1bc04ca629ed",
+      "sourceHash": "fnv1a64:3e04abd040661e22",
       "notice": null,
       "blocks": [
         {

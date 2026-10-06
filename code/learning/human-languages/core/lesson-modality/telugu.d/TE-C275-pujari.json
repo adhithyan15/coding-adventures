@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C275-pujari",
+    "language": "telugu",
+    "chapter": 275,
+    "sequence": 13020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf4abf1307e3e1a9"
+  },
+  "findings": []
+}

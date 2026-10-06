@@ -1,0 +1,11 @@
+{
+  "id": "AR-C236-sukkan",
+  "pathSegment": "AR-PATH-236-MAKAN236",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-236-MAKAN236",
+      "order": 4
+    }
+  ]
+}

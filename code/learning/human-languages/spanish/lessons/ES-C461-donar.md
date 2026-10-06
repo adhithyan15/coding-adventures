@@ -7,7 +7,7 @@ chapter: 461
 type: word
 headword: donar
 gloss: to donate — the giving inside *perdón*, said plainly
-concept_tag: ES-GIVE-DONAR
+concept_tag: ES-VERB-DONAR
 prerequisites: [ES-C460-sintesis-pedir, ES-C20-perdon, ES-C300-sangre]
 sounds: [d-soft, nasal-n, stress-final]
 roots: [donare-latin]

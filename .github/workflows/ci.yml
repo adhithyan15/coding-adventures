@@ -28,7 +28,9 @@
 #       every official Unicode 17 normalization/casing vector.
 #   13. unicode17-dart-conformance: runs the generated Dart tables against
 #       every official Unicode 17 normalization/casing vector.
-#   14. build: Installs only the needed toolchains, then runs the build.
+#   14. forme-release-platform: composes the complete Forme release contract
+#       on Linux, macOS, and Windows and publishes one reviewed verdict.
+#   15. build: Installs only the needed toolchains, then runs the build.
 #
 # This saves 3-5 minutes on language-specific changes by skipping
 # unneeded toolchain installations (e.g., Rust tarpaulin, Elixir/Erlang).
@@ -109,6 +111,7 @@ jobs:
       run_d18t_durable_epoch_activation_conformance: ${{ steps.detect.outputs.run_d18t_durable_epoch_activation_conformance }}
       run_ruby_grammar_regen_check: ${{ steps.detect.outputs.run_ruby_grammar_regen_check }}
       run_mosaic_grammar_regen_check: ${{ steps.detect.outputs.run_mosaic_grammar_regen_check }}
+      run_rust_grammar_regen_check: ${{ steps.detect.outputs.run_rust_grammar_regen_check }}
       run_unicode17_elixir_conformance: ${{ steps.detect.outputs.run_unicode17_elixir_conformance }}
       run_unicode17_lua_conformance: ${{ steps.detect.outputs.run_unicode17_lua_conformance }}
       run_unicode17_perl_conformance: ${{ steps.detect.outputs.run_unicode17_perl_conformance }}
@@ -119,8 +122,10 @@ jobs:
       run_contracts_build_tool_conformance: ${{ steps.detect.outputs.run_contracts_build_tool_conformance }}
       run_contracts_capability_cage: ${{ steps.detect.outputs.run_contracts_capability_cage }}
       run_ocaml_capability_gate: ${{ steps.detect.outputs.run_ocaml_capability_gate }}
+      run_build_linux_os_suites: ${{ steps.detect.outputs.run_build_linux_os_suites }}
       run_build_macos_os_suites: ${{ steps.detect.outputs.run_build_macos_os_suites }}
       run_build_windows_os_suites: ${{ steps.detect.outputs.run_build_windows_os_suites }}
+      run_forme_release_platform: ${{ steps.detect.outputs.run_forme_release_platform }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -520,6 +525,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          # Barcode adoption evidence binds the checked-out package tree to the
+          # exact pre-publication implementation commit.
+          fetch-depth: 0
 
       - name: Set up Go
         uses: actions/setup-go@v7
@@ -598,10 +607,13 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_ct_compare_conformance.py'
+          python3 code/scripts/ct_compare_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_elixir_windows_build_fronts.py'
           python3 code/scripts/validate_elixir_windows_build_fronts.py --format json > /tmp/elixir-windows-build-fronts.json
           python3 -m unittest discover -s code/scripts/tests -p 'test_classical_cipher_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_barcode_symbologies_fixtures.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_barcode_layout_1d_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_generate_scytale_fixture_consumers.py'
           python3 code/scripts/generate_scytale_fixture_consumers.py --check
           python3 -m unittest discover -s code/scripts/tests -p 'test_generate_vigenere_fixture_consumers.py'
@@ -616,6 +628,8 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_capability_gate.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_generate_tracked_artifact_unicode17.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_setup_lua.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_verify_gradle_wrapper_jar.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_deploy_workflows_drop_checkout_credentials.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_phy00_phy01_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_d18f_message_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_d18p_channel_conformance.py'
@@ -630,6 +644,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_qt_runtime_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_flutter_runtime_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_compose_runtime_ci_acceptance.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_run_under_xvfb.py'
           python3 code/scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
 
       # The cgroup lifecycle (mkdir, chown, trap, cleanup) must stay inside one
@@ -1151,6 +1166,48 @@ jobs:
           fi
           echo "All Mosaic compiled grammars are up to date."
 
+  # ── Job 7c: reconciled Rust compiled-grammar regeneration ──────
+  #
+  # MacroOct and Nib are the first reconciled Rust grammar lanes. Protect them
+  # without running the still-drifting full Rust sweep tracked by #14202. Keep
+  # widening this job only after each additional lane has been reconciled.
+  rust-grammar-regen-check:
+    name: Reconciled Rust compiled-grammar regeneration check
+    needs: detect
+    if: needs.detect.outputs.run_rust_grammar_regen_check == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build grammar-tools
+        run: cargo build --release --manifest-path code/programs/rust/grammar-tools/Cargo.toml
+
+      - name: Regenerate the reconciled Rust grammar lanes
+        run: |
+          GT=code/programs/rust/grammar-tools/target/release/grammar-tools
+          for stem in macrooct nib; do
+            "$GT" generate-rust-compiled-grammars "$stem"
+          done
+
+      - name: Fail if generated tables differ from committed files
+        run: |
+          paths=(
+            code/packages/rust/macrooct-lexer/src/_grammar.rs
+            code/packages/rust/nib-lexer/src/_grammar.rs
+            code/packages/rust/nib-parser/src/_grammar.rs
+          )
+          if ! git diff --quiet -- "${paths[@]}"; then
+            echo "::error::A reconciled Rust compiled grammar differs from its canonical source."
+            git diff --stat -- "${paths[@]}"
+            echo "Regenerate with: for s in macrooct nib; do grammar-tools generate-rust-compiled-grammars \$s; done"
+            exit 1
+          fi
+          echo "All reconciled Rust compiled grammars are up to date."
+
   # ── Job 8: Unicode 17 generated Elixir conformance ─────────────
   unicode17-elixir-conformance:
     name: Unicode 17 generated Elixir conformance
@@ -1356,7 +1413,488 @@ jobs:
             --self-check-runtime dart \
             --dart-executable "$dart_executable"
 
-  # ── Job 14: Build and test ─────────────────────────────────────
+  # ── UI87 §7.7: the Flutter platform library off Linux x64 ──────
+  #
+  # The Flutter lane runs the platform library's headless harness on Linux
+  # x64 only. The open(2) flag tables for macOS and Linux arm64, the macOS
+  # lstat layout and the Windows save (CreateFileW, FlushFileBuffers,
+  # MoveFileExW) are pinned by tests there but never ran. This runs the same
+  # harness -- through tests/flutter_platform_effects.rs, which copies the
+  # library exactly as a generated project gets it -- on a Mac (arm64), on
+  # Windows and on Linux arm64. MOSAIC_REQUIRE_DART makes a runner without
+  # Dart a failure rather than a skip.
+  mosaic-flutter-platform-library:
+    name: Flutter platform library (${{ matrix.os }})
+    needs: detect
+    if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up pinned Dart toolchain
+        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+        with:
+          sdk: '3.12.2'
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+
+      - name: Run the platform library's headless harness
+        shell: bash
+        env:
+          MOSAIC_REQUIRE_DART: '1'
+        run: |
+          cargo test --manifest-path code/packages/rust/mosaic-app-bindings/Cargo.toml \
+            --test flutter_platform_effects -- --nocapture
+
+  # ── Job 14: Forme supported-platform release gate ─────────────
+  #
+  # Pull requests are authoritative. Every supported host runs the same API,
+  # product, benchmark, browser, and reviewed-source contract; main repeats it
+  # after the squash. Branch pushes deliberately skip this expensive duplicate.
+  forme-release-platform:
+    name: Forme release (${{ matrix.host }})
+    needs: detect
+    if: needs.detect.outputs.run_forme_release_platform == 'true' && (github.event_name == 'pull_request' || needs.detect.outputs.is_main == 'true')
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - host: linux
+            os: ubuntu-latest
+          - host: macos
+            os: macos-latest
+          - host: windows
+            os: windows-latest
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13.7'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "22.23.2"
+          cache: npm
+          cache-dependency-path: |
+            code/sites/blog/package-lock.json
+            code/sites/landing-page/package-lock.json
+            code/programs/typescript/forme-shell-desktop/package-lock.json
+
+      - name: Set up Rust for the native macOS product
+        if: runner.os == 'macOS'
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # rust-toolchain action
+        with:
+          toolchain: '1.95.0'
+
+      - name: Set up MSVC for the native Windows product
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: python code/scripts/setup_msvc_dev_cmd.py --arch x64
+
+      - name: Install reviewed Chrome for Testing
+        id: chrome
+        uses: browser-actions/setup-chrome@48ad923757ca74d66703209fe939badbdf80f2f4 # v2.2.0
+        with:
+          chrome-version: 154.0.8037.92
+          install-dependencies: true
+
+      - name: Grant pinned Chrome read/execute to Windows AppContainers
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          $chrome = Get-Item -LiteralPath $env:CHROME_PATH -ErrorAction Stop
+          if (-not $chrome.PSIsContainer -and $chrome.Name -ceq 'chrome.exe') {
+            $chromePath = [IO.Path]::GetFullPath($chrome.FullName)
+          } else {
+            throw 'reviewed Windows Chrome output is not chrome.exe'
+          }
+          $toolCache = [IO.Path]::GetFullPath($env:RUNNER_TOOL_CACHE).TrimEnd('\') + '\'
+          if (-not $chromePath.StartsWith($toolCache, [StringComparison]::OrdinalIgnoreCase)) {
+            throw 'reviewed Windows Chrome is outside RUNNER_TOOL_CACHE'
+          }
+          $browserRoot = $chrome.Directory.FullName
+
+          function Get-OpaqueFileId {
+            param([string] $Path)
+            $fileId = (& fsutil.exe file queryfileid $Path 2>&1 | Out-String).Trim()
+            if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($fileId)) {
+              throw "could not bind Windows Chrome file identity: $Path"
+            }
+            return $fileId
+          }
+          function Get-AncestorSnapshot {
+            param([string] $Root, [string] $TrustedRoot)
+            $snapshot = @{}
+            $cursor = Get-Item -LiteralPath $Root -Force -ErrorAction Stop
+            while ($true) {
+              if (($cursor.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+                throw "reviewed Windows Chrome ancestor is a reparse point: $($cursor.FullName)"
+              }
+              $snapshot[$cursor.FullName] = Get-OpaqueFileId $cursor.FullName
+              if ($cursor.FullName.TrimEnd('\') -ieq $TrustedRoot.TrimEnd('\')) { break }
+              if ($null -eq $cursor.Parent) {
+                throw 'reviewed Windows Chrome ancestry escaped RUNNER_TOOL_CACHE'
+              }
+              $cursor = Get-Item -LiteralPath $cursor.Parent.FullName -Force -ErrorAction Stop
+            }
+            return $snapshot
+          }
+
+          function Get-BrowserTree {
+            param([string] $Root)
+            $rootItem = Get-Item -LiteralPath $Root -Force -ErrorAction Stop
+            $children = @(Get-ChildItem -LiteralPath $Root -Force -Recurse -ErrorAction Stop)
+            return @($rootItem) + $children
+          }
+          function Get-TreeSnapshot {
+            param([System.IO.FileSystemInfo[]] $Entries)
+            $snapshot = @{}
+            foreach ($entry in $Entries) {
+              if (($entry.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+                throw "reviewed Windows Chrome tree contains a reparse point: $($entry.FullName)"
+              }
+              $fileId = Get-OpaqueFileId $entry.FullName
+              if (-not $entry.PSIsContainer) {
+                $rawLinks = @(& fsutil.exe hardlink list $entry.FullName 2>&1)
+                if ($LASTEXITCODE -ne 0) {
+                  throw "could not enumerate Windows Chrome hardlinks: $($entry.FullName)"
+                }
+                $renderedLinks = ($rawLinks | Out-String)
+                $links = @($rawLinks | ForEach-Object { ([string]$_).Trim() } |
+                  Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+                if ($renderedLinks.Length -gt 32768 -or $links.Count -ne 1) {
+                  throw "Windows Chrome file has an unexpected hardlink identity: $($entry.FullName)"
+                }
+                $listed = $links[0]
+                if ($listed -match '[\x00-\x1f]' -or -not $listed.StartsWith('\')) {
+                  throw "Windows Chrome file has an unexpected hardlink identity: $($entry.FullName)"
+                }
+                $listedPath = [IO.Path]::GetFullPath(
+                  [IO.Path]::Combine([IO.Path]::GetPathRoot($entry.FullName), $listed.TrimStart('\'))
+                )
+                if ($listedPath -ine $entry.FullName) {
+                  throw "Windows Chrome file has an unexpected hardlink identity: $($entry.FullName)"
+                }
+              }
+              $length = if ($entry.PSIsContainer) { '-' } else { [string]$entry.Length }
+              $snapshot[$entry.FullName] = "$fileId|$($entry.PSIsContainer)|$length"
+            }
+            return $snapshot
+          }
+
+          $ancestorBefore = Get-AncestorSnapshot $browserRoot $toolCache
+          $before = Get-TreeSnapshot (Get-BrowserTree $browserRoot)
+          & icacls.exe $browserRoot /remove:g '*S-1-15-2-1' /T /Q
+          if ($LASTEXITCODE -ne 0) { throw "icacls removal failed with exit code $LASTEXITCODE" }
+          & icacls.exe $browserRoot /grant:r '*S-1-15-2-1:RX' /Q
+          if ($LASTEXITCODE -ne 0) { throw "root icacls failed with exit code $LASTEXITCODE" }
+          & icacls.exe $browserRoot /grant '*S-1-15-2-1:(OI)(CI)RX' /T /Q
+          if ($LASTEXITCODE -ne 0) { throw "tree icacls failed with exit code $LASTEXITCODE" }
+
+          $afterEntries = Get-BrowserTree $browserRoot
+          $after = Get-TreeSnapshot $afterEntries
+          if ($before.Count -ne $after.Count) {
+            throw 'Windows Chrome tree identity changed during ACL preparation'
+          }
+          foreach ($name in $before.Keys) {
+            if (-not $after.ContainsKey($name) -or $before[$name] -cne $after[$name]) {
+              throw 'Windows Chrome tree identity changed during ACL preparation'
+            }
+          }
+
+          $appPackages = 'S-1-15-2-1'
+          $requiredMask = [int][Security.AccessControl.FileSystemRights]::ReadAndExecute
+          $allowedMask = $requiredMask -bor [int][Security.AccessControl.FileSystemRights]::Synchronize
+          function Assert-ReviewedAppContainerAcl {
+            param(
+              [Security.AccessControl.RawSecurityDescriptor] $Descriptor,
+              [string] $Label
+            )
+            $combined = 0
+            foreach ($rule in $Descriptor.DiscretionaryAcl) {
+              if (
+                $rule.GetType() -ne [Security.AccessControl.CommonAce] -or
+                $rule.IsCallback
+              ) {
+                throw "unexpected Windows Chrome AppContainer ACE form: $Label"
+              }
+              if ($rule.SecurityIdentifier.Value -ne $appPackages) { continue }
+              $isEffective = ($rule.AceFlags -band [Security.AccessControl.AceFlags]::InheritOnly) -eq 0
+              if ($rule.AceQualifier -eq [Security.AccessControl.AceQualifier]::AccessDenied) {
+                if ($isEffective -and $rule.AccessMask -ne 0) {
+                  throw "effective Windows Chrome AppContainer deny ACE: $Label"
+                }
+                continue
+              }
+              if ($rule.AceQualifier -ne [Security.AccessControl.AceQualifier]::AccessAllowed) {
+                throw "unexpected Windows Chrome AppContainer ACE qualifier: $Label"
+              }
+              if (($rule.AccessMask -band (-bnot $allowedMask)) -ne 0) {
+                throw "unexpected Windows Chrome AppContainer rights: $Label"
+              }
+              if ($isEffective) {
+                $combined = $combined -bor $rule.AccessMask
+              }
+            }
+            if (($combined -band $requiredMask) -ne $requiredMask) {
+              throw "Windows Chrome AppContainer ACL lacks read/execute: $Label"
+            }
+          }
+
+          function Assert-AclSelfTestFailure {
+            param([string] $Sddl, [string] $Expected)
+            try {
+              Assert-ReviewedAppContainerAcl (
+                [Security.AccessControl.RawSecurityDescriptor]::new($Sddl)
+              ) 'self-test'
+            } catch {
+              if ($_.Exception.Message.Contains($Expected)) { return }
+              throw
+            }
+            throw "Windows Chrome ACL self-test failed open: $Expected"
+          }
+          Assert-AclSelfTestFailure `
+            'D:(A;OICIIO;0x1200a9;;;S-1-15-2-1)' `
+            'lacks read/execute'
+          Assert-ReviewedAppContainerAcl (
+            [Security.AccessControl.RawSecurityDescriptor]::new(
+              'D:(A;ID;0x1200a9;;;S-1-15-2-1)'
+            )
+          ) 'inherited-effective self-test'
+          Assert-AclSelfTestFailure `
+            'D:(A;;GA;;;S-1-15-2-1)' `
+            'unexpected Windows Chrome AppContainer rights'
+
+          $appPackagesSid = [Security.Principal.SecurityIdentifier]::new($appPackages)
+          $callbackAcl = [Security.AccessControl.RawAcl]::new(2, 1)
+          $callbackAcl.InsertAce(0, [Security.AccessControl.CommonAce]::new(
+            [Security.AccessControl.AceFlags]::None,
+            [Security.AccessControl.AceQualifier]::AccessAllowed,
+            $allowedMask,
+            $appPackagesSid,
+            $true,
+            [byte[]]@(0, 0, 0, 0)
+          ))
+          $callbackDescriptor = [Security.AccessControl.RawSecurityDescriptor]::new(
+            [Security.AccessControl.ControlFlags]::DiscretionaryAclPresent,
+            $null,
+            $null,
+            $null,
+            $callbackAcl
+          )
+          try {
+            Assert-ReviewedAppContainerAcl $callbackDescriptor 'callback self-test'
+            throw 'Windows Chrome ACL self-test failed open: callback'
+          } catch {
+            if (-not $_.Exception.Message.Contains('unexpected Windows Chrome AppContainer ACE form')) {
+              throw
+            }
+          }
+
+          $compoundAcl = [Security.AccessControl.RawAcl]::new(2, 1)
+          $compoundAcl.InsertAce(0, [Security.AccessControl.CompoundAce]::new(
+            [Security.AccessControl.AceFlags]::None,
+            $allowedMask,
+            [Security.AccessControl.CompoundAceType]::Impersonation,
+            $appPackagesSid
+          ))
+          $compoundDescriptor = [Security.AccessControl.RawSecurityDescriptor]::new(
+            [Security.AccessControl.ControlFlags]::DiscretionaryAclPresent,
+            $null,
+            $null,
+            $null,
+            $compoundAcl
+          )
+          try {
+            Assert-ReviewedAppContainerAcl $compoundDescriptor 'compound self-test'
+            throw 'Windows Chrome ACL self-test failed open: compound'
+          } catch {
+            if (-not $_.Exception.Message.Contains('unexpected Windows Chrome AppContainer ACE form')) {
+              throw
+            }
+          }
+
+          $objectAcl = [Security.AccessControl.RawAcl]::new(4, 1)
+          $objectAcl.InsertAce(0, [Security.AccessControl.ObjectAce]::new(
+            [Security.AccessControl.AceFlags]::None,
+            [Security.AccessControl.AceQualifier]::AccessAllowed,
+            $allowedMask,
+            $appPackagesSid,
+            [Security.AccessControl.ObjectAceFlags]::ObjectAceTypePresent,
+            [Guid]::NewGuid(),
+            [Guid]::Empty,
+            $false,
+            $null
+          ))
+          $objectDescriptor = [Security.AccessControl.RawSecurityDescriptor]::new(
+            [Security.AccessControl.ControlFlags]::DiscretionaryAclPresent,
+            $null,
+            $null,
+            $null,
+            $objectAcl
+          )
+          try {
+            Assert-ReviewedAppContainerAcl $objectDescriptor 'object self-test'
+            throw 'Windows Chrome ACL self-test failed open: object'
+          } catch {
+            if (-not $_.Exception.Message.Contains('unexpected Windows Chrome AppContainer ACE form')) {
+              throw
+            }
+          }
+
+          foreach ($entry in $afterEntries) {
+            $acl = Get-Acl -LiteralPath $entry.FullName -ErrorAction Stop
+            $descriptorBytes = $acl.GetSecurityDescriptorBinaryForm()
+            $descriptor = [Security.AccessControl.RawSecurityDescriptor]::new($descriptorBytes, 0)
+            Assert-ReviewedAppContainerAcl $descriptor $entry.FullName
+          }
+
+          $final = Get-TreeSnapshot (Get-BrowserTree $browserRoot)
+          if ($before.Count -ne $final.Count) {
+            throw 'Windows Chrome tree identity changed during ACL preparation'
+          }
+          foreach ($name in $before.Keys) {
+            if (-not $final.ContainsKey($name) -or $before[$name] -cne $final[$name]) {
+              throw 'Windows Chrome tree identity changed during ACL preparation'
+            }
+          }
+          $ancestorAfter = Get-AncestorSnapshot $browserRoot $toolCache
+          if ($ancestorBefore.Count -ne $ancestorAfter.Count) {
+            throw 'Windows Chrome ancestor identity changed during ACL preparation'
+          }
+          foreach ($name in $ancestorBefore.Keys) {
+            if (
+              -not $ancestorAfter.ContainsKey($name) -or
+              $ancestorBefore[$name] -cne $ancestorAfter[$name]
+            ) {
+              throw 'Windows Chrome ancestor identity changed during ACL preparation'
+            }
+          }
+
+      - name: Install the reviewed Chrome SUID sandbox
+        if: runner.os == 'Linux'
+        shell: bash
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          FORME_CHROME_SANDBOX_SHA256: 24beb85e4149c65db5bf40fa307721143d0883ab8952e60dde1158606f644dee
+        run: |
+          sandbox_source="$(dirname "$CHROME_PATH")/chrome_sandbox"
+          sandbox_target=/usr/local/sbin/forme-chrome-sandbox
+          test -f "$sandbox_source"
+          test ! -L "$sandbox_source"
+          test "$(stat -c '%F %h' "$sandbox_source")" = "regular file 1"
+          test "$(sha256sum "$sandbox_source" | cut -d ' ' -f 1)" = \
+            "$FORME_CHROME_SANDBOX_SHA256"
+          sudo install -o root -g root -m 0755 "$sandbox_source" "$sandbox_target"
+          test -f "$sandbox_target"
+          test ! -L "$sandbox_target"
+          test "$(stat -c '%F %h %U:%G %a' "$sandbox_target")" = \
+            "regular file 1 root:root 755"
+          test "$(sha256sum "$sandbox_target" | cut -d ' ' -f 1)" = \
+            "$FORME_CHROME_SANDBOX_SHA256"
+          sudo chmod 4755 "$sandbox_target"
+          test "$(stat -c '%F %h %U:%G %a' "$sandbox_target")" = \
+            "regular file 1 root:root 4755"
+          test "$(sha256sum "$sandbox_target" | cut -d ' ' -f 1)" = \
+            "$FORME_CHROME_SANDBOX_SHA256"
+
+      - name: Verify package and kernel API compatibility
+        run: python -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
+
+      - name: Build and test every Forme product
+        run: python code/scripts/forme_release_gate.py build-products --host ${{ matrix.host }}
+
+      - name: Enforce browser and static-fallback budgets
+        shell: bash
+        working-directory: code/sites/blog
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          CHROME_DEVEL_SANDBOX: ${{ runner.os == 'Linux' && '/usr/local/sbin/forme-chrome-sandbox' || '' }}
+          FORME_EXPECTED_CHROME_VERSION: 154.0.8037.92
+          FORME_INSTALLED_CHROME_VERSION: ${{ steps.chrome.outputs.chrome-version }}
+        run: npm run quality:release
+
+      - name: Emit reviewed host attestation
+        run: >-
+          python code/scripts/forme_release_gate.py attest
+          --host ${{ matrix.host }}
+          --commit ${{ github.sha }}
+          --benchmark code/sites/blog/dist/.forme-release-benchmark.json
+          --web-quality code/sites/blog/dist/.forme-web-quality.json
+          --output .forme-release-evidence/forme-release-${{ matrix.host }}.json
+
+      - name: Publish bounded Forme release evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: forme-release-${{ matrix.host }}
+          path: .forme-release-evidence/forme-release-${{ matrix.host }}.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+  forme-release-verdict:
+    name: Forme release verdict
+    needs: [detect, forme-release-platform]
+    if: always() && needs.detect.outputs.run_forme_release_platform == 'true' && (github.event_name == 'pull_request' || needs.detect.outputs.is_main == 'true')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Require every supported host
+        shell: bash
+        env:
+          PLATFORM_RESULT: ${{ needs['forme-release-platform'].result }}
+        run: test "$PLATFORM_RESULT" = success
+
+      - name: Download host attestations
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: forme-release-*
+          path: .forme-release-evidence
+
+      - name: Compose one release verdict
+        run: >-
+          python code/scripts/forme_release_gate.py verdict
+          --evidence-dir .forme-release-evidence
+          --output forme-release-verdict.json
+
+      - name: Publish the Forme release verdict
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: forme-release-verdict
+          path: forme-release-verdict.json
+          if-no-files-found: error
+          retention-days: 30
+
+  # ── Job 15: Build and test ─────────────────────────────────────
   #
   # Installs only the toolchains flagged by the detect job, then
   # compiles the build tool and runs the incremental build.
@@ -1432,7 +1970,7 @@ jobs:
         run: python -m unittest discover -s code/scripts/tests -p 'test_setup_msvc_dev_cmd.py'
 
       - name: Set up MSVC (Lua + C/C++ + Venture + LANG)
-        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true') && runner.os == 'Windows'
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true') && runner.os == 'Windows'
         shell: pwsh
         run: python code/scripts/setup_msvc_dev_cmd.py --arch x64
 
@@ -1539,6 +2077,32 @@ jobs:
       - name: Set up npm
         if: needs.detect.outputs.needs_typescript == 'true'
         run: npm install --global npm@11.13.0
+
+      - name: Delegate Forme sandbox cgroup v2 root
+        if: runner.os == 'Linux' && needs.detect.outputs.run_build_linux_os_suites == 'true'
+        run: |
+          test -f /sys/fs/cgroup/cgroup.controllers
+          if [ -f /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+          sudo mkdir -p \
+            /sys/fs/cgroup/forme-sandbox \
+            /sys/fs/cgroup/forme-sandbox/runner
+          sudo chown "$(id -u):$(id -g)" \
+            /sys/fs/cgroup/forme-sandbox \
+            /sys/fs/cgroup/forme-sandbox/cgroup.procs \
+            /sys/fs/cgroup/forme-sandbox/cgroup.threads \
+            /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control \
+            /sys/fs/cgroup/forme-sandbox/runner \
+            /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs \
+            /sys/fs/cgroup/forme-sandbox/runner/cgroup.threads
+          test -w /sys/fs/cgroup/forme-sandbox
+          test -w /sys/fs/cgroup/forme-sandbox/cgroup.procs
+          test -w /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control
+          for controller in cpu memory pids; do
+            grep -qw "$controller" /sys/fs/cgroup/forme-sandbox/cgroup.controllers
+            echo "+$controller" >> /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control
+          done
 
       # ── C/C++ compilers (pure-ISO multi-compiler lane) ──────────
       #
@@ -1900,6 +2464,17 @@ jobs:
           ghc-version: '9.4'
           cabal-version: '3.10'
 
+      # Cabal 3.10 can report a successful `cabal update` while deferring the
+      # package-index cache materialization until the first solver query.  On
+      # fresh hosted runners that made the first Haskell BUILD incorrectly
+      # resolve a test-disabled plan.  Force and verify that read here so a
+      # broken index is classified as bootstrap failure before package tests.
+      - name: Verify Haskell package index
+        if: needs.detect.outputs.needs_haskell == 'true'
+        shell: bash
+        run: |
+          cabal list --simple-output hspec | grep -Eq '^hspec [0-9]'
+
       - name: Set up reviewed OCaml compiler and repository
         id: setup-ocaml
         if: needs.detect.outputs.needs_ocaml == 'true' && (matrix.sharded != true || contains(matrix.languages, 'ocaml'))
@@ -2103,14 +2678,16 @@ jobs:
         shell: bash
         env:
           NEEDS_KOTLIN: ${{ needs.detect.outputs.needs_kotlin }}
+          NEEDS_MOSAIC_COMPOSE: ${{ needs.detect.outputs.needs_mosaic_compose_runtime }}
         run: |
           set -euo pipefail
           echo "Disk before cleanup:"
           df -h /
           # Keep the pre-installed Android SDK when Kotlin (Android) builds are
           # needed — deleting it forces a full re-download later, wasting several
-          # minutes and ~5 GB of bandwidth per shard.
-          if [ "$NEEDS_KOTLIN" != "true" ]; then
+          # minutes and ~5 GB of bandwidth per shard. Mosaic's Compose lane
+          # builds an Android APK too (UI89 §3.4).
+          if [ "$NEEDS_KOTLIN" != "true" ] && [ "$NEEDS_MOSAIC_COMPOSE" != "true" ]; then
             sudo rm -rf /usr/local/lib/android || true
           fi
           docker system prune --all --force || true
@@ -2126,7 +2703,7 @@ jobs:
       # Windows the action downloads a fresh SDK. Gradle then auto-downloads
       # the specific platform (API 35 / 36) on first build.
       - name: Set up Android SDK
-        if: needs.detect.outputs.needs_kotlin == 'true'
+        if: needs.detect.outputs.needs_kotlin == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
         uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4.0.1
         with:
           packages: 'platform-tools'
@@ -2199,7 +2776,9 @@ jobs:
       - name: Round-trip Rust engine through standard SwiftUI binding
         if: runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'
         shell: bash
-        timeout-minutes: 30
+        # 16 minutes before Journal's iOS gate (UI89 §2.4) joined it, about 25
+        # after; Engram's (§2.5) adds a second engine and app build.
+        timeout-minutes: 60
         run: |
           set -euo pipefail
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
@@ -2439,8 +3018,13 @@ jobs:
             xcodebuild -scheme App -destination 'generic/platform=iOS Simulator' -derivedDataPath "$ios_linked_data" CODE_SIGNING_ALLOWED=NO build
             xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$ios_linked_data" CODE_SIGNING_ALLOWED=NO build
           )
+          # nm writes to a file before grep reads it: `nm | grep -q` under
+          # pipefail fails whenever grep exits at its first match while nm is
+          # still writing (SIGPIPE, "LLVM ERROR: ... Broken pipe"), which depends
+          # only on where the symbol happens to fall in nm's output.
           for binary in "$ios_linked_data/Build/Products/Debug-iphonesimulator/App" "$ios_linked_data/Build/Products/Debug-iphoneos/App"; do
-            nm -gU "$binary" | grep -q ' _mosaic_app_create$'
+            nm -gU "$binary" > "$RUNNER_TEMP/mosaic-ios-symbols.txt"
+            grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-ios-symbols.txt"
           done
 
           # An installable iOS / iPadOS APP (UI89 §2.2): the same build wrote
@@ -2454,7 +3038,8 @@ jobs:
             xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO SYMROOT="$ios_app_build" build
           )
           ios_app="$ios_app_build/Debug-iphonesimulator/App.app"
-          nm -gU "$ios_app/App" | grep -q ' _mosaic_app_create$'
+          nm -gU "$ios_app/App" > "$RUNNER_TEMP/mosaic-ios-app-symbols.txt"
+          grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-ios-app-symbols.txt"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$ios_app/Info.plist")" = dev.codingadventures.trestle
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$ios_app/Info.plist")" = Trestle
           simulator="$(xcrun simctl list devices available -j | jq -r '[.devices[][] | select(.name | startswith("iPhone"))][0].udid')"
@@ -2511,6 +3096,87 @@ jobs:
           xcrun simctl launch "$ipad" dev.codingadventures.trestle
           sleep 10
           xcrun simctl spawn "$ipad" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+          xcrun simctl shutdown "$ipad"
+
+          # ---- Journal on iOS and iPadOS (UI89 §2.4, step 7). ---------------
+          # The same path as Trestle: the engine as a static .xcframework, the
+          # native-complete SwiftUI project, and the generated iOS app target.
+          # mosaic-ios-simulator-gate.sh then launches it three times on the
+          # iPhone simulator: a fresh launch writes state (the environment
+          # report is its first event), a second restores it with nothing
+          # quarantined, and a third quarantines a seeded `{}` and starts
+          # fresh. The same .app then runs on the iPad simulator.
+          journal_ios_runtime="$RUNNER_TEMP/JournalAppRuntime.xcframework"
+          bash code/scripts/build-mosaic-xcframework.sh journal-mosaic-app "$journal_ios_runtime"
+          journal_ios_output="$RUNNER_TEMP/mosaic-swift-journal-ios-linked"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend swiftui --output "$journal_ios_output" --emit-project --profile native-complete --runtime-library "$journal_ios_runtime"
+          jq -e '.replacedGeneratedFiles == []' "$journal_ios_output/swiftui/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_ios_output/swiftui/mosaic-degradations.json"
+          test -f "$journal_ios_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
+          journal_ios_build="$RUNNER_TEMP/mosaic-journal-ios-app"
+          (
+            cd "$journal_ios_output/swiftui/iOS"
+            xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO SYMROOT="$journal_ios_build" build
+          )
+          journal_ios_app="$journal_ios_build/Debug-iphonesimulator/App.app"
+          nm -gU "$journal_ios_app/App" > "$RUNNER_TEMP/mosaic-journal-ios-app-symbols.txt"
+          grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-journal-ios-app-symbols.txt"
+          # The defaults Journal's manifest leaves in place (UI89 §2.4, §3.9).
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$journal_ios_app/Info.plist")" = dev.codingadventures.journalapp
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$journal_ios_app/Info.plist")" = JournalApp
+          xcrun simctl boot "$simulator" || true
+          xcrun simctl bootstatus "$simulator" -b
+          bash code/scripts/mosaic-ios-simulator-gate.sh "$journal_ios_app" dev.codingadventures.journalapp journal-app "$simulator"
+          xcrun simctl shutdown "$simulator"
+          xcrun simctl boot "$ipad" || true
+          xcrun simctl bootstatus "$ipad" -b
+          xcrun simctl install "$ipad" "$journal_ios_app"
+          xcrun simctl launch "$ipad" dev.codingadventures.journalapp
+          sleep 10
+          # Running, not merely listed: launchctl keeps an exited job with `-`
+          # for its PID, so the label is matched exactly with a numeric PID.
+          ipad_services="$(xcrun simctl spawn "$ipad" launchctl list)"
+          awk -v b=dev.codingadventures.journalapp '$1 ~ /^[0-9]+$/ && ($3 == b || index($3, "UIKitApplication:" b "[") == 1) { f = 1 } END { exit !f }' <<< "$ipad_services"
+          xcrun simctl shutdown "$ipad"
+
+          # ---- Engram on iOS and iPadOS (UI89 §2.5, step 7). ----------------
+          # Journal's recipe and gate. The app also compiles Engram's
+          # [host_effects] handler (EngramEffects.swift), whose iOS branch
+          # fails Anki import/export with a message, and its touch layout.
+          engram_ios_runtime="$RUNNER_TEMP/EngramAppRuntime.xcframework"
+          bash code/scripts/build-mosaic-xcframework.sh engram-mosaic-app "$engram_ios_runtime"
+          engram_ios_output="$RUNNER_TEMP/mosaic-swift-engram-ios-linked"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend swiftui --output "$engram_ios_output" --emit-project --profile native-complete --runtime-library "$engram_ios_runtime"
+          jq -e '.replacedGeneratedFiles == []' "$engram_ios_output/swiftui/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_ios_output/swiftui/mosaic-degradations.json"
+          test -f "$engram_ios_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
+          # The handler is part of the iOS app target, so its #else branch
+          # (the iOS answer to Anki import/export) is compiled here.
+          grep -qF 'Sources/App/EngramEffects.swift' "$engram_ios_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
+          engram_ios_build="$RUNNER_TEMP/mosaic-engram-ios-app"
+          (
+            cd "$engram_ios_output/swiftui/iOS"
+            xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO SYMROOT="$engram_ios_build" build
+          )
+          engram_ios_app="$engram_ios_build/Debug-iphonesimulator/App.app"
+          nm -gU "$engram_ios_app/App" > "$RUNNER_TEMP/mosaic-engram-ios-app-symbols.txt"
+          grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-engram-ios-app-symbols.txt"
+          # The defaults Engram's manifest leaves in place (UI89 §2.5, §3.10).
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$engram_ios_app/Info.plist")" = dev.codingadventures.engramapp
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$engram_ios_app/Info.plist")" = EngramApp
+          xcrun simctl boot "$simulator" || true
+          xcrun simctl bootstatus "$simulator" -b
+          bash code/scripts/mosaic-ios-simulator-gate.sh "$engram_ios_app" dev.codingadventures.engramapp engram-app "$simulator"
+          xcrun simctl shutdown "$simulator"
+          xcrun simctl boot "$ipad" || true
+          xcrun simctl bootstatus "$ipad" -b
+          xcrun simctl install "$ipad" "$engram_ios_app"
+          xcrun simctl launch "$ipad" dev.codingadventures.engramapp
+          sleep 10
+          # Running, not merely listed: launchctl keeps an exited job with `-`
+          # for its PID, so the label is matched exactly with a numeric PID.
+          ipad_services="$(xcrun simctl spawn "$ipad" launchctl list)"
+          awk -v b=dev.codingadventures.engramapp '$1 ~ /^[0-9]+$/ && ($3 == b || index($3, "UIKitApplication:" b "[") == 1) { f = 1 } END { exit !f }' <<< "$ipad_services"
           xcrun simctl shutdown "$ipad"
 
           toolkit_output="$RUNNER_TEMP/mosaic-swift-toolkit"
@@ -2735,14 +3401,61 @@ jobs:
           # The handler is wired into the generated entry point, which is the
           # half a text assertion over the manifest cannot see.
           grep -q 'installEngramEffects(mosaicHost);' "$engram_output/qt/main.cpp"
-          # Mosaic's Qt platform library (UI87 §7.4a) wraps it, and is in the
+          # Mosaic's Qt platform library (UI87 §7.4a) wraps it, routing the two
+          # kinds Engram's manifest claims to it (UI87 §7.2), and is in the
           # build the cmake step below compiles.
-          grep -q 'installMosaicPlatformEffects(mosaicHost, std::nullopt);' "$engram_output/qt/main.cpp"
+          grep -qF 'installMosaicPlatformEffects(mosaicHost, QSet<QString>{QStringLiteral("importAnki"), QStringLiteral("exportAnki")});' "$engram_output/qt/main.cpp"
           grep -q 'MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)' "$engram_output/qt/CMakeLists.txt"
+
+          # UI48 §7.10 (ENV2/ENV3): Engram is the one package with a layout
+          # variant (EngramApp.touch.mll). Both roots must be in the QML
+          # module, each its own type, and main.cpp must carry the selector, so
+          # the build below proves they compile together. Each check names
+          # itself when it fails.
+          qt_layout_expect() {
+            if ! grep -qF -- "$2" "$1"; then
+              echo "::error::Qt layout variants: expected $3 -- '$2' is not in $1"
+              exit 1
+            fi
+          }
+          qt_layout_expect "$engram_output/qt/CMakeLists.txt" 'set_source_files_properties(EngramApp.touch.qml PROPERTIES QT_QML_SOURCE_TYPENAME EngramAppTouch)' "the touch root's QML type"
+          qt_layout_expect "$engram_output/qt/CMakeLists.txt" 'qt_target_qml_sources(EngramApp QML_FILES EngramApp.touch.qml)' "the touch root in the module"
+          qt_layout_expect "$engram_output/qt/EngramApp.touch.qml" 'required property var mosaicHost' "a strict touch root"
+          qt_layout_expect "$engram_output/qt/main.cpp" '{"touch", "qrc:/qt/qml/Mosaic/EngramApp/EngramApp.touch.qml", {{"pointer", "coarse"}}},' "the conventional touch rule"
+          qt_layout_expect "$engram_output/qt/main.cpp" 'if (!layoutSwitch->isActive()) layoutSwitch->start(0);' "the observer queueing the root switch"
+          if grep -qF 'const QUrl url(QStringLiteral("qrc:/qt/qml/Mosaic/EngramApp/EngramApp.qml"));' "$engram_output/qt/main.cpp"; then
+            echo "::error::Qt layout variants: main.cpp still mounts EngramApp.qml unconditionally"
+            exit 1
+          fi
 
           # The gate: it builds.
           cmake -S "$engram_output/qt" -B "$engram_output/qt/build" -DCMAKE_BUILD_TYPE=Release
           cmake --build "$engram_output/qt/build" --config Release --parallel
+
+          # UI48 §7.10: the resize gate §7 asks for. The fixture has a default
+          # and a `compact` layout; its harness compiles the generated main.cpp
+          # verbatim, runs it offscreen, resizes the window across 600 logical
+          # pixels and asserts the root swaps and keeps its props, so a shell
+          # frozen on one layout fails here. No runtime: the sample shell's
+          # host reports to nobody.
+          layout_variants_output="$RUNNER_TEMP/mosaic-qt-layout-variants"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-qt/fixtures/layout-variants --backend qt --output "$layout_variants_output" --emit-project
+          mv "$layout_variants_output/qt/main.cpp" "$layout_variants_output/qt/generated_main.cpp"
+          cp code/packages/rust/mosaic-emit-qt/fixtures/layout-variants-test/main.cpp "$layout_variants_output/qt/main.cpp"
+          cmake -S "$layout_variants_output/qt" -B "$layout_variants_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$layout_variants_output/qt/build" --config Release --parallel
+          layout_variants_log="$RUNNER_TEMP/mosaic-qt-layout-variants.log"
+          set +e
+          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen \
+            timeout 60s "$layout_variants_output/qt/build/LayoutProbe" >"$layout_variants_log" 2>&1
+          layout_variants_status=$?
+          set -e
+          cat "$layout_variants_log"
+          if [ "$layout_variants_status" -ne 0 ]; then
+            echo "::error::Qt layout-variant resize gate exited $layout_variants_status"
+            exit 1
+          fi
+          qt_layout_expect "$layout_variants_log" 'Qt layout-variant resize gate passed' "the resize gate to pass"
 
           # Engram's own suite, which the parent workspace cannot reach: the
           # package opts OUT of it (`[workspace]` empty in its Cargo.toml), so
@@ -2893,7 +3606,7 @@ jobs:
           cmp "$task_runtime_library" "$bundled_taskapp_runtime"
           taskapp_log="$RUNNER_TEMP/mosaic-flutter-taskapp-launch.log"
           set +e
-          env -u MOSAIC_APP_LIBRARY xvfb-run -a timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
+          env -u MOSAIC_APP_LIBRARY bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
           taskapp_status=$?
           set -e
           test "$taskapp_status" -eq 124
@@ -2918,7 +3631,52 @@ jobs:
             MOSAIC_APP_STATE_PATH="$ui_state_path" flutter test test/task_app_lifecycle_test.dart
             MOSAIC_APP_STATE_PATH="$ui_state_path" MOSAIC_EXPECT_RESTORED=1 \
               flutter test test/task_app_lifecycle_test.dart
+            # UI87 §7.7: on Linux the platform library asks before a save
+            # replaces a file (GTK's chooser, as file_selector opens it, does
+            # not). Drive that "Replace it?" dialog with the widget tester.
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-app-bindings/conformance/flutter-replace-dialog/replace_dialog_test.dart" \
+              test/mosaic_replace_dialog_test.dart
+            flutter test test/mosaic_replace_dialog_test.dart
           )
+
+          # UI29-1 §3.3: every HostDialog lowers to _MosaicDialogHost, which
+          # pushes its own DialogRoute (never showDialog, whose windowing path
+          # breaks macOS AOT builds). Drive the helper, exactly as emitted,
+          # with the widget tester: one dialog per open, one close per open,
+          # and no other route popped or left behind.
+          MOSAIC_REQUIRE_FLUTTER=1 cargo test --manifest-path code/packages/rust/mosaic-emit-flutter/Cargo.toml \
+            --test flutter_dialog_host -- --nocapture
+
+          # UI87 §7.7: every Flutter app gets Mosaic's platform library
+          # (files.open / files.save and the router), installed on each started
+          # host right after it is assigned. The TaskApp build above compiled
+          # and analysed its file_selector dialogs; this runs the rest -- the
+          # plain-Dart core, exactly as generated -- headless on the Dart VM
+          # with a fake host and fake dialogs.
+          python3 - "$taskapp_output/flutter/lib/main.dart" <<'PY'
+          import sys
+
+          text = open(sys.argv[1], encoding="utf-8").read()
+          assert "import 'mosaic_platform_effects.dart';" in text, "the platform library is never imported"
+          assign = text.index("_mosaicHost = host;")
+          install = text.index("installMosaicPlatformEffects(host, appKinds: null);")
+          props = text.index("host.setPropsChangedHandler")
+          assert assign < install < props, "the platform library is not installed on the started host"
+          PY
+          platform_harness="$RUNNER_TEMP/mosaic-flutter-platform-effects"
+          rm -rf "$platform_harness"
+          cp -R code/packages/rust/mosaic-app-bindings/conformance/flutter-platform-effects "$platform_harness"
+          mkdir -p "$platform_harness/lib"
+          cp "$taskapp_output/flutter/lib/mosaic_host.dart" \
+            "$taskapp_output/flutter/lib/mosaic_platform_effects_core.dart" \
+            "$platform_harness/lib/"
+          (
+            cd "$platform_harness"
+            dart pub get
+            dart analyze --fatal-infos
+            dart run bin/conformance.dart | tee "$RUNNER_TEMP/mosaic-flutter-platform-effects.log"
+          )
+          grep -F "Mosaic Flutter platform effects conformance passed" "$RUNNER_TEMP/mosaic-flutter-platform-effects.log"
 
           strict_output="$RUNNER_TEMP/mosaic-flutter-native-complete-rating-controls"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend flutter --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
@@ -2967,6 +3725,20 @@ jobs:
           (
             cd "$nested_conditional_output/flutter"
             cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/nested-row-conditional-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
+          # UI48 §7.9 (ENV2/ENV3): the resize gate §7 asks for. The fixture has
+          # a default and a `compact` layout; its widget test changes the
+          # window's size across 600 logical pixels and asserts the root
+          # swaps, so a shell frozen on one layout fails here.
+          layout_variants_output="$RUNNER_TEMP/mosaic-flutter-layout-variants"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/layout-variants --backend flutter --output "$layout_variants_output" --emit-project
+          (
+            cd "$layout_variants_output/flutter"
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/layout-variants-test/widget_test.dart" test/widget_test.dart
             flutter pub get
             flutter analyze
             flutter test test/widget_test.dart
@@ -3051,6 +3823,15 @@ jobs:
           assert install > assign, "handler is installed before the host exists"
           PY
 
+          # UI48 §7.9 (ENV2/ENV3): Engram is the one package with a layout
+          # variant (EngramApp.touch.mll). Both roots and the selector must be
+          # in lib/, so the analyze and build below prove they coexist.
+          grep -q '^class EngramAppTouch extends StatelessWidget {$' "$engram_output/flutter/lib/EngramApp.touch.dart"
+          if grep -q '^sealed class EngramAppEvent' "$engram_output/flutter/lib/EngramApp.touch.dart"; then exit 1; fi
+          grep -q "^import 'EngramApp.touch.dart';$" "$engram_output/flutter/lib/main.dart"
+          grep -q 'switch (mosaicLayoutVariant(environment))' "$engram_output/flutter/lib/main.dart"
+          grep -q 'return EngramAppTouch($' "$engram_output/flutter/lib/main.dart"
+
           (
             cd "$engram_output/flutter"
             flutter create --platforms=linux --project-name mosaic_engram_app .
@@ -3109,7 +3890,7 @@ jobs:
           test -n "$installed_taskapp"
           taskapp_log="$RUNNER_TEMP/mosaic-compose-taskapp-launch.log"
           set +e
-          env -u MOSAIC_APP_LIBRARY xvfb-run -a timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
+          env -u MOSAIC_APP_LIBRARY bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
           taskapp_status=$?
           set -e
           test "$taskapp_status" -eq 124
@@ -3139,11 +3920,11 @@ jobs:
           rm -f "$taskapp_ui_state" "$taskapp_ui_state.corrupt" "$taskapp_ui_state.tmp"
           MOSAIC_APP_STATE_PATH="$taskapp_ui_state" \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
-            xvfb-run -a gradle --no-daemon --stacktrace -p "$taskapp_output/compose" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace -p "$taskapp_output/compose" \
               test --tests TaskAppUiTest
           MOSAIC_APP_STATE_PATH="$taskapp_ui_state" MOSAIC_EXPECT_RESTORED=1 \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
-            xvfb-run -a gradle --no-daemon --stacktrace --rerun-tasks -p "$taskapp_output/compose" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace --rerun-tasks -p "$taskapp_output/compose" \
               test --tests TaskAppUiTest.generatedControlsDriveRustSchedulingLifecycle
 
           # Engram on Compose, the mirror of the SwiftUI and Qt Engram lanes.
@@ -3228,16 +4009,17 @@ jobs:
           rm -f "$journal_ui_state" "$journal_ui_state.corrupt" "$journal_ui_state.tmp"
           MOSAIC_APP_STATE_PATH="$journal_ui_state" \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")" \
-            xvfb-run -a gradle --no-daemon --stacktrace -p "$journal_output/compose" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace -p "$journal_output/compose" \
               test --tests JournalUiTest
           MOSAIC_APP_STATE_PATH="$journal_ui_state" MOSAIC_EXPECT_RESTORED=1 \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")" \
-            xvfb-run -a gradle --no-daemon --stacktrace --rerun-tasks -p "$journal_output/compose" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace --rerun-tasks -p "$journal_output/compose" \
               test --tests JournalUiTest
 
           # The platform library's own behaviour (UI87 §7): every Compose app
-          # gets MosaicPlatformEffects.kt, and this drives its open/save logic,
-          # limits and routing with fake dialogs -- no display needed.
+          # gets MosaicFileEffects.kt and MosaicPlatformEffects.kt, and this
+          # drives their open/save logic, limits, routing and the asynchronous
+          # picker path (UI89 §3.8) with fakes -- no display needed.
           cp code/packages/rust/mosaic-app-bindings/conformance/compose/MosaicPlatformEffectsTest.kt \
             "$journal_output/compose/src/test/kotlin/MosaicPlatformEffectsTest.kt"
           gradle --no-daemon --stacktrace -p "$journal_output/compose" \
@@ -3261,6 +4043,415 @@ jobs:
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend compose --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/compose/mosaic-degradations.json"
           gradle --no-daemon --stacktrace -p "$strict_output/compose" compileKotlin
+
+      # UI89 step 4: the Compose build of TaskApp above also wrote
+      # compose/android/, an Android project over the same shared Kotlin, with
+      # its own activity and the Android half of the platform seams. Gate: it
+      # builds a debug APK that carries the app's identity, launches
+      # MosaicActivity, and compiled the shared sources. The Rust runtime
+      # joins in step 5, and the emulator with it.
+      - name: Build Trestle for Android (UI89 step 4)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 25
+        run: |
+          set -euo pipefail
+          android_project="$RUNNER_TEMP/mosaic-compose-taskapp/compose/android"
+          test -f "$android_project/src/main/kotlin/mosaic/android/MosaicActivity.kt"
+          test -f "$android_project/src/main/kotlin/TaskApp.kt"
+          test ! -e "$android_project/src/main/kotlin/Main.kt"
+          # UI89 §3.8: the platform library's shared half, and Android's own
+          # half in place of the desktop's AWT dialogs.
+          test -f "$android_project/src/main/kotlin/MosaicFileEffects.kt"
+          if ! grep -q 'class MosaicAndroidDocumentPicker' "$android_project/src/main/kotlin/MosaicPlatformEffects.kt"; then
+            echo "::error::the Android project's MosaicPlatformEffects.kt is not Android's"
+            exit 1
+          fi
+          if grep -rl 'java\.awt' "$android_project/src"; then
+            echo "::error::desktop-only AWT reached the Android sources"
+            exit 1
+          fi
+
+          # The project names its Gradle in gradle-wrapper.properties. Write
+          # the wrapper's jar with whatever Gradle is installed, in
+          # an empty directory so that Gradle never configures the Android
+          # plugin it may not support.
+          gradle_version="$(sed -n 's|^distributionUrl=.*/gradle-\(.*\)-bin\.zip$|\1|p' "$android_project/gradle/wrapper/gradle-wrapper.properties")"
+          test -n "$gradle_version"
+          wrapper_seed="$RUNNER_TEMP/mosaic-android-gradle-wrapper"
+          rm -rf "$wrapper_seed"
+          mkdir -p "$wrapper_seed"
+          touch "$wrapper_seed/settings.gradle.kts"
+          gradle --no-daemon -q -p "$wrapper_seed" wrapper --gradle-version "$gradle_version"
+          cp "$wrapper_seed/gradle/wrapper/gradle-wrapper.jar" "$android_project/gradle/wrapper/gradle-wrapper.jar"
+          # Refuse to run a wrapper jar that is not the one Gradle published.
+          bash code/scripts/verify-gradle-wrapper-jar.sh "$android_project/gradle/wrapper/gradle-wrapper.jar"
+          # Run the verified jar itself, with gradlew's JVM options, rather
+          # than the generated gradlew script: Gradle publishes no checksum for
+          # the script, so it is the one part of the wrapper nothing can
+          # verify. Naming the main class (not `-jar`) works with every
+          # Gradle's wrapper jar, including old ones without a Main-Class.
+          (
+            cd "$android_project"
+            "${JAVA_HOME:+$JAVA_HOME/bin/}java" -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew \
+              -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain \
+              --no-daemon --stacktrace assembleDebug
+          )
+
+          apk="$(find "$android_project/build/outputs/apk/debug" -name '*.apk' -print -quit)"
+          test -n "$apk"
+          aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
+          test -n "$aapt2"
+          badging="$RUNNER_TEMP/mosaic-trestle-android-badging.txt"
+          "$aapt2" dump badging "$apk" > "$badging"
+          # Every check names what it wanted and shows what it got: a bare
+          # `grep -q` under `set -e` fails the step without saying which line.
+          expect_badging() {
+            if ! grep -Eq "$1" "$badging"; then
+              echo "::error::the APK's badging has no line matching $1"
+              cat "$badging"
+              exit 1
+            fi
+          }
+          expect_badging "^package: name='dev\.codingadventures\.trestle'"
+          expect_badging "^application-label:'Trestle'"
+          expect_badging "^launchable-activity: name='mosaic\.android\.MosaicActivity'"
+          # aapt prints `sdkVersion:`, newer aapt2 `minSdkVersion:`.
+          expect_badging "^(min)?[sS]dkVersion:'26'"
+          expect_badging "^targetSdkVersion:'36'"
+          # The shared sources and the Android seams are in the dex, and JNA
+          # brought its dispatcher for the emulator's ABI.
+          dex="$RUNNER_TEMP/mosaic-trestle-android-dex"
+          rm -rf "$dex"
+          unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$dex"
+          for class in 'Lmosaic/android/MosaicActivity;' 'LTaskAppKt;' 'LMosaicAppShellKt;' 'LMosaicRuntimeHost;' 'LMosaicPlatformKt;' \
+            'LMosaicPlatformRouter;' 'LMosaicFileEffectsKt;' 'LMosaicAndroidDocumentPicker;'; do
+            if ! grep -a -q -F "$class" "$dex"/classes*.dex; then
+              echo "::error::no $class in the APK's dex"
+              ls -l "$dex"
+              exit 1
+            fi
+          done
+          if ! test -f "$dex/lib/x86_64/libjnidispatch.so"; then
+            echo "::error::no lib/x86_64/libjnidispatch.so in the APK"
+            find "$dex/lib" -type f
+            exit 1
+          fi
+
+      # UI89 step 5: the Android app carries its Rust runtime. The TaskApp
+      # engine is built for every Android ABI with cargo-ndk
+      # (build-mosaic-android-libs.sh), handed to the Compose build as
+      # --runtime-library, and installed into the Android project's jniLibs.
+      # Gate: the APK carries libmosaic_app.so for all four ABIs, and each one
+      # exports mosaic_app_create. The emulator launch follows.
+      - name: Build Trestle for Android with its Rust runtime (UI89 step 5)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 45
+        run: |
+          set -euo pipefail
+          ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
+          if [ -z "$ndk" ] || [ ! -d "$ndk" ]; then
+            echo "::error::this runner has no Android NDK (ANDROID_NDK_LATEST_HOME / ANDROID_NDK_HOME)"
+            exit 1
+          fi
+          export ANDROID_NDK_HOME="$ndk"
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+          cargo install --locked cargo-ndk --version 4.1.2
+
+          jni_libs="$RUNNER_TEMP/mosaic-trestle-jnilibs"
+          bash code/scripts/build-mosaic-android-libs.sh task-mosaic-app "$jni_libs"
+
+          output="$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend compose --output "$output" --emit-project --profile native-complete --runtime-library "$jni_libs"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
+          android_project="$output/compose/android"
+
+          # The wrapper, written outside the project as in the step above.
+          gradle_version="$(sed -n 's|^distributionUrl=.*/gradle-\(.*\)-bin\.zip$|\1|p' "$android_project/gradle/wrapper/gradle-wrapper.properties")"
+          test -n "$gradle_version"
+          wrapper_seed="$RUNNER_TEMP/mosaic-android-runtime-gradle-wrapper"
+          rm -rf "$wrapper_seed"
+          mkdir -p "$wrapper_seed"
+          touch "$wrapper_seed/settings.gradle.kts"
+          gradle --no-daemon -q -p "$wrapper_seed" wrapper --gradle-version "$gradle_version"
+          cp "$wrapper_seed/gradle/wrapper/gradle-wrapper.jar" "$android_project/gradle/wrapper/gradle-wrapper.jar"
+          # Refuse to run a wrapper jar that is not the one Gradle published.
+          bash code/scripts/verify-gradle-wrapper-jar.sh "$android_project/gradle/wrapper/gradle-wrapper.jar"
+          # Run the verified jar itself, with gradlew's JVM options, rather
+          # than the generated gradlew script: Gradle publishes no checksum for
+          # the script, so it is the one part of the wrapper nothing can
+          # verify. Naming the main class (not `-jar`) works with every
+          # Gradle's wrapper jar, including old ones without a Main-Class.
+          (
+            cd "$android_project"
+            "${JAVA_HOME:+$JAVA_HOME/bin/}java" -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew \
+              -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain \
+              --no-daemon --stacktrace assembleDebug
+          )
+
+          apk="$(find "$android_project/build/outputs/apk/debug" -name '*.apk' -print -quit)"
+          test -n "$apk"
+          unpacked="$RUNNER_TEMP/mosaic-trestle-android-runtime-apk"
+          rm -rf "$unpacked"
+          unzip -q -o "$apk" 'lib/*' -d "$unpacked"
+          llvm_nm="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm"
+          test -x "$llvm_nm"
+          for abi in arm64-v8a armeabi-v7a x86_64 x86; do
+            library="$unpacked/lib/$abi/libmosaic_app.so"
+            if ! test -f "$library"; then
+              echo "::error::the APK has no lib/$abi/libmosaic_app.so"
+              find "$unpacked/lib" -type f
+              exit 1
+            fi
+            symbols="$RUNNER_TEMP/mosaic-trestle-$abi-symbols.txt"
+            "$llvm_nm" -D --defined-only "$library" > "$symbols"
+            if ! grep -Eq ' T mosaic_app_create$' "$symbols"; then
+              echo "::error::lib/$abi/libmosaic_app.so does not export mosaic_app_create"
+              head -n 40 "$symbols"
+              exit 1
+            fi
+          done
+
+      # UI89 step 7 (§3.9): Journal is the second app on Android. Its engine
+      # is built for every ABI and packaged exactly as Trestle's above; the
+      # APK is assembled through the same verified wrapper jar, by
+      # assemble-mosaic-android-debug.sh. Gate: native-complete with no
+      # degradations, Journal's own identity in the badging, and
+      # libmosaic_app.so exporting mosaic_app_create for each ABI.
+      - name: Build Journal for Android with its Rust runtime (UI89 step 7)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 45
+        run: |
+          set -euo pipefail
+          ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
+          if [ -z "$ndk" ] || [ ! -d "$ndk" ]; then
+            echo "::error::this runner has no Android NDK (ANDROID_NDK_LATEST_HOME / ANDROID_NDK_HOME)"
+            exit 1
+          fi
+          export ANDROID_NDK_HOME="$ndk"
+          # Both no-ops after the Trestle step; kept so this step stands alone.
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+          cargo install --locked cargo-ndk --version 4.1.2
+
+          jni_libs="$RUNNER_TEMP/mosaic-journal-jnilibs"
+          rm -rf "$jni_libs"
+          bash code/scripts/build-mosaic-android-libs.sh journal-mosaic-app "$jni_libs"
+
+          output="$RUNNER_TEMP/mosaic-compose-journal-android-runtime"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend compose --output "$output" --emit-project --profile native-complete --runtime-library "$jni_libs"
+          jq -e '.replacedGeneratedFiles == []' "$output/compose/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
+          android_project="$output/compose/android"
+          bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"
+
+          apk="$(find "$android_project/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
+          test -n "$apk"
+          aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
+          test -n "$aapt2"
+          badging="$RUNNER_TEMP/mosaic-journal-android-badging.txt"
+          "$aapt2" dump badging "$apk" > "$badging"
+          expect_badging() {
+            if ! grep -Eq "$1" "$badging"; then
+              echo "::error::Journal's APK badging has no line matching $1"
+              cat "$badging"
+              exit 1
+            fi
+          }
+          # The defaults Journal's manifest leaves in place (UI89 §3.9).
+          expect_badging "^package: name='dev\.codingadventures\.journalapp'"
+          expect_badging "^application-label:'JournalApp'"
+          expect_badging "^launchable-activity: name='mosaic\.android\.MosaicActivity'"
+          # aapt prints `sdkVersion:`, newer aapt2 `minSdkVersion:`.
+          expect_badging "^(min)?[sS]dkVersion:'26'"
+          expect_badging "^targetSdkVersion:'36'"
+
+          unpacked="$RUNNER_TEMP/mosaic-journal-android-runtime-apk"
+          rm -rf "$unpacked"
+          unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$unpacked"
+          for class in 'LJournalAppKt;' 'LMosaicRuntimeHost;' 'Lmosaic/android/MosaicActivity;'; do
+            if ! grep -a -q -F "$class" "$unpacked"/classes*.dex; then
+              echo "::error::no $class in Journal's dex"
+              exit 1
+            fi
+          done
+          if ! test -f "$unpacked/lib/x86_64/libjnidispatch.so"; then
+            echo "::error::Journal's APK has no lib/x86_64/libjnidispatch.so"
+            find "$unpacked/lib" -type f
+            exit 1
+          fi
+          llvm_nm="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm"
+          test -x "$llvm_nm"
+          for abi in arm64-v8a armeabi-v7a x86_64 x86; do
+            library="$unpacked/lib/$abi/libmosaic_app.so"
+            if ! test -f "$library"; then
+              echo "::error::Journal's APK has no lib/$abi/libmosaic_app.so"
+              find "$unpacked/lib" -type f
+              exit 1
+            fi
+            symbols="$RUNNER_TEMP/mosaic-journal-$abi-symbols.txt"
+            "$llvm_nm" -D --defined-only "$library" > "$symbols"
+            if ! grep -Eq ' T mosaic_app_create$' "$symbols"; then
+              echo "::error::Journal's lib/$abi/libmosaic_app.so does not export mosaic_app_create"
+              head -n 40 "$symbols"
+              exit 1
+            fi
+          done
+
+      # UI89 step 7 (§3.10): Engram is the third app on Android, built and
+      # checked exactly as Journal's above. Its touch layout variant reaches
+      # the Android project with the default one. Its Anki import and export
+      # are its own `compose-android` [host_effects] handler (§3.12), which
+      # MosaicActivity installs ahead of the platform library and which must
+      # reach the dex; the desktop handler (EngramEffectsKt) must not.
+      - name: Build Engram for Android with its Rust runtime (UI89 step 7)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 45
+        run: |
+          set -euo pipefail
+          ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
+          if [ -z "$ndk" ] || [ ! -d "$ndk" ]; then
+            echo "::error::this runner has no Android NDK (ANDROID_NDK_LATEST_HOME / ANDROID_NDK_HOME)"
+            exit 1
+          fi
+          export ANDROID_NDK_HOME="$ndk"
+          # Both no-ops after the steps above; kept so this step stands alone.
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+          cargo install --locked cargo-ndk --version 4.1.2
+
+          jni_libs="$RUNNER_TEMP/mosaic-engram-jnilibs"
+          rm -rf "$jni_libs"
+          bash code/scripts/build-mosaic-android-libs.sh engram-mosaic-app "$jni_libs"
+
+          output="$RUNNER_TEMP/mosaic-compose-engram-android-runtime"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend compose --output "$output" --emit-project --profile native-complete --runtime-library "$jni_libs"
+          jq -e '.replacedGeneratedFiles == []' "$output/compose/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
+          android_project="$output/compose/android"
+          # Installed as the host loads, before the platform library, which
+          # wraps it and routes the kinds it claims to it (UI89 §3.12).
+          grep -q -F 'installEngramAndroidEffects(it); platformRouter = installMosaicPlatformEffects(it, documentPicker, setOf("importAnki", "exportAnki"))' \
+            "$android_project/src/main/kotlin/mosaic/android/MosaicActivity.kt"
+          bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"
+
+          apk="$(find "$android_project/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
+          test -n "$apk"
+          aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
+          test -n "$aapt2"
+          badging="$RUNNER_TEMP/mosaic-engram-android-badging.txt"
+          "$aapt2" dump badging "$apk" > "$badging"
+          expect_badging() {
+            if ! grep -Eq "$1" "$badging"; then
+              echo "::error::Engram's APK badging has no line matching $1"
+              cat "$badging"
+              exit 1
+            fi
+          }
+          # The defaults Engram's manifest leaves in place (UI89 §3.10).
+          expect_badging "^package: name='dev\.codingadventures\.engramapp'"
+          expect_badging "^application-label:'EngramApp'"
+          expect_badging "^launchable-activity: name='mosaic\.android\.MosaicActivity'"
+          # aapt prints `sdkVersion:`, newer aapt2 `minSdkVersion:`.
+          expect_badging "^(min)?[sS]dkVersion:'26'"
+          expect_badging "^targetSdkVersion:'36'"
+
+          unpacked="$RUNNER_TEMP/mosaic-engram-android-runtime-apk"
+          rm -rf "$unpacked"
+          unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$unpacked"
+          # Engram's own Android handler, which MosaicActivity installs
+          # (UI89 §3.12): its class and its install function.
+          for class in 'LEngramAppKt;' 'LMosaicRuntimeHost;' 'Lmosaic/android/MosaicActivity;' 'LEngramAndroidEffectsKt;' 'installEngramAndroidEffects'; do
+            if ! grep -a -q -F "$class" "$unpacked"/classes*.dex; then
+              echo "::error::no $class in Engram's dex"
+              exit 1
+            fi
+          done
+          # The desktop Anki handler stays out (UI89 §3.10, §3.12): its
+          # Swing dialogs are not Android's. Both its class and its install
+          # function are looked for, so a renamed file or an added
+          # `@file:JvmName` cannot slip past; neither is a substring of the
+          # Android handler's names. grep's exit is read whole: 1 is
+          # "absent", anything else (no dex, unreadable) is a failure, never
+          # a pass.
+          for needle in 'LEngramEffectsKt;' 'installEngramEffects'; do
+            found=0
+            grep -a -q -F "$needle" "$unpacked"/classes*.dex || found=$?
+            if [ "$found" -eq 0 ]; then
+              echo "::error::Engram's desktop effect handler ($needle) reached the Android dex"
+              exit 1
+            fi
+            if [ "$found" -ne 1 ]; then
+              echo "::error::could not scan Engram's dex for $needle (grep exit $found)"
+              exit 1
+            fi
+          done
+          if ! test -f "$unpacked/lib/x86_64/libjnidispatch.so"; then
+            echo "::error::Engram's APK has no lib/x86_64/libjnidispatch.so"
+            find "$unpacked/lib" -type f
+            exit 1
+          fi
+          llvm_nm="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm"
+          test -x "$llvm_nm"
+          for abi in arm64-v8a armeabi-v7a x86_64 x86; do
+            library="$unpacked/lib/$abi/libmosaic_app.so"
+            if ! test -f "$library"; then
+              echo "::error::Engram's APK has no lib/$abi/libmosaic_app.so"
+              find "$unpacked/lib" -type f
+              exit 1
+            fi
+            symbols="$RUNNER_TEMP/mosaic-engram-$abi-symbols.txt"
+            "$llvm_nm" -D --defined-only "$library" > "$symbols"
+            if ! grep -Eq ' T mosaic_app_create$' "$symbols"; then
+              echo "::error::Engram's lib/$abi/libmosaic_app.so does not export mosaic_app_create"
+              head -n 40 "$symbols"
+              exit 1
+            fi
+          done
+
+      # UI89 step 5, second half, and step 7: the APKs above run. An x86_64
+      # emulator boots headless under KVM, and mosaic-android-emulator-gate.sh
+      # installs Trestle, then Journal, then Engram, launches each one's MosaicActivity
+      # three times and requires that it writes its state under filesDir,
+      # restores it, quarantines state the runtime refuses, and is still
+      # running ten seconds after each launch.
+      - name: Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 30
+        run: |
+          set -euo pipefail
+          # Let the runner's user open /dev/kvm (GitHub's documented recipe).
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules > /dev/null
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          export PATH="$ANDROID_HOME/platform-tools:$PATH"
+
+          apk="$(find "$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
+          test -n "$apk"
+          emulator_log="$RUNNER_TEMP/mosaic-android-emulator.log"
+          # However the step ends: stop the emulator, and on failure show why.
+          finish() {
+            local status=$?
+            adb emu kill > /dev/null 2>&1 || true
+            if [ "$status" -ne 0 ]; then
+              echo "---- emulator log ----"
+              tail -n 80 "$emulator_log" || true
+              df -h "$RUNNER_TEMP" "$HOME" || true
+            fi
+          }
+          trap finish EXIT
+          bash code/scripts/start-mosaic-android-emulator.sh "$emulator_log"
+          bash code/scripts/mosaic-android-emulator-gate.sh "$apk" dev.codingadventures.trestle task-app
+
+          journal_apk="$(find "$RUNNER_TEMP/mosaic-compose-journal-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
+          test -n "$journal_apk"
+          bash code/scripts/mosaic-android-emulator-gate.sh "$journal_apk" dev.codingadventures.journalapp journal-app
+
+          engram_apk="$(find "$RUNNER_TEMP/mosaic-compose-engram-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
+          test -n "$engram_apk"
+          bash code/scripts/mosaic-android-emulator-gate.sh "$engram_apk" dev.codingadventures.engramapp engram-app
 
       - name: Build concrete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
@@ -3495,6 +4686,74 @@ jobs:
             throw "Complete Mosaic toolkit XAML build failed with exit code $toolkitBuildExitCode"
           }
 
+      # UI48 ENV2/ENV3 on XAML (§7.11) -- the resize gate. The fixture has a
+      # default layout and a `compact` one selected by convention (under 600
+      # effective pixels); its interface is two of the conformance runtime's
+      # props, so the native-complete window runs against that runtime and
+      # mounts every root strictly. The source contract below checks both
+      # controls share one event union and the window carries the selector;
+      # the WinUI build compiles both roots; the smoke resizes the real window
+      # across the threshold both ways and requires the root to swap with the
+      # runtime's props on it. Linux cannot run WinUI, so this lane is where
+      # the switch is exercised.
+      - name: Resize the WinUI layout-variants fixture (UI48 §7.11)
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
+        shell: pwsh
+        timeout-minutes: 15
+        run: |
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic Rust conformance app build failed with exit code $LASTEXITCODE"
+          }
+          $library = Resolve-Path 'code/packages/rust/target/debug/mosaic_app_conformance.dll'
+          $output = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-layout-variants'
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-xaml/fixtures/layout-variants --backend xaml --output $output --emit-project --profile native-complete --runtime-library $library.Path
+          if ($LASTEXITCODE -ne 0) {
+            throw "XAML layout-variants generation failed with exit code $LASTEXITCODE"
+          }
+          $report = Get-Content (Join-Path $output 'xaml/mosaic-degradations.json') -Raw | ConvertFrom-Json
+          if (!$report.nativeComplete -or $report.degradations.Count -ne 0) {
+            throw 'XAML layout-variants generation reported degradations'
+          }
+          if (Test-Path (Join-Path $output 'xaml/LayoutProbe.compact.Event.cs')) {
+            throw 'The compact layout declared an event union of its own'
+          }
+          $compactCode = Get-Content (Join-Path $output 'xaml/LayoutProbe.compact.xaml.cs') -Raw
+          if (-not $compactCode.Contains('public event EventHandler<LayoutProbeEvent>? Dispatch;')) {
+            throw 'The compact control does not raise the default layout''s LayoutProbeEvent'
+          }
+          $window = Get-Content (Join-Path $output 'xaml/MainWindow.xaml.cs') -Raw
+          foreach ($marker in @(
+              '("compact", new[] { ("sizeClass", "compact") }),',
+              'var root = new LayoutProbeCompact();',
+              'MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps);',
+              'this.layoutSwitchQueued = this.DispatcherQueue.TryEnqueue(SwitchLayout);',
+              'if (MosaicRuntimeHost.IsSettling)')) {
+            if (-not $window.Contains($marker)) {
+              throw "MainWindow.xaml.cs is missing the layout switch: $marker"
+            }
+          }
+          $project = Join-Path $output 'xaml/LayoutProbe.csproj'
+          Push-Location (Split-Path -Parent $project)
+          dotnet build (Split-Path -Leaf $project) -c Debug -p:Platform=x64 --nologo
+          $buildExitCode = $LASTEXITCODE
+          Pop-Location
+          if ($buildExitCode -ne 0) {
+            throw "XAML layout-variants WinUI build failed with exit code $buildExitCode"
+          }
+          $executable = Get-ChildItem -Path (Join-Path $output 'xaml/bin') -Filter 'LayoutProbe.exe' -Recurse -File | Select-Object -First 1
+          if ($null -eq $executable) {
+            throw 'XAML layout-variants WinUI build did not produce LayoutProbe.exe'
+          }
+          Remove-Item Env:MOSAIC_APP_LIBRARY -ErrorAction SilentlyContinue
+          $env:MOSAIC_APP_STATE_PATH = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-layout-variants-state.json'
+          Remove-Item $env:MOSAIC_APP_STATE_PATH, "$($env:MOSAIC_APP_STATE_PATH).corrupt", "$($env:MOSAIC_APP_STATE_PATH).tmp" -Force -ErrorAction SilentlyContinue
+          pwsh -NoProfile -ExecutionPolicy Bypass -File code/scripts/mosaic-xaml-layout-variants-smoke.ps1 -ExePath $executable.FullName
+          if ($LASTEXITCODE -ne 0) {
+            throw "XAML layout-variants resize smoke failed with exit code $LASTEXITCODE"
+          }
+          Remove-Item Env:MOSAIC_APP_STATE_PATH -ErrorAction SilentlyContinue
+
       - name: Round-trip Rust engine through standard XAML binding
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh
@@ -3564,6 +4823,36 @@ jobs:
           dotnet $harnessBinary.FullName --expect-required-failure
           if ($LASTEXITCODE -ne 0) {
             throw "Mosaic XAML required-runtime failure check failed with exit code $LASTEXITCODE"
+          }
+
+      # UI87 §7.6: the XAML platform library (files.open / files.save and the
+      # router), driven headless with a fake picker and a fake host. The files
+      # are the ones TaskApp's generated WinUI project compiled in the step
+      # above, so what is tested is what shipped; run here, rather than on
+      # Linux, so the save's move-into-place runs on NTFS.
+      - name: Check the XAML platform library headless
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
+        shell: pwsh
+        timeout-minutes: 10
+        run: |
+          $generated = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp/xaml'
+          $window = Get-Content (Join-Path $generated 'MainWindow.xaml.cs') -Raw
+          if (!$window.Contains('MosaicPlatformEffects.Install(this, appKinds: null);')) {
+            throw 'TaskApp MainWindow.xaml.cs does not install the XAML platform library'
+          }
+          $platformHarness = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-platform-effects'
+          New-Item -ItemType Directory -Path $platformHarness -Force | Out-Null
+          Copy-Item 'code/packages/rust/mosaic-app-bindings/conformance/xaml-platform-effects/*' $platformHarness -Recurse
+          foreach ($file in 'MosaicPlatformEffects.cs', 'MosaicRuntimeHost.cs') {
+            $source = Join-Path $generated $file
+            if (!(Test-Path $source)) {
+              throw "Generated XAML $file not found at $source"
+            }
+            Copy-Item $source (Join-Path $platformHarness $file)
+          }
+          dotnet run -c Release --project (Join-Path $platformHarness 'XamlPlatformEffectsConformance.csproj')
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic XAML platform library conformance failed with exit code $LASTEXITCODE"
           }
 
       - name: Upload failed Mosaic TaskApp WinUI diagnostics
@@ -3658,11 +4947,22 @@ jobs:
       # every measured baseline (the historical ~91-minute whole-step run,
       # plus this PR's modest additions) while still turning a real hang into
       # a fast, loud CI failure instead of an hours-long silent stall.
+      #
+      # Why 300, not 150: pull-request builds are not sharded, so a change to a
+      # crate nearly everything depends on (`parser`, #16054) makes one runner
+      # rebuild ~750 packages. On Windows that took ~140 minutes, then ~150 on
+      # the next run, which the old ceiling killed mid-`lang-aot` (a single
+      # package that legitimately takes ~19 minutes there). 300 still ends
+      # well inside the 360-minute job limit, with room for the ~25 minutes
+      # of Windows setup before this step, so a real hang still fails.
       - name: Build and test affected packages
-        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true')
-        timeout-minutes: 150
+        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true')
+        timeout-minutes: 300
         shell: bash
         run: |
+          if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
+            printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
+          fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           job_flags=()
           if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then
@@ -3690,6 +4990,9 @@ jobs:
         timeout-minutes: 150
         shell: bash
         run: |
+          if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
+            printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
+          fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           job_flags=()
           if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then
@@ -3697,7 +5000,7 @@ jobs:
           fi
           $BT "${job_flags[@]}" -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -language all
 
-  # ── Job 14: CI gate ────────────────────────────────────────────
+  # ── Job 16: CI gate ────────────────────────────────────────────
   #
   # A single, always-present status check that summarizes the result of
   # every real job. The `build` job is a DYNAMIC matrix — its `build (…)`
@@ -3714,7 +5017,7 @@ jobs:
   # dependency failed, so it can report the failure rather than being skipped.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, build]
+    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -3731,17 +5034,21 @@ jobs:
           D18T_RESULT: ${{ needs['d18t-durable-epoch-activation-conformance'].result }}
           RUBY_GRAMMAR_REGEN_RESULT: ${{ needs['ruby-grammar-regen-check'].result }}
           MOSAIC_GRAMMAR_REGEN_RESULT: ${{ needs['mosaic-grammar-regen-check'].result }}
+          RUST_GRAMMAR_REGEN_RESULT: ${{ needs['rust-grammar-regen-check'].result }}
           UNICODE17_ELIXIR_RESULT: ${{ needs['unicode17-elixir-conformance'].result }}
           UNICODE17_LUA_RESULT: ${{ needs['unicode17-lua-conformance'].result }}
           UNICODE17_PERL_RESULT: ${{ needs['unicode17-perl-conformance'].result }}
           UNICODE17_HASKELL_RESULT: ${{ needs['unicode17-haskell-conformance'].result }}
           UNICODE17_SWIFT_RESULT: ${{ needs['unicode17-swift-conformance'].result }}
           UNICODE17_DART_RESULT: ${{ needs['unicode17-dart-conformance'].result }}
+          MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT: ${{ needs['mosaic-flutter-platform-library'].result }}
+          FORME_RELEASE_PLATFORM_RESULT: ${{ needs['forme-release-platform'].result }}
+          FORME_RELEASE_VERDICT_RESULT: ${{ needs['forme-release-verdict'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
         run: |
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;

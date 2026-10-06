@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C193-akara",
+    "language": "kannada",
+    "chapter": 193,
+    "sequence": 8830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0d9b7cba408c44c"
+  },
+  "findings": []
+}

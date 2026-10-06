@@ -2,6 +2,9 @@ cd ../directed-graph && npm install --silent
 cd ../state-machine && npm install --silent
 cd ../cli-builder && npm install --silent
 cd ../forme-dev-server && npm install --silent
+cd ../forme-deploy-runner-core && npm install --silent
+cd ../forme-deploy-runner-fs-adapter && npm install --silent
+cd ../forme-deploy-runner-github-pages-adapter && npm install --silent
 cd ../document-ast && npm install --silent
 cd ../forme-types && npm install --silent
 cd ../forme-errors && npm install --silent
@@ -9,6 +12,16 @@ cd ../forme-capability && npm install --silent
 cd ../forme-stage && npm install --silent
 cd ../forme-pipeline-config && npm install --silent
 cd ../blake2b && npm install --silent
+cd ../sha512 && npm install --silent
+cd ../ed25519 && npm install --silent
+cd ../forme-manifest && npm install --silent
+cd ../forme-plugin-runner-ts && npm install --silent
+cd ../forme-plugin-host && npm install --silent
+cd ../forme-plugin-installer-core && npm install --silent
+cd ../forme-sandbox-core && npm install --silent
+cd ../forme-sandbox-linux && npm install --silent && npm run build:native --silent
+cd ../forme-sandbox-macos && npm install --silent && npm run build:native --silent
+cd ../forme-sandbox-windows && npm install --silent && npm run build:native --silent
 cd ../forme-identity && npm install --silent
 cd ../forme-cache && npm install --silent
 cd ../forme-orchestrator && npm install --silent

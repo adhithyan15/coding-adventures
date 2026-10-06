@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Free time, Immediately, Finally, Until, Sankranti",
+  "label": "ch:te-free-time-immediately-finally-until-sankranti",
+  "canDo": "I can say free time, immediately, finally, until and Sankranti.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C212-sankranti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say free time, immediately, finally, until and Sankranti.",
+    "assesses": [
+      "TE-LEX-C212-SAMAYAM212-03",
+      "TE-LEX-C212-SAMAYAM212-04",
+      "TE-LEX-C212-SAMAYAM212-05"
+    ]
+  }
+}

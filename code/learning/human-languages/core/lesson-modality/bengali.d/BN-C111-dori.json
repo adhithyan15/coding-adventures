@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C111-dori",
+    "language": "bengali",
+    "chapter": 111,
+    "sequence": 5950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8234c24df17a8708"
+  },
+  "findings": []
+}

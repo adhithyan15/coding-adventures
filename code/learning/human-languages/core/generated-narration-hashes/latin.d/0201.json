@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:27ab6a73e8305496",
+  "lessonIds": [
+    "LA-C201-colloquor",
+    "LA-C201-trado",
+    "LA-C201-corrigo",
+    "LA-C201-celebro",
+    "LA-C201-persequor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch201.txt",
+  "json": "latin/narration/ch201.json",
+  "textHash": "fnv1a64:2e02e960fadfc1e5",
+  "jsonHash": "fnv1a64:6c5d366e46ef9c67",
+  "findings": []
+}

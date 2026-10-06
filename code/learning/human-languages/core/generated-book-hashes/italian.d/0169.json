@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:5015ce93caa69e77",
+  "lessonIds": [
+    "IT-C169-ambiente",
+    "IT-C169-inquinamento",
+    "IT-C169-rifiuto",
+    "IT-C169-riciclaggio",
+    "IT-C169-energia"
+  ],
+  "tex": "italian/book/chapters/ch169-environment-pollution-waste-recycling-energy.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:3cbcf92dda42aaf8",
+  "lessonIds": [
+    "BN-C100-sahos",
+    "BN-C100-protibha",
+    "BN-C100-jontro",
+    "BN-C100-soronjam",
+    "BN-C100-poddhoti"
+  ],
+  "tex": "bengali/book/chapters/ch100-courage-talent-machine-equipment-method.tex"
+}

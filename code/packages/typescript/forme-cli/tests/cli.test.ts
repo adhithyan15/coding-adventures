@@ -20,6 +20,7 @@ import {
   run,
   type CliIO,
   type CliServices,
+  type PluginInstallInvocation,
 } from "../src/index.js";
 
 interface MockIO extends CliIO {
@@ -79,7 +80,10 @@ function services(
   loaded: PipelineConfig,
   result: RunResult = successfulResult(),
   onBuild?: (value: PipelineConfig) => void,
-  onCreate?: (cacheRoot: string | null) => void,
+  onCreate?: (
+    cacheRoot: string | null,
+    runtime: { readonly config: PipelineConfig; readonly projectRoot: string; readonly signal?: AbortSignal },
+  ) => void,
 ): CliServices {
   const pipeline = (value: PipelineConfig): Pipeline => ({
     config: value,
@@ -92,8 +96,8 @@ function services(
   }) as never;
   return {
     loadConfig: async () => loaded,
-    createOrchestrator: cacheRoot => {
-      onCreate?.(cacheRoot);
+    createOrchestrator: (cacheRoot, runtime) => {
+      onCreate?.(cacheRoot, runtime);
       return {
         buildPipeline: async value => {
           onBuild?.(value);
@@ -106,6 +110,7 @@ function services(
     },
     startDevServer: async () => { throw new Error("dev server not expected"); },
     watchProject: () => { throw new Error("project watcher not expected"); },
+    installPlugin: async () => { throw new Error("plugin install not expected"); },
   };
 }
 
@@ -133,6 +138,17 @@ describe("argument and diagnostic contracts", () => {
     expect(buildHelp.stdoutText).toContain("forme build [OPTIONS]");
     expect(buildHelp.stdoutText).toContain("--reproducible");
     expect(buildHelp.stdoutText).toContain("--report <PATH>");
+    expect(buildHelp.stdoutText).toContain("--deploy-input <DIR>");
+
+    const deployHelp = makeIO();
+    expect(await run(["deploy", "--help"], deployHelp)).toBe(EXIT_OK);
+    expect(deployHelp.stdoutText).toContain("forme deploy [OPTIONS]");
+    expect(deployHelp.stdoutText).toContain("--content-dir <DIR>");
+    expect(deployHelp.stdoutText).toContain("--target-config <PATH>");
+
+    const installHelp = makeIO();
+    expect(await run(["install", "--help"], installHelp)).toBe(EXIT_OK);
+    expect(installHelp.stdoutText).toContain("forme install [OPTIONS] <PACKAGE>");
 
     const watchHelp = makeIO();
     expect(await run(["watch", "--help"], watchHelp)).toBe(EXIT_OK);
@@ -142,15 +158,30 @@ describe("argument and diagnostic contracts", () => {
 
     const version = makeIO();
     expect(await run(["--version"], version)).toBe(EXIT_OK);
-    expect(version.stdoutText).toBe("0.3.0\n");
+    expect(version.stdoutText).toBe("1.0.0\n");
   });
 
   it("rejects unknown commands, missing flag values, and invalid clean options", async () => {
-    for (const argv of [["deploy"], ["build", "--config"], ["clean", "--reproducible"]]) {
+    for (const argv of [["unknown"], ["deploy"], ["build", "--config"], ["clean", "--reproducible"]]) {
       const io = makeIO();
       expect(await run(argv, io)).toBe(EXIT_USAGE_OR_CONFIG);
       expect(io.stderrText).toMatch(/^forme: E_USAGE:/);
     }
+  });
+
+  it("uses CLI Builder to require exactly one deploy content store", async () => {
+    const missing = makeIO();
+    expect(await run([
+      "deploy", "--manifest", "manifest.json", "--target", "fs", "--target-config", "fs.json",
+    ], missing)).toBe(EXIT_USAGE_OR_CONFIG);
+    expect(missing.stderrText).toMatch(/one of/i);
+
+    const duplicate = makeIO();
+    expect(await run([
+      "deploy", "--manifest", "manifest.json", "--content-dir", "content",
+      "--content-bundle", "content.forme-bundle", "--target", "fs", "--target-config", "fs.json",
+    ], duplicate)).toBe(EXIT_USAGE_OR_CONFIG);
+    expect(duplicate.stderrText).toContain("Only one of");
   });
 
   it("uses CLI Builder duplicate checks and fuzzy flag suggestions", async () => {
@@ -162,6 +193,50 @@ describe("argument and diagnostic contracts", () => {
     const flagTypo = makeIO();
     expect(await run(["build", "--reproducibl"], flagTypo)).toBe(EXIT_USAGE_OR_CONFIG);
     expect(flagTypo.stderrText).toContain("Did you mean '--reproducible'");
+  });
+
+  it("dispatches a local package install with the configured runtime roots", async () => {
+    const io = makeIO();
+    let invocation: PluginInstallInvocation | undefined;
+    const custom: CliServices = {
+      ...services(config({
+        settings: {
+          storageRoot: "content",
+          cacheDir: ".forme/cache",
+          reproducibleBuild: false,
+          maxConcurrency: null,
+          logLevel: "info",
+          bestEffort: false,
+          deadlineMs: null,
+        },
+      })),
+      installPlugin: async value => {
+        invocation = value;
+        return {
+          status: "installed",
+          pluginName: "@example/plugin",
+          pluginVersion: "1.0.0",
+          manifestHash: "blake2b:fixture",
+          destinationPath: join(PROJECT_ROOT, "forme-plugins", "plugin-fixture"),
+          trustTier: "unverified-third-party",
+          grantedCapabilities: ["storage:read"],
+          fileCount: 3,
+          totalSizeBytes: 100,
+        } as never;
+      },
+    };
+    const reviewCapability = async () => true;
+    expect(await run(["install", "./plugin"], io, { reviewCapability }, custom)).toBe(EXIT_OK);
+    expect(invocation).toMatchObject({
+      packagePath: join(PROJECT_ROOT, "plugin"),
+      projectRoot: PROJECT_ROOT,
+      storageRoot: join(PROJECT_ROOT, "content"),
+      cacheDir: join(PROJECT_ROOT, ".forme/cache"),
+      reviewCapability,
+    });
+    expect(io.stdoutText).toBe(
+      "forme install: @example/plugin@1.0.0 installed (unverified-third-party; 1 grant)\n",
+    );
   });
 
   it("formats every ConfigError entry with its machine-readable code", async () => {
@@ -373,6 +448,41 @@ describe("build and check", () => {
     expect(io.stdoutText).toContain("forme build: fixture success");
   });
 
+  it("forwards command cancellation into product runtime creation", async () => {
+    const io = makeIO();
+    const cancellation = createCancellationTokenSource();
+    let observedSignal: AbortSignal | undefined;
+    expect(await run(["check"], io, { cancellation: cancellation.token }, services(
+      config(),
+      successfulResult(),
+      undefined,
+      (_cacheRoot, runtime) => { observedSignal = runtime.signal; },
+    ))).toBe(EXIT_OK);
+    expect(observedSignal).toBe(cancellation.token.signal);
+  });
+
+  it("reports cancellation during product runtime creation with exit 130", async () => {
+    const io = makeIO();
+    const cancellation = createCancellationTokenSource();
+    const base = services(config());
+    let releaseStarted: (() => void) | undefined;
+    const started = new Promise<void>(resolve => { releaseStarted = resolve; });
+    const custom: CliServices = {
+      ...base,
+      createOrchestrator: async (_cacheRoot, runtime) => {
+        releaseStarted?.();
+        await new Promise<void>(resolve => runtime.signal?.addEventListener("abort", () => resolve(), { once: true }));
+        runtime.signal?.throwIfAborted();
+        throw new Error("unreachable");
+      },
+    };
+    const running = run(["check"], io, { cancellation: cancellation.token }, custom);
+    await started;
+    cancellation.cancel("startup interrupted");
+    expect(await running).toBe(130);
+    expect(io.stderrText).toBe("forme: E_CANCELLED: startup interrupted\n");
+  });
+
   it("accepts the FM03 forme run spelling as a build alias", async () => {
     const io = makeIO();
     expect(await run(["run"], io, {}, services(config()))).toBe(EXIT_OK);
@@ -529,7 +639,7 @@ describe("clean", () => {
       produces: { name: "DeployArtifact", version: "1.0" },
     };
     const transformStage = {
-      produces: { name: "RenderedPage", version: "1.1" },
+      produces: { name: "RenderedPage", version: "2.0" },
     };
     const loaded = config({
       settings: { ...config().settings, cacheDir: ".forme/cache" },
@@ -654,7 +764,7 @@ function externalConfigSource(): string {
 const emit = {
   name: "@fixture/emit",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: 2,
   description: "self-contained external fixture",
   consumes: { name: "Void", version: "1.0" },
   produces: { name: "DeployArtifact", version: "1.0" },
@@ -690,7 +800,7 @@ function persistentCacheConfigSource(value: string): string {
   return `
 const contentSource = { name: "ContentSource", version: "1.0" };
 const source = {
-  name: "@fixture/cache-source", version: "0.1.0", apiVersion: 1,
+  name: "@fixture/cache-source", version: "0.1.0", apiVersion: 2,
   description: "external cache source", consumes: { name: "Void", version: "1.0" },
   produces: { name: "Stream", version: "1.0", inner: contentSource },
   capabilities: [], configSchema: null,
@@ -704,13 +814,13 @@ const source = {
   },
 };
 const transform = {
-  name: "@fixture/cache-transform", version: "0.1.0", apiVersion: 1,
+  name: "@fixture/cache-transform", version: "0.1.0", apiVersion: 2,
   description: "pure cache transform", consumes: contentSource, produces: contentSource,
   capabilities: [], configSchema: null,
   async run(input) { return { ...input, path: input.path.toUpperCase() }; },
 };
 const emit = {
-  name: "@fixture/cache-emit", version: "0.1.0", apiVersion: 1,
+  name: "@fixture/cache-emit", version: "0.1.0", apiVersion: 2,
   description: "pure in-memory emitter", consumes: contentSource,
   produces: { name: "DeployArtifact", version: "1.0" }, capabilities: [],
   configSchema: { type: "object", required: ["outDir"], properties: { outDir: { type: "string" } } },

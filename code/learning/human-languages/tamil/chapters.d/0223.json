@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "Interview, Company, Factory, Lesson, Homework",
+  "label": "ch:ta-interview-company-factory-lesson-homework",
+  "canDo": "I can say an interview, a company, a factory, a lesson and homework.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C223-vittuppatam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say an interview, a company, a factory, a lesson and homework.",
+    "assesses": [
+      "TA-LEX-C223-VELAI223-03",
+      "TA-LEX-C223-VELAI223-04",
+      "TA-LEX-C223-VELAI223-05"
+    ]
+  }
+}

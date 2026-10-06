@@ -1,0 +1,11 @@
+{
+  "id": "UR-C161-chikna",
+  "pathSegment": "UR-PATH-161-SIFAT161",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-161-SIFAT161",
+      "order": 2
+    }
+  ]
+}

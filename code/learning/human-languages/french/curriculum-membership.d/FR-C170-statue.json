@@ -1,0 +1,11 @@
+{
+  "id": "FR-C170-statue",
+  "pathSegment": "FR-PATH-170-CHOSES170",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-170-CHOSES170",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C286-venakadu",
+    "language": "telugu",
+    "chapter": 286,
+    "sequence": 13600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2d4d3abbe3ba6b4"
+  },
+  "findings": []
+}

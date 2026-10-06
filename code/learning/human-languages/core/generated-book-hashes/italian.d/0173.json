@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:abc40f030f20d19e",
+  "lessonIds": [
+    "IT-C173-geografia",
+    "IT-C173-matematica",
+    "IT-C173-scienza",
+    "IT-C173-arte",
+    "IT-C173-partita",
+    "IT-R173-first-pass-words-from-chapters-167-169",
+    "IT-R173-second-pass-words-from-chapters-170-173"
+  ],
+  "tex": "italian/book/chapters/ch173-geography-mathematics-science-art-match.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C236-reihe",
+    "language": "german",
+    "chapter": 236,
+    "sequence": 12860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef7bf056da9cba39"
+  },
+  "findings": []
+}

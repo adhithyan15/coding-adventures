@@ -1,0 +1,11 @@
+{
+  "id": "UR-C155-adha-ghanta",
+  "pathSegment": "UR-PATH-155-VAQT155",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-155-VAQT155",
+      "order": 1
+    }
+  ]
+}

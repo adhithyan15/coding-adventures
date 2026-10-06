@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "To move aside, To shrink, To lick, To suck, To install",
+  "label": "ch:ka-to-move-aside-to-shrink-to-lick-to-suck-to-install",
+  "canDo": "I can say to move aside, to shrink, to lick, to suck and to install.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C244-alavadisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say to move aside, to shrink, to lick, to suck and to install.",
+    "assesses": [
+      "KA-LEX-C244-KRIYE244-03",
+      "KA-LEX-C244-KRIYE244-04",
+      "KA-LEX-C244-KRIYE244-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C235-upar",
+    "language": "hindi",
+    "chapter": 235,
+    "sequence": 12470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8bcd192d57cf41b8"
+  },
+  "findings": []
+}

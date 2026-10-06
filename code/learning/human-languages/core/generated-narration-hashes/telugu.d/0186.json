@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:b40799f7a0b33456",
+  "lessonIds": [
+    "TE-C186-manavadu",
+    "TE-C186-manavaralu",
+    "TE-C186-tallidandrulu",
+    "TE-C186-kavalalu",
+    "TE-C186-papa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch186.txt",
+  "json": "telugu/narration/ch186.json",
+  "textHash": "fnv1a64:4ae564d691ecfb84",
+  "jsonHash": "fnv1a64:e32e78cda6da4670",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C236-religion",
+  "pathSegment": "GE-PATH-236-THING236",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-236-THING236",
+      "order": 4
+    }
+  ]
+}

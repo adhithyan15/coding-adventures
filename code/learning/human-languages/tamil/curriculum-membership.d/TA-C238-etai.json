@@ -1,0 +1,11 @@
+{
+  "id": "TA-C238-etai",
+  "pathSegment": "TA-PATH-238-GUNAM238",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-238-GUNAM238",
+      "order": 2
+    }
+  ]
+}

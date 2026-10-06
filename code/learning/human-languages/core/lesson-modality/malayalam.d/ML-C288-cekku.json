@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C288-cekku",
+    "language": "malayalam",
+    "chapter": 288,
+    "sequence": 13440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abb5afcf43a584e9"
+  },
+  "findings": []
+}

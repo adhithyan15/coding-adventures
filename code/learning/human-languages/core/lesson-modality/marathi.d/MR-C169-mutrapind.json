@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C169-mutrapind",
+    "language": "marathi",
+    "chapter": 169,
+    "sequence": 8130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:986a5599735f295c"
+  },
+  "findings": []
+}

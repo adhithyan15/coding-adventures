@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 222,
+  "output": "urdu/book/chapters/ch222-tasty-useless-unusual-fake-truthful.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

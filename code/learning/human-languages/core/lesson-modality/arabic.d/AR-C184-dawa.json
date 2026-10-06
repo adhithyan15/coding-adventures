@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C184-dawa",
+    "language": "arabic",
+    "chapter": 184,
+    "sequence": 9130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aad9e7846480a6c5"
+  },
+  "findings": []
+}

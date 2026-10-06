@@ -15,7 +15,7 @@ coupling.
 ## Quick start
 
 ```ts
-import { translateToTerminal } from "@coding-adventures/forme-style-to-terminal";
+import { compileTerminalStyles, translateToTerminal } from "@coding-adventures/forme-style-to-terminal";
 import {
   emptyStyleDocument, styleRuleId, sel,
 } from "@coding-adventures/forme-style-ir";
@@ -41,6 +41,10 @@ const doc = {
 const { output, emittedRules, warnings } = translateToTerminal(doc, {
   activeContexts: ["screen"],
 });
+
+// Runtime renderers use the same mapping without evaluating generated source.
+const { styles } = compileTerminalStyles(doc, { activeContexts: ["screen"] });
+const bodyStyle = styles.get("body");
 
 // `output` is a TS module source string:
 //

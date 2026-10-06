@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "From here, From there, On both sides, All around, On all sides",
+  "label": "ch:sa-from-here-from-there-on-both-sides-all-around-on-all-sides",
+  "canDo": "I can say from here, from there, on both sides, all around and on all sides.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "SA-C153-samantatah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: I can say from here, from there, on both sides, all around and on all sides.",
+    "assesses": [
+      "SA-LEX-C153-LOC153-03",
+      "SA-LEX-C153-LOC153-04",
+      "SA-LEX-C153-LOC153-05"
+    ]
+  }
+}

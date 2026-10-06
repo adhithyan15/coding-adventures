@@ -1,11 +1,20 @@
 # FM02 — Forme Plugin Host: Manifest, Sandboxing, Wire Protocol, Capability Mediation
 
-> **Status:** Code-ready specification. Read alongside FM00 (vision),
-> FM01 (kernel), and FM03 (orchestrator).
+> **Status:** Host/wire boundary implemented in FM-B014; bounded authority
+> persistence implemented in FM-B048; atomic installation implemented in FM-B049;
+> the TypeScript runtime adapter implemented in FM-B050; the reusable runner
+> conformance harness implemented in FM-B053; the Python and Rust runtimes
+> implemented in FM-B054/FM-B055 and closed by FM-B051; production OS
+> sandboxes implemented in FM-B052; reviewed local installation implemented in
+> FM-B056; runtime product composition implemented in FM-B057; bounded live
+> storage-watch mediation implemented in FM-B058; and Extensible v1 closed by
+> the FM-B015 completion milestone.
+> Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
 > safely and run them under a strong isolation boundary. The packages
 > `forme-manifest`, `forme-plugin-host`, `forme-plugin-runner-ts`,
-> and the per-OS sandbox modules `forme-sandbox-linux`,
+> `forme-plugin-runner-conformance`,
+> the shared launcher package `forme-sandbox-core`, and the per-OS sandbox modules `forme-sandbox-linux`,
 > `forme-sandbox-macos`, `forme-sandbox-windows`.
 > **Out of scope:** The orchestrator runtime itself (FM03), the
 > kernel types every plugin speaks (FM01), the IRs plugins
@@ -17,11 +26,18 @@
 | Surface | Status | Evidence / next step |
 |---|---|---|
 | Manifest parser | Implemented | `forme-manifest` validates the current first-party manifest shape. |
-| Plugin discovery and handshake | Pending | FM-B014 owns discovery, negotiation, and typed streaming. |
-| Capability mediation and crash isolation | Pending | FM-B014 must prove denial, cancellation, and failure boundaries. |
-| TypeScript/Python/Rust runners | Blocked | FM-B015 follows the host wire protocol. |
-| OS sandbox profiles | Blocked | FM-B015 owns macOS, Linux, and Windows enforcement. |
-| Install/trust CLI | Blocked | FM07 exposes it only after FM-B014/FM-B015 land. |
+| Plugin discovery and handshake | Implemented | FM-B014 ships deterministic discovery, manifest-authored proxies, negotiation, and typed streaming. |
+| Capability mediation and crash isolation | Implemented | FM-B014 proves denial, cancellation escalation, malformed-wire isolation, process failure, and cleanup boundaries. |
+| Trust and grant persistence | Implemented | FM-B048 provides bounded exact codecs, manifest-bound stale-grant denial, safe reads, and atomic restrictive writes. |
+| Atomic plugin installation | Implemented | FM-B049 consumes registry-independent immutable snapshots and publishes one complete host-owned plugin directory. |
+| TypeScript runner | Implemented | FM-B050 supplies the bounded reference SDK and host-launched end-to-end fixture. |
+| Shared runner conformance | Implemented | FM-B053 provides canonical vectors and a language-neutral subprocess driver, with the TypeScript runner passing the extracted suite. |
+| Python runner | Implemented | FM-B054 provides the first non-TypeScript SDK and passes the complete shared corpus without fixture changes. |
+| Rust runner | Implemented | FM-B055 provides typed stage/context APIs, bounded protocol concurrency and streams, and passes the complete shared corpus without fixture changes. |
+| OS sandbox profiles | Implemented | FM-B052 ships exact-snapshot Linux, macOS, and Windows launchers with platform CI. |
+| Install/trust CLI | Implemented | FM-B056 composes the completed installer and authority stores into FM07. |
+| Product runtime composition | Implemented | FM-B057 composes manifest-bound grants, language runners, and native platform sandboxes into FM07. |
+| Live storage-watch mediation | Implemented | FM-B058 bridges authorized watches through bounded cancellable host-to-plugin streams in every runner and the contained product adapter. |
 
 ---
 
@@ -96,7 +112,8 @@ FM02 specifies.
 11. **Plugin SDKs.** The per-language libraries that hide the wire
     protocol behind a clean `defineStage`-shaped API. Reference
     TypeScript SDK; sketch for Python and Rust.
-12. **Package layout.** Six new packages; their dependencies; their
+12. **Package layout.** Eight TypeScript packages plus the Python and Rust
+    runner SDKs; their dependencies; their
     BUILD ordering.
 13. **Testing contract.** The fault-injection matrix every
     implementation must pass.
@@ -105,7 +122,7 @@ FM02 specifies.
 
 The wire protocol is versioned by an `apiVersion` integer that
 matches FM01's `KERNEL_API_VERSION`. A plugin built against
-`apiVersion: 1` runs against any host that supports `apiVersion: 1`.
+`apiVersion: 2` runs against any host that supports `apiVersion: 2`.
 Breaking changes bump the version; the host loads only plugins
 whose declared `apiVersion` falls inside its supported set.
 
@@ -181,7 +198,7 @@ defend against:
    intermediate output.
 9. **Privilege escalation.** The plugin tries to use a granted
    capability to escalate to a denied one (e.g. given
-   `filesystem:read` to one directory, try to read another via
+   `storage:read` under the configured root, try to escape it via
    path traversal or symlink follow).
 10. **Supply-chain attacks via transitive plugins.** A plugin tries
     to load other plugins or `require()` packages outside its own
@@ -281,7 +298,7 @@ manifestVersion = 1
 [plugin]
 name        = "@forme/parse-markdown"     # globally unique; namespace recommended
 version     = "1.4.2"                      # semver
-apiVersion  = 1                            # FM01 KERNEL_API_VERSION targeted
+apiVersion  = 2                            # FM01 KERNEL_API_VERSION targeted
 description = "Parse CommonMark + GFM into a ContentNode"
 license     = "MIT"
 authors     = ["Alice <alice@example.com>"]
@@ -304,9 +321,8 @@ entry       = "./entry.js"                 # path relative to plugin root
 # Missing capabilities here cause the host to deny installation
 # (the plugin can't even start without these).
 [[capabilities.required]]
-realm   = "filesystem"
+realm   = "storage"
 scope   = "read"
-detail  = "$storageRoot"                   # template — resolved at runtime
 reason  = "Read source files to parse"     # shown to user at install
 
 # Capabilities the plugin can use but doesn't require. Missing optional
@@ -321,7 +337,7 @@ reason = "Use file mtime for cache invalidation; falls back to content hash with
 # Required: what this plugin contributes.
 [[contributes.stages]]
 id         = "parse-markdown"              # local id, qualified by plugin.name
-consumes   = "ContentSource"               # KindName
+consumes   = "ContentSource"               # KindRef: KindName or Stream<KindName>
 produces   = "ContentNode"
 configSchema = "./schemas/config.json"     # JSON Schema for stage config; optional
 
@@ -342,7 +358,7 @@ maxConcurrentRpcs  = 64
 # Optional: signature. Verified third-party plugins SHOULD ship one.
 [signature]
 algorithm = "ed25519"
-publicKey = "MCowBQYDK2VwAyEA..."          # base64 SPKI
+publicKey = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" # base64 raw 32-byte key
 signature = "MEUCIQD..."                   # base64 signature over canonical manifest + entry hash
 signedAt  = "2026-05-16T12:00:00Z"
 ```
@@ -372,7 +388,10 @@ A `plugin.toml` is valid when:
    refuses to install the plugin even with a user override flag.
 9. Every `contributes.stages` entry has unique `id`, references
    recognised kinds (or kinds the same plugin contributes), and
-   the optional `configSchema` parses as JSON Schema draft-07.
+   the optional `configSchema` parses as JSON Schema draft-07. A kind
+   reference is either a bare kind name or `Stream<KindName>`; nested
+   stream wrappers are rejected. This keeps streaming visible to DAG
+   typechecking before any untrusted process launches.
 10. Every `contributes.kinds` entry has a name beginning with
     `ext:`; kernel kind names are reserved.
 11. `resources.*` values are positive integers within the host's
@@ -394,6 +413,13 @@ capability is recorded:
   `settings.storageRoot`.
 - `$cacheDir` — resolves to `settings.cacheDir`, if set.
 - `$pluginDir` — resolves to the plugin's installation directory.
+
+Path-valued substitutions use reversible URI-path encoding: `/` remains the
+hierarchy separator while `%`, `:`, backslashes, whitespace, controls, and
+non-ASCII bytes are percent-encoded. Thus `C:\\site\\content` resolves as
+`C%3A%5Csite%5Ccontent`, remains one third capability segment, and compares
+identically during installation and loading without aliasing distinct POSIX
+paths. Platform path normalization occurs before template resolution.
 
 Any unrecognised `$variable` causes a manifest validation error.
 Plain `$` characters that should not be templated must be escaped
@@ -441,7 +467,32 @@ A `pluginPath` field in `PipelineSettings` lets the user add
 additional roots ahead of the defaults — useful for CI and
 hermetic-build scenarios.
 
-### 4.2 The `forme install` flow (informative)
+Discovery roots are host-managed snapshot inputs. They MUST remain quiescent
+for the complete discovery operation. The host rejects symlink escapes,
+rechecks containment and opened-file identity, and thereafter launches only
+from its private verified byte snapshot. Product callers pass the command's
+`AbortSignal`; discovery, bounded file reads, and manifest-bound grant loading
+check it throughout the snapshot pass. Concurrent same-user mutation of a
+discovery root is outside the FM-B014 boundary. The FM-B049 installer core and
+FM-B056 CLI MUST stage atomically and enforce immutable, host-owned install
+roots before making them discoverable; FM-B015 closes their product
+integration milestone.
+
+Third-party plugin config schemas use the host's bounded draft-07 subset.
+`pattern` is rejected until a guaranteed-linear regex engine is available;
+running attacker-authored JavaScript regular expressions in the trusted host
+would violate the sandbox boundary.
+Discovery reads every referenced schema into the same private, aggregate-bounded
+snapshot as the runtime entry. Later stage loads, launcher requests, schema
+validation, and announcement checks use only that snapshot, even if the source
+file is subsequently changed or deleted. The current signature binds the
+manifest and selected runtime entry, not auxiliary files. Until a future
+package-signature revision binds the complete file set, a plugin with
+`[signature]` MUST NOT use an external `configSchema`; hosts reject that
+combination rather than imply the existing signature authenticates schema
+bytes.
+
+### 4.2 The `forme install` flow
 
 The CLI (FM07) provides `forme install <package>` which:
 
@@ -463,6 +514,67 @@ The CLI (FM07) provides `forme install <package>` which:
    Subsequent runs read this file; no re-prompting unless the
    plugin's manifest changes.
 
+FM-B049 makes the registry-independent installation core normative. Registry
+and prompt adapters MUST hand `forme-plugin-installer-core` a complete immutable
+snapshot of regular-file entries plus the capabilities the user reviewed. The
+core does not fetch packages or display prompts. It MUST:
+
+1. accept at most 4,096 files, 4,096 distinct directories, 256 directory
+   levels, 16 MiB per file, 128 MiB total, and 4,096 reviewed grants;
+2. reject duplicate, absolute, empty, dot-segment, backslash, NUL, non-NFC,
+   non-portable, or case-fold-colliding relative paths before touching disk,
+   and reserve case-insensitive `grants.toml` plus every descendant path for
+   host-generated authority only;
+3. defensively copy every byte array, require exactly one root `plugin.toml`,
+   parse and validate it, and require every selected runtime entry and schema
+   path to name a supplied regular file;
+4. compute the existing manifest hash over the validated manifest and selected
+   runtime entry, verify any declared signature, and compare its raw Ed25519
+   key against the FM-B048 trust store;
+5. assign `verified-third-party` only when that trusted signature verifies and
+   the distribution contains exactly `plugin.toml` plus the selected entry.
+   Because the v1 signature does not bind auxiliary or alternate-platform
+   files, any larger snapshot is installed only as `unverified-third-party`;
+6. resolve declared capability templates against caller-supplied installation
+   roots, require every reviewed grant to be declared, require all resolved
+   required capabilities to be granted, and write the exact manifest-bound
+   grants file through the FM-B048 codec;
+7. derive the destination as `plugin-` plus Base64url of the UTF-8 plugin name,
+   under one existing canonical, real host-owned install root. Callers resolve
+   platform path aliases before capability review and do not choose a
+   destination basename. The encoded destination is at most 200 UTF-8 bytes,
+   keeping its lock, stage, and backup transaction names below the common
+   255-byte filesystem segment limit;
+8. acquire an exclusive same-parent per-plugin lock, materialize a private
+   sibling staging directory, write only exclusively-created regular files,
+   flush them, set files read-only and directories owner-private where POSIX
+   modes exist, and verify the staged complete set and byte identities under
+   the same independent file, directory, depth, and aggregate-entry ceilings;
+9. replace an existing singly-linked host-owned target through same-parent
+   rename with a retained backup, restore that backup after any pre-finalize
+   failure, and report an indeterminate error if rollback itself cannot be
+   proved; and
+10. recheck parent, lock, stage, target, and backup identities at each state
+    transition, remove only identities created by the current transaction, and
+    never expose a partial tree as a discovery candidate.
+
+Install results contain the plugin name/version, manifest hash, trust tier,
+canonical destination, granted capabilities, file count, and total bytes.
+Reinstalling an identical snapshot with identical grants is an exact no-op;
+changing the manifest identity or grants creates one atomic replacement.
+Cancellation is checked before staging, between file writes, and before the
+commit rename. The single-user threat model still excludes a privileged actor
+that can replace the install root itself.
+
+On POSIX, the installer rejects an install root or any accepted existing target
+directory/file writable by group or other users and verifies every transaction
+directory has the root's owner and device. On Windows, POSIX mode bits do not
+describe ACL authority, so callers MUST provide the install operation's
+`verifyWindowsAcl` callback; the core invokes it for both the canonical install
+root and the complete existing target tree, when present, and fails closed
+unless both exclude writers other than the current host user and trusted
+administrators.
+
 `forme install` is outside FM02's package surface (it lives in the
 CLI, FM07), but the trust-store and grants-file formats are FM02's
 responsibility and are specified in this document.
@@ -474,7 +586,7 @@ User-wide trust store: `~/.forme/trust.toml`.
 ```toml
 [[trustedKeys]]
 algorithm = "ed25519"
-publicKey = "MCowBQYDK2VwAyEA..."
+publicKey = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
 addedAt   = "2026-05-16T12:00:00Z"
 note      = "Alice's signing key — from her keybase"
 ```
@@ -484,15 +596,24 @@ Plugins signed by any key in the trust store load at the
 first time but skips it on subsequent installs by the same
 publisher.
 
+FM-B048 makes this format normative. `publicKey` is the canonical padded
+Base64 encoding of the raw 32-byte Ed25519 public key used by `[signature]`;
+it is not an SPKI wrapper. Readers accept canonical Base64
+only, require `algorithm = "ed25519"`, an RFC 3339 UTC `addedAt`, and a unique
+public key. Unknown or duplicate fields and table rows are errors rather than
+forward-compatible guesses. A trust store is bounded to 1 MiB and 4,096 keys.
+An absent file means an empty store; a malformed or unsafe existing file never
+falls back to empty.
+
 ### 4.4 Grants file
 
 Per-plugin grants: `<project>/forme-plugins/<name>/grants.toml`.
 
 ```toml
-manifestHash = "blake2b:abcdef..."         # hash at time of grant; mismatch → re-prompt
+manifestHash = "blake2b:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
 [[granted]]
-capability = "filesystem:read:/abs/path/to/storageRoot"
+capability = "storage:read"
 grantedAt  = "2026-05-16T12:00:00Z"
 note       = "$storageRoot resolved to this path at install time"
 
@@ -504,6 +625,23 @@ grantedAt  = "2026-05-16T12:00:00Z"
 If `manifestHash` no longer matches the plugin's current manifest
 (the publisher updated the plugin), the host re-prompts for any
 new or changed capability and updates the grants file.
+
+FM-B048 makes the grants format normative. `manifestHash` is the exact
+lowercase `blake2b:<64 hex>` identity returned by `computeManifestHash`; every
+`capability` is a canonical FM01 capability string; `grantedAt` is RFC 3339
+UTC; capabilities are unique and serialized in code-point order. Unknown or
+duplicate fields and rows are errors. A grants file is bounded to 1 MiB and
+4,096 decisions. Loading for a different manifest hash returns a typed
+"stale" result with no effective grants, never the old authority.
+
+Both files are written as deterministic UTF-8 TOML with mode `0600` where the
+platform supports POSIX permissions. Publication uses an exclusive temporary
+regular file in the same real parent directory, flushes it before an atomic
+rename, and rejects symlink or multiply-linked existing targets. Reads use a
+no-follow regular-file descriptor, enforce the byte bound while reading, and
+recheck the opened identity before accepting bytes. Concurrent same-user
+replacement of a parent directory remains outside the single-user threat
+model; callers must supply a host-owned parent.
 
 ### 4.5 Resolving `StageRef`
 
@@ -734,7 +872,7 @@ The host's first message is a `handshake` request:
   "params": {
     "hostName":          "forme-orchestrator",
     "hostVersion":       "0.1.1",
-    "apiVersion":        1,                    // FM01 KERNEL_API_VERSION
+    "apiVersion":        2,                    // FM01 KERNEL_API_VERSION
     "protocolVersion":   1,                    // FM02 wire protocol version
     "pluginName":        "@forme/parse-markdown",
     "pluginVersion":     "1.4.2",
@@ -756,10 +894,10 @@ The plugin must respond within `handshakeTimeoutMs` (default
   "result": {
     "pluginName":       "@forme/parse-markdown",
     "pluginVersion":    "1.4.2",
-    "apiVersion":       1,
+    "apiVersion":       2,
     "protocolVersion":  1,
     "runner":           "@coding-adventures/forme-plugin-runner-ts",
-    "runnerVersion":    "0.1.0"
+    "runnerVersion":    "1.0.0"
   }
 }
 ```
@@ -783,14 +921,11 @@ runtime, for parity with the static manifest:
   "id": 2,
   "result": {
     "stage": {
-      "name":          "@forme/parse-markdown",
-      "version":       "1.4.2",
-      "apiVersion":    1,
-      "description":   "Parses CommonMark + GFM into a ContentNode.",
-      "consumes":      { "name": "ContentSource", "version": "1.0" },
-      "produces":      { "name": "ContentNode",   "version": "1.0" },
-      "capabilities":  ["filesystem:read:$storageRoot"],
-      "configSchemaHash": "blake2b:..."
+      "id":            "parse",
+      "consumes":      "ContentSource",
+      "produces":      "ContentNode",
+      "capabilities":  ["storage:read"],
+      "configSchemaHash": "sha256:<64 lowercase hexadecimal digits>"
     }
   }
 }
@@ -799,6 +934,20 @@ runtime, for parity with the static manifest:
 The host verifies announced shapes match the manifest. Mismatch =
 kill + fail. This guards against a plugin shipping a manifest that
 says one thing and code that does another.
+
+When `configSchema` is present, `configSchemaHash` is exactly
+`"sha256:" + lowercase_hex(SHA-256(schema_file_bytes))`. The input is the
+complete bounded byte sequence read from the referenced schema file, with no
+JSON reserialization, key sorting, whitespace normalization, or newline
+normalization. Runners in every language MUST hash those same file bytes and
+announce the resulting 64-digit lowercase hexadecimal digest. When
+`configSchema` is absent, the runner MUST announce `null`.
+The stage implementation identity also binds this digest: it is
+`sha256(UTF-8 bytes of "forme-stage-identity-v1\\0" + manifestHash +
+"\\0" + configSchemaHash)`. A stage without a config schema retains
+`manifestHash` as its implementation identity. The sandbox launcher receives
+the private schema snapshot and MUST attest the same schema hash alongside the
+manifest hash.
 
 ### 6.6 Phase 3 — init
 
@@ -813,7 +962,6 @@ Once announced, the host invokes `stage.init` exactly once:
   "params": {
     "config": { ... },                       // validated against configSchema
     "instanceId":  "parse-markdown",
-    "storageRoot": "/abs/path/to/storage",
     "logLevel":    "info"
   }
 }
@@ -910,7 +1058,18 @@ yields as the wire delivers `stream.value` notifications.
 Hybrid stages (Stream-in, single-out) and pure stream-stream
 stages compose these two patterns.
 
-#### 6.7.4 Backpressure
+#### 6.7.4 Binary values
+
+The JSON wire recursively encodes every `Uint8Array` as the reserved
+envelope `{"$forme":"bytes","base64":"..."}` and revives it on the
+receiving side. An ordinary object that already owns a `$forme` key is
+encoded as `{"$forme":"escaped-object","entries":[...]}` so user data
+cannot collide with the binary marker. Runners MUST implement both
+envelopes and reject malformed base64 or malformed escaped-object pairs.
+The frame-size preflight accounts for base64 expansion before allocating
+the encoded copy.
+
+#### 6.7.5 Backpressure
 
 stdio's underlying pipes provide coarse-grained backpressure:
 when one side stops reading, the OS pipe buffer (~64KB on Linux,
@@ -924,8 +1083,9 @@ the OS pipe is sufficient.
 
 ### 6.8 Phase 5 — dispose
 
-After every `run` invocation, or on cancellation, the host calls
-`stage.dispose`:
+When the stage proxy or host is disposed, or when cancellation/failure makes a
+session unsafe to reuse, the host calls `stage.dispose`. Successful runs return
+the initialized session to the ready state for reuse:
 
 ```jsonc
 // Host → Plugin
@@ -991,8 +1151,8 @@ plugin's grants and either performs the operation or returns a
 {
   "jsonrpc": "2.0",
   "id": -42,
-  "method": "ctx.storage.readFile",
-  "params": { "path": "posts/hello.md" }
+  "method": "ctx.storage.read",
+  "params": { "path": "posts/hello.md", "streamId": 500 }
 }
 
 // Host → Plugin (granted)
@@ -1000,8 +1160,7 @@ plugin's grants and either performs the operation or returns a
   "jsonrpc": "2.0",
   "id": -42,
   "result": {
-    "bytes":    "SGVsbG8gd29ybGQ=",      // base64
-    "mimeType": "text/markdown"
+    "bytes": "SGVsbG8gd29ybGQ="          // base64
   }
 }
 
@@ -1013,7 +1172,7 @@ plugin's grants and either performs the operation or returns a
     "code":    -32001,
     "message": "CAPABILITY_DENIED",
     "data": {
-      "capability": "filesystem:read:/abs/path/to/posts/hello.md",
+      "capability": "storage:read",
       "reason":     "capability is not in plugin's granted set"
     }
   }
@@ -1023,17 +1182,29 @@ plugin's grants and either performs the operation or returns a
 ### 7.2 Storage API
 
 `ctx.storage` exposes content under the pipeline's `storageRoot`.
-Plugins requesting `filesystem:read:$storageRoot` get:
+Plugins requesting `storage:read` get:
 
-- `ctx.storage.readFile(path: string) → Promise<{ bytes, mimeType }>`
-  → wire `ctx.storage.readFile`
-- `ctx.storage.statFile(path: string) → Promise<StorageStat>`
-  → wire `ctx.storage.statFile`
-- `ctx.storage.listDir(path: string) → Promise<readonly string[]>`
-  → wire `ctx.storage.listDir`
-- `ctx.storage.watch(path: string) → AsyncIterable<StorageChange>`
-  → wire `ctx.storage.watch` (returns a streamId, plugin reads
-  via `stream.value` notifications)
+- `ctx.storage.read(path: string) → Promise<Uint8Array>`
+  → wire `ctx.storage.read`
+- `ctx.storage.stat(path: string) → Promise<StorageStat>`
+  → wire `ctx.storage.stat`
+- `ctx.storage.list(path: string) → AsyncIterable<StorageEntry>`
+  → wire `ctx.storage.list` (bounded snapshot)
+
+FM-B058 mediates `ctx.storage.watch(path)` as a live bounded stream. The
+plugin request returns `{ kind: "stream-handle", streamId }`; it does not
+materialize the potentially unbounded iterator. The runner registers a bounded
+receiver before sending `stream.start { streamId }`, which prevents a value from
+racing ahead of receiver registration. The host then emits `stream.value`,
+followed by exactly one `stream.end` or `stream.error`. Early iterator return
+sends an acknowledged `stream.cancel { streamId: activeRunId,
+capabilityStreamId }` request. The runner retains a bounded tombstone and
+discards already queued frames for that capability stream until the host
+acknowledges that its pump has stopped. Run cancellation, completion, protocol
+failure, and session disposal close every outstanding host iterator even when a
+hostile plugin never starts or cancels it. Hosts admit at most 64 outstanding
+capability streams per active run; runner value/byte bounds and wire
+backpressure apply independently to every stream.
 
 All paths are resolved relative to `storageRoot` on the host
 side. Path arguments containing `..` or absolute paths are
@@ -1041,8 +1212,8 @@ rejected with `INVALID_PATH` (-32002). Symlinks resolved on the
 host side; if a resolved path falls outside `storageRoot`, the
 operation is rejected with `CAPABILITY_DENIED`.
 
-`ctx.storage.writeFile` and `ctx.storage.removeFile` exist for
-emit-shaped stages with `filesystem:write` capability. They go
+`ctx.storage.write` and `ctx.storage.remove` exist for
+emit-shaped stages with `storage:write` capability. They go
 through identical mediation.
 
 ### 7.3 Network API
@@ -1055,10 +1226,9 @@ through identical mediation.
 
 The host parses the URL, checks the request's hostname against
 the plugin's grants (using the FM01 §4.8.2 dotted-suffix rule),
-performs the fetch, and returns the response. Response body is
-streamed back via `stream.value` notifications for large
-responses, or inline as base64 for small ones (threshold:
-1 MiB).
+re-checks every redirect target, performs the fetch, and returns the response.
+The v1 wire returns response bodies inline as base64 and rejects bodies larger
+than 1 MiB. A future protocol version may negotiate response streaming.
 
 DNS resolution happens on the host side; the plugin never
 contacts a name server.
@@ -1084,23 +1254,18 @@ requires `system:time:wallclock`; monotonic is always available
 (needed for `setTimeout`, performance measurement — denying it
 would prevent the runtime from functioning).
 
-- `ctx.time.nowMs() → number` (monotonic, in-process, no RPC)
-- `ctx.time.wallclockMs() → Promise<number>` → wire `ctx.time.wallclockMs`
+- `ctx.time.nowMs() → Promise<number>` → wire `ctx.time.nowMs`
 - `ctx.time.nowIso() → Promise<string>` → wire `ctx.time.nowIso`
+- `ctx.time.monotonicMs() → Promise<number>` → wire `ctx.time.monotonicMs`
 
 In FM03 §8 reproducible-build mode, the host returns a frozen
 wall-clock value to all plugins for the duration of the run.
 
 ### 7.6 Random API
 
-`ctx.random` provides cryptographic randomness, gated by
-`system:random`. (`Math.random()`-style PRNG is available
-in-process; only crypto-grade entropy needs mediation.)
-
-- `ctx.random.bytes(n) → Promise<Uint8Array>` → wire `ctx.random.bytes`
-- `ctx.random.deterministic(name) → number` → in-process,
-  seeded from the stage's cache key. Always available; ensures
-  reproducible builds remain reproducible.
+Cryptographic randomness mediation is not part of protocol v1. Plugins that
+need it remain blocked pending an explicit `system:random` wire addition;
+runners must not expose ambient runtime randomness as a host capability.
 
 ### 7.7 Logger API
 
@@ -1228,11 +1393,12 @@ and yields output values as the user's `run` function emits them.
 
 ### 9.2 Buffering bounds
 
-The host buffers at most `streamBufferSize` (default 64) values
-per stream direction. When the buffer fills, the host stops
-reading from the plugin's stdout, which (via OS pipe buffer
-saturation) eventually blocks the plugin's writes. This is the
-backpressure mechanism.
+The host buffers at most `streamBufferSize` (default 64) values and 8 MiB of
+estimated decoded memory per output stream. Exceeding either limit immediately
+discards the buffered attacker output, fails the stream, and retires the
+session. Protocol v1 does not pause the shared stdout reader because doing so
+would also block responses and cancellation; a future credit protocol may add
+fine-grained backpressure.
 
 ### 9.3 Cancellation during streaming
 
@@ -1240,6 +1406,9 @@ If the host cancels mid-stream, it sends `$/cancelRequest` for
 the active `stage.run`. The runner cancels the user's iterator;
 the user's code (which should be checking the cancellation token)
 unwinds; the runner sends back the cancellation error response.
+The cancellation notification is best-effort: abandoning an output iterator
+must proceed immediately to bounded disposal and TERM/KILL escalation even if
+the plugin has stopped reading stdin and the notification write never drains.
 Buffered stream values are discarded on both sides.
 
 ---
@@ -1309,13 +1478,16 @@ Downstream code can't tell the difference.
 
 | Resource | Default cap | Enforcement |
 |---|---|---|
-| Resident memory | 512 MiB | rlimit on POSIX, Job Object on Windows |
+| Resident memory | 256 MiB | rlimit on POSIX, Job Object on Windows |
 | Virtual memory | 2 GiB | rlimit on POSIX, Job Object on Windows |
 | CPU seconds | 60 | rlimit/cgroup on Linux, Job Object on Windows |
 | Wall-clock per run | 30 s | orchestrator-side timer |
 | File descriptors | 256 | rlimit on POSIX, Process Mitigations on Windows |
 | Concurrent in-flight RPCs | 64 | host-side wire layer |
-| stdout/stderr bytes/sec | 10 MiB/s | host-side wire layer |
+| stdout frame | 8 MiB | host-side wire layer |
+| buffered decoded output | 8 MiB and 64 values per stream | host-side queue |
+| plugin logs | 256 KiB and 1,024 entries per process lifetime | host-side wire layer |
+| stderr | 64 KiB per process lifetime | host-side reader |
 
 The plugin's manifest can request higher caps via `[resources]`
 (§3.2). The host enforces a hard ceiling regardless (configurable
@@ -1361,12 +1533,19 @@ the OS sandbox before the plugin's user code begins executing.
 - **User namespace** (`CLONE_NEWUSER`) so the plugin process
   appears as root inside its own namespace and as a non-
   privileged user outside; combined with **mount namespace**
-  (`CLONE_NEWNS`) to give the plugin a private rootfs.
+  (`CLONE_NEWNS`) to give the plugin a private rootfs. The private root exposes
+  an empty `/dev`; runtimes use inherited standard handles and the allowed
+  `getrandom` syscall rather than host device nodes.
 - **Network namespace** (`CLONE_NEWNET`) with no interfaces,
   defeating any DNS/socket attempts at the kernel level.
 - **PID namespace** so the plugin can't see other host processes.
 - **`no_new_privs`** to prevent setuid escape paths.
 - **cgroups v2** for memory and CPU limits.
+  The host runner MUST delegate a private writable subtree to the launcher and
+  start the launcher from a writable child of that subtree, leaving the
+  delegated root free of processes. The launcher creates a sibling per-plugin
+  leaf and restores itself to its original child before removing that leaf;
+  inability to configure or restore the per-plugin cgroup fails launch.
 
 This is bubblewrap / nsjail-style isolation. The implementation
 SHOULD use `libseccomp` and the `unshare` syscall directly rather
@@ -1393,7 +1572,14 @@ is acceptable as a v0 fallback.
   ```
 - **`taskgated`** is not used; we rely on the in-process profile
   installed during the runner's startup.
-- Resource limits via `setrlimit` (POSIX-compatible).
+- CPU and descriptor limits via `setrlimit` (POSIX-compatible). Modern macOS
+  rejects useful address-space rlimits, so the unsandboxed trusted launcher
+parent monitors the single sandbox child with `proc_pidinfo` and kills it
+when resident memory exceeds the manifest ceiling. No plugin code runs in
+that parent. Before Seatbelt installation, the child becomes a session leader
+and creates a descriptor-closed trusted `kqueue` watcher. The watcher binds to
+stable supervisor/plugin process identities and kills the plugin session if
+the supervisor exits unexpectedly; it exits when the plugin does.
 
 ### 12.3 Windows
 
@@ -1404,13 +1590,50 @@ is acceptable as a v0 fallback.
   - `JOB_OBJECT_LIMIT_ACTIVE_PROCESS = 1` (no child processes)
   - `JOB_OBJECT_LIMIT_BREAKAWAY_OK = 0`
   - `JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE`
-- **Restricted token**: plugin process runs as a restricted user
-  with `SECURITY_MANDATORY_LOW_RID` integrity level.
+- **Restricted token**: plugin process runs with the capability-free,
+  low-integrity token that Windows derives from the AppContainer security
+  capabilities process attribute. The launcher MUST NOT combine a separately
+  created primary token with that attribute.
 - **AppContainer** (Windows 8+) with no capabilities granted —
-  blocks network and most filesystem access at the kernel.
-- **Process Mitigations**: ASLR, DEP, CFG, no remote images, no
-  dynamic code.
-- File-handle limits via Job Object.
+  blocks network and most filesystem access at the kernel. The launcher grants
+  the unique AppContainer SID write access only to plugin scratch, while the
+  pre-existing snapshot directory uses a protected DACL and the directory,
+  entry, and schema receive explicit read/traverse ACLs without write
+  authority. Python plugins receive read/execute authority over a no-follow,
+  ACL-verified, identity-pinned trusted runtime distribution root and its
+  inherited contents so the interpreter can load its standard library and
+  DLLs. A descendant runtime reparse point MUST NOT be recursively followed and
+  is valid only when its opened final target remains strictly beneath that
+  pinned root and both link and target satisfy the strict trusted-writer policy,
+  including rejection of inherit-only dangerous authority. An external target
+  MUST fail closed, while install-tree verification remains reparse-free. Node, Deno, and
+  Bun retain access only to their exact executable. The
+  runtime-root ACE carries no write authority and MUST be revoked through the
+  same pinned handle before the ephemeral AppContainer profile is deleted, including by the
+  asynchronous janitor if the supervisor exits unexpectedly. Runtime DACL
+  grant/revoke operations MUST use a cross-process lock so overlapping plugin
+  launches cannot lose or resurrect another sandbox's ACE. Trust rejection
+  remains fail-closed, but the launcher MUST emit a bounded stderr diagnostic
+  naming the rejected verification stage and an ASCII-escaped, length-bounded
+  inspected path (plus the numeric Win32 error captured immediately for failed
+  system calls) so operators can distinguish policy, traversal-bound, and
+  platform failures without weakening the decision or enabling log injection.
+  The host passes the validated manifest runtime kind to the launcher. For a Node runtime,
+  the launcher supplies `--preserve-symlinks-main`, allowing Node to load the
+  exact, already verified and symlink-free staged entry without canonicalizing
+  every inaccessible ancestor back to the volume root. No equivalent flag is
+  added for other runtime kinds.
+- **Process Mitigations**: ASLR, DEP, CFG, and no remote images. JIT runtimes
+  require dynamic code, so a blanket dynamic-code prohibition is not applied;
+  the capability-free AppContainer and Job boundary remain authoritative.
+- File-handle limits via the trusted launcher parent polling
+  `GetProcessHandleCount`; exceeding the ceiling terminates the Job Object.
+- A private host-to-supervisor control pipe handles routine termination and
+  host-pipe loss. The supervisor terminates the Job and deletes its ephemeral
+  AppContainer profile before exiting; the host never directly kills the
+  supervisor during normal cancellation. A detached, argument-restricted
+  janitor watches the stable supervisor process handle and deletes the profile
+  after abnormal supervisor death as well.
 
 ### 12.4 If the OS doesn't support a feature
 
@@ -1421,6 +1644,74 @@ it. First-party plugins (in-process) are unaffected."
 
 Future revisions may relax this (e.g. allow opt-in unsandboxed
 plugins for trusted dev environments) but **never silently**.
+
+### 12.5 Launcher boundary and snapshot staging
+
+The three platform packages expose structurally compatible
+`PluginProcessFactory` implementations.  A launcher MUST complete the
+following sequence before it returns a process to the host:
+
+1. Recompute the FM02 manifest/entry identity and reject a request whose
+   supplied `manifestHash` does not match the exact entry bytes.
+2. Require an empty, host-created working directory, reject symbolic links,
+   and write the entry and optional config schema with exclusive creation in a
+   host-owned snapshot subdirectory distinct from plugin scratch output.
+3. Re-read the staged files through no-follow handles and compare their bytes
+   and identities with the verified request snapshots.
+4. Resolve the runtime from a host-owned allow-list.  Plugin-controlled
+   `PATH`, shell lookup, command strings, and interpreter flags are forbidden.
+5. Construct a minimal environment containing only launcher-owned runtime and
+   temporary-directory values. Windows additionally supplies the absolute
+   `LOCALAPPDATA` bootstrap path required for AppContainer environment
+   construction; Windows rewrites it to the ephemeral profile before plugin
+   code runs. The ambient host environment is not copied.
+6. Start the checked-in native launcher with only stdin/stdout/stderr
+   inherited.  The native launcher installs resource limits and the complete
+   OS sandbox before it executes the language runtime or binary entry.
+7. Re-hash the entry and schema after installing the OS boundary. Linux exposes
+   them through read-only namespace mounts, macOS explicitly denies writes to
+   snapshot literals, and Windows pins non-delete-sharing file handles. The
+   launcher does not attest readiness until runtime exec has committed.
+8. Return `isolation: "sandboxed"` only after the native launcher has sent a
+   bounded, authenticated readiness record identifying the platform policy,
+   manifest hash, schema hash, and staged-entry hash.  EOF, timeout, malformed
+   data, or an identity mismatch is a launch failure and the process is
+killed.
+
+On POSIX, the host creates a fresh launcher process group. Ordinary signals
+reach both the group and trusted supervisor. Because `SIGKILL` cannot be
+forwarded, the host uses a reserved supervisor control signal; the supervisor
+kills and reaps its directly owned child even if malicious code escaped the
+original group. An unexpected supervisor exit triggers a best-effort group
+kill. JavaScript never retains a bare plugin PID.
+
+The native launcher is a standalone executable rather than an in-process Node
+addon.  This keeps the trusted pre-exec path independent of the JavaScript
+event loop and ensures no plugin bytecode runs in the host process.  Each
+platform package ships its launcher source and builds it on that platform;
+prebuilt or missing helpers are never silently substituted.
+
+The launcher may preserve the one replacement `exec` needed to enter the
+selected runtime.  It MUST deny creation of an additional process.  Runtime
+threads are permitted only where the platform can distinguish threads from
+processes.  A plugin that replaces its own runtime process merely destroys its
+protocol session and cannot obtain another process slot.
+
+### 12.6 Resource-limit defaults and ceilings
+
+Missing manifest values use host-owned defaults: 256 MiB memory, 30 seconds
+wall clock, and 256 descriptors.  Launchers reject non-positive, fractional,
+or platform-unrepresentable values.  The host may lower these values but may
+not raise the manifest request. Wall-clock expiry is enforced by both the
+host's cancellation/kill sequence and an independent native monotonic
+watchdog. The native launcher also enforces memory, CPU, descriptor, and
+single-process ceilings. Limit setup is
+part of sandbox readiness: a failed limit is a failed launch.
+
+Platform policy identities are versioned (`forme-linux-v1`,
+`forme-macos-v1`, and `forme-windows-v1`).  The process attestation uses the
+matching identity as its `isolationProvider`; callers must not accept an
+unknown or unversioned provider.
 
 ---
 
@@ -1443,16 +1734,16 @@ import { Kinds, defineStage } from "@coding-adventures/forme-types";
 const stage = defineStage({
   name:        "@me/my-plugin",
   version:     "1.0.0",
-  apiVersion:  1,
+  apiVersion:  2,
   description: "...",
   consumes:    Kinds.ContentSource,
   produces:    Kinds.ContentNode,
-  capabilities: ["filesystem:read:$storageRoot"],
+  capabilities: ["storage:read"],
   configSchema: null,
   async run(source, _config, ctx) {
     // ctx.storage, ctx.network, ctx.logger, etc. all work —
     // the runner wires them to the host via RPC transparently.
-    const bytes = await ctx.storage.readFile(source.path);
+    const bytes = await ctx.storage.read(source.path);
     // ... do work ...
     return result;
   },
@@ -1462,7 +1753,9 @@ await runPlugin(stage);
 ```
 
 `runPlugin`:
-- Reads `argv[1]` for the handshake token.
+- Reads the selected stage id and optional config-schema identity from the
+  sandbox launcher's bounded bootstrap arguments. Authentication of the exact
+  staged entry remains the launcher's attested responsibility.
 - Reads Content-Length-framed JSON from stdin.
 - Writes Content-Length-framed JSON to stdout.
 - Constructs a `StageContext` whose APIs send RPCs.
@@ -1470,6 +1763,12 @@ await runPlugin(stage);
   AsyncIterable) into the appropriate response shape.
 - Translates user-thrown `StageError`s into wire errors.
 - Hooks `SIGINT`/`SIGTERM` to dispose cleanly.
+
+Host-mediated APIs are asynchronous all the way through the SDK. In
+particular, wall-clock, environment, and host-directory getters return
+promises; a runner must never emulate a synchronous RPC by blocking the
+JavaScript event loop. Monotonic time and cancellation observation remain
+local synchronous operations because neither requires host authority.
 
 ### 13.2 Python SDK — `forme-plugin-runner-py`
 
@@ -1481,13 +1780,13 @@ from forme_plugin_runner import run_plugin, define_stage
 @define_stage(
     name="@me/my-plugin",
     version="1.0.0",
-    api_version=1,
+    api_version=2,
     consumes="ContentSource",
     produces="ContentNode",
-    capabilities=["filesystem:read:$storageRoot"],
+    capabilities=["storage:read"],
 )
 async def my_stage(source, config, ctx):
-    bytes = await ctx.storage.read_file(source["path"])
+    bytes = await ctx.storage.read(source["path"])
     return { "kind": "ContentNode", ... }
 
 if __name__ == "__main__":
@@ -1499,27 +1798,45 @@ if __name__ == "__main__":
 For `binary` runtime plugins:
 
 ```rust
-use forme_plugin_runner::{run_plugin, Stage, StageContext, Kinds};
+use async_trait::async_trait;
+use forme_plugin_runner_rs::{run_plugin, RunnerOptions, Stage, StageContext,
+    StageError, StageInput, StageMetadata, StageOutput, WireValue,
+    KERNEL_API_VERSION};
 
 struct MyStage;
+#[async_trait]
 impl Stage for MyStage {
-    const NAME: &str = "@me/my-plugin";
-    const VERSION: &str = "1.0.0";
-    const API_VERSION: u32 = 1;
-    const CONSUMES: &str = "ContentSource";
-    const PRODUCES: &str = "ContentNode";
+    type Input = ContentSource;
+    type Output = ContentNode;
 
-    async fn run(&self, input: ContentSource, _config: Config, ctx: &StageContext) -> Result<ContentNode, StageError> {
-        let bytes = ctx.storage().read_file(&input.path).await?;
-        // ...
+    fn metadata(&self) -> StageMetadata {
+        StageMetadata::new("@me/my-plugin", "1.0.0", KERNEL_API_VERSION,
+            "ContentSource", "ContentNode", ["storage:read"])
+    }
+
+    async fn run(&self, input: StageInput<ContentSource>, _config: WireValue,
+                 ctx: &StageContext) -> Result<StageOutput<ContentNode>, StageError> {
+        let StageInput::Single(input) = input else {
+            return Err(StageError::new("INVALID_INPUT_SHAPE", "expected one source"));
+        };
+        let bytes = ctx.storage().read(&input.path).await?;
+        Ok(StageOutput::Single(parse(bytes)?))
     }
 }
 
 #[tokio::main]
 async fn main() {
-    run_plugin(MyStage).await;
+    run_plugin(MyStage, RunnerOptions::from_args()).await.unwrap();
 }
 ```
+
+`StageInput<T>` and `StageOutput<T>` make all four single/stream shape
+combinations explicit without erasing the authored `T`. `StageContext` is a
+typed, asynchronous facade over the host-mediated capability methods; it owns
+no ambient filesystem, environment, network, clock, or process authority.
+The runner accepts only canonical bounded `Content-Length` JSON-RPC frames,
+keeps at most one active invocation, bounds every queue and retained stream,
+redacts internal failures, and terminates non-zero when the peer is malformed.
 
 ### 13.4 Conformance suite
 
@@ -1540,9 +1857,10 @@ A new SDK is "ready" when it passes the suite.
 
 ## 14. Package Layout
 
-Six new packages under `code/packages/typescript/` (plus per-OS
-sandbox modules that may be native add-ons or shell-outs to
-existing tools like `bwrap` / `sandbox-exec`).
+Eight packages under `code/packages/typescript/`, plus the Python and Rust
+runner SDKs.  The per-OS packages compile their checked-in native launchers on
+the target platform; they do not download prebuilt helpers or shell out to an
+ambient sandbox tool.
 
 ### 14.1 `@coding-adventures/forme-manifest`
 
@@ -1570,11 +1888,19 @@ the `PluginHost` interface FM03 §12 declared.
 - `src/wire.ts` — Content-Length framing + JSON-RPC plumbing
 - `src/capability-mediator.ts` — handlers for every `ctx.*` method
 - `src/build-context.ts` — builds the wire-backed `StageContext`
-- `src/grants.ts` — read/write `grants.toml`
-- `src/trust-store.ts` — read `~/.forme/trust.toml`
+- `src/persistent-authority.ts` — strict codecs and safe filesystem helpers for
+  `grants.toml` and `~/.forme/trust.toml`
 - `src/resources.ts` — rlimit/Job-Object setup
 - `src/lifecycle.ts` — state machine, kill timers
 - `src/types.ts` — public API
+
+FM-B014 ships this package with an injected process-launch boundary. It
+refuses to load a third-party plugin unless a launcher explicitly reports
+that it established the required isolation boundary and echoes the manifest
+hash for the exact entry bytes it staged for execution. FM-B052 supplies the
+production per-runtime and per-OS launchers, FM-B057 composes them into product
+execution, and FM-B015 closes the Extensible v1 milestone. Host contract tests
+use a dedicated fixture launcher and never weaken the production default.
 
 ### 14.3 `@coding-adventures/forme-plugin-runner-ts`
 
@@ -1588,59 +1914,86 @@ The TypeScript-side SDK. The library a plugin author imports.
 - `src/stream-bridge.ts` — `AsyncIterable` ↔ stream notifications
 - `src/index.ts`
 
-### 14.4 `@coding-adventures/forme-sandbox-linux`
+### 14.4 `@coding-adventures/forme-plugin-runner-conformance`
+
+The language-neutral subprocess driver and canonical FM02 runner corpus.
+
+- `src/driver.ts` — bounded Content-Length/JSON-RPC subprocess peer
+- `src/vectors.ts` — shared fixture identity and ordered vector vocabulary
+- `src/suite.ts` — lifecycle, value, capability, stream, cancellation, error,
+  malformed-peer, and resource-bound scenarios
+- `src/index.ts`
+
+The package imports no SDK implementation. Each language supplies fixture
+commands for the four I/O shapes and must pass the same public corpus.
+
+### 14.5 `@coding-adventures/forme-sandbox-core`
+
+Platform-neutral launch safety shared by all three OS modules.
+
+- exact manifest/entry/schema identity verification
+- exclusive no-follow staging into an empty host-created directory
+- absolute trusted runtime selection and minimal environment construction
+- bounded private-fd readiness attestation and failed-launch cleanup
+
+### 14.6 `@coding-adventures/forme-sandbox-linux`
 
 Linux-only sandbox primitives.
 
 - `src/seccomp.ts` — generates seccomp-bpf programs
 - `src/namespaces.ts` — `unshare` wrapper
 - `src/cgroups.ts` — cgroup v2 setup
-- Native addon (Rust + N-API) for the syscalls Node can't make
-  directly.
+- `native/launcher.c` — checked-in pre-exec helper for namespace, mount,
+  seccomp, no-new-privileges, cgroup/rlimit, and descriptor setup.  It is
+  compiled locally on Linux and is never downloaded as a prebuilt binary.
 
-### 14.5 `@coding-adventures/forme-sandbox-macos`
+### 14.7 `@coding-adventures/forme-sandbox-macos`
 
 macOS-only sandbox primitives.
 
 - `src/sandbox-exec.ts` — generates `sandbox_init` profiles
-- `src/rlimits.ts` — `setrlimit` wrapper
+- `src/rlimits.ts` — resource-limit validation and launcher arguments
+- `native/launcher.c` — checked-in `sandbox_init` + `setrlimit` pre-exec
+  helper, compiled locally on macOS.
 
-### 14.6 `@coding-adventures/forme-sandbox-windows`
+### 14.8 `@coding-adventures/forme-sandbox-windows`
 
 Windows-only sandbox primitives.
 
 - `src/job-object.ts` — Job Object creation and assignment
-- `src/appcontainer.ts` — AppContainer setup
-- `src/restricted-token.ts` — token creation
-- Native addon for Win32 APIs not exposed in Node.
+- `src/appcontainer.ts` — AppContainer setup and token policy
+- `native/launcher.c` — checked-in Win32 helper for AppContainer-derived token,
+  AppContainer, mitigation-policy, Job Object, resource, and inherited-handle
+  setup, compiled locally with MSVC.
 
-### 14.7 Dependency graph
+### 14.9 Dependency graph
 
 ```
-forme-types ◄── forme-errors ◄── forme-capability ◄── forme-manifest
-                                                              │
-                                              ┌──────────────┴──┐
-                                              │                 │
-                              forme-sandbox-* (per OS)   forme-plugin-host
-                                                                 │
-                                              forme-plugin-runner-ts
-                                                                 │
-                                              (depends on forme-stage,
-                                               forme-types — same as any
-                                               in-process stage author)
+forme-types ──► forme-capability ──► forme-manifest ──► forme-plugin-host
+                                                            │
+                                                            ▼
+                                                  forme-sandbox-core
+                                                    ├──► forme-sandbox-linux
+                                                    ├──► forme-sandbox-macos
+                                                    └──► forme-sandbox-windows
+
+forme-stage + forme-types ──► forme-plugin-runner-ts
+
+forme-plugin-runner-conformance ──subprocess-drives──► TypeScript/Python/Rust fixtures
 ```
 
-### 14.8 BUILD ordering
+### 14.10 BUILD ordering
 
 Leaf-to-root, per `lessons.md` convention:
 
 ```
-forme-types → forme-errors → forme-capability → forme-manifest
-                                              → forme-sandbox-linux
-                                              → forme-sandbox-macos
-                                              → forme-sandbox-windows
-                                              → forme-plugin-host
-                                              → forme-plugin-runner-ts
+forme-types → forme-capability → forme-manifest → forme-plugin-host
+                                                  → forme-sandbox-core
+                                                    ├→ forme-sandbox-linux
+                                                    ├→ forme-sandbox-macos
+                                                    └→ forme-sandbox-windows
+forme-stage + forme-types → forme-plugin-runner-ts
+forme-plugin-runner-conformance → each language fixture
 ```
 
 ---
@@ -1686,7 +2039,19 @@ forme-types → forme-errors → forme-capability → forme-manifest
 - Memory of a no-op plugin stays bounded across 10,000
   request cycles.
 
-### 15.4 `forme-sandbox-*` (per OS)
+### 15.4 `forme-plugin-runner-conformance`
+
+- The same public corpus drives SDK fixtures without importing their language
+  implementation.
+- Malformed frames, identities, response envelopes, timeouts, and payloads
+  above the canonical bound fail closed.
+- Capability vectors compare every authority-bearing path, environment name,
+  URL, HTTP field, command argument, and byte payload exactly; aggregate wire
+  traffic and queued work are bounded and failed peers receive bounded
+  TERM-to-KILL cleanup.
+- The TypeScript reference runner passes before Python or Rust work begins.
+
+### 15.5 `forme-sandbox-*` (per OS)
 
 - The sandbox blocks an unauthorised filesystem read (a fixture
   process tries `open("/etc/passwd")`; syscall fails).
@@ -1695,8 +2060,17 @@ forme-types → forme-errors → forme-capability → forme-manifest
 - The sandbox enforces memory limit (a fixture allocates 1 GiB
   with a 256 MiB cap; process killed).
 - The sandbox enforces fd limit.
+- Snapshot races are covered: mutation between verification and staging,
+  symbolic-link substitution, a non-empty work directory, and staged-file
+  replacement all fail before readiness.
+- The child sees no ambient application variables and inherits only the three
+  protocol descriptors. Windows' AppContainer-owned profile variables are
+  allowed only after the OS rewrites their trusted bootstrap values.
+- A missing native primitive, helper build, readiness record, or resource
+  limit fails closed with `SANDBOX_UNAVAILABLE`; no test-only attestation can
+  be selected by a production constructor.
 
-### 15.5 Integration tests
+### 15.6 Integration tests
 
 A fixture plugin published as `code/packages/typescript/forme-fixture-plugin/`
 that does:
@@ -1712,7 +2086,7 @@ end-to-end behaviour. This becomes the smallest possible
 end-to-end FM02 demo, analogous to `forme-hello-world` for
 FM03.
 
-### 15.6 Coverage target
+### 15.7 Coverage target
 
 ≥ 95% line and branch across `forme-manifest` and
 `forme-plugin-host`. ≥ 90% for the per-OS sandbox modules
@@ -1729,7 +2103,7 @@ The targets are deliberately modest:
   spawn to first handshake response. Hot caches help; cold
   start may be 200–400 ms.
 - **RPC round-trip** — < 1 ms for a simple capability call
-  (e.g. `ctx.time.wallclockMs`) on localhost.
+  (e.g. `ctx.time.nowMs`) on localhost.
 - **Throughput** — > 10,000 single-output `stage.run` calls per
   second on a modern laptop, sustained.
 - **Memory overhead** — < 50 MiB per plugin process baseline
@@ -1795,11 +2169,29 @@ accommodate this transparently; no plugin-side changes needed.
 
 ## 18. Success Criteria
 
-FM02 is complete when:
+FM-B014 (host and wire protocol) is complete when:
 
-1. **All six packages exist** under `code/packages/typescript/forme-*`,
-   each with `package.json`, `BUILD`, `BUILD_windows`,
-   `README.md`, `CHANGELOG.md`.
+1. `forme-plugin-host` discovers manifests in deterministic precedence order,
+   resolves `StageRef`s without launching code, and returns typed proxies whose
+   single and streaming descriptors are sourced only from the manifest.
+2. Strict bounded Content-Length framing, handshake/announce parity, lifecycle,
+   diagnostics, typed input/output streaming, capability mediation,
+   cancellation escalation, crash isolation, and cleanup invariants pass
+   cross-process contract tests.
+3. Production loading fails closed when no isolation-establishing launcher is
+   installed. FM-B048 adds bounded manifest-bound grant and trust persistence;
+   the TypeScript/Python/Rust runners, OS sandbox launchers, install UX, product
+   composition, and live watches are complete in FM-B049–FM-B058 and closed by
+   FM-B015.
+
+FM02 as a whole is complete when:
+
+1. **All required TypeScript packages exist** under
+   `code/packages/typescript/forme-*`, each with `package.json`, `BUILD`,
+   `README.md`, and `CHANGELOG.md`; the Python and Rust runner packages carry
+   the equivalent language-native metadata. Native sandbox helpers are built
+   by each target platform's package script and exercised by that platform's
+   CI leg.
 2. **Test coverage ≥ 95%** for `forme-manifest` and
    `forme-plugin-host`, ≥ 90% for the per-OS sandbox modules.
 3. **The fixture plugin** (§15.5) loads end-to-end through
@@ -1824,6 +2216,10 @@ FM02 is complete when:
     one pipeline; the host routes each via the correct
     `PluginHost` (direct import vs subprocess) and the
     orchestrator is none the wiser.
+11. **Live storage watches remain bounded and cancellable** across the host,
+    TypeScript/Python/Rust runners, shared conformance corpus, and contained
+    product adapter; early return, run cancellation, and disposal retire every
+    watcher.
 
 ---
 
@@ -1962,17 +2358,18 @@ FM02 is complete when:
 
 | Method | Params | Result | Capability |
 |---|---|---|---|
-| `ctx.storage.readFile` | `{ path }` | `{ bytes, mimeType }` | `filesystem:read` |
-| `ctx.storage.statFile` | `{ path }` | `StorageStat` | `filesystem:read` |
-| `ctx.storage.listDir` | `{ path }` | `readonly string[]` | `filesystem:read` |
-| `ctx.storage.writeFile` | `{ path, bytes }` | `null` | `filesystem:write` |
-| `ctx.storage.removeFile` | `{ path }` | `null` | `filesystem:write` |
-| `ctx.storage.watch` | `{ path }` | `{ streamId }` | `filesystem:read` |
-| `ctx.network.fetch` | `{ url, init? }` | `FetchResult` | `network:<host>` |
-| `ctx.env.get` | `{ name }` | `string \| null` | `env:<name>` |
-| `ctx.time.wallclockMs` | `{}` | `number` | `system:time` |
-| `ctx.time.nowIso` | `{}` | `string` | `system:time` |
-| `ctx.random.bytes` | `{ n }` | `string` (base64) | `system:random` |
+| `ctx.storage.read` | `{ path, streamId }` | `{ bytes }` | `storage:read` |
+| `ctx.storage.stat` | `{ path, streamId }` | `StorageStat` | `storage:read` |
+| `ctx.storage.list` | `{ path, streamId }` | `readonly StorageEntry[]` | `storage:read` |
+| `ctx.storage.write` | `{ path, bytes, streamId }` | `null` | `storage:write` |
+| `ctx.storage.remove` | `{ path, streamId }` | `null` | `storage:write` |
+| `ctx.storage.watch` | `{ path, streamId }` | `{ kind: "stream-handle", streamId }` | `storage:read` |
+| `stream.cancel` | `{ streamId, capabilityStreamId }` | `null` | active-run ownership of the capability handle |
+| `ctx.network.fetch` | `{ url, init?, streamId }` | `FetchResult` | `network:<host>` |
+| `ctx.env.get` | `{ name, streamId }` | `string \| null` | `env:<name>` |
+| `ctx.time.nowMs` | `{ streamId }` | `number` | `system:time:wallclock` |
+| `ctx.time.nowIso` | `{ streamId }` | `string` | `system:time:wallclock` |
+| `ctx.time.monotonicMs` | `{ streamId }` | `number` | none |
 
 ### B.3 Notifications (either direction)
 
@@ -1982,6 +2379,7 @@ FM02 is complete when:
 | `stream.value` | `{ streamId, value }` | either |
 | `stream.end` | `{ streamId }` | either |
 | `stream.error` | `{ streamId, error }` | either |
+| `stream.start` | `{ streamId }` | plugin → host, capability streams only |
 | `$/cancelRequest` | `{ id }` | host → plugin |
 
 ### B.4 Error codes

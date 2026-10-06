@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Doubt, Contentment, Disappointment, Boredom, Pining",
+  "label": "ch:te-doubt-contentment-disappointment-boredom-pining",
+  "canDo": "I can say doubt, contentment, disappointment, boredom and pining.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C210-benga",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say doubt, contentment, disappointment, boredom and pining.",
+    "assesses": [
+      "TE-LEX-C210-AROGYAM210-03",
+      "TE-LEX-C210-AROGYAM210-04",
+      "TE-LEX-C210-AROGYAM210-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:dd4ff01d53a60480",
+  "lessonIds": [
+    "RU-C216-spokoynyy",
+    "RU-C216-nervnyy",
+    "RU-C216-schastlivyy",
+    "RU-C216-grustnyy",
+    "RU-C216-strogiy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch216.txt",
+  "json": "russian/narration/ch216.json",
+  "textHash": "fnv1a64:8b43e49eb8e7693d",
+  "jsonHash": "fnv1a64:e56b51d2a1c14551",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:d0c8c41bbb5bf067",
+  "lessonIds": [
+    "BN-C127-raja",
+    "BN-C127-rani",
+    "BN-C127-pujari",
+    "BN-C127-karkhana",
+    "BN-C127-mojur"
+  ],
+  "tex": "bengali/book/chapters/ch127-king-queen-priest-factory-labourer.tex"
+}

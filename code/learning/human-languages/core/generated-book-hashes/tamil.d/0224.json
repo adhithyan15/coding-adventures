@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:4a32620a8a16e49a",
+  "lessonIds": [
+    "TA-C224-minavar",
+    "TA-C224-kuyavar",
+    "TA-C224-mutitiruttupavar",
+    "TA-C224-kottanar",
+    "TA-C224-vinnani",
+    "TA-R224-first-pass-words-from-chapters-221-222",
+    "TA-R224-second-pass-words-from-chapters-223-224"
+  ],
+  "tex": "tamil/book/chapters/ch224-fisherman-potter-barber-mason-scientist.tex"
+}

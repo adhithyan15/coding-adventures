@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C211-myshtsa",
+    "language": "russian",
+    "chapter": 211,
+    "sequence": 12450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:372e62529f9d25b3"
+  },
+  "findings": []
+}

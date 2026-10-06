@@ -36,6 +36,7 @@ export type {
   StageRunSummary,
   WatchOptions,
   WatchSession,
+  PluginStageLoader,
 } from "./types.js";
 
 export type {

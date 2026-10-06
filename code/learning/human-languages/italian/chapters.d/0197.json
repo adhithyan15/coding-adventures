@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "Advice, Promise, Discount, Sales, Queue",
+  "label": "ch:it-advice-promise-discount-sales-queue",
+  "canDo": "I can say advice, a promise, a discount, the sales and a queue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-R197-second-pass-words-from-chapters-195-197",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say advice, a promise, a discount, the sales and a queue.",
+    "assesses": [
+      "IT-LEX-C197-COSE197-03",
+      "IT-LEX-C197-COSE197-04",
+      "IT-LEX-C197-COSE197-05"
+    ]
+  }
+}

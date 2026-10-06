@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Necklace, Crown, Lower garment, Clothing, Garment",
+  "label": "ch:sa-necklace-crown-lower-garment-clothing-garment",
+  "canDo": "I can say a necklace, a crown, a lower garment, clothing and a garment.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C192-vasanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say a necklace, a crown, a lower garment, clothing and a garment.",
+    "assesses": [
+      "SA-LEX-C192-THG192-03",
+      "SA-LEX-C192-THG192-04",
+      "SA-LEX-C192-THG192-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C218-qita",
+  "pathSegment": "AR-PATH-218-SHAY218",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-218-SHAY218",
+      "order": 3
+    }
+  ]
+}

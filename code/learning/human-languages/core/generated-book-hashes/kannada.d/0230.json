@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:696a799853061b36",
+  "lessonIds": [
+    "KA-C230-gere",
+    "KA-C230-hundi",
+    "KA-C230-sutkes",
+    "KA-C230-guddali",
+    "KA-C230-kudugolu"
+  ],
+  "tex": "kannada/book/chapters/ch230-line-money-box-suitcase-hoe-sickle.tex"
+}

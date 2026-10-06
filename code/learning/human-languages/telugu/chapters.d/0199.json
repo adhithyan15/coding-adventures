@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "To pound, To fill, To put out to dry, To fold, To arrange",
+  "label": "ch:te-to-pound-to-fill-to-put-out-to-dry-to-fold-to-arrange",
+  "canDo": "I can say to pound, to fill, to put out to dry, to fold and to arrange.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C199-sardu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say to pound, to fill, to put out to dry, to fold and to arrange.",
+    "assesses": [
+      "TE-LEX-C199-KRIYA199-03",
+      "TE-LEX-C199-KRIYA199-04",
+      "TE-LEX-C199-KRIYA199-05"
+    ]
+  }
+}

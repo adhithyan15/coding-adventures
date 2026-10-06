@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:d4de66fee1eac67b",
+  "lessonIds": [
+    "LA-C203-dubito",
+    "LA-C203-quaero",
+    "LA-C203-consumo",
+    "LA-C203-vexo",
+    "LA-C203-obliviscor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch203.txt",
+  "json": "latin/narration/ch203.json",
+  "textHash": "fnv1a64:d4ffc5b4cb7adc4d",
+  "jsonHash": "fnv1a64:8469fd6c29cb74d1",
+  "findings": []
+}

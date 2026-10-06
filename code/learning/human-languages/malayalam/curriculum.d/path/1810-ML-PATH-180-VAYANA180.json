@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-180-VAYANA180",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-180-VAYANA180"
+  ],
+  "after": []
+}

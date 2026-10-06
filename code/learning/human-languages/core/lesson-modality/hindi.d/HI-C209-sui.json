@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C209-sui",
+    "language": "hindi",
+    "chapter": 209,
+    "sequence": 10530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44a44ffd6c41d994"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:d19775d79fad4762",
+  "lessonIds": [
+    "ML-C217-parutti",
+    "ML-C217-pattu",
+    "ML-C217-tukal",
+    "ML-C217-piccala",
+    "ML-C217-cunnampu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch217.txt",
+  "json": "malayalam/narration/ch217.json",
+  "textHash": "fnv1a64:6978c0cec5b25cfc",
+  "jsonHash": "fnv1a64:cd9efbb9f210b2e9",
+  "findings": []
+}

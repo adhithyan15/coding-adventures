@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C201-daur",
+    "language": "urdu",
+    "chapter": 201,
+    "sequence": 11650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6aa9b1b6f1b8cdd"
+  },
+  "findings": []
+}

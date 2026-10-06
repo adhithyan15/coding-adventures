@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:dcf3d6c62dbd4781",
+  "lessonIds": [
+    "PT-C227-papelaria",
+    "PT-C227-livraria",
+    "PT-C227-peixaria",
+    "PT-C227-centro-comercial",
+    "PT-C227-montra"
+  ],
+  "tex": "portuguese/book/chapters/ch227-stationer-s-bookshop-fishmonger-s-shopping-centre-shop-window.tex"
+}

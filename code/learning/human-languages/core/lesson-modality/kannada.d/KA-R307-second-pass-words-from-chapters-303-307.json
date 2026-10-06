@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R307-second-pass-words-from-chapters-303-307",
+    "language": "kannada",
+    "chapter": 307,
+    "sequence": 14880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a0f3c9d9022d87d"
+  },
+  "findings": []
+}

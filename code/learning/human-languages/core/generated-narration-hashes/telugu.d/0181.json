@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:85e32ecd5627a74c",
+  "lessonIds": [
+    "TE-C181-goppa",
+    "TE-C181-vasana",
+    "TE-C181-asaktikaramaina",
+    "TE-C181-adbhutamaina",
+    "TE-C181-mamulu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch181.txt",
+  "json": "telugu/narration/ch181.json",
+  "textHash": "fnv1a64:85df9f9a4d139911",
+  "jsonHash": "fnv1a64:91fa193793054d33",
+  "findings": []
+}

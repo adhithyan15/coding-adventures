@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:19bc6d77de139f88",
+  "lessonIds": [
+    "IT-C164-fidanzata",
+    "IT-C164-sposo",
+    "IT-C164-sposa",
+    "IT-C164-vedovo",
+    "IT-C164-fallimento"
+  ],
+  "tex": "italian/book/chapters/ch164-girlfriend-bridegroom-bride-widower-failure.tex"
+}

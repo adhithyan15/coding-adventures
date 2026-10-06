@@ -1,0 +1,11 @@
+{
+  "id": "PT-C157-apartamento",
+  "pathSegment": "PT-PATH-157-COISAS157",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-157-COISAS157",
+      "order": 0
+    }
+  ]
+}

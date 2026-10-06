@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "Beyond, On this side, At the house of, Face to face, By which way",
+  "label": "ch:la-beyond-on-this-side-at-the-house-of-face-to-face-by-which-way",
+  "canDo": "I can say beyond, on this side, at the house of, face to face and by which way.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "LA-C238-qua",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say beyond, on this side, at the house of, face to face and by which way.",
+    "assesses": [
+      "LA-LEX-C238-LOC238-03",
+      "LA-LEX-C238-LOC238-04",
+      "LA-LEX-C238-LOC238-05"
+    ]
+  }
+}

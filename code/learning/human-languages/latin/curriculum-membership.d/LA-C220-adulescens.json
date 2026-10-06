@@ -1,0 +1,11 @@
+{
+  "id": "LA-C220-adulescens",
+  "pathSegment": "LA-PATH-220-RES220",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-220-RES220",
+      "order": 3
+    }
+  ]
+}

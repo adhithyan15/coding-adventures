@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-202-COSE202",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a racket, a gym, a race, swimming and skiing.",
+  "prerequisites": []
+}

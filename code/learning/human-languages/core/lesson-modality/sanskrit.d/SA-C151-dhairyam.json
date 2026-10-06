@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C151-dhairyam",
+    "language": "sanskrit",
+    "chapter": 151,
+    "sequence": 7810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:904e94ca4a1aee68"
+  },
+  "findings": []
+}

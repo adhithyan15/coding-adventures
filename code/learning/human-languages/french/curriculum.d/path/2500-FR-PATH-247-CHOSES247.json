@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-247-CHOSES247",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "FR-EXT-247-CHOSES247"
+  ],
+  "after": []
+}

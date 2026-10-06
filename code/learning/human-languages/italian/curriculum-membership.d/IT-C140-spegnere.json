@@ -1,0 +1,11 @@
+{
+  "id": "IT-C140-spegnere",
+  "pathSegment": "IT-PATH-140-VERBI140",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-140-VERBI140",
+      "order": 1
+    }
+  ]
+}

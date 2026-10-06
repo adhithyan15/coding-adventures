@@ -1,0 +1,10 @@
+{
+  "id": "UR-EXT-143-A2WRITING",
+  "stage": "A2",
+  "kind": "required",
+  "category": "writing",
+  "canDo": "I can plan and independently write a connected 70–90 word Urdu message for a named reader and familiar purpose without a copyable answer model.",
+  "prerequisites": [
+    "UR-EXT-142-ACT142"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "To discover, To seem, To serve, To suffer, To dream",
+  "label": "ch:fr-to-discover-to-seem-to-serve-to-suffer-to-dream",
+  "canDo": "I can say to discover, to seem, to serve, to suffer and to dream.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C149-rever",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: I can say to discover, to seem, to serve, to suffer and to dream.",
+    "assesses": [
+      "FR-LEX-C149-VERBES149-03",
+      "FR-LEX-C149-VERBES149-04",
+      "FR-LEX-C149-VERBES149-05"
+    ]
+  }
+}

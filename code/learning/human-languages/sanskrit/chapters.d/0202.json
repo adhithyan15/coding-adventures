@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "Wayfarer, Direction, East, West, North",
+  "label": "ch:sa-wayfarer-direction-east-west-north",
+  "canDo": "I can say a wayfarer, a direction, the east, the west and the north.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R202-second-pass-words-from-chapters-200-202",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say a wayfarer, a direction, the east, the west and the north.",
+    "assesses": [
+      "SA-LEX-C202-TRV202-03",
+      "SA-LEX-C202-TRV202-04",
+      "SA-LEX-C202-TRV202-05"
+    ]
+  }
+}

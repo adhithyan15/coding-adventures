@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C274-otium",
+    "language": "latin",
+    "chapter": 274,
+    "sequence": 14970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f109b31d91b50dde"
+  },
+  "findings": []
+}

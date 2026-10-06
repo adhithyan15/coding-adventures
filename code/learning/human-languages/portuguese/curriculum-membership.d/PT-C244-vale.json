@@ -1,0 +1,11 @@
+{
+  "id": "PT-C244-vale",
+  "pathSegment": "PT-PATH-244-COISAS244",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-244-COISAS244",
+      "order": 2
+    }
+  ]
+}

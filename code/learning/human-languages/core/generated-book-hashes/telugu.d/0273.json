@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:94e0a42550789025",
+  "lessonIds": [
+    "TE-C273-vaddi",
+    "TE-C273-billu",
+    "TE-C273-taggimpu",
+    "TE-C273-sarukulu",
+    "TE-C273-konugolu"
+  ],
+  "tex": "telugu/book/chapters/ch273-interest-bill-discount-groceries-purchase.tex"
+}

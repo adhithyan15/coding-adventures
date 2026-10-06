@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:e4683edb1832a18b",
+  "lessonIds": [
+    "FA-C224-kharandan",
+    "FA-C224-feshar-dadan",
+    "FA-C224-vasl-kardan",
+    "FA-C224-joda-kardan",
+    "FA-C224-pust-kandan"
+  ],
+  "tex": "persian/book/chapters/ch224-to-scratch-to-press-to-connect-to-separate-to-peel.tex"
+}

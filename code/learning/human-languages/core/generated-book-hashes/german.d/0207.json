@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:b36c8a55b0bd1182",
+  "lessonIds": [
+    "GE-C207-krankenwagen",
+    "GE-C207-feuerwehr",
+    "GE-C207-dieb",
+    "GE-C207-diebstahl",
+    "GE-C207-gericht"
+  ],
+  "tex": "german/book/chapters/ch207-an-ambulance-the-fire-brigade-a-thief-a-theft-a-court.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C255-recyclage",
+  "pathSegment": "FR-PATH-255-CHOSES255",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-255-CHOSES255",
+      "order": 1
+    }
+  ]
+}

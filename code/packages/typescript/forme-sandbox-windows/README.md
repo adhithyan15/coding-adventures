@@ -1,0 +1,51 @@
+# forme-sandbox-windows
+
+Production Windows process isolation for third-party Forme plugins.
+
+The checked-in native launcher creates a capability-free AppContainer-derived
+low-integrity restricted token, applies process mitigations, starts the plugin
+suspended, assigns it to a single-process memory/CPU Job Object, restricts
+inherited handles to protocol stdio, and monitors the process handle count.
+The supervisor duplicates those three handles as explicitly inheritable copies
+before applying the child handle allow-list, so Node and Python can use their
+normal buffered stdio implementations without gaining another host handle.
+It pins verified entry/schema handles without delete sharing until process exit
+and uses a cryptographically random ephemeral AppContainer profile name that is
+deleted on every post-creation exit path. Closing the launcher kills the job.
+Python plugins receive read/execute access to a no-follow, ACL-verified, pinned
+runtime distribution root and its inherited contents so the interpreter can
+load its standard library and runtime DLLs. Node, Deno, and Bun retain access
+only to their exact executable. The temporary SID grant carries no write
+authority and is revoked through the same stable handle before profile
+deletion, including through the abnormal-exit janitor. Descendant runtime
+aliases are not recursively followed and are valid only when their opened
+final target remains inside that pinned, trusted root and both link and target
+pass the strict writer check. External targets and inherit-only untrusted
+writers are rejected; install-tree verification remains reparse-free.
+Every trust rejection remains fail-closed and emits one bounded stderr
+diagnostic with the failed verification stage and an ASCII-escaped inspected
+path; failed Win32 calls also include their immediately captured numeric error.
+This makes native Windows failures actionable without exposing a fallback,
+allowing log injection, or weakening the trust policy.
+For Node plugins the launcher preserves the already verified, symlink-free main
+path, avoiding a broader AppContainer ACL solely for Node's root-to-entry
+canonicalization walk.
+Host cancellation travels over a private control pipe so routine termination
+still passes through Job and profile cleanup instead of killing the supervisor.
+A detached profile janitor watches the stable supervisor handle and removes the
+profile after abnormal supervisor death.
+
+`createWindowsInstallAclVerifier()` invokes a separate native inspection mode
+before installation or discovery. It opens every named object without
+following reparse points, accepts write authority only for the current user,
+built-in administrators, Local System, or the TrustedInstaller service, and
+rechecks file identities after a bounded walk. It evaluates inherit-only
+authority and every ancestor through the volume root so an untrusted principal
+cannot replace the verified root by renaming a writable parent. Inherit-only
+write rules are rejected on the install root where transaction children are
+created; existing ancestors are judged by their effective replacement
+authority. Unknown owners, null or malformed DACLs, untrusted allow ACEs,
+reparse points, races, and resource-limit exhaustion fail closed.
+
+Use `createWindowsSandboxFactory()` as the `processFactory` passed to
+`createPluginHost()`.

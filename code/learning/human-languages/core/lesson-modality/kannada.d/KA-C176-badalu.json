@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C176-badalu",
+    "language": "kannada",
+    "chapter": 176,
+    "sequence": 7990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9e6aa2cc9ef4d89"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C174-salutare",
+  "pathSegment": "IT-PATH-174-VERBI174",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-174-VERBI174",
+      "order": 2
+    }
+  ]
+}

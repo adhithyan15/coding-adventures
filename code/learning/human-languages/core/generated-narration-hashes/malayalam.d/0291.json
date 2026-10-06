@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:533a2f148c0f54bf",
+  "lessonIds": [
+    "ML-C291-valli",
+    "ML-C291-jantu",
+    "ML-C291-man",
+    "ML-C291-kala3",
+    "ML-C291-cennaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch291.txt",
+  "json": "malayalam/narration/ch291.json",
+  "textHash": "fnv1a64:29d3dc8467c955ac",
+  "jsonHash": "fnv1a64:4561ba6643ab4ebd",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C225-marubhumih",
+    "language": "sanskrit",
+    "chapter": 225,
+    "sequence": 13120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e0baa8b14a8005f"
+  },
+  "findings": []
+}

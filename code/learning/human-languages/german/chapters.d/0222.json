@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Thrifty, Sporty, Strict, Likeable, Dead",
+  "label": "ch:ge-thrifty-sporty-strict-likeable-dead",
+  "canDo": "I can say thrifty, sporty, strict, likeable and dead.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C222-tot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say thrifty, sporty, strict, likeable and dead.",
+    "assesses": [
+      "GE-LEX-C222-QUAL222-03",
+      "GE-LEX-C222-QUAL222-04",
+      "GE-LEX-C222-QUAL222-05"
+    ]
+  }
+}

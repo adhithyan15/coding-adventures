@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:f370a68745a9eece",
+  "lessonIds": [
+    "UR-C228-tairaki",
+    "UR-C228-tim",
+    "UR-C228-khilari",
+    "UR-C228-film",
+    "UR-C228-natak"
+  ],
+  "tex": "urdu/book/chapters/ch228-swimming-team-player-film-play.tex"
+}

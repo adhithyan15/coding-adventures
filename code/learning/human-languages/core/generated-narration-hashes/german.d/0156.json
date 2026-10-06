@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:87cbd588cc47e56b",
+  "lessonIds": [
+    "GE-C156-rezept",
+    "GE-C156-schmerz",
+    "GE-C156-erkaeltung",
+    "GE-C156-husten",
+    "GE-C156-grippe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch156.txt",
+  "json": "german/narration/ch156.json",
+  "textHash": "fnv1a64:010e653ba774190a",
+  "jsonHash": "fnv1a64:02395bb856712d18",
+  "findings": []
+}

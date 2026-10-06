@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C271-ilakhe",
+    "language": "kannada",
+    "chapter": 271,
+    "sequence": 12980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54cc728c49eb5bda"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "Ointment, Drops, Thermometer, Clinic, Ambulance",
+  "label": "ch:ru-ointment-drops-thermometer-clinic-ambulance",
+  "canDo": "I can say an ointment, drops, a thermometer, a clinic and an ambulance.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C238-skoraya-pomoshch",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say an ointment, drops, a thermometer, a clinic and an ambulance.",
+    "assesses": [
+      "RU-LEX-C238-ZDOROV238-03",
+      "RU-LEX-C238-ZDOROV238-04",
+      "RU-LEX-C238-ZDOROV238-05"
+    ]
+  }
+}

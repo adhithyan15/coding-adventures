@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "Border, Government, Nation, Island, Restaurant",
+  "label": "ch:bn-border-government-nation-island-restaurant",
+  "canDo": "I can say a border, a government, a nation, an island and a restaurant.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "BN-C244-restora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say a border, a government, a nation, an island and a restaurant.",
+    "assesses": [
+      "BN-LEX-C244-JAYGA244-03",
+      "BN-LEX-C244-JAYGA244-04",
+      "BN-LEX-C244-JAYGA244-05"
+    ]
+  }
+}

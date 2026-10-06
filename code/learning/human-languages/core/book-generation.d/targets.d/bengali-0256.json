@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 256,
+  "output": "bengali/book/chapters/ch256-culture-history-science-art-literature.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

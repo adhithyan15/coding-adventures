@@ -1,0 +1,19 @@
+{
+  "chapter": 259,
+  "title": "University, Mark, Teacher, Mistake, History",
+  "label": "ch:it-university-mark-teacher-mistake-history",
+  "canDo": "I can say a university, a mark, a teacher, a mistake and history.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-R259-second-pass-words-from-chapters-255-259",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can say a university, a mark, a teacher, a mistake and history.",
+    "assesses": [
+      "IT-LEX-C259-LAV259-03",
+      "IT-LEX-C259-LAV259-04",
+      "IT-LEX-C259-LAV259-05"
+    ]
+  }
+}

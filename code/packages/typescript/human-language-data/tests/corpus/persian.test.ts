@@ -36,7 +36,17 @@ it("pins Persian lesson-content budgets", () =>
     // 392 -> 689: the A1 tranche, chapters 79-135. 285 word lessons
     // (twenty-five verbs) in six runs, each closing on two reviews. No idiom,
     // sense or culture claim.
-    lessons: 689,
+    // 689 -> 711: chapters 136-139 realize the last four A2 spine nodes (negation and questions, the past, the future, practical texts).
+    // 711 -> 916: the first A2 vocabulary tranche, chapters 140-178: 195
+    // headwords, fifty of them verbs, in five runs each closed by two
+    // reviews.
+    // 916 -> 1116: the second A2 vocabulary tranche, chapters 179-216: 190
+    // headwords, fifty of them verbs.
+    // 1116 -> 1304: the third A2 vocabulary tranche, chapters 217-252: 180
+    // headwords, fifty of them verbs, which brings Persian to A2.
+    // 1304 -> 1482: the fourth A2 vocabulary tranche, chapters 253-286: 170
+    // headwords, fifty of them verbs, beyond the A2 floor.
+    lessons: 1482,
     idioms: 4,
     senses: 4,
     cultureClaims: 4,

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-221-CHOSES221",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say scissors, a watch, pyjamas, a button and a peach.",
+  "prerequisites": []
+}

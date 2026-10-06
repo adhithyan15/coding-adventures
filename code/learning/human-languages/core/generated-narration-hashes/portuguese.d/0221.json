@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:dc2dc4ac66b9c2e9",
+  "lessonIds": [
+    "PT-C221-genro",
+    "PT-C221-nora",
+    "PT-C221-noivo",
+    "PT-C221-noiva",
+    "PT-C221-viuvo-a-viuva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch221.txt",
+  "json": "portuguese/narration/ch221.json",
+  "textHash": "fnv1a64:05dff906824c2bb9",
+  "jsonHash": "fnv1a64:c1e06b7f238ce10d",
+  "findings": []
+}

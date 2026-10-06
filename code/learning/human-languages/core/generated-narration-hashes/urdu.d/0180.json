@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:abbee5dad17cf914",
+  "lessonIds": [
+    "UR-C180-sharmana",
+    "UR-C180-jhagarna",
+    "UR-C180-manana",
+    "UR-C180-milana",
+    "UR-C180-jorna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch180.txt",
+  "json": "urdu/narration/ch180.json",
+  "textHash": "fnv1a64:bac508c1943782d5",
+  "jsonHash": "fnv1a64:6c06036fc0a30dde",
+  "findings": []
+}

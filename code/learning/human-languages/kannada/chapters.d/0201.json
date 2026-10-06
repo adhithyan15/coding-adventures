@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "To postpone, To explain, To pass, To remember, To print",
+  "label": "ch:ka-to-postpone-to-explain-to-pass-to-remember-to-print",
+  "canDo": "I can say to postpone, to explain, to pass, to remember and to print.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C201-mudrisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say to postpone, to explain, to pass, to remember and to print.",
+    "assesses": [
+      "KA-LEX-C201-KRIYE201-03",
+      "KA-LEX-C201-KRIYE201-04",
+      "KA-LEX-C201-KRIYE201-05"
+    ]
+  }
+}

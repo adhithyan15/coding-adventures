@@ -1,0 +1,11 @@
+{
+  "id": "FA-C224-pust-kandan",
+  "pathSegment": "FA-PATH-224-KONESH224",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-224-KONESH224",
+      "order": 4
+    }
+  ]
+}

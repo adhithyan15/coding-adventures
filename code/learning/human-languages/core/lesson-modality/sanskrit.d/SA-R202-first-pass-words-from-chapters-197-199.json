@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R202-first-pass-words-from-chapters-197-199",
+    "language": "sanskrit",
+    "chapter": 202,
+    "sequence": 11470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:498e1c88eaf7be28"
+  },
+  "findings": []
+}

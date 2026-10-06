@@ -1,0 +1,11 @@
+{
+  "id": "GE-C217-klug",
+  "pathSegment": "GE-PATH-217-QUAL217",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-217-QUAL217",
+      "order": 1
+    }
+  ]
+}

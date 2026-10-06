@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:7cd24da34e2b9bf3",
+  "lessonIds": [
+    "SA-C219-bilvam",
+    "SA-C219-narangam",
+    "SA-C219-kapitthah",
+    "SA-C219-sevaphalam",
+    "SA-C219-cipitakah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch219.txt",
+  "json": "sanskrit/narration/ch219.json",
+  "textHash": "fnv1a64:9a39b8605cf45e16",
+  "jsonHash": "fnv1a64:a8135b51c61d4203",
+  "findings": []
+}

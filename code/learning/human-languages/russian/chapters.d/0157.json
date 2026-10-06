@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "Light blue, Sweet, Sour, Tasty, Comfortable",
+  "label": "ch:ru-light-blue-sweet-sour-tasty-comfortable",
+  "canDo": "I can say light blue, sweet, sour, tasty and comfortable.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-R157-second-pass-words-from-chapters-153-157",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: I can say light blue, sweet, sour, tasty and comfortable.",
+    "assesses": [
+      "RU-LEX-C157-KACH157-03",
+      "RU-LEX-C157-KACH157-04",
+      "RU-LEX-C157-KACH157-05"
+    ]
+  }
+}

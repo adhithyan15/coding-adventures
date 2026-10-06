@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C253-niyama",
+    "language": "kannada",
+    "chapter": 253,
+    "sequence": 12040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cedb137b32079da6"
+  },
+  "findings": []
+}

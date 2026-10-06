@@ -1,0 +1,11 @@
+{
+  "id": "RU-C212-oktyabr",
+  "pathSegment": "RU-PATH-212-VREMYA212",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-212-VREMYA212",
+      "order": 4
+    }
+  ]
+}

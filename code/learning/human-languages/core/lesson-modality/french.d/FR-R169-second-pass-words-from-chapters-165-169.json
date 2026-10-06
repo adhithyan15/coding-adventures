@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R169-second-pass-words-from-chapters-165-169",
+    "language": "french",
+    "chapter": 169,
+    "sequence": 8530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbd7ddb557d72378"
+  },
+  "findings": []
+}

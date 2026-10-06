@@ -1,0 +1,11 @@
+{
+  "id": "LA-C182-publicus",
+  "pathSegment": "LA-PATH-182-QUAL182",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-182-QUAL182",
+      "order": 0
+    }
+  ]
+}

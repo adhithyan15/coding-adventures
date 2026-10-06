@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:e575fbfcce35139f",
+  "lessonIds": [
+    "SA-C237-kumbhakarah",
+    "SA-C237-svarnakarah",
+    "SA-C237-lohakarah",
+    "SA-C237-tantuvayah",
+    "SA-C237-rajakah"
+  ],
+  "tex": "sanskrit/book/chapters/ch237-potter-goldsmith-blacksmith-weaver-washerman.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "To melt, To pick, To bark, To comfort, To shake hands",
+  "label": "ch:ta-to-melt-to-pick-to-bark-to-comfort-to-shake-hands",
+  "canDo": "I can say to melt, to pick, to bark, to comfort and to shake hands.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C258-kai-kulukku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can say to melt, to pick, to bark, to comfort and to shake hands.",
+    "assesses": [
+      "TA-LEX-C258-ACT258-03",
+      "TA-LEX-C258-ACT258-04",
+      "TA-LEX-C258-ACT258-05"
+    ]
+  }
+}

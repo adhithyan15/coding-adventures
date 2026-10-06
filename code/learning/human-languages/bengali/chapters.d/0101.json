@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Cooking, To join, To fill, To burn, Sewing",
+  "label": "ch:bn-cooking-to-join-to-fill-to-burn-sewing",
+  "canDo": "I can say cooking, to join, to fill, to burn and sewing.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C101-selai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: I can say cooking, to join, to fill, to burn and sewing.",
+    "assesses": [
+      "BN-LEX-C101-ACT101-03",
+      "BN-LEX-C101-ACT101-04",
+      "BN-LEX-C101-ACT101-05"
+    ]
+  }
+}

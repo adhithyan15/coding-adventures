@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C197-nere",
+    "language": "malayalam",
+    "chapter": 197,
+    "sequence": 8700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cc9cdf1b7a9f502"
+  },
+  "findings": []
+}

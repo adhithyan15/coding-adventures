@@ -235,6 +235,27 @@ impl ComponentRegistry {
     pub fn is_empty(&self) -> bool {
         self.entries.is_empty()
     }
+
+    /// The registered components declared in the C# namespace
+    /// `namespace` (an entry whose xmlns is `using:<namespace>`), sorted.
+    ///
+    /// These are the ones that share the generated controls' namespace --
+    /// `mosaic-compile`'s single-file mode registers the package's sibling
+    /// exports this way -- so a layout variant's type must not spell one of
+    /// their names (UI48 §7.11). A component in another namespace is
+    /// referenced only through its own XAML prefix (`<grid:Card/>`), never
+    /// by a bare C# name, so it cannot collide.
+    pub fn components_in_namespace(&self, namespace: &str) -> Vec<String> {
+        let xmlns = format!("using:{namespace}");
+        let mut tags: Vec<String> = self
+            .entries
+            .iter()
+            .filter(|(_, entry)| entry.xmlns_value == xmlns)
+            .map(|(tag, _)| tag.clone())
+            .collect();
+        tags.sort();
+        tags
+    }
 }
 
 /// Options controlling the emitter's behaviour.
@@ -286,6 +307,39 @@ pub struct EmitOptions {
     /// `require_runtime` ignores this: that MainWindow takes every value from
     /// the Mosaic runtime and has no stub to replace.
     pub slot_values: HashMap<String, String>,
+
+    /// The root component's layout variants the window switches between at
+    /// run time, in rule order (UI48 §7.11, ENV3). Empty -- the default --
+    /// mounts the default layout only and leaves every project file
+    /// byte-for-byte as before. Each variant's control must be in the
+    /// project as `<Component>.<variant>.xaml(.cs)`, emitted by
+    /// [`from_pipeline_variant`]. A shell whose root is a `HostDialog` shows
+    /// only the button that opens it, so it does not select (see
+    /// [`layout_root_is_dialog`]).
+    pub layout_variants: Vec<LayoutChoice>,
+
+    /// Every component the package exports, the root included (UI48
+    /// §7.11). The WinUI project compiles every export into one namespace,
+    /// so a variant's type, `<Component><Variant>`, may not take a name
+    /// another export declares (`Card` + `touch` beside an exported
+    /// `CardTouch`). Empty -- the default -- checks the component against
+    /// itself and the shell only.
+    pub package_exports: Vec<String>,
+}
+
+/// One run-time layout choice (UI48 §7.11): show `variant` when every
+/// condition holds.
+///
+/// Conditions are keyed by `mosaic-app-runtime`'s **wire names** -- the keys
+/// `MosaicRuntimeHost.EnvironmentReport` answers (`sizeClass`, `pointer`,
+/// ...) -- not the manifest's kebab-case axis keys, because the generated
+/// selector tests them against that report. The package builder translates
+/// them (`EnvironmentAxis::wire_name`); both halves are checked again here
+/// before they are written into C#.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LayoutChoice {
+    pub variant: String,
+    pub conditions: Vec<(String, String)>,
 }
 
 impl Default for EmitOptions {
@@ -298,6 +352,8 @@ impl Default for EmitOptions {
             use_community_datagrid: false,
             package_mode: false,
             slot_values: HashMap::new(),
+            layout_variants: Vec::new(),
+            package_exports: Vec::new(),
         }
     }
 }
@@ -362,6 +418,13 @@ pub enum PipelineEmitError {
     /// compile time rather than escaped, since XML-escaping the value
     /// does nothing to make an unsafe scheme safe.
     UnsafeUriScheme(String),
+
+    /// A layout variant (UI48 §7.11) that cannot become a C# type of its
+    /// own: its name does not make one, the type would take a name the
+    /// component, another export or the WinUI shell already declares, two
+    /// choices name one type, or a choice's condition is not a wire-name
+    /// key with a lowercase value. The message names the variant and why.
+    InvalidLayoutVariant(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -404,6 +467,9 @@ impl std::fmt::Display for PipelineEmitError {
                  set (http, https, mailto) -- NavigateUri would hand it to the OS shell \
                  launcher. Use an allowed scheme, or `external: false` for in-app routing."
             ),
+            PipelineEmitError::InvalidLayoutVariant(detail) => {
+                write!(f, "invalid layout variant: {detail}")
+            }
         }
     }
 }
@@ -437,9 +503,32 @@ pub fn from_pipeline(
             moslayout: layout.component_name.clone(),
         });
     }
+    // 1a. The layout choices a project shell switches between (UI48
+    //     §7.11) are checked before anything is generated: each becomes a
+    //     C# type name, a string literal and a tuple of string literals.
+    validate_layout_choices(
+        &interface.component,
+        &options.layout_variants,
+        &name_owners(registry, options),
+    )?;
+    emit_component(interface, layout, style, registry, options, &interface.component, None)
+}
 
-    let name = &interface.component;
-
+/// Emit one layout of `interface` as the WinUI type `name`.
+///
+/// `variant` is `None` for the default layout, which declares the
+/// component's interface (the `<Component>Event` union) and, in project
+/// mode, the shell. A variant (UI48 §7.11) declares neither: its control
+/// raises the default's union, and only the default builds a shell.
+fn emit_component(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    registry: Option<&ComponentRegistry>,
+    options: &EmitOptions,
+    name: &str,
+    variant: Option<&str>,
+) -> Result<XamlEmitResult, PipelineEmitError> {
     // 2. Build a part-name → CSS-fragment map from the mosstyle source.
     //    Used by the style inliner inside each primitive emitter. PR-1's
     //    inliner only consumes base props; state blocks and the full
@@ -450,6 +539,7 @@ pub fn from_pipeline(
     //    walker so `For`/`If` can register helpers, RowVms, and the
     //    converter requirement (PR-2).
     let mut ctx = EmitContext::new(name, &interface.slots, &interface.emits);
+    ctx.interface_name = &interface.component;
     ctx.registry = registry;
 
     // 3a. Pick the XAML root shape (UserControl vs ContentDialog)
@@ -468,7 +558,12 @@ pub fn from_pipeline(
         &ctx,
         shape,
     )?;
-    let events = emit_events(name, &interface.emits, options)?;
+    // A variant declares no union of its own: it raises the default's, which
+    // the default layout's `<Component>.Event.cs` declares once.
+    let events = match variant {
+        None => emit_events(name, &interface.emits, options)?,
+        Some(_) => String::new(),
+    };
 
     // 5. Assemble the result. RowVms become entries in `for_view_models`;
     //    the `if_helpers` field remains empty because the emitter inlines
@@ -513,7 +608,7 @@ pub fn from_pipeline(
     // Fix B1: when --emit-project is on, populate the full project
     // shell (csproj + App + MainWindow + manifest + build.ps1 + README).
     // The CLI then writes them next to the component triple.
-    let project = if options.emit_project {
+    let project = if options.emit_project && variant.is_none() {
         Some(build_project_files(
             name,
             &interface.slots,
@@ -529,11 +624,294 @@ pub fn from_pipeline(
         xaml,
         code_behind,
         events,
-        component_name: name.clone(),
+        component_name: name.to_string(),
         project,
         for_view_models,
         if_helpers,
     })
+}
+
+// =====================================================================
+// UI48 ENV2 (§7.11) — a layout variant is a WinUI type of its own
+// =====================================================================
+//
+// One WinUI project compiles every `.xaml` and `.cs` under it into ONE C#
+// namespace (`Mosaic.Generated`), so two layouts of a component can share
+// an app only if they declare nothing twice:
+//
+//   EngramApp.xaml(.cs)        partial class EngramApp      : UserControl
+//   EngramApp.Event.cs         abstract record EngramAppEvent  <- once
+//   EngramApp.touch.xaml(.cs)  partial class EngramAppTouch : UserControl
+//                              event EventHandler<EngramAppEvent> Dispatch
+//
+// The variant's control is its own type, `<Component><Variant>`, and every
+// type its layout needs (row view models `EngramAppTouch_DeckVm`, support
+// controls `EngramAppTouchMosaicSlider`, ...) is named after it, exactly as
+// the default's are named after `EngramApp`. Its interface is not: the
+// event union is the component's, emitted once by the default, and the
+// variant's handlers construct its cases. So the window's one
+// `OnComponentDispatch(object?, EngramAppEvent)` serves every root.
+//
+// What the variant's type may NOT be -- every name already in the
+// namespace that `<Component><Variant>` could spell:
+//
+//   | owner                         | names                                  |
+//   |-------------------------------|----------------------------------------|
+//   | each export X (the root too)  | `X`, `XEvent`, `XMosaic...` (support)  |
+//   | the WinUI shell               | [`SHELL_RESERVED_NAMES`]               |
+//   | another choice of this shell  | its type, and its `VMosaic...` support |
+//   | (and, in the package builder, |   types (`CardTouchMosaicSlider` is    |
+//   |  every export's variants)     |   `Card.touch`'s, not a variant's)     |
+//
+// Row view models are `X_<Alias>Vm`; a variant type has no `_`, so it can
+// never spell one. A dependency package's components add no names: the
+// package builder composes them into the layout that mounts them (no
+// registry, no `<pkg:X/>` reference). A `ComponentRegistry`'s components
+// (`mosaic-compile`'s single-file mode registers the package's sibling
+// exports) are owners when they are declared in the generated namespace;
+// one in another namespace is reached only through its XAML prefix and
+// cannot collide with a bare C# name.
+
+/// The C# type of a layout variant's control: the component name followed
+/// by the variant in PascalCase, `-` and `_` both separating words --
+/// `EngramApp` + `touch` is `EngramAppTouch`, `Grid` + `task-list` is
+/// `GridTaskList`. The same rule as SwiftUI, Compose, Flutter and Qt.
+///
+/// `None` for a variant that cannot make an identifier: empty, a character
+/// other than ASCII letters, digits, `-` and `_`, or an empty word (`a--b`,
+/// `-a`). The component name is the type's prefix, so the result never
+/// starts with a digit.
+pub fn variant_type_name(component: &str, variant: &str) -> Option<String> {
+    let separator = |character: char| character == '-' || character == '_';
+    let valid = !variant.is_empty()
+        && variant
+            .chars()
+            .all(|character| character.is_ascii_alphanumeric() || separator(character))
+        && variant.split(separator).all(|part| !part.is_empty());
+    if !valid {
+        return None;
+    }
+    let pascal: String = variant
+        .split(separator)
+        .map(|part| {
+            let mut characters = part.chars();
+            let first = characters.next().expect("parts are non-empty");
+            first.to_ascii_uppercase().to_string() + characters.as_str()
+        })
+        .collect();
+    Some(format!("{component}{pascal}"))
+}
+
+/// The public C# names a generated WinUI project already declares in its
+/// namespace beside the components:
+///
+/// | file                              | names                                  |
+/// |-----------------------------------|----------------------------------------|
+/// | `App.xaml.cs`, `MainWindow.xaml.cs` | `App`, `MainWindow`                  |
+/// | WinUI's generated entry point     | `Program`                              |
+/// | `MosaicRuntimeHost.cs`            | `MosaicRuntimeHost`, `MosaicRuntimeResult`, `MosaicRuntimeException` |
+/// | `MosaicPlatformEffects.cs`        | `MosaicPlatformEffects`, `MosaicPlatformRouter`, `MosaicRuntimeHostEffects`, `WinUIMosaicFileDialogs`, `IMosaicFileDialogs`, `IMosaicPlatformEffectHost` |
+/// | a package's own host (found by reflection) | `MosaicHost`                  |
+/// | the emitter's converters          | `BoolToVisibilityConverter`, `FocusStateToBoolConverter`, `StringEqualsConverter` |
+///
+/// A layout variant's type must not take one (component `Mosaic` + variant
+/// `host` would name `MosaicHost`; `Main` + `window` would name the shell's
+/// own window). The shell's names are pinned by an emitter test against the
+/// generated `App.xaml.cs`, both `MainWindow.xaml.cs` shapes and the
+/// converters, and the binding's by a builder test against
+/// `mosaic-app-bindings`' XAML templates, so a new public type in either
+/// fails a test until it is listed here.
+pub const SHELL_RESERVED_NAMES: &[&str] = &[
+    "App",
+    "MainWindow",
+    "Program",
+    "MosaicRuntimeHost",
+    "MosaicRuntimeResult",
+    "MosaicRuntimeException",
+    "MosaicPlatformEffects",
+    "MosaicPlatformRouter",
+    "MosaicRuntimeHostEffects",
+    "WinUIMosaicFileDialogs",
+    "IMosaicFileDialogs",
+    "IMosaicPlatformEffectHost",
+    "MosaicHost",
+    "BoolToVisibilityConverter",
+    "FocusStateToBoolConverter",
+    "StringEqualsConverter",
+];
+
+/// Why `type_name` -- a variant of `component` -- cannot be declared, or
+/// `None` when it can. See the table above [`variant_type_name`].
+fn reserved_variant_type(component: &str, type_name: &str, exports: &[String]) -> Option<String> {
+    if SHELL_RESERVED_NAMES.contains(&type_name) {
+        return Some(format!("`{type_name}` is a type the WinUI shell declares"));
+    }
+    // The component itself is always an owner, listed in `exports` or not.
+    let owners = std::iter::once(component).chain(exports.iter().map(String::as_str));
+    for owner in owners {
+        if type_name == owner {
+            return Some(format!("`{type_name}` is the component {owner}"));
+        }
+        if type_name == format!("{owner}Event") {
+            return Some(format!("`{type_name}` is {owner}'s event union"));
+        }
+        if in_support_namespace(owner, type_name) {
+            return Some(format!(
+                "`{type_name}` starts with `{owner}Mosaic`, which {owner}'s generated support types use"
+            ));
+        }
+    }
+    None
+}
+
+/// The controls besides the component that own names in the generated
+/// namespace: the package's exports, and a registry's components declared
+/// in that namespace ([`ComponentRegistry::components_in_namespace`]).
+fn name_owners(registry: Option<&ComponentRegistry>, options: &EmitOptions) -> Vec<String> {
+    let mut owners = options.package_exports.clone();
+    if let Some(registry) = registry {
+        owners.extend(registry.components_in_namespace(&options.namespace));
+    }
+    owners
+}
+
+/// Whether `type_name` is spelled inside `owner`'s support namespace,
+/// `<owner>Mosaic...`: every support type a layout of the control `owner`
+/// may declare is named that way (`<X>MosaicFontSize`, `<X>MosaicSlider`,
+/// `<X>MosaicTable`, ...), so a type there can collide with one of them.
+/// `owner` is any control in the project: an export's default layout, or
+/// another variant -- `Card.touch` declares `CardTouchMosaicSlider`, which a
+/// `Card.touch-mosaic-slider` variant would declare again.
+pub fn in_support_namespace(owner: &str, type_name: &str) -> bool {
+    type_name
+        .strip_prefix(owner)
+        .is_some_and(|rest| rest.starts_with("Mosaic"))
+}
+
+/// Emit one layout **variant** so it can share a WinUI project with the
+/// default (UI48 §7.11, ENV2).
+///
+/// The control is its own type, named by [`variant_type_name`]
+/// (`EngramApp.touch.mll` → `partial class EngramAppTouch`,
+/// `x:Class="Mosaic.Generated.EngramAppTouch"`). It declares none of the
+/// component's interface: `Dispatch` carries the default's
+/// `<Component>Event`, and the result's `events` is empty -- there is no
+/// `<Component>.<variant>.Event.cs` to write. The control takes the same
+/// slots as the default (UI30 §2.2 puts the variant on the layout, never
+/// the interface), so a host gives it props exactly as it gives the default.
+///
+/// The control does not depend on the shell's policy: a native-complete
+/// window applies props to it strictly, through the same
+/// `MosaicRuntimeHost.ApplyRequiredProps` as the default, so nothing here
+/// is re-emitted per profile. A variant never builds a project shell;
+/// `emit_project` is ignored.
+///
+/// # Errors
+///
+/// [`PipelineEmitError::InvalidLayoutVariant`] when the variant cannot name
+/// a type, or the type is reserved -- the component's own name or event
+/// union, a name in `options.package_exports` or a `registry` component in
+/// the generated namespace (or its union or support types), or one of
+/// [`SHELL_RESERVED_NAMES`]. Otherwise as
+/// [`from_pipeline`].
+pub fn from_pipeline_variant(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    registry: Option<&ComponentRegistry>,
+    variant: &str,
+    options: &EmitOptions,
+) -> Result<XamlEmitResult, PipelineEmitError> {
+    if interface.component != layout.component_name {
+        return Err(PipelineEmitError::ComponentNameMismatch {
+            mosmodel: interface.component.clone(),
+            moslayout: layout.component_name.clone(),
+        });
+    }
+    let component = &interface.component;
+    let type_name = variant_type_name(component, variant).ok_or_else(|| {
+        PipelineEmitError::InvalidLayoutVariant(format!(
+            "`{variant}` of {component} cannot name a C# type"
+        ))
+    })?;
+    if let Some(reason) = reserved_variant_type(component, &type_name, &name_owners(registry, options)) {
+        return Err(PipelineEmitError::InvalidLayoutVariant(format!(
+            "`{variant}` of {component}: {reason}"
+        )));
+    }
+    emit_component(interface, layout, style, registry, options, &type_name, Some(variant))
+}
+
+/// Whether a layout's root is a `HostDialog`, which WinUI lowers to a
+/// `ContentDialog` rather than a `UserControl` (the window then shows a
+/// button that opens it). A window switches only between `UserControl`
+/// roots: a `ContentDialog` cannot be placed in the window's tree, so the
+/// package builder refuses a selectable variant whose root is a dialog, and
+/// a dialog-root shell does not select at all.
+pub fn layout_root_is_dialog(layout: &LayoutDef) -> bool {
+    pick_root_shape(&layout.root) == RootShape::ContentDialog
+}
+
+/// Check every layout choice before any of it is spliced into C# (UI48
+/// §7.11). The variant becomes a type name (`new EngramAppTouch()`) and a
+/// string literal (`case "touch":`), each condition a tuple of string
+/// literals (`("pointer", "coarse")`), so each must be exactly the shape the
+/// manifest produces: a variant [`variant_type_name`] accepts, whose type
+/// is not reserved and is chosen once, an axis that is a camelCase wire name
+/// (ASCII letters only) and a value of lowercase letters and `-`. Nothing
+/// here can carry a quote, a backslash, a brace or a newline.
+///
+/// "Chosen once" is keyed on the TYPE, not the variant string: `touch` and
+/// `Touch`, or `task-list` and `task_list`, are two strings but one type.
+fn validate_layout_choices(
+    component: &str,
+    choices: &[LayoutChoice],
+    exports: &[String],
+) -> Result<(), PipelineEmitError> {
+    let axis_ok = |axis: &str| !axis.is_empty() && axis.chars().all(|c| c.is_ascii_alphabetic());
+    let value_ok =
+        |value: &str| !value.is_empty() && value.chars().all(|c| c.is_ascii_lowercase() || c == '-');
+    let mut seen = std::collections::HashSet::new();
+    for choice in choices {
+        let refuse = |why: String| {
+            PipelineEmitError::InvalidLayoutVariant(format!(
+                "`{}` of {component}: {why}",
+                choice.variant
+            ))
+        };
+        let type_name = variant_type_name(component, &choice.variant)
+            .ok_or_else(|| refuse("cannot name a C# type".to_string()))?;
+        if let Some(reason) = reserved_variant_type(component, &type_name, exports) {
+            return Err(refuse(reason));
+        }
+        if !seen.insert(type_name.clone()) {
+            return Err(refuse(format!(
+                "another layout choice already names `{type_name}`"
+            )));
+        }
+        // Another layout's support types, in either order of the rules.
+        if let Some(other) = choices
+            .iter()
+            .filter(|other| other.variant != choice.variant)
+            .filter_map(|other| variant_type_name(component, &other.variant))
+            .find(|other| in_support_namespace(other, &type_name))
+        {
+            return Err(refuse(format!(
+                "`{type_name}` starts with `{other}Mosaic`, which {other}'s generated support types use"
+            )));
+        }
+        if !choice
+            .conditions
+            .iter()
+            .all(|(axis, value)| axis_ok(axis) && value_ok(value))
+        {
+            return Err(refuse(
+                "a condition is not a wire-name axis (ASCII letters) with a lowercase value"
+                    .to_string(),
+            ));
+        }
+    }
+    Ok(())
 }
 
 // =====================================================================
@@ -692,7 +1070,16 @@ struct NativeTableEmission {
 /// `from_pipeline` consumes.
 struct EmitContext<'a> {
     /// The component name — used to namespace generated types.
+    ///
+    /// For a layout variant (UI48 §7.11) this is the variant's own type,
+    /// `<Component><Variant>`: its partial class, its row view models and
+    /// its support controls are all named after it.
     component_name: &'a str,
+    /// The component whose interface this layout implements. The same as
+    /// `component_name` for the default layout; the default's name for a
+    /// variant, which raises the default's `<Component>Event` rather than
+    /// declaring a union of its own. See [`EmitContext::event_union`].
+    interface_name: &'a str,
     /// Slot name (kebab-case) → C# type. For looking up the element
     /// type of a `For (each: slot: foo)` from `foo`'s declared type.
     slot_types: std::collections::HashMap<String, String>,
@@ -800,6 +1187,12 @@ struct EmitContext<'a> {
     table_font_size: Option<LayoutPropValue>,
     /// Flow of repeated siblings in the immediate layout container.
     horizontal_repeater: bool,
+    /// Colgroup source and loop depth for structural header item widths.
+    header_width_source: Option<(String, usize)>,
+    /// Nearest generated container text style. Unique keys let nested styles
+    /// inherit without resolving their own implicit TextBlock key recursively.
+    text_style_resource: Option<String>,
+    text_style_resource_count: usize,
 }
 
 impl<'a> EmitContext<'a> {
@@ -820,6 +1213,7 @@ impl<'a> EmitContext<'a> {
         }
         Self {
             component_name: name,
+            interface_name: name,
             slot_types,
             slot_order: slots.iter().map(|slot| slot.name.clone()).collect(),
             emit_payloads,
@@ -851,7 +1245,20 @@ impl<'a> EmitContext<'a> {
             needs_font_size_support: false,
             table_font_size: None,
             horizontal_repeater: false,
+            header_width_source: None,
+            text_style_resource: None,
+            text_style_resource_count: 0,
         }
+    }
+
+    /// The C# type of the component's event union, `<Component>Event`.
+    ///
+    /// Named after the INTERFACE, not the type being emitted: a layout
+    /// variant's handlers construct the default layout's cases
+    /// (`new EngramAppEvent.ImportAnki()`) and its `Dispatch` carries the
+    /// default's union, so one `MainWindow` handler serves every root.
+    fn event_union(&self) -> String {
+        format!("{}Event", self.interface_name)
     }
 
     /// PascalCased slot name (PR-1 default), unless the slot collides
@@ -1503,6 +1910,47 @@ fn register_host_visual_states(
     }
 }
 
+/// Row VMs are immutable snapshots. A predicate that reads component state
+/// must invalidate the outer projection, including captured nested row values.
+fn register_template_state_dependencies(src: &str, ctx: &mut EmitContext<'_>) {
+    let Ok(tokens) = tokenise_expr(src) else {
+        return;
+    };
+    let dependencies = tokens
+        .iter()
+        .filter_map(|token| {
+            let ExprTok::Name(name) = token else {
+                return None;
+            };
+            if ctx.lookup_for_binding(name).is_some() || ctx.lookup_for_index(name).is_some() {
+                return None;
+            }
+            ctx.slot_types
+                .keys()
+                .find(|slot| kebab_to_pascal_case(slot) == kebab_to_pascal_case(name))
+                .map(|slot| ctx.slot_property_name(slot))
+        })
+        .collect::<Vec<_>>();
+    let Some(projection_name) = ctx
+        .for_scope
+        .first()
+        .and_then(|binding| binding.projection_property.as_ref())
+    else {
+        return;
+    };
+    if let Some(projection) = ctx
+        .row_projections
+        .iter_mut()
+        .find(|projection| &projection.property_name == projection_name)
+    {
+        for dependency in dependencies {
+            if !projection.dependency_paths.contains(&dependency) {
+                projection.dependency_paths.push(dependency);
+            }
+        }
+    }
+}
+
 fn lower_state_trigger_value(value: &LayoutPropValue, ctx: &mut EmitContext<'_>) -> Option<String> {
     if !ctx.for_scope.is_empty() {
         return match value {
@@ -1512,54 +1960,15 @@ fn lower_state_trigger_value(value: &LayoutPropValue, ctx: &mut EmitContext<'_>)
                 let path = if let Some(path) = try_lower_for_template_predicate(src, ctx) {
                     path
                 } else {
-                    let binding = ctx.for_scope.last()?;
-                    let element_root = kebab_to_pascal_case(&binding.as_name);
-                    let index_root = binding.index_name.as_deref().map(kebab_to_pascal_case);
-                    let tokens = tokenise_expr(src).ok()?;
-                    if tokens.iter().any(|token| {
-                        matches!(
-                            token,
-                            ExprTok::EqEq
-                                | ExprTok::NotEq
-                                | ExprTok::Lt
-                                | ExprTok::Le
-                                | ExprTok::Gt
-                                | ExprTok::Ge
-                                | ExprTok::AndAnd
-                                | ExprTok::OrOr
-                                | ExprTok::Not
-                                | ExprTok::LBracket
-                                | ExprTok::RBracket
-                        )
-                    }) {
-                        // Page-level expression helpers are not in a
-                        // DataTemplate's typed x:Bind scope. Reject shapes
-                        // that would require one instead of generating markup
-                        // that compiles against the wrong namescope.
-                        return None;
-                    }
+                    // The shared lowerer projects helper results onto the row
+                    // VM. Only bind that property, never a page-level method in
+                    // the DataTemplate's isolated typed namescope.
                     match lower_expr_for_xbind(src, ctx) {
-                        ExprLowering::Bindable(path)
-                            if path == element_root
-                                || path.starts_with(&format!("{element_root}.")) =>
-                        {
-                            path
-                        }
-                        ExprLowering::Bindable(path)
-                            if index_root.as_deref() == Some(path.as_str()) =>
-                        {
-                            "Index".to_string()
-                        }
-                        ExprLowering::Bindable(path)
-                            if matches!(path.as_str(), "True" | "False") =>
-                        {
-                            path
-                        }
-                        ExprLowering::Bindable(_)
-                        | ExprLowering::Helper(_)
-                        | ExprLowering::Unsupported(_) => return None,
+                        ExprLowering::Bindable(path) => path,
+                        ExprLowering::Helper(_) | ExprLowering::Unsupported(_) => return None,
                     }
                 };
+                register_template_state_dependencies(src, ctx);
                 Some(format!("{{x:Bind {path}, Mode=OneWay}}"))
             }
             // Component slots live on the generated page, not on the row VM
@@ -3131,7 +3540,9 @@ fn emit_xaml_node(
             .iter().any(|(name, _)| name == "FontSize") {
         ctx.table_font_size = None;
     }
+    let previous_text_style = ctx.text_style_resource.clone();
     let result = emit_xaml_node_contents(node, indent, part_styles, ctx);
+    ctx.text_style_resource = previous_text_style;
     ctx.table_font_size = previous;
     ctx.horizontal_repeater = previous_flow;
     result
@@ -3609,7 +4020,45 @@ fn emit_box(
     part_styles: &PartStyleMap,
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
-    emit_container(node, indent, part_styles, "Border", ctx)
+    // Keep the authored visual and place its semantic row label on a native
+    // header peer. A row header is outside the inner data-cell loop.
+    let body = emit_container(node, indent, part_styles, "Border", ctx)?;
+    if ctx
+        .native_table
+        .as_ref()
+        .is_some_and(|table| matches!(table.role, NativeTableRole::Body) && table.for_depth == 1)
+        && find_prop_keyword(node, "table-cell-role") == Some("row-header")
+    {
+        let text = node.children.first().ok_or_else(|| {
+            PipelineEmitError::UnsupportedExpression("row-header requires label content".into())
+        })?;
+        let value = find_prop_value(text, "content").ok_or_else(|| {
+            PipelineEmitError::UnsupportedExpression("row-header requires label content".into())
+        })?;
+        let label = match value {
+            LayoutPropValue::Expr(src) => match lower_expr_for_xbind(src, ctx) {
+                ExprLowering::Bindable(path) => format!("{{x:Bind {path}, Mode=OneWay}}"),
+                _ => {
+                    return Err(PipelineEmitError::UnsupportedExpression(
+                        "unsupported row-header label".into(),
+                    ))
+                }
+            },
+            LayoutPropValue::SlotRef(slot) => {
+                format!("{{x:Bind {}, Mode=OneWay}}", ctx.slot_xbind_path(slot))
+            }
+            LayoutPropValue::String(value) => value.clone(),
+            _ => {
+                return Err(PipelineEmitError::UnsupportedExpression(
+                    "unsupported row-header label".into(),
+                ))
+            }
+        };
+        let pad = " ".repeat(indent);
+        let name = ctx.component_name;
+        return Ok(format!("{pad}<local:{name}MosaicTableHeaderCell Row=\"{{x:Bind Index, Mode=OneWay}}\" Header=\"{}\" HorizontalContentAlignment=\"Stretch\" VerticalContentAlignment=\"Stretch\">\n{}{pad}</local:{name}MosaicTableHeaderCell>\n", escape_xaml_attr(&label), indent_xaml_fragment(&body, 4)));
+    }
+    Ok(body)
 }
 
 /// Mount a host-supplied `UIElement` node slot inside a styled native
@@ -3671,7 +4120,7 @@ fn emit_stack_panel(
         format!("{pad}<StackPanel Orientation=\"{orientation}\"{stack_attrs}>\n")
     } else {
         let mut wrapped = format!("{pad}<Border{container_attrs}>\n");
-        emit_text_style_resources(&mut wrapped, "Border", indent + 4, &text_setters);
+        emit_text_style_resources(&mut wrapped, "Border", indent + 4, &text_setters, ctx);
         writeln!(
             wrapped,
             "{inner_pad}<StackPanel Orientation=\"{orientation}\"{stack_attrs}>"
@@ -3782,7 +4231,7 @@ fn emit_flex_grid(
         let mut wrapped_out =
             format!("{pad}<Border{state_name_attr}{container_attrs}{shadow_attr}>\n");
         wrapped_out.push_str(&shadow_child);
-        emit_text_style_resources(&mut wrapped_out, "Border", indent + 4, &text_setters);
+        emit_text_style_resources(&mut wrapped_out, "Border", indent + 4, &text_setters, ctx);
         writeln!(wrapped_out, "{inner_pad}<Grid{grid_attrs}>").unwrap();
         wrapped_out
     };
@@ -3914,6 +4363,89 @@ fn emit_stack(
     emit_container(node, indent, part_styles, "Grid", ctx)
 }
 
+/// A container tap carries the sender's row context, including outer indices.
+/// Reading selected-row here would dispatch the previously selected cell.
+fn container_tap_attrs(
+    node: &LayoutNode,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let Some(LayoutPropValue::EmitRef(emit_name)) =
+        find_prop_value(node, "onClick").or_else(|| find_prop_value(node, "onTap"))
+    else {
+        return Ok(String::new());
+    };
+    let params = ctx
+        .emit_payloads
+        .get(emit_name)
+        .cloned()
+        .unwrap_or_default();
+    let binding = ctx.for_scope.last().cloned();
+    let mut args = Vec::new();
+    for (name, kind) in params {
+        if kind != "double" {
+            return Err(PipelineEmitError::UnsupportedExpression(format!(
+                "container tap payload {name}: only explicit numeric props are supported"
+            )));
+        }
+        let value = find_prop_value(node, &name).ok_or_else(|| {
+            PipelineEmitError::UnsupportedExpression(format!(
+                "missing container tap payload {name}"
+            ))
+        })?;
+        if let LayoutPropValue::Number(number) = value {
+            if number.is_finite() {
+                args.push(number.to_string());
+                continue;
+            }
+            return Err(PipelineEmitError::UnsupportedExpression(format!(
+                "non-finite container tap payload {name}"
+            )));
+        }
+        let src = match value {
+            LayoutPropValue::Expr(src) | LayoutPropValue::Keyword(src) => src.clone(),
+            LayoutPropValue::SlotRef(slot) => kebab_to_pascal_case(slot),
+            _ => {
+                return Err(PipelineEmitError::UnsupportedExpression(format!(
+                    "unsupported container tap payload {name}"
+                )))
+            }
+        };
+        let path = match lower_expr_for_xbind(&src, ctx) {
+            ExprLowering::Bindable(path) => path,
+            _ => {
+                return Err(PipelineEmitError::UnsupportedExpression(format!(
+                    "unsupported container tap payload {name}"
+                )))
+            }
+        };
+        args.push(if binding.is_some() {
+            format!("row.{path}")
+        } else {
+            path
+        });
+    }
+    let handler = format!("{}_Tapped", ctx.next_state_target_name());
+    let case = kebab_to_pascal_case(&strip_on_prefix(emit_name));
+    let union = ctx.event_union();
+    let (tag, guard) = if let Some(binding) = binding {
+        (" Tag=\"{x:Bind}\"", format!(
+            "        if (sender is not Microsoft.UI.Xaml.FrameworkElement element || element.Tag is not {} row) return;\n",
+            binding.vm_class
+        ))
+    } else {
+        ("", String::new())
+    };
+    ctx.add_host_handler(HostHandler {
+        name: handler.clone(),
+        source: format!(
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)\n    {{\n{guard}        Dispatch?.Invoke(this, new {union}.{case}({}));\n        e.Handled = true;\n    }}",
+            args.join(", ")
+        ),
+    });
+    Ok(format!("{tag} Tapped=\"{handler}\""))
+}
+
+
 fn emit_container(
     node: &LayoutNode,
     indent: usize,
@@ -3933,8 +4465,14 @@ fn emit_container(
     // style. WinUI's implicit-style resolution then applies them to
     // every TextBlock descendant inside. Caught by the toolkit Alert
     // + Badge demo (#4548).
-    let (container_attrs, text_setters) =
+    let (mut container_attrs, text_setters) =
         partition_box_style(node.part_name.as_deref(), part_styles);
+    let tap_attrs = container_tap_attrs(node, ctx)?;
+    if !tap_attrs.is_empty() && !container_attrs.contains(" Background=") {
+        // Null backgrounds ignore pointer input in empty cell space.
+        container_attrs.push_str(" Background=\"Transparent\"");
+    }
+    container_attrs.push_str(&tap_attrs);
     let has_runtime_states = has_runtime_container_states(node, part_styles);
     let state_target = has_runtime_states.then(|| ctx.next_state_target_name());
     if let Some(target_name) = state_target.as_deref() {
@@ -3959,7 +4497,7 @@ fn emit_container(
             theme_shadow_attr_and_child(elevation, "Border", indent + 4);
         let mut out = format!("{pad}<Border{state_name_attr}{container_attrs}{shadow_attr}>\n");
         out.push_str(&shadow_child);
-        emit_text_style_resources(&mut out, "Border", indent + 4, &text_setters);
+        emit_text_style_resources(&mut out, "Border", indent + 4, &text_setters, ctx);
         writeln!(out, "{inner_pad}<{element}>").unwrap();
         out.push_str(&emit_xaml_children(
             &node.children,
@@ -3976,7 +4514,7 @@ fn emit_container(
     let mut out = format!("{pad}<{element}{state_name_attr}{container_attrs}{shadow_attr}>\n");
     out.push_str(&shadow_child);
 
-    emit_text_style_resources(&mut out, element, indent + 4, &text_setters);
+    emit_text_style_resources(&mut out, element, indent + 4, &text_setters, ctx);
 
     if element == "Border" {
         out.push_str(&emit_xaml_single_content_children(
@@ -4002,13 +4540,19 @@ fn emit_text_style_resources(
     element: &str,
     indent: usize,
     text_setters: &[(String, String)],
+    ctx: &mut EmitContext<'_>,
 ) {
     if text_setters.is_empty() {
         return;
     }
     let pad = " ".repeat(indent);
     writeln!(out, "{pad}<{element}.Resources>").unwrap();
-    writeln!(out, "{pad}    <Style TargetType=\"TextBlock\">").unwrap();
+    ctx.text_style_resource_count += 1;
+    let key = format!("MosaicTextStyle{}", ctx.text_style_resource_count);
+    let based_on = ctx.text_style_resource.as_ref()
+        .map(|parent| format!(" BasedOn=\"{{StaticResource {parent}}}\""))
+        .unwrap_or_default();
+    writeln!(out, "{pad}    <Style x:Key=\"{key}\" TargetType=\"TextBlock\"{based_on}>").unwrap();
     for (setter, value) in text_setters {
         writeln!(
             out,
@@ -4017,7 +4561,11 @@ fn emit_text_style_resources(
         .unwrap();
     }
     writeln!(out, "{pad}    </Style>").unwrap();
+    // The implicit style selects this lexical cascade. BasedOn preserves all
+    // outer setters while allowing this container's authored setters to win.
+    writeln!(out, "{pad}    <Style TargetType=\"TextBlock\" BasedOn=\"{{StaticResource {key}}}\"/>").unwrap();
     writeln!(out, "{pad}</{element}.Resources>").unwrap();
+    ctx.text_style_resource = Some(key);
 }
 
 /// `Text [name] (content: slot: foo)` → `<TextBlock Text="{x:Bind Foo}"/>`.
@@ -4703,14 +5251,19 @@ fn emit_code_behind(
         "    /// <summary>Fires once for every emit declared in the .mil interface.</summary>"
     )
     .unwrap();
-    writeln!(out, "    public event EventHandler<{name}Event>? Dispatch;").unwrap();
+    //
+    // The union is the INTERFACE's (`ctx.event_union()`): a layout variant
+    // raises the default layout's `<Component>Event`, so a host subscribes
+    // to every root with one handler (UI48 §7.11).
+    let event_union = ctx.event_union();
+    writeln!(out, "    public event EventHandler<{event_union}>? Dispatch;").unwrap();
     writeln!(out).unwrap();
 
     // Helper to invoke Dispatch from generated handlers — used by future
     // PRs (PR-3 wires HostButton's Click etc.). Today it's just here as a
     // no-warn unused method to lock the API shape.
     if !emits.is_empty() {
-        writeln!(out, "    private void RaiseDispatch({name}Event ev)").unwrap();
+        writeln!(out, "    private void RaiseDispatch({event_union} ev)").unwrap();
         writeln!(out, "    {{").unwrap();
         writeln!(out, "        Dispatch?.Invoke(this, ev);").unwrap();
         writeln!(out, "    }}").unwrap();
@@ -4975,7 +5528,17 @@ public sealed class __COMPONENT__MosaicTable : Grid
     {
         var headers = new List<__COMPONENT__MosaicTableHeaderCell>();
         CollectDescendants(this, headers);
+        headers.RemoveAll(header => header.Row >= 0);
         headers.Sort((left, right) => left.Column.CompareTo(right.Column));
+        return headers;
+    }
+
+    internal IReadOnlyList<__COMPONENT__MosaicTableHeaderCell> RowHeaders()
+    {
+        var headers = new List<__COMPONENT__MosaicTableHeaderCell>();
+        CollectDescendants(this, headers);
+        headers.RemoveAll(header => header.Row < 0);
+        headers.Sort((left, right) => left.Row.CompareTo(right.Row));
         return headers;
     }
 
@@ -4995,6 +5558,16 @@ public sealed class __COMPONENT__MosaicTable : Grid
 public sealed class __COMPONENT__MosaicTableHeaderCell : ContentControl
 {
     public __COMPONENT__MosaicTableHeaderCell() => IsTabStop = false;
+
+    // A negative row denotes a column header. Row headers retain their own
+    // logical index and do not consume a data column in IGridProvider.
+    public int Row
+    {
+        get => (int)GetValue(RowProperty);
+        set => SetValue(RowProperty, value);
+    }
+    public static readonly DependencyProperty RowProperty =
+        DependencyProperty.Register(nameof(Row), typeof(int), typeof(__COMPONENT__MosaicTableHeaderCell), new PropertyMetadata(-1));
 
     public int Column
     {
@@ -5117,7 +5690,13 @@ internal sealed class __COMPONENT__MosaicTableAutomationPeer : FrameworkElementA
         return providers;
     }
 
-    public IRawElementProviderSimple[] GetRowHeaders() => Array.Empty<IRawElementProviderSimple>();
+    public IRawElementProviderSimple[] GetRowHeaders()
+    {
+        var headers = Table.RowHeaders();
+        var providers = new IRawElementProviderSimple[headers.Count];
+        for (var index = 0; index < headers.Count; index++) providers[index] = ProviderFor(headers[index]);
+        return providers;
+    }
 
     private IRawElementProviderSimple ProviderFor(UIElement element)
     {
@@ -5187,7 +5766,20 @@ internal sealed class __COMPONENT__MosaicTableCellAutomationPeer : FrameworkElem
         return Array.Empty<IRawElementProviderSimple>();
     }
 
-    public IRawElementProviderSimple[] GetRowHeaderItems() => Array.Empty<IRawElementProviderSimple>();
+    public IRawElementProviderSimple[] GetRowHeaderItems()
+    {
+        var table = Cell.FindTable();
+        if (table is null) return Array.Empty<IRawElementProviderSimple>();
+        foreach (var header in table.RowHeaders())
+        {
+            if (header.Row != Cell.Row) continue;
+            var peer = FrameworkElementAutomationPeer.CreatePeerForElement(header);
+            return peer is null
+                ? Array.Empty<IRawElementProviderSimple>()
+                : new[] { ProviderFromPeer(peer) };
+        }
+        return Array.Empty<IRawElementProviderSimple>();
+    }
 }
 "#
     .replace("__COMPONENT__", component)
@@ -6309,6 +6901,10 @@ fn emit_for(
         .into_iter()
         .map(|(_, argument)| argument)
         .collect::<Vec<_>>();
+    let header_width_source = ctx.header_width_source.as_ref()
+        .filter(|(_, depth)| *depth == ctx.for_scope.len())
+        .map(|(source, _)| source.clone());
+    let has_width = is_cell_loop || header_width_source.is_some();
     let width_component_source = is_cell_loop.then(|| {
         ctx.slot_types
             .keys()
@@ -6316,7 +6912,7 @@ fn emit_for(
             .min()
             .map(|slot| ctx.slot_property_name(slot))
     });
-    let width_component_source = width_component_source.flatten();
+    let width_component_source = header_width_source.or(width_component_source.flatten());
 
     let vm = RowVm {
         class_name: vm_class.clone(),
@@ -6324,7 +6920,7 @@ fn emit_for(
         element_type: element_type.clone(),
         has_index,
         // GROUP C: only the per-column cell loop's VM carries `Width`.
-        has_width: is_cell_loop,
+        has_width,
         has_is_selected: false,
         helper_bindings: Vec::new(),
         captures,
@@ -6349,10 +6945,11 @@ fn emit_for(
         let projection = RowProjection {
             property_name: prop.clone(),
             source_path: source.clone(),
-            dependency_paths: vec![source.clone()],
+            dependency_paths: std::iter::once(source.clone())
+                .chain(width_component_source.iter().cloned()).collect(),
             vm_class: vm_class.clone(),
             has_index,
-            has_width: is_cell_loop,
+            has_width,
             width_source_path: width_component_source.as_ref().map(|path| {
                 if is_nested {
                     format!("Owner.{path}")
@@ -6487,7 +7084,7 @@ fn emit_for(
     let body_result =
         emit_xaml_single_content_children(&node.children, indent + 12, part_styles, ctx);
     ctx.horizontal_repeater = horizontal;
-    let template_visual_state_groups = ctx
+    let mut template_visual_state_groups = ctx
         .template_visual_state_groups
         .pop()
         .expect("For template visual-state collector");
@@ -6504,20 +7101,37 @@ fn emit_for(
     // and so have a `Width` property). Inject `Width="{x:Bind Width}"`
     // into that opening tag so the column renders at the colgroup's
     // fixed pixel width regardless of cell content.
-    if is_cell_loop {
+    if has_width {
         body = inject_attr_into_first_element(&body, "Width=\"{x:Bind Width, Mode=OneWay}\"");
     }
 
     if !template_visual_state_groups.is_empty() {
         let pad = " ".repeat(indent + 12);
         let mut wrapped = String::new();
-        writeln!(wrapped, "{pad}<Grid>").unwrap();
+        writeln!(wrapped, "{pad}<UserControl>\n{pad}    <Grid>").unwrap();
+        // WinUI initializes StateTriggers lazily. Compiled bindings on those
+        // objects can run before their connection fields exist. Bind compiled
+        // predicates on ordinary template children instead, then bridge their
+        // dependency properties into the triggers by template-local name.
+        // UserControl provides the control host required for state activation.
+        let mut trigger_proxies = String::new();
+        for group in &mut template_visual_state_groups {
+            for state in &mut group.states {
+                if state.trigger_value.starts_with("{x:Bind ") {
+                    let proxy = format!("{}Trigger", state.name);
+                    writeln!(trigger_proxies, "{pad}        <Border x:Name=\"{proxy}\" Tag=\"{}\" Visibility=\"Collapsed\"/>",
+                        escape_xaml_attr(&state.trigger_value)).unwrap();
+                    state.trigger_value = format!("{{Binding Tag, ElementName={proxy}}}");
+                }
+            }
+        }
         wrapped.push_str(&emit_visual_state_groups(
             &template_visual_state_groups,
-            indent + 16,
+            indent + 20,
         ));
-        wrapped.push_str(&indent_xaml_fragment(&body, 4));
-        writeln!(wrapped, "{pad}</Grid>").unwrap();
+        wrapped.push_str(&trigger_proxies);
+        wrapped.push_str(&indent_xaml_fragment(&body, 8));
+        writeln!(wrapped, "{pad}    </Grid>\n{pad}</UserControl>").unwrap();
         body = wrapped;
     }
 
@@ -7040,17 +7654,626 @@ fn build_project_files(
     shape: RootShape,
     options: &EmitOptions,
 ) -> ProjectFiles {
+    // UI48 §7.11: a window whose root has layout variants mounts one of them
+    // at a time. Only a UserControl root can: a dialog-root window shows the
+    // button that opens its dialog, so it neither selects nor changes.
+    let selects = shape == RootShape::UserControl && !options.layout_variants.is_empty();
+    let main_window_xaml = emit_main_window_xaml(name, options, shape);
+    let main_window_cs = emit_main_window_cs(name, slots, emits, options, shape);
+    let (main_window_xaml, main_window_cs) = if selects {
+        (
+            main_window_xaml_with_layout_host(&main_window_xaml, name),
+            main_window_cs_with_layout_variants(&main_window_cs, name, slots, options),
+        )
+    } else {
+        (main_window_xaml, main_window_cs)
+    };
     ProjectFiles {
         global_json: emit_global_json(),
         csproj: emit_csproj(name, options),
         app_xaml: emit_app_xaml(options),
         app_xaml_cs: emit_app_xaml_cs(options),
-        main_window_xaml: emit_main_window_xaml(name, options, shape),
-        main_window_cs: emit_main_window_cs(name, slots, emits, options, shape),
+        main_window_xaml,
+        main_window_cs,
         package_manifest: emit_app_manifest(name),
         build_script: emit_build_script(name),
         readme: emit_project_readme(name, shape, options.require_runtime),
     }
+}
+
+// =====================================================================
+// UI48 ENV3 (§7.11) — the window switches between layout roots
+// =====================================================================
+//
+// A window whose root component has layout variants is the plain window
+// with four edits, so everything else -- startup, retry, the ENV4 report,
+// the host helpers -- stays exactly what a package without variants gets:
+//
+//   MainWindow.xaml   <gen:Card x:Name="Component"/>  ->  <Grid x:Name="LayoutHost"/>
+//   constructor /     the root is CREATED in code (the default first) and
+//   StartRuntime      shown in LayoutHost, instead of declared in markup
+//   every use of      `this.Component` (one fixed type)  ->  `this.layoutRoot`
+//   the root          (whichever root is showing, as a FrameworkElement)
+//   end of the class  the selector and the switch, below
+//
+// The switch, for one resize across a threshold:
+//
+//   SizeChanged / ActualThemeChanged          (WinUI is inside layout here)
+//     -> QueueLayoutSwitch()                  queue ONE switch, return
+//   ...dispatcher...
+//   SwitchLayout()                            outside every handler
+//     settling?  -> retry in 100 ms           never swap under a settle
+//     WindowEnvironment() -> MosaicLayoutVariant()
+//     same layout?  -> nothing
+//     MountLayout(variant)                    new root, props applied FIRST,
+//                                             then it replaces the old one;
+//                                             a failure leaves the old one
+//
+// The props a new root gets are the ones the shell gives the default: a
+// native-complete window applies the runtime's, strictly, with its
+// RequiredProps (MosaicRuntimeHost.ApplyRequiredProps); a sample window's
+// live in the root it shows, so each slot's value is carried across.
+
+/// Replace the one occurrence of `from` in a generated template, or panic:
+/// every anchor below is text this file itself generates, so a miss is a
+/// bug in the emitter (the shell tests exercise each one), never input.
+fn replace_exactly_once(text: &str, from: &str, to: &str) -> String {
+    assert_eq!(
+        text.matches(from).count(),
+        1,
+        "the generated MainWindow should contain exactly one {from:?}"
+    );
+    text.replacen(from, to, 1)
+}
+
+/// `MainWindow.xaml` for a window that switches layouts: the component is no
+/// longer declared in markup, because which control it is depends on the
+/// window. An empty single-cell `Grid` takes its place -- and its sizing, a
+/// child of a `Grid` row stretching to fill it -- and holds whichever root
+/// is showing.
+fn main_window_xaml_with_layout_host(plain: &str, name: &str) -> String {
+    replace_exactly_once(
+        plain,
+        &format!("<gen:{name} Grid.Row=\"0\" x:Name=\"Component\"/>"),
+        "<Grid Grid.Row=\"0\" x:Name=\"LayoutHost\"/>",
+    )
+}
+
+/// `MainWindow.xaml.cs` for a window that switches layouts: the plain
+/// window's source with the root created in code and every use of it
+/// pointed at the root showing, plus [`layout_switch_section`].
+fn main_window_cs_with_layout_variants(
+    plain: &str,
+    name: &str,
+    slots: &[SlotDecl],
+    options: &EmitOptions,
+) -> String {
+    let mut source = plain.to_string();
+    if options.require_runtime {
+        // The root is mounted by `MountLayout`, which wires its `Dispatch`
+        // as it creates it; there is no fixed control to wire once.
+        source = replace_exactly_once(&source, "    private bool dispatchWired;\n", "");
+        // UI48 §7.11: the runtime starts once the window has been laid out,
+        // so the first root it mounts is the one the window selects. Until
+        // then the loading view shows -- never the default layout, about to
+        // be replaced, for a frame.
+        source = replace_exactly_once(
+            &source,
+            concat!(
+                "        ShowStartupLoading();\n",
+                "        if (!this.DispatcherQueue.TryEnqueue(StartRuntime))\n",
+            ),
+            concat!(
+                "        ShowStartupLoading();\n",
+                "        // UI48 §7.11: the first root is the one the window's environment\n",
+                "        // selects, so the runtime starts once the window has been laid\n",
+                "        // out and has a size to select by. Until then the loading view\n",
+                "        // shows, never the default layout about to be replaced. A retried\n",
+                "        // start finds the window laid out and starts at once.\n",
+                "        if (this.Content is FrameworkElement root && root.ActualWidth <= 0)\n",
+                "        {\n",
+                "            root.SizeChanged -= StartRuntimeOnceLaidOut;\n",
+                "            root.SizeChanged += StartRuntimeOnceLaidOut;\n",
+                "            return;\n",
+                "        }\n",
+                "        if (!this.DispatcherQueue.TryEnqueue(StartRuntime))\n",
+            ),
+        );
+        source = replace_exactly_once(
+            &source,
+            "    private void StartRuntime()\n",
+            concat!(
+                "    // The window's first layout pass. The runtime starts from the\n",
+                "    // dispatcher queue, outside the layout pass that raised this, once.\n",
+                "    private void StartRuntimeOnceLaidOut(object sender, SizeChangedEventArgs args)\n",
+                "    {\n",
+                "        if (this.Content is FrameworkElement root) root.SizeChanged -= StartRuntimeOnceLaidOut;\n",
+                "        if (!this.DispatcherQueue.TryEnqueue(StartRuntime))\n",
+                "        {\n",
+                "            ShowStartupFailure(\"WinUI could not schedule Mosaic runtime initialization.\");\n",
+                "        }\n",
+                "    }\n",
+                "\n",
+                "    private void StartRuntime()\n",
+            ),
+        );
+        source = replace_exactly_once(
+            &source,
+            concat!(
+                "            MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);\n",
+                "            this.StatusText.Text = \"Status: Mosaic runtime props loaded\";\n",
+                "            if (!this.dispatchWired)\n",
+                "            {\n",
+                "                this.Component.Dispatch += OnComponentDispatch;\n",
+                "                this.dispatchWired = true;\n",
+                "            }\n",
+            ),
+            concat!(
+                "            // UI48 §7.11: the root the window's environment selects (the\n",
+                "            // default only if the window has no size even now), its props\n",
+                "            // applied strictly, as every later root's are.\n",
+                "            MountLayout(WindowEnvironment() is { } environment\n",
+                "                ? MosaicLayoutVariant(environment)\n",
+                "                : null);\n",
+                "            this.StatusText.Text = \"Status: Mosaic runtime props loaded\";\n",
+            ),
+        );
+        source = replace_exactly_once(
+            &source,
+            concat!(
+                "        var result = await MosaicRuntimeHost.HandleRequiredEvent(\n",
+                "            this.Component, mosaicEvent, RequiredProps);\n",
+            ),
+            concat!(
+                "        if (this.layoutRoot is not { } component) return;\n",
+                "        var result = await MosaicRuntimeHost.HandleRequiredEvent(\n",
+                "            component, mosaicEvent, RequiredProps);\n",
+            ),
+        );
+        // The changes ENV4 reports are the changes that may select another
+        // layout. Reported first (handlers run in the order they were added,
+        // and so do the queued callbacks), so the runtime's answer is
+        // applied to the root showing and the new root starts from it.
+        source = replace_exactly_once(
+            &source,
+            concat!(
+                "            root.ActualThemeChanged += (_, _) => QueueEnvironmentReport();\n",
+                "            this.environmentWired = true;\n",
+            ),
+            concat!(
+                "            root.ActualThemeChanged += (_, _) => QueueEnvironmentReport();\n",
+                "            // UI48 ENV3 (§7.11): the same changes may select another layout.\n",
+                "            root.SizeChanged += (_, _) => QueueLayoutSwitch();\n",
+                "            root.ActualThemeChanged += (_, _) => QueueLayoutSwitch();\n",
+                "            this.Closed += OnLayoutWindowClosed;\n",
+                "            this.environmentWired = true;\n",
+            ),
+        );
+        source = replace_exactly_once(
+            &source,
+            "        if (this.Content is not FrameworkElement root || root.ActualWidth <= 0) return;\n",
+            concat!(
+                "        if (this.Content is not FrameworkElement root || root.ActualWidth <= 0) return;\n",
+                "        if (this.layoutRoot is not { } component) return;\n",
+            ),
+        );
+        source = replace_exactly_once(
+            &source,
+            "MosaicRuntimeHost.ReportEnvironment(this.Component, report, RequiredProps)",
+            "MosaicRuntimeHost.ReportEnvironment(component, report, RequiredProps)",
+        );
+        // A deferred answer refreshes the root showing, not the default.
+        source = replace_exactly_once(
+            &source,
+            concat!(
+                "        try\n",
+                "        {\n",
+                "            MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);\n",
+                "        }\n",
+            ),
+            concat!(
+                "        if (this.layoutRoot is not { } component) return;\n",
+                "        try\n",
+                "        {\n",
+                "            MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n",
+                "        }\n",
+            ),
+        );
+    } else {
+        source = replace_exactly_once(
+            &source,
+            concat!(
+                "The component is placed in the\n",
+                "// window's Grid as `x:Name=\"Component\"`.",
+            ),
+            concat!(
+                "The window shows one of its\n",
+                "// layouts at a time, in `LayoutHost` (UI48 §7.11).",
+            ),
+        );
+        source = replace_exactly_once(
+            &source,
+            "        var hostStatus = TryApplyMosaicHostProps(this.Component);\n",
+            &format!(
+                concat!(
+                    "        // UI48 §7.11: the default layout first. Once the window is laid\n",
+                    "        // out, its environment selects the root (see SwitchLayout).\n",
+                    "        var component = new {name}();\n",
+                    "        component.Dispatch += OnComponentDispatch;\n",
+                    "        ShowLayoutRoot(component, null);\n",
+                    "        var hostStatus = TryApplyMosaicHostProps(component);\n",
+                ),
+                name = name
+            ),
+        );
+        source = replace_exactly_once(
+            &source,
+            concat!(
+                "        this.Component.Dispatch += OnComponentDispatch;\n",
+                "        TryRunMosaicHostInteractionAcceptance(this.Component);\n",
+            ),
+            concat!(
+                "        TryRunMosaicHostInteractionAcceptance(component);\n",
+                "        ObserveLayout();\n",
+            ),
+        );
+        source = replace_exactly_once(
+            &source,
+            "        var hostStatus = await TryHandleMosaicHostEvent(this.Component, ev);\n",
+            concat!(
+                "        if (this.layoutRoot is not { } component) return;\n",
+                "        var hostStatus = await TryHandleMosaicHostEvent(component, ev);\n",
+            ),
+        );
+        // The remaining uses are the stub slot values, set on the root just
+        // created.
+        source = source.replace("this.Component.", "component.");
+        // An event or intent comes from whichever root is showing, so the
+        // host is looked up by that root's type. A package's own host typed
+        // on the default control (`HandleEvent(Card, CardEvent)`) then serves
+        // the default only; the standard runtime host takes any control.
+        for (from, to) in [
+            (
+                format!("TryHandleMosaicHostEvent({name} component, {name}Event ev)"),
+                format!("TryHandleMosaicHostEvent(FrameworkElement component, {name}Event ev)"),
+            ),
+            (
+                format!("FindMosaicHostMethod(\"HandleEvent\", typeof({name}), typeof({name}Event))"),
+                format!("FindMosaicHostMethod(\"HandleEvent\", component.GetType(), typeof({name}Event))"),
+            ),
+            (
+                format!("TryHandleMosaicHostIntent({name} component, object hostIntent)"),
+                "TryHandleMosaicHostIntent(FrameworkElement component, object hostIntent)".to_string(),
+            ),
+            (
+                format!("FindMosaicHostIntentMethod(hostType, hostIntent.GetType(), typeof({name}))"),
+                "FindMosaicHostIntentMethod(hostType, hostIntent.GetType(), component.GetType())"
+                    .to_string(),
+            ),
+        ] {
+            source = replace_exactly_once(&source, &from, &to);
+        }
+    }
+    assert!(
+        !source.contains("this.Component"),
+        "a layout-switching MainWindow names no fixed root"
+    );
+    let section = layout_switch_section(name, slots, options);
+    let end = source
+        .rfind("}\n")
+        .expect("the generated MainWindow ends with its class's closing brace");
+    format!("{}{section}{}", &source[..end], &source[end..])
+}
+
+/// The selector and the switch, appended to a layout-switching
+/// `MainWindow` (UI48 §7.11). Every string spliced in was checked by
+/// [`validate_layout_choices`]; slot names are kebab-case identifiers.
+fn layout_switch_section(name: &str, slots: &[SlotDecl], options: &EmitOptions) -> String {
+    let mut rules = String::new();
+    let mut cases = String::new();
+    let mut unwire = String::new();
+    for choice in &options.layout_variants {
+        let conditions = if choice.conditions.is_empty() {
+            "System.Array.Empty<(string Axis, string Value)>()".to_string()
+        } else {
+            let pairs = choice
+                .conditions
+                .iter()
+                .map(|(axis, value)| format!("(\"{axis}\", \"{value}\")"))
+                .collect::<Vec<_>>()
+                .join(", ");
+            format!("new[] {{ {pairs} }}")
+        };
+        writeln!(rules, "        (\"{}\", {conditions}),", choice.variant).unwrap();
+        let type_name = variant_type_name(name, &choice.variant)
+            .expect("layout choices are validated before the shell is built");
+        writeln!(
+            unwire,
+            "            case {type_name} control:\n                control.Dispatch -= OnComponentDispatch;\n                break;"
+        )
+        .unwrap();
+        write!(
+            cases,
+            concat!(
+                "            case \"{variant}\":\n",
+                "            {{\n",
+                "                var root = new {type_name}();\n",
+                "                root.Dispatch += OnComponentDispatch;\n",
+                "                return root;\n",
+                "            }}\n",
+            ),
+            variant = choice.variant,
+            type_name = type_name,
+        )
+        .unwrap();
+    }
+
+    // How a new root gets its props, and (sample only) how the window starts
+    // watching: the native-complete window watches from ObserveEnvironment,
+    // beside the ENV4 report, once the runtime is up.
+    let (mount, startup_guard) = if options.require_runtime {
+        (
+            r#"    // Mount a layout. Its props are the runtime's, applied strictly with the
+    // shell's RequiredProps -- exactly as the first root's are at startup --
+    // BEFORE it replaces the root showing, so a failure throws with the old
+    // root still in place. The app's state lives in the runtime, so the new
+    // root shows everything the old one did; only the old control's own
+    // state (a text box's caret, a list's scroll) is left behind.
+    private void MountLayout(string? variant)
+    {
+        var next = CreateLayoutRoot(variant);
+        MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps);
+        ShowLayoutRoot(next, variant);
+    }
+"#
+            .to_string(),
+            r#"            // Only while the runtime's content is showing: not during startup
+            // (StartRuntime mounts the first root itself), nor after a failed
+            // start, whose retry mounts afresh.
+            if (this.RuntimeContent.Visibility != Visibility.Visible) return;
+"#,
+        )
+    } else {
+        let properties = if slots.is_empty() {
+            "System.Array.Empty<string>()".to_string()
+        } else {
+            format!(
+                "{{ {} }}",
+                slots
+                    .iter()
+                    .map(|slot| format!(
+                        "\"{}\"",
+                        escape_csharp_string(&kebab_to_pascal_case(&slot.name))
+                    ))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        };
+        (
+            format!(
+                r#"    // Mount a layout. A sample window's props live in the root it shows --
+    // the stub values above, or whatever a host applied since -- so the new
+    // root takes each slot's value from the old one: every layout of
+    // __NAME__ declares the same slots.
+    private void MountLayout(string? variant)
+    {{
+        var next = CreateLayoutRoot(variant);
+        if (this.layoutRoot is {{ }} current) CarryMosaicSlots(current, next);
+        ShowLayoutRoot(next, variant);
+    }}
+
+    private static readonly string[] MosaicSlotProperties = {properties};
+
+    private static void CarryMosaicSlots(FrameworkElement from, FrameworkElement to)
+    {{
+        foreach (var property in MosaicSlotProperties)
+        {{
+            var source = from.GetType().GetProperty(property);
+            var target = to.GetType().GetProperty(property);
+            if (source is null || target is null || !target.CanWrite) continue;
+            target.SetValue(to, source.GetValue(from));
+        }}
+    }}
+
+    // Watch the window's size and theme, once (the constructor runs once).
+    private void ObserveLayout()
+    {{
+        if (this.Content is not FrameworkElement root) return;
+        root.SizeChanged += (_, _) => QueueLayoutSwitch();
+        root.ActualThemeChanged += (_, _) => QueueLayoutSwitch();
+        this.Closed += OnLayoutWindowClosed;
+    }}
+"#
+            ),
+            "",
+        )
+    };
+
+    r#"
+    // ---- UI48 ENV3 (§7.11): the layout the window's environment selects ----
+    //
+    // __NAME__ has more than one layout, each its own control with the same
+    // slots and the same __NAME__Event, and the window shows one at a time in
+    // LayoutHost. The package's [[app.layouts]] rules (or the conventional
+    // ones) choose which, in rule order, keyed by mosaic-app-runtime's wire
+    // names -- the keys MosaicRuntimeHost.EnvironmentReport answers, so the
+    // rules and the ENV4 report agree on every name and threshold.
+    private static readonly (string Variant, (string Axis, string Value)[] Conditions)[] MosaicLayoutRules =
+    {
+__RULES__    };
+
+    private FrameworkElement? layoutRoot;
+    private string? layoutVariant;
+    private string? layoutRefused;
+    private bool layoutSwitchQueued;
+    private bool layoutClosed;
+    private Microsoft.UI.Dispatching.DispatcherQueueTimer? layoutSwitchRetry;
+
+    /// <summary>
+    /// The layout variant an environment selects: the first rule whose
+    /// conditions all hold, or null for the default layout. A rule with no
+    /// conditions always holds. The semantics of select_variant in
+    /// mosaic-package-manifest, which every backend's shell shares.
+    /// </summary>
+    public static string? MosaicLayoutVariant(
+        System.Collections.Generic.IReadOnlyDictionary<string, string> environment)
+    {
+        foreach (var (variant, conditions) in MosaicLayoutRules)
+        {
+            var holds = true;
+            foreach (var (axis, value) in conditions)
+            {
+                if (!environment.TryGetValue(axis, out var actual) || actual != value)
+                {
+                    holds = false;
+                    break;
+                }
+            }
+            if (holds) return variant;
+        }
+        return null;
+    }
+
+    // The window's environment, reduced exactly as the ENV4 report reduces
+    // it; null before the first layout pass, when there is no size to read.
+    private System.Collections.Generic.IReadOnlyDictionary<string, string>? WindowEnvironment()
+    {
+        if (this.Content is not FrameworkElement root || root.ActualWidth <= 0) return null;
+        return MosaicRuntimeHost.EnvironmentReport(
+            root.ActualWidth, root.ActualHeight, root.ActualTheme == ElementTheme.Dark);
+    }
+
+    // A fresh root for a layout, wired to the window's one dispatch handler:
+    // every layout raises the same __NAME__Event.
+    private FrameworkElement CreateLayoutRoot(string? variant)
+    {
+        switch (variant)
+        {
+__CASES__            default:
+            {
+                var root = new __NAME__();
+                root.Dispatch += OnComponentDispatch;
+                return root;
+            }
+        }
+    }
+
+__MOUNT__
+    private void ShowLayoutRoot(FrameworkElement root, string? variant)
+    {
+        // The old root leaves the tree for good: unsubscribe it, so it can
+        // no longer reach the window's handler.
+        if (this.layoutRoot is { } previous && !ReferenceEquals(previous, root))
+        {
+            UnwireLayoutRoot(previous);
+        }
+        this.LayoutHost.Children.Clear();
+        this.LayoutHost.Children.Add(root);
+        this.layoutRoot = root;
+        this.layoutVariant = variant;
+        this.layoutRefused = null;
+    }
+
+    private void UnwireLayoutRoot(FrameworkElement root)
+    {
+        switch (root)
+        {
+__UNWIRE__            case __NAME__ control:
+                control.Dispatch -= OnComponentDispatch;
+                break;
+        }
+    }
+
+    // A change of size or theme never swaps roots inside the handler that
+    // reported it: WinUI raises SizeChanged from its layout pass, and an
+    // effect being settled may be what changed the window, so removing the
+    // root there would tear it down under its own callers. The switch is
+    // queued on the dispatcher instead, one at a time -- a burst of resize
+    // ticks costs one -- and reads the window afresh when it runs.
+    private void QueueLayoutSwitch()
+    {
+        if (this.layoutClosed || this.layoutSwitchQueued) return;
+        this.layoutSwitchQueued = this.DispatcherQueue.TryEnqueue(SwitchLayout);
+    }
+
+    private void SwitchLayout()
+    {
+        this.layoutSwitchQueued = false;
+        string? variant = null;
+        try
+        {
+            // The window closed while this was queued: nothing to show it in.
+            if (this.layoutClosed) return;
+__GUARD__            // A backstop: queued work does not run inside a settle on this
+            // thread, but if one is running, wait for it rather than swap the
+            // root it may be applying props to.
+            if (MosaicRuntimeHost.IsSettling)
+            {
+                RetryLayoutSwitchLater();
+                return;
+            }
+            if (WindowEnvironment() is not { } environment) return;
+            variant = MosaicLayoutVariant(environment);
+            if (variant == this.layoutVariant)
+            {
+                this.layoutRefused = null;
+                return;
+            }
+            // This choice failed already: wait until the environment selects
+            // something else rather than fail again on every resize tick.
+            if (this.layoutRefused == (variant ?? "")) return;
+            MountLayout(variant);
+        }
+        catch (System.Exception error)
+        {
+            // Nothing is thrown into the dispatcher: the window keeps the
+            // layout it was showing and says why on the status line.
+            this.layoutRefused = variant ?? "";
+            this.StatusText.Text =
+                $"Status: Mosaic layout '{variant ?? "default"}' could not be shown: {error.GetType().Name}: {error.Message}";
+        }
+    }
+
+    private void RetryLayoutSwitchLater()
+    {
+        if (this.layoutSwitchRetry is null)
+        {
+            this.layoutSwitchRetry = this.DispatcherQueue.CreateTimer();
+            this.layoutSwitchRetry.Interval = System.TimeSpan.FromMilliseconds(100);
+            this.layoutSwitchRetry.IsRepeating = false;
+            this.layoutSwitchRetry.Tick += OnLayoutSwitchRetry;
+        }
+        this.layoutSwitchRetry.Start();
+    }
+
+    // The timer's tick is a dispatcher callback too: nothing is thrown from
+    // it, and nothing is queued once the window has closed.
+    private void OnLayoutSwitchRetry(Microsoft.UI.Dispatching.DispatcherQueueTimer timer, object args)
+    {
+        try
+        {
+            if (!this.layoutClosed) QueueLayoutSwitch();
+        }
+        catch (System.Exception error)
+        {
+            System.Diagnostics.Debug.WriteLine($"Mosaic layout switch retry failed: {error}");
+        }
+    }
+
+    // A closed window switches nothing: no queued switch runs, the retry
+    // timer stops, and a tick already on its way does nothing.
+    private void OnLayoutWindowClosed(object sender, WindowEventArgs args)
+    {
+        this.layoutClosed = true;
+        this.layoutSwitchRetry?.Stop();
+    }
+"#
+    .replace("__RULES__", &rules)
+    .replace("__CASES__", &cases)
+    .replace("__UNWIRE__", &unwire)
+    .replace("__MOUNT__", &mount)
+    .replace("__GUARD__", startup_guard)
+    .replace("__NAME__", name)
 }
 
 fn emit_global_json() -> String {
@@ -7369,7 +8592,7 @@ fn emit_main_window_cs(
     let ns = &options.namespace;
     let component_ctor = build_component_constructor(name, slots, &options.slot_values);
     let dispatch_match = build_dispatch_match(name, emits);
-    let host_helpers = build_optional_host_helpers(name, ns);
+    let host_helpers = build_optional_host_helpers(name, ns, emits);
 
     match shape {
         RootShape::ContentDialog => {
@@ -7593,6 +8816,8 @@ public sealed partial class MainWindow : Window
 {{
     private static readonly string[] RequiredProps = {required_props};
     private bool dispatchWired;
+    private bool environmentWired;
+    private bool environmentReportQueued;
 
     public MainWindow()
     {{
@@ -7614,6 +8839,9 @@ public sealed partial class MainWindow : Window
         try
         {{
             MosaicRuntimeHost.LoadRequired();
+            // UI87 §7.6: an effect answered after it was deferred (a file
+            // dialog's answer) moves the app with no call from this window.
+            MosaicRuntimeHost.PropsChanged = QueuePropsRefresh;
             MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);
             this.StatusText.Text = "Status: Mosaic runtime props loaded";
             if (!this.dispatchWired)
@@ -7622,6 +8850,7 @@ public sealed partial class MainWindow : Window
                 this.dispatchWired = true;
             }}
             ShowRuntimeContent();
+            ObserveEnvironment();
         }}
         catch (System.Exception error)
         {{
@@ -7664,6 +8893,74 @@ public sealed partial class MainWindow : Window
             this.Component, mosaicEvent, RequiredProps);
         this.StatusText.Text = result.Status;
     }}
+
+    // UI87 §7.6: the host raises this on whichever thread answered a deferred
+    // effect, after releasing its lock. The props are re-applied from the
+    // dispatcher queue -- the UI thread, and never inside the host's call.
+    private void QueuePropsRefresh()
+    {{
+        this.DispatcherQueue.TryEnqueue(RefreshProps);
+    }}
+
+    private void RefreshProps()
+    {{
+        // An answer that raced a Close() arrives after the runtime is gone:
+        // there are no props to apply, and nothing to report.
+        if (!MosaicRuntimeHost.IsAvailable) return;
+        try
+        {{
+            MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);
+        }}
+        catch (System.Exception error)
+        {{
+            this.StatusText.Text = $"Mosaic host failed: {{error.GetType().Name}}: {{error.Message}}";
+        }}
+    }}
+
+    // UI48 ENV4: tell the runtime the window's size class, orientation and
+    // colour scheme once it has started, then whenever the window's size or
+    // theme changes. The host sends only a report that differs from the last
+    // one the runtime took, so dragging an edge sends nothing until a
+    // threshold is crossed. Wired once; a retried start reports afresh.
+    private void ObserveEnvironment()
+    {{
+        if (this.Content is not FrameworkElement root) return;
+        if (!this.environmentWired)
+        {{
+            root.SizeChanged += (_, _) => QueueEnvironmentReport();
+            root.ActualThemeChanged += (_, _) => QueueEnvironmentReport();
+            this.environmentWired = true;
+        }}
+        ReportEnvironment();
+    }}
+
+    // Changes report from the dispatcher queue, never from inside the
+    // handler: a change raised synchronously while an effect is being settled
+    // would otherwise dispatch in the middle of that settle. One report is
+    // queued at a time, so a burst of resize ticks costs one.
+    private void QueueEnvironmentReport()
+    {{
+        if (this.environmentReportQueued) return;
+        this.environmentReportQueued = this.DispatcherQueue.TryEnqueue(() =>
+        {{
+            this.environmentReportQueued = false;
+            ReportEnvironment();
+        }});
+    }}
+
+    private void ReportEnvironment()
+    {{
+        // Not laid out yet: SizeChanged reports once it is.
+        if (this.Content is not FrameworkElement root || root.ActualWidth <= 0) return;
+        var report = MosaicRuntimeHost.EnvironmentReport(
+            root.ActualWidth, root.ActualHeight, root.ActualTheme == ElementTheme.Dark);
+        // Only a failure is worth the status line; an accepted report is not
+        // something the user did.
+        if (MosaicRuntimeHost.ReportEnvironment(this.Component, report, RequiredProps) is {{ }} refusal)
+        {{
+            this.StatusText.Text = refusal;
+        }}
+    }}
 }}
 "#
         ),
@@ -7683,7 +8980,21 @@ fn build_required_prop_names(slots: &[SlotDecl]) -> String {
     }
 }
 
-fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
+fn build_optional_host_helpers(name: &str, namespace: &str, emits: &[EmitDecl]) -> String {
+    // The status line names the event the host handled. Only a component
+    // that declares events gets the `MosaicName` envelope on its event union
+    // (see `emit_events`); an emit-less component's `{Name}Event` is a bare
+    // abstract record with no members, so `ev.MosaicName` would not compile
+    // (CS1061). Such a component never dispatches, so the line is never
+    // reached -- it only has to compile, and the runtime type name will do:
+    //
+    //     declares events   ->  ev.MosaicName          "Status: ... handled increment"
+    //     declares none     ->  ev.GetType().Name      (unreachable, but compiles)
+    let event_label = if emits.is_empty() {
+        "ev.GetType().Name"
+    } else {
+        "ev.MosaicName"
+    };
     let host_type = escape_csharp_string(&format!("{namespace}.MosaicHost"));
     let runtime_type = escape_csharp_string(&format!("{namespace}.MosaicRuntimeHost"));
     format!(
@@ -7732,7 +9043,7 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
              try\n        \
              {{\n            \
                  var result = await UnwrapMosaicHostResultAsync(method.Invoke(null, new object[] {{ component, ev }}));\n            \
-                 var status = CoerceMosaicHostResult(result, $\"Status: Mosaic host handled {{ev.MosaicName}}\");\n            \
+                 var status = CoerceMosaicHostResult(result, $\"Status: Mosaic host handled {{{event_label}}}\");\n            \
                  var intent = GetMosaicHostIntent(result);\n            \
                  if (intent is not null)\n            \
                  {{\n                \
@@ -9312,10 +10623,10 @@ fn emit_host_input(
         let handler = format!("{x_name}_TextChanged");
         let emit_case = strip_on_prefix(emit_name);
         let case_pascal = kebab_to_pascal_case(&emit_case);
-        let component = ctx.component_name;
+        let event_union = ctx.event_union();
         let args = host_input_event_args(ctx, emit_name, "tb.Text")?;
         let body = format!(
-            "    private void {handler}(object sender, Microsoft.UI.Xaml.Controls.TextChangedEventArgs e)\n    {{\n        if (sender is Microsoft.UI.Xaml.Controls.TextBox tb && tb.FocusState != Microsoft.UI.Xaml.FocusState.Unfocused)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case_pascal}({args}));\n        }}\n    }}"
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.Controls.TextChangedEventArgs e)\n    {{\n        if (sender is Microsoft.UI.Xaml.Controls.TextBox tb && tb.FocusState != Microsoft.UI.Xaml.FocusState.Unfocused)\n        {{\n            Dispatch?.Invoke(this, new {event_union}.{case_pascal}({args}));\n        }}\n    }}"
         );
         ctx.add_host_handler(HostHandler {
             name: handler.clone(),
@@ -9339,19 +10650,19 @@ fn emit_host_input(
         body.push_str(&format!(
             "    private void {handler}(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)\n    {{\n        if (sender is not Microsoft.UI.Xaml.Controls.TextBox tb) return;\n"
         ));
-        let component = ctx.component_name;
+        let event_union = ctx.event_union();
         if let Some(emit) = &commit {
             let case = kebab_to_pascal_case(&strip_on_prefix(emit));
             let args = host_input_event_args(ctx, emit, "tb.Text")?;
             body.push_str(&format!(
-                "        if (e.Key == Windows.System.VirtualKey.Enter)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case}({args}));\n        }}\n"
+                "        if (e.Key == Windows.System.VirtualKey.Enter)\n        {{\n            Dispatch?.Invoke(this, new {event_union}.{case}({args}));\n        }}\n"
             ));
         }
         if let Some(emit) = &cancel {
             let case = kebab_to_pascal_case(&strip_on_prefix(emit));
             let args = host_input_event_args(ctx, emit, "tb.Text")?;
             body.push_str(&format!(
-                "        if (e.Key == Windows.System.VirtualKey.Escape)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case}({args}));\n        }}\n"
+                "        if (e.Key == Windows.System.VirtualKey.Escape)\n        {{\n            Dispatch?.Invoke(this, new {event_union}.{case}({args}));\n        }}\n"
             ));
         }
         body.push_str("    }");
@@ -9369,9 +10680,9 @@ fn emit_host_input(
         let handler = format!("{x_name}_GotFocus");
         let emit_case = strip_on_prefix(emit_name);
         let case_pascal = kebab_to_pascal_case(&emit_case);
-        let component = ctx.component_name;
+        let event_union = ctx.event_union();
         let body = format!(
-            "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}());\n    }}"
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {event_union}.{case_pascal}());\n    }}"
         );
         ctx.add_host_handler(HostHandler {
             name: handler.clone(),
@@ -9665,15 +10976,15 @@ fn emit_host_button(
         let handler = format!("{x_name}_Click");
         let emit_case = strip_on_prefix(emit_name);
         let case_pascal = kebab_to_pascal_case(&emit_case);
-        let component = ctx.component_name;
+        let event_union = ctx.event_union();
         let event_ctor = if let Some(payload_expr) = host_button_click_payload_expr(emit_name, ctx)
         {
             if payload_expr_uses_row_tag(&payload_expr) {
                 attrs.push_str(" Tag=\"{x:Bind}\"");
             }
-            format!("new {component}Event.{case_pascal}({payload_expr})")
+            format!("new {event_union}.{case_pascal}({payload_expr})")
         } else {
-            format!("new {component}Event.{case_pascal}()")
+            format!("new {event_union}.{case_pascal}()")
         };
         let body = format!(
             "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, {event_ctor});\n    }}"
@@ -9934,7 +11245,7 @@ fn register_drag_event_handler(
     let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, prop) else {
         return Ok(None);
     };
-    let component = ctx.component_name;
+    let event_union = ctx.event_union();
     let case = kebab_to_pascal_case(&strip_on_prefix(emit_name));
     let args = ctx
         .emit_payloads
@@ -9959,9 +11270,9 @@ fn register_drag_event_handler(
         })
         .unwrap_or_default();
     let ctor = if args.is_empty() {
-        format!("new {component}Event.{case}()")
+        format!("new {event_union}.{case}()")
     } else {
-        format!("new {component}Event.{case}({args})")
+        format!("new {event_union}.{case}({args})")
     };
     ctx.add_host_handler(HostHandler {
         name: handler.clone(),
@@ -10391,12 +11702,12 @@ fn emit_host_checkbox(
     if let Some((emit_name, payload_expr)) = row_index_payload {
         let handler = format!("{x_name}_Click");
         let case_pascal = kebab_to_pascal_case(&strip_on_prefix(emit_name));
-        let component = ctx.component_name;
+        let event_union = ctx.event_union();
         if payload_expr_uses_row_tag(&payload_expr) {
             attrs.push_str(" Tag=\"{x:Bind}\"");
         }
         let body = format!(
-            "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}({payload_expr}));\n    }}"
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {event_union}.{case_pascal}({payload_expr}));\n    }}"
         );
         ctx.add_host_handler(HostHandler {
             name: handler.clone(),
@@ -10406,11 +11717,11 @@ fn emit_host_checkbox(
     } else if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onToggle") {
         let emit_case = strip_on_prefix(emit_name);
         let case_pascal = kebab_to_pascal_case(&emit_case);
-        let component = ctx.component_name;
+        let event_union = ctx.event_union();
 
         let checked_handler = format!("{x_name}_Checked");
         let checked_body = format!(
-            "    private void {checked_handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}(true));\n    }}"
+            "    private void {checked_handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {event_union}.{case_pascal}(true));\n    }}"
         );
         ctx.add_host_handler(HostHandler {
             name: checked_handler.clone(),
@@ -10419,7 +11730,7 @@ fn emit_host_checkbox(
 
         let unchecked_handler = format!("{x_name}_Unchecked");
         let unchecked_body = format!(
-            "    private void {unchecked_handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}(false));\n    }}"
+            "    private void {unchecked_handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {event_union}.{case_pascal}(false));\n    }}"
         );
         ctx.add_host_handler(HostHandler {
             name: unchecked_handler.clone(),
@@ -10633,10 +11944,10 @@ fn emit_host_radio(
 
         let emit_case = strip_on_prefix(emit_name);
         let case_pascal = kebab_to_pascal_case(&emit_case);
-        let component = ctx.component_name;
+        let event_union = ctx.event_union();
         let handler = format!("{x_name}_Checked");
         let body = format!(
-            "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}({value_expr}));\n    }}"
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {event_union}.{case_pascal}({value_expr}));\n    }}"
         );
         ctx.add_host_handler(HostHandler {
             name: handler.clone(),
@@ -10892,9 +12203,9 @@ fn host_slider_event_constructor(
     if !is_safe_identifier(&case) {
         return Err(PipelineEmitError::UnsafeEmitName(case));
     }
-    let component = ctx.component_name;
+    let event_union = ctx.event_union();
     let Some(payloads) = ctx.emit_payloads.get(emit_name) else {
-        return Ok(format!("new {component}Event.{case}({value_expr})"));
+        return Ok(format!("new {event_union}.{case}({value_expr})"));
     };
     let args = match payloads.as_slice() {
         [] => String::new(),
@@ -10910,7 +12221,7 @@ fn host_slider_event_constructor(
             return Err(PipelineEmitError::UnsupportedExpression(reason));
         }
     };
-    Ok(format!("new {component}Event.{case}({args})"))
+    Ok(format!("new {event_union}.{case}({args})"))
 }
 
 /// Escape a Rust string for embedding inside a C# double-quoted
@@ -11122,15 +12433,15 @@ fn emit_host_link(
         if let Some(emit_name) = on_activate {
             let handler = format!("{x_name}_Click");
             let case_pascal = kebab_to_pascal_case(&strip_on_prefix(emit_name));
-            let component = ctx.component_name;
+            let event_union = ctx.event_union();
             let event_ctor =
                 if let Some(payload_expr) = host_link_click_payload_expr(emit_name, node, ctx)? {
                     if payload_expr_uses_row_tag(&payload_expr) {
                         attrs.push_str(" Tag=\"{x:Bind}\"");
                     }
-                    format!("new {component}Event.{case_pascal}({payload_expr})")
+                    format!("new {event_union}.{case_pascal}({payload_expr})")
                 } else {
-                    format!("new {component}Event.{case_pascal}()")
+                    format!("new {event_union}.{case_pascal}()")
                 };
             let body = format!(
                 "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, {event_ctor});\n    }}"
@@ -11412,11 +12723,11 @@ fn emit_host_number_input(
     if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onChange") {
         let handler = format!("{x_name}_ValueChanged");
         let case_pascal = kebab_to_pascal_case(&strip_on_prefix(emit_name));
-        let component = ctx.component_name;
+        let event_union = ctx.event_union();
         // NumberBox.ValueChanged fires NumberBoxValueChangedEventArgs;
         // the new value is at args.NewValue (double).
         let body = format!(
-            "    private void {handler}(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}(args.NewValue));\n    }}"
+            "    private void {handler}(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)\n    {{\n        Dispatch?.Invoke(this, new {event_union}.{case_pascal}(args.NewValue));\n    }}"
         );
         ctx.add_host_handler(HostHandler {
             name: handler.clone(),
@@ -11798,9 +13109,9 @@ fn build_host_dialog_attrs(
         let handler = format!("OnHostDialogClose_{counter}");
         let emit_case = strip_on_prefix(emit_name);
         let case_pascal = kebab_to_pascal_case(&emit_case);
-        let component = ctx.component_name;
+        let event_union = ctx.event_union();
         let body = format!(
-            "    private void {handler}(object sender, object e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}());\n    }}"
+            "    private void {handler}(object sender, object e)\n    {{\n        Dispatch?.Invoke(this, new {event_union}.{case_pascal}());\n    }}"
         );
         ctx.add_host_handler(HostHandler {
             name: handler.clone(),
@@ -11973,8 +13284,15 @@ fn xaml_native_table_shape(host_table: &LayoutNode) -> Option<XamlNativeTableSha
     if header_row.tag != "Row" {
         return None;
     }
-    let [header_cells] = header_row.children.as_slice() else {
-        return None;
+    let (header_cells, has_row_headers) = match header_row.children.as_slice() {
+        [cells] => (cells, false),
+        [corner, cells]
+            if corner.tag == "Box"
+                && find_prop_keyword(corner, "table-cell-role") == Some("corner") =>
+        {
+            (cells, true)
+        }
+        _ => return None,
     };
     if header_cells.tag != "For" || header_cells.children.len() != 1 {
         return None;
@@ -11992,8 +13310,18 @@ fn xaml_native_table_shape(host_table: &LayoutNode) -> Option<XamlNativeTableSha
     if body_row.tag != "Row" {
         return None;
     }
-    let [body_cells] = body_row.children.as_slice() else {
-        return None;
+    let body_cells = match body_row.children.as_slice() {
+        [cells] if !has_row_headers => cells,
+        [header, cells]
+            if has_row_headers
+                && header.tag == "Box"
+                && find_prop_keyword(header, "table-cell-role") == Some("row-header")
+                && header.children.len() == 1
+                && header.children[0].tag == "Text" =>
+        {
+            cells
+        }
+        _ => return None,
     };
     if body_cells.tag != "For" || body_cells.children.len() != 1 {
         return None;
@@ -12135,7 +13463,7 @@ fn emit_native_host_table(
         escape_xaml_attr(&table_name)
     )
     .unwrap();
-    emit_text_style_resources(&mut out, "Grid", indent + 4, &text_setters);
+    emit_text_style_resources(&mut out, "Grid", indent + 4, &text_setters, ctx);
     writeln!(out, "{pad2}<Grid.RowDefinitions>").unwrap();
     writeln!(out, "{pad2}    <RowDefinition Height=\"Auto\"/>").unwrap();
     writeln!(out, "{pad2}    <RowDefinition Height=\"*\"/>").unwrap();
@@ -12147,14 +13475,12 @@ fn emit_native_host_table(
         cell_name_helper: cell_name_helper.clone(),
         for_depth: 0,
     });
-    out.push_str(&emit_host_table_section(
-        shape.head,
-        0,
-        indent + 4,
-        part_styles,
-        ctx,
-        false,
-    )?);
+    let previous_width_source = ctx.header_width_source.take();
+    ctx.header_width_source =
+        table_header_width_source(node, ctx).map(|source| (source, ctx.for_scope.len()));
+    let header_result = emit_host_table_section(shape.head, 0, indent + 4, part_styles, ctx, false);
+    ctx.header_width_source = previous_width_source;
+    out.push_str(&header_result?);
 
     ctx.native_table = Some(NativeTableEmission {
         role: NativeTableRole::Body,
@@ -12174,6 +13500,43 @@ fn emit_native_host_table(
 
     writeln!(out, "{pad}</local:{table_type}>").unwrap();
     Ok(out)
+}
+
+fn table_header_width_source(node: &LayoutNode, ctx: &EmitContext<'_>) -> Option<String> {
+    let colgroup = node
+        .children
+        .iter()
+        .find(|child| child.tag == "HostTableColGroup");
+    // A single repeated Col defines the data-column widths. Fixed leading
+    // columns retain their authored geometry. Do not guess among groups.
+    let repeated_columns = colgroup
+        .map(|group| {
+            group
+                .children
+                .iter()
+                .filter(|child| child.tag == "For")
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    match repeated_columns.as_slice() {
+        [columns] if columns.children.len() == 1 && columns.children[0].tag == "Col" => {
+            match (
+                find_prop_value(columns, "each"),
+                find_prop_value(&columns.children[0], "width"),
+                find_prop_keyword(columns, "as"),
+            ) {
+                (
+                    Some(LayoutPropValue::SlotRef(slot)),
+                    Some(LayoutPropValue::Expr(value)),
+                    Some(binding),
+                ) if strip_balanced_outer_parens(value.trim()) == binding => {
+                    Some(ctx.slot_property_name(slot))
+                }
+                _ => None,
+            }
+        }
+        _ => None,
+    }
 }
 
 /// `HostTable [name] { section sub-tags... }` per spec §5.
@@ -12327,9 +13690,7 @@ fn emit_host_table_contents(
         }
     }
 
-    // colgroup is recognised but not yet rendered — the column-widths
-    // story needs more design (§5.2 caveat). PR-4 silently ignores it.
-    let _ = colgroup;
+    let header_width_source = table_header_width_source(node, ctx);
 
     // -- 2. Empty HostTable → empty `<Grid/>`. Preserves part style. --
     if head.is_none() && body.is_none() && foot.is_none() {
@@ -12352,7 +13713,7 @@ fn emit_host_table_contents(
     // -- 4. Assemble the XAML. --
     let mut out = String::new();
     writeln!(out, "{pad}<Grid{flow_direction_attr}{style}>").unwrap();
-    emit_text_style_resources(&mut out, "Grid", indent + 4, &text_setters);
+    emit_text_style_resources(&mut out, "Grid", indent + 4, &text_setters, ctx);
     writeln!(out, "{pad2}<Grid.RowDefinitions>").unwrap();
     for r in &row_defs {
         writeln!(out, "{pad2}    <RowDefinition Height=\"{r}\"/>").unwrap();
@@ -12362,14 +13723,18 @@ fn emit_host_table_contents(
     // -- 5. Per-section content. Assign Grid.Row indices in source order. --
     let mut row_index = 0u32;
     if let Some(h) = head {
-        out.push_str(&emit_host_table_section(
+        let previous_width_source = ctx.header_width_source.take();
+        ctx.header_width_source = header_width_source.map(|source| (source, ctx.for_scope.len()));
+        let header_result = emit_host_table_section(
             h,
             row_index,
             indent + 4,
             part_styles,
             ctx,
             false, // header doesn't wrap in ScrollViewer
-        )?);
+        );
+        ctx.header_width_source = previous_width_source;
+        out.push_str(&header_result?);
         row_index += 1;
     }
     if let Some(b) = body {
@@ -12466,13 +13831,14 @@ fn emit_host_table_rows(
     for row in rows {
         match row.tag.as_str() {
             "Row" => {
-                out.push_str(&emit_stack_panel(
-                    row,
-                    indent,
-                    part_styles,
-                    "Horizontal",
-                    ctx,
-                )?);
+                // Structural rows bypass emit_xaml_node, so establish the same
+                // lexical restoration boundary here (including error paths).
+                let previous_text_style = ctx.text_style_resource.clone();
+                let row_result = emit_stack_panel(
+                    row, indent, part_styles, "Horizontal", ctx,
+                );
+                ctx.text_style_resource = previous_text_style;
+                out.push_str(&row_result?);
             }
             "For" => {
                 // Allow a `For` inside a section so authors can iterate
@@ -15200,6 +16566,26 @@ mod tests {
             .code_behind
             .contains("IGridItemProvider, ITableItemProvider"));
 
+        let mut numbered = canonical.clone();
+        let prefix = |role: &str| LayoutNode {
+            tag: "Box".into(), part_name: None,
+            props: vec![LayoutProp { name: "table-cell-role".into(), value: LayoutPropValue::Keyword(role.into()) }],
+            children: vec![LayoutNode {
+                tag: "Text".into(), part_name: None, children: vec![],
+                props: vec![LayoutProp { name: "content".into(), value: LayoutPropValue::String("authored header".into()) }],
+            }],
+        };
+        numbered.children[0].children[0].children.insert(0, prefix("corner"));
+        assert!(!host_table_has_native_semantics(&numbered), "asymmetric prefixes are not a native table");
+        numbered.children[1].children[0].children[0].children.insert(0, prefix("row-header"));
+        assert!(host_table_has_native_semantics(&numbered));
+        let numbered_result = compile(&c, &layout_with_root("Sheet", numbered.clone()), &empty_style("Sheet"));
+        assert!(numbered_result.xaml.contains("MosaicTableHeaderCell Row=\"{x:Bind Index, Mode=OneWay}\" Header=\"authored header\""));
+        assert!(numbered_result.xaml.contains("ColumnCount=\"{x:Bind Headers.Count, Mode=OneWay}\""));
+        assert!(numbered_result.code_behind.contains("if (header.Row != Cell.Row) continue;"));
+        numbered.children[0].children[0].children[0].props.clear();
+        assert!(!host_table_has_native_semantics(&numbered), "unmarked leading content remains unsupported");
+
         let mut with_foot = canonical.clone();
         with_foot
             .children
@@ -16592,6 +17978,107 @@ mod tests {
             "got:\n{}",
             r.code_behind
         );
+    }
+
+    #[test]
+    fn container_tap_carries_nested_row_and_column() {
+        let c = component(
+            "Foo",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                true,
+            )],
+            vec![emit(
+                "onNavigate",
+                vec![
+                    param("row", EmitPayloadType::Number),
+                    param("col", EmitPayloadType::Number),
+                ],
+            )],
+        );
+        let cell = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            children: vec![],
+            props: vec![
+                LayoutProp {
+                    name: "onClick".to_string(),
+                    value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+                },
+                LayoutProp {
+                    name: "row".to_string(),
+                    value: LayoutPropValue::Expr("r".to_string()),
+                },
+                LayoutProp {
+                    name: "col".to_string(),
+                    value: LayoutPropValue::Expr("c".to_string()),
+                },
+            ],
+        };
+        let l = layout_with_root(
+            "Foo",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                Some("r"),
+                vec![for_node(
+                    LayoutPropValue::Keyword("row".to_string()),
+                    "value",
+                    Some("c"),
+                    vec![cell],
+                )],
+            ),
+        );
+        let result = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            result
+                .xaml
+                .contains("Background=\"Transparent\" Tag=\"{x:Bind}\" Tapped=\""),
+            "{}",
+            result.xaml
+        );
+        assert!(
+            result
+                .code_behind
+                .contains("new FooEvent.Navigate(row.R, row.Index)"),
+            "{}",
+            result.code_behind
+        );
+        assert!(
+            result
+                .code_behind
+                .contains("element.Tag is not Foo_ValueVm row) return;"),
+            "{}",
+            result.code_behind
+        );
+        assert!(result.code_behind.contains("e.Handled = true;"));
+    }
+
+    #[test]
+    fn container_tap_rejects_missing_payload_instead_of_defaulting_coordinates() {
+        let c = component(
+            "Foo",
+            vec![],
+            vec![emit(
+                "onNavigate",
+                vec![param("row", EmitPayloadType::Number)],
+            )],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".into(),
+                part_name: None,
+                children: vec![],
+                props: vec![LayoutProp {
+                    name: "onClick".into(),
+                    value: LayoutPropValue::EmitRef("onNavigate".into()),
+                }],
+            },
+        );
+        let result = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts());
+        assert!(result.is_err());
     }
 
     /// UI29-2 §2.1.1: in a `For`, an `( index : number )` `onToggle` carries
@@ -18633,6 +20120,22 @@ mod tests {
         assert!(p
             .main_window_cs
             .contains("MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps)"));
+        // UI87 §7.6: a deferred effect's answer reaches the window through
+        // the host's props-changed handler, set as soon as the runtime loads
+        // and re-applied from the dispatcher queue, never inside the host.
+        let cs = &p.main_window_cs;
+        let load = cs.find("MosaicRuntimeHost.LoadRequired();").unwrap();
+        let wired = cs
+            .find("MosaicRuntimeHost.PropsChanged = QueuePropsRefresh;")
+            .unwrap();
+        let first = cs
+            .find("MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);")
+            .unwrap();
+        assert!(load < wired && wired < first, "{cs}");
+        assert!(
+            cs.contains("        this.DispatcherQueue.TryEnqueue(RefreshProps);\n"),
+            "{cs}"
+        );
         assert!(p
             .main_window_xaml
             .contains("AutomationProperties.AutomationId=\"mosaic-startup-loading\""));
@@ -18712,6 +20215,633 @@ mod tests {
     }
 
     #[test]
+    fn native_complete_window_reports_its_environment_to_the_runtime() {
+        // UI48 ENV4: the strict UserControl shell observes the window's size
+        // and theme once the runtime has started and hands each change to the
+        // host, which dedupes, sends and applies.
+        let c = component(
+            "Foo",
+            vec![slot("greeting", SlotType::Text, true)],
+            vec![emit("onToggle", vec![])],
+        );
+        let l = layout_with_root("Foo", box_root());
+        let s = empty_style("Foo");
+        let mut o = opts();
+        o.emit_project = true;
+        o.require_runtime = true;
+        let r = from_pipeline(&c, &l, &s, None, &o).unwrap();
+        let source = &r.project.as_ref().expect("project populated").main_window_cs;
+
+        // After the runtime is up and showing, never before.
+        let show = source.find("            ShowRuntimeContent();\n").unwrap();
+        let observe = source.find("            ObserveEnvironment();\n").unwrap();
+        assert!(show < observe, "{source}");
+        assert!(source.find("MosaicRuntimeHost.LoadRequired()").unwrap() < observe);
+        // Wired once, so a retried start does not stack handlers.
+        assert!(source.contains("private bool environmentWired;"), "{source}");
+        assert_eq!(source.matches("root.SizeChanged += ").count(), 1, "{source}");
+        assert_eq!(source.matches("root.ActualThemeChanged += ").count(), 1, "{source}");
+        // Changes go through the dispatcher queue, one at a time, never
+        // straight from the handler (it may fire inside a settle).
+        assert!(source.contains("root.SizeChanged += (_, _) => QueueEnvironmentReport();"));
+        assert!(source.contains("root.ActualThemeChanged += (_, _) => QueueEnvironmentReport();"));
+        assert!(source.contains("if (this.environmentReportQueued) return;"));
+        assert!(source.contains("this.environmentReportQueued = this.DispatcherQueue.TryEnqueue(() =>"));
+        // Effective pixels and the rendered theme, through the host's reducer.
+        assert!(source.contains(
+            "MosaicRuntimeHost.EnvironmentReport(\n            root.ActualWidth, root.ActualHeight, root.ActualTheme == ElementTheme.Dark)"
+        ));
+        assert!(source.contains("root.ActualWidth <= 0) return;"));
+        // Strict, and only a refusal reaches the status line.
+        assert!(source.contains(
+            "MosaicRuntimeHost.ReportEnvironment(this.Component, report, RequiredProps) is { } refusal"
+        ));
+        assert!(source.contains("this.StatusText.Text = refusal;"));
+    }
+
+    #[test]
+    fn only_the_native_complete_window_observes_the_environment() {
+        // A sample shell has no runtime to tell, and a dialog-root window
+        // shows only the button that opens the dialog.
+        let c = component(
+            "Foo",
+            vec![slot("title", SlotType::Text, true)],
+            vec![emit("onClose", vec![])],
+        );
+        let s = empty_style("Foo");
+        let mut sample = opts();
+        sample.emit_project = true;
+        let r = from_pipeline(&c, &layout_with_root("Foo", box_root()), &s, None, &sample).unwrap();
+        let source = &r.project.as_ref().unwrap().main_window_cs;
+        assert!(!source.contains("ReportEnvironment"), "{source}");
+
+        let dialog_root = LayoutNode {
+            tag: "HostDialog".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: Vec::new(),
+        };
+        let mut strict = opts();
+        strict.emit_project = true;
+        strict.require_runtime = true;
+        let r = from_pipeline(&c, &layout_with_root("Foo", dialog_root), &s, None, &strict).unwrap();
+        let source = &r.project.as_ref().unwrap().main_window_cs;
+        assert!(!source.contains("ReportEnvironment"), "{source}");
+    }
+
+    // ── UI48 ENV2/ENV3 (§7.11): layout variants share one WinUI project ──
+
+    /// `Card { slot label : text; emit onTap; }`, laid out as a button that
+    /// shows the label and raises `onTap`.
+    fn tappable_card() -> (MosmodelComponent, LayoutDef, StyleDef) {
+        let c = component(
+            "Card",
+            vec![slot("label", SlotType::Text, true)],
+            vec![emit("onTap", vec![])],
+        );
+        let root = host_button_node(
+            Some("tap"),
+            vec![
+                LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::SlotRef("label".to_string()),
+                },
+                LayoutProp {
+                    name: "onClick".to_string(),
+                    value: LayoutPropValue::EmitRef("onTap".to_string()),
+                },
+            ],
+        );
+        (c, layout_with_root("Card", root), empty_style("Card"))
+    }
+
+    fn choice(variant: &str, conditions: &[(&str, &str)]) -> LayoutChoice {
+        LayoutChoice {
+            variant: variant.to_string(),
+            conditions: conditions
+                .iter()
+                .map(|(axis, value)| (axis.to_string(), value.to_string()))
+                .collect(),
+        }
+    }
+
+    fn card_shell(require_runtime: bool, choices: Vec<LayoutChoice>) -> ProjectFiles {
+        let (c, l, s) = tappable_card();
+        let mut o = opts();
+        o.emit_project = true;
+        o.require_runtime = require_runtime;
+        o.layout_variants = choices;
+        o.package_exports = vec!["Card".to_string()];
+        from_pipeline(&c, &l, &s, None, &o)
+            .expect("shell")
+            .project
+            .expect("project populated")
+    }
+
+    #[test]
+    fn variant_type_names_follow_the_shared_rule() {
+        assert_eq!(variant_type_name("EngramApp", "touch").as_deref(), Some("EngramAppTouch"));
+        assert_eq!(variant_type_name("Grid", "task-list").as_deref(), Some("GridTaskList"));
+        assert_eq!(variant_type_name("Grid", "task_list").as_deref(), Some("GridTaskList"));
+        assert_eq!(variant_type_name("Grid", "2col").as_deref(), Some("Grid2col"));
+        for bad in ["", "a--b", "-a", "a_", "touch.x", "tou ch", "t\"x", "t{x}"] {
+            assert_eq!(variant_type_name("Grid", bad), None, "{bad:?}");
+        }
+    }
+
+    /// ENV2: the variant is a control of its own that raises the DEFAULT's
+    /// event union, so one window handler serves both and nothing is
+    /// declared twice in the project's namespace.
+    #[test]
+    fn a_variant_is_its_own_control_and_raises_the_default_union() {
+        let (c, l, s) = tappable_card();
+        let mut o = opts();
+        o.emit_project = true; // ignored: only the default builds a shell
+        let r = from_pipeline_variant(&c, &l, &s, None, "touch", &o).expect("variant");
+        assert_eq!(r.component_name, "CardTouch");
+        assert!(r.xaml.contains("x:Class=\"Mosaic.Generated.CardTouch\""), "{}", r.xaml);
+        assert!(r.code_behind.contains("public sealed partial class CardTouch : UserControl"));
+        assert!(r.code_behind.contains("    public CardTouch()\n"), "{}", r.code_behind);
+        assert!(
+            r.code_behind.contains("    public event EventHandler<CardEvent>? Dispatch;"),
+            "{}",
+            r.code_behind
+        );
+        assert!(r.code_behind.contains("    private void RaiseDispatch(CardEvent ev)"));
+        assert!(r.code_behind.contains("new CardEvent.Tap()"), "{}", r.code_behind);
+        assert!(!r.code_behind.contains("CardTouchEvent"), "{}", r.code_behind);
+        // No second union, and no shell.
+        assert!(r.events.is_empty(), "{}", r.events);
+        assert!(r.project.is_none());
+
+        // The default is exactly what it always was.
+        let default = from_pipeline(&c, &l, &s, None, &opts()).unwrap();
+        assert!(default.events.contains("public abstract record CardEvent"));
+        assert!(default.code_behind.contains("    public event EventHandler<CardEvent>? Dispatch;"));
+        // And the variant's code-behind IS the default's with the control's
+        // type renamed: same slots, same handler, same union.
+        assert_eq!(
+            r.code_behind,
+            default
+                .code_behind
+                .replace("partial class Card ", "partial class CardTouch ")
+                .replace("public Card()", "public CardTouch()")
+                .replace("typeof(Card)", "typeof(CardTouch)")
+        );
+    }
+
+    /// The control does not depend on the shell's policy: a native-complete
+    /// window applies props to every root strictly from MainWindow, so
+    /// neither the default nor a variant is re-emitted per profile (Qt's
+    /// QML roots are; XAML's controls need not be).
+    #[test]
+    fn a_layout_control_is_the_same_under_either_shell_policy() {
+        let (c, l, s) = tappable_card();
+        let mut strict = opts();
+        strict.require_runtime = true;
+        for variant in [None, Some("touch")] {
+            let emit = |o: &EmitOptions| match variant {
+                None => from_pipeline(&c, &l, &s, None, o).unwrap(),
+                Some(v) => from_pipeline_variant(&c, &l, &s, None, v, o).unwrap(),
+            };
+            let (permissive, required) = (emit(&opts()), emit(&strict));
+            assert_eq!(permissive.xaml, required.xaml);
+            assert_eq!(permissive.code_behind, required.code_behind);
+            assert_eq!(permissive.events, required.events);
+        }
+    }
+
+    #[test]
+    fn a_registry_component_in_the_generated_namespace_owns_its_names() {
+        // UI48 §7.11: mosaic-compile's single-file mode registers the
+        // package's sibling exports in the generated namespace; a variant
+        // may not spell one of them, its union or its support types. A
+        // component in another namespace is reached through its own XAML
+        // prefix, so its names are free.
+        let (c, l, s) = tappable_card();
+        let mut registry = ComponentRegistry::new();
+        registry.register("CardTouch", "pkg", "using:Mosaic.Generated", "mosaic-pkg-cards");
+        registry.register("CardWide", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid");
+        assert_eq!(registry.components_in_namespace("Mosaic.Generated"), vec!["CardTouch"]);
+        for variant in ["touch", "touch-event", "touch-mosaic-slider"] {
+            let error = from_pipeline_variant(&c, &l, &s, Some(&registry), variant, &opts())
+                .unwrap_err()
+                .to_string();
+            assert!(error.contains("CardTouch"), "{variant}: {error}");
+            let mut o = opts();
+            o.emit_project = true;
+            o.layout_variants = vec![choice(variant, &[])];
+            let error = from_pipeline(&c, &l, &s, Some(&registry), &o).unwrap_err().to_string();
+            assert!(error.contains("CardTouch"), "{variant}: {error}");
+        }
+        assert!(from_pipeline_variant(&c, &l, &s, Some(&registry), "wide", &opts()).is_ok());
+        // Without the registry the same variant is free.
+        assert!(from_pipeline_variant(&c, &l, &s, None, "touch", &opts()).is_ok());
+    }
+
+    #[test]
+    fn a_variant_type_may_not_take_a_name_already_in_the_namespace() {
+        let (c, l, s) = tappable_card();
+        let refused = |variant: &str, exports: &[&str]| {
+            let mut o = opts();
+            o.package_exports = exports.iter().map(|e| e.to_string()).collect();
+            match from_pipeline_variant(&c, &l, &s, None, variant, &o) {
+                Err(PipelineEmitError::InvalidLayoutVariant(detail)) => detail,
+                other => panic!("{variant}: expected a refusal, got {other:?}"),
+            }
+        };
+        // The component's own interface type.
+        assert!(refused("event", &[]).contains("`CardEvent` is Card's event union"));
+        // Another export, its union, its generated support types.
+        assert!(refused("touch", &["Card", "CardTouch"]).contains("the component CardTouch"));
+        assert!(refused("touch-event", &["CardTouch"]).contains("CardTouch's event union"));
+        assert!(refused("mosaic-slider", &[]).contains("`CardMosaic`"));
+        // A name that cannot be an identifier.
+        assert!(refused("a--b", &[]).contains("cannot name a C# type"));
+
+        // The shell's own names: `Mosaic` + `host` is the package host's.
+        let m = component("Mosaic", vec![], vec![]);
+        let ml = layout_with_root("Mosaic", box_root());
+        for (variant, taken) in [
+            ("host", "MosaicHost"),
+            ("runtime-host", "MosaicRuntimeHost"),
+            ("platform-effects", "MosaicPlatformEffects"),
+        ] {
+            let error = from_pipeline_variant(&m, &ml, &empty_style("Mosaic"), None, variant, &opts())
+                .unwrap_err()
+                .to_string();
+            assert!(error.contains(&format!("`{taken}` is a type the WinUI shell declares")), "{error}");
+        }
+        let main = component("Main", vec![], vec![]);
+        let error = from_pipeline_variant(&main, &layout_with_root("Main", box_root()), &empty_style("Main"), None, "window", &opts())
+            .unwrap_err();
+        assert!(error.to_string().contains("`MainWindow`"), "{error}");
+
+        // An ordinary variant beside other exports is fine.
+        let mut o = opts();
+        o.package_exports = vec!["Card".to_string(), "Deck".to_string()];
+        assert!(from_pipeline_variant(&c, &l, &s, None, "touch", &o).is_ok());
+    }
+
+    /// Every type the generated shell declares in the project's namespace
+    /// -- `App`, `MainWindow` in each of its shapes, the converters the
+    /// emitter ships beside components, and the entry point WinUI's own
+    /// generator adds -- is reserved. (The binding's names are pinned by
+    /// the package builder, which owns those templates' wiring.)
+    #[test]
+    fn every_type_the_generated_shell_declares_is_reserved() {
+        let declared = |source: &str| -> Vec<String> {
+            source
+                .lines()
+                // A namespace-level declaration: unindented, not a comment.
+                .filter(|line| !line.starts_with(char::is_whitespace) && !line.starts_with("//"))
+                .filter_map(|line| {
+                    let words: Vec<&str> = line.split_whitespace().collect();
+                    let at = words.iter().position(|w| {
+                        matches!(*w, "class" | "record" | "struct" | "interface" | "enum")
+                    })?;
+                    let name: String = words.get(at + 1)?.chars().take_while(|c| c.is_ascii_alphanumeric()).collect();
+                    Some(name)
+                })
+                .collect()
+        };
+        let (c, l, s) = tappable_card();
+        let dialog = layout_with_root(
+            "Card",
+            LayoutNode { tag: "HostDialog".to_string(), part_name: None, props: Vec::new(), children: Vec::new() },
+        );
+        let mut names = Vec::new();
+        for layout in [&l, &dialog] {
+            for require_runtime in [false, true] {
+                for choices in [Vec::new(), vec![choice("touch", &[("pointer", "coarse")])]] {
+                    let mut o = opts();
+                    o.emit_project = true;
+                    o.require_runtime = require_runtime;
+                    o.layout_variants = choices;
+                    let p = from_pipeline(&c, layout, &s, None, &o).unwrap().project.unwrap();
+                    names.extend(declared(&p.app_xaml_cs));
+                    names.extend(declared(&p.main_window_cs));
+                }
+            }
+        }
+        for source in [
+            emit_bool_to_vis_converter_source("Mosaic.Generated"),
+            emit_focus_state_to_bool_converter_source("Mosaic.Generated"),
+            emit_string_equals_converter_source("Mosaic.Generated"),
+        ] {
+            names.extend(declared(&source));
+        }
+        names.sort();
+        names.dedup();
+        assert_eq!(
+            names,
+            ["App", "BoolToVisibilityConverter", "FocusStateToBoolConverter", "MainWindow", "StringEqualsConverter"]
+        );
+        for name in &names {
+            assert!(SHELL_RESERVED_NAMES.contains(&name.as_str()), "{name} is not reserved");
+        }
+        // WinUI's XAML compiler writes `static class Program` (the entry
+        // point) into the root namespace too.
+        assert!(SHELL_RESERVED_NAMES.contains(&"Program"));
+    }
+
+    /// ENV3 on the native-complete window: the rules as data under wire
+    /// names, the selector, every root mounted strictly through the same
+    /// call as the first, and the switch deferred to the dispatcher.
+    #[test]
+    fn the_native_complete_window_switches_layouts_at_run_time() {
+        let p = card_shell(true, vec![choice("touch", &[("pointer", "coarse")])]);
+        let xaml = &p.main_window_xaml;
+        assert!(xaml.contains("<Grid Grid.Row=\"0\" x:Name=\"LayoutHost\"/>"), "{xaml}");
+        assert!(!xaml.contains("x:Name=\"Component\""), "{xaml}");
+        let source = &p.main_window_cs;
+        assert!(!source.contains("this.Component"), "{source}");
+        assert!(!source.contains("dispatchWired"), "{source}");
+        // The rules, as data, keyed by wire name; and select_variant.
+        assert!(source.contains("        (\"touch\", new[] { (\"pointer\", \"coarse\") }),\n"), "{source}");
+        assert!(source.contains("    public static string? MosaicLayoutVariant(\n"));
+        assert!(source.contains("if (!environment.TryGetValue(axis, out var actual) || actual != value)"));
+        // The environment is the ENV4 reducer's, so the thresholds agree.
+        assert_eq!(source.matches("MosaicRuntimeHost.EnvironmentReport(\n").count(), 2, "{source}");
+        // One control per layout, each wired to the one handler.
+        assert!(source.contains("            case \"touch\":\n            {\n                var root = new CardTouch();\n                root.Dispatch += OnComponentDispatch;\n"));
+        assert!(source.contains("            default:\n            {\n                var root = new Card();\n                root.Dispatch += OnComponentDispatch;\n"));
+        assert!(source.contains("    private async void OnComponentDispatch(object? sender, CardEvent mosaicEvent)"));
+        // The first root at startup, chosen from the window, strictly; and
+        // every later root the same way, props applied BEFORE it is shown.
+        let load = source.find("MosaicRuntimeHost.LoadRequired();").unwrap();
+        let first = source.find("            MountLayout(WindowEnvironment() is { } environment\n").unwrap();
+        let shown = source.find("            ShowRuntimeContent();\n").unwrap();
+        assert!(load < first && first < shown, "{source}");
+        // The runtime starts only once the window is laid out, so that first
+        // root is the selected one, not the default for a frame: before the
+        // first layout pass the start waits for SizeChanged (unsubscribed
+        // as it fires), and queues StartRuntime from there.
+        let queue = &source[source.find("    private void QueueRuntimeStartup()").unwrap()..];
+        let waits = queue
+            .find(concat!(
+                "        if (this.Content is FrameworkElement root && root.ActualWidth <= 0)\n",
+                "        {\n",
+                "            root.SizeChanged -= StartRuntimeOnceLaidOut;\n",
+                "            root.SizeChanged += StartRuntimeOnceLaidOut;\n",
+                "            return;\n",
+                "        }\n",
+            ))
+            .unwrap();
+        assert!(waits < queue.find("this.DispatcherQueue.TryEnqueue(StartRuntime)").unwrap(), "{queue}");
+        assert!(source.contains(concat!(
+            "    private void StartRuntimeOnceLaidOut(object sender, SizeChangedEventArgs args)\n",
+            "    {\n",
+            "        if (this.Content is FrameworkElement root) root.SizeChanged -= StartRuntimeOnceLaidOut;\n",
+            "        if (!this.DispatcherQueue.TryEnqueue(StartRuntime))\n",
+        )), "{source}");
+        let mount = &source[source.find("    private void MountLayout(string? variant)").unwrap()..];
+        let apply = mount.find("MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps);").unwrap();
+        let replace = mount.find("ShowLayoutRoot(next, variant);").unwrap();
+        assert!(apply < replace, "{mount}");
+        // One strict MOUNT path: every root is created and first applied in
+        // MountLayout. The only other call refreshes the root already showing
+        // after a deferred effect's answer (UI87 §7.6), as an event does.
+        assert_eq!(source.matches("ApplyRequiredProps(").count(), 2, "{source}");
+        assert!(
+            source.contains(concat!(
+                "    private void RefreshProps()\n",
+                "    {\n",
+                "        // An answer that raced a Close() arrives after the runtime is gone:\n",
+                "        // there are no props to apply, and nothing to report.\n",
+                "        if (!MosaicRuntimeHost.IsAvailable) return;\n",
+                "        if (this.layoutRoot is not { } component) return;\n",
+                "        try\n",
+                "        {\n",
+                "            MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n",
+            )),
+            "{source}"
+        );
+        let wired = source
+            .find("MosaicRuntimeHost.PropsChanged = QueuePropsRefresh;")
+            .unwrap();
+        assert!(load < wired && wired < first, "{source}");
+        // Events and reports go to the root showing.
+        assert!(source.contains("        if (this.layoutRoot is not { } component) return;\n        var result = await MosaicRuntimeHost.HandleRequiredEvent(\n            component, mosaicEvent, RequiredProps);"));
+        assert!(source.contains("MosaicRuntimeHost.ReportEnvironment(component, report, RequiredProps)"));
+        // Watched from the same handlers as the report, after it, wired once.
+        let report = source.find("            root.SizeChanged += (_, _) => QueueEnvironmentReport();").unwrap();
+        let switch = source.find("            root.SizeChanged += (_, _) => QueueLayoutSwitch();").unwrap();
+        assert!(report < switch);
+        // (The third subscription is the one-shot start, above.)
+        assert_eq!(source.matches("root.SizeChanged += (_, _)").count(), 2);
+        assert_eq!(source.matches("root.SizeChanged += ").count(), 3);
+        assert!(source.contains("            root.ActualThemeChanged += (_, _) => QueueLayoutSwitch();\n            this.Closed += OnLayoutWindowClosed;\n            this.environmentWired = true;"));
+        // Never swapped inside the handler: queued, one at a time, and the
+        // settle state checked again when it runs.
+        assert!(source.contains("        if (this.layoutClosed || this.layoutSwitchQueued) return;\n        this.layoutSwitchQueued = this.DispatcherQueue.TryEnqueue(SwitchLayout);"));
+        let body = &source[source.find("    private void SwitchLayout()").unwrap()..];
+        let visible = body.find("if (this.RuntimeContent.Visibility != Visibility.Visible) return;").unwrap();
+        let settling = body.find("if (MosaicRuntimeHost.IsSettling)").unwrap();
+        let read = body.find("if (WindowEnvironment() is not { } environment) return;").unwrap();
+        let mounted = body.find("MountLayout(variant);").unwrap();
+        assert!(visible < settling && settling < read && read < mounted, "{body}");
+        assert!(body.contains("RetryLayoutSwitchLater();"));
+        assert!(source.contains("this.layoutSwitchRetry.Interval = System.TimeSpan.FromMilliseconds(100);"));
+        // A failed mount keeps the layout showing and throws nothing.
+        assert!(body.contains("        catch (System.Exception error)\n"));
+        assert!(body.contains("this.layoutRefused = variant ?? \"\";"));
+        assert!(body.contains("if (this.layoutRefused == (variant ?? \"\")) return;"));
+    }
+
+    /// A closed window switches nothing, and a root that leaves the tree is
+    /// unsubscribed from the window's handler -- in both windows.
+    #[test]
+    fn a_closed_window_switches_nothing_and_old_roots_are_unwired() {
+        for require_runtime in [false, true] {
+            let source = card_shell(require_runtime, vec![choice("touch", &[("pointer", "coarse")])])
+                .main_window_cs;
+            // Wired once, beside the switch's own handlers.
+            assert_eq!(source.matches("this.Closed += OnLayoutWindowClosed;").count(), 1, "{source}");
+            let wired = source.find("root.SizeChanged += (_, _) => QueueLayoutSwitch();").unwrap();
+            assert!(wired < source.find("this.Closed += OnLayoutWindowClosed;").unwrap());
+            assert!(source.contains(
+                "    private void OnLayoutWindowClosed(object sender, WindowEventArgs args)\n    {\n        this.layoutClosed = true;\n        this.layoutSwitchRetry?.Stop();\n    }"
+            ));
+            // Neither a queued switch nor a retry tick runs after close, and
+            // the tick throws nothing into the dispatcher.
+            assert!(source.contains("        if (this.layoutClosed || this.layoutSwitchQueued) return;\n"));
+            let body = &source[source.find("    private void SwitchLayout()").unwrap()..];
+            let closed = body.find("if (this.layoutClosed) return;").unwrap();
+            assert!(closed < body.find("MountLayout(variant);").unwrap());
+            assert!(source.contains("this.layoutSwitchRetry.Tick += OnLayoutSwitchRetry;"));
+            let tick = &source[source.find("    private void OnLayoutSwitchRetry(").unwrap()..];
+            assert!(tick.contains("        try\n        {\n            if (!this.layoutClosed) QueueLayoutSwitch();\n        }\n        catch (System.Exception error)"));
+            // The old root is unsubscribed when the new one is shown.
+            let show = &source[source.find("    private void ShowLayoutRoot(").unwrap()..];
+            let unwire = show.find("UnwireLayoutRoot(previous);").unwrap();
+            assert!(unwire < show.find("this.LayoutHost.Children.Clear();").unwrap());
+            assert!(source.contains("            case CardTouch control:\n                control.Dispatch -= OnComponentDispatch;\n                break;\n"));
+            assert!(source.contains("            case Card control:\n                control.Dispatch -= OnComponentDispatch;\n                break;\n"));
+        }
+    }
+
+    /// ENV3 on the sample window: it selects too (reporting to nobody), and
+    /// carries each slot's value from the root it replaces.
+    #[test]
+    fn the_sample_window_switches_layouts_and_carries_its_slots() {
+        let p = card_shell(false, vec![choice("compact", &[("sizeClass", "compact")])]);
+        let source = &p.main_window_cs;
+        assert!(!source.contains("this.Component"), "{source}");
+        assert!(!source.contains("ReportEnvironment"), "{source}");
+        assert!(source.contains("        var component = new Card();\n        component.Dispatch += OnComponentDispatch;\n        ShowLayoutRoot(component, null);\n        var hostStatus = TryApplyMosaicHostProps(component);\n"), "{source}");
+        assert!(source.contains("            component.Label = \"Sample Label\";\n"), "{source}");
+        assert!(source.contains("        TryRunMosaicHostInteractionAcceptance(component);\n        ObserveLayout();\n"));
+        assert!(source.contains("        (\"compact\", new[] { (\"sizeClass\", \"compact\") }),\n"));
+        assert!(source.contains("var root = new CardCompact();"));
+        assert!(source.contains("    private static readonly string[] MosaicSlotProperties = { \"Label\" };\n"));
+        let mount = &source[source.find("    private void MountLayout(string? variant)").unwrap()..];
+        assert!(mount.contains("if (this.layoutRoot is { } current) CarryMosaicSlots(current, next);"));
+        assert!(!source.contains("ApplyRequiredProps"));
+        assert!(!source.contains("RuntimeContent"));
+        // Events from any root reach the host, looked up by that root's type.
+        assert!(source.contains("TryHandleMosaicHostEvent(FrameworkElement component, CardEvent ev)"));
+        assert!(source.contains("FindMosaicHostMethod(\"HandleEvent\", component.GetType(), typeof(CardEvent))"));
+        assert!(source.contains("FindMosaicHostIntentMethod(hostType, hostIntent.GetType(), component.GetType())"));
+        assert!(source.contains("        root.SizeChanged += (_, _) => QueueLayoutSwitch();\n"));
+        assert!(source.contains("if (MosaicRuntimeHost.IsSettling)"));
+        assert!(p.main_window_xaml.contains("x:Name=\"LayoutHost\""));
+    }
+
+    /// Rules keep their order, and a rule with no conditions (which always
+    /// holds) is an empty array rather than `new[] { }`.
+    #[test]
+    fn layout_rules_keep_their_order() {
+        let p = card_shell(
+            true,
+            vec![
+                choice("compact", &[("sizeClass", "compact"), ("pointer", "coarse")]),
+                choice("touch", &[("pointer", "coarse")]),
+                choice("fallback", &[]),
+            ],
+        );
+        let source = &p.main_window_cs;
+        let rules = concat!(
+            "        (\"compact\", new[] { (\"sizeClass\", \"compact\"), (\"pointer\", \"coarse\") }),\n",
+            "        (\"touch\", new[] { (\"pointer\", \"coarse\") }),\n",
+            "        (\"fallback\", System.Array.Empty<(string Axis, string Value)>()),\n",
+        );
+        assert!(source.contains(rules), "{source}");
+        let compact = source.find("case \"compact\":").unwrap();
+        let touch = source.find("case \"touch\":").unwrap();
+        let fallback = source.find("case \"fallback\":").unwrap();
+        assert!(compact < touch && touch < fallback);
+    }
+
+    /// Every choice is checked before any of it reaches C#.
+    #[test]
+    fn invalid_layout_choices_are_refused() {
+        let (c, l, s) = tappable_card();
+        for (choices, why) in [
+            (vec![choice("tou\"ch", &[])], "cannot name a C# type"),
+            (vec![choice("touch", &[("pointer\"", "coarse")])], "wire-name axis"),
+            (vec![choice("touch", &[("size-class", "compact")])], "wire-name axis"),
+            (vec![choice("touch", &[("pointer", "Coarse")])], "lowercase value"),
+            (vec![choice("touch", &[("pointer", "co\"arse")])], "lowercase value"),
+            (vec![choice("touch", &[]), choice("Touch", &[])], "already names `CardTouch`"),
+            (vec![choice("task-list", &[]), choice("task_list", &[])], "already names `CardTaskList`"),
+            (vec![choice("event", &[])], "event union"),
+            // Another layout's support types, whichever rule comes first:
+            // `touch`'s control declares `CardTouchMosaicSlider`.
+            (
+                vec![choice("touch", &[]), choice("touch-mosaic-slider", &[])],
+                "`CardTouchMosaicSlider` starts with `CardTouchMosaic`",
+            ),
+            (
+                vec![choice("touch-mosaic-slider", &[]), choice("touch", &[])],
+                "`CardTouchMosaicSlider` starts with `CardTouchMosaic`",
+            ),
+        ] {
+            let mut o = opts();
+            o.emit_project = true;
+            o.layout_variants = choices.clone();
+            match from_pipeline(&c, &l, &s, None, &o) {
+                Err(PipelineEmitError::InvalidLayoutVariant(detail)) => {
+                    assert!(detail.contains(why), "{choices:?}: {detail}")
+                }
+                other => panic!("{choices:?}: expected a refusal, got {other:?}"),
+            }
+        }
+        let mut o = opts();
+        o.layout_variants = vec![choice("touch", &[])];
+        o.package_exports = vec!["CardTouch".to_string()];
+        assert!(from_pipeline(&c, &l, &s, None, &o).is_err(), "another export's name");
+    }
+
+    /// No variants: every project file is what it was. And a dialog-root
+    /// window, which shows only the button that opens its dialog, ignores
+    /// the choices rather than mounting a dialog in its tree.
+    #[test]
+    fn without_variants_or_with_a_dialog_root_the_shell_is_unchanged() {
+        let (c, l, s) = tappable_card();
+        let dialog = layout_with_root(
+            "Card",
+            LayoutNode { tag: "HostDialog".to_string(), part_name: None, props: Vec::new(), children: Vec::new() },
+        );
+        for layout in [&l, &dialog] {
+            for require_runtime in [false, true] {
+                let mut plain = opts();
+                plain.emit_project = true;
+                plain.require_runtime = require_runtime;
+                let baseline = from_pipeline(&c, layout, &s, None, &plain).unwrap();
+                let mut with_exports = plain.clone();
+                with_exports.package_exports = vec!["Card".to_string(), "Deck".to_string()];
+                assert_eq!(from_pipeline(&c, layout, &s, None, &with_exports).unwrap(), baseline);
+                if layout_root_is_dialog(layout) {
+                    let mut with_choices = with_exports.clone();
+                    with_choices.layout_variants = vec![choice("touch", &[("pointer", "coarse")])];
+                    assert_eq!(from_pipeline(&c, layout, &s, None, &with_choices).unwrap(), baseline);
+                }
+            }
+        }
+        assert!(layout_root_is_dialog(&dialog));
+        assert!(!layout_root_is_dialog(&l));
+    }
+
+    /// The layout-switching window is the plain window plus the switch:
+    /// remove what ENV3 adds and replaces, and the rest is byte-for-byte the
+    /// plain window, so startup, retry and the ENV4 report stay shared.
+    #[test]
+    fn the_switching_window_is_the_plain_window_plus_the_switch() {
+        for require_runtime in [false, true] {
+            let plain = card_shell(require_runtime, Vec::new()).main_window_cs;
+            let switching = card_shell(require_runtime, vec![choice("touch", &[])]).main_window_cs;
+            let section = switching
+                .find("\n    // ---- UI48 ENV3 (§7.11)")
+                .expect("the switch section");
+            let head = &switching[..section];
+            assert!(switching.ends_with("    }\n}\n"));
+            // Everything before the section, line by line, is the plain
+            // window's except the edited lines; nothing of the plain window
+            // is lost but `this.Component` and `dispatchWired`.
+            let plain_lines: Vec<&str> = plain.lines().collect();
+            let missing: Vec<&&str> = plain_lines
+                .iter()
+                .filter(|line| !head.lines().any(|kept| kept == **line))
+                .collect();
+            for line in &missing {
+                assert!(
+                    line.contains("this.Component")
+                        || line.contains("dispatchWired")
+                        || line.contains("TryHandleMosaicHostEvent(Card component")
+                        || line.contains("typeof(Card)")
+                        || line.contains("TryHandleMosaicHostIntent(Card component")
+                        || line.contains("The component is placed in the")
+                        || line.contains("window's Grid as `x:Name=\"Component\"`")
+                        || line.trim() == "{"
+                        || line.trim() == "}",
+                    "{require_runtime}: lost {line:?}"
+                );
+            }
+        }
+    }
+
+    #[test]
     fn project_dispatch_match_uses_keyword_safe_payload_patterns() {
         let c = component(
             "Foo",
@@ -18739,6 +20869,51 @@ mod tests {
             "payload keyword must not be emitted as a pattern variable, got:\n{}",
             p.main_window_cs
         );
+    }
+
+    /// The sample shell's host-status line names the handled event. Only a
+    /// component that declares events gets `MosaicName` on its event union,
+    /// so an emit-less component's shell must not read it: `FooEvent` is then
+    /// a bare `public abstract record FooEvent;` and `ev.MosaicName` failed
+    /// the WinUI build with CS1061.
+    #[test]
+    fn project_main_window_names_events_only_through_members_the_union_has() {
+        let s = empty_style("Foo");
+        let mut o = opts();
+        o.emit_project = true;
+        for (emits, label, absent) in [
+            (vec![], "ev.GetType().Name", "ev.MosaicName"),
+            (
+                vec![emit(
+                    "onToggle",
+                    vec![param("checked", EmitPayloadType::Bool)],
+                )],
+                "ev.MosaicName",
+                "ev.GetType().Name",
+            ),
+        ] {
+            let declares_events = !emits.is_empty();
+            let c = component("Foo", vec![], emits);
+            let l = layout_with_root("Foo", box_root());
+            let r = from_pipeline(&c, &l, &s, None, &o).unwrap();
+            assert_eq!(
+                r.events.contains("public abstract string MosaicName"),
+                declares_events,
+                "got:\n{}",
+                r.events
+            );
+            let shell = &r
+                .project
+                .as_ref()
+                .expect("project populated")
+                .main_window_cs;
+            let status = format!("$\"Status: Mosaic host handled {{{label}}}\"");
+            assert!(shell.contains(&status), "want {status}, got:\n{shell}");
+            assert!(
+                !shell.contains(absent),
+                "{absent} must not appear, got:\n{shell}"
+            );
+        }
     }
 
     /// Fix B1: for a UserControl-rooted component, the MainWindow
@@ -20074,6 +22249,57 @@ mod tests {
         }
     }
 
+    #[test]
+    fn nested_text_styles_preserve_parent_setters_and_isolate_siblings() {
+        let mut root = styled_box_with_text_child("outer");
+        let mut aligned = styled_box_with_text_child("aligned");
+        aligned.children.push(styled_box_with_text_child("override"));
+        root.children = vec![aligned, styled_box_with_text_child("sibling")];
+        let mut style = style_for_box("outer", vec![("color", "#eeeeee"), ("font-size", "16")]);
+        for (part, props) in [
+            ("aligned", vec![("text-align", "right")]),
+            ("override", vec![("color", "#ff0000")]),
+            ("sibling", vec![("font-weight", "700")]),
+        ] {
+            style.parts.extend(style_for_box(part, props).parts);
+        }
+        let r = compile(&component("Foo", vec![], vec![]), &layout_with_root("Foo", root), &style);
+        // Each branch inherits its lexical parent, not the last emitted style.
+        for (child, parent) in [(2, 1), (3, 2), (4, 1)] {
+            assert!(r.xaml.contains(&format!(
+                "x:Key=\"MosaicTextStyle{child}\" TargetType=\"TextBlock\" BasedOn=\"{{StaticResource MosaicTextStyle{parent}}}\""
+            )), "{}", r.xaml);
+        }
+        assert!(r.xaml.contains("Property=\"Foreground\" Value=\"#eeeeee\""));
+        assert!(r.xaml.contains("Property=\"TextAlignment\" Value=\"Right\""));
+        assert!(r.xaml.contains("Property=\"Foreground\" Value=\"#ff0000\""));
+        assert_eq!(r.xaml.matches("<Style TargetType=\"TextBlock\" BasedOn=").count(), 4);
+    }
+
+    #[test]
+    fn structural_table_row_text_styles_restore_the_table_parent() {
+        let mut first = styled_box_with_text_child("first");
+        first.tag = "Row".into();
+        let mut second = styled_box_with_text_child("second");
+        second.tag = "Row".into();
+        let root = LayoutNode {
+            tag: "HostTable".into(), part_name: Some("table".into()), props: vec![],
+            children: vec![LayoutNode {
+                tag: "HostTableBody".into(), part_name: None, props: vec![],
+                children: vec![first, second],
+            }],
+        };
+        let mut style = style_for_box("table", vec![("color", "#eeeeee")]);
+        style.parts.extend(style_for_box("first", vec![("text-align", "right")]).parts);
+        style.parts.extend(style_for_box("second", vec![("font-weight", "700")]).parts);
+        let r = compile(&component("Foo", vec![], vec![]), &layout_with_root("Foo", root), &style);
+        for child in [2, 3] {
+            assert!(r.xaml.contains(&format!(
+                "x:Key=\"MosaicTextStyle{child}\" TargetType=\"TextBlock\" BasedOn=\"{{StaticResource MosaicTextStyle1}}\""
+            )), "{}", r.xaml);
+        }
+    }
+
     // ── issue #12022: dropped_style_properties ──
 
     /// An `inset` `box-shadow` (the moon/status-dot drawing hack, issue
@@ -20413,7 +22639,7 @@ mod tests {
             r.xaml
         );
         assert!(
-            r.xaml.contains("<Style TargetType=\"TextBlock\">"),
+            r.xaml.contains("<Style TargetType=\"TextBlock\" BasedOn=\"{StaticResource MosaicTextStyle1}\"/>"),
             "got:\n{}",
             r.xaml
         );
@@ -21638,6 +23864,33 @@ mod tests {
         )
     }
 
+    #[test]
+    fn structural_header_uses_colgroup_widths_and_invalidates_on_resize() {
+        let c = component("Sheet", vec![
+            slot("sizes", SlotType::List(Box::new(ListInnerType::Number)), true),
+            slot("labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+        ], vec![]);
+        let header = for_node(LayoutPropValue::SlotRef("labels".into()), "label", Some("i"),
+            vec![wrapper_node("Box", vec![], vec![])]);
+        let columns = for_node(LayoutPropValue::SlotRef("sizes".into()), "size", Some("i"),
+            vec![wrapper_node("Col", vec![LayoutProp { name: "width".into(),
+                value: LayoutPropValue::Expr("( size )".into()) }], vec![])]);
+        let table = host_table_node(None, vec![
+            section_node("HostTableColGroup", vec![columns]),
+            section_node("HostTableHead", vec![wrapper_node("Row", vec![], vec![header])]),
+        ]);
+        let unrelated = for_node(LayoutPropValue::SlotRef("labels".into()), "other", None,
+            vec![wrapper_node("Box", vec![], vec![])]);
+        let r = compile(&c, &layout_with_root("Sheet", wrapper_node("Column", vec![],
+            vec![table, unrelated])), &empty_style("Sheet"));
+        assert_eq!(r.xaml.matches("Width=\"{x:Bind Width, Mode=OneWay}\"").count(), 1, "{}", r.xaml);
+        assert!(r.code_behind.contains("Sizes is { } widths && i < widths.Count ? widths[i] : 0"), "{}", r.code_behind);
+        let callback = r.code_behind.split("void OnMosaicSizesRowProjectionInputChanged").nth(1).expect("width callback");
+        assert!(callback.split("    }").next().unwrap().contains("SheetLabelVmRows"), "{callback}");
+        let unrelated_vm = r.for_view_models.iter().find(|vm| vm.filename.contains("OtherVm")).unwrap();
+        assert!(!unrelated_vm.source.contains("double Width"));
+    }
+
     /// GROUP B: the inner value VM (`Grid_VVm`) must type its value
     /// field as `string`, NOT `IReadOnlyList<string>`. The outer row VM
     /// keeps `IReadOnlyList<string> Row`. Binding a `string` Text to a
@@ -22096,7 +24349,7 @@ mod tests {
         let r = compile(&c, &l, &s);
         assert!(
             r.xaml.contains(
-                "<DataTemplate x:DataType=\"local:HoverRows_RowVm\">\n                <Grid>\n                    <VisualStateManager.VisualStateGroups>"
+                "<DataTemplate x:DataType=\"local:HoverRows_RowVm\">\n                <UserControl>\n                    <Grid>\n                        <VisualStateManager.VisualStateGroups>"
             ),
             "hover groups must live in the repeated row namescope:\n{}",
             r.xaml
@@ -22367,7 +24620,7 @@ mod tests {
         let r = compile(&c, &l, &s);
         assert!(
             r.xaml.contains(
-                "<DataTemplate x:DataType=\"local:FocusRows_RowVm\">\n                <Grid>\n                    <VisualStateManager.VisualStateGroups>"
+                "<DataTemplate x:DataType=\"local:FocusRows_RowVm\">\n                <UserControl>\n                    <Grid>\n                        <VisualStateManager.VisualStateGroups>"
             ),
             "focus groups must live in the repeated row namescope:\n{}",
             r.xaml
@@ -22813,14 +25066,14 @@ mod tests {
         );
         assert!(
             r.xaml.contains(
-                "<DataTemplate x:DataType=\"local:AnimatedRow_RowVm\">\n                <Grid>\n                    <VisualStateManager.VisualStateGroups>"
+                "<DataTemplate x:DataType=\"local:AnimatedRow_RowVm\">\n                <UserControl>\n                    <Grid>\n                        <VisualStateManager.VisualStateGroups>"
             ),
-            "WinUI StateTriggers must live on the DataTemplate's first visual child:\n{}",
+            "WinUI StateTriggers must live on the template control host's first child:\n{}",
             r.xaml
         );
         assert!(
             r.xaml
-                .contains("<StateTrigger IsActive=\"{x:Bind IsSelected, Mode=OneWay}\"/>"),
+                .contains("Tag=\"{x:Bind IsSelected, Mode=OneWay}\""),
             "template predicate must bind row-local projected state:\n{}",
             r.xaml
         );
@@ -22853,7 +25106,7 @@ mod tests {
                 "rows",
                 SlotType::List(Box::new(ListInnerType::Text)),
                 true,
-            )],
+            ), slot("selected-index", SlotType::Number, true)],
             vec![],
         );
         let l = layout_with_root(
@@ -22864,7 +25117,7 @@ mod tests {
                 Some("r"),
                 vec![styled_host_button(vec![LayoutProp {
                     name: "state-when-selected".to_string(),
-                    value: LayoutPropValue::Expr("r == 0".to_string()),
+                    value: LayoutPropValue::Expr("(r == selectedIndex && r >= 0)".to_string()),
                 }])],
             ),
         );
@@ -22888,16 +25141,15 @@ mod tests {
         };
 
         let r = compile(&c, &l, &style);
-        assert!(
-            !r.xaml.contains("<VisualStateManager.VisualStateGroups>"),
-            "unsupported template predicates must be omitted instead of targeting the root:\n{}",
-            r.xaml
-        );
-        assert!(
-            !r.code_behind.contains("private bool Expr_"),
-            "DataTemplate x:Bind cannot resolve page-level helper methods:\n{}",
-            r.code_behind
-        );
+        assert!(r.xaml.contains("<VisualStateManager.VisualStateGroups>"), "{}", r.xaml);
+        assert!(r.xaml.contains("Tag=\"{x:Bind Expr_"), "{}", r.xaml);
+        assert!(!r.xaml.contains("x:Bind Owner.Expr_"), "{}", r.xaml);
+        assert!(!r.xaml.contains("<StateTrigger IsActive=\"{x:Bind "), "{}", r.xaml);
+        assert!(r.xaml.contains("IsActive=\"{Binding Tag, ElementName=MosaicState1State0Trigger}"), "{}", r.xaml);
+
+        assert!(r.code_behind.contains("OnMosaicSelectedIndexRowProjectionInputChanged"), "{}", r.code_behind);
+        let vm = r.for_view_models.iter().find(|vm| vm.filename.ends_with("_RowVm.cs")).unwrap();
+        assert!(vm.source.contains("=> Owner.Expr_"), "{}", vm.source);
     }
 
     // ── #13040 ──────────────────────────────────────────────────────

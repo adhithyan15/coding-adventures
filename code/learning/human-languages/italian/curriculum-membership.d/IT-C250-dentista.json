@@ -1,0 +1,11 @@
+{
+  "id": "IT-C250-dentista",
+  "pathSegment": "IT-PATH-250-COSE250",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-250-COSE250",
+      "order": 2
+    }
+  ]
+}

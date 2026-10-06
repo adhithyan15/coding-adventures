@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:4cd40ee39f38dc81",
+  "lessonIds": [
+    "RU-C142-nosit",
+    "RU-C142-derzhat",
+    "RU-C142-brosat",
+    "RU-C142-lovit",
+    "RU-C142-tolkat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch142.txt",
+  "json": "russian/narration/ch142.json",
+  "textHash": "fnv1a64:b735f72c3220dd91",
+  "jsonHash": "fnv1a64:215fa1c6c99bcd08",
+  "findings": []
+}

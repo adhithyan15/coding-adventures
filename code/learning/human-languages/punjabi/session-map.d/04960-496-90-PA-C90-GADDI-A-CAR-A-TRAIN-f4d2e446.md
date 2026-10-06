@@ -1,0 +1,1 @@
+| 496 | 90 | PA-C90-gaddi | a car; a train |

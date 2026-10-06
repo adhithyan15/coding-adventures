@@ -1,0 +1,11 @@
+{
+  "id": "FR-C154-poumon",
+  "pathSegment": "FR-PATH-154-SANTE154",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-154-SANTE154",
+      "order": 2
+    }
+  ]
+}

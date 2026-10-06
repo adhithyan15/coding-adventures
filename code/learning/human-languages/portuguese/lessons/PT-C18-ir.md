@@ -8,21 +8,21 @@ type: word
 headword: ir
 gloss: "to go — two letters long, and welded together out of three separate Latin verbs"
 concept_tag: VERB-GO
-prerequisites: [PT-C18-ter-haver, PT-C16-ser-roots]
+prerequisites: [PT-C18-ter-haver, PT-C16-ser-roots, PT-C18-ha-time-ago]
 sounds: [final-r, nasal-ao]
 roots: [ire-latin, vadere-latin]
 etymology_hook: "ir ← īre (→ exit, transit, initial, itinerary, ambition, perish, obituary, and the grammar word preterite), but vou/vais/vai ← vādere 'to advance' (→ evade, invade, pervade) and fui ← esse's old perfect: one two-letter verb, three ancestors"
 duration:
   max_seconds: 228
 requires:
-  knowledge: [PT-LEX-TER-HAVER-02, PT-ETYMON-SER-ROOTS-02]
+  knowledge: [PT-LEX-TER-HAVER-02, PT-ETYMON-SER-ROOTS-02, PT-GRAMMAR-HA-TIME-04]
 introduces:
   knowledge: [PT-LEX-IR-02, PT-ETYMON-IR-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PT-LEX-TER-HAVER-02, PT-ETYMON-SER-ROOTS-02, PT-LEX-IR-02, PT-ETYMON-IR-03]
+  knowledge: [PT-LEX-TER-HAVER-02, PT-ETYMON-SER-ROOTS-02, PT-LEX-IR-02, PT-ETYMON-IR-03, PT-GRAMMAR-HA-TIME-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [PT-C16-ser-roots, PT-C15-preterito-perfeito, PT-C05-falar]
 # ir — two letters, three ancestors
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PT-GRAMMAR-HA-TIME-04] -->
 
 [PAUSE 2s] Portuguese's verb for "to go" is two letters long, and no two of its
 rows resemble one another. There is a reason for that.
+
+[PAUSE 2s] *Há três anos*, three years ago. *Há* stays fixed and the amount moves: *há dois dias*.
 
 ## You'll want to know: The forms, and the future they build
 <!-- hl-knowledge: introduces=[PT-LEX-IR-02]; assesses=[] -->

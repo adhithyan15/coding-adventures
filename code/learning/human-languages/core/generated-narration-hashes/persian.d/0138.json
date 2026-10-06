@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:0432bd279460e46e",
+  "lessonIds": [
+    "FA-C138-ayande",
+    "FA-C138-az-hala",
+    "FA-C138-tarh",
+    "FA-C138-tasmim-gereftan",
+    "FA-C138-omidvar-budan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch138.txt",
+  "json": "persian/narration/ch138.json",
+  "textHash": "fnv1a64:ea9dced52aeb6d13",
+  "jsonHash": "fnv1a64:6617f78069d8b364",
+  "findings": []
+}

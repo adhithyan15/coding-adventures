@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "To expect, To catch, To watch television, To hold on to, To whisper",
+  "label": "ch:ge-to-expect-to-catch-to-watch-television-to-hold-on-to-to-whisper",
+  "canDo": "I can say to expect, to catch, to watch television, to hold on to and to whisper.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C180-fluestern",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say to expect, to catch, to watch television, to hold on to and to whisper.",
+    "assesses": [
+      "GE-LEX-C180-VERB180-03",
+      "GE-LEX-C180-VERB180-04",
+      "GE-LEX-C180-VERB180-05"
+    ]
+  }
+}

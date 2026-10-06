@@ -1,0 +1,11 @@
+{
+  "id": "FR-C186-confiance",
+  "pathSegment": "FR-PATH-186-SANTE186",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-186-SANTE186",
+      "order": 2
+    }
+  ]
+}

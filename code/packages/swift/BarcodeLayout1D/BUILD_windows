@@ -1,1 +1,3 @@
-where swift >/dev/null 2>/dev/null && swift test || echo Swift not available on this runner - skipping
+where swift >nul 2>nul || exit /b 1
+swift test --enable-code-coverage || exit /b 1
+swift build -c release

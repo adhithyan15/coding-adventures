@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:cea4525983fa1d26",
+  "lessonIds": [
+    "AR-C250-kartun",
+    "AR-C250-tub",
+    "AR-C250-rukham",
+    "AR-C250-mattat",
+    "AR-C250-muthallath"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch250.txt",
+  "json": "arabic/narration/ch250.json",
+  "textHash": "fnv1a64:b698ec5820dd5234",
+  "jsonHash": "fnv1a64:7c65cc1e01bc49cf",
+  "findings": []
+}

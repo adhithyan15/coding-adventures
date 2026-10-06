@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "Modern, Ancient, Local, Foreign, Local",
+  "label": "ch:hi-modern-ancient-local-foreign-local",
+  "canDo": "I can say modern, ancient, local, foreign and local.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-C240-desi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say modern, ancient, local, foreign and local.",
+    "assesses": [
+      "HI-LEX-C240-QUAL240-03",
+      "HI-LEX-C240-QUAL240-04",
+      "HI-LEX-C240-QUAL240-05"
+    ]
+  }
+}

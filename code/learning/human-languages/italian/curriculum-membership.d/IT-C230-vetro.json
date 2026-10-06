@@ -1,0 +1,11 @@
+{
+  "id": "IT-C230-vetro",
+  "pathSegment": "IT-PATH-230-COSE230",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-230-COSE230",
+      "order": 1
+    }
+  ]
+}

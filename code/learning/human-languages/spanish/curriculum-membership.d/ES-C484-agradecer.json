@@ -1,0 +1,11 @@
+{
+  "id": "ES-C484-agradecer",
+  "pathSegment": "ES-PATH-484-USAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-484-USAR",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "Dust, Smoke, Ash, Moonlight, Tempest",
+  "label": "ch:ur-dust-smoke-ash-moonlight-tempest",
+  "canDo": "I can say dust, smoke, ash, moonlight and a tempest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R206-second-pass-words-from-chapters-202-206",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say dust, smoke, ash, moonlight and a tempest.",
+    "assesses": [
+      "UR-LEX-C206-CHIZ206-03",
+      "UR-LEX-C206-CHIZ206-04",
+      "UR-LEX-C206-CHIZ206-05"
+    ]
+  }
+}

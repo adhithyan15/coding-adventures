@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:43f05bcd26b291f0",
+  "lessonIds": [
+    "TE-C188-prasadam",
+    "TE-C188-ariselu",
+    "TE-C188-toranam",
+    "TE-C188-bottu",
+    "TE-C188-gorintaku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch188.txt",
+  "json": "telugu/narration/ch188.json",
+  "textHash": "fnv1a64:634333d8a15c1e8e",
+  "jsonHash": "fnv1a64:e06abcb3c90b27e0",
+  "findings": []
+}

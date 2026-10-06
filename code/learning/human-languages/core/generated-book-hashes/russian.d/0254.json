@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:605cb2ba5daf0062",
+  "lessonIds": [
+    "RU-C254-devochka",
+    "RU-C254-paren",
+    "RU-C254-devushka",
+    "RU-C254-roditeli",
+    "RU-C254-plemyannik"
+  ],
+  "tex": "russian/book/chapters/ch254-girl-lad-young-woman-parents-nephew.tex"
+}

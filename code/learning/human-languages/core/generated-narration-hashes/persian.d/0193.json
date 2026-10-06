@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:27f241e738c61a51",
+  "lessonIds": [
+    "FA-C193-darmangah",
+    "FA-C193-bashgah",
+    "FA-C193-hayat",
+    "FA-C193-ja",
+    "FA-C193-fasele"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch193.txt",
+  "json": "persian/narration/ch193.json",
+  "textHash": "fnv1a64:a85fd1acbd31d59d",
+  "jsonHash": "fnv1a64:7de0a3fb077a6f4e",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-247-THG247",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an arrow, a sword, armour, a flag and a drum.",
+  "prerequisites": []
+}

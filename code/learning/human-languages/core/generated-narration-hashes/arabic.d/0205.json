@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:347f0f5b73ce2bde",
+  "lessonIds": [
+    "AR-C205-tabia",
+    "AR-C205-turab",
+    "AR-C205-tin",
+    "AR-C205-hudud",
+    "AR-C205-kawkab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch205.txt",
+  "json": "arabic/narration/ch205.json",
+  "textHash": "fnv1a64:b036d3d71ef03a9c",
+  "jsonHash": "fnv1a64:4f241327f3590ffe",
+  "findings": []
+}

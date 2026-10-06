@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C332-kari",
+    "language": "malayalam",
+    "chapter": 332,
+    "sequence": 15770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51d264255dd1f9a0"
+  },
+  "findings": []
+}

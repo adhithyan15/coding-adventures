@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C171-beijar",
+    "language": "portuguese",
+    "chapter": 171,
+    "sequence": 9320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcba149efe4fbda9"
+  },
+  "findings": []
+}

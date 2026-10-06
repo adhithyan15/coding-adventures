@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "To dust, To tidy up, To decorate, To fry, To mix",
+  "label": "ch:bn-to-dust-to-tidy-up-to-decorate-to-fry-to-mix",
+  "canDo": "I can say to dust, to tidy up, to decorate, to fry and to mix.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C105-meshano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: I can say to dust, to tidy up, to decorate, to fry and to mix.",
+    "assesses": [
+      "BN-LEX-C105-ACT105-03",
+      "BN-LEX-C105-ACT105-04",
+      "BN-LEX-C105-ACT105-05"
+    ]
+  }
+}

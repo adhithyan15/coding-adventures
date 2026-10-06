@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C484-agradecer",
+    "language": "spanish",
+    "chapter": 484,
+    "sequence": 13730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d533c2c24295e35"
+  },
+  "findings": []
+}

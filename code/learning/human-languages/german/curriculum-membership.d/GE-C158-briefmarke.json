@@ -1,0 +1,11 @@
+{
+  "id": "GE-C158-briefmarke",
+  "pathSegment": "GE-PATH-158-THING158",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-158-THING158",
+      "order": 4
+    }
+  ]
+}

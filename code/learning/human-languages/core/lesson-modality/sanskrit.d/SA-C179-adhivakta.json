@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C179-adhivakta",
+    "language": "sanskrit",
+    "chapter": 179,
+    "sequence": 9760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d24add80151a4c96"
+  },
+  "findings": []
+}

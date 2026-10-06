@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Drought, Earthquake, Nature, Rock, Fire",
+  "label": "ch:ta-drought-earthquake-nature-rock-fire",
+  "canDo": "I can say a drought, an earthquake, nature, a rock and fire.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-R248-second-pass-words-from-chapters-246-248",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say a drought, an earthquake, nature, a rock and fire.",
+    "assesses": [
+      "TA-LEX-C248-PORUL248-03",
+      "TA-LEX-C248-PORUL248-04",
+      "TA-LEX-C248-PORUL248-05"
+    ]
+  }
+}

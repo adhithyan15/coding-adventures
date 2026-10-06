@@ -1,0 +1,11 @@
+{
+  "id": "FA-C207-sonnat",
+  "pathSegment": "FA-PATH-207-CHIZ207",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-207-CHIZ207",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C217-gordo-gorda",
+  "pathSegment": "PT-PATH-217-QUAL217",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-217-QUAL217",
+      "order": 4
+    }
+  ]
+}

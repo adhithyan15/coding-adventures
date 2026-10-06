@@ -1,0 +1,11 @@
+{
+  "id": "RU-C202-moryak",
+  "pathSegment": "RU-PATH-202-RABOTA202",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-202-RABOTA202",
+      "order": 3
+    }
+  ]
+}

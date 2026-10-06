@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:1c389f4a6aef676b",
+  "lessonIds": [
+    "LA-C198-veto",
+    "LA-C198-defendo",
+    "LA-C198-morior",
+    "LA-C198-nubo",
+    "LA-C198-quiesco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch198.txt",
+  "json": "latin/narration/ch198.json",
+  "textHash": "fnv1a64:00c69fbf1afead90",
+  "jsonHash": "fnv1a64:a8a489289c8944d9",
+  "findings": []
+}

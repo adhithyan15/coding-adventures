@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Huge, Medium, Nearby, Personal, Public",
+  "label": "ch:bn-huge-medium-nearby-personal-public",
+  "canDo": "I can say huge, medium, nearby, personal and public.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C193-sorkari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say huge, medium, nearby, personal and public.",
+    "assesses": [
+      "BN-LEX-C193-GUN193-03",
+      "BN-LEX-C193-GUN193-04",
+      "BN-LEX-C193-GUN193-05"
+    ]
+  }
+}

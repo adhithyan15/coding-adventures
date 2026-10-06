@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "To turn, To enjoy, To shape, To complain, To be missing",
+  "label": "ch:la-to-turn-to-enjoy-to-shape-to-complain-to-be-missing",
+  "canDo": "I can say to turn, to enjoy, to shape, to complain and to be missing.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C231-desum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say to turn, to enjoy, to shape, to complain and to be missing.",
+    "assesses": [
+      "LA-LEX-C231-ACT231-03",
+      "LA-LEX-C231-ACT231-04",
+      "LA-LEX-C231-ACT231-05"
+    ]
+  }
+}

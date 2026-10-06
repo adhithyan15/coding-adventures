@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:61107be980704fbd",
+  "lessonIds": [
+    "BN-C215-molom",
+    "BN-C215-daktarkhana",
+    "BN-C215-rogi",
+    "BN-C215-nari",
+    "BN-C215-nihshvas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch215.txt",
+  "json": "bengali/narration/ch215.json",
+  "textHash": "fnv1a64:20428ea60ece9d7f",
+  "jsonHash": "fnv1a64:edbb7f3af019c5b0",
+  "findings": []
+}

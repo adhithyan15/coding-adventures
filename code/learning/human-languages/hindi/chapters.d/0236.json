@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Half, Whole, Double, Separate, Round",
+  "label": "ch:hi-half-whole-double-separate-round",
+  "canDo": "I can say half, whole, double, separate and round.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-C236-gol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say half, whole, double, separate and round.",
+    "assesses": [
+      "HI-LEX-C236-QUAL236-03",
+      "HI-LEX-C236-QUAL236-04",
+      "HI-LEX-C236-QUAL236-05"
+    ]
+  }
+}

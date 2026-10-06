@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Colleague, Official, Clerk, Engineer, Lawyer",
+  "label": "ch:ml-colleague-official-clerk-engineer-lawyer",
+  "canDo": "I can say a colleague, an official, a clerk, an engineer and a lawyer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C220-vakkil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say a colleague, an official, a clerk, an engineer and a lawyer.",
+    "assesses": [
+      "ML-LEX-C220-JOLI220-03",
+      "ML-LEX-C220-JOLI220-04",
+      "ML-LEX-C220-JOLI220-05"
+    ]
+  }
+}

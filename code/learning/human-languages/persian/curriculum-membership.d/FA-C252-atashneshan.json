@@ -1,0 +1,11 @@
+{
+  "id": "FA-C252-atashneshan",
+  "pathSegment": "FA-PATH-252-KAR252",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-252-KAR252",
+      "order": 2
+    }
+  ]
+}

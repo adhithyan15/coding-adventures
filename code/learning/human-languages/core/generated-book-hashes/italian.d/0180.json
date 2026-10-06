@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:57a4799d3d7a8ca4",
+  "lessonIds": [
+    "IT-C180-osservare",
+    "IT-C180-partecipare",
+    "IT-C180-passeggiare",
+    "IT-C180-piegare",
+    "IT-C180-possedere"
+  ],
+  "tex": "italian/book/chapters/ch180-to-observe-to-take-part-to-go-for-a-walk-to-fold-to-own.tex"
+}

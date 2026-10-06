@@ -1,0 +1,11 @@
+{
+  "id": "IT-C145-convincere",
+  "pathSegment": "IT-PATH-145-VERBI145",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-145-VERBI145",
+      "order": 2
+    }
+  ]
+}

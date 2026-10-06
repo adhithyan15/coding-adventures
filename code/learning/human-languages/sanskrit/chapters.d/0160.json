@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "Meal, Curry, Food, Eating, Small pitcher",
+  "label": "ch:sa-meal-curry-food-eating-small-pitcher",
+  "canDo": "I can say a meal, a curry, food, eating and a small pitcher.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C160-kalasi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can say a meal, a curry, food, eating and a small pitcher.",
+    "assesses": [
+      "SA-LEX-C160-THG160-03",
+      "SA-LEX-C160-THG160-04",
+      "SA-LEX-C160-THG160-05"
+    ]
+  }
+}

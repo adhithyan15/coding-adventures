@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:936d467f92a9a561",
+  "lessonIds": [
+    "MR-C235-surekh",
+    "MR-C235-bhayankar",
+    "MR-C235-ascaryakarak",
+    "MR-C235-kantalvana",
+    "MR-C235-sampurna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch235.txt",
+  "json": "marathi/narration/ch235.json",
+  "textHash": "fnv1a64:56bc2618ee62d69e",
+  "jsonHash": "fnv1a64:72b0090f408ceae6",
+  "findings": []
+}

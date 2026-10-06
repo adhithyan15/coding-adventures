@@ -1,0 +1,11 @@
+{
+  "id": "MR-C239-niyam",
+  "pathSegment": "MR-PATH-239-VASTU239",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-239-VASTU239",
+      "order": 4
+    }
+  ]
+}

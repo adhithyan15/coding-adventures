@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:00edd930137ae24b",
+  "lessonIds": [
+    "TE-C308-gunta",
+    "TE-C308-mukka",
+    "TE-C308-ancu",
+    "TE-C308-mudi",
+    "TE-C308-varusa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch308.txt",
+  "json": "telugu/narration/ch308.json",
+  "textHash": "fnv1a64:c63f9c612499d612",
+  "jsonHash": "fnv1a64:7e84307903f70c01",
+  "findings": []
+}

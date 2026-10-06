@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "Sky blue, Suddenly, More, Completely, Careless",
+  "label": "ch:ur-sky-blue-suddenly-more-completely-careless",
+  "canDo": "I can say sky blue, suddenly, more, completely and careless.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C195-laparvah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say sky blue, suddenly, more, completely and careless.",
+    "assesses": [
+      "UR-LEX-C195-SIFAT195-03",
+      "UR-LEX-C195-SIFAT195-04",
+      "UR-LEX-C195-SIFAT195-05"
+    ]
+  }
+}

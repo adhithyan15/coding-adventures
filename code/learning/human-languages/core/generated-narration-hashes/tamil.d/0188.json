@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:e72709ba4f981c2e",
+  "lessonIds": [
+    "TA-C188-mul",
+    "TA-C188-tamarai",
+    "TA-C188-mallikai",
+    "TA-C188-veppamaram",
+    "TA-C188-tennaimaram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch188.txt",
+  "json": "tamil/narration/ch188.json",
+  "textHash": "fnv1a64:9cdadf0897c2efc3",
+  "jsonHash": "fnv1a64:cb5e706ae7ad37d6",
+  "findings": []
+}

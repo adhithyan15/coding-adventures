@@ -1,0 +1,11 @@
+{
+  "id": "TE-C164-muncu",
+  "pathSegment": "TE-PATH-164-KRIYA164",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-164-KRIYA164",
+      "order": 2
+    }
+  ]
+}

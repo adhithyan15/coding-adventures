@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:313d2ff36d6fca17",
+  "lessonIds": [
+    "BN-C139-bhitu",
+    "BN-C139-shanto",
+    "BN-C139-joruri",
+    "BN-C139-soja",
+    "BN-C139-baka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch139.txt",
+  "json": "bengali/narration/ch139.json",
+  "textHash": "fnv1a64:a8a4816417e01f4d",
+  "jsonHash": "fnv1a64:991c94087ef33529",
+  "findings": []
+}

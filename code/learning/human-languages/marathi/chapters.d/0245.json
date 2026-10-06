@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Farm plot, Cowshed, Mosque, College, Museum",
+  "label": "ch:mr-farm-plot-cowshed-mosque-college-museum",
+  "canDo": "I can say a farm plot, a cowshed, a mosque, a college and a museum.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-R245-second-pass-words-from-chapters-243-245",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say a farm plot, a cowshed, a mosque, a college and a museum.",
+    "assesses": [
+      "MR-LEX-C245-VASTU245-03",
+      "MR-LEX-C245-VASTU245-04",
+      "MR-LEX-C245-VASTU245-05"
+    ]
+  }
+}

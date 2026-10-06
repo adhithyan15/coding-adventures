@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "Natural rubber, Metal, Brick, Small bag, Rope",
+  "label": "ch:fr-natural-rubber-metal-brick-small-bag-rope",
+  "canDo": "I can say natural rubber, metal, a brick, a small bag and a rope.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C202-corde",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say natural rubber, metal, a brick, a small bag and a rope.",
+    "assesses": [
+      "FR-LEX-C202-CHOSES202-03",
+      "FR-LEX-C202-CHOSES202-04",
+      "FR-LEX-C202-CHOSES202-05"
+    ]
+  }
+}

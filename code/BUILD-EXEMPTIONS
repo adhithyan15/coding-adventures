@@ -1,4 +1,4 @@
-# BUILD-EXEMPTIONS — crates not covered by any BUILD file
+# BUILD-EXEMPTIONS — package roots not covered by any BUILD file
 #
 # The build tool discovers work by scanning for BUILD files. A crate that no
 # BUILD covers is therefore invisible to it: never built, its test targets never
@@ -8,8 +8,9 @@
 # nothing tests or lints it. That is how 84 crates accumulated unnoticed, two of
 # them carrying live clippy errors.
 #
-# `build-tool -validate-build-files` now fails on any directory that has a
-# Cargo.toml, no covering BUILD, and no entry here. A brand-new crate is in
+# `build-tool -validate-build-files` now fails on any Cargo manifest directory
+# or direct established-lane package root with governed source evidence, no
+# covering BUILD, and no applicable entry here. A brand-new package root is in
 # neither state, so it fails the first time it is pushed. That is the point:
 # writing the missing BUILD files fixes today's omissions, but only this gate
 # makes the next one impossible.
@@ -74,3 +75,40 @@ PENDING code/packages/rust/sir-conformance  # cross-backend conformance harness;
 # x86_64-unknown-linux-gnu target CI actually builds on.
 PENDING code/packages/rust/paint-vm-cairo  # 5 dependents; cairo-rs needs libcairo via pkg-config on Linux/macOS. Passes on Windows ONLY because the dep is target-gated off there, so that is not evidence — and the Linux cross-check cannot settle it either (pkg-config refuses to cross-compile). Needs a real Linux/macOS host with libcairo installed
 PENDING code/packages/rust/paint-vm-skia  # 2 dependents (barcode-1d, barcode-2d); skia-safe downloads or builds Skia binaries at build time, which needs a host with that toolchain to verify honestly
+
+# Established-lane package roots with explicit parity owners. These entries
+# are transitional debt and must be removed in the same change that lands a
+# runnable covering BUILD front.
+PENDING code/packages/elixir/activation_functions  # owned by elixir-activation-matrix-perceptron-build-front-coverage
+PENDING code/packages/elixir/matrix  # owned by elixir-activation-matrix-perceptron-build-front-coverage
+PENDING code/packages/elixir/perceptron  # owned by elixir-activation-matrix-perceptron-build-front-coverage
+PENDING code/packages/go/algol-lexer  # owned by go-algol-lexer-parser-build-front-coverage
+PENDING code/packages/go/algol-parser  # owned by go-algol-lexer-parser-build-front-coverage
+PENDING code/packages/haskell/arc2d  # owned by haskell-arc2d-build-front-coverage
+PENDING code/packages/kotlin/micro-qr  # owned by kotlin-micro-qr-build-front-and-gradle-metadata-coverage
+PENDING code/packages/python/algol-lexer  # owned by python-algol-lexer-parser-build-front-coverage
+PENDING code/packages/python/algol-parser  # owned by python-algol-lexer-parser-build-front-coverage
+PENDING code/packages/python/alpha-axp-simulator  # owned by alpha-axp-simulator-two-lane-classification
+PENDING code/packages/python/block-ram  # owned by python-block-ram-fpga-build-front-coverage
+PENDING code/packages/python/cas-fourier  # owned by python-cas-laplace-fourier-build-front-coverage
+PENDING code/packages/python/cas-laplace  # owned by python-cas-laplace-fourier-build-front-coverage
+PENDING code/packages/python/cas-mnewton  # owned by python-cas-mnewton-build-front-coverage
+PENDING code/packages/python/cas-ode  # owned by python-cas-ode-build-front-coverage
+PENDING code/packages/python/cdc6600-simulator  # owned by cdc6600-simulator-two-lane-classification
+PENDING code/packages/python/fpga  # owned by python-block-ram-fpga-build-front-coverage
+PENDING code/packages/python/gradient-descent  # owned by python-gradient-descent-build-front-coverage
+PENDING code/packages/python/intel8051-simulator  # owned by python-intel8051-mips-r2000-sparc-v8-build-front-coverage
+PENDING code/packages/python/mips-r2000-simulator  # owned by python-intel8051-mips-r2000-sparc-v8-build-front-coverage
+PENDING code/packages/python/pdp11-simulator  # owned by pdp11-simulator-two-lane-classification
+PENDING code/packages/python/sparc-v8-simulator  # owned by python-intel8051-mips-r2000-sparc-v8-build-front-coverage
+PENDING code/packages/python/wave_physics  # owned by python-wave-physics-orphan-package-root-classification
+PENDING code/packages/ruby/activation-functions  # owned by ruby-activation-matrix-perceptron-build-front-coverage
+PENDING code/packages/ruby/matrix  # owned by ruby-activation-matrix-perceptron-build-front-coverage
+PENDING code/packages/ruby/perceptron  # owned by ruby-activation-matrix-perceptron-build-front-coverage
+PENDING code/packages/typescript/activation-functions  # owned by typescript-activation-matrix-perceptron-build-front-coverage
+PENDING code/packages/typescript/macsyma-compiler  # owned by typescript-macsyma-frontend-build-front-coverage
+PENDING code/packages/typescript/macsyma-lexer  # owned by typescript-macsyma-frontend-build-front-coverage
+PENDING code/packages/typescript/macsyma-parser  # owned by typescript-macsyma-frontend-build-front-coverage
+PENDING code/packages/typescript/matrix  # owned by typescript-activation-matrix-perceptron-build-front-coverage
+PENDING code/packages/typescript/perceptron  # owned by typescript-activation-matrix-perceptron-build-front-coverage
+PENDING code/packages/typescript/symbolic-vm  # owned by typescript-symbolic-vm-build-front-coverage

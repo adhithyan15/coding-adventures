@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:153b8259b0d8e7b2",
+  "lessonIds": [
+    "TE-C159-pindu",
+    "TE-C159-nanabettu",
+    "TE-C159-baguceyu",
+    "TE-C159-pareyu",
+    "TE-C159-pogottuko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch159.txt",
+  "json": "telugu/narration/ch159.json",
+  "textHash": "fnv1a64:0a7b5d6707e52cac",
+  "jsonHash": "fnv1a64:9ba7c4a347914b6a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "Officer, Clerk, Manager, Colleague, Meeting",
+  "label": "ch:te-officer-clerk-manager-colleague-meeting",
+  "canDo": "I can say an officer, a clerk, a manager, a colleague and a meeting.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C195-samavesam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say an officer, a clerk, a manager, a colleague and a meeting.",
+    "assesses": [
+      "TE-LEX-C195-PANI195-03",
+      "TE-LEX-C195-PANI195-04",
+      "TE-LEX-C195-PANI195-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Basin, Shower, Drawer, Cloth bag, Glass",
+  "label": "ch:bn-basin-shower-drawer-cloth-bag-glass",
+  "canDo": "I can say a basin, a shower, a drawer, a cloth bag and a glass.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C201-glas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say a basin, a shower, a drawer, a cloth bag and a glass.",
+    "assesses": [
+      "BN-LEX-C201-JINIS201-03",
+      "BN-LEX-C201-JINIS201-04",
+      "BN-LEX-C201-JINIS201-05"
+    ]
+  }
+}

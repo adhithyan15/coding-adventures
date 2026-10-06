@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-204-IDAM204",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say stairs, a pharmacy, a restaurant, a supermarket and a clothes shop.",
+  "prerequisites": []
+}

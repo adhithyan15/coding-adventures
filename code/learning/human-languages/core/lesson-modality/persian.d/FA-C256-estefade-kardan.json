@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C256-estefade-kardan",
+    "language": "persian",
+    "chapter": 256,
+    "sequence": 13230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05a3213c939a0975"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "Architect, Weaver, Potter, Farm manager, Tenant farmer",
+  "label": "ch:la-architect-weaver-potter-farm-manager-tenant-farmer",
+  "canDo": "I can say an architect, a weaver, a potter, a farm manager and a tenant farmer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C188-colonus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say an architect, a weaver, a potter, a farm manager and a tenant farmer.",
+    "assesses": [
+      "LA-LEX-C188-RES188-03",
+      "LA-LEX-C188-RES188-04",
+      "LA-LEX-C188-RES188-05"
+    ]
+  }
+}

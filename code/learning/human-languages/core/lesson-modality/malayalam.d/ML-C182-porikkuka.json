@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C182-porikkuka",
+    "language": "malayalam",
+    "chapter": 182,
+    "sequence": 7900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f35085f54e01af79"
+  },
+  "findings": []
+}

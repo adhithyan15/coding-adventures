@@ -1,0 +1,11 @@
+{
+  "id": "TE-C166-vidipovu",
+  "pathSegment": "TE-PATH-166-KRIYA166",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-166-KRIYA166",
+      "order": 4
+    }
+  ]
+}

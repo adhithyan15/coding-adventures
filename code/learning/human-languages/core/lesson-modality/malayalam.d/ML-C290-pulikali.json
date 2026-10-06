@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C290-pulikali",
+    "language": "malayalam",
+    "chapter": 290,
+    "sequence": 13550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca203d79295ce73d"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C204-stoit",
+  "pathSegment": "RU-PATH-204-ACT204",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-204-ACT204",
+      "order": 3
+    }
+  ]
+}

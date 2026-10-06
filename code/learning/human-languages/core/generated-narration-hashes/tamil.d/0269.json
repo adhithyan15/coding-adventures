@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:372f53627be6f8c0",
+  "lessonIds": [
+    "TA-C269-ciranta",
+    "TA-C269-vittiyacamana",
+    "TA-C269-calippana",
+    "TA-C269-eliya",
+    "TA-C269-vacatiyana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch269.txt",
+  "json": "tamil/narration/ch269.json",
+  "textHash": "fnv1a64:bfd9faa80ac75b23",
+  "jsonHash": "fnv1a64:f6017adf1b65b3e1",
+  "findings": []
+}

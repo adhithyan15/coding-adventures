@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "The Last Letter You Read",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6affe8d62e5ab4ae",
+  "sourceHash": "fnv1a64:50b63e98aa8947ff",
   "lessons": [
     {
       "id": "SA-W65-letter-nga",
@@ -374,6 +374,223 @@
             {
               "kind": "speech",
               "text": "Say each word in the table once more, and name the letter you took from it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-W65-connected-text-guided-copy",
+      "sequence": 3012,
+      "title": "नमस्ते। अहं संस्कृतं वदामि। (namaste. ahaṁ saṁskṛtaṁ vadāmi.) — two known sentences, one tiny text",
+      "headword": "नमस्ते। अहं संस्कृतं वदामि।",
+      "romanization": "namaste. ahaṁ saṁskṛtaṁ vadāmi.",
+      "gloss": "copy a two-sentence Sanskrit introduction with both danda marks visible",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:a6d564cf1796bc9c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the whole text once: नमस्ते। अहं संस्कृतं वदामि। (namaste. ahaṁ saṁskṛtaṁ vadāmi.) It says only two things you already know: “Hello. I speak Sanskrit.” Every word, sign, conjunct, and danda has already been taught. There is no new vocabulary here."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided copy of connected text",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the model visible. Copy नमस्ते। once. Leave one clear word space, then copy अहं संस्कृतं वदामि। Read each word as your hand reaches it."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy the complete two-sentence text once more on a fresh line:"
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्ते। अहं संस्कृतं वदामि। (namaste. ahaṁ saṁskṛtaṁ vadāmi.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Check the two danda marks, the space after the first one, both anusvāra dots, the vocalic-ṛ sign in संस्कृतं, and the joined स्त inside नमस्ते. Credit requires the connected Devanagari text; romanization is not an answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many sentences and how many danda marks did you write? (Two and two.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-W65-connected-text-delayed-copy",
+      "sequence": 3014,
+      "title": "Two sentences after the model closes",
+      "headword": "नमस्ते। अहं संस्कृतं वदामि।",
+      "romanization": "namaste. ahaṁ saṁskṛtaṁ vadāmi.",
+      "gloss": "copy the known two-sentence introduction after a short delay",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:b6d1e11eae4fc4ef",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read नमस्ते। अहं संस्कृतं वदामि। (namaste. ahaṁ saṁskṛtaṁ vadāmi.) once. Say its two meanings: “Hello. I speak Sanskrit.” Notice where each sentence ends."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy of the whole text",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model now. Wait ten seconds without writing. Then write both sentences from memory, with a danda after each one. There is no visible answer and no romanization while you write."
+            },
+            {
+              "kind": "speech",
+              "text": "Uncover and compare only after one complete attempt:"
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्ते। अहं संस्कृतं वदामि। (namaste. ahaṁ saṁskṛtaṁ vadāmi.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Check in this order: two complete sentences; two danda marks; word spaces; both anusvāra dots; ◌ृ; joined स्त. Repair only the first difference, then read the repaired text aloud. A Latin-letter version earns no Devanagari writing credit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What support disappeared? (The visible model; the meaning and the text stayed the same.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-W65-connected-text-independent-recall",
+      "sequence": 3016,
+      "title": "Meanings only — recall the complete Devanagari text",
+      "headword": "नमस्ते। अहं संस्कृतं वदामि।",
+      "romanization": "namaste. ahaṁ saṁskṛtaṁ vadāmi.",
+      "gloss": "write the known two-sentence introduction from meaning alone",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:8a2da8ee8e4e31c9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put every Sanskrit model away. The prompt below gives meanings only. Nothing new is being composed or translated: these are the same two old sentences in the same order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — independent connected-text recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write in Devanagari:"
+            },
+            {
+              "kind": "speech",
+              "text": "“Hello.” Literally, “a bow to you.”"
+            },
+            {
+              "kind": "speech",
+              "text": "“I speak Sanskrit.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Put a danda after each sentence. Stop after one complete attempt; do not use a visible Devanagari model or a romanized cue."
+            },
+            {
+              "kind": "speech",
+              "text": "Now uncover the answer: नमस्ते। अहं संस्कृतं वदामि। (namaste. ahaṁ saṁskṛtaṁ vadāmi.) Award credit only if both known sentences are complete, ordered, separated, and closed with danda marks in Devanagari. Romanization earns no credit. If one feature differs, repair that feature and write the whole two-sentence text once more from memory."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The runway began with one traced न. What can you now produce without a model? (A complete two-sentence Devanagari text from meaning alone.)"
             }
           ]
         }

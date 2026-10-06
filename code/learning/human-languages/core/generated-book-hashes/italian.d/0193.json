@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:2ebf5d4ece7b8674",
+  "lessonIds": [
+    "IT-C193-politica",
+    "IT-C193-economia",
+    "IT-C193-guerra",
+    "IT-C193-pace",
+    "IT-C193-esercito"
+  ],
+  "tex": "italian/book/chapters/ch193-politics-economy-war-peace-army.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-R160-first-pass-words-from-chapters-152-155",
+  "pathSegment": "FR-PATH-160-QUAL160",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-160-QUAL160",
+      "order": 5
+    }
+  ]
+}

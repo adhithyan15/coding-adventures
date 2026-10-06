@@ -24,9 +24,9 @@
  *       <remaining 62 hex>.cache
  *
  * Sharded so any single sub-dir stays well below typical filesystem
- * directory entry limits.  Atomic writes (temp file + rename) by
- * default — set `atomicWrites: false` if you trust the caller to
- * avoid concurrent writes to the same key.
+ * directory entry limits. Temp-file replacement is enabled by
+ * default: atomic on POSIX and process-serialized on Windows. Set
+ * `atomicWrites: false` if the caller prevents concurrent writes.
  *
  * @module index
  */

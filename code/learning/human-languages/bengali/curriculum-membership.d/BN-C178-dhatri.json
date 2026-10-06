@@ -1,0 +1,11 @@
+{
+  "id": "BN-C178-dhatri",
+  "pathSegment": "BN-PATH-178-KAJ178",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-178-KAJ178",
+      "order": 2
+    }
+  ]
+}

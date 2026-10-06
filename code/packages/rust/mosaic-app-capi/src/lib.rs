@@ -661,6 +661,60 @@ pub mod bridge {
             }
         }
 
+        /// Native hosts hold back an environment report only when the
+        /// diagnostic begins with `INVALID_ENVIRONMENT_DIAGNOSTIC` (UI48
+        /// §7.12), so none of this layer's own texts -- panics, decode and
+        /// encode failures, bad pointers, poisoned handles -- may begin that
+        /// way. The runtime's own errors are pinned in `mosaic-app-runtime`.
+        #[test]
+        fn no_capi_diagnostic_reads_as_an_invalid_environment() {
+            use super::{decode, encode, prepare_output, read_input, Failure};
+            use mosaic_app_runtime::INVALID_ENVIRONMENT_DIAGNOSTIC;
+            use std::collections::BTreeMap;
+            unsafe {
+                let mut texts = vec![
+                    Failure::panic(Box::new("boom")).diagnostic,
+                    Failure::panic(Box::new(String::from("boom"))).diagnostic,
+                    Failure::panic(Box::new(7_u8)).diagnostic,
+                ];
+                texts.push(decode::<Value>(b"{").expect_err("decode fails").diagnostic);
+                let unencodable = BTreeMap::from([(vec![1_u8], 1_u8)]);
+                texts.push(encode(&unencodable).expect_err("encode fails").diagnostic);
+                let null_input = MosaicBytes {
+                    ptr: ptr::null(),
+                    len: 1,
+                };
+                texts.push(read_input(null_input).expect_err("null input").diagnostic);
+                texts.push(
+                    prepare_output(ptr::null_mut())
+                        .expect_err("null output")
+                        .diagnostic,
+                );
+
+                let encoded = serde_json::to_vec(&context()).unwrap();
+                let mut output = MosaicBuffer::empty();
+                mosaic_app_create(bytes(&encoded), ptr::null_mut(), &mut output);
+                texts.push(take_text(output));
+                let (status, output) = call_event(ptr::null_mut(), 1, "increment");
+                assert_eq!(status, MosaicStatus::InvalidArgument);
+                texts.push(take_text(output));
+                let (handle, _) = create_app();
+                let (status, output) = call_event(handle, 1, "panic");
+                assert_eq!(status, MosaicStatus::Panic);
+                texts.push(take_text(output));
+                let (status, output) = call_event(handle, 1, "increment");
+                assert_eq!(status, MosaicStatus::Poisoned);
+                texts.push(take_text(output));
+                mosaic_app_destroy(handle);
+
+                assert_eq!(texts.len(), 11);
+                for text in texts {
+                    assert!(!text.is_empty());
+                    assert!(!text.starts_with(INVALID_ENVIRONMENT_DIAGNOSTIC), "{text}");
+                }
+            }
+        }
+
         #[test]
         fn bounds_utf8_diagnostics() {
             let message = "界".repeat(MAX_DIAGNOSTIC_BYTES);

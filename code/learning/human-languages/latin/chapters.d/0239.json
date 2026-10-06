@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "At the same time, Perhaps, Also, As if, Because of",
+  "label": "ch:la-at-the-same-time-perhaps-also-as-if-because-of",
+  "canDo": "I can say at the same time, perhaps, also, as if and because of.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "LA-C239-propter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say at the same time, perhaps, also, as if and because of.",
+    "assesses": [
+      "LA-LEX-C239-CAUSA239-03",
+      "LA-LEX-C239-CAUSA239-04",
+      "LA-LEX-C239-CAUSA239-05"
+    ]
+  }
+}

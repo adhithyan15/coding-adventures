@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C309-tiriccariyuka",
+    "language": "malayalam",
+    "chapter": 309,
+    "sequence": 14550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:edf6d92fb23d7ec4"
+  },
+  "findings": []
+}

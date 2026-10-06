@@ -7,7 +7,7 @@ chapter: 455
 type: word
 headword: meter
 gloss: to put in — the plainest verb of putting, and the *mittere* inside *el permiso*
-concept_tag: ES-ROOM-METER
+concept_tag: ES-VERB-METER
 prerequisites: [ES-C455-tender, ES-C332-permiso, ES-C366-caja]
 sounds: [t-dental, stress-final]
 roots: [mittere-latin]

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-manifest",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Forme plugin manifest: plugin.toml parser, validator, canonical encoder, BLAKE2b hash, Ed25519 sign/verify, $variable templating (FM02 §3, §14.1).",
   "type": "module",
   "main": "src/index.ts",

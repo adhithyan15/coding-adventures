@@ -6,6 +6,34 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- `-validate-build-files` rejects a shared `BUILD` that Windows would run with a
+  POSIX environment assignment `cmd /C` cannot execute. Each line is first
+  passed through the executor's own Windows rewrite
+  (`executor.RewriteInlineEnvPrefixForWindows`, newly exported for this). Any
+  `VAR=` left where a command name belongs is reported, at the start of the
+  line or after `(`, `;`, `&&` or `||`. That covers values the rewrite refuses,
+  such as `RUSTC="$(rustup which rustc)" ...`, and assignments after `&&`. cmd
+  would run `VAR` as a program: `RUSTC` even resolves to rustup's `rustc.exe`
+  proxy and fails with "unknown proxy name". Packages with a `BUILD_windows` are
+  exempt. The first run flagged 18 latent packages, which now have Windows
+  files: 8 .NET, 7 JVM, perl/aes-modes, typescript/http1 and
+  programs/python/xor-hidden-layer-demo.
+
+### Changed
+
+- Advanced the graphdiff test's repository source-input boundary digest pin
+  for the new `forme-plugin-installer-core`, `forme-plugin-runner-conformance`,
+  and `forme-plugin-runner-ts` TypeScript roots to
+  `3370c811b51962c87757b01e98ad3db5206cad2c75e74c6853bf5209548bd18e`.
+
+- Adopted the generalized established-lane orphan package validator without
+  widening the legacy Cargo snapshot contract.
+- Regenerated the canonical source-input projection for the exact lowercase
+  `blib` exclusion and advanced its language-registry digest and dependent
+  repository-boundary digest pins.
+
+### Added
+
 - Added a typed, process-free graph and diff-selection core that dynamically
   consumes all eight graph and eleven diff-selection cases in the neutral v1
   corpus. It now pins canonical graph output, exact closure semantics,
@@ -25,6 +53,10 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Changed
 
+- Split the FIFO-manifest regression from the portable B07 executor probes so
+  Windows can compile and run the package tests without the Unix-only
+  `syscall.Mkfifo` symbol. Unix hosts still execute the original security
+  regression.
 - CI-gate match-work preflight now deduplicates identical globs and applies a
   sound literal path-segment prefix/suffix filter before charging the full glob
   grid. Large path-sharded diffs under an unrelated subtree therefore keep

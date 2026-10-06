@@ -1,0 +1,11 @@
+{
+  "id": "TA-C258-kurai",
+  "pathSegment": "TA-PATH-258-ACT258",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-258-ACT258",
+      "order": 2
+    }
+  ]
+}

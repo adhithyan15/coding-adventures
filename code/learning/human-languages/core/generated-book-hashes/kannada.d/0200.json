@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:41f9c83931a70a96",
+  "lessonIds": [
+    "KA-C200-gunavagu",
+    "KA-C200-turisu",
+    "KA-C200-sayu",
+    "KA-C200-mugisu",
+    "KA-C200-suru-madu"
+  ],
+  "tex": "kannada/book/chapters/ch200-to-get-well-to-itch-to-die-to-finish-to-start.tex"
+}

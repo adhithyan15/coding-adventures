@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:5ce83caa7edee631",
+  "lessonIds": [
+    "HI-C190-madad",
+    "HI-C190-khabar",
+    "HI-C190-akhbar",
+    "HI-C190-ciz",
+    "HI-C190-rang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch190.txt",
+  "json": "hindi/narration/ch190.json",
+  "textHash": "fnv1a64:1a3d5baf68465f33",
+  "jsonHash": "fnv1a64:96ad06467ae71ca7",
+  "findings": []
+}

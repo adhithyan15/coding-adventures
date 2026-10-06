@@ -1,0 +1,11 @@
+{
+  "id": "RU-C192-lineyka",
+  "pathSegment": "RU-PATH-192-VESHCH192",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-192-VESHCH192",
+      "order": 3
+    }
+  ]
+}

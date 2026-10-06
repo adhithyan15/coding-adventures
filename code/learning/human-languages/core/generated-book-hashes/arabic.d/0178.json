@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:64e8a7db83aceec8",
+  "lessonIds": [
+    "AR-C178-rasmi",
+    "AR-C178-khass",
+    "AR-C178-mustajil",
+    "AR-C178-wadih",
+    "AR-C178-mujtahid"
+  ],
+  "tex": "arabic/book/chapters/ch178-official-private-in-a-hurry-clear-hard-working.tex"
+}

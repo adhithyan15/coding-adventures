@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C218-locker",
+    "language": "german",
+    "chapter": 218,
+    "sequence": 11570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca81c365107d66d6"
+  },
+  "findings": []
+}

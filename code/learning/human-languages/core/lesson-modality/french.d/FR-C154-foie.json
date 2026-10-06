@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C154-foie",
+    "language": "french",
+    "chapter": 154,
+    "sequence": 7560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0e48914409b1e62"
+  },
+  "findings": []
+}

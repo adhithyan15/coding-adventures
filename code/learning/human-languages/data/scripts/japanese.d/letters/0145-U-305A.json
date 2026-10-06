@@ -1,0 +1,23 @@
+{
+  "glyph": "ず",
+  "sound": "zu",
+  "role": "hiragana",
+  "components": [
+    "す",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "draw the long bar from left to right",
+    "lift, begin above the bar and draw the vertical down through it, then without lifting loop round to the left and back over the top, come down the right side again and sweep away to the lower left",
+    "lift, draw the left tick of the dakuten down to the right",
+    "lift, draw the right tick down to the right"
+  ],
+  "strokeOrderNote": "KanjiVG's 0305a file records ず as four stroke paths in this order and direction: す's two strokes (the long bar and the vertical with its loop), then the dakuten's two ticks, the left one first, each drawn down to the right; so there are three pen lifts.",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0305a.svg",
+    "citation": "KanjiVG, kanji/0305a.svg, hiragana ず (U+305A HIRAGANA LETTER ZU), four stroke paths kvg:0305a-s1 to s4 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 to s2 are す's strokes, the same paths as in its file for す, kanji/03059.svg; s3 and s4 are the dakuten, the left tick first and then the right one, each drawn down to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. In the print glyph the vertical and the loop's right side share one band of ink, so the path comes back down that band before the tail."
+  },
+  "notes": "す voiced, read zu: on an s sign the dakuten makes a z. The end of みず and the middle of すずしい."
+}

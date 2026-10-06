@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C150-seguir",
+    "language": "portuguese",
+    "chapter": 150,
+    "sequence": 7740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f32854edde945eb7"
+  },
+  "findings": []
+}

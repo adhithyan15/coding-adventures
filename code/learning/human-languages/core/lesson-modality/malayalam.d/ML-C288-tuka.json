@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C288-tuka",
+    "language": "malayalam",
+    "chapter": 288,
+    "sequence": 13460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c65e3dde3717f467"
+  },
+  "findings": []
+}

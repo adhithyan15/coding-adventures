@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-251-AMAL251",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a waiter, a manager, an employee, a colleague and a company.",
+  "prerequisites": []
+}

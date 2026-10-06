@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C181-mukhostho-kora",
+    "language": "bengali",
+    "chapter": 181,
+    "sequence": 10640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b80717f3afd069fd"
+  },
+  "findings": []
+}

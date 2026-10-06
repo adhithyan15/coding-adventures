@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C132-kore",
+    "language": "japanese",
+    "chapter": 132,
+    "sequence": 7840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d76f4d07843b2bac"
+  },
+  "findings": []
+}

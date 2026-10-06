@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C156-kolbe",
+    "language": "persian",
+    "chapter": 156,
+    "sequence": 7970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d39dd9d29efc818"
+  },
+  "findings": []
+}

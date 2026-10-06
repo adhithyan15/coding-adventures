@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C162-batteria",
+    "language": "italian",
+    "chapter": 162,
+    "sequence": 8600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74515263dd9e3c85"
+  },
+  "findings": []
+}

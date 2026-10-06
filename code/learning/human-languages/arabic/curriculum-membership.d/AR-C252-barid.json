@@ -1,0 +1,11 @@
+{
+  "id": "AR-C252-barid",
+  "pathSegment": "AR-PATH-252-AMAL252",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-252-AMAL252",
+      "order": 4
+    }
+  ]
+}

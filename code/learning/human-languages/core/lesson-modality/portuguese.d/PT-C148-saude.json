@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C148-saude",
+    "language": "portuguese",
+    "chapter": 148,
+    "sequence": 7630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e34aa7659e1863cf"
+  },
+  "findings": []
+}

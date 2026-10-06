@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C177-promettre",
+    "language": "french",
+    "chapter": 177,
+    "sequence": 9210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48bf43ab9f87d7f0"
+  },
+  "findings": []
+}

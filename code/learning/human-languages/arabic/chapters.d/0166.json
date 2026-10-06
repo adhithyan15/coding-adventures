@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "To hunt, To build, To knock down, To paint, To hide",
+  "label": "ch:ar-to-hunt-to-build-to-knock-down-to-paint-to-hide",
+  "canDo": "I can say to hunt, to build, to knock down, to paint and to hide.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C166-khabbaa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say to hunt, to build, to knock down, to paint and to hide.",
+    "assesses": [
+      "AR-LEX-C166-ACT166-03",
+      "AR-LEX-C166-ACT166-04",
+      "AR-LEX-C166-ACT166-05"
+    ]
+  }
+}

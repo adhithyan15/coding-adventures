@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:057fbf3eca5285cc",
+  "lessonIds": [
+    "TE-C189-poti",
+    "TE-C189-vijeta",
+    "TE-C189-patakam",
+    "TE-C189-abhiruci",
+    "TE-C189-navala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch189.txt",
+  "json": "telugu/narration/ch189.json",
+  "textHash": "fnv1a64:f1af8fe6cbcce7aa",
+  "jsonHash": "fnv1a64:5e78fa1d8c41126b",
+  "findings": []
+}

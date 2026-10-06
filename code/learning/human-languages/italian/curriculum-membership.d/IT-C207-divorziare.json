@@ -1,0 +1,11 @@
+{
+  "id": "IT-C207-divorziare",
+  "pathSegment": "IT-PATH-207-VERBI207",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-207-VERBI207",
+      "order": 3
+    }
+  ]
+}

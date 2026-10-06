@@ -1,0 +1,11 @@
+{
+  "id": "BN-C234-chinta",
+  "pathSegment": "BN-PATH-234-JINIS234",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-234-JINIS234",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-R119-second-pass-nature-and-food",
+  "pathSegment": "BN-PATH-119-THINGS119",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "BN-EXT-119-THINGS119",
+      "order": 6
+    }
+  ]
+}

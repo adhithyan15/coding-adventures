@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C182-aram-karna",
+    "language": "urdu",
+    "chapter": 182,
+    "sequence": 10290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2129459c1d15ebc"
+  },
+  "findings": []
+}

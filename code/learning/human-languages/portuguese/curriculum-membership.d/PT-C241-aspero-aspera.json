@@ -1,0 +1,11 @@
+{
+  "id": "PT-C241-aspero-aspera",
+  "pathSegment": "PT-PATH-241-QUAL241",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-241-QUAL241",
+      "order": 1
+    }
+  ]
+}

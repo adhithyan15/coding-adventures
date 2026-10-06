@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C150-bavarder",
+    "language": "french",
+    "chapter": 150,
+    "sequence": 7160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a9247aef82da820"
+  },
+  "findings": []
+}

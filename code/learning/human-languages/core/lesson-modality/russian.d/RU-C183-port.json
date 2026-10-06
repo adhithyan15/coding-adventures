@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C183-port",
+    "language": "russian",
+    "chapter": 183,
+    "sequence": 10570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb20d0692b993807"
+  },
+  "findings": []
+}

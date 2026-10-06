@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:98645e239cc21a67",
+  "lessonIds": [
+    "AR-C242-sakhib",
+    "AR-C242-mayyit",
+    "AR-C242-barri",
+    "AR-C242-alif",
+    "AR-C242-samm"
+  ],
+  "tex": "arabic/book/chapters/ch242-noisy-dead-wild-tame-poisonous.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C164-vino",
+  "pathSegment": "RU-PATH-164-VESHCH164",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-164-VESHCH164",
+      "order": 1
+    }
+  ]
+}

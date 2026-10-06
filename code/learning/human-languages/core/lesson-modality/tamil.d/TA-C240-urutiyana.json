@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C240-urutiyana",
+    "language": "tamil",
+    "chapter": 240,
+    "sequence": 13120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0c06cf4058462cd"
+  },
+  "findings": []
+}

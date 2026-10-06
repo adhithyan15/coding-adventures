@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:98581e7c304bb70a",
+  "lessonIds": [
+    "PT-C201-reservar",
+    "PT-C201-gastar",
+    "PT-C201-poupar",
+    "PT-C201-encomendar",
+    "PT-C201-secar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch201.txt",
+  "json": "portuguese/narration/ch201.json",
+  "textHash": "fnv1a64:b822c786d5aa6278",
+  "jsonHash": "fnv1a64:bed942fa68b6f09b",
+  "findings": []
+}

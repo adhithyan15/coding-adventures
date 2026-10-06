@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:4a78156c24a31ed8",
+  "lessonIds": [
+    "MR-C203-nakki",
+    "MR-C203-kharokhar",
+    "MR-C203-javaljaval",
+    "MR-C203-sumare",
+    "MR-C203-phakta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch203.txt",
+  "json": "marathi/narration/ch203.json",
+  "textHash": "fnv1a64:f208a61a346643c0",
+  "jsonHash": "fnv1a64:ef57e10d476f3fb7",
+  "findings": []
+}

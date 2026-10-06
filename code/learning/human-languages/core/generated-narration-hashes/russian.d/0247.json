@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:9a3e46efb7fb679b",
+  "lessonIds": [
+    "RU-C247-radio",
+    "RU-C247-naushniki",
+    "RU-C247-pasport",
+    "RU-C247-viza",
+    "RU-C247-dokument"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch247.txt",
+  "json": "russian/narration/ch247.json",
+  "textHash": "fnv1a64:3011a666cb618a95",
+  "jsonHash": "fnv1a64:6244c6b76d963cad",
+  "findings": []
+}

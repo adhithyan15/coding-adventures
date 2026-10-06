@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C187-dayaluh",
+    "language": "sanskrit",
+    "chapter": 187,
+    "sequence": 10320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be25a4e2763fe5ee"
+  },
+  "findings": []
+}

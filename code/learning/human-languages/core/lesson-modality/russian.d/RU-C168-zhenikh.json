@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C168-zhenikh",
+    "language": "russian",
+    "chapter": 168,
+    "sequence": 9440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:231e9bab6d6c4f6a"
+  },
+  "findings": []
+}

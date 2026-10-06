@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C172-collega",
+    "language": "italian",
+    "chapter": 172,
+    "sequence": 9280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b2aca7c043eae03"
+  },
+  "findings": []
+}

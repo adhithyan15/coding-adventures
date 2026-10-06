@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Vomiting, Itch, Beard, Moustache, Chin",
+  "label": "ch:bn-vomiting-itch-beard-moustache-chin",
+  "canDo": "I can say vomiting, an itch, a beard, a moustache and a chin.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C243-chibuk",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say vomiting, an itch, a beard, a moustache and a chin.",
+    "assesses": [
+      "BN-LEX-C243-SVASTHYO243-03",
+      "BN-LEX-C243-SVASTHYO243-04",
+      "BN-LEX-C243-SVASTHYO243-05"
+    ]
+  }
+}

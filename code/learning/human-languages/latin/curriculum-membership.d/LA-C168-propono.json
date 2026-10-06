@@ -1,0 +1,11 @@
+{
+  "id": "LA-C168-propono",
+  "pathSegment": "LA-PATH-168-ACT168",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-168-ACT168",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C246-dhanyam",
+  "pathSegment": "SA-PATH-246-THG246",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-246-THG246",
+      "order": 1
+    }
+  ]
+}

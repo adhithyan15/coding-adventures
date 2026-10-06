@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:dddc03d44bbd43d9",
+  "lessonIds": [
+    "FR-C215-grippe",
+    "FR-C215-ordonnance",
+    "FR-C215-comprime",
+    "FR-C215-sirop",
+    "FR-C215-pommade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch215.txt",
+  "json": "french/narration/ch215.json",
+  "textHash": "fnv1a64:ccafb3a7235f5738",
+  "jsonHash": "fnv1a64:99c7df72b7e22f22",
+  "findings": []
+}

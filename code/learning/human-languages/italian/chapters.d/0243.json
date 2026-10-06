@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Plaster, Ambulance, Sick bay, Emergency, Accident",
+  "label": "ch:it-plaster-ambulance-sick-bay-emergency-accident",
+  "canDo": "I can say a plaster, an ambulance, a sick bay, an emergency and an accident.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C243-incidente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say a plaster, an ambulance, a sick bay, an emergency and an accident.",
+    "assesses": [
+      "IT-LEX-C243-SAL243-03",
+      "IT-LEX-C243-SAL243-04",
+      "IT-LEX-C243-SAL243-05"
+    ]
+  }
+}

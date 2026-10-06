@@ -1,0 +1,11 @@
+{
+  "id": "FA-C161-khonak",
+  "pathSegment": "FA-PATH-161-SEFAT161",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-161-SEFAT161",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 141,
+  "title": "Next Week, Next Year: Plans and the Future",
+  "label": "ch:ja-next-week-next-year-plans-and-the-future",
+  "canDo": "I can say what I will do, what I plan to do and what will probably happen, and when: next week, next month, next year.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C141-deshou",
+    "kind": "production",
+    "summary": "Say what you will do next week, next month and next year with a verb in -masu, give one plan with tsumori desu, and make one guess with deshou.",
+    "assesses": [
+      "JA-LEX-C141-RAISHUU",
+      "JA-LEX-C141-RAIGETSU",
+      "JA-LEX-C141-RAINEN",
+      "JA-LEX-C141-TSUMORI",
+      "JA-LEX-C141-DESHOU"
+    ]
+  }
+}

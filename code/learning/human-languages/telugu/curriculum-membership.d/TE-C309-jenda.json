@@ -1,0 +1,11 @@
+{
+  "id": "TE-C309-jenda",
+  "pathSegment": "TE-PATH-309-VASTUVU309",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-309-VASTUVU309",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C274-visayam",
+  "pathSegment": "TE-PATH-274-PANI274",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-274-PANI274",
+      "order": 3
+    }
+  ]
+}

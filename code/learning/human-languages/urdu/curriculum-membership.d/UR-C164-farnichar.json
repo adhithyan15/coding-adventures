@@ -1,0 +1,11 @@
+{
+  "id": "UR-C164-farnichar",
+  "pathSegment": "UR-PATH-164-CHIZ164",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-164-CHIZ164",
+      "order": 2
+    }
+  ]
+}

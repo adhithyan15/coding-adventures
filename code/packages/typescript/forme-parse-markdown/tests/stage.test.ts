@@ -86,8 +86,8 @@ describe("parseMarkdown — stage shape", () => {
     expect(parseMarkdown.capabilities).toEqual([]);
   });
 
-  it("targets kernel apiVersion 1", () => {
-    expect(parseMarkdown.apiVersion).toBe(1);
+  it("targets kernel apiVersion 2", () => {
+    expect(parseMarkdown.apiVersion).toBe(2);
   });
 
   it("has a configSchema (gfm boolean)", () => {

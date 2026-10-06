@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:cc5ab67487cece9c",
+  "lessonIds": [
+    "FR-C239-unir",
+    "FR-C239-valoir",
+    "FR-C239-habituer",
+    "FR-C239-rendre-compte",
+    "FR-C239-depecher"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch239.txt",
+  "json": "french/narration/ch239.json",
+  "textHash": "fnv1a64:59e64d259636b963",
+  "jsonHash": "fnv1a64:947c4963a0ec7a1c",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C146-offrire",
+  "pathSegment": "IT-PATH-146-VERBI146",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-146-VERBI146",
+      "order": 4
+    }
+  ]
+}

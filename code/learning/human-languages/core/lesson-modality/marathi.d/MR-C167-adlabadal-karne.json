@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C167-adlabadal-karne",
+    "language": "marathi",
+    "chapter": 167,
+    "sequence": 8010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa825117079fa17e"
+  },
+  "findings": []
+}

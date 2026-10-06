@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:f6ec915a6396a6d7",
+  "lessonIds": [
+    "FA-C242-vam",
+    "FA-C242-chek",
+    "FA-C242-benzin",
+    "FA-C242-jomle",
+    "FA-C242-farhang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch242.txt",
+  "json": "persian/narration/ch242.json",
+  "textHash": "fnv1a64:c96f3a5b03a55d71",
+  "jsonHash": "fnv1a64:6bd6bb9668965748",
+  "findings": []
+}

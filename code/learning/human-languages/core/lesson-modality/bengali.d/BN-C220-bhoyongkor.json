@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C220-bhoyongkor",
+    "language": "bengali",
+    "chapter": 220,
+    "sequence": 13470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fcd6f5dfafc93d0"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C138-planirovat",
+  "pathSegment": "RU-PATH-138-FUT138",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-138-FUT138",
+      "order": 3
+    }
+  ]
+}

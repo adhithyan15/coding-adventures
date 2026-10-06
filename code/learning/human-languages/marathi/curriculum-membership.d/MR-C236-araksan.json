@@ -1,0 +1,11 @@
+{
+  "id": "MR-C236-araksan",
+  "pathSegment": "MR-PATH-236-VASTU236",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-236-VASTU236",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "To hike, To change, To throw, To repeat, To pull",
+  "label": "ch:ge-to-hike-to-change-to-throw-to-repeat-to-pull",
+  "canDo": "I can say to hike, to change, to throw, to repeat and to pull.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C153-ziehen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: I can say to hike, to change, to throw, to repeat and to pull.",
+    "assesses": [
+      "GE-LEX-C153-VERB153-03",
+      "GE-LEX-C153-VERB153-04",
+      "GE-LEX-C153-VERB153-05"
+    ]
+  }
+}

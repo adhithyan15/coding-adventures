@@ -1,0 +1,11 @@
+{
+  "id": "LA-C258-praetereo",
+  "pathSegment": "LA-PATH-258-ACT258",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-258-ACT258",
+      "order": 2
+    }
+  ]
+}

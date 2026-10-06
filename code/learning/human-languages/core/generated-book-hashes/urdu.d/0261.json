@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:d9e57431dc79a4d7",
+  "lessonIds": [
+    "UR-C261-kampani",
+    "UR-C261-karkhana",
+    "UR-C261-miting",
+    "UR-C261-afsar",
+    "UR-C261-malik"
+  ],
+  "tex": "urdu/book/chapters/ch261-company-factory-meeting-officer-owner.tex"
+}

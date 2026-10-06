@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Coin, Banknote, Small change, Balance, Discount",
+  "label": "ch:ml-coin-banknote-small-change-balance-discount",
+  "canDo": "I can say a coin, a banknote, small change, the balance and a discount.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C219-kilivu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say a coin, a banknote, small change, the balance and a discount.",
+    "assesses": [
+      "ML-LEX-C219-JOLI219-03",
+      "ML-LEX-C219-JOLI219-04",
+      "ML-LEX-C219-JOLI219-05"
+    ]
+  }
+}

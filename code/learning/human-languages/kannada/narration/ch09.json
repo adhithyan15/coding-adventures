@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5482a02c112ae13f",
+  "sourceHash": "fnv1a64:13be6e35a58aa554",
   "lessons": [
     {
       "id": "KA-C09-kshamisi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e742a8ffed5f8582",
+      "sourceHash": "fnv1a64:586466fab3258c5e",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "‑ಇಸು (‑isu) = a verb-making suffix: bolt it onto a Sanskrit noun and you get a brand-new Kannada verb. kṣamā + ‑isu becomes ಕ್ಷಮಿಸು (kṣamisu), \"to forgive.\" (The same move builds ಪ್ರಾರಂಭಿಸು prārambhisu, \"to begin,\" from Sanskrit prārambha.)"
+              "text": "‑ಇಸು (‑isu) = a verb-making suffix: bolt it onto a Sanskrit noun and you get a brand-new Kannada verb. kṣamā + ‑isu becomes ಕ್ಷಮಿಸು (kṣamisu), \"to forgive.\" (The same move builds prārambhisu, \"to begin,\" from Sanskrit prārambha.)"
             },
             {
               "kind": "speech",
@@ -187,7 +187,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b9c716d9a06553d6",
+      "sourceHash": "fnv1a64:590bddcdec60dc6e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -262,15 +262,43 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ಡ — copy what you see",
+          "title": "Writing: ಡ",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಡ (ḍa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. start at the upper left and go down the left side into the left lobe, rising into the middle point."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. without lifting, drop from the point around the right lobe and climb the right side."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, curl left into the small inner loop and go round it counterclockwise."
+            },
+            {
+              "kind": "speech",
+              "text": "4. without lifting, rise out of the loop and close the bowl leftward along the top."
+            },
+            {
+              "kind": "speech",
+              "text": "5. lift, then draw the top bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "6. without lifting, curl up into the hook."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The whole body, with the point in its base and the small loop inside its right lobe, is one run that closes along the top; the curled bar comes after the only lift. It is ದ with that small loop tucked inside."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-da.gif', 49 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0."
+            },
+            {
+              "kind": "speech",
+              "text": "The animation is filed as 'da': that series keeps 'da' for this letter, ಡ (ḍa), and spells dental ದ with an h, as 'dha'."
             }
           ]
         },

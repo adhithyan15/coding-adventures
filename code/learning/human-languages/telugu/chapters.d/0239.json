@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "Report, Organization, Chit, Pension, Agreement",
+  "label": "ch:te-report-organization-chit-pension-agreement",
+  "canDo": "I can say a report, an organization, a chit, a pension and an agreement.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-R239-second-pass-words-from-chapters-237-239",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say a report, an organization, a chit, a pension and an agreement.",
+    "assesses": [
+      "TE-LEX-C239-PANI239-03",
+      "TE-LEX-C239-PANI239-04",
+      "TE-LEX-C239-PANI239-05"
+    ]
+  }
+}

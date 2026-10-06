@@ -1,0 +1,11 @@
+{
+  "id": "AR-C161-tanaffasa",
+  "pathSegment": "AR-PATH-161-ACT161",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-161-ACT161",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:14e55ee753dd586f",
+  "lessonIds": [
+    "UR-C209-not",
+    "UR-C209-qarz",
+    "UR-C209-taiks",
+    "UR-C209-bil",
+    "UR-C209-kharch"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch209.txt",
+  "json": "urdu/narration/ch209.json",
+  "textHash": "fnv1a64:4a92607d8c598111",
+  "jsonHash": "fnv1a64:a0938c9702aa72d0",
+  "findings": []
+}

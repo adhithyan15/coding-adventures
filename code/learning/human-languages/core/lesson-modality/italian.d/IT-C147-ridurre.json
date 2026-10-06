@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C147-ridurre",
+    "language": "italian",
+    "chapter": 147,
+    "sequence": 7440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ddf6310048087b7"
+  },
+  "findings": []
+}

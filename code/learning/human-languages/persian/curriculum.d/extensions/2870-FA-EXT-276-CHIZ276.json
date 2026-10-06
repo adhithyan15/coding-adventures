@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-276-CHIZ276",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say vinegar, flour, a number, a text message and an email.",
+  "prerequisites": []
+}

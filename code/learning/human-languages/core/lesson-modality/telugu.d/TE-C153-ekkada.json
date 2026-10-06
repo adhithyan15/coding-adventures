@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C153-ekkada",
+    "language": "telugu",
+    "chapter": 153,
+    "sequence": 6640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd02bf5fd91b8af3"
+  },
+  "findings": []
+}

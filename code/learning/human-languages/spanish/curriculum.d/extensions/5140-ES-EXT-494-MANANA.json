@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-494-MANANA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a morning: waking up, getting ready, going downstairs, switching on the light and heating up breakfast.",
+  "prerequisites": []
+}

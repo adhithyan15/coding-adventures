@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:166f3ce4ba3cf5b9",
+  "lessonIds": [
+    "UR-C145-mustaqbil",
+    "UR-C145-ainda",
+    "UR-C145-jald-hi",
+    "UR-C145-program",
+    "UR-C145-tai-karna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch145.txt",
+  "json": "urdu/narration/ch145.json",
+  "textHash": "fnv1a64:e6f4115e81fb3782",
+  "jsonHash": "fnv1a64:12f5d7bbb10a0fe9",
+  "findings": []
+}

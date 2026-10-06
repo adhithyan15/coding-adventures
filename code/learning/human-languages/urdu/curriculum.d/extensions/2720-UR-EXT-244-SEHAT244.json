@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-244-SEHAT244",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a blister, a mark, a bandage, an ointment and a pharmacy.",
+  "prerequisites": []
+}

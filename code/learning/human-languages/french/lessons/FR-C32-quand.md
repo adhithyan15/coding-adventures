@@ -8,21 +8,21 @@ type: word
 headword: quand
 gloss: "when — and a silent d that comes back to life"
 concept_tag: FR-QUESTION-WHEN
-prerequisites: [FR-C32-ou]
+prerequisites: [FR-C32-ou, FR-C26-entendre]
 sounds: []
 roots: []
 etymology_hook: "French asks a question three ways -- voice, est-ce que, inversion -- and they differ in register rather than in meaning."
 duration:
   max_seconds: 240
 requires:
-  knowledge: [FR-GRAMMAR-INTONATION-01, FR-GRAMMAR-ESTCEQUE-02, FR-LEX-OU-03]
+  knowledge: [FR-GRAMMAR-INTONATION-01, FR-GRAMMAR-ESTCEQUE-02, FR-LEX-OU-03, FR-SEMANTICS-ENTENDRE-SPREAD-03]
 introduces:
   knowledge: [FR-LEX-QUAND-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-GRAMMAR-INTONATION-01, FR-GRAMMAR-ESTCEQUE-02, FR-LEX-OU-03, FR-LEX-QUAND-04]
+  knowledge: [FR-GRAMMAR-INTONATION-01, FR-GRAMMAR-ESTCEQUE-02, FR-LEX-OU-03, FR-LEX-QUAND-04, FR-SEMANTICS-ENTENDRE-SPREAD-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -33,9 +33,11 @@ reviews_of: [FR-C32-ou]
 # quand — when
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[FR-GRAMMAR-INTONATION-01, FR-GRAMMAR-ESTCEQUE-02, FR-LEX-OU-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-GRAMMAR-INTONATION-01, FR-GRAMMAR-ESTCEQUE-02, FR-LEX-OU-03, FR-SEMANTICS-ENTENDRE-SPREAD-03] -->
 
 [PAUSE 2s] Recall the previous piece before adding another.
+
+[PAUSE 2s] *Entendre* once covered hearing, attending, understanding and intending. Hearing took the word when *ouïr* wore out.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[FR-LEX-QUAND-04]; assesses=[FR-GRAMMAR-INTONATION-01, FR-GRAMMAR-ESTCEQUE-02, FR-LEX-OU-03] -->

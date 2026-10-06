@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C276-serke",
+    "language": "persian",
+    "chapter": 276,
+    "sequence": 14260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08b714923dcc1a44"
+  },
+  "findings": []
+}

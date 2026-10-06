@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:38b87167f2330094",
+  "lessonIds": [
+    "LA-C206-anima",
+    "LA-C206-memoria",
+    "LA-C206-sapientia",
+    "LA-C206-ingenium",
+    "LA-C206-consuetudo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch206.txt",
+  "json": "latin/narration/ch206.json",
+  "textHash": "fnv1a64:5e34cf1b47f9ebb8",
+  "jsonHash": "fnv1a64:fb8ad91c48b4cebf",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C199-bhul",
+    "language": "bengali",
+    "chapter": 199,
+    "sequence": 11920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af99c4b50374f4f4"
+  },
+  "findings": []
+}

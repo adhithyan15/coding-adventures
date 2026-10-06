@@ -1,0 +1,11 @@
+{
+  "id": "MR-C200-vran",
+  "pathSegment": "MR-PATH-200-AAROGYA200",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-200-AAROGYA200",
+      "order": 2
+    }
+  ]
+}

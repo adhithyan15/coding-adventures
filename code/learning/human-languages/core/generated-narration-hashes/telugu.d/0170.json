@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:557f440e9e58b825",
+  "lessonIds": [
+    "TE-C170-samayam",
+    "TE-C170-appudappudu",
+    "TE-C170-taracuga",
+    "TE-C170-tedi",
+    "TE-C170-varantam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch170.txt",
+  "json": "telugu/narration/ch170.json",
+  "textHash": "fnv1a64:afd2029695556c69",
+  "jsonHash": "fnv1a64:b0c6e77a33db745d",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C168-suda",
+  "pathSegment": "AR-PATH-168-SIHHA168",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-168-SIHHA168",
+      "order": 4
+    }
+  ]
+}

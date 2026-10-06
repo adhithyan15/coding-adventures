@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:797242acb4a18d08",
+  "lessonIds": [
+    "RU-C203-podpis",
+    "RU-C203-pechat",
+    "RU-C203-biznes",
+    "RU-C203-bankomat",
+    "RU-C203-moneta",
+    "RU-R203-first-pass-words-from-chapters-200-201",
+    "RU-R203-second-pass-words-from-chapters-202-203"
+  ],
+  "tex": "russian/book/chapters/ch203-signature-seal-business-cash-machine-coin.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "Shy, Bad-tempered, Serious, Alone, Selfish",
+  "label": "ch:fa-shy-bad-tempered-serious-alone-selfish",
+  "canDo": "I can say shy, bad-tempered, serious, alone and selfish.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C200-khodkhah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say shy, bad-tempered, serious, alone and selfish.",
+    "assesses": [
+      "FA-LEX-C200-SEFAT200-03",
+      "FA-LEX-C200-SEFAT200-04",
+      "FA-LEX-C200-SEFAT200-05"
+    ]
+  }
+}

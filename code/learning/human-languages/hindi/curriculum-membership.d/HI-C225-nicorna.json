@@ -1,0 +1,11 @@
+{
+  "id": "HI-C225-nicorna",
+  "pathSegment": "HI-PATH-225-ACT225",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-225-ACT225",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:5c78a2f3ba47a3ce",
+  "lessonIds": [
+    "SA-C245-nalika",
+    "SA-C245-takram",
+    "SA-C245-phalarasah",
+    "SA-C245-lavangam",
+    "SA-C245-ela"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch245.txt",
+  "json": "sanskrit/narration/ch245.json",
+  "textHash": "fnv1a64:d1446f0e48239d0b",
+  "jsonHash": "fnv1a64:99648baf94f33499",
+  "findings": []
+}

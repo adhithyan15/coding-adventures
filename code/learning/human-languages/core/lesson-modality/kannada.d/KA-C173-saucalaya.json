@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C173-saucalaya",
+    "language": "kannada",
+    "chapter": 173,
+    "sequence": 7800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e72d4027de4e5813"
+  },
+  "findings": []
+}

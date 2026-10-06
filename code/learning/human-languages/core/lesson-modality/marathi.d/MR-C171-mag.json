@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C171-mag",
+    "language": "marathi",
+    "chapter": 171,
+    "sequence": 8390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88eb95a19b4f55a0"
+  },
+  "findings": []
+}

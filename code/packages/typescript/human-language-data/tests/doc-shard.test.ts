@@ -15,6 +15,7 @@ import {
   readFileSync,
   readdirSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { createHash } from "node:crypto";
@@ -49,6 +50,11 @@ import {
   unshardDocument,
 } from "../src/doc-shard-cli.js";
 import { LEGACY_DOC_SHARD_SHA256 } from "../src/doc-shard-legacy.js";
+import {
+  assertSafeDocShardDigestOwnerNames,
+  docShardDigestOwnerName,
+  readDocShardDigestOwners,
+} from "./doc-shard-digest-owners.js";
 
 const PLAN: DocShardPlan = { path: "x/DOC.md", headingLevel: 2, newestFirst: true };
 const OLDEST_FIRST: DocShardPlan = { ...PLAN, newestFirst: false };
@@ -91,6 +97,10 @@ const DUCTUS_PLAN: DocShardPlan = {
 const DUCTUS_FORWARD_FRAGMENT =
   "01625-CHANGED-SHARD-NATIVE-SCRIPT-INVENTORIES-9fa3a043.md";
 const DUCTUS_MIGRATION_MAX_RANK = 1_630;
+const DOC_SHARD_DIGEST_DIR = join(
+  defaultRepoRoot(),
+  "code/packages/typescript/human-language-data/tests/doc-shard-digests",
+);
 
 describe("concurrency-safe backlog ids", () => {
   it("keeps the sequence readable while deriving identity from the NFC subject", () => {
@@ -432,42 +442,49 @@ describe("splitting on numbered Markdown table rows", () => {
 });
 
 describe("the Indian planning-document migration", () => {
-  const expectedSha256: Readonly<Record<string, string>> = {
-    "bengali/roadmap.md": "be58d54b7714c870e17009598ed0bf59024124678b0d199c70a96cd86fab315a",
-    "bengali/session-map.md": "f947eb30a0ea7d235e727aeff3de389eafe951a1b490a09494d0c6b3ae03f242",
-    "gujarati/roadmap.md": "beb6624abe2dd015bcfe67e0a5fe11ab5f7eb7e97066292df468e1d1205db3d9",
-    "gujarati/session-map.md": "a9a5f019844d01e616117d384891308a6206eeab0982717abf07521e9bf16247",
-    "hindi/roadmap.md": "e7e552ff0287e1bac16818223898f1e1ceb11198ff1d1dacb7caca7ff1f59d09",
-    "hindi/session-map.md": "4c333147b25cdf45f9dafb021988510339ef716f2ad4fa7713a0a9fd5d385daf",
-    "kannada/roadmap.md": "d66e05fa7015e370fc90f1e8d4cefa478f4c63c4ed5c214bc8740f599ff27305",
-    "kannada/session-map.md": "79febb3b102c19a221c93ab4529bb82483a3b5892a81815b82c024f47baf3ae5",
-    "malayalam/roadmap.md": "77c3abf15a13498dbfc1c792b6f4ef61e0311627da3b31eb26f8644e4c67eadd",
-    "malayalam/session-map.md": "845d7252a533699913cde8dfa01c3bbfa9c729d7a559828c466fca8511559218",
-    "marathi/roadmap.md": "feb454b939d4f5ebe58813f5a8656fbf7652f1d63c2088ff46327c0107a82b14",
-    "marathi/session-map.md": "947ac732c2d229b6bf11da21bd33d4a7c2e06bf469c54c43e88e5bba8b21189c",
-    "marwadi/roadmap.md": "674c031e40898a9f3388287dda6321ebcd0a363f3405816564f50551835a3029",
-    "marwadi/session-map.md": "6e56cfa771cfbdb8d9ac2db9649ad07ec79876ce77a5404ee2ccaeb8f7f0f1cf",
-    "punjabi/roadmap.md": "35daceeb279e9e29f8d82456f019172d38e49ac554661df569be6a603b028604",
-    "punjabi/session-map.md": "1531e4fe5466946bbb0809bfa83b88610a8d39eb76c4ea2d0e3d49913dda31b5",
-    "sanskrit/roadmap.md": "7e572936de127d6da37af4c00fa38cb8fcb92d33a6cd1225a552062c62d21c85",
-    "sanskrit/session-map.md": "94aac4e55875f37bc5798d008409a6f96727cb24833d765b53a6f69c79f2670b",
-    "tamil/roadmap.md": "59c07fa003299dd31300ac11ad185df0e1a08c826ef02955ae4652c998818ba0",
-    "tamil/session-map.md": "080b6dd4c80a6bc07834e77f113a0ecb818ae47267b92f248bca4378bb4df652",
-    "telugu/roadmap.md": "6c1ea576c8f024861adc63a40364b4d7c738fbff8d11079f56fbb55cddcae6f8",
-    "telugu/session-map.md": "3036762d48a265521fff93de4e50ba10382a6fc8027639e6b4dd15d66163b659",
-    "urdu/roadmap.md": "93d066408e6dddfc2bbc683a2046bc1c1f986ba22f8e52bb659a84366d57e463",
-    "urdu/session-map.md": "7bd73b93486c86c1611f98ba468bcfda700650690e93b59b1c3100f99f7a9b20",
-  };
+  const plans = DOC_SHARD_PLANS.filter((plan) =>
+    /^code\/learning\/human-languages\/[^/]+\/(?:roadmap|session-map)\.md$/.test(plan.path)
+  );
+  const owners = readDocShardDigestOwners(DOC_SHARD_DIGEST_DIR);
 
-  for (const [relative, digest] of Object.entries(expectedSha256)) {
-    it(`${relative} reconstructs the exact pre-migration bytes`, () => {
-      const path = `code/learning/human-languages/${relative}`;
-      const plan = DOC_SHARD_PLANS.find((candidate) => candidate.path === path);
-      expect(plan).toBeDefined();
-      const rendered = unshardDocContents(defaultRepoRoot(), plan!);
-      expect(createHash("sha256").update(rendered, "utf8").digest("hex")).toBe(digest);
+  it("gives every planned roadmap and session map exactly one direct digest owner", () => {
+    expect([...owners.keys()].sort()).toEqual(plans.map((plan) => plan.path).sort());
+    expect(new Set([...owners.values()].map((owner) => docShardDigestOwnerName(owner.path))).size)
+      .toBe(plans.length);
+  });
+
+  for (const plan of plans) {
+    it(`${plan.path} reconstructs the exact pre-migration bytes`, () => {
+      const rendered = unshardDocContents(defaultRepoRoot(), plan);
+      expect(createHash("sha256").update(rendered, "utf8").digest("hex"))
+        .toBe(owners.get(plan.path)?.sha256);
     });
   }
+
+  it("fails closed on unsafe, duplicate, case-colliding, and symlink owners", () => {
+    const fixture = mkdtempSync(join(tmpdir(), "doc-digest-owners-"));
+    const writeOwner = (name: string, path: string) => writeFileSync(
+      join(fixture, name),
+      `${JSON.stringify({ version: 1, path, sha256: "0".repeat(64) }, null, 2)}\n`,
+    );
+    try {
+      expect(() => assertSafeDocShardDigestOwnerNames(["unsafe.json"])).toThrow(/unsafe/);
+      expect(() => assertSafeDocShardDigestOwnerNames([
+        "bengali--roadmap.json",
+        "Bengali--roadmap.json",
+      ])).toThrow(/case-colliding/);
+
+      writeOwner("bengali--roadmap.json", "code/learning/human-languages/bengali/roadmap.md");
+      writeOwner("gujarati--roadmap.json", "code/learning/human-languages/bengali/roadmap.md");
+      expect(() => readDocShardDigestOwners(fixture)).toThrow(/duplicate/);
+      rmSync(join(fixture, "gujarati--roadmap.json"));
+
+      symlinkSync(join(fixture, "bengali--roadmap.json"), join(fixture, "gujarati--roadmap.json"));
+      expect(() => readDocShardDigestOwners(fixture)).toThrow(/regular file/);
+    } finally {
+      rmSync(fixture, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("isDocSharded — absent versus UNKNOWN", () => {

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C132-sore",
+  "pathSegment": "JA-PATH-132-WRITE132",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-132-WRITE132",
+      "order": 5
+    }
+  ]
+}

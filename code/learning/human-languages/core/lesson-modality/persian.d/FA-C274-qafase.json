@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C274-qafase",
+    "language": "persian",
+    "chapter": 274,
+    "sequence": 14170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:409fdda6f6ea0399"
+  },
+  "findings": []
+}

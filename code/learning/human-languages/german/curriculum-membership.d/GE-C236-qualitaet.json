@@ -1,0 +1,11 @@
+{
+  "id": "GE-C236-qualitaet",
+  "pathSegment": "GE-PATH-236-THING236",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-236-THING236",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:43a964f9d93da2cf",
+  "lessonIds": [
+    "IT-C201-elettricita",
+    "IT-C201-legno",
+    "IT-C201-ferro",
+    "IT-C201-oro",
+    "IT-C201-argento"
+  ],
+  "tex": "italian/book/chapters/ch201-electricity-timber-iron-gold-silver.tex"
+}

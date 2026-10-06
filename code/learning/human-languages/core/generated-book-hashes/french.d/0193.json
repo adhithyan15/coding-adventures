@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:4b177549792cc5b3",
+  "lessonIds": [
+    "FR-C193-drap",
+    "FR-C193-tiroir",
+    "FR-C193-fauteuil",
+    "FR-C193-casserole",
+    "FR-C193-poele"
+  ],
+  "tex": "french/book/chapters/ch193-sheet-drawer-armchair-saucepan-frying-pan.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Opportunity, Danger, Kindness, Duty, Work",
+  "label": "ch:la-opportunity-danger-kindness-duty-work",
+  "canDo": "I can say an opportunity, danger, a kindness, a duty and work.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C248-labor2",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say an opportunity, danger, a kindness, a duty and work.",
+    "assesses": [
+      "LA-LEX-C248-RES248-03",
+      "LA-LEX-C248-RES248-04",
+      "LA-LEX-C248-RES248-05"
+    ]
+  }
+}

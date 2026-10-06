@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C242-pauci",
+    "language": "latin",
+    "chapter": 242,
+    "sequence": 12620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37538007e75222d8"
+  },
+  "findings": []
+}

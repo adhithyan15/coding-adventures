@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "To trip, To slip, To rescue, To escape, To disappear",
+  "label": "ch:ar-to-trip-to-slip-to-rescue-to-escape-to-disappear",
+  "canDo": "I can say to trip, to slip, to rescue, to escape and to disappear.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-R167-second-pass-words-from-chapters-163-167",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say to trip, to slip, to rescue, to escape and to disappear.",
+    "assesses": [
+      "AR-LEX-C167-ACT167-03",
+      "AR-LEX-C167-ACT167-04",
+      "AR-LEX-C167-ACT167-05"
+    ]
+  }
+}

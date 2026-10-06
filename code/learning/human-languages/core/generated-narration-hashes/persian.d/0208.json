@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:883fb94244335508",
+  "lessonIds": [
+    "FA-C208-hava",
+    "FA-C208-yakh",
+    "FA-C208-tagarg",
+    "FA-C208-saye",
+    "FA-C208-dama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch208.txt",
+  "json": "persian/narration/ch208.json",
+  "textHash": "fnv1a64:4d062d710ae5aef1",
+  "jsonHash": "fnv1a64:47c0f0ce7b83037d",
+  "findings": []
+}

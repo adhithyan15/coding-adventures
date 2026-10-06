@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Together, Perhaps, Besides, Of course, That is to say",
+  "label": "ch:mr-together-perhaps-besides-of-course-that-is-to-say",
+  "canDo": "I can say together, perhaps, besides, of course and that is to say.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "MR-R231-second-pass-words-from-chapters-227-231",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say together, perhaps, besides, of course and that is to say.",
+    "assesses": [
+      "MR-LEX-C231-KARAN231-03",
+      "MR-LEX-C231-KARAN231-04",
+      "MR-LEX-C231-KARAN231-05"
+    ]
+  }
+}

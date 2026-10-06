@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "A menu, An order, A tip, A waitress, Cutlery",
+  "label": "ch:ge-a-menu-an-order-a-tip-a-waitress-cutlery",
+  "canDo": "I can say a menu, an order, a tip, a waitress and cutlery.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-R200-second-pass-words-from-chapters-196-200",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say a menu, an order, a tip, a waitress and cutlery.",
+    "assesses": [
+      "GE-LEX-C200-THING200-03",
+      "GE-LEX-C200-THING200-04",
+      "GE-LEX-C200-THING200-05"
+    ]
+  }
+}

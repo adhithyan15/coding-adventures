@@ -1,0 +1,11 @@
+{
+  "id": "BN-C190-durbhagyoboshoto",
+  "pathSegment": "BN-PATH-190-KARON190",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-190-KARON190",
+      "order": 3
+    }
+  ]
+}

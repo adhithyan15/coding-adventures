@@ -1,0 +1,11 @@
+{
+  "id": "GE-C220-roh",
+  "pathSegment": "GE-PATH-220-QUAL220",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-220-QUAL220",
+      "order": 2
+    }
+  ]
+}

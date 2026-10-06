@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:db609579e263a62c",
+  "lessonIds": [
+    "UR-C144-hal-hi-mein",
+    "UR-C144-pehle-se",
+    "UR-C144-mazi",
+    "UR-C144-guzashta",
+    "UR-C144-pesh-ana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch144.txt",
+  "json": "urdu/narration/ch144.json",
+  "textHash": "fnv1a64:b4d4b19b4bd1d701",
+  "jsonHash": "fnv1a64:8d9d80df2f66faf3",
+  "findings": []
+}

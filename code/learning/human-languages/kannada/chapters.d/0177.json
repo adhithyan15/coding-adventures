@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "Exactly, Naturally, Result, Effect, Difference",
+  "label": "ch:ka-exactly-naturally-result-effect-difference",
+  "canDo": "I can say exactly, naturally, a result, an effect and a difference.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "KA-C177-vyatyasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say exactly, naturally, a result, an effect and a difference.",
+    "assesses": [
+      "KA-LEX-C177-KARANA177-03",
+      "KA-LEX-C177-KARANA177-04",
+      "KA-LEX-C177-KARANA177-05"
+    ]
+  }
+}

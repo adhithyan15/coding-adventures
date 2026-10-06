@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "Next, From Now On, a Plan, To Decide, To Expect",
+  "label": "ch:ta-next-from-now-on-a-plan-to-decide-to-expect",
+  "canDo": "I can say what will happen, and when: next week, from now on, and what I plan.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "TA-C159-etirpar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can say what will happen, and when: next week, from now on, and what I plan.",
+    "assesses": [
+      "TA-LEX-C159-ETIR159-03",
+      "TA-LEX-C159-ETIR159-04",
+      "TA-LEX-C159-ETIR159-05"
+    ]
+  }
+}

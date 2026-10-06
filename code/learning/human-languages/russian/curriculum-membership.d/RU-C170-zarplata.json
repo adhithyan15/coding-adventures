@@ -1,0 +1,11 @@
+{
+  "id": "RU-C170-zarplata",
+  "pathSegment": "RU-PATH-170-RABOTA170",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-170-RABOTA170",
+      "order": 1
+    }
+  ]
+}

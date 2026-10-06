@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Load, Voice, Conversation, Man, Woman",
+  "label": "ch:ta-load-voice-conversation-man-woman",
+  "canDo": "I can say a load, a voice, a conversation, a man and a woman.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C245-pen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say a load, a voice, a conversation, a man and a woman.",
+    "assesses": [
+      "TA-LEX-C245-PORUL245-03",
+      "TA-LEX-C245-PORUL245-04",
+      "TA-LEX-C245-PORUL245-05"
+    ]
+  }
+}

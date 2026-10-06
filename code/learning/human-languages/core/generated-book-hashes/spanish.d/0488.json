@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:60601b47475d9a56",
+  "lessonIds": [
+    "ES-C488-casarse",
+    "ES-C488-divorciarse",
+    "ES-C488-enamorarse",
+    "ES-C488-despedirse",
+    "ES-C488-saludar"
+  ],
+  "tex": "spanish/book/chapters/ch488-encuentros-y-despedidas.tex"
+}

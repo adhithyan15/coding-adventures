@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C194-madagha",
+    "language": "arabic",
+    "chapter": 194,
+    "sequence": 9980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2547ba33d6e03e26"
+  },
+  "findings": []
+}

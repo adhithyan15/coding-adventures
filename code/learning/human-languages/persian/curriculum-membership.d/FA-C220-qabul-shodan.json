@@ -1,0 +1,11 @@
+{
+  "id": "FA-C220-qabul-shodan",
+  "pathSegment": "FA-PATH-220-KONESH220",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-220-KONESH220",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-193-SIFAT193",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "UR-EXT-193-SIFAT193"
+  ],
+  "after": []
+}

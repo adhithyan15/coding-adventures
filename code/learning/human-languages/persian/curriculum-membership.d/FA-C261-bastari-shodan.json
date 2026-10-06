@@ -1,0 +1,11 @@
+{
+  "id": "FA-C261-bastari-shodan",
+  "pathSegment": "FA-PATH-261-KONESH261",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-261-KONESH261",
+      "order": 1
+    }
+  ]
+}

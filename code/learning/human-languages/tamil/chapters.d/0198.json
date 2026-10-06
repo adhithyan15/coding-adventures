@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "To pray, To cheat, To tell a lie, To quarrel, To tease",
+  "label": "ch:ta-to-pray-to-cheat-to-tell-a-lie-to-quarrel-to-tease",
+  "canDo": "I can say to pray, to cheat, to tell a lie, to quarrel and to tease.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C198-keli-cey",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say to pray, to cheat, to tell a lie, to quarrel and to tease.",
+    "assesses": [
+      "TA-LEX-C198-ACT198-03",
+      "TA-LEX-C198-ACT198-04",
+      "TA-LEX-C198-ACT198-05"
+    ]
+  }
+}

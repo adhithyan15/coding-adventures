@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C157-srantah",
+    "language": "sanskrit",
+    "chapter": 157,
+    "sequence": 8130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98c87c3f1de7670a"
+  },
+  "findings": []
+}

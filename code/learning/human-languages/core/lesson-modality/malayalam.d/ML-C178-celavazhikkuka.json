@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C178-celavazhikkuka",
+    "language": "malayalam",
+    "chapter": 178,
+    "sequence": 7710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7bc1c5bcaf857db"
+  },
+  "findings": []
+}

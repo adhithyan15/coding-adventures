@@ -1,0 +1,11 @@
+{
+  "id": "RU-C201-sdacha",
+  "pathSegment": "RU-PATH-201-RABOTA201",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-201-RABOTA201",
+      "order": 0
+    }
+  ]
+}

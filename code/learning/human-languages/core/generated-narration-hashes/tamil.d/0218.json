@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:3cab0a35255e9911",
+  "lessonIds": [
+    "TA-C218-ottakaccivinki",
+    "TA-C218-varikkutirai",
+    "TA-C218-mutalai",
+    "TA-C218-pattampucci",
+    "TA-C218-teni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch218.txt",
+  "json": "tamil/narration/ch218.json",
+  "textHash": "fnv1a64:649c376c4efd19c3",
+  "jsonHash": "fnv1a64:96c6041f67fa15c0",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-192-FREQ192",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say every day, sometimes, always, often and never.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C159-corridoio",
+  "pathSegment": "IT-PATH-159-COSE159",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-159-COSE159",
+      "order": 2
+    }
+  ]
+}

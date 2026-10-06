@@ -1,0 +1,11 @@
+{
+  "id": "LA-C240-profundus",
+  "pathSegment": "LA-PATH-240-QUAL240",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-240-QUAL240",
+      "order": 1
+    }
+  ]
+}

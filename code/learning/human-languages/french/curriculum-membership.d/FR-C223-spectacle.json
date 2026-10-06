@@ -1,0 +1,11 @@
+{
+  "id": "FR-C223-spectacle",
+  "pathSegment": "FR-PATH-223-CHOSES223",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-223-CHOSES223",
+      "order": 4
+    }
+  ]
+}

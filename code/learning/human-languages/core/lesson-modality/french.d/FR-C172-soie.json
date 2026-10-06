@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C172-soie",
+    "language": "french",
+    "chapter": 172,
+    "sequence": 8840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b76d0f96725937fe"
+  },
+  "findings": []
+}

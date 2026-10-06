@@ -20,6 +20,8 @@ the repo:
 9. Hash package sources through the complete checked language registry plus
    exact repository-boundary inputs, using one stable tracked-index snapshot
    before and after the package batch
+10. Evaluate caller-supplied graph and diff-selection snapshots without Git,
+    filesystem, process, environment, clock, or network access
 
 ## Usage
 
@@ -32,6 +34,18 @@ dotnet run -- --emit-plan --plan-file build-plan.json
 
 ## Design notes
 
+- `GraphDiffCore.EvaluateGraph(GraphInput)` and
+  `GraphDiffCore.EvaluateDiffSelection(DiffSelectionInput)` are separate pure
+  decisions from the legacy live CLI paths. Edges are
+  `[prerequisite, dependent]`; a cycle returns only `GRAPH_CYCLE`. Diff
+  selection seeds forced, local, and exact repository-boundary consumers,
+  then computes dependent and prerequisite closure. A supplied boundary must
+  pass canonical digest validation before selection. Strict globs use the
+  portable Unicode-scalar matcher, and the complete 50,000,000-unit preflight
+  precedes matching and unknown-path policy. Each failure returns empty sets.
+  C# tests load the checked 8+12 neutral fixtures; fixture decoding is not
+  linked into these operations. This bounded adoption does not certify a
+  neutral adapter or the other build-tool domains.
 - Uses no external managed dependencies. Registry, hashing, XML, and process
   work use the .NET base class library; secure file traversal calls the native
   kernel32 or libc APIs directly.
@@ -51,14 +65,19 @@ dotnet run -- --emit-plan --plan-file build-plan.json
   a changed shared input to every exact consumer.
 - Package hashes sort canonical repository-relative UTF-8 paths and frame each
   path and exact raw file body with unsigned 64-bit big-endian lengths before
-  SHA-256. Dependency and combined-digest framing remain a separate contract.
+  SHA-256. Native tests now replay all 20 neutral source-collection cases and
+  eight hashing/cache package-digest cases, including both before/after
+  consumers of one exact shared Rust manifest. Dependency and combined-digest
+  framing remain a separate contract.
 - Live hashing incrementally bounds 100,000 candidates, 50,000 selected files,
   50,000,000 declared-glob match-work units, 64 MiB per file, and 1 GiB per
   package. Native no-follow opens reject linked,
   reparse, non-regular, or multiply linked inputs. Each package retains the
   repository root while reopening and revalidating directory and file identity
   with constant descriptor use; complete Git
-  mode/OID/stage/path evidence is checked before and after batch hashing.
+  mode/OID/stage/path evidence is checked before and after batch hashing. Each
+  index snapshot remains bounded to 1 MiB per output stream and 60 seconds, so
+  contended CI runners have headroom without creating an unbounded subprocess.
   Package-hash failures expose only a stable quoted package identity; tracked
   snapshot failures expose only a stable `SOURCE_HASH_*` code.
 - Keeps the handwritten engine and secure source reader in focused literate
@@ -70,8 +89,8 @@ dotnet run -- --emit-plan --plan-file build-plan.json
 - Discovery consumes the complete language-neutral registry. The exact bucket
   immediately below `packages` or `programs` is the sole language
   discriminator, BUILD roots outside those containers do not become packages,
-  and exact case-sensitive generated components including `_build` and
-  `dist-newstyle` are pruned while near names and case variants remain source.
+  and exact case-sensitive generated components including `_build`, `blib`,
+  and `dist-newstyle` are pruned while near names and case variants remain source.
 - `Validator.ValidateTrackedArtifactSnapshot` is a pure security boundary for
   the shared build-tool conformance corpus. It rejects unsafe portable paths,
   redacts hostile path text, and detects Unicode compatibility aliases of an

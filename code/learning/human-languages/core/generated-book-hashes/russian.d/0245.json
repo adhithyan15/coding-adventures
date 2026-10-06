@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:df36662ecbccba01",
+  "lessonIds": [
+    "RU-C245-strannyy",
+    "RU-C245-smeshnoy",
+    "RU-C245-prekrasnyy",
+    "RU-C245-uzhasnyy",
+    "RU-C245-otlichnyy"
+  ],
+  "tex": "russian/book/chapters/ch245-strange-funny-wonderful-terrible-excellent.tex"
+}

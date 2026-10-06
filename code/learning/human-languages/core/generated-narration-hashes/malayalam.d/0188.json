@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:90c76c960ddf1d37",
+  "lessonIds": [
+    "ML-C188-maykkuka",
+    "ML-C188-onakkuka",
+    "ML-C188-ophakkuka",
+    "ML-C188-prasiddhikarikkuka",
+    "ML-C188-nannakkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch188.txt",
+  "json": "malayalam/narration/ch188.json",
+  "textHash": "fnv1a64:3851ab31abbb824d",
+  "jsonHash": "fnv1a64:c280f759c99d09f9",
+  "findings": []
+}

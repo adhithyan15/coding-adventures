@@ -1,0 +1,11 @@
+{
+  "id": "MR-C209-arthavyavastha",
+  "pathSegment": "MR-PATH-209-VASTU209",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-209-VASTU209",
+      "order": 0
+    }
+  ]
+}

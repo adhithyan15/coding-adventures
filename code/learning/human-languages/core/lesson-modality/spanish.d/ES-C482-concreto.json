@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C482-concreto",
+    "language": "spanish",
+    "chapter": 482,
+    "sequence": 13600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35cd164d4e4763a0"
+  },
+  "findings": []
+}

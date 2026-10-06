@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:5b038450400cd5ea",
+  "lessonIds": [
+    "UR-C163-fuzul",
+    "UR-C163-majbur",
+    "UR-C163-azad",
+    "UR-C163-pak",
+    "UR-C163-sharminda"
+  ],
+  "tex": "urdu/book/chapters/ch163-pointless-forced-free-pure-embarrassed.tex"
+}

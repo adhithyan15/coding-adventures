@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-156-MUNDE156",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "KA-EXT-156-MUNDE156"
+  ],
+  "after": []
+}

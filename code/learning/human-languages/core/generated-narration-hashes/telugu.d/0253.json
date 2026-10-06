@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:45009fb4e9dcca45",
+  "lessonIds": [
+    "TE-C253-civara",
+    "TE-C253-eppudaina",
+    "TE-C253-prastutam",
+    "TE-C253-purvam",
+    "TE-C253-tellavarujamu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch253.txt",
+  "json": "telugu/narration/ch253.json",
+  "textHash": "fnv1a64:5664089fafe3c84e",
+  "jsonHash": "fnv1a64:6a920f7459ae1156",
+  "findings": []
+}

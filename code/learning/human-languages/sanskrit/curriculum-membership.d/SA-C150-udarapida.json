@@ -1,0 +1,11 @@
+{
+  "id": "SA-C150-udarapida",
+  "pathSegment": "SA-PATH-150-WEL150",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-150-WEL150",
+      "order": 4
+    }
+  ]
+}

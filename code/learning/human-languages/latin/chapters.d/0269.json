@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "Gloomy, Drunk, Sober, Greedy, Thrifty",
+  "label": "ch:la-gloomy-drunk-sober-greedy-thrifty",
+  "canDo": "I can say gloomy, drunk, sober, greedy and thrifty.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C269-parcus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can say gloomy, drunk, sober, greedy and thrifty.",
+    "assesses": [
+      "LA-LEX-C269-QUAL269-03",
+      "LA-LEX-C269-QUAL269-04",
+      "LA-LEX-C269-QUAL269-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:d1df5c97761a139d",
+  "lessonIds": [
+    "KA-C203-belesu",
+    "KA-C203-aralu",
+    "KA-C203-badu",
+    "KA-C203-bisu",
+    "KA-C203-karagu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch203.txt",
+  "json": "kannada/narration/ch203.json",
+  "textHash": "fnv1a64:e4769f706f52e0b3",
+  "jsonHash": "fnv1a64:f709e5345c8671b3",
+  "findings": []
+}

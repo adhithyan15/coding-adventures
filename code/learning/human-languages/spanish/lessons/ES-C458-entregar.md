@@ -7,7 +7,7 @@ chapter: 458
 type: word
 headword: entregar
 gloss: to hand in, to deliver — to give a thing over whole
-concept_tag: ES-TERM-ENTREGAR
+concept_tag: ES-VERB-ENTREGAR
 prerequisites: [ES-C458-plazo, ES-C406-documento, ES-C452-almacen]
 sounds: [pr-cluster, g-hard, stress-final]
 roots: [integrare-latin]

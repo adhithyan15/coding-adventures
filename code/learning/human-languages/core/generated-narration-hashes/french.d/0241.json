@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:06d5a2392f77d6ad",
+  "lessonIds": [
+    "FR-C241-tousser",
+    "FR-C241-trembler",
+    "FR-C241-hurler",
+    "FR-C241-voter",
+    "FR-C241-accueillir",
+    "FR-R241-first-pass-words-from-chapters-233-236",
+    "FR-R241-second-pass-words-from-chapters-237-241"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch241.txt",
+  "json": "french/narration/ch241.json",
+  "textHash": "fnv1a64:13f40722b30722a3",
+  "jsonHash": "fnv1a64:37013c6973a4af39",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "Mud, Dust, Smoke, Flame, Climate",
+  "label": "ch:pt-mud-dust-smoke-flame-climate",
+  "canDo": "I can say mud, dust, smoke, a flame and the climate.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C195-clima",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say mud, dust, smoke, a flame and the climate.",
+    "assesses": [
+      "PT-LEX-C195-COISAS195-03",
+      "PT-LEX-C195-COISAS195-04",
+      "PT-LEX-C195-COISAS195-05"
+    ]
+  }
+}

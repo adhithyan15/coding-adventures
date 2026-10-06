@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:7b9c385013ad7d7b",
+  "lessonIds": [
+    "ML-C244-niranna",
+    "ML-C244-kiriya",
+    "ML-C244-murccayulla",
+    "ML-C244-svakarya",
+    "ML-C244-potu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch244.txt",
+  "json": "malayalam/narration/ch244.json",
+  "textHash": "fnv1a64:cc95f731a4648629",
+  "jsonHash": "fnv1a64:421a0cfb1822345c",
+  "findings": []
+}

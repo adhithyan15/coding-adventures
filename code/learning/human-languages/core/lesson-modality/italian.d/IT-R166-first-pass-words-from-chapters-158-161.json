@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R166-first-pass-words-from-chapters-158-161",
+    "language": "italian",
+    "chapter": 166,
+    "sequence": 8820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ba004cd9628db85"
+  },
+  "findings": []
+}

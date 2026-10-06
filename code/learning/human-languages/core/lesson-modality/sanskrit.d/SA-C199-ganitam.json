@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C199-ganitam",
+    "language": "sanskrit",
+    "chapter": 199,
+    "sequence": 11300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd91e10b363d4ccb"
+  },
+  "findings": []
+}

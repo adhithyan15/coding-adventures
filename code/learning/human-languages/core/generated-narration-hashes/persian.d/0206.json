@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:7567a4e3e0892156",
+  "lessonIds": [
+    "FA-C206-madrak",
+    "FA-C206-shenasname",
+    "FA-C206-parvande",
+    "FA-C206-printer",
+    "FA-C206-adres"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch206.txt",
+  "json": "persian/narration/ch206.json",
+  "textHash": "fnv1a64:708bd68cf9a667b3",
+  "jsonHash": "fnv1a64:481abe1af757ef65",
+  "findings": []
+}

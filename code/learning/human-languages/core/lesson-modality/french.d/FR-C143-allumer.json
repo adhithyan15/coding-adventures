@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C143-allumer",
+    "language": "french",
+    "chapter": 143,
+    "sequence": 6790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:826eadb51aae018d"
+  },
+  "findings": []
+}

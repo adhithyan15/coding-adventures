@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:af35dbafdde3e431",
+  "lessonIds": [
+    "BN-C154-rog",
+    "BN-C154-sordi",
+    "BN-C154-kashi",
+    "BN-C154-mathabtha",
+    "BN-C154-petbtha"
+  ],
+  "tex": "bengali/book/chapters/ch154-disease-cold-cough-headache-stomach-ache.tex"
+}

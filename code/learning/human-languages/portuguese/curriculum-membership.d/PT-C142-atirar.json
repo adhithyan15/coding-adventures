@@ -1,0 +1,11 @@
+{
+  "id": "PT-C142-atirar",
+  "pathSegment": "PT-PATH-142-VERBOS142",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-142-VERBOS142",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "Flat, Wrinkled, Steep, Hollow, Faded",
+  "label": "ch:ml-flat-wrinkled-steep-hollow-faded",
+  "canDo": "I can say flat, wrinkled, steep, hollow and faded.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C285-manniya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can say flat, wrinkled, steep, hollow and faded.",
+    "assesses": [
+      "ML-LEX-C285-GUNAM285-03",
+      "ML-LEX-C285-GUNAM285-04",
+      "ML-LEX-C285-GUNAM285-05"
+    ]
+  }
+}

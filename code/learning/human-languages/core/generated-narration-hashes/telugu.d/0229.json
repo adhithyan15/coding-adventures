@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:48c783584b155039",
+  "lessonIds": [
+    "TE-C229-tapakayalu",
+    "TE-C229-gangireddu",
+    "TE-C229-enda",
+    "TE-C229-cinuku",
+    "TE-C229-pogamancu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch229.txt",
+  "json": "telugu/narration/ch229.json",
+  "textHash": "fnv1a64:e428c28295f4eda7",
+  "jsonHash": "fnv1a64:d491d118745b2778",
+  "findings": []
+}

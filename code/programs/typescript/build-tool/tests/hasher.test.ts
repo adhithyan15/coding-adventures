@@ -24,6 +24,7 @@ import {
   SPECIAL_FILENAMES,
 } from "../src/hasher.js";
 import { DirectedGraph } from "../src/resolver.js";
+import { GlobPatternError } from "../src/glob-match.js";
 import type { Package } from "../src/discovery.js";
 
 type SourceCollectionFixture = {
@@ -68,6 +69,7 @@ const EXPECTED_EXCLUDED_COMPONENTS = [
   "Pods",
   "__pycache__",
   "_build",
+  "blib",
   "build",
   "cover",
   "deps",
@@ -347,7 +349,7 @@ describe("collectSourceFiles", () => {
     },
   );
 
-  it("keeps the neutral fixture's exact 26-component exclusion registry", () => {
+  it("keeps the neutral fixture's exact 27-component exclusion registry", () => {
     for (const fixtureFilename of SOURCE_COLLECTION_FIXTURES) {
       const fixture = readSourceCollectionFixture(fixtureFilename);
       const excluded = fixture.input.options.candidates
@@ -616,6 +618,15 @@ describe("collectSourceFilesGlob", () => {
     const files = collectSourceFilesGlob(pkg, []);
     expect(files.length).toBe(1);
     expect(path.basename(files[0])).toBe("BUILD");
+  });
+
+  it("validates every declared pattern before filesystem enumeration", () => {
+    const missingRoot = path.join(tmpDir, "does-not-exist");
+    const pkg = makePkg(missingRoot, "typescript");
+
+    expect(() =>
+      collectSourceFilesGlob(pkg, ["**/*.ts", "[z-a].ts"]),
+    ).toThrow(GlobPatternError);
   });
 
   it("should return sorted files", () => {

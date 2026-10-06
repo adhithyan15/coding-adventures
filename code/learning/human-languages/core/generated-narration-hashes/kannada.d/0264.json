@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:840917d29d4956e0",
+  "lessonIds": [
+    "KA-C264-intarnet",
+    "KA-C264-vebsait",
+    "KA-C264-pasvard",
+    "KA-C264-ap",
+    "KA-C264-vidiyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch264.txt",
+  "json": "kannada/narration/ch264.json",
+  "textHash": "fnv1a64:d66b549458839bf0",
+  "jsonHash": "fnv1a64:850cf574c32c03e4",
+  "findings": []
+}

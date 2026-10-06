@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-222-VELAI222",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a discount, a rupee, a coin, an expense and a salary.",
+  "prerequisites": []
+}

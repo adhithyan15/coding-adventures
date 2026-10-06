@@ -1,0 +1,11 @@
+{
+  "id": "IT-C228-torre",
+  "pathSegment": "IT-PATH-228-COSE228",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-228-COSE228",
+      "order": 2
+    }
+  ]
+}

@@ -37,7 +37,7 @@ import {
 export const SUPPORTED_MANIFEST_VERSIONS = Object.freeze([1] as const);
 
 /** Hard ceiling for `plugin.apiVersion` (== FM01 KERNEL_API_VERSION). */
-export const SUPPORTED_API_VERSIONS = Object.freeze([1] as const);
+export const SUPPORTED_API_VERSIONS = Object.freeze([2] as const);
 
 /** Regex matching the FM02 §3.3 rule 2 plugin-name format. */
 export const PLUGIN_NAME_REGEX =
@@ -125,7 +125,7 @@ function validatePlugin(m: Manifest, add: (e: ManifestErrorEntry) => void): void
   if (typeof p?.apiVersion !== "number" || p.apiVersion <= 0) {
     add({ code: "REQUIRED_FIELD_MISSING", path: "plugin.apiVersion",
       message: "plugin.apiVersion is required and must be a positive integer" });
-  } else if (!SUPPORTED_API_VERSIONS.includes(p.apiVersion as 1)) {
+  } else if (!SUPPORTED_API_VERSIONS.includes(p.apiVersion as 2)) {
     add({ code: "PLUGIN_API_VERSION_INVALID", path: "plugin.apiVersion",
       message: `plugin.apiVersion ${p.apiVersion} is not supported; ` +
                `supported: ${SUPPORTED_API_VERSIONS.join(", ")}` });
@@ -201,10 +201,11 @@ function validateSafePath(
 }
 
 function validateCapabilities(m: Manifest, add: (e: ManifestErrorEntry) => void): void {
-  for (const [bucket, entries] of [
+  const buckets: ReadonlyArray<readonly ["required" | "optional", readonly CapabilityEntry[]]> = [
     ["required" as const, m.capabilities?.required ?? []],
     ["optional" as const, m.capabilities?.optional ?? []],
-  ]) {
+  ];
+  for (const [bucket, entries] of buckets) {
     entries.forEach((cap, i) => validateCapabilityEntry(cap, bucket, i, add));
   }
 }
@@ -325,6 +326,24 @@ function validateStage(
 }
 
 function validateKindReference(
+  kind: string,
+  path: string,
+  add: (e: ManifestErrorEntry) => void,
+): void {
+  const streamMatch = /^Stream<([^<>]+)>$/.exec(kind);
+  if (streamMatch) {
+    validateBareKindReference(streamMatch[1]!, path, add);
+    return;
+  }
+  if (kind.startsWith("Stream<") || kind.includes("<") || kind.includes(">")) {
+    add({ code: "STAGE_KIND_NAME_INVALID", path,
+      message: `invalid stream kind reference "${kind}"; expected Stream<KindName> with no nesting` });
+    return;
+  }
+  validateBareKindReference(kind, path, add);
+}
+
+function validateBareKindReference(
   kind: string,
   path: string,
   add: (e: ManifestErrorEntry) => void,

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C221-montre",
+  "pathSegment": "FR-PATH-221-CHOSES221",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-221-CHOSES221",
+      "order": 1
+    }
+  ]
+}

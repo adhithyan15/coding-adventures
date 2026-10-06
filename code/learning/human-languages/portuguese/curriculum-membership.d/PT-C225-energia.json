@@ -1,0 +1,11 @@
+{
+  "id": "PT-C225-energia",
+  "pathSegment": "PT-PATH-225-COISAS225",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-225-COISAS225",
+      "order": 3
+    }
+  ]
+}

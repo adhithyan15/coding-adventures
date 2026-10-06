@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:8ad59c61ab899358",
+  "lessonIds": [
+    "UR-C173-divar-ghari",
+    "UR-C173-gamla",
+    "UR-C173-pauda",
+    "UR-C173-tana",
+    "UR-C173-kichar",
+    "UR-R173-first-pass-words-from-chapters-165-168",
+    "UR-R173-second-pass-words-from-chapters-169-173"
+  ],
+  "tex": "urdu/book/chapters/ch173-wall-clock-flowerpot-plant-tree-trunk-mud.tex"
+}

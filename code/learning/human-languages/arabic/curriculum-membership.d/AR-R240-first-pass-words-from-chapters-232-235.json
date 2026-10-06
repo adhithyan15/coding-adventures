@@ -1,0 +1,11 @@
+{
+  "id": "AR-R240-first-pass-words-from-chapters-232-235",
+  "pathSegment": "AR-PATH-240-SIFA240",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-240-SIFA240",
+      "order": 5
+    }
+  ]
+}

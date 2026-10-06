@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:c3557b48b284c562",
+  "lessonIds": [
+    "BN-C206-silindar",
+    "BN-C206-kukar",
+    "BN-C206-miksi",
+    "BN-C206-tre",
+    "BN-C206-chhakni"
+  ],
+  "tex": "bengali/book/chapters/ch206-cylinder-pressure-cooker-blender-tray-strainer.tex"
+}

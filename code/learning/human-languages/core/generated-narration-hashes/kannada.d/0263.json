@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:c6289fc4da59f588",
+  "lessonIds": [
+    "KA-C263-huduga",
+    "KA-C263-hudugi",
+    "KA-C263-gandasu",
+    "KA-C263-hengasu",
+    "KA-C263-muduka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch263.txt",
+  "json": "kannada/narration/ch263.json",
+  "textHash": "fnv1a64:257ffbca36122704",
+  "jsonHash": "fnv1a64:0c05eebe1cc551e3",
+  "findings": []
+}

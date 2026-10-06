@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Crab, Sparrow, Stork, Owl, Peacock",
+  "label": "ch:la-crab-sparrow-stork-owl-peacock",
+  "canDo": "I can say a crab, a sparrow, a stork, an owl and a peacock.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C192-pavo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say a crab, a sparrow, a stork, an owl and a peacock.",
+    "assesses": [
+      "LA-LEX-C192-RES192-03",
+      "LA-LEX-C192-RES192-04",
+      "LA-LEX-C192-RES192-05"
+    ]
+  }
+}

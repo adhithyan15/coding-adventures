@@ -1,0 +1,11 @@
+{
+  "id": "UR-C243-klinik",
+  "pathSegment": "UR-PATH-243-SEHAT243",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-243-SEHAT243",
+      "order": 4
+    }
+  ]
+}

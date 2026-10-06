@@ -1,0 +1,11 @@
+{
+  "id": "KA-C299-aparicita",
+  "pathSegment": "KA-PATH-299-VASTU299",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-299-VASTU299",
+      "order": 3
+    }
+  ]
+}

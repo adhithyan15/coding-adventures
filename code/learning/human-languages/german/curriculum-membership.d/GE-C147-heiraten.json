@@ -1,0 +1,11 @@
+{
+  "id": "GE-C147-heiraten",
+  "pathSegment": "GE-PATH-147-VERB147",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-147-VERB147",
+      "order": 2
+    }
+  ]
+}

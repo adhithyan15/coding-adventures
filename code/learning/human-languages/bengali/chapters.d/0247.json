@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Next, Pale, Steep, Flattened, Shiny",
+  "label": "ch:bn-next-pale-steep-flattened-shiny",
+  "canDo": "I can say next, pale, steep, flattened and shiny.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C247-chokchoke",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say next, pale, steep, flattened and shiny.",
+    "assesses": [
+      "BN-LEX-C247-GUN247-03",
+      "BN-LEX-C247-GUN247-04",
+      "BN-LEX-C247-GUN247-05"
+    ]
+  }
+}

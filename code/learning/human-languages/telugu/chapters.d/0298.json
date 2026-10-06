@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "Blunt, Crooked, Flat, Hollow, Dim",
+  "label": "ch:te-blunt-crooked-flat-hollow-dim",
+  "canDo": "I can say blunt, crooked, flat, hollow and dim.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C298-masaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can say blunt, crooked, flat, hollow and dim.",
+    "assesses": [
+      "TE-LEX-C298-GUNAM298-03",
+      "TE-LEX-C298-GUNAM298-04",
+      "TE-LEX-C298-GUNAM298-05"
+    ]
+  }
+}

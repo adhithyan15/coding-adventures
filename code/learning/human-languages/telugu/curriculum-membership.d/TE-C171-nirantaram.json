@@ -1,0 +1,11 @@
+{
+  "id": "TE-C171-nirantaram",
+  "pathSegment": "TE-PATH-171-SAMAYAM171",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-171-SAMAYAM171",
+      "order": 4
+    }
+  ]
+}

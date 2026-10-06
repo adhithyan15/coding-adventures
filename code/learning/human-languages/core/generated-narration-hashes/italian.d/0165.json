@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:7ccc8cdb1295d152",
+  "lessonIds": [
+    "IT-C165-regola",
+    "IT-C165-permesso",
+    "IT-C165-divieto",
+    "IT-C165-pericolo",
+    "IT-C165-sicurezza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch165.txt",
+  "json": "italian/narration/ch165.json",
+  "textHash": "fnv1a64:b858bc97ef40677b",
+  "jsonHash": "fnv1a64:3e9b37b88b007802",
+  "findings": []
+}

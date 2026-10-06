@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:4b4c0bb77fed4978",
+  "lessonIds": [
+    "TA-C259-patam-etu",
+    "TA-C259-nati",
+    "TA-C259-raci",
+    "TA-C259-palutu-par",
+    "TA-C259-olunkupatuttu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch259.txt",
+  "json": "tamil/narration/ch259.json",
+  "textHash": "fnv1a64:1bb9855795f0914e",
+  "jsonHash": "fnv1a64:6168c3b4100d50b1",
+  "findings": []
+}

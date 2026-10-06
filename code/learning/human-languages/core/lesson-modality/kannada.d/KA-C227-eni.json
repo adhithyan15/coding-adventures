@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C227-eni",
+    "language": "kannada",
+    "chapter": 227,
+    "sequence": 10630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e50376994554d6e"
+  },
+  "findings": []
+}

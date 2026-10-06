@@ -1,0 +1,11 @@
+{
+  "id": "TE-C236-markulu",
+  "pathSegment": "TE-PATH-236-PANI236",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-236-PANI236",
+      "order": 4
+    }
+  ]
+}

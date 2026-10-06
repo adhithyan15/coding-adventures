@@ -1,0 +1,9 @@
+{
+  "language": "marwadi",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:20afdf31acc8f276",
+  "lessonIds": [
+    "MW-W44-a2-connected-composition"
+  ],
+  "tex": "marwadi/book/chapters/ch150-a-connected-a2-message.tex"
+}

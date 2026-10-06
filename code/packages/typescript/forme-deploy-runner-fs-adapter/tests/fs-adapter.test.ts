@@ -6,6 +6,7 @@ import {
   mkdtemp,
   readFile,
   readdir,
+  realpath,
   rename,
   rm,
   stat,
@@ -18,6 +19,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ContentStore } from "@coding-adventures/forme-deploy-runner-core";
 import {
   FilesystemPublishError,
+  inspectFilesystemSite,
   prepareFilesystemPublication,
   publishFilesystemSite,
 } from "../src/index.js";
@@ -134,6 +136,44 @@ async function artifacts(root: string): Promise<string[]> {
 }
 
 describe("publishFilesystemSite", () => {
+  it("inspects a missing target without creating roots or transaction artifacts", async () => {
+    const root = await temporarySite();
+    const files = { "index.html": "home" };
+
+    await expect(inspectFilesystemSite({ root, manifest: manifest(files), contentStore: store(files) }))
+      .resolves.toEqual({ status: "would-publish", fileCount: 1, totalSizeBytes: 4 });
+
+    await expect(lstat(root)).rejects.toMatchObject({ code: "ENOENT" });
+    expect(await artifacts(root)).toEqual([]);
+  });
+
+  it("reports an exact existing target as unchanged without taking a lock", async () => {
+    const root = await temporarySite();
+    const files = { "index.html": "same" };
+    await publishFilesystemSite({ root, manifest: manifest(files), contentStore: store(files) });
+
+    await expect(inspectFilesystemSite({ root, manifest: manifest(files), contentStore: store(files) }))
+      .resolves.toEqual({ status: "unchanged", fileCount: 1, totalSizeBytes: 4 });
+    expect(await artifacts(root)).toEqual([]);
+  });
+
+  it("rejects a caller-bound parent identity mismatch before staging", async () => {
+    const root = await temporarySite();
+    const parent = dirname(root);
+    const identity = await lstat(parent, { bigint: true });
+    await expect(publishFilesystemSite({
+      root,
+      manifest: manifest({ "index.html": "home" }),
+      contentStore: store({ "index.html": "home" }),
+      expectedParentIdentity: {
+        canonicalPath: await realpath(parent),
+        dev: identity.dev,
+        ino: identity.ino + 1n,
+      },
+    })).rejects.toMatchObject({ code: "ROOT_UNSAFE" });
+    expect(await artifacts(root)).toEqual([]);
+  });
+
   it("publishes the complete nested manifest and removes transaction residue", async () => {
     const root = await temporarySite();
     const files = { "index.html": "home", "assets/app.css": "body{}" };
@@ -420,7 +460,7 @@ describe("filesystem containment", () => {
     const disappearing = join(root, "nested", "vanish.txt");
     await writeFile(disappearing, "old");
     fsFaults.beforeLstat = async path => {
-      if (!path.endsWith("/nested/vanish.txt")) return false;
+      if (basename(path) !== "vanish.txt" || basename(dirname(path)) !== "nested") return false;
       await rm(disappearing, { force: true });
       return true;
     };

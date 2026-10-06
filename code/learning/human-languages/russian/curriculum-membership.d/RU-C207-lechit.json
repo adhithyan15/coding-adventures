@@ -1,0 +1,11 @@
+{
+  "id": "RU-C207-lechit",
+  "pathSegment": "RU-PATH-207-ACT207",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-207-ACT207",
+      "order": 1
+    }
+  ]
+}

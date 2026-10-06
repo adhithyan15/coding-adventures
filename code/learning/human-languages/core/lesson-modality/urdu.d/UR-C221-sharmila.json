@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C221-sharmila",
+    "language": "urdu",
+    "chapter": 221,
+    "sequence": 13160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a70ad5ae5aa73c36"
+  },
+  "findings": []
+}

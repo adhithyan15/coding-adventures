@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "To remind, To earn, To avoid, To move house, To contact",
+  "label": "ch:ta-to-remind-to-earn-to-avoid-to-move-house-to-contact",
+  "canDo": "I can say to remind, to earn, to avoid, to move house and to contact.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C197-totarpu-kol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say to remind, to earn, to avoid, to move house and to contact.",
+    "assesses": [
+      "TA-LEX-C197-ACT197-03",
+      "TA-LEX-C197-ACT197-04",
+      "TA-LEX-C197-ACT197-05"
+    ]
+  }
+}

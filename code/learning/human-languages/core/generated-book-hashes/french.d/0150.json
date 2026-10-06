@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:5d9d4b023ba4ea15",
+  "lessonIds": [
+    "FR-C150-eloigner",
+    "FR-C150-approcher",
+    "FR-C150-bavarder",
+    "FR-C150-brancher",
+    "FR-C150-livrer"
+  ],
+  "tex": "french/book/chapters/ch150-to-move-away-to-come-near-to-chat-to-plug-in-to-deliver.tex"
+}

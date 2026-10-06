@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C152-shukano",
+    "language": "bengali",
+    "chapter": 152,
+    "sequence": 8450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5f6324a3100a625"
+  },
+  "findings": []
+}

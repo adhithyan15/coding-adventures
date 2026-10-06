@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C228-tavallod",
+    "language": "persian",
+    "chapter": 228,
+    "sequence": 11800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98601b5be1b2bd35"
+  },
+  "findings": []
+}

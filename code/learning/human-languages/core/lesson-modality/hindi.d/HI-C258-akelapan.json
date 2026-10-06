@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C258-akelapan",
+    "language": "hindi",
+    "chapter": 258,
+    "sequence": 14040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8598f2ce35ec301f"
+  },
+  "findings": []
+}

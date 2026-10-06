@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Mayor, Elections, Vote, Politics, Economy",
+  "label": "ch:fr-mayor-elections-vote-politics-economy",
+  "canDo": "I can say a mayor, elections, a vote, politics and the economy.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C248-economie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say a mayor, elections, a vote, politics and the economy.",
+    "assesses": [
+      "FR-LEX-C248-CHOSES248-03",
+      "FR-LEX-C248-CHOSES248-04",
+      "FR-LEX-C248-CHOSES248-05"
+    ]
+  }
+}

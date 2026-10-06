@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C254-devochka",
+    "language": "russian",
+    "chapter": 254,
+    "sequence": 15660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4432bc0cd3ed3595"
+  },
+  "findings": []
+}

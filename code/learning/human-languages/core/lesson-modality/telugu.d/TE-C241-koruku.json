@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C241-koruku",
+    "language": "telugu",
+    "chapter": 241,
+    "sequence": 11250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87d9cf6340a78367"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "To carry, To hold, To throw, To catch, To push",
+  "label": "ch:ru-to-carry-to-hold-to-throw-to-catch-to-push",
+  "canDo": "I can say to carry, to hold, to throw, to catch and to push.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C142-tolkat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: I can say to carry, to hold, to throw, to catch and to push.",
+    "assesses": [
+      "RU-LEX-C142-ACT142-03",
+      "RU-LEX-C142-ACT142-04",
+      "RU-LEX-C142-ACT142-05"
+    ]
+  }
+}

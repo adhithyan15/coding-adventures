@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:9920db277b1c7e8f",
+  "lessonIds": [
+    "GE-C184-parken",
+    "GE-C184-pflegen",
+    "GE-C184-pfluecken",
+    "GE-C184-pruefen",
+    "GE-C184-reinigen"
+  ],
+  "tex": "german/book/chapters/ch184-to-park-to-look-after-to-pick-to-test-to-clean.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C275-parisilisu",
+    "language": "kannada",
+    "chapter": 275,
+    "sequence": 13170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:309a4f9f92a644bc"
+  },
+  "findings": []
+}

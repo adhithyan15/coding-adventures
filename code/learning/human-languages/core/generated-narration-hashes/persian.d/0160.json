@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:039e68d8df0d1d56",
+  "lessonIds": [
+    "FA-C160-angize",
+    "FA-C160-manzur",
+    "FA-C160-qasd",
+    "FA-C160-ettefaq",
+    "FA-C160-shans"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch160.txt",
+  "json": "persian/narration/ch160.json",
+  "textHash": "fnv1a64:1d33b1e560c15ba5",
+  "jsonHash": "fnv1a64:8e3a50fb21807eb0",
+  "findings": []
+}

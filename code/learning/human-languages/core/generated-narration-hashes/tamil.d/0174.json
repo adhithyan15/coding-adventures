@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:960530994576a2e4",
+  "lessonIds": [
+    "TA-C174-pataku",
+    "TA-C174-mitivanti",
+    "TA-C174-kar",
+    "TA-C174-atto",
+    "TA-C174-payani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch174.txt",
+  "json": "tamil/narration/ch174.json",
+  "textHash": "fnv1a64:a123a2e726fec3f1",
+  "jsonHash": "fnv1a64:dc6ef6414c3b4b43",
+  "findings": []
+}

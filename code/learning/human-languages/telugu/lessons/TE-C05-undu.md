@@ -47,14 +47,14 @@ own right, and use it to say where you live.
 
 **ఉండు** (*uṇḍu*, "to be, to exist, to stay, to live") is native Dravidian and
 does an enormous amount of work. It is the verb behind Chapter 3's *unnāru*
-("you are") and *bāgunnānu* ("I'm well") — and it also means "to reside": **నేను
-హైదరాబాద్లో ఉంటాను** (*nēnu Hyderābādlō uṇṭānu*, "I live in Hyderabad"). One
+("you are") and *bāgunnānu* ("I'm well") — and it also means "to reside": *nēnu
+Hyderābādlō uṇṭānu* ("I live in Hyderabad"). One
 verb covers "be," "stay," and "live."
 
 ## Grammar Lens: "in" comes after the noun
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C05-UNDU-03]; assesses=[] -->
 
-**హైదరాబాద్లో** (*Hyderābādlō*) = *Hyderabad* + **-లో** (*-lō*, "in"). The little
+*Hyderābādlō* = *Hyderabad* + **-లో** (*-lō*, "in"). The little
 word for "in" is glued to the **end** of the noun — Telugu uses **post**positions
 (really, case-suffixes) where English uses prepositions. "Hyderabad-in I stay,"
 the verb last.

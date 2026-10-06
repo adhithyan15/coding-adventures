@@ -1,0 +1,11 @@
+{
+  "id": "BN-C194-jog",
+  "pathSegment": "BN-PATH-194-JINIS194",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-194-JINIS194",
+      "order": 2
+    }
+  ]
+}

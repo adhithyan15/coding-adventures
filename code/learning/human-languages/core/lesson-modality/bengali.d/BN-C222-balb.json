@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C222-balb",
+    "language": "bengali",
+    "chapter": 222,
+    "sequence": 13550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8112a97f4c4790b0"
+  },
+  "findings": []
+}

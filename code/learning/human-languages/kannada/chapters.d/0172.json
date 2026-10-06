@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Rarely, Every day, Beginning, Century, Moment",
+  "label": "ch:ka-rarely-every-day-beginning-century-moment",
+  "canDo": "I can say rarely, every day, the beginning, a century and a moment.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C172-ksana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say rarely, every day, the beginning, a century and a moment.",
+    "assesses": [
+      "KA-LEX-C172-KALA172-03",
+      "KA-LEX-C172-KALA172-04",
+      "KA-LEX-C172-KALA172-05"
+    ]
+  }
+}

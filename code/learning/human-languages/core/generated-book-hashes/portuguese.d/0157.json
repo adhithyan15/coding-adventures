@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:84ff6d99e02c86a7",
+  "lessonIds": [
+    "PT-C157-apartamento",
+    "PT-C157-sala-de-jantar",
+    "PT-C157-varanda",
+    "PT-C157-fechadura",
+    "PT-C157-campainha"
+  ],
+  "tex": "portuguese/book/chapters/ch157-flat-dining-room-balcony-lock-doorbell.tex"
+}

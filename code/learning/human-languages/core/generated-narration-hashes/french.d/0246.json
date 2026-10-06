@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:f74498eee3e19448",
+  "lessonIds": [
+    "FR-C246-genereux-genereuse",
+    "FR-C246-paresseux-paresseuse",
+    "FR-C246-travailleur-travailleuse",
+    "FR-C246-bavard-bavarde",
+    "FR-C246-fache-fachee"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch246.txt",
+  "json": "french/narration/ch246.json",
+  "textHash": "fnv1a64:ef9fbd5f9870affb",
+  "jsonHash": "fnv1a64:4272af605d0a59b0",
+  "findings": []
+}

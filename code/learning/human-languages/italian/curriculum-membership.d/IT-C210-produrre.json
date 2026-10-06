@@ -1,0 +1,11 @@
+{
+  "id": "IT-C210-produrre",
+  "pathSegment": "IT-PATH-210-VERBI210",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-210-VERBI210",
+      "order": 2
+    }
+  ]
+}

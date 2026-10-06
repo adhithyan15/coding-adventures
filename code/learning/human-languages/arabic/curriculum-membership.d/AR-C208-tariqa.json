@@ -1,0 +1,11 @@
+{
+  "id": "AR-C208-tariqa",
+  "pathSegment": "AR-PATH-208-SABAB208",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-208-SABAB208",
+      "order": 4
+    }
+  ]
+}

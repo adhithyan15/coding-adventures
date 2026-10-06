@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C179-ullur",
+    "language": "tamil",
+    "chapter": 179,
+    "sequence": 8830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48791ebac3059f1f"
+  },
+  "findings": []
+}

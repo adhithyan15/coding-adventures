@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "Worried, With a cold, Single, Married, Divorced",
+  "label": "ch:fr-worried-with-a-cold-single-married-divorced",
+  "canDo": "I can say worried, with a cold, single, married and divorced.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C162-divorce-divorcee",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say worried, with a cold, single, married and divorced.",
+    "assesses": [
+      "FR-LEX-C162-QUAL162-03",
+      "FR-LEX-C162-QUAL162-04",
+      "FR-LEX-C162-QUAL162-05"
+    ]
+  }
+}

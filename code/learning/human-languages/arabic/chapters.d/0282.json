@@ -1,0 +1,19 @@
+{
+  "chapter": 282,
+  "title": "Calculator, Pencil case, Page, Sentence, Barber",
+  "label": "ch:ar-calculator-pencil-case-page-sentence-barber",
+  "canDo": "I can say a calculator, a pencil case, a page, a sentence and a barber.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-R282-second-pass-words-from-chapters-280-282",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 282: I can say a calculator, a pencil case, a page, a sentence and a barber.",
+    "assesses": [
+      "AR-LEX-C282-AMAL282-03",
+      "AR-LEX-C282-AMAL282-04",
+      "AR-LEX-C282-AMAL282-05"
+    ]
+  }
+}

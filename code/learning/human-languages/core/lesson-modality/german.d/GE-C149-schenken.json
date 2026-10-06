@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C149-schenken",
+    "language": "german",
+    "chapter": 149,
+    "sequence": 6650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c360f49849c040e"
+  },
+  "findings": []
+}

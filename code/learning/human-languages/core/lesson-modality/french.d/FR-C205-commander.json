@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C205-commander",
+    "language": "french",
+    "chapter": 205,
+    "sequence": 11340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76e0f79caf08fb80"
+  },
+  "findings": []
+}

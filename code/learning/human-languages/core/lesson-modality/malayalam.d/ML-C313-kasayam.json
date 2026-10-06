@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C313-kasayam",
+    "language": "malayalam",
+    "chapter": 313,
+    "sequence": 14790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9663be898ba37c2b"
+  },
+  "findings": []
+}

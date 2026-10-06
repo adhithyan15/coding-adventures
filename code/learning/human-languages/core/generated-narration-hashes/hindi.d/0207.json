@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:2476496a03661ddc",
+  "lessonIds": [
+    "HI-C207-sart",
+    "HI-C207-qarz",
+    "HI-C207-kamai",
+    "HI-C207-bacat",
+    "HI-C207-kharc"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch207.txt",
+  "json": "hindi/narration/ch207.json",
+  "textHash": "fnv1a64:8c79ee3dfc4c7cd7",
+  "jsonHash": "fnv1a64:f5b32b19783f7c6f",
+  "findings": []
+}

@@ -2,6 +2,17 @@
 
 Haskell implementation of the monorepo build tool.
 
+The `GraphDiffCore` library module is a typed, process-free graph and
+changed-path selection boundary. Callers provide declared packages, edges,
+changed paths, and an optional repository source-input boundary as values;
+it neither discovers a checkout nor invokes Git. It validates declared graph
+and portable path/glob limits, emits deterministic prerequisite-first levels
+and closure sets, checks the versioned boundary SHA-256, and preflights the
+operation-wide 50,000,000-unit strict-glob match budget before matching.
+The Hspec suite loads and pins all eight graph and twelve diff-selection
+neutral cases, including their case IDs. This native core does not yet make
+the Haskell neutral execution adapter ready.
+
 ## What it does
 
 This version discovers packages by walking `code/`, resolves internal
@@ -177,8 +188,9 @@ Package hashing uses a source-embedded projection of the complete checked v1
 language registry and verifies its domain-separated SHA-256 digest in tests.
 The shared production selector covers extension and declared-source modes,
 all seven selector roles, all 23 registered languages including OCaml, the
-five BUILD fronts, and exact case-sensitive pruning of all 26 generated
-components. It admits only the two registry-named TypeScript site roots and
+five BUILD fronts, and exact case-sensitive pruning of all 27 generated
+components. Exact lowercase `blib` is pruned while `Blib` and `blib-example`
+remain source. It admits only the two registry-named TypeScript site roots and
 their 13 exact authored resources beyond conventional package/program roots.
 Those sites retain their legacy `unknown/*` graph identities while live
 hashing derives the TypeScript selector only from an exact registered root

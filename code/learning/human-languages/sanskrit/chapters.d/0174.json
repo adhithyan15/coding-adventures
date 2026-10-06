@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "Steals, Eats up, Strikes, Keeps, Hurts",
+  "label": "ch:sa-steals-eats-up-strikes-keeps-hurts",
+  "canDo": "I can say steals, eats up, strikes, keeps and hurts.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C174-pidayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say steals, eats up, strikes, keeps and hurts.",
+    "assesses": [
+      "SA-LEX-C174-ACT174-03",
+      "SA-LEX-C174-ACT174-04",
+      "SA-LEX-C174-ACT174-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C304-parikse",
+  "pathSegment": "KA-PATH-304-KELASA304",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-304-KELASA304",
+      "order": 1
+    }
+  ]
+}

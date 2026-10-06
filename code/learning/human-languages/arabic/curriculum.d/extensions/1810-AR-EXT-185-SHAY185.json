@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-185-SHAY185",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a dolphin, a parrot, an ant, a bull and an insect.",
+  "prerequisites": []
+}

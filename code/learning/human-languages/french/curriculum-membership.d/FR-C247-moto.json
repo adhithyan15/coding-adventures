@@ -1,0 +1,11 @@
+{
+  "id": "FR-C247-moto",
+  "pathSegment": "FR-PATH-247-CHOSES247",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-247-CHOSES247",
+      "order": 3
+    }
+  ]
+}

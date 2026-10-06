@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:114828f04654b503",
+  "lessonIds": [
+    "FR-C243-pansement",
+    "FR-C243-urgences",
+    "FR-C243-urgence",
+    "FR-C243-consultation",
+    "FR-C243-regime"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch243.txt",
+  "json": "french/narration/ch243.json",
+  "textHash": "fnv1a64:fc8126f1088cbf49",
+  "jsonHash": "fnv1a64:6732ff1717251937",
+  "findings": []
+}

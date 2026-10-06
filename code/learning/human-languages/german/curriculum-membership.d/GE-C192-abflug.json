@@ -1,0 +1,11 @@
+{
+  "id": "GE-C192-abflug",
+  "pathSegment": "GE-PATH-192-THING192",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-192-THING192",
+      "order": 2
+    }
+  ]
+}

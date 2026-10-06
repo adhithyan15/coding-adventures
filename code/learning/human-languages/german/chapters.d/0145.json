@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "To use, To go shopping, To invite, To recommend, To decide",
+  "label": "ch:ge-to-use-to-go-shopping-to-invite-to-recommend-to-decide",
+  "canDo": "I can say to use, to go shopping, to invite, to recommend and to decide.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C145-entscheiden",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: I can say to use, to go shopping, to invite, to recommend and to decide.",
+    "assesses": [
+      "GE-LEX-C145-VERB145-03",
+      "GE-LEX-C145-VERB145-04",
+      "GE-LEX-C145-VERB145-05"
+    ]
+  }
+}

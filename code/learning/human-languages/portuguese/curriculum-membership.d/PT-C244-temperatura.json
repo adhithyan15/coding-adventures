@@ -1,0 +1,11 @@
+{
+  "id": "PT-C244-temperatura",
+  "pathSegment": "PT-PATH-244-COISAS244",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-244-COISAS244",
+      "order": 3
+    }
+  ]
+}

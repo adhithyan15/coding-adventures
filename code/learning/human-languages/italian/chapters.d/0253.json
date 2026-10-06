@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "Bank account, Loan, Debt, Tax, Form",
+  "label": "ch:it-bank-account-loan-debt-tax-form",
+  "canDo": "I can say a bank account, a loan, a debt, a tax and a form.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C253-modulo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say a bank account, a loan, a debt, a tax and a form.",
+    "assesses": [
+      "IT-LEX-C253-COSE253-03",
+      "IT-LEX-C253-COSE253-04",
+      "IT-LEX-C253-COSE253-05"
+    ]
+  }
+}

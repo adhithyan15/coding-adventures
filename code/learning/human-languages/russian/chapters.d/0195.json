@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "Nature, Branch, Root, Rose, Oak",
+  "label": "ch:ru-nature-branch-root-rose-oak",
+  "canDo": "I can say nature, a branch, a root, a rose and an oak.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C195-dub",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say nature, a branch, a root, a rose and an oak.",
+    "assesses": [
+      "RU-LEX-C195-VESHCH195-03",
+      "RU-LEX-C195-VESHCH195-04",
+      "RU-LEX-C195-VESHCH195-05"
+    ]
+  }
+}

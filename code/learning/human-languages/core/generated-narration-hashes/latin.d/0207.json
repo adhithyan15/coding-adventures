@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:ea4240bad81961c4",
+  "lessonIds": [
+    "LA-C207-saeculum",
+    "LA-C207-aetas",
+    "LA-C207-occasus",
+    "LA-C207-ortus",
+    "LA-C207-diluculum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch207.txt",
+  "json": "latin/narration/ch207.json",
+  "textHash": "fnv1a64:4dadf90cfb73325f",
+  "jsonHash": "fnv1a64:e14e8eb4e9f3f8d5",
+  "findings": []
+}

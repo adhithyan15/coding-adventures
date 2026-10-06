@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:c5496335239b8617",
+  "lessonIds": [
+    "UR-C195-asmani",
+    "UR-C195-achanak",
+    "UR-C195-zyada",
+    "UR-C195-bilkul",
+    "UR-C195-laparvah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch195.txt",
+  "json": "urdu/narration/ch195.json",
+  "textHash": "fnv1a64:9eb297c1f668aba6",
+  "jsonHash": "fnv1a64:50580bd99f27489c",
+  "findings": []
+}

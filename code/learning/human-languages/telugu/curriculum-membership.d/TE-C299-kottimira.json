@@ -1,0 +1,11 @@
+{
+  "id": "TE-C299-kottimira",
+  "pathSegment": "TE-PATH-299-VASTUVU299",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-299-VASTUVU299",
+      "order": 2
+    }
+  ]
+}

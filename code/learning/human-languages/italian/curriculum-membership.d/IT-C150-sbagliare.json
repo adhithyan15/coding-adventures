@@ -1,0 +1,11 @@
+{
+  "id": "IT-C150-sbagliare",
+  "pathSegment": "IT-PATH-150-VERBI150",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-150-VERBI150",
+      "order": 1
+    }
+  ]
+}

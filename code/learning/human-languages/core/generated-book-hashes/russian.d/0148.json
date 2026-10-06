@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:e432c3ef29db44f7",
+  "lessonIds": [
+    "RU-C148-zdorovyy",
+    "RU-C148-slabyy",
+    "RU-C148-silnyy",
+    "RU-C148-blednyy",
+    "RU-C148-ustalyy",
+    "RU-R148-first-pass-words-from-chapters-140-143",
+    "RU-R148-second-pass-words-from-chapters-144-148"
+  ],
+  "tex": "russian/book/chapters/ch148-healthy-weak-strong-pale-tired.tex"
+}

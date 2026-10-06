@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:5aba24d23f8498bc",
+  "lessonIds": [
+    "HI-C210-paratha",
+    "HI-C210-khicri",
+    "HI-C210-halva",
+    "HI-C210-laddu",
+    "HI-C210-achar"
+  ],
+  "tex": "hindi/book/chapters/ch210-a-paratha-khichri-halwa-a-laddu-pickle.tex"
+}

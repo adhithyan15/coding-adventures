@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Papeles y plazos",
+  "label": "ch:es-papeles-y-plazos",
+  "canDo": "I can read a form that says what is compulsory, how to sign up or cancel, what to pay in advance and who stands in for whom.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C479-sustituir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can read a form that says what is compulsory, how to sign up or cancel, what to pay in advance and who stands in for whom.",
+    "assesses": [
+      "ES-LEX-C479-TRAMITE-03",
+      "ES-LEX-C479-TRAMITE-04",
+      "ES-LEX-C479-TRAMITE-05"
+    ]
+  }
+}

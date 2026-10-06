@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:f3852dbbc19c75b9",
+  "lessonIds": [
+    "BN-C240-atkano",
+    "BN-C240-joma-deoya",
+    "BN-C240-jhap-deoya",
+    "BN-C240-doba",
+    "BN-C240-bhasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch240.txt",
+  "json": "bengali/narration/ch240.json",
+  "textHash": "fnv1a64:74efc49baf864ee3",
+  "jsonHash": "fnv1a64:dd34ef313d0fc1a6",
+  "findings": []
+}

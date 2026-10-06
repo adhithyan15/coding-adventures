@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C265-dahe",
+    "language": "persian",
+    "chapter": 265,
+    "sequence": 13710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff07bfc3b8951737"
+  },
+  "findings": []
+}

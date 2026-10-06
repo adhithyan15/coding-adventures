@@ -1,0 +1,11 @@
+{
+  "id": "GE-C177-drucken",
+  "pathSegment": "GE-PATH-177-VERB177",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-177-VERB177",
+      "order": 4
+    }
+  ]
+}

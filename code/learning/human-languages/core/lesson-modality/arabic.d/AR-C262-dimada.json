@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C262-dimada",
+    "language": "arabic",
+    "chapter": 262,
+    "sequence": 14810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85874c0d538e290c"
+  },
+  "findings": []
+}

@@ -7,64 +7,12 @@ license = "MIT"
 [components]
 exports = ["PhotoPickerApp"]
 
-# XAML, Qt and Flutter carry this app's own `files.open` handler (UI59 §2).
-# Compose and SwiftUI answer it from Mosaic's platform library (UI87 §7), and
-# the other three move onto theirs as those libraries land (UI87 §7.4).
-#
-# `[host_assets]` exists ONLY to declare the Flutter handler's third-party pub
-# dependency -- unlike Engram, this app has no legacy hand-written host to
-# retire, so it has no `[host_assets].files` entries at all.
-[host_assets]
-dependencies = [
-  # `PhotoPickerEffects.dart` opens the platform file picker via
-  # `package:file_selector`. No generated Dart uses it, so the emitter has no
-  # reason to declare it -- matching engram-app's own reasoning and its own
-  # `{ backend = "flutter", coordinate = "file_selector: '>=1.0.0 <2.0.0'" }`
-  # entry exactly (same coordinate, for parity/consistency).
-  { backend = "flutter", coordinate = "file_selector: '>=1.0.0 <2.0.0'" },
-]
-
-[host_effects]
-files = [
-  { backend = "xaml", source = "host/xaml/PhotoPickerEffects.cs", target = "PhotoPickerEffects.cs" },
-  # Qt names its sources and needs `target_sources` (unlike SwiftUI/Compose,
-  # which compile whole directories) -- both the header and the source are
-  # listed, matching engram-app's own Qt `[host_effects]` entry.
-  { backend = "qt", source = "host/qt/PhotoPickerEffects.h", target = "PhotoPickerEffects.h" },
-  { backend = "qt", source = "host/qt/PhotoPickerEffects.cpp", target = "PhotoPickerEffects.cpp" },
-  # No Compose (or SwiftUI) entry: Mosaic's platform library answers
-  # `files.open` for every app on those backends (UI87 §7), so this app keeps
-  # no copy of its own (UI87 §7.4).
-  # Dart compiles everything under `lib/`, like Kotlin does under
-  # `src/main/kotlin` -- but unlike Kotlin, Dart resolves nothing across
-  # files without an import, so this one still needs an `include` below.
-  # Matches engram-app's own Flutter entry exactly.
-  { backend = "flutter", source = "host/flutter/PhotoPickerEffects.dart", target = "lib/PhotoPickerEffects.dart" },
-]
-handlers = [
-  # No `include`: the XAML emitter refuses one outright (every type in the
-  # assembly is already visible; `install` must be fully namespace-
-  # qualified instead) -- confirmed against `xaml_main_with_host_effects`'s
-  # own refusal message, not assumed from the `[host_assets]` precedent.
-  #
-  # Namespace is `PhotoPickerHost`, not `PhotoPickerApp` -- the generated
-  # component class is `Mosaic.Generated.PhotoPickerApp` (from this
-  # package's own `component PhotoPickerApp`), and the generated
-  # `Install();` call site lives inside `namespace Mosaic.Generated`, where
-  # an unqualified `PhotoPickerApp` would resolve to that class instead of
-  # a same-named handler namespace. Confirmed by a real `dotnet build`
-  # failure (CS0117) before this was caught.
-  { backend = "xaml", install = "PhotoPickerHost.PhotoPickerEffects.Install" },
-  # `include` names the header (plain C++, not a static class method like
-  # XAML), matching engram-app's `{ backend = "qt", include = ...,
-  # install = "installEngramEffects" }` shape exactly.
-  { backend = "qt", include = "PhotoPickerEffects.h", install = "installPhotoPickerEffects" },
-  # `include` names the file relative to `lib/`, matching engram-app's own
-  # Flutter entry -- Dart, unlike Kotlin/Swift, resolves nothing across
-  # files without an explicit import, and `flutter_main_with_host_effects`
-  # refuses to proceed without one.
-  { backend = "flutter", include = "PhotoPickerEffects.dart", install = "installPhotoPickerEffects" },
-]
+# No `[host_effects]` or `[host_assets]`: Mosaic's platform library answers
+# `files.open` on every backend -- Compose, SwiftUI, Qt, XAML and Flutter
+# (UI87 §7) -- and this app claims no effect kinds, so the router sends it
+# there. The per-backend handlers this app used to carry, and the Flutter
+# handler's `file_selector` coordinate (every generated Flutter project now
+# pins it for the library), were retired for it (UI87 §7.4).
 
 [kernel]
 version = "1"

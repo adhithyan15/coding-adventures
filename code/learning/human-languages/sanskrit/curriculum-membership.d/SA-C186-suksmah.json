@@ -1,0 +1,11 @@
+{
+  "id": "SA-C186-suksmah",
+  "pathSegment": "SA-PATH-186-QUAL186",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-186-QUAL186",
+      "order": 3
+    }
+  ]
+}

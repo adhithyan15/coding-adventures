@@ -1,5 +1,35 @@
 # Changelog
 
+## Unreleased
+
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
+### Fixed
+
+- Drain live page and asset inputs concurrently before asset-dependent page
+  rewriting, avoiding a bounded sibling-stream deadlock at 128 shared-source
+  pages. Page snapshots now have explicit page-count, per-page/aggregate UTF-8
+  byte, aggregate nested-usage, and FM05 package-name safety limits.
+
+### Added
+
+- Verify `RenderedPage.usedIslands` against exact island-module asset uses,
+  emit fingerprinted external module tags, and preserve those IDs in deploy
+  routes.
+- Prune unreferenced `script` assets while preserving the zero-JavaScript path
+  for static pages.
+
+### Security
+
+- Require descriptor-only canonical bounded provenance for every page and
+  reject legacy source-only or forged plugin output before materialization.
+- Reject missing, duplicate, non-script, non-JavaScript-MIME, or usage-list
+  mismatches before materializing an interactive page. Recompute reviewed
+  script SHA-256 bindings, snapshot bounded page usage, and reject exact or
+  portable case/Unicode-normalization output-path collisions before writes.
+
 ## 0.2.0 — 2026-09-19
 
 ### Added

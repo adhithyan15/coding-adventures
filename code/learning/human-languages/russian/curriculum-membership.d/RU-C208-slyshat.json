@@ -1,0 +1,11 @@
+{
+  "id": "RU-C208-slyshat",
+  "pathSegment": "RU-PATH-208-ACT208",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-208-ACT208",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "Bamboo grove, Rainbow, Hail, Dew, Moonlight",
+  "label": "ch:sa-bamboo-grove-rainbow-hail-dew-moonlight",
+  "canDo": "I can say a bamboo grove, a rainbow, hail, dew and moonlight.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C197-jyotsna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say a bamboo grove, a rainbow, hail, dew and moonlight.",
+    "assesses": [
+      "SA-LEX-C197-THG197-03",
+      "SA-LEX-C197-THG197-04",
+      "SA-LEX-C197-THG197-05"
+    ]
+  }
+}

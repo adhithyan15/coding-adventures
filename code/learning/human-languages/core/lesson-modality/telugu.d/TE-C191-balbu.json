@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C191-balbu",
+    "language": "telugu",
+    "chapter": 191,
+    "sequence": 8610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ddf355e98e1346d4"
+  },
+  "findings": []
+}

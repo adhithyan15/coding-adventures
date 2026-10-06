@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:1adfe1129677e91a",
+  "lessonIds": [
+    "IT-C227-guida",
+    "IT-C227-ingresso",
+    "IT-C227-uscita",
+    "IT-C227-bagaglio",
+    "IT-C227-posto",
+    "IT-R227-first-pass-words-from-chapters-222-224",
+    "IT-R227-second-pass-words-from-chapters-225-227"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch227.txt",
+  "json": "italian/narration/ch227.json",
+  "textHash": "fnv1a64:49f232ed7f2a9da1",
+  "jsonHash": "fnv1a64:bf36e157595b0c0d",
+  "findings": []
+}

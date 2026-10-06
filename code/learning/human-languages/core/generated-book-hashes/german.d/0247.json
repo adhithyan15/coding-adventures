@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:e2f224e19e040b26",
+  "lessonIds": [
+    "GE-C247-bestehen",
+    "GE-C247-beweisen",
+    "GE-C247-bluehen",
+    "GE-C247-diskutieren",
+    "GE-C247-einpacken"
+  ],
+  "tex": "german/book/chapters/ch247-to-pass-to-prove-to-bloom-to-discuss-to-pack.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C259-daghata",
+    "language": "arabic",
+    "chapter": 259,
+    "sequence": 14680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6bb18680fe71f4b8"
+  },
+  "findings": []
+}

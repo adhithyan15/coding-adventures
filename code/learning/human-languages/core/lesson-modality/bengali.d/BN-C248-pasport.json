@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C248-pasport",
+    "language": "bengali",
+    "chapter": 248,
+    "sequence": 15540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0aa3bba780da5a43"
+  },
+  "findings": []
+}

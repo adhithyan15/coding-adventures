@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C177-sathi",
+    "language": "urdu",
+    "chapter": 177,
+    "sequence": 9880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8dd825e97cc0d5a2"
+  },
+  "findings": []
+}

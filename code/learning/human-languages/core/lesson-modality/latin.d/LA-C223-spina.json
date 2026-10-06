@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C223-spina",
+    "language": "latin",
+    "chapter": 223,
+    "sequence": 11170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b4a6a4f2bb0d357"
+  },
+  "findings": []
+}

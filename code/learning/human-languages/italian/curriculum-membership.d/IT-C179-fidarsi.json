@@ -1,0 +1,11 @@
+{
+  "id": "IT-C179-fidarsi",
+  "pathSegment": "IT-PATH-179-VERBI179",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-179-VERBI179",
+      "order": 4
+    }
+  ]
+}

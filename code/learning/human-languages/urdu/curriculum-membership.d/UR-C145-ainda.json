@@ -1,0 +1,11 @@
+{
+  "id": "UR-C145-ainda",
+  "pathSegment": "UR-PATH-145-MUST145",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-145-MUST145",
+      "order": 1
+    }
+  ]
+}

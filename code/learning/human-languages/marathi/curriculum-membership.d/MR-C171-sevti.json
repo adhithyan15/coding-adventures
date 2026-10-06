@@ -1,0 +1,11 @@
+{
+  "id": "MR-C171-sevti",
+  "pathSegment": "MR-PATH-171-VEL171",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-171-VEL171",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C252-enveloppe",
+  "pathSegment": "FR-PATH-252-CHOSES252",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-252-CHOSES252",
+      "order": 2
+    }
+  ]
+}

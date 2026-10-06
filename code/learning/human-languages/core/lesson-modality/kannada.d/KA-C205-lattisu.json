@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C205-lattisu",
+    "language": "kannada",
+    "chapter": 205,
+    "sequence": 9500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d33dface89b34b10"
+  },
+  "findings": []
+}

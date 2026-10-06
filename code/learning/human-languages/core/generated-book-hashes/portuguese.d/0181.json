@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:ba1ebec08cf8c0fb",
+  "lessonIds": [
+    "PT-C181-confianca",
+    "PT-C181-coragem",
+    "PT-C181-vergonha",
+    "PT-C181-ciume",
+    "PT-C181-tedio"
+  ],
+  "tex": "portuguese/book/chapters/ch181-trust-courage-shame-jealousy-boredom.tex"
+}

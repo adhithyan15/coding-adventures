@@ -1,0 +1,11 @@
+{
+  "id": "UR-C167-murabba",
+  "pathSegment": "UR-PATH-167-CHIZ167",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-167-CHIZ167",
+      "order": 2
+    }
+  ]
+}

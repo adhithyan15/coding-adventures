@@ -1,0 +1,11 @@
+{
+  "id": "RU-C215-k-sozhaleniyu",
+  "pathSegment": "RU-PATH-215-PRICH215",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-215-PRICH215",
+      "order": 3
+    }
+  ]
+}

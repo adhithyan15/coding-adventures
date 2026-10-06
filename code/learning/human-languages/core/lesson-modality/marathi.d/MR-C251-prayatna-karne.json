@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C251-prayatna-karne",
+    "language": "marathi",
+    "chapter": 251,
+    "sequence": 14280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff07ebb4b99f6395"
+  },
+  "findings": []
+}

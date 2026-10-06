@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C193-monile",
+    "language": "latin",
+    "chapter": 193,
+    "sequence": 9150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9b41702afdb2cbf"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "To pour, To chop, To peel, To deep-fry, To knead",
+  "label": "ch:ta-to-pour-to-chop-to-peel-to-deep-fry-to-knead",
+  "canDo": "I can say to pour, to chop, to peel, to deep-fry and to knead.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C194-picai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say to pour, to chop, to peel, to deep-fry and to knead.",
+    "assesses": [
+      "TA-LEX-C194-ACT194-03",
+      "TA-LEX-C194-ACT194-04",
+      "TA-LEX-C194-ACT194-05"
+    ]
+  }
+}

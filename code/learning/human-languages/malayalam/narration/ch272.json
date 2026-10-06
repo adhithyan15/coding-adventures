@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 272,
+  "title": "To feed, To graze, To weave, To drill, To leak",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:ee919c9646097765",
+  "lessons": [
+    {
+      "id": "ML-C272-tirruka",
+      "sequence": 12590,
+      "title": "തീറ്റുക (tīṟṟuka) — to feed (an animal)",
+      "headword": "തീറ്റുക",
+      "romanization": "tīṟṟuka",
+      "gloss": "to feed (an animal)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:279c16fa668f41da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to break down, then the Malayalam for to continue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തീറ്റുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തീറ്റുക — tīṟṟuka — \"to feed (an animal)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīṟṟuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīṟṟuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīṟṟuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīṟṟuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tīṟṟuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tīṟṟuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to break down, then the Malayalam for to continue, then say tīṟṟuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to break down, then the Malayalam for to continue, then say *tīṟṟuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തീറ്റുക (tīṟṟuka) mean? (\"To feed (an animal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C272-meyuka",
+      "sequence": 12600,
+      "title": "മേയുക (mēyuka) — to graze",
+      "headword": "മേയുക",
+      "romanization": "mēyuka",
+      "gloss": "to graze",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc9a978ebb44cd37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to continue, then the Malayalam for to feed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മേയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മേയുക — mēyuka — \"to graze\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mēyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mēyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to continue, then the Malayalam for to feed, then say mēyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to continue, then the Malayalam for to feed, then say *mēyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മേയുക (mēyuka) mean? (\"To graze\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C272-neyyuka",
+      "sequence": 12610,
+      "title": "നെയ്യുക (neyyuka) — to weave",
+      "headword": "നെയ്യുക",
+      "romanization": "neyyuka",
+      "gloss": "to weave",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7589014808012695",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to feed, then the Malayalam for to graze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നെയ്യുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നെയ്യുക — neyyuka — \"to weave\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neyyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neyyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neyyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neyyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say neyyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *neyyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to feed, then the Malayalam for to graze, then say neyyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to feed, then the Malayalam for to graze, then say *neyyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നെയ്യുക (neyyuka) mean? (\"To weave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C272-tulaykkuka",
+      "sequence": 12620,
+      "title": "തുളയ്ക്കുക (tuḷaykkuka) — to drill, to bore a hole",
+      "headword": "തുളയ്ക്കുക",
+      "romanization": "tuḷaykkuka",
+      "gloss": "to drill, to bore a hole",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c5a1bdc56367c96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to graze, then the Malayalam for to weave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തുളയ്ക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തുളയ്ക്കുക — tuḷaykkuka — \"to drill, to bore a hole\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuḷaykkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuḷaykkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuḷaykkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuḷaykkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tuḷaykkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tuḷaykkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to graze, then the Malayalam for to weave, then say tuḷaykkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to graze, then the Malayalam for to weave, then say *tuḷaykkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തുളയ്ക്കുക (tuḷaykkuka) mean? (\"To drill, to bore a hole\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C272-coruka",
+      "sequence": 12630,
+      "title": "ചോരുക (cōruka) — to leak",
+      "headword": "ചോരുക",
+      "romanization": "cōruka",
+      "gloss": "to leak",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a688d7c64988740b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to weave, then the Malayalam for to drill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചോരുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചോരുക — cōruka — \"to leak\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōruka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōruka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōruka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōruka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say cōruka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *cōruka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to weave, then the Malayalam for to drill, then say cōruka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to weave, then the Malayalam for to drill, then say *cōruka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചോരുക (cōruka) mean? (\"To leak\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R272-first-pass-words-from-chapters-264-267",
+      "sequence": 12640,
+      "title": "Words from chapters 264-267 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 264-267",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39c5c835e5e89682",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to drill and to leak."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get ready, to brush, to wipe, to sweep, to fold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get ready, to brush, to wipe, to sweep, to fold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wrap, to light, to put out, to tie, to measure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wrap, to light, to put out, to tie, to measure]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to touch, to bite, to chew, to swallow, to smell",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to touch, to bite, to chew, to swallow, to smell]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to practise, to pass, to fail, to hand over, to earn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to practise, to pass, to fail, to hand over, to earn]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To get ready? (ഒരുങ്ങുക, oruṅṅuka.) To brush? (തേക്കുക, tēkkuka.) To wipe? (തുടയ്ക്കുക, tuṭaykkuka.) To sweep? (അടിച്ചുവാരുക, aṭiccuvāruka.) To fold? (മടക്കുക, maṭakkuka.) To wrap? (പൊതിയുക, potiyuka.) To light? (കത്തിക്കുക, kattikkuka.) To put out? (കെടുത്തുക, keṭuttuka.) To tie? (കെട്ടുക, keṭṭuka.) To measure? (അളക്കുക, aḷakkuka.) To touch? (തൊടുക, toṭuka.) To bite? (കടിക്കുക, kaṭikkuka.) To chew? (ചവയ്ക്കുക, cavaykkuka.) To swallow? (വിഴുങ്ങുക, viḻuṅṅuka.) To smell? (മണക്കുക, maṇakkuka.) To practise? (പരിശീലിക്കുക, pariśīlikkuka.) To pass? (ജയിക്കുക, jayikkuka.) To fail? (തോൽക്കുക, tōlkkuka.) To hand over? (കൈമാറുക, kaimāṟuka.) To earn? (സമ്പാദിക്കുക, sampādikkuka.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R272-second-pass-words-from-chapters-268-272",
+      "sequence": 12650,
+      "title": "Words from chapters 268-272 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 268-272",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18e23c4762f5fe6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to refuse and to approve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to refuse, to approve, to renew, to register, to deliver",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to refuse, to approve, to renew, to register, to deliver]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to comfort, to pray, to decorate, to be born, to die",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to comfort, to pray, to decorate, to be born, to die]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to oppose, to guess, to compare, to argue, to pay attention",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to oppose, to guess, to compare, to argue, to pay attention]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to borrow, to lend, to build, to break down, to continue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to borrow, to lend, to build, to break down, to continue]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to feed, to graze, to weave, to drill, to leak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to feed, to graze, to weave, to drill, to leak]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To refuse? (നിരസിക്കുക, nirasikkuka.) To approve? (അംഗീകരിക്കുക, aṁgīkarikkuka.) To renew? (പുതുക്കുക, putukkuka.) To register? (രജിസ്റ്റർ ചെയ്യുക, rajisṟṟar ceyyuka.) To deliver? (എത്തിക്കുക, ettikkuka.) To comfort? (ആശ്വസിപ്പിക്കുക, āśvasippikkuka.) To pray? (പ്രാർത്ഥിക്കുക, prārtthikkuka.) To decorate? (അലങ്കരിക്കുക, alaṅkarikkuka.) To be born? (ജനിക്കുക, janikkuka.) To die? (മരിക്കുക, marikkuka.) To oppose? (എതിർക്കുക, etirkkuka.) To guess? (ഊഹിക്കുക, ūhikkuka.) To compare? (താരതമ്യം ചെയ്യുക, tāratamyaṁ ceyyuka.) To argue? (തർക്കിക്കുക, tarkkikkuka.) To pay attention? (ശ്രദ്ധിക്കുക, śraddhikkuka.) To borrow? (കടം വാങ്ങുക, kaṭaṁ vāṅṅuka.) To lend? (കടം കൊടുക്കുക, kaṭaṁ koṭukkuka.) To build? (പണിയുക, paṇiyuka.) To break down? (കേടാകുക, kēṭākuka.) To continue? (തുടരുക, tuṭaruka.) To feed? (തീറ്റുക, tīṟṟuka.) To graze? (മേയുക, mēyuka.) To weave? (നെയ്യുക, neyyuka.) To drill? (തുളയ്ക്കുക, tuḷaykkuka.) To leak? (ചോരുക, cōruka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

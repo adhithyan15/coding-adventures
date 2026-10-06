@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C254-benzina",
+    "language": "italian",
+    "chapter": 254,
+    "sequence": 15340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7507cf5f24a39efb"
+  },
+  "findings": []
+}

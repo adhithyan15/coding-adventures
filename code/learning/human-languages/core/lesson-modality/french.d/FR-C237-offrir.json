@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C237-offrir",
+    "language": "french",
+    "chapter": 237,
+    "sequence": 13630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6983eb2d3e395c07"
+  },
+  "findings": []
+}

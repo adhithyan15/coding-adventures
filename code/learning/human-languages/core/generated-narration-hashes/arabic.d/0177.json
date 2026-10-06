@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:b077ec7c6ac75aa9",
+  "lessonIds": [
+    "AR-C177-mukallif",
+    "AR-C177-majjani",
+    "AR-C177-nay",
+    "AR-C177-matbukh",
+    "AR-C177-maqli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch177.txt",
+  "json": "arabic/narration/ch177.json",
+  "textHash": "fnv1a64:a8e69f27abb87ddd",
+  "jsonHash": "fnv1a64:6a2dcae96d723f93",
+  "findings": []
+}

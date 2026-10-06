@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C236-qimat",
+    "language": "urdu",
+    "chapter": 236,
+    "sequence": 14090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0f96a9f5e7d502c"
+  },
+  "findings": []
+}

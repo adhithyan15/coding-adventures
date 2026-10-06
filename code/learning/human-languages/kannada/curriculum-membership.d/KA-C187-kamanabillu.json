@@ -1,0 +1,11 @@
+{
+  "id": "KA-C187-kamanabillu",
+  "pathSegment": "KA-PATH-187-VASTU187",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-187-VASTU187",
+      "order": 1
+    }
+  ]
+}

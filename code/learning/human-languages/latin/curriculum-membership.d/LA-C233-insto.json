@@ -1,0 +1,11 @@
+{
+  "id": "LA-C233-insto",
+  "pathSegment": "LA-PATH-233-ACT233",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-233-ACT233",
+      "order": 0
+    }
+  ]
+}

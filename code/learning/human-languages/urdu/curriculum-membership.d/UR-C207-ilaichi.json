@@ -1,0 +1,11 @@
+{
+  "id": "UR-C207-ilaichi",
+  "pathSegment": "UR-PATH-207-CHIZ207",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-207-CHIZ207",
+      "order": 1
+    }
+  ]
+}

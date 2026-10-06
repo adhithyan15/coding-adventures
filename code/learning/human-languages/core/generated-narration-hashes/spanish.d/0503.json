@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:0f6eecc1b8aa1fbe",
+  "lessonIds": [
+    "ES-C503-adelgazar",
+    "ES-C503-aguantar",
+    "ES-C503-esfuerzo",
+    "ES-C503-presion",
+    "ES-C503-paciente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch503.txt",
+  "json": "spanish/narration/ch503.json",
+  "textHash": "fnv1a64:2016c63bd9b19493",
+  "jsonHash": "fnv1a64:6c422064f1ffd7d5",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C294-cillare",
+    "language": "kannada",
+    "chapter": 294,
+    "sequence": 14190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee95e3aa8cfb58f9"
+  },
+  "findings": []
+}

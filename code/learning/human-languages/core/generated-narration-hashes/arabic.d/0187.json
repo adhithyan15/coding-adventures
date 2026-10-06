@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:f32f69070e78f8b9",
+  "lessonIds": [
+    "AR-C187-khallat",
+    "AR-C187-sunbur",
+    "AR-C187-unbub",
+    "AR-C187-silk",
+    "AR-C187-habl"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch187.txt",
+  "json": "arabic/narration/ch187.json",
+  "textHash": "fnv1a64:1525577898cb6c2e",
+  "jsonHash": "fnv1a64:e34977cb1d53c4f0",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "Coal, Gas, A wok, A rolling pin, A sieve",
+  "label": "ch:hi-coal-gas-a-wok-a-rolling-pin-a-sieve",
+  "canDo": "I can say coal, gas, a wok, a rolling pin and a sieve.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-R269-second-pass-words-from-chapters-265-269",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can say coal, gas, a wok, a rolling pin and a sieve.",
+    "assesses": [
+      "HI-LEX-C269-THG269-03",
+      "HI-LEX-C269-THG269-04",
+      "HI-LEX-C269-THG269-05"
+    ]
+  }
+}

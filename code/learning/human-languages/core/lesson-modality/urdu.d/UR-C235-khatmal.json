@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C235-khatmal",
+    "language": "urdu",
+    "chapter": 235,
+    "sequence": 14050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8718e868e1ad07b3"
+  },
+  "findings": []
+}

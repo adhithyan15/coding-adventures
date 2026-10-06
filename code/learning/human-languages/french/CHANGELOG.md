@@ -1,5 +1,204 @@
 # Changelog
 
+## Chapters 233-257: 125 more A2 headwords, and French attains A2
+
+The last of four French A2 vocabulary tranches. Twenty-five chapters of five
+words each, in three runs of at most nine chapters, and each run closes with
+two reviews.
+
+- **Chapters 233-242: fifty verbs**, including *réparer*, *construire*,
+  *vérifier*, *déménager*, *se réveiller*, *brûler*, *jeter*, *améliorer*,
+  *résoudre*, *s'habituer*, *mélanger*, *tousser*, *plaisanter* and *ranger*.
+- **Chapter 243: emergencies and diet** (*le pansement*, *les urgences*,
+  *la consultation*, *le régime*).
+- **Chapters 244-246: fifteen qualities**, such as *propre*, *lisse*,
+  *gratuit / gratuite*, *généreux / généreuse*, *paresseux / paresseuse* and
+  *bavard / bavarde*.
+- **Chapters 247-257: fifty-five nouns**:
+  - eating out (*l'addition*, *le pourboire*);
+  - civic life (*le maire*, *les élections*, *la politique*);
+  - the arts (*l'acteur*, *le poème*, *l'écrivain*);
+  - people (*le touriste*, *la personne âgée*, *le jumeau*);
+  - truth (*la vérité*, *le mensonge*);
+  - paperwork (*l'impôt*, *le formulaire*, *le timbre*);
+  - building (*le chantier*, *l'immeuble*);
+  - the outdoors (*la pelouse*, *le sentier*, *la grotte*);
+  - energy (*le recyclage*, *l'électricité*);
+  - music (*la guitare*, *le violon*);
+  - school (*la géographie*, *l'équipe*, *l'anniversaire*).
+- **French attains A2.** Chapters 139-257 realize the last four A2 spine nodes
+  and teach 595 headwords, 205 of them verbs. At or below A2 the track now
+  teaches 1,226 distinct headwords (target 1,200). The level gate reports no
+  blocker below B1, and the attainment pin moves from A1 to A2.
+- A gloss that read "A&E" (*les urgences*) now reads "the emergency
+  department". LaTeX escaped the ampersand in the chapter title, and the
+  chapter gate reported the escaped title as drift.
+- **Pins:** the French lesson-content budget goes from 1245 to 1376.
+
+## Chapters 205-232: 140 more A2 headwords
+
+The third of four French A2 vocabulary tranches. Twenty-eight chapters of five
+words each, in four runs of at most nine chapters, and each run closes with two
+reviews.
+
+- **Chapters 205-214: fifty verbs**, including *réserver*, *économiser*,
+  *goûter*, *naître*, *vieillir*, *traverser*, *prévenir*, *se plaindre*,
+  *reconnaître*, *craindre*, *soupçonner*, *suggérer* and *exprimer*.
+- **Chapter 215: the chemist's** (*la grippe*, *l'ordonnance*, *le
+  comprimé*, *le sirop*, *la pommade*).
+- **Chapter 216: place** (*autour*, *partout*, *ailleurs*, *la banlieue*).
+- **Chapter 217: degree** (*presque*, *environ*, *seulement*, *ensemble*,
+  *cependant*).
+- **Chapters 218-220: fifteen qualities**, such as *curieux / curieuse*,
+  *fier / fière*, *étrange*, *honnête* and *patient / patiente*.
+- **Chapters 221-232: sixty nouns**:
+  - public life (*la société*, *le gouvernement*, *la loi*);
+  - entertainment (*le chanteur*, *le concert*, *le spectacle*);
+  - professions (*le comptable*, *le chercheur*);
+  - choosing (*le choix*, *la décision*, *la raison*);
+  - banking (*la carte bancaire*, *le compte bancaire*, *le prêt*);
+  - the road (*le péage*, *l'amende*);
+  - plants (*la graine*, *la racine*);
+  - weather (*l'éclair*, *le tonnerre*, *le climat*);
+  - tools (*l'aiguille*, *le marteau*, *l'échelle*);
+  - travel (*le départ*, *la destination*);
+  - study (*le dictionnaire*, *l'erreur*).
+- **Pins:** the French lesson-content budget goes from 1097 to 1245.
+- **Level gate at A2:** vocabulary 239 short -> 99.
+
+## Chapters 175-204: 150 more A2 headwords
+
+The second of four French A2 vocabulary tranches. Thirty chapters of five words
+each, in four runs of at most nine chapters, and each run closes with two
+reviews.
+
+- **Chapters 175-184: fifty verbs**, including *remercier*, *inviter*,
+  *enlever*, *promettre*, *interdire*, *ajouter*, *partager*, *éviter*,
+  *prêter*, *ressembler*, *corriger*, *emprunter* and *disparaître*.
+- **Chapters 185-186: well-being** (*la blessure*, *le rhume*, *l'amitié*,
+  *l'espoir*, *la confiance*).
+- **Chapter 187: time** (*soudain*, *jusqu'à*, *depuis*).
+- **Chapter 188: place** (*près de*, *loin de*, *à droite*, *à gauche*).
+- **Chapter 189: stance** (*malgré*, *malheureusement*, *heureusement*,
+  *vraiment*).
+- **Chapters 190-192: fifteen qualities**, such as *joyeux / joyeuse*,
+  *timide*, *compliqué / compliquée*, *utile* and *mûr / mûre*.
+- **Chapters 193-204: sixty nouns**:
+  - the house (*le tiroir*, *le fauteuil*, *la casserole*);
+  - insects (*le papillon*, *le moustique*);
+  - media (*la publicité*, *l'écran*, *le clavier*);
+  - trades (*le plombier*, *l'électricien*);
+  - weddings (*le marié*, *la mariée*);
+  - shopping (*la réduction*, *les soldes*);
+  - the car (*le siège*, *le volant*);
+  - the garden (*le portail*, *le potager*);
+  - the ground (*la boue*, *la poussière*);
+  - materials (*le métal*, *la brique*);
+  - sport (*la défaite*, *le championnat*);
+  - job hunting (*l'entretien*, *la carrière*).
+- **Book:** the contents now pass page 999. The contents page-number box
+  widens from 1.55em to 2.4em, with the right margin widened to match, as in
+  the Tamil, German, Sanskrit and Italian preambles. This removes 110 overfull
+  boxes. Chapter 115's title becomes "Vacuum, Laundry, Washing powder, Iron,
+  Pocket", so its contents line no longer wraps under the wider margin.
+- **Pins:** the French lesson-content budget goes from 939 to 1097.
+- **Level gate at A2:** vocabulary 389 short -> 239.
+
+## Chapters 143-174: 160 A2 headwords, fifty-five of them verbs
+
+The first of four French A2 vocabulary tranches. Thirty-two chapters of five
+words each, in four runs of at most nine chapters, and each run closes with two
+reviews.
+
+- **Chapters 143-153: fifty-five verbs** (`SPINE-NAME-EVERYDAY-ACTIONS`),
+  including *allumer*, *éteindre*, *expliquer*, *traduire*, *essayer*,
+  *téléphoner*, *s'ennuyer*, *s'inquiéter*, *conseiller*, *découvrir*,
+  *bavarder*, *recommander*, *remplacer* and *rencontrer*.
+- **Chapters 154-155: health and rest** (*la santé*, *le cerveau*, *le
+  sommeil*, *le rêve*, *l'angoisse*).
+- **Chapter 156: time** (*rarement*, *ensuite*, *enfin*, *désormais*).
+- **Chapter 157: place** (*au-dessus*, *au-dessous*, *devant*, *derrière*,
+  *à côté*).
+- **Chapter 158: joining ideas** (*donc*, *pourtant*, *au contraire*, *bien
+  que*).
+- **Chapters 159-162: twenty qualities**, such as *confortable*, *poli /
+  polie*, *dangereux / dangereuse*, *moderne*, *épicé / épicée* and *marié /
+  mariée*.
+- **Chapters 163-174: sixty nouns**:
+  - the flat (*l'appartement*, *le balcon*, *la serrure*);
+  - travel papers (*le passeport*, *la douane*);
+  - war and peace (*la guerre*, *la paix*);
+  - professions (*le journaliste*, *le dentiste*);
+  - in-laws (*la belle-mère*, *le gendre*);
+  - rules (*la permission*, *l'interdiction*, *la sécurité*);
+  - papers (*la carte postale*, *le dossier*, *l'étiquette*);
+  - sights (*le château*, *la fontaine*);
+  - land (*le volcan*, *la cascade*);
+  - materials (*le coton*, *la soie*, *le cuir*);
+  - sport (*la natation*, *la victoire*);
+  - work (*l'entreprise*, *le salaire*, *le contrat*).
+- **Candidate screen.** Candidates whose form already appears untaught in an
+  earlier French lesson were dropped, so the tranche adds no forward
+  reference. Pure English loans (*le sport*, *le parking*) were left out too,
+  and so were spelling variants of taught words (*la salle de bains*).
+- **Pins:** the French lesson-content budget goes from 771 to 939.
+- **Level gate at A2:** verb vocabulary 33 short -> 0; vocabulary 549 short
+  -> 389.
+
+## Chapters 139-142: saying no, the past, the future, and reading practical texts
+
+French had realized one of its five A2 spine nodes. These four chapters realize
+the other four, and the A2 gate now reports no missing spine node.
+
+- **Chapter 139 — saying no and asking which** (`SPINE-NEGATE-AND-ASK`):
+  *rien*, *aucun / aucune*, *non plus*, *lequel / laquelle* and *n'importe
+  quoi*. **Je ne comprends rien**, **Il n'y a aucun train lundi**, and the
+  reply **Moi non plus** after a negative (**moi aussi** after a positive).
+- **Chapter 140 — the past** (`SPINE-TALK-ABOUT-PAST`): *déjà*, *récemment*,
+  *avant-hier*, *autrefois* and *se produire*. The chapter builds on the passé
+  composé the book already teaches: **J'ai déjà parlé**, and **Qu'est-ce qui
+  s'est produit ?**, whose past takes *être*.
+- **Chapter 141 — the future** (`SPINE-TALK-ABOUT-FUTURE`): *l'avenir*, *ce
+  soir*, *le projet*, *prévoir* and *organiser*. The future is built on the
+  infinitive (*parler* → *je parlerai*). The irregular *je serai* comes with
+  *prévoir*, and **dans** plus a length of time gives "in".
+- **Chapter 142 — reading practical texts** (`SPINE-READ-PRACTICAL-TEXTS`):
+  *l'horaire*, *l'avis*, *le loyer*, *l'annonce* and *la facture*. Each lesson
+  reads a short notice, advert or bill built from taught words, then says what
+  to do about it.
+- **Candidate screen.** Candidates whose form already appears untaught in an
+  earlier French lesson were left out, so the chapters add no forward
+  reference. That dropped *ne … pas* and every other *ne* pair, *le futur*, *dans* and
+  *le reçu*.
+- Two reviews close chapter 142.
+- **Pins:** the French lesson-content budget goes from 749 to 771.
+## Chapter payoffs say "I can", not "i can"
+
+The payoff line under each chapter's goal lowercased the goal's first letter,
+so 90 chapters printed "Complete the last lesson of chapter N: i can say …".
+Every one now keeps the capital: "…: I can say …", and a new test
+(`payoff-summary-case.test.ts`) fails if the lowercase pronoun comes back. Only
+the payoff summary changed; no lesson, word or atom moved.
+
+## A2 reinforcement — eight atoms get their second revisit
+
+The level gate's A2 reinforcement criterion asks that every atom at or below
+A2 is revisited at least twice (etymology hooks are waived). 8 atoms fell
+short. Each now comes back as a one-line retrieval in the Warm-up of a later
+lesson. Each host comes after the introducing lesson in the curriculum path
+and stays under the 300-second budget. Hosts:
+
+- `FR-C06-deux` (*travailler* and *trabajar*)
+- `FR-C17-main` (an object flips *être* to *avoir*)
+- `FR-C18-non` (every pronominal verb takes *être*)
+- `FR-C19-sil-vous-plait` (verbs that exist only with *se*)
+- `FR-C28-lait` (*s'asseoir*'s two stems)
+- `FR-C31-nez` (*comprendre* breaks where *prendre* does)
+- `FR-C32-est-ce-que` (*aider*)
+- `FR-C32-quand` (how *entendre* came to mean hearing)
+
+Level gate at A2: reinforcement blocker cleared.
+
 ## Chapters 106-138, the numbers node, fifteen revisits, and French attains A1
 
 French had three A1 gaps. Measured against the level gate, it was 160

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C150-dastkhat-karna",
+    "language": "urdu",
+    "chapter": 150,
+    "sequence": 7980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40a8f45afd1f3926"
+  },
+  "findings": []
+}

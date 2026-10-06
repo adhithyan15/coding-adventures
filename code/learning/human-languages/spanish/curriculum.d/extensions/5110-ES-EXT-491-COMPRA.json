@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-491-COMPRA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with a receipt, a special offer, the cashier, my wallet and a tip.",
+  "prerequisites": []
+}

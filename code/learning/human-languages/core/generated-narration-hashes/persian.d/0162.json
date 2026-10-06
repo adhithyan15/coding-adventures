@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:1c091904318db66a",
+  "lessonIds": [
+    "FA-C162-dowlati",
+    "FA-C162-fowri",
+    "FA-C162-lazem",
+    "FA-C162-dalir",
+    "FA-C162-porharf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch162.txt",
+  "json": "persian/narration/ch162.json",
+  "textHash": "fnv1a64:3f1611850fa388eb",
+  "jsonHash": "fnv1a64:29e30a68a79b3c2e",
+  "findings": []
+}

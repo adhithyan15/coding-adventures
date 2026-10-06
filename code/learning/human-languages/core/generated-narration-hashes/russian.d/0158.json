@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:580c93ff8f233fee",
+  "lessonIds": [
+    "RU-C158-zhivoy",
+    "RU-C158-myortvyy",
+    "RU-C158-golodnyy",
+    "RU-C158-sytyy",
+    "RU-C158-znakomyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch158.txt",
+  "json": "russian/narration/ch158.json",
+  "textHash": "fnv1a64:2489143918425fe3",
+  "jsonHash": "fnv1a64:38b07b57f7f7574e",
+  "findings": []
+}

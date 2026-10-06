@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C293-paripati",
+    "language": "malayalam",
+    "chapter": 293,
+    "sequence": 13740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47f78cb079dc17fd"
+  },
+  "findings": []
+}

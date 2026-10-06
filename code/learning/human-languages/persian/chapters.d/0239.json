@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "Kettle, Teapot, Handkerchief, Basket, Rubbish",
+  "label": "ch:fa-kettle-teapot-handkerchief-basket-rubbish",
+  "canDo": "I can say a kettle, a teapot, a handkerchief, a basket and rubbish.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C239-zobale",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say a kettle, a teapot, a handkerchief, a basket and rubbish.",
+    "assesses": [
+      "FA-LEX-C239-CHIZ239-03",
+      "FA-LEX-C239-CHIZ239-04",
+      "FA-LEX-C239-CHIZ239-05"
+    ]
+  }
+}

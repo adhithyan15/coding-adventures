@@ -1,0 +1,11 @@
+{
+  "id": "RU-C199-turist",
+  "pathSegment": "RU-PATH-199-VESHCH199",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-199-VESHCH199",
+      "order": 3
+    }
+  ]
+}

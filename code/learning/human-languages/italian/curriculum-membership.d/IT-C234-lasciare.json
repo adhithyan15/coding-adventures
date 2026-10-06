@@ -1,0 +1,11 @@
+{
+  "id": "IT-C234-lasciare",
+  "pathSegment": "IT-PATH-234-VERBI234",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-234-VERBI234",
+      "order": 3
+    }
+  ]
+}

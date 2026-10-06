@@ -4,7 +4,7 @@
   "chapter": 448,
   "title": "La mudanza",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:a63a9d794d5a7ebc",
+  "sourceHash": "fnv1a64:71c973dcc546457d",
   "lessons": [
     {
       "id": "ES-C448-mudarse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e041d2fdcde2188c",
+      "sourceHash": "fnv1a64:f6d7b6f8dfa4be7e",
       "notice": null,
       "blocks": [
         {

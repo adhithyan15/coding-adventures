@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-247-GUNAM247",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say double, elderly, bald, curly and orderly.",
+  "prerequisites": []
+}

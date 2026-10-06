@@ -1,0 +1,11 @@
+{
+  "id": "ES-C494-despertarse",
+  "pathSegment": "ES-PATH-494-MANANA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-494-MANANA",
+      "order": 0
+    }
+  ]
+}

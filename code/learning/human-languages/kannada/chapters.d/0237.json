@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "To bite, To use, To repair, To hit, To try",
+  "label": "ch:ka-to-bite-to-use-to-repair-to-hit-to-try",
+  "canDo": "I can say to bite, to use, to repair, to hit and to try.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C237-prayatnisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say to bite, to use, to repair, to hit and to try.",
+    "assesses": [
+      "KA-LEX-C237-KRIYE237-03",
+      "KA-LEX-C237-KRIYE237-04",
+      "KA-LEX-C237-KRIYE237-05"
+    ]
+  }
+}

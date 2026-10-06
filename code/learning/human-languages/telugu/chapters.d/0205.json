@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "To record, To take a photo, To share, To find out, To borrow",
+  "label": "ch:te-to-record-to-take-a-photo-to-share-to-find-out-to-borrow",
+  "canDo": "I can say to record, to take a photo, to share, to find out and to borrow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C205-appu-tisuko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say to record, to take a photo, to share, to find out and to borrow.",
+    "assesses": [
+      "TE-LEX-C205-KRIYA205-03",
+      "TE-LEX-C205-KRIYA205-04",
+      "TE-LEX-C205-KRIYA205-05"
+    ]
+  }
+}

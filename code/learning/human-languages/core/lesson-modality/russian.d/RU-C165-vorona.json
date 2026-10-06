@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C165-vorona",
+    "language": "russian",
+    "chapter": 165,
+    "sequence": 9090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f74436fb3b5e8321"
+  },
+  "findings": []
+}

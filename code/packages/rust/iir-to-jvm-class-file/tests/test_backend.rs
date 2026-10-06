@@ -3346,6 +3346,31 @@ fn e6_global_load_into_i32_dest_narrows_with_l2i() {
     assert!(code.contains(&0x85), "global_store of an i32 value must emit i2l (0x85)");
 }
 
+#[test]
+fn e6_floating_globals_retain_their_field_descriptors() {
+    let mut m = IIRModule::new("Main", "Main");
+    m.add_or_replace(IIRFunction::new(
+        "f",
+        vec![],
+        "f64",
+        vec![
+            IIRInstr::new("const", Some("x32".into()), vec![Operand::Float(1.25)], "f32"),
+            IIRInstr::new("global_store", None, vec![Operand::Str("g32".into()), Operand::Var("x32".into())], "void"),
+            IIRInstr::new("global_load", Some("y32".into()), vec![Operand::Str("g32".into())], "f32"),
+            IIRInstr::new("const", Some("x64".into()), vec![Operand::Float(2.5)], "f64"),
+            IIRInstr::new("global_store", None, vec![Operand::Str("g64".into()), Operand::Var("x64".into())], "void"),
+            IIRInstr::new("global_load", Some("y64".into()), vec![Operand::Str("g64".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("y64".into())], "f64"),
+        ],
+    ));
+
+    let class = lower_iir_to_jvm(&m, &IIRJvmConfig { class_name: "Main".into() })
+        .expect("floating-point globals should lower");
+    assert_eq!(class.fields.len(), 2);
+    assert_eq!(class.fields[0].descriptor, "F");
+    assert_eq!(class.fields[1].descriptor, "D");
+}
+
 /// End-to-end on real `java`: the cross-function global program prints 42.
 /// Skipped if `java` is unavailable.
 #[test]

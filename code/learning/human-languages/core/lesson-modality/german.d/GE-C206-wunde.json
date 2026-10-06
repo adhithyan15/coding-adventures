@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C206-wunde",
+    "language": "german",
+    "chapter": 206,
+    "sequence": 10840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20b6b4a864b93106"
+  },
+  "findings": []
+}

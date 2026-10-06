@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:dc8ad19acb821084",
+  "lessonIds": [
+    "UR-C170-insan",
+    "UR-C170-buzurg",
+    "UR-C170-validain",
+    "UR-C170-chacha",
+    "UR-C170-chachi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch170.txt",
+  "json": "urdu/narration/ch170.json",
+  "textHash": "fnv1a64:70f633b0523e1506",
+  "jsonHash": "fnv1a64:5feb7852c6910c47",
+  "findings": []
+}

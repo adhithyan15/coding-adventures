@@ -1,0 +1,11 @@
+{
+  "id": "TA-C197-campati",
+  "pathSegment": "TA-PATH-197-ACT197",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-197-ACT197",
+      "order": 1
+    }
+  ]
+}

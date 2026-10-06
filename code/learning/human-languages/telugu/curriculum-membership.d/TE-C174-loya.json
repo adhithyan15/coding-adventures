@@ -1,0 +1,11 @@
+{
+  "id": "TE-C174-loya",
+  "pathSegment": "TE-PATH-174-STHALAM174",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-174-STHALAM174",
+      "order": 4
+    }
+  ]
+}

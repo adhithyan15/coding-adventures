@@ -8,7 +8,7 @@ type: word
 headword: profesor
 gloss: teacher — and the one place Spanish drops the "a" that English insists on
 concept_tag: ES-WORK-PROFESOR
-prerequisites: [ES-C09-repaso-ser, ES-C02-un]
+prerequisites: [ES-C09-repaso-ser, ES-C02-un, ES-C09-sois]
 sounds: []
 roots: [profiteri-latin]
 teaches_cells: []
@@ -16,11 +16,11 @@ etymology_hook: "profiteri was to declare something publicly — a professor is 
 duration:
   max_seconds: 260
 requires:
-  knowledge: [ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE, ES-LEX-TRABAJAR]
+  knowledge: [ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE, ES-LEX-TRABAJAR, ES-GRAMMAR-SER-PRESENT-2PL]
 introduces:
   knowledge: [ES-LEX-PROFESOR, ES-GRAMMAR-BARE-PROFESSION, ES-ETYMON-PROFITERI]
 practises:
-  knowledge: [ES-LEX-PROFESOR, ES-GRAMMAR-BARE-PROFESSION, ES-ETYMON-PROFITERI, ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE, ES-LEX-TRABAJAR]
+  knowledge: [ES-LEX-PROFESOR, ES-GRAMMAR-BARE-PROFESSION, ES-ETYMON-PROFITERI, ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE, ES-LEX-TRABAJAR, ES-GRAMMAR-SER-PRESENT-2PL]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -32,12 +32,14 @@ reviews_of: [ES-C09-ser, ES-C02-un]
 # profesor
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-SER-PRESENT-2PL] -->
 
 [PAUSE 2s] Say "I am." (*Soy*.) You learned *ser* three chapters ago as the verb
 for saying **what someone is**.
 
 [PAUSE 1s] And then you had nothing to put after it. Today you do.
+
+[PAUSE 2s] *Sois* closes *ser*: *soy, eres, es, somos, sois, son*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-LEX-PROFESOR, ES-ETYMON-PROFITERI]; assesses=[] -->

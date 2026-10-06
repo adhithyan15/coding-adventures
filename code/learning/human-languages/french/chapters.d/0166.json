@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "Photographer, Journalist, Architect, Dentist, Pharmacist",
+  "label": "ch:fr-photographer-journalist-architect-dentist-pharmacist",
+  "canDo": "I can say a photographer, a journalist, an architect, a dentist and a pharmacist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C166-pharmacien",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say a photographer, a journalist, an architect, a dentist and a pharmacist.",
+    "assesses": [
+      "FR-LEX-C166-CHOSES166-03",
+      "FR-LEX-C166-CHOSES166-04",
+      "FR-LEX-C166-CHOSES166-05"
+    ]
+  }
+}

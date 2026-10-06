@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C201-avalincu",
+    "language": "telugu",
+    "chapter": 201,
+    "sequence": 9160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:072d1cde08f67fc7"
+  },
+  "findings": []
+}

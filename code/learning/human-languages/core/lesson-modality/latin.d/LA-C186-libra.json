@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C186-libra",
+    "language": "latin",
+    "chapter": 186,
+    "sequence": 8610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51c169ffb1e8816f"
+  },
+  "findings": []
+}

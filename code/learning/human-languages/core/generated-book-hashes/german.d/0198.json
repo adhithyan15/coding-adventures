@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:14787d0d600364a9",
+  "lessonIds": [
+    "GE-C198-tier",
+    "GE-C198-hase",
+    "GE-C198-fliege",
+    "GE-C198-schmetterling",
+    "GE-C198-pflanze"
+  ],
+  "tex": "german/book/chapters/ch198-an-animal-a-hare-a-fly-a-butterfly-a-plant.tex"
+}

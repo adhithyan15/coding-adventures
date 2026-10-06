@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C238-niram",
+    "language": "tamil",
+    "chapter": 238,
+    "sequence": 13020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a51ed0846f5bb888"
+  },
+  "findings": []
+}

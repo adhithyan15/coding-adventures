@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:6c1cdf479dffe6d8",
+  "lessonIds": [
+    "FA-C282-lule",
+    "FA-C282-qab",
+    "FA-C282-toshak",
+    "FA-C282-shir-e-ab",
+    "FA-C282-dastgire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch282.txt",
+  "json": "persian/narration/ch282.json",
+  "textHash": "fnv1a64:163894d637b87309",
+  "jsonHash": "fnv1a64:b1e4bd1d688be095",
+  "findings": []
+}

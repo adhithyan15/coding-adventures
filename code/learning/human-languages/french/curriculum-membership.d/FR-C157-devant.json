@@ -1,0 +1,11 @@
+{
+  "id": "FR-C157-devant",
+  "pathSegment": "FR-PATH-157-LIEU157",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-157-LIEU157",
+      "order": 2
+    }
+  ]
+}

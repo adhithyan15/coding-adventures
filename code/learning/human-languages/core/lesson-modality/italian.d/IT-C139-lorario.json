@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C139-lorario",
+    "language": "italian",
+    "chapter": 139,
+    "sequence": 6920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd1f763759ec7cd1"
+  },
+  "findings": []
+}

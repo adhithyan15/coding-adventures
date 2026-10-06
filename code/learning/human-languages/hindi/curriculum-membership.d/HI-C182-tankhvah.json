@@ -1,0 +1,11 @@
+{
+  "id": "HI-C182-tankhvah",
+  "pathSegment": "HI-PATH-182-THG182",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-182-THG182",
+      "order": 2
+    }
+  ]
+}

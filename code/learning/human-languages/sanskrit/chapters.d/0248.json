@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Sheath, Treasure, Rupee, Stake, Fee",
+  "label": "ch:sa-sheath-treasure-rupee-stake-fee",
+  "canDo": "I can say a sheath, a treasure, a rupee, a stake and a fee.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C248-sulkam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say a sheath, a treasure, a rupee, a stake and a fee.",
+    "assesses": [
+      "SA-LEX-C248-THG248-03",
+      "SA-LEX-C248-THG248-04",
+      "SA-LEX-C248-THG248-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C170-pallone",
+    "language": "italian",
+    "chapter": 170,
+    "sequence": 9200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a016316f9d3f52ca"
+  },
+  "findings": []
+}

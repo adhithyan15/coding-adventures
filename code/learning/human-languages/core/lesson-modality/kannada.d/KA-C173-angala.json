@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C173-angala",
+    "language": "kannada",
+    "chapter": 173,
+    "sequence": 7820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61bd21f5c2c7b367"
+  },
+  "findings": []
+}

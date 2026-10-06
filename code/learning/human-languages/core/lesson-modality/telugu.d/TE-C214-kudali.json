@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C214-kudali",
+    "language": "telugu",
+    "chapter": 214,
+    "sequence": 9830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14e3fab71b2e5d38"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:17d19e70e6884c64",
+  "lessonIds": [
+    "FA-C285-fizik",
+    "FA-C285-shimi",
+    "FA-C285-adabiyat",
+    "FA-C285-engelisi",
+    "FA-C285-hendese"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch285.txt",
+  "json": "persian/narration/ch285.json",
+  "textHash": "fnv1a64:4a5f52681eccd132",
+  "jsonHash": "fnv1a64:19d824e747ec2daf",
+  "findings": []
+}

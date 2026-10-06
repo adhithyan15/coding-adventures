@@ -2,10 +2,7 @@ import { defineConfig } from "vite";
 import path from "node:path";
 import { humanLanguageLedgerPlugin } from "./human-language-ledger-plugin.ts";
 import { scriptInventoryPlugin } from "@coding-adventures/script-ductus/script-inventory-plugin.ts";
-import {
-  isBookLedgerModuleId,
-  isHandwritingToolsModuleId,
-} from "./chunk-routing.ts";
+import { isBookLedgerModuleId } from "./chunk-routing.ts";
 // How lesson batches are grouped lives in ONE module, imported by both this
 // config and scripts/check-bundle.mjs. The gate used to recover the band width
 // by regex-ing this file, which a comment mentioning the constant could shadow.
@@ -167,18 +164,6 @@ export default defineConfig({
                   );
                 return match?.[1] ? `equivalents-data-${match[1]}` : null;
               },
-            },
-            {
-              // Handwriting grows one cited path at a time. Keep its model,
-              // renderer, and font parser out of the interactive shell so
-              // later source-backed letters do not consume shell headroom.
-              name: "handwriting-tools",
-              // The modules moved into @coding-adventures/script-ductus, and
-              // authored paths are now split below `strokes/` by owner.
-              // `scriptdata` is NOT in this chunk: the app's shell needs
-              // SCRIPTS on first paint, while the pen paths and font parser are
-              // only needed once a learner opens a handwriting view.
-              test: isHandwritingToolsModuleId,
             },
           ],
         },

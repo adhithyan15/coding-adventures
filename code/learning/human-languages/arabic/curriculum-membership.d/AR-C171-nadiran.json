@@ -1,0 +1,11 @@
+{
+  "id": "AR-C171-nadiran",
+  "pathSegment": "AR-PATH-171-WAQT171",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-171-WAQT171",
+      "order": 3
+    }
+  ]
+}

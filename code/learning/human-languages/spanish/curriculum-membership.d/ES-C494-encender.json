@@ -1,0 +1,11 @@
+{
+  "id": "ES-C494-encender",
+  "pathSegment": "ES-PATH-494-MANANA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-494-MANANA",
+      "order": 3
+    }
+  ]
+}

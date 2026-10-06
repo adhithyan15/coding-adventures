@@ -8,17 +8,17 @@ type: word
 headword: problema
 gloss: problem
 concept_tag: PROBLEM-REPORT
-prerequisites: [ES-C268-habitacion]
+prerequisites: [ES-C268-habitacion, ES-C267-no-verbo, ES-C267-no-nada, ES-C267-negar-preguntar]
 sounds: [vowel-a, vowel-e]
 roots: [problema-greek]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-HABITACION]
+  knowledge: [ES-LEX-HABITACION, ES-GRAMMAR-C267-NOVERBO-01, ES-GRAMMAR-C267-NONADA-01, ES-GRAMMAR-C267-NEGARPREGUNTAR-01]
 introduces:
   knowledge: [ES-LEX-PROBLEMA, ES-GRAMMAR-MASCULINE-MA-NOUNS]
 practises:
-  knowledge: [ES-LEX-PROBLEMA, ES-GRAMMAR-MASCULINE-MA-NOUNS]
+  knowledge: [ES-LEX-PROBLEMA, ES-GRAMMAR-MASCULINE-MA-NOUNS, ES-GRAMMAR-C267-NOVERBO-01, ES-GRAMMAR-C267-NONADA-01, ES-GRAMMAR-C267-NEGARPREGUNTAR-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,11 +30,13 @@ reviews_of: [ES-C268-habitacion]
 # problema — the word for when it goes wrong (and the -a that is masculine)
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-C267-NOVERBO-01, ES-GRAMMAR-C267-NONADA-01, ES-GRAMMAR-C267-NEGARPREGUNTAR-01] -->
 
 [PAUSE 2s] Travel goes wrong. This is the word that starts the conversation about
 it — and it hides a grammatical surprise you should meet on purpose rather than
 by accident.
+
+[PAUSE 2s] Deny it the Spanish way: *no* goes before the verb, and it stays when a negative word follows. Asked *¿Qué ves?*, answer *No veo nada.*
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

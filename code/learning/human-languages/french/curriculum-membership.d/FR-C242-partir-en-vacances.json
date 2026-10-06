@@ -1,0 +1,11 @@
+{
+  "id": "FR-C242-partir-en-vacances",
+  "pathSegment": "FR-PATH-242-VERBES242",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-242-VERBES242",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C176-illavittal",
+    "language": "tamil",
+    "chapter": 176,
+    "sequence": 8520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46e864818b8b2298"
+  },
+  "findings": []
+}

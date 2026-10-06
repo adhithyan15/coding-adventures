@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C180-manana",
+    "language": "urdu",
+    "chapter": 180,
+    "sequence": 10200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11c83e9db6d66ab3"
+  },
+  "findings": []
+}

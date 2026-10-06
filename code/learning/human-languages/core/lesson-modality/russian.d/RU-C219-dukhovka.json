@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C219-dukhovka",
+    "language": "russian",
+    "chapter": 219,
+    "sequence": 13080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8a77f961a4f8976"
+  },
+  "findings": []
+}

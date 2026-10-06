@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "War, Freedom, Law, Duty, Success",
+  "label": "ch:bn-war-freedom-law-duty-success",
+  "canDo": "I can say a war, freedom, a law, a duty and success.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C200-sapholyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say a war, freedom, a law, a duty and success.",
+    "assesses": [
+      "BN-LEX-C200-JINIS200-03",
+      "BN-LEX-C200-JINIS200-04",
+      "BN-LEX-C200-JINIS200-05"
+    ]
+  }
+}

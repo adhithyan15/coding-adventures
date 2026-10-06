@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Las --- The Plural Article That Behaves",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6a6ba5ccfb289e04",
+  "sourceHash": "fnv1a64:0284d6d87362d39c",
   "lessons": [
     {
       "id": "ES-C44-las",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:972e0aff74cba035",
+      "sourceHash": "fnv1a64:123fd8087e07ba81",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "You learned this in your first chapter: a noun ending in a vowel adds -s. So what is \"houses\"? (Casas.) Now — what is \"the houses\"?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One future before the articles: hablaré, hablarás, hablará. The same endings serve comer and vivir."
             }
           ]
         },

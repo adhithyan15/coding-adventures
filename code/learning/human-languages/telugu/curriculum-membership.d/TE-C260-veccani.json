@@ -1,0 +1,11 @@
+{
+  "id": "TE-C260-veccani",
+  "pathSegment": "TE-PATH-260-GUNAM260",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-260-GUNAM260",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "Chess, Mountain climbing, Concert, Art, Painting",
+  "label": "ch:fa-chess-mountain-climbing-concert-art-painting",
+  "canDo": "I can say chess, mountain climbing, a concert, art and painting.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C280-naqqashi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can say chess, mountain climbing, a concert, art and painting.",
+    "assesses": [
+      "FA-LEX-C280-CHIZ280-03",
+      "FA-LEX-C280-CHIZ280-04",
+      "FA-LEX-C280-CHIZ280-05"
+    ]
+  }
+}

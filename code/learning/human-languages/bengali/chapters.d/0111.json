@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "Rope, Nail, Hammer, Axe, Umbrella",
+  "label": "ch:bn-rope-nail-hammer-axe-umbrella",
+  "canDo": "I can say a rope, a nail, a hammer, an axe and an umbrella.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C111-chhata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: I can say a rope, a nail, a hammer, an axe and an umbrella.",
+    "assesses": [
+      "BN-LEX-C111-THINGS111-03",
+      "BN-LEX-C111-THINGS111-04",
+      "BN-LEX-C111-THINGS111-05"
+    ]
+  }
+}

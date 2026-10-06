@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:f2c9d3b3b6dbd08e",
+  "lessonIds": [
+    "FA-C273-kesel-konande",
+    "FA-C273-mofid",
+    "FA-C273-sonnati",
+    "FA-C273-monaseb",
+    "FA-C273-momken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch273.txt",
+  "json": "persian/narration/ch273.json",
+  "textHash": "fnv1a64:15c7f5fbf640d18f",
+  "jsonHash": "fnv1a64:81750e68d807c0e9",
+  "findings": []
+}

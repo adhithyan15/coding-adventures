@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-166-COSE166",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a signature, an envelope, a stamp, a parcel and a postcard.",
+  "prerequisites": []
+}

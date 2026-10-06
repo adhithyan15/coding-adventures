@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:b8cb4c506647ddfa",
+  "lessonIds": [
+    "FA-C274-bokhari",
+    "FA-C274-qafase",
+    "FA-C274-qeymat",
+    "FA-C274-takhfif",
+    "FA-C274-eskenas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch274.txt",
+  "json": "persian/narration/ch274.json",
+  "textHash": "fnv1a64:abc608a8113cee02",
+  "jsonHash": "fnv1a64:2facf9e00df5eb9e",
+  "findings": []
+}

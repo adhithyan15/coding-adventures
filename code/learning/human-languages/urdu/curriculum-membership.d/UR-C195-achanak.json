@@ -1,0 +1,11 @@
+{
+  "id": "UR-C195-achanak",
+  "pathSegment": "UR-PATH-195-SIFAT195",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-195-SIFAT195",
+      "order": 1
+    }
+  ]
+}

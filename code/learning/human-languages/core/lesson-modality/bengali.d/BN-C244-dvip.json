@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C244-dvip",
+    "language": "bengali",
+    "chapter": 244,
+    "sequence": 15170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc2d64d4edbe0899"
+  },
+  "findings": []
+}

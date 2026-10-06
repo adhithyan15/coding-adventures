@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:c4c99d082af39e0d",
+  "lessonIds": [
+    "IT-C204-parcheggiare",
+    "IT-C204-prenotare",
+    "IT-C204-spendere",
+    "IT-C204-risparmiare",
+    "IT-C204-costare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch204.txt",
+  "json": "italian/narration/ch204.json",
+  "textHash": "fnv1a64:03fb4f2f23049a94",
+  "jsonHash": "fnv1a64:df7bc7d86a95b362",
+  "findings": []
+}

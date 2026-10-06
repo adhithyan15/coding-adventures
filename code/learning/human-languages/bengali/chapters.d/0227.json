@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "Surname, Age, Number, Advice, Truth",
+  "label": "ch:bn-surname-age-number-advice-truth",
+  "canDo": "I can say a surname, an age, a number, advice and the truth.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C227-sotyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say a surname, an age, a number, advice and the truth.",
+    "assesses": [
+      "BN-LEX-C227-JINIS227-03",
+      "BN-LEX-C227-JINIS227-04",
+      "BN-LEX-C227-JINIS227-05"
+    ]
+  }
+}

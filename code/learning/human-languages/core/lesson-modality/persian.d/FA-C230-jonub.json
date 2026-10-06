@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C230-jonub",
+    "language": "persian",
+    "chapter": 230,
+    "sequence": 11870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de90138f5f6e8853"
+  },
+  "findings": []
+}

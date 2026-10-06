@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C209-obeshchat",
+    "language": "russian",
+    "chapter": 209,
+    "sequence": 12370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e516ba9b2c437912"
+  },
+  "findings": []
+}

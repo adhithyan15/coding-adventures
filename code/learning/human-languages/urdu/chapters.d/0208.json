@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "Nightingale, Crane, Vulture, Bat, Scorpion",
+  "label": "ch:ur-nightingale-crane-vulture-bat-scorpion",
+  "canDo": "I can say a nightingale, a crane, a vulture, a bat and a scorpion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C208-bichchhu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say a nightingale, a crane, a vulture, a bat and a scorpion.",
+    "assesses": [
+      "UR-LEX-C208-CHIZ208-03",
+      "UR-LEX-C208-CHIZ208-04",
+      "UR-LEX-C208-CHIZ208-05"
+    ]
+  }
+}

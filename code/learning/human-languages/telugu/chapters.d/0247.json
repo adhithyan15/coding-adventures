@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "To pinch, To scratch, To whisper, To persuade, To plead",
+  "label": "ch:te-to-pinch-to-scratch-to-whisper-to-persuade-to-plead",
+  "canDo": "I can say to pinch, to scratch, to whisper, to persuade and to plead.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C247-batimalu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say to pinch, to scratch, to whisper, to persuade and to plead.",
+    "assesses": [
+      "TE-LEX-C247-KRIYA247-03",
+      "TE-LEX-C247-KRIYA247-04",
+      "TE-LEX-C247-KRIYA247-05"
+    ]
+  }
+}

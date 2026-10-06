@@ -1,0 +1,11 @@
+{
+  "id": "ML-C195-varantyam",
+  "pathSegment": "ML-PATH-195-SAMAYAM195",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-195-SAMAYAM195",
+      "order": 2
+    }
+  ]
+}

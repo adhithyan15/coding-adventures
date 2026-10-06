@@ -1,0 +1,11 @@
+{
+  "id": "BN-C126-mudi",
+  "pathSegment": "BN-PATH-126-THINGS126",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-126-THINGS126",
+      "order": 3
+    }
+  ]
+}

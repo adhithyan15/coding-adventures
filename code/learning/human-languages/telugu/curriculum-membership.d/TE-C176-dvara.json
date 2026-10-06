@@ -1,0 +1,11 @@
+{
+  "id": "TE-C176-dvara",
+  "pathSegment": "TE-PATH-176-KARANAM176",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-176-KARANAM176",
+      "order": 2
+    }
+  ]
+}

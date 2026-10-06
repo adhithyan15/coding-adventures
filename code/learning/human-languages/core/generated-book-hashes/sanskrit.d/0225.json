@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:37d1e8b1d71077e9",
+  "lessonIds": [
+    "SA-C225-upatyaka",
+    "SA-C225-marubhumih",
+    "SA-C225-kananam",
+    "SA-C225-kunjah",
+    "SA-C225-sadvalam"
+  ],
+  "tex": "sanskrit/book/chapters/ch225-valley-desert-woodland-bower-meadow.tex"
+}

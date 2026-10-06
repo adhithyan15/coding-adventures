@@ -1,0 +1,11 @@
+{
+  "id": "KA-C281-sikkihakikollu",
+  "pathSegment": "KA-PATH-281-KRIYE281",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-281-KRIYE281",
+      "order": 4
+    }
+  ]
+}

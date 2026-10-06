@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:0916ab82dc23f3e4",
+  "lessonIds": [
+    "RU-C137-nedavno",
+    "RU-C137-davno",
+    "RU-C137-ranshe",
+    "RU-C137-proshlyy",
+    "RU-C137-sluchitsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch137.txt",
+  "json": "russian/narration/ch137.json",
+  "textHash": "fnv1a64:013b92d43f434b9d",
+  "jsonHash": "fnv1a64:f51fb857f4c25fca",
+  "findings": []
+}

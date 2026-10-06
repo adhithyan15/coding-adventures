@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "To tutor, To memorise, To scream, To smile, To panic",
+  "label": "ch:ur-to-tutor-to-memorise-to-scream-to-smile-to-panic",
+  "canDo": "I can say to tutor, to memorise, to scream, to smile and to panic.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C147-ghabrana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: I can say to tutor, to memorise, to scream, to smile and to panic.",
+    "assesses": [
+      "UR-LEX-C147-ACT147-03",
+      "UR-LEX-C147-ACT147-04",
+      "UR-LEX-C147-ACT147-05"
+    ]
+  }
+}

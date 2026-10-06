@@ -1,0 +1,11 @@
+{
+  "id": "KA-C224-hoge",
+  "pathSegment": "KA-PATH-224-VASTU224",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-224-VASTU224",
+      "order": 0
+    }
+  ]
+}

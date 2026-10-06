@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "Industrious, Talkative, Worried, Unmarried, Rainy",
+  "label": "ch:la-industrious-talkative-worried-unmarried-rainy",
+  "canDo": "I can say industrious, talkative, worried, unmarried and rainy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C241-pluvius",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say industrious, talkative, worried, unmarried and rainy.",
+    "assesses": [
+      "LA-LEX-C241-QUAL241-03",
+      "LA-LEX-C241-QUAL241-04",
+      "LA-LEX-C241-QUAL241-05"
+    ]
+  }
+}

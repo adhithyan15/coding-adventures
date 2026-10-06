@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "To smell, To celebrate, To grind, To boil, To fry",
+  "label": "ch:hi-to-smell-to-celebrate-to-grind-to-boil-to-fry",
+  "canDo": "I can say to smell, to celebrate, to grind, to boil and to fry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C177-talna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say to smell, to celebrate, to grind, to boil and to fry.",
+    "assesses": [
+      "HI-LEX-C177-ACT177-03",
+      "HI-LEX-C177-ACT177-04",
+      "HI-LEX-C177-ACT177-05"
+    ]
+  }
+}

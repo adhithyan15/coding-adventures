@@ -58,17 +58,17 @@ Telugu does not say that block the way its two letters would suggest. Spelled
 *kṛtagnyata*. Both facts are true at once, and this is one of the places where
 Telugu's spelling remembers Sanskrit while Telugu's mouth has moved on.
 
-## Writing: ఞ — copy what you see
+## Writing: ఞ — eight deliberate movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-132] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on ఞ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Follow the filmstrip slowly. Movements 1 and 2 trace the two upper loops.
+Movements 3–6 build the lower bowl, its inner turns and the short tail. Draw
+the right bar as movement 7, then finish with the separate upper stem as
+movement 8.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+This is one attested school-style order. Telugu handwriting varies, so keep
+the eight directions clear and let the rounded shape grow from them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-132] -->
@@ -78,7 +78,8 @@ and larger than it is printed.
 
 > కృతజ్ఞత  ·  ధన్యవాదములు
 
-- [YOU TRACE: ఞ three times, saying *ña* as you finish each one]
+- [YOU TRACE: ఞ once, following all eight numbered movements]
+- [YOU COPY: ఞ twice without tracing, saying *ña* as you finish each one]
 - [YOU SAY: *kṛtajñata* the way it is said — *kṛtagnyata*]
 
 ## Wrap-up Recall

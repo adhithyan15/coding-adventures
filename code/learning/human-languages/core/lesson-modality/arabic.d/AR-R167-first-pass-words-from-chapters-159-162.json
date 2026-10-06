@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R167-first-pass-words-from-chapters-159-162",
+    "language": "arabic",
+    "chapter": 167,
+    "sequence": 7940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d33eb50dc1a7d6ba"
+  },
+  "findings": []
+}

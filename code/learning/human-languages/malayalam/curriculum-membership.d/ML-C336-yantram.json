@@ -1,0 +1,11 @@
+{
+  "id": "ML-C336-yantram",
+  "pathSegment": "ML-PATH-336-JOLI336",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-336-JOLI336",
+      "order": 1
+    }
+  ]
+}

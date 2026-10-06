@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C158-siling",
+    "language": "bengali",
+    "chapter": 158,
+    "sequence": 8980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7dd9e915ce0e2bd"
+  },
+  "findings": []
+}

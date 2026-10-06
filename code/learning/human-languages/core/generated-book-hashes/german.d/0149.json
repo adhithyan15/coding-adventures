@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:51c257c0c03427d3",
+  "lessonIds": [
+    "GE-C149-nennen",
+    "GE-C149-riechen",
+    "GE-C149-sammeln",
+    "GE-C149-schenken",
+    "GE-C149-schreien"
+  ],
+  "tex": "german/book/chapters/ch149-to-name-to-smell-to-collect-to-give-to-shout.tex"
+}

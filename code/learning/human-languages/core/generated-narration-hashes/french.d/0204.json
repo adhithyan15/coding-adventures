@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:688c5e12f62115f2",
+  "lessonIds": [
+    "FR-C204-entretien",
+    "FR-C204-carriere",
+    "FR-C204-imprimante",
+    "FR-C204-telephone-portable",
+    "FR-C204-feuille-de-papier",
+    "FR-R204-first-pass-words-from-chapters-199-201",
+    "FR-R204-second-pass-words-from-chapters-202-204"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch204.txt",
+  "json": "french/narration/ch204.json",
+  "textHash": "fnv1a64:9e715f1a02e54799",
+  "jsonHash": "fnv1a64:351b2404be1411d0",
+  "findings": []
+}

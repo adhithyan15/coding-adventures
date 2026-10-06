@@ -1,5 +1,18 @@
 # Changelog — @coding-adventures/forme-stage
 
+## Unreleased
+
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
+- Add optional `Stage.implementationIdentity` so plugin manifest/entry hashes
+  participate in cache and revision-ledger identities even when a third-party
+  package fails to bump its semantic version.
+- Add bounded storage and absolute-filesystem read methods for mediated
+  untrusted runtimes. Implementations return complete values up to the limit,
+  reject larger values after at most `limit + 1` bytes, and never truncate.
+
 ## 0.3.0 — 2026-09-19
 
 ### Added

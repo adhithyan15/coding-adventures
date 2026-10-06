@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:a240cfbe239e8ca3",
+  "lessonIds": [
+    "GE-C142-zukunft",
+    "GE-C142-naechste-woche",
+    "GE-C142-uebermorgen",
+    "GE-C142-naechstes-jahr",
+    "GE-C142-vorhaben"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch142.txt",
+  "json": "german/narration/ch142.json",
+  "textHash": "fnv1a64:bb3e41f487e6e263",
+  "jsonHash": "fnv1a64:9d3870843abad8f8",
+  "findings": []
+}

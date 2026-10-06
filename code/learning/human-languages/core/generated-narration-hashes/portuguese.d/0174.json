@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:b967d86792405281",
+  "lessonIds": [
+    "PT-C174-atravessar",
+    "PT-C174-aumentar",
+    "PT-C174-diminuir",
+    "PT-C174-avisar",
+    "PT-C174-bastar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch174.txt",
+  "json": "portuguese/narration/ch174.json",
+  "textHash": "fnv1a64:22d6121356d6c974",
+  "jsonHash": "fnv1a64:a10c40ff3ac3e1de",
+  "findings": []
+}

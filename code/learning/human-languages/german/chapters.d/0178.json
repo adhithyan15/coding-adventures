@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "To shower, To fall asleep, To get on, To get off, To change",
+  "label": "ch:ge-to-shower-to-fall-asleep-to-get-on-to-get-off-to-change",
+  "canDo": "I can say to shower, to fall asleep, to get on, to get off and to change.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C178-umsteigen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say to shower, to fall asleep, to get on, to get off and to change.",
+    "assesses": [
+      "GE-LEX-C178-VERB178-03",
+      "GE-LEX-C178-VERB178-04",
+      "GE-LEX-C178-VERB178-05"
+    ]
+  }
+}

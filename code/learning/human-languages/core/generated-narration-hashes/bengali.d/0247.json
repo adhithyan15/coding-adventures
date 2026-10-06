@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:d4b723c3fc6b865a",
+  "lessonIds": [
+    "BN-C247-porer",
+    "BN-C247-phkashe",
+    "BN-C247-khara",
+    "BN-C247-chpta",
+    "BN-C247-chokchoke"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch247.txt",
+  "json": "bengali/narration/ch247.json",
+  "textHash": "fnv1a64:0878da561a49af47",
+  "jsonHash": "fnv1a64:4f9c83023a29940a",
+  "findings": []
+}

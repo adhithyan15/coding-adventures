@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 148,
+  "title": "To touch, To doze, To brake, To get a flat tyre, To get stuck",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:fdba0681b574dfff",
+  "lessons": [
+    {
+      "id": "FA-C148-dast-zadan",
+      "sequence": 7540,
+      "title": "دست زدن (dast zadan) — to touch; to clap",
+      "headword": "دست زدن",
+      "romanization": "dast zadan",
+      "gloss": "to touch; to clap",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef2786a12403c59f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to rub, then the Persian for to sprinkle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دست زدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دست زدن — dast zadan — \"to touch; to clap\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dast zadan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dast zadan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dast zadan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dast zadan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dast zadan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dast zadan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to rub, then the Persian for to sprinkle, then say dast zadan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to rub, then the Persian for to sprinkle, then say *dast zadan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دست زدن (dast zadan) mean? (\"To touch; to clap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C148-chort-zadan",
+      "sequence": 7550,
+      "title": "چرت زدن (chort zadan) — to doze, to nap",
+      "headword": "چرت زدن",
+      "romanization": "chort zadan",
+      "gloss": "to doze, to nap",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c29c3b1be896b67a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to sprinkle, then the Persian for to touch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چرت زدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چرت زدن — chort zadan — \"to doze, to nap\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chort zadan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chort zadan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chort zadan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chort zadan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chort zadan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chort zadan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to sprinkle, then the Persian for to touch, then say chort zadan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to sprinkle, then the Persian for to touch, then say *chort zadan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چرت زدن (chort zadan) mean? (\"To doze, to nap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C148-tormoz-gereftan",
+      "sequence": 7560,
+      "title": "ترمز گرفتن (tormoz gereftan) — to brake",
+      "headword": "ترمز گرفتن",
+      "romanization": "tormoz gereftan",
+      "gloss": "to brake",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce4c0abaf2379078",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to touch, then the Persian for to doze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ترمز گرفتن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ترمز گرفتن — tormoz gereftan — \"to brake\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tormoz gereftan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tormoz gereftan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tormoz gereftan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tormoz gereftan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tormoz gereftan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tormoz gereftan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to touch, then the Persian for to doze, then say tormoz gereftan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to touch, then the Persian for to doze, then say *tormoz gereftan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ترمز گرفتن (tormoz gereftan) mean? (\"To brake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C148-panchar-shodan",
+      "sequence": 7570,
+      "title": "پنچر شدن (panchar shodan) — to get a flat tyre",
+      "headword": "پنچر شدن",
+      "romanization": "panchar shodan",
+      "gloss": "to get a flat tyre",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d729dd00c62b5f26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to doze, then the Persian for to brake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پنچر شدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پنچر شدن — panchar shodan — \"to get a flat tyre\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "panchar shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *panchar shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "panchar shodan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *panchar shodan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say panchar shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *panchar shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to doze, then the Persian for to brake, then say panchar shodan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to doze, then the Persian for to brake, then say *panchar shodan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پنچر شدن (panchar shodan) mean? (\"To get a flat tyre\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C148-gir-kardan",
+      "sequence": 7580,
+      "title": "گیر کردن (gir kardan) — to get stuck",
+      "headword": "گیر کردن",
+      "romanization": "gir kardan",
+      "gloss": "to get stuck",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe3d576dc6af6303",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to brake, then the Persian for to get a flat tyre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گیر کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گیر کردن — gir kardan — \"to get stuck\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gir kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gir kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gir kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gir kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gir kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gir kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to brake, then the Persian for to get a flat tyre, then say gir kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to brake, then the Persian for to get a flat tyre, then say *gir kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گیر کردن (gir kardan) mean? (\"To get stuck\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R148-first-pass-words-from-chapters-140-143",
+      "sequence": 7590,
+      "title": "Words from chapters 140-143 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 140-143",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c7573bb86acc0d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to get a flat tyre and to get stuck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to open, to wipe, to switch on, to switch off, to wake up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to open, to wipe, to switch on, to switch off, to wake up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to lose, to find, to give back, to settle the bill, to order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to lose, to find, to give back, to settle the bill, to order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wait, to suggest, to choose, to catch a cold, to get hurt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wait, to suggest, to choose, to catch a cold, to get hurt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to swallow, to forget, to teach, to fill, to hand in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to swallow, to forget, to teach, to fill, to hand in]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To open? (باز کردن, bâz kardan.) To wipe? (پاک کردن, pâk kardan.) To switch on? (روشن کردن, roshan kardan.) To switch off? (خاموش کردن, khâmush kardan.) To wake up? (بیدار شدن, bidâr shodan.) To lose? (گم کردن, gom kardan.) To find? (پیدا کردن, peydâ kardan.) To give back? (پس دادن, pas dâdan.) To settle the bill? (حساب کردن, hesâb kardan.) To order? (سفارش دادن, sefâresh dâdan.) To wait? (صبر کردن, sabr kardan.) To suggest? (پیشنهاد کردن, pishnahâd kardan.) To choose? (انتخاب کردن, entekhâb kardan.) To catch a cold? (سرما خوردن, sarmâ khordan.) To get hurt? (زخمی شدن, zakhmi shodan.) To swallow? (قورت دادن, qurt dâdan.) To forget? (فراموش کردن, farâmush kardan.) To teach? (یاد دادن, yâd dâdan.) To fill? (پر کردن, por kardan.) To hand in? (تحویل دادن, tahvil dâdan.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R148-second-pass-words-from-chapters-144-148",
+      "sequence": 7600,
+      "title": "Words from chapters 144-148 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 144-148",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee1a0fe3e7899d80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to give directions and to show."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to give directions, to show, to visit, to continue, to type",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to give directions, to show, to visit, to continue, to type]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to apologise, to look after, to accompany, to believe, to call",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to apologise, to look after, to accompany, to believe, to call]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to remember, to guess, to prefer, to seem, to be worried",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to remember, to guess, to prefer, to seem, to be worried]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to dust, to spread out, to pound, to rub, to sprinkle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to dust, to spread out, to pound, to rub, to sprinkle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to touch, to doze, to brake, to get a flat tyre, to get stuck",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to touch, to doze, to brake, to get a flat tyre, to get stuck]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To give directions? (راهنمایی کردن, râhnamâyi kardan.) To show? (نشان دادن, neshân dâdan.) To visit? (بازدید کردن, bâzdid kardan.) To continue? (ادامه دادن, edâme dâdan.) To type? (تایپ کردن, tâyp kardan.) To apologise? (پوزش خواستن, puzesh khâstan.) To look after? (نگهداری کردن, negahdâri kardan.) To accompany? (همراهی کردن, hamrâhi kardan.) To believe? (باور کردن, bâvar kardan.) To call? (صدا زدن, sedâ zadan.) To remember? (به یاد آوردن, be yâd âvardan.) To guess? (حدس زدن, hads zadan.) To prefer? (ترجیح دادن, tarjih dâdan.) To seem? (به نظر رسیدن, be nazar residan.) To be worried? (نگران بودن, negarân budan.) To dust? (گردگیری کردن, gerdgiri kardan.) To spread out? (پهن کردن, pahn kardan.) To pound? (کوبیدن, kubidan.) To rub? (مالیدن, mâlidan.) To sprinkle? (پاشیدن, pâshidan.) To touch? (دست زدن, dast zadan.) To doze? (چرت زدن, chort zadan.) To brake? (ترمز گرفتن, tormoz gereftan.) To get a flat tyre? (پنچر شدن, panchar shodan.) To get stuck? (گیر کردن, gir kardan.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

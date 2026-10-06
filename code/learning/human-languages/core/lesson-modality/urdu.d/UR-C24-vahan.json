@@ -4,18 +4,21 @@
     "language": "urdu",
     "chapter": 24,
     "sequence": 1300,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "writing-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:916b2da4409bdea7"
+    "sourceHash": "fnv1a64:694b822092f5a3b9",
+    "detachableSegments": [
+      "Writing: the first question you assemble yourself"
+    ]
   },
   "findings": []
 }

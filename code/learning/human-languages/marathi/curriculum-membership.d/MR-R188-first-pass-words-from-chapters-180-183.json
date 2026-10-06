@@ -1,0 +1,11 @@
+{
+  "id": "MR-R188-first-pass-words-from-chapters-180-183",
+  "pathSegment": "MR-PATH-188-VASTU188",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MR-EXT-188-VASTU188",
+      "order": 5
+    }
+  ]
+}

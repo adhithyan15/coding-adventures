@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C170-bokke",
+    "language": "kannada",
+    "chapter": 170,
+    "sequence": 7660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ed1321fc8db1e40"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:ae0db014fe693bd2",
+  "lessonIds": [
+    "TE-C272-pandiri",
+    "TE-C272-kance",
+    "TE-C272-poda",
+    "TE-C272-kandam",
+    "TE-C272-rekka",
+    "TE-R272-first-pass-words-from-chapters-267-269",
+    "TE-R272-second-pass-words-from-chapters-270-272"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch272.txt",
+  "json": "telugu/narration/ch272.json",
+  "textHash": "fnv1a64:38d01a386eba560a",
+  "jsonHash": "fnv1a64:6da3e51edd4202e2",
+  "findings": []
+}

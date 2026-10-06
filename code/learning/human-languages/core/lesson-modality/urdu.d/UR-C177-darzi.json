@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C177-darzi",
+    "language": "urdu",
+    "chapter": 177,
+    "sequence": 9910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47aa1e53a7efa2d3"
+  },
+  "findings": []
+}

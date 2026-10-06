@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:83bc2cdb4d49b978",
+  "lessonIds": [
+    "IT-C145-confrontare",
+    "IT-C145-consigliare",
+    "IT-C145-convincere",
+    "IT-C145-coprire",
+    "IT-C145-criticare"
+  ],
+  "tex": "italian/book/chapters/ch145-to-compare-to-advise-to-convince-to-cover-to-criticise.tex"
+}

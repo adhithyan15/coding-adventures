@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C257-cinta",
+    "language": "marathi",
+    "chapter": 257,
+    "sequence": 14590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0bea116f7071b05f"
+  },
+  "findings": []
+}

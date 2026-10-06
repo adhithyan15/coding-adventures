@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-224-CHIZ224",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an iron, a broom, a jug, a dinner plate and a small bowl.",
+  "prerequisites": []
+}

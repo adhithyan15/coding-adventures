@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C251-porul",
+    "language": "tamil",
+    "chapter": 251,
+    "sequence": 14040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93db70152ff34f9d"
+  },
+  "findings": []
+}

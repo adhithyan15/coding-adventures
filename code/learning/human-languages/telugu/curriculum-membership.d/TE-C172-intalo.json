@@ -1,0 +1,11 @@
+{
+  "id": "TE-C172-intalo",
+  "pathSegment": "TE-PATH-172-SAMAYAM172",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-172-SAMAYAM172",
+      "order": 2
+    }
+  ]
+}

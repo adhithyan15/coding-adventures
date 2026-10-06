@@ -1,0 +1,11 @@
+{
+  "id": "FA-C273-mofid",
+  "pathSegment": "FA-PATH-273-SEFAT273",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-273-SEFAT273",
+      "order": 1
+    }
+  ]
+}

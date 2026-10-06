@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "Metre, Packet, Tin, Sack, Small change",
+  "label": "ch:bn-metre-packet-tin-sack-small-change",
+  "canDo": "I can say a metre, a packet, a tin, a sack and small change.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C233-khuchro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say a metre, a packet, a tin, a sack and small change.",
+    "assesses": [
+      "BN-LEX-C233-JINIS233-03",
+      "BN-LEX-C233-JINIS233-04",
+      "BN-LEX-C233-JINIS233-05"
+    ]
+  }
+}

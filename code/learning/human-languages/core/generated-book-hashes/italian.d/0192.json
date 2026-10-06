@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:923c92be95f99e09",
+  "lessonIds": [
+    "IT-C192-binario",
+    "IT-C192-passaporto",
+    "IT-C192-frontiera",
+    "IT-C192-dogana",
+    "IT-C192-prenotazione"
+  ],
+  "tex": "italian/book/chapters/ch192-platform-passport-border-customs-booking.tex"
+}

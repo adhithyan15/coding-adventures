@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C164-aplod-madu",
+    "language": "kannada",
+    "chapter": 164,
+    "sequence": 7310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f4c8b95a455c5a2"
+  },
+  "findings": []
+}

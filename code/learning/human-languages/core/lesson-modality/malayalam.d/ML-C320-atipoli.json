@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C320-atipoli",
+    "language": "malayalam",
+    "chapter": 320,
+    "sequence": 15170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60a8ade9367c43ac"
+  },
+  "findings": []
+}

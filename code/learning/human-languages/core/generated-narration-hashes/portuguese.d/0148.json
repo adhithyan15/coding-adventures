@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:2d3c769d32131219",
+  "lessonIds": [
+    "PT-C148-saude",
+    "PT-C148-cerebro",
+    "PT-C148-pulmao",
+    "PT-C148-figado",
+    "PT-C148-rim"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch148.txt",
+  "json": "portuguese/narration/ch148.json",
+  "textHash": "fnv1a64:e981eb68d12840c7",
+  "jsonHash": "fnv1a64:da89ca848761955e",
+  "findings": []
+}

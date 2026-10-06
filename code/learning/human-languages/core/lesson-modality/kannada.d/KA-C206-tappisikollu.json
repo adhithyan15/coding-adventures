@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C206-tappisikollu",
+    "language": "kannada",
+    "chapter": 206,
+    "sequence": 9540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c38500d20c63bf20"
+  },
+  "findings": []
+}

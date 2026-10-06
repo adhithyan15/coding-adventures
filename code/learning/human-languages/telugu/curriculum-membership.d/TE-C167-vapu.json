@@ -1,0 +1,11 @@
+{
+  "id": "TE-C167-vapu",
+  "pathSegment": "TE-PATH-167-AROGYAM167",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-167-AROGYAM167",
+      "order": 4
+    }
+  ]
+}

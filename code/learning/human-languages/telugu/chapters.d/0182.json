@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "Silence, Durable, Fake, Plain, Extra",
+  "label": "ch:te-silence-durable-fake-plain-extra",
+  "canDo": "I can say silence, durable, fake, plain and extra.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C182-adanapu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say silence, durable, fake, plain and extra.",
+    "assesses": [
+      "TE-LEX-C182-GUNAM182-03",
+      "TE-LEX-C182-GUNAM182-04",
+      "TE-LEX-C182-GUNAM182-05"
+    ]
+  }
+}

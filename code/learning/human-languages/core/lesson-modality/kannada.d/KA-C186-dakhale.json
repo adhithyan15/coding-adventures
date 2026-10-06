@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C186-dakhale",
+    "language": "kannada",
+    "chapter": 186,
+    "sequence": 8510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62df9c076eac43d4"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C475-profesional",
+    "language": "spanish",
+    "chapter": 475,
+    "sequence": 13250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e5310fd1c20e94d"
+  },
+  "findings": []
+}

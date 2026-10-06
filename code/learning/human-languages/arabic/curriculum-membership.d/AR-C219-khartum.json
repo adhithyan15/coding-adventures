@@ -1,0 +1,11 @@
+{
+  "id": "AR-C219-khartum",
+  "pathSegment": "AR-PATH-219-SHAY219",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-219-SHAY219",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C283-garbhini",
+    "language": "kannada",
+    "chapter": 283,
+    "sequence": 13620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1683894e45a5f0d"
+  },
+  "findings": []
+}

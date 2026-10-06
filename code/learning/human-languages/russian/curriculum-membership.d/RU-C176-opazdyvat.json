@@ -1,0 +1,11 @@
+{
+  "id": "RU-C176-opazdyvat",
+  "pathSegment": "RU-PATH-176-ACT176",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-176-ACT176",
+      "order": 1
+    }
+  ]
+}

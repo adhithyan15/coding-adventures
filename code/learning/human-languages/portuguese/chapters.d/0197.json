@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "Landscape, Guided tour, Reception desk, Laundry, Hairdresser",
+  "label": "ch:pt-landscape-guided-tour-reception-desk-laundry-hairdresser",
+  "canDo": "I can say a landscape, a guided tour, a reception desk, a laundry and a hairdresser.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C197-cabeleireiro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say a landscape, a guided tour, a reception desk, a laundry and a hairdresser.",
+    "assesses": [
+      "PT-LEX-C197-COISAS197-03",
+      "PT-LEX-C197-COISAS197-04",
+      "PT-LEX-C197-COISAS197-05"
+    ]
+  }
+}

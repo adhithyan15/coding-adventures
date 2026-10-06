@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C290-satabdam",
+    "language": "telugu",
+    "chapter": 290,
+    "sequence": 13840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0ec1c9ed78d40bd"
+  },
+  "findings": []
+}

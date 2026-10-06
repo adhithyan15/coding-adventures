@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:88f30a8b1c1d7640",
+  "lessonIds": [
+    "BN-C120-choti",
+    "BN-C120-maphlar",
+    "BN-C120-har",
+    "BN-C120-shiyal",
+    "BN-C120-badur"
+  ],
+  "tex": "bengali/book/chapters/ch120-slippers-scarf-necklace-jackal-bat.tex"
+}

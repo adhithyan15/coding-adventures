@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:8913ecc9c410045b",
+  "lessonIds": [
+    "FA-C251-honarmand",
+    "FA-C251-davar",
+    "FA-C251-morabbi",
+    "FA-C251-bazikon",
+    "FA-C251-tarikh"
+  ],
+  "tex": "persian/book/chapters/ch251-artist-referee-coach-player-history.tex"
+}

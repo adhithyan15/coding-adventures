@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C243-taqat",
+    "language": "urdu",
+    "chapter": 243,
+    "sequence": 14630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:972201e630ed30d3"
+  },
+  "findings": []
+}

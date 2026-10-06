@@ -1,0 +1,11 @@
+{
+  "id": "IT-C155-invece",
+  "pathSegment": "IT-PATH-155-PERCHE155",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-155-PERCHE155",
+      "order": 3
+    }
+  ]
+}

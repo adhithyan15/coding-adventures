@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "Training, Conference, Decision, Thought, Opinion",
+  "label": "ch:sa-training-conference-decision-thought-opinion",
+  "canDo": "I can say training, a conference, a decision, a thought and an opinion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C256-matam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say training, a conference, a decision, a thought and an opinion.",
+    "assesses": [
+      "SA-LEX-C256-WRK256-03",
+      "SA-LEX-C256-WRK256-04",
+      "SA-LEX-C256-WRK256-05"
+    ]
+  }
+}

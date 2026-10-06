@@ -1,0 +1,11 @@
+{
+  "id": "TA-C250-alamaram",
+  "pathSegment": "TA-PATH-250-PORUL250",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-250-PORUL250",
+      "order": 2
+    }
+  ]
+}

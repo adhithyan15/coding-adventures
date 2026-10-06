@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C187-girjaghar",
+    "language": "hindi",
+    "chapter": 187,
+    "sequence": 9110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6c7461fd3c350b0"
+  },
+  "findings": []
+}

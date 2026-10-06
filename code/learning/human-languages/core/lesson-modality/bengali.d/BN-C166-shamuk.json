@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C166-shamuk",
+    "language": "bengali",
+    "chapter": 166,
+    "sequence": 9560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04f50d7f60de0dcb"
+  },
+  "findings": []
+}

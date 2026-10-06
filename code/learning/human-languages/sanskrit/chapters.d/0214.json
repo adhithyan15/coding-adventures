@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Exactly, Indeed, Like, Without, Towards",
+  "label": "ch:sa-exactly-indeed-like-without-towards",
+  "canDo": "I can say exactly, indeed, like, without and towards.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "SA-C214-prati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say exactly, indeed, like, without and towards.",
+    "assesses": [
+      "SA-LEX-C214-WHY214-03",
+      "SA-LEX-C214-WHY214-04",
+      "SA-LEX-C214-WHY214-05"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "glyph": "だ",
+  "sound": "da",
+  "role": "hiragana",
+  "components": [
+    "た",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "draw the upper horizontal from left to right",
+    "lift and descend through the crossing stem, curving left at the foot",
+    "lift and draw the short right horizontal from left to right",
+    "lift and descend into the lower-right bowl, then sweep right along its base",
+    "lift, draw the left tick of the dakuten down to the right",
+    "lift, draw the right tick down to the right"
+  ],
+  "strokeOrderNote": "KanjiVG's 03060 file records だ as six stroke paths in this order and direction: た's four strokes (the upper bar, the long falling stem, the short right bar and the lower curve), then the dakuten's two ticks, the left one first, each drawn down to the right; so there are five pen lifts.",
+  "penLifts": 5,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03060.svg",
+    "citation": "KanjiVG, kanji/03060.svg, hiragana だ (U+3060 HIRAGANA LETTER DA), six stroke paths kvg:03060-s1 to s6 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 to s4 are た's strokes, the same paths as in its file for た, kanji/0305f.svg; s5 and s6 are the dakuten, the left tick first and then the right one, each drawn down to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. KanjiVG's short right bar of た ends in a small turn down and back to the left that the print glyph does not show."
+  },
+  "notes": "た voiced, read da. The da of the polite ください, kudasai, as in いって ください."
+}

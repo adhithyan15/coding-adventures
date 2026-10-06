@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C190-mughanni",
+    "language": "arabic",
+    "chapter": 190,
+    "sequence": 9610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e9be35181d087b9"
+  },
+  "findings": []
+}

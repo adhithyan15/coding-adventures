@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:3800a893b9e081da",
+  "lessonIds": [
+    "LA-C261-gigno",
+    "LA-C261-iubeo",
+    "LA-C261-cogo",
+    "LA-C261-lugeo",
+    "LA-C261-fodio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch261.txt",
+  "json": "latin/narration/ch261.json",
+  "textHash": "fnv1a64:87ec841ff38ab56b",
+  "jsonHash": "fnv1a64:19faf32307fcd316",
+  "findings": []
+}

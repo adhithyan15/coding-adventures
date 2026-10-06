@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
 import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative, sep } from "node:path";
 import { tmpdir } from "node:os";
 import { runCompletionPlan } from "../src/plan-cli.js";
 import { defaultCurriculumRoot } from "../src/loader.js";
@@ -11,10 +11,51 @@ import { EXAM_INVENTORY_META_OWNER } from "../src/exam-inventory-shards.js";
 // presence list, the coverage measurement, and what happens when they disagree.
 
 const roots: string[] = [];
+// The cleanup states its own budget, as every case below does. Each full-corpus
+// copy is about 100,000 files, and deleting one is real filesystem work that grows
+// with every content PR. The package-wide 30s `hookTimeout` covered it until the
+// Sanskrit, Italian and French A2 tranches added some 6,000 files between them.
+// After that, the delete overran 30s on a loaded CI runner while the test it
+// followed had passed, so the hook failed even though nothing asserted wrongly.
+// The hook gets the same 120s as the cases it cleans up after. Since the copy
+// below stopped taking the whole corpus, the hook deletes about half as much.
 afterEach(() => {
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
   vi.restoreAllMocks();
-});
+}, 120_000);
+
+// What the plan CLI never reads, so a case's copy can leave it behind.
+//
+// These are build products and ledgers of build products. They make up close to
+// half of the corpus's files, and copying and then deleting them was most of what
+// each case spent. They were found by tracing every fs read the plan makes over
+// the real corpus:
+//   - per track: the spoken narration export, and the generated book chapters and
+//     figures (the plan reads only book/frontmatter.tex and book/backmatter.tex,
+//     to tell which tracks have a book at all);
+//   - in core/: the modality manifest and the generated book, narration and figure
+//     hash ledgers, plus the book-generation targets.
+//
+// A list like this goes stale silently if the CLI later starts reading one of
+// these paths. So the first case below runs the plan on a pruned copy and on the
+// real corpus, and requires byte-identical output. A pruning mistake fails there,
+// and is not left to look like a planner change in a later case.
+const NEVER_READ_TRACK_DIRS = new Set(["narration"]);
+const NEVER_READ_BOOK_DIRS = new Set(["chapters", "figures"]);
+const NEVER_READ_CORE_DIRS = new Set([
+  "lesson-modality",
+  "generated-book-hashes",
+  "generated-narration-hashes",
+  "generated-figure-hashes.d",
+  "book-generation.d",
+]);
+
+function readByPlan(source: string): boolean {
+  const parts = relative(defaultCurriculumRoot(), source).split(sep);
+  if (parts[0] === "core") return !NEVER_READ_CORE_DIRS.has(parts[1] ?? "");
+  if (NEVER_READ_TRACK_DIRS.has(parts[1] ?? "")) return false;
+  return !(parts[1] === "book" && NEVER_READ_BOOK_DIRS.has(parts[2] ?? ""));
+}
 
 function corpus(inventoriesOnly = false): string {
   const root = mkdtempSync(join(tmpdir(), "hl-plan-"));
@@ -24,7 +65,7 @@ function corpus(inventoriesOnly = false): string {
       cpSync(join(defaultCurriculumRoot(), directory), join(root, directory), { recursive: true });
     }
   } else {
-    cpSync(defaultCurriculumRoot(), root, { recursive: true });
+    cpSync(defaultCurriculumRoot(), root, { recursive: true, filter: readByPlan });
   }
   return root;
 }
@@ -72,7 +113,14 @@ describe("the plan CLI", () => {
     // HL16 adds one assessment-contract item per track ahead of content proxy
     // work. Ask for the complete enumerable queue so this test continues to
     // assert that the measured French/German exam gaps survive behind that gate.
-    const { code, out } = run(corpus(), 200);
+    const { code, out, err } = run(corpus(), 200);
+    // This case also guards NEVER_READ_* above. The plan only reads, so running it
+    // on the committed corpus is safe, and the pruned copy must plan identically.
+    // If it ever differs, one of those directories has become an input and must
+    // come off the list.
+    vi.restoreAllMocks();
+    const real = run(defaultCurriculumRoot(), 200);
+    expect({ code, out, err }).toEqual(real);
     expect(code).toBe(0);
     expect(out).toMatch(/exam-point — french/);
     expect(out).toMatch(/exam-point — german/);

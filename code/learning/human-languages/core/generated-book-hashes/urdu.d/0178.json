@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:2cdd9848c17644c4",
+  "lessonIds": [
+    "UR-C178-gulukar",
+    "UR-C178-pailat",
+    "UR-C178-mallah",
+    "UR-C178-machhera",
+    "UR-C178-mali"
+  ],
+  "tex": "urdu/book/chapters/ch178-singer-pilot-sailor-fisherman-gardener.tex"
+}

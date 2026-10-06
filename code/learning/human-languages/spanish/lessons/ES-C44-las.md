@@ -8,7 +8,7 @@ type: grammar
 headword: las casas
 gloss: "the houses" — the plural article, which does exactly what the noun does
 concept_tag: ES-GRAMMAR-DEFINITE-PLURAL-FEMININE
-prerequisites: [ES-C43-comida, ES-C01-dia, ES-C02-concordancia]
+prerequisites: [ES-C43-comida, ES-C01-dia, ES-C02-concordancia, ES-C10-futuro-simple]
 sounds: [s-final]
 roots: [ille, illa]
 teaches_cells: []
@@ -16,11 +16,11 @@ etymology_hook: "no new rule — the article takes the same -s the noun takes, b
 duration:
   max_seconds: 230
 requires:
-  knowledge: [ES-LEX-CASA, ES-GRAMMAR-NOUN-NUMBER, ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL, ES-LEX-COMIDA]
+  knowledge: [ES-LEX-CASA, ES-GRAMMAR-NOUN-NUMBER, ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL, ES-LEX-COMIDA, ES-GRAMMAR-SIMPLE-FUTURE-SINGULAR]
 introduces:
   knowledge: [ES-GRAMMAR-DEFINITE-PLURAL-FEMININE]
 practises:
-  knowledge: [ES-LEX-CASA, ES-GRAMMAR-NOUN-NUMBER, ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL, ES-LEX-COMIDA, ES-GRAMMAR-DEFINITE-PLURAL-FEMININE]
+  knowledge: [ES-LEX-CASA, ES-GRAMMAR-NOUN-NUMBER, ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL, ES-LEX-COMIDA, ES-GRAMMAR-DEFINITE-PLURAL-FEMININE, ES-GRAMMAR-SIMPLE-FUTURE-SINGULAR]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,10 +32,12 @@ reviews_of: [ES-C01-dia, ES-C43-casa]
 # las casas — "the houses"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-NOUN-NUMBER, ES-LEX-CASA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-NOUN-NUMBER, ES-LEX-CASA, ES-GRAMMAR-SIMPLE-FUTURE-SINGULAR] -->
 
 [PAUSE 2s] You learned this in your first chapter: a noun ending in a vowel adds
 **-s**. So what is "houses"? (*Casas*.) Now — what is "**the** houses"?
+
+[PAUSE 2s] One future before the articles: *hablaré, hablarás, hablará*. The same endings serve *comer* and *vivir*.
 
 ## Grammar Lens: the article does what the noun does
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-DEFINITE-PLURAL-FEMININE]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL, ES-LEX-CASA, ES-LEX-COMIDA] -->

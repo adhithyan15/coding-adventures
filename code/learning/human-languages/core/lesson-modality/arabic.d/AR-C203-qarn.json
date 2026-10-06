@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C203-qarn",
+    "language": "arabic",
+    "chapter": 203,
+    "sequence": 10640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7158d59ea847479c"
+  },
+  "findings": []
+}

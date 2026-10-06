@@ -1,0 +1,11 @@
+{
+  "id": "TE-C260-vinta",
+  "pathSegment": "TE-PATH-260-GUNAM260",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-260-GUNAM260",
+      "order": 3
+    }
+  ]
+}

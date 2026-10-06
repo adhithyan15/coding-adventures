@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:c731e949f7d8ddec",
+  "lessonIds": [
+    "BN-C248-charjar",
+    "BN-C248-pasport",
+    "BN-C248-bhisa",
+    "BN-C248-parsel",
+    "BN-C248-potrika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch248.txt",
+  "json": "bengali/narration/ch248.json",
+  "textHash": "fnv1a64:40f64c004408e15d",
+  "jsonHash": "fnv1a64:29293411e13eb0b2",
+  "findings": []
+}

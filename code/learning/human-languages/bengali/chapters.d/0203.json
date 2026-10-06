@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "Nature, Mood, Pride, Envy, Respect",
+  "label": "ch:bn-nature-mood-pride-envy-respect",
+  "canDo": "I can say a nature, a mood, pride, envy and respect.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C203-somman",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say a nature, a mood, pride, envy and respect.",
+    "assesses": [
+      "BN-LEX-C203-JINIS203-03",
+      "BN-LEX-C203-JINIS203-04",
+      "BN-LEX-C203-JINIS203-05"
+    ]
+  }
+}

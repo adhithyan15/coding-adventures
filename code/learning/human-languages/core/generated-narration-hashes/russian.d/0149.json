@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:9a04dc4aceb58980",
+  "lessonIds": [
+    "RU-C149-polchasa",
+    "RU-C149-chetvert",
+    "RU-C149-sutki",
+    "RU-C149-rassvet",
+    "RU-C149-zakat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch149.txt",
+  "json": "russian/narration/ch149.json",
+  "textHash": "fnv1a64:f258b042720a4c6b",
+  "jsonHash": "fnv1a64:cf7a76a6f8cffe33",
+  "findings": []
+}

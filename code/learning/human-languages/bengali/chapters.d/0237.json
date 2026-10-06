@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "To put out, To light, To bring to a halt, To cross, To go on an outing",
+  "label": "ch:bn-to-put-out-to-light-to-bring-to-a-halt-to-cross-to-go-on-an-outing",
+  "canDo": "I can say to put out, to light, to bring to a halt, to cross and to go on an outing.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C237-berano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say to put out, to light, to bring to a halt, to cross and to go on an outing.",
+    "assesses": [
+      "BN-LEX-C237-ACT237-03",
+      "BN-LEX-C237-ACT237-04",
+      "BN-LEX-C237-ACT237-05"
+    ]
+  }
+}

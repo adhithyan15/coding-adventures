@@ -1,0 +1,11 @@
+{
+  "id": "BN-C166-timi",
+  "pathSegment": "BN-PATH-166-JINIS166",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-166-JINIS166",
+      "order": 1
+    }
+  ]
+}

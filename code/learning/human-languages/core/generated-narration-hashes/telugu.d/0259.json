@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:dcdd7db55c4b5aa2",
+  "lessonIds": [
+    "TE-C259-raddi",
+    "TE-C259-mukhyamaina",
+    "TE-C259-sonta",
+    "TE-C259-biji",
+    "TE-C259-tappanisari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch259.txt",
+  "json": "telugu/narration/ch259.json",
+  "textHash": "fnv1a64:911410bd8b57edd0",
+  "jsonHash": "fnv1a64:3bf2adf7cba36768",
+  "findings": []
+}

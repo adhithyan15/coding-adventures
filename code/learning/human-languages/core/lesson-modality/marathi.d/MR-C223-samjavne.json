@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C223-samjavne",
+    "language": "marathi",
+    "chapter": 223,
+    "sequence": 12220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfde5a8dad32bf44"
+  },
+  "findings": []
+}

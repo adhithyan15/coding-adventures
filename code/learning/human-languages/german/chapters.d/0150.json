@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "To save, To jump, To die, To disturb, To argue",
+  "label": "ch:ge-to-save-to-jump-to-die-to-disturb-to-argue",
+  "canDo": "I can say to save, to jump, to die, to disturb and to argue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C150-streiten",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: I can say to save, to jump, to die, to disturb and to argue.",
+    "assesses": [
+      "GE-LEX-C150-VERB150-03",
+      "GE-LEX-C150-VERB150-04",
+      "GE-LEX-C150-VERB150-05"
+    ]
+  }
+}

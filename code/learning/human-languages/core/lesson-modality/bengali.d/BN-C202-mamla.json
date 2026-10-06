@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C202-mamla",
+    "language": "bengali",
+    "chapter": 202,
+    "sequence": 12070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cd9d8a22cf845a6"
+  },
+  "findings": []
+}

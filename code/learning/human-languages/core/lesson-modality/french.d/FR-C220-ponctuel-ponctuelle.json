@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C220-ponctuel-ponctuelle",
+    "language": "french",
+    "chapter": 220,
+    "sequence": 12250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:129011592e6bd777"
+  },
+  "findings": []
+}

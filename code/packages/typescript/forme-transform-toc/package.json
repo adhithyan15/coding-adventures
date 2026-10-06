@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-transform-toc",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Build a hierarchical Table-of-Contents tree from a DocumentNode (or a pre-computed HeadingSlug[] stream).  Pure transform: heading sequence → nested TocNode[] (level + text + slug + href + children) that renderers consume to emit `<nav><ul><li><a href=\"#slug\">…</a><ul>…</ul></li></ul></nav>`.  FM00 v0 §5.3 transform.",
   "type": "module",
   "main": "src/index.ts",

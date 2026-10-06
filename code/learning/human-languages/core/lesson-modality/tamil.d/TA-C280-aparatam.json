@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C280-aparatam",
+    "language": "tamil",
+    "chapter": 280,
+    "sequence": 16020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82302b710266914b"
+  },
+  "findings": []
+}

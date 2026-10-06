@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:b7f5a3ae6764bb39",
+  "lessonIds": [
+    "BN-C225-dol",
+    "BN-C225-kheloyar",
+    "BN-C225-sinema",
+    "BN-C225-natok",
+    "BN-C225-kobita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch225.txt",
+  "json": "bengali/narration/ch225.json",
+  "textHash": "fnv1a64:4dd37f5b9fad42f6",
+  "jsonHash": "fnv1a64:fcf5e14ff2302eba",
+  "findings": []
+}

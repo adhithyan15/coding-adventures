@@ -1,0 +1,11 @@
+{
+  "id": "BN-C248-pasport",
+  "pathSegment": "BN-PATH-248-JINIS248",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-248-JINIS248",
+      "order": 1
+    }
+  ]
+}

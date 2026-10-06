@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "To type, To translate, To cancel, To hurry, To love",
+  "label": "ch:ta-to-type-to-translate-to-cancel-to-hurry-to-love",
+  "canDo": "I can say to type, to translate, to cancel, to hurry and to love.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C228-neci",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say to type, to translate, to cancel, to hurry and to love.",
+    "assesses": [
+      "TA-LEX-C228-ACT228-03",
+      "TA-LEX-C228-ACT228-04",
+      "TA-LEX-C228-ACT228-05"
+    ]
+  }
+}

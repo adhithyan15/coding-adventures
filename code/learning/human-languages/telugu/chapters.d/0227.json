@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "Young man, Elders, Neighbours, Enemy, Bridegroom",
+  "label": "ch:te-young-man-elders-neighbours-enemy-bridegroom",
+  "canDo": "I can say a young man, elders, neighbours, an enemy and a bridegroom.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C227-pellikoduku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say a young man, elders, neighbours, an enemy and a bridegroom.",
+    "assesses": [
+      "TE-LEX-C227-VASTUVU227-03",
+      "TE-LEX-C227-VASTUVU227-04",
+      "TE-LEX-C227-VASTUVU227-05"
+    ]
+  }
+}

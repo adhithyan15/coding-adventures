@@ -1,0 +1,11 @@
+{
+  "id": "IT-C255-cortile",
+  "pathSegment": "IT-PATH-255-COSE255",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-255-COSE255",
+      "order": 3
+    }
+  ]
+}

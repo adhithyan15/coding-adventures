@@ -1,0 +1,11 @@
+{
+  "id": "BN-C174-injin",
+  "pathSegment": "BN-PATH-174-JINIS174",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-174-JINIS174",
+      "order": 1
+    }
+  ]
+}

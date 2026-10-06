@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "To pick up, To depart, To arrive, To take off, To tidy up",
+  "label": "ch:ge-to-pick-up-to-depart-to-arrive-to-take-off-to-tidy-up",
+  "canDo": "I can say to pick up, to depart, to arrive, to take off and to tidy up.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C174-aufraeumen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say to pick up, to depart, to arrive, to take off and to tidy up.",
+    "assesses": [
+      "GE-LEX-C174-VERB174-03",
+      "GE-LEX-C174-VERB174-04",
+      "GE-LEX-C174-VERB174-05"
+    ]
+  }
+}

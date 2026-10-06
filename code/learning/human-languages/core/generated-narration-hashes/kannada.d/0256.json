@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:e377f1df50123e08",
+  "lessonIds": [
+    "KA-C256-tollu",
+    "KA-C256-cappate",
+    "KA-C256-donku",
+    "KA-C256-masuku",
+    "KA-C256-kikkirida"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch256.txt",
+  "json": "kannada/narration/ch256.json",
+  "textHash": "fnv1a64:81e9ed49794239ca",
+  "jsonHash": "fnv1a64:d319e2a2c5756861",
+  "findings": []
+}

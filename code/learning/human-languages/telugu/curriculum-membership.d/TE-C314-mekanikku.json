@@ -1,0 +1,11 @@
+{
+  "id": "TE-C314-mekanikku",
+  "pathSegment": "TE-PATH-314-PANI314",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-314-PANI314",
+      "order": 2
+    }
+  ]
+}

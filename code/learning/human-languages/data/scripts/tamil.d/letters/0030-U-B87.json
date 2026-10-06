@@ -10,18 +10,18 @@
   "strokeOrder": [
     "start inside the upper curl and sweep around it",
     "without lifting, sweep down the inner right curve",
-    "without lifting, carry left across the middle and turn around the lower-left loop",
-    "without lifting, climb the lower diagonal back to the left crossing",
-    "without lifting, carry right across the middle and turn around the lower-right loop — then lift once",
-    "set the pen at the lower outer-left side and climb it",
-    "without lifting again, arch over the top and down the far right — and only now lift"
+    "without lifting, carry left down the lower diagonal and turn around the lower-left loop",
+    "without lifting, climb the loop's outer side back to the left crossing",
+    "without lifting, carry right across the middle and turn around the lower-right loop",
+    "without lifting, climb the other diagonal back across the middle and on up the outer left side",
+    "without lifting, arch over the top and down the far right — and only now lift"
   ],
-  "strokeOrderNote": "two strokes — five joined inner-and-lower movements, one pen lift, then the joined outer-left climb and arch; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 4, இ",
-  "penLifts": 1,
+  "strokeOrderNote": "one stroke — the manual numbers seven movements; native writers draw them without lifting, and this ductus follows them in order along the print face's one unbroken line, down one lower diagonal and back up the other; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 4, இ",
+  "penLifts": 0,
   "strokeOrderSource": {
     "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, இ (Univ. of Texas at Austin), p. 192",
     "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
-    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. Appendix I Frame 4 numbers seven hand-movements for இ. Native writers draw them as one continuous stroke, and this ductus follows the seven movements in order without lifting. The bundled Noto Sans Tamil outline is one unbroken line: the inner right curve runs straight on down one lower diagonal into the lower-left loop, and the lower-right loop runs on up the other diagonal into the outer left side, so movement 3 goes down the first diagonal, movement 6 climbs the second, and no movement retraces ink. In HP Labs India's online Tamil handwriting data (the LipiTk 4.0 Tamil isolated-character recognizer, trained on hpl-tamil-iso-char), 100% of the 30 stored prototypes of இ are a single pen-down stroke."
   },
-  "notes": "The compact curl, crossing lower loops, and large outside arch are seven named movements, not seven separate strokes. The first five stay connected; after one lift, the outside climb flows straight into the final arch as the second pen-down run."
+  "notes": "The compact curl, crossing lower loops, and large outside arch are seven named movements, not seven separate strokes. They are one continuous stroke: the line runs down from the curl, crosses into the lower-left loop, comes back across the middle into the lower-right loop, and climbs from there into the great outside arch."
 }

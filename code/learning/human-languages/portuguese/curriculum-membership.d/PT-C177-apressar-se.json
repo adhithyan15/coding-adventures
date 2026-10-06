@@ -1,0 +1,11 @@
+{
+  "id": "PT-C177-apressar-se",
+  "pathSegment": "PT-PATH-177-VERBOS177",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-177-VERBOS177",
+      "order": 3
+    }
+  ]
+}

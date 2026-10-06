@@ -1,0 +1,11 @@
+{
+  "id": "RU-C164-vozdukh",
+  "pathSegment": "RU-PATH-164-VESHCH164",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-164-VESHCH164",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:cbbcf922eb4e862b",
+  "lessonIds": [
+    "MR-C180-lekhak",
+    "MR-C180-citrakar",
+    "MR-C180-chayacitrakar",
+    "MR-C180-patrakar",
+    "MR-C180-vastuvisarad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch180.txt",
+  "json": "marathi/narration/ch180.json",
+  "textHash": "fnv1a64:8110d89088c4859d",
+  "jsonHash": "fnv1a64:c16f6e08db149bc2",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C254-ratribhojanam",
+    "language": "sanskrit",
+    "chapter": 254,
+    "sequence": 15280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e834d1f29253c975"
+  },
+  "findings": []
+}

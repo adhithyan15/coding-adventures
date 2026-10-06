@@ -1,0 +1,11 @@
+{
+  "id": "IT-C144-innamorarsi",
+  "pathSegment": "IT-PATH-144-VERBI144",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-144-VERBI144",
+      "order": 2
+    }
+  ]
+}

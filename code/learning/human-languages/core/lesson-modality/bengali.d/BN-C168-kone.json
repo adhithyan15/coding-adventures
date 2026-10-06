@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C168-kone",
+    "language": "bengali",
+    "chapter": 168,
+    "sequence": 9650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d3f9467d78001c8"
+  },
+  "findings": []
+}

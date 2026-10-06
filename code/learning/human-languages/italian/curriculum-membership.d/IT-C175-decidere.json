@@ -1,0 +1,11 @@
+{
+  "id": "IT-C175-decidere",
+  "pathSegment": "IT-PATH-175-VERBI175",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-175-VERBI175",
+      "order": 3
+    }
+  ]
+}

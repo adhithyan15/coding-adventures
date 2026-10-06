@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "Yoghurt, Peaches, Pears, Pineapple, Almonds",
+  "label": "ch:ar-yoghurt-peaches-pears-pineapple-almonds",
+  "canDo": "I can say yoghurt, peaches, pears, pineapple and almonds.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C244-lawz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say yoghurt, peaches, pears, pineapple and almonds.",
+    "assesses": [
+      "AR-LEX-C244-SHAY244-03",
+      "AR-LEX-C244-SHAY244-04",
+      "AR-LEX-C244-SHAY244-05"
+    ]
+  }
+}

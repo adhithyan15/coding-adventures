@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C197-intabaha",
+    "language": "arabic",
+    "chapter": 197,
+    "sequence": 10150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:246dea5137b5712b"
+  },
+  "findings": []
+}

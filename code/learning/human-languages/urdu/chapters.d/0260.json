@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "Meatball, Tikka, Kadhi, Jalebi, Gulab jamun",
+  "label": "ch:ur-meatball-tikka-kadhi-jalebi-gulab-jamun",
+  "canDo": "I can say a meatball, a tikka, kadhi, a jalebi and a gulab jamun.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C260-gulab-jamun",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can say a meatball, a tikka, kadhi, a jalebi and a gulab jamun.",
+    "assesses": [
+      "UR-LEX-C260-CHIZ260-03",
+      "UR-LEX-C260-CHIZ260-04",
+      "UR-LEX-C260-CHIZ260-05"
+    ]
+  }
+}

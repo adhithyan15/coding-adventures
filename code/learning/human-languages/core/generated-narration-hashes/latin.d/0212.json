@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:0d1416a1606247bc",
+  "lessonIds": [
+    "LA-C212-curiosus",
+    "LA-C212-invidus",
+    "LA-C212-anxius",
+    "LA-C212-placidus",
+    "LA-C212-tacitus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch212.txt",
+  "json": "latin/narration/ch212.json",
+  "textHash": "fnv1a64:23654e2cc2a802b4",
+  "jsonHash": "fnv1a64:79bea5cc92168833",
+  "findings": []
+}

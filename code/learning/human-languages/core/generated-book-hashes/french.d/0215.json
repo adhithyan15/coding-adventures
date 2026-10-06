@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:0f48c34343cc59f6",
+  "lessonIds": [
+    "FR-C215-grippe",
+    "FR-C215-ordonnance",
+    "FR-C215-comprime",
+    "FR-C215-sirop",
+    "FR-C215-pommade"
+  ],
+  "tex": "french/book/chapters/ch215-flu-prescription-tablet-syrup-ointment.tex"
+}

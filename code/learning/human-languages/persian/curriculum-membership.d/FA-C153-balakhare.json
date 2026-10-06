@@ -1,0 +1,11 @@
+{
+  "id": "FA-C153-balakhare",
+  "pathSegment": "FA-PATH-153-ZAMAN153",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-153-ZAMAN153",
+      "order": 3
+    }
+  ]
+}

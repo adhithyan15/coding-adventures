@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Buttermilk, Fruit juice, Tender coconut water, Flour, Bread",
+  "label": "ch:ta-buttermilk-fruit-juice-tender-coconut-water-flour-bread",
+  "canDo": "I can say buttermilk, fruit juice, tender coconut water, flour and bread.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C214-rotti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say buttermilk, fruit juice, tender coconut water, flour and bread.",
+    "assesses": [
+      "TA-LEX-C214-PORUL214-03",
+      "TA-LEX-C214-PORUL214-04",
+      "TA-LEX-C214-PORUL214-05"
+    ]
+  }
+}

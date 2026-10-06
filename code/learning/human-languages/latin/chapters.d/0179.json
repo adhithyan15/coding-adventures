@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Especially, Rather, Most, Very, Quite",
+  "label": "ch:la-especially-rather-most-very-quite",
+  "canDo": "I can say especially, rather, most, very and quite.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "LA-C179-admodum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say especially, rather, most, very and quite.",
+    "assesses": [
+      "LA-LEX-C179-CAUSA179-03",
+      "LA-LEX-C179-CAUSA179-04",
+      "LA-LEX-C179-CAUSA179-05"
+    ]
+  }
+}

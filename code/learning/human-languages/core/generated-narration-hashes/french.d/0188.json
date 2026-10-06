@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:022250896f538e3d",
+  "lessonIds": [
+    "FR-C188-pres-de",
+    "FR-C188-loin-de",
+    "FR-C188-au-fond",
+    "FR-C188-a-droite",
+    "FR-C188-a-gauche"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch188.txt",
+  "json": "french/narration/ch188.json",
+  "textHash": "fnv1a64:045bf67208963f3d",
+  "jsonHash": "fnv1a64:1a2aacc157789502",
+  "findings": []
+}

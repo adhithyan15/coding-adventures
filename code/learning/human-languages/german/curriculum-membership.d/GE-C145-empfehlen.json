@@ -1,0 +1,11 @@
+{
+  "id": "GE-C145-empfehlen",
+  "pathSegment": "GE-PATH-145-VERB145",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-145-VERB145",
+      "order": 3
+    }
+  ]
+}

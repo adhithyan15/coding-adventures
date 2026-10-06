@@ -62,28 +62,69 @@ export function runCommand(command, args, cwd) {
   });
 }
 
+export function npmInvocationForPlatform(platform = process.platform, executable = process.execPath) {
+  return platform === "win32"
+    ? {
+        command: executable,
+        argsPrefix: [path.win32.join(
+          path.win32.dirname(executable),
+          "node_modules",
+          "npm",
+          "bin",
+          "npm-cli.js",
+        )],
+      }
+    : { command: "npm", argsPrefix: [] };
+}
+
 export async function bootstrap(projectDirectory, options = {}) {
-  const npm = options.npmCommand ?? (process.platform === "win32" ? "npm.cmd" : "npm");
+  const npm = options.npmCommand === undefined
+    ? npmInvocationForPlatform()
+    : { command: options.npmCommand, argsPrefix: [] };
   const install = options.install ?? runCommand;
   const log = options.log ?? console.log;
+  const frozen = options.frozen === true;
   for (const directory of await localInstallOrder(projectDirectory)) {
     const manifest = JSON.parse(
       await readFile(path.join(directory, "package.json"), "utf8"),
     );
     log(`[bootstrap] ${manifest.name ?? directory}`);
     await install(
-      npm,
-      ["install", "--silent", "--package-lock=false", "--legacy-peer-deps"],
+      npm.command,
+      [...npm.argsPrefix, ...(frozen
+        ? [
+            "ci",
+            "--silent",
+            "--ignore-scripts",
+            "--legacy-peer-deps",
+            "--audit=false",
+            "--fund=false",
+          ]
+        : ["install", "--silent", "--package-lock=false", "--legacy-peer-deps"])],
       directory,
     );
+    if (frozen) {
+      await install(
+        npm.command,
+        [...npm.argsPrefix, "run", "build", "--if-present"],
+        directory,
+      );
+    }
   }
 }
 
 const scriptPath = fileURLToPath(import.meta.url);
 if (process.argv[1] && path.resolve(process.argv[1]) === scriptPath) {
-  const projectDirectory = path.resolve(process.argv[2] ?? process.cwd());
-  bootstrap(projectDirectory).catch((error) => {
-    console.error(error instanceof Error ? error.message : error);
-    process.exitCode = 1;
-  });
+  const args = process.argv.slice(2);
+  const frozen = args.includes("--frozen");
+  const positional = args.filter((argument) => argument !== "--frozen");
+  if (positional.length > 1 || args.some((argument) => argument.startsWith("--") && argument !== "--frozen")) {
+    console.error("usage: bootstrap.mjs [project-directory] [--frozen]");
+    process.exitCode = 2;
+  } else {
+    bootstrap(path.resolve(positional[0] ?? process.cwd()), { frozen }).catch((error) => {
+      console.error(error instanceof Error ? error.message : error);
+      process.exitCode = 1;
+    });
+  }
 }

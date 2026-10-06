@@ -1,0 +1,11 @@
+{
+  "id": "ML-C281-kutate",
+  "pathSegment": "ML-PATH-281-KARANAM281",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-281-KARANAM281",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C137-proshlyy",
+    "language": "russian",
+    "chapter": 137,
+    "sequence": 7200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e927fd9953a21f7d"
+  },
+  "findings": []
+}

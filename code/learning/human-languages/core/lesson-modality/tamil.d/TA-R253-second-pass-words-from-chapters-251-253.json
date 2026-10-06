@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R253-second-pass-words-from-chapters-251-253",
+    "language": "tamil",
+    "chapter": 253,
+    "sequence": 14180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4955a32524768095"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:af0c99682b7329d5",
+  "lessonIds": [
+    "KA-C217-agga",
+    "KA-C217-khali",
+    "KA-C217-bigi",
+    "KA-C217-sadila",
+    "KA-C217-dappa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch217.txt",
+  "json": "kannada/narration/ch217.json",
+  "textHash": "fnv1a64:a07e587160efa576",
+  "jsonHash": "fnv1a64:259e7eef424c4539",
+  "findings": []
+}

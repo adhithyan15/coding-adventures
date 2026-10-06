@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-490-EMPLEO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a job advert about the position, the salary and the interview, and news of a strike or a business.",
+  "prerequisites": []
+}

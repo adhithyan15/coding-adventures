@@ -21,13 +21,13 @@ Sounds you'll need: the letters in these two verbs.
 अ is a, a short neutral vowel; ति is ti. Inside अस्ति the s and t stack into one joined shape, स्ति — Devanagari fuses a consonant cluster into a single letter. भवति needs no fusing: भ bha, व va, ति ti.
 
 Grammar Lens: the dhātu and its gaṇa.
-Sanskrit files a verb under its धातु (dhātu), its root — the bare syllable a dictionary lists. Asti is filed under अस् (as), bhavati under भू (bhū).
-A root is not yet a word. To reach the present it joins one of ten गण (gaṇa) classes, and the class decides what happens between root and ending. Class 2 adds nothing: as + ti becomes asti. Class 1 strengthens the root and adds a vowel: bhū becomes bhava + ti becomes bhavati.
+Sanskrit files a verb under its dhātu, its root — the bare syllable a dictionary lists. Asti is filed under अस् (as), bhavati under bhū.
+A root is not yet a word. To reach the present it joins one of ten gaṇa classes, and the class decides what happens between root and ending. Class 2 adds nothing: as + ti becomes asti. Class 1 strengthens the root and adds a vowel: bhū becomes bhava + ti becomes bhavati.
 Root, then class, then ending. Every verb in this chapter is built that way.
 
 The word, taken apart — English melted the two together.
 अस् is PIE es-: English is, Latin est, German ist, barely worn.
-भू is PIE bheu-, "to grow, to come to be": English be and been, Latin futūrus behind future, Greek phusis behind physics.
+bhū is PIE bheu-, "to grow, to come to be": English be and been, Latin futūrus behind future, Greek phusis behind physics.
 Now the surprise. English "to be" is stitched from both — am, is, are from es-; be, been, being from bheu-. English fused two verbs into one ragged paradigm. Sanskrit left them side by side.
 
 Guided Practice.
@@ -43,7 +43,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which two roots stand behind asti and bhavati? (अस् as and भू bhū.) What does a गण class do? (Turns a root into a present stem — nothing added for as, a vowel added for bhū.) Which English words descend from each? (Is from as; be and been from bhū.) Next: a root whose present stem you could never have guessed.
+Which two roots stand behind asti and bhavati? (अस् as and bhū.) What does a gaṇa class do? (Turns a root into a present stem — nothing added for as, a vowel added for bhū.) Which English words descend from each? (Is from as; be and been from bhū.) Next: a root whose present stem you could never have guessed.
 
 
 Lesson 2 of 9.
@@ -69,10 +69,11 @@ You already say these, and every one of them has च (ca) somewhere inside it:
 
 Writing: च.
 1. draw the short upper bar left-to-right, turn down and left through the shoulder, then curve around the rounded body to its open right junction without lifting.
-2. lift and draw the right stem top-to-bottom.
-3. lift and draw the top shirorekhā left-to-right.
-Pen lifts: 2. The pen comes up 2 times and no more.
-verified three-stroke teaching form; everyday handwriting may join or simplify the body differently.
+2. without lifting, climb up the right stem to the headline.
+3. descend the right stem top-to-bottom.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 1. The pen comes up once.
+The source shows three movements; most native writers draw च (ca) in two strokes (76% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-च (ca)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
 
 Guided Practice.
@@ -148,12 +149,12 @@ Sounds you'll need: the letters in आगच्छति.
 Everything after the first letter is last lesson's word, unchanged. The new piece is आ, the long ā — the same vowel as अ a but held roughly twice as long. Length alone carries meaning in Sanskrit, so give it its time: aa-gach-cha-ti.
 
 Grammar Lens: the upasarga, Sanskrit's aiming device.
-आ is an उपसर्ग (upasarga), a preverb. Sanskrit has about twenty, and any of them may ride in front of a root to re-aim it:
+आ is an upasarga, a preverb. Sanskrit has about twenty, and any of them may ride in front of a root to re-aim it:
 [a table of 3 rows, read aloud]
 prefix: आ ā. sense: toward. on गम्: āgacchati, comes.
 prefix: सम् sam. sense: together. on गम्: saṁgacchati, goes together.
 prefix: नि ni. sense: down. on गम्: nigacchati, goes down.
-A handful of roots plus a handful of prefixes covers an enormous amount of vocabulary. You have met the trick already without being told: संस्कृत (saṁskṛta, "Sanskrit") is sam "together" on the root कृ kṛ "make" — put-together, and so perfected.
+A handful of roots plus a handful of prefixes covers an enormous amount of vocabulary. You have met the trick already without being told: saṁskṛta ("Sanskrit") is sam "together" on the root kṛ "make" — put-together, and so perfected.
 
 The word, taken apart — Latin does the same thing.
 Latin aims venīre "come" with the same kind of prefix: ad- "toward" gives advent, con- "with" gives convene, inter- "between" gives intervene. English does it natively too — come becomes become, overcome, income.
@@ -170,7 +171,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How does Sanskrit say "comes"? (आगच्छति (āgacchati) — ā "toward" on "goes.") What is such a prefix called? (An उपसर्ग, upasarga.) Which Sanskrit word you already knew is built the same way? (संस्कृत — sam plus kṛ.) Next: a verb whose everyday form is not the one related to English.
+How does Sanskrit say "comes"? (आगच्छति (āgacchati) — ā "toward" on "goes.") What is such a prefix called? (An upasarga.) Which Sanskrit word you already knew is built the same way? (saṁskṛta — sam plus kṛ.) Next: a verb whose everyday form is not the one related to English.
 
 
 Lesson 5 of 9.
@@ -190,18 +191,20 @@ It is a consonant, and in this script a consonant is never bare: it comes with a
 What it is made of:
 a counterclockwise left bowl.
 a top-to-bottom central stem.
-a separate right-hand arch.
+a right-hand arch.
 the top shirorekhā.
 You already say these, and every one of them has क (ka) somewhere inside it:
 किम् kim — what.
 
 Writing: क.
 1. start at the bowl's upper-right junction and sweep left over the top, down around the left side, and back to the lower-right junction.
-2. lift and draw the central stem top-to-bottom.
-3. lift at the upper junction and sweep the right-hand arch clockwise down to its open lower tip.
-4. lift and draw the top shirorekhā left-to-right.
-Pen lifts: 3. The pen comes up 3 times and no more.
-verified four-stroke teaching form; everyday handwriting may join or simplify the body differently.
+2. without lifting, climb up the central stem to the headline.
+3. descend the central stem top-to-bottom.
+4. climb back up the stem to the upper junction.
+5. sweep the right-hand arch clockwise down to its open lower tip.
+6. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 1. The pen comes up once.
+The source shows four movements; most native writers draw क (ka) in two strokes (74% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-क (ka)-order.gif’, strokes 1–4, Wikimedia Commons, 8 May 2009.
 
 Guided Practice.
@@ -377,4 +380,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the root of jānāti, and what does its class insert? (ज्ञा jñā; the syllable -ना-.) Give the six verbs of this chapter. (Asti, gacchati, āgacchati, khādati, paśyati, jānāti.) Which two are one root plus a prefix? (गच्छति and आगच्छति.) Which Sanskrit root is English know? (ज्ञा.) And which English words carry gam, ad, paś, and bhū? (Come, eat, inspect, be — four roots you now own in two languages.)
+What is the root of jānāti, and what does its class insert? (ज्ञा jñā; the syllable -ना-.) Give the six verbs of this chapter. (Asti, gacchati, āgacchati, khādati, paśyati, jānāti.) Which two are one root plus a prefix? (gacchati and āgacchati.) Which Sanskrit root is English know? (ज्ञा.) And which English words carry gam, ad, paś, and bhū? (Come, eat, inspect, be — four roots you now own in two languages.)

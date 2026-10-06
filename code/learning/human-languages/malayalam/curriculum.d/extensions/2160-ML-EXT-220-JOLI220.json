@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-220-JOLI220",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a colleague, an official, a clerk, an engineer and a lawyer.",
+  "prerequisites": []
+}

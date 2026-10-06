@@ -156,14 +156,14 @@
     {
       "id": "radar",
       "headers": ["radar-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "chart",
       "smoke_source": "radar-beta\naxis A, B, C\ncurve x{1, 2, 3}"
     },
     {
       "id": "eventmodeling",
       "headers": ["eventmodeling"],
-      "status": "partial",
+      "status": "full",
       "ir": "event-model",
       "smoke_source": "eventmodeling\ntf 01 ui CustomerUI"
     },

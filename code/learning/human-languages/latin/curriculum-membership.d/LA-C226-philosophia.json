@@ -1,0 +1,11 @@
+{
+  "id": "LA-C226-philosophia",
+  "pathSegment": "LA-PATH-226-RES226",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-226-RES226",
+      "order": 1
+    }
+  ]
+}

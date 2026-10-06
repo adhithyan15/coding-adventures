@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C333-kasuvanti",
+    "language": "malayalam",
+    "chapter": 333,
+    "sequence": 15800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b213a70fd8698dd"
+  },
+  "findings": []
+}

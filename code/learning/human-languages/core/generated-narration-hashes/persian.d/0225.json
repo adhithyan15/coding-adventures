@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:ba76f509ada5eadf",
+  "lessonIds": [
+    "FA-C225-hefz-kardan",
+    "FA-C225-nale-kardan",
+    "FA-C225-khamyaze-keshidan",
+    "FA-C225-bala-avardan",
+    "FA-C225-varam-kardan",
+    "FA-R225-first-pass-words-from-chapters-217-220",
+    "FA-R225-second-pass-words-from-chapters-221-225"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch225.txt",
+  "json": "persian/narration/ch225.json",
+  "textHash": "fnv1a64:ae40d5b07ef96008",
+  "jsonHash": "fnv1a64:bc0c7215420ae00d",
+  "findings": []
+}

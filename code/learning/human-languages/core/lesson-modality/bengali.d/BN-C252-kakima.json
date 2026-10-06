@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C252-kakima",
+    "language": "bengali",
+    "chapter": 252,
+    "sequence": 15730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b218890cea89e892"
+  },
+  "findings": []
+}

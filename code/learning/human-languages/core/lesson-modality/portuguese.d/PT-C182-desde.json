@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C182-desde",
+    "language": "portuguese",
+    "chapter": 182,
+    "sequence": 10080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cac58846a13db268"
+  },
+  "findings": []
+}

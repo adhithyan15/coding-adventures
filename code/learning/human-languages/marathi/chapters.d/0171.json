@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Rarely, Then, Finally, Still, Suddenly",
+  "label": "ch:mr-rarely-then-finally-still-suddenly",
+  "canDo": "I can say rarely, then, finally, still and suddenly.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MR-C171-acanak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say rarely, then, finally, still and suddenly.",
+    "assesses": [
+      "MR-LEX-C171-VEL171-03",
+      "MR-LEX-C171-VEL171-04",
+      "MR-LEX-C171-VEL171-05"
+    ]
+  }
+}

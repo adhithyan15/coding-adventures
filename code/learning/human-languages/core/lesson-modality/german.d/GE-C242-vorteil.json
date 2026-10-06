@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C242-vorteil",
+    "language": "german",
+    "chapter": 242,
+    "sequence": 13360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68c80e93de35eb36"
+  },
+  "findings": []
+}

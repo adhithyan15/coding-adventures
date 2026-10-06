@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "When You Are Lost",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f2aff0d125ee2147",
+  "sourceHash": "fnv1a64:9fe7913bd47d3127",
   "lessons": [
     {
       "id": "UR-C22-kahna",
@@ -670,7 +670,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:337582865cbfd981",
+      "sourceHash": "fnv1a64:2f9476044ab602ef",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -740,20 +740,20 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at قمیض and name its four letters from the right edge",
+              "instruction": "at ق, the letter qamīz opens with, and name the letter it is easiest to confuse with",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at **قمیض** and name its four letters from the right edge]"
+              "source": "[YOU LOOK: at **ق**, the letter *qamīz* opens with, and name the letter it is easiest to confuse with]"
             },
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at جوتا and say which of its letters is the plain dental t",
+              "instruction": "at تا, the last two letters of jūtā, and say whether that t is the plain dental or the retroflex",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at **جوتا** and say which of its letters is the plain dental *t*]"
+              "source": "[YOU LOOK: at **تا**, the last two letters of *jūtā*, and say whether that *t* is the plain dental or the retroflex]"
             },
             {
               "kind": "prompt",

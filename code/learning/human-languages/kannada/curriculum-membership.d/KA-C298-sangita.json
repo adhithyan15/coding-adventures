@@ -1,0 +1,11 @@
+{
+  "id": "KA-C298-sangita",
+  "pathSegment": "KA-PATH-298-VASTU298",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-298-VASTU298",
+      "order": 2
+    }
+  ]
+}

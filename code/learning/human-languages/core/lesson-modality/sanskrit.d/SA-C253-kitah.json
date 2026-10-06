@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C253-kitah",
+    "language": "sanskrit",
+    "chapter": 253,
+    "sequence": 15200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6c8d8b54451819e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Court, Judge, Mayor, Election, Politics",
+  "label": "ch:mr-court-judge-mayor-election-politics",
+  "canDo": "I can say a court, a judge, a mayor, an election and politics.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-R179-second-pass-words-from-chapters-175-179",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say a court, a judge, a mayor, an election and politics.",
+    "assesses": [
+      "MR-LEX-C179-VASTU179-03",
+      "MR-LEX-C179-VASTU179-04",
+      "MR-LEX-C179-VASTU179-05"
+    ]
+  }
+}

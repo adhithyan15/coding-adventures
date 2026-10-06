@@ -49,6 +49,14 @@
     {
       "id": "obstacle-avoiding-route",
       "source": "architecture-beta\nservice gateway(server)[Gateway]\nservice cache(disk)[Cache]\nservice worker(server)[Worker]\nalign row gateway cache worker\ngateway:R --> L:worker"
+    },
+    {
+      "id": "group-obstacle-avoiding-route",
+      "source": "architecture-beta\ngroup middle(disk)[Middle]\nservice gateway(server)[Gateway]\nservice cache(disk)[Cache] in middle\nservice worker(server)[Worker]\nalign row gateway cache worker\ngateway:R --> L:worker"
+    },
+    {
+      "id": "size-and-separation-config",
+      "source": "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25}}}%%\narchitecture-beta\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\nservice db(database)[Database] in platform"
     }
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "A habit, A hobby, A dream, Sport, A ball",
+  "label": "ch:hi-a-habit-a-hobby-a-dream-sport-a-ball",
+  "canDo": "I can say a habit, a hobby, a dream, sport and a ball.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C223-ged",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say a habit, a hobby, a dream, sport and a ball.",
+    "assesses": [
+      "HI-LEX-C223-THG223-03",
+      "HI-LEX-C223-THG223-04",
+      "HI-LEX-C223-THG223-05"
+    ]
+  }
+}

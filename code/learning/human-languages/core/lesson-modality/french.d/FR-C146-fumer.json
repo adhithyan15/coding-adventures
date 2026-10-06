@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C146-fumer",
+    "language": "french",
+    "chapter": 146,
+    "sequence": 6980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:024ac0cc61416b63"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C180-cicatriz",
+  "pathSegment": "PT-PATH-180-SAUDE180",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-180-SAUDE180",
+      "order": 3
+    }
+  ]
+}

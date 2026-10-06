@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Cómo es",
+  "label": "ch:es-como-es",
+  "canDo": "I can describe things and people as incredible, independent, well known, current or acceptable.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C508-aceptable",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can describe things and people as incredible, independent, well known, current or acceptable.",
+    "assesses": [
+      "ES-LEX-C508-CUALIDAD-03",
+      "ES-LEX-C508-CUALIDAD-04",
+      "ES-LEX-C508-CUALIDAD-05"
+    ]
+  }
+}

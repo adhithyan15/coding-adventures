@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C235-muttu",
+    "language": "kannada",
+    "chapter": 235,
+    "sequence": 11080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01c1dc63df7139c3"
+  },
+  "findings": []
+}

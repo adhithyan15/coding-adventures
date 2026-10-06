@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C172-yavvanam",
+    "language": "telugu",
+    "chapter": 172,
+    "sequence": 7610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6544bdd1d84825a5"
+  },
+  "findings": []
+}

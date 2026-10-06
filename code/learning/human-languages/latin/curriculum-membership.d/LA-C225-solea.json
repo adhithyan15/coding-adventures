@@ -1,0 +1,11 @@
+{
+  "id": "LA-C225-solea",
+  "pathSegment": "LA-PATH-225-RES225",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-225-RES225",
+      "order": 2
+    }
+  ]
+}

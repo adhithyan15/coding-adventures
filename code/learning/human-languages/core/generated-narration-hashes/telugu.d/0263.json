@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:0ba47a8c336e2230",
+  "lessonIds": [
+    "TE-C263-verusanaga",
+    "TE-C263-ruci",
+    "TE-C263-pyantu",
+    "TE-C263-nikkaru",
+    "TE-C263-baninu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch263.txt",
+  "json": "telugu/narration/ch263.json",
+  "textHash": "fnv1a64:73cdf6413d51d90f",
+  "jsonHash": "fnv1a64:ded2ddc549f70395",
+  "findings": []
+}

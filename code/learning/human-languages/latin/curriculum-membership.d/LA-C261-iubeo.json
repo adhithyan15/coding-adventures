@@ -1,0 +1,11 @@
+{
+  "id": "LA-C261-iubeo",
+  "pathSegment": "LA-PATH-261-ACT261",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-261-ACT261",
+      "order": 1
+    }
+  ]
+}

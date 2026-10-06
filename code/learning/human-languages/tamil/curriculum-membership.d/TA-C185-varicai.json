@@ -1,0 +1,11 @@
+{
+  "id": "TA-C185-varicai",
+  "pathSegment": "TA-PATH-185-PORUL185",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-185-PORUL185",
+      "order": 0
+    }
+  ]
+}

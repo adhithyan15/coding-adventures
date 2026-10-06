@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C162-maqami",
+    "language": "urdu",
+    "chapter": 162,
+    "sequence": 8740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0de806a888244330"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C253-rosikota",
+  "pathSegment": "BN-PATH-253-JINIS253",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-253-JINIS253",
+      "order": 2
+    }
+  ]
+}

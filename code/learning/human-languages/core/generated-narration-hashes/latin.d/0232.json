@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:ecf4d54b662e1a28",
+  "lessonIds": [
+    "LA-C232-furor",
+    "LA-C232-detego",
+    "LA-C232-videor",
+    "LA-C232-servio",
+    "LA-C232-patior"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch232.txt",
+  "json": "latin/narration/ch232.json",
+  "textHash": "fnv1a64:16a6a4c8ca2ad316",
+  "jsonHash": "fnv1a64:8de89d870287252b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "Poet, Singer, Dancer, Painter, Craftsman",
+  "label": "ch:sa-poet-singer-dancer-painter-craftsman",
+  "canDo": "I can say a poet, a singer, a dancer, a painter and a craftsman.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C209-silpi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say a poet, a singer, a dancer, a painter and a craftsman.",
+    "assesses": [
+      "SA-LEX-C209-PPL209-03",
+      "SA-LEX-C209-PPL209-04",
+      "SA-LEX-C209-PPL209-05"
+    ]
+  }
+}

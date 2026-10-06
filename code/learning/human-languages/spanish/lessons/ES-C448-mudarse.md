@@ -7,7 +7,7 @@ chapter: 448
 type: word
 headword: mudarse
 gloss: to move house — a verb about changing, with the change aimed back at yourself
-concept_tag: ES-HOME-MUDARSE
+concept_tag: ES-VERB-MUDARSE
 prerequisites: [ES-C447-sintesis-juicio, ES-C43-casa, ES-C355-piso]
 sounds: [d-soft, stress-penultimate]
 roots: [mutare-latin]

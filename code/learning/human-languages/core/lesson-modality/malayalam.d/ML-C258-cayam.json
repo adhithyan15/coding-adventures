@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C258-cayam",
+    "language": "malayalam",
+    "chapter": 258,
+    "sequence": 11850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:81b753ca41a003ba"
+  },
+  "findings": []
+}

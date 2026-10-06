@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:e509e8d2a34f363a",
+  "lessonIds": [
+    "TE-C213-akasmattuga",
+    "TE-C213-pade-pade",
+    "TE-C213-kasepu",
+    "TE-C213-sekanu",
+    "TE-C213-monna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch213.txt",
+  "json": "telugu/narration/ch213.json",
+  "textHash": "fnv1a64:d9161ef7938bc672",
+  "jsonHash": "fnv1a64:626450927f99b826",
+  "findings": []
+}

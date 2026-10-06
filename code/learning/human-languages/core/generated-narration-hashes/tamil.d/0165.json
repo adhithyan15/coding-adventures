@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:1d09181fba56983c",
+  "lessonIds": [
+    "TA-C165-palaku",
+    "TA-C165-kontatu",
+    "TA-C165-alankari",
+    "TA-C165-natanamatu",
+    "TA-C165-vananku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch165.txt",
+  "json": "tamil/narration/ch165.json",
+  "textHash": "fnv1a64:a727cfcbd880b4a5",
+  "jsonHash": "fnv1a64:49ba4559ac6d46f2",
+  "findings": []
+}

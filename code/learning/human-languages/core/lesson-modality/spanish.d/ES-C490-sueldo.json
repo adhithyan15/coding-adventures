@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C490-sueldo",
+    "language": "spanish",
+    "chapter": 490,
+    "sequence": 14030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d938e9884b8f5be3"
+  },
+  "findings": []
+}

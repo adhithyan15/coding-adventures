@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C259-maida",
+    "language": "urdu",
+    "chapter": 259,
+    "sequence": 15830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c0c2543fa0e9371"
+  },
+  "findings": []
+}

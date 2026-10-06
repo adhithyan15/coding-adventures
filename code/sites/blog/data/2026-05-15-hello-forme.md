@@ -15,24 +15,39 @@ The path it took from `data/2026-05-15-hello-forme.md` to
 `/coding-adventures/blog/2026-05-15-hello-forme.html` is exactly the
 shape laid out in the FM00 spec:
 
+<div id="forme-pipeline-steps">
+  <p>The complete pipeline is listed below. With JavaScript enabled, optional controls can focus one step at a time.</p>
+</div>
+
 1. **`forme-source-fs`** walked `data/`, found this file, and emitted a
    `ContentSource`.
 2. **`forme-parse-markdown`** split off the frontmatter you see above,
    parsed the body as GFM, and emitted a `ContentNode`.
-3. **`forme-resolve-asset-refs-fs`** discovered the local diagram below,
+3. **`blog-attach-interactivity`** attached the one reviewed pipeline-step
+   module to this post and left every other post without a script asset.
+4. **`forme-resolve-asset-refs-fs`** discovered the local diagram below,
    assigned its stable logical identity, and preserved its fragment target.
-4. **`forme-router`** assigned one canonical route, then fanned the
+5. **`forme-router`** assigned one canonical route, then fanned the
    routed node out to the page and collection branches.
-5. **`forme-collect-chronological`** sorted this and the other posts
+6. **`forme-collect-chronological`** sorted this and the other posts
    by date while preserving that canonical route.
-6. **`forme-render-static`** matched the reusable classless Style IR theme,
+7. **`forme-render-static`** matched the reusable classless Style IR theme,
    recorded `usedStyle`, compiled the page slice through the AOT path, and
-   emitted a `RenderedPage` with an asset placeholder.
-7. **`forme-load-assets-fs`** loaded and hashed the SVG bytes while enforcing
-   canonical storage-root containment.
-8. **`forme-emit-site-fs`** joined the rendered page and asset streams,
-   replaced the placeholder with a fingerprinted public URL, copied the SVG,
-   and recorded it in the `DeployArtifact` manifest.
+   emitted a `RenderedPage` with exact island usage and asset placeholders.
+8. **`forme-render-terminal`** compiled the same routed content and classless
+   Style IR theme to safe ANSI text, preserved fallback content, and recorded
+   every unsupported style, asset, raw node, and island as explicit data.
+9. **`forme-render-terminal/package`** assembled those terminal buffers into a
+   deterministic capability-free artifact with `.ansi` and degradation files.
+10. **`forme-load-assets-fs`** loaded and hashed the SVG and JavaScript bytes
+   while enforcing canonical storage-root containment.
+11. **`blog-surface`** rendered the chronological collection into the blog
+   index, RSS, Atom, and sitemap artifacts.
+12. **`forme-emit-site-fs`** joined the rendered page and asset streams,
+    replaced placeholders with fingerprinted public URLs, emitted only the
+    selected script, and recorded the article `DeployArtifact` manifest.
+13. **`forme-emit-fs`** wrote the index, feeds, and sitemap through the
+    independent surface branch.
 
 ![Forme turns source content into reusable IR and many output surfaces.](assets/forme-pipeline.svg#pipeline)
 

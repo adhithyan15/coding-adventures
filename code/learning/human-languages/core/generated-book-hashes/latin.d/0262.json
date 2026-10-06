@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:cc0e69ebda8221f5",
+  "lessonIds": [
+    "LA-C262-fides",
+    "LA-C262-virtus",
+    "LA-C262-pudor",
+    "LA-C262-invidia",
+    "LA-C262-taedium"
+  ],
+  "tex": "latin/book/chapters/ch262-trust-courage-shame-envy-boredom.tex"
+}

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:eb0de8faf7b739a2",
+  "sourceHash": "fnv1a64:2bdd325f04be6587",
   "lessons": [
     {
       "id": "HI-C03-kaise",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8d9015036aa86bac",
+      "sourceHash": "fnv1a64:7424d75085bc8084",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already met क्या (kyā, \"what\"). Here is its sibling — and, like all of Hindi's question-words, it starts with k-."
+              "text": "You already met kyā (\"what\"). Here is its sibling — and, like all of Hindi's question-words, it starts with k-."
             }
           ]
         },
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कैसे (kaise, \"how\") from Sanskrit कीदृश (kīdṛśa, \"of what kind\") / the interrogative stem क- (ka-), from Proto-Indo-European kʷo- — the same question-root behind English wh- (what, who, how) and Latin qu-. Notice the pattern: Hindi's question-words are nearly all k- words — kyā (what), kaun (who), kab (when), kahāṁ (where), kaise (how). Learn to hear the k- and you can spot a question."
+              "text": "कैसे (kaise, \"how\") from Sanskrit kīdṛśa (\"of what kind\") / the interrogative stem क- (ka-), from Proto-Indo-European kʷo- — the same question-root behind English wh- (what, who, how) and Latin qu-. Notice the pattern: Hindi's question-words are nearly all k- words — kyā (what), kaun (who), kab (when), kahāṁ (where), kaise (how). Learn to hear the k- and you can spot a question."
             }
           ]
         },
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:642cd009ec911f94",
+      "sourceHash": "fnv1a64:967a500c2dc11ca2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -354,7 +354,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मैं (maiṁ, \"I\") from Sanskrit मया (mayā, \"by me\"), on the first-person root म- (ma-) — the same root that gave you merā (\"my\") last chapter, and the same m- behind English me, my, mine and Latin mē. Hindi's \"I,\" its \"my,\" and English's \"me/my\" all grow from one ancient first-person sound."
+              "text": "मैं (maiṁ, \"I\") from Sanskrit mayā (\"by me\"), on the first-person root म- (ma-) — the same root that gave you merā (\"my\") last chapter, and the same m- behind English me, my, mine and Latin mē. Hindi's \"I,\" its \"my,\" and English's \"me/my\" all grow from one ancient first-person sound."
             }
           ]
         },
@@ -603,7 +603,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3dc477fdaba1a64f",
+      "sourceHash": "fnv1a64:faa30f0231334bb7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -643,7 +643,7 @@
             },
             {
               "kind": "speech",
-              "text": "ी (the long-ī mātrā) + क (ka) becomes ठीक (ṭhīk). The retroflex ट-ठ-ड series is a hallmark of Indian languages; the tongue touches further back than for an English \"t.\""
+              "text": "ी (the long-ī mātrā) + क (ka) becomes ठीक (ṭhīk). The retroflex ṭ-ṭh-ḍ series is a hallmark of Indian languages; the tongue touches further back than for an English \"t.\""
             }
           ]
         },
@@ -665,7 +665,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put it together with Chapter 3's atoms: मैं ठीक हूँ (maiṁ ṭhīk hūṁ) — \"I am fine.\" Literally \"I fine am,\" verb last. Add thanks: maiṁ ṭhīk hūṁ, dhanyavād. And the whole exchange stands:"
+              "text": "Put it together with Chapter 3's atoms: maiṁ ṭhīk hūṁ — \"I am fine.\" Literally \"I fine am,\" verb last. Add thanks: maiṁ ṭhīk hūṁ, dhanyavād. And the whole exchange stands:"
             },
             {
               "kind": "speech",
@@ -680,7 +680,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ठ (ṭha, a retroflex th — tongue curled to the roof of the mouth) + ी (long ī) + क (ka) becomes ठीक (ṭhīk). The retroflex ट-ठ-ड series is a hallmark of Indian sound."
+              "text": "ठ (ṭha, a retroflex th — tongue curled to the roof of the mouth) + ी (long ī) + क (ka) becomes ठीक (ṭhīk). The retroflex ṭ-ṭh-ḍ series is a hallmark of Indian sound."
             }
           ]
         },

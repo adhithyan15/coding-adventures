@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:5ee2b6d4d7b3194b",
+  "lessonIds": [
+    "HI-C186-gussa",
+    "HI-C186-pyar",
+    "HI-C186-sarm",
+    "HI-C186-ummid",
+    "HI-C186-yad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch186.txt",
+  "json": "hindi/narration/ch186.json",
+  "textHash": "fnv1a64:88eba0af78c4e597",
+  "jsonHash": "fnv1a64:614f4c684f0eac31",
+  "findings": []
+}

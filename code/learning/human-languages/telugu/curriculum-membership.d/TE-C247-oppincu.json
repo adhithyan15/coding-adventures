@@ -1,0 +1,11 @@
+{
+  "id": "TE-C247-oppincu",
+  "pathSegment": "TE-PATH-247-KRIYA247",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-247-KRIYA247",
+      "order": 3
+    }
+  ]
+}

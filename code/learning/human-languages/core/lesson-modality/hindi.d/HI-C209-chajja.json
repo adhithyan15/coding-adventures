@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C209-chajja",
+    "language": "hindi",
+    "chapter": 209,
+    "sequence": 10510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:773868ecb584607d"
+  },
+  "findings": []
+}

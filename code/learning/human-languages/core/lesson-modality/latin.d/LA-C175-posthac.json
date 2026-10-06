@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C175-posthac",
+    "language": "latin",
+    "chapter": 175,
+    "sequence": 7840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46ab2a2e02209d58"
+  },
+  "findings": []
+}

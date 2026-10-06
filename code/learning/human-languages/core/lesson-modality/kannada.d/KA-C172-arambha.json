@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C172-arambha",
+    "language": "kannada",
+    "chapter": 172,
+    "sequence": 7750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21e8539757c66759"
+  },
+  "findings": []
+}

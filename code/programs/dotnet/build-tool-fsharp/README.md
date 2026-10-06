@@ -16,9 +16,17 @@ and BUILD-front records through a native F# symbol. The `discoverPackages`
 facade likewise gives F# callers and tests an explicit entry into the shared
 .NET discovery engine. The no-inline `selectSourceCandidates`, registry
 projection/digest, canonical-digest, and `hashPackageInputs` facades expose the
-portable source-hashing contract through native F# symbols.
+portable source-hashing contract through native F# symbols. The no-inline
+`evaluateGraph` and `evaluateDiffSelection` functions expose the process-free
+typed graph and diff decisions through F# symbols.
 
 ## Why share the engine?
+
+The F# suite independently discovers and evaluates the checked eight graph
+and twelve diff-selection fixtures through those native functions. A caller
+supplies all graph, path, and optional boundary values; this facade never
+discovers a checkout, invokes Git, or launches a process. The pure tranche is
+not a neutral execution adapter and does not cover the remaining domains.
 
 The build tool touches almost every language in the monorepo. Keeping the core
 dependency parsing, hashing, planning, and execution logic in one .NET engine
@@ -29,12 +37,14 @@ The discovery facade independently consumes the complete language-neutral
 registry through F#. Its fixture pins exact package/program bucket
 classification, program identities, domain-language buckets, unknown buckets,
 non-package BUILD roots, and exact case-sensitive generated-directory pruning,
-including Dune `_build`. Direct C# evidence additionally proves that `_Build`
-and `_build-example` remain source. This facade intentionally performs the same
-filesystem discovery as the CLI and adds no second implementation or authority.
+including Dune `_build` and Perl `blib`. Direct C# evidence additionally proves
+that `_Build`, `Blib`, `blib-example`, and `_build-example` remain source. This
+facade intentionally performs the same filesystem discovery as the CLI and adds
+no second implementation or authority.
 
-The source-hashing facades independently consume all 16 neutral source-
-collection cases and all three package-digest cases through F#. They prove the
+The source-hashing facades independently consume all 20 neutral source-
+collection cases and all eight hashing/cache package-digest cases through F#,
+including both before/after consumers of one exact shared Rust manifest. They prove the
 complete typed language and repository-boundary projections, both canonical
 registry digests, exact generated-component and link-boundary pruning, the two
 registered TypeScript site roots and their foreign-package exclusion, declared

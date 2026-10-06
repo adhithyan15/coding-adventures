@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C186-zhadnyy",
+    "language": "russian",
+    "chapter": 186,
+    "sequence": 10720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3af1db98febc9b29"
+  },
+  "findings": []
+}

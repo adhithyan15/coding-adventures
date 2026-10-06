@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C140-praptipatram",
+    "language": "sanskrit",
+    "chapter": 140,
+    "sequence": 6980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2937e4d8381985f"
+  },
+  "findings": []
+}

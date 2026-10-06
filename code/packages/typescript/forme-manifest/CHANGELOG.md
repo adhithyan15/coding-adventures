@@ -1,5 +1,17 @@
 # Changelog — @coding-adventures/forme-manifest
 
+## Unreleased
+
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
+- Accept one explicit `Stream<KindName>` wrapper in stage contribution kind
+  references and reject malformed or nested wrappers before plugin loading.
+- Reversibly URI-encode templated host paths into one capability detail so
+  Windows drive letters, backslashes, whitespace, and controls remain safe
+  without aliasing distinct POSIX paths.
+
 ## 0.1.0 — 2026-05-16
 
 Initial release. First FM02 package — the manifest layer that

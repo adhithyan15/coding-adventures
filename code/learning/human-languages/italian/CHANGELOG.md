@@ -1,5 +1,195 @@
 # Changelog
 
+## Chapters 233-259: 135 more A2 headwords, and Italian attains A2
+
+The last of four Italian A2 vocabulary tranches. Twenty-seven chapters of five
+words each, in three runs of at most nine chapters, and each run closes with
+two reviews.
+
+- **Chapters 233-242: fifty verbs**, including *ordinare*, *costruire*,
+  *togliere*, *compilare*, *spedire*, *svegliarsi*, *divertirsi*,
+  *lamentarsi*, *restituire*, *riconoscere*, *correggere* and *respirare*.
+- **Chapter 243: emergencies** (*il cerotto*, *l'ambulanza*, *l'emergenza*,
+  *l'incidente*).
+- **Chapter 244: degree** (*proprio*, *quasi*, *circa*, *soltanto*,
+  *insieme*).
+- **Chapters 245-246: ten qualities**, such as *liscio*, *profondo*,
+  *sconosciuto*, *antico* and *crudo*.
+- **Chapters 247-259: sixty-five nouns**:
+  - clothes (*il bottone*, *la taglia*);
+  - the news (*la notizia*, *il telegiornale*, *la pubblicità*);
+  - professions (*il giornalista*, *l'architetto*, *il dentista*);
+  - in-laws (*il suocero*, *la nuora*);
+  - truth and lies (*la verità*, *la bugia*, *il segreto*);
+  - money (*il conto corrente*, *il prestito*, *la tassa*);
+  - the car (*il volante*, *la ruota*, *la benzina*);
+  - outside the house (*il cancello*, *il cortile*, *la cantina*);
+  - weather (*il fulmine*, *il tuono*, *l'arcobaleno*);
+  - trains and sport (*il ritardo*, *la coincidenza*, *il tifoso*);
+  - school (*l'università*, *l'insegnante*, *l'errore*).
+- **Italian attains A2.** Chapters 137-259 realize the last three A2 spine
+  nodes and teach 615 headwords, 215 of them verbs. At or below A2 the track
+  now teaches 1,244 distinct headwords (target 1,200). The level gate reports
+  no blocker below B1, and the attainment pin moves from A1 to A2.
+- **Pins:** the Italian lesson-content budget goes from 1171 to 1312.
+
+## Chapters 204-232: 145 more A2 headwords
+
+The third of four Italian A2 vocabulary tranches. Twenty-nine chapters of five
+words each, in four runs of at most nine chapters, and each run closes with two
+reviews.
+
+- **Chapters 204-214: fifty-five verbs**, including *prenotare*,
+  *risparmiare*, *smettere*, *misurare*, *traslocare*, *attraversare*,
+  *immaginare*, *prestare*, *sembrare*, *somigliare*, *chiacchierare* and
+  *suggerire*.
+- **Chapters 215-216: well-being**: *l'influenza*, *la ricetta*, *lo
+  sciroppo*, *la fiducia*, *la vergogna*, *la sorpresa*.
+- **Chapter 217: stance** (*purtroppo*, *forse*, *magari*, *certo*,
+  *davvero*).
+- **Chapters 218-219: ten qualities**, such as *orgoglioso*, *nervoso*,
+  *simile*, *gratuito* and *moderno*.
+- **Chapters 220-232: sixty-five nouns**:
+  - clothes (*la maglietta*, *la cintura*, *la tasca*);
+  - shops and land (*la panetteria*, *la costa*, *la valle*);
+  - culture (*la religione*, *la tradizione*, *la poesia*);
+  - ages (*l'adulto*, *l'anziano*, *il neonato*);
+  - reasons (*la decisione*, *il motivo*, *il risultato*);
+  - paying (*lo scontrino*, *il resto*, *la banconota*);
+  - getting about (*l'ingresso*, *l'uscita*, *il bagaglio*);
+  - sights (*il castello*, *la torre*, *la statua*);
+  - materials (*la plastica*, *il cotone*, *la seta*);
+  - sport (*la vittoria*, *il campionato*, *l'allenatore*);
+  - reading matter (*il giornale*, *la rivista*, *il dizionario*).
+- **Pins:** the Italian lesson-content budget goes from 1018 to 1171.
+- **Level gate at A2:** vocabulary 236 short -> 91.
+
+## Chapters 174-203: 150 more A2 headwords
+
+The second of four Italian A2 vocabulary tranches. Thirty chapters of five
+words each, in four runs of at most nine chapters, and each run closes with two
+reviews.
+
+- **Chapters 174-184: fifty-five verbs**, including *ringraziare*, *invitare*,
+  *tradurre*, *dimenticare*, *scegliere*, *assaggiare*, *promettere*,
+  *vietare*, *aggiungere*, *evitare*, *fidarsi*, *risolvere*, *scoprire* and
+  *accorgersi*.
+- **Chapters 185-186: well-being**: *la ferita*, *il raffreddore*,
+  *l'ansia*, *l'amicizia*, *la speranza*.
+- **Chapter 187: time** (*ancora*, *durante*, *mentre*, *il decennio*).
+- **Chapter 188: joining ideas** (*anzi*, *infatti*, *cioè*, *sebbene*,
+  *nonostante*).
+- **Chapters 189-190: ten qualities**, such as *allegro*, *timido*,
+  *coraggioso*, *utile* and *diverso*.
+- **Chapters 191-203: sixty-five nouns**:
+  - the house (*il soffitto*, *la serratura*, *il campanello*);
+  - travel papers (*il passaporto*, *la dogana*, *la prenotazione*);
+  - public life (*la politica*, *l'economia*, *la pace*);
+  - the stage (*l'attore*, *il romanzo*);
+  - professions (*il pilota*, *lo scienziato*);
+  - thinking and choosing (*l'esperienza*, *la scelta*);
+  - shopping (*lo sconto*, *i saldi*, *la fila*);
+  - signs and papers (*l'etichetta*, *il cartello*, *la mappa*);
+  - the road (*la rotonda*, *il cantiere*);
+  - the countryside (*il ramo*, *il prato*, *il sentiero*);
+  - materials (*il legno*, *il ferro*, *l'oro*);
+  - sport (*la palestra*, *il nuoto*);
+  - job hunting (*il contratto*, *il colloquio*, *la carriera*).
+- **Book:** the book passes page 999. The contents page-number box widens from
+  1.55em to 2.4em, with the right margin widened to match, as in the Tamil,
+  German and Sanskrit preambles.
+- **Pins:** the Italian lesson-content budget goes from 860 to 1018.
+- **Level gate at A2:** vocabulary 386 short -> 236.
+
+## Chapters 140-173: 170 A2 headwords, fifty-five of them verbs
+
+The first of four Italian A2 vocabulary tranches. Thirty-four chapters of five
+words each, in four runs of at most nine chapters, and each run closes with two
+reviews.
+
+- **Chapters 140-150: fifty-five verbs** (`SPINE-NAME-EVERYDAY-ACTIONS`),
+  including *accendere*, *spegnere*, *spiegare*, *nascondere*, *litigare*,
+  *scusarsi*, *preoccuparsi*, *consigliare*, *migliorare*, *rifiutare*,
+  *festeggiare* and *sbagliare*.
+- **Chapters 151-152: the body and rest** (*il cervello*, *il polmone*,
+  *l'osso*, *la dieta*, *il sonno*).
+- **Chapter 153: time** (*raramente*, *subito*, *intanto*, *ormai*).
+- **Chapter 154: place** (*intorno*, *dappertutto*, *altrove*, *laggiù*).
+- **Chapter 155: joining ideas** (*quindi*, *dunque*, *però*, *invece*,
+  *comunque*).
+- **Chapters 156-158: fifteen qualities**, such as *comodo*, *cortese*,
+  *complicato*, *necessario*, *buio* and *puntuale*.
+- **Chapters 159-173: seventy-five nouns** (`SPINE-NAME-EVERYDAY-THINGS`):
+  - the flat (*l'appartamento*, *il balcone*);
+  - eating out (*il conto*, *la mancia*);
+  - civic life (*il tribunale*, *il sindaco*, *le elezioni*);
+  - screens (*lo schermo*, *la tastiera*, *il caricabatterie*);
+  - trades (*l'idraulico*, *l'elettricista*);
+  - rules (*il permesso*, *il divieto*, *la sicurezza*);
+  - the post (*la busta*, *il francobollo*, *il pacco*);
+  - driving (*l'autostrada*, *la multa*, *la patente*);
+  - the garden (*l'orto*, *la radice*);
+  - the environment (*l'inquinamento*, *il riciclaggio*);
+  - music (*la chitarra*, *il violino*);
+  - travel (*la partenza*, *la destinazione*);
+  - work (*l'azienda*, *lo stipendio*, *la riunione*);
+  - school subjects (*la geografia*, *la matematica*).
+- **Candidate screen.** Every candidate whose bare form already appears in an
+  earlier Italian lesson was dropped, so the tranche adds no forward reference.
+  Pure English loans (*il computer*, *il film*, *lo sport*) were left out as
+  well.
+- **Recall prompts stay unambiguous.** Words that share an English gloss with
+  a taught word lead with a gloss of their own. For example, *la parete* is
+  "an inner wall", because "a wall" already belongs to *il muro*.
+- **Pins:** the Italian lesson-content budget goes from 682 to 860.
+- **Level gate at A2:** verb vocabulary 41 short -> 0; vocabulary 556 short
+  -> 386.
+
+## Chapters 137-139: the past, the future, and reading practical texts
+
+Italian had realized two of its five A2 spine nodes. These three chapters
+realize the other three, and the A2 gate now reports no missing spine node.
+
+- **Chapter 137 — the past** (`SPINE-TALK-ABOUT-PAST`): *scorso / scorsa*,
+  *già*, *l'altro ieri*, *recentemente* and *succedere*. The chapter builds
+  on the passato prossimo the book already teaches: **La settimana scorsa ho
+  lavorato**, **Ho già capito**, and **Che cosa è successo?**, whose past takes
+  *essere*, like *andare*.
+- **Chapter 138 — the future** (`SPINE-TALK-ABOUT-FUTURE`): *il futuro*,
+  *stasera*, *il progetto*, *prevedere* and *organizzare*. The future is built
+  on the infinitive (*parlare* → *parlerò*). The irregular *sarò* comes with
+  *prevedere*, and **tra** plus a length of time gives "in" (*tra due giorni*).
+- **Chapter 139 — reading practical texts** (`SPINE-READ-PRACTICAL-TEXTS`):
+  *l'orario*, *l'avviso*, *l'affitto*, *la ricevuta* and *l'appuntamento*. Each
+  lesson reads a short notice, advert, receipt or message built from taught
+  words, then says what to do about it.
+- **Candidate screen.** Candidates whose bare form already appears in an
+  earlier Italian lesson were left out, so the chapters add no forward
+  reference. This dropped *prossimo* (which appears inside "passato
+  prossimo"), *fa*, *domani* and *fra*.
+- Two reviews close chapter 139.
+- **Pins:** the Italian lesson-content budget goes from 665 to 682.
+## Chapter payoffs say "I can", not "i can"
+
+The payoff line under each chapter's goal lowercased the goal's first letter,
+so 100 chapters printed "Complete the last lesson of chapter N: i can say …".
+Every one now keeps the capital: "…: I can say …", and a new test
+(`payoff-summary-case.test.ts`) fails if the lowercase pronoun comes back. Only
+the payoff summary changed; no lesson, word or atom moved.
+
+## A2 reinforcement — three atoms get their second revisit
+
+The level gate's A2 reinforcement criterion asks that every atom at or below
+A2 is revisited at least twice (etymology hooks are waived). 3 atoms fell
+short. Each now comes back as a one-line retrieval in the Warm-up of a later
+lesson. Each host comes after the introducing lesson in the curriculum path
+and stays under the 300-second budget. Hosts:
+
+- `IT-C37-braccio` (*un po'* is *poco* cut short)
+- `IT-C22-latte` (*rispondere a*, and *rispondere* as the return journey)
+
+Level gate at A2: reinforcement blocker cleared.
+
 ## Chapters 85-136: 260 headwords, can and want, and Italian attains A1
 
 Italian had four A1 gaps. Measured against the level gate, it was 251

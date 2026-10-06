@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C186-tallidandrulu",
+    "language": "telugu",
+    "chapter": 186,
+    "sequence": 8370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:224fda5d57d9bfb8"
+  },
+  "findings": []
+}

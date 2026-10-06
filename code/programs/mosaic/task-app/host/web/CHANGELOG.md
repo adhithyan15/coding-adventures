@@ -4,6 +4,12 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed — the Web Components lifecycle test has a timeout it fits in
+
+The "drives create, complete, restore, and delete through the emitted
+controls" test takes 3.4–4.9 s on CI runners, against vitest's 5 s default
+timeout, and timed out once at 5047 ms. It now has its own 30 s budget.
+
 ### Added — shared Web Components parity host (#16125)
 
 The React host's presentation controller is now framework-neutral and shared

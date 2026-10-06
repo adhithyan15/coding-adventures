@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C181-longinquus",
+    "language": "latin",
+    "chapter": 181,
+    "sequence": 8170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:340e30f4d2586e33"
+  },
+  "findings": []
+}

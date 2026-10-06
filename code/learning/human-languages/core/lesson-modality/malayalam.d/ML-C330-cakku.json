@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C330-cakku",
+    "language": "malayalam",
+    "chapter": 330,
+    "sequence": 15680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21a9e458b3028f09"
+  },
+  "findings": []
+}

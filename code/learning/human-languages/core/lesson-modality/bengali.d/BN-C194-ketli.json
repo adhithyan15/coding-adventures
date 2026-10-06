@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C194-ketli",
+    "language": "bengali",
+    "chapter": 194,
+    "sequence": 11480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:251bd0c1d4431c8c"
+  },
+  "findings": []
+}

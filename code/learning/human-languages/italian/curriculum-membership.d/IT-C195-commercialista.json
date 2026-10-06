@@ -1,0 +1,11 @@
+{
+  "id": "IT-C195-commercialista",
+  "pathSegment": "IT-PATH-195-COSE195",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-195-COSE195",
+      "order": 1
+    }
+  ]
+}

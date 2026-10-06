@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:16613d9597b60749",
+  "lessonIds": [
+    "ML-C328-bencu",
+    "ML-C328-selphu",
+    "ML-C328-karttan",
+    "ML-C328-kotali",
+    "ML-C328-manvetti",
+    "ML-R328-first-pass-words-from-chapters-320-323",
+    "ML-R328-second-pass-words-from-chapters-324-328"
+  ],
+  "tex": "malayalam/book/chapters/ch328-bench-shelf-curtain-axe-spade.tex"
+}

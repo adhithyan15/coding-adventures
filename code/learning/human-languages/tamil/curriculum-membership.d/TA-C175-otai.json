@@ -1,0 +1,11 @@
+{
+  "id": "TA-C175-otai",
+  "pathSegment": "TA-PATH-175-IDAM175",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-175-IDAM175",
+      "order": 2
+    }
+  ]
+}

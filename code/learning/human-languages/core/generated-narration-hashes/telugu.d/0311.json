@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:7795d95aedf0bcd7",
+  "lessonIds": [
+    "TE-C311-kalasala",
+    "TE-C311-visvavidyalayam",
+    "TE-C311-digri",
+    "TE-C311-anubhavam",
+    "TE-C311-khata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch311.txt",
+  "json": "telugu/narration/ch311.json",
+  "textHash": "fnv1a64:286c5a9e70b40736",
+  "jsonHash": "fnv1a64:189f86cb0e69ca4e",
+  "findings": []
+}

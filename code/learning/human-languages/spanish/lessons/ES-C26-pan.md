@@ -8,18 +8,18 @@ type: word
 headword: el pan
 gloss: bread — and the compañero who shares it with you
 concept_tag: ES-FOOD-BREAD
-prerequisites: [ES-C26-agua, ES-C26-vino]
+prerequisites: [ES-C26-agua, ES-C26-vino, ES-C50-sintesis-pedir-bien]
 sounds: [nasal-none, short-vowel]
 roots: [panis-latin]
 etymology_hook: "pan ← Latin panis 'bread' → compañero ('one you share bread with', com- + panis) — the very same word-story as English companion, and Spanish keeps BOTH the bread and the friendship"
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [ES-CULTURE-COMMAND-REGISTER]
 introduces:
   knowledge: [ES-LEX-PAN-01, ES-ETYMON-PAN-02, ES-ETYMON-COMPANION-03]
 practises:
-  knowledge: [ES-LEX-PAN-01, ES-ETYMON-PAN-02, ES-ETYMON-COMPANION-03]
+  knowledge: [ES-LEX-PAN-01, ES-ETYMON-PAN-02, ES-ETYMON-COMPANION-03, ES-CULTURE-COMMAND-REGISTER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,11 +31,13 @@ reviews_of: [ES-C26-agua, ES-C26-vino]
 # el pan — bread, and the friend who shares it
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-CULTURE-COMMAND-REGISTER] -->
 
 [PAUSE 2s] Spanish's word for bread hides the same lovely word-story you'd
 find in English's "companion" — except Spanish kept **both halves**, the
 bread and the friendship.
+
+[PAUSE 2s] Offer the bread two ways: to a friend, *come pan*; to a stranger, *coma pan, por favor*. Neither is blunt. The person you choose carries the courtesy.
 
 ## The word, taken apart: pan
 <!-- hl-knowledge: introduces=[ES-LEX-PAN-01, ES-ETYMON-PAN-02]; assesses=[] -->

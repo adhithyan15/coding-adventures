@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-27
+Status date: 2026-09-30 — complete
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -8,7 +8,177 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## Prioritization run — 2026-09-30
+
+PR #16208 delivered the first VM-067 guard and merged as
+`34a8061d145849dffdb6bb7cf90ce1b8fa638fa5` after required CI passed. The
+MacroOct lane now regenerates its committed Rust lexer table byte-for-byte in
+CI whenever its grammar, artifact, or generator changes.
+
+PR #16232 delivered the next VM-067 lane and merged as
+`dac9dddff9a234a659094f2ef88f93f14c30d173`. Nib's parser artifact already
+matched `nib.grammar`; its lexer artifact needed only canonical generator
+formatting. The shared CI job now guards both MacroOct and Nib.
+
+The first protected Windows run exposed the already documented B07 test-only
+compile limitation: `syscall.Mkfifo` is unavailable on Windows, so touching the
+Go build tool made the package uncompilable before the gate tests could run.
+The repair kept portable B07 probes cross-platform and placed the FIFO security
+regression behind a platform build tag.
+
+PR #16247 delivered VM-073 and merged as
+`367db90189900c411931b0963a967240e5246171`. The ets-backed `array_set`
+path had ignored the declared `[Table | Length]` extent, while BEAM11 `array_get` and the
+integer-array `:atomics` store enforce it. Direct IIR can write an arbitrary
+ETS key. Dartmouth BASIC emits `array_set` after subscript flattening for
+`LET A(i)` and `READ A(i)` without an independent range guard. BEAM12
+now specifies the shared-backend guard; direct-IIR real-Erlang tests cover
+both ets element types and the index in `x0`.
+
+PR #16253 delivered WORD03a and merged as
+`9085b2dfa805c0e8d53138175cda7eb60481c72c`. Both two-slot backends now
+execute normalized unsigned comparisons at both widths; the Z80 proof includes
+high/low-byte ordering and the 8086 proof includes unsigned boundary cases.
+
+PR #16261 delivered WORD03b and merged as
+`62bbac265ee5ce1ca70b18cdf37cf0b1aaa5e83f` after all required checks passed.
+Both backends now execute structured branches and loops with control-flow
+liveness and final byte-address resolution while retaining the bounded
+two-slot contract.
+
+PR #16273 delivered VM-069 expansion provenance and merged as
+`ee4f37613136b749ec364a4613a1fa45af1f7a39` after every protected platform and
+metadata gate passed. The fresh non-ALGOL audit selected the remaining
+`defined()` operand contract as exactly one next PREP01 item.
+
+PR #16283 delivered that contract and merged as
+`84f70494c4e17226d86fe7fc0bd27191da3b6be7` after Linux, macOS, Windows,
+metadata, grammar, and final CI gates passed. The next fresh audit selected
+VM-075's bounded Intel 8086 documentation reconciliation; VM-076's separate Z80
+wording audit remains next and is not part of this item.
+
+PR #16294 delivered VM-075 and merged as
+`5020c0f0a362f93c8cfed04ce865233fbedf15d2` after the protected documentation
+and metadata gates passed. The Intel 8086 backend spec now reflects the complete
+simulator, its 461-vector full-state differential, and the landed WORD02/WORD03
+surface. A fresh overlap and backlog audit selected VM-076 as the remaining
+bounded non-ALGOL item.
+
+PR #16299 delivered VM-076 and merged as
+`7b311ceb8af6593ced494336bf3de2722f7a5412` after required branch protection
+passed. The Z80 README, crate rustdoc, opcode docs, changelog, and normative 07k
+spec now distinguish shared 8080 instruction bytes and core operations from the
+architectures' different packed flags and arithmetic parity/overflow behavior.
+
+The current queue is:
+
+**Empty.** A fresh audit of current `main`, open issues, open pull requests, and
+the corrected compatibility claims found no actionable non-ALGOL LANG VM item.
+PR #16295 is a separately authored, conflicting duplicate of merged VM-075 PR
+#16294 and does not represent remaining backlog. The separately owned ALGOL
+campaign remains outside this backlog.
+
+The following run records the first VM-067 selection.
+
+## Prioritization run — 2026-09-28
+
+PR #16202 delivered WORD02b on both simulators and merged as
+`5f42bcf0f16b28ac94de265f23fa1dcdf85dfbba`. The next priority is the
+missing Rust compiled-grammar regeneration guard, VM-067. MacroOct already
+tests that its compiled token definitions match `macrooct.tokens`; regenerating
+its `_grammar.rs` with the Rust grammar-tools CLI on current main also produced
+no diff. That makes it a reconciled first lane for a byte-for-byte CI check.
+The wider Rust sweep remains blocked by issue #14202's stale baseline.
+
+The current queue is:
+
+1. **VM-067 (selected):** add a dedicated, gated CI job that regenerates only
+   MacroOct's Rust `_grammar.rs` and fails on a diff. Trigger it for the
+   MacroOct grammar, lexer, and Rust grammar-tools sources, and include it in
+   the required CI gate. Prove the gate fires for each input and skips an
+   unrelated change.
+2. **VM-073:** audit ets-backed `array_set` extent checks and execute a
+   real-Erlang regression if an out-of-range insertion is reachable.
+3. **WORD03 / VM-072:** add normalized comparisons and structured control on
+   both target backends.
+4. **VM-069 / PREP01:** continue expansion-definition provenance and
+   `defined()` operand expansion.
+5. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
+   claims recorded below.
+
+The following run records the prior WORD02b selection.
+
+PR #16196 delivered the bounded two-live WORD02 add/sub/and/or/xor proof and
+merged as `ae8a418726475025343e430816429311302713b5` after Linux, macOS,
+and Windows CI passed. A parallel WORD02 PR #16197 conflicted with the merge
+and was closed as superseded; its branch is preserved. That branch exposed a
+remaining portable `~` operation which the merged backend does not yet lower.
+Its allocator also discarded other live values after an operation, so the
+parallel branch must not be merged wholesale.
+
+The next shared-platform queue is:
+
+1. **WORD02b / VM-072 (selected):** lower typed unary `not_u8` and `not_u16`
+   on both targets, preserving any other live value and proving the masked
+   result in both simulators. This closes the bitwise surface before control
+   flow and reuses the merged two-slot allocator.
+2. **VM-067:** scope a useful generated-grammar CI guard against issue
+   #14202's documented drift, starting with a reconciled grammar lane.
+3. **VM-073:** audit ets-backed `array_set` extent checks and execute a
+   real-Erlang regression if an out-of-range insertion is reachable.
+4. **WORD03 / VM-072:** add normalized comparisons and structured control on
+   both target backends.
+5. **VM-069 / PREP01:** continue expansion-definition provenance and
+   `defined()` operand expansion.
+
+Preserve the unpublished Hex H0 branch while Word remains the selected path.
+Reprioritize after every merge or newly discovered executable failure.
+
 ## Prioritization run — 2026-09-27
+
+PR #16169 delivered VM-074 and merged as `3afc8bf0c805fbfce535bef0bde4e2b3cf9a08c0`
+after all required checks passed. The Oct/8080 compatibility premise is now
+corrected before selecting the next language design.
+
+VM-072 selects one cross-target language, **Word**, rather than separate Z80
+and 8086 frontends. Fixed `u8`/`u16` source types make the same program compare
+pair-based Z80 work with native 8086 word work without implying compatible
+machine code. Portable memory is a 16-bit logical offset (flat on Z80, near
+`DS:offset` on 8086), portable I/O is byte-wide, and architecture-only features
+remain namespaced. The detailed contract and proof ladder are in
+`WORD00-word-language.md`.
+
+`HEX00-portable-16-bit-language.md` landed from a near-simultaneous design
+branch with a conflicting frontend-first H0-H4 ladder. The current
+prioritization selects Word's backend-first ladder; HEX00 is retained as
+superseded design history and must not create a parallel implementation.
+
+The next shared-platform queue is:
+
+PR #16187 delivered WORD01 and merged as
+`9d1b5e446ad50ac70a432fcd35b8eafd6a82f999` after required checks
+passed. Its executed proof confirms the `u16` result ABI on both targets.
+The unpublished Hex H0 implementation branch is parked because the merged
+Word contract selects a backend-first ladder; it is not a second active PR.
+
+1. **WORD02 / VM-072 (selected):** add bounded two-live-value allocation plus
+   wrapping `u8`/`u16` arithmetic and bitwise execution on both targets.
+   Run emitted bytes in both simulators and inspect full-width results.
+2. **VM-067:** add a useful Rust generated-grammar regeneration guard scoped
+   against issue #14202's existing drift.
+3. **VM-073:** audit ets-backed `array_set` extent checks and add a real-Erlang
+   regression if an out-of-range insertion is reachable.
+4. **VM-069 / PREP01:** continue the bounded preprocessor ladder with
+   expansion-definition provenance and `defined()` operand expansion.
+5. **Remaining semantic/runtime work:** VM-013 Oct intrinsics, VM-028 4004
+   fidelity, VM-029/031 platform acceptance/native GC proofs, and AOT00.
+
+WORD03 through WORD05 then add control flow, static memory/I/O/direct calls,
+and finally the frontend plus same-source acceptance. Do not scaffold the
+frontend before the backend proof ladder works; simulator ISA coverage is not
+backend coverage.
+
+## Prioritization run before VM-072 selection
 
 PR #16126 delivered VM-071/BEAM11 and merged as `624b6ffe2807abaec0c9e12e3d9a6a23df227108`
 after push and PR CI passed. Its `ets:lookup_element/4` default reads preserve
@@ -17,34 +187,44 @@ extent. The macOS-discovered allocation bug was repaired by retaining the
 length in an initialized Y slot across `ets:new/2`. Issue #15882's wider
 scratch-register GC-root risk remains open.
 
+PR #16169 delivered #16164/VM-074 and merged as
+`3afc8bf0c805fbfce535bef0bde4e2b3cf9a08c0` after all latest checks
+passed. OCT00 now requires target-specific code generation; a decoder test
+pins the 8008 `JMP`/8080 `MOV A,H` opcode collision.
+
 The next shared-platform queue, reranked against that merge and the user's
 request for a gradual 8086/Z80 language, is:
 
-1. **#16164 / VM-074 (selected):** OCT00 falsely promises that 8008 machine
-   code runs unchanged on 8080. An 8008 `JMP` is `0x7C`; an 8080 `JMP` is
-   `0xC3`. Correct the language and simulator specs, audit repeated claims,
-   and pin the control-flow encoding difference in a simulator test before
-   designing the next language on a false compatibility premise.
-2. **VM-072 (user-directed design):** design the next gradual language rung
+1. **VM-072 (selected, user-directed design):** design the next gradual language rung
    after Nib and Oct for Intel 8086 and Z80. Both have Rust/Python behavioral
    simulators, Rust encoders, and gate-level models. Their Rust CIR backends
    currently lower only constants and return/halt, so arithmetic, memory,
    branches, calls, and I/O need implementation and executed proof. Compare a
-   portable source subset with separate machine-specific intrinsics. Z80
-   extends the 8080 encoding; neither it nor 8086 accepts 8008 binaries as a
-   general rule. Decide one cross-target language versus two rungs from a
-   feature and teaching-cost audit, then run discriminating programs in both
-   simulators before claiming end-to-end support.
+   portable source subset with separate target code generation. `HEX00` chooses
+   one Hex source language with `u8`/`u16` semantics and distinct Z80/8086
+   emitters; its staged source-to-ROM acceptance plan must precede any claim
+   that the language already runs on either target.
+2. **VM-077 / Hex H0 (after the design PR merges):** implement the canonical
+   grammar, typed AST, type checker, IIR emission, reference execution, and
+   exact diagnostics from `HEX00`. Reject target emission until H1 can run
+   the generated ROM on both simulators; retain Nib/Oct regression coverage.
 3. **VM-067:** Rust generated grammars lack a CI regeneration guard; issue
    #14202 also reports existing drift. Scope the guard against that baseline
    before enabling it, so CI executes a useful assertion.
 4. **VM-073:** audit ets-backed `array_set` extent checks for direct IIR
    consumers and reachable frontends; add a real-Erlang regression if an
    out-of-range insertion is reachable.
-5. **VM-069 / PREP01:** retain expansion-definition provenance and resolve
+5. **VM-075 / VM-076 (discovered during VM-072):** reconcile the older
+   `intel8086-backend.md` account of a curated Rust simulator with the now
+   complete implementation and full-state differential suite; narrow the
+   Z80 simulator README's claim of identical 8080 semantics to byte
+   compatibility where applicable, explicitly accounting for flag differences.
+   Both are documentation audits, behind the user-directed design and the
+   missing grammar CI protection.
+6. **VM-069 / PREP01:** retain expansion-definition provenance and resolve
    `defined()` operand expansion before the C dialect; continue one bounded
    preprocessor slice at a time.
-6. **Remaining semantic and runtime tracks:** VM-013 Oct intrinsics, VM-028
+7. **Remaining semantic and runtime tracks:** VM-013 Oct intrinsics, VM-028
    4004 fidelity, VM-029/031 platform acceptance and native GC proofs, and
    AOT00 exceptions/optimization/concurrency. Re-rank after each merge.
 
@@ -55,9 +235,10 @@ and the guard runs in CI.
 
 **VM-073 (discovered during BEAM11):** the ets-backed `array_set` lowering
 inserts an arbitrary integer key without consulting the `[Table | Length]`
-extent, whereas the `:atomics` path traps on an out-of-range index. Existing
-language frontends emit bounds checks, so this is not yet a proven declared
-matrix failure. Audit direct IIR consumers and any reachable frontend path,
+extent, whereas the `:atomics` path traps on an out-of-range index. At this
+discovery point, language frontends were assumed to emit bounds checks, so it
+was not yet a proven declared matrix failure. Audit direct IIR consumers and
+any reachable frontend path,
 then either enforce bounds in the shared backend with a real-Erlang regression
 or document the frontend precondition explicitly. Rank it after the measured
 VM-071 failure and the missing CI protection above unless execution proves a
@@ -337,7 +518,7 @@ non-recursive expansion algorithm, and gives MacroOct `@define`. Stringize and
 paste stay unimplemented dialect hooks — MacroOct declines both, which is
 itself a test that the engine does not assume they exist.
 
-### VM-069 — expanded tokens have no expansion provenance (interim fix in slice 2)
+### VM-069 — expansion provenance and `defined()` operand handling
 
 Slice 2's security review found that an expanded token carried the macro
 **body's** line and column while `emit` stamped it with the file currently
@@ -346,28 +527,43 @@ position inside the *including* file's `@include` line — pointing at text with
 no relationship to the token. Confidently wrong provenance, not merely absent:
 a reader follows it and lands somewhere unrelated.
 
-**Interim, shipped:** expanded tokens now carry the position of the
-**invocation**, which is real text in the file that genuinely produced them.
-Pinned by `an_expanded_token_points_at_its_invocation_not_at_unrelated_text`.
+**Historical interim:** expanded tokens were restamped with the position of the
+**invocation**, which at least named real text in the file that produced them.
+The completed provenance path below supersedes that approximation.
 
-**Still open:** `Locus::expansion` is always `None`, so the interned expansion
-arena in `source_map.rs` — `intern_expansion`, `expansion_parent`,
-`expansion_site` — is entirely unexercised. That arena is not incidental:
+**Expansion provenance implemented in this selected slice:** `MToken` now
+carries its physical `Position` and `Option<ExpansionId>` alongside the hide
+set. Every actual substitution interns an invocation node with the macro name,
+definition position, invocation position, and parent. Forwarded, already
+expanded arguments copy and memoize only the affected prefix so shared records
+remain immutable; copied nodes obey the same arena cap. `emit` writes that data
+to `Locus`, and `SourceMap::expansion_definition` exposes the definition end of
+the chain. Macro-body spellings keep their defining file/line/column rather
+than being restamped with an unrelated file.
+
+The arena is not incidental:
 `lib.rs` names "keeping a token's true origin across inclusion **and
 expansion**" as one of the three hard parts this crate exists to solve, and
 `source_map.rs` documents the interning design at length precisely so the map
 stays `O(tokens + expansions)` rather than `O(tokens × depth)`.
 
-Closing it needs an `Option<ExpansionId>` on `MToken` alongside `hide`,
-`intern_expansion` called at each substitution, and the macro body's defining
-`FileId` recorded in `MacroDef` so a chain can name it. Then a diagnostic can
-say "in expansion of `FOO`, defined at `ports.oct:3`, used at `main.oct:12`" —
-which is the whole reason the side-table design was chosen over widening
-`Token`.
+The acceptance proof covers an included-file definition used in the main file,
+nested object-like macros, function-argument pre-expansion, and an
+already-expanded argument forwarded through two function macros. It asserts
+correct innermost-to-outermost parents, bounded copied prefixes, and ordinary
+tokens with no expansion. The shared lexer `Token` remains unchanged.
 
 Worth doing before C (slice 4): C programs nest macros deeply enough that
 "which expansion produced this token" is the difference between a usable
 diagnostic and an unusable one.
+
+**Completed in the following VM-069 slice:** `Dialect::prepare_condition`
+runs before ordinary condition expansion with read-only access to the macro
+table. A future C dialect can replace `defined(NAME)` with a truth-value token,
+leaving `NAME` unexpanded while the shared engine expands the remainder. The
+default identity hook preserves dialects without this operator, and the engine
+rejects increases in token count or text bytes so the hook cannot return
+unmetered tokens.
 
 ### VM-068 — controlling expressions were not macro-expanded (found and fixed in slice 2)
 
@@ -409,11 +605,11 @@ undefined-name row, and an always-truthy one passes the defined-name row:
 Also pinned in the engine's own suite, including that grouping introduced *by a
 macro body* is still depth-bounded.
 
-**Still open, deliberately:** a `defined()`-style operator needs its operand
-left *un*expanded while the rest of the expression is expanded — C special-cases
-exactly this. `Directive::If(Vec<Token>)` does not yet say whether its tokens
-are pre- or post-expansion, and that question has to be answered before slice 4,
-because `#if defined(X)` is unimplementable without it.
+**Resolved by VM-069:** `Directive::If(Vec<Token>)` carries raw controlling
+tokens. The engine depth-checks them, calls the dialect's non-growing
+`prepare_condition` hook, expands the remaining tokens, depth-checks again,
+then calls `eval_condition`. This makes `#if defined(X)` implementable without
+teaching the generic engine C's spelling or expanding `X` first.
 
 ### VM-067 — Rust compiled grammars have no CI regeneration check (found 2026-09-21)
 
@@ -429,9 +625,19 @@ whose check looks present and is absent.** Worth noting the class explicitly,
 because it has now appeared in three unrelated mechanisms — target lists,
 name filters, and code generation.
 
-macrooct's own artifact was verified correct at slice 1: regenerated with the
-Rust `grammar-tools` binary directly and diffed byte-identical against the
-committed file.
+MacroOct's own artifact was verified correct at slice 1 and again before the
+VM-067 gate: regenerated with the Rust `grammar-tools` binary directly and
+diffed byte-identical against the committed file. Its lexer already tests the
+full compiled token definitions against the `.tokens` file; adding only a
+token-name test would duplicate weaker existing protection. PR #16208 landed
+the first explicit, byte-for-byte MacroOct CI regeneration job with source and
+generator triggers.
+
+The second slice audits Nib. Its parser artifact is generator-clean; its lexer
+has only a post-generation rustfmt difference. Reconcile that file to the raw
+generator output and widen the existing job to both Nib artifacts and sources.
+Issue #14202 continues to track the other Rust grammars before further widening
+the shared gate.
 
 *A trap for whoever picks this up:* the full `generate-compiled-grammars` run
 exits 1 early on a Windows dev box (dies at the css/python step with

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C224-iqtarada",
+    "language": "arabic",
+    "chapter": 224,
+    "sequence": 12190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7233745e4b6fd928"
+  },
+  "findings": []
+}

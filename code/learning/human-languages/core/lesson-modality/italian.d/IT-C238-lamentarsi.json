@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C238-lamentarsi",
+    "language": "italian",
+    "chapter": 238,
+    "sequence": 14150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f8b94eb5cb90151"
+  },
+  "findings": []
+}

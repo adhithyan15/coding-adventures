@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C106-chalano",
+    "language": "bengali",
+    "chapter": 106,
+    "sequence": 5640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8941a9857cb25e75"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Sour cream, Cottage cheese, Pork, Lamb, Ham",
+  "label": "ch:ru-sour-cream-cottage-cheese-pork-lamb-ham",
+  "canDo": "I can say sour cream, cottage cheese, pork, lamb and ham.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-R249-second-pass-words-from-chapters-245-249",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say sour cream, cottage cheese, pork, lamb and ham.",
+    "assesses": [
+      "RU-LEX-C249-VESHCH249-03",
+      "RU-LEX-C249-VESHCH249-04",
+      "RU-LEX-C249-VESHCH249-05"
+    ]
+  }
+}

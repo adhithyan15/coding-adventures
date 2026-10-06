@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-style-to-terminal",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Style IR → terminal ANSI translator: takes a forme-style-ir StyleDocument and emits a TS module source string that exports per-rule { prefix, suffix } ANSI SGR sequences (FM04 §9.4).",
   "type": "module",
   "main": "src/index.ts",

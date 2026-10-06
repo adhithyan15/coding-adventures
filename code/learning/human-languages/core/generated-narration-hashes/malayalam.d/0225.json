@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:1359a2d7d3559605",
+  "lessonIds": [
+    "ML-C225-otikkuka",
+    "ML-C225-ninnuka",
+    "ML-C225-ettuka",
+    "ML-C225-matannuka",
+    "ML-C225-kontupokuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch225.txt",
+  "json": "malayalam/narration/ch225.json",
+  "textHash": "fnv1a64:83ed4511c6976c4c",
+  "jsonHash": "fnv1a64:356b834e46cc3657",
+  "findings": []
+}

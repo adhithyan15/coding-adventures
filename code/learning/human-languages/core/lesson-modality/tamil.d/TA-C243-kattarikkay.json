@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C243-kattarikkay",
+    "language": "tamil",
+    "chapter": 243,
+    "sequence": 13480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1399243c8a1942e1"
+  },
+  "findings": []
+}

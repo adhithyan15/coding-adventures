@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C202-elektrik",
+    "language": "russian",
+    "chapter": 202,
+    "sequence": 11860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:239b9fc4c1603e0b"
+  },
+  "findings": []
+}

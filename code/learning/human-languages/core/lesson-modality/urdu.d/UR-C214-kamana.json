@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C214-kamana",
+    "language": "urdu",
+    "chapter": 214,
+    "sequence": 12630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f8efb510505897c"
+  },
+  "findings": []
+}

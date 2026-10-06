@@ -1,0 +1,11 @@
+{
+  "id": "AR-C274-hibr",
+  "pathSegment": "AR-PATH-274-SHAY274",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-274-SHAY274",
+      "order": 1
+    }
+  ]
+}

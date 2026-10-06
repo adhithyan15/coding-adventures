@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:d2fa6985a89220c7",
+  "lessonIds": [
+    "ML-C236-kuttikkalam",
+    "ML-C236-attam",
+    "ML-C236-tiruvonam",
+    "ML-C236-sandhya",
+    "ML-C236-nimisam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch236.txt",
+  "json": "malayalam/narration/ch236.json",
+  "textHash": "fnv1a64:fe7a02cb61d955f2",
+  "jsonHash": "fnv1a64:e2dbb8973ed6c271",
+  "findings": []
+}

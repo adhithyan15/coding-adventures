@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C177-reshte",
+    "language": "persian",
+    "chapter": 177,
+    "sequence": 9100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37d8e58b4d035861"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R260-first-pass-words-from-chapters-252-255",
+    "language": "hindi",
+    "chapter": 260,
+    "sequence": 14150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af2319c73c4e74ea"
+  },
+  "findings": []
+}

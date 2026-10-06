@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "Amazing, Sure, Exciting, Complicated, Reasonable",
+  "label": "ch:ar-amazing-sure-exciting-complicated-reasonable",
+  "canDo": "I can say amazing, sure, exciting, complicated and reasonable.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C272-maqul",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can say amazing, sure, exciting, complicated and reasonable.",
+    "assesses": [
+      "AR-LEX-C272-SIFA272-03",
+      "AR-LEX-C272-SIFA272-04",
+      "AR-LEX-C272-SIFA272-05"
+    ]
+  }
+}

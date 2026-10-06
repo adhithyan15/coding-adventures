@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:852ea56e8dbd1dc0",
+  "lessonIds": [
+    "AR-C252-alama",
+    "AR-C252-muhadara",
+    "AR-C252-madda",
+    "AR-C252-rusum",
+    "AR-C252-barid"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch252.txt",
+  "json": "arabic/narration/ch252.json",
+  "textHash": "fnv1a64:b88217c2a17e1124",
+  "jsonHash": "fnv1a64:d0a8e580dd5852f0",
+  "findings": []
+}

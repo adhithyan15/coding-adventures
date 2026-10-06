@@ -153,12 +153,18 @@ pub enum PipelineEmitError {
     /// escaped -- no escaping makes an unsafe scheme safe.
     UnsafeUriScheme(String),
     InvalidTypography(String),
+    /// A layout variant (UI48 §7.10) that cannot be written into the Qt
+    /// project: a name that cannot become a QML type, a type name the
+    /// default layout or the shell already owns, one chosen twice, or a rule
+    /// condition that is not a wire-name key and a lowercase value.
+    InvalidLayoutVariant(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::InvalidTypography(reason) => write!(f, "invalid Qt typography: {reason}"),
+            Self::InvalidLayoutVariant(detail) => write!(f, "invalid layout variant: {detail}"),
             PipelineEmitError::ComponentNameMismatch {
                 mosmodel,
                 moslayout,
@@ -236,6 +242,37 @@ pub struct EmitOptions {
     /// properties from `mosaicHost.propsRequired()` and is defined to take
     /// every value from the runtime.
     pub slot_values: HashMap<String, String>,
+
+    /// The root component's layout variants the window switches between at
+    /// run time, in rule order (UI48 §7.10, ENV3). Empty -- the default --
+    /// mounts the default layout only and leaves every project file byte for
+    /// byte as before. Each variant's root must be in the project as
+    /// `<Component>.<variant>.qml` (see [`from_pipeline_variant`]); the
+    /// generated `CMakeLists.txt` compiles it as the QML type
+    /// `<Component><Variant>`.
+    pub layout_variants: Vec<LayoutChoice>,
+}
+
+/// One run-time layout choice (UI48 §7.10): mount `variant`'s root when every
+/// condition holds.
+///
+/// Conditions are keyed by `mosaic-app-runtime`'s **wire names** -- the keys
+/// of the map `MosaicHost::environmentReport` answers (`sizeClass`,
+/// `pointer`, ...) -- not the manifest's kebab-case axis keys, because the
+/// generated selector tests them against that map. The package builder
+/// translates them (`EnvironmentAxis::wire_name`); both halves are checked
+/// again here before they are written into C++.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LayoutChoice {
+    pub variant: String,
+    pub conditions: Vec<(String, String)>,
+    /// How many native table models the variant's root takes
+    /// ([`native_table_model_count`] of its layout). A QML root refuses an
+    /// initial property it does not declare -- `setInitialProperties` with an
+    /// unknown name leaves the view in `Error` (checked on Qt 6.4) -- so the
+    /// shell must know, per root, whether to hand it the models, and must
+    /// allocate enough for whichever root is showing.
+    pub native_table_models: usize,
 }
 
 impl Default for EmitOptions {
@@ -247,6 +284,7 @@ impl Default for EmitOptions {
             pinned_cmake_min: "3.21".to_string(),
             pinned_cxx_standard: "17".to_string(),
             slot_values: HashMap::new(),
+            layout_variants: Vec::new(),
         }
     }
 }
@@ -300,6 +338,9 @@ pub fn from_pipeline_with_options(
         from_pipeline_with_runtime_policy(interface, layout, style, options.require_runtime)?;
 
     let project = if options.emit_project {
+        // Every layout choice is spliced into C++ and CMake, so it is checked
+        // before any project file is written (UI48 §7.10).
+        validate_layout_choices(&component.component_name, &options.layout_variants)?;
         Some(build_qt_project_files(
             &component.component_name,
             &interface.slots,
@@ -344,8 +385,9 @@ fn build_qt_project_files(
             native_table_count,
             options.require_runtime,
             &options.slot_values,
+            &options.layout_variants,
         ),
-        qmldir: build_qmldir(name, &module_name),
+        qmldir: build_qmldir(name, &module_name, &options.layout_variants),
         readme: build_qt_readme(name, &module_name, options.require_runtime),
     }
 }
@@ -378,7 +420,52 @@ fn build_cmake_lists(name: &str, module_name: &str, options: &EmitOptions) -> St
         name,
         name,
         name,
-    )
+    ) + &layout_variants_cmake(name, &options.layout_variants)
+}
+
+/// The CMake that puts the root's selectable layout variants into the QML
+/// module (UI48 §7.10, ENV2) -- empty without variants, so a package with one
+/// layout gets exactly the `CMakeLists.txt` it always had.
+fn layout_variants_cmake(name: &str, layout_variants: &[LayoutChoice]) -> String {
+    if layout_variants.is_empty() {
+        return String::new();
+    }
+    let mut out = String::from(concat!(
+        "\n# UI48 ENV2 (§7.10): every layout the window can switch to is in the QML\n",
+        "# module, each a QML type of its own, so main.cpp can mount whichever the\n",
+        "# window's environment selects.\n",
+    ));
+    for choice in layout_variants {
+        out.push_str(
+            &layout_variant_cmake(name, name, &choice.variant)
+                .expect("layout choices are validated before the project is built"),
+        );
+    }
+    out
+}
+
+/// Two CMake lines that compile `<component>.<variant>.qml` into `target`'s
+/// QML module as the type `<Component><Variant>` (UI48 §7.10).
+///
+/// The file keeps Mosaic's artifact name -- the one every backend writes a
+/// variant under (`EngramApp.touch.qml`) -- and the type name is declared
+/// beside it. Without `QT_QML_SOURCE_TYPENAME`, `qt_add_qml_module` names a
+/// file's type after the text before its FIRST dot, which would register
+/// the variant as a second `EngramApp`:
+///
+/// ```text
+/// set_source_files_properties(EngramApp.touch.qml PROPERTIES QT_QML_SOURCE_TYPENAME EngramAppTouch)
+/// qt_target_qml_sources(EngramApp QML_FILES EngramApp.touch.qml)
+/// ```
+///
+/// (Checked on Qt 6.4: the module's `qmldir` then reads
+/// `EngramAppTouch 1.0 EngramApp.touch.qml`.) `None` for a variant that
+/// cannot name a QML type.
+pub fn layout_variant_cmake(target: &str, component: &str, variant: &str) -> Option<String> {
+    let type_name = variant_type_name(component, variant)?;
+    Some(format!(
+        "set_source_files_properties({component}.{variant}.qml PROPERTIES QT_QML_SOURCE_TYPENAME {type_name})\nqt_target_qml_sources({target} QML_FILES {component}.{variant}.qml)\n"
+    ))
 }
 
 fn push_native_table_model_includes(out: &mut String, native_table_count: usize) {
@@ -502,6 +589,427 @@ fn push_main_moc(out: &mut String, native_table_count: usize) {
     }
 }
 
+/// UI48 ENV4 (§7.6): the window tells the runtime its environment. Emitted
+/// into every `main.cpp` that has a host, as free functions before `main`.
+///
+/// - The report is the six UI48 §4 values, from `MosaicHost::environmentReport`
+///   (the thresholds live in the host, beside the wire names).
+/// - Width and height changes and a colour scheme change (Qt 6.5+; earlier
+///   Qts read the palette once) send it; the host drops a report equal to the
+///   last one taken, so dragging a window's edge sends nothing until a size
+///   class or orientation flips.
+/// - An answer with props is applied as the QML applies any response; a
+///   refusal is logged, and never applied -- its empty props would blank the
+///   screen.
+/// - A report that arrives while effects settle (a modal file dialog runs a
+///   nested event loop inside the settle) waits for one restartable timer
+///   instead of dispatching in the middle.
+const ENVIRONMENT_OBSERVER_CPP: &str = r#"#include <QDebug>
+#include <QMetaObject>
+#include <QPalette>
+#include <QStyleHints>
+#include <QTimer>
+#include <QWindow>
+
+// UI48 ENV4 (§7.6): the colour scheme the window is drawn in.
+static bool mosaicPrefersDark()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+  const auto scheme = QGuiApplication::styleHints()->colorScheme();
+  if (scheme != Qt::ColorScheme::Unknown) return scheme == Qt::ColorScheme::Dark;
+#endif
+  const auto palette = QGuiApplication::palette();
+  return palette.color(QPalette::Window).lightness()
+      < palette.color(QPalette::WindowText).lightness();
+}
+
+// UI48 ENV4 (§7.6): report the window's environment now, and again whenever a
+// bucket may have flipped.
+static void mosaicObserveEnvironment(QQuickView &view, MosaicHost &host)
+{
+  auto *retry = new QTimer(&host);
+  retry->setSingleShot(true);
+  retry->setInterval(100);
+  const auto report = [&view, &host, retry]() {
+    if (host.isSettling()) {
+      retry->start();
+      return;
+    }
+    const auto response = host.reportEnvironment(
+        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()));
+    if (response.contains(QStringLiteral("error"))) {
+      qWarning().noquote() << "host error:" << response.value(QStringLiteral("error")).toString();
+      return;
+    }
+    const auto props = response.value(QStringLiteral("props"));
+    if (props.isValid() && !props.isNull() && view.rootObject() != nullptr) {
+      QMetaObject::invokeMethod(view.rootObject(), "applyMosaicResponse",
+                                Q_ARG(QVariant, QVariant::fromValue(response)));
+    }
+  };
+  QObject::connect(retry, &QTimer::timeout, &host, report);
+  QObject::connect(&view, &QWindow::widthChanged, &host, report);
+  QObject::connect(&view, &QWindow::heightChanged, &host, report);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+  QObject::connect(QGuiApplication::styleHints(), &QStyleHints::colorSchemeChanged, &host, report);
+#endif
+  report();
+}
+
+"#;
+
+// =====================================================================
+// UI48 ENV2/ENV3 (§7.10) — the layout a window with variants shows
+//
+// Without layout variants every function below contributes nothing, and
+// `main.cpp` is byte for byte what it was before. With them, `main.cpp`
+// gains, between `mosaicPrefersDark` and the observer:
+//
+//   struct MosaicLayoutRule { variant, source, conditions };
+//   mosaicLayoutRules()          the rules as data, in rule order
+//   mosaicLayoutVariant(env)     select_variant: first match, else ""
+//   mosaicLayoutUrl(env)         the root that variant mounts
+//   mosaicLayoutProps(view, h)   what a newly mounted root starts with
+//   mosaicMountLayout(...)       create a root (setInitialProperties + setSource)
+//   mosaicSwitchLayout(...)      mount another root when the selection changes
+//
+// and each report the observer builds also starts a zero-interval timer
+// that calls `mosaicSwitchLayout` once the event loop is back -- deferred,
+// because swapping the view's source deletes the old root, and coalesced, so
+// a burst of resize ticks switches once (see `environment_observer_cpp`).
+//
+// Why the C++ shell, not QML: a `QQuickView`'s root IS the component (the
+// host sets its properties and calls its `applyMosaicResponse`), so a QML
+// wrapper choosing between roots would have to redeclare and forward every
+// slot. Swapping the view's source keeps each root exactly what it is when
+// it is the only one. The app's state lives in the runtime; a new root is
+// created with the props the old one showed and loses nothing but its own
+// QML state (a text field's cursor, say).
+// =====================================================================
+
+/// The highest native-table-model count any root of the shell takes: the
+/// models are allocated once, for whichever root is showing.
+fn shell_native_table_count(native_table_count: usize, layout_variants: &[LayoutChoice]) -> usize {
+    layout_variants
+        .iter()
+        .map(|choice| choice.native_table_models)
+        .fold(native_table_count, usize::max)
+}
+
+/// The rules as C++ data and the pure functions that apply them. Nothing in
+/// here touches the host, so the sample shell can emit it outside its
+/// `#if MOSAIC_HAS_HOST` (`[[maybe_unused]]` keeps a host-less build quiet).
+fn layout_selector_cpp(
+    name: &str,
+    module_name_slash: &str,
+    native_table_count: usize,
+    layout_variants: &[LayoutChoice],
+) -> String {
+    let default_source = format!("qrc:/qt/qml/{module_name_slash}/{name}.qml");
+    let source_of =
+        |variant: &str| format!("qrc:/qt/qml/{module_name_slash}/{name}.{variant}.qml");
+    let mut rules = String::new();
+    for choice in layout_variants {
+        let conditions = choice
+            .conditions
+            .iter()
+            .map(|(axis, value)| format!("{{\"{axis}\", \"{value}\"}}"))
+            .collect::<Vec<_>>()
+            .join(", ");
+        writeln!(
+            rules,
+            "      {{\"{}\", \"{}\", {{{conditions}}}}},",
+            choice.variant,
+            source_of(&choice.variant)
+        )
+        .unwrap();
+    }
+    let mut out = format!(
+        concat!(
+            "#include <QStringList>\n",
+            "#include <QVariantMap>\n",
+            "#include <exception>\n",
+            "#include <utility>\n",
+            "#include <vector>\n\n",
+            "// UI48 ENV3 (§7.10): which layout the window shows.\n",
+            "//\n",
+            "// Each layout's root is its own QML type in this module: the default\n",
+            "// {name}.qml is {name}, and a variant's {name}.<variant>.qml is\n",
+            "// {name}<Variant> (CMakeLists.txt names it). The rules are the package's\n",
+            "// `[[app.layouts]]` (or the conventional ones), in rule order, keyed by\n",
+            "// mosaic-app-runtime's wire names -- the keys MosaicHost::environmentReport\n",
+            "// answers.\n",
+            "struct MosaicLayoutRule\n",
+            "{{\n",
+            "  const char *variant;\n",
+            "  const char *source;\n",
+            "  std::vector<std::pair<const char *, const char *>> conditions;\n",
+            "}};\n\n",
+            "[[maybe_unused]] static const std::vector<MosaicLayoutRule> &mosaicLayoutRules()\n",
+            "{{\n",
+            "  static const std::vector<MosaicLayoutRule> rules{{\n",
+            "{rules}",
+            "  }};\n",
+            "  return rules;\n",
+            "}}\n\n",
+            "// The first variant whose conditions all hold, or an empty string for the\n",
+            "// default layout -- select_variant's semantics (mosaic-package-manifest).\n",
+            "// A rule with no conditions always holds; an environment without a rule's\n",
+            "// axis never matches it.\n",
+            "[[maybe_unused]] static QString mosaicLayoutVariant(const QVariantMap &environment)\n",
+            "{{\n",
+            "  for (const auto &rule : mosaicLayoutRules()) {{\n",
+            "    bool holds = true;\n",
+            "    for (const auto &[axis, value] : rule.conditions) {{\n",
+            "      if (environment.value(QString::fromLatin1(axis)).toString() != QLatin1String(value)) {{\n",
+            "        holds = false;\n",
+            "        break;\n",
+            "      }}\n",
+            "    }}\n",
+            "    if (holds) return QString::fromLatin1(rule.variant);\n",
+            "  }}\n",
+            "  return QString();\n",
+            "}}\n\n",
+            "// The root a window with this environment shows.\n",
+            "[[maybe_unused]] static QUrl mosaicLayoutUrl(const QVariantMap &environment)\n",
+            "{{\n",
+            "  const auto variant = mosaicLayoutVariant(environment);\n",
+            "  for (const auto &rule : mosaicLayoutRules()) {{\n",
+            "    if (variant == QLatin1String(rule.variant)) return QUrl(QString::fromLatin1(rule.source));\n",
+            "  }}\n",
+            "  return QUrl(QStringLiteral(\"{default_source}\"));\n",
+            "}}\n\n",
+            "// Whether `source` is one of this shell's layout roots (and not, say, a\n",
+            "// startup surface), so only a layout is ever swapped for another.\n",
+            "[[maybe_unused]] static bool mosaicIsLayoutRoot(const QUrl &source)\n",
+            "{{\n",
+            "  if (source == QUrl(QStringLiteral(\"{default_source}\"))) return true;\n",
+            "  for (const auto &rule : mosaicLayoutRules()) {{\n",
+            "    if (source == QUrl(QString::fromLatin1(rule.source))) return true;\n",
+            "  }}\n",
+            "  return false;\n",
+            "}}\n\n",
+        ),
+        name = name,
+        rules = rules,
+        default_source = default_source,
+    );
+    if shell_native_table_count(native_table_count, layout_variants) > 0 {
+        // Only the roots whose layouts hold a native table declare
+        // `mosaicNativeTableModels`, and a QML root refuses an initial
+        // property it does not declare.
+        let mut takers = Vec::new();
+        if native_table_count > 0 {
+            takers.push(default_source.clone());
+        }
+        for choice in layout_variants.iter().filter(|c| c.native_table_models > 0) {
+            takers.push(source_of(&choice.variant));
+        }
+        let test = takers
+            .iter()
+            .map(|source| format!("source == QUrl(QStringLiteral(\"{source}\"))"))
+            .collect::<Vec<_>>()
+            .join("\n      || ");
+        write!(
+            out,
+            concat!(
+                "// Whether `source`'s root declares `mosaicNativeTableModels`. A QML root\n",
+                "// refuses an initial property it does not declare, so the models go only\n",
+                "// to the roots whose layouts hold a native table.\n",
+                "[[maybe_unused]] static bool mosaicLayoutTakesTableModels(const QUrl &source)\n",
+                "{{\n",
+                "  return {test};\n",
+                "}}\n\n",
+            ),
+            test = test
+        )
+        .unwrap();
+    }
+    out
+}
+
+/// What a newly mounted root starts with, and the mount itself (UI48 §7.10).
+/// Needs the host, so the sample shell emits it inside `#if MOSAIC_HAS_HOST`.
+///
+/// The strict shell gives a root the runtime's props, checked and mapped to
+/// QML names exactly as at startup (`propsRequired`). The sample shell
+/// carries each slot's value from the old root: every layout of a component
+/// has the same slots (UI30 puts a variant on the layout, never the
+/// interface), so whatever it showed -- a runtime's props, or its own sample
+/// values -- reaches the other layout unchanged.
+fn layout_mount_cpp(slots: &[SlotDecl], require_runtime: bool, shell_tables: usize) -> String {
+    let mut out = String::new();
+    if require_runtime {
+        out.push_str(concat!(
+            "// UI48 ENV3 (§7.10): the props a newly mounted root starts with -- the\n",
+            "// runtime's, checked and mapped to QML names exactly as at startup. Throws,\n",
+            "// as startup does, when a required prop is missing.\n",
+            "static QVariantMap mosaicLayoutProps(QQuickView &, MosaicHost &host)\n",
+            "{\n",
+            "  auto properties = host.propsRequired();\n",
+            "  properties.insert(QStringLiteral(\"mosaicHost\"), QVariant::fromValue(static_cast<QObject *>(&host)));\n",
+            "  return properties;\n",
+            "}\n\n",
+        ));
+    } else {
+        out.push_str(concat!(
+            "// UI48 ENV3 (§7.10): the props a newly mounted root starts with -- what the\n",
+            "// root it replaces shows. Every layout of a component has the same slots\n",
+            "// (a variant changes the layout, never the interface), so each slot's value\n",
+            "// is carried across unchanged.\n",
+            "static QVariantMap mosaicLayoutProps(QQuickView &view, MosaicHost &host)\n",
+            "{\n",
+            "  const QStringList slotProperties{\n",
+        ));
+        // Each name was already checked to be a safe identifier when the
+        // root's `property` declarations were emitted, before this file.
+        for slot in slots {
+            writeln!(
+                out,
+                "      QStringLiteral(\"{}\"),",
+                to_camel_case_first_lower(&slot.name)
+            )
+            .unwrap();
+        }
+        out.push_str(concat!(
+            "  };\n",
+            "  QVariantMap properties;\n",
+            "  if (auto *root = view.rootObject()) {\n",
+            "    for (const auto &name : slotProperties) {\n",
+            "      const auto value = root->property(name.toUtf8().constData());\n",
+            "      if (value.isValid()) properties.insert(name, value);\n",
+            "    }\n",
+            "  }\n",
+            "  properties.insert(QStringLiteral(\"mosaicHost\"), QVariant::fromValue(static_cast<QObject *>(&host)));\n",
+            "  return properties;\n",
+            "}\n\n",
+        ));
+    }
+    out.push_str(concat!(
+        "// Create `source`'s root in the view, starting from `properties`.\n",
+        "static void mosaicMountLayout(QQuickView &view, const QUrl &source, QVariantMap properties)\n",
+        "{\n",
+    ));
+    if shell_tables > 0 {
+        out.push_str(concat!(
+            "  if (mosaicLayoutTakesTableModels(source)) {\n",
+            "    properties.insert(QStringLiteral(\"mosaicNativeTableModels\"), view.property(\"mosaicNativeTableModels\"));\n",
+            "  }\n",
+        ));
+    }
+    out.push_str(concat!(
+        "  view.setInitialProperties(properties);\n",
+        "  view.setSource(source);\n",
+        "}\n\n",
+        "// Show the layout `environment` selects, if another is showing.\n",
+        "//\n",
+        "// The new root is created afresh with the props the old one showed; the\n",
+        "// app's state lives in the runtime, so nothing is lost but the old root's\n",
+        "// own QML state. It runs from a timer the observer starts (never inside\n",
+        "// the signal that noticed the change), and nothing here throws: a\n",
+        "// root that cannot get its props (a required prop the runtime no longer\n",
+        "// provides) or cannot load leaves the window on the layout it was showing,\n",
+        "// and the reason is logged.\n",
+        "static void mosaicSwitchLayout(QQuickView &view, MosaicHost &host, const QVariantMap &environment)\n",
+        "{\n",
+        "  const QUrl showing = view.source();\n",
+        "  const QUrl selected = mosaicLayoutUrl(environment);\n",
+        "  if (selected == showing || !mosaicIsLayoutRoot(showing)) return;\n",
+        "  QVariantMap properties;\n",
+        "  try {\n",
+        "    properties = mosaicLayoutProps(view, host);\n",
+        "  } catch (const std::exception &exception) {\n",
+        "    qWarning().noquote() << \"host error: Mosaic kept its layout:\" << exception.what();\n",
+        "    return;\n",
+        "  }\n",
+        "  mosaicMountLayout(view, selected, properties);\n",
+        "  if (view.status() != QQuickView::Ready || view.rootObject() == nullptr) {\n",
+        "    qWarning().noquote() << \"host error: Mosaic could not mount\" << selected.toString()\n",
+        "                         << \"and kept its layout\";\n",
+        "    mosaicMountLayout(view, showing, properties);\n",
+        "  }\n",
+        "  if (view.rootObject() != nullptr) host.attach(view.rootObject());\n",
+        "}\n\n",
+    ));
+    out
+}
+
+/// The ENV4 observer (§7.6), and with layout variants the selector between
+/// its colour-scheme helper and the observer itself, whose reports also
+/// switch the root (§7.10). `layout_block` empty gives exactly
+/// [`ENVIRONMENT_OBSERVER_CPP`].
+///
+/// The switch is **deferred**, never made inside the signal that noticed the
+/// change. Swapping the view's source deletes the old root, and the
+/// observer runs from `QWindow::widthChanged` / `heightChanged` and the
+/// colour-scheme signal: if QML ever resized its own window, the root being
+/// deleted would still be on the stack. So each report only starts one
+/// zero-interval timer owned by the host:
+///
+/// ```text
+///   resize ─► report ─► reportEnvironment (answer applied to the root shown)
+///               └─► layoutSwitch->start(0)  (already pending? nothing more)
+///   event loop ─► layoutSwitch fires ─► settling? wait 100 ms and retry
+///                                    └─► re-read the window ─► mosaicSwitchLayout
+/// ```
+///
+/// A burst of resize ticks coalesces into one switch, which reads the window
+/// as it is when it fires rather than as it was at the first tick. Nothing is
+/// lost by switching after the report: the new root starts from the props
+/// the old one shows, which by then include the report's answer.
+fn environment_observer_cpp(layout_block: &str) -> String {
+    if layout_block.is_empty() {
+        return ENVIRONMENT_OBSERVER_CPP.to_string();
+    }
+    const OBSERVER: &str = "// UI48 ENV4 (§7.6): report the window's environment now";
+    const LAMBDA: &str = "  const auto report = [&view, &host, retry]() {\n";
+    const SWITCHING_LAMBDA: &str = concat!(
+        "  // UI48 ENV3 (§7.10): the layout switch, deferred to the event loop and\n",
+        "  // coalesced -- never inside the signal that noticed the change, because\n",
+        "  // swapping the view's source deletes the root that may be on the stack.\n",
+        "  auto *layoutSwitch = new QTimer(&host);\n",
+        "  layoutSwitch->setSingleShot(true);\n",
+        "  QObject::connect(layoutSwitch, &QTimer::timeout, &host, [&view, &host, layoutSwitch]() {\n",
+        "    if (host.isSettling()) {\n",
+        "      layoutSwitch->start(100);\n",
+        "      return;\n",
+        "    }\n",
+        "    mosaicSwitchLayout(\n",
+        "        view, host,\n",
+        "        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()));\n",
+        "  });\n",
+        "  const auto report = [&view, &host, retry, layoutSwitch]() {\n",
+    );
+    const REPORT: &str = concat!(
+        "    const auto response = host.reportEnvironment(\n",
+        "        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()));\n",
+    );
+    const SWITCHING_REPORT: &str = concat!(
+        "    // UI48 ENV3 (§7.10): show the layout this environment selects, once the\n",
+        "    // event loop is back.\n",
+        "    if (!layoutSwitch->isActive()) layoutSwitch->start(0);\n",
+        "    const auto response = host.reportEnvironment(\n",
+        "        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()));\n",
+    );
+    let at = ENVIRONMENT_OBSERVER_CPP
+        .find(OBSERVER)
+        .expect("the observer follows its colour-scheme helper");
+    let (head, observer) = ENVIRONMENT_OBSERVER_CPP.split_at(at);
+    assert_eq!(observer.matches(LAMBDA).count(), 1, "one report lambda in the observer");
+    assert_eq!(observer.matches(REPORT).count(), 1, "one report in the observer");
+    format!(
+        "{head}{layout_block}{}",
+        observer
+            .replacen(LAMBDA, SWITCHING_LAMBDA, 1)
+            .replacen(REPORT, SWITCHING_REPORT, 1)
+    )
+}
+
+/// The first mount's source line in a shell with layout variants: the root
+/// the window's environment selects at startup, through the same functions
+/// every later report uses.
+const LAYOUT_STARTUP_URL: &str = "mosaicLayoutUrl(MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()))";
+
 fn push_offscreen_font_fallback(out: &mut String, indent: &str) {
     out.push_str(indent);
     out.push_str("if (QGuiApplication::platformName() == QStringLiteral(\"offscreen\")\n");
@@ -526,8 +1034,26 @@ fn build_main_cpp(
     native_table_count: usize,
     require_runtime: bool,
     slot_values: &HashMap<String, String>,
+    layout_variants: &[LayoutChoice],
 ) -> String {
     let module_name_slash = module_name.replace('.', "/");
+    // UI48 §7.10: with layout variants the shell allocates table models for
+    // whichever root is showing, and chooses that root at startup and on
+    // every report. Without them `has_layouts` is false, `shell_tables` is
+    // the default's own count, and every line below is what it always was.
+    let has_layouts = !layout_variants.is_empty();
+    let shell_tables = shell_native_table_count(native_table_count, layout_variants);
+    let selector = if has_layouts {
+        layout_selector_cpp(name, &module_name_slash, native_table_count, layout_variants)
+    } else {
+        String::new()
+    };
+    let mount = if has_layouts {
+        layout_mount_cpp(slots, require_runtime, shell_tables)
+    } else {
+        String::new()
+    };
+    let native_table_count = shell_tables;
     let mut out = String::new();
     out.push_str(BANNER_CPP);
     if require_runtime {
@@ -547,6 +1073,7 @@ fn build_main_cpp(
         out.push_str("#include <cstdlib>\n");
         out.push_str("#include <stdexcept>\n\n");
         push_native_table_model_class(&mut out, native_table_count);
+        out.push_str(&environment_observer_cpp(&format!("{selector}{mount}")));
         out.push_str("int main(int argc, char *argv[])\n{\n");
         out.push_str("  if (qEnvironmentVariableIsEmpty(\"QT_QUICK_CONTROLS_STYLE\")) {\n");
         out.push_str("    QQuickStyle::setStyle(QStringLiteral(\"Basic\"));\n  }\n");
@@ -582,23 +1109,40 @@ fn build_main_cpp(
         writeln!(out, "    view.setTitle(QStringLiteral(\"{name}\"));").unwrap();
         out.push_str("    view.resize(1100, 800);\n");
         push_native_table_model_setup(&mut out, "    ", native_table_count);
-        out.push_str("    auto initialProperties = mosaicHost.propsRequired();\n");
-        out.push_str("    initialProperties.insert(QStringLiteral(\"mosaicHost\"), QVariant::fromValue(static_cast<QObject *>(&mosaicHost)));\n");
-        if native_table_count > 0 {
-            out.push_str("    initialProperties.insert(QStringLiteral(\"mosaicNativeTableModels\"), mosaicNativeTableModels);\n");
+        if has_layouts {
+            // UI48 §7.10: the first root is mounted exactly as every later one
+            // is -- the layout the window's environment selects, with the
+            // runtime's props -- and the table models are kept on the view
+            // for the roots mounted after it.
+            if native_table_count > 0 {
+                out.push_str("    view.setProperty(\"mosaicNativeTableModels\", mosaicNativeTableModels);\n");
+            }
+            out.push_str("    // UI48 ENV3 (§7.10): the layout the window's environment selects.\n");
+            writeln!(
+                out,
+                "    mosaicMountLayout(view, {LAYOUT_STARTUP_URL},\n                      mosaicLayoutProps(view, mosaicHost));"
+            )
+            .unwrap();
+        } else {
+            out.push_str("    auto initialProperties = mosaicHost.propsRequired();\n");
+            out.push_str("    initialProperties.insert(QStringLiteral(\"mosaicHost\"), QVariant::fromValue(static_cast<QObject *>(&mosaicHost)));\n");
+            if native_table_count > 0 {
+                out.push_str("    initialProperties.insert(QStringLiteral(\"mosaicNativeTableModels\"), mosaicNativeTableModels);\n");
+            }
+            out.push_str("    view.setInitialProperties(initialProperties);\n");
+            writeln!(
+                out,
+                "    const QUrl url(QStringLiteral(\"qrc:/qt/qml/{module_name_slash}/{name}.qml\"));"
+            )
+            .unwrap();
+            out.push_str("    view.setSource(url);\n");
         }
-        out.push_str("    view.setInitialProperties(initialProperties);\n");
-        writeln!(
-            out,
-            "    const QUrl url(QStringLiteral(\"qrc:/qt/qml/{module_name_slash}/{name}.qml\"));"
-        )
-        .unwrap();
-        out.push_str("    view.setSource(url);\n");
         out.push_str(
             "    if (view.status() != QQuickView::Ready || view.rootObject() == nullptr) {\n",
         );
         out.push_str("      throw std::runtime_error(\"native-complete could not instantiate the generated QML root\");\n    }\n");
         out.push_str("    mosaicHost.attach(view.rootObject());\n");
+        out.push_str("    mosaicObserveEnvironment(view, mosaicHost);\n");
         out.push_str("    view.show();\n");
         out.push_str("    return app.exec();\n");
         out.push_str("  } catch (const std::exception &exception) {\n");
@@ -626,6 +1170,12 @@ fn build_main_cpp(
     out.push_str("#define MOSAIC_HAS_HOST 0\n");
     out.push_str("#endif\n\n");
     push_native_table_model_class(&mut out, native_table_count);
+    // UI48 §7.10: the selector needs no host, so it sits outside the guard
+    // (a host-less build mounts the default); mounting and switching do.
+    out.push_str(&selector);
+    out.push_str("#if MOSAIC_HAS_HOST\n");
+    out.push_str(&environment_observer_cpp(&mount));
+    out.push_str("#endif\n");
     out.push_str("int main(int argc, char *argv[])\n");
     out.push_str("{\n");
     out.push_str("  if (qEnvironmentVariableIsEmpty(\"QT_QUICK_CONTROLS_STYLE\")) {\n");
@@ -641,6 +1191,25 @@ fn build_main_cpp(
     writeln!(out, "  view.setTitle(QStringLiteral(\"{name}\"));").unwrap();
     out.push_str("  view.resize(1100, 800);\n\n");
     push_native_table_model_setup(&mut out, "  ", native_table_count);
+    if has_layouts {
+        // UI48 §7.10: the root is chosen before its initial properties are
+        // built, because only some roots take the table models; and the
+        // models are kept on the view for the roots mounted after it.
+        if native_table_count > 0 {
+            out.push_str("  view.setProperty(\"mosaicNativeTableModels\", mosaicNativeTableModels);\n");
+        }
+        out.push_str("  // UI48 ENV3 (§7.10): the layout the window's environment selects. Without\n");
+        out.push_str("  // the host there is no environment to read, so the default layout.\n");
+        out.push_str("#if MOSAIC_HAS_HOST\n");
+        writeln!(out, "  const QUrl url({LAYOUT_STARTUP_URL});").unwrap();
+        out.push_str("#else\n");
+        writeln!(
+            out,
+            "  const QUrl url(QStringLiteral(\"qrc:/qt/qml/{module_name_slash}/{name}.qml\"));"
+        )
+        .unwrap();
+        out.push_str("#endif\n");
+    }
     // Fixture values reach the component the same way the table models do --
     // as initial properties on the view, set from the shell. Writing them into
     // the component .qml instead would make the reusable artifact differ per
@@ -648,7 +1217,11 @@ fn build_main_cpp(
     let fixture_lines = fixture_initial_property_lines(slots, slot_values);
     if native_table_count > 0 || !fixture_lines.is_empty() {
         out.push_str("  QVariantMap initialProperties;\n");
-        if native_table_count > 0 {
+        if native_table_count > 0 && has_layouts {
+            out.push_str("  if (mosaicLayoutTakesTableModels(url)) {\n");
+            out.push_str("    initialProperties.insert(QStringLiteral(\"mosaicNativeTableModels\"), mosaicNativeTableModels);\n");
+            out.push_str("  }\n");
+        } else if native_table_count > 0 {
             out.push_str("  initialProperties.insert(QStringLiteral(\"mosaicNativeTableModels\"), mosaicNativeTableModels);\n");
         }
         for line in &fixture_lines {
@@ -656,23 +1229,25 @@ fn build_main_cpp(
         }
         out.push_str("  view.setInitialProperties(initialProperties);\n\n");
     }
-    out.push_str("  // Load the Item component into a visible Qt Quick view from the\n");
-    out.push_str("  // embedded module. The qrc:// path is set up by qt_add_qml_module in\n");
-    writeln!(
-        out,
-        "  // CMakeLists.txt; the module URI is {module_name}, so the"
-    )
-    .unwrap();
-    writeln!(
-        out,
-        "  // component resolves at qrc:/qt/qml/{module_name_slash}/{name}.qml."
-    )
-    .unwrap();
-    writeln!(
-        out,
-        "  const QUrl url(QStringLiteral(\"qrc:/qt/qml/{module_name_slash}/{name}.qml\"));"
-    )
-    .unwrap();
+    if !has_layouts {
+        out.push_str("  // Load the Item component into a visible Qt Quick view from the\n");
+        out.push_str("  // embedded module. The qrc:// path is set up by qt_add_qml_module in\n");
+        writeln!(
+            out,
+            "  // CMakeLists.txt; the module URI is {module_name}, so the"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "  // component resolves at qrc:/qt/qml/{module_name_slash}/{name}.qml."
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "  const QUrl url(QStringLiteral(\"qrc:/qt/qml/{module_name_slash}/{name}.qml\"));"
+        )
+        .unwrap();
+    }
     out.push_str("  view.setSource(url);\n");
     out.push_str("  if (view.status() != QQuickView::Ready || view.rootObject() == nullptr) {\n");
     out.push_str("    return -1;\n");
@@ -688,6 +1263,7 @@ fn build_main_cpp(
     out.push_str(
         "                            Q_ARG(QVariant, QVariant::fromValue(mosaicHost.props())));\n",
     );
+    out.push_str("  mosaicObserveEnvironment(view, mosaicHost);\n");
     out.push_str("#endif\n\n");
     out.push_str("  view.show();\n");
     out.push_str("  return app.exec();\n");
@@ -696,8 +1272,16 @@ fn build_main_cpp(
     out
 }
 
-fn build_qmldir(name: &str, module_name: &str) -> String {
-    format!("{BANNER_QMLDIR}module {module_name}\n{name} 1.0 {name}.qml\n")
+fn build_qmldir(name: &str, module_name: &str, layout_variants: &[LayoutChoice]) -> String {
+    let mut qmldir = format!("{BANNER_QMLDIR}module {module_name}\n{name} 1.0 {name}.qml\n");
+    // UI48 §7.10: each layout the shell can mount, under the type name the
+    // CMake module gives it, so an `import "."` consumer sees the same types.
+    for choice in layout_variants {
+        let type_name = variant_type_name(name, &choice.variant)
+            .expect("layout choices are validated before the project is built");
+        writeln!(qmldir, "{type_name} 1.0 {name}.{}.qml", choice.variant).unwrap();
+    }
+    qmldir
 }
 
 fn build_qt_readme(name: &str, module_name: &str, require_runtime: bool) -> String {
@@ -1066,6 +1650,8 @@ struct CellTextStyle {
     font_family_mono: bool,
     /// Integer `font.pixelSize` value.
     font_pixel_size: Option<String>,
+    /// Whether the descendant text uses a bold Qt font weight.
+    font_bold: Option<bool>,
     font_binding: Option<LayoutPropValue>,
     /// Inner content inset, from `padding: Npx`.
     padding: Option<String>,
@@ -1077,6 +1663,7 @@ impl CellTextStyle {
             && self.horizontal_alignment.is_none()
             && !self.font_family_mono
             && self.font_pixel_size.is_none()
+            && self.font_bold.is_none()
             && self.font_binding.is_none()
             && self.padding.is_none()
     }
@@ -1423,16 +2010,39 @@ fn qt_drop_reason(name: &str) -> &'static str {
 /// Find the first prop named `name` in a base/state prop list.
 ///
 ///
-/// EVERY style read in this emitter funnels through here -- `style_prop_any`
-/// delegates to it rather than searching itself -- which is what lets a
-/// single recording point at the top of this function see all of them,
-/// including ones added later.
+/// Almost every style read in this emitter funnels through here --
+/// `style_prop_any` delegates to it rather than searching itself -- which is
+/// what lets a single recording point see new lowering work automatically.
+/// Value-sensitive lowerings use [`lowered_style_prop`] instead: a property
+/// with an unsupported value must remain unread so the degradation reporter
+/// does not mistake a rejected value for native coverage.
 fn style_prop<'p>(props: &'p [StyleProp], name: &str) -> Option<&'p str> {
     record_style_read(props, name);
     props
         .iter()
         .find(|p| p.name == name)
         .map(|p| p.value.as_str())
+}
+
+/// Find and convert one property, recording support only when conversion
+/// succeeds.
+///
+/// This is deliberately distinct from `style_prop(...).and_then(convert)`.
+/// The latter records the lookup before learning that (for example) `100%`
+/// cannot become a scalar QML length, which would erase a real degradation
+/// even though the generated control still lacks that geometry.
+fn lowered_style_prop(
+    props: &[StyleProp],
+    name: &str,
+    convert: fn(&str) -> Option<String>,
+) -> Option<String> {
+    let raw = props
+        .iter()
+        .find(|prop| prop.name == name)
+        .map(|prop| prop.value.as_str())?;
+    let lowered = convert(raw)?;
+    record_style_read(props, name);
+    Some(lowered)
 }
 
 /// One active style layer and the QML predicate that selects it.
@@ -1550,6 +2160,36 @@ fn conditional_px_expr(
     default: &str,
 ) -> Option<String> {
     conditional_scalar_expr(base, layers, name, default, qml_px_or_none)
+}
+
+/// A px-valued conditional whose degradation accounting is value-sensitive.
+///
+/// Use this where accepting one spelling (a scalar or `px`) must not claim
+/// support for other spellings of the same property (`100%`, `max-content`,
+/// `calc(...)`).
+fn conditional_lowered_px_expr(
+    base_props: &[StyleProp],
+    layers: &[StateLayer<'_>],
+    name: &str,
+    default: &str,
+) -> Option<String> {
+    let base = lowered_style_prop(base_props, name, qml_px_or_none);
+    let overrides: Vec<(&str, String)> = layers
+        .iter()
+        .filter_map(|layer| {
+            lowered_style_prop(layer.props, name, qml_px_or_none)
+                .map(|value| (layer.cond_expr.as_str(), value))
+        })
+        .collect();
+    if base.is_none() && overrides.is_empty() {
+        return None;
+    }
+
+    let mut expr = base.unwrap_or_else(|| default.to_string());
+    for (condition, value) in overrides {
+        expr = format!("( {condition} ) ? {value} : {expr}");
+    }
+    Some(expr)
 }
 
 /// Shared body of the two scalar builders above. `convert` is the whole
@@ -1712,6 +2352,7 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
         font_pixel_size: style_prop(base, "font-size")
             .and_then(qml_font_pixel_size)
             .or_else(|| ctx.inherited.font_pixel_size.clone()),
+        font_bold: style_prop(base, "font-weight").and_then(qml_font_weight_is_bold),
         font_binding: if style_prop(base, "font-size").is_some() { None } else { ctx.inherited.font_binding.clone() },
         padding: style_prop(base, "padding").and_then(qml_px_or_none),
         color: None,
@@ -1733,13 +2374,28 @@ fn part_style_props<'a>(node: &LayoutNode, ctx: &'a EmitCtx<'_>) -> Option<&'a [
     ctx.part_styles.get(part).map(|props| props.as_slice())
 }
 
-fn qml_layout_size_lines(props: &[StyleProp]) -> Vec<String> {
+fn qml_layout_size_lines_with_states(
+    props: &[StyleProp],
+    state_layers: &[StateLayer<'_>],
+) -> Vec<String> {
     let mut lines = Vec::new();
-    if let Some(width) = style_prop(props, "width").and_then(qml_px_or_none) {
+    let width = conditional_px_expr(
+        style_prop(props, "width").and_then(qml_px_or_none),
+        state_layers,
+        "width",
+        "0",
+    );
+    if let Some(width) = width {
         lines.push(format!("implicitWidth: {width}"));
         lines.push(format!("Layout.preferredWidth: {width}"));
     }
-    if let Some(height) = style_prop(props, "height").and_then(qml_px_or_none) {
+    let height = conditional_px_expr(
+        style_prop(props, "height").and_then(qml_px_or_none),
+        state_layers,
+        "height",
+        "0",
+    );
+    if let Some(height) = height {
         lines.push(format!("implicitHeight: {height}"));
         lines.push(format!("Layout.preferredHeight: {height}"));
     }
@@ -1758,12 +2414,23 @@ fn qml_layout_size_lines(props: &[StyleProp]) -> Vec<String> {
     lines
 }
 
-fn qml_layout_container_lines(props: &[StyleProp]) -> Vec<String> {
-    let mut lines = qml_layout_size_lines(props);
+fn qml_layout_size_lines(props: &[StyleProp]) -> Vec<String> {
+    qml_layout_size_lines_with_states(props, &[])
+}
+
+fn qml_layout_container_lines_with_states(
+    props: &[StyleProp],
+    state_layers: &[StateLayer<'_>],
+) -> Vec<String> {
+    let mut lines = qml_layout_size_lines_with_states(props, state_layers);
     if let Some(gap) = style_prop(props, "gap").and_then(qml_px_or_none) {
         lines.push(format!("spacing: {gap}"));
     }
     lines
+}
+
+fn qml_layout_container_lines(props: &[StyleProp]) -> Vec<String> {
+    qml_layout_container_lines_with_states(props, &[])
 }
 
 /// The two `elevation` tiers (UI41, issue #12028 item 1), mapped to a
@@ -2205,19 +2872,41 @@ fn qml_padding_px(value: &str) -> Option<String> {
 /// different edges -- `task-detail` is `15 / 16 / 16 / 47` and rendered 15 on
 /// every side (#15247).
 fn qml_padding_edges(props: &[StyleProp]) -> (String, String, String, String) {
-    let short = style_prop(props, "padding").and_then(qml_padding_px);
-    let edge = |name: &str| {
-        style_prop(props, name)
-            .and_then(qml_padding_px)
-            .or_else(|| short.clone())
-            .unwrap_or_else(|| "0".to_string())
-    };
+    let edge = |name: &str| qml_padding_edge(props, name).unwrap_or_else(|| "0".to_string());
     (
         edge("padding-left"),
         edge("padding-top"),
         edge("padding-right"),
         edge("padding-bottom"),
     )
+}
+
+fn qml_padding_edge(props: &[StyleProp], name: &str) -> Option<String> {
+    style_prop(props, name)
+        .and_then(qml_padding_px)
+        .or_else(|| style_prop(props, "padding").and_then(qml_padding_px))
+}
+
+fn conditional_padding_edge_expr(
+    base: &[StyleProp],
+    state_layers: &[StateLayer<'_>],
+    name: &str,
+) -> Option<String> {
+    let base_value = qml_padding_edge(base, name);
+    let overrides: Vec<(&str, String)> = state_layers
+        .iter()
+        .filter_map(|layer| {
+            qml_padding_edge(layer.props, name).map(|value| (layer.cond_expr.as_str(), value))
+        })
+        .collect();
+    if base_value.is_none() && overrides.is_empty() {
+        return None;
+    }
+    let mut expr = base_value.unwrap_or_else(|| "0".to_string());
+    for (condition, value) in overrides {
+        expr = format!("( {condition} ) ? {value} : {expr}");
+    }
+    Some(expr)
 }
 
 /// Does this part declare any padding at all, by shorthand or longhand?
@@ -2358,6 +3047,10 @@ fn qml_font_family(v: &str) -> Option<String> {
     }
 }
 
+fn qml_font_family_literal(v: &str) -> Option<String> {
+    qml_font_family(v).map(|family| format!("\"{family}\""))
+}
+
 fn qml_font_weight_is_bold(v: &str) -> Option<bool> {
     let weight = v.trim().trim_matches('"');
     match weight {
@@ -2387,6 +3080,95 @@ fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
     lines
 }
 
+/// Give a styled `Text` the paint box that QML's bare `Text` cannot own.
+///
+/// Qt Quick `Text` has foreground/font properties but no background,
+/// border, radius, or padding.  When a text part authors one of those
+/// surface properties, keep the semantic/accessibility node as the inner
+/// `Text` and introduce a `Rectangle` solely for paint and box geometry.
+/// Text parts without a surface property retain their historical bare shape.
+fn wrap_styled_text_surface_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx<'_>,
+    text_qml: String,
+) -> Option<String> {
+    let part = node.part_name.as_deref()?;
+    let props = ctx.part_styles.get(part).map(Vec::as_slice).unwrap_or(&[]);
+    let state_layers = collect_state_layers(node, part, ctx.part_styles);
+    let needs_wrapper = needs_container_wrapper(props)
+        || state_layers
+            .iter()
+            .any(|layer| needs_container_wrapper(layer.props));
+    if !needs_wrapper {
+        return None;
+    }
+
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let nested = "    ".repeat(depth + 2);
+    let (left, top, right, bottom) = qml_padding_edges(props);
+    let paint_lines = qml_rectangle_paint_lines_with_states(props, &state_layers);
+    let has_fixed_width = style_prop(props, "width")
+        .and_then(qml_px_or_none)
+        .is_some();
+    let has_fixed_height = style_prop(props, "height")
+        .and_then(qml_px_or_none)
+        .is_some();
+    let elevation = part_elevation_tier(props);
+    let elevation_id = elevation.is_some().then(|| next_elevation_id(ctx));
+    let content_id = next_content_id(ctx);
+
+    let mut out = String::new();
+    writeln!(out, "{pad}Rectangle {{").unwrap();
+    if let Some(id) = &elevation_id {
+        writeln!(out, "{inner}id: {id}").unwrap();
+    }
+    if ctx.cell_fill_children {
+        writeln!(out, "{inner}anchors.fill: parent").unwrap();
+    }
+    for line in qml_layout_size_lines(props) {
+        writeln!(out, "{inner}{line}").unwrap();
+    }
+    if !has_fixed_width {
+        writeln!(
+            out,
+            "{inner}implicitWidth: {content_id}.implicitWidth + {left} + {right}"
+        )
+        .unwrap();
+    }
+    if !has_fixed_height {
+        writeln!(
+            out,
+            "{inner}implicitHeight: {content_id}.implicitHeight + {top} + {bottom}"
+        )
+        .unwrap();
+    }
+    if paint_lines.iter().all(|line| !line.starts_with("color:")) {
+        writeln!(out, "{inner}color: \"transparent\"").unwrap();
+    }
+    for line in &paint_lines {
+        writeln!(out, "{inner}{line}").unwrap();
+    }
+    for line in qml_per_edge_border_lines(props, &inner) {
+        writeln!(out, "{line}").unwrap();
+    }
+
+    for (index, line) in text_qml.lines().enumerate() {
+        writeln!(out, "    {line}").unwrap();
+        if index == 0 {
+            writeln!(out, "{nested}id: {content_id}").unwrap();
+            writeln!(out, "{nested}x: {left}").unwrap();
+            writeln!(out, "{nested}y: {top}").unwrap();
+        }
+    }
+    writeln!(out, "{pad}}}").unwrap();
+    if let Some(id) = &elevation_id {
+        out = qml_elevation_wrap(out, elevation, id, &pad);
+    }
+    Some(out)
+}
+
 fn emit_styled_layout_container_qml(
     node: &LayoutNode,
     depth: usize,
@@ -2407,7 +3189,7 @@ fn emit_styled_layout_container_qml(
 
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
-    let layout_lines = qml_layout_container_lines(props);
+    let layout_lines = qml_layout_container_lines_with_states(props, &state_layers);
     let needs_wrapper = needs_container_wrapper(props)
         || state_layers
             .iter()
@@ -2463,7 +3245,7 @@ fn emit_styled_layout_container_qml(
     if let Some(id) = &elevation_id {
         writeln!(out, "{inner_pad}id: {id}").unwrap();
     }
-    for line in qml_layout_size_lines(props) {
+    for line in qml_layout_size_lines_with_states(props, &state_layers) {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
     let (w_src, h_src) = match &content_id {
@@ -2665,12 +3447,223 @@ pub fn from_pipeline(
     from_pipeline_with_runtime_policy(interface, layout, style, false)
 }
 
+// =====================================================================
+// UI48 ENV2 (§7.10) — a layout variant is a root of its own
+//
+// `EngramApp.mll` and `EngramApp.touch.mll` are two layouts over one
+// interface. On Qt each becomes a root QML type the shell's `QQuickView`
+// can mount: `EngramApp` (EngramApp.qml) and `EngramAppTouch`
+// (EngramApp.touch.qml, named in CMakeLists.txt).
+//
+// Unlike Compose, Flutter and SwiftUI, the variant's file declares the
+// component's interface again -- its slot `property`s, its signals and the
+// `mosaicEvent` routing, `applyMosaicResponse` -- and that is deliberate:
+//
+// - QML has no declaration a second file could import instead. A root's
+//   properties are what the host sets and what the layout's bindings read
+//   unqualified; the only way to share them is to inherit the default's
+//   type, which would also inherit (and instantiate) the default's whole
+//   visual tree.
+// - Nothing collides. Kotlin, Dart and Swift put every file's top-level
+//   names in one namespace, which is why a second `<C>Event` was an error
+//   there. A QML file's declarations are members of its own type; the one
+//   name a file adds to the module is its type name, which is what the
+//   checks below guard.
+// - Part of that surface depends on the layout. Signal names are allocated
+//   against the controls that call them (a `toggle` called from a Button
+//   becomes `mosaicEmitToggle`), and table models, the icon helper and the
+//   drag scope exist only when the layout uses them.
+//
+// What the host sees is identical by construction: the same `.mil` through
+// the same functions gives every root the same properties and the same
+// `mosaicEvent` payloads (a test pins it), and the strict shell's slot and
+// required-prop tables in main.cpp are emitted once.
+// =====================================================================
+
+/// The QML type a layout **variant**'s root is (UI48 §7.10, ENV2):
+/// `EngramApp` + `touch` → `EngramAppTouch`. The same rule as Compose's
+/// `<Component><Variant>` composable, Flutter's widget and SwiftUI's
+/// `<Component><Variant>View`, so one variant has one name on every backend;
+/// `None` for a variant name that could not become part of a QML type name.
+///
+/// ```text
+/// variant        QML type (component EngramApp)
+/// touch          EngramAppTouch
+/// task-list      EngramAppTaskList
+/// big_screen     EngramAppBigScreen
+/// a--b, a b, é   (refused)
+/// ```
+pub fn variant_type_name(component: &str, variant: &str) -> Option<String> {
+    // `-` and `_` both separate words (`discover_variants` admits both).
+    let separator = |character: char| character == '-' || character == '_';
+    let valid = !variant.is_empty()
+        && variant
+            .chars()
+            .all(|character| character.is_ascii_alphanumeric() || separator(character))
+        && variant.split(separator).all(|part| !part.is_empty());
+    if !valid {
+        return None;
+    }
+    let pascal: String = variant
+        .split(separator)
+        .map(|part| {
+            let mut characters = part.chars();
+            let first = characters.next().expect("parts are non-empty");
+            first.to_ascii_uppercase().to_string() + characters.as_str()
+        })
+        .collect();
+    Some(format!("{component}{pascal}"))
+}
+
+/// The PascalCase names a generated Qt project's shell already owns, which a
+/// layout variant's QML type may not take:
+///
+/// | declared in                    | names                                      |
+/// |--------------------------------|--------------------------------------------|
+/// | `main.cpp`                     | `MosaicTableModel`, `MosaicLayoutRule`     |
+/// | `MosaicHost.h`                 | `MosaicHost`                               |
+/// | `MosaicPlatformEffects.h`      | `MosaicFileDialogs`                        |
+///
+/// They are C++ classes, and a QML type does not enter the C++ namespace
+/// today -- but the project is one namespace to the people reading it, and
+/// `MosaicHost::registerTypes()` is the hook through which the shell
+/// registers its own classes with QML, where a module type `MosaicHost`
+/// (component `Mosaic` + variant `host`) would collide. The list is pinned
+/// by an emitter test against both generated `main.cpp` shapes and by a
+/// builder test against `mosaic-app-bindings`' headers, so a new public
+/// class in either fails a test until it is listed.
+pub const SHELL_RESERVED_NAMES: &[&str] = &[
+    "MosaicTableModel",
+    "MosaicLayoutRule",
+    "MosaicHost",
+    "MosaicFileDialogs",
+];
+
+/// How many native table models a layout's root takes (one per native
+/// `HostTable`), so a shell with layout variants can allocate enough for
+/// whichever root is showing ([`LayoutChoice::native_table_models`]).
+pub fn native_table_model_count(layout: &LayoutDef) -> usize {
+    count_native_table_models(&layout.root)
+}
+
+/// Emit one layout **variant**'s root (UI48 §7.10, ENV2): the same QML a
+/// default layout gets, for `layout`, plus a line naming the variant and its
+/// QML type. The file is written as `<Component>.<variant>.qml`; the shell's
+/// `CMakeLists.txt` declares its type, `<Component><Variant>`
+/// ([`variant_type_name`]). A variant whose type would be a name the default
+/// layout or the shell already owns -- the component's own, or a
+/// [`SHELL_RESERVED_NAMES`] entry -- is refused.
+pub fn from_pipeline_variant(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    variant: &str,
+) -> Result<PipelineEmitResult, PipelineEmitError> {
+    emit_root(interface, layout, style, false, Some(variant))
+}
+
+/// [`from_pipeline_variant`] under `options`' runtime policy: a
+/// native-complete shell (`require_runtime`) mounts every root strictly --
+/// `required property var mosaicHost`, events through
+/// `handleRequiredEvent` -- so its variants must be emitted the same way as
+/// its default. Project files come from the default layout's
+/// [`from_pipeline_with_options`]; `emit_project` is ignored here.
+pub fn from_pipeline_variant_with_options(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    variant: &str,
+    options: &EmitOptions,
+) -> Result<PipelineEmitResult, PipelineEmitError> {
+    emit_root(interface, layout, style, options.require_runtime, Some(variant))
+}
+
+/// The variant's QML type, or why it cannot have one. Shared by
+/// [`from_pipeline_variant`] and the shell's own check of its choices.
+fn checked_variant_type_name(component: &str, variant: &str) -> Result<String, PipelineEmitError> {
+    let type_name = variant_type_name(component, variant).ok_or_else(|| {
+        PipelineEmitError::InvalidLayoutVariant(format!(
+            "layout variant `{variant}` of {component} cannot name a QML type"
+        ))
+    })?;
+    if type_name == component || SHELL_RESERVED_NAMES.contains(&type_name.as_str()) {
+        return Err(PipelineEmitError::InvalidLayoutVariant(format!(
+            "layout variant `{variant}` would name its QML type `{type_name}`, which \
+             {component}'s default layout or the Qt shell already owns"
+        )));
+    }
+    Ok(type_name)
+}
+
+/// Check every layout choice before any of it is spliced into C++, CMake or
+/// a `qmldir` (UI48 §7.10). The variant becomes a QML type name, a file name
+/// and a C++ string literal; each condition a pair of C++ string literals.
+/// So each must be exactly the shape the manifest produces: a variant whose
+/// QML type [`checked_variant_type_name`] accepts, chosen once, an axis that
+/// is a camelCase wire name (ASCII letters only) and a value of lowercase
+/// letters and `-`. Nothing here can carry a quote, a backslash, a `?` or a
+/// space.
+///
+/// "Chosen once" is keyed on the TYPE, not the variant string: `touch` and
+/// `Touch`, or `task-list` and `task_list`, are two strings but one type
+/// (`CardTouch`, `CardTaskList`), which the module would register twice.
+/// (`discover_variants` refuses such pairs of files; this is the same guard
+/// for a caller that builds the options itself.)
+fn validate_layout_choices(
+    component: &str,
+    choices: &[LayoutChoice],
+) -> Result<(), PipelineEmitError> {
+    let axis_ok = |axis: &str| !axis.is_empty() && axis.chars().all(|c| c.is_ascii_alphabetic());
+    let value_ok = |value: &str| {
+        !value.is_empty() && value.chars().all(|c| c.is_ascii_lowercase() || c == '-')
+    };
+    let mut seen = HashSet::new();
+    for choice in choices {
+        let type_name = checked_variant_type_name(component, &choice.variant)?;
+        if !seen.insert(type_name.clone()) {
+            return Err(PipelineEmitError::InvalidLayoutVariant(format!(
+                "layout variant `{}` of {component} names `{type_name}`, which another \
+                 layout choice already names",
+                choice.variant
+            )));
+        }
+        if !choice
+            .conditions
+            .iter()
+            .all(|(axis, value)| axis_ok(axis) && value_ok(value))
+        {
+            return Err(PipelineEmitError::InvalidLayoutVariant(format!(
+                "layout variant `{}` of {component} has a condition that is not a \
+                 wire-name axis and a lowercase value",
+                choice.variant
+            )));
+        }
+    }
+    Ok(())
+}
+
 fn from_pipeline_with_runtime_policy(
     interface: &MosmodelComponent,
     layout: &LayoutDef,
     style: &StyleDef,
     require_runtime: bool,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
+    emit_root(interface, layout, style, require_runtime, None)
+}
+
+/// One root QML file: the default layout's (`variant` is `None`) or a layout
+/// variant's (see [`from_pipeline_variant`]).
+fn emit_root(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    require_runtime: bool,
+    variant: Option<&str>,
+) -> Result<PipelineEmitResult, PipelineEmitError> {
+    // The variant's QML type, checked before anything is written.
+    let variant_type = variant
+        .map(|variant| checked_variant_type_name(&interface.component, variant))
+        .transpose()?;
     validate_typography(&layout.root)?;
     // 1. The three IRs must agree on the component name. The style IR's
     // `component_name` is allowed to differ when the style targets a
@@ -2734,6 +3727,16 @@ fn from_pipeline_with_runtime_policy(
     writeln!(out, "Item {{").unwrap();
     writeln!(out, "    id: mosaicRoot").unwrap();
     writeln!(out, "    // Component: {name}").unwrap();
+    if let (Some(variant), Some(variant_type)) = (variant, &variant_type) {
+        // UI48 §7.10: the only line a variant's root adds. Its type name is
+        // declared in CMakeLists.txt, not here -- a QML file cannot name
+        // itself -- so the reader is told where it comes from.
+        writeln!(
+            out,
+            "    // Layout variant: {variant}, the QML type {variant_type} (UI48 §7.10)"
+        )
+        .unwrap();
+    }
     // Slots become `property` declarations on this same root object, so a
     // slot that camel-cases onto one of the sizing property names must
     // suppress our binding for that dimension — see
@@ -3338,6 +4341,11 @@ fn emit_qml_tree(
     )?);
 
     writeln!(out, "{pad}}}").unwrap();
+    if is_text {
+        if let Some(wrapped) = wrap_styled_text_surface_qml(node, depth, ctx, out.clone()) {
+            return Ok(wrapped);
+        }
+    }
     Ok(out)
 }
 
@@ -3366,6 +4374,9 @@ fn cell_text_style_lines(ts: &CellTextStyle) -> Vec<String> {
     }
     if let Some(sz) = &ts.font_pixel_size {
         lines.push(format!("font.pixelSize: {sz}"));
+    }
+    if let Some(is_bold) = ts.font_bold {
+        lines.push(format!("font.bold: {is_bold}"));
     }
     lines
 }
@@ -4876,11 +5887,33 @@ fn host_control_style_qml_lines(
     }
 
     let mut lines = Vec::new();
-    if let Some(padding) = style_prop(base, "padding").and_then(qml_px_or_none) {
-        lines.push(format!("leftPadding: {padding}"));
-        lines.push(format!("rightPadding: {padding}"));
-        lines.push(format!("topPadding: {padding}"));
-        lines.push(format!("bottomPadding: {padding}"));
+    // Host controls participate in Qt Quick Layouts directly, so authored
+    // scalar geometry belongs on the control just as it does on a styled box.
+    // Keep the implicit size and the layout hint in sync; either property on
+    // its own is insufficient when the same control is emitted inside and
+    // outside a Layout. Percentages and intrinsic CSS keywords remain
+    // deliberate degradations because `qml_px_or_none` rejects them.
+    let width = conditional_lowered_px_expr(base, &state_layers, "width", "0");
+    if let Some(width) = width {
+        lines.push(format!("implicitWidth: {width}"));
+        lines.push(format!("Layout.preferredWidth: {width}"));
+    }
+    let height = conditional_lowered_px_expr(base, &state_layers, "height", "0");
+    if let Some(height) = height {
+        lines.push(format!("implicitHeight: {height}"));
+        lines.push(format!("Layout.preferredHeight: {height}"));
+    }
+    // #16223 -- Controls expose one property per edge. Reuse the container
+    // resolver so longhands override the shorthand with the same CSS rules.
+    for (edge, property) in [
+        ("padding-left", "leftPadding"),
+        ("padding-right", "rightPadding"),
+        ("padding-top", "topPadding"),
+        ("padding-bottom", "bottomPadding"),
+    ] {
+        if let Some(value) = conditional_padding_edge_expr(base, &state_layers, edge) {
+            lines.push(format!("{property}: {value}"));
+        }
     }
     if let Some(property) = caps.text_color {
         let foreground = style_prop(base, "color").and_then(qml_hex_color_or_none);
@@ -4891,6 +5924,26 @@ fn host_control_style_qml_lines(
         }
     }
     if caps.font {
+        let font_family = style_prop(base, "font-family").and_then(qml_font_family_literal);
+        if let Some(font_family) = conditional_scalar_expr(
+            font_family,
+            &state_layers,
+            "font-family",
+            "Qt.application.font.family",
+            qml_font_family_literal,
+        ) {
+            lines.push(format!("font.family: {font_family}"));
+        }
+        let font_size = style_prop(base, "font-size").and_then(qml_font_pixel_size);
+        if let Some(font_size) = conditional_scalar_expr(
+            font_size,
+            &state_layers,
+            "font-size",
+            "Qt.application.font.pixelSize",
+            qml_font_pixel_size,
+        ) {
+            lines.push(format!("font.pixelSize: {font_size}"));
+        }
         if let Some(is_bold) = style_prop(base, "font-weight").and_then(qml_font_weight_is_bold) {
             lines.push(format!("font.bold: {is_bold}"));
         }
@@ -15107,6 +16160,7 @@ mod tests {
                         sp("padding", "2px"),
                         sp("height", "22px"),
                         sp("text-align", "right"),
+                        sp("font-weight", "600"),
                     ],
                     transitions: vec![],
                     states: vec![
@@ -15572,6 +16626,10 @@ mod tests {
             out.contains("font.pixelSize: 13"),
             "fractional inherited font size must lower to a Qt integer:\n{out}"
         );
+        assert!(
+            out.contains("font.bold: true"),
+            "the Box part's font weight must reach its descendant Text:\n{out}"
+        );
     }
 
     /// A state that changes the BORDER changes the border.
@@ -15775,6 +16833,156 @@ mod tests {
             ),
             "HostButton state precedence is wrong:\n{out}"
         );
+    }
+
+    #[test]
+    fn a_stack_size_variant_drives_its_qml_geometry() {
+        let model = component(
+            "Spinner",
+            vec![slot(
+                "size",
+                SlotType::OneOf(vec!["md".to_string(), "lg".to_string()]),
+                true,
+            )],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "Spinner".to_string(),
+            root: LayoutNode {
+                tag: "Stack".to_string(),
+                part_name: Some("spinner".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "Spinner".to_string(),
+            parts: vec![PartStyle {
+                name: "spinner".to_string(),
+                base: vec![sp("width", "24px"), sp("height", "24px")],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    slot: Some("size".to_string()),
+                    slot_is_bool: false,
+                    state: "lg".to_string(),
+                    transitions: vec![],
+                    props: vec![sp("width", "32px"), sp("height", "32px")],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        for expected in [
+            "implicitWidth: ( (size === \"lg\") ) ? 32 : 24",
+            "Layout.preferredWidth: ( (size === \"lg\") ) ? 32 : 24",
+            "implicitHeight: ( (size === \"lg\") ) ? 32 : 24",
+            "Layout.preferredHeight: ( (size === \"lg\") ) ? 32 : 24",
+        ] {
+            assert!(out.contains(expected), "missing {expected:?}:\n{out}");
+        }
+    }
+
+    #[test]
+    fn a_host_control_size_variant_drives_geometry_padding_and_typography() {
+        let model = component(
+            "SizedButton",
+            vec![slot(
+                "size",
+                SlotType::OneOf(vec!["md".to_string(), "sm".to_string()]),
+                true,
+            )],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "SizedButton".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![lp("label", LayoutPropValue::String("Save".to_string()))],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "SizedButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![
+                    sp("width", "150px"),
+                    sp("height", "40px"),
+                    sp("padding", "8px"),
+                    sp("font-family", "Inter"),
+                    sp("font-size", "14px"),
+                ],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    slot: Some("size".to_string()),
+                    slot_is_bool: false,
+                    state: "sm".to_string(),
+                    transitions: vec![],
+                    props: vec![
+                        sp("width", "120px"),
+                        sp("height", "32px"),
+                        sp("padding", "4px"),
+                        sp("padding-left", "5px"),
+                        sp("font-family", "monospace"),
+                        sp("font-size", "12px"),
+                    ],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        for expected in [
+            "implicitWidth: ( (size === \"sm\") ) ? 120 : 150",
+            "Layout.preferredWidth: ( (size === \"sm\") ) ? 120 : 150",
+            "implicitHeight: ( (size === \"sm\") ) ? 32 : 40",
+            "Layout.preferredHeight: ( (size === \"sm\") ) ? 32 : 40",
+            "leftPadding: ( (size === \"sm\") ) ? 5 : 8",
+            "rightPadding: ( (size === \"sm\") ) ? 4 : 8",
+            "topPadding: ( (size === \"sm\") ) ? 4 : 8",
+            "bottomPadding: ( (size === \"sm\") ) ? 4 : 8",
+            "font.family: ( (size === \"sm\") ) ? \"monospace\" : \"Inter\"",
+            "font.pixelSize: ( (size === \"sm\") ) ? 12 : 14",
+        ] {
+            assert!(out.contains(expected), "missing {expected:?}:\n{out}");
+        }
+    }
+
+    #[test]
+    fn unsupported_host_control_geometry_remains_a_reported_drop() {
+        let model = component("FluidButton", vec![], vec![]);
+        let layout = LayoutDef {
+            component_name: "FluidButton".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![lp("label", LayoutPropValue::String("Save".to_string()))],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "FluidButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![
+                    sp("width", "100%"),
+                    sp("height", "max-content"),
+                    sp("padding", "8px"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(!out.contains("implicitWidth: 100"), "got:\n{out}");
+        assert!(!out.contains("implicitHeight: max-content"), "got:\n{out}");
+
+        let dropped = dropped_style_properties(&model, &layout, &style);
+        let names: HashSet<&str> = dropped.iter().map(|drop| drop.name.as_str()).collect();
+        assert!(names.contains("width"), "missing width drop: {dropped:?}");
+        assert!(names.contains("height"), "missing height drop: {dropped:?}");
+        assert!(!names.contains("padding"), "padding must lower: {dropped:?}");
     }
 
     /// The `For` delegate `Item` sizes to its children so the styled cell
@@ -16372,6 +17580,72 @@ mod tests {
             out.contains("horizontalAlignment: Text.AlignHCenter"),
             "missing text alignment:\n{out}"
         );
+        assert_eq!(
+            out.matches("Rectangle {").count(),
+            0,
+            "text-only styling must keep the bare Text shape:\n{out}"
+        );
+    }
+
+    #[test]
+    fn styled_text_surface_wraps_paint_and_padding_around_semantic_text() {
+        let style = StyleDef {
+            component_name: "PanelLabel".to_string(),
+            parts: vec![PartStyle {
+                name: "label".to_string(),
+                base: vec![
+                    sp("background", "#252019"),
+                    sp("border-color", "#6b5f50"),
+                    sp("border-width", "2px"),
+                    sp("border-radius", "4px"),
+                    sp("padding", "8px"),
+                    sp("padding-left", "13px"),
+                    sp("padding-bottom", "11px"),
+                    sp("color", "#f8fafc"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = LayoutDef {
+            component_name: "PanelLabel".to_string(),
+            root: LayoutNode {
+                tag: "Text".to_string(),
+                part_name: Some("label".to_string()),
+                props: vec![
+                    lp("content", LayoutPropValue::String("Details".to_string())),
+                    lp("a11y-role", LayoutPropValue::Keyword("heading".to_string())),
+                ],
+                children: vec![],
+            },
+        };
+        let model = component("PanelLabel", vec![], vec![]);
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+
+        for expected in [
+            "Rectangle {",
+            "color: \"#252019\"",
+            "border.color: \"#6b5f50\"",
+            "border.width: 2",
+            "radius: 4",
+            "implicitWidth: mosaicContent0.implicitWidth + 13 + 8",
+            "implicitHeight: mosaicContent0.implicitHeight + 8 + 11",
+            "id: mosaicContent0",
+            "x: 13",
+            "y: 8",
+            "Text {",
+            "text: \"Details\"",
+            "color: \"#f8fafc\"",
+            "Accessible.role: Accessible.Heading",
+        ] {
+            assert!(out.contains(expected), "missing {expected:?}:\n{out}");
+        }
+
+        let dropped = dropped_style_properties(&model, &layout, &style);
+        assert!(
+            dropped.is_empty(),
+            "the surface wrapper must consume every authored property: {dropped:?}"
+        );
     }
 
     /// An unstyled `Box` (no matching part) keeps the bare `Item` shape —
@@ -16884,7 +18158,7 @@ mod tests {
 
     // ---- host controls read part styles (#14780) ---------------------
 
-    fn styled_host(tag: &str, props: Vec<LayoutProp>) -> String {
+    fn styled_host_with_base(tag: &str, props: Vec<LayoutProp>, base: Vec<StyleProp>) -> String {
         let c = component(
             "P",
             vec![
@@ -16908,21 +18182,29 @@ mod tests {
             component_name: "P".to_string(),
             parts: vec![PartStyle {
                 name: "ctl".to_string(),
-                base: vec![
-                    StyleProp {
-                        name: "padding".to_string(),
-                        value: "37".to_string(),
-                    },
-                    StyleProp {
-                        name: "background".to_string(),
-                        value: "#abcdef".to_string(),
-                    },
-                ],
+                base,
                 transitions: vec![],
                 states: vec![],
             }],
         };
         from_pipeline(&c, &l, &s).expect("emit ok").output
+    }
+
+    fn styled_host(tag: &str, props: Vec<LayoutProp>) -> String {
+        styled_host_with_base(
+            tag,
+            props,
+            vec![
+                StyleProp {
+                    name: "padding".to_string(),
+                    value: "37".to_string(),
+                },
+                StyleProp {
+                    name: "background".to_string(),
+                    value: "#abcdef".to_string(),
+                },
+            ],
+        )
     }
 
     fn slot_prop(name: &str, slot_name: &str) -> LayoutProp {
@@ -16950,6 +18232,68 @@ mod tests {
                 out.contains("Padding: 37"),
                 "{tag} dropped authored padding, got:\n{out}"
             );
+        }
+    }
+
+    #[test]
+    fn every_host_control_preserves_directional_padding() {
+        let base = || {
+            vec![
+                StyleProp {
+                    name: "padding".to_string(),
+                    value: "37".to_string(),
+                },
+                StyleProp {
+                    name: "padding-left".to_string(),
+                    value: "11".to_string(),
+                },
+                StyleProp {
+                    name: "padding-top".to_string(),
+                    value: "12".to_string(),
+                },
+                StyleProp {
+                    name: "padding-right".to_string(),
+                    value: "13".to_string(),
+                },
+                StyleProp {
+                    name: "padding-bottom".to_string(),
+                    value: "14".to_string(),
+                },
+            ]
+        };
+        for (tag, props) in [
+            ("HostButton", vec![slot_prop("label", "label")]),
+            ("HostCheckbox", vec![slot_prop("checked", "on")]),
+            ("HostRadio", vec![slot_prop("checked", "on")]),
+            ("HostInput", vec![slot_prop("value", "value")]),
+            ("HostSlider", vec![slot_prop("value", "num")]),
+            ("HostNumberInput", vec![slot_prop("value", "num")]),
+        ] {
+            let out = styled_host_with_base(tag, props, base());
+            for expected in [
+                "leftPadding: 11",
+                "topPadding: 12",
+                "rightPadding: 13",
+                "bottomPadding: 14",
+            ] {
+                assert!(
+                    out.contains(expected),
+                    "{tag} dropped {expected}, got:\n{out}"
+                );
+            }
+        }
+
+        let out = styled_host_with_base(
+            "HostButton",
+            vec![slot_prop("label", "label")],
+            vec![sp("padding", "37"), sp("padding-left", "11")],
+        );
+        for inherited in [
+            "topPadding: 37",
+            "rightPadding: 37",
+            "bottomPadding: 37",
+        ] {
+            assert!(out.contains(inherited), "shorthand fallback: {out}");
         }
     }
 
@@ -17223,5 +18567,642 @@ mod qml_property_ownership_tests {
             &vec!["opacity: 0.5".to_string()],
             "the whole Rectangle block must go, and nothing after it"
         );
+    }
+}
+
+/// UI48 ENV4 (§7.6): every shell with a host tells the runtime its window's
+/// environment.
+#[cfg(test)]
+mod environment_observer_tests {
+    use super::*;
+
+    fn main_cpp(require_runtime: bool) -> String {
+        build_main_cpp("Card", "Mosaic.Card", &[], 0, require_runtime, &HashMap::new(), &[])
+    }
+
+    #[test]
+    fn both_shells_observe_the_window_through_the_host() {
+        for require_runtime in [false, true] {
+            let main = main_cpp(require_runtime);
+            let define = main
+                .find("static void mosaicObserveEnvironment(QQuickView &view, MosaicHost &host)")
+                .unwrap_or_else(|| panic!("observer defined:\n{main}"));
+            let call = main
+                .find("mosaicObserveEnvironment(view, mosaicHost);\n")
+                .unwrap_or_else(|| panic!("observer installed:\n{main}"));
+            let show = main.rfind("view.show();").unwrap();
+            assert!(define < main.find("int main(").unwrap());
+            assert!(call < show, "the first report precedes show:\n{main}");
+            for wiring in [
+                "&QWindow::widthChanged",
+                "&QWindow::heightChanged",
+                "&QStyleHints::colorSchemeChanged",
+                "MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark())",
+                "if (host.isSettling()) {\n      retry->start();",
+                "if (response.contains(QStringLiteral(\"error\"))) {",
+            ] {
+                assert!(main.contains(wiring), "{wiring}:\n{main}");
+            }
+            // A refusal is logged before anything is applied: its props are an
+            // empty map, and applying them would blank the screen.
+            assert!(
+                main.find("response.contains(QStringLiteral(\"error\"))").unwrap()
+                    < main.find("\"applyMosaicResponse\",\n                                Q_ARG").unwrap()
+            );
+        }
+        // Without a host there is nothing to observe with.
+        let sample = main_cpp(false);
+        let guarded = sample.find("#if MOSAIC_HAS_HOST\n#include <QDebug>").unwrap();
+        assert!(guarded < sample.find("static void mosaicObserveEnvironment").unwrap());
+    }
+}
+
+/// UI48 §7.10 (ENV2/ENV3 on Qt): a layout variant is a root QML type of its
+/// own, and a shell with variants chooses its root from the window.
+#[cfg(test)]
+mod layout_variant_tests {
+    use super::*;
+
+    fn compile(mil: &str, mll: &str) -> (MosmodelComponent, LayoutDef, StyleDef) {
+        let model = mosmodel_compiler::compile(mil).expect("mil");
+        let layout = moslayout_compiler::compile(mll, Some(&model.descriptor_json)).expect("mll");
+        let style = mosstyle_compiler::compile("style Card { }", Some(&layout.part_map_json))
+            .expect("msl")
+            .def;
+        (model.component, layout.def, style)
+    }
+
+    fn card() -> (MosmodelComponent, LayoutDef, StyleDef) {
+        compile(
+            "component Card { slot label : text ; slot count : number ; emit onTap ; }",
+            "layout Card { Column [ root ] { Text [ heading ] ( content : slot: label ) \
+             HostButton [ tap ] ( label : \"Tap\" , onClick : emit: onTap ) } }",
+        )
+    }
+
+    fn choice(variant: &str, conditions: &[(&str, &str)]) -> LayoutChoice {
+        LayoutChoice {
+            variant: variant.to_string(),
+            conditions: conditions
+                .iter()
+                .map(|(axis, value)| (axis.to_string(), value.to_string()))
+                .collect(),
+            native_table_models: 0,
+        }
+    }
+
+    fn touch() -> LayoutChoice {
+        choice("touch", &[("pointer", "coarse")])
+    }
+
+    fn project(require_runtime: bool, layout_variants: Vec<LayoutChoice>) -> ProjectFiles {
+        let (model, layout, style) = card();
+        let options = EmitOptions {
+            emit_project: true,
+            require_runtime,
+            layout_variants,
+            ..EmitOptions::default()
+        };
+        from_pipeline_with_options(&model, &layout, &style, &options)
+            .expect("project")
+            .project
+            .expect("project files")
+    }
+
+    #[test]
+    fn variant_type_names_are_pascal_case_and_refuse_unusable_names() {
+        assert_eq!(
+            variant_type_name("EngramApp", "touch").as_deref(),
+            Some("EngramAppTouch")
+        );
+        assert_eq!(
+            variant_type_name("Card", "task-list").as_deref(),
+            Some("CardTaskList")
+        );
+        assert_eq!(
+            variant_type_name("Card", "big_screen").as_deref(),
+            Some("CardBigScreen")
+        );
+        assert_eq!(variant_type_name("Card", "x2").as_deref(), Some("CardX2"));
+        for bad in ["", "-", "_", "a--b", "a-", "a b", "a.b", "a$b", "a\"b", "é"] {
+            assert_eq!(variant_type_name("Card", bad), None, "{bad:?}");
+        }
+    }
+
+    /// The variant's root is the root a default layout gets for the same
+    /// tree, plus the one line naming it: so its interface -- the slot
+    /// properties, the signals, the `mosaicEvent` payloads the host reads,
+    /// `applyMosaicResponse` -- is the default's, by construction.
+    #[test]
+    fn a_variant_root_is_the_default_root_plus_the_line_naming_it() {
+        let (model, layout, style) = card();
+        let default = from_pipeline(&model, &layout, &style).unwrap().output;
+        let variant = from_pipeline_variant(&model, &layout, &style, "touch")
+            .unwrap()
+            .output;
+        let line = "    // Layout variant: touch, the QML type CardTouch (UI48 §7.10)\n";
+        assert_eq!(variant.matches(line).count(), 1, "{variant}");
+        assert_eq!(variant.replacen(line, "", 1), default);
+        assert!(variant.find("    // Component: Card\n").unwrap() < variant.find(line).unwrap());
+        for surface in [
+            "    property string label: \"\"\n",
+            "    signal tap()\n",
+            "    signal mosaicEvent(var event)\n",
+            "mosaicEvent({ \"event\": \"onTap\" })",
+            "    function applyMosaicResponse(response) {\n",
+        ] {
+            assert!(variant.contains(surface), "{surface}\n{variant}");
+        }
+        // A native-complete shell mounts its variants strictly, as its
+        // default: the host is required and events go through the strict
+        // handler.
+        let strict_options = EmitOptions {
+            require_runtime: true,
+            ..EmitOptions::default()
+        };
+        let strict =
+            from_pipeline_variant_with_options(&model, &layout, &style, "touch", &strict_options)
+                .unwrap()
+                .output;
+        let strict_default = from_pipeline_with_options(&model, &layout, &style, &strict_options)
+            .unwrap()
+            .output;
+        assert_eq!(strict.replacen(line, "", 1), strict_default);
+        assert!(strict.contains("    required property var mosaicHost\n"), "{strict}");
+        assert!(strict.contains("mosaicHost.handleRequiredEvent(event)"), "{strict}");
+    }
+
+    #[test]
+    fn a_variant_may_not_take_an_unusable_or_owned_name() {
+        let (model, layout, style) = card();
+        let error = from_pipeline_variant(&model, &layout, &style, "a b").unwrap_err();
+        assert!(error.to_string().contains("cannot name a QML type"), "{error}");
+        // `Mosaic` + `host` would be the shell's `MosaicHost`, and so on for
+        // every name the shell owns.
+        let (model, layout, style) = compile(
+            "component Mosaic { slot label : text ; }",
+            "layout Mosaic { Text [ root ] ( content : slot: label ) }",
+        );
+        for variant in ["host", "table-model", "layout_rule", "file-dialogs"] {
+            let error = from_pipeline_variant(&model, &layout, &style, variant).unwrap_err();
+            assert!(
+                error.to_string().contains("Qt shell already owns"),
+                "{variant}: {error}"
+            );
+            let options = EmitOptions {
+                emit_project: true,
+                layout_variants: vec![choice(variant, &[])],
+                ..EmitOptions::default()
+            };
+            assert!(
+                from_pipeline_with_options(&model, &layout, &style, &options).is_err(),
+                "{variant}"
+            );
+        }
+        assert!(from_pipeline_variant(&model, &layout, &style, "touch").is_ok());
+    }
+
+    #[test]
+    fn a_layout_choice_that_cannot_be_written_into_the_project_is_refused() {
+        let (model, layout, style) = card();
+        let refused = |choices: Vec<LayoutChoice>| {
+            let options = EmitOptions {
+                emit_project: true,
+                layout_variants: choices,
+                ..EmitOptions::default()
+            };
+            from_pipeline_with_options(&model, &layout, &style, &options).is_err()
+        };
+        assert!(!refused(vec![touch()]));
+        assert!(refused(vec![choice("a\"b", &[("pointer", "coarse")])]));
+        assert!(
+            refused(vec![choice("touch", &[("size-class", "compact")])]),
+            "a manifest key, not a wire name"
+        );
+        assert!(refused(vec![choice("touch", &[("pointer", "co\"arse")])]));
+        assert!(refused(vec![choice("touch", &[("pointer", "co?arse")])]));
+        assert!(refused(vec![choice("touch", &[("pointer", "")])]));
+        assert!(refused(vec![choice("touch", &[("", "coarse")])]));
+        // Chosen twice -- by the same string, or by two strings that name one
+        // QML type, which the module would register twice.
+        assert!(refused(vec![touch(), touch()]));
+        assert!(refused(vec![
+            touch(),
+            choice("Touch", &[("pointer", "coarse")])
+        ]));
+        assert!(refused(vec![
+            choice("task-list", &[]),
+            choice("task_list", &[])
+        ]));
+        assert!(!refused(vec![choice("task-list", &[]), choice("tasks", &[])]));
+        // Without a project nothing is written, so nothing is checked.
+        let options = EmitOptions {
+            layout_variants: vec![touch(), touch()],
+            ..EmitOptions::default()
+        };
+        assert!(from_pipeline_with_options(&model, &layout, &style, &options).is_ok());
+    }
+
+    #[test]
+    fn the_project_compiles_each_variant_as_its_own_qml_type() {
+        let files = project(false, vec![touch(), choice("task-list", &[])]);
+        assert!(
+            files.cmake_lists.ends_with(concat!(
+                "set_source_files_properties(Card.touch.qml PROPERTIES QT_QML_SOURCE_TYPENAME CardTouch)\n",
+                "qt_target_qml_sources(Card QML_FILES Card.touch.qml)\n",
+                "set_source_files_properties(Card.task-list.qml PROPERTIES QT_QML_SOURCE_TYPENAME CardTaskList)\n",
+                "qt_target_qml_sources(Card QML_FILES Card.task-list.qml)\n",
+            )),
+            "{}",
+            files.cmake_lists
+        );
+        // The default is still the module's first file, exactly as before.
+        assert!(files.cmake_lists.contains("  QML_FILES Card.qml\n)\n"));
+        assert!(
+            files.qmldir.ends_with(
+                "Card 1.0 Card.qml\nCardTouch 1.0 Card.touch.qml\nCardTaskList 1.0 Card.task-list.qml\n"
+            ),
+            "{}",
+            files.qmldir
+        );
+    }
+
+    #[test]
+    fn both_shells_select_at_startup_and_switch_on_every_report() {
+        for require_runtime in [false, true] {
+            let main = project(require_runtime, vec![touch()]).main_cpp;
+            // The rules as data, keyed by wire names, and select_variant.
+            assert!(
+                main.contains(
+                    "      {\"touch\", \"qrc:/qt/qml/Mosaic/Card/Card.touch.qml\", {{\"pointer\", \"coarse\"}}},\n"
+                ),
+                "{main}"
+            );
+            for piece in [
+                "struct MosaicLayoutRule\n{\n",
+                "static QString mosaicLayoutVariant(const QVariantMap &environment)\n",
+                "if (environment.value(QString::fromLatin1(axis)).toString() != QLatin1String(value)) {",
+                "if (holds) return QString::fromLatin1(rule.variant);",
+                "  return QUrl(QStringLiteral(\"qrc:/qt/qml/Mosaic/Card/Card.qml\"));\n",
+                "static void mosaicSwitchLayout(QQuickView &view, MosaicHost &host, const QVariantMap &environment)\n",
+                "  if (selected == showing || !mosaicIsLayoutRoot(showing)) return;\n",
+                "    mosaicMountLayout(view, showing, properties);\n",
+                "  if (view.rootObject() != nullptr) host.attach(view.rootObject());\n",
+            ] {
+                assert!(main.contains(piece), "{piece}\n{main}");
+            }
+            // The observer never switches inside the signal that noticed the
+            // change: each report, after its settle check, starts one
+            // zero-interval timer (coalescing a burst of ticks), and the
+            // timer re-reads the window and checks for a settle again when it
+            // fires.
+            for piece in [
+                "  auto *layoutSwitch = new QTimer(&host);\n  layoutSwitch->setSingleShot(true);\n",
+                "  const auto report = [&view, &host, retry, layoutSwitch]() {\n",
+                "    if (!layoutSwitch->isActive()) layoutSwitch->start(0);\n",
+            ] {
+                assert!(main.contains(piece), "{piece}\n{main}");
+            }
+            let timer = main
+                .find("QObject::connect(layoutSwitch, &QTimer::timeout")
+                .unwrap();
+            let fire_settling = main[timer..]
+                .find("    if (host.isSettling()) {\n      layoutSwitch->start(100);")
+                .unwrap()
+                + timer;
+            let fire_switch = main[timer..]
+                .find("    mosaicSwitchLayout(\n        view, host,\n        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()));\n")
+                .unwrap()
+                + timer;
+            assert!(fire_settling < fire_switch, "{main}");
+            let report = main
+                .find("  const auto report = [&view, &host, retry, layoutSwitch]")
+                .unwrap();
+            let settling = report + main[report..].find("if (host.isSettling()) {").unwrap();
+            let queue = main
+                .find("    if (!layoutSwitch->isActive()) layoutSwitch->start(0);\n")
+                .unwrap();
+            assert!(fire_switch < report && settling < queue, "{main}");
+            // No call to the switch is left inside the report itself.
+            assert_eq!(
+                main.matches("mosaicSwitchLayout(").count(),
+                2,
+                "definition and timer:\n{main}"
+            );
+            // The first root is the one the window's environment selects.
+            assert!(main.contains(LAYOUT_STARTUP_URL), "{main}");
+            // Its definitions precede the observer, which precedes `main`.
+            assert!(
+                main.find("static void mosaicSwitchLayout").unwrap()
+                    < main.find("static void mosaicObserveEnvironment").unwrap()
+            );
+        }
+
+        let strict = project(true, vec![touch()]).main_cpp;
+        // The strict shell mounts every root with the runtime's checked props.
+        assert!(
+            strict.contains("  auto properties = host.propsRequired();\n"),
+            "{strict}"
+        );
+        assert!(
+            strict.contains(
+                "    mosaicMountLayout(view, mosaicLayoutUrl(MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark())),\n                      mosaicLayoutProps(view, mosaicHost));\n"
+            ),
+            "{strict}"
+        );
+        assert!(!strict.contains("const QUrl url("), "{strict}");
+
+        let sample = project(false, vec![touch()]).main_cpp;
+        // The sample shell carries each slot's value to the next root.
+        assert!(
+            sample.contains(concat!(
+                "  const QStringList slotProperties{\n",
+                "      QStringLiteral(\"label\"),\n",
+                "      QStringLiteral(\"count\"),\n",
+                "  };\n",
+            )),
+            "{sample}"
+        );
+        assert!(
+            sample.contains("root->property(name.toUtf8().constData())"),
+            "{sample}"
+        );
+        // Its selector needs no host and sits outside the guard; mounting
+        // and switching need one and sit inside it. Without a host it opens
+        // the default layout.
+        let guard = sample.find("#if MOSAIC_HAS_HOST\n#include <QDebug>").unwrap();
+        assert!(sample.find("struct MosaicLayoutRule").unwrap() < guard);
+        assert!(guard < sample.find("static QVariantMap mosaicLayoutProps").unwrap());
+        assert!(sample.contains(&format!(
+            "#if MOSAIC_HAS_HOST\n  const QUrl url({LAYOUT_STARTUP_URL});\n#else\n  const QUrl url(QStringLiteral(\"qrc:/qt/qml/Mosaic/Card/Card.qml\"));\n#endif\n"
+        )));
+    }
+
+    #[test]
+    fn rules_keep_their_order_and_an_unconditional_rule_always_holds() {
+        let main = project(
+            false,
+            vec![
+                choice(
+                    "compact",
+                    &[("sizeClass", "compact"), ("orientation", "portrait")],
+                ),
+                choice("wide", &[]),
+            ],
+        )
+        .main_cpp;
+        assert!(
+            main.contains(concat!(
+                "      {\"compact\", \"qrc:/qt/qml/Mosaic/Card/Card.compact.qml\", {{\"sizeClass\", \"compact\"}, {\"orientation\", \"portrait\"}}},\n",
+                "      {\"wide\", \"qrc:/qt/qml/Mosaic/Card/Card.wide.qml\", {}},\n",
+            )),
+            "{main}"
+        );
+    }
+
+    /// A QML root refuses an initial property it does not declare, so the
+    /// table models go only to roots whose layouts hold a table, and the
+    /// shell allocates enough for whichever is showing.
+    #[test]
+    fn table_models_go_only_to_the_roots_that_take_them() {
+        let mut tables = touch();
+        tables.native_table_models = 2;
+        for require_runtime in [false, true] {
+            let main = build_main_cpp(
+                "Card",
+                "Mosaic.Card",
+                &[],
+                0,
+                require_runtime,
+                &HashMap::new(),
+                std::slice::from_ref(&tables),
+            );
+            assert!(main.contains("class MosaicTableModel final"), "{main}");
+            assert!(main.contains("index < 2; ++index"), "{main}");
+            assert!(
+                main.contains(
+                    "view.setProperty(\"mosaicNativeTableModels\", mosaicNativeTableModels);\n"
+                ),
+                "{main}"
+            );
+            assert!(
+                main.contains(
+                    "  return source == QUrl(QStringLiteral(\"qrc:/qt/qml/Mosaic/Card/Card.touch.qml\"));\n"
+                ),
+                "only the touch root takes them:\n{main}"
+            );
+            assert!(
+                main.contains("  if (mosaicLayoutTakesTableModels(source)) {\n"),
+                "{main}"
+            );
+            assert!(main.contains("#include \"main.moc\""), "{main}");
+        }
+        let sample = build_main_cpp(
+            "Card",
+            "Mosaic.Card",
+            &[],
+            1,
+            false,
+            &HashMap::new(),
+            std::slice::from_ref(&tables),
+        );
+        assert!(
+            sample.contains("index < 2; ++index"),
+            "the larger count wins:\n{sample}"
+        );
+        assert!(
+            sample.contains(concat!(
+                "  if (mosaicLayoutTakesTableModels(url)) {\n",
+                "    initialProperties.insert(QStringLiteral(\"mosaicNativeTableModels\"), mosaicNativeTableModels);\n",
+                "  }\n",
+            )),
+            "{sample}"
+        );
+        assert!(
+            sample.contains(concat!(
+                "  return source == QUrl(QStringLiteral(\"qrc:/qt/qml/Mosaic/Card/Card.qml\"))\n",
+                "      || source == QUrl(QStringLiteral(\"qrc:/qt/qml/Mosaic/Card/Card.touch.qml\"));\n",
+            )),
+            "{sample}"
+        );
+        // No tables anywhere: no table code at all.
+        let plain = project(false, vec![touch()]).main_cpp;
+        assert!(!plain.contains("mosaicNativeTableModels"), "{plain}");
+        assert!(!plain.contains("mosaicLayoutTakesTableModels"), "{plain}");
+    }
+
+    /// A package without variants gets exactly the project it always had:
+    /// take the variant project, remove what ENV2/ENV3 add, and the two are
+    /// equal byte for byte -- so variants add only the selector, and the
+    /// empty case adds nothing. (What is removed is pinned by the tests
+    /// above.)
+    #[test]
+    fn without_variants_the_project_is_the_variant_project_minus_the_selector() {
+        for require_runtime in [false, true] {
+            let plain = project(require_runtime, vec![]);
+            let chosen = project(require_runtime, vec![touch()]);
+            assert!(!plain.main_cpp.contains("Layout"), "{}", plain.main_cpp);
+            assert!(
+                !plain.cmake_lists.contains("Card.touch"),
+                "{}",
+                plain.cmake_lists
+            );
+
+            // CMakeLists.txt and qmldir: one appended section each.
+            let section = chosen.cmake_lists.find("\n# UI48 ENV2 (§7.10)").unwrap();
+            assert_eq!(chosen.cmake_lists[..section], plain.cmake_lists);
+            assert_eq!(
+                chosen
+                    .qmldir
+                    .replacen("CardTouch 1.0 Card.touch.qml\n", "", 1),
+                plain.qmldir
+            );
+            assert_eq!(chosen.readme, plain.readme);
+
+            // main.cpp: the selector, the mount block, the observer's switch
+            // and the first mount.
+            let main = &chosen.main_cpp;
+            let selector = main
+                .find("#include <QStringList>\n#include <QVariantMap>\n#include <exception>")
+                .unwrap();
+            let observer = main
+                .find("// UI48 ENV4 (§7.6): report the window's environment now")
+                .unwrap();
+            let stripped = if require_runtime {
+                // Both blocks sit together, between the colour-scheme helper
+                // and the observer.
+                format!("{}{}", &main[..selector], &main[observer..])
+            } else {
+                // The selector sits before the host guard, the mount block
+                // inside it.
+                let mount = main
+                    .find("// UI48 ENV3 (§7.10): the props a newly mounted root")
+                    .unwrap();
+                let guard = main.find("#if MOSAIC_HAS_HOST\n#include <QDebug>").unwrap();
+                format!(
+                    "{}{}{}",
+                    &main[..selector],
+                    &main[guard..mount],
+                    &main[observer..]
+                )
+            };
+            assert_eq!(
+                restore_plain_startup(&stripped, require_runtime),
+                plain.main_cpp,
+                "require_runtime = {require_runtime}"
+            );
+        }
+    }
+
+    /// Undo the observer's switch and the first mount: what remains of a
+    /// variant shell once its selector and mount block are cut out.
+    fn restore_plain_startup(stripped: &str, require_runtime: bool) -> String {
+        let observer = stripped
+            .replacen(
+                concat!(
+                    "  // UI48 ENV3 (§7.10): the layout switch, deferred to the event loop and\n",
+                    "  // coalesced -- never inside the signal that noticed the change, because\n",
+                    "  // swapping the view's source deletes the root that may be on the stack.\n",
+                    "  auto *layoutSwitch = new QTimer(&host);\n",
+                    "  layoutSwitch->setSingleShot(true);\n",
+                    "  QObject::connect(layoutSwitch, &QTimer::timeout, &host, [&view, &host, layoutSwitch]() {\n",
+                    "    if (host.isSettling()) {\n",
+                    "      layoutSwitch->start(100);\n",
+                    "      return;\n",
+                    "    }\n",
+                    "    mosaicSwitchLayout(\n",
+                    "        view, host,\n",
+                    "        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()));\n",
+                    "  });\n",
+                    "  const auto report = [&view, &host, retry, layoutSwitch]() {\n",
+                ),
+                "  const auto report = [&view, &host, retry]() {\n",
+                1,
+            )
+            .replacen(
+                concat!(
+                    "    // UI48 ENV3 (§7.10): show the layout this environment selects, once the\n",
+                    "    // event loop is back.\n",
+                    "    if (!layoutSwitch->isActive()) layoutSwitch->start(0);\n",
+                ),
+                "",
+                1,
+            );
+        if require_runtime {
+            observer.replacen(
+                concat!(
+                    "    // UI48 ENV3 (§7.10): the layout the window's environment selects.\n",
+                    "    mosaicMountLayout(view, mosaicLayoutUrl(MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark())),\n",
+                    "                      mosaicLayoutProps(view, mosaicHost));\n",
+                ),
+                concat!(
+                    "    auto initialProperties = mosaicHost.propsRequired();\n",
+                    "    initialProperties.insert(QStringLiteral(\"mosaicHost\"), QVariant::fromValue(static_cast<QObject *>(&mosaicHost)));\n",
+                    "    view.setInitialProperties(initialProperties);\n",
+                    "    const QUrl url(QStringLiteral(\"qrc:/qt/qml/Mosaic/Card/Card.qml\"));\n",
+                    "    view.setSource(url);\n",
+                ),
+                1,
+            )
+        } else {
+            observer.replacen(
+                concat!(
+                    "  // UI48 ENV3 (§7.10): the layout the window's environment selects. Without\n",
+                    "  // the host there is no environment to read, so the default layout.\n",
+                    "#if MOSAIC_HAS_HOST\n",
+                    "  const QUrl url(mosaicLayoutUrl(MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark())));\n",
+                    "#else\n",
+                    "  const QUrl url(QStringLiteral(\"qrc:/qt/qml/Mosaic/Card/Card.qml\"));\n",
+                    "#endif\n",
+                ),
+                concat!(
+                    "  // Load the Item component into a visible Qt Quick view from the\n",
+                    "  // embedded module. The qrc:// path is set up by qt_add_qml_module in\n",
+                    "  // CMakeLists.txt; the module URI is Mosaic.Card, so the\n",
+                    "  // component resolves at qrc:/qt/qml/Mosaic/Card/Card.qml.\n",
+                    "  const QUrl url(QStringLiteral(\"qrc:/qt/qml/Mosaic/Card/Card.qml\"));\n",
+                ),
+                1,
+            )
+        }
+    }
+
+    /// Every class or struct either generated `main.cpp` declares at file
+    /// scope is reserved, so a new public name there cannot silently become
+    /// a type a variant may take.
+    #[test]
+    fn every_class_the_shell_declares_is_reserved() {
+        let mut tables = touch();
+        tables.native_table_models = 1;
+        for require_runtime in [false, true] {
+            let main = build_main_cpp(
+                "Card",
+                "Mosaic.Card",
+                &[],
+                1,
+                require_runtime,
+                &HashMap::new(),
+                std::slice::from_ref(&tables),
+            );
+            let mut declared = 0;
+            for line in main.lines() {
+                let Some(rest) = ["class ", "struct "]
+                    .iter()
+                    .find_map(|keyword| line.strip_prefix(keyword))
+                else {
+                    continue;
+                };
+                let name: String = rest
+                    .chars()
+                    .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                    .collect();
+                assert!(SHELL_RESERVED_NAMES.contains(&name.as_str()), "{name}");
+                declared += 1;
+            }
+            assert_eq!(
+                declared, 2,
+                "MosaicTableModel and MosaicLayoutRule:\n{main}"
+            );
+        }
     }
 }

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-475-OFICIO",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-475-OFICIO"
+  ],
+  "after": []
+}

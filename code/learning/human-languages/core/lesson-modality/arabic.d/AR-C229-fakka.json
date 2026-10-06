@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C229-fakka",
+    "language": "arabic",
+    "chapter": 229,
+    "sequence": 12440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15403dc6cdd444a2"
+  },
+  "findings": []
+}

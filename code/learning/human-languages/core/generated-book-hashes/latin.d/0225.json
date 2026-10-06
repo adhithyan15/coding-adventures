@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:23e5d081b937f475",
+  "lessonIds": [
+    "LA-C225-gemma",
+    "LA-C225-vestimentum",
+    "LA-C225-solea",
+    "LA-C225-sinus",
+    "LA-C225-culcita"
+  ],
+  "tex": "latin/book/chapters/ch225-gem-garment-sandal-fold-of-a-garment-mattress.tex"
+}

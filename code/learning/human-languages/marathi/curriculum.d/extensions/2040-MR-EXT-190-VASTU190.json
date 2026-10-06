@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-190-VASTU190",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say the neighbourhood, traffic, a passenger, a queue and a crowd.",
+  "prerequisites": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-322-VASTU322",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say biryani, a chapati, a parotta, tapioca and a chutney.",
+  "prerequisites": []
+}

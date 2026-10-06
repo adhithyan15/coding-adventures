@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "To light a lamp, To burst, To put up with, To make peace, To consider",
+  "label": "ch:ta-to-light-a-lamp-to-burst-to-put-up-with-to-make-peace-to-consider",
+  "canDo": "I can say to light a lamp, to burst, to put up with, to make peace and to consider.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C166-yoci",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say to light a lamp, to burst, to put up with, to make peace and to consider.",
+    "assesses": [
+      "TA-LEX-C166-ACT166-03",
+      "TA-LEX-C166-ACT166-04",
+      "TA-LEX-C166-ACT166-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:1c2023a7f590acec",
+  "lessonIds": [
+    "ES-C485-barrer",
+    "ES-C485-fregar",
+    "ES-C485-limpiar",
+    "ES-C485-secar",
+    "ES-C485-basura"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch485.txt",
+  "json": "spanish/narration/ch485.json",
+  "textHash": "fnv1a64:442f2d63a866b444",
+  "jsonHash": "fnv1a64:a408fe5f865270ce",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C240-emergencia",
+  "pathSegment": "PT-PATH-240-SAUDE240",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-240-SAUDE240",
+      "order": 1
+    }
+  ]
+}

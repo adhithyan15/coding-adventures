@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "To refuse, To graduate, To be glad, To be afraid, To smile",
+  "label": "ch:ar-to-refuse-to-graduate-to-be-glad-to-be-afraid-to-smile",
+  "canDo": "I can say to refuse, to graduate, to be glad, to be afraid and to smile.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C257-ibtasama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say to refuse, to graduate, to be glad, to be afraid and to smile.",
+    "assesses": [
+      "AR-LEX-C257-ACT257-03",
+      "AR-LEX-C257-ACT257-04",
+      "AR-LEX-C257-ACT257-05"
+    ]
+  }
+}

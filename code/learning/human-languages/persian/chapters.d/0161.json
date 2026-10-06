@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "Tasty, Cool, Raw, Tight, Loose",
+  "label": "ch:fa-tasty-cool-raw-tight-loose",
+  "canDo": "I can say tasty, cool, raw, tight and loose.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C161-goshad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say tasty, cool, raw, tight and loose.",
+    "assesses": [
+      "FA-LEX-C161-SEFAT161-03",
+      "FA-LEX-C161-SEFAT161-04",
+      "FA-LEX-C161-SEFAT161-05"
+    ]
+  }
+}

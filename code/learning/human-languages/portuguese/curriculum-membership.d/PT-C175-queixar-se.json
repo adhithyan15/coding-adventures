@@ -1,0 +1,11 @@
+{
+  "id": "PT-C175-queixar-se",
+  "pathSegment": "PT-PATH-175-VERBOS175",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-175-VERBOS175",
+      "order": 1
+    }
+  ]
+}

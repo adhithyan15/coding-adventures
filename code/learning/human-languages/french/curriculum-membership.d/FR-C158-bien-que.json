@@ -1,0 +1,11 @@
+{
+  "id": "FR-C158-bien-que",
+  "pathSegment": "FR-PATH-158-POURQUOI158",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-158-POURQUOI158",
+      "order": 4
+    }
+  ]
+}

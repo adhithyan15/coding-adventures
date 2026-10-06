@@ -1,0 +1,11 @@
+{
+  "id": "FA-C246-barq",
+  "pathSegment": "FA-PATH-246-CHIZ246",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-246-CHIZ246",
+      "order": 4
+    }
+  ]
+}

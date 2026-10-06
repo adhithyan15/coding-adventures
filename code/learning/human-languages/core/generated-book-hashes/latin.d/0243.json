@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:4cd3fabbebc59e93",
+  "lessonIds": [
+    "LA-C243-dubius",
+    "LA-C243-fidus",
+    "LA-C243-fidelis",
+    "LA-C243-infelix",
+    "LA-C243-beatus"
+  ],
+  "tex": "latin/book/chapters/ch243-doubtful-faithful-loyal-unlucky-blessed.tex"
+}

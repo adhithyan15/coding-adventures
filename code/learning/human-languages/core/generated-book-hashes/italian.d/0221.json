@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:4f51879e9ef0a1ca",
+  "lessonIds": [
+    "IT-C221-panetteria",
+    "IT-C221-macelleria",
+    "IT-C221-foresta",
+    "IT-C221-costa",
+    "IT-C221-valle",
+    "IT-R221-first-pass-words-from-chapters-213-216",
+    "IT-R221-second-pass-words-from-chapters-217-221"
+  ],
+  "tex": "italian/book/chapters/ch221-bakery-butcher-s-forest-coast-valley.tex"
+}

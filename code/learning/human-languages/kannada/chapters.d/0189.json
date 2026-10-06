@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Group, Village fair, Worship, God, Fasting",
+  "label": "ch:ka-group-village-fair-worship-god-fasting",
+  "canDo": "I can say a group, a village fair, worship, god and fasting.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C189-upavasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say a group, a village fair, worship, god and fasting.",
+    "assesses": [
+      "KA-LEX-C189-VASTU189-03",
+      "KA-LEX-C189-VASTU189-04",
+      "KA-LEX-C189-VASTU189-05"
+    ]
+  }
+}

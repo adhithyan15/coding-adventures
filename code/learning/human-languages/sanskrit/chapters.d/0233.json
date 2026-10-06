@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "Rains, Sprouts, Waits, Follows, Goes out",
+  "label": "ch:sa-rains-sprouts-waits-follows-goes-out",
+  "canDo": "I can say rains, sprouts, waits, follows and goes out.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C233-nirgacchati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say rains, sprouts, waits, follows and goes out.",
+    "assesses": [
+      "SA-LEX-C233-ACT233-03",
+      "SA-LEX-C233-ACT233-04",
+      "SA-LEX-C233-ACT233-05"
+    ]
+  }
+}

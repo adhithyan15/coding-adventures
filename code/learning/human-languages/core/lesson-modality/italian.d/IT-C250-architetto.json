@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C250-architetto",
+    "language": "italian",
+    "chapter": 250,
+    "sequence": 14920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:774399fbb5da8910"
+  },
+  "findings": []
+}

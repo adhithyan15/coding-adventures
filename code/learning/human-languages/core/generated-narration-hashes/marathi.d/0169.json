@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:b85e7e05815870f7",
+  "lessonIds": [
+    "MR-C169-arogya",
+    "MR-C169-mendu",
+    "MR-C169-phuphphus",
+    "MR-C169-yakrt",
+    "MR-C169-mutrapind"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch169.txt",
+  "json": "marathi/narration/ch169.json",
+  "textHash": "fnv1a64:22f20e09c5b2c4dd",
+  "jsonHash": "fnv1a64:1759fcd312ab9020",
+  "findings": []
+}

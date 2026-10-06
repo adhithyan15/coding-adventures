@@ -1,0 +1,11 @@
+{
+  "id": "PT-C171-estacionar",
+  "pathSegment": "PT-PATH-171-VERBOS171",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-171-VERBOS171",
+      "order": 4
+    }
+  ]
+}

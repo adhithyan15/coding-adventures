@@ -1,0 +1,11 @@
+{
+  "id": "ML-C219-bakki",
+  "pathSegment": "ML-PATH-219-JOLI219",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-219-JOLI219",
+      "order": 3
+    }
+  ]
+}

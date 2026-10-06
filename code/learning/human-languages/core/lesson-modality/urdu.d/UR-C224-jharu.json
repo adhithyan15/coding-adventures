@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C224-jharu",
+    "language": "urdu",
+    "chapter": 224,
+    "sequence": 13300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aef71b4875456cc1"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:48b45ac9bf9ca6f9",
+  "lessonIds": [
+    "MR-C212-arj",
+    "MR-C212-pakit",
+    "MR-C212-patta",
+    "MR-C212-pagar",
+    "MR-C212-margadarsak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch212.txt",
+  "json": "marathi/narration/ch212.json",
+  "textHash": "fnv1a64:5bae9368dc4d6bc2",
+  "jsonHash": "fnv1a64:4c3fa2a5a3e0d0cb",
+  "findings": []
+}

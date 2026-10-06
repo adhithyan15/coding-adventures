@@ -1,0 +1,11 @@
+{
+  "id": "FR-C247-quai",
+  "pathSegment": "FR-PATH-247-CHOSES247",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-247-CHOSES247",
+      "order": 4
+    }
+  ]
+}

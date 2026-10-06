@@ -164,6 +164,42 @@ vertical `SizedBox` separators without replacing the flex container with a
 conditional and repeated children receive exactly one gap only when they
 actually produce neighboring widgets.
 
+## Layout variants (UI48 §7.9)
+
+A component can have several layouts over one interface
+(`EngramApp.mll` and `EngramApp.touch.mll`). `from_pipeline_variant` emits a
+variant so it can live in the same app as the default:
+
+- its widget is `<Component><Variant>` (`EngramAppTouch`), named by
+  `variant_widget_name` -- the same rule as Compose and SwiftUI;
+- it declares none of the interface: it imports the default's file
+  (`import 'EngramApp.dart';`) for `EngramAppEvent` and its cases, and takes
+  the same constructor arguments as the default widget;
+- its private helpers (`_MosaicDragScope`, ...) are private to its own file,
+  so they may repeat.
+
+`EmitOptions::layout_variants` (one `LayoutChoice` per rule, in rule order,
+conditions keyed by `mosaic-app-runtime`'s wire names) makes the project shell
+switch between them. `main.dart` imports each selectable variant, carries the
+rules as `mosaicLayoutRules`, and builds its root in a `Builder` below
+`MaterialApp`'s `MediaQuery`:
+
+```dart
+switch (mosaicLayoutVariant(environment)) {
+  case 'touch':
+    return EngramAppTouch(...);
+  default:
+    return EngramApp(...);
+}
+```
+
+`environment` is `MosaicHost.environmentReport(...)` of the window's size,
+brightness and motion setting, so a resize across a threshold rebuilds just
+that `Builder` with the other root. Both the sample and native-complete shells
+select; only the native-complete shell also reports the environment to the
+runtime (§7.8). With no layout variants every generated file is exactly what
+it was before.
+
 ## `HostInput` styling
 
 A `HostInput`'s part style reaches the widget through two different
@@ -211,8 +247,17 @@ See `CHANGELOG.d/` for the full feature matrix. The headline:
   drop, arrow-key target movement, Escape cancellation, screen-reader
   announcements, disabled/accepted-kind filtering, and the complete lifecycle
   event payloads.
-- 🚧 Rich dialog behavior and multi-field payload synthesis from a single
-  text-input callback remain follow-up work.
+- ✅ `HostDialog` (modal) lowers to `_MosaicDialogHost`, which pushes its
+  own `DialogRoute` on the root navigator when `open` becomes true and
+  removes that route when it becomes false (UI29-1 §3.3). It never calls
+  `showDialog`, whose desktop windowing path aborts macOS AOT builds.
+  `onClose` fires once per open, however the dialog closes.
+  `tests/flutter_dialog_host.rs` runs the helper, exactly as emitted,
+  against the widget tests in `conformance/dialog-host/` when `flutter`
+  is on PATH (CI's Flutter lane requires it).
+- 🚧 Non-modal dialogs (`modal: false`), `onOpen`, and multi-field
+  payload synthesis from a single text-input callback remain follow-up
+  work.
 
 ## Versioning
 

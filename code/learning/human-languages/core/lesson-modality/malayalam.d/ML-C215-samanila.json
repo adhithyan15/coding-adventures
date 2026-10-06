@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C215-samanila",
+    "language": "malayalam",
+    "chapter": 215,
+    "sequence": 9630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62c4bb704bab18b7"
+  },
+  "findings": []
+}

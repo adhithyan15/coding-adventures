@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-264-VASTU264",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "KA-EXT-264-VASTU264"
+  ],
+  "after": []
+}

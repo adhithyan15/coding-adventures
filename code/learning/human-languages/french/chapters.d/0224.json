@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Employee, Pilot, Accountant, Scientist, Researcher",
+  "label": "ch:fr-employee-pilot-accountant-scientist-researcher",
+  "canDo": "I can say an employee, a pilot, an accountant, a scientist and a researcher.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C224-chercheur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say an employee, a pilot, an accountant, a scientist and a researcher.",
+    "assesses": [
+      "FR-LEX-C224-CHOSES224-03",
+      "FR-LEX-C224-CHOSES224-04",
+      "FR-LEX-C224-CHOSES224-05"
+    ]
+  }
+}

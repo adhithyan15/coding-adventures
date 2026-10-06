@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "To snow, To protect, To sail, To send, To stroll",
+  "label": "ch:ge-to-snow-to-protect-to-sail-to-send-to-stroll",
+  "canDo": "I can say to snow, to protect, to sail, to send and to stroll.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C186-spazieren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say to snow, to protect, to sail, to send and to stroll.",
+    "assesses": [
+      "GE-LEX-C186-VERB186-03",
+      "GE-LEX-C186-VERB186-04",
+      "GE-LEX-C186-VERB186-05"
+    ]
+  }
+}

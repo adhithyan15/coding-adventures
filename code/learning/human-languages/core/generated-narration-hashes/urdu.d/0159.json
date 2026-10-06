@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:679b1c004a9af962",
+  "lessonIds": [
+    "UR-C159-is-liye",
+    "UR-C159-chunki",
+    "UR-C159-agar",
+    "UR-C159-phir-bhi",
+    "UR-C159-varna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch159.txt",
+  "json": "urdu/narration/ch159.json",
+  "textHash": "fnv1a64:3efa42e71a48dea6",
+  "jsonHash": "fnv1a64:6862be73206ddcbf",
+  "findings": []
+}

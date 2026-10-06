@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:86237bb4faa4161b",
+  "lessonIds": [
+    "UR-W11-a2-connected-composition"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "urdu/narration/ch143.txt",
+  "json": "urdu/narration/ch143.json",
+  "textHash": "fnv1a64:23d1e98d2dda8187",
+  "jsonHash": "fnv1a64:c44e081e8d51a07c",
+  "findings": []
+}

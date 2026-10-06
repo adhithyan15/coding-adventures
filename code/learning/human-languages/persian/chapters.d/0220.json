@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "To allow, To finish, To pass, To print, To photocopy",
+  "label": "ch:fa-to-allow-to-finish-to-pass-to-print-to-photocopy",
+  "canDo": "I can say to allow, to finish, to pass, to print and to photocopy.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C220-kopi-gereftan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say to allow, to finish, to pass, to print and to photocopy.",
+    "assesses": [
+      "FA-LEX-C220-KONESH220-03",
+      "FA-LEX-C220-KONESH220-04",
+      "FA-LEX-C220-KONESH220-05"
+    ]
+  }
+}

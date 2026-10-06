@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C231-zadgah",
+    "language": "persian",
+    "chapter": 231,
+    "sequence": 11950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18c239d474888e45"
+  },
+  "findings": []
+}

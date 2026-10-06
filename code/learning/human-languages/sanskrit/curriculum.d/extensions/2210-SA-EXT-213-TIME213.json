@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-213-TIME213",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say at once, instantly, formerly, afterwards and as long as.",
+  "prerequisites": []
+}

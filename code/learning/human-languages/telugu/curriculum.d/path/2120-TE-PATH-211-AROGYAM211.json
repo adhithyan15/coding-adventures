@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-211-AROGYAM211",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "TE-EXT-211-AROGYAM211"
+  ],
+  "after": []
+}

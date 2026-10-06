@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:6883d6eac9dd6bc2",
+  "lessonIds": [
+    "BN-C189-adalot",
+    "BN-C189-jel",
+    "BN-C189-guha",
+    "BN-C189-khad",
+    "BN-C189-jhorna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch189.txt",
+  "json": "bengali/narration/ch189.json",
+  "textHash": "fnv1a64:302ff02f86f852ab",
+  "jsonHash": "fnv1a64:daf1cbc2994e26cc",
+  "findings": []
+}

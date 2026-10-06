@@ -1,0 +1,11 @@
+{
+  "id": "BN-C187-doshok",
+  "pathSegment": "BN-PATH-187-SOMOY187",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-187-SOMOY187",
+      "order": 3
+    }
+  ]
+}

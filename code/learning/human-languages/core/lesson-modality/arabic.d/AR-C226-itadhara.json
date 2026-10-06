@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C226-itadhara",
+    "language": "arabic",
+    "chapter": 226,
+    "sequence": 12300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8dce7a43fc8e4021"
+  },
+  "findings": []
+}

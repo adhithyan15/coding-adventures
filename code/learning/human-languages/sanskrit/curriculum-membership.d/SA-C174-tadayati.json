@@ -1,0 +1,11 @@
+{
+  "id": "SA-C174-tadayati",
+  "pathSegment": "SA-PATH-174-ACT174",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-174-ACT174",
+      "order": 2
+    }
+  ]
+}

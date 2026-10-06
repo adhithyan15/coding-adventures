@@ -1,0 +1,11 @@
+{
+  "id": "KA-C289-adhara",
+  "pathSegment": "KA-PATH-289-KARANA289",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-289-KARANA289",
+      "order": 3
+    }
+  ]
+}

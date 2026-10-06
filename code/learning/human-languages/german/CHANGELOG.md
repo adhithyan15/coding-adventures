@@ -1,5 +1,152 @@
 # Changelog
 
+## Chapter payoffs say "I can", not "i can"
+
+The payoff line under each chapter's goal lowercased the goal's first letter,
+so 196 chapters printed "Complete the last lesson of chapter N: i can say …".
+Every one now keeps the capital: "…: I can say …", and a new test
+(`payoff-summary-case.test.ts`) fails if the lowercase pronoun comes back. Only
+the payoff summary changed; no lesson, word or atom moved.
+
+## Chapters 211-251: 205 more headwords, and German attains A2
+
+- Forty-one chapters of five, generated in five runs of five to nine
+  chapters, each closed by two reviews. The candidates passed the same strict
+  screen as the second tranche, so no forward reference was added.
+- **Chapters 211-224, seventy qualities** (`SPINE-DESCRIBE-QUALITIES`):
+  - feelings (*ängstlich*, *aufgeregt*, *einsam*, *eifersüchtig*, *verliebt*);
+  - character (*ehrlich*, *geduldig*, *großzügig*, *hilfsbereit*,
+    *schüchtern*);
+  - weather (*bewölkt*, *regnerisch*, *sonnig*, *windig*);
+  - food (*lecker*, *salzig*, *roh*);
+  - life (*ledig*, *verheiratet*, *geschieden*, *berufstätig*,
+    *selbstständig*).
+- **Chapters 225-243, ninety-five nouns** (`SPINE-NAME-EVERYDAY-THINGS`):
+  - experience (*das Erlebnis*, *das Abenteuer*, *die Erinnerung*);
+  - work and study (*die Ausbildung*, *die Bewerbung*, *der Lebenslauf*,
+    *das Studium*);
+  - culture (*die Ausstellung*, *die Kunst*, *die Tradition*);
+  - society (*die Umwelt*, *der Verkehr*, *die Werbung*, *die Mehrheit*);
+  - reasoning (*der Vorteil*, *der Nachteil*, *die Ursache*, *die Tatsache*,
+    *die Wahrheit*).
+- **Chapters 244-249, thirty verbs** (`SPINE-NAME-EVERYDAY-ACTIONS`):
+  *anbieten*, *annehmen*, *ablehnen*, *anmelden*, *aufpassen*, *ausgeben*,
+  *begleiten*, *besichtigen*, *bestehen*, *diskutieren*, and more.
+- **Chapters 250-251, ten connectives** (`SPINE-SAY-WHY`): *außerdem*,
+  *deshalb*, *trotzdem*, *eigentlich*, *übrigens*, *während*, *sowieso*, and
+  more.
+- **Level gate: German attains A2**, the second track to do so. It has 1,200
+  headwords and 120 verbs at or below A2, all five A2 spine nodes, no lesson
+  over budget and no atom revisited fewer than twice.
+- Pins: lesson-content budget 1169 -> 1384; `level-gate-attainment/german.json`
+  moves to A2.
+- A gloss that read "fair, just" (*gerecht*) now reads "fair, even-handed". The
+  corpus bans *just* in learner-facing prose (HL10 §7.4).
+
+## Chapters 174-210: 185 more A2 headwords
+
+- Thirty-seven chapters of five, generated in five runs of five to nine
+  chapters, each closed by two reviews.
+- **Chapters 174-191, ninety verbs** (`SPINE-NAME-EVERYDAY-ACTIONS`):
+  - travel (*abfahren*, *ankommen*, *einsteigen*, *aussteigen*, *umsteigen*,
+    *verpassen*);
+  - the day (*duschen*, *frühstücken*, *einschlafen*, *wecken*, *aufräumen*);
+  - the kitchen (*backen*, *braten*, *mischen*, *spülen*);
+  - paperwork (*ausfüllen*, *buchstabieren*, *übersetzen*, *vergleichen*);
+  - people (*grüßen*, *umarmen*, *verabreden*, *erinnern*, *kümmern*).
+- **Chapters 192-210, ninety-five nouns** (`SPINE-NAME-EVERYDAY-THINGS`):
+  - the station (*die Abfahrt*, *die Ankunft*, *die Verspätung*, *das Gleis*,
+    *der Fahrplan*);
+  - sights (*der Dom*, *das Denkmal*, *die Burg*, *der Hafen*);
+  - landscape and weather (*das Ufer*, *die Küste*, *der Nebel*, *der Blitz*);
+  - the restaurant (*die Speisekarte*, *die Bestellung*, *das Trinkgeld*,
+    *das Besteck*);
+  - the kitchen and house (*der Topf*, *die Pfanne*, *der Staubsauger*,
+    *das Bügeleisen*);
+  - materials (*die Wolle*, *die Seide*, *das Leder*, *das Holz*);
+  - health and emergencies (*die Sprechstunde*, *die Verletzung*, *das
+    Pflaster*, *der Notfall*, *der Krankenwagen*);
+  - civic life (*das Gesetz*, *die Regierung*, *die Wahl*, *die Wirtschaft*).
+- **Candidate screen.** Candidates were screened more strictly than in the
+  first tranche. Any word whose bare form (no article) already appears
+  anywhere in a German lesson, in German or in the English prose, was dropped
+  before generation, so the tranche adds no forward reference.
+- Pins: lesson-content budget 974 -> 1169.
+- Level gate at A2: vocabulary 378 -> 193 short.
+
+## Chapters 144-173: 150 A2 headwords, fifty of them verbs
+
+- Thirty chapters of five, generated in four runs of six to nine chapters,
+  each closed by two reviews.
+- **Chapters 144-153, fifty verbs** (`SPINE-NAME-EVERYDAY-ACTIONS`), including
+  *ändern*, *anrufen*, *einladen*, *empfehlen*, *entscheiden*, *erklären*,
+  *heiraten*, *mitbringen*, *sparen*, *treffen*, *umziehen*, *unterschreiben*,
+  *verdienen*, *vorstellen* and *wiederholen*.
+- **Chapters 154-166, sixty-five nouns** (`SPINE-NAME-EVERYDAY-THINGS`):
+  - work (*die Firma*, *das Gehalt*, *die Stelle*);
+  - travel papers (*der Ausweis*, *das Visum*);
+  - health (*die Erkältung*, *die Grippe*, *das Rezept*);
+  - money (*das Konto*, *die Rechnung*, *die Kreditkarte*);
+  - post and media (*das Paket*, *die Briefmarke*, *die Nachricht*);
+  - the flat (*das Schlafzimmer*, *der Balkon*, *der Keller*);
+  - weather (*das Gewitter*, *die Temperatur*);
+  - occasions (*die Hochzeit*, *die Einladung*);
+  - ideas (*die Meinung*, *die Lösung*, *die Erfahrung*, *die Möglichkeit*).
+- **Chapters 167-169**: fifteen qualities (*bequem*, *höflich*, *spannend*,
+  *nervös*, *stolz*, and more).
+- **Chapters 170-171**: ten time adverbs on `SPINE-TIME-OF-DAY` (*selten*,
+  *meistens*, *endlich*, *zuerst*, *danach*, *vorher*, *nachher*, and more).
+- **Chapters 172-173**: ten stance and degree adverbs (*leider*,
+  *vielleicht*, *wahrscheinlich*, *natürlich*, *ungefähr*, *zusammen*,
+  *allein*, and more).
+- **Excluded words.** Thirty-seven candidates were left out because teaching
+  them would add forward references. Some are words earlier lessons already use
+  in passing (*dann*, *schon*, *bekommen*). Others spell English words (*das
+  Kind*, *der Pass*, *fast*). German's track-wide cap of 45 holds.
+- Pins: lesson-content budget 816 -> 974.
+- Level gate at A2: verb vocabulary 41 -> 0 short, vocabulary 528 -> 378.
+
+## Chapters 142-143: the future, and reading practical texts
+
+German had realized three of the five A2 spine nodes. The last two now each
+have a chapter.
+
+- **Chapter 142**, on `SPINE-TALK-ABOUT-FUTURE`: *die Zukunft*, *nächste Woche*,
+  *übermorgen*, *nächstes Jahr*, *vorhaben*. Their notes teach the two ways
+  German points ahead:
+  - **werden** plus an infinitive at the end (*Ich werde Deutsch lernen*), with
+    *ich werde*, *du wirst*, *er wird*;
+  - the present tense after a time word (*Übermorgen fahre ich*).
+- **Chapter 143**, on `SPINE-READ-PRACTICAL-TEXTS`: *die Miete*, *die Anzeige*,
+  *der Termin*, *die Öffnungszeiten*, *die Quittung*. Each reads a short text
+  and says what to do about it, for example **Montag bis Freitag, neun bis
+  achtzehn Uhr**: not on Saturday.
+- The texts use only words the book already teaches as headwords.
+- Two reviews close chapter 143.
+- Level gate at A2: spine nodes 2 -> 0. Vocabulary (528 short) and verb
+  vocabulary (41 short) remain.
+
+## A2 reinforcement — eleven atoms get their second revisit
+
+The level gate's A2 reinforcement criterion asks that every atom at or below
+A2 is revisited at least twice (etymology hooks are waived). 11 atoms fell
+short. Each now comes back as a one-line retrieval in the Warm-up of a later
+lesson. Each host comes after the introducing lesson in the curriculum path
+and stays under the 300-second budget. Hosts:
+
+- `GE-C05-wo` (*in*)
+- `GE-C05-wir` (the sounds of *wohnen*)
+- `GE-C06-drei` (*Was machst du?*)
+- `GE-C06-eins` (the sounds of *Deutsch*)
+- `GE-C06-zwei` (the sounds of *lernen*)
+- `GE-C15-machte` (the Perfekt as the plain past)
+- `GE-C15-sagte` (*wir haben gesagt*)
+- `GE-C16-kommen` (*wir waren*)
+- `GE-C17-kopf` (a participle in front of a noun)
+- `GE-C28-kaffee` (the false friends *bekommen* and *gehören*)
+
+Level gate at A2: reinforcement blocker cleared.
+
 ## Chapters 104-141, the numbers node, twenty revisits, and German attains A1
 
 German had three A1 gaps. It was 185 headwords short. Five A1 spine nodes had no

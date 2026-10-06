@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
-import { createBrowserFileEffects, EXECUTABLE_EXTENSIONS, hasExecutableExtension, isPlainFileName, MAX_FILE_BYTES } from './mosaic-file-effects.mjs';
+import { createBrowserFileEffects, EXECUTABLE_EXTENSIONS, hasExecutableExtension, isPlainFileName, isReservedDeviceName, MAX_FILE_BYTES } from './mosaic-file-effects.mjs';
 import { loadMosaicModule } from './mosaic-host.mjs';
 
 const effect = (id = 1, kind = 'file.open', payload = {}) => ({ id, delivery: 'await', kind, payload });
@@ -282,8 +282,10 @@ test('the download fallback refuses a name with no accepted type', async () => {
 });
 
 test('the plain-name rule and executable list match the Compose library', async () => {
-  const kotlin = await readFile(new URL('../../mosaic-app-bindings/templates/compose/MosaicPlatformEffects.kt', import.meta.url), 'utf8');
+  // The rules live in the half Compose Desktop and Android share (UI89 §3.8).
+  const kotlin = await readFile(new URL('../../mosaic-app-bindings/templates/compose/MosaicFileEffects.kt', import.meta.url), 'utf8');
   const start = kotlin.indexOf('val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(');
+  assert.ok(start >= 0, 'the Compose library declares MOSAIC_EXECUTABLE_EXTENSIONS');
   const body = kotlin.slice(start, kotlin.indexOf(')\n', start));
   const listed = [...body.matchAll(/"([a-z0-9-]+)"/g)].map(match => match[1]).sort();
   assert.deepEqual([...EXECUTABLE_EXTENSIONS].sort(), listed);
@@ -304,4 +306,20 @@ test('the legacy file.save type may not name a launcher', async () => {
   await trailing.files.run(effect(15, 'file.save', { suggestedName: 'photo', mimeType: 'application/x-msdownload', extension: '.exe.', bytes: 'AA==' }));
   assert.equal(trailing.calls.length, 0);
   assert.ok(trailing.completions[0][1].failed);
+});
+
+test('Windows device names are never plain names, and active content counts as executable (UI87 §3.1)', () => {
+  for (const name of ['CON', 'con.txt', 'Nul.json', 'COM1.json', 'lpt9', 'COM\u00B9.json', 'CON .txt', 'CONIN$.log', 'aux.tar.gz']) {
+    assert.equal(isPlainFileName(name), false, name);
+    assert.equal(isReservedDeviceName(name), true, name);
+  }
+  for (const name of ['console.txt', 'CONFIG.json', 'aux-notes.txt', 'COM10.json', 'my.CON', 'nul report.json', 'CON\u0131N$.txt']) {
+    assert.equal(isPlainFileName(name), true, name);
+  }
+  for (const name of ['page.html', 'page.HTM', 'card.svg', 'archive.mht', 'shortcut.website', 'report.xlsm', 'deck.pptm', 'tool.py', 'invoice.\u0435x\u0435', 'setup.exe\u0301', 'macros.xlsb', 'addin.xla', 'link.iqy', 'sheet.slk', 'remote.rdp', 'app.pyzw', 'cache.pyc']) {
+    assert.equal(hasExecutableExtension(name), true, name);
+  }
+  for (const name of ['notes.txt', 'data.xlsx', 'report.docx', 'photo.png']) {
+    assert.equal(hasExecutableExtension(name), false, name);
+  }
 });

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:3f004e744aed8d41",
+  "lessonIds": [
+    "TE-C294-salaha",
+    "TE-C294-paiga",
+    "TE-C294-annattu",
+    "TE-C294-dadapu",
+    "TE-C294-mottaniki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch294.txt",
+  "json": "telugu/narration/ch294.json",
+  "textHash": "fnv1a64:ec4c3ed5ea2191f9",
+  "jsonHash": "fnv1a64:e1bf782e50837d23",
+  "findings": []
+}

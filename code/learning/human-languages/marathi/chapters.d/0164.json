@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "To announce, To clap, To cross, To increase, To reduce",
+  "label": "ch:mr-to-announce-to-clap-to-cross-to-increase-to-reduce",
+  "canDo": "I can say to announce, to clap, to cross, to increase and to reduce.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C164-kami-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say to announce, to clap, to cross, to increase and to reduce.",
+    "assesses": [
+      "MR-LEX-C164-ACT164-03",
+      "MR-LEX-C164-ACT164-04",
+      "MR-LEX-C164-ACT164-05"
+    ]
+  }
+}

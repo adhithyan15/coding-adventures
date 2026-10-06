@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-142-LIRE142",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-142-LIRE142"
+  ],
+  "after": []
+}

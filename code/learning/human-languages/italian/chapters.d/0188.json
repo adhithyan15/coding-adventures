@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "On the contrary, In fact, That is, Although, Despite",
+  "label": "ch:it-on-the-contrary-in-fact-that-is-although-despite",
+  "canDo": "I can say on the contrary, in fact, that is, although and despite.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "IT-C188-nonostante",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say on the contrary, in fact, that is, although and despite.",
+    "assesses": [
+      "IT-LEX-C188-PERCHE188-03",
+      "IT-LEX-C188-PERCHE188-04",
+      "IT-LEX-C188-PERCHE188-05"
+    ]
+  }
+}

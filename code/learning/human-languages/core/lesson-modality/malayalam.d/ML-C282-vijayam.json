@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C282-vijayam",
+    "language": "malayalam",
+    "chapter": 282,
+    "sequence": 13170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06fdd88e14f75719"
+  },
+  "findings": []
+}

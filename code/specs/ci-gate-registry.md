@@ -266,6 +266,17 @@ belongs in its own pull request rather than riding along with a performance fix.
 
 ## Adding a job
 
+### Rust compiled grammars: reconciled lanes
+
+The VM-067 check regenerates the reconciled MacroOct and Nib `_grammar.rs`
+artifacts and rejects a byte diff. Its registry entry covers both languages'
+lexer/parser packages and canonical sources plus the Rust grammar-tools library
+and CLI. The job is intentionally limited to confirmed clean artifacts; issue
+#14202 tracks the other Rust grammars whose current output is stale. Widen this
+one job after reconciling another lane instead of adding one queued job per
+language.
+
+
 1. Add the job to `.github/workflows/ci.yml` with `needs: detect` and
    `if: needs.detect.outputs.run_<job_id> == 'true'`.
 2. Add its entry to `code/specs/data/ci-gates.json`, listing every package it

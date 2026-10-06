@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:8831ab5bcc833ffd",
+  "lessonIds": [
+    "BN-C232-shosa",
+    "BN-C232-mashrum",
+    "BN-C232-bhutta",
+    "BN-C232-chhola",
+    "BN-C232-intarnet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch232.txt",
+  "json": "bengali/narration/ch232.json",
+  "textHash": "fnv1a64:4c58e4824e8e28bd",
+  "jsonHash": "fnv1a64:44ebca3bcc9f8c1a",
+  "findings": []
+}

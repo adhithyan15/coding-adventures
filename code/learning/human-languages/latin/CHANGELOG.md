@@ -1,5 +1,202 @@
 # Changelog
 
+## Chapters 255-280: 130 more headwords, and Latin attains A2
+
+The last of four Latin A2 vocabulary tranches. Twenty-six chapters of five
+words each, in three runs of at most nine chapters. Each run closes with two
+reviews.
+
+- **Chapters 255-261: thirty-five verbs**, including *teneō*, *impleō*,
+  *mētior*, *plaudō*, *trānseō*, *augeō*, *moneō*, *mereor*, *offerō*,
+  *spatior*, *ōrō*, *commendō*, *animadvertō*, *iubeō* and *cōgō*.
+- **Chapter 262: virtues and vices** (*fidēs*, *virtūs*, *pudor*,
+  *invidia*, *taedium*).
+- **Chapter 263: time** (*postrīdiē*, *intereā*, *aliquandō*, *diū*,
+  *brevī*).
+- **Chapter 264: place** (*nusquam*, *undique*, *passim*, *sūrsum*,
+  *deorsum*).
+- **Chapter 265: joining ideas** (*sīcut*, *velut*, *utinam*, *immō*,
+  *saltem*).
+- **Chapters 266-269: twenty qualities**, such as *mīrus*, *similis*,
+  *iūstus*, *callidus*, *proximus*, *alter*, *parātus*, *ēbrius* and
+  *avārus*.
+- **Chapters 270-280: fifty-five nouns**:
+  - public buildings (*circus*, *basilica*, *cūria*);
+  - the state at war (*populus*, *cīvitās*, *patria*, *hostis*,
+    *bellum*);
+  - trades (*lanius*, *caupō*, *argentārius*, *scrība*);
+  - family (*nūptiae*, *coniūnx*, *parēns*, *nepōs*, *neptis*);
+  - business (*ōtium*, *negōtium*, *lucrum*, *damnum*);
+  - dust and ash (*lutum*, *pulvis*, *fūmus*, *cinis*);
+  - small creatures (*vespa*, *culex*, *vermis*, *testūdō*);
+  - arms (*galea*, *hasta*, *arcus*, *sagitta*);
+  - books (*volūmen*, *pāgina*, *littera*, *verbum*, *nōmen*);
+  - the garden (*cerasum*, *prūnum*, *brassica*, *porrum*);
+  - defences (*turris*, *columna*, *moenia*, *fossa*, *vallum*).
+- **Latin attains A2.** At or below A2 it teaches 1,235 distinct headwords
+  (target 1,200), and every A2 spine node is realized. Chapters 161-280 add
+  600 headwords, 153 of them verbs. The attainment pin moves from A1 to A2,
+  and the level-gate climb history records the climb.
+- **Pins:** the Latin lesson-content budget goes from 1171 to 1307. The
+  strict book compile is clean at 1486 pages.
+
+## Chapters 229-254: 130 more A2 headwords
+
+The third of four Latin A2 vocabulary tranches. Twenty-six chapters of five
+words each, in three runs of at most nine chapters. Each run closes with two
+reviews.
+
+- **Chapters 229-235: thirty-five verbs**, including *temptō*, *pergō*,
+  *expergīscor*, *comitor*, *nūntiō*, *fruor*, *queror*, *videor*,
+  *patior*, *misceō*, *pāreō*, *colligō*, *meminī*, *loquor*, *sequor*,
+  *proficīscor* and *ūtor*. Most of the deponents fall here.
+- **Chapter 236: remedies and love** (*emplastrum*, *remedium*, *somnium*,
+  *amor*, *amīcitia*).
+- **Chapter 237: time** (*fīnis*, *mora*, *interdum*, *cotīdiē*, *prīdiē*).
+- **Chapter 238: place** (*ultrā*, *citrā*, *apud*, *cōram*, *quā*).
+- **Chapter 239: joining ideas** (*simul*, *fortasse*, *quoque*, *quasi*,
+  *propter*).
+- **Chapters 240-243: twenty qualities**, such as *asper*, *profundus*,
+  *necessārius*, *loquāx*, *sollicitus*, *omnis*, *tōtus*, *fīdēlis* and
+  *beātus*.
+- **Chapters 244-254: fifty-five nouns**:
+  - the city (*platēa*, *aquaeductus*, *thermae*, *amphitheātrum*);
+  - power and crime (*fūr*, *latrō*, *cōnsul*, *imperātor*);
+  - the arts (*carmen*, *versus*, *scrīptor*, *mūsica*);
+  - in-laws (*socer*, *socrus*, *gener*, *nurus*);
+  - duty and danger (*occāsiō*, *perīculum*, *officium*);
+  - materials (*lignum*, *marmor*, *vitrum*);
+  - trees (*vītis*, *quercus*, *pīnus*, *laurus*);
+  - arms (*clāva*, *catēna*, *scūtum*);
+  - the kitchen (*sartāgō*, *furnus*, *candēlābrum*);
+  - feasts and gods (*fēriae*, *convīvium*, *āra*, *dea*);
+  - the march (*sarcina*, *tabernāculum*, *vexillum*).
+- **Book.** Chapter 247's generated title ("Twin, Father-in-law,
+  Mother-in-law, Son-in-law, Daughter-in-law") could not break in the
+  contents and set an underfull line. It is titled "A Twin and the In-Laws".
+  The strict compile is clean at 1349 pages.
+- **Pins:** the Latin lesson-content budget goes from 1035 to 1171.
+- **Level gate at A2:** vocabulary 225 short -> 95.
+
+## Chapters 197-228: 160 more A2 headwords
+
+The second of four Latin A2 vocabulary tranches. Thirty-two chapters of five
+words each, in four runs of at most nine chapters. Each run closes with two
+reviews.
+
+- **Chapters 197-204: forty verbs**, including *ōsculor*, *salūtō*,
+  *explicō*, *vetō*, *morior*, *persuādeō*, *recūsō*, *colloquor*,
+  *celebrō*, *excipiō*, *dubitō*, *quaerō*, *oblīvīscor* and *dēsinō*.
+- **Chapters 205-206: wounds and the mind** (*vulnus*, *cicātrīx*,
+  *gravēdō*, *medicāmentum*, *memoria*, *sapientia*, *cōnsuētūdō*).
+- **Chapters 207-208: time** (*saeculum*, *aetās*, *occāsus*, *ortus*,
+  *dēnique*, *postrēmō*, *quondam*).
+- **Chapter 209: place** (*regiō*, *prōvincia*, *inde*, *obviam*,
+  *usque*).
+- **Chapters 210-211: joining ideas** (*autem*, *vērō*, *profectō*,
+  *omnīnō*, *vix*, *frūstrā*, *rūrsus*).
+- **Chapters 212-216: twenty-five qualities**, such as *cūriōsus*,
+  *anxius*, *peregrīnus*, *līberālis*, *domesticus*, *hodiernus*,
+  *hesternus*, *crāstinus*, *vērus* and *barbātus*.
+- **Chapters 217-228: sixty nouns**:
+  - the roof and the road (*tēgula*, *lectīca*, *vehiculum*, *currus*);
+  - the courts (*testis*, *reus*, *poena*, *crīmen*);
+  - the stage (*fāma*, *spectāculum*, *histriō*, *fābula*);
+  - the household (*ancilla*, *lībertus*, *advena*);
+  - fortune (*discrīmen*, *ēventus*, *fortūna*, *cāsus*);
+  - metals (*aurum*, *argentum*, *aes*, *ferrum*, *plumbum*);
+  - plants and the field (*rādīx*, *spīna*, *seges*);
+  - farm animals (*aper*, *caper*, *agnus*, *vitulus*);
+  - dress (*gemma*, *vestīmentum*, *solea*);
+  - study (*grammatica*, *philosophia*, *quaestiō*, *respōnsum*);
+  - travel (*fātum*, *hospitium*, *dēversōrium*, *viātor*);
+  - the hills (*saltus*, *cacūmen*, *iugum*).
+- **Glosses.** *autem* is "moreover; however", against *tamen*, and *cāsus*
+  is "an accident, a fall", against *facultās*.
+- **Book.** It passes page 999 in the contents, so the preamble widens the
+  page-number box: `\@pnumwidth` goes to 2.4em and `\@tocrmarg` to 3.4em, as
+  in the French and Portuguese books. With the narrower title column, chapter
+  189's contents line ("Blood relative, Mother's brother, Mother's sister, …")
+  set loose and reported an underfull box. It is now titled "Kin, Uncle,
+  Aunt, Truth, Lie". The strict compile is clean at 1218 pages.
+- **Pins:** the Latin lesson-content budget goes from 867 to 1035.
+- **Level gate at A2:** vocabulary 385 short -> 225.
+
+## Chapters 165-196: 160 A2 headwords, forty of them verbs
+
+The first of four Latin A2 vocabulary tranches. Thirty-two chapters of five
+words each, in four runs of at most nine chapters. Each run closes with two
+reviews.
+
+- **Chapters 165-172: forty verbs**, including *accendō*, *exstinguō*,
+  *subrīdeō*, *prōmittō*, *permittō*, *computō*, *possideō*, *commodō*,
+  *appropinquō*, *admīror*, *suspicor*, *crēdō*, *vēnor* and *negō*. Deponents
+  (*lābor*, *admīror*, *vēnor*) are listed in their dictionary form,
+  *lābor, lābī*.
+- **Chapters 173-174: the body and the mind** (*valētūdō*, *cerebrum*,
+  *pulmō*, *lacrima*, *rīsus*, *vōx*, *animus*).
+- **Chapters 175-176: time** (*tandem*, *posthāc*, *adhūc*, *subitō*,
+  *quotannīs*, *semel*, *bis*).
+- **Chapter 177: place** (*longē*, *alibī*, *illīc*, *intus*, *forīs*).
+- **Chapters 178-179: joining ideas** (*igitur*, *tamen*, *quamquam*,
+  *etsī*, *nisi*, *praesertim*, *potius*, *valdē*).
+- **Chapters 180-184: twenty-five qualities**, such as *commodus*,
+  *urbānus*, *hilaris*, *grātuītus*, *recēns*, *pūblicus*, *celeber* and
+  *fācundus*.
+- **Chapters 185-196: sixty nouns**:
+  - the Roman house (*tablīnum*, *peristylium*, *impluvium*);
+  - the market (*mercātus*, *pondus*, *lībra*);
+  - peace and glory (*pāx*, *victōria*, *lībertās*);
+  - trades (*architectus*, *figulus*, *vīlicus*);
+  - family and truth (*avunculus*, *mātertera*, *vēritās*, *mendācium*);
+  - money (*vectīgal*, *dēnārius*, *sēstertius*);
+  - weather (*sīdus*, *procella*, *nimbus*);
+  - birds (*passer*, *cicōnia*, *noctua*, *pāvō*);
+  - games (*tālus*, *tessera*);
+  - speech (*sermō*, *ōrātiō*, *rūmor*);
+  - the table (*lībum*, *garum*, *diēs nātālis*);
+  - land (*fluvius*, *palūs*, *prātum*, *lūcus*).
+- **Candidate screen.** Candidates whose lemma already appears untaught in an
+  earlier Latin lesson were dropped, so the tranche adds no forward
+  reference. Examples: *via*, *rēx*, *tempus*, *nāvis*.
+- **Glosses.** They are disambiguated against taught words that share an
+  English cue: *avunculus* is "a mother's brother", against *patruus*, and
+  *properō* is "to make haste", against *festīnō*.
+- **Pins:** the Latin lesson-content budget goes from 699 to 867.
+- **Level gate at A2:** verb vocabulary 6 short -> 0; vocabulary 545 short
+  -> 385. The strict book compile reports 1050 pages and no overfull box.
+
+## Chapters 161-164: saying no, the past, the future and practical texts
+
+Latin had realized one of its five A2 spine nodes. Four chapters realize the
+other four, so the A2 gate reports no missing spine node. Vocabulary and verb
+vocabulary remain.
+
+- Chapter 161 (SPINE-NEGATE-AND-ASK): *nihil*, *nēmō*, *nūllus*,
+  *uter*, *neque*. Latin needs no second negative, and *uter* asks "which of
+  two".
+- Chapter 162 (SPINE-TALK-ABOUT-PAST): *nūper*, *nudiustertius*, *ōlim*,
+  *anteā*, *accidō*. The notes introduce the perfect through forms like
+  *vīdī*, *lēgī*, *scrīpsī* and *habitāvī*.
+- Chapter 163 (SPINE-TALK-ABOUT-FUTURE): *perendiē*, *posteā*, *cōnsilium*,
+  *cōnstituō*, *prōvideō*. These build on the future *vidēbō* from
+  *crās tē vidēbō*, and the notes add *ībō* and *cōnstituam*.
+- Chapter 164 (SPINE-READ-PRACTICAL-TEXTS): *titulus*, *īnscrīptiō*,
+  *pretium*, *vēnālis*, *merx*. Each lesson reads a real kind of Roman
+  notice: *Cavē canem*, *SPQR*, a sale sign.
+- No new forward reference. Candidates already used untaught in an earlier
+  lesson were dropped: *num*, *-ne*, *futūrus*, *spērō*, *cavē* as a
+  headword.
+- The extensions carry stage A2. Two reviews close the four chapters.
+
+## Chapter payoffs say "I can", not "i can"
+
+The payoff line under each chapter's goal lowercased the goal's first letter,
+so 98 chapters printed "Complete the last lesson of chapter N: i can say …".
+Every one now keeps the capital: "…: I can say …", and a new test
+(`payoff-summary-case.test.ts`) fails if the lowercase pronoun comes back. Only
+the payoff summary changed; no lesson, word or atom moved.
+
 ## Chapters 109-160: 260 headwords, can, want and why, and Latin attains A1
 
 Latin had three A1 gaps. It was 247 headwords short. Six A1 spine nodes had no

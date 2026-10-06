@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:e2c728b46503a0b6",
+  "lessonIds": [
+    "BN-C262-lekhok",
+    "BN-C262-kobi",
+    "BN-C262-shilpi",
+    "BN-C262-gayika",
+    "BN-C262-nortoki",
+    "BN-R262-first-pass-words-from-chapters-255-258",
+    "BN-R262-second-pass-words-from-chapters-259-262"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch262.txt",
+  "json": "bengali/narration/ch262.json",
+  "textHash": "fnv1a64:1ba4b976c621a96b",
+  "jsonHash": "fnv1a64:0b26fbd751845715",
+  "findings": []
+}

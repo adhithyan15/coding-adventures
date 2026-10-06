@@ -1,0 +1,11 @@
+{
+  "id": "RU-C216-spokoynyy",
+  "pathSegment": "RU-PATH-216-KACH216",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-216-KACH216",
+      "order": 0
+    }
+  ]
+}

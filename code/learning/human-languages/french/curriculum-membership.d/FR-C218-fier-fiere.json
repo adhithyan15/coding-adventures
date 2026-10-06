@@ -1,0 +1,11 @@
+{
+  "id": "FR-C218-fier-fiere",
+  "pathSegment": "FR-PATH-218-QUAL218",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-218-QUAL218",
+      "order": 2
+    }
+  ]
+}

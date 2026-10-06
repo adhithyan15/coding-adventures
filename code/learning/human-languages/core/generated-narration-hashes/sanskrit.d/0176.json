@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:a2dd397e43519668",
+  "lessonIds": [
+    "SA-C176-parivartayati",
+    "SA-C176-nivedayati",
+    "SA-C176-amantrayati",
+    "SA-C176-sodhayati",
+    "SA-C176-purayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch176.txt",
+  "json": "sanskrit/narration/ch176.json",
+  "textHash": "fnv1a64:0810e01cb061c871",
+  "jsonHash": "fnv1a64:6497dd46c287a0c0",
+  "findings": []
+}

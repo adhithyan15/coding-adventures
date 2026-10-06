@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:56b8522c2d4db983",
+  "lessonIds": [
+    "GE-C162-sofa",
+    "GE-C162-radio",
+    "GE-C162-wetter",
+    "GE-C162-wind",
+    "GE-C162-gewitter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch162.txt",
+  "json": "german/narration/ch162.json",
+  "textHash": "fnv1a64:c83969db64737802",
+  "jsonHash": "fnv1a64:9383eed05121c68d",
+  "findings": []
+}

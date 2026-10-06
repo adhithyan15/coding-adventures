@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "Customs, Booking, Valley, Temperature, Fly",
+  "label": "ch:pt-customs-booking-valley-temperature-fly",
+  "canDo": "I can say customs, a booking, a valley, temperature and a fly.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C244-mosca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say customs, a booking, a valley, temperature and a fly.",
+    "assesses": [
+      "PT-LEX-C244-COISAS244-03",
+      "PT-LEX-C244-COISAS244-04",
+      "PT-LEX-C244-COISAS244-05"
+    ]
+  }
+}

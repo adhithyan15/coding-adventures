@@ -1,0 +1,11 @@
+{
+  "id": "BN-C255-jhor",
+  "pathSegment": "BN-PATH-255-JINIS255",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-255-JINIS255",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:12ef1b51d78dd0da",
+  "lessonIds": [
+    "MR-C222-karkirda",
+    "MR-C222-masik",
+    "MR-C222-sabdakos",
+    "MR-C222-vidyapith",
+    "MR-C222-cuk",
+    "MR-R222-first-pass-words-from-chapters-217-219",
+    "MR-R222-second-pass-words-from-chapters-220-222"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch222.txt",
+  "json": "marathi/narration/ch222.json",
+  "textHash": "fnv1a64:8e7237c6295118a2",
+  "jsonHash": "fnv1a64:918f363e43e35f98",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Pace, Witness, Defendant, Punishment, Charge",
+  "label": "ch:la-pace-witness-defendant-punishment-charge",
+  "canDo": "I can say a pace, a witness, a defendant, a punishment and a charge.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C218-crimen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say a pace, a witness, a defendant, a punishment and a charge.",
+    "assesses": [
+      "LA-LEX-C218-RES218-03",
+      "LA-LEX-C218-RES218-04",
+      "LA-LEX-C218-RES218-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C227-parkku-ceyyuka",
+    "language": "malayalam",
+    "chapter": 227,
+    "sequence": 10280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f01e3b6bbbcd2cc"
+  },
+  "findings": []
+}

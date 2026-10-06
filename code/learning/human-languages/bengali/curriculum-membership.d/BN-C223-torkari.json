@@ -1,0 +1,11 @@
+{
+  "id": "BN-C223-torkari",
+  "pathSegment": "BN-PATH-223-JINIS223",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-223-JINIS223",
+      "order": 2
+    }
+  ]
+}

@@ -8,18 +8,18 @@ type: phrase
 headword: tengo · hago · digo
 gloss: comparing the three learned yo forms that end in -go
 concept_tag: ES-YO-GO
-prerequisites: [ES-C12-hacer, ES-C12-decir, ES-C08-tener]
+prerequisites: [ES-C12-hacer, ES-C12-decir, ES-C08-tener, ES-C08-tenemos, ES-C08-tenemos]
 sounds: [g-hard]
 roots: [spanish-yo-go-convergence]
 etymology_hook: "tengo, hago, and digo reached a shared -go shape through inherited sound changes and analogy, not through one productive ending that can predict unseen verbs"
 duration:
   max_seconds: 290
 requires:
-  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR]
+  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-GRAMMAR-TENER-PRESENT-1PL, ES-GRAMMAR-TENER-PRESENT-2PL]
 introduces:
   knowledge: [ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE]
 practises:
-  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE]
+  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-GRAMMAR-TENER-PRESENT-1PL, ES-GRAMMAR-TENER-PRESENT-2PL]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,10 +31,12 @@ reviews_of: [ES-C08-tener, ES-C12-hacer, ES-C12-decir]
 # tengo · hago · digo — compare only what you know
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-GRAMMAR-TENER-PRESENT-1PL, ES-GRAMMAR-TENER-PRESENT-2PL] -->
 
 [PAUSE 2s] Three learned verbs now place **g** in the **yo** form: **tengo,
 hago, digo**. Compare those three without guessing the form of any unseen verb.
+
+[PAUSE 2s] Say *tenemos* and *tenéis* once more, stress on the ending, before *tengo* goes its own way.
 
 ## Grammar Lens: one visible corner
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-YO-GO-CONTRAST-LEARNED]; assesses=[ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR] -->

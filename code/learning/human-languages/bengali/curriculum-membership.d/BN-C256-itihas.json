@@ -1,0 +1,11 @@
+{
+  "id": "BN-C256-itihas",
+  "pathSegment": "BN-PATH-256-JINIS256",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-256-JINIS256",
+      "order": 1
+    }
+  ]
+}

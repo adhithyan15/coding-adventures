@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:fc0f27ea0ca02c87",
+  "lessonIds": [
+    "RU-C164-pivo",
+    "RU-C164-vino",
+    "RU-C164-klimat",
+    "RU-C164-vozdukh",
+    "RU-C164-zemlya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch164.txt",
+  "json": "russian/narration/ch164.json",
+  "textHash": "fnv1a64:b1acd7a0f7f89cf6",
+  "jsonHash": "fnv1a64:c910dad0a827c49f",
+  "findings": []
+}

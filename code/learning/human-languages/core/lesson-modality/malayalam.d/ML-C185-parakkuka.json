@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C185-parakkuka",
+    "language": "malayalam",
+    "chapter": 185,
+    "sequence": 8070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fef7d78a98c0a42f"
+  },
+  "findings": []
+}

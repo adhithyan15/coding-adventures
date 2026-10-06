@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Rain, Sun, Wind, Heat, Cold",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:645582ad8c8682b6",
+  "sourceHash": "fnv1a64:39898ab1e5f5b52d",
   "lessons": [
     {
       "id": "UR-C15-barish",
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c115f71ec4da52b",
+      "sourceHash": "fnv1a64:9cf99569e4e01ee9",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +341,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ہوا is borrowed from Classical Persian hawā — but Persian did not invent it either. Persian itself borrowed the word from Arabic هَوَاء hawā. khudā, back in the take-leave chapter, came into Urdu directly from Persian, inherited within Iranian the whole way. dil and safed each split from one PIE root into two independent roads, Iranian and Indo-Aryan. ہوا is a different shape again: a single word passed hand to hand, Arabic to Persian, Persian to Urdu — a loan of a loan, not a shared inheritance at all."
+              "text": "ہوا is borrowed from Classical Persian hawā — but Persian did not invent it either. Persian itself borrowed the word from Arabic hawāʾ. khudā, back in the take-leave chapter, came into Urdu directly from Persian, inherited within Iranian the whole way. dil and safed each split from one PIE root into two independent roads, Iranian and Indo-Aryan. ہوا is a different shape again: a single word passed hand to hand, Arabic to Persian, Persian to Urdu — a loan of a loan, not a shared inheritance at all."
             }
           ]
         },

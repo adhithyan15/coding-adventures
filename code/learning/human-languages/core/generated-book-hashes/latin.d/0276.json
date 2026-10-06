@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:46439e6d9da3a81a",
+  "lessonIds": [
+    "LA-C276-vespa",
+    "LA-C276-culex",
+    "LA-C276-pulex",
+    "LA-C276-vermis",
+    "LA-C276-testudo"
+  ],
+  "tex": "latin/book/chapters/ch276-wasp-gnat-flea-worm-tortoise.tex"
+}

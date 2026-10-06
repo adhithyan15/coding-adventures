@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C257-mettilu",
+    "language": "kannada",
+    "chapter": 257,
+    "sequence": 12210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55c1d91f4ba57fed"
+  },
+  "findings": []
+}

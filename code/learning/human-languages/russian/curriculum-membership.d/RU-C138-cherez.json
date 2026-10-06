@@ -1,0 +1,11 @@
+{
+  "id": "RU-C138-cherez",
+  "pathSegment": "RU-PATH-138-FUT138",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-138-FUT138",
+      "order": 1
+    }
+  ]
+}

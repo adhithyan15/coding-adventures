@@ -9,7 +9,7 @@ headword: ਭਰਾ
 romanization: bharā
 gloss: brother — spelled with a breathy bh, said with a plain p and a low tone
 concept_tag: PA-FAMILY-BROTHER
-prerequisites: [PA-C11-parivar]
+prerequisites: [PA-C11-parivar, PA-C07-khana-tone]
 sounds: [tone-low, breathy-bh]
 roots: [sanskrit-bhratr, pie-bhrehter]
 etymology_hook: ਭਰਾ is inherited from Old Punjabi bharāu, from Sanskrit bhrātṛ, from Proto-Indo-European *bʰréh2tēr — the same word, by unbroken descent, as English brother, Latin frāter, Greek phrātēr, and Russian brat; its opening breathy bh is now said as a plain p, with the breath itself surviving only as a low tone.

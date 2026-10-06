@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Almonds, Raisins, Jaggery, Dhoti, Kurta",
+  "label": "ch:mr-almonds-raisins-jaggery-dhoti-kurta",
+  "canDo": "I can say almonds, raisins, jaggery, a dhoti and a kurta.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C270-kurta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say almonds, raisins, jaggery, a dhoti and a kurta.",
+    "assesses": [
+      "MR-LEX-C270-VASTU270-03",
+      "MR-LEX-C270-VASTU270-04",
+      "MR-LEX-C270-VASTU270-05"
+    ]
+  }
+}

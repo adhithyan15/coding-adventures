@@ -1,0 +1,11 @@
+{
+  "id": "KA-C215-sampradaya",
+  "pathSegment": "KA-PATH-215-KARANA215",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-215-KARANA215",
+      "order": 3
+    }
+  ]
+}

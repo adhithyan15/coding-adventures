@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:03ff804b1bb24f70",
+  "lessonIds": [
+    "FA-C212-darpush",
+    "FA-C212-karton",
+    "FA-C212-kise",
+    "FA-C212-kuze",
+    "FA-C212-estekan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch212.txt",
+  "json": "persian/narration/ch212.json",
+  "textHash": "fnv1a64:6cbdbc51d3936d9f",
+  "jsonHash": "fnv1a64:d52cd2a7529088ca",
+  "findings": []
+}

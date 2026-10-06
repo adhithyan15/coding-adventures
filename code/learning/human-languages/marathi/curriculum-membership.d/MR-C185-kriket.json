@@ -1,0 +1,11 @@
+{
+  "id": "MR-C185-kriket",
+  "pathSegment": "MR-PATH-185-VASTU185",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-185-VASTU185",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C242-kafe",
+    "language": "russian",
+    "chapter": 242,
+    "sequence": 14890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c5c14d7970c02ad"
+  },
+  "findings": []
+}

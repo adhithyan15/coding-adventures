@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:ed4ee8e247511b8f",
+  "lessonIds": [
+    "RU-C191-batareya",
+    "RU-C191-rozetka",
+    "RU-C191-provod",
+    "RU-C191-zaryadka",
+    "RU-C191-noutbuk"
+  ],
+  "tex": "russian/book/chapters/ch191-radiator-socket-wire-charger-laptop.tex"
+}

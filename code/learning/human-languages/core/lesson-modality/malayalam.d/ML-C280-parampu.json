@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C280-parampu",
+    "language": "malayalam",
+    "chapter": 280,
+    "sequence": 13020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a89c773943728a5"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C144-nenavidet",
+  "pathSegment": "RU-PATH-144-ACT144",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-144-ACT144",
+      "order": 2
+    }
+  ]
+}

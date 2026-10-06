@@ -1,5 +1,16 @@
 # Changelog — @coding-adventures/forme-aot-fs-cache
 
+## Unreleased
+
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
+- Serialize same-process writes to one cache key and replace completed cache
+  entries explicitly on Windows, where `rename` does not overwrite an existing
+  destination. Concurrent readers may observe a cache miss during that Windows
+  fallback, but never a partial value.
+
 ## 0.1.0 — 2026-05-17
 
 Initial release.  Third FM06 AOT compiler family package and the
@@ -42,9 +53,9 @@ divergences.
 - **`list()` ignores non-cache files** (anything not matching
   `^[0-9a-f]{62}\.cache$` in a shard dir), non-shard top-level
   entries, and leftover `.tmp.*` files from crashed previous runs.
-- **Multiple `CacheIO` instances over the same `cacheDir` are
-  safe** — atomic writes prevent partial-state reads; no
-  in-process coordination state.
+- **Multiple `CacheIO` instances over the same `cacheDir` never expose
+  partial values.** Windows replacement is serialized in-process and
+  may expose a brief cache miss.
 - **Graceful empty state.**  `get` / `list` on a non-existent
   `cacheDir` return `null` / `[]` respectively (so callers can
   construct the IO before the dir exists).  Only `put` insists on
@@ -59,8 +70,9 @@ Four concerns explicitly addressed (pre-push review):
   filesystem.  Keys like `../../etc/passwd` (which don't match
   the regex) throw synchronously.  Defence in depth: `path.join`
   would normalise even if the assertion were bypassed.
-- **Atomic-write correctness.**  Temp file + rename per `put`.
-  No partial-read window.  Failed renames clean up the temp
+- **Complete-value write correctness.** Temp file + rename per `put`.
+  POSIX replacement is atomic; Windows may expose a brief miss but no
+  partial value. Failed renames clean up the temp
   file (best-effort `unlink`).  Tests pin both the happy-path
   "no .tmp leftovers after 50 concurrent puts" and the
   rename-fail cleanup path.
@@ -81,14 +93,14 @@ that interface to real disk.
 
 ### Tests
 
-33 tests in `fs-cache.test.ts`:
+35 tests in `fs-cache.test.ts`:
 
 - Basic round-trip (6)
 - Sharded layout (2)
 - Key validation including path-traversal-shaped keys + control
   chars (6)
 - `cacheDir` validation (3)
-- Atomic writes including 50-way concurrent stress (3)
+- Complete-value writes including Windows replacement and 50-way stress (5)
 - `list()` filtering of stray files (3)
 - Defensive non-ENOENT error handling (4)
 - End-to-end via incremental-cache layer (1)
@@ -98,7 +110,7 @@ that interface to real disk.
 - Randomness-in-temp-name (1)
 - Whitelist for stray .cache.tmp.* files (1)
 
-Coverage: **97.95% line / 95.23% branch** — above the FM04 §14.4
+Coverage: **95.65% line / 86.20% branch** — above the FM04 §14.4
 ≥95% line target.  Uncovered lines: the defensive non-ENOENT arm
 of `ensureCacheDirValid` (e.g. EACCES — hard to reproduce
 cross-platform).
@@ -113,3 +125,6 @@ cross-platform).
 - **Single-filesystem atomic guarantee.**  If `cacheDir` straddles
   a mount point, `rename` atomicity weakens to "almost always
   atomic in practice."
+- **Windows replacement is not cross-process atomic.** Readers may observe a
+  cache miss between unlink and rename, which is safe for rebuildable cache
+  data but unsuitable for primary storage.

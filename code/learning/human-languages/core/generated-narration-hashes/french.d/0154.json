@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:666653b8909217f9",
+  "lessonIds": [
+    "FR-C154-sante",
+    "FR-C154-cerveau",
+    "FR-C154-poumon",
+    "FR-C154-foie",
+    "FR-C154-rein"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch154.txt",
+  "json": "french/narration/ch154.json",
+  "textHash": "fnv1a64:c5c2e0f8895bc783",
+  "jsonHash": "fnv1a64:9be2dc31a2dbc216",
+  "findings": []
+}

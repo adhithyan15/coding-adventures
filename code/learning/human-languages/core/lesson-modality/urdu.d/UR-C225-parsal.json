@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C225-parsal",
+    "language": "urdu",
+    "chapter": 225,
+    "sequence": 13350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea545b10a9a7064e"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:3a27ff8785a89fd9",
+  "lessonIds": [
+    "IT-C198-cartella",
+    "IT-C198-busta-paga",
+    "IT-C198-etichetta",
+    "IT-C198-cartello",
+    "IT-C198-mappa"
+  ],
+  "tex": "italian/book/chapters/ch198-folder-pay-slip-label-sign-map.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:367b5e1fea23f4c9",
+  "lessonIds": [
+    "AR-C227-khajila",
+    "AR-C227-qaliqa",
+    "AR-C227-taarrafa",
+    "AR-C227-tashajara",
+    "AR-C227-tasalaha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch227.txt",
+  "json": "arabic/narration/ch227.json",
+  "textHash": "fnv1a64:5a0a93d92feff6a3",
+  "jsonHash": "fnv1a64:fa272f4b679f5d3f",
+  "findings": []
+}

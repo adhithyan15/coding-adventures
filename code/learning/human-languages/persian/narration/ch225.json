@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 225,
+  "title": "To memorise, To moan, To yawn, To vomit, To swell up",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:ba76f509ada5eadf",
+  "lessons": [
+    {
+      "id": "FA-C225-hefz-kardan",
+      "sequence": 11590,
+      "title": "حفظ کردن (hefz kardan) — to memorise",
+      "headword": "حفظ کردن",
+      "romanization": "hefz kardan",
+      "gloss": "to memorise",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b4153fc2f85d600",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to separate, then the Persian for to peel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حفظ کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حفظ کردن — hefz kardan — \"to memorise\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hefz kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hefz kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hefz kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hefz kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hefz kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hefz kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to separate, then the Persian for to peel, then say hefz kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to separate, then the Persian for to peel, then say *hefz kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حفظ کردن (hefz kardan) mean? (\"To memorise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C225-nale-kardan",
+      "sequence": 11600,
+      "title": "ناله کردن (nâle kardan) — to moan, to groan",
+      "headword": "ناله کردن",
+      "romanization": "nâle kardan",
+      "gloss": "to moan, to groan",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a20f8c7dc534a29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to peel, then the Persian for to memorise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ناله کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ناله کردن — nâle kardan — \"to moan, to groan\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nâle kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nâle kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nâle kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nâle kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nâle kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nâle kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to peel, then the Persian for to memorise, then say nâle kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to peel, then the Persian for to memorise, then say *nâle kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ناله کردن (nâle kardan) mean? (\"To moan, to groan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C225-khamyaze-keshidan",
+      "sequence": 11610,
+      "title": "خمیازه کشیدن (khamyâze keshidan) — to yawn",
+      "headword": "خمیازه کشیدن",
+      "romanization": "khamyâze keshidan",
+      "gloss": "to yawn",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a3ded7e5b50d767",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to memorise, then the Persian for to moan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خمیازه کشیدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خمیازه کشیدن — khamyâze keshidan — \"to yawn\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khamyâze keshidan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khamyâze keshidan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khamyâze keshidan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khamyâze keshidan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say khamyâze keshidan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *khamyâze keshidan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to memorise, then the Persian for to moan, then say khamyâze keshidan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to memorise, then the Persian for to moan, then say *khamyâze keshidan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خمیازه کشیدن (khamyâze keshidan) mean? (\"To yawn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C225-bala-avardan",
+      "sequence": 11620,
+      "title": "بالا آوردن (bâlâ âvardan) — to vomit, to throw up",
+      "headword": "بالا آوردن",
+      "romanization": "bâlâ âvardan",
+      "gloss": "to vomit, to throw up",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01ed4ff2927e9f48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to moan, then the Persian for to yawn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بالا آوردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بالا آوردن — bâlâ âvardan — \"to vomit, to throw up\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bâlâ âvardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bâlâ âvardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bâlâ âvardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bâlâ âvardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bâlâ âvardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bâlâ âvardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to moan, then the Persian for to yawn, then say bâlâ âvardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to moan, then the Persian for to yawn, then say *bâlâ âvardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بالا آوردن (bâlâ âvardan) mean? (\"To vomit, to throw up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C225-varam-kardan",
+      "sequence": 11630,
+      "title": "ورم کردن (varam kardan) — to swell up",
+      "headword": "ورم کردن",
+      "romanization": "varam kardan",
+      "gloss": "to swell up",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:576e8a37e6666fb8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to yawn, then the Persian for to vomit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ورم کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ورم کردن — varam kardan — \"to swell up\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varam kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varam kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varam kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varam kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say varam kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *varam kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to yawn, then the Persian for to vomit, then say varam kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to yawn, then the Persian for to vomit, then say *varam kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ورم کردن (varam kardan) mean? (\"To swell up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R225-first-pass-words-from-chapters-217-220",
+      "sequence": 11640,
+      "title": "Words from chapters 217-220 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 217-220",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45efa543425541ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to vomit and to swell up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to speak, to work, to play, to walk, to get on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to speak, to work, to play, to walk, to get on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to brew, to cough, to rest, to exercise, to swim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to brew, to cough, to rest, to exercise, to swim]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stop, to keep, to practise, to kiss, to smile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stop, to keep, to practise, to kiss, to smile]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to allow, to finish, to pass, to print, to photocopy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to allow, to finish, to pass, to print, to photocopy]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To speak? (حرف زدن, harf zadan.) To work? (کار کردن, kâr kardan.) To play? (بازی کردن, bâzi kardan.) To walk? (راه رفتن, râh raftan.) To get on? (سوار شدن, savâr shodan.) To brew? (دم کردن, dam kardan.) To cough? (سرفه کردن, sorfe kardan.) To rest? (استراحت کردن, esterâhat kardan.) To exercise? (ورزش کردن, varzesh kardan.) To swim? (شنا کردن, shenâ kardan.) To stop? (توقف کردن, tavaqqof kardan.) To keep? (نگه داشتن, negah dâshtan.) To practise? (تمرین کردن, tamrin kardan.) To kiss? (بوسیدن, busidan.) To smile? (لبخند زدن, labkhand zadan.) To allow? (اجازه دادن, ejâze dâdan.) To finish? (تمام کردن, tamâm kardan.) To pass? (قبول شدن, qabul shodan.) To print? (چاپ کردن, chap kardan.) To photocopy? (کپی گرفتن, kopi gereftan.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R225-second-pass-words-from-chapters-221-225",
+      "sequence": 11650,
+      "title": "Words from chapters 221-225 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 221-225",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b387feb21641d9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to forgive and to fall out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to forgive, to fall out, to make up, to joke, to be jealous",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to forgive, to fall out, to make up, to joke, to be jealous]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to water, to bark, to dream, to doubt, to take",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to water, to bark, to dream, to doubt, to take]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to rescue, to hide, to explain, to carry, to move",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to rescue, to hide, to explain, to carry, to move]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to scratch, to press, to connect, to separate, to peel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to scratch, to press, to connect, to separate, to peel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to memorise, to moan, to yawn, to vomit, to swell up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to memorise, to moan, to yawn, to vomit, to swell up]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To forgive? (بخشیدن, bakhshidan.) To fall out? (قهر کردن, qahr kardan.) To make up? (آشتی کردن, âshti kardan.) To joke? (شوخی کردن, shukhi kardan.) To be jealous? (حسودی کردن, hasudi kardan.) To water? (آب دادن, âb dâdan.) To bark? (پارس کردن, pârs kardan.) To dream? (خواب دیدن, khâb didan.) To doubt? (شک کردن, shak kardan.) To take? (طول کشیدن, tul keshidan.) To rescue? (نجات دادن, nejât dâdan.) To hide? (پنهان کردن, penhân kardan.) To explain? (شرح دادن, sharh dâdan.) To carry? (حمل کردن, haml kardan.) To move? (حرکت کردن, harakat kardan.) To scratch? (خاراندن, khârândan.) To press? (فشار دادن, feshâr dâdan.) To connect? (وصل کردن, vasl kardan.) To separate? (جدا کردن, jodâ kardan.) To peel? (پوست کندن, pust kandan.) To memorise? (حفظ کردن, hefz kardan.) To moan? (ناله کردن, nâle kardan.) To yawn? (خمیازه کشیدن, khamyâze keshidan.) To vomit? (بالا آوردن, bâlâ âvardan.) To swell up? (ورم کردن, varam kardan.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

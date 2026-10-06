@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R157-second-pass-words-from-chapters-153-157",
+    "language": "italian",
+    "chapter": 157,
+    "sequence": 8190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6960b866de6d193f"
+  },
+  "findings": []
+}

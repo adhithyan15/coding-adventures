@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:455b1fb1574c2bcd",
+  "lessonIds": [
+    "UR-C208-bulbul",
+    "UR-C208-saras",
+    "UR-C208-giddh",
+    "UR-C208-chamgadar",
+    "UR-C208-bichchhu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch208.txt",
+  "json": "urdu/narration/ch208.json",
+  "textHash": "fnv1a64:5008255b65f919a1",
+  "jsonHash": "fnv1a64:12ca432c7315e43b",
+  "findings": []
+}

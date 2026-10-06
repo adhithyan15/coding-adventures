@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C265-ukku",
+    "language": "kannada",
+    "chapter": 265,
+    "sequence": 12660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0dc9357c977855a1"
+  },
+  "findings": []
+}

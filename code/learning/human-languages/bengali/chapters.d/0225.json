@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Team, Player, Film, Play, Poem",
+  "label": "ch:bn-team-player-film-play-poem",
+  "canDo": "I can say a team, a player, a film, a play and a poem.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C225-kobita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say a team, a player, a film, a play and a poem.",
+    "assesses": [
+      "BN-LEX-C225-JINIS225-03",
+      "BN-LEX-C225-JINIS225-04",
+      "BN-LEX-C225-JINIS225-05"
+    ]
+  }
+}

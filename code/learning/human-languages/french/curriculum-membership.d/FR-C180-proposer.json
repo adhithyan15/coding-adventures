@@ -1,0 +1,11 @@
+{
+  "id": "FR-C180-proposer",
+  "pathSegment": "FR-PATH-180-VERBES180",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-180-VERBES180",
+      "order": 3
+    }
+  ]
+}

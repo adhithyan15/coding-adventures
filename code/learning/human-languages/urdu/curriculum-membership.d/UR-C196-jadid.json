@@ -1,0 +1,11 @@
+{
+  "id": "UR-C196-jadid",
+  "pathSegment": "UR-PATH-196-SIFAT196",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-196-SIFAT196",
+      "order": 4
+    }
+  ]
+}

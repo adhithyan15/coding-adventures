@@ -1,0 +1,11 @@
+{
+  "id": "SA-C147-senapatih",
+  "pathSegment": "SA-PATH-147-PPL147",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-147-PPL147",
+      "order": 4
+    }
+  ]
+}

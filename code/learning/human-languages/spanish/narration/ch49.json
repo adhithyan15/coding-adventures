@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Going, and the Future You Can Already Say",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5a190be94be96d0d",
+  "sourceHash": "fnv1a64:5c7e48b341b9b9aa",
   "lessons": [
     {
       "id": "ES-C10-ir",
@@ -577,7 +577,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3927041e1691a22d",
+      "sourceHash": "fnv1a64:af755379bf248b1b",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +594,16 @@
             {
               "kind": "speech",
               "text": "You already know café, and you distinguish informal tú from formal usted. Now put one small ownership word before that one known noun."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two futures: voy a hablar, where the a is motion toward, and hablaré, the endings riding on the whole infinitive. Then comeré, viviré."
             }
           ]
         },

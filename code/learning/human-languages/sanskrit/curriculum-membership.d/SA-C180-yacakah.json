@@ -1,0 +1,11 @@
+{
+  "id": "SA-C180-yacakah",
+  "pathSegment": "SA-PATH-180-PPL180",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-180-PPL180",
+      "order": 2
+    }
+  ]
+}

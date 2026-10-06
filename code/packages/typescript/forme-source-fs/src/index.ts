@@ -275,8 +275,8 @@ async function scanSourceSnapshot(
 
 const sourceFs = defineStage({
   name: "@coding-adventures/forme-source-fs",
-  version: "0.4.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Walk a filesystem directory and emit one ContentSource per matching file.",
   consumes: Kinds.Void,
   produces: streamOf(Kinds.ContentSource),

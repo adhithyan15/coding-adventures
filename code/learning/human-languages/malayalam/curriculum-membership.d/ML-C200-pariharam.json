@@ -1,0 +1,11 @@
+{
+  "id": "ML-C200-pariharam",
+  "pathSegment": "ML-PATH-200-KARANAM200",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-200-KARANAM200",
+      "order": 3
+    }
+  ]
+}

@@ -8,18 +8,18 @@ type: word
 headword: querer
 gloss: to want — with the singular present forms quiero, quieres, and quiere
 concept_tag: VERB-WANT
-prerequisites: [ES-C10-practice, ES-C08-tener, ES-C06-hablar, ES-C07-comer, ES-C07-vivir]
+prerequisites: [ES-C10-practice, ES-C08-tener, ES-C06-hablar, ES-C07-comer, ES-C07-vivir, ES-C09-falsos-amigos]
 sounds: [diphthong-ie, r-tap]
 roots: [quaerere-latin]
 etymology_hook: "querer descends from Latin quaerere 'to seek or ask'; English query, quest, inquire, and require preserve the same seeking family"
 duration:
   max_seconds: 290
 requires:
-  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR]
+  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-FRIENDS-FALSE-FRIENDS]
 introduces:
   knowledge: [ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE]
 practises:
-  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE]
+  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE, ES-FRIENDS-FALSE-FRIENDS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,11 +31,13 @@ reviews_of: [ES-C10-practice, ES-C08-tener, ES-C06-hablar, ES-C07-comer, ES-C07-
 # querer — wanting with one familiar vowel change
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-FRIENDS-FALSE-FRIENDS] -->
 
 [PAUSE 2s] You already say **tienes** and **tiene**, where the middle **e**
 opens into **ie**. Today, reuse that visible change in one useful verb and keep
 the same three-person frame you already own.
+
+[PAUSE 2s] A false friend from before: *éxito* obeys your rules and still lies. It means **success**, not *exit*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

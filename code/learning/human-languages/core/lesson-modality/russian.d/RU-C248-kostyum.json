@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C248-kostyum",
+    "language": "russian",
+    "chapter": 248,
+    "sequence": 15190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ff6d61edc672000"
+  },
+  "findings": []
+}

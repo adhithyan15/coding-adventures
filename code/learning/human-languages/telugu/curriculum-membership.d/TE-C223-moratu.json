@@ -1,0 +1,11 @@
+{
+  "id": "TE-C223-moratu",
+  "pathSegment": "TE-PATH-223-GUNAM223",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-223-GUNAM223",
+      "order": 4
+    }
+  ]
+}

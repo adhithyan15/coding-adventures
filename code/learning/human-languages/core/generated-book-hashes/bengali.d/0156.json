@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:91aba50224052446",
+  "lessonIds": [
+    "BN-C156-majhe-majhe",
+    "BN-C156-prothome",
+    "BN-C156-tarikh",
+    "BN-C156-jonmodin",
+    "BN-C156-derite",
+    "BN-R156-first-pass-words-from-chapters-148-151",
+    "BN-R156-second-pass-words-from-chapters-152-156"
+  ],
+  "tex": "bengali/book/chapters/ch156-sometimes-at-first-calendar-date-birthday-late.tex"
+}

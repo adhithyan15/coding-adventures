@@ -1,0 +1,11 @@
+{
+  "id": "AR-C196-qatafa",
+  "pathSegment": "AR-PATH-196-ACT196",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-196-ACT196",
+      "order": 1
+    }
+  ]
+}

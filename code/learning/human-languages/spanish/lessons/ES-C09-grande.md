@@ -8,7 +8,7 @@ type: word
 headword: grande
 gloss: big — the first word in this book for what something is like, and it does not change for gender
 concept_tag: ES-DESC-GRANDE
-prerequisites: [ES-C09-repaso-ser-estar, ES-C09-ista]
+prerequisites: [ES-C09-repaso-ser-estar, ES-C09-ista, ES-C09-estais]
 sounds: []
 roots: [grandis-latin]
 teaches_cells: []
@@ -16,11 +16,11 @@ etymology_hook: "grandis was Latin for full-grown, and English took it whole —
 duration:
   max_seconds: 265
 requires:
-  knowledge: [ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-NOUN-GENDER, ES-MORPH-BUENO-BUENA, ES-FRIEND-ISTA-IST]
+  knowledge: [ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-NOUN-GENDER, ES-MORPH-BUENO-BUENA, ES-FRIEND-ISTA-IST, ES-GRAMMAR-ESTAR-PRESENT-2PL]
 introduces:
   knowledge: [ES-LEX-GRANDE, ES-GRAMMAR-ADJECTIVE-AFTER-NOUN, ES-ETYMON-GRANDIS]
 practises:
-  knowledge: [ES-LEX-GRANDE, ES-GRAMMAR-ADJECTIVE-AFTER-NOUN, ES-ETYMON-GRANDIS, ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-MORPH-BUENO-BUENA, ES-FRIEND-ISTA-IST, ES-GRAMMAR-NOUN-GENDER]
+  knowledge: [ES-LEX-GRANDE, ES-GRAMMAR-ADJECTIVE-AFTER-NOUN, ES-ETYMON-GRANDIS, ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-MORPH-BUENO-BUENA, ES-FRIEND-ISTA-IST, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-ESTAR-PRESENT-2PL]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -32,12 +32,14 @@ reviews_of: [ES-C02-concordancia, ES-C09-ista]
 # grande
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-ESTAR-PRESENT-2PL] -->
 
 [PAUSE 2s] Say "she is." (*Es*.) You can say who someone **is** and what they
 **do**.
 
 [PAUSE 1s] You still cannot say what anything is **like**. That starts here.
+
+[PAUSE 2s] *Estáis*: you all are, in Spain. The plain *-ar* ending, with the stress on it.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-LEX-GRANDE, ES-ETYMON-GRANDIS]; assesses=[] -->

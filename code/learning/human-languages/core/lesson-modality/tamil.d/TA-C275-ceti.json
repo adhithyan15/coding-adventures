@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C275-ceti",
+    "language": "tamil",
+    "chapter": 275,
+    "sequence": 15780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36cf25cc14c552b7"
+  },
+  "findings": []
+}

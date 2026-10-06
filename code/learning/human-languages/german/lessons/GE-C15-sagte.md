@@ -8,21 +8,21 @@ type: word
 headword: ich sagte
 gloss: I said, in one word — the Präteritum of sagen, beside the Perfekt that means exactly the same
 concept_tag: GE-PRAETERITUM-SAGTE
-prerequisites: [GE-C15-praeteritum]
+prerequisites: [GE-C15-praeteritum, GE-C15-wir-haben-gesagt]
 sounds: [final-te, long-a]
 roots: []
 etymology_hook: "ich sagte and ich habe gesagt are two ways of saying one thing, and German is unusual in having kept both alive rather than letting one bury the other"
 duration:
   max_seconds: 150
 requires:
-  knowledge: [GE-GRAMMAR-PRAETERITUM-TE-01, GE-LEX-SAGEN-01, GE-GRAMMAR-PERFEKT-ICH-01, GE-LEX-ICH-02]
+  knowledge: [GE-GRAMMAR-PRAETERITUM-TE-01, GE-LEX-SAGEN-01, GE-GRAMMAR-PERFEKT-ICH-01, GE-LEX-ICH-02, GE-GRAMMAR-PERFEKT-WIR-01]
 introduces:
   knowledge: [GE-LEX-SAGTE-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-SAGTE-01, GE-GRAMMAR-PRAETERITUM-TE-01, GE-GRAMMAR-PERFEKT-ICH-01, GE-LEX-SAGEN-01]
+  knowledge: [GE-LEX-SAGTE-01, GE-GRAMMAR-PRAETERITUM-TE-01, GE-GRAMMAR-PERFEKT-ICH-01, GE-LEX-SAGEN-01, GE-GRAMMAR-PERFEKT-WIR-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,9 +34,11 @@ reviews_of: [GE-C15-praeteritum, GE-C15-ich-habe-gesagt]
 # ich sagte — "I said," in one word
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PRAETERITUM-TE-01, GE-LEX-SAGEN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PRAETERITUM-TE-01, GE-LEX-SAGEN-01, GE-GRAMMAR-PERFEKT-WIR-01] -->
 
 [PAUSE 2s] Run the new ending on the verb this chapter started from.
+
+[PAUSE 2s] *Wir haben gesagt*: for *wir*, the helper is the infinitive itself, unchanged.
 
 ## You'll want to know: ich sagte
 <!-- hl-knowledge: introduces=[GE-LEX-SAGTE-01]; assesses=[GE-GRAMMAR-PRAETERITUM-TE-01] -->

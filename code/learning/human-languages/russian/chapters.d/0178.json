@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "To train, To run about, To jump, To go for a ride, To sunbathe",
+  "label": "ch:ru-to-train-to-run-about-to-jump-to-go-for-a-ride-to-sunbathe",
+  "canDo": "I can say to train, to run about, to jump, to go for a ride and to sunbathe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C178-zagorat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say to train, to run about, to jump, to go for a ride and to sunbathe.",
+    "assesses": [
+      "RU-LEX-C178-ACT178-03",
+      "RU-LEX-C178-ACT178-04",
+      "RU-LEX-C178-ACT178-05"
+    ]
+  }
+}

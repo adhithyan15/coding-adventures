@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:2c9013f57ff7b70a",
+  "lessonIds": [
+    "TA-C262-avvappotu",
+    "TA-C262-varantorum",
+    "TA-C262-tamatamaka",
+    "TA-C262-kataiciyaka",
+    "TA-C262-ippotellam",
+    "TA-R262-first-pass-words-from-chapters-254-257",
+    "TA-R262-second-pass-words-from-chapters-258-262"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch262.txt",
+  "json": "tamil/narration/ch262.json",
+  "textHash": "fnv1a64:a1c2ac06b4b05a52",
+  "jsonHash": "fnv1a64:7f1aae3634d93d76",
+  "findings": []
+}

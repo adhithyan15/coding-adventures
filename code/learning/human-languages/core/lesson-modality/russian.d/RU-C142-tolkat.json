@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C142-tolkat",
+    "language": "russian",
+    "chapter": 142,
+    "sequence": 7600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7107096e3534cf29"
+  },
+  "findings": []
+}

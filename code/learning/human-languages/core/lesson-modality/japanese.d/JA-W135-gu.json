@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "JA-W135-gu",
+    "language": "japanese",
+    "chapter": 135,
+    "sequence": 8180,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7eeb7a1c27a73756",
+    "detachableSegments": [
+      "Script — the change"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

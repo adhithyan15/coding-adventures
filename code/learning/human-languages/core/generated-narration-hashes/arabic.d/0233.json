@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:2e4864464c524d94",
+  "lessonIds": [
+    "AR-C233-mundhu",
+    "AR-C233-fajr",
+    "AR-C233-shuruq",
+    "AR-C233-ghurub",
+    "AR-C233-milad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch233.txt",
+  "json": "arabic/narration/ch233.json",
+  "textHash": "fnv1a64:d0686aebe515454a",
+  "jsonHash": "fnv1a64:486f9f42ad07e94f",
+  "findings": []
+}

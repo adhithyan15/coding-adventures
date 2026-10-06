@@ -192,5 +192,5 @@ forme-aot-manifest-emitter      →  manifest.webmanifest
 
 forme-aot-deploy-manifest-emitter  ←  YOU ARE HERE
          ↓
-deploy runner (next package)  →  S3 / Netlify / fs target
+`forme deploy` + target adapter  →  GitHub Pages / fs target
 ```

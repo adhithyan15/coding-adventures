@@ -1,0 +1,11 @@
+{
+  "id": "FR-C217-seulement",
+  "pathSegment": "FR-PATH-217-POURQUOI217",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-217-POURQUOI217",
+      "order": 2
+    }
+  ]
+}

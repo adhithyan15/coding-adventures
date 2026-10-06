@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C167-traffico",
+    "language": "italian",
+    "chapter": 167,
+    "sequence": 9030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cd31730e467cc4d"
+  },
+  "findings": []
+}

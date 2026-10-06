@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:d9989d39eb25d129",
+  "lessonIds": [
+    "RU-C157-goluboy",
+    "RU-C157-sladkiy",
+    "RU-C157-kislyy",
+    "RU-C157-vkusnyy",
+    "RU-C157-udobnyy",
+    "RU-R157-first-pass-words-from-chapters-149-152",
+    "RU-R157-second-pass-words-from-chapters-153-157"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch157.txt",
+  "json": "russian/narration/ch157.json",
+  "textHash": "fnv1a64:9cb67b6e3026fa04",
+  "jsonHash": "fnv1a64:661dffdca1cd40a5",
+  "findings": []
+}

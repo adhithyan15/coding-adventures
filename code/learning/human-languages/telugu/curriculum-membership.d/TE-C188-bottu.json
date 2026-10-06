@@ -1,0 +1,11 @@
+{
+  "id": "TE-C188-bottu",
+  "pathSegment": "TE-PATH-188-VASTUVU188",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-188-VASTUVU188",
+      "order": 3
+    }
+  ]
+}

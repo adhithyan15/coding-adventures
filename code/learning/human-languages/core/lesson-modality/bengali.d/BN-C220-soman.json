@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C220-soman",
+    "language": "bengali",
+    "chapter": 220,
+    "sequence": 13450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d28b8e9f95bcca1f"
+  },
+  "findings": []
+}

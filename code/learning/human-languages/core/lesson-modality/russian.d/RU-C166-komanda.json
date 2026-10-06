@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C166-komanda",
+    "language": "russian",
+    "chapter": 166,
+    "sequence": 9160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:798ed0984eb83f1c"
+  },
+  "findings": []
+}

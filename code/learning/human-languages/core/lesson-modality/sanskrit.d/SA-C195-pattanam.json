@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C195-pattanam",
+    "language": "sanskrit",
+    "chapter": 195,
+    "sequence": 10910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c9fdf2ae214e473"
+  },
+  "findings": []
+}

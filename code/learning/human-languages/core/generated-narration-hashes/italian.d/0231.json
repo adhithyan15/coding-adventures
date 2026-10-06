@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:03d72ec26dc3a896",
+  "lessonIds": [
+    "IT-C231-vittoria",
+    "IT-C231-sconfitta",
+    "IT-C231-campionato",
+    "IT-C231-giocatore",
+    "IT-C231-allenatore"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch231.txt",
+  "json": "italian/narration/ch231.json",
+  "textHash": "fnv1a64:f70445a998e71d2a",
+  "jsonHash": "fnv1a64:133be69ab6d8db80",
+  "findings": []
+}

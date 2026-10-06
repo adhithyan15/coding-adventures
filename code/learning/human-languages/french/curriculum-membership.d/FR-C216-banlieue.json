@@ -1,0 +1,11 @@
+{
+  "id": "FR-C216-banlieue",
+  "pathSegment": "FR-PATH-216-LIEU216",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-216-LIEU216",
+      "order": 4
+    }
+  ]
+}

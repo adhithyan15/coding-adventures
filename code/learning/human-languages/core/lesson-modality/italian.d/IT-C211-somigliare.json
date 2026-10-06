@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C211-somigliare",
+    "language": "italian",
+    "chapter": 211,
+    "sequence": 12120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39ce8093a2ef9617"
+  },
+  "findings": []
+}

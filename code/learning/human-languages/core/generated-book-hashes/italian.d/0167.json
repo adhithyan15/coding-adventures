@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:de1a9438b69f0d8c",
+  "lessonIds": [
+    "IT-C167-pedaggio",
+    "IT-C167-autostrada",
+    "IT-C167-traffico",
+    "IT-C167-multa",
+    "IT-C167-patente"
+  ],
+  "tex": "italian/book/chapters/ch167-toll-motorway-traffic-fine-driving-licence.tex"
+}

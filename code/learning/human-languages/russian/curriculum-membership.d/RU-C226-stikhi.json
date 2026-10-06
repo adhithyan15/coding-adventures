@@ -1,0 +1,11 @@
+{
+  "id": "RU-C226-stikhi",
+  "pathSegment": "RU-PATH-226-VESHCH226",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-226-VESHCH226",
+      "order": 4
+    }
+  ]
+}

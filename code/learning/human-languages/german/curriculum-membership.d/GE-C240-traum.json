@@ -1,0 +1,11 @@
+{
+  "id": "GE-C240-traum",
+  "pathSegment": "GE-PATH-240-THING240",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-240-THING240",
+      "order": 2
+    }
+  ]
+}

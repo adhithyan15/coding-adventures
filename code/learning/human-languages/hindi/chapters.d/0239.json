@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "Shiny, Hazy, Deserted, Crowded, Inhabited",
+  "label": "ch:hi-shiny-hazy-deserted-crowded-inhabited",
+  "canDo": "I can say shiny, hazy, deserted, crowded and inhabited.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-C239-abad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say shiny, hazy, deserted, crowded and inhabited.",
+    "assesses": [
+      "HI-LEX-C239-QUAL239-03",
+      "HI-LEX-C239-QUAL239-04",
+      "HI-LEX-C239-QUAL239-05"
+    ]
+  }
+}

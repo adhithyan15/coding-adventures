@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C188-sebbene",
+    "language": "italian",
+    "chapter": 188,
+    "sequence": 10450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73c5a4cf7f0e16fe"
+  },
+  "findings": []
+}

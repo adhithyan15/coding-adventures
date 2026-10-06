@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:414c77e2b4297c04",
+  "lessonIds": [
+    "UR-C209-not",
+    "UR-C209-qarz",
+    "UR-C209-taiks",
+    "UR-C209-bil",
+    "UR-C209-kharch"
+  ],
+  "tex": "urdu/book/chapters/ch209-banknote-debt-tax-bill-expense.tex"
+}

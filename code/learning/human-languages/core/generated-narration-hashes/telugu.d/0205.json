@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:b044898fe300ce9b",
+  "lessonIds": [
+    "TE-C205-rikardu-ceyu",
+    "TE-C205-photo-tiyu",
+    "TE-C205-pancuko",
+    "TE-C205-kanukko",
+    "TE-C205-appu-tisuko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch205.txt",
+  "json": "telugu/narration/ch205.json",
+  "textHash": "fnv1a64:99b78147f001d45a",
+  "jsonHash": "fnv1a64:19a25b6a9a11bf23",
+  "findings": []
+}

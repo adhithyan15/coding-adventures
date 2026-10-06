@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:5a94aad44ef4bf4c",
+  "lessonIds": [
+    "BN-C146-agami",
+    "BN-C146-erpor",
+    "BN-C146-porikolpona",
+    "BN-C146-sthir-kora",
+    "BN-C146-asha-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch146.txt",
+  "json": "bengali/narration/ch146.json",
+  "textHash": "fnv1a64:f3a857c833d101a4",
+  "jsonHash": "fnv1a64:b9b1116b85c07700",
+  "findings": []
+}

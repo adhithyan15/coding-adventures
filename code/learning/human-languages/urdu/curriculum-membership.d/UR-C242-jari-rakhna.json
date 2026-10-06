@@ -1,0 +1,11 @@
+{
+  "id": "UR-C242-jari-rakhna",
+  "pathSegment": "UR-PATH-242-ACT242",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-242-ACT242",
+      "order": 4
+    }
+  ]
+}

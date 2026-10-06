@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C241-niji",
+    "language": "hindi",
+    "chapter": 241,
+    "sequence": 12780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0fe267f5edee8a96"
+  },
+  "findings": []
+}

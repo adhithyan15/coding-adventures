@@ -1,0 +1,11 @@
+{
+  "id": "AR-C246-tawam",
+  "pathSegment": "AR-PATH-246-SHAY246",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-246-SHAY246",
+      "order": 3
+    }
+  ]
+}

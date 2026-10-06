@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C238-nirakarisu",
+    "language": "kannada",
+    "chapter": 238,
+    "sequence": 11240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:984eaed00e1c6c8b"
+  },
+  "findings": []
+}

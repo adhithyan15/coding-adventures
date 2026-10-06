@@ -1,0 +1,11 @@
+{
+  "id": "PT-C164-planicie",
+  "pathSegment": "PT-PATH-164-COISAS164",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-164-COISAS164",
+      "order": 2
+    }
+  ]
+}

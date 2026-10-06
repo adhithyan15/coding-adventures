@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Wish, Hope, Dream, Need, Necessity",
+  "label": "ch:bn-wish-hope-dream-need-necessity",
+  "canDo": "I can say a wish, hope, a dream, a need and a necessity.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "BN-C96-proyojon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: I can say a wish, hope, a dream, a need and a necessity.",
+    "assesses": [
+      "BN-LEX-C96-WANT96-03",
+      "BN-LEX-C96-WANT96-04",
+      "BN-LEX-C96-WANT96-05"
+    ]
+  }
+}

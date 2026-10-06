@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:5f799010432d7eed",
+  "lessonIds": [
+    "FR-C235-demenager",
+    "FR-C235-louer",
+    "FR-C235-reposer",
+    "FR-C235-reveiller",
+    "FR-C235-coiffer"
+  ],
+  "tex": "french/book/chapters/ch235-to-move-house-to-rent-to-rest-to-wake-up-to-do-one-s-hair.tex"
+}

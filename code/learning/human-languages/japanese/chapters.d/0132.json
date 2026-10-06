@@ -1,0 +1,25 @@
+{
+  "chapter": 132,
+  "title": "This and That: So, Re and Ru",
+  "label": "ch:ja-this-and-that-so-re-ru",
+  "canDo": "I can write so, re and ru, read words that use them, and point to things and places near me and near the listener.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-R132-this-and-that",
+    "kind": "production",
+    "summary": "Read soko, soto, kore, sore and kuruma, point with kore and sore, write kuruma from memory with る in the middle, and write the three new signs once each.",
+    "assesses": [
+      "JA-LEX-ANCHOR-SOKO",
+      "JA-SCRIPT-SO-01",
+      "JA-LEX-C132-SOTO",
+      "JA-LEX-ANCHOR-KORE",
+      "JA-SCRIPT-RE-01",
+      "JA-LEX-C132-SORE",
+      "JA-LEX-ANCHOR-KURUMA",
+      "JA-SCRIPT-RU-01"
+    ],
+    "note": "Word before sign, every time. Each of the three signs is first SEEN inside a word taught one lesson earlier -- soko for so, kore for re, kuruma for ru -- and only then written, so every letter lesson is anchored (HL-C443) rather than building toward a later word. Two lessons separate each writing lesson from the next, and each new sign is spent at once in a second word (soto, sore) or in the review. The order so, re, ru lets sore use both of the first two signs."
+  }
+}

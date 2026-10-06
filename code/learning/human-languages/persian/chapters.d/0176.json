@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "Profession, Company, Factory, Meeting, Salary",
+  "label": "ch:fa-profession-company-factory-meeting-salary",
+  "canDo": "I can say a profession, a company, a factory, a meeting and a salary.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C176-hoquq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say a profession, a company, a factory, a meeting and a salary.",
+    "assesses": [
+      "FA-LEX-C176-KAR176-03",
+      "FA-LEX-C176-KAR176-04",
+      "FA-LEX-C176-KAR176-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Lid, Jar, Water pot, Sack, Gold",
+  "label": "ch:ml-lid-jar-water-pot-sack-gold",
+  "canDo": "I can say a lid, a jar, a water pot, a sack and gold.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C330-svarnnam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can say a lid, a jar, a water pot, a sack and gold.",
+    "assesses": [
+      "ML-LEX-C330-VASTU330-03",
+      "ML-LEX-C330-VASTU330-04",
+      "ML-LEX-C330-VASTU330-05"
+    ]
+  }
+}

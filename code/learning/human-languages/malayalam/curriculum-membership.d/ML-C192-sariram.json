@@ -1,0 +1,11 @@
+{
+  "id": "ML-C192-sariram",
+  "pathSegment": "ML-PATH-192-AROGYAM192",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-192-AROGYAM192",
+      "order": 1
+    }
+  ]
+}

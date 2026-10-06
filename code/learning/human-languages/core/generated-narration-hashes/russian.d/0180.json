@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:636528b3792de6d3",
+  "lessonIds": [
+    "RU-C180-golovnaya-bol",
+    "RU-C180-son",
+    "RU-C180-diyeta",
+    "RU-C180-vitamin",
+    "RU-C180-lyogkiye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch180.txt",
+  "json": "russian/narration/ch180.json",
+  "textHash": "fnv1a64:510e7db025b2405b",
+  "jsonHash": "fnv1a64:399998cf8ed92481",
+  "findings": []
+}

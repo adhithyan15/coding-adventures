@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R309-second-pass-words-from-chapters-307-309",
+    "language": "telugu",
+    "chapter": 309,
+    "sequence": 14860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4dba77c88862e9da"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "To give back, To decorate, To look after, To improve, To weigh",
+  "label": "ch:hi-to-give-back-to-decorate-to-look-after-to-improve-to-weigh",
+  "canDo": "I can say to give back, to decorate, to look after, to improve and to weigh.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C174-tolna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say to give back, to decorate, to look after, to improve and to weigh.",
+    "assesses": [
+      "HI-LEX-C174-ACT174-03",
+      "HI-LEX-C174-ACT174-04",
+      "HI-LEX-C174-ACT174-05"
+    ]
+  }
+}

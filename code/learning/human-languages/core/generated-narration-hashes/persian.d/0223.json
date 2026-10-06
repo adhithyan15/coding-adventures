@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:cc54d5c6fe6cb3f1",
+  "lessonIds": [
+    "FA-C223-nejat-dadan",
+    "FA-C223-penhan-kardan",
+    "FA-C223-sharh-dadan",
+    "FA-C223-haml-kardan",
+    "FA-C223-harakat-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch223.txt",
+  "json": "persian/narration/ch223.json",
+  "textHash": "fnv1a64:3ff79e3fe3270a41",
+  "jsonHash": "fnv1a64:8de8075752706aac",
+  "findings": []
+}

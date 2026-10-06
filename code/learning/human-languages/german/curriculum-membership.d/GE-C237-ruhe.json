@@ -1,0 +1,11 @@
+{
+  "id": "GE-C237-ruhe",
+  "pathSegment": "GE-PATH-237-THING237",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-237-THING237",
+      "order": 1
+    }
+  ]
+}

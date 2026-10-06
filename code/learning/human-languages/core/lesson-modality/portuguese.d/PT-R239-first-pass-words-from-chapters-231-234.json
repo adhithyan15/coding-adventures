@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R239-first-pass-words-from-chapters-231-234",
+    "language": "portuguese",
+    "chapter": 239,
+    "sequence": 14170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77d4706ba9e86f1e"
+  },
+  "findings": []
+}

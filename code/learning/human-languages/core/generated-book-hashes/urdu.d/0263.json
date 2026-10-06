@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:0ed9022c35bda945",
+  "lessonIds": [
+    "UR-C263-nanbai",
+    "UR-C263-halvai",
+    "UR-C263-pansari",
+    "UR-C263-phalvala",
+    "UR-C263-sabzivala",
+    "UR-R263-first-pass-words-from-chapters-257-259",
+    "UR-R263-second-pass-words-from-chapters-260-263"
+  ],
+  "tex": "urdu/book/chapters/ch263-baker-sweet-maker-grocer-fruit-seller-greengrocer.tex"
+}

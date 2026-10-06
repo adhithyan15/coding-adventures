@@ -30,6 +30,12 @@ private const val MOSAIC_STATUS_OK = 0
 private const val MOSAIC_PERSISTENCE_ENABLED = __MOSAIC_PERSISTENCE_ENABLED__
 private const val MOSAIC_APPLICATION_ID = "__MOSAIC_APPLICATION_ID__"
 private const val MOSAIC_STATE_FILE = "mosaic-state.v1.json"
+/**
+ * How the runtime's refusal of an invalid environment begins
+ * (`mosaic-app-runtime`'s `INVALID_ENVIRONMENT_DIAGNOSTIC`). No other failure
+ * begins this way: an app error begins "Mosaic application error".
+ */
+private const val MOSAIC_INVALID_ENVIRONMENT = "__MOSAIC_INVALID_ENVIRONMENT__"
 
 class MosaicRuntimeException(val status: Int, message: String) : RuntimeException(message)
 
@@ -107,7 +113,20 @@ interface MosaicNativeApi : Library {
     fun mosaic_app_destroy(app: Pointer)
 }
 
-class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : MosaicComposeHost {
+/**
+ * What the platform library's router (MosaicFileEffects.kt) needs from a host:
+ * the effect handler it wraps, and deferring and answering an effect.
+ * [MosaicRuntimeHost] is the real one; a test supplies a fake, so routing and
+ * deferral run without a Rust runtime (UI89 §3.8).
+ */
+interface MosaicPlatformEffectHost {
+    var effectHandler: ((Long, String, Any?, String) -> Unit)?
+    fun deferEffect(id: Long): Boolean
+    fun completeEffect(id: Long, result: Map<String, Any?>): Map<String, Any?>
+}
+
+class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) :
+    MosaicComposeHost, MosaicPlatformEffectHost {
     private var handle: Pointer? = null
     private var sequence = 0L
     private var latestUpdate: JsonObject
@@ -136,7 +155,7 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
      * marshal there itself -- there is no portable main-thread primitive here
      * to do it for you.
      */
-    var effectHandler: ((Long, String, Any?, String) -> Unit)? = null
+    override var effectHandler: ((Long, String, Any?, String) -> Unit)? = null
 
     /** Awaited effect ids nothing has answered yet. */
     private val awaiting = mutableSetOf<Long>()
@@ -164,10 +183,22 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
     private var effectWarning: String? = null
     private var persistenceWarning: String? = null
     /**
+     * The revision the state file was last saved at by an answer, so an answer
+     * at that same revision skips the write. Null until the first save: the
+     * first answer after launch always writes, so a fresh install has its
+     * state on disk even when the app ignored that first answer.
+     */
+    private var savedRevision: Long? = null
+    /**
      * The last environment the runtime accepted (UI48 ENV4), so an unchanged
      * report is not sent twice.
      */
     private var lastReportedEnvironment: Map<String, String>? = null
+    /**
+     * The last report the runtime refused as invalid, not re-sent until it
+     * changes. Any other failure leaves it alone.
+     */
+    private var lastRefusedEnvironment: Map<String, String>? = null
 
     init {
         val app = PointerByReference()
@@ -236,7 +267,21 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
         // Settle BEFORE persisting: the runtime refuses to snapshot while an
         // effect is outstanding, so persisting first warns on every effect.
         val settled = keepShowingProps(settleEffects(update))
-        persistSnapshot()
+        // An answer at the revision the state file already holds -- an
+        // environment the app ignored (UI48 §7.1) -- changed nothing the app
+        // would save, so the file is not rewritten: a resize storm costs no
+        // disk writes. Compared with the revision SAVED, not the one showing:
+        // a fresh install's first answer is often an ignored environment, and
+        // must still write the state. Unless an earlier save failed (a
+        // warning is pending): then it retries that save, so a kill before
+        // the next event does not lose that revision; the answer carries the
+        // warning or its clearing, as an event's does. Unreadable revisions
+        // persist.
+        val revision = (settled["revision"] as? JsonPrimitive)?.longOrNull
+        if (revision == null || revision != savedRevision || persistenceWarning != null) {
+            persistSnapshot()
+            savedRevision = if (persistenceWarning == null) revision else null
+        }
         latestUpdate = withPersistenceWarning(settled)
         propsChangedHandler?.invoke()
         return latestUpdate.toKotlinMap()
@@ -263,21 +308,34 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
      * the whole environment as its payload -- the six UI48 §4 values under
      * `mosaic-app-runtime`'s wire names.
      *
-     * - A report equal to the last accepted one is dropped and answers null.
+     * - A report equal to the last accepted one, or to the last one refused
+     *   as invalid, is dropped and answers null: a drag across a threshold
+     *   would otherwise re-send a refused one on every frame.
      * - An app that does not react answers with the props already showing
-     *   (see [keepShowingProps]).
-     * - A refusal (an invalid environment) answers `{"error": ...}` instead of
-     *   throwing, and is not remembered, so the next report is sent.
+     *   (see [keepShowingProps]), and writes no state unless an earlier save
+     *   failed, which it retries.
+     * - A runtime failure answers `{"error": ...}` instead of throwing, and
+     *   does not replace the last report accepted. Only a refusal of the
+     *   report itself (an invalid environment) is remembered as refused; any
+     *   other failure -- an app error, which may be transient -- lets the same
+     *   report be sent again, rather than leaving the app on a stale
+     *   environment until the window changes to a third one.
      */
     @Synchronized
     fun reportEnvironment(environment: Map<String, String>): Map<String, Any?>? {
-        if (environment == lastReportedEnvironment) return null
+        if (environment == lastReportedEnvironment || environment == lastRefusedEnvironment) {
+            return null
+        }
         val response = try {
             handleEvent(mapOf("name" to "environmentChanged", "payload" to environment))
         } catch (error: MosaicRuntimeException) {
+            if (error.message.orEmpty().startsWith(MOSAIC_INVALID_ENVIRONMENT)) {
+                lastRefusedEnvironment = environment.toMap()
+            }
             return mapOf("error" to (error.message ?: "Mosaic runtime refused the environment"))
         }
         lastReportedEnvironment = environment.toMap()
+        lastRefusedEnvironment = null
         return response
     }
 
@@ -289,7 +347,7 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
      * a file dialog dismissed with Escape is an ordinary user action.
      */
     @Synchronized
-    fun completeEffect(id: Long, result: Map<String, Any?>): Map<String, Any?> {
+    override fun completeEffect(id: Long, result: Map<String, Any?>): Map<String, Any?> {
         val app = requireHandle()
         val update = withJsonInput(result.toJsonElement()) { resultBytes ->
             withJsonInput(JsonPrimitive(id)) { idBytes ->
@@ -334,7 +392,7 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
      * will ever answer -- wedging persistence for the life of the process.
      */
     @Synchronized
-    fun deferEffect(id: Long): Boolean {
+    override fun deferEffect(id: Long): Boolean {
         if (!awaiting.contains(id)) return false
         deferred.add(id)
         return true

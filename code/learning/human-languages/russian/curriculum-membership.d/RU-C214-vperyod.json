@@ -1,0 +1,11 @@
+{
+  "id": "RU-C214-vperyod",
+  "pathSegment": "RU-PATH-214-MESTO214",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-214-MESTO214",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:929e8f85e8f8c4ef",
+  "lessonIds": [
+    "IT-C154-intorno",
+    "IT-C154-dappertutto",
+    "IT-C154-da-nessuna-parte",
+    "IT-C154-altrove",
+    "IT-C154-laggiu"
+  ],
+  "tex": "italian/book/chapters/ch154-around-everywhere-nowhere-elsewhere-down-there.tex"
+}

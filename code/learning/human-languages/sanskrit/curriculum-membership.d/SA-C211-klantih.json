@@ -1,0 +1,11 @@
+{
+  "id": "SA-C211-klantih",
+  "pathSegment": "SA-PATH-211-WEL211",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-211-WEL211",
+      "order": 3
+    }
+  ]
+}

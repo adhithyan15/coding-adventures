@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:0362d1d8f80b4e00",
+  "lessonIds": [
+    "JA-C139-desuka",
+    "JA-C139-chigaimasu",
+    "JA-C139-janai",
+    "JA-C139-nanimo",
+    "JA-C139-daremo",
+    "JA-C139-dokonimo"
+  ],
+  "tex": "japanese/book/chapters/ch139-is-it-no-nothing-nobody-nowhere.tex"
+}

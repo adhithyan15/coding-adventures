@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C185-carju-ceyyuka",
+    "language": "malayalam",
+    "chapter": 185,
+    "sequence": 8060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9afbf67734b4f7c9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C273-sonnati",
+    "language": "persian",
+    "chapter": 273,
+    "sequence": 14130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f222643b23ba231"
+  },
+  "findings": []
+}

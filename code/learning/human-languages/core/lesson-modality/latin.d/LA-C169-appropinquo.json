@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C169-appropinquo",
+    "language": "latin",
+    "chapter": 169,
+    "sequence": 7380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e34421556de0c538"
+  },
+  "findings": []
+}

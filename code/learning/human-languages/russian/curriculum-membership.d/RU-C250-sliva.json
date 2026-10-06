@@ -1,0 +1,11 @@
+{
+  "id": "RU-C250-sliva",
+  "pathSegment": "RU-PATH-250-VESHCH250",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-250-VESHCH250",
+      "order": 1
+    }
+  ]
+}

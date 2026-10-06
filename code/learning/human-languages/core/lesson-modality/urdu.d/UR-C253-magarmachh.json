@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C253-magarmachh",
+    "language": "urdu",
+    "chapter": 253,
+    "sequence": 15330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a69c09dfa32c42e"
+  },
+  "findings": []
+}

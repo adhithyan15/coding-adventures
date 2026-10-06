@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:c440f09c5003a491",
+  "lessonIds": [
+    "HI-C229-morna",
+    "HI-C229-sametna",
+    "HI-C229-phailana",
+    "HI-C229-phailna",
+    "HI-C229-chutna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch229.txt",
+  "json": "hindi/narration/ch229.json",
+  "textHash": "fnv1a64:060d8d75812b67b8",
+  "jsonHash": "fnv1a64:221202c9d6d17a5f",
+  "findings": []
+}

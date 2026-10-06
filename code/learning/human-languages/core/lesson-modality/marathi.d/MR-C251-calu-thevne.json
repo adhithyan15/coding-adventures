@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C251-calu-thevne",
+    "language": "marathi",
+    "chapter": 251,
+    "sequence": 14290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c7952e456180654"
+  },
+  "findings": []
+}

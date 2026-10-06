@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "Identity card, Tax, Application, Photograph, Copy",
+  "label": "ch:ta-identity-card-tax-application-photograph-copy",
+  "canDo": "I can say an identity card, a tax, an application, a photograph and a copy.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C272-nakal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can say an identity card, a tax, an application, a photograph and a copy.",
+    "assesses": [
+      "TA-LEX-C272-PORUL272-03",
+      "TA-LEX-C272-PORUL272-04",
+      "TA-LEX-C272-PORUL272-05"
+    ]
+  }
+}

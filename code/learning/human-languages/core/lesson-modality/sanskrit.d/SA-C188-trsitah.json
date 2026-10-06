@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C188-trsitah",
+    "language": "sanskrit",
+    "chapter": 188,
+    "sequence": 10370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff60d0671500fdb5"
+  },
+  "findings": []
+}

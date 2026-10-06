@@ -2,6 +2,576 @@
 
 All notable changes to the Japanese curriculum track are recorded here.
 
+## Stroke order for the katakana and kanji of the writing lessons
+
+Five writing lessons taught a katakana or kanji sign with an inventory row
+and printed no stroke-order filmstrip: **コ** and **ヒ**
+(JA-W06-ko-katakana, JA-W06-hi-katakana) and **語**, **日** and **本**
+(JA-W05-go-kanji, -nichi-kanji, -hon-kanji). Their rows said only
+"authoritative". Each now cites KanjiVG's directed paths for its own code
+point, and all five lessons now print a filmstrip.
+
+| sign | KanjiVG | strokes, in order |
+|---|---|---|
+| コ | kanji/030b3.svg | the top bar turning down the right side; the base bar |
+| ヒ | kanji/030d2.svg | the short bar, left to right, rising; the vertical turning right along the base |
+| 日 | kanji/065e5.svg | the left side down; the top turning down the right side; the middle bar; the base |
+| 語 | kanji/08a9e.svg | 言 (top mark, three bars, its box), then 五 (top bar, a short stroke falling to the left, the middle bar turning down, the long base bar), then 口 (left side, top turning down, base) |
+| 本 | kanji/0672c.svg | the bar; the stem; the left sweep; the right sweep; the short lower bar |
+
+Only the order and direction come from KanjiVG; the pen paths follow the
+bundled font's own outline. KanjiVG draws the top mark of 語's 言 as a dot
+falling to the right, where the print glyph has a short bar, so the path
+runs along the bar from left to right; the record says so.
+
+**言, 五 and 口 still print no filmstrip.** Chapter 5 also writes them on
+their own (JA-W05-gen-component, -five-component, -mouth-component), but
+they have no inventory row, and a stroke order needs a row to belong to. No
+word lesson spells them alone, so adding rows would raise the track's count
+of inventory letters read in no word, which may only fall. For now they are
+drawn as the parts of 語, in JA-W05-go-kanji's filmstrip.
+
+**Two lessons are corrected to match KanjiVG.** JA-W06-hi-katakana said
+ヒ's first stroke runs "from right toward left"; it runs from left to right,
+rising a little. JA-W05-five-component put 五's turn on the second stroke
+("a short vertical and turn; a second horizontal"); the second stroke is a
+short stroke falling to the left, and the turn ends the middle bar, as 語's
+filmstrip shows. Its trace line and feedback, and the recall line "top,
+turn, middle, long bottom" in JA-C14-go, now read "top, down, middle and
+turn, (long) bottom". No assessment answer changes and no lesson is added,
+moved or retagged. The generated LaTeX of chapters 5 and 6 gains the five
+figures, and the book and narration of chapters 5, 6 and 14 are
+regenerated.
+
+## Stroke order for the voiced kana, ゛, ゜ and ー
+
+Seventeen writing lessons taught a voiced kana and printed no stroke-order
+filmstrip: **ど** and **だ** (JA-W09-do, JA-W11-da), the eight of chapters 134
+and 135, and the seven of chapters 136 and 137. Three more taught the marks
+themselves: the dakuten **゛** (JA-W03-dakuten), the handakuten **゜**
+(JA-W18-handakuten) and the long-vowel mark **ー** (JA-W06-long-mark). The
+voiced rows said only "authoritative", the mark records had no stroke order at
+all, and ど and だ had no row, being covered only through their decomposition.
+Every voiced kana row the inventory holds (が ぎ ぐ げ ご ざ ず ぜ ぞ だ で ど ば
+び ぶ べ ぼ ぱ ぴ ぷ ぺ ぽ, 22 in all, with だ and ど added) and the three mark
+records now cite KanjiVG's directed paths for their own code point. All
+twenty lessons now print a filmstrip.
+
+KanjiVG draws a voiced kana as one glyph: the base sign's own paths, the same
+as in its file for the base sign, then the mark.
+
+| part | KanjiVG | order and direction |
+|---|---|---|
+| dakuten ゛ | kanji/0309b.svg, and the last two paths of every voiced kana | two ticks, the left one first, each drawn down to the right |
+| handakuten ゜ | kanji/0309c.svg, and the last path of ぱ ぴ ぷ ぺ ぽ | one ring, from its foot, clockwise: round the left, over the top, down the right |
+| long-vowel mark ー | kanji/030fc.svg | one bar, left to right (horizontal writing) |
+
+So a dakuten adds two strokes and two pen lifts to the base sign, and a
+handakuten one of each: が has five strokes and four pen lifts, ぱ four
+strokes and three.
+
+Only the order and direction come from KanjiVG. The pen paths follow the
+bundled font's own outline: each base sign's fitted path, moved to where the
+voiced glyph's outline puts that sign, and re-fitted to its medial line; the
+mark fitted on its own contours.
+
+**Where KanjiVG and an older base row disagree, the voiced glyph follows
+KanjiVG and says so.** Three base rows cite Sirgazil's animations, and on
+three points KanjiVG's files for both the base and the voiced sign differ
+from them:
+
+- **ぜ**: KanjiVG draws せ's right stem (with its hook) second and the left
+  stem third. The せ row has them the other way round.
+- **ぶ, ぷ**: KanjiVG draws ふ's lower-left mark up to the right. The ふ row
+  draws it down and to the left.
+- **ぼ, ぽ**: KanjiVG's left vertical of ほ ends in a flick up to the right,
+  as は's does. The ほ row says it hooks left.
+
+The せ, ふ and ほ rows and their filmstrips are not changed here. JA-W136-ze
+asks the reader to write せ "in the order you learned it", which is the せ
+row's order; its filmstrip now shows KanjiVG's. Reconciling the three base
+rows with KanjiVG is left as follow-up work.
+
+No lesson text changes, no assessment answer changes, and no lesson is added,
+moved or retagged. The generated LaTeX of chapters 3, 6, 9, 11, 18 and 134 to
+137 gains the twenty figures.
+
+## Chapters 138-142: the A2 spine, what I do, negation and questions, the past, the future and practical texts
+
+The level gate counted none of the five A2 spine nodes as realized for
+Japanese. Chapters 131-137 wrote the kana that A2 words need; chapters
+138-142 now spend them, one chapter per node, so the A2 gate no longer
+reports a missing spine node. Vocabulary (694 of 1200 headwords) and verbs
+(73 of 120) remain, so Japanese stays at A1.
+
+Every headword is new to the corpus (no headword or homograph existed) and
+written only in kana the book already teaches. Verbs are taught in the polite
+**ます** form, the form a learner says, and carry `JA-VERB-*` tags for their
+dictionary form.
+
+| chapter | spine node | lessons |
+|---|---|---|
+| 138, My Day | SPINE-SAY-WHAT-I-DO | **おきます** (I get up), **はたらきます** (I work), **あるきます** (I walk), **かえります** (I go home), **ねます** (I go to bed); the notes find the stem of both verb groups, and the last lesson tabulates them |
+| 139, Is It? No | SPINE-NEGATE-AND-ASK | **ですか** (is it ...?), **ちがいます** (no, that is not right), **じゃない** (is not), **なにも** (nothing), **だれも** (nobody), **どこにも** (nowhere); the notes add **ません** for the negative verb |
+| 140, Last Week | SPINE-TALK-ABOUT-PAST | **せんしゅう** (last week), **せんげつ** (last month), **きょねん** (last year), **さっき** (a moment ago), **おわりました** (it is over); the notes add **ました** and **ませんでした** |
+| 141, Next Week | SPINE-TALK-ABOUT-FUTURE | **らいしゅう** (next week), **らいげつ** (next month), **らいねん** (next year), **つもり** (a plan), **でしょう** (probably); the notes show that **ます** with a time word says the future |
+| 142, Notices | SPINE-READ-PRACTICAL-TEXTS | **ちゅうい** (caution), **きんえん** (no smoking), **うけつけ** (reception), **えいぎょうちゅう** (open), **じゅんびちゅう** (not yet open), each with a notice to read and act on; then a first-pass review of chapters 138-140 and a second-pass review of 141-142 that reads a three-line notice on a clinic door |
+
+Seven of the 26 headwords are verbs (the five of chapter 138, **ちがいます**
+and **おわりました**). The last word lesson of chapters 138-141 is the
+chapter payoff, and its practice uses all of that chapter's words; chapter
+142's payoff is the second-pass review. Each new path segment carries an
+extension at stage A2. The spine overlays in `curriculum.d/spine/` do not
+change: they list canonical concept tags the track does not carry, and the
+new lessons use track tags, as Telugu's and Malayalam's A2 spine chapters do.
+
+**Reinforcement.** Twenty-eight more lessons make 46 older (atom, window)
+slots measurable for the first time: R4 for 24 atoms from chapters 130-133,
+R3 for 18 atoms from chapters 136-137, and R2 for four chapter 137 atoms.
+Each new lesson's warm-up retrieves the atom due at its position at exactly
+80, 20 and 5 lessons. Inside the five chapters, every new atom is retrieved
+one lesson later and, where the track is long enough to judge it, five
+lessons later, and the first eight are retrieved again twenty lessons later.
+The R1, R2, R3 and R4 miss counts stay at 1, 459, 245 and 519, with no
+per-atom change, and every new atom is revisited at least twice. Letter
+anchoring and script closure do not move (zero violations, zero never-taught
+glyphs).
+
+## Chapters 136-137: the z row and the p row, ず, ぜ, ぞ, ぱ, ぴ, ぷ and ぺ
+
+After chapter 135 the book wrote the whole *g* and *b* rows, but of the *z*
+row only **ざ** and **じ**, and of the *p* row only **ぽ**. Script closure
+counts the precomposed sign, so A2 words such as **かぞく** (a family),
+**みず** (water) and **きっぷ** (a ticket) still could not be written.
+Chapters 136 and 137 add 21 lessons and write seven more signs. The three
+*z* signs are a sign the reader already writes plus the two-stroke dakuten,
+like **ざ**. The four *p* signs are an *h*-row sign plus the small circle of
+the handakuten, like **ぽ**, which the book has written since chapter 18 and
+used on no other sign until now. Each writing lesson pairs the new sign with
+its base sign. With them the book writes the whole *z* row (ざ じ ず ぜ ぞ)
+and the whole *p* row (ぱ ぴ ぷ ぺ ぽ). Only the two rare *d* signs of the *t*
+row are still unwritten.
+
+**Word before sign, every time.** As in chapters 131-135, each new sign is
+first seen inside a word taught one lesson earlier, with a romanization, and
+only then written:
+
+| lesson | what it does |
+|---|---|
+| **かぞく** (*kazoku*, a family) | shows ぞ between か and く |
+| writing **ぞ** | そ plus the dakuten, as さ became ざ |
+| **かぞえる** (*kazoeru*, to count) | spends ぞ; a verb (JA-VERB-KAZOERU) |
+| **みず** (*mizu*, water) | shows ず after み |
+| writing **ず** | す plus the dakuten |
+| **すずしい** (*suzushii*, cool) | spends ず, with plain す beside it |
+| **かぜ** (*kaze*, a wind; a cold) | shows ぜ; one word in kana, two in kanji |
+| writing **ぜ** | せ plus the dakuten; the *z* row is complete |
+| review (chapter 136) | reads the five words, writes each new sign beside its base sign, and かぞく, かぞえる and かぜ |
+| **いっぱい** (*ippai*, full; a lot) | shows ぱ after the held beat of っ |
+| writing **ぱ** | は plus the handakuten, as ほ became ぽ in いっぽん |
+| **しんぱい** (*shinpai*, worry) | spends ぱ |
+| **えんぴつ** (*enpitsu*, a pencil) | shows ぴ |
+| writing **ぴ** | ひ plus the handakuten; ひ, び and ぴ side by side |
+| **いっぴき** (*ippiki*, one small animal) | spends ぴ; the animal counter, beside いっぽん |
+| **きっぷ** (*kippu*, a ticket) | shows ぷ |
+| writing **ぷ** | ふ plus the handakuten, read *pu* |
+| **てんぷら** (*tenpura*, tempura) | spends ぷ |
+| **ぺらぺら** (*perapera*, fluent) | shows ぺ, twice |
+| writing **ぺ** | へ plus the handakuten; the *p* row is complete |
+| review (chapter 137) | reads the seven words, writes each new sign beside its base sign, and えんぴつ, きっぷ and ぺらぺら |
+
+Every word is new to the corpus (no headword or homograph existed) and uses
+only kana the book already writes, plus the one new sign. **かぞえる** is the
+one verb. Two lessons separate each writing lesson from the next. Chapter
+136 sits on the everyday-things spine node, like chapter 134; chapter 137,
+with its ticket, pencil and tempura, sits on saying what I want.
+
+All seven letter lessons are **anchored** (HL-C443; 32 -> 39). Cold,
+builds-toward, unwritten and unread inventory stay at 1, 35, 0 and 9. Script
+closure stays at zero violations and zero never-taught glyphs (taught glyphs
+77 -> 84). Each of the seven gets an inventory row: the *z* signs in the form
+ざ uses (base sign in full, then the two short strokes at the upper right),
+the *p* signs in the form ぽ uses (base sign in full, then a small circle at
+the upper right). None cites a stroke-order source of its own, so none has a
+ductus or a filmstrip.
+
+**Reinforcement.** Twenty-one more lessons make 43 older (atom, window)
+slots measurable for the first time: R4 for 21 words from chapters 126-130,
+R3 for 18 atoms from chapters 134-135, and R2 for four atoms from chapter
+135. Each new lesson's warm-up retrieves the R4 atom due at its position at
+exactly 80 lessons and, where one is due, the R3 atom at exactly 20. The
+first four take the chapter 135 atoms at five. Inside the two chapters, every
+new atom is retrieved one lesson later and, where the track is long enough to
+judge it, five lessons later; **かぞく**, the first new word, is retrieved
+again twenty lessons later in the chapter 137 review. The R1, R2, R3 and R4
+miss counts stay at 1, 459, 245 and 519, with no per-atom change. Every new
+atom except ぺ, written in the second-to-last lesson, is revisited at least
+twice. Japanese stays at A1.
+
+## Chapters 134-135: eight voiced kana, で, ば, べ, ぶ, び, ぐ, げ and ぎ
+
+After chapter 133 the book wrote every basic hiragana, but only seven voiced
+ones: **が**, **ご**, **ざ**, **じ**, **だ**, **ど** and **ぼ** (and **ぽ** with
+the handakuten). Everyday A2 words need more: **でんわ** (a telephone),
+**べんきょう** (study), **ぎんこう** (a bank) and **げんき** (well) could not be
+written at all. Chapters 134 and 135 add 24 lessons and write eight more,
+four per chapter. Each one is a sign the reader already writes plus the
+two-stroke dakuten, and each writing lesson pairs it with that base sign. They
+are the first new voiced signs since chapter 18. With them the book writes the
+whole *g* row (が ぎ ぐ げ ご) and the whole *b* row (ば び ぶ べ ぼ).
+
+**Word before sign, every time.** As in chapters 131-133, each new sign is
+first seen inside a word taught one lesson earlier, with a romanization, and
+only then written:
+
+| lesson | what it does |
+|---|---|
+| **でんわ** (*denwa*, a telephone) | shows で after ん and わ |
+| writing **で** | て plus the dakuten, as た became だ and と became ど |
+| **でんしゃ** (*densha*, a train) | spends で at once |
+| **かばん** (*kaban*, a bag) | shows ば between か and ん |
+| writing **ば** | は plus the dakuten; on an *h* sign the mark makes a *b*, as on ほ for ぼ |
+| **ばしょ** (*basho*, a place) | spends ば |
+| **たべる** (*taberu*, to eat) | shows べ; a verb (JA-VERB-TABERU) |
+| writing **べ** | へ plus the dakuten |
+| **べんきょう** (*benkyō*, study) | spends べ |
+| **しんぶん** (*shinbun*, a newspaper) | shows ぶ |
+| writing **ぶ** | ふ plus the dakuten, read *bu* |
+| review (chapter 134) | reads the seven words, writes each new sign beside its base sign, and でんしゃ, ばしょ and しんぶん |
+| **びょういん** (*byōin*, a hospital) | shows び; keep the ょ small, or the word is *biyōin*, a hair salon |
+| writing **び** | ひ plus the dakuten; the *b* row is complete |
+| **どようび** (*doyōbi*, Saturday) | spends び |
+| **いりぐち** (*iriguchi*, an entrance) | shows ぐ; *guchi* is *kuchi*, a mouth, voiced |
+| writing **ぐ** | く plus the dakuten |
+| **でぐち** (*deguchi*, an exit) | spends ぐ, and で from chapter 134 |
+| **げつようび** (*getsuyōbi*, Monday) | shows げ; ends in the *yōbi* of どようび |
+| writing **げ** | け plus the dakuten |
+| **げんき** (*genki*, well, healthy) | spends げ |
+| **ぎんこう** (*ginkō*, a bank) | shows ぎ |
+| writing **ぎ** | き plus the dakuten; the *g* row is complete |
+| review (chapter 135) | reads the seven words, writes each new sign beside its base sign, and どようび, げつようび and ぎんこう |
+
+Every word is new to the corpus and uses only kana the book already writes,
+plus the one new sign. Two lessons separate each writing lesson from the
+next. Chapter 134 sits on the everyday-things spine node, like chapters 132
+and 133; chapter 135, with its hospital, entrance, exit and bank, sits on
+asking where things are.
+
+All eight letter lessons are **anchored** (HL-C443). Cold, builds-toward,
+unwritten and unread inventory stay at 1, 35, 0 and 9. Script closure stays
+at zero violations and zero never-taught glyphs: closure counts the
+precomposed sign, so each new sign appears only in its own headword until its
+writing lesson. Each of the eight also gets an inventory row in the form
+が, ご, ざ and ぼ already use (base sign in full, then the two short strokes
+at the upper right). None of them cites a stroke-order source of its own, so
+none has a ductus or a filmstrip.
+
+**Reinforcement.** Twenty-four more lessons make 46 older (atom, window)
+slots measurable for the first time: R4 for 24 words from chapters 121-126,
+R3 for 18 atoms from chapters 132-133, and R2 for four atoms from chapter
+133. Each new lesson's warm-up retrieves the R4 atom due at its position at
+exactly 80 lessons and, where one is due, the R3 atom at exactly 20. The
+first four take the chapter 133 atoms at five. Inside the two chapters, every
+new atom is retrieved one lesson later and, where the track is long enough to
+judge it, five lessons later; the first four chapter 134 atoms are retrieved
+again twenty lessons later, at the end of chapter 135. The R1, R2, R3 and R4
+miss counts stay at 1, 459, 245 and 519, with no per-atom change. Every new
+atom except ぎ, written in the second-to-last lesson, is revisited at least
+twice. Japanese stays at A1.
+
+## Stroke order for に, は, ま, り and ん
+
+The last five basic hiragana without a cited stroke order were **に**, **は**,
+**ま**, **り** and **ん** (JA-W01-ni, JA-W01-ha, JA-W03-ma, JA-W03-ri and
+JA-W01-n), taught since chapters 1 to 4. Their inventory rows said only
+"authoritative", so they had no ductus and their writing lessons printed no
+filmstrip. Each row now cites KanjiVG's directed paths for its own code point,
+the way こ to と do. All five lessons now print a filmstrip.
+
+| sign | KanjiVG file | paths | pen lifts |
+|---|---|---|---|
+| に | kanji/0306b.svg | the left vertical with its flick, the upper stroke, the lower curve | 2 |
+| は | kanji/0306f.svg | the left vertical with its flick, the bar, the vertical with its loop | 2 |
+| ま | kanji/0307e.svg | the upper bar, the lower bar, the vertical with its loop | 2 |
+| り | kanji/0308a.svg | the left stroke with its flick, the long right stroke | 1 |
+| ん | kanji/03093.svg | one stroke: the diagonal, back up it, the hump, the rising finish | 0 |
+
+**Every one of the 46 basic hiragana, あ to ん with を, now has a cited stroke
+order and a ductus**, and the script-ductus and inventory tests check all 46.
+
+Only the order and direction come from KanjiVG. The pen paths follow the
+bundled font's own outline. In the print glyph the flick of に's and は's left
+vertical leaves the stroke a little above its foot, and ん's hump leaves the
+diagonal partway up, so the path goes down to the end of that ink and climbs
+back before turning. り's print glyph draws the pen's way from the left stroke
+to the right one as a thin rising arch, so in the filmstrip the two strokes
+touch at the top of that arch, though in KanjiVG they do not.
+
+**Three lessons are corrected**, each only where its text contradicted both
+KanjiVG and the filmstrip now printed beside it:
+
+- JA-W01-ha said は's left vertical ends with a flick to the left, that the
+  crossbar crosses that vertical, and that the loop starts at the crossbar's
+  right and comes back up to close. The flick goes up to the right; the
+  crossbar sits to the right of the vertical without touching it; and the last
+  stroke starts above the crossbar, comes down through it, rounds to the left
+  at the foot, comes back up across itself and runs out to the lower right.
+  The three list items now say so.
+- JA-W01-ni said に's left vertical has "the same small flick left at the
+  foot" as は. It is the same flick, but it goes up to the right. That list
+  item now says so.
+- JA-W01-n began ん with "a small tick down-left". The stroke cuts all the way
+  from the top down to the lower left, climbs back up the same line and turns
+  over a small hump before rounding to the right and rising. That sentence now
+  says so.
+
+No assessment answer changes, and no lesson was added, moved or retagged. The
+ま and り lessons' prose is unchanged. JA-W03-ri still says the two strokes of
+り never touch, which KanjiVG's handwriting agrees with even though the print
+glyph joins them.
+
+## Stroke order for こ, さ, す, ち and と
+
+Five more signs that chapters 2, 3 and 4 teach had no cited stroke order:
+**こ**, **さ**, **す**, **ち** and **と** (JA-W01-ko, JA-W03-sa, JA-W03-su,
+JA-W01-chi and JA-W03-to). Their inventory rows said only "authoritative", so
+they had no ductus and their writing lessons printed no filmstrip. Each row now
+cites KanjiVG's directed paths for its own code point, the way あ to か do. All
+five lessons now print a filmstrip.
+
+| sign | KanjiVG file | paths | pen lifts |
+|---|---|---|---|
+| こ | kanji/03053.svg | the upper stroke, the lower curve | 1 |
+| さ | kanji/03055.svg | the bar, the slanting stroke with its hook, the curve at the foot | 2 |
+| す | kanji/03059.svg | the bar, the vertical with its loop and tail | 1 |
+| ち | kanji/03061.svg | the bar, the body in one movement | 1 |
+| と | kanji/03068.svg | the short stroke, the long sweep | 1 |
+
+Only the order and direction come from KanjiVG. The pen paths follow the
+bundled font's own outline. In the print glyph, す's vertical and the right
+side of its loop share one band of ink, so the path comes back down that band
+before the tail. ち's descender meets the rising stroke in a sharp point, so
+the path goes down to that tip and turns back up the same ink.
+
+**Three lessons are corrected**, each only where its text contradicted both
+KanjiVG and the filmstrip now printed beside it:
+
+- JA-W03-sa called さ "two strokes" in its gloss and title, though its own
+  body counts three. It also described the second stroke as a short curve
+  below the bar, falling to the left, and the foot curve as opening left. The
+  second stroke starts above the bar, slants down to the right through it and
+  hooks back to the left; the foot curve comes down on the left and runs out
+  to the right. The title, gloss, the two list items and the guided-practice
+  cue now say so. The paragraph about printed fonts is unchanged.
+- JA-W01-chi described ち's body as curving left and then round into a belly
+  "to the right and up". It falls through the bar to the lower left, turns
+  sharply up to the right, rounds the belly and finishes low on the left. That
+  one list item now says so.
+- JA-W03-to said と's two strokes never meet. In KanjiVG the short stroke ends
+  on the long one, and the print glyph joins them there. The title, the
+  opening hook, the line introducing the strokes, the second list item and
+  the guided-practice cue now say the strokes touch, and the recall activity's
+  answer moves from "no" to "yes", with its accepted answers and feedback to
+  match.
+
+No lesson was added, moved or retagged, and the other two lessons' prose is
+unchanged.
+
+Five basic hiragana rows (に, は, ま, り and ん) still have no cited
+stroke-order source, so those signs have no ductus and no filmstrip yet.
+
+## Stroke order for あ, い, う, え, お and か
+
+Six signs that chapters 1, 3 and 10 teach had no cited stroke order: **あ**,
+**い**, **う**, **え**, **お** and **か** (JA-W03-a, JA-W01-i, JA-W03-u,
+JA-W01-e, JA-W10-o and JA-W03-ka). Their inventory rows said only
+"authoritative", so they had no ductus and their writing lessons printed no
+filmstrip. Each row now cites KanjiVG's directed paths for its own code
+point, the way き, け, ぬ, へ and ら do. All six lessons now print a filmstrip.
+
+| sign | KanjiVG file | paths | pen lifts |
+|---|---|---|---|
+| あ | kanji/03042.svg | the bar, the vertical, the looping stroke | 2 |
+| い | kanji/03044.svg | the long left stroke with its flick, the short right stroke | 1 |
+| う | kanji/03046.svg | the short top stroke, the wide curve | 1 |
+| え | kanji/03048.svg | the short top stroke, the body in one movement | 1 |
+| お | kanji/0304a.svg | the bar, the long vertical with its loop and bowl, the dot | 2 |
+| か | kanji/0304b.svg | the bar with its turn and hook, the long falling stroke, the dot | 2 |
+
+Only the order and direction come from KanjiVG. The pen paths follow the
+bundled font's own outline. In the print glyph, え's small hump branches off
+its diagonal, so the path goes down to the tip of the diagonal and climbs back
+up the same ink before turning over the hump.
+
+**One lesson is corrected.** JA-W03-ka described the first stroke of か as
+going down and curving right at the foot, and the second as a short vertical
+falling to the right. That is not how か is written, and the new filmstrip
+shows otherwise. The first stroke is a bar that turns down the right side and
+hooks back to the left. The second is a long stroke falling to the lower left
+through the bar. The lesson now says so, and its two feedback lines name the
+strokes the same way. Nothing else in the six lessons changes: no lesson was
+added, moved or retagged.
+
+Ten basic hiragana rows (こ, さ, す, ち, と, に, は, ま, り and ん) still have
+no cited stroke-order source, so those signs have no ductus and no filmstrip
+yet.
+
+## Chapter 133: き, け, ぬ and へ, the last four basic hiragana
+
+After chapter 132 the book wrote every sign of the basic hiragana table but
+four: **き**, **け**, **ぬ** and **へ**. Its words had been chosen to avoid
+them. Chapter 133 adds twelve lessons and writes all four. They were the last
+basic hiragana without a writing lesson.
+
+ら had the opposite gap: chapter 8 has a writing lesson for it, but the script
+inventory had no row for ら, so it had no stroke-order source and no
+filmstrip. Chapter 133 adds that row, cited to KanjiVG like the other four,
+and a ductus. JA-W08-ra now prints a filmstrip; its prose is unchanged.
+Every basic hiragana now has a writing lesson and an inventory row, but
+sixteen rows (あ, い, う, え, お, か, こ, さ, す, ち, と, に, は, ま, り and
+ん) still have no cited stroke-order source, so those signs have no ductus
+and no filmstrip yet.
+
+**Word before sign, every time.** Each new sign is first seen inside a word
+taught one lesson earlier, and only then written:
+
+| lesson | what it does |
+|---|---|
+| **えき** (*eki*, a station) | shows き after the え the reader writes |
+| writing **き** | さ with a second bar |
+| **きのう** (*kinō*, yesterday) | spends き at once |
+| **いけ** (*ike*, a pond) | shows け after い |
+| writing **け** | the first two strokes of は, then a sweep to the lower left |
+| **けさ** (*kesa*, this morning) | spends け; sits beside きのう |
+| **いぬ** (*inu*, a dog) | shows ぬ, which looks like め with a loop |
+| writing **ぬ** | め with a small closed loop at the end |
+| **ぬの** (*nuno*, cloth) | spends ぬ |
+| **へや** (*heya*, a room) | shows へ, the sign the は, ひ, ふ, ほ row was missing |
+| writing **へ** | one stroke over a low peak |
+| review | reads the seven words, writes きのう, けさ and へや, and each new sign once |
+
+All four letter lessons are **anchored** (HL-C443), and cold, builds-toward,
+unwritten and unread inventory stay at 1, 35, 0 and 9. Two lessons separate
+each writing lesson from the next. Script closure stays at zero violations,
+because each word lesson declares a romanization and its new sign appears only
+in that word.
+
+**Where the stroke orders come from.** All four follow を, そ, れ and る.
+KanjiVG's directed paths for U+304D, U+3051, U+306C and U+3078 give the order
+and direction: き is four paths, け three, ぬ two and へ one. ら's record uses
+U+3089's file, which has two paths. The pen paths
+follow the bundled font's own outline. Where the print glyph has no separate
+ink for a return, the path retraces the ink: け climbs back a short way from
+the foot of its left stroke into the flick.
+
+**Reinforcement.** Twelve more lessons make 23 older (atom, window) slots
+measurable for the first time: R4 for ten words from chapters 119-121, R3 for
+nine atoms from chapters 131-132, and R2 for four atoms from chapter 132. Each
+new lesson's warm-up retrieves the R4 and R3 atoms due at its own position, at
+exactly 80 and 20 lessons, in their original order, and the first four take
+the chapter 132 atoms at five. Every new atom is also retrieved one lesson
+later and, where the chapter is long enough to judge it, five lessons later.
+The miss counts stay at R2 459, R3 245 and R4 519. Every new atom except へ,
+written in the second-to-last lesson, is revisited at least twice inside the
+chapter; へ is used again in the review. Japanese stays at A1.
+
+## Chapter 132: そ, れ and る, each written after a word that holds it
+
+The book's 295 A1 words were chosen to avoid three very common signs: **そ**,
+**れ** and **る**. Chapter 131 used the same approach to add small ゃ, small ょ
+and を. Chapter 132 adds nine lessons and writes these three. The pointing words
+**そこ**, **これ** and **それ** sit beside the **ここ** the reader already knows.
+
+**Word before sign, every time.** Each new sign is first seen inside a word
+taught one lesson earlier, and only then written:
+
+| lesson | what it does |
+|---|---|
+| **そこ** (*soko*, there) | shows そ beside the こ of ここ |
+| writing **そ** | one stroke that zigzags twice before its curve |
+| **そと** (*soto*, outside) | spends そ at once |
+| **これ** (*kore*, this) | shows れ: a thing near you, as ここ is a place |
+| writing **れ** | the first stroke and zigzag of わ and ね, with a flick at the end |
+| **それ** (*sore*, that) | spends れ and そ together; the four pointing words line up |
+| **くるま** (*kuruma*, a car) | shows る between two signs the reader writes |
+| writing **る** | ろ with a small closed loop at the bottom |
+| review | reads the five words, points with *kore* and *sore*, writes くるま |
+
+The signs come in the order そ, れ, る so that それ can use the first two. All
+three letter lessons are **anchored** (HL-C443), and cold, builds-toward,
+unwritten and unread inventory stay at 1, 35, 0 and 9. Two lessons separate
+each writing lesson from the next. Script closure stays at zero violations,
+because each word lesson declares a romanization and its new sign appears only
+in that headword.
+
+**Where the stroke orders come from.** All three follow を. KanjiVG's
+directed paths for U+305D, U+308C and U+308B give the order and direction:
+そ and る are one path each, and れ is two. The pen paths follow the bundled
+font's own outline. Where the print glyph has no separate ink for a return,
+the path retraces the ink: そ doubles back along its middle bar, and れ climbs
+back up its diagonal.
+
+**Reinforcement.** Nine more lessons make 22 older (atom, window) slots
+measurable for the first time: R4 for nine words from chapters 117-119, R3 for
+nine qualities from chapters 129-130, and R2 for four atoms from chapter 131.
+Each new lesson's warm-up retrieves one R4 word and one R3 word, at exactly 80
+and 20 lessons, in their original order. Four warm-ups also take the chapter
+131 atoms, each at five lessons. All 22 slots are served, so the miss counts
+stay at R2 459, R3 245 and R4 519. Every new atom except the last sign is
+revisited at least twice inside the chapter. る, written in the second-to-last
+lesson, is used again in the review. Japanese stays at A1.
+
+## Chapter 131: small ゃ, small ょ and を, each written after a word that holds it
+
+The book wrote every hiragana sign its words used, but three common ones were
+still missing: the small **ゃ** and **ょ** that fold a sign into one beat, and
+**を**, the object particle. Chapter 131 adds nine lessons.
+
+**Word before sign, every time.** Each new sign is first seen inside a word taught
+one lesson earlier, and only then written:
+
+| lesson | what it does |
+|---|---|
+| **おちゃ** (*ocha*, tea) | shows ゃ: two beats, *o–cha* |
+| writing **ゃ** | や written small, in the same three strokes |
+| **いしゃ** (*isha*, a doctor) | spends ゃ at once |
+| **ちょっと** (*chotto*, a little) | shows ょ beside the っ the reader already writes |
+| writing **ょ** | よ written small; with ゃ and ゅ the set is complete |
+| **としょかん** (*toshokan*, a library) | spends ょ at once |
+| **おちゃを ください** (*ocha o kudasai*, tea, please) | the object particle, said *o* |
+| writing **を** | said like お, kept for the particle only, as は is kept for *wa* |
+| review | reads the four words, writes the request from memory |
+
+So all three letter lessons are **anchored** (HL-C443). None of them waits for
+a later word, and the track's cold and builds-toward counts do not move. Two
+lessons separate each writing lesson from the next. Script closure stays at
+zero violations, because each word lesson declares a romanization and its new
+sign sits only in that headword.
+
+**Where the stroke orders come from.** Small ゃ and ょ use the rule small ゅ
+set: the full-size sign's observed order and its citation, fitted to the small
+glyph, and an explicit note that the size change is not separate evidence.
+KanjiVG's files for U+3083 and U+3087 hold the same strokes in the same order.
+を takes its order and direction from KanjiVG's three directed paths, and its
+pen path follows the bundled font's own outline.
+
+**Reinforcement.** Nine more lessons make 21 older (atom, window) slots
+measurable for the first time: R4 for nine words from chapters 115-117, R3
+for nine qualities from chapters 127-129, and R2 for three from chapter 130.
+Each new lesson's warm-up retrieves one R4 word and one R3 word, at exactly 80
+and 20 lessons, in their original order; three warm-ups also take the R2
+words. All 21 are served, so the miss counts stay at R2 459, R3 245 and R4
+519. Every new atom is revisited at least twice inside the chapter, and
+Japanese stays at A1.
+
+## Chapter payoffs say "I can", not "i can"
+
+The payoff line under each chapter's goal lowercased the goal's first letter,
+so 111 chapters printed "Complete the last lesson of chapter N: i can say …".
+Every one now keeps the capital: "…: I can say …", and a new test
+(`payoff-summary-case.test.ts`) fails if the lowercase pronoun comes back. Only
+the payoff summary changed; no lesson, word or atom moved.
+
 ## Chapters 72-130: 295 hiragana words, and Japanese attains A1
 
 Japanese had four A1 gaps:

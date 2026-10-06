@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:87462c379f7a81d5",
+  "lessonIds": [
+    "RU-C190-shtora",
+    "RU-C190-rakovina",
+    "RU-C190-kran",
+    "RU-C190-tualet",
+    "RU-C190-shampun",
+    "RU-R190-first-pass-words-from-chapters-182-185",
+    "RU-R190-second-pass-words-from-chapters-186-190"
+  ],
+  "tex": "russian/book/chapters/ch190-heavy-curtain-sink-tap-toilet-shampoo.tex"
+}

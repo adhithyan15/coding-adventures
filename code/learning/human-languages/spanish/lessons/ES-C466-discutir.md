@@ -7,7 +7,7 @@ chapter: 466
 type: word
 headword: discutir
 gloss: to discuss, and to argue — one verb for both, from a Latin verb about shaking a thing apart
-concept_tag: ES-ASK-DISCUTIR
+concept_tag: ES-VERB-DISCUTIR
 prerequisites: [ES-C466-comportamiento, ES-C442-reunion, ES-C466-director]
 sounds: [stress-final, r-tap]
 roots: [discutere-latin]

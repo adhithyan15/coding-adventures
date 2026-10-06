@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:ee2fa5c8110a096b",
+  "lessonIds": [
+    "RU-C253-skazka",
+    "RU-C253-istoriya",
+    "RU-C253-shakhmaty",
+    "RU-C253-transport",
+    "RU-C253-trolleybus"
+  ],
+  "tex": "russian/book/chapters/ch253-fairy-tale-story-chess-transport-trolleybus.tex"
+}

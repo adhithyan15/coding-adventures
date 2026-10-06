@@ -33,7 +33,7 @@
 
 use std::collections::HashMap;
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Size values
@@ -159,6 +159,7 @@ pub struct FontSpec {
     /// CSS-style weight 100..=900.
     pub weight: u16,
     pub italic: bool,
+    pub stretch: FontStretch,
     /// Line-height multiplier, e.g. 1.5 = 150% of `size`. Must be > 0.
     pub line_height: f64,
 }
@@ -169,8 +170,23 @@ pub fn font_spec(family: impl Into<String>, size: f64) -> FontSpec {
         size,
         weight: 400,
         italic: false,
+        stretch: FontStretch::Normal,
         line_height: 1.2,
     }
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub enum FontStretch {
+    UltraCondensed,
+    ExtraCondensed,
+    Condensed,
+    SemiCondensed,
+    #[default]
+    Normal,
+    SemiExpanded,
+    Expanded,
+    ExtraExpanded,
+    UltraExpanded,
 }
 
 pub fn font_bold(mut spec: FontSpec) -> FontSpec {
@@ -217,15 +233,33 @@ impl TextDecorationLines {
 pub enum TextDecorationStyle {
     #[default]
     Solid,
+    Double,
+    Dotted,
+    Dashed,
+    Wavy,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub enum TextUnderlinePosition {
+    #[default]
+    Auto,
+    FromFont,
+    Under,
 }
 
 /// Paint-independent text decoration inherited by inline text descendants.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct TextDecoration {
     pub lines: TextDecorationLines,
     pub style: TextDecorationStyle,
     /// `None` means use the text foreground color.
     pub color: Option<Color>,
+    /// Authored logical-unit thickness. `None` uses font metrics.
+    pub thickness: Option<f64>,
+    /// Authored underline distance below the baseline. `None` uses font metrics.
+    pub underline_offset: Option<f64>,
+    /// Selects the baseline-relative source for an automatic underline offset.
+    pub underline_position: TextUnderlinePosition,
 }
 
 impl TextDecoration {
@@ -234,6 +268,9 @@ impl TextDecoration {
             lines: TextDecorationLines::UNDERLINE,
             style: TextDecorationStyle::Solid,
             color: None,
+            thickness: None,
+            underline_offset: None,
+            underline_position: TextUnderlinePosition::Auto,
         }
     }
 }

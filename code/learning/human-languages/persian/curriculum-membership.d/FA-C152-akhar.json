@@ -1,0 +1,11 @@
+{
+  "id": "FA-C152-akhar",
+  "pathSegment": "FA-PATH-152-ZAMAN152",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-152-ZAMAN152",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C263-phalvala",
+  "pathSegment": "UR-PATH-263-KAM263",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-263-KAM263",
+      "order": 3
+    }
+  ]
+}

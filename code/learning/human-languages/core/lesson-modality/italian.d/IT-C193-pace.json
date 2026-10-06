@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C193-pace",
+    "language": "italian",
+    "chapter": 193,
+    "sequence": 10890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb147f2fb05b0dc4"
+  },
+  "findings": []
+}

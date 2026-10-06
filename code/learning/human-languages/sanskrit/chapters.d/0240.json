@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "So long, Gradually, Every day, Daily, Constantly",
+  "label": "ch:sa-so-long-gradually-every-day-daily-constantly",
+  "canDo": "I can say so long, gradually, every day, daily and constantly.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "SA-R240-second-pass-words-from-chapters-236-240",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say so long, gradually, every day, daily and constantly.",
+    "assesses": [
+      "SA-LEX-C240-TIME240-03",
+      "SA-LEX-C240-TIME240-04",
+      "SA-LEX-C240-TIME240-05"
+    ]
+  }
+}

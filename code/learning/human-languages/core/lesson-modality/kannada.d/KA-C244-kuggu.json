@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C244-kuggu",
+    "language": "kannada",
+    "chapter": 244,
+    "sequence": 11540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:764754c755c94785"
+  },
+  "findings": []
+}

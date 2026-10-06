@@ -1,0 +1,11 @@
+{
+  "id": "GE-C226-besuch",
+  "pathSegment": "GE-PATH-226-THING226",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-226-THING226",
+      "order": 4
+    }
+  ]
+}

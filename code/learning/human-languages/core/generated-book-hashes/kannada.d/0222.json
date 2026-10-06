@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:a4c8e8b5fc059b71",
+  "lessonIds": [
+    "KA-C222-pyant",
+    "KA-C222-langa",
+    "KA-C222-ravike",
+    "KA-C222-baniyan",
+    "KA-C222-butu"
+  ],
+  "tex": "kannada/book/chapters/ch222-trousers-long-skirt-blouse-vest-shoes.tex"
+}

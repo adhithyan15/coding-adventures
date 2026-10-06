@@ -7,7 +7,7 @@ chapter: 473
 type: word
 headword: aconsejar
 gloss: to advise — el consejo with a verb built on it, and the verb a question reaches for when it asks what somebody recommends
-concept_tag: ES-ASK-ACONSEJAR
+concept_tag: ES-VERB-ACONSEJAR
 prerequisites: [ES-C472-sintesis-encuesta, ES-C321-consejo, ES-C353-biblioteca]
 sounds: [j-jota, s-clear, stress-final]
 roots: [consilium-latin]

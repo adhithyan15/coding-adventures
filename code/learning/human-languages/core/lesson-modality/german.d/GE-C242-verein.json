@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C242-verein",
+    "language": "german",
+    "chapter": 242,
+    "sequence": 13340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4896b5890d2aa29b"
+  },
+  "findings": []
+}

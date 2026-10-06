@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Plastic, Cotton, Wool, Silk, Leather",
+  "label": "ch:fr-plastic-cotton-wool-silk-leather",
+  "canDo": "I can say plastic, cotton, wool, silk and leather.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C172-cuir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say plastic, cotton, wool, silk and leather.",
+    "assesses": [
+      "FR-LEX-C172-CHOSES172-03",
+      "FR-LEX-C172-CHOSES172-04",
+      "FR-LEX-C172-CHOSES172-05"
+    ]
+  }
+}

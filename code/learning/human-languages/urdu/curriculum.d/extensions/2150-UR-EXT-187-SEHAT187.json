@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-187-SEHAT187",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a swelling, a dose, a diet, exercise and the body.",
+  "prerequisites": []
+}

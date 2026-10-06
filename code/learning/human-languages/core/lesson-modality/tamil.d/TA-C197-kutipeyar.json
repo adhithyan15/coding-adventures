@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C197-kutipeyar",
+    "language": "tamil",
+    "chapter": 197,
+    "sequence": 10100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ea19d7dd8e20f7d"
+  },
+  "findings": []
+}

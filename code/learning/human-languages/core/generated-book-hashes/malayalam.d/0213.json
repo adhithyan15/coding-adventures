@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:13b4e9cce5ed4147",
+  "lessonIds": [
+    "ML-C213-pulu",
+    "ML-C213-vavval",
+    "ML-C213-kuyil",
+    "ML-C213-paruntu",
+    "ML-C213-kokku"
+  ],
+  "tex": "malayalam/book/chapters/ch213-worm-bat-koel-kite-crane.tex"
+}

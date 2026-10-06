@@ -1,0 +1,11 @@
+{
+  "id": "PT-C234-convencer",
+  "pathSegment": "PT-PATH-234-VERBOS234",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-234-VERBOS234",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:10a441d7ae317233",
+  "lessonIds": [
+    "TA-C248-varatci",
+    "TA-C248-nilanatukkam",
+    "TA-C248-iyarkai",
+    "TA-C248-parai",
+    "TA-C248-neruppu",
+    "TA-R248-first-pass-words-from-chapters-243-245",
+    "TA-R248-second-pass-words-from-chapters-246-248"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch248.txt",
+  "json": "tamil/narration/ch248.json",
+  "textHash": "fnv1a64:956859528c72c604",
+  "jsonHash": "fnv1a64:ed82993c16d24b88",
+  "findings": []
+}

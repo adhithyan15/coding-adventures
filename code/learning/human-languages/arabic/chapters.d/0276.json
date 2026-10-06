@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "Animal, Birds, Sparrow, Giraffe, Whale",
+  "label": "ch:ar-animal-birds-sparrow-giraffe-whale",
+  "canDo": "I can say an animal, birds, a sparrow, a giraffe and a whale.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C276-hut",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can say an animal, birds, a sparrow, a giraffe and a whale.",
+    "assesses": [
+      "AR-LEX-C276-SHAY276-03",
+      "AR-LEX-C276-SHAY276-04",
+      "AR-LEX-C276-SHAY276-05"
+    ]
+  }
+}

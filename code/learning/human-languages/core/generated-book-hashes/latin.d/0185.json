@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:6795586741e3cb19",
+  "lessonIds": [
+    "LA-C185-cella",
+    "LA-C185-tablinum",
+    "LA-C185-peristylium",
+    "LA-C185-impluvium",
+    "LA-C185-fundamentum"
+  ],
+  "tex": "latin/book/chapters/ch185-storeroom-study-colonnaded-garden-rain-basin-foundation.tex"
+}

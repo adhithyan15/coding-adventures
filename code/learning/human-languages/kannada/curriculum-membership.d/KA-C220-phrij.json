@@ -1,0 +1,11 @@
+{
+  "id": "KA-C220-phrij",
+  "pathSegment": "KA-PATH-220-VASTU220",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-220-VASTU220",
+      "order": 2
+    }
+  ]
+}

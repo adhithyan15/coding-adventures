@@ -1,0 +1,11 @@
+{
+  "id": "BN-C211-lojja-paoya",
+  "pathSegment": "BN-PATH-211-ACT211",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-211-ACT211",
+      "order": 2
+    }
+  ]
+}

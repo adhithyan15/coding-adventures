@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "To breathe, To tidy, To shake, To cross, To stroll",
+  "label": "ch:fa-to-breathe-to-tidy-to-shake-to-cross-to-stroll",
+  "canDo": "I can say to breathe, to tidy, to shake, to cross and to stroll.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C181-qadam-zadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say to breathe, to tidy, to shake, to cross and to stroll.",
+    "assesses": [
+      "FA-LEX-C181-KONESH181-03",
+      "FA-LEX-C181-KONESH181-04",
+      "FA-LEX-C181-KONESH181-05"
+    ]
+  }
+}

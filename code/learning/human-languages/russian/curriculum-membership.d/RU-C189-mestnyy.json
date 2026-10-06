@@ -1,0 +1,11 @@
+{
+  "id": "RU-C189-mestnyy",
+  "pathSegment": "RU-PATH-189-KACH189",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-189-KACH189",
+      "order": 2
+    }
+  ]
+}

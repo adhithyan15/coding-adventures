@@ -1,0 +1,11 @@
+{
+  "id": "JA-C133-eki",
+  "pathSegment": "JA-PATH-133-WRITE133",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-133-WRITE133",
+      "order": 0
+    }
+  ]
+}

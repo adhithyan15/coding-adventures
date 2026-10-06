@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R228-second-pass-words-from-chapters-226-228",
+    "language": "latin",
+    "chapter": 228,
+    "sequence": 11640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5497b6d533a0af0f"
+  },
+  "findings": []
+}

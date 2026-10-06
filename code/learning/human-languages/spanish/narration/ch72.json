@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "Salir --- Leaving",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9dc126e5e9354bf1",
+  "sourceHash": "fnv1a64:1dad026ec20b244e",
   "lessons": [
     {
       "id": "ES-C13-salir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:683259af9c3ac24f",
+      "sourceHash": "fnv1a64:c31dca81a8ecb1f6",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "You can retrieve pongo, pones, pone, and you already use de with a place name. Keep that frontier while adding salir, “to leave” or “to go out.”"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Settle the false friend before the real way out: éxito is success. To go out, Spanish uses today's verb, salir."
             }
           ]
         },

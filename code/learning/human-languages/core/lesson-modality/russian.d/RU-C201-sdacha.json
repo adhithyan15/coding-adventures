@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C201-sdacha",
+    "language": "russian",
+    "chapter": 201,
+    "sequence": 11810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e0ed0f23fdb4ceb"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:7c4d6ca09f275073",
+  "lessonIds": [
+    "SA-C176-parivartayati",
+    "SA-C176-nivedayati",
+    "SA-C176-amantrayati",
+    "SA-C176-sodhayati",
+    "SA-C176-purayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch176-changes-reports-invites-cleans-fills.tex"
+}

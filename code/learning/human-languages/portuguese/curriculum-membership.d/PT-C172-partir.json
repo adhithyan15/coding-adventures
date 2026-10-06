@@ -1,0 +1,11 @@
+{
+  "id": "PT-C172-partir",
+  "pathSegment": "PT-PATH-172-VERBOS172",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-172-VERBOS172",
+      "order": 3
+    }
+  ]
+}

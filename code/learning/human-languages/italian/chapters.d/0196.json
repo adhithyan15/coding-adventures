@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "Experience, Thought, Memory, Solution, Choice",
+  "label": "ch:it-experience-thought-memory-solution-choice",
+  "canDo": "I can say experience, a thought, a memory, a solution and a choice.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C196-scelta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say experience, a thought, a memory, a solution and a choice.",
+    "assesses": [
+      "IT-LEX-C196-COSE196-03",
+      "IT-LEX-C196-COSE196-04",
+      "IT-LEX-C196-COSE196-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C139-nanimo",
+  "pathSegment": "JA-PATH-139-NEG139",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-139-NEG139",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C169-tamrin",
+  "pathSegment": "AR-PATH-169-SIHHA169",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-169-SIHHA169",
+      "order": 1
+    }
+  ]
+}

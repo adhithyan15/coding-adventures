@@ -1,0 +1,11 @@
+{
+  "id": "HI-C167-manzil",
+  "pathSegment": "HI-PATH-167-READ167",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-167-READ167",
+      "order": 3
+    }
+  ]
+}

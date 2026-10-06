@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Rarely, Mostly, Right away, Finally, Still",
+  "label": "ch:ge-rarely-mostly-right-away-finally-still",
+  "canDo": "I can say rarely, mostly, right away, finally and still.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "GE-C170-noch",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say rarely, mostly, right away, finally and still.",
+    "assesses": [
+      "GE-LEX-C170-TIME170-03",
+      "GE-LEX-C170-TIME170-04",
+      "GE-LEX-C170-TIME170-05"
+    ]
+  }
+}

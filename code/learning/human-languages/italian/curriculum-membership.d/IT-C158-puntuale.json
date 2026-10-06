@@ -1,0 +1,11 @@
+{
+  "id": "IT-C158-puntuale",
+  "pathSegment": "IT-PATH-158-QUAL158",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-158-QUAL158",
+      "order": 4
+    }
+  ]
+}

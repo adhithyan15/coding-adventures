@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:b553496729038960",
+  "lessonIds": [
+    "FA-C172-durbin",
+    "FA-C172-gitar",
+    "FA-C172-roman",
+    "FA-C172-majalle",
+    "FA-C172-seriyal",
+    "FA-R172-first-pass-words-from-chapters-167-169",
+    "FA-R172-second-pass-words-from-chapters-170-172"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch172.txt",
+  "json": "persian/narration/ch172.json",
+  "textHash": "fnv1a64:4faf16a9020b9978",
+  "jsonHash": "fnv1a64:f077aec372ba6eaa",
+  "findings": []
+}

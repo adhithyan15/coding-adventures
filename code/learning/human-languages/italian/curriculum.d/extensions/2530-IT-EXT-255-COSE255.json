@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-255-COSE255",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a fountain, a gate, a fence, a courtyard and a cellar.",
+  "prerequisites": []
+}

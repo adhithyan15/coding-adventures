@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:49b979ea5a4bd4b8",
+  "lessonIds": [
+    "RU-C197-khobbi",
+    "RU-C197-vystavka",
+    "RU-C197-spektakl",
+    "RU-C197-gitara",
+    "RU-C197-pianino"
+  ],
+  "tex": "russian/book/chapters/ch197-hobby-exhibition-play-guitar-piano.tex"
+}

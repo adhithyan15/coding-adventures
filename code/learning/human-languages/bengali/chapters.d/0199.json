@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "Citizen, Tourist, Sentence, Mistake, Rule",
+  "label": "ch:bn-citizen-tourist-sentence-mistake-rule",
+  "canDo": "I can say a citizen, a tourist, a sentence, a mistake and a rule.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C199-niyom",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say a citizen, a tourist, a sentence, a mistake and a rule.",
+    "assesses": [
+      "BN-LEX-C199-JINIS199-03",
+      "BN-LEX-C199-JINIS199-04",
+      "BN-LEX-C199-JINIS199-05"
+    ]
+  }
+}

@@ -1,5 +1,27 @@
 # lang-aot
 
+ALGOL runtime real output now includes values migrated through provenance-tracked
+scalar slots: a real procedure result with zero parameters or only value-mode
+scalar parameters can be assigned and copied between real locals before the
+shared portable formatter prints it on all seven standard backends. Unknown
+statement conditions may also merge that provenance
+when both exits establish it for the same slot, and side-effect-free conditional
+value selectors may choose between proven runtime-real branches. One-sided
+reassignment and selector calls remain gated. Unary signs, additive
+composition, multiplication, division, and exponentiation over proven
+runtime-real or finite static operands preserve runtime-real provenance. The
+real-valued standard functions preserve that provenance for a runtime-real
+operand while respecting user-declared overrides. Real array-element reads and
+real value formals, including nested-procedure captures, also carry runtime-real
+provenance through assignment and composition. Specialised read-only real name
+formals retain it for runtime-real actual expressions on all seven standard
+backends, including assignable real array elements and direct forwarding
+through another name formal. Writes still use the existing specialised caller
+storage path. Ordinary captured real scalars also retain formatter provenance
+through their existing E6 typed-global slots in nested sibling procedures. Real
+procedure results also retain it when every name formal is a real scalar bound
+by the existing finite specialisation to a proven runtime-real actual.
+
 The opt-in CLR integration suite `tests/clr_strict_flow.rs` executes forward-only
 conditional control, nested Bool branches and wide values through joins,
 including promoted long branches. It refuses skipped definitions. This does not

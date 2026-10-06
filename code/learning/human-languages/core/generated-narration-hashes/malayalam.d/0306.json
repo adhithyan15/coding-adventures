@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:4f4583c2e20e5d7f",
+  "lessonIds": [
+    "ML-C306-tiruttuka",
+    "ML-C306-vivarttanam-ceyyuka",
+    "ML-C306-raddakkuka",
+    "ML-C306-marrivaykkuka",
+    "ML-C306-tonnuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch306.txt",
+  "json": "malayalam/narration/ch306.json",
+  "textHash": "fnv1a64:ffeddc64c6212182",
+  "jsonHash": "fnv1a64:3d9e125912c00e34",
+  "findings": []
+}

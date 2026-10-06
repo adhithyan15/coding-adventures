@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-177-KARANAM177",
+  "spine_node": "SPINE-SAY-WHY",
+  "before": [],
+  "inline": [
+    "TA-EXT-177-KARANAM177"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:e197cf2debb92353",
+  "lessonIds": [
+    "KA-C165-kadi",
+    "KA-C165-nenapisikollu",
+    "KA-C165-urulu",
+    "KA-C165-uli",
+    "KA-C165-kayisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch165.txt",
+  "json": "kannada/narration/ch165.json",
+  "textHash": "fnv1a64:0cad32b655f6cadf",
+  "jsonHash": "fnv1a64:10b8413cd28b6b5b",
+  "findings": []
+}

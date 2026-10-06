@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C215-hodiernus",
+    "language": "latin",
+    "chapter": 215,
+    "sequence": 10740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee7b4c46a76b8715"
+  },
+  "findings": []
+}

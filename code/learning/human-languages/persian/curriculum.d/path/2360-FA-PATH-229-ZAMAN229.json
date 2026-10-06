@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-229-ZAMAN229",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "FA-EXT-229-ZAMAN229"
+  ],
+  "after": []
+}

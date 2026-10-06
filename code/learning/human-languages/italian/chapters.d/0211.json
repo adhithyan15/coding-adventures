@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "To seem, To be useful, To suffer, To dream, To look like",
+  "label": "ch:it-to-seem-to-be-useful-to-suffer-to-dream-to-look-like",
+  "canDo": "I can say to seem, to be useful, to suffer, to dream and to look like.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C211-somigliare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say to seem, to be useful, to suffer, to dream and to look like.",
+    "assesses": [
+      "IT-LEX-C211-VERBI211-03",
+      "IT-LEX-C211-VERBI211-04",
+      "IT-LEX-C211-VERBI211-05"
+    ]
+  }
+}

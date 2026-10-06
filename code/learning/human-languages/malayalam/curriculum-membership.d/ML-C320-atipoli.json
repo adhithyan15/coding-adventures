@@ -1,0 +1,11 @@
+{
+  "id": "ML-C320-atipoli",
+  "pathSegment": "ML-PATH-320-GUNAM320",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-320-GUNAM320",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "End, Delay, Sometimes, Every day, Day before",
+  "label": "ch:la-end-delay-sometimes-every-day-day-before",
+  "canDo": "I can say the end, a delay, sometimes, every day and the day before.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-R237-second-pass-words-from-chapters-233-237",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say the end, a delay, sometimes, every day and the day before.",
+    "assesses": [
+      "LA-LEX-C237-TEMP237-03",
+      "LA-LEX-C237-TEMP237-04",
+      "LA-LEX-C237-TEMP237-05"
+    ]
+  }
+}

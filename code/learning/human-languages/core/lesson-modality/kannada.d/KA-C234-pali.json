@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C234-pali",
+    "language": "kannada",
+    "chapter": 234,
+    "sequence": 11020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83f3100cad6a927b"
+  },
+  "findings": []
+}

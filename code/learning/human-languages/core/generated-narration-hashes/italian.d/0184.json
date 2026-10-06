@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:a886403afbb2a6c5",
+  "lessonIds": [
+    "IT-C184-scivolare",
+    "IT-C184-sollevare",
+    "IT-C184-sorprendere",
+    "IT-C184-sospettare",
+    "IT-C184-stringere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch184.txt",
+  "json": "italian/narration/ch184.json",
+  "textHash": "fnv1a64:d76fea573cf07c72",
+  "jsonHash": "fnv1a64:0884ee15980d6724",
+  "findings": []
+}

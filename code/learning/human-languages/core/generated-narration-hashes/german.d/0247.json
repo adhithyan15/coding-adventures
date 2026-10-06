@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:2593f37a30df0d05",
+  "lessonIds": [
+    "GE-C247-bestehen",
+    "GE-C247-beweisen",
+    "GE-C247-bluehen",
+    "GE-C247-diskutieren",
+    "GE-C247-einpacken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch247.txt",
+  "json": "german/narration/ch247.json",
+  "textHash": "fnv1a64:e075d32b171d9376",
+  "jsonHash": "fnv1a64:ff5139ed150f2934",
+  "findings": []
+}

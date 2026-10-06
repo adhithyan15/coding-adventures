@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C180-chayacitrakar",
+    "language": "marathi",
+    "chapter": 180,
+    "sequence": 9040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c94f02c5b24bdde9"
+  },
+  "findings": []
+}

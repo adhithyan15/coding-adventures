@@ -1,0 +1,11 @@
+{
+  "id": "BN-C165-porota",
+  "pathSegment": "BN-PATH-165-JINIS165",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-165-JINIS165",
+      "order": 4
+    }
+  ]
+}

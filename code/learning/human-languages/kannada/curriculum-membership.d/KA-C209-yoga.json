@@ -1,0 +1,11 @@
+{
+  "id": "KA-C209-yoga",
+  "pathSegment": "KA-PATH-209-AROGYA209",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-209-AROGYA209",
+      "order": 3
+    }
+  ]
+}

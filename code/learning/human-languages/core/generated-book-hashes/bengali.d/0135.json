@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:1ebcd5a522f1475e",
+  "lessonIds": [
+    "BN-C135-bhije",
+    "BN-C135-shukno",
+    "BN-C135-bhora",
+    "BN-C135-druto",
+    "BN-C135-dhir"
+  ],
+  "tex": "bengali/book/chapters/ch135-wet-dry-full-fast-slow.tex"
+}

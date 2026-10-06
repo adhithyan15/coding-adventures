@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:35c7cfe89f8508f7",
+  "lessonIds": [
+    "TE-C220-ucitam",
+    "TE-C220-nindu",
+    "TE-C220-lavu",
+    "TE-C220-sannani",
+    "TE-C220-pacci"
+  ],
+  "tex": "telugu/book/chapters/ch220-free-full-fat-thin-raw.tex"
+}

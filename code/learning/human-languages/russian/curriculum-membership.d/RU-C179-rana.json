@@ -1,0 +1,11 @@
+{
+  "id": "RU-C179-rana",
+  "pathSegment": "RU-PATH-179-ZDOROV179",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-179-ZDOROV179",
+      "order": 2
+    }
+  ]
+}

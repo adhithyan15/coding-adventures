@@ -1,0 +1,11 @@
+{
+  "id": "TE-C214-vimanasrayam",
+  "pathSegment": "TE-PATH-214-STHALAM214",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-214-STHALAM214",
+      "order": 1
+    }
+  ]
+}

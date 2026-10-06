@@ -1,0 +1,11 @@
+{
+  "id": "SA-C184-duratah",
+  "pathSegment": "SA-PATH-184-LOC184",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-184-LOC184",
+      "order": 0
+    }
+  ]
+}

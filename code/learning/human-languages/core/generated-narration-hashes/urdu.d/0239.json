@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:9cc398c23beeb15c",
+  "lessonIds": [
+    "UR-C239-nigalna",
+    "UR-C239-chabana",
+    "UR-C239-sunghna",
+    "UR-C239-ghurna",
+    "UR-C239-talash-karna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch239.txt",
+  "json": "urdu/narration/ch239.json",
+  "textHash": "fnv1a64:ece216d7297509c6",
+  "jsonHash": "fnv1a64:4ac139c492ac9736",
+  "findings": []
+}

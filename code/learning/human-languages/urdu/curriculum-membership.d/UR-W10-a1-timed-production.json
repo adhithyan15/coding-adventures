@@ -1,0 +1,11 @@
+{
+  "id": "UR-W10-a1-timed-production",
+  "pathSegment": "UR-PATH-142-ACT142",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "UR-EXT-142-ACT142",
+      "order": 7
+    }
+  ]
+}

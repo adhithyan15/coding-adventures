@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial slice: titles, accessibility metadata, labeled axes, positional curves, and axis-keyed curves.",
+  "scope": "Pinned full compatibility scope: titles, accessibility metadata, labeled axes with angular text anchoring, positional and axis-keyed curves, curve lists, multiline curve bodies, core chart options, layout configuration, curve tension, core Radar theme variables, sparse series palettes, and upstream default frame, palette, title, and legend geometry.",
   "fixtures": [
     {
       "id": "basic",
@@ -13,12 +13,44 @@
       "source": "radar-beta:\ntitle Restaurant Comparison\naccTitle: Comparison chart\naccDescr: Scores by category\naxis food[\"Food Quality\"], service[\"Service\"], price[\"Price\"]\ncurve a[\"Restaurant A\"]{4, 3, 2}"
     },
     {
+      "id": "angular-label-anchors",
+      "source": "radar-beta\naxis N, NE, E, SE, S, SW, W, NW\ncurve compass{8, 7, 6, 5, 4, 3, 2, 1}"
+    },
+    {
       "id": "detailed-entries",
       "source": "radar-beta\naxis speed[\"Speed\"], quality[\"Quality\"], cost[\"Cost\"]\ncurve product{cost: 20, speed: 80, quality: 60}"
     },
     {
       "id": "multiple-statements",
       "source": "radar-beta\naxis A, B, C, D\ncurve first{1, 2, 3, 4}\ncurve second[\"Second\"]{4, 3, 2, 1}"
+    },
+    {
+      "id": "curve-list-and-multiline",
+      "source": "radar-beta\naxis A, B, C\ncurve first{1, 2, 3}, second[\"Second\"]{\n  3,\n  2,\n  1\n}"
+    },
+    {
+      "id": "core-options",
+      "source": "radar-beta\naxis A, B, C\ncurve scores{20, 50, 80}\nshowLegend false, ticks 4\nmin 10\nmax 90\ngraticule polygon"
+    },
+    {
+      "id": "init-layout-config",
+      "source": "%%{init: {\"radar\": {\"width\": 520, \"height\": 480, \"marginTop\": 30, \"marginBottom\": 40, \"marginLeft\": 25, \"marginRight\": 35, \"axisScaleFactor\": 0.9, \"axisLabelFactor\": 1.1, \"curveTension\": 0.25}}}%%\nradar-beta\naxis A, B, C\ncurve scores{20, 50, 80}"
+    },
+    {
+      "id": "front-matter-layout-config",
+      "source": "---\nconfig:\n  radar:\n    width: 440\n    height: 420\n    axisScaleFactor: 0.8\n---\nradar-beta\naxis A, B, C\ncurve scores{20, 50, 80}"
+    },
+    {
+      "id": "init-theme-style",
+      "source": "%%{init: {\"themeVariables\": {\"cScale0\": \"#102030\", \"radar\": {\"axisColor\": \"#203040\", \"axisStrokeWidth\": 3, \"axisLabelFontSize\": 15, \"curveOpacity\": 0.4, \"curveStrokeWidth\": 4, \"graticuleColor\": \"#304050\", \"graticuleStrokeWidth\": 2, \"graticuleOpacity\": 0.2, \"legendFontSize\": 14}}}}%%\nradar-beta\naxis A, B, C\ncurve scores{20, 50, 80}"
+    },
+    {
+      "id": "front-matter-theme-style",
+      "source": "---\nthemeVariables:\n  cScale0: '#405060'\n  radar:\n    axisColor: '#506070'\n    curveOpacity: 0.35\n    graticuleColor: '#607080'\n---\nradar-beta\naxis A, B, C\ncurve scores{20, 50, 80}"
+    },
+    {
+      "id": "sparse-theme-palette",
+      "source": "%%{init: {\"themeVariables\": {\"cScale1\": \"#708090\"}}}%%\nradar-beta\naxis A, B, C\ncurve first{20, 50, 80}, second{80, 50, 20}"
     }
   ]
 }

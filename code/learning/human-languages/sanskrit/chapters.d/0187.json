@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "Kind, Generous, Stingy, Truthful, Adept",
+  "label": "ch:sa-kind-generous-stingy-truthful-adept",
+  "canDo": "I can say kind, generous, stingy, truthful and adept.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C187-patuh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say kind, generous, stingy, truthful and adept.",
+    "assesses": [
+      "SA-LEX-C187-QUAL187-03",
+      "SA-LEX-C187-QUAL187-04",
+      "SA-LEX-C187-QUAL187-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C234-mungada",
+  "pathSegment": "KA-PATH-234-KELASA234",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-234-KELASA234",
+      "order": 4
+    }
+  ]
+}

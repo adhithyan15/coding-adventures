@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "Wedding, Relative, Female friend, Host, People",
+  "label": "ch:ur-wedding-relative-female-friend-host-people",
+  "canDo": "I can say a wedding, a relative, a female friend, a host and people.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R256-second-pass-words-from-chapters-252-256",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say a wedding, a relative, a female friend, a host and people.",
+    "assesses": [
+      "UR-LEX-C256-CHIZ256-03",
+      "UR-LEX-C256-CHIZ256-04",
+      "UR-LEX-C256-CHIZ256-05"
+    ]
+  }
+}

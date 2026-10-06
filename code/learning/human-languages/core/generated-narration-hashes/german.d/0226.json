@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:23a195c593e5cd57",
+  "lessonIds": [
+    "GE-C226-aussprache",
+    "GE-C226-bedeutung",
+    "GE-C226-begruessung",
+    "GE-C226-beschreibung",
+    "GE-C226-besuch"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch226.txt",
+  "json": "german/narration/ch226.json",
+  "textHash": "fnv1a64:c8ab17011bf57d06",
+  "jsonHash": "fnv1a64:9203a6f656920e0a",
+  "findings": []
+}

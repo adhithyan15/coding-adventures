@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "Beans, Orange, Lemon, Banana, Grapes",
+  "label": "ch:ru-beans-orange-lemon-banana-grapes",
+  "canDo": "I can say beans, an orange, a lemon, a banana and grapes.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C223-vinograd",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say beans, an orange, a lemon, a banana and grapes.",
+    "assesses": [
+      "RU-LEX-C223-VESHCH223-03",
+      "RU-LEX-C223-VESHCH223-04",
+      "RU-LEX-C223-VESHCH223-05"
+    ]
+  }
+}

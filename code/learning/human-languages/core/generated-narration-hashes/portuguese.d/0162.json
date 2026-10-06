@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:1dba2bfcc9469979",
+  "lessonIds": [
+    "PT-C162-divida",
+    "PT-C162-imposto",
+    "PT-C162-formulario",
+    "PT-C162-envelope",
+    "PT-C162-encomenda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch162.txt",
+  "json": "portuguese/narration/ch162.json",
+  "textHash": "fnv1a64:10cc0e88901277a6",
+  "jsonHash": "fnv1a64:af09742444910db5",
+  "findings": []
+}

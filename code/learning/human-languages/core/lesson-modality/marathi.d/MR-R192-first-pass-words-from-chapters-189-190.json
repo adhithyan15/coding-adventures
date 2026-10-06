@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R192-first-pass-words-from-chapters-189-190",
+    "language": "marathi",
+    "chapter": 192,
+    "sequence": 9860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:906132a23399a4aa"
+  },
+  "findings": []
+}

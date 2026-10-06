@@ -1,0 +1,11 @@
+{
+  "id": "RU-C247-pasport",
+  "pathSegment": "RU-PATH-247-VESHCH247",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-247-VESHCH247",
+      "order": 2
+    }
+  ]
+}

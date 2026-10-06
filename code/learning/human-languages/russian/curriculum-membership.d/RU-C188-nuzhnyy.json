@@ -1,0 +1,11 @@
+{
+  "id": "RU-C188-nuzhnyy",
+  "pathSegment": "RU-PATH-188-KACH188",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-188-KACH188",
+      "order": 2
+    }
+  ]
+}

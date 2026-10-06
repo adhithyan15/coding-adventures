@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:8076cf33c8b6a7bf",
+  "lessonIds": [
+    "FR-C233-repasser",
+    "FR-C233-reparer",
+    "FR-C233-construire",
+    "FR-C233-photographier",
+    "FR-C233-repeter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch233.txt",
+  "json": "french/narration/ch233.json",
+  "textHash": "fnv1a64:2f2db0977bcaa97b",
+  "jsonHash": "fnv1a64:1cbc977cd4efae61",
+  "findings": []
+}

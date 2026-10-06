@@ -2,8 +2,17 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, explicit sources, titles, and accessibility metadata.",
-  "fixtures": [
+  "level": "full",
+  "scope": "Complete pinned Mermaid 11.16.1 Event Modeling grammar and validator surface: empty diagrams, metadata, comments, timeline/reset frames, all compact and relaxed entity aliases, qualified names, standalone entities, validated explicit sources, all data types and payload forms, notes, scenarios, directives, front matter, layout configuration, and entity-color theme variables.",
+  "valid": [
+    {
+      "id": "header-only",
+      "source": "eventmodeling"
+    },
+    {
+      "id": "empty-metadata-and-comments",
+      "source": "eventmodeling\ntitle\naccTitle:\naccDescr:\n/* block\ncomment */\n// line comment\n%% mermaid comment\ntf 01 ui UI"
+    },
     {
       "id": "state-change",
       "source": "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem\ntf 03 evt ItemAdded"
@@ -19,6 +28,112 @@
     {
       "id": "multiple-sources",
       "source": "eventmodeling\nrf 02 evt CartCreated\nrf 03 evt ItemAdded\nrf 04 evt ItemRemoved\ntf 01 rmo CartUI ->> 02 ->> 03 ->> 04"
+    },
+    {
+      "id": "validated-source-types",
+      "source": "eventmodeling\nrf 01 evt InventoryChanged\ntf 02 rmo InventoryView ->> 01\ntf 03 pcr InventoryProcessor ->> 02\ntf 04 cmd RebuildInventory ->> 03\ntf 05 evt InventoryRebuilt ->> 04\ntf 06 readmodel RebuiltView ->> 05\ntf 07 ui InventoryUI ->> 06\ntf 08 command RefreshInventory ->> 07"
+    },
+    {
+      "id": "inline-data",
+      "source": "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem { description: string }\ntf 03 evt ItemAdded `json`{ \"description\": \"book\" }"
+    },
+    {
+      "id": "data-blocks",
+      "source": "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem [[AddItemData]]\ntf 03 evt ItemAdded [[ItemAddedData]]\ndata AddItemData `json`{\n  \"description\": \"book\",\n  \"quantity\": 2\n}\ndata ItemAddedData {\n  description: string\n  quantity: number\n}"
+    },
+    {
+      "id": "quoted-inline-data",
+      "source": "eventmodeling\ntf 01 ui CartUI \"shopping cart\"\ntf 02 cmd AddItem `json`\"{ \"quantity\": 2 }\"\ntf 03 evt ItemAdded 'accepted'"
+    },
+    {
+      "id": "frame-notes",
+      "source": "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem\nnote 01 `md` {\n  # Cart\n  Shows pending items\n}\nnote 02 {\n  Validates inventory\n}"
+    },
+    {
+      "id": "given-when-then",
+      "source": "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem\ntf 03 evt ItemAdded\ngwt 02\n  given\n    evt CartCreated\n    rmo CartItems\n  when\n    ui CartUI\n    cmd AddItem\n  then\n    evt ItemAdded\ngwt 03 given evt CartCreated then evt ItemAdded"
+    },
+    {
+      "id": "standalone-entities",
+      "source": "eventmodeling\nentity Sales.CartUI\nentity AddItem\nentity Sales.ItemAdded\ntf 01 ui Sales.CartUI\ntf 02 cmd AddItem\ntf 03 evt Sales.ItemAdded"
+    },
+    {
+      "id": "init-layout-config",
+      "source": "%%{init: {\"eventmodeling\": {\"padding\": 18, \"rowHeight\": 40, \"useMaxWidth\": false}}}%%\neventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem"
+    },
+    {
+      "id": "front-matter-layout-config",
+      "source": "---\nconfig:\n  eventmodeling:\n    padding: 22\n    rowHeight: 36\n    useMaxWidth: false\n---\neventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem"
+    },
+    {
+      "id": "init-theme-colors",
+      "source": "%%{init: {\"themeVariables\": {\"emUiFill\": \"#102030\", \"emUiStroke\": \"#203040\", \"emCommandFill\": \"#304050\", \"emCommandStroke\": \"#405060\", \"emEventFill\": \"#506070\", \"emEventStroke\": \"#607080\"}}}%%\neventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem\ntf 03 evt ItemAdded"
+    },
+    {
+      "id": "front-matter-theme-colors",
+      "source": "---\nthemeVariables:\n  emProcessorFill: '#112233'\n  emProcessorStroke: '#223344'\n  emReadModelFill: '#334455'\n  emReadModelStroke: '#445566'\n---\neventmodeling\ntf 01 pcr InventoryProcessor\ntf 02 rmo InventoryView"
+    },
+    {
+      "id": "upstream-complex-model",
+      "source": "eventmodeling\ntf 01 cmd UpdateCartCommand\ntf 02 evt CartUpdatedEvent ->> 01 `jsobj`{ a: b }\ntf 03 rmo CartItemsReadModel ->> 02 [[CartItemsReadModel03]]\ntf 04 evt ProductDescriptionUpdatedEvent ->> 01 `jsobj`{ a: { c: d } }\ntf 05 evt ProductTitleUpdatedEvent ->> 01 { \"a\": { \"c\": true } }\ntf 06 evt ProductCountIncrementedEvent ->> 01 `json`\" { \"a\": { \"c\": true } } \"\ndata CartItemsReadModel03 {\n  { a: b }\n}\ndata NotAssignedData02 `jsobj` {\n  { a: {\n    d: true\n  }}\n}\ndata AnotherNotAssignedData06 {\n  a: 'abc'\n}\nnote 02 `md` {\n  # head 1\n  this is markdown note\n}\nnote 05 {\n  This is whatever <b>you</b> want\n  On multiple lines\n}\ngwt 01 given evt CartUpdatedEvent evt CartUpdatedEvent when evt ProductDescriptionUpdatedEvent evt ProductTitleUpdatedEvent then evt ProductTitleUpdatedEvent\ngwt 03 given evt CartUpdatedEvent evt ProductTitleUpdatedEvent then evt ProductTitleUpdatedEvent evt CartUpdatedEvent"
+    },
+    {
+      "id": "separated-block-opening-and-data-types",
+      "source": "eventmodeling\ntf 01 ui UI `figma`{ node: 1 }\ntf 02 cmd Command `salt`{ command }\ntf 03 evt Event `uri`\"https://example.com\"\ntf 04 rmo View [[HtmlData]]\ntf 05 pcr Processor `text`'refresh'\ndata HtmlData `html`\n{\n  <b>view</b>\n}\nnote 04 `json`\n{\n  { \"nested\": { \"ok\": true } }\n}"
+    }
+  ],
+  "invalid": [
+    {
+      "id": "missing-header",
+      "source": "tf 01 ui UI"
+    },
+    {
+      "id": "frame-id-too-long",
+      "source": "eventmodeling\ntf 1000 ui UI"
+    },
+    {
+      "id": "duplicate-frame",
+      "source": "eventmodeling\ntf 01 ui UI\nrf 01 evt Event"
+    },
+    {
+      "id": "unknown-data-reference",
+      "source": "eventmodeling\ntf 01 cmd Command [[Missing]]"
+    },
+    {
+      "id": "unknown-note-frame",
+      "source": "eventmodeling\ntf 01 ui UI\nnote 02 { missing }"
+    },
+    {
+      "id": "unknown-scenario-frame",
+      "source": "eventmodeling\ntf 01 ui UI\ngwt 02 given evt Event then evt Event"
+    },
+    {
+      "id": "invalid-event-source",
+      "source": "eventmodeling\nrf 01 rmo View\nrf 02 evt Event ->> 01"
+    },
+    {
+      "id": "invalid-command-source",
+      "source": "eventmodeling\nrf 01 evt Event\nrf 02 cmd Command ->> 01"
+    },
+    {
+      "id": "invalid-read-model-source",
+      "source": "eventmodeling\nrf 01 pcr Processor\nrf 02 rmo View ->> 01"
+    },
+    {
+      "id": "invalid-processor-source",
+      "source": "eventmodeling\nrf 01 evt Event\nrf 02 pcr Processor ->> 01"
+    },
+    {
+      "id": "invalid-ui-source",
+      "source": "eventmodeling\nrf 01 cmd Command\nrf 02 ui UI ->> 01"
+    },
+    {
+      "id": "unsupported-data-type",
+      "source": "eventmodeling\ntf 01 ui UI `xml`{ <ui/> }"
+    },
+    {
+      "id": "unterminated-data-block",
+      "source": "eventmodeling\ntf 01 ui UI\ndata Payload {\n  value: true"
     }
   ]
 }

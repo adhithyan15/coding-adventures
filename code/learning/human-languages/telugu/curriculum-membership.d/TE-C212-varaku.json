@@ -1,0 +1,11 @@
+{
+  "id": "TE-C212-varaku",
+  "pathSegment": "TE-PATH-212-SAMAYAM212",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-212-SAMAYAM212",
+      "order": 3
+    }
+  ]
+}

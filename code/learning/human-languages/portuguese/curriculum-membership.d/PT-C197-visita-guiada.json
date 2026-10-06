@@ -1,0 +1,11 @@
+{
+  "id": "PT-C197-visita-guiada",
+  "pathSegment": "PT-PATH-197-COISAS197",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-197-COISAS197",
+      "order": 1
+    }
+  ]
+}

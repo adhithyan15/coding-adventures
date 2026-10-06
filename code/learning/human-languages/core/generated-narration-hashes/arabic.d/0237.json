@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:737f4dd2de8a522f",
+  "lessonIds": [
+    "AR-C237-sabr",
+    "AR-C237-karam",
+    "AR-C237-shuur",
+    "AR-C237-akhlaq",
+    "AR-C237-shakhsiyya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch237.txt",
+  "json": "arabic/narration/ch237.json",
+  "textHash": "fnv1a64:19b35e057081232d",
+  "jsonHash": "fnv1a64:c9a82a8557b84369",
+  "findings": []
+}

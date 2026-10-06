@@ -1,0 +1,11 @@
+{
+  "id": "BN-C167-trak",
+  "pathSegment": "BN-PATH-167-JINIS167",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-167-JINIS167",
+      "order": 4
+    }
+  ]
+}

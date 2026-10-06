@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Childbirth, Eyesight, Infection, Blister, Nutritious",
+  "label": "ch:ka-childbirth-eyesight-infection-blister-nutritious",
+  "canDo": "I can say childbirth, eyesight, an infection, a blister and nutritious.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C170-paustika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say childbirth, eyesight, an infection, a blister and nutritious.",
+    "assesses": [
+      "KA-LEX-C170-AROGYA170-03",
+      "KA-LEX-C170-AROGYA170-04",
+      "KA-LEX-C170-AROGYA170-05"
+    ]
+  }
+}

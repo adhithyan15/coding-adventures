@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "To take a photo, To pass, To fail, To shake, To stir",
+  "label": "ch:bn-to-take-a-photo-to-pass-to-fail-to-shake-to-stir",
+  "canDo": "I can say to take a photo, to pass, to fail, to shake and to stir.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C214-narano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say to take a photo, to pass, to fail, to shake and to stir.",
+    "assesses": [
+      "BN-LEX-C214-ACT214-03",
+      "BN-LEX-C214-ACT214-04",
+      "BN-LEX-C214-ACT214-05"
+    ]
+  }
+}

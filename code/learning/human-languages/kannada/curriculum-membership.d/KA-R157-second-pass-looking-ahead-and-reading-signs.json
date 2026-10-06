@@ -1,0 +1,11 @@
+{
+  "id": "KA-R157-second-pass-looking-ahead-and-reading-signs",
+  "pathSegment": "KA-PATH-157-ODU157",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "KA-EXT-157-ODU157",
+      "order": 6
+    }
+  ]
+}

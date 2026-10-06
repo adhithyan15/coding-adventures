@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:0693c8fdc782020f",
+  "lessonIds": [
+    "RU-C252-khokkey",
+    "RU-C252-tennis",
+    "RU-C252-basketbol",
+    "RU-C252-beg",
+    "RU-C252-plavaniye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch252.txt",
+  "json": "russian/narration/ch252.json",
+  "textHash": "fnv1a64:868757215225cb93",
+  "jsonHash": "fnv1a64:251f6a64c6fc0435",
+  "findings": []
+}

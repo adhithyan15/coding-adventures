@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C487-enfadarse",
+    "language": "spanish",
+    "chapter": 487,
+    "sequence": 13880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab5f24951ae83142"
+  },
+  "findings": []
+}

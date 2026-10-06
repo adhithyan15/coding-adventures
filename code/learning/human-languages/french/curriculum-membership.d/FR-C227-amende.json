@@ -1,0 +1,11 @@
+{
+  "id": "FR-C227-amende",
+  "pathSegment": "FR-PATH-227-CHOSES227",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-227-CHOSES227",
+      "order": 4
+    }
+  ]
+}

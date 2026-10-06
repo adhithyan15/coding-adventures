@@ -1,0 +1,11 @@
+{
+  "id": "SA-C217-kapilah",
+  "pathSegment": "SA-PATH-217-QUAL217",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-217-QUAL217",
+      "order": 2
+    }
+  ]
+}

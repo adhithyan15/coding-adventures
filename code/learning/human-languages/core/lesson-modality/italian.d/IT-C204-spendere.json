@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C204-spendere",
+    "language": "italian",
+    "chapter": 204,
+    "sequence": 11750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4cd2c9c5bede93b"
+  },
+  "findings": []
+}

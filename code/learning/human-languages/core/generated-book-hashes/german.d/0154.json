@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:ab0aa5c32606b9fa",
+  "lessonIds": [
+    "GE-C154-arbeitsplatz",
+    "GE-C154-firma",
+    "GE-C154-kollegin",
+    "GE-C154-kollege",
+    "GE-C154-stelle"
+  ],
+  "tex": "german/book/chapters/ch154-a-workplace-a-company-a-colleague-a-colleague-a-job.tex"
+}

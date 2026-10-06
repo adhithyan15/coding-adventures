@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:bea8b3e1baed5b36",
+  "lessonIds": [
+    "TE-C240-ettu",
+    "TE-C240-moyu",
+    "TE-C240-lagu",
+    "TE-C240-nettu",
+    "TE-C240-visuru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch240.txt",
+  "json": "telugu/narration/ch240.json",
+  "textHash": "fnv1a64:441476abe33c85f4",
+  "jsonHash": "fnv1a64:7aabc1783a3007b6",
+  "findings": []
+}

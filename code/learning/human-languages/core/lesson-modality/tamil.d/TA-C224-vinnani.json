@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C224-vinnani",
+    "language": "tamil",
+    "chapter": 224,
+    "sequence": 12030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4617abe70786795e"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:e446d69dba39ec47",
+  "lessonIds": [
+    "BN-C240-atkano",
+    "BN-C240-joma-deoya",
+    "BN-C240-jhap-deoya",
+    "BN-C240-doba",
+    "BN-C240-bhasa"
+  ],
+  "tex": "bengali/book/chapters/ch240-to-block-to-hand-in-to-dive-to-sink-to-float.tex"
+}

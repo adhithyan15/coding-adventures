@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "End, Across, To there, To here, Side",
+  "label": "ch:ml-end-across-to-there-to-here-side",
+  "canDo": "I can say the end, across, to there, to here and a side.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ML-R240-second-pass-words-from-chapters-236-240",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say the end, across, to there, to here and a side.",
+    "assesses": [
+      "ML-LEX-C240-STHALAM240-03",
+      "ML-LEX-C240-STHALAM240-04",
+      "ML-LEX-C240-STHALAM240-05"
+    ]
+  }
+}

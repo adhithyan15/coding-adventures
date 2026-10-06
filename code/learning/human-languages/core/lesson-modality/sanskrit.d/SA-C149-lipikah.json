@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C149-lipikah",
+    "language": "sanskrit",
+    "chapter": 149,
+    "sequence": 7540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83037bc926b46f09"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "To doubt, To argue, To carry on, To sneeze, To cough",
+  "label": "ch:bn-to-doubt-to-argue-to-carry-on-to-sneeze-to-cough",
+  "canDo": "I can say to doubt, to argue, to carry on, to sneeze and to cough.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C150-kasha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: I can say to doubt, to argue, to carry on, to sneeze and to cough.",
+    "assesses": [
+      "BN-LEX-C150-ACT150-03",
+      "BN-LEX-C150-ACT150-04",
+      "BN-LEX-C150-ACT150-05"
+    ]
+  }
+}

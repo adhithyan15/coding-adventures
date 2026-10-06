@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "Quantity, Kilo, Litre, Packet, Tin",
+  "label": "ch:pt-quantity-kilo-litre-packet-tin",
+  "canDo": "I can say quantity, a kilo, a litre, a packet and a tin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C198-lata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say quantity, a kilo, a litre, a packet and a tin.",
+    "assesses": [
+      "PT-LEX-C198-COISAS198-03",
+      "PT-LEX-C198-COISAS198-04",
+      "PT-LEX-C198-COISAS198-05"
+    ]
+  }
+}

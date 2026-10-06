@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "A wound, A plaster, An ointment, An injection, An emergency",
+  "label": "ch:ge-a-wound-a-plaster-an-ointment-an-injection-an-emergency",
+  "canDo": "I can say a wound, a plaster, an ointment, an injection and an emergency.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C206-notfall",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say a wound, a plaster, an ointment, an injection and an emergency.",
+    "assesses": [
+      "GE-LEX-C206-THING206-03",
+      "GE-LEX-C206-THING206-04",
+      "GE-LEX-C206-THING206-05"
+    ]
+  }
+}

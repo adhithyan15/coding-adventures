@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C242-pottan",
+    "language": "tamil",
+    "chapter": 242,
+    "sequence": 13250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2fc21176d33d7681"
+  },
+  "findings": []
+}

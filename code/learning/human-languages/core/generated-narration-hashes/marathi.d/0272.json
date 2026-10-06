@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:b1b0498cd6c0a87b",
+  "lessonIds": [
+    "MR-C272-nyay",
+    "MR-C272-hakka",
+    "MR-C272-kartavya",
+    "MR-C272-jababdari",
+    "MR-C272-sandhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch272.txt",
+  "json": "marathi/narration/ch272.json",
+  "textHash": "fnv1a64:074d0fc87edb1377",
+  "jsonHash": "fnv1a64:a2b93eeb2b9b2ad4",
+  "findings": []
+}

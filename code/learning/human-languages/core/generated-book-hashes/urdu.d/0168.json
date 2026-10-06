@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:4073bf8831d4e3d2",
+  "lessonIds": [
+    "UR-C168-batakh",
+    "UR-C168-ullu",
+    "UR-C168-vhel",
+    "UR-C168-kriket",
+    "UR-C168-futbal"
+  ],
+  "tex": "urdu/book/chapters/ch168-duck-owl-whale-cricket-football.tex"
+}

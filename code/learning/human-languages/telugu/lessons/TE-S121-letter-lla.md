@@ -52,17 +52,20 @@ You already say these, and every one of them has ళ somewhere inside it:
 - **మళ్ళీ కలుద్దాం** *maḷḷī kaluddām* — we'll meet again
 - **సోమవారం మంగళవారం బుధవారం గురువారం శుక్రవారం శనివారం ఆదివారం** — the seven weekdays
 
-## Writing: ళ — copy what you see
+## Writing: ళ — four calm movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-121] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on ళ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the guide once before your hand moves. ళ arrives in **four calm
+movements**, with a small lift between each one:
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+1. Loop counterclockwise around the small inner bowl.
+2. Sweep down around the broad left body and loop the lower bowl.
+3. Sweep right and up around the broad outer body.
+4. Lift once more, then draw down and up through the separate chevron above.
+
+Trace the filmstrip slowly. Let every movement finish before you lift, then
+copy the whole shape once without rushing.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-121] -->

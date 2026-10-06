@@ -3,30 +3,37 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "UR-W01-shukriya-first-three",
+      "sourceHash": "fnv1a64:2a5849016137a80c",
+      "svgHash": "fnv1a64:9871d2e4b1bbd63c",
+      "svg": "urdu/book/figures/UR-W01-shukriya-first-three-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "UR-W01-sin",
       "sourceHash": "fnv1a64:95f7fa87635900f5",
-      "svgHash": "fnv1a64:60ec35cfc7629254",
+      "svgHash": "fnv1a64:bb8e8086149f0eb9",
       "svg": "urdu/book/figures/UR-W01-sin-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "UR-W02-alef",
       "sourceHash": "fnv1a64:962a1f632adf4e37",
-      "svgHash": "fnv1a64:58d3f8682d24582a",
+      "svgHash": "fnv1a64:c5711976f9abca52",
       "svg": "urdu/book/figures/UR-W02-alef-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "UR-W03-lam",
       "sourceHash": "fnv1a64:171ce1b1ebec3734",
-      "svgHash": "fnv1a64:e6596f1c63fb2692",
+      "svgHash": "fnv1a64:cebda6a4a83ca394",
       "svg": "urdu/book/figures/UR-W03-lam-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "UR-W03-mim",
       "sourceHash": "fnv1a64:0374d0289b25e0f8",
-      "svgHash": "fnv1a64:7e8e9c5440f4e77c",
+      "svgHash": "fnv1a64:d4b484dcd1aa3f1f",
       "svg": "urdu/book/figures/UR-W03-mim-filmstrip.svg"
     },
     {
@@ -40,21 +47,21 @@
       "kind": "script-filmstrip",
       "lessonId": "UR-W04-nun",
       "sourceHash": "fnv1a64:07a9dcffb754231b",
-      "svgHash": "fnv1a64:e5b62c913116a08b",
+      "svgHash": "fnv1a64:4411b978e602cf02",
       "svg": "urdu/book/figures/UR-W04-nun-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "UR-W05-he",
       "sourceHash": "fnv1a64:cecb78fe6c997aeb",
-      "svgHash": "fnv1a64:c5a084e0fd704e7e",
+      "svgHash": "fnv1a64:3ed7ca40bda41023",
       "svg": "urdu/book/figures/UR-W05-he-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "UR-W05-ye",
       "sourceHash": "fnv1a64:4a8921710661b34a",
-      "svgHash": "fnv1a64:80cdd8b21414e799",
+      "svgHash": "fnv1a64:88196e39fed056b8",
       "svg": "urdu/book/figures/UR-W05-ye-filmstrip.svg"
     },
     {
@@ -68,7 +75,7 @@
       "kind": "script-filmstrip",
       "lessonId": "UR-W06-nun-ghunna",
       "sourceHash": "fnv1a64:d40b671177b83169",
-      "svgHash": "fnv1a64:90f2418bf8b01fe6",
+      "svgHash": "fnv1a64:4b2337a38268b6f9",
       "svg": "urdu/book/figures/UR-W06-nun-ghunna-filmstrip.svg"
     },
     {
@@ -82,14 +89,14 @@
       "kind": "script-filmstrip",
       "lessonId": "UR-W08-vao",
       "sourceHash": "fnv1a64:d917f11971c86dfd",
-      "svgHash": "fnv1a64:1cd9e27fde64f93f",
+      "svgHash": "fnv1a64:1d011ac6bd512861",
       "svg": "urdu/book/figures/UR-W08-vao-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "UR-W34-be",
       "sourceHash": "fnv1a64:bf9d728fc45e0092",
-      "svgHash": "fnv1a64:aca0e3de14a59b7a",
+      "svgHash": "fnv1a64:73dd97223ac29e8b",
       "svg": "urdu/book/figures/UR-W34-be-filmstrip.svg"
     },
     {
@@ -103,14 +110,14 @@
       "kind": "script-filmstrip",
       "lessonId": "UR-W34-tte",
       "sourceHash": "fnv1a64:bafc486ae32c55ef",
-      "svgHash": "fnv1a64:b1f4a0d00ec47c4d",
+      "svgHash": "fnv1a64:33de13bd32cb7a1a",
       "svg": "urdu/book/figures/UR-W34-tte-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "UR-W35-bari-he",
       "sourceHash": "fnv1a64:a8181d0be9616411",
-      "svgHash": "fnv1a64:86af96367d283192",
+      "svgHash": "fnv1a64:20fe62a246aaadc5",
       "svg": "urdu/book/figures/UR-W35-bari-he-filmstrip.svg"
     },
     {
@@ -138,7 +145,7 @@
       "kind": "script-filmstrip",
       "lessonId": "UR-W36-dal",
       "sourceHash": "fnv1a64:7ab72a255ff8025b",
-      "svgHash": "fnv1a64:8ef49f6c6ccd2d39",
+      "svgHash": "fnv1a64:ec632cd26535d6b2",
       "svg": "urdu/book/figures/UR-W36-dal-filmstrip.svg"
     },
     {

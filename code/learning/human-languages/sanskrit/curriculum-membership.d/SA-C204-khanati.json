@@ -1,0 +1,11 @@
+{
+  "id": "SA-C204-khanati",
+  "pathSegment": "SA-PATH-204-ACT204",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-204-ACT204",
+      "order": 1
+    }
+  ]
+}

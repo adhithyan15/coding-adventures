@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C276-rasayanasastram",
+    "language": "telugu",
+    "chapter": 276,
+    "sequence": 13070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d63b8fd74b26683"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:1b161b607bf5c7b4",
+  "lessonIds": [
+    "FA-C210-radiyo",
+    "FA-C210-rasane",
+    "FA-C210-mosahebe",
+    "FA-C210-internet",
+    "FA-C210-mobayl"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch210.txt",
+  "json": "persian/narration/ch210.json",
+  "textHash": "fnv1a64:dbbfd585920f4284",
+  "jsonHash": "fnv1a64:1be14f8a10efe8b3",
+  "findings": []
+}

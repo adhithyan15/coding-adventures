@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Application, Envelope, Address, Salary, Guide",
+  "label": "ch:mr-application-envelope-address-salary-guide",
+  "canDo": "I can say an application, an envelope, an address, a salary and a guide.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C212-margadarsak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say an application, an envelope, an address, a salary and a guide.",
+    "assesses": [
+      "MR-LEX-C212-VASTU212-03",
+      "MR-LEX-C212-VASTU212-04",
+      "MR-LEX-C212-VASTU212-05"
+    ]
+  }
+}

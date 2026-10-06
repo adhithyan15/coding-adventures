@@ -1,0 +1,23 @@
+{
+  "glyph": "ぐ",
+  "sound": "gu",
+  "role": "hiragana",
+  "components": [
+    "く",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "sweep down and left from the upper right into the central turn",
+    "without lifting, sweep down and right to the lower tip",
+    "lift, draw the left tick of the dakuten down to the right",
+    "lift, draw the right tick down to the right"
+  ],
+  "strokeOrderNote": "KanjiVG's 03050 file records ぐ as three stroke paths in this order and direction: く's stroke (the one bent stroke), then the dakuten's two ticks, the left one first, each drawn down to the right; so there are two pen lifts.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03050.svg",
+    "citation": "KanjiVG, kanji/03050.svg, hiragana ぐ (U+3050 HIRAGANA LETTER GU), three stroke paths kvg:03050-s1 to s3 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is く's stroke, the same paths as in its file for く, kanji/0304f.svg; s2 and s3 are the dakuten, the left tick first and then the right one, each drawn down to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
+  "notes": "く voiced. The third sign of いりぐち and the second of でぐち, where くち, a mouth, is voiced as it joins the word in front."
+}

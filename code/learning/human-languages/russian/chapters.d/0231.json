@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Kopeck, Rouble, Lecture, Class, Mark",
+  "label": "ch:ru-kopeck-rouble-lecture-class-mark",
+  "canDo": "I can say a kopeck, a rouble, a lecture, a class and a mark.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-R231-second-pass-words-from-chapters-229-231",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say a kopeck, a rouble, a lecture, a class and a mark.",
+    "assesses": [
+      "RU-LEX-C231-RABOTA231-03",
+      "RU-LEX-C231-RABOTA231-04",
+      "RU-LEX-C231-RABOTA231-05"
+    ]
+  }
+}

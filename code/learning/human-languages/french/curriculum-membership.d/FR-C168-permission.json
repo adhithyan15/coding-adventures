@@ -1,0 +1,11 @@
+{
+  "id": "FR-C168-permission",
+  "pathSegment": "FR-PATH-168-CHOSES168",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-168-CHOSES168",
+      "order": 1
+    }
+  ]
+}

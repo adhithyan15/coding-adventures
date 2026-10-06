@@ -1,0 +1,11 @@
+{
+  "id": "GE-R237-first-pass-words-from-chapters-229-232",
+  "pathSegment": "GE-PATH-237-THING237",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-237-THING237",
+      "order": 5
+    }
+  ]
+}

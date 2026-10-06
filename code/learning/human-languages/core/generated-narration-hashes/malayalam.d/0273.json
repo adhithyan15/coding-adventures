@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:baeab1225e5a0b17",
+  "lessonIds": [
+    "ML-C273-perukkuka",
+    "ML-C273-vitaykkuka",
+    "ML-C273-kottuka",
+    "ML-C273-karannuka",
+    "ML-C273-nulluka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch273.txt",
+  "json": "malayalam/narration/ch273.json",
+  "textHash": "fnv1a64:0a2b5ac09f04d6c2",
+  "jsonHash": "fnv1a64:03f5eb64d572d5cb",
+  "findings": []
+}

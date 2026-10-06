@@ -1,0 +1,11 @@
+{
+  "id": "KA-C282-dadi",
+  "pathSegment": "KA-PATH-282-AROGYA282",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-282-AROGYA282",
+      "order": 3
+    }
+  ]
+}

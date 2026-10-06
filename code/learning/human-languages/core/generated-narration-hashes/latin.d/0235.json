@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:27226a11b1a97e3c",
+  "lessonIds": [
+    "LA-C235-memini",
+    "LA-C235-loquor",
+    "LA-C235-sequor",
+    "LA-C235-proficiscor",
+    "LA-C235-utor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch235.txt",
+  "json": "latin/narration/ch235.json",
+  "textHash": "fnv1a64:167148c54dc9bb31",
+  "jsonHash": "fnv1a64:63b2b1555a79cbee",
+  "findings": []
+}

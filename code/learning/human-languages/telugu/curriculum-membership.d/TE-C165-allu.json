@@ -1,0 +1,11 @@
+{
+  "id": "TE-C165-allu",
+  "pathSegment": "TE-PATH-165-KRIYA165",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-165-KRIYA165",
+      "order": 4
+    }
+  ]
+}

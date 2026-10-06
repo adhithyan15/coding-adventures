@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:824eeb8db1f8fb01",
+  "lessonIds": [
+    "IT-C214-suggerire",
+    "IT-C214-tossire",
+    "IT-C214-tremare",
+    "IT-C214-urlare",
+    "IT-C214-votare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch214.txt",
+  "json": "italian/narration/ch214.json",
+  "textHash": "fnv1a64:c893fa0b9c278650",
+  "jsonHash": "fnv1a64:0254c017ea78d6dc",
+  "findings": []
+}

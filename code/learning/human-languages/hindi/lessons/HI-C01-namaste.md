@@ -65,7 +65,7 @@ changes the vowel, a *halant* removes it. That's most of how Devanagari works.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-NAMASTE-01] -->
 
-**नमस्ते** = **नमः** (*namaḥ*, "a bow, reverence, homage") + **ते** (*te*, "to
+**नमस्ते** = *namaḥ* ("a bow, reverence, homage") + **ते** (*te*, "to
 you") = literally **"reverence to you," "I bow to you."** The root is Sanskrit
 **नम्** (*nam*), "to bow, bend, pay homage" — the same root behind *namaskār*
 (next lesson) and borrowed whole into English as **namaste** and **namaskar**.

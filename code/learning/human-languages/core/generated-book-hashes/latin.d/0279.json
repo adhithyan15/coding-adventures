@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:835ad82a56a06d5d",
+  "lessonIds": [
+    "LA-C279-cerasum",
+    "LA-C279-prunum",
+    "LA-C279-brassica",
+    "LA-C279-porrum",
+    "LA-C279-puls"
+  ],
+  "tex": "latin/book/chapters/ch279-cherry-plum-cabbage-leek-porridge.tex"
+}

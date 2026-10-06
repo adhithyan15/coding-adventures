@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C157-kreditkarte",
+    "language": "german",
+    "chapter": 157,
+    "sequence": 7240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28b6abe3f38fa72c"
+  },
+  "findings": []
+}

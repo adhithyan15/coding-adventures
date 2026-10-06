@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R257-first-pass-words-from-chapters-250-253",
+    "language": "russian",
+    "chapter": 257,
+    "sequence": 15860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4299fdf7ce17115"
+  },
+  "findings": []
+}

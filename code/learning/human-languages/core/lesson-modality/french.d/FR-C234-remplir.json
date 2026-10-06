@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C234-remplir",
+    "language": "french",
+    "chapter": 234,
+    "sequence": 13440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb2eefd982e9f928"
+  },
+  "findings": []
+}

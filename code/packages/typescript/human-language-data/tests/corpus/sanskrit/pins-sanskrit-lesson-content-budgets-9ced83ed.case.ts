@@ -95,7 +95,31 @@ it("pins Sanskrit lesson-content budgets", () =>
     // lessons. They reuse the already-taught न, म, ः, and the *namas* "a bow"
     // inside *namaste*. The existing visarga trace gains the observe/trace
     // marker, and no vocabulary or content atom is added.
-    lessons: 754,
+    // 754 -> 757: #13413's vocalic-r bridge adds guided copy, delayed copy,
+    // and sound/function dictation for the already-taught ◌ृ. The lessons
+    // reuse SA-SCRIPT-RECOG-205 and introduce no vocabulary or content atom.
+    // 757 -> 761: #13413's first conjunct bridge waits for every component of
+    // अस्ति to be taught, then moves स्त from observe/trace through a guided
+    // whole-word copy, delayed copy, and sound/meaning dictation. The four
+    // writing lessons reuse known script and lexical atoms only.
+    // 761 -> 764: #13413's closing connected-text bridge copies, delays, and
+    // independently recalls two already-known sentences after every script
+    // component and the danda have landed. No vocabulary or content atom is
+    // introduced, and the final prompt supplies meaning but no copyable form.
+    // 764 -> 776: chapters 139-140 realize Sanskrit's last two A2 spine nodes,
+    // the future and reading practical texts. Ten word lessons and two reviews;
+    // they declare no idioms, senses or culture claims, so the three content
+    // totals below stay where they were.
+    // 776 -> 944: the first Sanskrit A2 vocabulary tranche, chapters 141-172.
+    // 160 word lessons in thirty-two chapters, plus two reviews per run of at
+    // most nine chapters. None declares an idiom, a sense or a culture claim.
+    // 944 -> 1102: the second tranche, chapters 173-202: 150 word lessons and
+    // two reviews per run, again with no idiom, sense or culture claim.
+    // 1102 -> 1255: the third tranche, chapters 203-231: 145 word lessons and
+    // two reviews per run.
+    // 1255 -> 1391: the fourth and last tranche, chapters 232-257: 130 word
+    // lessons and two reviews per run. Sanskrit attains A2 here.
+    lessons: 1391,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

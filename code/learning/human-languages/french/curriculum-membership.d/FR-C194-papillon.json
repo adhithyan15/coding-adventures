@@ -1,0 +1,11 @@
+{
+  "id": "FR-C194-papillon",
+  "pathSegment": "FR-PATH-194-CHOSES194",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-194-CHOSES194",
+      "order": 2
+    }
+  ]
+}

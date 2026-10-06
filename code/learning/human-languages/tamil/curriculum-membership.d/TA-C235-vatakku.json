@@ -1,0 +1,11 @@
+{
+  "id": "TA-C235-vatakku",
+  "pathSegment": "TA-PATH-235-IDAM235",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-235-IDAM235",
+      "order": 1
+    }
+  ]
+}

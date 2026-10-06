@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "Sizdah Bedar, Chaharshanbe Suri, New Year, Turn of the year, Birth",
+  "label": "ch:fa-sizdah-bedar-chaharshanbe-suri-new-year-turn-of-the-year-birth",
+  "canDo": "I can say Sizdah Bedar, Chaharshanbe Suri, the New Year, the turn of the year and birth.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FA-C228-tavallod",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say Sizdah Bedar, Chaharshanbe Suri, the New Year, the turn of the year and birth.",
+    "assesses": [
+      "FA-LEX-C228-ZAMAN228-03",
+      "FA-LEX-C228-ZAMAN228-04",
+      "FA-LEX-C228-ZAMAN228-05"
+    ]
+  }
+}

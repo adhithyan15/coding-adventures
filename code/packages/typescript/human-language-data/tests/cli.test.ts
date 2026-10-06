@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { runValidate } from "../src/cli.js";
-import { runCurriculumGapReport } from "../src/report-cli.js";
+import { buildCurriculumGapReportOutputs, runCurriculumGapReport } from "../src/report-cli.js";
 
 // `runValidate` validates the WHOLE real corpus, about 15s under a full suite
 // run and growing with every content PR. It runs once at import, where no
@@ -50,20 +50,34 @@ describe("runCurriculumGapReport", () => {
   // to the corpus and that 35s covers roughly 3x today's size. If it runs close
   // before then, something has gone superlinear again: profile it, do not thin the
   // report, and do not just move this number.
-  it.each(["json", "text"])("prints a %s report for the real curriculum", { timeout: 35_000 }, (format) => {
-    const out = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-    try {
-      expect(runCurriculumGapReport(["--format", format])).toBe(0);
-      const printed = out.mock.calls.map((call) => String(call[0])).join("");
-      if (format === "json") {
-        // Marwadi joins Mandarin and Japanese as a complete registry/book track.
-        expect(JSON.parse(printed).summary.registeredTracks).toBe(23);
-      } else {
-        expect(printed).toContain("Human Languages curriculum gap report");
-      }
-    } finally {
-      out.mockRestore();
-    }
+  //
+  // At 20,317 lessons (about 7x that size) the json case overran 35s on CI. It was
+  // profiled as asked, and nothing had gone superlinear: the corpus had simply
+  // outgrown the 3x estimate. The largest single cost turned out to be `fnv1a64`,
+  // which did BigInt arithmetic for every byte of every lesson. It now runs on two
+  // 32-bit halves and gives byte-identical output (src/hash.ts). One report went
+  // from ~24s to ~19s locally. The number below did not move. The next steps are
+  // the gap report's per-lesson passes (continuity, ramp, script closure), and the
+  // fact that this pair builds the whole report twice.
+  //
+  // At about 35,000 lessons the json case overran 35s on CI again, and a single
+  // build now takes ~17s warm locally. Profiled: no pass has gone superlinear;
+  // the cost is spread over the linear per-lesson passes (continuity ~3s,
+  // loading and parsing ~4s, metalanguage, ramp and script closure ~1.5s each,
+  // GC ~12%). So the duplicate build went first. `runCurriculumGapReport` had
+  // always rendered BOTH formats and printed one; `buildCurriculumGapReportOutputs`
+  // returns both, the CLI prints the one asked for, and this file builds the
+  // report ONCE, at import, exactly as it does for `runValidate` above. The two
+  // tests below check the two renderings of that one build.
+  const GAP_REPORT = buildCurriculumGapReportOutputs();
+
+  it("renders a json report for the real curriculum", () => {
+    // Marwadi joins Mandarin and Japanese as a complete registry/book track.
+    expect(JSON.parse(GAP_REPORT.json).summary.registeredTracks).toBe(23);
+  });
+
+  it("renders a text report for the real curriculum", () => {
+    expect(GAP_REPORT.text).toContain("Human Languages curriculum gap report");
   });
 
   it("rejects unknown or incomplete arguments", () => {

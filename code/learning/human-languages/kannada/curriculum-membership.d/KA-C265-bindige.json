@@ -1,0 +1,11 @@
+{
+  "id": "KA-C265-bindige",
+  "pathSegment": "KA-PATH-265-VASTU265",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-265-VASTU265",
+      "order": 1
+    }
+  ]
+}

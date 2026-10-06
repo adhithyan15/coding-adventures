@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C109-gamchha",
+    "language": "bengali",
+    "chapter": 109,
+    "sequence": 5770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c4841a8c73c2bd5"
+  },
+  "findings": []
+}

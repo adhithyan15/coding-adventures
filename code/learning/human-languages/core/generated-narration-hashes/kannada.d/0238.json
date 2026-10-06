@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:4a15ec8697b48439",
+  "lessonIds": [
+    "KA-C238-taip-madu",
+    "KA-C238-kaleduhogu",
+    "KA-C238-oppu",
+    "KA-C238-nirakarisu",
+    "KA-C238-sampadisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch238.txt",
+  "json": "kannada/narration/ch238.json",
+  "textHash": "fnv1a64:7c1ec337b756cde0",
+  "jsonHash": "fnv1a64:18939a7c724bdc1f",
+  "findings": []
+}

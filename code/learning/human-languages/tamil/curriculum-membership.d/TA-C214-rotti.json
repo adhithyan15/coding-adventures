@@ -1,0 +1,11 @@
+{
+  "id": "TA-C214-rotti",
+  "pathSegment": "TA-PATH-214-PORUL214",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-214-PORUL214",
+      "order": 4
+    }
+  ]
+}

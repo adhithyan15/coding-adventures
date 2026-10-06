@@ -13,9 +13,7 @@ import {
   startDevServer,
   type DevServer,
 } from "@coding-adventures/forme-dev-server";
-import { filesystemCache } from "@coding-adventures/forme-cache";
 import {
-  createOrchestrator,
   type Orchestrator,
   type Pipeline,
   type RunResult,
@@ -26,11 +24,17 @@ import {
   loadTsConfig,
   type PipelineConfig,
 } from "@coding-adventures/forme-pipeline-config";
-import {
-  silentLogger,
-  type CancellationToken,
-} from "@coding-adventures/forme-stage";
+import { type CancellationToken } from "@coding-adventures/forme-stage";
+import { createWindowsInstallAclVerifier } from "@coding-adventures/forme-sandbox-windows";
 import { watchProject } from "./project-watcher.js";
+import { executeDeploy, materializeDeployInput, type DeployInvocation } from "./deploy.js";
+import {
+  executePluginInstall,
+  type CapabilityReview,
+  type PluginInstallInvocation,
+  type ProductPluginInstallResult,
+} from "./install.js";
+import { createProductOrchestrator } from "./runtime.js";
 
 export const EXIT_OK = 0;
 export const EXIT_BUILD_FAILED = 1;
@@ -45,6 +49,7 @@ const DEFAULT_CONFIG_NAMES = [
 ] as const;
 
 const CLI_SPEC_PATH = fileURLToPath(new URL("../forme.cli.json", import.meta.url));
+const verifyWindowsAcl = createWindowsInstallAclVerifier();
 
 export interface CliIO {
   readonly stdout: { write(value: string): unknown };
@@ -58,13 +63,22 @@ export interface CliIO {
 
 export interface CliServices {
   loadConfig(path: string): Promise<PipelineConfig>;
-  createOrchestrator(cacheRoot: string | null): Orchestrator;
+  createOrchestrator(
+    cacheRoot: string | null,
+    runtime: {
+      readonly config: PipelineConfig;
+      readonly projectRoot: string;
+      readonly signal?: AbortSignal;
+    },
+  ): Orchestrator | Promise<Orchestrator>;
   startDevServer(options: { readonly port: number }): Promise<DevServer>;
   watchProject(root: string, ignoredPaths: readonly string[]): AsyncIterable<unknown>;
+  installPlugin(invocation: PluginInstallInvocation): Promise<ProductPluginInstallResult>;
 }
 
 export interface RunCliOptions {
   readonly cancellation?: CancellationToken;
+  readonly reviewCapability?: (review: CapabilityReview) => Promise<boolean>;
 }
 
 interface ParsedArgs {
@@ -74,6 +88,7 @@ interface ParsedArgs {
   readonly reportPath: string | null;
   readonly port: number;
   readonly debounceMs: number;
+  readonly deployInput: string | null;
 }
 
 const defaultIO: CliIO = {
@@ -91,12 +106,16 @@ const defaultIO: CliIO = {
 
 const defaultServices: CliServices = {
   loadConfig: path => loadTsConfig(path),
-  createOrchestrator: cacheRoot => createOrchestrator({
-    logger: silentLogger(),
-    ...(cacheRoot === null ? {} : { cache: filesystemCache(cacheRoot) }),
+  createOrchestrator: (cacheRoot, runtime) => createProductOrchestrator({
+    ...runtime,
+    cacheRoot,
   }),
   startDevServer: options => startDevServer(options),
   watchProject: (root, ignoredPaths) => watchProject(root, ignoredPaths),
+  installPlugin: invocation => executePluginInstall({
+    ...invocation,
+    ...(process.platform === "win32" ? { verifyWindowsAcl } : {}),
+  }),
 };
 
 export async function run(
@@ -129,6 +148,69 @@ export async function run(
     return EXIT_OK;
   }
 
+  if (parsed.commandPath[1] === "deploy") {
+    const originalCwd = io.cwd();
+    try {
+      const args = deployInvocation(parsed, originalCwd, options.cancellation);
+      if (args.dryRun && typeof parsed.flags["report"] === "string") {
+        throw new Error("--dry-run cannot be combined with --report because dry-run performs zero writes");
+      }
+      const report = await executeDeploy(args);
+      const reportPath = parsed.flags["report"];
+      if (typeof reportPath === "string") {
+        await io.writeFile(isAbsolute(reportPath) ? reportPath : resolve(originalCwd, reportPath), report);
+      } else {
+        io.stdout.write(report);
+      }
+      return EXIT_OK;
+    } catch (error) {
+      if (options.cancellation?.cancelled === true) {
+        diagnostic(io, "E_CANCELLED", options.cancellation.reason ?? "deployment cancelled");
+        return EXIT_CANCELLED;
+      }
+      diagnostic(io, "E_DEPLOY", message(error));
+      return EXIT_USAGE_OR_CONFIG;
+    }
+  }
+
+  if (parsed.commandPath[1] === "install") {
+    const originalCwd = io.cwd();
+    try {
+      const packageArgument = parsed.arguments["package"];
+      if (typeof packageArgument !== "string") throw new Error("a local plugin package directory is required");
+      const configFlag = parsed.flags["config"];
+      const configPath = await resolveConfigPath(
+        typeof configFlag === "string" ? configFlag : null,
+        originalCwd,
+        io,
+      );
+      const projectRoot = dirname(configPath);
+      io.chdir(projectRoot);
+      const config = await services.loadConfig(configPath);
+      const result = await services.installPlugin({
+        packagePath: isAbsolute(packageArgument) ? packageArgument : resolve(originalCwd, packageArgument),
+        projectRoot,
+        storageRoot: resolve(projectRoot, config.settings.storageRoot),
+        cacheDir: config.settings.cacheDir === null ? null : resolve(projectRoot, config.settings.cacheDir),
+        cancellation: options.cancellation,
+        reviewCapability: options.reviewCapability,
+      });
+      io.stdout.write(
+        `forme install: ${result.pluginName}@${result.pluginVersion} ${result.status} (${result.trustTier}; ${result.grantedCapabilities.length} grant${result.grantedCapabilities.length === 1 ? "" : "s"})\n`,
+      );
+      return EXIT_OK;
+    } catch (error) {
+      if (options.cancellation?.cancelled === true) {
+        diagnostic(io, "E_CANCELLED", options.cancellation.reason ?? "plugin installation cancelled");
+        return EXIT_CANCELLED;
+      }
+      diagnostic(io, "E_INSTALL", message(error));
+      return EXIT_USAGE_OR_CONFIG;
+    } finally {
+      io.chdir(originalCwd);
+    }
+  }
+
   let args: ParsedArgs;
   try {
     args = invocation(parsed);
@@ -151,7 +233,14 @@ export async function run(
       };
     }
 
-    orchestrator = services.createOrchestrator(projectCacheRoot(config, projectRoot));
+    orchestrator = await services.createOrchestrator(
+      projectCacheRoot(config, projectRoot),
+      {
+        config,
+        projectRoot,
+        ...(options.cancellation === undefined ? {} : { signal: options.cancellation.signal }),
+      },
+    );
     const pipeline = await orchestrator.buildPipeline(config);
 
     if (args.command === "watch") {
@@ -193,6 +282,12 @@ export async function run(
           : resolve(projectRoot, args.reportPath);
         await io.writeFile(reportPath, buildReport(config, result));
       }
+      if (args.deployInput !== null) {
+        const deployInput = isAbsolute(args.deployInput)
+          ? args.deployInput
+          : resolve(projectRoot, args.deployInput);
+        await materializeDeployInput(result.outputs, deployInput, projectRoot);
+      }
       io.stdout.write(
         `forme build: ${config.name} success (${count} stage${count === 1 ? "" : "s"}; outputs: ${outputs}; build: ${result.buildId})\n`,
       );
@@ -203,6 +298,10 @@ export async function run(
     }
     return result.outcome === "cancelled" ? EXIT_CANCELLED : EXIT_BUILD_FAILED;
   } catch (error) {
+    if (options.cancellation?.cancelled === true) {
+      diagnostic(io, "E_CANCELLED", options.cancellation.reason ?? "command cancelled");
+      return EXIT_CANCELLED;
+    }
     const entries = configErrorEntries(error);
     if (entries !== null) {
       for (const entry of entries) {
@@ -243,7 +342,51 @@ function invocation(parsed: ParseResult): ParsedArgs {
     reportPath: typeof report === "string" ? report : null,
     port,
     debounceMs,
+    deployInput: typeof parsed.flags["deploy-input"] === "string" ? parsed.flags["deploy-input"] : null,
   };
+}
+
+function deployInvocation(
+  parsed: ParseResult,
+  cwd: string,
+  cancellation?: CancellationToken,
+): DeployInvocation {
+  const manifest = parsed.flags["manifest"];
+  const target = parsed.flags["target"];
+  const targetConfig = parsed.flags["target-config"];
+  const retry = parsed.flags["retry"] ?? 3;
+  if (typeof manifest !== "string" || (target !== "fs" && target !== "github-pages") || typeof targetConfig !== "string") {
+    throw new Error("deploy requires --manifest, --target, and --target-config");
+  }
+  if (typeof retry !== "number" || !Number.isSafeInteger(retry) || retry < 0 || retry > 10) {
+    throw new Error("--retry must be an integer from 0 through 10");
+  }
+  let content: DeployInvocation["content"];
+  if (typeof parsed.flags["content-dir"] === "string") {
+    content = { kind: "directory", path: parsed.flags["content-dir"] };
+  } else if (typeof parsed.flags["content-bundle"] === "string") {
+    content = { kind: "bundle", path: parsed.flags["content-bundle"] };
+  } else if (typeof parsed.flags["content-inline-fd"] === "number") {
+    content = { kind: "inline", fd: parsed.flags["content-inline-fd"] };
+  } else {
+    throw new Error("deploy requires exactly one content store");
+  }
+  const controller = new AbortController();
+  cancellation?.onCancel(() => controller.abort());
+  const bootstrap = parsed.flags["bootstrap-ownership"];
+  const previous = parsed.flags["previous"];
+  return Object.freeze({
+    cwd,
+    manifestPath: manifest,
+    content,
+    target,
+    targetConfigPath: targetConfig,
+    ...(typeof bootstrap === "string" ? { bootstrapOwnershipPath: bootstrap } : {}),
+    ...(typeof previous === "string" ? { previousPath: previous } : {}),
+    dryRun: parsed.flags["dry-run"] === true,
+    retryLimit: retry,
+    signal: controller.signal,
+  });
 }
 
 async function runWatch(

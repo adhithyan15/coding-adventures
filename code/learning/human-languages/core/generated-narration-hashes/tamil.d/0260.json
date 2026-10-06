@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:e81e66e6c6b3413c",
+  "lessonIds": [
+    "TA-C260-atikari2",
+    "TA-C260-paravu",
+    "TA-C260-mulku",
+    "TA-C260-mita",
+    "TA-C260-pili"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch260.txt",
+  "json": "tamil/narration/ch260.json",
+  "textHash": "fnv1a64:a7de43f288a03ada",
+  "jsonHash": "fnv1a64:5507cc14cd902eeb",
+  "findings": []
+}

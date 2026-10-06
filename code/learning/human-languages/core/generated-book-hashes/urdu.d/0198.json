@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:a270151def112079",
+  "lessonIds": [
+    "UR-C198-tar",
+    "UR-C198-skrin",
+    "UR-C198-kaimra",
+    "UR-C198-pasport",
+    "UR-C198-viza"
+  ],
+  "tex": "urdu/book/chapters/ch198-wire-screen-camera-passport-visa.tex"
+}

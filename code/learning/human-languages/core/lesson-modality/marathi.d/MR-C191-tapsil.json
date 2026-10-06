@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C191-tapsil",
+    "language": "marathi",
+    "chapter": 191,
+    "sequence": 9790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a759db4a74c0977"
+  },
+  "findings": []
+}

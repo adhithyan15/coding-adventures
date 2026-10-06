@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "So, Since, If, Even so, Otherwise",
+  "label": "ch:ur-so-since-if-even-so-otherwise",
+  "canDo": "I can say so, since, if, even so and otherwise.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "UR-C159-varna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can say so, since, if, even so and otherwise.",
+    "assesses": [
+      "UR-LEX-C159-VAJAH159-03",
+      "UR-LEX-C159-VAJAH159-04",
+      "UR-LEX-C159-VAJAH159-05"
+    ]
+  }
+}

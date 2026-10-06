@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R148-second-pass-words-from-chapters-144-148",
+    "language": "persian",
+    "chapter": 148,
+    "sequence": 7600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee1a0fe3e7899d80"
+  },
+  "findings": []
+}

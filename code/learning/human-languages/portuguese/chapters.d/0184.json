@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "Luckily, Certainly, Really, Almost, About",
+  "label": "ch:pt-luckily-certainly-really-almost-about",
+  "canDo": "I can say luckily, certainly, really, almost and about.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "PT-C184-cerca-de",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say luckily, certainly, really, almost and about.",
+    "assesses": [
+      "PT-LEX-C184-PORQUE184-03",
+      "PT-LEX-C184-PORQUE184-04",
+      "PT-LEX-C184-PORQUE184-05"
+    ]
+  }
+}

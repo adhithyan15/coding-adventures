@@ -1,0 +1,11 @@
+{
+  "id": "KA-C172-aparupakke",
+  "pathSegment": "KA-PATH-172-KALA172",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-172-KALA172",
+      "order": 0
+    }
+  ]
+}

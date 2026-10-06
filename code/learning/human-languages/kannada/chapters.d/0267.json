@@ -1,0 +1,19 @@
+{
+  "chapter": 267,
+  "title": "Manure, Flowerpot, Pipe, Pump, Gate",
+  "label": "ch:ka-manure-flowerpot-pipe-pump-gate",
+  "canDo": "I can say manure, a flowerpot, a pipe, a pump and a gate.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C267-getu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can say manure, a flowerpot, a pipe, a pump and a gate.",
+    "assesses": [
+      "KA-LEX-C267-VASTU267-03",
+      "KA-LEX-C267-VASTU267-04",
+      "KA-LEX-C267-VASTU267-05"
+    ]
+  }
+}

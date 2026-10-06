@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Housework, Domestic helper, Tailor, Trader, Coin",
+  "label": "ch:te-housework-domestic-helper-tailor-trader-coin",
+  "canDo": "I can say housework, a domestic helper, a tailor, a trader and a coin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C194-nanem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say housework, a domestic helper, a tailor, a trader and a coin.",
+    "assesses": [
+      "TE-LEX-C194-PANI194-03",
+      "TE-LEX-C194-PANI194-04",
+      "TE-LEX-C194-PANI194-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Young, Intelligent, Possible, Impossible, Main",
+  "label": "ch:pt-young-intelligent-possible-impossible-main",
+  "canDo": "I can say young, intelligent, possible, impossible and main.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C243-principal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say young, intelligent, possible, impossible and main.",
+    "assesses": [
+      "PT-LEX-C243-QUAL243-03",
+      "PT-LEX-C243-QUAL243-04",
+      "PT-LEX-C243-QUAL243-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:fd88a8f27e595432",
+  "lessonIds": [
+    "FA-C281-pich",
+    "FA-C281-arre",
+    "FA-C281-bil",
+    "FA-C281-chasb",
+    "FA-C281-chub"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch281.txt",
+  "json": "persian/narration/ch281.json",
+  "textHash": "fnv1a64:cb0f3fa724b6ba19",
+  "jsonHash": "fnv1a64:a07cffff5cef664c",
+  "findings": []
+}

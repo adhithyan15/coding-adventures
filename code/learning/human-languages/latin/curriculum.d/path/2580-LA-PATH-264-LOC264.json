@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-264-LOC264",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "LA-EXT-264-LOC264"
+  ],
+  "after": []
+}

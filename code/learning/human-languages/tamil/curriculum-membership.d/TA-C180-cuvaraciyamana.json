@@ -1,0 +1,11 @@
+{
+  "id": "TA-C180-cuvaraciyamana",
+  "pathSegment": "TA-PATH-180-GUNAM180",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-180-GUNAM180",
+      "order": 4
+    }
+  ]
+}

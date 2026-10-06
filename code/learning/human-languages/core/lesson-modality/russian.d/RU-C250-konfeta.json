@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C250-konfeta",
+    "language": "russian",
+    "chapter": 250,
+    "sequence": 15500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fbf0f957ff053f2"
+  },
+  "findings": []
+}

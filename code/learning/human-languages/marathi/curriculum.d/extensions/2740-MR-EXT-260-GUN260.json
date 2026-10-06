@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-260-GUN260",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say generous, talkative, worried, unmarried and married.",
+  "prerequisites": []
+}

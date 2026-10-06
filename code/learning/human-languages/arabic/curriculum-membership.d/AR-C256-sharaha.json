@@ -1,0 +1,11 @@
+{
+  "id": "AR-C256-sharaha",
+  "pathSegment": "AR-PATH-256-ACT256",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-256-ACT256",
+      "order": 2
+    }
+  ]
+}

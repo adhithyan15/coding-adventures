@@ -1,0 +1,11 @@
+{
+  "id": "PT-C184-quase",
+  "pathSegment": "PT-PATH-184-PORQUE184",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-184-PORQUE184",
+      "order": 3
+    }
+  ]
+}

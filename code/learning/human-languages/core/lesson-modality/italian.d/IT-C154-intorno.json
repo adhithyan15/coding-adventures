@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C154-intorno",
+    "language": "italian",
+    "chapter": 154,
+    "sequence": 7980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85ca68d66ec9e679"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C173-angala",
+  "pathSegment": "KA-PATH-173-STHALA173",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-173-STHALA173",
+      "order": 4
+    }
+  ]
+}

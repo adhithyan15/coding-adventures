@@ -1,0 +1,11 @@
+{
+  "id": "GE-C147-kennen",
+  "pathSegment": "GE-PATH-147-VERB147",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-147-VERB147",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/forme-plugin-host",
+  "version": "1.0.0",
+  "description": "Fail-closed Forme plugin discovery, JSON-RPC wire protocol, lifecycle, streaming, and capability mediation (FM02/FM-B014).",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-capability": "file:../forme-capability",
+    "@coding-adventures/forme-errors": "file:../forme-errors",
+    "@coding-adventures/forme-manifest": "file:../forme-manifest",
+    "@coding-adventures/forme-pipeline-config": "file:../forme-pipeline-config",
+    "@coding-adventures/forme-stage": "file:../forme-stage",
+    "@coding-adventures/forme-types": "file:../forme-types"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "@vitest/coverage-v8": "^4.1.11",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.11"
+  }
+}

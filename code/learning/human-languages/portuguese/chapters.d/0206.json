@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "To steal, To discover, To seem, To serve, To suffer",
+  "label": "ch:pt-to-steal-to-discover-to-seem-to-serve-to-suffer",
+  "canDo": "I can say to steal, to discover, to seem, to serve and to suffer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C206-sofrer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say to steal, to discover, to seem, to serve and to suffer.",
+    "assesses": [
+      "PT-LEX-C206-VERBOS206-03",
+      "PT-LEX-C206-VERBOS206-04",
+      "PT-LEX-C206-VERBOS206-05"
+    ]
+  }
+}

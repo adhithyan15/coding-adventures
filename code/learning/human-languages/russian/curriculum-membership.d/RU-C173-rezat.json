@@ -1,0 +1,11 @@
+{
+  "id": "RU-C173-rezat",
+  "pathSegment": "RU-PATH-173-ACT173",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-173-ACT173",
+      "order": 1
+    }
+  ]
+}

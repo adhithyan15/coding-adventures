@@ -1,0 +1,847 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 140,
+  "title": "Last Week, Last Month, Last Year: the Past",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:20524bb6e0fd716d",
+  "lessons": [
+    {
+      "id": "JA-C140-senshuu",
+      "sequence": 8580,
+      "title": "せんしゅう (senshū) — last week",
+      "headword": "せんしゅう",
+      "romanization": "senshū",
+      "gloss": "last week",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f3b77ca10eae88e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four recalls before the new word."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nowhere, with a negative verb — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nowhere*, with a negative verb — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "answer no, that is not right — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: answer *no, that is not right* — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say a pencil — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *a pencil* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask for tea, please, with the particle を — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask for *tea, please*, with the particle **を** — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せんしゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せんしゅう — senshū — \"last week\". It sits beside こんしゅう, konshū, \"this week\", which you already know."
+            },
+            {
+              "kind": "speech",
+              "text": "To say what happened, the polite verb changes ます to ました, mashita:"
+            },
+            {
+              "kind": "speech",
+              "text": "せんしゅう はたらきました。 — senshū hatarakimashita — \"I worked last week.\""
+            },
+            {
+              "kind": "speech",
+              "text": "はたらきます becomes はたらきました, ねます becomes ねました. Every polite verb makes its past this way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senshū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senshū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senshū hatarakimashita — I worked last week",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senshū hatarakimashita* — I worked last week]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say I go home, then I went home: kaerimasu, kaerimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *I go home*, then *I went home*: *kaerimasu*, *kaerimashita*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"last week\"? (せんしゅう, senshū.) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C140-senshuu-type",
+              "prompt": "Type the Japanese for 'last week'.",
+              "assesses": [
+                "JA-LEX-C140-SENSHUU"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せんしゅう",
+                "senshuu",
+                "senshu",
+                "senshū"
+              ],
+              "feedback": {
+                "correct": "Right: せんしゅう (senshū) is 'last week'.",
+                "incorrect": "'Last week' is せんしゅう (senshū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C140-sengetsu",
+      "sequence": 8590,
+      "title": "せんげつ (sengetsu) — last month",
+      "headword": "せんげつ",
+      "romanization": "sengetsu",
+      "gloss": "last month",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fd8398c5bfac209",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four recalls before the new word."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say last week — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *last week* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say is not, plainly — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *is not*, plainly — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write ぴ — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **ぴ** — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write を — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **を** — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せんげつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せんげつ — sengetsu — \"last month\". The せん at its start is the same as in せんしゅう (senshū): \"the one before\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんげつ うみに いきました。 — sengetsu umi ni ikimashita — \"I went to the sea last month.\""
+            },
+            {
+              "kind": "speech",
+              "text": "いく, iku, \"to go\", gives いきます and then いきました."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sengetsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sengetsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sengetsu umi ni ikimashita — I went to the sea last month",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sengetsu umi ni ikimashita* — I went to the sea last month]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say last week, then last month",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *last week*, then *last month*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"last month\"? (せんげつ, sengetsu.) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C140-sengetsu-type",
+              "prompt": "Type the Japanese for 'last month'.",
+              "assesses": [
+                "JA-LEX-C140-SENGETSU"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せんげつ",
+                "sengetsu"
+              ],
+              "feedback": {
+                "correct": "Right: せんげつ (sengetsu) is 'last month'.",
+                "incorrect": "'Last month' is せんげつ (sengetsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C140-kyonen",
+      "sequence": 8600,
+      "title": "きょねん (kyonen) — last year",
+      "headword": "きょねん",
+      "romanization": "kyonen",
+      "gloss": "last year",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f731da6ee82a2f0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls before the new word."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say last month — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *last month* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nothing, with a negative verb — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nothing*, with a negative verb — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say one small animal — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *one small animal* — **R3**, twenty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きょねん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きょねん — kyonen — \"last year\". It sits beside ことし, kotoshi, \"this year\"."
+            },
+            {
+              "kind": "speech",
+              "text": "To say what did NOT happen, the polite negative ません adds でした, deshita: ませんでした, masen deshita."
+            },
+            {
+              "kind": "speech",
+              "text": "きょねん どこにも いきませんでした。 — kyonen doko ni mo ikimasen deshita — \"Last year I didn't go anywhere.\""
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "form",
+                "now, or as a plan",
+                "before now"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "form: affirmative. now, or as a plan: いきます. before now: いきました.",
+                "form: negative. now, or as a plan: いきません. before now: いきませんでした."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyonen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyonen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyonen doko ni mo ikimasen deshita — Last year I didn't go anywhere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyonen doko ni mo ikimasen deshita* — Last year I didn't go anywhere]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say I didn't work: hatarakimasen deshita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *I didn't work*: *hatarakimasen deshita*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"last year\"? (きょねん, kyonen.) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C140-kyonen-type",
+              "prompt": "Type the Japanese for 'last year'.",
+              "assesses": [
+                "JA-LEX-C140-KYONEN"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きょねん",
+                "kyonen"
+              ],
+              "feedback": {
+                "correct": "Right: きょねん (kyonen) is 'last year'.",
+                "incorrect": "'Last year' is きょねん (kyonen)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C140-sakki",
+      "sequence": 8610,
+      "title": "さっき (sakki) — a moment ago, a little while ago",
+      "headword": "さっき",
+      "romanization": "sakki",
+      "gloss": "a moment ago, a little while ago",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a8870ca669a3270",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four recalls before the new word."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say last year — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *last year* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nobody, with a negative verb — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nobody*, with a negative verb — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say a ticket — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *a ticket* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say there, near the listener — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *there*, near the listener — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さっき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さっき — sakki — \"a moment ago\", \"a little while ago\": earlier today, not long before now. The small っ holds the beat before ki."
+            },
+            {
+              "kind": "speech",
+              "text": "さっき おきました。 — sakki okimashita — \"I got up a little while ago.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakki okimashita — I got up a little while ago",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakki okimashita* — I got up a little while ago]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say last year, then a moment ago, and say which is closer to now",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *last year*, then *a moment ago*, and say which is closer to now]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a moment ago\"? (さっき, sakki.) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C140-sakki-type",
+              "prompt": "Type the Japanese for 'a moment ago'.",
+              "assesses": [
+                "JA-LEX-C140-SAKKI"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さっき",
+                "sakki"
+              ],
+              "feedback": {
+                "correct": "Right: さっき (sakki) is 'a moment ago'.",
+                "incorrect": "'A moment ago' is さっき (sakki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C140-owarimashita",
+      "sequence": 8620,
+      "title": "おわりました (owarimashita) — it finished, it is over (polite past)",
+      "headword": "おわりました",
+      "romanization": "owarimashita",
+      "gloss": "it finished, it is over (polite past)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f047eb07b180807",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four recalls before the new word."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say a moment ago — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *a moment ago* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nowhere, with a negative verb — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nowhere*, with a negative verb — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write ぷ — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **ぷ** — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write そ — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **そ** — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おわりました",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おわりました — owarimashita — \"it finished\", \"it is over\". It is the polite past of おわる, owaru, \"to come to an end\", which follows the -u pattern: る becomes り, then ました."
+            },
+            {
+              "kind": "speech",
+              "text": "しごとが おわりました。 — shigoto ga owarimashita — \"Work is over; I have finished work.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Now you can say what you did, and when:"
+            },
+            {
+              "kind": "speech",
+              "text": "せんしゅう (senshū) はたらきました。 — \"I worked last week.\" きょねん (kyonen) どこにも いきませんでした。 — \"Last year I didn't go anywhere.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "owarimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *owarimashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shigoto ga owarimashita — Work is over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shigoto ga owarimashita* — Work is over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say what you did: senshū (last week), sengetsu (last month), kyonen (last year) and sakki (a moment ago), each with a verb in -mashita or -masen deshita, and end with owarimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say what you did: *senshū* (last week), *sengetsu* (last month), *kyonen* (last year) and *sakki* (a moment ago), each with a verb in *-mashita* or *-masen deshita*, and end with *owarimashita*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last week? (せんしゅう, senshū.) Last month? (せんげつ, sengetsu.) Last year? (きょねん, kyonen.) A moment ago? (さっき, sakki.) It is over? (おわりました, owarimashita.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C140-owarimashita-type",
+              "prompt": "Type the Japanese for 'it is over (polite past)'.",
+              "assesses": [
+                "JA-LEX-C140-OWARIMASHITA"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おわりました",
+                "owarimashita"
+              ],
+              "feedback": {
+                "correct": "Right: おわりました (owarimashita) is 'it is over'.",
+                "incorrect": "'It is over' is おわりました (owarimashita)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

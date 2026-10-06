@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:f32ab56667966c82",
+  "lessonIds": [
+    "RU-C175-tyanut",
+    "RU-C175-podnimat",
+    "RU-C175-vklyuchat",
+    "RU-C175-vyklyuchat",
+    "RU-C175-zazhigat"
+  ],
+  "tex": "russian/book/chapters/ch175-to-pull-to-lift-to-switch-on-to-switch-off-to-light.tex"
+}

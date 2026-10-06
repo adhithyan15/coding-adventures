@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Scissors, Watch, Pyjamas, Button, Peach",
+  "label": "ch:fr-scissors-watch-pyjamas-button-peach",
+  "canDo": "I can say scissors, a watch, pyjamas, a button and a peach.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C221-peche",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say scissors, a watch, pyjamas, a button and a peach.",
+    "assesses": [
+      "FR-LEX-C221-CHOSES221-03",
+      "FR-LEX-C221-CHOSES221-04",
+      "FR-LEX-C221-CHOSES221-05"
+    ]
+  }
+}

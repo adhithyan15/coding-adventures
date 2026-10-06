@@ -1,0 +1,11 @@
+{
+  "id": "UR-C197-shaimpu",
+  "pathSegment": "UR-PATH-197-CHIZ197",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-197-CHIZ197",
+      "order": 1
+    }
+  ]
+}

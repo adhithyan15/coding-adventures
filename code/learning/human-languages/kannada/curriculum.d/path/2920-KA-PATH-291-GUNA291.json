@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-291-GUNA291",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "KA-EXT-291-GUNA291"
+  ],
+  "after": []
+}

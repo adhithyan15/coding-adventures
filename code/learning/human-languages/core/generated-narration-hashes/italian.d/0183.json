@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:1360b47e1ab71253",
+  "lessonIds": [
+    "IT-C183-inseguire",
+    "IT-C183-insistere",
+    "IT-C183-interrompere",
+    "IT-C183-lanciare",
+    "IT-C183-legare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch183.txt",
+  "json": "italian/narration/ch183.json",
+  "textHash": "fnv1a64:32cf56822467eb8a",
+  "jsonHash": "fnv1a64:8e857a405cdde217",
+  "findings": []
+}

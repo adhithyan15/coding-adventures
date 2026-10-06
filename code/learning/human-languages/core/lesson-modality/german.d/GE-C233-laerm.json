@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C233-laerm",
+    "language": "german",
+    "chapter": 233,
+    "sequence": 12680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b06e93b5ae5e3d6c"
+  },
+  "findings": []
+}

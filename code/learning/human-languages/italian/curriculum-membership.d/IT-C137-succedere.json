@@ -1,0 +1,11 @@
+{
+  "id": "IT-C137-succedere",
+  "pathSegment": "IT-PATH-137-PAST137",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-137-PAST137",
+      "order": 4
+    }
+  ]
+}

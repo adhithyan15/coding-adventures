@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:d2496fa44d60b8c4",
+  "lessonIds": [
+    "TA-C160-kala-attavanai",
+    "TA-C160-arivippu",
+    "TA-C160-vatakai",
+    "TA-C160-vilamparam",
+    "TA-C160-racitu",
+    "TA-R160-first-pass-looking-back",
+    "TA-R160-second-pass-looking-ahead-and-reading-signs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch160.txt",
+  "json": "tamil/narration/ch160.json",
+  "textHash": "fnv1a64:bffd75d2618bb760",
+  "jsonHash": "fnv1a64:e6b5889e2099842e",
+  "findings": []
+}

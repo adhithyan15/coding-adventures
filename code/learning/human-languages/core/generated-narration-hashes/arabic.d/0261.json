@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:e1b24d2587038ed3",
+  "lessonIds": [
+    "AR-C261-dhaba",
+    "AR-C261-tajammada",
+    "AR-C261-rakana",
+    "AR-C261-istaffa",
+    "AR-C261-wazzaa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch261.txt",
+  "json": "arabic/narration/ch261.json",
+  "textHash": "fnv1a64:bf520d40884864f0",
+  "jsonHash": "fnv1a64:b8e7adb0af73a501",
+  "findings": []
+}

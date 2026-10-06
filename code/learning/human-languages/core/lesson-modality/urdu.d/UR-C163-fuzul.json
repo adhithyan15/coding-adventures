@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C163-fuzul",
+    "language": "urdu",
+    "chapter": 163,
+    "sequence": 8790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6bcd7369fbe13775"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:be01233b8534b7cb",
+  "lessonIds": [
+    "UR-C219-flait",
+    "UR-C219-manzil",
+    "UR-C219-zina",
+    "UR-C219-angan",
+    "UR-C219-balkani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch219.txt",
+  "json": "urdu/narration/ch219.json",
+  "textHash": "fnv1a64:ca4232f6ad7759f8",
+  "jsonHash": "fnv1a64:2cdd70de3d4dfd7d",
+  "findings": []
+}

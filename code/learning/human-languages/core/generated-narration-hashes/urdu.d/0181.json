@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:c5dc0a73521bb382",
+  "lessonIds": [
+    "UR-C181-kharch-karna",
+    "UR-C181-chukana",
+    "UR-C181-napna",
+    "UR-C181-tolna",
+    "UR-C181-janchna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch181.txt",
+  "json": "urdu/narration/ch181.json",
+  "textHash": "fnv1a64:14deb6f9361abc1a",
+  "jsonHash": "fnv1a64:83477d2e50b696c8",
+  "findings": []
+}

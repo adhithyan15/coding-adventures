@@ -1,0 +1,11 @@
+{
+  "id": "LA-C275-fumus",
+  "pathSegment": "LA-PATH-275-RES275",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-275-RES275",
+      "order": 3
+    }
+  ]
+}

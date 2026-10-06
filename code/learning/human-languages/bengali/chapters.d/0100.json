@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Courage, Talent, Machine, Equipment, Method",
+  "label": "ch:bn-courage-talent-machine-equipment-method",
+  "canDo": "I can say courage, talent, a machine, equipment and a method.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "BN-C100-poddhoti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: I can say courage, talent, a machine, equipment and a method.",
+    "assesses": [
+      "BN-LEX-C100-CAN100-03",
+      "BN-LEX-C100-CAN100-04",
+      "BN-LEX-C100-CAN100-05"
+    ]
+  }
+}

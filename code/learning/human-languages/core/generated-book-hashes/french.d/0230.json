@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:4b83df6efc581265",
+  "lessonIds": [
+    "FR-C230-fil",
+    "FR-C230-aiguille",
+    "FR-C230-clou",
+    "FR-C230-marteau",
+    "FR-C230-echelle"
+  ],
+  "tex": "french/book/chapters/ch230-thread-needle-nail-for-hammering-hammer-ladder.tex"
+}

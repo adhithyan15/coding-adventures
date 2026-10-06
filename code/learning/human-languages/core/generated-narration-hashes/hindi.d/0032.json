@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 32,
-  "sourceHash": "fnv1a64:07c72dba7e2ac5ea",
+  "sourceHash": "fnv1a64:1f9c609992ca8776",
   "lessonIds": [
     "HI-C32-shubh-sandhya",
     "HI-S133-letter-jha",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "hindi/narration/ch32.txt",
   "json": "hindi/narration/ch32.json",
-  "textHash": "fnv1a64:1e49b0175880f485",
-  "jsonHash": "fnv1a64:8cdb192d5d09ebc1",
+  "textHash": "fnv1a64:31952a64d83d9557",
+  "jsonHash": "fnv1a64:dcec8ef65105e761",
   "findings": []
 }

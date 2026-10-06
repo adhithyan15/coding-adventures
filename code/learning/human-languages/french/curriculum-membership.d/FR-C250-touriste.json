@@ -1,0 +1,11 @@
+{
+  "id": "FR-C250-touriste",
+  "pathSegment": "FR-PATH-250-CHOSES250",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-250-CHOSES250",
+      "order": 1
+    }
+  ]
+}

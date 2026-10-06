@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R156-first-pass-saying-no-and-looking-back",
+    "language": "telugu",
+    "chapter": 156,
+    "sequence": 6820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c091238b361ae120"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C200-vaddincu",
+    "language": "telugu",
+    "chapter": 200,
+    "sequence": 9120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8bb7f0073b7a193"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C195-burg",
+  "pathSegment": "GE-PATH-195-THING195",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-195-THING195",
+      "order": 4
+    }
+  ]
+}

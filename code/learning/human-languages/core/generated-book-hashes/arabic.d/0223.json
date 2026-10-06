@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:04d6e86724fdc468",
+  "lessonIds": [
+    "AR-C223-rattaba",
+    "AR-C223-kanasa",
+    "AR-C223-kawa",
+    "AR-C223-tawa",
+    "AR-C223-allaqa"
+  ],
+  "tex": "arabic/book/chapters/ch223-to-tidy-to-sweep-to-iron-to-fold-to-hang.tex"
+}

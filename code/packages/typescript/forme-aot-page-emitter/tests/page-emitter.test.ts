@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect } from "vitest";
+import * as path from "node:path";
 import type { CssArtifact } from "@coding-adventures/forme-aot-css-slicer";
 import { emitPages, type EmitIO } from "../src/index.js";
 
@@ -45,8 +46,8 @@ describe("emitPages — basic CSS write", () => {
     ), {}, io);
 
     expect(result.written.size).toBe(2);
-    expect(io.files.get("/dist/index.css")).toBe("p { color: red; }");
-    expect(io.files.get("/dist/about.css")).toBe("p { color: blue; }");
+    expect(io.files.get(path.normalize("/dist/index.css"))).toBe("p { color: red; }");
+    expect(io.files.get(path.normalize("/dist/about.css"))).toBe("p { color: blue; }");
   });
 
   it("includes byteSize per page and totalBytes", async () => {
@@ -74,8 +75,8 @@ describe("emitPages — basic CSS write", () => {
   it("creates parent directories recursively (mkdir recursive)", async () => {
     const io = memIO();
     await emitPages("/dist", mapOf(art("/blog/posts/hello.html", "x")), {}, io);
-    expect(io.dirs.has("/dist/blog/posts")).toBe(true);
-    expect(io.files.has("/dist/blog/posts/hello.css")).toBe(true);
+    expect(io.dirs.has(path.normalize("/dist/blog/posts"))).toBe(true);
+    expect(io.files.has(path.normalize("/dist/blog/posts/hello.css"))).toBe(true);
   });
 });
 
@@ -91,8 +92,8 @@ describe("emitPages — route → file path mapping", () => {
   ])("pageId %j → html %j + css %j", async (pageId, htmlPath, cssPath) => {
     const io = memIO();
     await emitPages("/dist", mapOf(art(pageId, ".x{}")), { writeHtml: true }, io);
-    expect(io.files.has(cssPath)).toBe(true);
-    expect(io.files.has(htmlPath)).toBe(true);
+    expect(io.files.has(path.normalize(cssPath))).toBe(true);
+    expect(io.files.has(path.normalize(htmlPath))).toBe(true);
   });
 });
 
@@ -101,13 +102,13 @@ describe("emitPages — HTML wrapper", () => {
     const io = memIO();
     const result = await emitPages("/d", mapOf(art("/index.html", "x")), {}, io);
     expect(result.written.get("/index.html")!.htmlPath).toBeUndefined();
-    expect(io.files.has("/d/index.html")).toBe(false);
+    expect(io.files.has(path.normalize("/d/index.html"))).toBe(false);
   });
 
   it("writeHtml: true emits a minimal HTML wrapper", async () => {
     const io = memIO();
     await emitPages("/d", mapOf(art("/index.html", "x")), { writeHtml: true }, io);
-    const html = io.files.get("/d/index.html");
+    const html = io.files.get(path.normalize("/d/index.html"));
     expect(html).toContain("<!doctype html>");
     expect(html).toContain("<meta charset=\"utf-8\">");
     expect(html).toContain(`<link rel="stylesheet" href="index.css">`);
@@ -121,14 +122,14 @@ describe("emitPages — HTML wrapper", () => {
       writeHtml: true,
       htmlBody: (pageId) => `<h1>page: ${pageId}</h1>`,
     }, io);
-    const html = io.files.get("/d/about.html")!;
+    const html = io.files.get(path.normalize("/d/about.html"))!;
     expect(html).toContain("<h1>page: /about.html</h1>");
   });
 
   it("default htmlBody is empty string (still valid HTML)", async () => {
     const io = memIO();
     await emitPages("/d", mapOf(art("/index.html", "x")), { writeHtml: true }, io);
-    const html = io.files.get("/d/index.html")!;
+    const html = io.files.get(path.normalize("/d/index.html"))!;
     // Just verify it's syntactically reasonable — no body content
     // between the body tags.
     expect(html).toMatch(/<body>\s*\n*\s*<\/body>/);
@@ -139,7 +140,7 @@ describe("emitPages — HTML wrapper", () => {
     const css = "p{color:red}";
     const result = await emitPages("/d", mapOf(art("/index.html", css)), { writeHtml: true }, io);
     const cssBytes = Buffer.byteLength(css, "utf8");
-    const htmlBytes = Buffer.byteLength(io.files.get("/d/index.html")!, "utf8");
+    const htmlBytes = Buffer.byteLength(io.files.get(path.normalize("/d/index.html"))!, "utf8");
     expect(result.totalBytes).toBe(cssBytes + htmlBytes);
     expect(result.written.get("/index.html")!.byteSize).toBe(cssBytes + htmlBytes);
   });
@@ -196,9 +197,9 @@ describe("emitPages — overwrites pre-existing files", () => {
   it("second emit replaces the first one's CSS content", async () => {
     const io = memIO();
     await emitPages("/d", mapOf(art("/a.html", "v1")), {}, io);
-    expect(io.files.get("/d/a.css")).toBe("v1");
+    expect(io.files.get(path.normalize("/d/a.css"))).toBe("v1");
     await emitPages("/d", mapOf(art("/a.html", "v2")), {}, io);
-    expect(io.files.get("/d/a.css")).toBe("v2");
+    expect(io.files.get(path.normalize("/d/a.css"))).toBe("v2");
   });
 });
 
@@ -249,7 +250,7 @@ describe("emitPages — HTML attribute escaping (defensive)", () => {
     // but technically should be HTML-attr-escaped — like `&` and `<`.
     const io = memIO();
     await emitPages("/d", mapOf(art("/r&d.html", "x")), { writeHtml: true }, io);
-    const html = io.files.get("/d/r&d.html")!;
+    const html = io.files.get(path.normalize("/d/r&d.html"))!;
     // The href attribute value should contain `&amp;`, not raw `&`.
     expect(html).toContain(`href="r&amp;d.css"`);
   });
@@ -272,6 +273,6 @@ describe("emitPages — pageId without leading slash", () => {
   it("accepts pageIds without leading slash (route-shaped)", async () => {
     const io = memIO();
     await emitPages("/d", mapOf(art("index.html", "x")), {}, io);
-    expect(io.files.has("/d/index.css")).toBe(true);
+    expect(io.files.has(path.normalize("/d/index.css"))).toBe(true);
   });
 });

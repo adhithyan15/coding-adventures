@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C253-sisu",
+    "language": "hindi",
+    "chapter": 253,
+    "sequence": 13790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e440a11ea7998c3"
+  },
+  "findings": []
+}

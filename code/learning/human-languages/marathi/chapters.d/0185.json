@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Gym, Cricket, Victory, Defeat, Competition",
+  "label": "ch:mr-gym-cricket-victory-defeat-competition",
+  "canDo": "I can say a gym, cricket, a victory, a defeat and a competition.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C185-spardha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say a gym, cricket, a victory, a defeat and a competition.",
+    "assesses": [
+      "MR-LEX-C185-VASTU185-03",
+      "MR-LEX-C185-VASTU185-04",
+      "MR-LEX-C185-VASTU185-05"
+    ]
+  }
+}

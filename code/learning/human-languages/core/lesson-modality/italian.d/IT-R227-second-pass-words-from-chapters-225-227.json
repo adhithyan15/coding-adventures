@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R227-second-pass-words-from-chapters-225-227",
+    "language": "italian",
+    "chapter": 227,
+    "sequence": 13320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3bd6869d3c5de28"
+  },
+  "findings": []
+}

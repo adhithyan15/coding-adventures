@@ -1,0 +1,11 @@
+{
+  "id": "AR-C189-suhufi",
+  "pathSegment": "AR-PATH-189-AMAL189",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-189-AMAL189",
+      "order": 1
+    }
+  ]
+}

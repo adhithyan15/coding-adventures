@@ -1,0 +1,11 @@
+{
+  "id": "ML-C298-sambalam",
+  "pathSegment": "ML-PATH-298-JOLI298",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-298-JOLI298",
+      "order": 2
+    }
+  ]
+}

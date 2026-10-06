@@ -1,0 +1,11 @@
+{
+  "id": "IT-C225-occasione",
+  "pathSegment": "IT-PATH-225-COSE225",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-225-COSE225",
+      "order": 2
+    }
+  ]
+}

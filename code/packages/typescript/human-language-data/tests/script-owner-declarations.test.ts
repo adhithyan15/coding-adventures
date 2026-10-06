@@ -24,7 +24,32 @@ const corpus = defaultCurriculumRoot();
 const CONFIGS = [
   // 49 -> 51: HL-C360 adds ろ (U+308D) and ゅ (U+3085), the two hiragana the
   // Japanese cardinals one to ten needed — ろ for roku and ゅ for juu.
-  { language: "japanese", script: "japanese", letters: 59, marks: 3 },
+  // 59 -> 62: chapter 131 writes small ゃ (U+3083), small ょ (U+3087) and を
+  // (U+3092), each after a word that already holds it (おちゃ, ちょっと,
+  // おちゃを ください).
+  // 62 -> 65: chapter 132 writes そ (U+305D), れ (U+308C) and る (U+308B),
+  // each after a word that already holds it (そこ, これ, くるま).
+  // 65 -> 69: chapter 133 writes the last four basic hiragana, き (U+304D),
+  // け (U+3051), ぬ (U+306C) and へ (U+3078), each after a word that already
+  // holds it (えき, いけ, いぬ, へや). 69 -> 70: ら (U+3089), written since
+  // chapter 8 (JA-W08-ra) but never given an inventory row, gets its record,
+  // its KanjiVG stroke-order source and its ductus in the same chapter.
+  // 70 -> 78: chapters 134 and 135 write eight voiced kana, で (U+3067),
+  // ば (U+3070), べ (U+3079), ぶ (U+3076), び (U+3073), ぐ (U+3050),
+  // げ (U+3052) and ぎ (U+304E). Each row follows が, ご, ざ and ぼ: the base
+  // sign plus the dakuten, with no stroke-order source of its own and so no
+  // ductus.
+  // 78 -> 85: chapters 136 and 137 write ぞ (U+305E), ず (U+305A), ぜ
+  // (U+305C), ぱ (U+3071), ぴ (U+3074), ぷ (U+3077) and ぺ (U+307A). The
+  // three z signs follow ざ (base plus the dakuten); the four p signs follow
+  // ぽ (base plus the handakuten). None has a stroke-order source of its own,
+  // and so none has a ductus.
+  // 85 -> 87: だ (U+3060) and ど (U+3069), written since chapters 9 and 11
+  // (JA-W09-do, JA-W11-da) but covered until now only through decomposition,
+  // get rows of their own, because a cited stroke order and a ductus need a
+  // row to belong to. Every voiced kana row and the three spacing marks now
+  // cite KanjiVG.
+  { language: "japanese", script: "japanese", letters: 87, marks: 3 },
   // 24 -> 26: HL-C350 adds ج and ص as RECOGNITION-ONLY owners. panj (five) and
   // sad (a hundred) need them in a headword, and `uncoveredGlyphs` is a
   // headword check, so the numerals could not be taught without them. Both

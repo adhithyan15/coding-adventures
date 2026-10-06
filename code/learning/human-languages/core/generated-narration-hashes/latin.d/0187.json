@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:99bb4259bfbc9ea7",
+  "lessonIds": [
+    "LA-C187-pax",
+    "LA-C187-dux",
+    "LA-C187-victoria",
+    "LA-C187-libertas",
+    "LA-C187-gloria"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch187.txt",
+  "json": "latin/narration/ch187.json",
+  "textHash": "fnv1a64:931e7783696ee89c",
+  "jsonHash": "fnv1a64:d1979ebfae43d15d",
+  "findings": []
+}

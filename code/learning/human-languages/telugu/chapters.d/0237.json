@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "Police officer, Driver, Postman, Bus conductor, Lawyer",
+  "label": "ch:te-police-officer-driver-postman-bus-conductor-lawyer",
+  "canDo": "I can say a police officer, a driver, a postman, a bus conductor and a lawyer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C237-vakilu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say a police officer, a driver, a postman, a bus conductor and a lawyer.",
+    "assesses": [
+      "TE-LEX-C237-PANI237-03",
+      "TE-LEX-C237-PANI237-04",
+      "TE-LEX-C237-PANI237-05"
+    ]
+  }
+}

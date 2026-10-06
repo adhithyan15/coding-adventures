@@ -1,0 +1,11 @@
+{
+  "id": "PT-C225-reciclagem",
+  "pathSegment": "PT-PATH-225-COISAS225",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-225-COISAS225",
+      "order": 2
+    }
+  ]
+}

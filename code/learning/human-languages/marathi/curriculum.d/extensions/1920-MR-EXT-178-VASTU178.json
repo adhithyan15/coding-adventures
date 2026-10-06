@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-178-VASTU178",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a flat, a dining room, a balcony, a bell and a compartment.",
+  "prerequisites": []
+}

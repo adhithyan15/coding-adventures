@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "With, All together, A computer, A mobile phone, A document",
+  "label": "ch:hi-with-all-together-a-computer-a-mobile-phone-a-document",
+  "canDo": "I can say with, all together, a computer, a mobile phone and a document.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C249-dastavez",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say with, all together, a computer, a mobile phone and a document.",
+    "assesses": [
+      "HI-LEX-C249-THG249-03",
+      "HI-LEX-C249-THG249-04",
+      "HI-LEX-C249-THG249-05"
+    ]
+  }
+}

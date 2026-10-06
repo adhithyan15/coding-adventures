@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Competition, Winner, Medal, Hobby, Novel",
+  "label": "ch:te-competition-winner-medal-hobby-novel",
+  "canDo": "I can say a competition, a winner, a medal, a hobby and a novel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C189-navala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say a competition, a winner, a medal, a hobby and a novel.",
+    "assesses": [
+      "TE-LEX-C189-VASTUVU189-03",
+      "TE-LEX-C189-VASTUVU189-04",
+      "TE-LEX-C189-VASTUVU189-05"
+    ]
+  }
+}

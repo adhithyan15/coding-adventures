@@ -39,7 +39,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 162-case bootstrap corpus covers every process-free v1 domain:
+The 175-case bootstrap corpus covers every process-free v1 domain:
 
 - validated CI gate selection with exact package intersection, path and
   globstar matching, explicit false verdicts, deterministic output names,
@@ -75,12 +75,18 @@ The 162-case bootstrap corpus covers every process-free v1 domain:
 - fail-closed rejection of a future plan version;
 - conservative diff selection and prerequisite closure, including positive
   package-prefix matching, forced changed-set seed closure, both unknown-path
-  policies, exact reverse selection from a digest-pinned repository
-  source-input boundary, and exact-at-limit plus fail-closed operation-wide
+  policies, exact reverse selection of every declared consumer of a shared
+  digest-pinned repository input (excluding an unregistered peer), and
+  exact-at-limit plus fail-closed operation-wide
   declared match-work accounting with Unicode-scalar lengths and recursive
   BUILD-front exemptions;
 - framed SHA-256 hashing over the caller-supplied, deduplicated union of local
-  and repository-boundary inputs, plus hit, miss, and corrupt-cache recovery;
+  and repository-boundary inputs, plus hit, miss, and corrupt-cache recovery.
+  Eight paired source-collection and hashing/cache cases additionally prove
+  that an edit to one exact Rust workspace manifest changes the source and
+  package digests of both registered Swift consumers, while their local files
+  and dependency digests stay fixed and their successful prior cache records
+  become stale;
 - case-sensitive source collection across the complete generated-artifact
   registry and the closed 23-language source-input registry, including all
   five BUILD fronts, root-only capability and package metadata, reviewed
@@ -99,11 +105,11 @@ The 162-case bootstrap corpus covers every process-free v1 domain:
   pruned inputs, and exact cross-package inputs remain outside this package-
   root authority. A separate closed repository-relative registry admits 18
   reviewed boundaries, 21 input registrations over 19 tracked regular files,
-  483 consumer scopes, and 486 input-to-scope authorizations. It covers exact
+  481 consumer scopes, and 484 input-to-scope authorizations. It covers exact
   Haskell, Lua, and Python shared inputs; Rust workspace, Cargo, and Windows-
   launcher inputs; exact TypeScript base-config consumers; five shared Starlark
   rules; reviewed human-language, neural-learning, required-capability, and
-  cross-language workspace inputs; and bounded VisiCalc sibling inputs. Nine
+  cross-language workspace inputs; and bounded VisiCalc sibling inputs. Fourteen
   boundary cases prove exact, descendant, exclusion,
   shared-ancestor, generated-pruning, cross-package, cross-language, direct-
   BUILD-input, Starlark-load, and inert symlink/reparse behavior without
@@ -124,7 +130,11 @@ The 162-case bootstrap corpus covers every process-free v1 domain:
   `BUILD_windows` sibling-closure parity and the complete toolchain registry,
   including OCaml, plus independently derived orphan Cargo-manifest coverage,
   empty BUILD rejection, reasoned exemptions, countable PENDING debt, and
-  stale-ledger cleanup, plus tracked-artifact rejection for exact, nested,
+  stale-ledger cleanup. Four package-root cases generalize that contract across
+  the fifteen established lanes with a digest-pinned source witness, exact
+  generated and virtual exclusions, separate count and byte ceilings,
+  package-root-specific diagnostics, and deterministic shared-ledger behavior.
+  Validation also covers tracked-artifact rejection for exact, nested,
   separator-normalized, case, and Unicode-compatible `node_modules` paths,
   inert symlink/reparse metadata, redacted unsafe paths, forward- and
   backslash trailing empty segments, exact 512/513 Unicode scalar boundaries,
@@ -323,7 +333,7 @@ stable error codes. `validate-corpus` also performs two-phase validation and
 bounded in-memory decoding of pure fixture workspaces so invalid base64, path
 aliases, collisions, prefix conflicts, and aggregate size violations fail
 without creating a filesystem root. Domain checks verify reference integrity,
-framed hashes, cache state, inline Starlark loads, shard closure/cost, all eleven
+framed hashes, cache state, inline Starlark loads, shard closure/cost, all twelve
 BUILD-file validation checks, complete toolchain maps, and independent CLI
 parse/exit decisions.
 
@@ -381,7 +391,7 @@ The corpus now closes all process-free v1 domains:
 - diff selection, source collection, and hashing/cache;
 - Starlark evaluation and structured-command extraction;
 - prerequisite-closed sharding;
-- ten-check BUILD-file validation and toolchain detection; and
+- twelve-check BUILD-file validation and toolchain detection; and
 - bounded CLI parsing, typed normalized options, and exit-decision semantics.
 
 Execution now has a closed data model and authority policy, but no execution

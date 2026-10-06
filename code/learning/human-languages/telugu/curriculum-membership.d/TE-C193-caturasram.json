@@ -1,0 +1,11 @@
+{
+  "id": "TE-C193-caturasram",
+  "pathSegment": "TE-PATH-193-VASTUVU193",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-193-VASTUVU193",
+      "order": 2
+    }
+  ]
+}

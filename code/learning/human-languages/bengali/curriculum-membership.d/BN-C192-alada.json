@@ -1,0 +1,11 @@
+{
+  "id": "BN-C192-alada",
+  "pathSegment": "BN-PATH-192-GUN192",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-192-GUN192",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C503-presion",
+    "language": "spanish",
+    "chapter": 503,
+    "sequence": 14740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d57e84b7f1b9eb6"
+  },
+  "findings": []
+}

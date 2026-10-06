@@ -1,0 +1,11 @@
+{
+  "id": "FR-C246-fache-fachee",
+  "pathSegment": "FR-PATH-246-QUAL246",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-246-QUAL246",
+      "order": 4
+    }
+  ]
+}

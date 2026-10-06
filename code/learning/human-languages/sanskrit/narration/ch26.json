@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Naming Who Someone Is",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f065e6ed6bab50ba",
+  "sourceHash": "fnv1a64:9fdb555a9072cd52",
   "lessons": [
     {
       "id": "SA-C26-teacher",
@@ -281,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9c29355812e9bbe",
+      "sourceHash": "fnv1a64:335ae174eef2f422",
       "notice": null,
       "blocks": [
         {
@@ -322,7 +322,7 @@
             },
             {
               "kind": "speech",
-              "text": "राजा (rājā) is a king, and it belongs to the same -ऋ-shaped family as पिता and माता — the stem is rājan-."
+              "text": "राजा (rājā) is a king, and it belongs to the same -ṛ-shaped family as पिता and माता — the stem is rājan-."
             },
             {
               "kind": "speech",

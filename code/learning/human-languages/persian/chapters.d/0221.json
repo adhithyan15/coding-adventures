@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "To forgive, To fall out, To make up, To joke, To be jealous",
+  "label": "ch:fa-to-forgive-to-fall-out-to-make-up-to-joke-to-be-jealous",
+  "canDo": "I can say to forgive, to fall out, to make up, to joke and to be jealous.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C221-hasudi-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say to forgive, to fall out, to make up, to joke and to be jealous.",
+    "assesses": [
+      "FA-LEX-C221-KONESH221-03",
+      "FA-LEX-C221-KONESH221-04",
+      "FA-LEX-C221-KONESH221-05"
+    ]
+  }
+}

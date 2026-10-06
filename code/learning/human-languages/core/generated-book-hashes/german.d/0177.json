@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:510de3316a7e6fcc",
+  "lessonIds": [
+    "GE-C177-bewerben",
+    "GE-C177-biegen",
+    "GE-C177-braten",
+    "GE-C177-buchstabieren",
+    "GE-C177-drucken"
+  ],
+  "tex": "german/book/chapters/ch177-to-apply-to-bend-to-fry-to-spell-to-print.tex"
+}

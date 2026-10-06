@@ -4,6 +4,12 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ## [Unreleased]
 
+### Changed
+
+- Source hashing now follows the 27-component neutral generated-directory
+  registry, pruning exact lowercase `blib` while retaining `Blib` and
+  `blib-example` in both extension and declared-source modes.
+
 ### Added
 
 - Add a pure bounded `evaluateToolchainSnapshot()` API and a package-local
@@ -34,6 +40,12 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Fixed
 
+- Replace recursive globstar suffix exploration and UTF-16 code-unit matching
+  with compiled Unicode-scalar patterns and bounded rolling-row dynamic
+  programs. Portable character classes now follow the strict shared
+  Python-fnmatchcase contract, invalid classes raise one stable typed error,
+  and hashing plus Git-diff selection validate complete declared-source lists
+  before filesystem enumeration or candidate short-circuits.
 - Complete portable TypeScript source hashing with OCaml `.ml`, `.mli`, and
   `.opam` recognition plus exact `.ocamlformat`, `dune`, and `dune-project`
   metadata in extension and declared-source collection.

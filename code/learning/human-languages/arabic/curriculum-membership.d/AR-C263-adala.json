@@ -1,0 +1,11 @@
+{
+  "id": "AR-C263-adala",
+  "pathSegment": "AR-PATH-263-SIHHA263",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-263-SIHHA263",
+      "order": 4
+    }
+  ]
+}

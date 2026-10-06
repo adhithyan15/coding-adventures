@@ -1,0 +1,11 @@
+{
+  "id": "TE-C155-edurucudu",
+  "pathSegment": "TE-PATH-155-BHAVISHYAT155",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-155-BHAVISHYAT155",
+      "order": 4
+    }
+  ]
+}

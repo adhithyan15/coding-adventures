@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C277-phiryadu",
+    "language": "telugu",
+    "chapter": 277,
+    "sequence": 13120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8fc4686cd33acf2c"
+  },
+  "findings": []
+}

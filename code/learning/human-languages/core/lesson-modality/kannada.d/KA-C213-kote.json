@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C213-kote",
+    "language": "kannada",
+    "chapter": 213,
+    "sequence": 9880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4bebddc3607e3281"
+  },
+  "findings": []
+}

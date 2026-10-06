@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C302-eddu",
+    "language": "telugu",
+    "chapter": 302,
+    "sequence": 14430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73fa43ec102c2965"
+  },
+  "findings": []
+}

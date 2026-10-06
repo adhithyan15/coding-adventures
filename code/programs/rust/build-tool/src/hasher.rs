@@ -61,6 +61,7 @@ const GENERATED_DIRECTORY_COMPONENTS: &[&str] = &[
     "dist",
     "dist-newstyle",
     "_build",
+    "blib",
     "build",
     "target",
     ".claude",

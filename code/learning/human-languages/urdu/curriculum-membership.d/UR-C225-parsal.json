@@ -1,0 +1,11 @@
+{
+  "id": "UR-C225-parsal",
+  "pathSegment": "UR-PATH-225-CHIZ225",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-225-CHIZ225",
+      "order": 1
+    }
+  ]
+}

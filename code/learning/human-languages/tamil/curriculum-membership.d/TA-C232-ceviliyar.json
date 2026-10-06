@@ -1,0 +1,11 @@
+{
+  "id": "TA-C232-ceviliyar",
+  "pathSegment": "TA-PATH-232-NALAM232",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-232-NALAM232",
+      "order": 4
+    }
+  ]
+}

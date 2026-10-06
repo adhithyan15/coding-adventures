@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:386f8842a2839b45",
+  "lessonIds": [
+    "LA-C178-igitur",
+    "LA-C178-tamen",
+    "LA-C178-quamquam",
+    "LA-C178-etsi",
+    "LA-C178-nisi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch178.txt",
+  "json": "latin/narration/ch178.json",
+  "textHash": "fnv1a64:4b536d7da0129f81",
+  "jsonHash": "fnv1a64:c3eccb3f71d36129",
+  "findings": []
+}

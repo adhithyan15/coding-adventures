@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Future, Period, Beginning, Rarely, Often",
+  "label": "ch:ar-future-period-beginning-rarely-often",
+  "canDo": "I can say the future, a period, a beginning, rarely and often.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C171-kathiran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say the future, a period, a beginning, rarely and often.",
+    "assesses": [
+      "AR-LEX-C171-WAQT171-03",
+      "AR-LEX-C171-WAQT171-04",
+      "AR-LEX-C171-WAQT171-05"
+    ]
+  }
+}

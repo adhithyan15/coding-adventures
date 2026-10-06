@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "A minister, A king, A queen, A servant, A thief",
+  "label": "ch:hi-a-minister-a-king-a-queen-a-servant-a-thief",
+  "canDo": "I can say a minister, a king, a queen, a servant and a thief.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C196-cor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say a minister, a king, a queen, a servant and a thief.",
+    "assesses": [
+      "HI-LEX-C196-THG196-03",
+      "HI-LEX-C196-THG196-04",
+      "HI-LEX-C196-THG196-05"
+    ]
+  }
+}

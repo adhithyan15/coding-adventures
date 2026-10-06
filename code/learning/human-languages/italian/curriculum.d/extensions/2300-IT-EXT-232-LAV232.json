@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-232-LAV232",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a number, a sheet of paper, a newspaper, a magazine and a dictionary.",
+  "prerequisites": []
+}

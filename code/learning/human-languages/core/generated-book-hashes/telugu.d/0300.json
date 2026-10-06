@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:337794bac8606b77",
+  "lessonIds": [
+    "TE-C300-butlu",
+    "TE-C300-golusu",
+    "TE-C300-cevipogulu",
+    "TE-C300-gundi",
+    "TE-C300-cetirumalu"
+  ],
+  "tex": "telugu/book/chapters/ch300-shoes-chain-earrings-button-handkerchief.tex"
+}

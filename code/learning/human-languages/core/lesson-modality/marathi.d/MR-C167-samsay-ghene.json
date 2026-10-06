@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C167-samsay-ghene",
+    "language": "marathi",
+    "chapter": 167,
+    "sequence": 8030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9960fc624c33b31b"
+  },
+  "findings": []
+}

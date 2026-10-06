@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:b771c2469d0d482a",
+  "lessonIds": [
+    "LA-C192-cancer",
+    "LA-C192-passer",
+    "LA-C192-ciconia",
+    "LA-C192-noctua",
+    "LA-C192-pavo"
+  ],
+  "tex": "latin/book/chapters/ch192-crab-sparrow-stork-owl-peacock.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C260-joy",
+    "language": "bengali",
+    "chapter": 260,
+    "sequence": 16360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4873aef7ed9481b5"
+  },
+  "findings": []
+}

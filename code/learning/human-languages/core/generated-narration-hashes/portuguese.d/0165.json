@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:34d9f712cef244ea",
+  "lessonIds": [
+    "PT-C165-couro",
+    "PT-C165-metal",
+    "PT-C165-tijolo",
+    "PT-C165-saco",
+    "PT-C165-fio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch165.txt",
+  "json": "portuguese/narration/ch165.json",
+  "textHash": "fnv1a64:0b48b39d886116ce",
+  "jsonHash": "fnv1a64:11ee975c5e66352a",
+  "findings": []
+}

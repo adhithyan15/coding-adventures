@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "To turn, To enjoy, To imagine, To inform, To complain",
+  "label": "ch:mr-to-turn-to-enjoy-to-imagine-to-inform-to-complain",
+  "canDo": "I can say to turn, to enjoy, to imagine, to inform and to complain.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C253-takrar-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say to turn, to enjoy, to imagine, to inform and to complain.",
+    "assesses": [
+      "MR-LEX-C253-ACT253-03",
+      "MR-LEX-C253-ACT253-04",
+      "MR-LEX-C253-ACT253-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:69f3884bf017d8a5",
+  "lessonIds": [
+    "PT-C191-adulto",
+    "PT-C191-idoso",
+    "PT-C191-gemeo-a-gemea",
+    "PT-C191-sogra",
+    "PT-C191-sogro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch191.txt",
+  "json": "portuguese/narration/ch191.json",
+  "textHash": "fnv1a64:66cf7b7018f2dc06",
+  "jsonHash": "fnv1a64:f2c7339ed998442d",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C249-pubblicita",
+  "pathSegment": "IT-PATH-249-COSE249",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-249-COSE249",
+      "order": 4
+    }
+  ]
+}

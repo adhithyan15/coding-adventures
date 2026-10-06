@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:440ed1d7acbe03ee",
+  "lessonIds": [
+    "HI-C200-tvaca",
+    "HI-C200-rajya",
+    "HI-C200-rajdhani",
+    "HI-C200-sima",
+    "HI-C200-dvip"
+  ],
+  "tex": "hindi/book/chapters/ch200-skin-a-state-a-capital-city-a-border-an-island.tex"
+}

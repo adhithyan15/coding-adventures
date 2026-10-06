@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "Bee, Lizard, Insect, Sparrow, Koel",
+  "label": "ch:te-bee-lizard-insect-sparrow-koel",
+  "canDo": "I can say a bee, a lizard, an insect, a sparrow and a koel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C187-kokila",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say a bee, a lizard, an insect, a sparrow and a koel.",
+    "assesses": [
+      "TE-LEX-C187-VASTUVU187-03",
+      "TE-LEX-C187-VASTUVU187-04",
+      "TE-LEX-C187-VASTUVU187-05"
+    ]
+  }
+}

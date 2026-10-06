@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C260-avivahit",
+    "language": "marathi",
+    "chapter": 260,
+    "sequence": 14950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec873e8c87728ecf"
+  },
+  "findings": []
+}

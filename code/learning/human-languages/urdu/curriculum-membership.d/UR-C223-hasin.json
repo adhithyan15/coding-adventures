@@ -1,0 +1,11 @@
+{
+  "id": "UR-C223-hasin",
+  "pathSegment": "UR-PATH-223-SIFAT223",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-223-SIFAT223",
+      "order": 4
+    }
+  ]
+}

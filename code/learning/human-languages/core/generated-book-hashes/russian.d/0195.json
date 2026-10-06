@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:7a684122566661fb",
+  "lessonIds": [
+    "RU-C195-priroda",
+    "RU-C195-vetka",
+    "RU-C195-koren",
+    "RU-C195-roza",
+    "RU-C195-dub"
+  ],
+  "tex": "russian/book/chapters/ch195-nature-branch-root-rose-oak.tex"
+}

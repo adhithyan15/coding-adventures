@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "Screwdriver, Tool, Pipe, Tap, Shower",
+  "label": "ch:ur-screwdriver-tool-pipe-tap-shower",
+  "canDo": "I can say a screwdriver, a tool, a pipe, a tap and a shower.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C258-shavar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can say a screwdriver, a tool, a pipe, a tap and a shower.",
+    "assesses": [
+      "UR-LEX-C258-CHIZ258-03",
+      "UR-LEX-C258-CHIZ258-04",
+      "UR-LEX-C258-CHIZ258-05"
+    ]
+  }
+}

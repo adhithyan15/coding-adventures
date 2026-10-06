@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:ca1e542a06c004b4",
+  "lessonIds": [
+    "FA-C175-fandak",
+    "FA-C175-khakandaz",
+    "FA-C175-periz",
+    "FA-C175-jarubarqi",
+    "FA-C175-lebasshuyi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch175.txt",
+  "json": "persian/narration/ch175.json",
+  "textHash": "fnv1a64:8aa0f5a7a770b839",
+  "jsonHash": "fnv1a64:40f729fa6408792d",
+  "findings": []
+}

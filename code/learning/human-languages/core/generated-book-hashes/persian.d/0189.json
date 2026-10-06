@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:3944528a2d461f45",
+  "lessonIds": [
+    "FA-C189-ampul",
+    "FA-C189-noskhe",
+    "FA-C189-azmayesh",
+    "FA-C189-ambulans",
+    "FA-C189-qad"
+  ],
+  "tex": "persian/book/chapters/ch189-injection-prescription-medical-test-ambulance-height.tex"
+}

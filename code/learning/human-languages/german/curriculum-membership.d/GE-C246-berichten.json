@@ -1,0 +1,11 @@
+{
+  "id": "GE-C246-berichten",
+  "pathSegment": "GE-PATH-246-VERB246",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-246-VERB246",
+      "order": 3
+    }
+  ]
+}

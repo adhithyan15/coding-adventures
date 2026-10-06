@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "Nest, Creeper, Bud, Thorn, Holy basil",
+  "label": "ch:ka-nest-creeper-bud-thorn-holy-basil",
+  "canDo": "I can say a nest, a creeper, a bud, a thorn and holy basil.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C188-tulasi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say a nest, a creeper, a bud, a thorn and holy basil.",
+    "assesses": [
+      "KA-LEX-C188-VASTU188-03",
+      "KA-LEX-C188-VASTU188-04",
+      "KA-LEX-C188-VASTU188-05"
+    ]
+  }
+}

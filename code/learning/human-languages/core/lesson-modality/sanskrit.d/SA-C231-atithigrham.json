@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C231-atithigrham",
+    "language": "sanskrit",
+    "chapter": 231,
+    "sequence": 13600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77ec7a6a26629396"
+  },
+  "findings": []
+}

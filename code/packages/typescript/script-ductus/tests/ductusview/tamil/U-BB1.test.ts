@@ -15,40 +15,32 @@ it("owns U-BB1 view evidence for ற", () => {
   expect(ductusFor("ற")).toBe(RRA);
 });
 
-describe("ற — a real cited three-stroke five-movement filmstrip", () => {
+describe("ற — a real cited one-stroke 5-movement filmstrip", () => {
   const steps = ductusSteps(RRA);
   const strip = ductusFilmstrip(RRA, rraOutline);
 
-  it("marks exactly the two source-backed lift transitions", () => {
-    expect(steps.map((step) => step.startsAfterLift)).toEqual([
-      false,
-      false,
-      true,
-      true,
-      false,
-    ]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2, 2]);
+  it("never lifts the pen between movements", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual(
+      Array(5).fill(false),
+    );
+    expect(steps.map((step) => step.strokeIndex)).toEqual(Array(5).fill(0));
   });
 
-  it("reports five movements in three strokes with two lifts", () => {
+  it("reports 5 movements in one unbroken stroke", () => {
     expect(strip.frames).toHaveLength(5);
-    expect(strip.penLifts).toBe(2);
-    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 5 movements");
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 5 movements");
   });
 
-  it("keeps both completed strokes visible while drawing the joined sweep", () => {
-    const last = strip.frames[4];
+  it("draws the whole letter as the one pen path in the last frame", () => {
+    const last = strip.frames.at(-1)!;
     const done = byTag(last, "path").filter(
-      (path) => path.attrs.class === "ductus__done",
+      (node) => node.attrs.class === "ductus__done",
     );
     const pen = byTag(last, "path").find(
-      (path) => path.attrs.class === "ductus__pen",
+      (node) => node.attrs.class === "ductus__pen",
     )!;
-    expect(done).toHaveLength(2);
-    expect(done.map((path) => path.attrs.d)).toEqual([
-      penPathD(RRA.strokes[0], 1),
-      penPathD(RRA.strokes[1], 1),
-    ]);
-    expect(pen.attrs.d).toBe(penPathD(RRA.strokes[2], 1));
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(RRA.strokes[0], 1));
   });
 });

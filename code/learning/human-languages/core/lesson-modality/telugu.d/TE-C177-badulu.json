@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C177-badulu",
+    "language": "telugu",
+    "chapter": 177,
+    "sequence": 7890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b1b57e5ea0d62d1"
+  },
+  "findings": []
+}

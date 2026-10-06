@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C191-serratura",
+    "language": "italian",
+    "chapter": 191,
+    "sequence": 10580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb82ad2c78c23b84"
+  },
+  "findings": []
+}

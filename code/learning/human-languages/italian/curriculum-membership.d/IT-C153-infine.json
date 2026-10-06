@@ -1,0 +1,11 @@
+{
+  "id": "IT-C153-infine",
+  "pathSegment": "IT-PATH-153-TEMPO153",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-153-TEMPO153",
+      "order": 2
+    }
+  ]
+}

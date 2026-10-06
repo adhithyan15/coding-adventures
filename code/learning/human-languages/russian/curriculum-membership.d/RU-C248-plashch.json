@@ -1,0 +1,11 @@
+{
+  "id": "RU-C248-plashch",
+  "pathSegment": "RU-PATH-248-VESHCH248",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-248-VESHCH248",
+      "order": 1
+    }
+  ]
+}

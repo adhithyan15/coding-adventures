@@ -128,7 +128,7 @@ The last word of the chapter, and the one where Hindi hands you a choice rather 
 Grammar Lens: the pair, and the family complete.
 औरत (aurat) = "woman," and it is feminine. Say एक औरत — and for the reason एक आदमी (ādmī) was the safe phrase, leave मेरी औरत alone: it means my woman, a wife. औ is one vowel letter, au, standing alone.
 Consonant ending, feminine — as चाय, किताब and आँख were. Beside it आदमी (ādmī): -ी ending, masculine. Neither adult's gender is reachable from spelling. Where you can hear the agreement is on the child: मेरा बच्चा, मेरी बच्ची, the yearling who takes the ending seriously.
-The family: पिता, माता, भाई, बहन, बच्चा, आदमी (ādmī), औरत — and the chosen one, दोस्त (dost).
+The family: पिता, माता, bhāī, बहन, बच्चा, आदमी (ādmī), औरत — and the chosen one, दोस्त (dost).
 
 The word, taken apart: औरत.
 औरत is Arabic, عورة (ʿawra), on the three-consonant root ʿ-w-r — built the way k-t-b built किताब — whose senses run to a weak point, a gap in a defence, something left uncovered.
@@ -176,7 +176,7 @@ Script you'll notice: औ.
 Same vowel, standing on its own with no consonant to ride on. Like झ, it arrives before any word that needs it, so there is nothing to find it inside yet.
 What it is made of:
 the joined upper and lower bowls of अ.
-a separately swept middle shoulder.
+a middle shoulder running into the inner stem.
 the inner stem.
 the trailing stem.
 two separate upper arcs.
@@ -192,13 +192,14 @@ The two arcs are the same two that the sitting mark carries above the bar. Which
 Writing: औ.
 1. curve right around the upper bowl and continue down and around the lower bowl without lifting.
 2. lift and sweep the middle shoulder right.
-3. lift and descend the inner stem.
-4. lift and descend the trailing stem.
-5. lift at the trailing stem's headline junction and sweep the lower upper arc upward and left.
-6. lift at the same junction and sweep the taller upper arc upward and left.
-7. lift and draw the top shirorekhā left-to-right.
-Pen lifts: 6. More than any other character you have drawn — take it slowly.
-Verified modern printed teaching form; traditional and everyday handwriting may divide or simplify the curves differently.
+3. without lifting, climb up the inner stem to the headline.
+4. descend the inner stem.
+5. lift and descend the trailing stem.
+6. lift at the trailing stem's headline junction and sweep the lower upper arc upward and left.
+7. lift at the same junction and sweep the taller upper arc upward and left.
+8. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 5. One more than ओ, and more than any other — take it slowly.
+The source shows seven movements; most native writers draw औ (au) in six strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and lifts five times; only the shoulder runs on, up the inner stem.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari औ stroke order.svg’, panels 1–7, Wikimedia Commons, 5 August 2023.
 
 Guided Practice.
@@ -212,4 +213,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What sound is औ? (au.) What is its sitting form? (◌ौ.) How many pen lifts does it take? (Six — the most in the book.)
+What sound is औ? (au.) What is its sitting form? (◌ौ.) How many pen lifts does it take? (Five — one more than ओ, the most in the book.)

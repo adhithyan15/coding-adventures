@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:7da21dff4c0b7348",
+  "lessonIds": [
+    "FR-C172-plastique",
+    "FR-C172-coton",
+    "FR-C172-laine",
+    "FR-C172-soie",
+    "FR-C172-cuir"
+  ],
+  "tex": "french/book/chapters/ch172-plastic-cotton-wool-silk-leather.tex"
+}

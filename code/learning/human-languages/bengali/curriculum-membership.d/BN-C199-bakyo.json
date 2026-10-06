@@ -1,0 +1,11 @@
+{
+  "id": "BN-C199-bakyo",
+  "pathSegment": "BN-PATH-199-JINIS199",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-199-JINIS199",
+      "order": 2
+    }
+  ]
+}

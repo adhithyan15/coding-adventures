@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:9d20f31dcb489628",
+  "lessonIds": [
+    "UR-C153-nars",
+    "UR-C153-mariz",
+    "UR-C153-ambulans",
+    "UR-C153-palak",
+    "UR-C153-bhau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch153.txt",
+  "json": "urdu/narration/ch153.json",
+  "textHash": "fnv1a64:5d510b4300f65371",
+  "jsonHash": "fnv1a64:142d5c784ff643f6",
+  "findings": []
+}

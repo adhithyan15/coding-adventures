@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:fec42787f3e6a102",
+  "lessonIds": [
+    "TE-C254-rastram",
+    "TE-C254-prantam",
+    "TE-C254-dikku",
+    "TE-C254-turpu",
+    "TE-C254-padamara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch254.txt",
+  "json": "telugu/narration/ch254.json",
+  "textHash": "fnv1a64:759ad1f469fe84f6",
+  "jsonHash": "fnv1a64:7961d90fcc231ba8",
+  "findings": []
+}

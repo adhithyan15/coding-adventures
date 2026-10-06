@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:0752233d71109b82",
+  "lessonIds": [
+    "KA-C221-sebu",
+    "KA-C221-kittale",
+    "KA-C221-pappayi",
+    "KA-C221-kallangadi",
+    "KA-C221-capati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch221.txt",
+  "json": "kannada/narration/ch221.json",
+  "textHash": "fnv1a64:c0ddfa5aa2785b15",
+  "jsonHash": "fnv1a64:4c7fff25c4a8ae25",
+  "findings": []
+}

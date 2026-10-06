@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Iron, Silver, Paper, Plastic, Cotton wool",
+  "label": "ch:hi-iron-silver-paper-plastic-cotton-wool",
+  "canDo": "I can say iron, silver, paper, plastic and cotton wool.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C246-rui",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say iron, silver, paper, plastic and cotton wool.",
+    "assesses": [
+      "HI-LEX-C246-THG246-03",
+      "HI-LEX-C246-THG246-04",
+      "HI-LEX-C246-THG246-05"
+    ]
+  }
+}

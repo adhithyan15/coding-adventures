@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C250-taracu",
+    "language": "tamil",
+    "chapter": 250,
+    "sequence": 14000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f40b1ec66a0e4d0c"
+  },
+  "findings": []
+}

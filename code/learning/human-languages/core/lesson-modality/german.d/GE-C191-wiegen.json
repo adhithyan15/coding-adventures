@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C191-wiegen",
+    "language": "german",
+    "chapter": 191,
+    "sequence": 9590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d013aa853e2d33a7"
+  },
+  "findings": []
+}

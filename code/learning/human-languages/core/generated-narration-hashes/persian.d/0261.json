@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:aad76b4efe1301e5",
+  "lessonIds": [
+    "FA-C261-panseman-kardan",
+    "FA-C261-bastari-shodan",
+    "FA-C261-tekye-dadan",
+    "FA-C261-deraz-keshidan",
+    "FA-C261-asbabkeshi-kardan",
+    "FA-R261-first-pass-words-from-chapters-253-256",
+    "FA-R261-second-pass-words-from-chapters-257-261"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch261.txt",
+  "json": "persian/narration/ch261.json",
+  "textHash": "fnv1a64:45bb2020d3b8beab",
+  "jsonHash": "fnv1a64:f914c85267470d07",
+  "findings": []
+}

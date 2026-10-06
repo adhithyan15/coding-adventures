@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C268-alter",
+    "language": "latin",
+    "chapter": 268,
+    "sequence": 14480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7dc5368af20f1f89"
+  },
+  "findings": []
+}

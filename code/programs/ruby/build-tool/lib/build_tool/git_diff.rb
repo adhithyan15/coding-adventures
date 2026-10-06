@@ -118,11 +118,15 @@ module BuildTool
         # Normalize to forward slashes for consistent matching.
         rel = rel.tr("\\", "/")
 
+        declared_srcs = pkg.respond_to?(:declared_srcs) ? (pkg.declared_srcs || []) : []
+        is_starlark = pkg.respond_to?(:is_starlark) ? pkg.is_starlark : false
+
         {
           name: pkg.name,
           rel_path: rel,
-          is_starlark: pkg.respond_to?(:is_starlark) ? pkg.is_starlark : false,
-          declared_srcs: pkg.respond_to?(:declared_srcs) ? (pkg.declared_srcs || []) : []
+          is_starlark: is_starlark,
+          declared_srcs: declared_srcs,
+          compiled_srcs: is_starlark ? GlobMatch.compile_patterns(declared_srcs) : []
         }
       end
 
@@ -160,8 +164,8 @@ module BuildTool
           end
 
           # Check if the file matches any declared source pattern.
-          info[:declared_srcs].each do |pattern|
-            if GlobMatch.match_path?(pattern, rel_to_package)
+          info[:compiled_srcs].each do |pattern|
+            if GlobMatch.match_compiled_path?(pattern, rel_to_package)
               changed[info[:name]] = true
               break
             end

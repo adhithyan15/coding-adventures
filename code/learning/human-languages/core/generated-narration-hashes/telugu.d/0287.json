@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:74b9f8b4a2cb1b43",
+  "lessonIds": [
+    "TE-C287-chati",
+    "TE-C287-pramadam",
+    "TE-C287-ambulensu",
+    "TE-C287-bima",
+    "TE-C287-atyavasaram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch287.txt",
+  "json": "telugu/narration/ch287.json",
+  "textHash": "fnv1a64:b84f12494f0f6907",
+  "jsonHash": "fnv1a64:8f5ecba47e098b94",
+  "findings": []
+}

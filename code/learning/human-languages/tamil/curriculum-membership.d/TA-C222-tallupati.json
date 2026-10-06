@@ -1,0 +1,11 @@
+{
+  "id": "TA-C222-tallupati",
+  "pathSegment": "TA-PATH-222-VELAI222",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-222-VELAI222",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C305-lyaptap",
+  "pathSegment": "TE-PATH-305-VASTUVU305",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-305-VASTUVU305",
+      "order": 2
+    }
+  ]
+}

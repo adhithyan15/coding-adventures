@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C305-pinvalikkuka",
+    "language": "malayalam",
+    "chapter": 305,
+    "sequence": 14350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75f0674905fc92a3"
+  },
+  "findings": []
+}

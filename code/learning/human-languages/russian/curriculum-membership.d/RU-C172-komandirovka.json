@@ -1,0 +1,11 @@
+{
+  "id": "RU-C172-komandirovka",
+  "pathSegment": "RU-PATH-172-RABOTA172",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-172-RABOTA172",
+      "order": 3
+    }
+  ]
+}

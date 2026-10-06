@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:254e66baf91565cc",
+  "lessonIds": [
+    "BN-C248-charjar",
+    "BN-C248-pasport",
+    "BN-C248-bhisa",
+    "BN-C248-parsel",
+    "BN-C248-potrika"
+  ],
+  "tex": "bengali/book/chapters/ch248-charger-passport-visa-parcel-magazine.tex"
+}

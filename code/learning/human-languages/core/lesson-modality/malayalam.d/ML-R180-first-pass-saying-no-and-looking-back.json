@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R180-first-pass-saying-no-and-looking-back",
+    "language": "malayalam",
+    "chapter": 180,
+    "sequence": 7820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2ddd02fe35943a5"
+  },
+  "findings": []
+}

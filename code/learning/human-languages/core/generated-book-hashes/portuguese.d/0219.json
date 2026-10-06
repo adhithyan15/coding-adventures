@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:b727d7efe2812b02",
+  "lessonIds": [
+    "PT-C219-guerra",
+    "PT-C219-paz",
+    "PT-C219-exercito",
+    "PT-C219-soldado",
+    "PT-C219-tradicao"
+  ],
+  "tex": "portuguese/book/chapters/ch219-war-peace-army-soldier-tradition.tex"
+}

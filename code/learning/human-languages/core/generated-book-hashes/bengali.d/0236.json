@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:5efcb766071cefad",
+  "lessonIds": [
+    "BN-C236-klas",
+    "BN-C236-kormi",
+    "BN-C236-chukti",
+    "BN-C236-sobha",
+    "BN-C236-sangbadik",
+    "BN-R236-first-pass-words-from-chapters-232-233",
+    "BN-R236-second-pass-words-from-chapters-234-236"
+  ],
+  "tex": "bengali/book/chapters/ch236-class-worker-contract-assembly-journalist.tex"
+}

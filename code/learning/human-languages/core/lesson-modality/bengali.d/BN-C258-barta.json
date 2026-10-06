@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C258-barta",
+    "language": "bengali",
+    "chapter": 258,
+    "sequence": 16230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d55f3780c2d723d9"
+  },
+  "findings": []
+}

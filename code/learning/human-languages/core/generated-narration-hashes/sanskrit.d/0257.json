@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:5a9b89405fc3a525",
+  "lessonIds": [
+    "SA-C257-simantah",
+    "SA-C257-lokayanam",
+    "SA-C257-karayanam",
+    "SA-C257-agamanam",
+    "SA-C257-prasthanam",
+    "SA-R257-first-pass-words-from-chapters-250-253",
+    "SA-R257-second-pass-words-from-chapters-254-257"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch257.txt",
+  "json": "sanskrit/narration/ch257.json",
+  "textHash": "fnv1a64:6920b7b628823a6a",
+  "jsonHash": "fnv1a64:798ab8f9d6c67223",
+  "findings": []
+}

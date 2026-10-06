@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-10-01 (layout variants share one app)
+
+- **ENV2 on Qt (UI48 §7.10): a layout variant is a root QML type of its own.** `from_pipeline_variant` emits `EngramApp.touch.mll` as `EngramApp.touch.qml`, whose type -- `EngramAppTouch`, named by the new `variant_type_name` with the same `<Component><Variant>` rule as Compose, Flutter and SwiftUI -- the generated `CMakeLists.txt` declares with `QT_QML_SOURCE_TYPENAME` and adds with `qt_target_qml_sources` (without it, Qt names a file after the text before its first dot: a second `EngramApp`). The variant's root is exactly the default's root for that tree plus one comment line naming it, so its interface is the default's by construction; QML has no declaration another file could import, and a file's declarations are members of its own type, so nothing collides. `from_pipeline_variant_with_options` emits it under a native-complete shell's strict policy. A variant whose type would be the component's own name or a name the shell owns (`SHELL_RESERVED_NAMES`) is refused with the new `PipelineEmitError::InvalidLayoutVariant`.
+- **ENV3 on Qt: the shell switches roots as the window changes.** `EmitOptions::layout_variants` (`LayoutChoice { variant, conditions, native_table_models }`, rule order, conditions keyed by wire names) makes `main.cpp` carry the rules as data (`mosaicLayoutRules`), apply them with `select_variant`'s semantics (`mosaicLayoutVariant`), mount the root the window's environment selects at startup, and swap the view's source when the selection changes (`mosaicSwitchLayout`). The swap is deferred: each ENV4 report, after its settle check, starts one zero-interval timer owned by the host, which coalesces a burst of resize ticks and, when it fires, checks for a settle again and re-reads the window -- so the old root is never deleted inside the window signal that noticed the change. The new root starts with the runtime's checked props (strict shell) or each slot's value carried from the old root (sample shell); a root that cannot be mounted leaves the window on its layout and is logged. Table models are allocated for whichever root is showing and handed only to roots that declare them (a QML root refuses an unknown initial property). Every choice is validated before it reaches C++, CMake or `qmldir`: a usable type chosen once (keyed on the type, so `touch`/`Touch` are refused together), camelCase axes, lowercase values.
+- **Unchanged without variants.** TaskApp, RatingControls and every other package with one layout emit byte-for-byte the same project in both profiles; a test pins the variant project, minus what ENV2/ENV3 add, as the plain one.
+- **Resize gate.** `fixtures/layout-variants` (a default and a `compact` layout) and `fixtures/layout-variants-test/main.cpp`, a harness that compiles the generated `main.cpp` verbatim, runs it offscreen, resizes the window across 600 logical pixels and asserts the root swaps and keeps its props. Ten new emitter tests.
+
+## 2026-09-30 (host-control geometry)
+
+- Qt host controls now lower expressible numeric `width` and `height` styles to matching `implicit*` and `Layout.preferred*` bindings, including state-layer overrides. Percentage and intrinsic keyword sizes remain reported degradations rather than being presented as native coverage.
+
+## 2026-09-27 (the window reports its environment)
+
+- **ENV4 on Qt (UI48 §7.6).** Every `main.cpp` with a host defines `mosaicObserveEnvironment(view, host)` and calls it before the window is shown: one report, then another on each width or height change and (Qt 6.5+) colour scheme change, through `MosaicHost::environmentReport`. An answer with props is applied with `applyMosaicResponse`; a refusal is logged and never applied. A report arriving while effects settle (a resize behind a modal file dialog) retries on one restartable 100 ms timer instead of dispatching mid-settle.
+
 ## 2026-09-25 (checkbox row index)
 
 - **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.
@@ -57,6 +72,55 @@
 All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
+
+### Fixed — Qt host controls preserve authored font families (#15254)
+
+`HostButton`, `HostInput`, `HostCheckbox`, and the other Qt Quick Controls now
+receive their part's `font-family` as a native `font.family` binding. Variant
+overrides remain conditional and fall back to the platform application font
+when only a state authors the family. This completes the host-control
+typography gap after `font-size` support landed with #15277; it does not claim
+font-family declarations on unrelated non-control containers.
+
+### Fixed — state-layer sizing reaches Qt layout items and host controls (#15277)
+
+Size variants on `Stack` and other styled layout containers now drive
+conditional QML `implicitWidth`, `implicitHeight`, and matching
+`Layout.preferred*` bindings instead of freezing their base dimensions.
+State-layer `padding` and `font-size` likewise reach Qt host controls, with
+longhand padding retaining precedence over the shorthand on each edge.
+
+Focused emitter tests cover both paths. Fresh native-complete toolkit and
+Engram inverse-ratchet runs retire the Qt `width`, `height`, `padding`, and
+`font-size` allowances that this fix makes stale. TaskApp's broader measured Qt
+style-degradation baseline remains 193; this change does not claim the
+unrelated occurrences still reported elsewhere in that application.
+
+### Fixed — Text parts own a native surface when they paint (#15276)
+
+A `Text [ part ]` that authors background, border, radius, or padding now keeps
+the semantic and accessibility properties on an inner QML `Text` while a
+conditional `Rectangle` owns paint and box geometry. Text-only styling retains
+the previous bare `Text` shape. Padding resolves per edge with longhand
+precedence, state paint remains conditional, and fixed dimensions stay on the
+outer layout item. A `Box` part's `font-weight` also reaches its descendant
+text, covering the mirror case where a Rectangle cannot own typography.
+
+Fresh native-complete TaskApp generation reduces Qt style drops from 251 to
+193: background 8 to 0, border-radius 8 to 0, all 33 padding drops to 0, width
+33 to 25, and height 3 to 2. The toolkit inverse ratchet also confirms that
+Text-part background, border colour, border width, and Box font weight are no
+longer licensed drops.
+
+### Fixed — host controls preserve directional padding (#16223)
+
+`HostButton`, `HostCheckbox`, `HostRadio`, `HostInput`, `HostSlider`, and
+`HostNumberInput` now lower `padding-left`, `padding-top`, `padding-right`, and
+`padding-bottom` to the matching Qt Quick Control properties. A longhand wins
+over `padding` for its edge, and an omitted edge still inherits the shorthand.
+Previously host controls read only `padding`, so TaskApp silently lost 56
+authored edge values even though its layout containers already preserved them.
+The TaskApp Qt style-drop ratchet moves from 307 to 251 accordingly.
 
 ### Fixed — the navigation split rendered nothing at all (#15833)
 

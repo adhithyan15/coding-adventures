@@ -1,0 +1,11 @@
+{
+  "id": "SA-C205-svikaroti",
+  "pathSegment": "SA-PATH-205-ACT205",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-205-ACT205",
+      "order": 3
+    }
+  ]
+}

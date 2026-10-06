@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C222-sachcha",
+    "language": "urdu",
+    "chapter": 222,
+    "sequence": 13230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:739bcfb2f97bfa6e"
+  },
+  "findings": []
+}

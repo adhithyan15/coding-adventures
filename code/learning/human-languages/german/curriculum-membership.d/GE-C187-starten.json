@@ -1,0 +1,11 @@
+{
+  "id": "GE-C187-starten",
+  "pathSegment": "GE-PATH-187-VERB187",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-187-VERB187",
+      "order": 1
+    }
+  ]
+}

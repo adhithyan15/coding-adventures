@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:5a34140e159b748f",
+  "lessonIds": [
+    "KA-C232-kharcu",
+    "KA-C232-vime",
+    "KA-C232-salu",
+    "KA-C232-anubhava",
+    "KA-C232-rajiname"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch232.txt",
+  "json": "kannada/narration/ch232.json",
+  "textHash": "fnv1a64:520d1869c0cd1de3",
+  "jsonHash": "fnv1a64:1f5e26c48e32017d",
+  "findings": []
+}

@@ -8,21 +8,21 @@ type: word
 headword: le lait
 gloss: milk — masculine, and the one drink in this chapter French did not have to borrow
 concept_tag: FR-DRINK-LAIT
-prerequisites: [FR-C28-the]
+prerequisites: [FR-C28-the, FR-C27-sasseoir]
 sounds: [silent-final]
 roots: [latin-lac-lactis]
 etymology_hook: "lait ← Latin lac, stem lact- — an ordinary INHERITED word, unlike café and thé; English lactic, lactose and lactate are LEARNED borrowings of the same Latin stem, but English's everyday word milk is unrelated to it entirely, from a different PIE root meaning 'to milk (a cow)'"
 duration:
   max_seconds: 235
 requires:
-  knowledge: [FR-LEX-THE-03, FR-ETYMON-THE-04]
+  knowledge: [FR-LEX-THE-03, FR-ETYMON-THE-04, FR-GRAMMAR-ASSEOIR-TWO-STEMS-03]
 introduces:
   knowledge: [FR-LEX-LAIT-05, FR-ETYMON-LAIT-06]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-LAIT-05, FR-ETYMON-LAIT-06, FR-LEX-THE-03, FR-ETYMON-THE-04, FR-LEX-CAFE-01]
+  knowledge: [FR-LEX-LAIT-05, FR-ETYMON-LAIT-06, FR-LEX-THE-03, FR-ETYMON-THE-04, FR-LEX-CAFE-01, FR-GRAMMAR-ASSEOIR-TWO-STEMS-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [FR-C28-the, FR-C28-cafe]
 # le lait — milk, the word French never had to borrow
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-THE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-THE-03, FR-GRAMMAR-ASSEOIR-TWO-STEMS-03] -->
 
 [PAUSE 2s] *Café* and *thé* both crossed an ocean to reach French. This word
 never left home.
+
+[PAUSE 2s] *Je m'assieds, tu t'assieds, il s'assied*: three forms, one sound.
 
 ## You'll want to know: the word
 <!-- hl-knowledge: introduces=[FR-LEX-LAIT-05]; assesses=[FR-LEX-CAFE-01] -->

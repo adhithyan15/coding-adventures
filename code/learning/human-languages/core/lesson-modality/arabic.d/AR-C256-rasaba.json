@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C256-rasaba",
+    "language": "arabic",
+    "chapter": 256,
+    "sequence": 14490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:024aacbd47f34f7e"
+  },
+  "findings": []
+}

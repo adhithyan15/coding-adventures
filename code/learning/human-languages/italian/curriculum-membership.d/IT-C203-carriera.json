@@ -1,0 +1,11 @@
+{
+  "id": "IT-C203-carriera",
+  "pathSegment": "IT-PATH-203-LAV203",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-203-LAV203",
+      "order": 2
+    }
+  ]
+}

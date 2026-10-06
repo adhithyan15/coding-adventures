@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:5771ca54b0f09fb5",
+  "lessonIds": [
+    "SA-C247-banah",
+    "SA-C247-khadgah",
+    "SA-C247-kavacam",
+    "SA-C247-dhvajah",
+    "SA-C247-patahah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch247.txt",
+  "json": "sanskrit/narration/ch247.json",
+  "textHash": "fnv1a64:387982af8b13c1c6",
+  "jsonHash": "fnv1a64:1aabcf6a2f79d6af",
+  "findings": []
+}

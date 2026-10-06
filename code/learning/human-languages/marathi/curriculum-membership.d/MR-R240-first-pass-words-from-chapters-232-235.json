@@ -1,0 +1,11 @@
+{
+  "id": "MR-R240-first-pass-words-from-chapters-232-235",
+  "pathSegment": "MR-PATH-240-VASTU240",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MR-EXT-240-VASTU240",
+      "order": 5
+    }
+  ]
+}

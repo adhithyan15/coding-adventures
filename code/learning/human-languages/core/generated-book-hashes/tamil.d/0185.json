@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:860b9219229cecfb",
+  "lessonIds": [
+    "TA-C185-varicai",
+    "TA-C185-en",
+    "TA-C185-kurunceyti",
+    "TA-C185-ceyti",
+    "TA-C185-minnancal"
+  ],
+  "tex": "tamil/book/chapters/ch185-queue-number-text-message-news-email.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-259-GUN259",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say unknown, simple, complicated, necessary and useless.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C142-lovit",
+  "pathSegment": "RU-PATH-142-ACT142",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-142-ACT142",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:689c8d6e3b7c8cf2",
+  "lessonIds": [
+    "BN-C202-bhata",
+    "BN-C202-chor",
+    "BN-C202-dakat",
+    "BN-C202-mamla",
+    "BN-C202-bhot",
+    "BN-R202-first-pass-words-from-chapters-197-199",
+    "BN-R202-second-pass-words-from-chapters-200-202"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch202.txt",
+  "json": "bengali/narration/ch202.json",
+  "textHash": "fnv1a64:9f49ff5d73f2cca2",
+  "jsonHash": "fnv1a64:5100c0fd0994ab1c",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C164-fallimento",
+    "language": "italian",
+    "chapter": 164,
+    "sequence": 8710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a4ee3d5b1d167fb"
+  },
+  "findings": []
+}

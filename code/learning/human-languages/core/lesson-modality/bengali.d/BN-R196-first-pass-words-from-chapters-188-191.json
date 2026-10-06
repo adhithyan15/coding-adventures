@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R196-first-pass-words-from-chapters-188-191",
+    "language": "bengali",
+    "chapter": 196,
+    "sequence": 11600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a668a358653daf30"
+  },
+  "findings": []
+}

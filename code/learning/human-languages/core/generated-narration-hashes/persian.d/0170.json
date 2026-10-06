@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:30bfc69007adf53f",
+  "lessonIds": [
+    "FA-C170-mohabbat",
+    "FA-C170-khashm",
+    "FA-C170-ashk",
+    "FA-C170-akhlaq",
+    "FA-C170-shakhsiyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch170.txt",
+  "json": "persian/narration/ch170.json",
+  "textHash": "fnv1a64:c04ae93d019fd195",
+  "jsonHash": "fnv1a64:701f45f4d395034b",
+  "findings": []
+}

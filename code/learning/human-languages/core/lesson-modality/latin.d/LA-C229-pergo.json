@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C229-pergo",
+    "language": "latin",
+    "chapter": 229,
+    "sequence": 11800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bd1efc57f5e7cd3"
+  },
+  "findings": []
+}

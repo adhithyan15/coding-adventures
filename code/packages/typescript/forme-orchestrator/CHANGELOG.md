@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
+### Fixed
+
+- Batch same-turn reads across default and named live inputs into one shared
+  permit yield. Multi-input collectors can now drain sibling bounded branches
+  concurrently without either exceeding the pipeline permit budget or
+  deadlocking when both 64-value windows fill.
+- Permit at most one pending operation per iterator, 64 active iterators per
+  wrapped input, and 256 pending operations per stage invocation. Pending
+  outcomes remain withheld during direct iterator cleanup yields until the
+  scheduler permit is reacquired.
+- Retire started sibling reads when a batched input fails, then cancel internal
+  observers only after started consumers drain their bounded error prefixes.
+- Reject and retire queued reads before a cancelled direct-cleanup yield clears
+  its delivery guard, preventing late input delivery without a held permit.
+- Preserve an already-requested cancellation as the run outcome when awaited
+  iterator cleanup subsequently rejects.
+
+### Added
+
+- Resolve `StageRef` values through an optional FM02 `PluginStageLoader`
+  before configuration validation, while retaining the fail-closed direct-
+  import default when no plugin host is configured.
+- Dispose the injected plugin host with the orchestrator lifecycle.
+- Include the plugin implementation identity in invocation caches, whole-
+  instance checkpoints, and revision-ledger topology fingerprints.
+- Exercise a real subprocess `StageRef` twice through host capability
+  mediation and per-run session disposal.
+
 ### Documentation
 
 - Reconciled the public entry-point, watch-loop, scheduler-state, and README

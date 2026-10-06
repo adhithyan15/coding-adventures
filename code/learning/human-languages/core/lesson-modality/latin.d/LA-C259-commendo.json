@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C259-commendo",
+    "language": "latin",
+    "chapter": 259,
+    "sequence": 13850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59f81ef8aa38838d"
+  },
+  "findings": []
+}

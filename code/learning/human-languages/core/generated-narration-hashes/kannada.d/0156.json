@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:a796fcd3ffc6d6c6",
+  "lessonIds": [
+    "KA-C156-mundina",
+    "KA-C156-innu-munde",
+    "KA-C156-bhavishya",
+    "KA-C156-nirdharisu",
+    "KA-C156-nirikshisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch156.txt",
+  "json": "kannada/narration/ch156.json",
+  "textHash": "fnv1a64:75224957e628e526",
+  "jsonHash": "fnv1a64:cc70a2a2e4d7d9ed",
+  "findings": []
+}

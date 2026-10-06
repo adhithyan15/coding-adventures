@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ae73cc3a05043921",
+  "sourceHash": "fnv1a64:f09e22bba797d6d4",
   "lessons": [
     {
       "id": "HI-C08-kripaya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3f0f2f0e79e85b1",
+      "sourceHash": "fnv1a64:b9c2f8f5109a1811",
       "notice": null,
       "blocks": [
         {
@@ -75,7 +75,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the catch a textbook often hides: कृपया is formal and bookish. You'll see it on signs and hear it in announcements (\"kṛpayā mind the gap\"), but in everyday speech Hindi speakers rarely say it. Real politeness usually rides on the verb instead — the respectful request ending ‑इए / ‑इएगा (-iye / -iyegā): baiṭhiye \"please sit,\" suniye \"please listen.\" And very often, people simply say the English word \"please.\""
+              "text": "Here's the catch a textbook often hides: कृपया is formal and bookish. You'll see it on signs and hear it in announcements (\"kṛpayā mind the gap\"), but in everyday speech Hindi speakers rarely say it. Real politeness usually rides on the verb instead — the respectful request ending -iye / -iyegā: baiṭhiye \"please sit,\" suniye \"please listen.\" And very often, people simply say the English word \"please.\""
             },
             {
               "kind": "speech",
@@ -356,7 +356,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ea59d2616ab9f3ca",
+      "sourceHash": "fnv1a64:6bd3af42376e91aa",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -420,7 +420,7 @@
             },
             {
               "kind": "speech",
-              "text": "a middle shoulder."
+              "text": "a middle shoulder running into the right stem."
             },
             {
               "kind": "speech",
@@ -455,19 +455,23 @@
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the right stem top-to-bottom."
+              "text": "3. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "5. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "Verified modern printed teaching form; other Devanagari traditions split the body into more strokes."
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw अ in three strokes (74% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the shoulder and the headline."
             },
             {
               "kind": "speech",

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C233-preocupar-se",
+    "language": "portuguese",
+    "chapter": 233,
+    "sequence": 13840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18b1c97e529d319e"
+  },
+  "findings": []
+}

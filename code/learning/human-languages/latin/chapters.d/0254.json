@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "Pack, Satchel, Money bag, Tent, Flag",
+  "label": "ch:la-pack-satchel-money-bag-tent-flag",
+  "canDo": "I can say a pack, a satchel, a money bag, a tent and a flag.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-R254-second-pass-words-from-chapters-251-254",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say a pack, a satchel, a money bag, a tent and a flag.",
+    "assesses": [
+      "LA-LEX-C254-RES254-03",
+      "LA-LEX-C254-RES254-04",
+      "LA-LEX-C254-RES254-05"
+    ]
+  }
+}

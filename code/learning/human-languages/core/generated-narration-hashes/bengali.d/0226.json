@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:f88fa92f1e5ade1b",
+  "lessonIds": [
+    "BN-C226-janjot",
+    "BN-C226-jorimana",
+    "BN-C226-laisens",
+    "BN-C226-parking",
+    "BN-C226-lokjon",
+    "BN-R226-first-pass-words-from-chapters-218-221",
+    "BN-R226-second-pass-words-from-chapters-222-226"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch226.txt",
+  "json": "bengali/narration/ch226.json",
+  "textHash": "fnv1a64:4299412b77d329b6",
+  "jsonHash": "fnv1a64:e4db684c75bda655",
+  "findings": []
+}

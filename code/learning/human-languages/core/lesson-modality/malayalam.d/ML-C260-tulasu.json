@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C260-tulasu",
+    "language": "malayalam",
+    "chapter": 260,
+    "sequence": 11990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5a68e8e0d25b724"
+  },
+  "findings": []
+}

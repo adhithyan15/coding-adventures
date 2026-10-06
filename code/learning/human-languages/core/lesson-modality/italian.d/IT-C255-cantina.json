@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C255-cantina",
+    "language": "italian",
+    "chapter": 255,
+    "sequence": 15390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42b529de8a94b498"
+  },
+  "findings": []
+}

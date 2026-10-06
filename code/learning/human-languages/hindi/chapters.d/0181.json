@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "A map, A way, A turn, A crossroads, A ship",
+  "label": "ch:hi-a-map-a-way-a-turn-a-crossroads-a-ship",
+  "canDo": "I can say a map, a way, a turn, a crossroads and a ship.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C181-jahaz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say a map, a way, a turn, a crossroads and a ship.",
+    "assesses": [
+      "HI-LEX-C181-THG181-03",
+      "HI-LEX-C181-THG181-04",
+      "HI-LEX-C181-THG181-05"
+    ]
+  }
+}

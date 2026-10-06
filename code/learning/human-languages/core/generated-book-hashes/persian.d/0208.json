@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:fec044ba6d7eb735",
+  "lessonIds": [
+    "FA-C208-hava",
+    "FA-C208-yakh",
+    "FA-C208-tagarg",
+    "FA-C208-saye",
+    "FA-C208-dama"
+  ],
+  "tex": "persian/book/chapters/ch208-weather-ice-hail-shade-temperature.tex"
+}

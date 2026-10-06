@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C166-pacco",
+    "language": "italian",
+    "chapter": 166,
+    "sequence": 8800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d231a9402a1f20df"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C228-ugana",
+    "language": "hindi",
+    "chapter": 228,
+    "sequence": 11940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1465fb55413bdde"
+  },
+  "findings": []
+}

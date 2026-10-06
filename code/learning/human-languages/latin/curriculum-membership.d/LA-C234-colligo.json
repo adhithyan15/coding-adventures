@@ -1,0 +1,11 @@
+{
+  "id": "LA-C234-colligo",
+  "pathSegment": "LA-PATH-234-ACT234",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-234-ACT234",
+      "order": 1
+    }
+  ]
+}

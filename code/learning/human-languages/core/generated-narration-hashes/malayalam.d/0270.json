@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:e78b438caa1da321",
+  "lessonIds": [
+    "ML-C270-etirkkuka",
+    "ML-C270-uhikkuka",
+    "ML-C270-taratamyam-ceyyuka",
+    "ML-C270-tarkkikkuka",
+    "ML-C270-sraddhikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch270.txt",
+  "json": "malayalam/narration/ch270.json",
+  "textHash": "fnv1a64:ce15e66634c80d6d",
+  "jsonHash": "fnv1a64:fe57b5704e2fdf9a",
+  "findings": []
+}

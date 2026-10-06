@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "Exactly, Almost, About, Only, Together",
+  "label": "ch:it-exactly-almost-about-only-together",
+  "canDo": "I can say exactly, almost, about, only and together.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "IT-C244-insieme",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say exactly, almost, about, only and together.",
+    "assesses": [
+      "IT-LEX-C244-PERCHE244-03",
+      "IT-LEX-C244-PERCHE244-04",
+      "IT-LEX-C244-PERCHE244-05"
+    ]
+  }
+}

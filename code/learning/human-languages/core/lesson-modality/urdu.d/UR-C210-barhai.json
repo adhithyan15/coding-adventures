@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C210-barhai",
+    "language": "urdu",
+    "chapter": 210,
+    "sequence": 12290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f8553b333d5b8a9"
+  },
+  "findings": []
+}

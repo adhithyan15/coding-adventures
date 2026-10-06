@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C237-tantuvayah",
+    "language": "sanskrit",
+    "chapter": 237,
+    "sequence": 14050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11f72e354ec6a49c"
+  },
+  "findings": []
+}

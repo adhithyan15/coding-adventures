@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "April, May, June, July, August",
+  "label": "ch:ur-april-may-june-july-august",
+  "canDo": "I can say April, May, June, July and August.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "UR-R188-second-pass-words-from-chapters-184-188",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say April, May, June, July and August.",
+    "assesses": [
+      "UR-LEX-C188-VAQT188-03",
+      "UR-LEX-C188-VAQT188-04",
+      "UR-LEX-C188-VAQT188-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C236-muwatin",
+  "pathSegment": "AR-PATH-236-MAKAN236",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-236-MAKAN236",
+      "order": 3
+    }
+  ]
+}

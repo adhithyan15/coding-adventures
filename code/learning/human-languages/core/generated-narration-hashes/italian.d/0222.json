@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:98d22c9c7f853de4",
+  "lessonIds": [
+    "IT-C222-soldato",
+    "IT-C222-bandiera",
+    "IT-C222-religione",
+    "IT-C222-cultura",
+    "IT-C222-tradizione"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch222.txt",
+  "json": "italian/narration/ch222.json",
+  "textHash": "fnv1a64:4ec8a0f94443e500",
+  "jsonHash": "fnv1a64:377e8932b54ccd38",
+  "findings": []
+}

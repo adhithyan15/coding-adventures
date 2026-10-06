@@ -1,0 +1,11 @@
+{
+  "id": "LA-C254-marsuppium",
+  "pathSegment": "LA-PATH-254-RES254",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-254-RES254",
+      "order": 2
+    }
+  ]
+}

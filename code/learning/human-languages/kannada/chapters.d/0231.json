@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Colleague, Meeting, Interview, Clerk, Officer",
+  "label": "ch:ka-colleague-meeting-interview-clerk-officer",
+  "canDo": "I can say a colleague, a meeting, an interview, a clerk and an officer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C231-adhikari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say a colleague, a meeting, an interview, a clerk and an officer.",
+    "assesses": [
+      "KA-LEX-C231-KELASA231-03",
+      "KA-LEX-C231-KELASA231-04",
+      "KA-LEX-C231-KELASA231-05"
+    ]
+  }
+}

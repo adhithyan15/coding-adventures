@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:0004645cd09605d4",
+  "lessonIds": [
+    "GE-C146-erklaeren",
+    "GE-C146-fehlen",
+    "GE-C146-feiern",
+    "GE-C146-fuellen",
+    "GE-C146-gefallen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch146.txt",
+  "json": "german/narration/ch146.json",
+  "textHash": "fnv1a64:1ec0af64961bab0b",
+  "jsonHash": "fnv1a64:d1d02bd6bf69305f",
+  "findings": []
+}

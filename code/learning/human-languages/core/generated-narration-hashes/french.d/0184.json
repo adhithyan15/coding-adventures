@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:15e6de13a7a42f31",
+  "lessonIds": [
+    "FR-C184-bouger",
+    "FR-C184-cueillir",
+    "FR-C184-defendre",
+    "FR-C184-disparaitre",
+    "FR-C184-emprunter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch184.txt",
+  "json": "french/narration/ch184.json",
+  "textHash": "fnv1a64:775a9ef9f76d5791",
+  "jsonHash": "fnv1a64:52f92bcd552f6cdd",
+  "findings": []
+}

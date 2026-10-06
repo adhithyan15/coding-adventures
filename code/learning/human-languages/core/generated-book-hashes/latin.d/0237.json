@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:bd765c6adcbabfe0",
+  "lessonIds": [
+    "LA-C237-finis",
+    "LA-C237-mora",
+    "LA-C237-interdum",
+    "LA-C237-cotidie",
+    "LA-C237-pridie",
+    "LA-R237-first-pass-words-from-chapters-229-232",
+    "LA-R237-second-pass-words-from-chapters-233-237"
+  ],
+  "tex": "latin/book/chapters/ch237-end-delay-sometimes-every-day-day-before.tex"
+}

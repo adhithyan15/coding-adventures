@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "Simple, Useful, Excellent, Strange, Modern",
+  "label": "ch:ml-simple-useful-excellent-strange-modern",
+  "canDo": "I can say simple, useful, excellent, strange and modern.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C205-adhunika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say simple, useful, excellent, strange and modern.",
+    "assesses": [
+      "ML-LEX-C205-GUNAM205-03",
+      "ML-LEX-C205-GUNAM205-04",
+      "ML-LEX-C205-GUNAM205-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Bamboo, Mango tree, Coconut, Pineapple, Papaya",
+  "label": "ch:bn-bamboo-mango-tree-coconut-pineapple-papaya",
+  "canDo": "I can say bamboo, a mango tree, a coconut, a pineapple and a papaya.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C115-pepe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: I can say bamboo, a mango tree, a coconut, a pineapple and a papaya.",
+    "assesses": [
+      "BN-LEX-C115-THINGS115-03",
+      "BN-LEX-C115-THINGS115-04",
+      "BN-LEX-C115-THINGS115-05"
+    ]
+  }
+}

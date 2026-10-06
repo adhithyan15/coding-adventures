@@ -169,6 +169,7 @@ fn the_emitted_xaml_host_answers_effects() {
         "runaway",
         "closes",
         "deferred",
+        "scoped",
     ] {
         let stdout = run(
             Command::new("dotnet")
@@ -197,6 +198,10 @@ fn the_emitted_xaml_host_answers_effects() {
         "a failed completion does not advance the app",
         "an answered await is settled",
         "the handler's value reached the app",
+        // UI48 §7.11: what a layout-switching window asks before a swap.
+        "nothing is settling before a dispatch",
+        "an effect handler runs inside a settle (IsSettling)",
+        "the settle is over once the dispatch returns",
         "the handler answered both effects of the batch",
         "a fully-answered chaining batch leaves nothing outstanding",
         "state still persists after a fully-answered chaining batch",
@@ -213,11 +218,22 @@ fn the_emitted_xaml_host_answers_effects() {
         "deferring an effect nothing awaits is refused",
         "the handler was offered the effect",
         "a deferred effect stays outstanding rather than being failed",
+        "deferring an effect raises no props-changed",
+        "a deferred answer raises props-changed once",
+        "an answer inside the handler raises no props-changed",
         "state cannot be persisted while a deferred effect is outstanding",
         "answering from another thread does not deadlock",
         "answering a deferred effect settles it",
         "the deferred answer's value reached the app",
         "state persists again once the deferred effect is answered",
+        "the old runtime's effect is deferred",
+        "the retry replaced the runtime",
+        "the new runtime awaits its own effect",
+        "a scope on a closed runtime defers nothing",
+        "a late answer to the closed runtime is refused",
+        "the late answer did not settle the new runtime's effect",
+        "the new runtime's own answer settles it",
+        "and its value, not the stale one, reached the app",
     ] {
         assert!(
             transcript.contains(expected),

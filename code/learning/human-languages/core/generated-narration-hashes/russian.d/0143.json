@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:8f6e5e2a07ba1463",
+  "lessonIds": [
+    "RU-C143-letat",
+    "RU-C143-yezdit",
+    "RU-C143-khodit",
+    "RU-C143-prikhodit",
+    "RU-C143-ukhodit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch143.txt",
+  "json": "russian/narration/ch143.json",
+  "textHash": "fnv1a64:4376f4414d6446b8",
+  "jsonHash": "fnv1a64:05faddaa30f6a298",
+  "findings": []
+}

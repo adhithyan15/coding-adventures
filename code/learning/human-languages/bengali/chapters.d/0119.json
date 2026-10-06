@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Sherbet, Halwa, Biscuit, Dhoti, Long shirt",
+  "label": "ch:bn-sherbet-halwa-biscuit-dhoti-long-shirt",
+  "canDo": "I can say a sherbet, halwa, a biscuit, a dhoti and a long shirt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-R119-second-pass-nature-and-food",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: I can say a sherbet, halwa, a biscuit, a dhoti and a long shirt.",
+    "assesses": [
+      "BN-LEX-C119-THINGS119-03",
+      "BN-LEX-C119-THINGS119-04",
+      "BN-LEX-C119-THINGS119-05"
+    ]
+  }
+}

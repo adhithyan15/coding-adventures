@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Industry, A workshop, A shop, A butcher's, A department store",
+  "label": "ch:ge-industry-a-workshop-a-shop-a-butcher-s-a-department-store",
+  "canDo": "I can say industry, a workshop, a shop, a butcher's and a department store.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-R210-second-pass-words-from-chapters-208-210",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say industry, a workshop, a shop, a butcher's and a department store.",
+    "assesses": [
+      "GE-LEX-C210-THING210-03",
+      "GE-LEX-C210-THING210-04",
+      "GE-LEX-C210-THING210-05"
+    ]
+  }
+}

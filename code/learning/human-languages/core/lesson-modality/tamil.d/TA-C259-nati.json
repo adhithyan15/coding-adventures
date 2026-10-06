@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C259-nati",
+    "language": "tamil",
+    "chapter": 259,
+    "sequence": 14580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28d85e1b53b10768"
+  },
+  "findings": []
+}

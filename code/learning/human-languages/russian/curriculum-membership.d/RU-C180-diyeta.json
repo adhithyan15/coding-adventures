@@ -1,0 +1,11 @@
+{
+  "id": "RU-C180-diyeta",
+  "pathSegment": "RU-PATH-180-ZDOROV180",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-180-ZDOROV180",
+      "order": 2
+    }
+  ]
+}

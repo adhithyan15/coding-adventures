@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:c10cae7792611dae",
+  "lessonIds": [
+    "IT-C253-conto-corrente",
+    "IT-C253-prestito",
+    "IT-C253-debito",
+    "IT-C253-tassa",
+    "IT-C253-modulo"
+  ],
+  "tex": "italian/book/chapters/ch253-bank-account-loan-debt-tax-form.tex"
+}

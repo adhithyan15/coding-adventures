@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:b6987350908408cc",
+  "lessonIds": [
+    "BN-C198-biman",
+    "BN-C198-petrol",
+    "BN-C198-petrol-pamp",
+    "BN-C198-ason",
+    "BN-C198-pltphorm"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch198.txt",
+  "json": "bengali/narration/ch198.json",
+  "textHash": "fnv1a64:47c2cbf122137497",
+  "jsonHash": "fnv1a64:b4e1c288adb15f10",
+  "findings": []
+}

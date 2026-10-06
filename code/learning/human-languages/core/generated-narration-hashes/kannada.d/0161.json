@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:e0eed8aeb07250a3",
+  "lessonIds": [
+    "KA-C161-antisu",
+    "KA-C161-tilisu",
+    "KA-C161-bheti-madu",
+    "KA-C161-kaydirisu",
+    "KA-C161-raddu-madu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch161.txt",
+  "json": "kannada/narration/ch161.json",
+  "textHash": "fnv1a64:a512a0f393e0169b",
+  "jsonHash": "fnv1a64:2b83a84a2d60ceea",
+  "findings": []
+}

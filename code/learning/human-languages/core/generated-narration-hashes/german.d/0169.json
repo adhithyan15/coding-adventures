@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:78924d83ba1d385e",
+  "lessonIds": [
+    "GE-C169-bekannt",
+    "GE-C169-fremd",
+    "GE-C169-nervoes",
+    "GE-C169-stolz",
+    "GE-C169-wuetend"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch169.txt",
+  "json": "german/narration/ch169.json",
+  "textHash": "fnv1a64:c2b8d59828fa7791",
+  "jsonHash": "fnv1a64:1a4f74958458abd9",
+  "findings": []
+}

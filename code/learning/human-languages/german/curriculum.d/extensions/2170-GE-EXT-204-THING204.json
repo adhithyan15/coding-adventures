@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-204-THING204",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say leather, wood, metal, plastic and the body.",
+  "prerequisites": []
+}

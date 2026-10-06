@@ -1,0 +1,1793 @@
+{
+  "schema_version": 1,
+  "profile": "barcode-layout-1d-v1",
+  "limits": {
+    "max_pattern_scalars": 65567,
+    "max_runs": 40979,
+    "max_content_modules": 65567,
+    "max_quiet_zone_modules": 4096,
+    "max_symbols": 40979,
+    "max_label_scalars": 4096,
+    "max_metadata_entries": 64,
+    "max_metadata_key_scalars": 128,
+    "max_metadata_value_scalars": 4096,
+    "max_metadata_utf8_bytes": 65536,
+    "max_module_width": 8192,
+    "max_bar_height": 8192,
+    "max_color_scalars": 128,
+    "max_cases": 64,
+    "max_fixture_bytes": 131072,
+    "max_fixture_depth": 8
+  },
+  "error_ids": [
+    "pattern-too-long",
+    "empty-pattern",
+    "invalid-binary-token",
+    "invalid-width-token",
+    "invalid-marker-configuration",
+    "invalid-module-count",
+    "too-many-runs",
+    "content-too-wide",
+    "non-alternating-runs",
+    "invalid-quiet-zone",
+    "too-many-symbols",
+    "symbol-width-mismatch",
+    "invalid-render-config",
+    "metadata-too-large",
+    "human-readable-text-unsupported",
+    "invalid-source-attribution"
+  ],
+  "cases": [
+    {
+      "id": "layout-v1-binary-basic",
+      "operation": "expand-binary",
+      "input": {
+        "pattern": "110100",
+        "sourceLabel": "start",
+        "sourceIndex": -1,
+        "role": "guard"
+      },
+      "expected": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 2,
+            "sourceLabel": "start",
+            "sourceIndex": -1,
+            "role": "guard"
+          },
+          {
+            "color": "space",
+            "modules": 1,
+            "sourceLabel": "start",
+            "sourceIndex": -1,
+            "role": "guard"
+          },
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "start",
+            "sourceIndex": -1,
+            "role": "guard"
+          },
+          {
+            "color": "space",
+            "modules": 2,
+            "sourceLabel": "start",
+            "sourceIndex": -1,
+            "role": "guard"
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout-v1-binary-starts-space",
+      "operation": "expand-binary",
+      "input": {
+        "pattern": "00111",
+        "sourceLabel": "A",
+        "sourceIndex": 0,
+        "role": "data"
+      },
+      "expected": {
+        "runs": [
+          {
+            "color": "space",
+            "modules": 2,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "bar",
+            "modules": 3,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout-v1-binary-one-bit",
+      "operation": "expand-binary",
+      "input": {
+        "pattern": "1",
+        "sourceLabel": "C",
+        "sourceIndex": 2,
+        "role": "check"
+      },
+      "expected": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "C",
+            "sourceIndex": 2,
+            "role": "check"
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout-v1-binary-source-label-too-long",
+      "operation": "expand-binary",
+      "input": {
+        "pattern": "1",
+        "sourceLabel": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "sourceIndex": 0,
+        "role": "data"
+      },
+      "expected": {
+        "error": "invalid-source-attribution"
+      }
+    },
+    {
+      "id": "layout-v1-binary-source-index-too-large",
+      "operation": "expand-binary",
+      "input": {
+        "pattern": "1",
+        "sourceLabel": "A",
+        "sourceIndex": 2147483648,
+        "role": "data"
+      },
+      "expected": {
+        "error": "invalid-source-attribution"
+      }
+    },
+    {
+      "id": "layout-v1-binary-limit",
+      "operation": "expand-binary",
+      "input": {
+        "repeat": {
+          "token": "1",
+          "count": 65567
+        },
+        "sourceLabel": "start",
+        "sourceIndex": -1,
+        "role": "guard"
+      },
+      "expected": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 65567,
+            "sourceLabel": "start",
+            "sourceIndex": -1,
+            "role": "guard"
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout-v1-binary-empty",
+      "operation": "expand-binary",
+      "input": {
+        "pattern": "",
+        "sourceLabel": "start",
+        "sourceIndex": -1,
+        "role": "guard"
+      },
+      "expected": {
+        "error": "empty-pattern"
+      }
+    },
+    {
+      "id": "layout-v1-binary-invalid",
+      "operation": "expand-binary",
+      "input": {
+        "pattern": "10A1",
+        "sourceLabel": "start",
+        "sourceIndex": -1,
+        "role": "guard"
+      },
+      "expected": {
+        "error": "invalid-binary-token"
+      }
+    },
+    {
+      "id": "layout-v1-binary-fullwidth",
+      "operation": "expand-binary",
+      "input": {
+        "pattern": "１",
+        "sourceLabel": "start",
+        "sourceIndex": -1,
+        "role": "guard"
+      },
+      "expected": {
+        "error": "invalid-binary-token"
+      }
+    },
+    {
+      "id": "layout-v1-binary-too-long",
+      "operation": "expand-binary",
+      "input": {
+        "repeat": {
+          "token": "1",
+          "count": 65568
+        },
+        "sourceLabel": "start",
+        "sourceIndex": -1,
+        "role": "guard"
+      },
+      "expected": {
+        "error": "pattern-too-long"
+      }
+    },
+    {
+      "id": "layout-v1-binary-too-long-precedence",
+      "operation": "expand-binary",
+      "input": {
+        "repeat": {
+          "token": "1",
+          "count": 65568,
+          "suffix": "A"
+        },
+        "sourceLabel": "start",
+        "sourceIndex": -1,
+        "role": "guard"
+      },
+      "expected": {
+        "error": "pattern-too-long"
+      }
+    },
+    {
+      "id": "layout-v1-binary-too-many-runs",
+      "operation": "expand-binary",
+      "input": {
+        "repeat": {
+          "token": "10",
+          "count": 20490
+        },
+        "sourceLabel": "start",
+        "sourceIndex": -1,
+        "role": "guard"
+      },
+      "expected": {
+        "error": "too-many-runs"
+      }
+    },
+    {
+      "id": "layout-v1-width-basic",
+      "operation": "expand-width",
+      "input": {
+        "pattern": "NWNNW",
+        "sourceLabel": "A",
+        "sourceIndex": 0,
+        "role": "data"
+      },
+      "expected": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "space",
+            "modules": 3,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "space",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "bar",
+            "modules": 3,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout-v1-width-custom",
+      "operation": "expand-width",
+      "input": {
+        "pattern": "nww",
+        "narrowMarker": "n",
+        "wideMarker": "w",
+        "narrowModules": 2,
+        "wideModules": 5,
+        "startingColor": "space",
+        "sourceLabel": "B",
+        "sourceIndex": 2,
+        "role": "check"
+      },
+      "expected": {
+        "runs": [
+          {
+            "color": "space",
+            "modules": 2,
+            "sourceLabel": "B",
+            "sourceIndex": 2,
+            "role": "check"
+          },
+          {
+            "color": "bar",
+            "modules": 5,
+            "sourceLabel": "B",
+            "sourceIndex": 2,
+            "role": "check"
+          },
+          {
+            "color": "space",
+            "modules": 5,
+            "sourceLabel": "B",
+            "sourceIndex": 2,
+            "role": "check"
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout-v1-width-astral-markers",
+      "operation": "expand-width",
+      "input": {
+        "pattern": "🐜🐝🐜",
+        "narrowMarker": "🐜",
+        "wideMarker": "🐝",
+        "sourceLabel": "A",
+        "sourceIndex": 0,
+        "role": "data"
+      },
+      "expected": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "space",
+            "modules": 3,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout-v1-width-module-limit",
+      "operation": "expand-width",
+      "input": {
+        "pattern": "W",
+        "wideModules": 65567,
+        "sourceLabel": "A",
+        "sourceIndex": 0,
+        "role": "data"
+      },
+      "expected": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 65567,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout-v1-width-run-limit",
+      "operation": "expand-width",
+      "input": {
+        "repeat": {
+          "token": "N",
+          "count": 40979
+        },
+        "sourceLabel": "A",
+        "sourceIndex": 0,
+        "role": "data"
+      },
+      "expected": {
+        "runDigest": {
+          "runCount": 40979,
+          "contentModules": 40979,
+          "firstRun": {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          "lastRun": {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          "runsSha256": "6b5abd84e83b8cca52df0750f6a8ad78535e0a3056e553cea8faf00f217f4383"
+        }
+      }
+    },
+    {
+      "id": "layout-v1-width-empty",
+      "operation": "expand-width",
+      "input": {
+        "pattern": "",
+        "sourceLabel": "A",
+        "sourceIndex": 0,
+        "role": "data"
+      },
+      "expected": {
+        "error": "empty-pattern"
+      }
+    },
+    {
+      "id": "layout-v1-width-invalid",
+      "operation": "expand-width",
+      "input": {
+        "pattern": "NX",
+        "sourceLabel": "A",
+        "sourceIndex": 0,
+        "role": "data"
+      },
+      "expected": {
+        "error": "invalid-width-token"
+      }
+    },
+    {
+      "id": "layout-v1-width-zero-narrow",
+      "operation": "expand-width",
+      "input": {
+        "pattern": "N",
+        "narrowModules": 0,
+        "sourceLabel": "A",
+        "sourceIndex": 0,
+        "role": "data"
+      },
+      "expected": {
+        "error": "invalid-module-count"
+      }
+    },
+    {
+      "id": "layout-v1-width-zero-wide",
+      "operation": "expand-width",
+      "input": {
+        "pattern": "W",
+        "wideModules": 0,
+        "sourceLabel": "A",
+        "sourceIndex": 0,
+        "role": "data"
+      },
+      "expected": {
+        "error": "invalid-module-count"
+      }
+    },
+    {
+      "id": "layout-v1-width-identical-markers",
+      "operation": "expand-width",
+      "input": {
+        "pattern": "N",
+        "narrowMarker": "N",
+        "wideMarker": "N",
+        "sourceLabel": "A",
+        "sourceIndex": 0,
+        "role": "data"
+      },
+      "expected": {
+        "error": "invalid-marker-configuration"
+      }
+    },
+    {
+      "id": "layout-v1-width-too-many-runs",
+      "operation": "expand-width",
+      "input": {
+        "repeat": {
+          "token": "N",
+          "count": 40980
+        },
+        "sourceLabel": "A",
+        "sourceIndex": 0,
+        "role": "data"
+      },
+      "expected": {
+        "error": "too-many-runs"
+      }
+    },
+    {
+      "id": "layout-v1-width-content-too-wide",
+      "operation": "expand-width",
+      "input": {
+        "pattern": "WW",
+        "wideModules": 32784,
+        "sourceLabel": "A",
+        "sourceIndex": 0,
+        "role": "data"
+      },
+      "expected": {
+        "error": "content-too-wide"
+      }
+    },
+    {
+      "id": "layout-v1-layout-sample",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "*",
+            "sourceIndex": -1,
+            "role": "start"
+          },
+          {
+            "color": "space",
+            "modules": 1,
+            "sourceLabel": "",
+            "sourceIndex": -1,
+            "role": "inter-character-gap"
+          },
+          {
+            "color": "bar",
+            "modules": 2,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 10
+      },
+      "expected": {
+        "layout": {
+          "leftQuietZoneModules": 10,
+          "rightQuietZoneModules": 10,
+          "contentModules": 4,
+          "totalModules": 24,
+          "symbolLayouts": [
+            {
+              "label": "*",
+              "startModule": 0,
+              "endModule": 2,
+              "sourceIndex": -1,
+              "role": "start"
+            },
+            {
+              "label": "A",
+              "startModule": 2,
+              "endModule": 4,
+              "sourceIndex": 0,
+              "role": "data"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "layout-v1-layout-gap-span",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "space",
+            "modules": 2,
+            "sourceLabel": "",
+            "sourceIndex": 0,
+            "role": "inter-character-gap"
+          },
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 2
+      },
+      "expected": {
+        "layout": {
+          "leftQuietZoneModules": 2,
+          "rightQuietZoneModules": 2,
+          "contentModules": 4,
+          "totalModules": 8,
+          "symbolLayouts": [
+            {
+              "label": "A",
+              "startModule": 0,
+              "endModule": 4,
+              "sourceIndex": 0,
+              "role": "data"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "layout-v1-layout-leading-trailing-gap",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "space",
+            "modules": 1,
+            "sourceLabel": "",
+            "sourceIndex": -1,
+            "role": "inter-character-gap"
+          },
+          {
+            "color": "bar",
+            "modules": 2,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "space",
+            "modules": 1,
+            "sourceLabel": "",
+            "sourceIndex": -1,
+            "role": "inter-character-gap"
+          }
+        ],
+        "quietZoneModules": 1
+      },
+      "expected": {
+        "layout": {
+          "leftQuietZoneModules": 1,
+          "rightQuietZoneModules": 1,
+          "contentModules": 4,
+          "totalModules": 6,
+          "symbolLayouts": [
+            {
+              "label": "A",
+              "startModule": 1,
+              "endModule": 4,
+              "sourceIndex": 0,
+              "role": "data"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "layout-v1-layout-role-change",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "start"
+          },
+          {
+            "color": "space",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 1
+      },
+      "expected": {
+        "layout": {
+          "leftQuietZoneModules": 1,
+          "rightQuietZoneModules": 1,
+          "contentModules": 2,
+          "totalModules": 4,
+          "symbolLayouts": [
+            {
+              "label": "A",
+              "startModule": 0,
+              "endModule": 1,
+              "sourceIndex": 0,
+              "role": "start"
+            },
+            {
+              "label": "A",
+              "startModule": 1,
+              "endModule": 2,
+              "sourceIndex": 0,
+              "role": "data"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "layout-v1-layout-repeated-noncontiguous",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "space",
+            "modules": 1,
+            "sourceLabel": "B",
+            "sourceIndex": 1,
+            "role": "data"
+          },
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 1
+      },
+      "expected": {
+        "layout": {
+          "leftQuietZoneModules": 1,
+          "rightQuietZoneModules": 1,
+          "contentModules": 3,
+          "totalModules": 5,
+          "symbolLayouts": [
+            {
+              "label": "A",
+              "startModule": 0,
+              "endModule": 1,
+              "sourceIndex": 0,
+              "role": "data"
+            },
+            {
+              "label": "B",
+              "startModule": 1,
+              "endModule": 2,
+              "sourceIndex": 1,
+              "role": "data"
+            },
+            {
+              "label": "A",
+              "startModule": 2,
+              "endModule": 3,
+              "sourceIndex": 0,
+              "role": "data"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "layout-v1-layout-explicit",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "*",
+            "sourceIndex": -1,
+            "role": "start"
+          },
+          {
+            "color": "space",
+            "modules": 1,
+            "sourceLabel": "",
+            "sourceIndex": -1,
+            "role": "inter-character-gap"
+          },
+          {
+            "color": "bar",
+            "modules": 2,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 10,
+        "symbols": [
+          {
+            "label": "*",
+            "modules": 2,
+            "sourceIndex": -1,
+            "role": "start"
+          },
+          {
+            "label": "A",
+            "modules": 2,
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ]
+      },
+      "expected": {
+        "layout": {
+          "leftQuietZoneModules": 10,
+          "rightQuietZoneModules": 10,
+          "contentModules": 4,
+          "totalModules": 24,
+          "symbolLayouts": [
+            {
+              "label": "*",
+              "startModule": 0,
+              "endModule": 2,
+              "sourceIndex": -1,
+              "role": "start"
+            },
+            {
+              "label": "A",
+              "startModule": 2,
+              "endModule": 4,
+              "sourceIndex": 0,
+              "role": "data"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "layout-v1-layout-empty",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [],
+        "quietZoneModules": 3
+      },
+      "expected": {
+        "layout": {
+          "leftQuietZoneModules": 3,
+          "rightQuietZoneModules": 3,
+          "contentModules": 0,
+          "totalModules": 6,
+          "symbolLayouts": []
+        }
+      }
+    },
+    {
+      "id": "layout-v1-layout-max",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 65567,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 4096
+      },
+      "expected": {
+        "layout": {
+          "leftQuietZoneModules": 4096,
+          "rightQuietZoneModules": 4096,
+          "contentModules": 65567,
+          "totalModules": 73759,
+          "symbolLayouts": [
+            {
+              "label": "A",
+              "startModule": 0,
+              "endModule": 65567,
+              "sourceIndex": 0,
+              "role": "data"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "layout-v1-layout-invalid-modules",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 0,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 1
+      },
+      "expected": {
+        "error": "invalid-module-count"
+      }
+    },
+    {
+      "id": "layout-v1-layout-invalid-source",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 2147483648,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 1
+      },
+      "expected": {
+        "error": "invalid-source-attribution"
+      }
+    },
+    {
+      "id": "layout-v1-layout-content-too-wide",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 40000,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "space",
+            "modules": 25568,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 1
+      },
+      "expected": {
+        "error": "content-too-wide"
+      }
+    },
+    {
+      "id": "layout-v1-layout-non-alternating",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "B",
+            "sourceIndex": 1,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 1
+      },
+      "expected": {
+        "error": "non-alternating-runs"
+      }
+    },
+    {
+      "id": "layout-v1-layout-zero-quiet",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [],
+        "quietZoneModules": 0
+      },
+      "expected": {
+        "error": "invalid-quiet-zone"
+      }
+    },
+    {
+      "id": "layout-v1-layout-large-quiet",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [],
+        "quietZoneModules": 4097
+      },
+      "expected": {
+        "error": "invalid-quiet-zone"
+      }
+    },
+    {
+      "id": "layout-v1-layout-zero-symbol",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 1,
+        "symbols": [
+          {
+            "label": "A",
+            "modules": 0,
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ]
+      },
+      "expected": {
+        "error": "invalid-module-count"
+      }
+    },
+    {
+      "id": "layout-v1-layout-symbol-short",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 2,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 1,
+        "symbols": [
+          {
+            "label": "A",
+            "modules": 1,
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ]
+      },
+      "expected": {
+        "error": "symbol-width-mismatch"
+      }
+    },
+    {
+      "id": "layout-v1-layout-symbol-long",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 1,
+        "symbols": [
+          {
+            "label": "A",
+            "modules": 2,
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ]
+      },
+      "expected": {
+        "error": "symbol-width-mismatch"
+      }
+    },
+    {
+      "id": "layout-v1-layout-too-many-symbols",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [],
+        "quietZoneModules": 1,
+        "repeatSymbols": {
+          "label": "A",
+          "modules": 1,
+          "count": 40980,
+          "role": "data"
+        }
+      },
+      "expected": {
+        "error": "too-many-symbols"
+      }
+    },
+    {
+      "id": "layout-v1-layout-precedence",
+      "operation": "compute-layout",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 0,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 0
+      },
+      "expected": {
+        "error": "invalid-module-count"
+      }
+    },
+    {
+      "id": "layout-v1-scene-default",
+      "operation": "project-scene",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "demo",
+            "sourceIndex": 0,
+            "role": "guard"
+          },
+          {
+            "color": "space",
+            "modules": 1,
+            "sourceLabel": "demo",
+            "sourceIndex": 0,
+            "role": "guard"
+          },
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "demo",
+            "sourceIndex": 0,
+            "role": "guard"
+          }
+        ],
+        "quietZoneModules": 10,
+        "label": "Demo",
+        "metadata": {
+          "symbology": "demo",
+          "totalModules": "spoof"
+        }
+      },
+      "expected": {
+        "scene": {
+          "width": 92,
+          "height": 120,
+          "background": "#ffffff",
+          "rectangles": [
+            {
+              "x": 40,
+              "y": 0,
+              "width": 4,
+              "height": 120,
+              "fill": "#000000",
+              "metadata": {
+                "sourceLabel": "demo",
+                "sourceIndex": "0",
+                "role": "guard",
+                "moduleStart": "10",
+                "moduleEnd": "11"
+              }
+            },
+            {
+              "x": 48,
+              "y": 0,
+              "width": 4,
+              "height": 120,
+              "fill": "#000000",
+              "metadata": {
+                "sourceLabel": "demo",
+                "sourceIndex": "0",
+                "role": "guard",
+                "moduleStart": "12",
+                "moduleEnd": "13"
+              }
+            }
+          ],
+          "metadata": {
+            "barHeightPx": "120",
+            "contentModules": "3",
+            "label": "Demo",
+            "leftQuietZoneModules": "10",
+            "moduleWidthPx": "4",
+            "rightQuietZoneModules": "10",
+            "sceneHeightPx": "120",
+            "sceneWidthPx": "92",
+            "symbolCount": "1",
+            "symbology": "demo",
+            "totalModules": "23"
+          }
+        }
+      }
+    },
+    {
+      "id": "layout-v1-scene-custom",
+      "operation": "project-scene",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "space",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          },
+          {
+            "color": "bar",
+            "modules": 2,
+            "sourceLabel": "B",
+            "sourceIndex": 1,
+            "role": "check"
+          }
+        ],
+        "quietZoneModules": 2,
+        "renderConfig": {
+          "moduleWidth": 2,
+          "barHeight": 50,
+          "foreground": "navy",
+          "background": "transparent"
+        }
+      },
+      "expected": {
+        "scene": {
+          "width": 16,
+          "height": 50,
+          "background": "transparent",
+          "rectangles": [
+            {
+              "x": 4,
+              "y": 0,
+              "width": 2,
+              "height": 50,
+              "fill": "navy",
+              "metadata": {
+                "sourceLabel": "A",
+                "sourceIndex": "0",
+                "role": "data",
+                "moduleStart": "2",
+                "moduleEnd": "3"
+              }
+            },
+            {
+              "x": 8,
+              "y": 0,
+              "width": 4,
+              "height": 50,
+              "fill": "navy",
+              "metadata": {
+                "sourceLabel": "B",
+                "sourceIndex": "1",
+                "role": "check",
+                "moduleStart": "4",
+                "moduleEnd": "6"
+              }
+            }
+          ],
+          "metadata": {
+            "barHeightPx": "50",
+            "contentModules": "4",
+            "label": "1D barcode",
+            "leftQuietZoneModules": "2",
+            "moduleWidthPx": "2",
+            "rightQuietZoneModules": "2",
+            "sceneHeightPx": "50",
+            "sceneWidthPx": "16",
+            "symbolCount": "2",
+            "totalModules": "8"
+          }
+        }
+      }
+    },
+    {
+      "id": "layout-v1-scene-max-render-config",
+      "operation": "project-scene",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 4096,
+        "renderConfig": {
+          "moduleWidth": 8192,
+          "barHeight": 8192
+        }
+      },
+      "expected": {
+        "scene": {
+          "width": 67117056,
+          "height": 8192,
+          "background": "#ffffff",
+          "rectangles": [
+            {
+              "x": 33554432,
+              "y": 0,
+              "width": 8192,
+              "height": 8192,
+              "fill": "#000000",
+              "metadata": {
+                "sourceLabel": "A",
+                "sourceIndex": "0",
+                "role": "data",
+                "moduleStart": "4096",
+                "moduleEnd": "4097"
+              }
+            }
+          ],
+          "metadata": {
+            "barHeightPx": "8192",
+            "contentModules": "1",
+            "label": "1D barcode",
+            "leftQuietZoneModules": "4096",
+            "moduleWidthPx": "8192",
+            "rightQuietZoneModules": "4096",
+            "sceneHeightPx": "8192",
+            "sceneWidthPx": "67117056",
+            "symbolCount": "1",
+            "totalModules": "8193"
+          }
+        }
+      }
+    },
+    {
+      "id": "layout-v1-scene-metadata-entry-limit",
+      "operation": "project-scene",
+      "input": {
+        "runs": [],
+        "quietZoneModules": 1,
+        "metadata": {
+          "k00": "v",
+          "k01": "v",
+          "k02": "v",
+          "k03": "v",
+          "k04": "v",
+          "k05": "v",
+          "k06": "v",
+          "k07": "v",
+          "k08": "v",
+          "k09": "v",
+          "k10": "v",
+          "k11": "v",
+          "k12": "v",
+          "k13": "v",
+          "k14": "v",
+          "k15": "v",
+          "k16": "v",
+          "k17": "v",
+          "k18": "v",
+          "k19": "v",
+          "k20": "v",
+          "k21": "v",
+          "k22": "v",
+          "k23": "v",
+          "k24": "v",
+          "k25": "v",
+          "k26": "v",
+          "k27": "v",
+          "k28": "v",
+          "k29": "v",
+          "k30": "v",
+          "k31": "v",
+          "k32": "v",
+          "k33": "v",
+          "k34": "v",
+          "k35": "v",
+          "k36": "v",
+          "k37": "v",
+          "k38": "v",
+          "k39": "v",
+          "k40": "v",
+          "k41": "v",
+          "k42": "v",
+          "k43": "v",
+          "k44": "v",
+          "k45": "v",
+          "k46": "v",
+          "k47": "v",
+          "k48": "v",
+          "k49": "v",
+          "k50": "v",
+          "k51": "v",
+          "k52": "v",
+          "k53": "v",
+          "k54": "v",
+          "k55": "v",
+          "k56": "v",
+          "k57": "v",
+          "k58": "v",
+          "k59": "v",
+          "k60": "v",
+          "k61": "v",
+          "k62": "v",
+          "k63": "v"
+        }
+      },
+      "expected": {
+        "scene": {
+          "width": 8,
+          "height": 120,
+          "background": "#ffffff",
+          "rectangles": [],
+          "metadata": {
+            "barHeightPx": "120",
+            "contentModules": "0",
+            "k00": "v",
+            "k01": "v",
+            "k02": "v",
+            "k03": "v",
+            "k04": "v",
+            "k05": "v",
+            "k06": "v",
+            "k07": "v",
+            "k08": "v",
+            "k09": "v",
+            "k10": "v",
+            "k11": "v",
+            "k12": "v",
+            "k13": "v",
+            "k14": "v",
+            "k15": "v",
+            "k16": "v",
+            "k17": "v",
+            "k18": "v",
+            "k19": "v",
+            "k20": "v",
+            "k21": "v",
+            "k22": "v",
+            "k23": "v",
+            "k24": "v",
+            "k25": "v",
+            "k26": "v",
+            "k27": "v",
+            "k28": "v",
+            "k29": "v",
+            "k30": "v",
+            "k31": "v",
+            "k32": "v",
+            "k33": "v",
+            "k34": "v",
+            "k35": "v",
+            "k36": "v",
+            "k37": "v",
+            "k38": "v",
+            "k39": "v",
+            "k40": "v",
+            "k41": "v",
+            "k42": "v",
+            "k43": "v",
+            "k44": "v",
+            "k45": "v",
+            "k46": "v",
+            "k47": "v",
+            "k48": "v",
+            "k49": "v",
+            "k50": "v",
+            "k51": "v",
+            "k52": "v",
+            "k53": "v",
+            "k54": "v",
+            "k55": "v",
+            "k56": "v",
+            "k57": "v",
+            "k58": "v",
+            "k59": "v",
+            "k60": "v",
+            "k61": "v",
+            "k62": "v",
+            "k63": "v",
+            "label": "1D barcode",
+            "leftQuietZoneModules": "1",
+            "moduleWidthPx": "4",
+            "rightQuietZoneModules": "1",
+            "sceneHeightPx": "120",
+            "sceneWidthPx": "8",
+            "symbolCount": "0",
+            "totalModules": "2"
+          }
+        }
+      }
+    },
+    {
+      "id": "layout-v1-scene-empty",
+      "operation": "project-scene",
+      "input": {
+        "runs": [],
+        "quietZoneModules": 3,
+        "renderConfig": {
+          "moduleWidth": 2,
+          "barHeight": 5
+        }
+      },
+      "expected": {
+        "scene": {
+          "width": 12,
+          "height": 5,
+          "background": "#ffffff",
+          "rectangles": [],
+          "metadata": {
+            "barHeightPx": "5",
+            "contentModules": "0",
+            "label": "1D barcode",
+            "leftQuietZoneModules": "3",
+            "moduleWidthPx": "2",
+            "rightQuietZoneModules": "3",
+            "sceneHeightPx": "5",
+            "sceneWidthPx": "12",
+            "symbolCount": "0",
+            "totalModules": "6"
+          }
+        }
+      }
+    },
+    {
+      "id": "layout-v1-scene-zero-module-width",
+      "operation": "project-scene",
+      "input": {
+        "runs": [],
+        "quietZoneModules": 1,
+        "renderConfig": {
+          "moduleWidth": 0
+        }
+      },
+      "expected": {
+        "error": "invalid-render-config"
+      }
+    },
+    {
+      "id": "layout-v1-scene-zero-height",
+      "operation": "project-scene",
+      "input": {
+        "runs": [],
+        "quietZoneModules": 1,
+        "renderConfig": {
+          "barHeight": 0
+        }
+      },
+      "expected": {
+        "error": "invalid-render-config"
+      }
+    },
+    {
+      "id": "layout-v1-scene-color-too-long",
+      "operation": "project-scene",
+      "input": {
+        "runs": [],
+        "quietZoneModules": 1,
+        "renderConfig": {
+          "foreground": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      },
+      "expected": {
+        "error": "invalid-render-config"
+      }
+    },
+    {
+      "id": "layout-v1-scene-zero-quiet",
+      "operation": "project-scene",
+      "input": {
+        "runs": [],
+        "quietZoneModules": 0
+      },
+      "expected": {
+        "error": "invalid-quiet-zone"
+      }
+    },
+    {
+      "id": "layout-v1-scene-text-enabled",
+      "operation": "project-scene",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "demo",
+            "sourceIndex": 0,
+            "role": "guard"
+          },
+          {
+            "color": "space",
+            "modules": 1,
+            "sourceLabel": "demo",
+            "sourceIndex": 0,
+            "role": "guard"
+          },
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "demo",
+            "sourceIndex": 0,
+            "role": "guard"
+          }
+        ],
+        "quietZoneModules": 1,
+        "renderConfig": {
+          "includeHumanReadableText": true
+        }
+      },
+      "expected": {
+        "error": "human-readable-text-unsupported"
+      }
+    },
+    {
+      "id": "layout-v1-scene-text-supplied",
+      "operation": "project-scene",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "demo",
+            "sourceIndex": 0,
+            "role": "guard"
+          },
+          {
+            "color": "space",
+            "modules": 1,
+            "sourceLabel": "demo",
+            "sourceIndex": 0,
+            "role": "guard"
+          },
+          {
+            "color": "bar",
+            "modules": 1,
+            "sourceLabel": "demo",
+            "sourceIndex": 0,
+            "role": "guard"
+          }
+        ],
+        "quietZoneModules": 1,
+        "humanReadableText": "012345"
+      },
+      "expected": {
+        "error": "human-readable-text-unsupported"
+      }
+    },
+    {
+      "id": "layout-v1-scene-metadata-too-large",
+      "operation": "project-scene",
+      "input": {
+        "runs": [],
+        "quietZoneModules": 1,
+        "metadata": {
+          "k0": "v",
+          "k1": "v",
+          "k2": "v",
+          "k3": "v",
+          "k4": "v",
+          "k5": "v",
+          "k6": "v",
+          "k7": "v",
+          "k8": "v",
+          "k9": "v",
+          "k10": "v",
+          "k11": "v",
+          "k12": "v",
+          "k13": "v",
+          "k14": "v",
+          "k15": "v",
+          "k16": "v",
+          "k17": "v",
+          "k18": "v",
+          "k19": "v",
+          "k20": "v",
+          "k21": "v",
+          "k22": "v",
+          "k23": "v",
+          "k24": "v",
+          "k25": "v",
+          "k26": "v",
+          "k27": "v",
+          "k28": "v",
+          "k29": "v",
+          "k30": "v",
+          "k31": "v",
+          "k32": "v",
+          "k33": "v",
+          "k34": "v",
+          "k35": "v",
+          "k36": "v",
+          "k37": "v",
+          "k38": "v",
+          "k39": "v",
+          "k40": "v",
+          "k41": "v",
+          "k42": "v",
+          "k43": "v",
+          "k44": "v",
+          "k45": "v",
+          "k46": "v",
+          "k47": "v",
+          "k48": "v",
+          "k49": "v",
+          "k50": "v",
+          "k51": "v",
+          "k52": "v",
+          "k53": "v",
+          "k54": "v",
+          "k55": "v",
+          "k56": "v",
+          "k57": "v",
+          "k58": "v",
+          "k59": "v",
+          "k60": "v",
+          "k61": "v",
+          "k62": "v",
+          "k63": "v",
+          "k64": "v"
+        }
+      },
+      "expected": {
+        "error": "metadata-too-large"
+      }
+    },
+    {
+      "id": "layout-v1-scene-text-precedence",
+      "operation": "project-scene",
+      "input": {
+        "runs": [
+          {
+            "color": "bar",
+            "modules": 0,
+            "sourceLabel": "A",
+            "sourceIndex": 0,
+            "role": "data"
+          }
+        ],
+        "quietZoneModules": 1,
+        "renderConfig": {
+          "includeHumanReadableText": true
+        }
+      },
+      "expected": {
+        "error": "human-readable-text-unsupported"
+      }
+    }
+  ]
+}

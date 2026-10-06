@@ -1,0 +1,11 @@
+{
+  "id": "UR-C170-buzurg",
+  "pathSegment": "UR-PATH-170-CHIZ170",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-170-CHIZ170",
+      "order": 1
+    }
+  ]
+}

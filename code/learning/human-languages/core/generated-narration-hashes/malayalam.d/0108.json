@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 108,
-  "sourceHash": "fnv1a64:89896627032a6f1f",
+  "sourceHash": "fnv1a64:719b37a37a63687e",
   "lessonIds": [
     "ML-W108-full-stop",
     "ML-W108-comma",
@@ -9,13 +9,14 @@
     "ML-W108-quotation",
     "ML-W108-the-rest",
     "ML-W108-the-rest-more",
-    "ML-R108-marks-recall"
+    "ML-R108-marks-recall",
+    "ML-W108-evide-controlled-question"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch108.txt",
   "json": "malayalam/narration/ch108.json",
-  "textHash": "fnv1a64:16b4b2b5b2878448",
-  "jsonHash": "fnv1a64:0d12550e28a129a1",
+  "textHash": "fnv1a64:5d9b88afd8455e68",
+  "jsonHash": "fnv1a64:dc9faf5c1897b7f4",
   "findings": []
 }

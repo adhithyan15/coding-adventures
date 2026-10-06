@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:3730f72f02d6a249",
+  "lessonIds": [
+    "AR-C279-mustatil",
+    "AR-C279-mishjab",
+    "AR-C279-isfanja",
+    "AR-C279-sharit",
+    "AR-C279-ghira"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch279.txt",
+  "json": "arabic/narration/ch279.json",
+  "textHash": "fnv1a64:b1603803932eebcd",
+  "jsonHash": "fnv1a64:2623ba75c6373249",
+  "findings": []
+}

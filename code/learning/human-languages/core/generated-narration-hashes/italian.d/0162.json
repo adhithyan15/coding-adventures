@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:4bf1bac60c5c3c81",
+  "lessonIds": [
+    "IT-C162-sito",
+    "IT-C162-schermo",
+    "IT-C162-tastiera",
+    "IT-C162-batteria",
+    "IT-C162-caricabatterie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch162.txt",
+  "json": "italian/narration/ch162.json",
+  "textHash": "fnv1a64:3a38a4632efe0869",
+  "jsonHash": "fnv1a64:1b4b0abe25a0851e",
+  "findings": []
+}

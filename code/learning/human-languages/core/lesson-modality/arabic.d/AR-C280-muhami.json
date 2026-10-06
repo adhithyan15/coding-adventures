@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C280-muhami",
+    "language": "arabic",
+    "chapter": 280,
+    "sequence": 16250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6cb2a454b9fca02a"
+  },
+  "findings": []
+}

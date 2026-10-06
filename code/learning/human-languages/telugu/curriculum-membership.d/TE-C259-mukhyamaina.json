@@ -1,0 +1,11 @@
+{
+  "id": "TE-C259-mukhyamaina",
+  "pathSegment": "TE-PATH-259-GUNAM259",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-259-GUNAM259",
+      "order": 1
+    }
+  ]
+}

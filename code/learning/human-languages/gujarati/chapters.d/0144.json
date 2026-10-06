@@ -1,0 +1,21 @@
+{
+  "chapter": 144,
+  "title": "A connected A2 message",
+  "label": "ch:gu-a-connected-a2-message",
+  "canDo": "I can plan and write a connected 70–90 word Gujarati message in Gujarati script for a named reader and practical purpose.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-W11-a2-connected-composition",
+    "kind": "production",
+    "summary": "Complete chapter 144 by writing a model-free 70–90 word connected Gujarati message for a named reader and practical purpose.",
+    "assesses": [
+      "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
+      "GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01",
+      "GU-CONCEPT-C05-RAHEVUN-01",
+      "GU-CONCEPT-C05-KAAMKARVUN-01",
+      "GU-JOIN-KEMKE-01"
+    ]
+  }
+}

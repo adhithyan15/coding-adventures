@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:022b6f0db7d6be31",
+  "lessonIds": [
+    "HI-C242-sadharan",
+    "HI-C242-khas",
+    "HI-C242-mashur",
+    "HI-C242-bekar",
+    "HI-C242-kamyab",
+    "HI-R242-first-pass-words-from-chapters-234-237",
+    "HI-R242-second-pass-words-from-chapters-238-242"
+  ],
+  "tex": "hindi/book/chapters/ch242-ordinary-special-famous-useless-successful.tex"
+}

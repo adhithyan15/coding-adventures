@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:8e34faf12d402fb3",
+  "lessonIds": [
+    "TA-C273-al",
+    "TA-C273-perror",
+    "TA-C273-utanpirantavar",
+    "TA-C273-irattaiyar",
+    "TA-C273-maittunan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch273.txt",
+  "json": "tamil/narration/ch273.json",
+  "textHash": "fnv1a64:880a972be18e0703",
+  "jsonHash": "fnv1a64:110233a38c354316",
+  "findings": []
+}

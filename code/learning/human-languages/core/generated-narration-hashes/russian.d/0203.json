@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:6847777643899466",
+  "lessonIds": [
+    "RU-C203-podpis",
+    "RU-C203-pechat",
+    "RU-C203-biznes",
+    "RU-C203-bankomat",
+    "RU-C203-moneta",
+    "RU-R203-first-pass-words-from-chapters-200-201",
+    "RU-R203-second-pass-words-from-chapters-202-203"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch203.txt",
+  "json": "russian/narration/ch203.json",
+  "textHash": "fnv1a64:78722a19105ca264",
+  "jsonHash": "fnv1a64:120c76b7a9a1df34",
+  "findings": []
+}

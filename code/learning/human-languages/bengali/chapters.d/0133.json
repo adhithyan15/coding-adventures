@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Mosquito net, Blanket, Curtain, Vase, Cup",
+  "label": "ch:bn-mosquito-net-blanket-curtain-vase-cup",
+  "canDo": "I can say a mosquito net, a blanket, a curtain, a vase and a cup.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C133-kap",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: I can say a mosquito net, a blanket, a curtain, a vase and a cup.",
+    "assesses": [
+      "BN-LEX-C133-THINGS133-03",
+      "BN-LEX-C133-THINGS133-04",
+      "BN-LEX-C133-THINGS133-05"
+    ]
+  }
+}

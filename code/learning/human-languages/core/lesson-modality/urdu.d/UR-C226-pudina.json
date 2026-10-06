@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C226-pudina",
+    "language": "urdu",
+    "chapter": 226,
+    "sequence": 13400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e97870d0f6ec14c"
+  },
+  "findings": []
+}

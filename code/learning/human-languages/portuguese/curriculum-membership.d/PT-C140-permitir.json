@@ -1,0 +1,11 @@
+{
+  "id": "PT-C140-permitir",
+  "pathSegment": "PT-PATH-140-VERBOS140",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-140-VERBOS140",
+      "order": 2
+    }
+  ]
+}

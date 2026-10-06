@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C246-uluku",
+    "language": "kannada",
+    "chapter": 246,
+    "sequence": 11630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62230b55c0e3b735"
+  },
+  "findings": []
+}

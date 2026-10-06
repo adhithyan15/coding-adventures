@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:749ce62d7b9c26a2",
+  "lessonIds": [
+    "KA-C252-adrsta",
+    "KA-C252-salahe",
+    "KA-C252-sumaru",
+    "KA-C252-jotege",
+    "KA-C252-ottige",
+    "KA-R252-first-pass-words-from-chapters-244-247",
+    "KA-R252-second-pass-words-from-chapters-248-252"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch252.txt",
+  "json": "kannada/narration/ch252.json",
+  "textHash": "fnv1a64:7415e7ab2b0ef218",
+  "jsonHash": "fnv1a64:1176f690f9c50964",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C304-atagadu",
+  "pathSegment": "TE-PATH-304-VASTUVU304",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-304-VASTUVU304",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:f5c655879f0f1633",
+  "lessonIds": [
+    "KA-C187-sankhye",
+    "KA-C187-kamanabillu",
+    "KA-C187-hima",
+    "KA-C187-neralu",
+    "KA-C187-kattale"
+  ],
+  "tex": "kannada/book/chapters/ch187-number-rainbow-snow-shade-darkness.tex"
+}

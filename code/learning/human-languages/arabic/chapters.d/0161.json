@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "To sneeze, To breathe, To break, To rest, To feel",
+  "label": "ch:ar-to-sneeze-to-breathe-to-break-to-rest-to-feel",
+  "canDo": "I can say to sneeze, to breathe, to break, to rest and to feel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C161-ahassa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say to sneeze, to breathe, to break, to rest and to feel.",
+    "assesses": [
+      "AR-LEX-C161-ACT161-03",
+      "AR-LEX-C161-ACT161-04",
+      "AR-LEX-C161-ACT161-05"
+    ]
+  }
+}

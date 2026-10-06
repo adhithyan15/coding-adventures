@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Things You Ask For",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:00bb3eb42c076cb2",
+  "sourceHash": "fnv1a64:cad942a628aaaf83",
   "lessons": [
     {
       "id": "SA-C24-water",
@@ -414,7 +414,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d1ef05218188f94d",
+      "sourceHash": "fnv1a64:34b8c5f8d664c551",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -478,7 +478,7 @@
             },
             {
               "kind": "speech",
-              "text": "a separately swept middle shoulder."
+              "text": "a middle shoulder running into the inner stem."
             },
             {
               "kind": "speech",
@@ -521,27 +521,31 @@
             },
             {
               "kind": "speech",
-              "text": "3. lift and descend the inner stem."
+              "text": "3. without lifting, climb up the inner stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "4. lift and descend the trailing stem."
+              "text": "4. descend the inner stem."
             },
             {
               "kind": "speech",
-              "text": "5. lift at the trailing stem's headline junction and sweep the upper arc upward and left."
+              "text": "5. lift and descend the trailing stem."
             },
             {
               "kind": "speech",
-              "text": "6. lift and draw the top shirorekhā left-to-right."
+              "text": "6. lift at the trailing stem's headline junction and sweep the upper arc upward and left."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 5. The pen comes up 5 times and no more."
+              "text": "7. lift and draw the top shirorekhā left-to-right."
             },
             {
               "kind": "speech",
-              "text": "verified modern printed teaching form; traditional and everyday handwriting may divide or simplify the curves differently."
+              "text": "Pen lifts: 4. The pen comes up 4 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows six movements; most native writers draw ओ in five strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts four times: the shoulder runs on up the inner stem and back down it."
             },
             {
               "kind": "speech",

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C195-burg",
+    "language": "german",
+    "chapter": 195,
+    "sequence": 9990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a81e1a00b0d1584a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C138-prevedere",
+    "language": "italian",
+    "chapter": 138,
+    "sequence": 6900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5de0ce8021065669"
+  },
+  "findings": []
+}

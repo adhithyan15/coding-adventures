@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Soldier, Guard, Judge, Lawyer, Writer",
+  "label": "ch:sa-soldier-guard-judge-lawyer-writer",
+  "canDo": "I can say a soldier, a guard, a judge, a lawyer and a writer.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C179-lekhakah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say a soldier, a guard, a judge, a lawyer and a writer.",
+    "assesses": [
+      "SA-LEX-C179-PPL179-03",
+      "SA-LEX-C179-PPL179-04",
+      "SA-LEX-C179-PPL179-05"
+    ]
+  }
+}

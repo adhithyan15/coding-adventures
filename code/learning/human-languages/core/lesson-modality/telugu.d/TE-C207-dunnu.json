@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C207-dunnu",
+    "language": "telugu",
+    "chapter": 207,
+    "sequence": 9470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9deae8e8492d3e70"
+  },
+  "findings": []
+}

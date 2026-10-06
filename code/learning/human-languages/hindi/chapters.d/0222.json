@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Autumn, A reason, A result, A problem, A remedy",
+  "label": "ch:hi-autumn-a-reason-a-result-a-problem-a-remedy",
+  "canDo": "I can say autumn, a reason, a result, a problem and a remedy.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C222-upay",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say autumn, a reason, a result, a problem and a remedy.",
+    "assesses": [
+      "HI-LEX-C222-THG222-03",
+      "HI-LEX-C222-THG222-04",
+      "HI-LEX-C222-THG222-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:37350e8326f0cd3c",
+  "lessonIds": [
+    "GE-C194-rucksack",
+    "GE-C194-sehenswuerdigkeit",
+    "GE-C194-stadtplan",
+    "GE-C194-rundfahrt",
+    "GE-C194-marktplatz"
+  ],
+  "tex": "german/book/chapters/ch194-a-rucksack-a-sight-a-city-map-a-round-trip-a-market-square.tex"
+}

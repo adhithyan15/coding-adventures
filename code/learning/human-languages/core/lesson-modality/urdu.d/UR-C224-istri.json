@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C224-istri",
+    "language": "urdu",
+    "chapter": 224,
+    "sequence": 13290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e26bc85ce2c022ab"
+  },
+  "findings": []
+}

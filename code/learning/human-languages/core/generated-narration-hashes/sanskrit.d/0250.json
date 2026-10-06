@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:db46f4579b3feb05",
+  "lessonIds": [
+    "SA-C250-durgam",
+    "SA-C250-prasadah",
+    "SA-C250-kutiram",
+    "SA-C250-bhavanam",
+    "SA-C250-avasah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch250.txt",
+  "json": "sanskrit/narration/ch250.json",
+  "textHash": "fnv1a64:458b1482a163129b",
+  "jsonHash": "fnv1a64:5bc6be3b5a9447d2",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "glyph": "ょ",
+  "sound": "small yo, which joins to the preceding sign and makes one mora with it",
+  "role": "hiragana",
+  "components": [
+    "a short upper horizontal",
+    "a small vertical turning into a lower loop"
+  ],
+  "strokeOrder": [
+    "draw the short upper horizontal from left to right",
+    "lift, begin above the horizontal, descend through it, then turn left and continue clockwise around the lower loop to the rightward finish"
+  ],
+  "strokeOrderNote": "Sirgazil's corrected 26-frame よ animation supplies the two-run order; KanjiVG's 03087 file holds the same two strokes in the same order for U+3087 itself, and Unicode names U+3087 HIRAGANA LETTER SMALL YO, so the movement is fitted to the smaller bundled glyph exactly as small ゅ is fitted from ゆ.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%88_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana よ stroke order animation.gif, hiragana よ, 26 frames, 2.6 seconds (Wikimedia Commons, 1 October 2009; corrected first-stroke direction 4 January 2012); KanjiVG kanji/03087.svg, two stroke paths in the same order; the Unicode Standard names U+3087 HIRAGANA LETTER SMALL YO",
+    "variation": "The CC0 animation draws full-size よ in two pen-down runs with one lift: the short upper bar from left to right, then the stem descending through it and the clockwise lower loop. KanjiVG records U+3087 with the same two strokes in the same order. Unicode separately identifies U+3087 as small yo. This learner path therefore preserves the source's two-run movement while scaling and fitting it to the bundled Noto Sans JP small ょ outline; the cited animation demonstrates よ rather than a separately animated ょ, so the size adaptation is explicit rather than presented as independent handwriting evidence."
+  },
+  "notes": "A yōon sign: it fuses with the sign before it, so ち + ょ is one mora cho, as in ちょっと, a little. Its full-size twin よ takes a beat of its own, as in よろしく."
+}

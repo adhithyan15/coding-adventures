@@ -1,0 +1,11 @@
+{
+  "id": "ES-C506-envolver",
+  "pathSegment": "ES-PATH-506-REGALO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-506-REGALO",
+      "order": 1
+    }
+  ]
+}

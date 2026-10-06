@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C197-saluto",
+    "language": "latin",
+    "chapter": 197,
+    "sequence": 9470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec8a710860b69366"
+  },
+  "findings": []
+}

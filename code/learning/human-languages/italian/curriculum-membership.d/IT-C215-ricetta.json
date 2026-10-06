@@ -1,0 +1,11 @@
+{
+  "id": "IT-C215-ricetta",
+  "pathSegment": "IT-PATH-215-SAL215",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-215-SAL215",
+      "order": 1
+    }
+  ]
+}

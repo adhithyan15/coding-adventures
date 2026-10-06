@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:cece066e7df4ab28",
+  "lessonIds": [
+    "UR-C193-imandar",
+    "UR-C193-buzdil",
+    "UR-C193-kanjus",
+    "UR-C193-lalchi",
+    "UR-C193-pareshan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch193.txt",
+  "json": "urdu/narration/ch193.json",
+  "textHash": "fnv1a64:45a0008d07b4fa6a",
+  "jsonHash": "fnv1a64:efc12d88953a33be",
+  "findings": []
+}

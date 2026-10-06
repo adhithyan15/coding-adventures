@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C141-sefaresh-dadan",
+    "language": "persian",
+    "chapter": 141,
+    "sequence": 7230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2745eb08bea35a9c"
+  },
+  "findings": []
+}

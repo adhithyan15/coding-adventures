@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:02f38eb0545b0482",
+  "lessonIds": [
+    "TE-C207-callarcu",
+    "TE-C207-tattu",
+    "TE-C207-tempu",
+    "TE-C207-dunnu",
+    "TE-C207-pandincu",
+    "TE-R207-first-pass-words-from-chapters-199-202",
+    "TE-R207-second-pass-words-from-chapters-203-207"
+  ],
+  "tex": "telugu/book/chapters/ch207-to-cool-to-tap-to-pluck-to-till-to-grow.tex"
+}

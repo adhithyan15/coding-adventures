@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:c24b7c2fd046468f",
+  "lessonIds": [
+    "TE-C192-vatti",
+    "TE-C192-gollem",
+    "TE-C192-kunce",
+    "TE-C192-haram",
+    "TE-C192-jada",
+    "TE-R192-first-pass-words-from-chapters-184-187",
+    "TE-R192-second-pass-words-from-chapters-188-192"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch192.txt",
+  "json": "telugu/narration/ch192.json",
+  "textHash": "fnv1a64:4c3793dd1938716b",
+  "jsonHash": "fnv1a64:0bda0ded9477fe09",
+  "findings": []
+}

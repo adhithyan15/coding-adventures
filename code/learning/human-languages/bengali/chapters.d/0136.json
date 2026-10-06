@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Deep, Wide, Narrow, Round, Purple",
+  "label": "ch:bn-deep-wide-narrow-round-purple",
+  "canDo": "I can say deep, wide, narrow, round and purple.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C136-beguni",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: I can say deep, wide, narrow, round and purple.",
+    "assesses": [
+      "BN-LEX-C136-QUAL136-03",
+      "BN-LEX-C136-QUAL136-04",
+      "BN-LEX-C136-QUAL136-05"
+    ]
+  }
+}

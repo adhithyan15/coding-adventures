@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:8e5ded424a7b003f",
+  "lessonIds": [
+    "UR-C253-chhipkali",
+    "UR-C253-kachhua",
+    "UR-C253-magarmachh",
+    "UR-C253-zarafa",
+    "UR-C253-makri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch253.txt",
+  "json": "urdu/narration/ch253.json",
+  "textHash": "fnv1a64:327a7c7e4bf4dea9",
+  "jsonHash": "fnv1a64:ae8ddfc9472a51b2",
+  "findings": []
+}

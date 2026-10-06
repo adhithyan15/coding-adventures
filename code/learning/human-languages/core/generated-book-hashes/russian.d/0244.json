@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:9b8bc11c4156c85f",
+  "lessonIds": [
+    "RU-C244-drevniy",
+    "RU-C244-gromkiy",
+    "RU-C244-yarkiy",
+    "RU-C244-tyomnyy",
+    "RU-C244-svetlyy"
+  ],
+  "tex": "russian/book/chapters/ch244-ancient-loud-bright-dark-light.tex"
+}

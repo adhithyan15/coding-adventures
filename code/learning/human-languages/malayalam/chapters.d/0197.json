@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "Pharmacy, Clothes shop, On the left, On the right, Straight ahead",
+  "label": "ch:ml-pharmacy-clothes-shop-on-the-left-on-the-right-straight-ahead",
+  "canDo": "I can say a pharmacy, a clothes shop, on the left, on the right and straight ahead.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ML-C197-nere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say a pharmacy, a clothes shop, on the left, on the right and straight ahead.",
+    "assesses": [
+      "ML-LEX-C197-STHALAM197-03",
+      "ML-LEX-C197-STHALAM197-04",
+      "ML-LEX-C197-STHALAM197-05"
+    ]
+  }
+}

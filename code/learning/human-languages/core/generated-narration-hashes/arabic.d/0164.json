@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:6bb5138745545c27",
+  "lessonIds": [
+    "AR-C164-sarakha",
+    "AR-C164-salla",
+    "AR-C164-mazaha",
+    "AR-C164-itaqada",
+    "AR-C164-tadhakkara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch164.txt",
+  "json": "arabic/narration/ch164.json",
+  "textHash": "fnv1a64:d5fff92effec5aa0",
+  "jsonHash": "fnv1a64:ab74c38bb1a36239",
+  "findings": []
+}

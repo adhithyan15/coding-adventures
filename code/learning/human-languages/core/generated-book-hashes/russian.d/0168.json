@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:2359075761882fbc",
+  "lessonIds": [
+    "RU-C168-svadba",
+    "RU-C168-zhenikh",
+    "RU-C168-nevesta",
+    "RU-C168-rodstvennik",
+    "RU-C168-pensioner"
+  ],
+  "tex": "russian/book/chapters/ch168-wedding-bridegroom-bride-relative-pensioner.tex"
+}

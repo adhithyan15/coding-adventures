@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:fcd9df2a41c165a2",
+  "lessonIds": [
+    "RU-C234-podmetat",
+    "RU-C234-sazhat",
+    "RU-C234-polivat",
+    "RU-C234-rasti",
+    "RU-C234-kormit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch234.txt",
+  "json": "russian/narration/ch234.json",
+  "textHash": "fnv1a64:38c3daae6f9c7f66",
+  "jsonHash": "fnv1a64:fcdb512c7955de80",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "A tin, A pot, A frying pan, An oven, A dishwasher",
+  "label": "ch:ge-a-tin-a-pot-a-frying-pan-an-oven-a-dishwasher",
+  "canDo": "I can say a tin, a pot, a frying pan, an oven and a dishwasher.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C201-spuelmaschine",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say a tin, a pot, a frying pan, an oven and a dishwasher.",
+    "assesses": [
+      "GE-LEX-C201-THING201-03",
+      "GE-LEX-C201-THING201-04",
+      "GE-LEX-C201-THING201-05"
+    ]
+  }
+}

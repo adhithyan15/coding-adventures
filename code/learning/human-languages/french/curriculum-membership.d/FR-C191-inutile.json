@@ -1,0 +1,11 @@
+{
+  "id": "FR-C191-inutile",
+  "pathSegment": "FR-PATH-191-QUAL191",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-191-QUAL191",
+      "order": 4
+    }
+  ]
+}

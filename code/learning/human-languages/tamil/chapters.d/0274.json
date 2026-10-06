@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Music, Song, Story, God, Animal",
+  "label": "ch:ta-music-song-story-god-animal",
+  "canDo": "I can say music, a song, a story, God and an animal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C274-vilanku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can say music, a song, a story, God and an animal.",
+    "assesses": [
+      "TA-LEX-C274-PORUL274-03",
+      "TA-LEX-C274-PORUL274-04",
+      "TA-LEX-C274-PORUL274-05"
+    ]
+  }
+}

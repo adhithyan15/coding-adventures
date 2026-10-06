@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C218-dhuke",
+    "language": "marathi",
+    "chapter": 218,
+    "sequence": 11820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d28e2069adbe3e74"
+  },
+  "findings": []
+}

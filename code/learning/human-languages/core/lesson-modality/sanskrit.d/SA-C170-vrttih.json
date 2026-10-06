@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C170-vrttih",
+    "language": "sanskrit",
+    "chapter": 170,
+    "sequence": 9160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8cc9d8cf7b9cca1"
+  },
+  "findings": []
+}

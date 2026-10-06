@@ -1,0 +1,11 @@
+{
+  "id": "MR-C248-jatra",
+  "pathSegment": "MR-PATH-248-VASTU248",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-248-VASTU248",
+      "order": 2
+    }
+  ]
+}

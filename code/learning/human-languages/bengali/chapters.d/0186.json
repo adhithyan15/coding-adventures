@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Rib, Navel, Palm, Brain, Muscle",
+  "label": "ch:bn-rib-navel-palm-brain-muscle",
+  "canDo": "I can say a rib, a navel, a palm, the brain and a muscle.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C186-peshi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say a rib, a navel, a palm, the brain and a muscle.",
+    "assesses": [
+      "BN-LEX-C186-SVASTHYO186-03",
+      "BN-LEX-C186-SVASTHYO186-04",
+      "BN-LEX-C186-SVASTHYO186-05"
+    ]
+  }
+}

@@ -43,9 +43,9 @@ again, riding a brand-new verb.
 
 - **క్షమా** (*kṣamā*) = "**forgiveness, patience**" — the Sanskrit noun,
   borrowed whole.
-- **‑ఇంచు** (*‑in̄cu*) = a **verb-making suffix**: *kṣamā* + *‑in̄cu* →
+- **‑ించు** (*‑in̄cu*) = a **verb-making suffix**: *kṣamā* + *‑in̄cu* →
   **క్షమించు** (*kṣamin̄cu*), "**to forgive**." (The same pattern gives
-  ప్రారంభించు *prārambhin̄cu*, "to begin," from Sanskrit *prārambha*.)
+  *prārambhin̄cu*, "to begin," from Sanskrit *prārambha*.)
 - **‑ండి** (*‑aṇḍi*) = the **respectful imperative** ending — exactly the one
   you already met on *kūrcōṇḍi* "please sit" and *ceppaṇḍi* "please tell me."
 

@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-232-MAKAN232",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a tile, a basement, a stairwell, a landing and a railing.",
+  "prerequisites": []
+}

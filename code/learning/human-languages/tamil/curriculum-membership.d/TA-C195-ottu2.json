@@ -1,0 +1,11 @@
+{
+  "id": "TA-C195-ottu2",
+  "pathSegment": "TA-PATH-195-ACT195",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-195-ACT195",
+      "order": 2
+    }
+  ]
+}

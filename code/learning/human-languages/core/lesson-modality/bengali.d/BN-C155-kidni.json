@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C155-kidni",
+    "language": "bengali",
+    "chapter": 155,
+    "sequence": 8620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7ba0e4efb56769c"
+  },
+  "findings": []
+}

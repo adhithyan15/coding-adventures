@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C182-malik",
+    "language": "hindi",
+    "chapter": 182,
+    "sequence": 8790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7053f2d97e88b83d"
+  },
+  "findings": []
+}

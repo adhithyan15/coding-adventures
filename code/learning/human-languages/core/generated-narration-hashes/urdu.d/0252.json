@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:8eb912b3f891871b",
+  "lessonIds": [
+    "UR-C252-papita",
+    "UR-C252-khubani",
+    "UR-C252-anannas",
+    "UR-C252-nariyal",
+    "UR-C252-kaju"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch252.txt",
+  "json": "urdu/narration/ch252.json",
+  "textHash": "fnv1a64:6f6b15b1d3c07a0d",
+  "jsonHash": "fnv1a64:bdfb4a5a4ad33389",
+  "findings": []
+}

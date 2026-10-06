@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:62090178d4629066",
+  "lessonIds": [
+    "HI-C209-chajja",
+    "HI-C209-pyala",
+    "HI-C209-sui",
+    "HI-C209-batti",
+    "HI-C209-roti",
+    "HI-R209-first-pass-words-from-chapters-202-205",
+    "HI-R209-second-pass-words-from-chapters-206-209"
+  ],
+  "tex": "hindi/book/chapters/ch209-a-balcony-a-cup-a-needle-a-lamp-bread.tex"
+}

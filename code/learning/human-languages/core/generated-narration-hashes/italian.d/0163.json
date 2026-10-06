@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:429c768d37593407",
+  "lessonIds": [
+    "IT-C163-meccanico",
+    "IT-C163-elettricista",
+    "IT-C163-idraulico",
+    "IT-C163-operaio",
+    "IT-C163-impiegato"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch163.txt",
+  "json": "italian/narration/ch163.json",
+  "textHash": "fnv1a64:14ffbec0c5487376",
+  "jsonHash": "fnv1a64:b219f682e6662071",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C241-janano",
+    "language": "bengali",
+    "chapter": 241,
+    "sequence": 15020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4eec02357fbd6e24"
+  },
+  "findings": []
+}

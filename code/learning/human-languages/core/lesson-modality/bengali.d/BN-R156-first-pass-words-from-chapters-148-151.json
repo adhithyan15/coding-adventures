@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R156-first-pass-words-from-chapters-148-151",
+    "language": "bengali",
+    "chapter": 156,
+    "sequence": 8700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9e074d3d79cb166"
+  },
+  "findings": []
+}

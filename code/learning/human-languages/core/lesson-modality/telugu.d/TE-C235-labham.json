@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C235-labham",
+    "language": "telugu",
+    "chapter": 235,
+    "sequence": 10950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c14c6a3890971f58"
+  },
+  "findings": []
+}

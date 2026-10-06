@@ -1,0 +1,11 @@
+{
+  "id": "KA-C236-caukasi-madu",
+  "pathSegment": "KA-PATH-236-KRIYE236",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-236-KRIYE236",
+      "order": 3
+    }
+  ]
+}

@@ -361,7 +361,10 @@ export async function executeDag(
     const reportSourceTerminal = (error: unknown): void => {
       if (sourceTerminalReported) return;
       sourceTerminalReported = true;
-      if (error instanceof CancellationError && lifecycle.token.cancelled) return;
+      // Once the run is cancelled, iterator cleanup may surface a producer
+      // error after the cancellation boundary. Cleanup is still awaited, but
+      // it must not replace the caller's authoritative cancellation outcome.
+      if (lifecycle.token.cancelled) return;
       const inherited = optionsForStream.inputPermitContext?.transportFailure?.error
         === error;
       state.transportFailure ??= { error, inherited };
@@ -633,9 +636,20 @@ export async function executeDag(
         const usesLiveInput = hasLiveProducer(inst, states);
         const inputPermitContext: PermitContext = {
           current: null,
-          inputTail: Promise.resolve(),
+          inputQueue: [],
+          inputFlushScheduled: false,
+          inputFlushActive: false,
+          inputDirectYieldActive: false,
+          inputWake: null,
           inputFailed: null,
           transportFailure: null,
+          cancelOnFailure: error => {
+            if (error instanceof CancellationError) return;
+            const inputError = toRunError(error, inst);
+            if (!(inputError.recoverable && runOptions.bestEffort)) {
+              lifecycle.cancel(`fatal stream input failure in ${inst.id}`);
+            }
+          },
         };
         const guardedInput = permitAwareInput(inputs.value, inputPermitContext);
         const stored = await runInvocation(inst, async permit => {
@@ -1098,6 +1112,15 @@ export async function executeDag(
         );
       }
     }
+  }
+
+  // Fatal transports stop new stage admission so already-started consumers
+  // can drain their bounded prefixes and observe the originating error. Once
+  // those consumers have settled and every unclaimed edge is detached, close
+  // the shared lifecycle to retire internal observers and any sibling source
+  // pull that is still pending.
+  if (anyFatal && !lifecycle.token.cancelled) {
+    lifecycle.cancel("fatal stream failure");
   }
 
   // Readiness is released when a stream transport is published, not when its
@@ -1743,9 +1766,23 @@ async function settleWithCleanup(
 
 interface PermitContext {
   current: ConcurrencyPermit | null;
-  inputTail: Promise<void>;
+  inputQueue: PendingInputOperation[];
+  inputFlushScheduled: boolean;
+  inputFlushActive: boolean;
+  inputDirectYieldActive: boolean;
+  inputWake: (() => void) | null;
   inputFailed: { readonly error: unknown } | null;
   transportFailure: { readonly error: unknown } | null;
+  readonly cancelOnFailure: (error: unknown) => void;
+}
+
+interface PendingInputOperation {
+  readonly operation: () => Promise<unknown>;
+  readonly retire: (() => Promise<unknown>) | null;
+  readonly resolve: (value: unknown) => void;
+  readonly reject: (error: unknown) => void;
+  started: boolean;
+  outcome: PromiseSettledResult<unknown> | null;
 }
 
 async function withPermitContext<T>(
@@ -1768,26 +1805,29 @@ function permitAwareIterable<T>(
   source: AsyncIterable<T>,
   context: PermitContext,
 ): AsyncIterable<T> {
+  const MAX_ITERATORS = 64;
   const active = new Set<AsyncIterator<T>>();
   let opened = false;
-  const waitWithPermit = async <R>(operation: () => Promise<R>): Promise<R> => {
+  const waitDirectWithPermit = async <R>(operation: () => Promise<R>): Promise<R> => {
     const permit = context.current;
-    if (permit === null) {
-      throw new Error("stream input read requires an active scheduler permit");
+    if (permit === null) throw new Error("stream input read requires an active scheduler permit");
+    if (context.inputFailed !== null) throw context.inputFailed.error;
+    if (context.inputDirectYieldActive || context.inputFlushActive) {
+      throw new Error("stream input permit already has an active yield");
     }
-    const wait = context.inputTail;
-    let release!: () => void;
-    context.inputTail = new Promise<void>(resolve => { release = resolve; });
-    await wait;
+    context.inputDirectYieldActive = true;
     try {
-      if (context.inputFailed !== null) throw context.inputFailed.error;
       return await permit.yieldWhile(operation);
     } catch (error) {
-      context.inputFailed ??= { error };
-      context.transportFailure ??= { error };
+      // Cancellation can reject yieldWhile without reacquiring the released
+      // permit. Reject and retire the whole batch before the direct-yield
+      // guard is cleared, so no queued fulfilled result can resume stage code
+      // outside the shared concurrency budget.
+      failInputOperations(context, error);
       throw error;
     } finally {
-      release();
+      context.inputDirectYieldActive = false;
+      deliverSettledInputOperations(context);
     }
   };
   return {
@@ -1808,50 +1848,190 @@ function permitAwareIterable<T>(
       }
       const iterators = [...active];
       active.clear();
-      await Promise.all(iterators.map(iterator => {
-        if (typeof iterator.return !== "function") return Promise.resolve();
+      for (const iterator of iterators) {
+        if (typeof iterator.return !== "function") continue;
         const operation = () => iterator.return!().then(() => undefined);
-        return context.current === null ? operation() : waitWithPermit(operation);
-      }));
+        if (context.current === null) await operation();
+        else await waitDirectWithPermit(operation);
+      }
     },
     [Symbol.asyncIterator](): AsyncIterator<T> {
+      if (active.size >= MAX_ITERATORS) {
+        throw new RangeError(`stream input allows at most ${MAX_ITERATORS} active iterators`);
+      }
       const iterator = source[Symbol.asyncIterator]();
       opened = true;
       active.add(iterator);
+      let operationPending = false;
+      const requireIdle = (): void => {
+        if (operationPending) {
+          throw new Error("stream input iterator allows only one pending operation");
+        }
+        operationPending = true;
+      };
       return {
         next: async () => {
+          requireIdle();
           try {
-            const result = await waitWithPermit(() => iterator.next());
+            const result = await enqueueInputOperation(
+              context,
+              () => iterator.next(),
+              typeof iterator.return === "function"
+                ? () => iterator.return!().then(() => undefined)
+                : null,
+            );
             if (result.done) active.delete(iterator);
             return result;
           } catch (error) {
             active.delete(iterator);
             throw error;
+          } finally {
+            operationPending = false;
           }
         },
         return: async value => {
+          requireIdle();
           try {
-            return await waitWithPermit(() =>
+            return await waitDirectWithPermit(() =>
               typeof iterator.return === "function"
                 ? iterator.return(value)
                 : Promise.resolve({ done: true, value }));
           } finally {
+            operationPending = false;
             active.delete(iterator);
           }
         },
         throw: async error => {
+          requireIdle();
           try {
-            return await waitWithPermit(() =>
+            return await waitDirectWithPermit(() =>
               typeof iterator.throw === "function"
                 ? iterator.throw(error)
                 : Promise.reject(error));
           } finally {
+            operationPending = false;
             active.delete(iterator);
           }
         },
       };
     },
   } as AsyncIterable<T>;
+}
+
+function enqueueInputOperation<R>(
+  context: PermitContext,
+  operation: () => Promise<R>,
+  retire: (() => Promise<unknown>) | null,
+): Promise<R> {
+  if (context.current === null) {
+    return Promise.reject(new Error("stream input read requires an active scheduler permit"));
+  }
+  if (context.inputFailed !== null) return Promise.reject(context.inputFailed.error);
+  if (context.inputQueue.length >= MAX_PENDING_INPUT_OPERATIONS) {
+    const error = new RangeError(
+      `stage input allows at most ${MAX_PENDING_INPUT_OPERATIONS} pending operations`,
+    );
+    failInputOperations(context, error);
+    return Promise.reject(error);
+  }
+  const result = new Promise<R>((resolve, reject) => {
+    context.inputQueue.push({
+      operation,
+      retire,
+      resolve: value => { resolve(value as R); },
+      reject,
+      started: false,
+      outcome: null,
+    });
+  });
+  if (!context.inputFlushScheduled) {
+    context.inputFlushScheduled = true;
+    void Promise.resolve().then(() => flushInputOperations(context));
+  }
+  return result;
+}
+
+const MAX_PENDING_INPUT_OPERATIONS = 256;
+
+async function flushInputOperations(context: PermitContext): Promise<void> {
+  context.inputFlushScheduled = false;
+  if (context.inputFlushActive || context.inputQueue.length === 0) return;
+  const permit = context.current;
+  if (permit === null) {
+    const error = new Error("stream input read requires an active scheduler permit");
+    failInputOperations(context, error);
+    return;
+  }
+  context.inputFlushActive = true;
+  try {
+    await permit.yieldWhile(async () => {
+      for (const pending of context.inputQueue) startInputOperation(context, pending);
+      if (context.inputQueue.some(pending => pending.outcome !== null)) return;
+      await new Promise<void>(resolve => { context.inputWake = resolve; });
+    });
+    context.inputFlushActive = false;
+    context.inputWake = null;
+    deliverSettledInputOperations(context);
+  } catch (error) {
+    context.inputFlushActive = false;
+    context.inputWake = null;
+    failInputOperations(context, error);
+  }
+}
+
+function startInputOperation(
+  context: PermitContext,
+  pending: PendingInputOperation,
+): void {
+  if (pending.started) return;
+  pending.started = true;
+  void Promise.resolve().then(pending.operation).then(
+    value => { settleInputOperation(context, pending, { status: "fulfilled", value }); },
+    reason => { settleInputOperation(context, pending, { status: "rejected", reason }); },
+  );
+}
+
+function settleInputOperation(
+  context: PermitContext,
+  pending: PendingInputOperation,
+  outcome: PromiseSettledResult<unknown>,
+): void {
+  pending.outcome = outcome;
+  context.inputWake?.();
+  context.inputWake = null;
+  if (!context.inputFlushActive && !context.inputDirectYieldActive) {
+    deliverSettledInputOperations(context);
+  }
+}
+
+function deliverSettledInputOperations(context: PermitContext): void {
+  const failure = context.inputQueue.find(
+    (pending): pending is PendingInputOperation & { outcome: PromiseRejectedResult } =>
+      pending.outcome?.status === "rejected",
+  );
+  if (failure !== undefined) {
+    failInputOperations(context, failure.outcome.reason);
+    return;
+  }
+  const settled = context.inputQueue.filter(
+    (pending): pending is PendingInputOperation & { outcome: PromiseFulfilledResult<unknown> } =>
+      pending.outcome?.status === "fulfilled",
+  );
+  context.inputQueue = context.inputQueue.filter(pending => pending.outcome === null);
+  for (const pending of settled) pending.resolve(pending.outcome.value);
+}
+
+function failInputOperations(context: PermitContext, error: unknown): void {
+  context.inputFailed ??= { error };
+  context.transportFailure ??= { error };
+  const pending = context.inputQueue.splice(0);
+  for (const operation of pending) {
+    operation.reject(error);
+    if (operation.started && operation.retire !== null) {
+      void Promise.resolve().then(operation.retire).catch(() => {});
+    }
+  }
+  context.cancelOnFailure(error);
 }
 
 function permitAwareInput(value: unknown, context: PermitContext): unknown {
@@ -1901,7 +2081,7 @@ async function runCached(
   }
   const key = cacheKey({
     stageName: inst.stage.name,
-    stageVersion: inst.stage.version,
+    stageVersion: inst.stage.implementationIdentity ?? inst.stage.version,
     stageConfig: (inst.config ?? null) as JsonValue,
     inputRevision: computeBinaryRevisionId(inputBytes),
     capabilities: inst.capabilities.map(String),

@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:eea89e420ee38b0e",
+  "lessonIds": [
+    "ML-C231-caruka",
+    "ML-C231-muttuka",
+    "ML-C231-kuniyuka",
+    "ML-C231-parikkuka",
+    "ML-C231-karakkuka",
+    "ML-R231-first-pass-words-from-chapters-223-226",
+    "ML-R231-second-pass-words-from-chapters-227-231"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch231.txt",
+  "json": "malayalam/narration/ch231.json",
+  "textHash": "fnv1a64:b474fe4e33945ba4",
+  "jsonHash": "fnv1a64:7cae2988f190520e",
+  "findings": []
+}

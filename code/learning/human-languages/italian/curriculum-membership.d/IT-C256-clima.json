@@ -1,0 +1,11 @@
+{
+  "id": "IT-C256-clima",
+  "pathSegment": "IT-PATH-256-COSE256",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-256-COSE256",
+      "order": 4
+    }
+  ]
+}

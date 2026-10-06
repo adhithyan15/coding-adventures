@@ -1,0 +1,11 @@
+{
+  "id": "IT-C251-genero",
+  "pathSegment": "IT-PATH-251-COSE251",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-251-COSE251",
+      "order": 2
+    }
+  ]
+}

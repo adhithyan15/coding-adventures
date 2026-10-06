@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:14d084562c5c16f0",
+  "lessonIds": [
+    "TE-C216-snanapu-gadi",
+    "TE-C216-punadi",
+    "TE-C216-getu",
+    "TE-C216-bekari",
+    "TE-C216-selunu",
+    "TE-R216-first-pass-words-from-chapters-208-211",
+    "TE-R216-second-pass-words-from-chapters-212-216"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch216.txt",
+  "json": "telugu/narration/ch216.json",
+  "textHash": "fnv1a64:10e229949a49dfad",
+  "jsonHash": "fnv1a64:fc87696f97dc5546",
+  "findings": []
+}

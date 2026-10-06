@@ -1,0 +1,11 @@
+{
+  "id": "SA-C155-kathorah",
+  "pathSegment": "SA-PATH-155-QUAL155",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-155-QUAL155",
+      "order": 4
+    }
+  ]
+}

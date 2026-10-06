@@ -10,17 +10,20 @@
     "a broad right bowl ending in a low tail"
   ],
   "strokeOrder": [
-    "start at the middle left, climb the short upright, and carry the top bar to the right — then lift once",
-    "restart at the central crossing, carry the short upper bar right, and curve down around the broad right bowl — then lift a second time",
-    "restart at the middle left, turn around the compact left loop, and curl back to the central crossing — then lift a third time",
-    "restart at the lower right and sweep the low tail left"
+    "start at the middle left and climb the short upright",
+    "without lifting, carry the top bar to the central upright",
+    "without lifting, carry the short upper bar to the right",
+    "without lifting, turn back along the bar, drop down the central upright, and curve around the broad right bowl",
+    "without lifting, climb back around the right bowl, cross the middle to the left, and turn around the compact left loop",
+    "without lifting, curl back to the central crossing",
+    "without lifting, follow the right bowl down again and sweep the low tail left — and only now lift"
   ],
-  "strokeOrderNote": "four strokes — movements 1–2 make the upper frame, movements 3–4 make the broad right bowl, movements 5–6 make the compact left loop, and movement 7 sweeps the low tail left; cited to Radhakrishnan, Tamil Script Learners Manual, Appendix I, Frame 3, த",
-  "penLifts": 3,
+  "strokeOrderNote": "one stroke — the manual numbers seven movements: 1–2 the upper frame, 3–4 the broad right bowl, 5–6 the compact left loop, and 7 the low tail; native writers draw them without lifting, and this ductus follows them in order, retracing the right bowl where the numbering returns to it; cited to Radhakrishnan, Tamil Script Learners Manual, Appendix I, Frame 3, த",
+  "penLifts": 0,
   "strokeOrderSource": {
     "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 3, த (University of Texas at Austin), p. 192",
     "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
-    "variation": "Module 3 identifies த as the dental stop and asks learners to write it. Appendix I's final Frame 3 row numbers four separate pen-down runs: joined movements 1–2 for the upper frame, joined 3–4 for the right bowl, joined 5–6 for the left loop, and separate movement 7 for the leftward tail. Tamil handwriting varies by school; this is one attested four-run order fitted to the bundled Noto Sans Tamil outline."
+    "variation": "Module 3 identifies த as the dental stop and asks learners to write it. Appendix I's final Frame 3 row numbers seven hand-movements: 1–2 for the upper frame, 3–4 for the broad right bowl, 5–6 for the compact left loop, and 7 for the leftward tail. Native writers draw த as one continuous stroke, and this ductus follows the seven movements in order without lifting. Because the manual numbers the right bowl before the left loop, the pen retraces the right bowl to reach the loop and again to reach the tail. In HP Labs India's online Tamil handwriting data (the LipiTk 4.0 Tamil isolated-character recognizer, trained on hpl-tamil-iso-char), 88% of the 266 stored prototypes of த are a single pen-down stroke. Tamil handwriting varies by school; this is one attested order fitted to the bundled Noto Sans Tamil outline."
   },
-  "notes": "Dental ta is assembled in four short runs: upper frame, broad right bowl, compact left loop, then the separate low tail. The numbered source order begins by climbing the left upright rather than descending it."
+  "notes": "Dental ta is one continuous stroke: upper frame, broad right bowl, compact left loop, then the low tail. The numbered source order begins by climbing the left upright rather than descending it."
 }

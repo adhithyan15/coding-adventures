@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C192-prenotazione",
+    "language": "italian",
+    "chapter": 192,
+    "sequence": 10850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a834360fb15b7e2"
+  },
+  "findings": []
+}

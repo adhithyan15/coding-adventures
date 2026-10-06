@@ -325,6 +325,148 @@ int main(int argc, char **argv) {
     }
 
     {
+        // UI48 ENV4 (§7.6). The conformance app does not react to its
+        // environment, so the runtime answers with the current revision and no
+        // props -- and the host keeps showing what it showed.
+        qputenv("MOSAIC_APP_STATE_PATH", qgetenv("MOSAIC_PROBE_STATE_J"));
+        MosaicHost host;
+        const auto before = host.props();
+        const auto shownProps = before.value(QStringLiteral("props")).toMap();
+        const auto shownRevision = before.value(QStringLiteral("revision")).toLongLong();
+        check(!shownProps.isEmpty(), "the environment checks start from real props");
+
+        const auto compact = MosaicHost::environmentReport(390, 844, false);
+        check(compact.value(QStringLiteral("sizeClass")).toString() == QStringLiteral("compact") &&
+                  compact.value(QStringLiteral("orientation")).toString() == QStringLiteral("portrait") &&
+                  compact.value(QStringLiteral("colorScheme")).toString() == QStringLiteral("light") &&
+                  compact.value(QStringLiteral("pointer")).toString() == QStringLiteral("fine") &&
+                  compact.value(QStringLiteral("hover")).toString() == QStringLiteral("hover") &&
+                  compact.value(QStringLiteral("reducedMotion")).toString() == QStringLiteral("no-preference") &&
+                  compact.size() == 6,
+              "a phone-sized light window reports the six values");
+        check(MosaicHost::environmentReport(599, 400, true).value(QStringLiteral("sizeClass")) == QStringLiteral("compact") &&
+                  MosaicHost::environmentReport(600, 400, true).value(QStringLiteral("sizeClass")) == QStringLiteral("regular") &&
+                  MosaicHost::environmentReport(1023, 400, true).value(QStringLiteral("sizeClass")) == QStringLiteral("regular") &&
+                  MosaicHost::environmentReport(1024, 400, true).value(QStringLiteral("sizeClass")) == QStringLiteral("expanded") &&
+                  MosaicHost::environmentReport(800, 800, true).value(QStringLiteral("orientation")) == QStringLiteral("landscape") &&
+                  MosaicHost::environmentReport(800, 800, true).value(QStringLiteral("colorScheme")) == QStringLiteral("dark"),
+              "size classes split at 600 and 1024, and a square window is landscape");
+
+        // A fresh host's first answer saves its state even when the app
+        // ignored it: nothing is on disk yet, so the skip -- "the file already
+        // holds this revision" -- cannot apply (an Android fresh install
+        // answers an ignored report first, and its gate expects the file).
+        const auto freshStatePath = qEnvironmentVariable("MOSAIC_APP_STATE_PATH");
+        check(!freshStatePath.isEmpty() && !QFile::exists(freshStatePath),
+              "the environment host starts with no state file");
+        const auto reported = host.reportEnvironment(compact);
+        check(!reported.contains(QStringLiteral("error")), "an ignored environment is accepted");
+        check(QFile::exists(freshStatePath),
+              "a fresh host's first answer writes its state, even an ignored report's");
+        check(reported.value(QStringLiteral("revision")).toLongLong() == shownRevision,
+              "an ignored environment keeps the revision");
+        check(reported.value(QStringLiteral("props")).toMap() == shownProps,
+              "an ignored environment keeps the props");
+        check(host.props().value(QStringLiteral("props")).toMap() == shownProps,
+              "the host still shows the same props");
+        check(host.reportEnvironment(compact).isEmpty(),
+              "an unchanged environment is not sent again");
+
+        auto invalid = compact;
+        invalid.insert(QStringLiteral("sizeClass"), QStringLiteral("enormous"));
+        check(host.reportEnvironment(invalid).contains(QStringLiteral("error")),
+              "an invalid environment is refused");
+        check(host.reportEnvironment(invalid).isEmpty(),
+              "the same refused report is not resent");
+        check(host.props().value(QStringLiteral("props")).toMap() == shownProps,
+              "a refused environment leaves the props");
+        const auto expanded = MosaicHost::environmentReport(1280, 800, false);
+        check(!host.reportEnvironment(expanded).isEmpty(), "a changed size class is sent");
+        check(!host.reportEnvironment(compact).isEmpty(),
+              "a refused report was not remembered, and going back is a change");
+        check(!host.isSettling(), "no settle is left open");
+
+        // Only an invalid report is held back. While failEnvironment is on,
+        // every report that reaches the app is an app error -- a failure that
+        // is not the report's fault -- so an error answer proves a report was
+        // sent and an empty one that it was held back.
+        const auto failEnvironment = [&host](bool fail) {
+            return host.handleEvent(QVariantMap{
+                {QStringLiteral("name"), QStringLiteral("failEnvironment")},
+                {QStringLiteral("payload"), QVariantMap{{QStringLiteral("fail"), fail}}},
+            });
+        };
+        check(!failEnvironment(true).contains(QStringLiteral("error")),
+              "the app is told to fail environment changes");
+        check(host.reportEnvironment(compact).isEmpty(),
+              "the report last taken is still held back");
+        const auto tablet = MosaicHost::environmentReport(800, 1000, false);
+        check(host.reportEnvironment(tablet).value(QStringLiteral("error")).toString()
+                  .startsWith(QStringLiteral("Mosaic application error")),
+              "an app's failure on a report is an error answer");
+        check(host.reportEnvironment(tablet).contains(QStringLiteral("error")),
+              "a report that failed transiently is sent again");
+        check(host.reportEnvironment(invalid).contains(QStringLiteral("error")) &&
+                  host.reportEnvironment(invalid).isEmpty(),
+              "an invalid report is still held back after one refusal");
+        check(host.reportEnvironment(tablet).contains(QStringLiteral("error")),
+              "holding back an invalid report holds back nothing else");
+        check(!failEnvironment(false).contains(QStringLiteral("error")),
+              "the app is told to take environment changes again");
+
+        // An ignored report writes no state: nothing the app saves changed.
+        const auto statePath = qEnvironmentVariable("MOSAIC_APP_STATE_PATH");
+        check(!statePath.isEmpty() && QFile::exists(statePath), "the environment host persists");
+        QFile::remove(statePath);
+        const auto revisionBefore = host.props().value(QStringLiteral("revision")).toLongLong();
+        const auto retried = host.reportEnvironment(tablet);
+        check(!retried.isEmpty() && !retried.contains(QStringLiteral("error")) &&
+                  retried.value(QStringLiteral("revision")).toLongLong() == revisionBefore,
+              "once the failure passes, the same report is taken");
+        check(!QFile::exists(statePath), "an ignored report does not rewrite the state file");
+        // With the state path a directory, any write fails and says so. With
+        // no failed save pending, an ignored report attempts none, so it
+        // raises no warning; an event still does, on its own answer. Once a
+        // save has failed, the next ignored report retries it -- so a kill
+        // before the next event does not lose that revision -- and its
+        // answer carries the warning's clearing, as an event's would.
+        check(QDir().mkpath(statePath), "the state path made unwritable");
+        check(!host.reportEnvironment(compact).contains(QStringLiteral("persistenceWarning")),
+              "an ignored report raises no persistence warning");
+        check(failEnvironment(false).contains(QStringLiteral("persistenceWarning")),
+              "an event that cannot persist surfaces the warning at once");
+        check(host.reportEnvironment(tablet).contains(QStringLiteral("persistenceWarning")),
+              "an ignored report while saving still fails keeps the warning");
+        check(QDir(statePath).removeRecursively(), "the state path made writable again");
+        const auto saved = host.reportEnvironment(compact);
+        check(!saved.isEmpty() && !saved.contains(QStringLiteral("error")) &&
+                  !saved.contains(QStringLiteral("persistenceWarning")) && QFile::exists(statePath),
+              "an ignored report retries a failed save and clears the warning");
+        check(failEnvironment(true).value(QStringLiteral("error")).isNull(),
+              "the app is told to fail environment changes once more");
+        check(host.reportEnvironment(compact).isEmpty(),
+              "the report that retried the save is held back");
+        check(!failEnvironment(false).contains(QStringLiteral("error")),
+              "the app is left taking environment changes");
+
+        // A native-complete shell: the answer reaches QML checked and under
+        // its QML names, exactly as handleRequiredEvent's does.
+        host.configureRequiredProps(
+            QVariantMap{{QStringLiteral("count"), QStringLiteral("countValue")}},
+            QStringList{QStringLiteral("count")});
+        const auto mapped = host.reportEnvironment(MosaicHost::environmentReport(1280, 800, true));
+        const auto mappedProps = mapped.value(QStringLiteral("props")).toMap();
+        check(!mapped.contains(QStringLiteral("error")) &&
+                  mappedProps.contains(QStringLiteral("countValue")) &&
+                  !mappedProps.contains(QStringLiteral("count")),
+              "a native-complete answer is mapped to QML names");
+        host.configureRequiredProps(QVariantMap{}, QStringList{QStringLiteral("no-such-prop")});
+        check(host.reportEnvironment(MosaicHost::environmentReport(390, 844, true))
+                  .value(QStringLiteral("error")).toString().contains(QStringLiteral("no-such-prop")),
+              "a native-complete answer missing a required prop is refused");
+    }
+
+    {
         // The library's own behaviour, with fake dialogs: no display needed.
         struct FakeDialogs : MosaicFileDialogs {
             QString choice;
@@ -402,11 +544,45 @@ int main(int argc, char **argv) {
                   opened.value(QStringLiteral("mimeType")).toString() == QStringLiteral("image/png") &&
                   opened.value(QStringLiteral("bytes")).toString() == QStringLiteral("AQID"),
               "files.open returns the name, type and bytes, never the path");
+        // UI59 §2: a "pictures only" open starts in the Pictures folder.
+        check(mosaicOnlyImages({QStringLiteral("png"), QStringLiteral("jpg"), QStringLiteral("jpeg")}),
+              "images start in Pictures");
+        check(mosaicOnlyImages({QStringLiteral("svg")}), "svg is an image");
+        check(!mosaicOnlyImages({QStringLiteral("png"), QStringLiteral("txt")}),
+              "mixed types keep Qt's default start");
+        check(!mosaicOnlyImages({}), "any file keeps Qt's default start");
+        check(!mosaicOnlyImages({QStringLiteral("pdf")}), "a document keeps Qt's default start");
+
         FakeDialogs folder;
         folder.choice = directory.path();
         check(mosaicRunFilesOpen(QVariantMap{}, folder).value(QStringLiteral("failed")).toMap()
                   .value(QStringLiteral("message")).toString() == QStringLiteral("that is not a regular file"),
               "files.open refuses something that is not a regular file");
+    }
+
+    {
+        // UI87 §3.1: Windows device names are never plain names, on any host;
+        // active content and non-ASCII extensions count as executable.
+        bool devices = true;
+        for (const QString &name : {QStringLiteral("CON"), QStringLiteral("con.txt"), QStringLiteral("Nul.json"), QStringLiteral("COM1.json"), QStringLiteral("lpt9"), QStringLiteral("COM\u00B9.json"), QStringLiteral("CON .txt"), QStringLiteral("CONIN$.log"), QStringLiteral("aux.tar.gz")}) {
+            devices = devices && !mosaicIsPlainFileName(name) && mosaicIsReservedDeviceName(name);
+        }
+        check(devices, "Windows device names are not plain names");
+        bool near = true;
+        for (const QString &name : {QStringLiteral("console.txt"), QStringLiteral("CONFIG.json"), QStringLiteral("aux-notes.txt"), QStringLiteral("COM10.json"), QStringLiteral("my.CON"), QStringLiteral("nul report.json"), QStringLiteral("CON\u0131N$.txt")}) {
+            near = near && mosaicIsPlainFileName(name);
+        }
+        check(near, "names that only start like a device name pass");
+        bool active = true;
+        for (const QString &name : {QStringLiteral("page.html"), QStringLiteral("page.HTM"), QStringLiteral("card.svg"), QStringLiteral("archive.mht"), QStringLiteral("shortcut.website"), QStringLiteral("report.xlsm"), QStringLiteral("deck.pptm"), QStringLiteral("tool.py"), QStringLiteral("invoice.\u0435x\u0435"), QStringLiteral("setup.exe\u0301"), QStringLiteral("macros.xlsb"), QStringLiteral("addin.xla"), QStringLiteral("link.iqy"), QStringLiteral("sheet.slk"), QStringLiteral("remote.rdp"), QStringLiteral("app.pyzw"), QStringLiteral("cache.pyc")}) {
+            active = active && mosaicHasExecutableExtension(name);
+        }
+        check(active, "active content and non-ASCII extensions are executable");
+        bool documents = true;
+        for (const QString &name : {QStringLiteral("notes.txt"), QStringLiteral("data.xlsx"), QStringLiteral("report.docx"), QStringLiteral("photo.png")}) {
+            documents = documents && !mosaicHasExecutableExtension(name);
+        }
+        check(documents, "ordinary documents are not executable");
     }
 
     if (failures) {

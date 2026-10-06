@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:917baae13793203c",
+  "lessonIds": [
+    "FA-C200-khejalati",
+    "FA-C200-badakhlaq",
+    "FA-C200-jeddi",
+    "FA-C200-tanha",
+    "FA-C200-khodkhah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch200.txt",
+  "json": "persian/narration/ch200.json",
+  "textHash": "fnv1a64:0d896ca19f84674a",
+  "jsonHash": "fnv1a64:8866b9b38a551307",
+  "findings": []
+}

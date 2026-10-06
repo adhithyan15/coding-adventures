@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Sandal, Pocket, Zip, Sleeve, Wardrobe",
+  "label": "ch:pt-sandal-pocket-zip-sleeve-wardrobe",
+  "canDo": "I can say a sandal, a pocket, a zip, a sleeve and a wardrobe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C169-guarda-roupa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say a sandal, a pocket, a zip, a sleeve and a wardrobe.",
+    "assesses": [
+      "PT-LEX-C169-COISAS169-03",
+      "PT-LEX-C169-COISAS169-04",
+      "PT-LEX-C169-COISAS169-05"
+    ]
+  }
+}

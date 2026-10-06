@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "North, South, East, Straight ahead, Opposite",
+  "label": "ch:fa-north-south-east-straight-ahead-opposite",
+  "canDo": "I can say north, south, east, straight ahead and opposite.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-C230-rubaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say north, south, east, straight ahead and opposite.",
+    "assesses": [
+      "FA-LEX-C230-MAKAN230-03",
+      "FA-LEX-C230-MAKAN230-04",
+      "FA-LEX-C230-MAKAN230-05"
+    ]
+  }
+}

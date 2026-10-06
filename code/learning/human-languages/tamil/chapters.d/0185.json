@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Queue, Number, Text message, News, Email",
+  "label": "ch:ta-queue-number-text-message-news-email",
+  "canDo": "I can say a queue, a number, a text message, news and an email.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C185-minnancal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say a queue, a number, a text message, news and an email.",
+    "assesses": [
+      "TA-LEX-C185-PORUL185-03",
+      "TA-LEX-C185-PORUL185-04",
+      "TA-LEX-C185-PORUL185-05"
+    ]
+  }
+}

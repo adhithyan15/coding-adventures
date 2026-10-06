@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:3c81ae0ead3b08ea",
+  "lessonIds": [
+    "TE-C223-vyaktigata",
+    "TE-C223-praivetu",
+    "TE-C223-panikirani",
+    "TE-C223-cindaravandara",
+    "TE-C223-moratu"
+  ],
+  "tex": "telugu/book/chapters/ch223-personal-private-useless-messy-rude.tex"
+}

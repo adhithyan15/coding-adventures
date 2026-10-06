@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:7d87d131f290da9f",
+  "lessonIds": [
+    "GE-C246-begleiten",
+    "GE-C246-bemerken",
+    "GE-C246-beraten",
+    "GE-C246-berichten",
+    "GE-C246-besichtigen",
+    "GE-R246-first-pass-words-from-chapters-238-241",
+    "GE-R246-second-pass-words-from-chapters-242-246"
+  ],
+  "tex": "german/book/chapters/ch246-to-accompany-to-notice-to-advise-to-report-to-visit.tex"
+}

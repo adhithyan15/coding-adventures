@@ -1,0 +1,11 @@
+{
+  "id": "LA-C217-currus",
+  "pathSegment": "LA-PATH-217-RES217",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-217-RES217",
+      "order": 4
+    }
+  ]
+}

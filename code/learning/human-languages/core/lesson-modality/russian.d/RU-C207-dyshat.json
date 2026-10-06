@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C207-dyshat",
+    "language": "russian",
+    "chapter": 207,
+    "sequence": 12270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51e4b5fc9002bbc9"
+  },
+  "findings": []
+}

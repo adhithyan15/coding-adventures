@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:7a06fa77bad45392",
+  "lessonIds": [
+    "MR-C250-itihas",
+    "MR-C250-bhugol",
+    "MR-C250-ganit",
+    "MR-C250-kala",
+    "MR-C250-sangh",
+    "MR-R250-first-pass-words-from-chapters-246-247",
+    "MR-R250-second-pass-words-from-chapters-248-250"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch250.txt",
+  "json": "marathi/narration/ch250.json",
+  "textHash": "fnv1a64:257a117b319d3e3a",
+  "jsonHash": "fnv1a64:c8f0db504c78e1c3",
+  "findings": []
+}

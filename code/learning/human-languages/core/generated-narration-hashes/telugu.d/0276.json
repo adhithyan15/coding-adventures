@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:522fd66c89d0aca0",
+  "lessonIds": [
+    "TE-C276-rasayanasastram",
+    "TE-C276-jivasastram",
+    "TE-C276-arthasastram",
+    "TE-C276-vyakaranam",
+    "TE-C276-nallaballa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch276.txt",
+  "json": "telugu/narration/ch276.json",
+  "textHash": "fnv1a64:748365f4ab01da2f",
+  "jsonHash": "fnv1a64:cbe366ae6875b343",
+  "findings": []
+}

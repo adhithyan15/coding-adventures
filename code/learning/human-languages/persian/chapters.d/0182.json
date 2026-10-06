@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "To book, To hire, To repeat, To translate, To talk",
+  "label": "ch:fa-to-book-to-hire-to-repeat-to-translate-to-talk",
+  "canDo": "I can say to book, to hire, to repeat, to translate and to talk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C182-sohbat-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say to book, to hire, to repeat, to translate and to talk.",
+    "assesses": [
+      "FA-LEX-C182-KONESH182-03",
+      "FA-LEX-C182-KONESH182-04",
+      "FA-LEX-C182-KONESH182-05"
+    ]
+  }
+}

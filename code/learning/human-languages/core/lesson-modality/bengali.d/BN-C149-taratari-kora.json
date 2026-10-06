@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C149-taratari-kora",
+    "language": "bengali",
+    "chapter": 149,
+    "sequence": 8330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cd7005fd5d00da4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C214-modir",
+  "pathSegment": "FA-PATH-214-KAR214",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-214-KAR214",
+      "order": 4
+    }
+  ]
+}

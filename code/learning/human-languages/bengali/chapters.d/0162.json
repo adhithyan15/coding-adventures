@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "Fragrant, Rotten, Half, Whole, Slight",
+  "label": "ch:bn-fragrant-rotten-half-whole-slight",
+  "canDo": "I can say fragrant, rotten, half, whole and slight.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C162-samanyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say fragrant, rotten, half, whole and slight.",
+    "assesses": [
+      "BN-LEX-C162-GUN162-03",
+      "BN-LEX-C162-GUN162-04",
+      "BN-LEX-C162-GUN162-05"
+    ]
+  }
+}

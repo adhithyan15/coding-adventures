@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C225-occasione",
+    "language": "italian",
+    "chapter": 225,
+    "sequence": 13180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15651d2b8c2e8d48"
+  },
+  "findings": []
+}

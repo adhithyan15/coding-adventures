@@ -1,0 +1,11 @@
+{
+  "id": "BN-C203-somman",
+  "pathSegment": "BN-PATH-203-JINIS203",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-203-JINIS203",
+      "order": 4
+    }
+  ]
+}

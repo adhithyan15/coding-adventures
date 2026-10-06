@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:fa532919d814729c",
+  "lessonIds": [
+    "TE-C311-kalasala",
+    "TE-C311-visvavidyalayam",
+    "TE-C311-digri",
+    "TE-C311-anubhavam",
+    "TE-C311-khata"
+  ],
+  "tex": "telugu/book/chapters/ch311-college-university-degree-experience-account.tex"
+}

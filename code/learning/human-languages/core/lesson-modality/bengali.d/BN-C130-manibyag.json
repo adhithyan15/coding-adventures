@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C130-manibyag",
+    "language": "bengali",
+    "chapter": 130,
+    "sequence": 7100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3c9c1c58dfbfc1b"
+  },
+  "findings": []
+}

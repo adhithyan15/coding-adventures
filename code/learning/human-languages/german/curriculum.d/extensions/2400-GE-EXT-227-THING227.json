@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-227-THING227",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an application, a relationship, an impression, admission and an admission ticket.",
+  "prerequisites": []
+}

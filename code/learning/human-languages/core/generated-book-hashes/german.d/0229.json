@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:d8128fc4d203d522",
+  "lessonIds": [
+    "GE-C229-erlebnis",
+    "GE-C229-fuehrung",
+    "GE-C229-gebuehr",
+    "GE-C229-gefuehl",
+    "GE-C229-gegend"
+  ],
+  "tex": "german/book/chapters/ch229-an-experience-a-guided-tour-a-fee-a-feeling-an-area.tex"
+}

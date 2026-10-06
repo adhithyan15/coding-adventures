@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:b53df09de7cd51b7",
+  "lessonIds": [
+    "IT-C160-conto",
+    "IT-C160-mancia",
+    "IT-C160-pizzeria",
+    "IT-C160-villaggio",
+    "IT-C160-marciapiede"
+  ],
+  "tex": "italian/book/chapters/ch160-bill-tip-pizzeria-hamlet-pavement.tex"
+}

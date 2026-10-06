@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "To observe, To take part, To go for a walk, To fold, To own",
+  "label": "ch:fr-to-observe-to-take-part-to-go-for-a-walk-to-fold-to-own",
+  "canDo": "I can say to observe, to take part, to go for a walk, to fold and to own.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C148-posseder",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: I can say to observe, to take part, to go for a walk, to fold and to own.",
+    "assesses": [
+      "FR-LEX-C148-VERBES148-03",
+      "FR-LEX-C148-VERBES148-04",
+      "FR-LEX-C148-VERBES148-05"
+    ]
+  }
+}

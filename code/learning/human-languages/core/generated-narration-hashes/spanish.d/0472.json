@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 472,
-  "sourceHash": "fnv1a64:d6b41c9ab99af2fd",
+  "sourceHash": "fnv1a64:f0fa195afb5c3e41",
   "lessonIds": [
     "ES-C472-usuario",
     "ES-C472-encuesta",
@@ -16,6 +16,6 @@
   "text": "spanish/narration/ch472.txt",
   "json": "spanish/narration/ch472.json",
   "textHash": "fnv1a64:6a90a1e2214c653d",
-  "jsonHash": "fnv1a64:665a0201620b2a52",
+  "jsonHash": "fnv1a64:4798d7436d7b8f13",
   "findings": []
 }

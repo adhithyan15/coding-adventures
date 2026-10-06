@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:6172186f53711f5c",
+  "lessonIds": [
+    "BN-C174-plag",
+    "BN-C174-injin",
+    "BN-C174-chaka",
+    "BN-C174-tayar",
+    "BN-C174-brek",
+    "BN-R174-first-pass-words-from-chapters-166-169",
+    "BN-R174-second-pass-words-from-chapters-170-174"
+  ],
+  "tex": "bengali/book/chapters/ch174-plug-engine-wheel-tyre-brake.tex"
+}

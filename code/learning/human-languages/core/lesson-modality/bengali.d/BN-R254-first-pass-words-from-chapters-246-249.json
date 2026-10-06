@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R254-first-pass-words-from-chapters-246-249",
+    "language": "bengali",
+    "chapter": 254,
+    "sequence": 15880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f38565516803b29a"
+  },
+  "findings": []
+}

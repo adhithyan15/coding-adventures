@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:0913b900eac7435a",
+  "lessonIds": [
+    "PT-C198-quantidade",
+    "PT-C198-quilo",
+    "PT-C198-litro",
+    "PT-C198-pacote",
+    "PT-C198-lata"
+  ],
+  "tex": "portuguese/book/chapters/ch198-quantity-kilo-litre-packet-tin.tex"
+}

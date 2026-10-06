@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C225-zebra",
+    "language": "russian",
+    "chapter": 225,
+    "sequence": 13550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8ec28a983eab776"
+  },
+  "findings": []
+}

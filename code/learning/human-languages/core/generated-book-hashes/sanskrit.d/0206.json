@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:020c6b3fb275e558",
+  "lessonIds": [
+    "SA-C206-majjati",
+    "SA-C206-snati",
+    "SA-C206-khelati",
+    "SA-C206-nimilayati",
+    "SA-C206-unmilayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch206-sinks-bathes-frolics-shuts-opens.tex"
+}

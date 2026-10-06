@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:a5fd12aa37c54c72",
+  "lessonIds": [
+    "AR-C216-qasida",
+    "AR-C216-hadith",
+    "AR-C216-sirr",
+    "AR-C216-wad",
+    "AR-C216-dabab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch216.txt",
+  "json": "arabic/narration/ch216.json",
+  "textHash": "fnv1a64:8422a01d39cf7155",
+  "jsonHash": "fnv1a64:d64d1b2579a56ccb",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C199-partior",
+    "language": "latin",
+    "chapter": 199,
+    "sequence": 9590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8a430f74b532874"
+  },
+  "findings": []
+}

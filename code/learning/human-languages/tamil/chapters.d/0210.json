@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Mind, Character, Jealousy, Shyness, Surprise",
+  "label": "ch:ta-mind-character-jealousy-shyness-surprise",
+  "canDo": "I can say the mind, character, jealousy, shyness and surprise.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C210-accariyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say the mind, character, jealousy, shyness and surprise.",
+    "assesses": [
+      "TA-LEX-C210-GUNAM210-03",
+      "TA-LEX-C210-GUNAM210-04",
+      "TA-LEX-C210-GUNAM210-05"
+    ]
+  }
+}

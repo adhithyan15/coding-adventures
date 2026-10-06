@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C229-motar-saikil",
+    "language": "urdu",
+    "chapter": 229,
+    "sequence": 13540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f88b5654d313950"
+  },
+  "findings": []
+}

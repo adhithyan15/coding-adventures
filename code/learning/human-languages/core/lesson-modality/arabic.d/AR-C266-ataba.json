@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C266-ataba",
+    "language": "arabic",
+    "chapter": 266,
+    "sequence": 15200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b09cbdfe3f7e4b81"
+  },
+  "findings": []
+}

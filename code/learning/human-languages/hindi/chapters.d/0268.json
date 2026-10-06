@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Rubbish, A dustbin, Smoke, Fire, Ash",
+  "label": "ch:hi-rubbish-a-dustbin-smoke-fire-ash",
+  "canDo": "I can say rubbish, a dustbin, smoke, fire and ash.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C268-rakh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can say rubbish, a dustbin, smoke, fire and ash.",
+    "assesses": [
+      "HI-LEX-C268-THG268-03",
+      "HI-LEX-C268-THG268-04",
+      "HI-LEX-C268-THG268-05"
+    ]
+  }
+}

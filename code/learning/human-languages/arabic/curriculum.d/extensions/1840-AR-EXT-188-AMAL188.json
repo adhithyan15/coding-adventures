@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-188-AMAL188",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a currency, a bill, a discount, a customer and a cashier.",
+  "prerequisites": []
+}

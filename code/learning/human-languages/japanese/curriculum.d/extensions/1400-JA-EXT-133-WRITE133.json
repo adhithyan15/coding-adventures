@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-133-WRITE133",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write ki, ke, nu and he, the last four basic hiragana, and read words that use them, such as eki, inu and heya.",
+  "prerequisites": []
+}

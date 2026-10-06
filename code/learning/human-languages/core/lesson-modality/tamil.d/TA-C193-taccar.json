@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C193-taccar",
+    "language": "tamil",
+    "chapter": 193,
+    "sequence": 9750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2961a1760988d7cd"
+  },
+  "findings": []
+}

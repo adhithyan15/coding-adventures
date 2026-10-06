@@ -1,0 +1,11 @@
+{
+  "id": "BN-C225-kobita",
+  "pathSegment": "BN-PATH-225-JINIS225",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-225-JINIS225",
+      "order": 4
+    }
+  ]
+}

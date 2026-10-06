@@ -1,0 +1,11 @@
+{
+  "id": "LA-C238-citra",
+  "pathSegment": "LA-PATH-238-LOC238",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-238-LOC238",
+      "order": 1
+    }
+  ]
+}

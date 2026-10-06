@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Society, Government, Law, Court, Judge",
+  "label": "ch:fr-society-government-law-court-judge",
+  "canDo": "I can say society, the government, a law, a court and a judge.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-R222-second-pass-words-from-chapters-218-222",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say society, the government, a law, a court and a judge.",
+    "assesses": [
+      "FR-LEX-C222-CHOSES222-03",
+      "FR-LEX-C222-CHOSES222-04",
+      "FR-LEX-C222-CHOSES222-05"
+    ]
+  }
+}

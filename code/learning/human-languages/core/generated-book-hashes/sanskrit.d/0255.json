@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:e6965ed77e6bff38",
+  "lessonIds": [
+    "SA-C255-siksa",
+    "SA-C255-jnanam",
+    "SA-C255-abhyasah",
+    "SA-C255-grhakaryam",
+    "SA-C255-uttaram"
+  ],
+  "tex": "sanskrit/book/chapters/ch255-education-knowledge-practice-homework-answer.tex"
+}

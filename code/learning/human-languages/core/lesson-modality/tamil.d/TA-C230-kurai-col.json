@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C230-kurai-col",
+    "language": "tamil",
+    "chapter": 230,
+    "sequence": 12450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:223ff2150d3234f0"
+  },
+  "findings": []
+}

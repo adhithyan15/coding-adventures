@@ -1,0 +1,11 @@
+{
+  "id": "PT-C143-apanhar",
+  "pathSegment": "PT-PATH-143-VERBOS143",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-143-VERBOS143",
+      "order": 1
+    }
+  ]
+}

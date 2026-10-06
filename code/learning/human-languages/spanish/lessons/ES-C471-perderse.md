@@ -7,7 +7,7 @@ chapter: 471
 type: word
 headword: perderse
 gloss: to get lost — the reflexive equivocarse already grouped it with, and in a class it is the thread you lose, not the way
-concept_tag: ES-ASK-PERDERSE
+concept_tag: ES-VERB-PERDERSE
 prerequisites: [ES-C471-sencillo, ES-C437-equivocarse, ES-C395-perder]
 sounds: [r-tap, s-clear, stress-penultimate]
 roots: [perdere-latin]

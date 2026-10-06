@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C160-inconnu-inconnue",
+    "language": "french",
+    "chapter": 160,
+    "sequence": 7850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfd2d937efd18581"
+  },
+  "findings": []
+}

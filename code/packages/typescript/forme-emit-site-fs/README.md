@@ -4,6 +4,12 @@ The asset-aware static-site emitter for Forme. It joins rendered pages with
 loaded `Asset` IR, replaces renderer-owned `forme-asset:<logical-id>`
 placeholders, and writes one complete `DeployArtifact` to disk.
 
+Interactive pages additionally carry exact `IslandId` to script-asset pairs.
+The emitter verifies those pairs, fingerprints only referenced script assets,
+adds one external `type="module"` tag per distinct asset immediately before `</body>`, and copies the
+same ordered IDs into each deploy route. A page with no islands receives no
+script tag, loader shell, or unused script asset.
+
 ## Stage contract
 
 ```ts
@@ -13,10 +19,15 @@ emitSiteFs.produces   // Kinds.DeployArtifact
 emitSiteFs.capabilities // ["filesystem:write"]
 ```
 
-The default input and named asset input are both materialized by the
-orchestrator, so the emitter runs exactly once. This preserves the page/asset
-split established by the resolver and loader without frontmatter, event-bus,
-or hidden-filesystem side channels.
+The default page stream and named asset stream remain live, bounded inputs and
+the emitter runs exactly once. It drains both sibling streams concurrently,
+snapshots at most 65,536 pages, and only then performs the asset-dependent page
+rewrite. This avoids circular backpressure when both branches share an
+upstream source while preserving the resolver/loader split without
+frontmatter, event-bus, or hidden-filesystem side channels.
+Before retaining a page, the collector enforces a 16 MiB per-page and 32 MiB
+aggregate UTF-8 content budget plus 65,536 aggregate asset/island/module uses.
+Island-module package names retain the FM05 214-character ceiling at this sink.
 
 ## Output policy
 
@@ -33,12 +44,20 @@ or hidden-filesystem side channels.
 - `manifest.assets` records each logical ID, artifact path, MIME type, and
   complete SHA-256 digest.
 - `manifest.buildId` covers the hashes of every rewritten page and asset file.
+- Script assets require a JavaScript MIME type and are emitted only when named
+  by a page's exact `islandModules` list. The emitter recomputes and verifies
+  each reviewed SHA-256 binding before producing a module tag. Other asset
+  roles preserve the existing complete-stream behavior.
 
 The stage copies asset bytes defensively, sorts output paths before writing,
-and rejects duplicate identities, conflicting output paths, route traversal,
+and rejects duplicate identities, exact or portable-filesystem-conflicting
+output paths, route traversal,
 missing `meta.sourcePath`, inconsistent byte lengths, missing assets, and
 undeclared placeholders. Validation finishes before the first write except for
 cancellation, which is checked throughout collection and materialization.
+Page asset/island/module lists are descriptor-snapshotted with explicit count
+bounds so later producer mutation cannot alter the deploy manifest. Aggregate
+content and usage budgets are checked before those defensive copies.
 
 `filesystem:write` follows the same adapter exception as `forme-emit-fs`: the
 stage declares the capability and directly materializes through
@@ -63,6 +82,7 @@ npm run test:coverage
 ```
 
 Tests include a real orchestrator pipeline with explicit default and `assets`
-wires, a fresh-process persistent-cache replay after deleting the output tree,
+wires, a 256-page shared-source regression for bounded sibling-stream
+backpressure, a fresh-process persistent-cache replay after deleting the output tree,
 real temporary-directory writes, deterministic fingerprint and manifest
 checks, suffix preservation, and failure-path coverage.

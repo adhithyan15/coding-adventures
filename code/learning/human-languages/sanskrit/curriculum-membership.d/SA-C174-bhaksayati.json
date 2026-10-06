@@ -1,0 +1,11 @@
+{
+  "id": "SA-C174-bhaksayati",
+  "pathSegment": "SA-PATH-174-ACT174",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-174-ACT174",
+      "order": 1
+    }
+  ]
+}

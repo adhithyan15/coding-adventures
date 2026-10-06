@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:6f3708bb2766fb6a",
+  "lessonIds": [
+    "RU-C192-gazeta",
+    "RU-C192-zhurnal",
+    "RU-C192-slovar",
+    "RU-C192-lineyka",
+    "RU-C192-papka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch192.txt",
+  "json": "russian/narration/ch192.json",
+  "textHash": "fnv1a64:cce4d8caa4322090",
+  "jsonHash": "fnv1a64:ee28afafeb67b362",
+  "findings": []
+}

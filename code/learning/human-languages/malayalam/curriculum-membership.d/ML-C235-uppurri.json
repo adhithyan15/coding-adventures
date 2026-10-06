@@ -1,0 +1,11 @@
+{
+  "id": "ML-C235-uppurri",
+  "pathSegment": "ML-PATH-235-AROGYAM235",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-235-AROGYAM235",
+      "order": 1
+    }
+  ]
+}

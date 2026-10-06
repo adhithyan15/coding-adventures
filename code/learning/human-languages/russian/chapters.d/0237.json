@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "To die, To knock, To renovate, To move, To earn",
+  "label": "ch:ru-to-die-to-knock-to-renovate-to-move-to-earn",
+  "canDo": "I can say to die, to knock, to renovate, to move and to earn.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C237-zarabatyvat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say to die, to knock, to renovate, to move and to earn.",
+    "assesses": [
+      "RU-LEX-C237-ACT237-03",
+      "RU-LEX-C237-ACT237-04",
+      "RU-LEX-C237-ACT237-05"
+    ]
+  }
+}

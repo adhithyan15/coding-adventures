@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-174-IDAM174",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a boat, a bicycle, a car, an auto-rickshaw and a passenger.",
+  "prerequisites": []
+}

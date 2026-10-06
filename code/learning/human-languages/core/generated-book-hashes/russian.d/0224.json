@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:4d79f47b1c648a7e",
+  "lessonIds": [
+    "RU-C224-beryoza",
+    "RU-C224-yel",
+    "RU-C224-sosna",
+    "RU-C224-kust",
+    "RU-C224-ovtsa"
+  ],
+  "tex": "russian/book/chapters/ch224-birch-spruce-pine-bush-sheep.tex"
+}

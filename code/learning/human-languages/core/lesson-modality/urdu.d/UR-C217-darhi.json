@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C217-darhi",
+    "language": "urdu",
+    "chapter": 217,
+    "sequence": 12750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:191e7f73bb5a0b37"
+  },
+  "findings": []
+}

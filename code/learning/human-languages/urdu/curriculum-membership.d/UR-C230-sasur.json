@@ -1,0 +1,11 @@
+{
+  "id": "UR-C230-sasur",
+  "pathSegment": "UR-PATH-230-CHIZ230",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-230-CHIZ230",
+      "order": 1
+    }
+  ]
+}

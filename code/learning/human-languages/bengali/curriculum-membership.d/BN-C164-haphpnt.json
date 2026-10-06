@@ -1,0 +1,11 @@
+{
+  "id": "BN-C164-haphpnt",
+  "pathSegment": "BN-PATH-164-JINIS164",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-164-JINIS164",
+      "order": 3
+    }
+  ]
+}

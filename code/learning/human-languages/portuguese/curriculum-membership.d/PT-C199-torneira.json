@@ -1,0 +1,11 @@
+{
+  "id": "PT-C199-torneira",
+  "pathSegment": "PT-PATH-199-COISAS199",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-199-COISAS199",
+      "order": 4
+    }
+  ]
+}

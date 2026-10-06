@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C196-ippolum",
+    "language": "malayalam",
+    "chapter": 196,
+    "sequence": 8620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:313bbe82313c8c20"
+  },
+  "findings": []
+}

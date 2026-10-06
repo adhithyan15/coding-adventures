@@ -1,0 +1,11 @@
+{
+  "id": "ML-C216-palaka",
+  "pathSegment": "ML-PATH-216-VASTU216",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-216-VASTU216",
+      "order": 2
+    }
+  ]
+}

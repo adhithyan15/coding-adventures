@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C251-mottam",
+    "language": "tamil",
+    "chapter": 251,
+    "sequence": 14020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5de61ba7fbbf2693"
+  },
+  "findings": []
+}

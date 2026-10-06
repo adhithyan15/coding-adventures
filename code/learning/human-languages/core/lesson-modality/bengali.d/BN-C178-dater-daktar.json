@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C178-dater-daktar",
+    "language": "bengali",
+    "chapter": 178,
+    "sequence": 10320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfec164a213d5fb0"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C232-narde",
+    "language": "persian",
+    "chapter": 232,
+    "sequence": 12000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:372ae4021c2bddd6"
+  },
+  "findings": []
+}

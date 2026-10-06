@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:36104c14e593bdf5",
+  "lessonIds": [
+    "RU-C250-arbuz",
+    "RU-C250-sliva",
+    "RU-C250-makarony",
+    "RU-C250-tort",
+    "RU-C250-konfeta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch250.txt",
+  "json": "russian/narration/ch250.json",
+  "textHash": "fnv1a64:5b5a9c367b1d5307",
+  "jsonHash": "fnv1a64:fa16d3cf2ebff9bb",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C160-mehrban",
+    "language": "urdu",
+    "chapter": 160,
+    "sequence": 8640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7f4dbaf8ba65939"
+  },
+  "findings": []
+}

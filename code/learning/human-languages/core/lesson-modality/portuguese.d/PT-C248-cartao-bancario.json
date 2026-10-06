@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C248-cartao-bancario",
+    "language": "portuguese",
+    "chapter": 248,
+    "sequence": 14770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d25a6c3cbce5428"
+  },
+  "findings": []
+}

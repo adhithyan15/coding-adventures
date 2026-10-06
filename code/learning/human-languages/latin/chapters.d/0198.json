@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "To forbid, To defend, To die, To marry, To rest",
+  "label": "ch:la-to-forbid-to-defend-to-die-to-marry-to-rest",
+  "canDo": "I can say to forbid, to defend, to die, to marry and to rest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C198-quiesco",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say to forbid, to defend, to die, to marry and to rest.",
+    "assesses": [
+      "LA-LEX-C198-ACT198-03",
+      "LA-LEX-C198-ACT198-04",
+      "LA-LEX-C198-ACT198-05"
+    ]
+  }
+}

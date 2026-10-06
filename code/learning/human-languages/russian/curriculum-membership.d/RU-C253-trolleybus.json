@@ -1,0 +1,11 @@
+{
+  "id": "RU-C253-trolleybus",
+  "pathSegment": "RU-PATH-253-VESHCH253",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-253-VESHCH253",
+      "order": 4
+    }
+  ]
+}

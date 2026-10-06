@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "A washerman, A cook, A driver, An engineer, A writer",
+  "label": "ch:hi-a-washerman-a-cook-a-driver-an-engineer-a-writer",
+  "canDo": "I can say a washerman, a cook, a driver, an engineer and a writer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C194-lekhak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say a washerman, a cook, a driver, an engineer and a writer.",
+    "assesses": [
+      "HI-LEX-C194-THG194-03",
+      "HI-LEX-C194-THG194-04",
+      "HI-LEX-C194-THG194-05"
+    ]
+  }
+}

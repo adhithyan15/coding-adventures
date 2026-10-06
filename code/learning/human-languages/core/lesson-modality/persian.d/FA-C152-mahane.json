@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C152-mahane",
+    "language": "persian",
+    "chapter": 152,
+    "sequence": 7780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b3a306a68f11cf2"
+  },
+  "findings": []
+}

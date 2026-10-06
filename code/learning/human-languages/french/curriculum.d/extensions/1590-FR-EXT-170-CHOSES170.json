@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-170-CHOSES170",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a castle, a tower, a monument, a statue and a fountain.",
+  "prerequisites": []
+}

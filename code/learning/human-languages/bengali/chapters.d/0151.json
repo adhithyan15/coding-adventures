@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "To close, To build, To repair, To hang, To tie",
+  "label": "ch:bn-to-close-to-build-to-repair-to-hang-to-tie",
+  "canDo": "I can say to close, to build, to repair, to hang and to tie.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C151-badha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: I can say to close, to build, to repair, to hang and to tie.",
+    "assesses": [
+      "BN-LEX-C151-ACT151-03",
+      "BN-LEX-C151-ACT151-04",
+      "BN-LEX-C151-ACT151-05"
+    ]
+  }
+}

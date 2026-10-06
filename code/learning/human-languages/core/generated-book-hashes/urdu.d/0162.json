@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:c0f85133d85db0f7",
+  "lessonIds": [
+    "UR-C162-maqami",
+    "UR-C162-angrezi",
+    "UR-C162-pakistani",
+    "UR-C162-hindustani",
+    "UR-C162-surmai"
+  ],
+  "tex": "urdu/book/chapters/ch162-local-english-pakistani-indian-grey.tex"
+}

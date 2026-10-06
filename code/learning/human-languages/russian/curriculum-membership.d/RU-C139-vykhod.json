@@ -1,0 +1,11 @@
+{
+  "id": "RU-C139-vykhod",
+  "pathSegment": "RU-PATH-139-CHT139",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-139-CHT139",
+      "order": 3
+    }
+  ]
+}

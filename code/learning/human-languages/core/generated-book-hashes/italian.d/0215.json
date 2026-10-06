@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:cfdf3a13a2a5b097",
+  "lessonIds": [
+    "IT-C215-influenza",
+    "IT-C215-ricetta",
+    "IT-C215-pillola",
+    "IT-C215-sciroppo",
+    "IT-C215-pomata"
+  ],
+  "tex": "italian/book/chapters/ch215-flu-prescription-pill-syrup-ointment.tex"
+}

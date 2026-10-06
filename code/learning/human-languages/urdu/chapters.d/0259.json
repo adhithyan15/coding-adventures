@@ -1,0 +1,19 @@
+{
+  "chapter": 259,
+  "title": "Dish, Menu, Tangy, Fine white flour, Semolina",
+  "label": "ch:ur-dish-menu-tangy-fine-white-flour-semolina",
+  "canDo": "I can say a dish, a menu, tangy, fine white flour and semolina.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C259-suji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can say a dish, a menu, tangy, fine white flour and semolina.",
+    "assesses": [
+      "UR-LEX-C259-CHIZ259-03",
+      "UR-LEX-C259-CHIZ259-04",
+      "UR-LEX-C259-CHIZ259-05"
+    ]
+  }
+}

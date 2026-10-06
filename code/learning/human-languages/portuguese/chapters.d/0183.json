@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "Outskirts, Centre, Side, Corner, Middle",
+  "label": "ch:pt-outskirts-centre-side-corner-middle",
+  "canDo": "I can say the outskirts, the centre, a side, a corner and the middle.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PT-C183-meio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can say the outskirts, the centre, a side, a corner and the middle.",
+    "assesses": [
+      "PT-LEX-C183-LUGAR183-03",
+      "PT-LEX-C183-LUGAR183-04",
+      "PT-LEX-C183-LUGAR183-05"
+    ]
+  }
+}

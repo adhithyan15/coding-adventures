@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import re
 import subprocess
 import sys
 import tempfile
@@ -149,6 +150,218 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn("test --tests MosaicPlatformEffectsTest", block)
 
+    def test_trestle_builds_an_android_apk(self) -> None:
+        """UI89 step 4: the Compose lane keeps the Android SDK, builds
+        TaskApp's generated Android project, and checks what the APK is."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Trestle for Android (UI89 step 4)")
+        block = workflow[start:workflow.index("\n      - name:", start)]
+        self.assertIn("needs.detect.outputs.needs_mosaic_compose_runtime == 'true'", block)
+        self.assertIn('android_project="$RUNNER_TEMP/mosaic-compose-taskapp/compose/android"', block)
+        self.assertIn('test ! -e "$android_project/src/main/kotlin/Main.kt"', block)
+        self.assertIn(
+            "-cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain",
+            block,
+        )
+        self.assertIn("launchable-activity: name='mosaic\\.android\\.MosaicActivity'", block)
+        self.assertIn("package: name='dev\\.codingadventures\\.trestle'", block)
+        self.assertIn("^(min)?[sS]dkVersion:'26'", block)
+        self.assertIn('test -f "$dex/lib/x86_64/libjnidispatch.so"', block)
+        # A failed check says which one, instead of a silent `grep -q`.
+        self.assertIn("::error::the APK's badging has no line matching", block)
+        # The SDK survives the disk reclaim and is set up for this lane.
+        self.assertIn('[ "$NEEDS_MOSAIC_COMPOSE" != "true" ]', workflow)
+        setup = workflow.index("- name: Set up Android SDK")
+        self.assertIn(
+            "(needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')",
+            workflow[setup:workflow.index("\n", setup + 40)],
+        )
+
+    def test_trestle_android_apk_carries_the_rust_runtime(self) -> None:
+        """UI89 step 5: every ABI's engine is built with cargo-ndk, installed
+        through --runtime-library, and proven in the APK by its symbol."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Trestle for Android with its Rust runtime (UI89 step 5)")
+        block = workflow[start:workflow.index("\n      - name:", start)]
+        self.assertIn("needs.detect.outputs.needs_mosaic_compose_runtime == 'true'", block)
+        self.assertIn('bash code/scripts/build-mosaic-android-libs.sh task-mosaic-app "$jni_libs"', block)
+        self.assertIn('--runtime-library "$jni_libs"', block)
+        self.assertIn("for abi in arm64-v8a armeabi-v7a x86_64 x86; do", block)
+        self.assertIn("' T mosaic_app_create$'", block)
+        self.assertIn("cargo install --locked cargo-ndk --version", block)
+
+    def test_journal_android_apk_carries_its_rust_runtime(self) -> None:
+        """UI89 step 7 (§3.9): Journal's engine is built for every ABI and
+        packaged like Trestle's, through the verified wrapper jar."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Journal for Android with its Rust runtime (UI89 step 7)")
+        block = workflow[start:workflow.index("\n      - name:", start)]
+        self.assertLess(
+            workflow.index("- name: Build Trestle for Android with its Rust runtime (UI89 step 5)"),
+            start,
+        )
+        self.assertIn("needs.detect.outputs.needs_mosaic_compose_runtime == 'true'", block)
+        self.assertIn('bash code/scripts/build-mosaic-android-libs.sh journal-mosaic-app "$jni_libs"', block)
+        self.assertIn("pkg code/programs/mosaic/journal-app --backend compose", block)
+        self.assertIn('--runtime-library "$jni_libs"', block)
+        self.assertIn('bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"', block)
+        self.assertIn("package: name='dev\\.codingadventures\\.journalapp'", block)
+        self.assertIn("launchable-activity: name='mosaic\\.android\\.MosaicActivity'", block)
+        self.assertIn("for abi in arm64-v8a armeabi-v7a x86_64 x86; do", block)
+        self.assertIn("' T mosaic_app_create$'", block)
+
+        assemble = (SCRIPT.parent / "assemble-mosaic-android-debug.sh").read_text(encoding="utf-8")
+        # The jar is verified before anything runs it.
+        self.assertLess(
+            assemble.index("verify-gradle-wrapper-jar.sh"),
+            assemble.index("org.gradle.wrapper.GradleWrapperMain"),
+        )
+
+    def test_engram_android_apk_carries_its_rust_runtime(self) -> None:
+        """UI89 step 7 (§3.10): Engram is built like Journal. Its Android
+        Anki handler is installed and reaches the dex (§3.12); the desktop
+        one is kept out of it."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Engram for Android with its Rust runtime (UI89 step 7)")
+        block = workflow[start : workflow.index("\n      - name:", start)]
+        self.assertLess(
+            workflow.index("- name: Build Journal for Android with its Rust runtime (UI89 step 7)"),
+            start,
+        )
+        self.assertIn('bash code/scripts/build-mosaic-android-libs.sh engram-mosaic-app "$jni_libs"', block)
+        self.assertIn("pkg code/programs/mosaic/engram-app --backend compose", block)
+        self.assertIn('bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"', block)
+        self.assertIn("package: name='dev\\.codingadventures\\.engramapp'", block)
+        self.assertIn("'LEngramAppKt;'", block)
+        self.assertIn("'LEngramAndroidEffectsKt;' 'installEngramAndroidEffects'; do", block)
+        self.assertIn(
+            "installEngramAndroidEffects(it); platformRouter = installMosaicPlatformEffects("
+            'it, documentPicker, setOf("importAnki", "exportAnki"))',
+            block,
+        )
+        self.assertLess(
+            block.index("installEngramAndroidEffects(it); platformRouter"),
+            block.index('bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"'),
+        )
+        self.assertIn("for needle in 'LEngramEffectsKt;' 'installEngramEffects'; do", block)
+        self.assertIn('if [ "$found" -ne 1 ]; then', block)
+        self.assertIn("' T mosaic_app_create$'", block)
+
+        emulator = workflow.index("- name: Launch Trestle, Journal and Engram on an Android emulator")
+        gate = workflow[emulator : workflow.index("\n      - name:", emulator)]
+        self.assertLess(
+            gate.index("dev.codingadventures.journalapp journal-app"),
+            gate.index(
+                'bash code/scripts/mosaic-android-emulator-gate.sh "$engram_apk" '
+                "dev.codingadventures.engramapp engram-app"
+            ),
+        )
+
+    def test_trestle_launches_and_restores_on_an_android_emulator(self) -> None:
+        """UI89 step 5, second half: the APK with the runtime boots on an
+        x86_64 emulator, keeps its state and quarantines refused state."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)")
+        block = workflow[start:workflow.index("\n      - name:", start)]
+        self.assertLess(
+            workflow.index("- name: Build Trestle for Android with its Rust runtime (UI89 step 5)"),
+            start,
+        )
+        self.assertIn("needs.detect.outputs.needs_mosaic_compose_runtime == 'true'", block)
+        self.assertIn("mosaic-compose-taskapp-android-runtime/compose/android/build/outputs/apk/debug", block)
+        self.assertIn('bash code/scripts/start-mosaic-android-emulator.sh "$emulator_log"', block)
+        self.assertIn(
+            'bash code/scripts/mosaic-android-emulator-gate.sh "$apk" dev.codingadventures.trestle task-app',
+            block,
+        )
+        self.assertIn("adb emu kill", block)
+        # Journal runs the same gate after Trestle, on the same emulator.
+        self.assertIn("mosaic-compose-journal-android-runtime/compose/android/build/outputs/apk/debug", block)
+        self.assertLess(
+            block.index("dev.codingadventures.trestle task-app"),
+            block.index(
+                'bash code/scripts/mosaic-android-emulator-gate.sh "$journal_apk" '
+                "dev.codingadventures.journalapp journal-app"
+            ),
+        )
+
+        scripts = SCRIPT.parent
+        gate = (scripts / "mosaic-android-emulator-gate.sh").read_text(encoding="utf-8")
+        # Where MosaicActivity points the host, the three launches, and the
+        # checks that make each one mean something.
+        self.assertIn('state="files/$application_id/mosaic-state.v1.json"', gate)
+        self.assertIn('activity="$package/mosaic.android.MosaicActivity"', gate)
+        self.assertIn('printf {} > $state', gate)
+        self.assertIn("FATAL EXCEPTION", gate)
+        self.assertIn("rejected persisted state", gate)
+        self.assertLess(gate.index('eventually "test -e $corrupt"'), gate.rindex("expect_state_written\n"))
+        emulator = (scripts / "start-mosaic-android-emulator.sh").read_text(encoding="utf-8")
+        self.assertIn('image="system-images;android-34;default;x86_64"', emulator)
+        self.assertIn("sys.boot_completed", emulator)
+        # The device lives where the emulator looks, and is listed before the
+        # wait: the first CI run created it somewhere else and booted nothing.
+        self.assertIn('export ANDROID_AVD_HOME="${ANDROID_AVD_HOME:-$HOME/.android/avd}"', emulator)
+        self.assertIn('avds="$("$emulator" -list-avds 2>/dev/null || true)"', emulator)
+        self.assertNotIn('-list-avds | grep', emulator)
+        self.assertIn("the emulator exited before it appeared to adb", emulator)
+
+    def test_a_lane_script_change_alone_requires_acceptance(self) -> None:
+        """The Android scripts belong to no package; changing one must still
+        run the lane that executes it."""
+
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+
+            def git(*arguments: str) -> None:
+                subprocess.run(
+                    ["git", "-c", "user.name=t", "-c", "user.email=t@example.com", *arguments],
+                    cwd=repo,
+                    check=True,
+                    capture_output=True,
+                )
+
+            git("init", "-q", "-b", "main")
+            for path in (MODULE.CI_WORKFLOW_PATH, *MODULE.CI_SCRIPT_PATHS, "README.md"):
+                (repo / path).parent.mkdir(parents=True, exist_ok=True)
+                (repo / path).write_text("v1\n", encoding="utf-8")
+            git("add", ".")
+            git("commit", "-q", "-m", "base")
+            git("checkout", "-q", "-b", "change")
+            (repo / "README.md").write_text("v2\n", encoding="utf-8")
+            git("commit", "-q", "-am", "unrelated")
+            self.assertFalse(MODULE.workflow_changed(repo, "main"))
+            for path in MODULE.CI_SCRIPT_PATHS:
+                (repo / path).write_text("v2\n", encoding="utf-8")
+                git("commit", "-q", "-am", f"change {path}")
+                self.assertTrue(MODULE.workflow_changed(repo, "main"), path)
+                git("reset", "-q", "--hard", "HEAD~1")
+
+    def test_every_script_the_android_steps_call_is_a_lane_script(self) -> None:
+        """A script only the Trestle Android steps call belongs to no package,
+        so the lane reruns on a change to it only if CI_SCRIPT_PATHS lists it.
+        Read the scripts the steps actually call, so a new one cannot be
+        forgotten the way verify-gradle-wrapper-jar.sh first was."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        called: set[str] = set()
+        for name in (
+            "Build Trestle for Android (UI89 step 4)",
+            "Build Trestle for Android with its Rust runtime (UI89 step 5)",
+            "Build Journal for Android with its Rust runtime (UI89 step 7)",
+            "Build Engram for Android with its Rust runtime (UI89 step 7)",
+            "Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)",
+        ):
+            start = workflow.index(f"- name: {name}")
+            block = workflow[start : workflow.index("\n      - name:", start)]
+            called.update(re.findall(r"code/scripts/[\w./-]+\.(?:sh|py|ps1)\b", block))
+        self.assertTrue(called)
+        self.assertEqual(sorted(called - set(MODULE.CI_SCRIPT_PATHS)), [])
+
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_compose_runtime(
@@ -244,7 +457,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             'cmp "$task_runtime_library" "$installed_taskapp_runtime"', workflow
         )
         self.assertIn("*/bin/task_app", workflow)
-        self.assertIn('xvfb-run -a timeout 8s "$installed_taskapp"', workflow)
+        self.assertIn('run-under-xvfb.sh" timeout 8s "$installed_taskapp"', workflow)
         self.assertIn('test "$taskapp_status" -eq 124', workflow)
         self.assertIn("Mosaic Rust runtime unavailable", workflow)
         self.assertIn("--runtime-library \"$runtime_library\"", workflow)

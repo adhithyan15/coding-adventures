@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C480-prometer",
+    "language": "spanish",
+    "chapter": 480,
+    "sequence": 13530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8ec9f2c545f6b58"
+  },
+  "findings": []
+}

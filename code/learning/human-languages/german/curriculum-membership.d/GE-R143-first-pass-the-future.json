@@ -1,0 +1,11 @@
+{
+  "id": "GE-R143-first-pass-the-future",
+  "pathSegment": "GE-PATH-143-READ143",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-143-READ143",
+      "order": 5
+    }
+  ]
+}

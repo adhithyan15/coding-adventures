@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:a6c8148844cc55f6",
+  "lessonIds": [
+    "RU-C198-passazhir",
+    "RU-C198-vagon",
+    "RU-C198-peresadka",
+    "RU-C198-probka",
+    "RU-C198-avariya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch198.txt",
+  "json": "russian/narration/ch198.json",
+  "textHash": "fnv1a64:426211bdc8a14b3f",
+  "jsonHash": "fnv1a64:3f5769f707640a73",
+  "findings": []
+}

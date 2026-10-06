@@ -1,0 +1,11 @@
+{
+  "id": "UR-C252-nariyal",
+  "pathSegment": "UR-PATH-252-CHIZ252",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-252-CHIZ252",
+      "order": 3
+    }
+  ]
+}

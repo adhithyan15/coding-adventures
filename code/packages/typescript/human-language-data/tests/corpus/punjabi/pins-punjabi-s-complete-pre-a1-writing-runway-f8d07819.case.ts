@@ -121,5 +121,27 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     // single lesson closes six level-debts.
     "timed-assessment-production",
     "connected-composition",
+    // Chapter 153 adds six supported copies, then one delayed entry and one
+    // dictation before three controlled-composition repair/choice prompts.
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "delayed-copy",
+    "dictation-transcription",
+    "controlled-composition",
+    "controlled-composition",
+    "controlled-composition",
+    // Chapter 154 joins three already-taught fields: two supported copies,
+    // one brief delay, then separate repairs and an independent checkpoint.
+    "guided-copy",
+    "guided-copy",
+    "delayed-copy",
+    "controlled-composition",
+    "controlled-composition",
+    "controlled-composition",
+    "controlled-composition",
   ]);
 });

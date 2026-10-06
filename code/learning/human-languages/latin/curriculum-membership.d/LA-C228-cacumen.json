@@ -1,0 +1,11 @@
+{
+  "id": "LA-C228-cacumen",
+  "pathSegment": "LA-PATH-228-RES228",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-228-RES228",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C265-immo",
+  "pathSegment": "LA-PATH-265-CAUSA265",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-265-CAUSA265",
+      "order": 3
+    }
+  ]
+}

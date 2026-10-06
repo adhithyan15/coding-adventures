@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:818a1f7e65923728",
+  "lessonIds": [
+    "HI-C234-baya",
+    "HI-C234-sidha",
+    "HI-C234-ulta",
+    "HI-C234-bic",
+    "HI-C234-kona"
+  ],
+  "tex": "hindi/book/chapters/ch234-left-straight-upside-down-the-middle-a-corner.tex"
+}

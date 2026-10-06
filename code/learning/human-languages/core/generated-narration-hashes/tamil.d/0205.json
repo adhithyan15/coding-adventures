@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:256e705ec1ddfd27",
+  "lessonIds": [
+    "TA-C205-currula",
+    "TA-C205-tiraiyarankam",
+    "TA-C205-kattitam",
+    "TA-C205-mati",
+    "TA-C205-kaval-nilaiyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch205.txt",
+  "json": "tamil/narration/ch205.json",
+  "textHash": "fnv1a64:a32d00fa02ae9e6c",
+  "jsonHash": "fnv1a64:eae724cdb12a121b",
+  "findings": []
+}

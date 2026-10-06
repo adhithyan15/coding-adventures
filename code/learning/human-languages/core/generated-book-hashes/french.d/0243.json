@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:6e9104372d8f404a",
+  "lessonIds": [
+    "FR-C243-pansement",
+    "FR-C243-urgences",
+    "FR-C243-urgence",
+    "FR-C243-consultation",
+    "FR-C243-regime"
+  ],
+  "tex": "french/book/chapters/ch243-plaster-emergency-department-emergency-medical-appointment-diet.tex"
+}

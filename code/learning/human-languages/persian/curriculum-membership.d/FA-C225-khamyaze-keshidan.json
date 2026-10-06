@@ -1,0 +1,11 @@
+{
+  "id": "FA-C225-khamyaze-keshidan",
+  "pathSegment": "FA-PATH-225-KONESH225",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-225-KONESH225",
+      "order": 2
+    }
+  ]
+}

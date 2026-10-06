@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-263-IDAM263",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say traffic, a footpath, an aeroplane, an airport and a ship.",
+  "prerequisites": []
+}

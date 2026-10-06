@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C306-tonnuka",
+    "language": "malayalam",
+    "chapter": 306,
+    "sequence": 14430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d96f5aacd85621b9"
+  },
+  "findings": []
+}

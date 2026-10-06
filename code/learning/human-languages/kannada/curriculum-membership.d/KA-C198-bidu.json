@@ -1,0 +1,11 @@
+{
+  "id": "KA-C198-bidu",
+  "pathSegment": "KA-PATH-198-KRIYE198",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-198-KRIYE198",
+      "order": 4
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Forme Completion Roadmap
 
-> **Status:** Living delivery backlog, last prioritized 2026-09-20.
+> **Status:** Living delivery backlog, last prioritized 2026-10-05.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -11,13 +11,14 @@
 |---|---|---|
 | Vision and delivery backlog | Active | [FM00 vision](FM00-forme-vision.md) and this roadmap |
 | Kernel | Implemented | [FM01](FM01-forme-kernel.md) |
-| Plugin host | Specified; implementation pending | [FM02](FM02-forme-plugin-host.md) |
+| Plugin host | Extensible v1 implemented: installation, authority, runners, native sandboxes, product composition, and live storage watches | [FM02](FM02-forme-plugin-host.md) |
 | Orchestrator | Headless v0 implemented | [FM03](FM03-forme-orchestrator.md) |
 | Style IR | Implemented | [FM04](FM04-forme-style-ir.md) |
-| Interactivity IR | Location reserved; contract pending | [FM05](FM05-forme-interactivity-ir.md) |
+| Interactivity IR | Implemented | [FM05](FM05-forme-interactivity-ir.md) |
 | AOT compiler | Static v0 implemented | [FM06](FM06-forme-aot-compiler.md) |
 | CLI and development server | Headless v0 implemented | [FM07](FM07-forme-cli-dev-server.md) |
-| Deploy runner | Active | [FM08](FM08-forme-deploy-runner.md) |
+| Deploy runner | Headless v0 implemented | [FM08](FM08-forme-deploy-runner.md) |
+| Authoring shell | Authoring v1 implemented: first-run desktop product, multi-backend proof, and supported-platform release contract | [FM09](FM09-forme-authoring-shell.md) |
 
 ## What “complete” means
 
@@ -36,17 +37,24 @@ well-tested packages. We will deliver that in three horizons:
    backend, accessibility, performance, and security gates are part of the
    release contract.
 
-The first horizon is the current release target. Work for later horizons stays
-visible so a local optimization cannot quietly close the project early.
+Headless v0, Extensible v1, and Authoring v1 are complete. Their interactivity,
+shell, backend, scale, accessibility, performance, API, security, and
+supported-platform evidence stays visible so later operational work cannot
+quietly weaken the completed release contract.
 
 ## Current baseline
 
-The implementation is substantial but not yet an end-to-end product:
+The implementation now forms a complete headless v0 product:
 
-- 66 TypeScript `forme-*` packages and 199 package test files cover the kernel,
+- 81 TypeScript `forme-*` packages and 239 package test files cover the kernel,
   stage contracts, a bounded concurrent orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
-- The blog proves a ten-stage routed DAG: source → parse → asset resolution →
+- The plugin runtime boundary also includes Python and Rust SDK packages. All
+  three supported runners pass one unchanged language-neutral subprocess corpus
+  for lifecycle, mediated capabilities, wire values, stream shapes,
+  cancellation, typed errors, malformed peers, and resource bounds.
+- The blog proves an eleven-stage routed DAG: source → parse → exact reviewed
+  interactivity attachment → asset resolution →
   router fans out to article rendering, asset loading, and chronological
   collection. Typed page/asset fan-in writes fingerprinted local assets and
   manifest entries while the second filesystem sink emits an index, RSS, Atom,
@@ -63,10 +71,15 @@ The implementation is substantial but not yet an end-to-end product:
   formats stable diagnostics and exits, and cooperatively handles SIGINT. Watch
   serves only successful in-memory artifacts, coalesces project changes,
   reloads browsers over SSE, and retains the last good site across failures.
-  The pure deploy-runner core validates manifests, plans complete owned output
-  sets, preflights content, and produces deterministic dry-run reports. The
-  filesystem adapter stages and reversibly swaps complete validated trees; the
-  hosted adapter, plugin host, runtime sandbox, and authoring shell remain.
+  `forme deploy` validates manifests and selected content stores, plans complete
+  owned output sets, performs write-free target inspection, and produces
+  deterministic reports. The filesystem adapter reversibly swaps complete
+  validated trees, while the GitHub Pages adapter publishes independently owned
+  prefixes through non-forced ref updates. Installed third-party plugins now
+  share that product path through persistent least-authority grants, native
+  sandboxes, three runner SDKs, and bounded live storage watches. The native
+  Tauri authoring host now packages the capability-free first-run product with
+  crash-safe storage, exact isolated builds, preview, and atomic local publish.
 - The CLI now persists per-invocation cache entries and topology-scoped
   materialized checkpoints through a containment-checked project cache.
   Filesystem sources publish validated external-state manifests, and successful
@@ -78,16 +91,17 @@ The implementation is substantial but not yet an end-to-end product:
   bounded fan-out while a content-addressed checkpoint branch publishes its
   manifest last. One shared FIFO permit pool bounds ready stages, per-item work,
   and iterator pulls without deadlocking at `maxConcurrency: 1`.
-- Interactivity IR now has a canonical FM05 location but no normative schema or
-  package. FM06 reconciles the existing static AOT family, FM07 records the
+- Interactivity IR has a canonical FM05 contract, bounded validator and
+  serializer, exact per-page renderer/deploy selection, and a live blog proof
+  that preserves a complete fallback while leaving unrelated routes
+  script-free. FM06 reconciles the existing static AOT family, FM07 records the
   shipped headless CLI/dev server, and the deploy-runner contract is FM08.
-- The completed concurrent scheduler now has product-level clean/incremental
-  and reproducibility proof in both live sites. The remaining headless-product
-  path has reconciled the specification map and is implementing the deploy
-  runner as four independently reviewed capability boundaries.
-  Both live sites use the same product CLI, watch server,
+- The completed concurrent scheduler has product-level clean/incremental and
+  reproducibility proof in both live sites. The reconciled specification map
+  and four independently reviewed deploy boundaries close the headless-product
+  path. Both live sites use the same product CLI, watch server, deploy command,
   and centralized local-dependency bootstrap; site-local code is limited to
-  content adapters and post-build artifact assertions.
+  content adapters, target declarations, and artifact assertions.
 
 ## Prioritization method
 
@@ -148,19 +162,44 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 35 | FM-B044 | done | Implement the pure deploy-runner core | `forme-deploy-runner-core` strictly validates bounded current and previous manifests, rejects portable-path and prefix collisions, computes a stable immutable complete-set plan, and emits deterministic reports. Its cancellable manifest-bound reader deduplicates dry-run preflight and gives adapters only the exact trusted byte snapshot it size/hash-verified. Adversarial tests cover previous-only ownership, mutable or changing stores, resource bounds, cancellation, and canonical ordering. |
 | 36 | FM-B045 | done | Implement atomic filesystem publication | Depends on completed FM-B044. `forme-deploy-runner-fs-adapter` stages the complete planned output set in an exclusively created sibling tree, rejects linked or escaping components and external hard-link mutation, swaps through a retained same-parent backup, restores every pre-finalize failure or cancellation, and proves stale-file/directory pruning plus write-free exact retries. |
 | 37 | FM-B046 | done | Implement the GitHub Pages publication adapter | Depends on completed FM-B044. `forme-deploy-runner-github-pages-adapter` publishes one validated owned source-branch prefix through bounded Git Data API calls and a non-forced atomic ref update; it preserves sibling and unowned paths, verifies immutable candidate completeness, prunes only identity-checked stale files, and reports unprovable ref outcomes as indeterminate. |
-| 38 | FM-B047 | ready | Compose `forme deploy` and dogfood it | Depends on completed FM-B045 and FM-B046. Add the command through the repository CLI builder, implement directory/bundle/inline content-store selection and scoped capabilities, explicitly bootstrap the two legacy sites' existing target ownership from verified identities, then make both live Pages workflows deploy through it with clean-checkout, dry-run, rollback, and availability assertions. |
-| 39 | FM-B012 | blocked | Complete the deploy runner | Depends on FM-B044–FM-B047. Close the FM08 implementation ledger after the core, filesystem and GitHub Pages adapters, deterministic reporting, `forme deploy` composition, and both live product paths are merged. |
-| 40 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
-| 41 | FM-B014 | ready | Implement the plugin host and wire protocol | Depends on completed FM-B011 and the existing manifest parser. Stage discovery, handshake, typed streaming, capability mediation, diagnostics, cancellation, and crash isolation pass cross-process contract tests. |
-| 42 | FM-B015 | blocked | Ship plugin installation, runtimes, and sandboxes | Depends on FM-B014. Signed/trusted install flow, grants persistence, TypeScript/Python/Rust runners, and macOS/Linux/Windows sandbox profiles pass adversarial filesystem/network/process tests. |
-| 43 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
-| 44 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
-| 45 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
-| 46 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
+| 38 | FM-B047 | done | Compose `forme deploy` and dogfood it | Depends on completed FM-B045 and FM-B046. Add the command through the repository CLI builder, implement directory/bundle/inline content-store selection and scoped capabilities, explicitly bootstrap the two legacy sites' existing target ownership from verified identities, then make both live Pages workflows deploy through it with clean-checkout, dry-run, rollback, and availability assertions. |
+| 39 | FM-B012 | done | Complete the deploy runner | Depends on FM-B044–FM-B047. Close the FM08 implementation ledger after the core, filesystem and GitHub Pages adapters, deterministic reporting, `forme deploy` composition, and both live product paths are merged. |
+| 40 | FM-B014 | done | Implement the plugin host and wire protocol | Depends on completed FM-B011 and the existing manifest parser. Stage discovery, handshake, typed streaming, capability mediation, diagnostics, cancellation, and crash isolation pass cross-process contract tests. |
+| 41 | FM-B048 | done | Persist bounded plugin trust and capability decisions | Depends on completed FM-B014. Strict trust-store and grants-file codecs reject unknown, duplicate, malformed, non-canonical, oversized, and over-count inputs; Ed25519 keys use the manifest's canonical raw-key encoding; grants bind exact manifest hashes; atomic restrictive writes reject linked targets and round-trip deterministic bytes. |
+| 42 | FM-B049 | done | Stage signed plugin installations atomically | Depends on completed FM-B048. A registry-independent install core validates a complete bounded package snapshot, assigns the trust tier, records reviewed grants, publishes an immutable host-owned directory by atomic rename, and never exposes a partial or mutable discovery root. |
+| 43 | FM-B050 | done | Implement the TypeScript plugin runner | Depends on completed FM-B014. The SDK mirrors the bounded wire protocol, exposes a wire-backed `StageContext`, passes its reference protocol tests including streaming and cancellation, and replaces the hand-written host fixture in an end-to-end test. |
+| 44 | FM-B053 | done | Extract the reusable plugin-runner conformance harness | Depends on completed FM-B050. A language-neutral subprocess driver and canonical bounded vectors cover handshake, value envelopes, every mediated capability, single/stream/hybrid shapes, cancellation, typed errors, malformed peers, and resource limits; the TypeScript runner passes the extracted suite. |
+| 45 | FM-B054 | done | Implement the Python plugin runner | Depends on completed FM-B053. An idiomatic Python SDK exposes authored stage metadata and a wire-backed asynchronous context, fails closed on malformed or oversized peers, and passes the complete canonical runner corpus as a real subprocess. |
+| 46 | FM-B055 | done | Implement the Rust plugin runner | Depends on completed FM-B054 so the first non-TypeScript SDK can settle any language-neutral fixture gaps before a compiled implementation repeats the same corpus. The Rust SDK exposes typed stage/context traits and passes the complete canonical runner corpus as a real subprocess. |
+| 47 | FM-B051 | done | Complete Python and Rust plugin runners | Depends on FM-B054 and FM-B055. Both SDKs pass the same handshake, value, capability, stream, cancellation, error, malformed-peer, and bounded-resource vectors as the TypeScript runner. |
+| 48 | FM-B052 | done | Implement production OS sandbox launchers | Depends on completed FM-B049–FM-B051. Linux, macOS, and Windows launchers stage exact verified snapshots, attest their identities, and block ungranted filesystem, network, environment, process, descriptor, memory, and CPU access in platform CI. |
+| 49 | FM-B056 | done | Compose the reviewed local-package `forme install` path | Depends on completed FM-B048 and FM-B049. FM07 snapshots one bounded local package directory, renders a mandatory per-capability review with required/optional reasons and sensitive warnings, reads the user trust store, and atomically installs the manifest-bound grants into the project discovery root. Non-POSIX hosts fail closed until an explicit ACL verifier is composed. |
+| 50 | FM-B057 | done | Compose installed plugins into the product runtime | Depends on FM-B056 and completed FM-B050–FM-B052. Wire persistent grants, language-runner selection, and the platform sandbox factory into the CLI/orchestrator path; prove one mixed first-/third-party pipeline on every supported OS, including the Windows install-root ACL verifier. |
+| 51 | FM-B058 | done | Stream live plugin storage watches | Depends on completed FM-B057. Replace the deferred `ctx.storage.watch` refusal with a capability-authorized, explicitly started, bounded host-to-plugin stream; all three runner SDKs pass one unchanged conformance vector, early iterator return sends cancellation, run cancellation/disposal closes every watcher, and the product storage adapter emits contained portable events without unbounded buffering. |
+| 52 | FM-B015 | done | Complete plugin installation, runtimes, and sandboxes | Completion milestone depending on FM-B056–FM-B058. `forme install`, persistent grants, all supported runners, production sandbox profiles, mixed first-/third-party product integration, and live storage-watch mediation close the Extensible v1 runtime path. |
+| 53 | FM-B059 | done | Define and validate Interactivity IR v1 | Replace FM05's placeholder with a bounded versioned state/predicate/binding/handler/island contract; ship a pure `forme-interactivity-ir` package whose validator rejects malformed, cyclic, over-limit, ambiguous, and dangling-reference values and whose canonical serializer is deterministic. |
+| 54 | FM-B060 | done | Track and emit exact per-page interactivity | Depends on FM-B059. Resolve each page's authored element references, record exact `usedIslands`, select only those island modules in the AOT/deploy path, and preserve zero-JavaScript output for pages without interactivity. |
+| 55 | FM-B061 | done | Prove progressive enhancement in a live Forme site | Depends on FM-B060. One dogfood page ships a useful no-JavaScript fallback plus one declarative enhanced interaction; clean and incremental builds prove only that page receives its bounded island module. |
+| 56 | FM-B013 | done | Complete Interactivity IR | Completion milestone depending on FM-B059–FM-B061. The normative schema, validator, exact per-page island selection, zero-JavaScript static path, and live progressive-enhancement proof close the FM05 delivery gate. |
+| 57 | FM-B062 | done | Implement the durable authoring project core | Depends on FM-B013 and FM-B015. A bounded closed project codec, semantic immutable transactions, compare-and-swap autosave, and persistent bounded undo/redo pass hostile-input, failure, conflict, cancellation, and restart tests without ambient I/O. |
+| 58 | FM-B063 | done | Build the accessible default block editor | Depends on FM-B062. A keyboard-complete editor and configuration UI create and edit the default Content IR block set through exact declarative plugin slots and durable core commands without exposing storage or host authority. |
+| 59 | FM-B064 | done | Run exact pipeline-backed live preview | Depends on FM-B009 and FM-B063. `forme-authoring-preview` validates and freezes each persisted revision, materializes it through a narrow isolated host boundary, runs the real FM03/FM07 watch path, cancels/coalesces stale work, retains last-good output, and emits bounded revision-bound diagnostics. |
+| 60 | FM-B065 | done | Compose the reviewed authoring publish workflow | Depends on FM-B012 and FM-B064. `forme-authoring-publish` snapshots and builds one exact persisted revision, validates and preflights its FM08 manifest/content set, publishes through one closed reviewed target without exposing credentials, retires preparation, and atomically records the revision/manifest/target while marking only that unchanged snapshot published. Failed or indeterminate work never changes publication metadata; uncertainty poisons retries until reconciliation. |
+| 61 | FM-B067 | done | Compose the capability-free first-run authoring shell | Depends on completed FM-B065. `forme-authoring-shell` owns the accessible first-run, workspace, preview, target-review, explicit-publish, failure, and disposal UI state while accepting only bounded reviewed data plus injected session/preview/publish handles; the editor never receives host capabilities. |
+| 62 | FM-B068 | done | Package the Tauri authoring host | Depends on FM-B067. The installable Tauri window exposes only narrow commands for contained crash-safe project storage, exact sandboxed product materialization/preview, reviewed atomic local publication, first-draft identity creation, and clean-profile product acceptance without a CLI. |
+| 63 | FM-B066 | done | Package the first-run desktop authoring product | Completion milestone depending on FM-B067 and FM-B068. The installable local shell creates a project, selects a theme, edits and previews a first post, configures a supported target, and publishes without source/config editing, git, or a command line. |
+| 64 | FM-B016 | done | Complete the authoring shell | Completion milestone depending on FM-B062–FM-B066. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
+| 65 | FM-B017 | done | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
+| 66 | FM-B069 | done | Prove 1,000-page clean and incremental scale | Run the live blog's complete HTML/terminal product DAG over exactly 1,000 generated pages, then edit one page and run it again through the persistent cache. A portable benchmark report records both elapsed times and deterministic per-stage work. The gate rejects missing outputs, incomplete clean work, or an incremental run that fails to reuse the unaffected page work; wall-clock values remain evidence rather than host-specific pass/fail thresholds. |
+| 67 | FM-B070 | done | Enforce web performance and accessibility budgets | Depends on FM-B069. Run the built live sites through pinned browser tooling with explicit Lighthouse and automated accessibility budgets, retain useful static fallbacks, and publish bounded diagnostics for every regression. |
+| 68 | FM-B071 | done | Version the public package and kernel APIs | Remove the legacy `RenderedPage.source` producer branch, advance its kind/API contract with a tested compatibility refusal, align publishable Forme package versions, and ship a migration guide for every breaking change. |
+| 69 | FM-B072 | done | Compose the supported-platform release gate | Depends on FM-B069–FM-B071. Run the release benchmark, web budgets, package/API compatibility checks, complete product builds, and mandatory security review on every supported host with one documented release verdict. |
+| 70 | FM-B018 | done | Close release-quality gates | Completion milestone depending on FM-B069–FM-B072. The 1,000-page benchmark, Lighthouse/accessibility budgets, versioned package/API migration, security review, and supported-platform CI all pass on the same release contract. |
+| 71 | FM-B029 | active | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
 ## Dependency path
 
-The shortest path to the current release target is:
+The completed dependency path to Headless v0 was:
 
 `FM-B002 → FM-B019 → FM-B003 → FM-B004`, alongside `FM-B005` and
 `FM-B025 → FM-B026 → FM-B027 → FM-B030 → FM-B028 → FM-B006`, then
@@ -168,9 +207,113 @@ The shortest path to the current release target is:
 FM-B020 retires the temporary compatibility path after the routed product DAG
 is proven, but it does not block FM-B004.
 
-FM-B011 should land before new numbered specs are added. FM-B013–FM-B018 are
-visible v1 work and must not interrupt the headless dogfood path unless they
-uncover a contract or security flaw in that path.
+Headless v0 is complete. Extensible v1 is complete through FM-B048 →
+FM-B049/FM-B050 → FM-B053 → FM-B054 → FM-B055 → FM-B051 → FM-B052 →
+FM-B056 → FM-B057 → FM-B058 → FM-B015. Interactivity is complete through
+FM-B059 → FM-B060 → FM-B061 → FM-B013. The authoring path is complete through
+FM-B062 → FM-B063 → FM-B064 → FM-B065 → FM-B067 → FM-B068 → FM-B066 →
+FM-B016. FM-B017 completes the backend proof, FM-B069 closes the scale gate,
+FM-B070 closes browser quality, FM-B071 closes the public API migration, and
+FM-B072 → FM-B018 closes the supported-platform release-quality milestone.
+Authoring v1 is complete. FM-B029 is now the sole active operational
+improvement and does not reopen the shipped release horizon.
+
+### FM-B070 web-quality contract
+
+FM-B070 is a release gate over the generated bytes of both live Forme sites,
+not a replacement renderer or a production-network smoke test. The gate builds
+the repository landing page and blog from a clean checkout, serves only those
+artifacts on an ephemeral loopback listener, and audits this bounded route set:
+
+- the repository landing page at `/coding-adventures/`;
+- the blog index at `/coding-adventures/blog/`; and
+- the progressively enhanced `Hello, Forme` article.
+
+The browser lane installs Lighthouse `13.5.0` and Chrome for Testing
+`154.0.8037.92` from reviewed exact pins. Every target must retain a Lighthouse
+desktop performance score of at least `0.95` and an accessibility score of
+`1.00`. The landing page is limited to 640 KiB total transfer and 512 KiB of
+images, the blog index to 160 KiB total transfer, and the enhanced article to
+256 KiB total transfer, 64 KiB of images, and 32 KiB of JavaScript. The landing
+page and blog index admit no script bytes at all.
+
+Because a single hosted-runner Lighthouse observation is noisy, each route is
+audited by exactly three fresh browser processes and the performance contract
+applies to their median score. This changes neither the `0.95` budget nor the
+audited bytes. Accessibility and resource evidence remain fail-closed across
+every sample: the retained aggregate uses the lowest accessibility score and
+the largest observed transfer count for each resource type, while preserving
+the bounded union of sample diagnostics. The summary records the three bounded
+performance samples alongside that conservative aggregate; no raw trace is
+retained.
+
+Browser scores do not replace the static contract. Before Chrome starts, the
+gate parses each size-bounded emitted HTML document with script, stylesheet,
+frame, image, and navigation loading disabled, and proves that it still
+contains its main content and navigation. The enhanced article must retain all
+thirteen named pipeline steps in its ordered-list fallback; the other two
+audited routes must remain script-free. Browser requests are constrained to
+the loopback artifact server by proxy and response policy, and Lighthouse must
+report the exact requested and final route identity. Missing selectors,
+insufficient fallback content, unreachable generated assets, navigation,
+score regressions, accessibility failures, duplicate or inexact resource
+evidence, and transfer-budget overruns all fail closed.
+
+Each browser phase has a finite deadline and is retired on success or failure.
+The retained JSON summary records the exact tool/browser versions, scores,
+resource totals, fallback evidence, and at most twenty sorted diagnostics per
+target. It omits raw Lighthouse traces and host timing thresholds so reports
+remain bounded and runner load cannot silently weaken or fail the contract.
+The CI lane uses an exact Node release and the frozen local bootstrap to enforce
+every reviewed npm lock before explicitly building packages and products; it
+does not run dependency lifecycle scripts.
+
+### FM-B071 public API v2 contract
+
+The first stable Forme package line is `1.0.0`, while the independently
+versioned kernel contract advances to `apiVersion` `2`. Every publishable
+`@coding-adventures/forme-*` package carries the same package version and every
+first-party stage or plugin manifest targets kernel API v2. Package semver and
+kernel API version are intentionally distinct: package `1.0.0` may implement
+kernel API `2`.
+
+`RenderedPage` advances from kind `1.1` to `2.0`. Its `provenance` field is
+required and its temporary `source` compatibility field is removed. A
+single-input renderer records one provenance contributor; aggregate renderers
+record their complete normalized contributor set. The DAG compatibility check
+must refuse v1.x/v2 wiring, and every manifest, direct stage, and runner
+boundary must refuse kernel API v1 rather than silently accepting it.
+
+The release includes one package-level migration guide that names every
+breaking change, shows the single-source and aggregate provenance replacements,
+and explains the distinct package, kind, and kernel version axes. Lockfiles,
+runtime stage metadata, product fixtures, changelogs, and user-facing version
+output are updated together so a clean checkout cannot report a mixed release.
+
+### FM-B072 supported-platform release contract
+
+The release gate runs one unchanged contract on `ubuntu-latest`,
+`macos-latest`, and `windows-latest`. Each host checks the package/API v2 map,
+executes the platform-appropriate checked-in build front for the landing page,
+blog, and desktop authoring product, runs the 1,000-page benchmark, and audits
+the generated live sites with the exact browser pins and budgets defined by
+FM-B070. The macOS product build additionally produces and tests the native
+Tauri application; Linux and Windows run the portable desktop product gate
+because FM09 deliberately exposes no native host on those platforms.
+
+Every host emits one bounded JSON attestation for the same commit. Attestations
+contain only contract identities, content digests for the benchmark and browser
+summaries, and pass/fail state; they do not copy raw build logs or timing
+thresholds. A final fail-closed job accepts exactly the three supported host
+identities, rejects duplicate, missing, mixed-commit, malformed, or failing
+evidence, and emits one documented technical release verdict.
+
+Security approval is deliberately not self-asserted by a mutable file in the
+reviewed change. Every host records the `mandatory-exact-head-external` policy,
+and the technical verdict is valid only together with the separately
+authenticated mandatory review of that exact head. Any head change invalidates
+that review and requires another one; the cross-platform attestations cannot
+mint, impersonate, or reuse an approval themselves.
 
 ## Discovery log
 
@@ -180,6 +323,7 @@ work.
 
 | Date | Discovery | Disposition |
 |---|---|---|
+| 2026-10-02 | FM-B016 combined durable user data, editor behavior, preview fidelity, deployment authority, and native packaging in one acceptance gate. Those boundaries cannot receive focused tests or security review in one merge-sized change. | Split the linear authoring path into FM-B062–FM-B066, retained FM-B016 as the completion milestone, and made the durable UI-free core the only active item. |
 | 2026-08-27 | The blog README advertises `npm install && npm run build`, but file-linked source packages require their own dependency bootstrap in a clean checkout. | FM-B002 |
 | 2026-08-27 | Blog comments and package metadata say “five stages”; the actual configured pipeline has four because the collector is not wired. | FM-B002 |
 | 2026-08-27 | The blog README links to a nonexistent lowercase FM00 filename. | FM-B002 |
@@ -188,7 +332,7 @@ work.
 | 2026-08-27 | `forme-render-static` hard-codes a light classless theme instead of consuming Style IR. | FM-B005 |
 | 2026-08-27 | FM01–FM04 reserve FM05/FM06/FM07 for Interactivity IR, AOT, and CLI, but FM05 is now the deploy runner and FM06/FM07 files are absent. | Resolved in FM-B011: FM05/FM06/FM07 now own those reserved contracts, the deploy runner moved to FM08, and a CI contract prevents another collision. |
 | 2026-08-27 | The orchestrator README understates the implemented reproducible-build support, while caching, bounded streaming, fan-out, and concurrency remain incomplete. | FM-B010 and FM-B011 |
-| 2026-08-27 | The Forme blog workflow can succeed while the public blog root is missing, so deployment success alone is not an end-to-end availability check. | FM-B004 and FM-B012 |
+| 2026-08-27 | The Forme blog workflow can succeed while the public blog root is missing, so deployment success alone is not an end-to-end availability check. | Resolved across FM-B004 and FM-B047: the product emits the complete blog surface and both Forme publication workflows end with bounded live availability assertions. |
 | 2026-08-27 | The DAG builder ignores explicit `wires` and assigns one inferred producer per instance. Routed nodes therefore cannot feed article rendering and collection building in the same blog run. | Added FM-B019 and moved it ahead of FM-B003. |
 | 2026-08-27 | `forme-orchestrator` tests pass but its TypeScript build cannot resolve Node APIs imported through `forme-cache` and `forme-pipeline-config` because the package omits `@types/node`. | Resolve in FM-B019 and retain `npm run build` as a package gate. |
 | 2026-08-27 | The blog deployment workflow did not watch `forme-router` or `forme-collect-chronological`, so future changes to its routed DAG could bypass the clean-build check. | Resolved in FM-B003 by adding both package paths. |
@@ -238,7 +382,7 @@ work.
 | 2026-09-19 | Product replay tests show that `forme-resolve-asset-refs-fs` and `forme-load-assets-fs` still rerun to observe ambient asset state even when authored sources are unchanged, while both emitters and unrelated pure stages skip. | Correctness requires these capability-bearing readers to remain conservative because their upstream values do not describe external asset bytes. This is not a headless-v0 blocker; a future plugin/external-dependency contract may optimize it without weakening invalidation. |
 | 2026-09-19 | The topology fingerprint included stage version and config but not effective per-instance capability grants. Reusing a prior checkpoint after authority changes would cross a security-relevant cache boundary. | Resolved in FM-B037 by including the sorted effective capability set in the revision-ledger/checkpoint namespace, with a regression test proving grant changes invalidate reuse. |
 | 2026-09-19 | A replay path could be lexically contained but still escape through a pre-existing directory or final-file symlink beneath `outDir`. Direct writes would also modify an external hard-link target. | Resolved in FM-B037 for both normal emission and replay: reject linked components and final targets, verify canonical parents remain beneath the real output root, and publish exclusive same-directory temporary files by rename. |
-| 2026-09-19 | Per-file atomic writes cannot prune files that disappeared from one artifact or atomically publish the union of the blog's two sinks, because emitters intentionally share `dist` without an output-ownership contract. | Fold into FM-B012: the deploy runner must stage the complete named-output artifact set, reject cross-artifact path collisions, publish it as one tree, and remove stale files without letting one emitter delete a sibling's output. |
+| 2026-09-19 | Per-file atomic writes cannot prune files that disappeared from one artifact or atomically publish the union of the blog's two sinks, because emitters intentionally share `dist` without an output-ownership contract. | Resolved in FM-B047: `forme build --deploy-input` collision-checks and merges the named in-memory artifacts into one complete manifest-bound set, and the deploy adapters publish that set while pruning only declared ownership. |
 | 2026-09-19 | Eager materialization currently serves two contracts at once: replayable fan-out and whole-instance checkpoints. Replacing only the fan-out array would still retain every value for the revision ledger/cache, while dropping stream checkpoints would regress exact affected-set reuse. | Split FM-B010 into FM-B038 (bounded content-addressed stream checkpoints), FM-B039 (bounded multicast/backpressure), and FM-B040 (pipeline-wide scheduling). Keep FM-B010 as the product-level integration milestone so each risky boundary is independently testable and reviewable. |
 | 2026-09-19 | FM-B040 still coupled three failure-sensitive mechanisms: fair permit accounting, concurrent DAG readiness, and one-pass live-stream/checkpoint integration. A permit leak or holding a permit across an upstream wait can deadlock the whole pipeline before scheduler behavior can be reviewed meaningfully. | Split the implementation into FM-B041 (FIFO cancellation-aware permit pool), FM-B042 (concurrent ready/per-item scheduling), and FM-B043 (live multicast plus bounded checkpoint integration). Keep FM-B040 as their scheduler completion milestone. |
 | 2026-09-19 | After FM-B043 merged, the roadmap baseline, root README, orchestrator entry-point header, and watch-loop comment still described concurrency, bounded streaming, side-effect replay, or exact affected scheduling as deferred. | Close FM-B040 by reconciling those status surfaces with the shipped scheduler. Keep product-level clean/incremental and reproducibility proof in the now-active FM-B010 milestone. |
@@ -246,8 +390,61 @@ work.
 | 2026-09-19 | Clean and warm live-site builds produced semantically equal output reports with different nested object insertion order because restored checkpoints are canonically decoded while fresh stage values retain construction order. That makes the advertised deterministic report byte representation depend on whether a stage ran or restored. | Resolved in FM-B010 by recursively canonicalizing summarized report values and making both dogfood sites compare clean and warm output summaries byte-for-byte. |
 | 2026-09-20 | The Forme spec map was documentation-only, so a renamed or duplicate number could silently recreate broken package links. | Resolved in FM-B011 with an always-on metadata contract that checks the exact FM01–FM08 map, required implementation ledgers, roadmap links, and local Markdown targets. |
 | 2026-09-20 | FM-B012 combined four security-sensitive, independently testable boundaries in one PR, while FM08's implementation plan said each package ships separately and simultaneously listed GitHub Pages as both the required v0 hosted target and a future adapter. | Split FM-B012 into FM-B044–FM-B047. FM-B044 first reconciles the contract and lands only the capability-free validation/planning/reporting core; filesystem publication, GitHub Pages, and CLI/product composition follow as separate reviewed changes. |
-| 2026-09-20 | The two Forme dogfood sites and the repository's other Pages applications share a legacy `gh-pages` source branch and publish independent prefixes with `keep_files`; a whole-site Pages artifact deployment would replace sibling applications rather than preserve them. | Reconciled FM-B046 with the deployed product topology: the v0 hosted adapter creates blobs/trees/commits through GitHub's Git Data API and atomically advances the configured Pages source ref with a non-forced compare-and-swap. A reserved per-owner manifest records exact stale-path deletion authority; FM-B047 will dogfood separate landing-page and blog prefixes without changing the repository's Pages mode. |
-| 2026-09-20 | The legacy landing page and blog already occupy their final Pages paths without Forme ownership manifests. Inferring ownership from destination would let a new deployment overwrite unrelated exact-path content. | FM-B046 fails closed on every unowned exact path. FM-B047 must perform a one-time explicit bootstrap that matches the expected existing Git blob identities before normal Forme publication can take over either live prefix. |
+| 2026-09-20 | The two Forme dogfood sites and the repository's other Pages applications share a legacy `gh-pages` source branch and publish independent prefixes with `keep_files`; a whole-site Pages artifact deployment would replace sibling applications rather than preserve them. | Resolved across FM-B046 and FM-B047: the adapter records exact per-owner deletion authority and both live workflows publish separate landing-page and blog ownership through the shared source branch without changing Pages mode. |
+| 2026-09-20 | The legacy landing page and blog already occupy their final Pages paths without Forme ownership manifests. Inferring ownership from destination would let a new deployment overwrite unrelated exact-path content. | Resolved across FM-B046 and FM-B047: publication fails closed on unowned exact paths, while one-time reviewed bootstrap files bind the final target to exact Git-object and SHA-256 identities before either live prefix is adopted. |
+| 2026-09-27 | The root and blog publishers independently advance one shared `gh-pages` ref, so separate workflow concurrency domains could make otherwise-valid compare-and-swap publications race; carrying build output through a deploy job also creates a privilege transition. | FM-B047 gives both workflows one non-cancelling publication concurrency group, keeps build jobs read-only, checksums the exact manifest-bound deploy input before artifact transfer, and grants `contents: write` plus `GITHUB_TOKEN` only to the isolated main-branch deploy job. |
+| 2026-09-27 | The merged root and blog workflows both built, dry-ran, published through Forme, and passed their live availability checks; the duplicate push suite also completed successfully. | Close FM-B047 and the FM-B012 deploy milestone. Headless v0 is complete; reprioritize FM-B014 as the Extensible v1 critical path ahead of independent FM-B013 interactivity work. |
+| 2026-09-27 | FM02 required typed streaming but the manifest grammar admitted only bare kind names, while its storage wire examples used stale `readFile`/`filesystem:read` names instead of the kernel's `read`/`storage:read` contract. | Resolved in FM-B014 by adding validated `Stream<Kind>` references, rejecting nested/unknown stream kinds, and reconciling storage methods and capability names with FM01. |
+| 2026-09-27 | A plugin host cannot safely ship an ambient subprocess fallback before the per-OS sandbox launchers exist, but deferring all process integration would leave FM-B014 untestable. | Resolved in FM-B014 with an injected launcher boundary that must attest sandbox isolation, fails closed when absent or false, and supports cross-process contract fixtures; production runners and sandbox profiles remain the now-active FM-B015. |
+| 2026-09-30 | FM-B015 combined persistent authority decisions, atomic package installation, three language SDKs, three operating-system sandboxes, and product integration in one security-sensitive item. The host still accepts ephemeral injected grants, so installation cannot yet establish a durable least-authority boundary. | Split FM-B015 into FM-B048–FM-B052 and retain it as the completion milestone. Start with strict bounded trust/grants persistence, then allow atomic installation and the TypeScript runner to proceed on independent reviewed boundaries before shared conformance and OS enforcement converge. |
+| 2026-09-30 | FM-B048 landed strict bounded trust/grants persistence after adversarial review found and closed formatter amplification, inherited authority, Unicode ordering, TOML scalar, timestamp, and round-trip gaps. The existing manifest signature authenticates only `plugin.toml` plus one selected runtime entry, not arbitrary auxiliary files. | Close FM-B048 and activate FM-B049. The v1 installer may assign the verified tier only to a minimal package containing the manifest and selected signed entry; snapshots with auxiliary or alternate-platform files remain unverified until a future package-signature revision binds the complete file set. |
+| 2026-09-30 | FM-B049 landed the bounded atomic installer with owner/device checks, portable collision rejection, immutable publication, and manifest-bound grant persistence; both authoritative CI suites and the mandatory security review passed. The runner audit then found that FM01's synchronous wall-clock, environment, and directory getters cannot be implemented over an asynchronous subprocess wire without blocking the JavaScript event loop. | Close FM-B049 and activate FM-B050. Reconcile those host-mediated getters to promises before exposing the TypeScript runner context; retain local synchronous cancellation and monotonic observation only where the wire contract does not require authority. |
+| 2026-09-30 | FM-B050 landed the bounded TypeScript runner and replaced the host's hand-written cross-process fixture, but its protocol vectors remain embedded in TypeScript-only unit tests. The `forme-plugin-runner-conformance/` harness promised by FM02 does not exist, so Python and Rust cannot prove that they pass the same corpus without copying policy. | Close FM-B050, split FM-B053 ahead of FM-B051, and extract one language-neutral subprocess driver plus canonical bounded vectors before implementing either additional SDK. |
+| 2026-10-01 | FM-B053 landed the reusable subprocess driver and canonical corpus, including cross-platform resource and process-lifecycle hardening. Implementing two new public SDKs in one review would still combine separate packaging, concurrency, framing, and API-design risks. | Close FM-B053, split FM-B051 into FM-B054 (Python) and FM-B055 (Rust), and keep FM-B051 as their completion milestone. Settle any genuinely language-neutral fixture gaps with the smaller Python boundary before compiling the Rust SDK against the same corpus. |
+| 2026-10-01 | FM-B054 implemented the Python runner without requiring changes to the language-neutral corpus. The SDK passed the complete subprocess suite plus strict typing, lint, formatting, unit tests, and combined coverage while keeping all privileged operations host-mediated. | Close FM-B054 and activate FM-B055. Implement the Rust runner against the unchanged corpus, retaining the same bounded framing, single-active-run, cancellation, stream, error, and capability semantics. |
+| 2026-10-01 | FM-B055 implemented the compiled Rust runner against the unchanged corpus with typed stage/input/output/context APIs, canonical framing, bounded concurrent work and retained streams, capability mediation, cancellation, signal retirement, and fail-closed malformed-peer handling. Python and Rust now satisfy every shared runner vector alongside TypeScript. | Close FM-B055 and its FM-B051 completion milestone, then activate FM-B052 as the sole remaining runtime-isolation blocker for Extensible v1. |
+| 2026-10-01 | FM-B052 implemented shared exact-snapshot staging plus native Linux, macOS, and Windows supervisors. Platform gates prove pre-runtime attestation, minimal environments, resource ceilings, syscall/filesystem/network/process denial, descendant retirement, and abnormal-supervisor cleanup; mandatory adversarial review found no remaining blockers. | Close FM-B052 and activate FM-B015. Integrate the completed installer, persistent authority, three runners, and platform sandbox factory into the CLI/orchestrator product path as the final Extensible v1 milestone. |
+| 2026-10-01 | The final FM-B015 product milestone still combined two independently reviewable authority boundaries: install-time package/capability consent and run-time grant/runner/sandbox composition. The installer core deliberately has no registry or prompt adapter, while the host deliberately has no production process factory. | Split FM-B056 for the bounded local-package install UX ahead of FM-B057 runtime composition, retain FM-B015 as their completion milestone, and keep exactly one product boundary active at a time. |
+| 2026-10-02 | FM-B056 landed the reviewed local-package install command with bounded snapshotting, mandatory per-capability consent, manifest-bound grant persistence, and atomic project-root publication; its platform CI and mandatory security review passed. The CLI still constructs an orchestrator without the installed-plugin host, persistent grants, or native sandbox factory. | Close FM-B056 and activate FM-B057 as the sole remaining Extensible v1 implementation item before the FM-B015 milestone. |
+| 2026-10-02 | FM-B057's Windows product acceptance exposed three hidden differences from package-level sandbox probes: managed protocol runtimes need explicitly inheritable stdio copies; the implemented 128-descriptor fallback contradicted FM02's 256-descriptor summary and was too small for normal Node/Python startup; and granting only the interpreter executable left Python unable to load its standard library and runtime DLLs from the validated distribution root. FM02 also contradicted itself by listing 512 MiB in its summary while specifying and implementing 256 MiB in the detailed default contract. | Keep the child handle allow-list restricted to duplicated stdin/stdout/stderr; add native Node and Python protocol byte round trips; preserve exact-executable authority for Node, Deno, and Bun while granting Python's ephemeral AppContainer read/execute-only authority over a no-follow, ACL-verified, identity-pinned runtime root with mandatory same-handle normal/janitor revocation and overlap coverage; set and test the omitted-manifest descriptor default at 256; and reconcile both FM02 summary/detail defaults before FM-B057 can close. |
+| 2026-10-02 | FM-B057 landed the complete installed-plugin product path, but the fresh milestone audit found that FM02 still required `ctx.storage.watch` to fail with `METHOD_NOT_FOUND`, every runner materialized its response as a finite array, and the product storage adapter deliberately threw. An unbounded watch cannot be materialized without violating the runner resource contract, so FM-B015 cannot honestly close on the merged product composition alone. | Close FM-B057, split FM-B058 as the sole active Extensible-v1 blocker, and require an explicitly started, cancellable, bounded host-to-plugin stream shared unchanged by TypeScript, Python, and Rust before closing FM-B015. |
+| 2026-10-02 | FM-B058 landed capability-authorized, explicitly started, bounded storage-watch streams across the host, all three runners, the shared conformance corpus, and the contained product adapter. Linux, macOS, Windows, duplicate push CI, CodeQL, and the mandatory security review all passed on the final head; the fresh milestone audit found no remaining FM-B015 acceptance gap. | Close FM-B058 and FM-B015. Extensible v1 is complete; activate FM-B013 as the single Authoring-v1 critical-path item. |
+| 2026-10-02 | The FM-B013 audit found three independently reviewable boundaries hidden in one item: a hostile-data schema/validator, renderer/AOT/deploy selection, and a live progressive-enhancement proof. The existing kernel type is only a permissive JSON placeholder, the static renderer always emits `usedIslands: []`, and no dogfood site exercises a fallback. | Split FM-B013 into FM-B059–FM-B061 and retain it as the completion milestone. Activate only FM-B059 so the bounded declarative contract lands before any renderer or product code consumes it. |
+| 2026-10-02 | FM-B059 merged with the normative schema, hostile-input validator, and canonical serializer. The renderer still emits an empty usage set and the static-site emitter has no script-asset selection boundary. | Close FM-B059 and activate FM-B060. Compose validated route documents with an explicitly authorized reviewed-content allowlist, exact element resolution, SHA-256-bound deploy-time script pruning, and a zero-JavaScript static path before attempting the live dogfood proof. |
+| 2026-10-02 | FM-B060 security review established that browser island modules execute with page-origin authority, not the FM02 native-plugin sandbox; a generic config mapping cannot honestly claim FM02 authentication. HTML identity also requires browser-equivalent tree construction, and emitted paths must remain collision-free on portable filesystems and replay. | Define this PR's boundary as explicit executable-output authority plus a reviewed package/export-to-exact-bytes allowlist; use HTML5 parsing with aggregate budgets, recompute script digests at the sink, snapshot bounded page usage, and reserve portable output keys in both initial materialization and replay. The live product uses a repository-reviewed, site-owned producer; optional FM02 provenance integration remains future work and would not reduce the island's browser page-origin authority. |
+| 2026-10-02 | FM-B060 merged after macOS, Windows, Linux, metadata, duplicate-push, CodeQL, and mandatory security review passed. The multi-page blog already uses the generic renderer and asset-aware emitter, so it can prove selected and zero-JavaScript routes without duplicating the new composition boundary. | Close FM-B060 and activate FM-B061. Enhance only the `Hello, Forme` article with a reviewed, exact-byte pipeline-step island; retain its complete ordered-list fallback, keep every other article script-free, and extend clean plus warm incremental product acceptance to assert the route/module split. |
+| 2026-10-02 | FM-B061 added an opt-in pipeline-step explorer to only the `Hello, Forme` article. Its full ordered list remains the no-JavaScript fallback; the product binds one stable script identity to reviewed SHA-256 bytes; clean and unchanged warm builds are byte-identical; and every other article remains script- and island-free. The source-input audit also added the module identity sidecar to the exact blog boundary and regenerated every checked digest projection. | Close FM-B061 and its FM-B013 completion milestone. Interactivity IR is implemented end to end. Activate FM-B016 as the highest-priority ready Authoring-v1 item; FM-B017 is independently ready but remains blocked so only one roadmap item is active. |
+| 2026-10-03 | Adding the canonical FM09 authoring-shell specification and its TypeScript core exposed that the numbered-spec allowlist, roadmap status table, and TypeScript project inventory still stopped before the new surfaces. | Extend all three metadata contracts to FM09 and `forme-authoring-core` so future additions cannot silently bypass the canonical maps. |
+| 2026-10-03 | A same-realm React plugin component could read ambient DOM and host globals regardless of the props omitted from its nominal interface, so passing JSX through an “editor slot” would not satisfy FM09's authority claim. | Make FM-B063 slots bounded declarative data and route activation through one injected bridge representing the already-sandboxed FM02 boundary. The bridge receives only a frozen snapshot and returns one core command; arbitrary plugin code and DOM nodes never enter the editor realm. |
+| 2026-10-03 | A mutable preview input or an output labeled only by pipeline build ID could let a completed older draft masquerade as the active revision. Running a second in-editor renderer would also bypass the product pipeline entirely. | Close FM-B064 with one capability-free coordinator: snapshot the persisted revision, require a separately disposable isolated materialization, execute only through `Orchestrator.watch`, stop superseded sessions, pass success through FM07 artifact validation, and publish closed diagnostics plus exact authoring-revision attribution. Activate FM-B065 next. |
+| 2026-10-04 | FM-B065's one-line gate hid two durable commit points: the external FM08 target and the local project acknowledgement. A deployment can succeed while cleanup or compare-and-swap persistence fails, and a queued edit can otherwise make a successful older build mark newer content published. | Add closed workflow metadata and exact-revision dispatch to the authoring core. The coordinator validates and preflights the exact build, requires a closed reviewed target result, retires preparation before the metadata write, treats post-deploy cleanup or persistence failure as indeterminate, and poisons retries until the host reconciles external state. |
+| 2026-10-04 | Preflighting a mutable builder content store once did not bind later target reads to the reviewed bytes, and invoking an async builder before installing active state admitted synchronous re-entry. | Give the reviewed target a manifest-restricted store that re-verifies every read and is revoked on retirement; defer adapter entry until the active action is installed, with adversarial swap and re-entry regressions. |
+| 2026-10-04 | Final FM-B065 adversarial review found that caller-controlled session getters ran before action admission, concurrent disposal did not share cleanup settlement, revision tokens were validated differently at build and record boundaries, and proxy or oversized hostile shapes could reach trapping or unbounded reflection. | Reserve admission before session inspection, share one disposal promise, validate opaque revisions once across core and publisher, reject proxies and accessors through bounded descriptor snapshots, and cap hostile text before scalar work. |
+| 2026-10-04 | A resolved builder value without a valid own retirement method was classified as a retryable build failure even though it could already own privileged preparation resources that the coordinator could not release. | Treat any resolved preparation without a capturable retirement hook as indeterminate cleanup, poison retries, and retain retryable build failure only for rejected builder promises before a preparation is returned. |
+| 2026-10-04 | FM-B066 still combined a hostile browser-facing lifecycle and explicit-publication UI with native filesystem durability, product-pipeline process authority, credential custody, Tauri IPC containment, packaging, and clean-profile installation acceptance. No Tauri package or dependency exists yet, while the four capability-free authoring layers are ready to compose and test independently. | Split FM-B066 into FM-B067 (bounded injected first-run shell UI) and FM-B068 (native Tauri host plus installable product acceptance), retain FM-B066 as their completion milestone, and activate only FM-B067. |
+| 2026-10-04 | FM-B067 composed the four capability-free layers without acquiring host authority. Local file-linked React packages each installed their own peer copy during dependency bootstrap, which would create invalid cross-package hooks in tests unless the browser bundler selected one realm. | Close FM-B067 after adding bounded host/workspace admission, explicit exact-session preview, complete two-step target review, shared late-settlement disposal, adversarial coverage, and React/React DOM deduplication. Activate FM-B068 as the only native product boundary. |
+| 2026-10-04 | FM-B068's native boundary had to preserve the capability-free shell while owning durable bytes, isolated product execution, loopback serving, target selection, and atomic publication. Security review additionally exposed ACL, identity-race, cleanup-state, process-budget, and Rust/TypeScript validation-parity requirements that ordinary happy-path packaging would miss. | Close FM-B068, FM-B066, and FM-B016 after adding the installable Tauri product, exact bundled worker plus audited macOS launcher, canonical shared storage corpus, lifecycle admission, capability-only preview, descriptor-relative identity-bound local publication, ACL/resource/cleanup hardening, clean-profile product acceptance, and mandatory security review. Activate FM-B017 as the only highest-priority ready item. |
+| 2026-10-04 | The terminal Style IR translator generated TypeScript source but no renderer consumed it, the kernel had no `TerminalBuffer`, and live products could not expose non-web degradation as testable data. | Keep FM-B017 active. Add the versioned buffer kind, a pure terminal renderer and artifact packager, then fan the blog's routed content into HTML and terminal using the same resolved theme and Interactivity IR. Require exact ANSI, unsupported-style, raw-node/asset, and dropped-island acceptance tests before closing the item. |
+| 2026-10-04 | FM-B017's terminal boundary had to distinguish canonical source provenance from backend-content revision, admit only SGR terminal escapes, cap descriptor snapshots and artifact resources, reject portable path and ancestor collisions, exclude script/style fallback content, and keep every hostile diagnostic bounded and ASCII. | Close FM-B017 after the shared `TerminalBuffer`, pure renderer/packager, live 13-stage HTML/terminal fan-out, exact degradation evidence, proportional coverage, and mandatory security review pass. Activate FM-B018 as the only remaining Authoring-v1 item. |
+| 2026-10-04 | FM-B018 combined scale, browser quality, a breaking public API migration, platform composition, and final security evidence in one gate. Absolute benchmark deadlines would additionally measure hosted-runner load rather than Forme's incremental work. | Split FM-B018 into FM-B069–FM-B072 and retain it as the completion milestone. Activate FM-B069 first: exercise the existing 13-stage live product over 1,000 generated pages, record same-run timings, and gate deterministic output and cache-work counters instead of host-specific milliseconds. |
+| 2026-10-04 | The live HTML branch stalled at exactly 128 generated pages while 127 completed: the default page and named asset streams shared an upstream source, each 64-value window filled, and the join's permit wrapper serialized the two pending reads. Package-scale examples had never crossed both windows. | Keep the scale discovery inside FM-B069. Batch same-turn named-input reads under one yielded scheduler permit, drain the emitter's page and asset streams concurrently with an explicit page cap, and pin both a multi-window liveness regression and the full 1,000-page product benchmark. |
+| 2026-10-04 | The repaired live 13-stage product completed clean and single-edit incremental runs over exactly 1,000 generated pages, emitted 1,000 HTML plus 1,000 terminal routes on both runs, and recorded 999 parser cache hits with one miss after the edit. Timings remain same-run evidence, not machine-speed gates. | Close FM-B069 and activate FM-B070 as the sole active release-quality item. Keep FM-B071 ready in parallel priority order, while FM-B072 and FM-B018 remain blocked on those independent gates. |
+| 2026-10-04 | Both generated Forme sites pass one required browser lane over the real Pages routes: the landing page, blog index, and enhanced article retain useful static fallbacks, score at least 0.98 for desktop performance and exactly 1.00 for accessibility locally, and remain far below their explicit transfer budgets. The lane uses exact Lighthouse and Chrome-for-Testing pins, loopback-only contained serving, fresh bounded browser phases, and a small atomic evidence summary. | Close FM-B070 and activate FM-B071 as the only ready release-quality item. Keep FM-B072 and FM-B018 blocked until the public API migration also lands. |
+| 2026-10-05 | FM-B071 aligned all 81 publishable TypeScript Forme packages and locks at `1.0.0`, advanced the kernel contract to API v2 with exact v1 refusal in manifests, stages, and all three runners, made `RenderedPage` v2 provenance required and canonically validated at both filesystem sinks, aligned npm/Tauri package metadata, and shipped the breaking-change migration guide. Proportional package, conformance, product-contract, coverage, and mandatory security review gates passed. | Close FM-B071 and activate FM-B072 as the sole remaining implementation gate before the FM-B018 release-quality milestone. |
+| 2026-10-05 | The first clean-checkout PR builds found four product-local stages outside the publishable package inventory still targeting kernel API v1; the landing renderer also retained the removed `RenderedPage.source` field. Package and runner checks could not exercise those direct site adapters. | Keep the repair inside FM-B071: migrate all four live adapters to the shared API-v2 constant, remove the final source shortcut, add a durable live-stage contract to the spec-map suite, and rerun both complete product builds and tests before updating the PR. |
+| 2026-10-05 | FM-B072's first checked-in product-front run found that the two live-site lockfiles still snapshotted pre-v1 metadata for local Forme dependencies even though package manifests and package-local locks were aligned. The earlier API gate did not inspect consumer lock snapshots. | Keep the repair in FM-B072: refresh both live-site locks from the reviewed v1 package graph and extend the spec-map contract so either site fails if any local `@coding-adventures/forme-*` entry regresses from `1.0.0`. |
+| 2026-10-05 | FM-B072's first Windows release-lane run reached the shared frozen bootstrap but Node rejected direct spawning of the `npm.cmd` batch launcher with `EINVAL`; routing generic caller-controlled commands through `cmd.exe` would restore function by weakening literal argument boundaries. | Keep the repair in FM-B072: execute npm's JavaScript CLI directly with the exact active Node binary on Windows, retain shell-free argument-vector spawning on every host, and lock the platform-specific invocation plus metacharacter-bearing path behavior with unit coverage. |
+| 2026-10-05 | Once the shell-free npm launcher exposed the complete Windows dependency graph, the release lane reached `forme-sandbox-windows` but had not imported the hosted image's MSVC developer environment, so its native launcher build could not resolve `cl.exe`. | Keep the repair in FM-B072: invoke the already reviewed repository-owned MSVC environment bootstrap only on the Windows release host before running the checked-in product fronts, and pin that prerequisite in the release-job contract test. |
+| 2026-10-05 | The pinned Chrome-for-Testing archive on the Windows hosted tool cache denied the browser sandbox access to its own executable even after every product build passed. Disabling the sandbox would invalidate FM-B070. | Keep the repair in FM-B072: identity-bind every non-reparse ancestor and single-link member of the exact browser tree below the hosted tool cache before and after mutation; replace existing Windows `ALL APPLICATION PACKAGES` grants with read/execute only; verify no dangerous effective grant across the complete tree; and retain the global prohibition on no-sandbox flags. |
+| 2026-10-05 | Windows `icacls` applied the recursive object/container-inherit grant to all 314 Chrome descendants but left the browser root itself without an effective read/execute ACE, and the release lane's complete-tree verifier rejected that incomplete repair before launching Chrome. | Keep the fail-closed verifier and add a separate replacement read/execute grant on the identity-bound browser root before propagating the same read/execute-only grant through the tree. Continue rejecting any write/delete/ownership authority and revalidate every identity after both ACL operations. |
+| 2026-10-05 | After the explicit root grant, `icacls` reported success for the root and all descendants, but the verifier's projected `FileSystemAccessRule` identity translation still produced no matching effective root grant. Friendly-name translation is an unnecessary and image-sensitive layer over the security descriptor. | Parse each identity-bound entry's binary descriptor without normalization, accept only unconditional common allow ACEs effective on the current object, require their raw masks to be a subset of exact read/execute plus synchronize, reject matching effective denies and unsupported callback/object ACEs, and retain the final complete-tree identity pass. Execute synthetic inherit-only, inherited-effective, callback, object, and generic-all descriptor regressions in the Windows lane before trusting the live tree. |
+| 2026-10-05 | The synthetic raw-descriptor policy tests passed on the Windows host, but the live `FileSystemSecurity` object exposes its binary descriptor through the zero-argument PowerShell/.NET method rather than the buffer-writing overload used by `RawSecurityDescriptor`. The lane failed closed before examining the first live tree entry. | Use `GetSecurityDescriptorBinaryForm()`'s returned byte array directly as the raw descriptor input, keep the same policy self-tests and final identity revalidation, and pin the exact invocation in the CI contract test. |
+| 2026-10-05 | With the browser ACL repaired and verified, every Windows product build and coverage gate passed, but Chrome for Testing's Windows GUI binary treated `--version` as a normal browser launch, emitted background-service diagnostics, and did not terminate within the bounded query. The pinned setup action had already read the same binary's PE product version successfully. | On Windows only, consume the pinned setup action's exact four-part file-metadata output as installed-version evidence and compare it with the independently reviewed version constant; retain the bounded binary `--version` query on Linux and macOS, where it is supported. Pin the workflow wiring and platform-selection behavior with tests. |
+| 2026-10-05 | The first exact-browser supported-host rerun produced isolated landing-page Lighthouse performance samples of `0.85` on Windows and `0.92` on macOS after the same generated bytes, resource budgets, accessibility checks, and earlier local audits passed. A single noisy observation made the `0.95` release threshold depend on hosted-runner scheduling rather than the retained site contract. | Keep the `0.95` threshold and exact browser pins, but take exactly three fresh-process samples per route and gate their median. Continue failing closed across every sample by aggregating the minimum accessibility score, maximum resource counts, and bounded diagnostic union; record the three performance samples in the validated summary without retaining raw traces. |
+| 2026-10-05 | Concurrent squash merges on main left repo-wide barcode registry entries pointing at deleted PR-head commits, so authoritative and duplicate metadata gates could fail even after every Forme-specific check passed. | Repair the shared CI prerequisite in the same babysitting cycle: bind all affected verified package trees to their reachable squash revisions and require every future verified revision to be an ancestor of the tested checkout. This is an external gate repair, not a new Forme backlog item. |
+| 2026-10-05 | The API-v2 PR's Windows lane exposed that the document demo's lexical write-containment helper resolved its target but compared it with the caller's unnormalized base spelling. Mandatory security review then found that lexical containment alone still followed existing output symlinks, Windows junctions/reparse points, and multiply-linked files. | Keep the repair inside FM-B071: resolve the base before joining or comparing targets; reject linked path components; open targets without following their final component; verify the opened and named identities before truncation; reject multiply-linked files; exercise relative-base, POSIX-link, Windows-junction, and hard-link regressions; and rerun the complete document-demo gate. |
+| 2026-10-05 | Follow-up security review found that starting the link walk at an already redirected output root missed a linked ancestor, while portable Node lacks descriptor-relative `openat` writes that could close every same-identity rename race. | Anchor the walk at the canonical working directory and enforce an explicit portable single-writer contract: require a fresh private output root, hold an exclusive lock for the complete write, refuse unowned or multiply-linked files, and fail closed on observable authority, directory, lock, path, or handle identity changes. Document that concurrent mutation by another process running as the same OS identity is outside this contract, and cover linked-ancestor, injected child-link, injected hard-link, and pre-existing-root regressions. |
+| 2026-10-05 | PR #16729 passed the unchanged FM-B072 contract on Linux, macOS, and Windows at one exact head: all three host attestations and the aggregate verdict passed, the exact-head mandatory security review approved, and authoritative CI, duplicate push CI, and CodeQL all passed before squash merge. The release evidence included the 1,000-page benchmark, three-sample Lighthouse medians with fail-closed accessibility/resource aggregation, API-v2 compatibility, and every supported product build. | Close FM-B072 and its FM-B018 completion milestone. Authoring v1 is complete. Activate FM-B029 as the highest-priority remaining operational gap so duplicate workflow cancellation and merge-state reporting become unambiguous without weakening the completed release contract. |
 
 ## Loop protocol
 

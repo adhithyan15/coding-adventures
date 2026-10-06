@@ -1,0 +1,11 @@
+{
+  "id": "SA-C256-matam",
+  "pathSegment": "SA-PATH-256-WRK256",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-256-WRK256",
+      "order": 4
+    }
+  ]
+}

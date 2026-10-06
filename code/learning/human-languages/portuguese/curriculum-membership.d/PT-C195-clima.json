@@ -1,0 +1,11 @@
+{
+  "id": "PT-C195-clima",
+  "pathSegment": "PT-PATH-195-COISAS195",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-195-COISAS195",
+      "order": 4
+    }
+  ]
+}

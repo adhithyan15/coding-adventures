@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "Creeper, Animal, Deer, Bull, Wolf",
+  "label": "ch:ml-creeper-animal-deer-bull-wolf",
+  "canDo": "I can say a creeper, an animal, a deer, a bull and a wolf.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C291-cennaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can say a creeper, an animal, a deer, a bull and a wolf.",
+    "assesses": [
+      "ML-LEX-C291-VASTU291-03",
+      "ML-LEX-C291-VASTU291-04",
+      "ML-LEX-C291-VASTU291-05"
+    ]
+  }
+}

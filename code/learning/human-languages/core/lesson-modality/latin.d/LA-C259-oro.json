@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C259-oro",
+    "language": "latin",
+    "chapter": 259,
+    "sequence": 13840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b60d7c0d49d4c167"
+  },
+  "findings": []
+}

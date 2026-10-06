@@ -1,0 +1,11 @@
+{
+  "id": "PT-C190-fotografo",
+  "pathSegment": "PT-PATH-190-COISAS190",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-190-COISAS190",
+      "order": 4
+    }
+  ]
+}

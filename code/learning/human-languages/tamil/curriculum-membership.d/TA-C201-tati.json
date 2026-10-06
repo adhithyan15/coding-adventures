@@ -1,0 +1,11 @@
+{
+  "id": "TA-C201-tati",
+  "pathSegment": "TA-PATH-201-NALAM201",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-201-NALAM201",
+      "order": 1
+    }
+  ]
+}

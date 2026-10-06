@@ -1,0 +1,11 @@
+{
+  "id": "PT-C166-regresso",
+  "pathSegment": "PT-PATH-166-COISAS166",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-166-COISAS166",
+      "order": 1
+    }
+  ]
+}

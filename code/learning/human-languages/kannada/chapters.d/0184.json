@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "Cucumber, Okra, Green beans, Leafy greens, Tender coconut water",
+  "label": "ch:ka-cucumber-okra-green-beans-leafy-greens-tender-coconut-water",
+  "canDo": "I can say a cucumber, okra, green beans, leafy greens and tender coconut water.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-R184-second-pass-words-from-chapters-180-184",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say a cucumber, okra, green beans, leafy greens and tender coconut water.",
+    "assesses": [
+      "KA-LEX-C184-VASTU184-03",
+      "KA-LEX-C184-VASTU184-04",
+      "KA-LEX-C184-VASTU184-05"
+    ]
+  }
+}

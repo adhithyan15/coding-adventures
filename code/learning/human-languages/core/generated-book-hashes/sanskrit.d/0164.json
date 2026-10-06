@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:a63c779ed0c4182d",
+  "lessonIds": [
+    "SA-C164-pranganam",
+    "SA-C164-vatika",
+    "SA-C164-upavanam",
+    "SA-C164-kridanganam",
+    "SA-C164-vimanapattanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch164-courtyard-small-garden-park-playground-airport.tex"
+}

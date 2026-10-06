@@ -1,0 +1,11 @@
+{
+  "id": "FR-C174-salaire",
+  "pathSegment": "FR-PATH-174-TRAV174",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-174-TRAV174",
+      "order": 2
+    }
+  ]
+}

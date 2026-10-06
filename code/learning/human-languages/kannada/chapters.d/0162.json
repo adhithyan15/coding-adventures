@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "To correct, To copy, To warn, To take part, To transfer",
+  "label": "ch:ka-to-correct-to-copy-to-warn-to-take-part-to-transfer",
+  "canDo": "I can say to correct, to copy, to warn, to take part and to transfer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C162-vargayisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say to correct, to copy, to warn, to take part and to transfer.",
+    "assesses": [
+      "KA-LEX-C162-KRIYE162-03",
+      "KA-LEX-C162-KRIYE162-04",
+      "KA-LEX-C162-KRIYE162-05"
+    ]
+  }
+}

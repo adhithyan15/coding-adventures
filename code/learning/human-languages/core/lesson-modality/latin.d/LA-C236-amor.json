@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C236-amor",
+    "language": "latin",
+    "chapter": 236,
+    "sequence": 12160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1971ee60f256b52f"
+  },
+  "findings": []
+}

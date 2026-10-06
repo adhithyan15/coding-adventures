@@ -1,0 +1,11 @@
+{
+  "id": "UR-C202-taiksi",
+  "pathSegment": "UR-PATH-202-CHIZ202",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-202-CHIZ202",
+      "order": 3
+    }
+  ]
+}

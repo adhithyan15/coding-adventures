@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Father-in-law, Boyfriend, Girlfriend, Romantic love, Friendship",
+  "label": "ch:ta-father-in-law-boyfriend-girlfriend-romantic-love-friendship",
+  "canDo": "I can say a father-in-law, a boyfriend, a girlfriend, romantic love and friendship.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C186-natpu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say a father-in-law, a boyfriend, a girlfriend, romantic love and friendship.",
+    "assesses": [
+      "TA-LEX-C186-PORUL186-03",
+      "TA-LEX-C186-PORUL186-04",
+      "TA-LEX-C186-PORUL186-05"
+    ]
+  }
+}

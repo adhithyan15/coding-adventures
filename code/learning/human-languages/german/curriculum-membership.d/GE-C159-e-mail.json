@@ -1,0 +1,11 @@
+{
+  "id": "GE-C159-e-mail",
+  "pathSegment": "GE-PATH-159-THING159",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-159-THING159",
+      "order": 3
+    }
+  ]
+}

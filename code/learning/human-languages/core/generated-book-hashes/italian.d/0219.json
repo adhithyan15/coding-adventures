@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:6dc3071bbcaeccbc",
+  "lessonIds": [
+    "IT-C219-uguale",
+    "IT-C219-simile",
+    "IT-C219-falso",
+    "IT-C219-gratuito",
+    "IT-C219-moderno"
+  ],
+  "tex": "italian/book/chapters/ch219-equal-similar-false-free-of-charge-modern.tex"
+}

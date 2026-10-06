@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:bbe838f72596675c",
+  "lessonIds": [
+    "PT-C219-guerra",
+    "PT-C219-paz",
+    "PT-C219-exercito",
+    "PT-C219-soldado",
+    "PT-C219-tradicao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch219.txt",
+  "json": "portuguese/narration/ch219.json",
+  "textHash": "fnv1a64:8606bcf28cfa4bf7",
+  "jsonHash": "fnv1a64:622f0c41530d7742",
+  "findings": []
+}

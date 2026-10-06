@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "Punctual, Honest, Patient, Generous, Lazy",
+  "label": "ch:pt-punctual-honest-patient-generous-lazy",
+  "canDo": "I can say punctual, honest, patient, generous and lazy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-R155-second-pass-words-from-chapters-151-155",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: I can say punctual, honest, patient, generous and lazy.",
+    "assesses": [
+      "PT-LEX-C155-QUAL155-03",
+      "PT-LEX-C155-QUAL155-04",
+      "PT-LEX-C155-QUAL155-05"
+    ]
+  }
+}

@@ -102,6 +102,62 @@ That is about 380 filmstrips that could print today.
   still have none. Each added path needs its primary-source citation and its
   own lesson owner before it can become a figure. Combination filmstrips remain
   later work after the single-letter inventories.
+- **Sequence strips: letter lists and separate-letter words.** A writing
+  lesson whose headword is a list of single letters (`வ, க`, `ક — ણ — શ`,
+  `в, р`, `ع ي`) prints one strip that draws each letter's own cited frames
+  in turn, a labelled group per letter. So does a word in a script whose
+  letters stand apart (Japanese はい, こんにちは, さようなら), when every
+  grapheme is one cited base letter. 28 lessons gained a filmstrip (494 →
+  522 of 1,309 writing lessons): Arabic 7, Gujarati 7, Russian 5, Tamil 4,
+  Japanese 3, Persian 1 and Urdu 1. Words are refused where composition would
+  draw something false: Devanagari (one shared headline; every cited letter
+  draws its own), the Arabic family (joined, positional forms) and Cyrillic
+  (cited school cursive joins letters). Words with any vowel sign, virama or
+  length mark are refused everywhere, because some marks are written before
+  the consonant they follow in Unicode.
+- **Next for combinations, by lessons unlocked.** 787 writing lessons still
+  print no strip. 256 need only a mark's ductus: Tamil pulli ் is needed by
+  32 lessons and ு by 17; Gujarati ા by 19. Marks need a written-order model
+  before any word containing one can compose. 360 need a letter with no
+  ductus at all (Punjabi 88, Bengali 71, Malayalam 52, Kannada 45, Japanese
+  26). 21 have cited letters but no Writing or Script block to hold the
+  figure (15 Chinese copy drills). 14 are fully cited words in a joined
+  script. The other 136 are placeholders, punctuation, or headwords that
+  mix in Latin text or A/B options.
+- **Tamil vowel signs, in written order.** ா, ி, ீ, ெ, ே and ை gained a
+  cited ductus each (native writers' pen traces in HP Labs India's LipiTk
+  Tamil recognizer), and the composer now draws a Tamil sign where the hand
+  writes it: ெ, ே and ை before their consonant, ொ and ோ in two halves around
+  it (`WRITTEN_SIGN_SIDES`, each side cited in the sign's mark record).
+  14 Tamil lessons gained a filmstrip (Tamil 34 → 48): seven sign lessons and
+  the words சரி, சொ, போ, மேலே, கடை, மேசை and சரியா. Still open for Tamil: the
+  pulli ் (32 lessons) and ு/ூ (17 and more), which need a citable pen path;
+  the repository's research could reach no source for them (Info-farmer's
+  Commons animations and Radhakrishnan's Appendix I could not be opened).
+- **Gujarati vowel signs, written after the consonant.** ા િ ી ુ ૂ ે ૈ ો ૌ ં
+  and ઃ gained a cited ductus each (order, start, direction and lifts from
+  KanoAI's hand-made barakhadi templates, whose licence is ambiguous, so facts
+  only; paths fitted to Noto), and a `gujarati` written-order table in which
+  every sign comes after its consonant, even િ. 22 Gujarati lessons gained a
+  filmstrip (Gujarati 41 → 63): nine sign lessons, અને, કે, કેમકે, તે, હા
+  (three lessons) and six glyph lists. Still open for Gujarati: the virama ્
+  (GU-W01-virama, નમસ્તે, ક્યાં, રસ્તો and the lists that carry it) and ૃ, which
+  have no Gujarati source; words with a pair the font reshapes (બજાર with જા,
+  જો, and ુ/ૂ under the 22 consonants that take a stem form);
+  and the bucket-b lessons that have no Writing or Script block to land in
+  (GU-C20 to GU-C23, GU-R21, GU-R23-map-ten, GU-W21).
+- **Devanagari signs drawn alone.** ु ू े ं ़ ् ृ and ँ gained a cited ductus
+  each (stroke count, start and direction from native writers' pen traces in
+  HP Labs India's LipiTk Devanagari recognizer, counts and shares only; paths
+  fitted to Noto). 32 sign lessons gained a one-glyph filmstrip: Hindi
+  44 → 54, Marathi 42 → 49, Sanskrit 39 → 48, Marwadi 33 → 39. Still open for
+  Devanagari: ा ि ी ो and ः (Noto prints a headline piece the sign-only traces
+  never draw, so the fit leaves 3.5% to 37% of the ink untraced; a cited
+  two-stroke form with the headline stub, such as ा's 28% minority, would
+  need a decision to draw a minority form), ै and ौ (the traces split), and
+  every word with a sign, which needs the written order of a sign against its
+  consonant and the shared headline (HP Labs' hpl-dvng-iso-word data would
+  show it, but its host is blocked here).
 - **Telugu consonants started with క.** The first base consonant now has the
   five-movement, two-run order from Sathish Shanmugam's packaged tracing guide,
   fitted to the bundled Noto Sans Telugu outline. Its existing `TE-S03` lesson
@@ -119,6 +175,70 @@ That is about 380 filmstrips that could print today.
   body, then movements 4–6 restart for the outer arch, upper flourish and
   downward stem. The order comes from the same packaged tracing guide and is
   fitted to Noto Sans Telugu.
+- **Telugu చ starts the next ready consonant row.** The intervening `ఙ` still
+  needs the vocabulary-first lesson sequence recorded below, so the existing
+  `TE-S112` lesson is the next available owner. Its four-movement filmstrip
+  joins movements 1–3 for the main body and restarts for the upper flourish,
+  using the same packaged tracing guide and Noto Sans Telugu fit.
+- **Telugu ఙ now gets the word first.** Chapter 150 introduces **వాఙ్మయం**
+  (*vāṅmayaṁ*, literature) before `TE-S171` extracts the uncommon letter from
+  the word and gives it a five-movement filmstrip. Movements 1–3 form the
+  connected body; movements 4 and 5 restart for the inner bar and headstroke.
+  The order comes from the packaged `dot_stroke_c_1_5_nya.png` tracing guide
+  and is fitted to Noto Sans Telugu. This closes the earlier vocabulary-first
+  dependency instead of teaching the inventory shape cold.
+- **Telugu జ follows as the next ready consonant.** The existing `TE-S127` owns
+  `జ` after `రోజు`. Its four separately numbered movements draw the upper-left
+  arch, the two lower bowls, and the upper-right flourish, using the same
+  packaged tracing guide and Noto Sans Telugu fit.
+- **Telugu ఛ now gets the word first.** Chapter 151 introduces **ఛాయ**
+  (*chāya*, shade or shadow) before `TE-S172` extracts the uncommon aspirated
+  letter from the word. Its five-movement filmstrip keeps movements 1–4 joined
+  across the main body and upper flourish, then restarts for the downward stem.
+  The order comes from the packaged `dot_stroke_c_2_2_chha.png` tracing guide
+  and is fitted to Noto Sans Telugu, closing another vocabulary-first gap
+  without turning the alphabet into a cold chart.
+- **Telugu ఞ is the next consonant with a word-first owner.** `TE-S132`
+  already extracts `ఞ` from `కృతజ్ఞత`. Its eight separately numbered movements
+  trace the two upper loops, lower body, right bar and upper stem, again
+  following the packaged tracing guide and Noto Sans Telugu fit.
+- **Telugu ట begins the retroflex row.** `TE-S152` already extracts the letter
+  from `ఏమిటి`, so no vocabulary debt blocks it. Its six separately numbered
+  movements trace the inner shoulder, the rounded outer body in four sections,
+  and the separate upper stem, using the same packaged tracing guide and Noto
+  Sans Telugu fit.
+- **Telugu ఠ follows with an existing month-name owner.** `TE-S155` extracts
+  the aspirated retroflex from `జ్యేష్ఠం`, already taught in the previous
+  chapter. Its three movements draw the circular body, upper flourish and inner
+  dot from the packaged tracing guide, fitted to Noto Sans Telugu.
+- **Telugu డ continues with an existing word-first owner.** `TE-S123` extracts
+  the retroflex from `డప్పు`, already taught earlier in the chapter. Its five
+  movements draw the rounded body in four sections and finish with the separate
+  upper flourish, following the packaged tracing guide and Noto Sans Telugu fit.
+- **Telugu ఝ now follows an authentic word-first anchor.** Chapter 152 teaches
+  **ఝరి** (*jhari*, a stream or mountain stream) as an explicitly learned or
+  literary word before extracting ఝ. Its five separately numbered movements
+  trace three rounded bowls, the upper flourish and the downward stem from the
+  packaged `dot_stroke_c_2_4_jha.png` guide, fitted to Noto Sans Telugu.
+- **Telugu ఢ now follows its existing word-first owner.** `TE-S139` takes ఢ
+  from **ఆషాఢం**, already taught in the month lesson. Its six separately
+  numbered movements trace four sections of the rounded body, the upper
+  flourish and the lower stem from the packaged `dot_stroke_c_3_4_dha.png`
+  guide, fitted to Noto Sans Telugu.
+- **Telugu ణ now follows its existing word-first owner.** `TE-S126` takes ణ
+  from **వాతావరణం**, **శ్రావణం** and **ఫాల్గుణం**, all already taught before
+  the letter lesson. Its five separately numbered movements trace the paired
+  bowls and inner curve from the packaged `dot_stroke_c_3_5_na.png` guide,
+  fitted to Noto Sans Telugu.
+- **Telugu త now follows its existing word-first owner and full writing
+  ladder.** Tracked as #16281, `TE-S01` takes త from **సంతోషం** and
+  **వెళ్ళి వస్తాను**, then moves through observe-and-trace, guided copy,
+  delayed copy and dictation. Six connected movements trace the paired bowls
+  and lower body from `dot_stroke_c_4_1_ta.png`; a seventh restarts for the
+  separate top flourish.
+- **Next priority: audit the following Telugu consonant థ.** Re-check its
+  earliest word-first owner and writing-ladder coverage, then verify the
+  packaged `dot_stroke_c_4_2_tha.png` guide before authoring any route.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 

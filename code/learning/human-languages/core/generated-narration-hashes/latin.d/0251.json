@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:c7f2d4c61af13c3e",
+  "lessonIds": [
+    "LA-C251-catulus",
+    "LA-C251-tigris",
+    "LA-C251-clava",
+    "LA-C251-catena",
+    "LA-C251-scutum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch251.txt",
+  "json": "latin/narration/ch251.json",
+  "textHash": "fnv1a64:227cfd8ec10461ca",
+  "jsonHash": "fnv1a64:f4e4533533dd12ff",
+  "findings": []
+}

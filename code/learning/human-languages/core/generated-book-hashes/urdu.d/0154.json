@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:3654e0227be18c3f",
+  "lessonIds": [
+    "UR-C154-tika",
+    "UR-C154-dharkan",
+    "UR-C154-pasina",
+    "UR-C154-ulti",
+    "UR-C154-chakkar"
+  ],
+  "tex": "urdu/book/chapters/ch154-vaccination-heartbeat-sweat-vomiting-dizziness.tex"
+}

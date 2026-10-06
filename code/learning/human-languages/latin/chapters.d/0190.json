@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Tax, Tribute, Wages, Denarius, Sesterce",
+  "label": "ch:la-tax-tribute-wages-denarius-sesterce",
+  "canDo": "I can say a tax, a tribute, wages, a denarius and a sesterce.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C190-sestertius",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say a tax, a tribute, wages, a denarius and a sesterce.",
+    "assesses": [
+      "LA-LEX-C190-RES190-03",
+      "LA-LEX-C190-RES190-04",
+      "LA-LEX-C190-RES190-05"
+    ]
+  }
+}

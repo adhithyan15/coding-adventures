@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:c5f787525da6c709",
+  "lessonIds": [
+    "IT-C177-promettere",
+    "IT-C177-permettere",
+    "IT-C177-vietare",
+    "IT-C177-proteggere",
+    "IT-C177-salvare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch177.txt",
+  "json": "italian/narration/ch177.json",
+  "textHash": "fnv1a64:62afafd2341fdb2e",
+  "jsonHash": "fnv1a64:2fd64d75bedea67d",
+  "findings": []
+}

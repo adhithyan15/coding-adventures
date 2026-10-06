@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C219-bilvam",
+    "language": "sanskrit",
+    "chapter": 219,
+    "sequence": 12620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a36b99e4891ad354"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:3c60ada9a99502b2",
+  "lessonIds": [
+    "SA-C220-tula",
+    "SA-C220-manadandah",
+    "SA-C220-dandah",
+    "SA-C220-yastih",
+    "SA-C220-dhanuh",
+    "SA-R220-first-pass-words-from-chapters-212-215",
+    "SA-R220-second-pass-words-from-chapters-216-220"
+  ],
+  "tex": "sanskrit/book/chapters/ch220-balance-measuring-rod-stick-staff-archer-s-bow.tex"
+}

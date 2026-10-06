@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-style-to-css",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Reference Style IR → CSS translator: takes a forme-style-ir StyleDocument and emits a CSS string (FM04 §9.2).",
   "type": "module",
   "main": "src/index.ts",

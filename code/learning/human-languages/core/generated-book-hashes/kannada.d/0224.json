@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:c88d444eb6f57760",
+  "lessonIds": [
+    "KA-C224-hoge",
+    "KA-C224-dhulu",
+    "KA-C224-pravaha",
+    "KA-C224-prakrti",
+    "KA-C224-prani",
+    "KA-R224-first-pass-words-from-chapters-216-219",
+    "KA-R224-second-pass-words-from-chapters-220-224"
+  ],
+  "tex": "kannada/book/chapters/ch224-smoke-dust-flood-nature-animal.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C184-syuda",
+    "language": "russian",
+    "chapter": 184,
+    "sequence": 10610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9dc25d17abf0ae26"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "Aeroplane, Petrol, Petrol station, Seat, Platform",
+  "label": "ch:bn-aeroplane-petrol-petrol-station-seat-platform",
+  "canDo": "I can say an aeroplane, petrol, a petrol station, a seat and a platform.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C198-pltphorm",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say an aeroplane, petrol, a petrol station, a seat and a platform.",
+    "assesses": [
+      "BN-LEX-C198-JINIS198-03",
+      "BN-LEX-C198-JINIS198-04",
+      "BN-LEX-C198-JINIS198-05"
+    ]
+  }
+}

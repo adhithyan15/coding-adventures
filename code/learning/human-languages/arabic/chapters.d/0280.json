@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "Client, Engineer, Lawyer, Pilot, Pharmacist",
+  "label": "ch:ar-client-engineer-lawyer-pilot-pharmacist",
+  "canDo": "I can say a client, an engineer, a lawyer, a pilot and a pharmacist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C280-saydali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can say a client, an engineer, a lawyer, a pilot and a pharmacist.",
+    "assesses": [
+      "AR-LEX-C280-AMAL280-03",
+      "AR-LEX-C280-AMAL280-04",
+      "AR-LEX-C280-AMAL280-05"
+    ]
+  }
+}

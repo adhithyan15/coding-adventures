@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "So, Since, If, Yet, Otherwise",
+  "label": "ch:bn-so-since-if-yet-otherwise",
+  "canDo": "I can say so, since, if, yet and otherwise.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "BN-C159-nahole",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can say so, since, if, yet and otherwise.",
+    "assesses": [
+      "BN-LEX-C159-KARON159-03",
+      "BN-LEX-C159-KARON159-04",
+      "BN-LEX-C159-KARON159-05"
+    ]
+  }
+}

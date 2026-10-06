@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C186-mutthi",
+    "language": "urdu",
+    "chapter": 186,
+    "sequence": 10490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e49600b62e69e417"
+  },
+  "findings": []
+}

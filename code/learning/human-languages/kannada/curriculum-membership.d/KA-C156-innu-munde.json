@@ -1,0 +1,11 @@
+{
+  "id": "KA-C156-innu-munde",
+  "pathSegment": "KA-PATH-156-MUNDE156",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-156-MUNDE156",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:b67c5d2ce8282a08",
+  "lessonIds": [
+    "FA-C166-tuman",
+    "FA-C166-moshtari",
+    "FA-C166-andaze",
+    "FA-C166-naqd",
+    "FA-C166-bluz",
+    "FA-R166-first-pass-words-from-chapters-158-161",
+    "FA-R166-second-pass-words-from-chapters-162-166"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch166.txt",
+  "json": "persian/narration/ch166.json",
+  "textHash": "fnv1a64:d39d0399a7590d64",
+  "jsonHash": "fnv1a64:2f541ba2535da3e2",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Hunter, Thief, Beggar, Scholar, Learned person",
+  "label": "ch:sa-hunter-thief-beggar-scholar-learned-person",
+  "canDo": "I can say a hunter, a thief, a beggar, a scholar and a learned person.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C180-vidvan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say a hunter, a thief, a beggar, a scholar and a learned person.",
+    "assesses": [
+      "SA-LEX-C180-PPL180-03",
+      "SA-LEX-C180-PPL180-04",
+      "SA-LEX-C180-PPL180-05"
+    ]
+  }
+}

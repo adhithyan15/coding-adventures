@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:4a5d35c783fc2472",
+  "lessonIds": [
+    "UR-C223-chalak",
+    "UR-C223-sharif",
+    "UR-C223-badtamiz",
+    "UR-C223-tamizdar",
+    "UR-C223-hasin"
+  ],
+  "tex": "urdu/book/chapters/ch223-cunning-decent-rude-polite-beautiful.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "Dead end, Dormitory, Prison, Port, Chimney",
+  "label": "ch:fa-dead-end-dormitory-prison-port-chimney",
+  "canDo": "I can say a dead end, a dormitory, a prison, a port and a chimney.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-R157-second-pass-words-from-chapters-153-157",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: I can say a dead end, a dormitory, a prison, a port and a chimney.",
+    "assesses": [
+      "FA-LEX-C157-MAKAN157-03",
+      "FA-LEX-C157-MAKAN157-04",
+      "FA-LEX-C157-MAKAN157-05"
+    ]
+  }
+}

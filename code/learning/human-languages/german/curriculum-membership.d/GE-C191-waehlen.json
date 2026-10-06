@@ -1,0 +1,11 @@
+{
+  "id": "GE-C191-waehlen",
+  "pathSegment": "GE-PATH-191-VERB191",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-191-VERB191",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C167-tarikh",
+  "pathSegment": "HI-PATH-167-READ167",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-167-READ167",
+      "order": 1
+    }
+  ]
+}

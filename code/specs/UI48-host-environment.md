@@ -1,6 +1,6 @@
 # UI48 — Host environment: runtime viewport, input modality, and variant selection
 
-**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2) and Compose (§7.5); ENV4 on SwiftUI (§7.3) and Compose (§7.4)
+**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2), Compose (§7.5), Flutter (§7.9), Qt (§7.10) and XAML (§7.11); ENV4 on SwiftUI (§7.3), Compose (§7.4), Qt (§7.6), XAML (§7.7) and Flutter (§7.8)
 **Layer:** UI / standard Mosaic app ABI
 **Depends on:** UI29 (primitive kernel), UI30 (multi-layout pipelines), UI38
 (native application runtime), `mosaic-app-runtime`, `mosaic-app-capi`
@@ -384,7 +384,9 @@ Decisions taken while implementing ENV1 in `mosaic-app-runtime`:
   consumes the next sequence number.
 - **The runtime intercepts it; apps opt in.** The runtime decodes the payload
   (an invalid one is refused as `InvalidEnvironment` before the app sees
-  anything, consuming nothing) and calls a new trait method,
+  anything, consuming nothing; its message begins with the exported
+  `INVALID_ENVIRONMENT_DIAGNOSTIC`, which is how a native host tells it from
+  other failures, §7.12) and calls a new trait method,
   `MosaicApp::environment_changed`, instead of `dispatch`. Its default answers
   "no reaction", so every existing app — each of which rejects event names it
   does not know — keeps working when a host starts sending the event.
@@ -416,6 +418,10 @@ the default is compiled into `Sources/App`.
   variant name in PascalCase: `touch` → `EngramAppTouchView`), and each
   backend's equivalent (a `@Composable` function, a Dart widget class, a QML
   component, a XAML user control — XAML already suffixes its type).
+- A variant's root may not take a name another export, another export's
+  variant or the shell already declares (`Card.touch` beside an exported
+  `CardTouch` would be a second `CardTouchView`): the builder refuses it,
+  naming both, for every export's variants on every backend (§7.9).
 - A variant file carries only what differs: its view. The component's
   interface — its event type, prop accessors — is the same for every variant
   (UI30 §2.2 puts the variant on the layout, never the interface) and is
@@ -482,7 +488,9 @@ runtime's `environment()` is the one the user is looking at.
   `orientation`, `reducedMotion`) and reports them with `.task(id:)` keyed on
   those values: once when the window first appears, then only when one of
   them flips. Dragging a window's edge sends nothing until a threshold is
-  crossed. The host also drops a report equal to the last one it sent.
+  crossed. The host also drops a report equal to the last one the runtime
+  took, or the last one it refused as invalid; any other failure is sent
+  again (§7.12).
 - **The start context carries what is known before the first frame.** The
   host starts the app with the platform's pointer and hover (`coarse`/`none`
   on iOS, `fine`/`hover` on macOS), reduced motion from the system setting,
@@ -529,8 +537,9 @@ by desktop and Android since UI89 §3.4). Compose has no layout variants yet
 - **Reported on bucket change only.** `LaunchedEffect(report)` is keyed on
   the six values, so it runs once when the window is first measured and again
   only when a bucket flips. The host also drops a report equal to the last
-  one it accepted, and remembers a report only once the runtime took it, so a
-  refused one is tried again with the next.
+  one it accepted, and remembers a report only once the runtime took it. An
+  identical report the runtime refused as invalid is held back; any other
+  failure is sent again (§7.12).
 - **Through the concrete host.** `MosaicComposeHost` is an interface shared
   with test harnesses and the legacy bridge, and knows nothing about the
   environment; the shell reaches `reportEnvironment` through
@@ -549,8 +558,8 @@ shell) and the host template. The Compose conformance harness, run in CI's
 Linux lane against the conformance runtime (which ignores the event), checks
 that a report keeps the props and revision, an unchanged report is not
 resent, a changed one is, and an invalid one is refused, leaves the props and
-is not remembered. The resize-and-assert gate lands with the first app that
-reacts (ENV-last).
+is held back -- plus the §7.12 cases. The resize-and-assert gate lands with
+the first app that reacts (ENV-last).
 
 ### 7.5 ENV2 and ENV3 on Compose, designed
 
@@ -587,6 +596,14 @@ reacts (ENV-last).
   the runtime, so swapping roots loses nothing but composition-local state.
 - A package without variants gets byte-identical output. A sample-props shell
   with variants observes and selects too (it has no runtime to report to).
+- Two variants whose names differ only in letter case or in `-` / `_`
+  (`touch` / `Touch`, `task-list` / `task_list` / `tasklist`) are refused when
+  the variants are discovered, for every backend: they would name one
+  generated view twice, and a case-insensitive filesystem keeps only one of
+  their files.
+- A variant composable named like another export (`Card.touch` beside an
+  exported `CardTouch`), like another export's variant, or like a name the
+  shell declares is refused by the builder, as on Qt and XAML (§7.9).
 
 **Acceptance.** Emitter tests pin the variant composable (its name, the
 default's event and props types, no redeclaration); builder tests mirror
@@ -596,6 +613,698 @@ the one package with a variant (`EngramApp.touch.mll`), so both roots and the
 selector compile together. On desktop the pointer is `fine`, so the touch
 layout is compiled but not shown; the resize-and-assert gate still lands
 with ENV-last.
+
+### 7.6 ENV4 on Qt, as built
+
+The §7.3 contract on the Qt shell. Qt has no layout variants yet, so this is
+the report alone.
+
+- **The host owns the values.** `MosaicHost::environmentReport(width,
+  height, dark)` reduces a window to the six §4 values -- `sizeClass` at 600
+  and 1024 logical pixels (every host's thresholds), `orientation` from height
+  against width (a square window is landscape), `colorScheme` light or dark --
+  plus `MosaicHost::initialEnvironment()`: `coarse`/`none` on Android and iOS,
+  `fine`/`hover` elsewhere, and `reducedMotion` `no-preference` (Qt has no
+  portable setting). The initial values also go into the start context.
+- **The shell observes.** Every generated `main.cpp` with a host defines
+  `mosaicObserveEnvironment(view, host)` and calls it before the window is
+  shown: it reports once, then on `QWindow::widthChanged` /
+  `heightChanged` and, on Qt 6.5+, `QStyleHints::colorSchemeChanged` (earlier
+  Qts read the palette once). The packaged native-complete shell installs it
+  for each host that starts, so a retry's new host is observed and the old
+  one's connections go with it.
+- **Deduplicated in the host.** `reportEnvironment` sends nothing without a
+  runtime or when the report equals the last one the runtime took; it
+  remembers a report only once taken, so a refusal is retried with the next
+  change. Only an identical report the runtime refused as invalid is not
+  resent; any other failure is sent again (§7.12).
+- **Strict shells get strict answers.** In a native-complete shell
+  (`configureRequiredProps`) the answer is checked for required props and
+  mapped to QML property names, exactly as `handleRequiredEvent`'s is; a
+  missing prop is a refusal, not a half-applied screen.
+- **Not in the middle of a settle.** A modal file dialog runs a nested event
+  loop inside `settleEffects`, and a resize behind it would dispatch there.
+  The shell asks `MosaicHost::isSettling()` first and, if so, retries on one
+  restartable 100 ms timer instead.
+- **"No reaction" keeps the current props.** `handleEvent` keeps the props it
+  is showing when an update carries `props: null` at the revision it is
+  showing, as the Swift and Kotlin hosts do -- the runtime's own props, so a
+  persistence warning that has since cleared is not kept with them. The shell applies a report's
+  answer only when it carries props, and logs a refusal instead of applying
+  it (a refusal's props are an empty map, which would blank the screen).
+
+**Acceptance.** The Qt effect driver, linked to the conformance runtime (which
+ignores the event), checks the six values and thresholds, that an ignored
+report keeps the props and revision, that an unchanged report is not resent,
+that an invalid one is refused, leaves the props and is not remembered, and
+that a changed one is sent -- plus the §7.12 cases. Emitter tests pin the
+observer in both
+`main.cpp` shapes. As on the other hosts, the resize-and-assert gate lands
+with ENV-last.
+
+### 7.7 ENV4 on XAML, as built
+
+The §7.3 contract on the WinUI shell. XAML has no layout variants yet, so
+this is the report alone.
+
+- **The host owns the values.** `MosaicRuntimeHost.EnvironmentReport(width,
+  height, dark)` reduces a window to the six §4 values from effective pixels
+  (WinUI's `ActualWidth`/`ActualHeight`) -- `sizeClass` at 600 and 1024,
+  `orientation` from height against width (a square is landscape),
+  `colorScheme` light or dark -- plus `MosaicRuntimeHost.InitialEnvironment()`:
+  `fine`/`hover`, and `reducedMotion` `no-preference` (WinUI's animation
+  setting is not read yet). The initial values also go into the start
+  context.
+- **The shell observes.** The native-complete `MainWindow` with a component
+  root calls `ObserveEnvironment()` once the runtime has started and is
+  showing: it reports once, then on the window content's `SizeChanged` and
+  `ActualThemeChanged` (the rendered theme). A change is reported from the
+  dispatcher queue, never inside the handler (which may fire while an effect
+  is being settled), and only one report is queued at a time, so a burst of
+  resize ticks costs one. The handlers are wired once, so a retried start
+  reports afresh without stacking them; nothing is reported before the first
+  layout. A sample shell has no runtime to tell, and a dialog-root window
+  shows only the button that opens its dialog, so neither observes.
+- **Deduplicated in the host, per runtime.** `ReportEnvironment` sends nothing
+  without a runtime, when the report equals the last one the runtime took, or
+  when it equals the last one the runtime refused as invalid (a drag across
+  a threshold would otherwise re-send a refused report on every tick); any
+  other failure is sent again (§7.12). A refusal does not replace the last
+  report taken. A report the runtime took is remembered
+  at once, even if showing its answer then fails. A new runtime (after a
+  retry) starts with nothing remembered.
+- **"No reaction" keeps the current props, and re-applies nothing.** Every
+  dispatch and effect completion keeps the props showing when its update
+  carries `props: null` at the revision showing (as the Swift, Kotlin and Qt
+  hosts do). A report re-applies props to the component only when the
+  revision showing is newer than the last one applied: XAML's apply rebuilds
+  list view models, which would reset scrolling on every resize. So an apply
+  that failed is retried by the next report or event. An answer is applied
+  strictly, with the shell's required props, as an event's is.
+- **Only a failure reaches the status line.** `ReportEnvironment` answers a
+  status only when the report failed (refused, its strict props missing, or
+  the runtime closed) or when taking it tripped a settle guard, whose reason
+  reaches a caller only through that status; a resize is not something the
+  user did, so an accepted report leaves the status describing their last
+  action.
+- **A backstop inside a settle.** The host sends nothing while a settle is
+  running on the same thread and does not remember the report, so the next
+  one is sent; the queued shell never reaches it.
+
+**Acceptance.** The XAML conformance harness, run in CI's Windows lane against
+the conformance runtime (which ignores the event), checks the six values and
+thresholds, that an ignored report re-applies nothing and keeps the props for
+the next strict apply, that an invalid report is refused and keeps the props,
+and -- with the conformance app failing every change that reaches it, so a
+failure proves a report was sent (§7.12) -- that the refused report is not
+re-sent, that it did not replace the last report taken, that an unchanged
+report is not sent and a changed one is, plus the other §7.12 cases. Rust
+tests pin the host
+template and the shell (the observer after start, wired once, queued, strict,
+only failures shown; none in a sample or dialog shell). The TaskApp WinUI
+build compiles the observer. As on the other hosts, the resize-and-assert
+gate lands with ENV-last.
+
+### 7.8 ENV4 on Flutter, as built
+
+The §7.3 contract on the Flutter shell. Flutter has no layout variants yet,
+so this is the report alone.
+
+- **The host owns the values.** `MosaicHost.environmentReport(width, height,
+  dark, {reduceMotion})` reduces a window to the six §4 values from logical
+  pixels (`MediaQuery`'s size) -- `sizeClass` at 600 and 1024, `orientation`
+  from height against width (a square is landscape), `colorScheme` light or
+  dark, and `reducedMotion` from the platform's `disableAnimations` -- plus
+  `MosaicHost.initialEnvironment()`: `coarse`/`none` on Android and iOS,
+  `fine`/`hover` elsewhere, and `reducedMotion` `no-preference`. The binding
+  stays free of Flutter imports (the conformance harness runs it on the plain
+  Dart VM), so it cannot read the motion setting before the first frame; the
+  start context carries the initial values and the shell's first report
+  corrects the rest, as on SwiftUI.
+- **The shell observes.** The native-complete `main.dart` passes
+  `builder: _observeEnvironment` to its `MaterialApp`. The builder runs below
+  the app's `MediaQuery` and above every route, and reads only the aspects the
+  report needs (`MediaQuery.sizeOf`, `platformBrightnessOf` -- the rendered
+  scheme, since `themeMode` is `system` -- and `disableAnimationsOf`), so a
+  change to exactly those rebuilds it. It records the report and queues one
+  post-frame callback; it never dispatches during build. One report is queued
+  at a time and it sends what the last build saw, so a burst of resize frames
+  costs one. Nothing is reported until the runtime has started and is
+  showing; a retried start reports afresh to its new host. A sample-props
+  shell has no runtime to tell, and its host may be a package's own (Venture
+  replaces `mosaic_host.dart`), so it does not observe.
+- **Deduplicated in the host, per runtime.** `reportEnvironment` sends nothing
+  without a runtime, inside a settle (a backstop; not remembered), when the
+  report equals the last one the runtime took, or when it equals the last one
+  the runtime refused as invalid; any other failure is sent again (§7.12). A
+  refusal does not replace the last report taken; a report the runtime took
+  is remembered at once.
+- **"No reaction" keeps the current props, and rebuilds nothing.** Every
+  dispatch and effect completion keeps the props showing when its update
+  carries `props: null` at the revision showing -- the runtime's own props,
+  before the persistence warning is folded in, as on Qt. `reportEnvironment`
+  answers null when the revision did not move, so the shell calls no
+  `setState` for an ignored report; an answer that moved it, or carries a
+  tripped settle guard's `error`, is shown exactly as an event's answer is.
+- **A failure is logged, never fatal.** The public `reportEnvironment` never
+  throws: a refusal (an invalid environment) or a closed runtime comes back as
+  `{'error': 'Mosaic environment report failed: ...'}`, which the shell logs
+  with `debugPrint`. A resize is not something the user did, so it never
+  reaches the startup-failure screen, and a refusal's missing props are never
+  applied.
+
+**Acceptance.** The Flutter conformance harness, run in CI's Linux lane
+("Round-trip Rust engine through standard Flutter binding") against the
+conformance runtime (which ignores the event), checks the six values and
+thresholds, that an ignored report has nothing to show and keeps the props and
+revision, that an invalid report is refused as an `error` answer and keeps the
+props, and -- with the conformance app failing every change that reaches it,
+so an `error` answer proves a report was sent (§7.12) -- that the refused
+report is not re-sent, that it did not replace the last report taken, that an
+unchanged report is not sent and a changed one is, plus the other §7.12
+cases. Rust tests pin the
+host template and the shell (the builder, the aspect reads, the post-frame
+queue, nothing before the host is ready, failures only logged; none in a
+sample shell). The same lane runs `flutter analyze`, a launch and the TaskApp
+lifecycle widget test on the generated TaskApp, which observes at start. As on
+the other hosts, the resize-and-assert gate lands with ENV-last.
+
+### 7.9 ENV2 and ENV3 on Flutter, as built
+
+§7.5 on the Flutter shell, reusing what §7.8 already reduces.
+
+**ENV2 — one app carries every variant.**
+
+- A variant's root is its own Dart widget class, `<Component><Variant>` in
+  PascalCase (`EngramApp.touch.mll` → `class EngramAppTouch`), named by
+  `mosaic-emit-flutter`'s `variant_widget_name` with the same rule as Compose
+  and SwiftUI. A variant whose widget would take a name the default file
+  declares (`Card.event-tap.mll` → `CardEventTap`, the `onTap` event) is
+  refused, and so is one that would take a public name of the shell's own
+  files, which `main.dart` imports beside it (`Mosaic.host.mll` →
+  `MosaicHost`; the list, `SHELL_RESERVED_NAMES`, is pinned by tests against
+  the generated `main.dart` and the binding templates).
+- A variant widget named like *another exported component* (`Card`'s
+  `touch` variant and an exported `CardTouch`) or like another export's
+  variant (`Card` + `touch-bar` and `CardTouch` + `bar`) is refused by the
+  builder, naming both `.mll` files, as on Qt and XAML -- for every export's
+  variants, and on Compose and SwiftUI too. One check serves all five
+  backends (`check_layout_namespace`), each describing what its default
+  files and its shell declare: on Flutter `<X>`, `<X>Event` and every
+  `<X>Event<Case>` (claimed as a prefix, so adding an emit never breaks a
+  build), on Compose `<X>`, `<X>Event` and `<X>Props` (`<X>Props<n>`) plus the
+  Compose shell's public names (pinned by a builder test against every
+  generated shell source), on SwiftUI `<X>View` and `<X>Event` (no SwiftUI
+  shell type ends in `View`, also pinned). It runs before anything is
+  written, flat builds included, since the flat artifacts are what a
+  consumer compiles together. File names need no check: Kotlin's per-file
+  class (`Card.touch.kt` → `Card_touchKt`) could only meet an export named
+  `Card_touch`, which the manifest's `[A-Z][a-zA-Z0-9]*` rule refuses (a test
+  pins it).
+- A variant file carries only what differs: its widget and the private
+  helpers its own tree uses. A leading `_` makes a Dart name private to its
+  file, so those may repeat. The interface — the `<C>Event` sealed class and
+  its `<C>Event<Case>` subclasses — is emitted once, by the default layout's
+  file. Dart resolves nothing across files without an import, so the variant
+  file imports it (`import 'EngramApp.dart';`); the import is always used,
+  because the widget's `dispatch` field names `<C>Event`. The variant widget
+  takes exactly the default's constructor arguments, since the slots are part
+  of the interface too.
+- The project shell copies every export's variant files
+  (`<C>.<variant>.dart`) into `lib/`, beside the default, so
+  `flutter analyze` checks every layout. `main.dart` imports the root's
+  selectable variants — only those, because an unused import is an error
+  under the generated `analysis_options.yaml`.
+- Two variants whose names differ only in letter case or in `-` / `_` are
+  already refused when variants are discovered (§7.5); that check is shared
+  by every backend, Flutter included.
+
+**ENV3 — the selector.**
+
+- The rules are the package's `[[app.layouts]]` (or the conventions),
+  computed by the same `effective_layout_rules` as SwiftUI and Compose, and
+  passed to the emitter as `EmitOptions::layout_variants`: one
+  `LayoutChoice` per rule, in rule order, each condition keyed by its wire
+  name (`EnvironmentAxis::wire_name`). The emitter checks them again before
+  writing Dart: a usable variant whose widget is chosen once (keyed on the
+  widget, so `touch` and `Touch`, or `task-list` and `task_list`, which name
+  one class, are refused together) and is not a shell name, camelCase axis
+  names, lowercase values. A rule for a variant with no `.mll` fails the build.
+- `main.dart` carries them as data, `mosaicLayoutRules`, a `const` list of
+  `(variant, conditions)` records, and a public
+  `mosaicLayoutVariant(environment)` that returns the first variant whose
+  conditions all hold, or null for the default — `select_variant`'s
+  semantics. It is public so a widget test can call it directly.
+- Selection runs in a `Builder` placed where the root used to be, below
+  `MaterialApp`'s `MediaQuery`: `_mosaicLayoutRoot(context)` reads the same
+  aspects §7.8's observer reads (`sizeOf`, `platformBrightnessOf`,
+  `disableAnimationsOf`), reduces them with `MosaicHost.environmentReport` —
+  so the report and the rules share wire names and thresholds — and switches:
+  `case 'touch': return EngramAppTouch(...); default: return EngramApp(...);`.
+  A resize across a threshold rebuilds just that `Builder` with the other
+  root, on the same frame. The props live in the shell's state (fed by the
+  runtime), so swapping roots loses nothing but the old root's own
+  widget-local state (a text field's cursor, say).
+- A test pins every rule axis's wire name as a key of the Flutter binding's
+  `environmentReport`, so a rule can never test a key the report does not
+  carry.
+- The observer (§7.8) is untouched: it still reports from `MaterialApp`'s
+  builder, post-frame. The selector does not wait for it and does not need
+  the runtime to have taken the report.
+- A sample-props shell with variants selects too, and reports to nobody, as
+  on Compose. Its host is the standard binding the builder installs; a
+  package that replaces `mosaic_host.dart` and has variants must provide
+  `environmentReport` (none does today). The emitter's placeholder host
+  gains an `environmentReport` answering an empty environment (the default
+  layout) whenever a shell selects from it.
+- A package without variants gets byte-identical output: TaskApp and
+  RatingControls were emitted before and after, both profiles, with no
+  difference. A test also pins that the variant shell, minus the import, the
+  `_mosaicLayoutRoot` method and the selector, is byte-for-byte the plain
+  shell.
+
+**Acceptance — the resize gate.** Unlike SwiftUI and Compose, Flutter's
+widget tests can resize the window (`tester.view.physicalSize`), so the gate
+§7 asks for lands here rather than waiting for ENV-last. A fixture package,
+`mosaic-emit-flutter/fixtures/layout-variants`, has a default layout and a
+`compact` one selected by convention; its widget test mounts the generated
+sample shell at 1200 × 800 (default), 400 × 800 (compact), 599 (compact),
+600 (default) and back, asserting which root is mounted each time and that
+the same props reach it. CI's Linux Flutter lane runs it after `flutter
+analyze`. The native-complete shell cannot be mounted in a widget test
+without a runtime library, so its selector is covered by Rust tests and by
+Engram — the one package with a variant — whose generated native-complete
+project the same lane analyzes and builds with both roots, after checking
+that `EngramAppTouch`, its import and the `switch` are in `lib/`. On Linux
+the pointer is `fine`, so Engram's touch layout is compiled but not shown.
+
+### 7.10 ENV2 and ENV3 on Qt, as built
+
+§7.5 on the Qt shell, reusing what §7.6 already observes.
+
+**ENV2 — one app carries every variant.**
+
+- A variant's root is a QML type of its own, `<Component><Variant>` in
+  PascalCase, named by `mosaic-emit-qt`'s `variant_type_name` with the same
+  rule as Compose, Flutter and SwiftUI. The file keeps the artifact name every
+  backend writes a variant under (`EngramApp.touch.qml`); its type
+  (`EngramAppTouch`) is declared in the generated `CMakeLists.txt`, because
+  `qt_add_qml_module` otherwise names a file after the text before its first
+  dot -- a second `EngramApp`:
+
+  ```cmake
+  set_source_files_properties(EngramApp.touch.qml PROPERTIES QT_QML_SOURCE_TYPENAME EngramAppTouch)
+  qt_target_qml_sources(EngramApp QML_FILES EngramApp.touch.qml)
+  ```
+
+  The project's `qmldir` lists it the same way. A variant whose type would be
+  the component's own name, or a name the Qt shell owns
+  (`SHELL_RESERVED_NAMES`: `main.cpp`'s `MosaicTableModel` and
+  `MosaicLayoutRule`, the binding's `MosaicHost` and `MosaicFileDialogs`,
+  pinned by tests against both `main.cpp` shapes and the binding's headers),
+  is refused. They are C++ names, which a QML type does not enter today, but
+  `MosaicHost::registerTypes()` is where the shell would register its classes
+  with QML.
+- **Diverges from §7.5: a variant's file declares the interface again.** Its
+  slot `property`s, signals, `mosaicEvent` routing and `applyMosaicResponse`
+  are the default's, emitted by the same functions from the same `.mil`, and
+  the variant's root is exactly the default's root for that tree plus one
+  comment line naming it (a test pins this). Compose, Flutter and SwiftUI emit
+  the interface once because their files share one namespace, where a second
+  `<C>Event` is a redeclaration. QML has neither the problem nor the remedy: a
+  file's declarations are members of its own type, so nothing collides, and
+  nothing in QML can be imported in their place -- sharing them would mean
+  inheriting the default type, whose whole visual tree would be instantiated
+  under the variant's. Part of that surface also depends on the layout:
+  signal names are allocated against the controls that call them (a `toggle`
+  called from a Button becomes `mosaicEmitToggle`), and table models, the
+  icon helper and the drag scope exist only when the layout uses them. The one name a variant
+  adds to the module is its type, and that is what is checked. The interface
+  knowledge the shell needs -- the strict shell's slot names and required
+  props -- is emitted once, in `main.cpp`.
+- The project shell compiles every export's variants into the QML module, as
+  it compiles every export's default. A type the module would register twice
+  -- a variant named like another export (`Card` + `touch` beside an exported
+  `CardTouch`) or like another variant -- fails the build, and so does a
+  variant of ANY export named like something the shell owns (`Mosaic` +
+  `host`), not only the root's. The check is the one every backend shares
+  (§7.9), run for a Qt project before anything is written, so a refused
+  build leaves no partial project. A flat Qt build is not checked: it has
+  no module, and a flat `Card.touch.qml` registers no type.
+- A native-complete shell mounts every root strictly, so it re-emits the
+  root's variants under that policy (`required property var mosaicHost`,
+  events through `handleRequiredEvent`) as it re-emits the default. The flat
+  artifacts stay permissive.
+
+**ENV3 — the selector.**
+
+- The rules are the package's `[[app.layouts]]` (or the conventions),
+  computed by the same `effective_layout_rules` as the other backends, and
+  passed to the emitter as `EmitOptions::layout_variants`: one `LayoutChoice`
+  per rule, in rule order, conditions keyed by `EnvironmentAxis::wire_name`,
+  plus the native table models that variant's root takes. The emitter checks
+  them again before writing C++, CMake or `qmldir`: a usable type chosen once
+  (keyed on the type, so `touch` and `Touch` are refused together), camelCase
+  axis names, lowercase values. A rule for a variant with no `.mll` fails the
+  build. A test pins every rule axis's wire name as a key of the Qt binding's
+  `environmentReport` (or the `initialEnvironment` it starts from).
+- `main.cpp` carries them as data -- `mosaicLayoutRules()`, a list of
+  `{variant, source, conditions}` -- with `mosaicLayoutVariant(environment)`
+  (the first rule whose conditions all hold, else the default:
+  `select_variant`'s semantics) and `mosaicLayoutUrl(environment)`.
+- **Selection is in the C++ shell, not in QML.** A `QQuickView`'s root is the
+  component itself -- the host sets its properties and calls its
+  `applyMosaicResponse` -- so a QML wrapper choosing between roots would have
+  to redeclare and forward every slot. Instead the shell swaps the view's
+  source. The first root is the one `MosaicHost::environmentReport` of the
+  window selects.
+- **The switch is deferred, never made inside the signal that noticed the
+  change.** Swapping the view's source deletes the old root, and the §7.6
+  observer runs from `QWindow::widthChanged` / `heightChanged` and the
+  colour-scheme signal; if QML ever resized its own window, the root being
+  deleted would be on the stack. So each report, after its settle check,
+  only starts one zero-interval single-shot timer owned by the host
+  (`if (!layoutSwitch->isActive()) layoutSwitch->start(0);`), which coalesces
+  a burst of resize ticks into one switch. When it fires it checks
+  `isSettling()` again (and waits 100 ms if so), re-reads the window, and
+  calls `mosaicSwitchLayout`. The report is therefore answered on the root
+  that was showing; nothing is lost, because the new root starts from the
+  props the old one shows, which by then include that answer.
+- The new root starts with the props the old one showed: in a native-complete
+  shell the runtime's, checked and mapped exactly as at startup
+  (`propsRequired`); in a sample shell each slot's value is carried across
+  from the old root (every layout has the same slots), which covers a runtime's
+  props and the shell's own samples alike. The app's state lives in the
+  runtime, so nothing is lost but the old root's own QML state. A root that
+  cannot get its props or cannot load leaves the window on the layout it was
+  showing, and the reason is logged; nothing is thrown into the event loop.
+  Only a layout root is ever swapped for another (never, say, the strict
+  shell's startup surface).
+- Table models are allocated once, for the largest count any root takes, and
+  handed only to the roots that declare them: a QML root refuses an initial
+  property it does not declare (checked on Qt 6.4: `setInitialProperties`
+  with an unknown name leaves the view in `Error`). The strict shell's
+  retrying startup still allocates a fresh set per attempt, owned by that
+  attempt's host, because the packaged shell ties them to the candidate host
+  so a failed attempt releases the whole partial graph; each attempt keeps
+  its set on the view before mounting, and the previous host's observer
+  (the only reader) goes with that host, so the stale set is never read.
+  Reusing one set across retries was left as is: it saves a few objects per
+  failed start and would undo that ownership.
+- A sample shell selects too, and reports to nobody. Without the standard
+  host (`MOSAIC_HAS_HOST` 0) it has no environment to read and opens the
+  default layout.
+- A package without variants gets byte-identical output: TaskApp and
+  RatingControls were emitted before and after, both profiles, with no
+  difference (Engram's changes are exactly the ones above), and a test pins
+  the variant project, minus what ENV2/ENV3 add, as the plain one.
+
+**Acceptance — the resize gate.** Qt can resize a window offscreen, so the
+gate §7 asks for lands here. A fixture package,
+`mosaic-emit-qt/fixtures/layout-variants`, has a default layout (a
+`RowLayout`) and a `compact` one (a `ColumnLayout`) selected by convention.
+Its harness, `fixtures/layout-variants-test/main.cpp`, compiles the generated
+sample `main.cpp` verbatim with its `main` renamed, runs it offscreen, and from
+inside its event loop resizes the window to 400, 599, 600, 400 and 1200
+logical pixels, asserting each time which root is mounted (by source and by
+the layout it built), that the title the first root showed reached it, and
+that the host is attached. CI's Linux Qt lane runs it, and before building
+Engram -- the one package with a variant -- checks that `EngramApp.touch.qml`
+is a strict root and its own type in the module and that `main.cpp` selects
+and switches; then it builds the native-complete project with both roots. On
+Linux the pointer is `fine`, so Engram's touch layout is compiled but not
+shown. Verified locally on Qt 6.4 (the CI lane uses 6.8.3), with the project's
+version floor lowered and `RESOURCE_PREFIX /qt/qml` added for 6.4: the
+fixture gate passes and fails when the switch or the carried props are
+removed, Engram's native-complete project builds, and with a declared
+`touch <- size-class = compact` rule the strict shell, running the real
+Engram runtime, swaps to the touch root at 400 pixels and back with
+`appTitle` carried. Both runs were repeated after the switch was deferred to
+the event loop, and the fixture gate fails when the switch is never queued.
+
+### 7.11 ENV2 and ENV3 on XAML, as built
+
+§7.5 on the WinUI shell, reusing what §7.7 already observes. §7.2 noted that
+XAML already gave a variant a type of its own; what it lacked was one app
+holding both, and a window choosing between them.
+
+**ENV2 — one project carries every variant.**
+
+- A variant's root is a WinUI control of its own, `<Component><Variant>` in
+  PascalCase, named by `mosaic-emit-xaml`'s `variant_type_name` with the
+  same rule as every other backend (`EngramApp.touch.mll` →
+  `x:Class="Mosaic.Generated.EngramAppTouch"`, `partial class EngramAppTouch
+  : UserControl`), emitted by `from_pipeline_variant`. Every type its layout
+  needs is named after it, as the default's are named after the component
+  (`EngramAppTouch_DeckVm`, `EngramAppTouchMosaicSlider`). The files keep the
+  artifact name every backend writes a variant under (`EngramApp.touch.xaml`,
+  `.xaml.cs`).
+- **The interface is the default's.** A WinUI project compiles every `.cs`
+  under it into one C# namespace, so -- as on Compose and Flutter -- the
+  variant declares no union of its own: its `Dispatch` is
+  `EventHandler<EngramAppEvent>` and its handlers construct the default's
+  cases. The builder no longer writes `<C>.<variant>.Event.cs`. Before, the
+  variant declared `EngramAppTouchEvent`, so the window would have needed one
+  handler per layout. The control takes the same slots as the default and
+  does not depend on the shell's policy (a test pins it identical under
+  either), so nothing is re-emitted for native-complete: the strict policy
+  lives in `MainWindow`, which applies props to every root the same way
+  (below). Qt, whose QML roots carry the policy themselves, has to re-emit
+  its variants; XAML does not.
+- **A variant's type may not take a name already in the namespace**, and
+  the emitter refuses it (`PipelineEmitError::InvalidLayoutVariant`): the
+  component's own name, `<X>Event` or a `<X>Mosaic…` support-type name for
+  the component and for every export `EmitOptions::package_exports` lists
+  (`Card` + `touch` beside an exported `CardTouch` is refused), and the
+  names the WinUI shell owns (`SHELL_RESERVED_NAMES`: `App`, `MainWindow`,
+  WinUI's generated `Program`, the binding's `MosaicRuntimeHost`,
+  `MosaicRuntimeResult`, `MosaicRuntimeException`, the platform library's
+  `MosaicPlatformEffects`, `MosaicPlatformRouter`, `MosaicRuntimeHostEffects`,
+  `WinUIMosaicFileDialogs`, `IMosaicFileDialogs`,
+  `IMosaicPlatformEffectHost`, a package host's `MosaicHost`, and the
+  emitter's three converters). The list is pinned by an emitter test against
+  every type the generated `App.xaml.cs`, both `MainWindow.xaml.cs` shapes
+  and the converters declare, and by a builder test against
+  `mosaic-app-bindings`' XAML templates. Row view models are `<X>_<Alias>Vm`,
+  which a variant type, having no `_`, can never spell. Every variant is an
+  owner too: its own support types are `<Variant type>Mosaic…`
+  (`Card.touch` declares `CardTouchMosaicSlider`), so a variant type inside
+  another variant's support names (`Card.touch-mosaic-slider`) is refused --
+  by the emitter among the shell's choices, by the builder among every
+  export's variants. Two exports' variants that spell one type (`Card` +
+  `touch-bar` and `CardTouch` + `bar`) are refused by the builder, which
+  sees them all, naming both files, and so is the reverse, an export named
+  inside a variant's support names (`CardTouchMosaicSlider` beside
+  `Card.touch`). The builder now makes every one of these
+  checks for the whole package before the emitter runs -- the same check as
+  on the other four backends (§7.9) -- so its message, naming both `.mll`
+  files or the export, is the one a package build reports; the emitter's
+  remains for callers that are not the builder. A dependency package's
+  components add no names: the builder composes them into the layout that
+  mounts them. A caller that passes the emitter a `ComponentRegistry`
+  (`mosaic-compile`'s single-file mode registers the package's sibling
+  exports) has each registered component in the generated namespace treated
+  as an owner, exactly like an export: its name, its union and its support
+  names are refused for a variant, by `from_pipeline` among the shell's
+  choices and by `from_pipeline_variant`. A component registered in another
+  namespace is reached only through its own XAML prefix (`<grid:Card/>`),
+  never by a bare C# name, so its names stay free. A registry lists
+  components, not their variants, so two single-file builds whose variants
+  spell one type (`Ab` + `c-d` and `AbC` + `d`) are caught only by the
+  package builder, which sees every variant.
+- **A component with variants needs its default layout.** The variants
+  raise `<C>Event`, which only the default declares, so a XAML build of a
+  component with `<C>.<variant>.mll` files and no `<C>.mll` fails, saying so,
+  rather than emitting controls that name an undeclared union. No backend
+  supports that shape (each variant takes its interface from the default's
+  file); XAML is where the build would otherwise succeed.
+- The project compiles every export's variants already: the WinUI SDK globs
+  every `.xaml` and `.cs` beside the `.csproj`, where the builder writes the
+  flat artifacts. `MosaicPackage.props`, the fragment a host imports, now
+  lists each variant's `Page` and code-behind too -- it already listed their
+  row view models, which named a control the fragment never compiled.
+
+**ENV3 — the selector.**
+
+- The rules are the package's `[[app.layouts]]` (or the conventions),
+  computed by the same `effective_layout_rules` as the other backends and
+  passed as `EmitOptions::layout_variants`: one `LayoutChoice` per rule, in
+  rule order, keyed by `EnvironmentAxis::wire_name`. The emitter checks them
+  again before writing C#: a type `variant_type_name` accepts, not reserved,
+  chosen once (keyed on the type, so `touch` and `Touch` are refused
+  together), ASCII-letter axes and lowercase values. A rule for a variant
+  with no `.mll` fails the build. A test pins every rule axis's wire name as
+  a key of `MosaicRuntimeHost.EnvironmentReport` (or the
+  `InitialEnvironment` it starts from).
+- `MainWindow.xaml.cs` carries them as data -- `MosaicLayoutRules`, an array
+  of `(Variant, Conditions)` tuples -- with a public static
+  `MosaicLayoutVariant(environment)`: the first rule whose conditions all
+  hold, else null for the default (`select_variant`'s semantics). The
+  environment is the ENV4 reducer's, `MosaicRuntimeHost.EnvironmentReport`
+  of the window content's effective size and rendered theme, so the rules
+  and the report agree on every threshold.
+- **The window holds whichever root is showing.** `MainWindow.xaml` no
+  longer declares the component (`<gen:EngramApp x:Name="Component"/>`); an
+  empty single-cell `Grid`, `LayoutHost`, takes its place and its sizing.
+  `CreateLayoutRoot(variant)` constructs the control and wires its
+  `Dispatch` to the window's one `OnComponentDispatch`; every use of the old
+  fixed `this.Component` -- events, the ENV4 report -- goes to the root
+  showing. Otherwise the window is the plain one: a test pins that, minus
+  the edited lines and the appended switch, it is byte-for-byte the window
+  a package without variants gets.
+- **Props reach a new root the way they reach the first.** In the
+  native-complete window `MountLayout` applies the runtime's props with
+  `MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps)` -- the one
+  strict path, also used for the first root at startup -- *before* the new
+  root replaces the old, so a root that cannot get its props throws with the
+  old one still showing. The app's state lives in the runtime, so nothing is
+  lost but the old control's own state (a caret, a scroll offset). A sample
+  window's props live in the root it shows (stubs, or whatever a host
+  applied), so each slot's value is carried across from the old root by
+  name. A package's own XAML host typed on the default control (Engram's
+  `HandleEvent(EngramApp, …)`) is looked up by the root's type, so it serves
+  the default only; the standard runtime host takes any control.
+- **The switch is deferred, never made inside the handler that noticed the
+  change** (the lesson from the Qt shell). `SizeChanged` and
+  `ActualThemeChanged` -- the same handlers §7.7 wired, after the report, so
+  the runtime's answer is applied to the root showing first -- only queue
+  one `SwitchLayout` on the `DispatcherQueue`; a burst of resize ticks costs
+  one, and it reads the window afresh when it runs. There it checks the new
+  `MosaicRuntimeHost.IsSettling` (the binding's settle counter, read without
+  the lock) and, if a settle is somehow running, retries in 100 ms; queued
+  work does not run inside a settle on the UI thread, so this is a backstop.
+  A mount that throws is caught: the window keeps the layout it was showing,
+  writes why on the status line, and does not retry that same choice until
+  the environment selects something else. Nothing is thrown into the
+  dispatcher. In the native-complete window the switch runs only while the
+  runtime's content is showing. Once the window closes (`Closed`, wired once
+  beside the switch's own handlers) nothing switches: the flag stops a
+  queued switch and the retry timer, a tick already on its way does
+  nothing, and the tick handler throws nothing. A root that leaves the tree
+  is unsubscribed from the window's handler.
+- The first root: the native-complete window mounts the one the window
+  selects in `StartRuntime` (after `LoadRequired` and the platform
+  library's install). It starts the runtime only once the window has been
+  laid out: a start queued before the first layout pass waits for the
+  content's first `SizeChanged` (unsubscribing as it fires) and queues
+  `StartRuntime` from there, so until then the loading view shows, never the
+  default about to be replaced. A window that opens already narrow shows
+  its compact layout first, as on Flutter and Qt. A retried start finds the
+  window laid out and starts at once; a window with no size even then
+  mounts the default, which the first `SizeChanged` switches. The runtime,
+  and so anything the app does at start, therefore begins only once the
+  window has been laid out (a window launched minimized waits, showing
+  the loading view, until it is). A sample
+  window (a preview, with no runtime to wait for) still mounts the default
+  in its constructor and switches the same way, so it can show the default
+  for one frame.
+- **A dialog-root window does not select.** It shows only the button that
+  opens its dialog, so it ignores the choices; its variants still compile.
+  A `ContentDialog` cannot stand in the window's tree in place of a control,
+  so a selectable variant rooted in a `HostDialog` under a control-rooted
+  default fails the build.
+- A package without variants gets byte-identical generated output: TaskApp
+  and RatingControls were emitted before and after (flat, sample and
+  native-complete) and differ only in the standard binding
+  `MosaicRuntimeHost.cs`, which every WinUI project shares and which gained
+  the read-only `IsSettling`.
+
+**Acceptance — the resize gate.** WinUI cannot run on Linux, so the gate §7
+asks for runs in CI's Windows lane. A fixture package,
+`mosaic-emit-xaml/fixtures/layout-variants`, has a default layout and a
+`compact` one selected by convention; its two slots are the conformance
+runtime's `platform` and `status`, so it is built native-complete against
+that runtime and every root is mounted strictly. The lane checks the
+generated source (one event union, the selector, the strict mount, the
+queued switch and settle check), builds the WinUI project, and runs
+`code/scripts/mosaic-xaml-layout-variants-smoke.ps1`, which resizes the real
+window to 1300, 420, 1300 and 420 device-independent pixels and requires,
+each time, the matching layout's marker, the other's absence, and the
+runtime's props on screen. A UI Automation read that races a swap (an
+element gone before its name is read) is skipped and polled again; only the
+deadline fails. The lane runs whenever the workflow or one of its own smoke
+scripts changes, as well as for its packages. Rust tests pin the emitter's naming, refusals,
+interface reuse and both windows; builder tests mirror the other backends'
+(convention, declared rules under wire names, missing variant refused, no
+variants → no selector) plus the strict mount, the reserved names, the
+cross-export refusals and dialog roots; Engram's own suite checks its
+native-complete WinUI project carries both roots and the selector. The
+binding's effect driver checks `IsSettling` is true inside an effect handler
+and false around a dispatch. Engram's WinUI project is not built in CI (it
+never has been); on a Windows desktop the pointer is `fine`, so its touch
+layout would be compiled but not shown.
+
+### 7.12 ENV4 hardening on every host, as built
+
+Three findings from the security reviews of §7.6-§7.8, fixed identically on
+every host that reports its environment (Qt, XAML, Flutter, Compose,
+SwiftUI). Where this section and an earlier one differ, this one is current.
+
+- **Only an invalid environment is held back.** A host remembers a report as
+  refused -- and drops an identical one until the report changes -- only when
+  the runtime refused the report itself (§7.1's `InvalidEnvironment`). Every
+  other failure (an app error, which may be transient; a closed runtime) is
+  answered as before but not remembered, so the same report is sent again
+  with the next report rather than leaving the app on a stale environment
+  until the window changes to a third one. The C ABI's status cannot tell
+  them apart -- an invalid payload is a `ProtocolError`, like a sequence
+  mismatch -- so a host reads the diagnostic: it begins with
+  `mosaic-app-runtime`'s `INVALID_ENVIRONMENT_DIAGNOSTIC` (`invalid Mosaic
+  environmentChanged payload`), which no other failure begins with (an app
+  error begins `Mosaic application error:`, a test pins the rest), and which
+  `mosaic-app-bindings` writes into each host rather than a copy. Compose and
+  SwiftUI previously held nothing back, so they now also drop a repeated
+  invalid report. A shell asks again only when it observes again: Qt and
+  XAML on the next resize event, Flutter on the next frame whose size or
+  scheme changed, Compose and SwiftUI on the next bucket change. No host
+  retries on a timer.
+- **An ignored report writes no state -- unless a save is owed.** A
+  dispatch persists unless the state file already holds its answer's
+  revision: each host remembers the revision its last successful save was
+  at, and an answer at that revision, with no earlier save failed (no
+  persistence warning pending), writes nothing. An unreadable revision
+  persists, to be safe. The comparison is with the revision SAVED, not the
+  one showing: before the first save there is none, so the first answer
+  after launch always writes -- on a fresh install that answer is often an
+  ignored environment, and the state must still reach the disk (the Android
+  emulator gate checks it after launch 1). An environment the app ignored
+  answers at the revision already saved and changed nothing the app saves,
+  so with saving healthy a window drag costs no disk writes. But a save that failed at
+  revision N would otherwise wait for the next event, and a kill before it
+  would lose N; so while a warning is pending each ignored report retries
+  the save. Ordinary events and effect answers always move the revision, so
+  they persist as before. `MosaicApp::environment_changed` documents the
+  app's side: answering `None` must not change the state `snapshot` saves.
+- **A warning an ignored report sets or clears is shown as an event's is.**
+  Only a retried save can change the warning during an ignored report. Qt
+  and Compose hand back the kept props with the warning folded in (or
+  without it, once cleared), and SwiftUI pushes them, exactly as for an
+  event. Flutter's `reportEnvironment` answers with the update rather than
+  null when the warning changed; XAML's re-applies the props and answers a
+  status line (`Mosaic runtime handled environmentChanged`, with the warning
+  if one remains) rather than null. With saving healthy no warning can arise
+  from an ignored report, since it writes nothing.
+
+**Acceptance.** The conformance app gained `failEnvironment` (`{"fail":
+true}` / `false`): while on, every `environmentChanged` that reaches it is an
+app error that changes nothing. That gives the harnesses a failure that is not
+the report's fault, and, since an ignored report no longer rewrites the state
+file they used to watch, their proof of delivery: a sent report answers an
+error, a held-back one nothing. The Qt driver and the XAML, Flutter and
+Compose conformance harnesses check that a report that failed transiently is
+sent again and, once the failure passes, taken; that an invalid one is still
+held back and holds back nothing else; that an ignored report does not
+rewrite the state file and, with the state path made a directory so any write
+would fail, raises no persistence warning, while an event that cannot persist
+surfaces one at once; and that once the path is writable again, the next
+ignored report retries the failed save, writes the file and shows the warning
+cleared. The Swift driver checks the same except the no-warning case (it runs
+only on macOS). Rust tests pin, in all five hosts, the diagnostic written in
+once from the runtime (and that it is only ASCII letters and spaces, safe in
+every host's string literal), the refusal memory behind it, and the persist
+condition; the runtime's test walks every other `RuntimeError` variant
+through an exhaustive match, and `mosaic-app-capi`'s checks its own panic,
+decode, encode and pointer diagnostics, so none can be mistaken for it.
 
 ## 8. Open questions
 

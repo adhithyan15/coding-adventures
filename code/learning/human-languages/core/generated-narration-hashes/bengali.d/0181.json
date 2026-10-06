@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:81bd0ed4a0baee27",
+  "lessonIds": [
+    "BN-C181-nihshvas-neoya",
+    "BN-C181-kapa",
+    "BN-C181-bheja",
+    "BN-C181-mukhostho-kora",
+    "BN-C181-bojhano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch181.txt",
+  "json": "bengali/narration/ch181.json",
+  "textHash": "fnv1a64:247a6530463a48cf",
+  "jsonHash": "fnv1a64:c85ab602343748e7",
+  "findings": []
+}

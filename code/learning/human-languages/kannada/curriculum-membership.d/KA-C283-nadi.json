@@ -1,0 +1,11 @@
+{
+  "id": "KA-C283-nadi",
+  "pathSegment": "KA-PATH-283-AROGYA283",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-283-AROGYA283",
+      "order": 0
+    }
+  ]
+}

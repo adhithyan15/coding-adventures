@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:6f007b88c31d6d73",
+  "lessonIds": [
+    "TE-C245-sekarincu",
+    "TE-C245-prasaram-ceyu",
+    "TE-C245-mudrincu",
+    "TE-C245-daunlod-ceyu",
+    "TE-C245-taip-ceyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch245.txt",
+  "json": "telugu/narration/ch245.json",
+  "textHash": "fnv1a64:520f7d7ed9173b80",
+  "jsonHash": "fnv1a64:b1de984887ec51c0",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:9550dbfb837953be",
+  "lessonIds": [
+    "LA-C189-cognatus",
+    "LA-C189-avunculus",
+    "LA-C189-matertera",
+    "LA-C189-veritas",
+    "LA-C189-mendacium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch189.txt",
+  "json": "latin/narration/ch189.json",
+  "textHash": "fnv1a64:fb546b9c696d6095",
+  "jsonHash": "fnv1a64:e1c3d9e10f428852",
+  "findings": []
+}

@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-10-01 (hosts can tell an invalid environment from other failures)
+
+- **`INVALID_ENVIRONMENT_DIAGNOSTIC`** (`"invalid Mosaic environmentChanged
+  payload"`): how every `RuntimeError::InvalidEnvironment` message begins,
+  now exported and used by its `Display`. A native host sees a failure only
+  as an ABI status and this text, and the status cannot separate a refused
+  environment from a sequence mismatch (both are `ProtocolError`). The hosts
+  hold back an identical report only when the runtime refused it as invalid,
+  and send it again after any other failure (an app error may be transient);
+  `mosaic-app-bindings` writes this constant into each host. A test pins that
+  no other `RuntimeError` message begins the same way, walking every variant
+  through an exhaustive match, so a new variant does not compile until it is
+  covered. No wire or behaviour change: the message text is unchanged.
+- **`MosaicApp::environment_changed` documents that answering `None` must
+  not change the state `snapshot` saves.** Native hosts persist an ignored
+  report only to retry a failed save (UI48 §7.12), so state recorded silently
+  would wait for the next event, and be lost if the app were killed first.
+
 ## Unreleased
 
 - **The host environment (UI48 ENV1).** The foundation for phone, tablet and

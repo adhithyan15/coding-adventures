@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:f3396b48a12f4f70",
+  "lessonIds": [
+    "AR-C218-mitraqa",
+    "AR-C218-mawdu",
+    "AR-C218-mizan",
+    "AR-C218-qita",
+    "AR-C218-wazn",
+    "AR-R218-first-pass-words-from-chapters-210-213",
+    "AR-R218-second-pass-words-from-chapters-214-218"
+  ],
+  "tex": "arabic/book/chapters/ch218-hammer-topic-scales-piece-weight.tex"
+}

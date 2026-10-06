@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "A rainbow, An earthquake, A flood, A man, A baby",
+  "label": "ch:hi-a-rainbow-an-earthquake-a-flood-a-man-a-baby",
+  "canDo": "I can say a rainbow, an earthquake, a flood, a man and a baby.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C253-sisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say a rainbow, an earthquake, a flood, a man and a baby.",
+    "assesses": [
+      "HI-LEX-C253-THG253-03",
+      "HI-LEX-C253-THG253-04",
+      "HI-LEX-C253-THG253-05"
+    ]
+  }
+}

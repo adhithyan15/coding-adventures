@@ -1,0 +1,11 @@
+{
+  "id": "RU-C229-bukhgalter",
+  "pathSegment": "RU-PATH-229-RABOTA229",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-229-RABOTA229",
+      "order": 1
+    }
+  ]
+}

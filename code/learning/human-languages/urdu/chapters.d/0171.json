@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Citizen, Tourist, Sentence, Character, Meaning",
+  "label": "ch:ur-citizen-tourist-sentence-character-meaning",
+  "canDo": "I can say a citizen, a tourist, a sentence, a character and a meaning.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C171-matlab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say a citizen, a tourist, a sentence, a character and a meaning.",
+    "assesses": [
+      "UR-LEX-C171-CHIZ171-03",
+      "UR-LEX-C171-CHIZ171-04",
+      "UR-LEX-C171-CHIZ171-05"
+    ]
+  }
+}

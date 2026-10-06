@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-497-FAMILIA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-497-FAMILIA"
+  ],
+  "after": []
+}

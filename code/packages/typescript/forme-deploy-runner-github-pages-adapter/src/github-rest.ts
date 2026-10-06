@@ -3,12 +3,15 @@ import {
   GitHubPagesBoundaryError,
   type GitHubPagesBoundary,
   type GitHubPagesBoundaryCall,
+  type GitHubPagesReadBoundary,
   type GitHubTreeEntry,
 } from "./index.js";
 
 const DEFAULT_API_BASE = "https://api.github.com";
 const DEFAULT_API_VERSION = "2026-03-10";
 const MAX_JSON_BYTES = 24 * 1024 * 1024;
+const MAX_BLOB_BYTES = 100 * 1024 * 1024;
+const MAX_BLOB_JSON_BYTES = 144 * 1024 * 1024;
 const MAX_TREE_ENTRIES = 100_000;
 const MAX_RESPONSE_CHUNKS = 100_000;
 const MAX_OWNERSHIP_MANIFESTS = 1_024;
@@ -21,12 +24,19 @@ export interface GitHubRestBoundaryOptions {
   readonly fetch?: typeof globalThis.fetch;
 }
 
+export interface GitHubRestReadBoundaryOptions {
+  readonly token?: string;
+  readonly apiVersion?: string;
+  readonly fetch?: typeof globalThis.fetch;
+}
+
 interface RequestOptions {
   readonly method?: "GET" | "POST" | "PATCH";
   readonly body?: unknown;
   readonly signal?: AbortSignal;
   readonly refUpdate?: boolean;
   readonly discardSuccessBody?: boolean;
+  readonly maxResponseBytes?: number;
 }
 
 interface TreeItem {
@@ -42,7 +52,27 @@ type BoundaryInput<Method extends GitHubPagesBoundaryCall["method"]> = Extract<
 >["input"];
 
 export function createGitHubRestBoundary(options: GitHubRestBoundaryOptions): GitHubPagesBoundary {
-  const token = validateToken(options.token);
+  return createBoundary({ ...options, token: validateToken(options.token) });
+}
+
+export function createGitHubRestReadBoundary(
+  options: GitHubRestReadBoundaryOptions = {},
+): GitHubPagesReadBoundary {
+  const boundary = createBoundary({
+    ...options,
+    ...(options.token === undefined ? {} : { token: validateToken(options.token) }),
+  });
+  return Object.freeze({
+    getRef: boundary.getRef,
+    getCommit: boundary.getCommit,
+    listOwnershipManifests: boundary.listOwnershipManifests,
+    getTargetTree: boundary.getTargetTree,
+    getBlob: boundary.getBlob,
+  });
+}
+
+function createBoundary(options: GitHubRestReadBoundaryOptions): GitHubPagesBoundary {
+  const token = options.token;
   const apiVersion = validateApiVersion(options.apiVersion ?? DEFAULT_API_VERSION);
   const fetchImplementation = options.fetch ?? globalThis.fetch;
   if (typeof fetchImplementation !== "function") throw new TypeError("fetch implementation is required");
@@ -55,7 +85,7 @@ export function createGitHubRestBoundary(options: GitHubRestBoundaryOptions): Gi
         method: requestOptions.method ?? "GET",
         headers: {
           Accept: "application/vnd.github+json",
-          Authorization: `Bearer ${token}`,
+          ...(token === undefined ? {} : { Authorization: `Bearer ${token}` }),
           "X-GitHub-Api-Version": apiVersion,
           "User-Agent": "coding-adventures-forme-deploy-runner",
           ...(requestOptions.body === undefined ? {} : { "Content-Type": "application/json" }),
@@ -96,7 +126,7 @@ export function createGitHubRestBoundary(options: GitHubRestBoundaryOptions): Gi
         try { void response.body?.cancel().catch(() => undefined); } catch { /* Best-effort release only. */ }
         return undefined as T;
       }
-      return await parseJsonResponse<T>(response, requestOptions.signal);
+      return await parseJsonResponse<T>(response, requestOptions.signal, requestOptions.maxResponseBytes);
     } catch (error) {
       if (requestOptions.signal?.aborted === true || error instanceof GitHubPagesBoundaryError) throw error;
       throw new GitHubPagesBoundaryError("NETWORK_ERROR", "GitHub API response stream failed", 503);
@@ -221,6 +251,24 @@ export function createGitHubRestBoundary(options: GitHubRestBoundaryOptions): Gi
       }
       return result;
     },
+    getBlob: async (input: BoundaryInput<"getBlob">) => {
+      const value = await request<Record<string, unknown>>(
+        repoPath(input, `git/blobs/${segment(input.sha)}`),
+        { signal: input.signal, maxResponseBytes: MAX_BLOB_JSON_BYTES },
+      );
+      if (value.encoding !== "base64" || typeof value.content !== "string") {
+        throw malformed("Git blob response must contain base64 content");
+      }
+      const content = value.content.replace(/[\r\n]/g, "");
+      if (!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(content)) {
+        throw malformed("Git blob response contains invalid base64");
+      }
+      const bytes = Uint8Array.from(Buffer.from(content, "base64"));
+      if (bytes.byteLength > MAX_BLOB_BYTES || Buffer.from(bytes).toString("base64") !== content) {
+        throw malformed(`Git blob response exceeds ${MAX_BLOB_BYTES} bytes or is not canonical base64`);
+      }
+      return bytes;
+    },
     createBlob: async (input: BoundaryInput<"createBlob">) => {
       const value = await request<Record<string, unknown>>(repoPath(input, "git/blobs"), {
         method: "POST",
@@ -284,12 +332,12 @@ function findTree(entries: readonly TreeItem[], name: string): string | undefine
   return matches[0].sha;
 }
 
-async function parseJsonResponse<T>(response: Response, signal?: AbortSignal): Promise<T> {
+async function parseJsonResponse<T>(response: Response, signal?: AbortSignal, maximum = MAX_JSON_BYTES): Promise<T> {
   const contentLength = response.headers.get("content-length");
-  if (contentLength !== null && Number(contentLength) > MAX_JSON_BYTES) {
-    throw malformed(`GitHub response exceeds ${MAX_JSON_BYTES} bytes`);
+  if (contentLength !== null && Number(contentLength) > maximum) {
+    throw malformed(`GitHub response exceeds ${maximum} bytes`);
   }
-  const text = await readResponse(response, MAX_JSON_BYTES, false, signal);
+  const text = await readResponse(response, maximum, false, signal);
   if (text.length === 0) return Object.freeze({}) as T;
   try {
     return JSON.parse(text) as T;
@@ -298,7 +346,7 @@ async function parseJsonResponse<T>(response: Response, signal?: AbortSignal): P
   }
 }
 
-async function responseDetail(response: Response, token: string, signal?: AbortSignal): Promise<string> {
+async function responseDetail(response: Response, token: string | undefined, signal?: AbortSignal): Promise<string> {
   const text = await readResponse(response, 4096, true, signal);
   try {
     const value = JSON.parse(text) as unknown;
@@ -311,10 +359,9 @@ async function responseDetail(response: Response, token: string, signal?: AbortS
   return `GitHub API returned ${response.status}`;
 }
 
-function sanitizeDiagnostic(value: string, token: string): string {
-  return value
-    .split(token).join("[REDACTED]")
-    .replace(/[\u0000-\u001f\u007f-\u009f]/g, " ");
+function sanitizeDiagnostic(value: string, token: string | undefined): string {
+  const sanitized = token === undefined ? value : value.split(token).join("[REDACTED]");
+  return sanitized.replace(/[\u0000-\u001f\u007f-\u009f]/g, " ");
 }
 
 async function readResponse(response: Response, limit: number, truncate: boolean, signal?: AbortSignal): Promise<string> {

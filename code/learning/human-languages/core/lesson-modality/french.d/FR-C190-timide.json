@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C190-timide",
+    "language": "french",
+    "chapter": 190,
+    "sequence": 10070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a65d8a8bbfc8c136"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "Enthusiasm, Courage, Laziness, Jealousy, Pride",
+  "label": "ch:sa-enthusiasm-courage-laziness-jealousy-pride",
+  "canDo": "I can say enthusiasm, courage, laziness, jealousy and pride.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C151-garvah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: I can say enthusiasm, courage, laziness, jealousy and pride.",
+    "assesses": [
+      "SA-LEX-C151-WEL151-03",
+      "SA-LEX-C151-WEL151-04",
+      "SA-LEX-C151-WEL151-05"
+    ]
+  }
+}

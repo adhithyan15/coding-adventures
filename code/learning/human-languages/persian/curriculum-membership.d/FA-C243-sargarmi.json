@@ -1,0 +1,11 @@
+{
+  "id": "FA-C243-sargarmi",
+  "pathSegment": "FA-PATH-243-CHIZ243",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-243-CHIZ243",
+      "order": 3
+    }
+  ]
+}

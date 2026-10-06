@@ -1,0 +1,11 @@
+{
+  "id": "UR-C182-aram-karna",
+  "pathSegment": "UR-PATH-182-ACT182",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-182-ACT182",
+      "order": 1
+    }
+  ]
+}

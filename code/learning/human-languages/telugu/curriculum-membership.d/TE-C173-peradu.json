@@ -1,0 +1,11 @@
+{
+  "id": "TE-C173-peradu",
+  "pathSegment": "TE-PATH-173-STHALAM173",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-173-STHALAM173",
+      "order": 1
+    }
+  ]
+}

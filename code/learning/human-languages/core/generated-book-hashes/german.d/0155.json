@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:edc2cfb08352740c",
+  "lessonIds": [
+    "GE-C155-gehalt",
+    "GE-C155-ausweis",
+    "GE-C155-visum",
+    "GE-C155-stau",
+    "GE-C155-unfall"
+  ],
+  "tex": "german/book/chapters/ch155-a-salary-an-identity-card-a-visa-a-traffic-jam-an-accident.tex"
+}

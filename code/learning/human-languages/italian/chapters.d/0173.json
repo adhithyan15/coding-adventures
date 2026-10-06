@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "Geography, Mathematics, Science, Art, Match",
+  "label": "ch:it-geography-mathematics-science-art-match",
+  "canDo": "I can say geography, mathematics, science, art and a match.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-R173-second-pass-words-from-chapters-170-173",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can say geography, mathematics, science, art and a match.",
+    "assesses": [
+      "IT-LEX-C173-LAV173-03",
+      "IT-LEX-C173-LAV173-04",
+      "IT-LEX-C173-LAV173-05"
+    ]
+  }
+}

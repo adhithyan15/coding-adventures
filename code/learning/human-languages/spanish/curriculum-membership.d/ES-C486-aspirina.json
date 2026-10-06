@@ -1,0 +1,11 @@
+{
+  "id": "ES-C486-aspirina",
+  "pathSegment": "ES-PATH-486-MEDICO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-486-MEDICO",
+      "order": 3
+    }
+  ]
+}

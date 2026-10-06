@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-178-PPL178",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "SA-EXT-178-PPL178"
+  ],
+  "after": []
+}

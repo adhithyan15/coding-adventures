@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "To go out, To scatter, To roll up, To wrap, To dig",
+  "label": "ch:bn-to-go-out-to-scatter-to-roll-up-to-wrap-to-dig",
+  "canDo": "I can say to go out, to scatter, to roll up, to wrap and to dig.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C242-khora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say to go out, to scatter, to roll up, to wrap and to dig.",
+    "assesses": [
+      "BN-LEX-C242-ACT242-03",
+      "BN-LEX-C242-ACT242-04",
+      "BN-LEX-C242-ACT242-05"
+    ]
+  }
+}

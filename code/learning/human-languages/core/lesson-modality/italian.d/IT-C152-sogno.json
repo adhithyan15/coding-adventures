@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C152-sogno",
+    "language": "italian",
+    "chapter": 152,
+    "sequence": 7920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f1b7208a756c753"
+  },
+  "findings": []
+}

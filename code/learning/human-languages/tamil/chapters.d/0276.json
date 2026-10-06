@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "Darkness, Shade, Machine, Sofa, Screwdriver",
+  "label": "ch:ta-darkness-shade-machine-sofa-screwdriver",
+  "canDo": "I can say darkness, shade, a machine, a sofa and a screwdriver.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C276-tiruppuli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can say darkness, shade, a machine, a sofa and a screwdriver.",
+    "assesses": [
+      "TA-LEX-C276-PORUL276-03",
+      "TA-LEX-C276-PORUL276-04",
+      "TA-LEX-C276-PORUL276-05"
+    ]
+  }
+}

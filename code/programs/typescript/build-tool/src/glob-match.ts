@@ -1,227 +1,345 @@
 /**
- * glob-match.ts -- Pure String-Based Glob Matching
- * ==================================================
+ * glob-match.ts -- Bounded Portable Glob Matching
+ * =================================================
  *
- * This module implements glob pattern matching for file paths, used by the
- * build tool to filter source files declared in Starlark BUILD files. It
- * supports the three standard glob wildcards:
+ * BUILD files are shared data: a declared source pattern must mean the same
+ * thing in TypeScript, Go, Python, Ruby, and every other build-tool engine.
+ * Delegating to a host regular-expression or filesystem glob implementation
+ * would make that promise depend on the host. This module instead compiles a
+ * deliberately small language:
  *
- *   - `*`  matches zero or more characters within a single path segment
- *           (does NOT cross `/` boundaries)
- *   - `?`  matches exactly one character (not `/`)
- *   - a double-star pattern matches zero or more path segments
+ * - a whole double-star segment crosses zero or more path segments;
+ * - `*` consumes zero or more Unicode scalars inside one segment;
+ * - `?` consumes exactly one Unicode scalar inside one segment; and
+ * - `[...]` consumes one scalar from a strict literal/range class.
  *
- * ==========================================================================
- * Chapter 1: Why Not Use a Library?
- * ==========================================================================
- *
- * Node.js has no built-in `fnmatch` or glob-matching function (only
- * `fs.glob` for filesystem enumeration). We could use a library like
- * `minimatch` or `picomatch`, but this build tool aims for zero external
- * dependencies. A pure-string glob matcher is surprisingly simple -- around
- * 100 lines of code -- and gives us full control over the matching semantics.
- *
- * ==========================================================================
- * Chapter 2: The Algorithm
- * ==========================================================================
- *
- * The matching works by splitting both the pattern and the path on `/` into
- * segments, then comparing segments left-to-right with special handling for
- * the double-star wildcard:
- *
- * 1. Split pattern and path on `/`.
- *    Example: "src/foo.py" -> ["src", "foo.py"]
- *
- * 2. Walk through pattern segments:
- *    - If the segment is a double-star wildcard, try matching the remaining
- *      pattern against every possible suffix of the remaining path segments
- *      (zero or more segments consumed). This is a recursive search.
- *    - Otherwise, match the segment against the corresponding path segment
- *      using single-segment matching (handling `*` and `?`).
- *
- * 3. Single-segment matching uses a two-pointer approach:
- *    - Walk through pattern and text simultaneously.
- *    - `?` matches any single character.
- *    - `*` matches zero or more characters. We record a "star position"
- *      and try advancing the text pointer one character at a time.
- *    - Literal characters must match exactly.
- *
- * ==========================================================================
- * Chapter 3: Truth Table
- * ==========================================================================
- *
- * | Pattern             | Path                    | Match? | Why                          |
- * |---------------------|-------------------------|--------|------------------------------|
- * | "src/foo.py"        | "src/foo.py"            | true   | Exact match                  |
- * | "src/*.py"          | "src/foo.py"            | true   | * matches "foo"              |
- * | "src/*.py"          | "src/bar/foo.py"        | false  | * does not cross /           |
- * | "src/f?o.py"        | "src/foo.py"            | true   | ? matches "o"               |
- * | "src/f?o.py"        | "src/fo.py"             | false  | ? must match exactly one     |
- * | "src/any/foo.py"    | "src/foo.py"            | false  | double-star matches 0+ segs  |
- * | "src/any/foo.py"    | "src/a/b/foo.py"        | false  | literal "any" != "a"         |
+ * Compilation validates the whole pattern before matching. Both matching
+ * layers use rolling-row dynamic programs, so an adversarial near miss visits
+ * each pattern/candidate state once rather than recursively revisiting suffixes.
  *
  * @module
  */
 
-// ---------------------------------------------------------------------------
-// Single-Segment Matching
-// ---------------------------------------------------------------------------
+const INVALID_PATTERN_MESSAGE =
+  "ambiguous or descending character class in glob pattern";
 
-/**
- * Match a single path segment against a glob pattern segment.
- *
- * Supports `*` (zero or more characters) and `?` (exactly one character).
- * No `/` characters should appear in either argument -- they are segments.
- *
- * The algorithm uses a "star backtrack" technique:
- *
- * - We maintain two pointers: `pi` into the pattern and `ti` into the text.
- * - When we see `*`, we record where we are (starIdx, matchIdx) and try
- *   matching zero characters first.
- * - If a mismatch occurs later, we backtrack to the star position and try
- *   matching one more character from the text.
- * - This is O(n*m) in the worst case but typically linear for real globs.
- *
- * @param pattern - The glob pattern segment (e.g., "*.py", "f?o").
- * @param text    - The text segment to match against (e.g., "foo.py").
- * @returns true if the text matches the pattern.
- */
-export function matchSegment(pattern: string, text: string): boolean {
-  let pi = 0; // Pattern index
-  let ti = 0; // Text index
-  let starIdx = -1; // Position of last `*` in pattern
-  let matchIdx = -1; // Position in text when we last hit `*`
+/** Stable host-visible failure for rejected portable glob syntax. */
+export class GlobPatternError extends Error {
+  constructor() {
+    super(INVALID_PATTERN_MESSAGE);
+    this.name = "GlobPatternError";
+  }
+}
 
-  while (ti < text.length) {
-    if (pi < pattern.length && (pattern[pi] === "?" || pattern[pi] === text[ti])) {
-      // Current characters match (or pattern has `?`). Advance both.
-      pi++;
-      ti++;
-    } else if (pi < pattern.length && pattern[pi] === "*") {
-      // Star: record position and try matching zero characters.
-      starIdx = pi;
-      matchIdx = ti;
-      pi++;
-    } else if (starIdx !== -1) {
-      // Mismatch, but we have a star to backtrack to.
-      // Try matching one more character from the text against the star.
-      pi = starIdx + 1;
-      matchIdx++;
-      ti = matchIdx;
+type LiteralMember = Readonly<{
+  kind: "literal";
+  value: string;
+}>;
+
+type RangeMember = Readonly<{
+  kind: "range";
+  start: string;
+  end: string;
+}>;
+
+type CharacterClassMember = LiteralMember | RangeMember;
+
+type SegmentToken =
+  | Readonly<{ kind: "star" }>
+  | Readonly<{ kind: "question" }>
+  | LiteralMember
+  | Readonly<{
+      kind: "character-class";
+      negated: boolean;
+      members: readonly CharacterClassMember[];
+    }>;
+
+type CompiledSegment =
+  | Readonly<{ kind: "globstar" }>
+  | Readonly<{ kind: "segment"; tokens: readonly SegmentToken[] }>;
+
+/** Immutable, validated representation of one portable path pattern. */
+export type CompiledPattern = readonly CompiledSegment[];
+
+/** Parser evidence used by tests to pin linear bracket lookup work. */
+export type ParsedSegmentWithStateCount = Readonly<{
+  tokens: readonly SegmentToken[];
+  visitedStates: number;
+}>;
+
+/** Matcher evidence used by tests to pin the dynamic-program state bound. */
+export type MatchWithStateCount = Readonly<{
+  matched: boolean;
+  visitedStates: number;
+}>;
+
+const GLOBSTAR: CompiledSegment = Object.freeze({ kind: "globstar" });
+
+function unicodeScalarValue(value: string): number {
+  // Every caller supplies one value from Array.from(), so this cannot be empty.
+  return value.codePointAt(0) as number;
+}
+
+function splitPath(value: string): string[] {
+  if (value.length === 0) return [];
+  return value.split("/").filter((segment) => segment.length > 0);
+}
+
+function parseCharacterClass(
+  scalars: readonly string[],
+  opening: number,
+  nextClosingBracket: readonly (number | undefined)[],
+): Readonly<{ token: SegmentToken; nextIndex: number }> | null {
+  let cursor = opening + 1;
+  const negated = cursor < scalars.length && scalars[cursor] === "!";
+  if (negated) cursor += 1;
+
+  // A leading closing bracket is a literal member, so the class closes at the
+  // following bracket. Without that following bracket, the opening bracket is
+  // just a literal, matching Python fnmatchcase.
+  let closing = nextClosingBracket[cursor];
+  if (closing === cursor) closing = nextClosingBracket[cursor + 1];
+  if (closing === undefined) return null;
+
+  const body = scalars.slice(cursor, closing);
+  for (let index = 0; index + 1 < body.length; index += 1) {
+    const value = body[index];
+    if (
+      value === body[index + 1] &&
+      (value === "-" || value === "&" || value === "~" || value === "|")
+    ) {
+      throw new GlobPatternError();
+    }
+  }
+
+  const members: CharacterClassMember[] = [];
+  let memberIndex = 0;
+  while (memberIndex < body.length) {
+    if (memberIndex + 2 < body.length && body[memberIndex + 1] === "-") {
+      const start = body[memberIndex];
+      const end = body[memberIndex + 2];
+      if (unicodeScalarValue(start) > unicodeScalarValue(end)) {
+        throw new GlobPatternError();
+      }
+      members.push(Object.freeze({ kind: "range", start, end }));
+      memberIndex += 3;
     } else {
-      // Mismatch with no star to backtrack to -- fail.
-      return false;
+      members.push(Object.freeze({ kind: "literal", value: body[memberIndex] }));
+      memberIndex += 1;
     }
   }
 
-  // Consume any trailing `*` in the pattern (they match empty strings).
-  while (pi < pattern.length && pattern[pi] === "*") {
-    pi++;
-  }
-
-  // Match succeeds only if we consumed the entire pattern.
-  return pi === pattern.length;
+  return Object.freeze({
+    token: Object.freeze({
+      kind: "character-class",
+      negated,
+      members: Object.freeze(members),
+    }),
+    nextIndex: closing + 1,
+  });
 }
 
-// ---------------------------------------------------------------------------
-// Full Path Matching
-// ---------------------------------------------------------------------------
+/** Compile one path segment while reporting deterministic parser work. */
+export function parseSegmentWithStateCount(
+  segment: string,
+): ParsedSegmentWithStateCount {
+  const scalars = Array.from(segment);
+  const nextClosingBracket = new Array<number | undefined>(scalars.length + 1);
+  let nextClosing: number | undefined;
 
-/**
- * Match a file path against a glob pattern.
- *
- * Both pattern and path are split on `/` into segments. The matching then
- * proceeds segment-by-segment. A double-star segment in the pattern matches
- * zero or more path segments.
- *
- * Important: both pattern and path should use forward slashes (`/`) as
- * separators. The caller is responsible for normalizing Windows backslashes
- * before calling this function.
- *
- * @param pattern - The glob pattern (e.g., "src/foo.py", "tests/*.test.ts").
- * @param filePath - The file path to test (e.g., "src/lib/foo.py").
- * @returns true if the path matches the pattern.
- *
- * @example
- * ```typescript
- * matchPath("src/*.py", "src/foo.py");        // true
- * matchPath("src/*.py", "src/bar/foo.py");    // false (* doesn't cross /)
- * ```
- */
-export function matchPath(pattern: string, filePath: string): boolean {
-  // Split into segments, filtering out empty strings from leading/trailing /.
-  const patternSegs = pattern.split("/").filter((s) => s.length > 0);
-  const pathSegs = filePath.split("/").filter((s) => s.length > 0);
-
-  return matchSegments(patternSegs, 0, pathSegs, 0);
-}
-
-/**
- * Recursive segment-level matching engine.
- *
- * This is the heart of the glob matcher. It walks through pattern segments
- * and path segments in parallel, with special handling for double-star:
- *
- * - Double-star: try matching the remaining pattern against every possible
- *   suffix of the remaining path (consuming 0, 1, 2, ... path segments).
- *   This recursive search handles nested directories of any depth.
- *
- * - Normal segment: use matchSegment() for single-segment comparison,
- *   then advance both pointers.
- *
- * @param pSegs - Pattern segments array.
- * @param pi    - Current index into pattern segments.
- * @param tSegs - Path segments array.
- * @param ti    - Current index into path segments.
- * @returns true if the remaining segments match.
- */
-function matchSegments(
-  pSegs: readonly string[],
-  pi: number,
-  tSegs: readonly string[],
-  ti: number,
-): boolean {
-  // Base case: both pattern and path exhausted -- match!
-  if (pi === pSegs.length && ti === tSegs.length) {
-    return true;
+  // This reverse pass makes every later opening-bracket lookup O(1). Without
+  // it, a run of unmatched brackets would repeatedly scan the same suffix.
+  for (let index = scalars.length - 1; index >= 0; index -= 1) {
+    if (scalars[index] === "]") nextClosing = index;
+    nextClosingBracket[index] = nextClosing;
   }
 
-  // Pattern exhausted but path segments remain -- no match.
-  if (pi === pSegs.length) {
-    return false;
-  }
-
-  // Handle double-star: matches zero or more path segments.
-  //
-  // We try consuming 0 segments (skip the double-star entirely), then 1,
-  // then 2, etc. up to all remaining path segments. If any attempt
-  // succeeds, the whole match succeeds.
-  if (pSegs[pi] === "**") {
-    // Optimization: collapse consecutive double-stars (they're equivalent
-    // to a single one). "a/**/b" and "a/**/**/b" match the same paths.
-    let nextPi = pi;
-    while (nextPi < pSegs.length && pSegs[nextPi] === "**") {
-      nextPi++;
+  const tokens: SegmentToken[] = [];
+  let index = 0;
+  let visitedStates = scalars.length;
+  while (index < scalars.length) {
+    visitedStates += 1;
+    const scalar = scalars[index];
+    if (scalar === "*") {
+      if (tokens.at(-1)?.kind !== "star") {
+        tokens.push(Object.freeze({ kind: "star" }));
+      }
+      index += 1;
+    } else if (scalar === "?") {
+      tokens.push(Object.freeze({ kind: "question" }));
+      index += 1;
+    } else if (scalar === "[") {
+      const parsed = parseCharacterClass(scalars, index, nextClosingBracket);
+      if (parsed === null) {
+        tokens.push(Object.freeze({ kind: "literal", value: "[" }));
+        index += 1;
+      } else {
+        tokens.push(parsed.token);
+        index = parsed.nextIndex;
+      }
+    } else {
+      tokens.push(Object.freeze({ kind: "literal", value: scalar }));
+      index += 1;
     }
+  }
 
-    // Try consuming 0, 1, 2, ... path segments.
-    for (let skip = 0; skip <= tSegs.length - ti; skip++) {
-      if (matchSegments(pSegs, nextPi, tSegs, ti + skip)) {
-        return true;
+  return Object.freeze({
+    tokens: Object.freeze(tokens),
+    visitedStates,
+  });
+}
+
+function compileSegment(segment: string): CompiledSegment {
+  return Object.freeze({
+    kind: "segment",
+    tokens: parseSegmentWithStateCount(segment).tokens,
+  });
+}
+
+/** Compile and validate one portable path pattern. */
+export function compilePattern(pattern: string): CompiledPattern {
+  const segments: CompiledSegment[] = [];
+  for (const segment of splitPath(pattern)) {
+    if (segment === "**") {
+      if (segments.at(-1)?.kind !== "globstar") segments.push(GLOBSTAR);
+    } else {
+      segments.push(compileSegment(segment));
+    }
+  }
+  return Object.freeze(segments);
+}
+
+/** Compile the complete declared list before a caller examines candidates. */
+export function compilePatterns(
+  patterns: readonly string[],
+): readonly CompiledPattern[] {
+  return Object.freeze(patterns.map((pattern) => compilePattern(pattern)));
+}
+
+function tokenMatches(token: SegmentToken, value: string): boolean {
+  if (token.kind === "literal") return token.value === value;
+  if (token.kind !== "character-class") return false;
+
+  const included = token.members.some((member) => {
+    if (member.kind === "literal") return member.value === value;
+    const scalar = unicodeScalarValue(value);
+    return (
+      unicodeScalarValue(member.start) <= scalar &&
+      scalar <= unicodeScalarValue(member.end)
+    );
+  });
+  return token.negated ? !included : included;
+}
+
+function matchCompiledSegmentWithStateCount(
+  tokens: readonly SegmentToken[],
+  text: string,
+): MatchWithStateCount {
+  const values = Array.from(text);
+  const valueCount = values.length;
+  let nextRow = new Array<boolean>(valueCount + 1).fill(false);
+  nextRow[valueCount] = true;
+
+  for (let tokenIndex = tokens.length - 1; tokenIndex >= 0; tokenIndex -= 1) {
+    const token = tokens[tokenIndex];
+    const row = new Array<boolean>(valueCount + 1).fill(false);
+    if (token.kind === "star") {
+      row[valueCount] = nextRow[valueCount];
+      for (let valueIndex = valueCount - 1; valueIndex >= 0; valueIndex -= 1) {
+        row[valueIndex] = nextRow[valueIndex] || row[valueIndex + 1];
+      }
+    } else if (token.kind === "question") {
+      for (let valueIndex = 0; valueIndex < valueCount; valueIndex += 1) {
+        row[valueIndex] = nextRow[valueIndex + 1];
+      }
+    } else {
+      for (let valueIndex = 0; valueIndex < valueCount; valueIndex += 1) {
+        row[valueIndex] =
+          nextRow[valueIndex + 1] && tokenMatches(token, values[valueIndex]);
       }
     }
-    return false;
+    nextRow = row;
   }
 
-  // Path exhausted but pattern has non-double-star segments remaining -- no match.
-  if (ti === tSegs.length) {
-    return false;
+  return Object.freeze({
+    matched: nextRow[0],
+    visitedStates: (tokens.length + 1) * (valueCount + 1),
+  });
+}
+
+/** Match one segment and report its exact dynamic-program state count. */
+export function matchSegmentWithStateCount(
+  pattern: string,
+  text: string,
+): MatchWithStateCount {
+  return matchCompiledSegmentWithStateCount(
+    parseSegmentWithStateCount(pattern).tokens,
+    text,
+  );
+}
+
+/** Match one segment against `*`, `?`, literals, and strict classes. */
+export function matchSegment(pattern: string, text: string): boolean {
+  return matchSegmentWithStateCount(pattern, text).matched;
+}
+
+/** Match a compiled pattern without repeating parser work. */
+export function matchCompiledPathWithStateCount(
+  compiledPattern: CompiledPattern,
+  filePath: string,
+): MatchWithStateCount {
+  const pathSegments = splitPath(filePath);
+  const pathCount = pathSegments.length;
+  let nextRow = new Array<boolean>(pathCount + 1).fill(false);
+  nextRow[pathCount] = true;
+  let visitedStates = pathCount + 1;
+
+  for (
+    let patternIndex = compiledPattern.length - 1;
+    patternIndex >= 0;
+    patternIndex -= 1
+  ) {
+    const segment = compiledPattern[patternIndex];
+    const row = new Array<boolean>(pathCount + 1).fill(false);
+    visitedStates += pathCount + 1;
+    if (segment.kind === "globstar") {
+      row[pathCount] = nextRow[pathCount];
+      for (let pathIndex = pathCount - 1; pathIndex >= 0; pathIndex -= 1) {
+        row[pathIndex] = nextRow[pathIndex] || row[pathIndex + 1];
+      }
+    } else {
+      for (let pathIndex = pathCount - 1; pathIndex >= 0; pathIndex -= 1) {
+        row[pathIndex] =
+          nextRow[pathIndex + 1] &&
+          matchCompiledSegmentWithStateCount(
+            segment.tokens,
+            pathSegments[pathIndex],
+          ).matched;
+      }
+    }
+    nextRow = row;
   }
 
-  // Normal segment: match using single-segment matcher, then advance.
-  if (matchSegment(pSegs[pi], tSegs[ti])) {
-    return matchSegments(pSegs, pi + 1, tSegs, ti + 1);
-  }
+  return Object.freeze({ matched: nextRow[0], visitedStates });
+}
 
-  return false;
+/** Match a path against a previously compiled portable pattern. */
+export function matchCompiledPath(
+  compiledPattern: CompiledPattern,
+  filePath: string,
+): boolean {
+  return matchCompiledPathWithStateCount(compiledPattern, filePath).matched;
+}
+
+/** Compile and match one path while reporting path-level state work. */
+export function matchPathWithStateCount(
+  pattern: string,
+  filePath: string,
+): MatchWithStateCount {
+  return matchCompiledPathWithStateCount(compilePattern(pattern), filePath);
+}
+
+/** Compile and match one path against one portable glob pattern. */
+export function matchPath(pattern: string, filePath: string): boolean {
+  return matchPathWithStateCount(pattern, filePath).matched;
 }

@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "Girl, Lad, Young woman, Parents, Nephew",
+  "label": "ch:ru-girl-lad-young-woman-parents-nephew",
+  "canDo": "I can say a girl, a lad, a young woman, parents and a nephew.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C254-plemyannik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say a girl, a lad, a young woman, parents and a nephew.",
+    "assesses": [
+      "RU-LEX-C254-VESHCH254-03",
+      "RU-LEX-C254-VESHCH254-04",
+      "RU-LEX-C254-VESHCH254-05"
+    ]
+  }
+}

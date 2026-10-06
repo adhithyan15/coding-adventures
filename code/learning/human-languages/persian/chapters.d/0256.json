@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "To download, To use, To try, To travel, To retire",
+  "label": "ch:fa-to-download-to-use-to-try-to-travel-to-retire",
+  "canDo": "I can say to download, to use, to try, to travel and to retire.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C256-bazneshaste-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say to download, to use, to try, to travel and to retire.",
+    "assesses": [
+      "FA-LEX-C256-KONESH256-03",
+      "FA-LEX-C256-KONESH256-04",
+      "FA-LEX-C256-KONESH256-05"
+    ]
+  }
+}

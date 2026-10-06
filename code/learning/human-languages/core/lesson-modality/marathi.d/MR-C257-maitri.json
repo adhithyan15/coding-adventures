@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C257-maitri",
+    "language": "marathi",
+    "chapter": 257,
+    "sequence": 14600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd1900351da14ebe"
+  },
+  "findings": []
+}

@@ -6,6 +6,15 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- Source hashing now follows the 27-component neutral generated-directory
+  registry, pruning exact lowercase `blib` while retaining `Blib` and
+  `blib-example` in both extension and declared-source modes.
+- Declared source globs now use a bounded Unicode-scalar matcher with the
+  portable build-tool v1 character-class grammar instead of `File.fnmatch`
+  and recursive suffix slicing. Hasher and Git-diff callers compile and
+  validate every pattern before enumerating candidates, reuse the compiled
+  form, raise one stable typed error for ambiguous or descending classes, and
+  preserve Python-compatible leading-dot behavior.
 - Source hashing now recognizes OCaml `.ml`, `.mli`, and `.opam` inputs plus
   exact `.ocamlformat`, `dune`, `dune-project`, and supported BUILD-front
   metadata in extension and declared-source modes. Declared mode retains a

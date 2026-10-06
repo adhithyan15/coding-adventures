@@ -7,7 +7,7 @@ chapter: 455
 type: word
 headword: pintar
 gloss: to paint — and a Latin verb that once meant to embroider
-concept_tag: ES-ROOM-PINTAR
+concept_tag: ES-VERB-PINTAR
 prerequisites: [ES-C454-sintesis-corte, ES-C33-verde, ES-C449-arreglar]
 sounds: [nasal-n, t-dental, stress-final]
 roots: [pingere-latin]

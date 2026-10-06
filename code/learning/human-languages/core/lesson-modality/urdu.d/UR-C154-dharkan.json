@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C154-dharkan",
+    "language": "urdu",
+    "chapter": 154,
+    "sequence": 8160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da177400d5488cd0"
+  },
+  "findings": []
+}

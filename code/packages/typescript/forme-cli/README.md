@@ -1,6 +1,6 @@
 # @coding-adventures/forme-cli
 
-The headless product driver for Forme. It loads a TypeScript or JavaScript
+The product command driver for Forme. It loads a TypeScript or JavaScript
 project config, validates the typed DAG, runs the orchestrator, formats stable
 diagnostics, and returns documented process exit codes.
 
@@ -16,6 +16,10 @@ forme build
 forme run # FM03-compatible alias for build
 forme build --reproducible
 forme build --report dist/.forme-build-report.json
+forme build --deploy-input .forme/deploy-input
+forme deploy --manifest .forme/deploy-input/deploy-manifest.json \
+  --content-dir .forme/deploy-input/content --target fs --target-config deploy.fs.json --dry-run
+forme install ../my-forme-plugin
 forme clean
 forme watch
 forme watch --port 4321 --debounce 100
@@ -42,6 +46,45 @@ project.
   `settings.cacheDir` is configured, unchanged capability-free downstream
   invocations are restored across separate CLI processes from a
   containment-checked filesystem cache beneath the project root.
+  `--deploy-input DIR` collision-checks and merges named in-memory `dist-tree`
+  outputs into one strict deploy manifest plus canonical digest store beneath
+  the project. The manifest is written last.
+- `deploy` loads no project config. CLI Builder requires one manifest, exactly
+  one directory/canonical-bundle/regular-file-descriptor inline content store, one `fs` or
+  `github-pages` target, and one strict target-config JSON file. Dry-run
+  preflights all content and uses write-free target inspection; it rejects
+  `--report`. GitHub publication accepts only `GITHUB_TOKEN`; its GET-only
+  dry-run boundary uses that token when available and otherwise stays
+  anonymous. It supports an explicit identity-bound
+  one-time ownership bootstrap for legacy Pages content. Once that deployment
+  owner exists, retaining the bootstrap flag is a validated no-op even after
+  later publications legitimately change its owned path or digest set.
+- `install <PACKAGE>` loads the selected project config, snapshots one bounded
+  local plugin directory, loads the user trust store, and requires an
+  interactive grant-or-deny decision for every declared capability. A complete
+  side-effect-free preflight runs before prompting; capability templates use
+  the runtime's configured storage/cache roots. The escaped prompt includes the
+  plugin identity, trust tier, each manifest reason, and a sensitive marker for
+  broad authority. Required grants have no default;
+  optional grants default to deny. The reviewed snapshot and manifest-bound
+  grants are atomically published beneath the current project's
+  `forme-plugins/` root. Package-supplied `grants.toml`, links, special files,
+  oversized trees, changing file identities, and unsafe install roots are
+  rejected. Windows additionally requires the native verifier to prove the
+  install root and any existing target tree exclude reparse points and
+  untrusted write authority.
+- Configs containing plugin `StageRef`s discover only the current project's
+  installed `forme-plugins/` root, load its manifest-bound grants, and launch
+  lazily through the current platform's native sandbox. Node uses the current
+  trusted executable; Deno, Bun, and Python use explicit absolute executable
+  and distribution-root pairs from `settings.pluginRuntimes`. Rust plugins use
+  their exact installed `binary` entry. The host exposes contained bounded
+  project storage and grant-mediated network, environment, and broad user
+  filesystem adapters, but host-owned plugin installation and cache roots stay
+  hidden and inaccessible through every adapter; shell execution remains
+  forbidden. Storage watches stay live through the same contained adapter and
+  are closed when their plugin run ends. Direct-import-only configs create no
+  plugin host or subprocess.
 - `check` performs config-schema, capability, wiring, kind, and output
   validation without invoking a stage or writing output.
 - `clean` validates the pipeline, then removes its configured cache directory
@@ -72,8 +115,8 @@ on exception stacks for expected failures.
 
 TypeScript and JavaScript configs are executable modules. The CLI treats the
 selected project config as trusted code, matching FM03's direct-import host; it
-does not claim to sandbox config evaluation. Plugin isolation remains a later
-Forme milestone.
+does not claim to sandbox config evaluation. Installed plugin stages are
+separate verified snapshots and always require an attested native sandbox.
 
 ## Repository bootstrap helper
 
@@ -84,3 +127,10 @@ leaf-first. Bootstrap installs use npm's legacy peer-dependency mode so npm 10
 does not fail while resolving unrelated development-tool peers in the local
 package graph. Published consumers use normal package-manager installation and
 do not need this helper.
+
+Pass `--frozen` in release automation to require every discovered local
+package's committed lockfile. Frozen bootstrap runs `npm ci` with dependency
+lifecycle scripts disabled, then invokes each package's reviewed build script
+explicitly in the same leaf-first order. This keeps generated local-package
+artifacts available without turning install-time hooks into an ambient code
+execution surface.

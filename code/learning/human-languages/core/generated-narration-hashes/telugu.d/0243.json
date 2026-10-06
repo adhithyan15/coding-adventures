@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:d543b9960781dff0",
+  "lessonIds": [
+    "TE-C243-pariskarincu",
+    "TE-C243-taggincu",
+    "TE-C243-pencu",
+    "TE-C243-teliyajeyu",
+    "TE-C243-badili-ceyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch243.txt",
+  "json": "telugu/narration/ch243.json",
+  "textHash": "fnv1a64:ca9d045f26baa5a1",
+  "jsonHash": "fnv1a64:ac6e9e315386da0e",
+  "findings": []
+}

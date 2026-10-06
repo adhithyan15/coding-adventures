@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C198-farq",
+    "language": "persian",
+    "chapter": 198,
+    "sequence": 10200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5829f73287dd262"
+  },
+  "findings": []
+}

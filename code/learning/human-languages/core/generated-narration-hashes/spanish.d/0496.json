@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:b5484b8cd66e13c8",
+  "lessonIds": [
+    "ES-C496-hogar",
+    "ES-C496-cerradura",
+    "ES-C496-colocar",
+    "ES-C496-quitar",
+    "ES-C496-llenar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch496.txt",
+  "json": "spanish/narration/ch496.json",
+  "textHash": "fnv1a64:be5f12e0450c14ec",
+  "jsonHash": "fnv1a64:76da48d92f87200a",
+  "findings": []
+}

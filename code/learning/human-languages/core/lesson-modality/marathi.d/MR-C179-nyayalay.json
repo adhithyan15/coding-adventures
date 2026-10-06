@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C179-nyayalay",
+    "language": "marathi",
+    "chapter": 179,
+    "sequence": 8780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea13c4b6c36e60a9"
+  },
+  "findings": []
+}

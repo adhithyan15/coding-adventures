@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C214-domesticus",
+    "language": "latin",
+    "chapter": 214,
+    "sequence": 10520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce28b34d621594f6"
+  },
+  "findings": []
+}

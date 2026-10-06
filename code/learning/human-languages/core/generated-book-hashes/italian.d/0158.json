@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:ad0bd6ae2f853589",
+  "lessonIds": [
+    "IT-C158-maturo",
+    "IT-C158-buio",
+    "IT-C158-chiaro",
+    "IT-C158-scuro",
+    "IT-C158-puntuale"
+  ],
+  "tex": "italian/book/chapters/ch158-ripe-dark-clear-dark-coloured-punctual.tex"
+}

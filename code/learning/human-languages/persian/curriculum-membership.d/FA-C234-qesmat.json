@@ -1,0 +1,11 @@
+{
+  "id": "FA-C234-qesmat",
+  "pathSegment": "FA-PATH-234-CHERA234",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-234-CHERA234",
+      "order": 4
+    }
+  ]
+}

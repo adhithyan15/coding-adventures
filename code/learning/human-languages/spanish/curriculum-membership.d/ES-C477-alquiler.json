@@ -1,0 +1,11 @@
+{
+  "id": "ES-C477-alquiler",
+  "pathSegment": "ES-PATH-477-DINERO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-477-DINERO",
+      "order": 1
+    }
+  ]
+}

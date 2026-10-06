@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:ed7166a0f3226c0e",
+  "lessonIds": [
+    "MR-C273-athvan",
+    "MR-C273-svabhav",
+    "MR-C273-vagnuk",
+    "MR-C273-adar",
+    "MR-C273-daya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch273.txt",
+  "json": "marathi/narration/ch273.json",
+  "textHash": "fnv1a64:214b691e43ce169f",
+  "jsonHash": "fnv1a64:1711bf69a1b3947e",
+  "findings": []
+}

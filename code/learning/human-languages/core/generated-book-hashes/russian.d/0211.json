@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:768af7958201a1ea",
+  "lessonIds": [
+    "RU-C211-myshtsa",
+    "RU-C211-kost",
+    "RU-C211-puls",
+    "RU-C211-davleniye",
+    "RU-C211-sila"
+  ],
+  "tex": "russian/book/chapters/ch211-muscle-bone-pulse-pressure-strength.tex"
+}

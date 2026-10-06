@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C252-shvoshur",
+    "language": "bengali",
+    "chapter": 252,
+    "sequence": 15770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf52c52f7e73d3e0"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C246-canalizador",
+    "language": "portuguese",
+    "chapter": 246,
+    "sequence": 14680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:055b81410793ac78"
+  },
+  "findings": []
+}

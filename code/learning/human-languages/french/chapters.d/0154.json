@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "Health, Brain, Lung, Liver, Kidney",
+  "label": "ch:fr-health-brain-lung-liver-kidney",
+  "canDo": "I can say health, the brain, a lung, the liver and a kidney.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C154-rein",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: I can say health, the brain, a lung, the liver and a kidney.",
+    "assesses": [
+      "FR-LEX-C154-SANTE154-03",
+      "FR-LEX-C154-SANTE154-04",
+      "FR-LEX-C154-SANTE154-05"
+    ]
+  }
+}

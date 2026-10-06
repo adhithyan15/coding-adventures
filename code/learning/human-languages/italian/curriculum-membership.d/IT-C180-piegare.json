@@ -1,0 +1,11 @@
+{
+  "id": "IT-C180-piegare",
+  "pathSegment": "IT-PATH-180-VERBI180",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-180-VERBI180",
+      "order": 3
+    }
+  ]
+}

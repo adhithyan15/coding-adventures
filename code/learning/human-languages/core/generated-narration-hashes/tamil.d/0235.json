@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:d9b670660f303674",
+  "lessonIds": [
+    "TA-C235-ticai",
+    "TA-C235-vatakku",
+    "TA-C235-terku",
+    "TA-C235-kilakku",
+    "TA-C235-merku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch235.txt",
+  "json": "tamil/narration/ch235.json",
+  "textHash": "fnv1a64:ac4f3c99ebba7452",
+  "jsonHash": "fnv1a64:6318de8dadb2e6da",
+  "findings": []
+}

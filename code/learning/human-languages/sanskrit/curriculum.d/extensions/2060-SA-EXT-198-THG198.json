@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-198-THG198",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a deer, a leopard, a rhinoceros, a nest and an egg.",
+  "prerequisites": []
+}

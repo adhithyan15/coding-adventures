@@ -140,5 +140,10 @@ describe("TaskApp Web Components parity host", () => {
     buttonByText(root.shadowRoot, "Delete").click();
     await settle();
     expect(root.shadowRoot.textContent).not.toContain("Ship the Web Component gate");
-  });
+    // The whole lifecycle -- instantiating the WASM engine twice, three
+    // round-trips through the emitted controls (add, complete, delete) and a
+    // restore -- takes 3.4 to 4.9 seconds on a CI runner, right at vitest's
+    // 5 s default, which timed it out once at 5047 ms. Its own budget leaves
+    // real headroom; a hang still fails, just later.
+  }, 30_000);
 });

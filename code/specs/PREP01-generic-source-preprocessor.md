@@ -174,6 +174,22 @@ arena: each entry is an expansion id naming its parent expansion id, exactly as
 LLVM's `SourceManager` does. That makes the map `O(tokens + expansions)`. This
 is normative, because §6's memory bounds depend on it.
 
+**Implemented in VM-069.** `MToken` carries its physical `Position` and an
+optional `ExpansionId`; every actual substitution interns an invocation node
+containing the macro name, definition site, invocation site, and parent.
+Macro-body tokens therefore keep their defining file/line/column while
+diagnostics can walk from the innermost expansion out through nested
+object-like and function-argument expansions. `lexer::token::Token` remains
+unchanged.
+
+Function-argument forwarding must preserve an argument's existing inner macro
+chain. If `H` is pre-expanded inside `OUTER(x)` and its result passes through
+`F(x)`, the emitted token's chain is `H → F → OUTER`. Insert `F` by copying and
+memoizing the affected prefix; expansion records are shared, so changing an
+existing parent in place would corrupt other tokens. Cap both substitutions
+and copied provenance nodes before allocation under the expansion-round
+limit.
+
 **Known limitation, stated deliberately:** the per-token `Locus` vector is
 positional, so it is valid only for a consumer that does not reorder or
 synthesise tokens between the engine and the parser. That holds for the intended
@@ -188,11 +204,15 @@ something to guess at now.
 /// what a directive means.
 pub trait Dialect {
     /// Recognise a logical line as a directive. `None` = ordinary source.
-    fn directive_of(&self, line: &[Token]) -> Option<Directive>;
+    fn classify(&self, line: &[Token]) -> Option<Result<Directive, PpError>>;
+
+    /// Resolve operators whose operands must remain unexpanded. Called after
+    /// the raw depth check and before the engine expands the rest.
+    fn prepare_condition(&self, toks: Vec<Token>, macros: &MacroTable)
+        -> Result<Vec<Token>, PpError> { Ok(toks) }
 
     /// Evaluate a conditional's controlling expression.
-    fn eval_condition(&self, toks: &[Token], macros: &MacroTable)
-        -> Result<bool, PpError>;
+    fn eval_condition(&self, toks: &[Token]) -> Result<bool, PpError>;
 
     /// Lex an included unit's text. The engine calls this, never a lexer
     /// directly, so each language keeps its own grammar.
@@ -220,6 +240,17 @@ pub trait SourceFs {
     fn read(&self, file: FileId) -> Result<SourceText, PpError>;
 }
 ```
+
+`prepare_condition` is the contract for C's exceptional `defined` rule. A C
+dialect recognizes `defined NAME` or `defined(NAME)`, queries
+`MacroTable::is_defined`, and replaces the whole operator with a truth-value
+token. The operand consequently never enters ordinary macro expansion, while
+the engine still expands every remaining macro before `eval_condition`. The
+default identity implementation keeps dialects without such an operator
+unchanged. Preparation must not increase the token count or total token text
+bytes; the engine rejects a growing result and any token exceeding the spelling
+limit. An unlocated preparation error receives the controlling directive's
+source position.
 
 **`FileId` names a retained open handle, and that is load-bearing.** Splitting
 the operation across two calls would otherwise reopen the very TOCTOU the rules

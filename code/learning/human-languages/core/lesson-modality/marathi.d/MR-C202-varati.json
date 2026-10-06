@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C202-varati",
+    "language": "marathi",
+    "chapter": 202,
+    "sequence": 10680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:191c5172e218cf8c"
+  },
+  "findings": []
+}

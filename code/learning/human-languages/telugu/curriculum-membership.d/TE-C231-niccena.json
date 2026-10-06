@@ -1,0 +1,11 @@
+{
+  "id": "TE-C231-niccena",
+  "pathSegment": "TE-PATH-231-VASTUVU231",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-231-VASTUVU231",
+      "order": 2
+    }
+  ]
+}

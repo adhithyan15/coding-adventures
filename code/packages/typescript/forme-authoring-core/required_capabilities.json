@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "package": "typescript/forme-authoring-core",
+  "capabilities": [],
+  "justification": "Pure validation and immutable state transitions over caller-supplied values plus an injected storage adapter. The package opens no filesystem, network, environment, shell, subprocess, clock, or random source."
+}

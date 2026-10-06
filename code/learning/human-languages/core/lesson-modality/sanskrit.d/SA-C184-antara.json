@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C184-antara",
+    "language": "sanskrit",
+    "chapter": 184,
+    "sequence": 10190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4635d3fa43e5c9d0"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:21510cd52f38ad11",
+  "lessonIds": [
+    "HI-C204-trak",
+    "HI-C204-riksa",
+    "HI-C204-havaijahaz",
+    "HI-C204-petrol",
+    "HI-C204-phon"
+  ],
+  "tex": "hindi/book/chapters/ch204-a-lorry-a-rickshaw-an-aeroplane-petrol-a-telephone.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C306-simentu",
+    "language": "telugu",
+    "chapter": 306,
+    "sequence": 14660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e8aa308c3cfe2b8"
+  },
+  "findings": []
+}

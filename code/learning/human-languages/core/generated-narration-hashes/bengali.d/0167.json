@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:99a5d7371b76b041",
+  "lessonIds": [
+    "BN-C167-jatri",
+    "BN-C167-tksi",
+    "BN-C167-riksha",
+    "BN-C167-motorsaikel",
+    "BN-C167-trak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch167.txt",
+  "json": "bengali/narration/ch167.json",
+  "textHash": "fnv1a64:c1b716648eac14c9",
+  "jsonHash": "fnv1a64:0ae4b24341c513b5",
+  "findings": []
+}

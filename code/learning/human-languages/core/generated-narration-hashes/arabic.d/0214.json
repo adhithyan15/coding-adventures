@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:e97150bd5a89c25f",
+  "lessonIds": [
+    "AR-C214-badla",
+    "AR-C214-sandal",
+    "AR-C214-qumash",
+    "AR-C214-qutn",
+    "AR-C214-suf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch214.txt",
+  "json": "arabic/narration/ch214.json",
+  "textHash": "fnv1a64:9d108ab56088303d",
+  "jsonHash": "fnv1a64:11fab89782af3ca7",
+  "findings": []
+}

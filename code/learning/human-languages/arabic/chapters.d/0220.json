@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Card, Loan, Goods, Account, Butcher",
+  "label": "ch:ar-card-loan-goods-account-butcher",
+  "canDo": "I can say a card, a loan, goods, an account and a butcher.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C220-jazzar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say a card, a loan, goods, an account and a butcher.",
+    "assesses": [
+      "AR-LEX-C220-AMAL220-03",
+      "AR-LEX-C220-AMAL220-04",
+      "AR-LEX-C220-AMAL220-05"
+    ]
+  }
+}

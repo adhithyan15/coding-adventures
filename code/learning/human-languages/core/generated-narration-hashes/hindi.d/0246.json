@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:6b3a126597a8905b",
+  "lessonIds": [
+    "HI-C246-loha",
+    "HI-C246-cadi",
+    "HI-C246-kagaz",
+    "HI-C246-plastik",
+    "HI-C246-rui"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch246.txt",
+  "json": "hindi/narration/ch246.json",
+  "textHash": "fnv1a64:4df760afa3124533",
+  "jsonHash": "fnv1a64:d4b0f17109549266",
+  "findings": []
+}

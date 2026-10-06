@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Silk, Leather, So, If, Or",
+  "label": "ch:hi-silk-leather-so-if-or",
+  "canDo": "I can say silk, leather, so, if and or.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C247-ya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say silk, leather, so, if and or.",
+    "assesses": [
+      "HI-LEX-C247-THG247-03",
+      "HI-LEX-C247-THG247-04",
+      "HI-LEX-C247-THG247-05"
+    ]
+  }
+}

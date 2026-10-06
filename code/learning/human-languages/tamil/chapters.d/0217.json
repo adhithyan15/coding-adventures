@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Bride, Bridegroom, Engagement, Feast, Festival",
+  "label": "ch:ta-bride-bridegroom-engagement-feast-festival",
+  "canDo": "I can say a bride, a bridegroom, an engagement, a feast and a festival.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C217-vila",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say a bride, a bridegroom, an engagement, a feast and a festival.",
+    "assesses": [
+      "TA-LEX-C217-PORUL217-03",
+      "TA-LEX-C217-PORUL217-04",
+      "TA-LEX-C217-PORUL217-05"
+    ]
+  }
+}

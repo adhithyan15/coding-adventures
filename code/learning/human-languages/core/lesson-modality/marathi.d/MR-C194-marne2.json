@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C194-marne2",
+    "language": "marathi",
+    "chapter": 194,
+    "sequence": 10090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23963371943943a5"
+  },
+  "findings": []
+}

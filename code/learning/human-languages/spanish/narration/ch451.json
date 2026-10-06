@@ -4,7 +4,7 @@
   "chapter": 451,
   "title": "La cola y el carné",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cf4a8bb77d2fb94f",
+  "sourceHash": "fnv1a64:770398399a794115",
   "lessons": [
     {
       "id": "ES-C451-cola",
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76b0f351f758d8e0",
+      "sourceHash": "fnv1a64:e356342c8ada7046",
       "notice": null,
       "blocks": [
         {
@@ -513,7 +513,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a93c236f020e187e",
+      "sourceHash": "fnv1a64:99a8e29184489850",
       "notice": null,
       "blocks": [
         {
@@ -846,7 +846,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ecf6618cf7463047",
+      "sourceHash": "fnv1a64:7e83ae03310632e9",
       "notice": {
         "modality": "sight",
         "needs": [

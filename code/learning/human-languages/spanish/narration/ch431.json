@@ -4,7 +4,7 @@
   "chapter": 431,
   "title": "El Pedido Y La Devolución",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:aef67048d3858d5e",
+  "sourceHash": "fnv1a64:d3f8304c4c8183d5",
   "lessons": [
     {
       "id": "ES-C431-pedido",
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:084bcebf87cf30c5",
+      "sourceHash": "fnv1a64:2c557138b4c2897e",
       "notice": null,
       "blocks": [
         {
@@ -607,7 +607,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6dd62b4a51787151",
+      "sourceHash": "fnv1a64:c0ec8dd6f2630a96",
       "notice": null,
       "blocks": [
         {

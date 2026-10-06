@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:44698d6fe80079e2",
+  "lessonIds": [
+    "PT-C254-marisco",
+    "PT-C254-camarao",
+    "PT-C254-atum",
+    "PT-C254-bacalhau",
+    "PT-C254-salsicha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch254.txt",
+  "json": "portuguese/narration/ch254.json",
+  "textHash": "fnv1a64:4c5ae584dfe3e8c1",
+  "jsonHash": "fnv1a64:a5fa5731f42bbd7a",
+  "findings": []
+}

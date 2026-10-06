@@ -1,0 +1,11 @@
+{
+  "id": "FR-C173-victoire",
+  "pathSegment": "FR-PATH-173-CHOSES173",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-173-CHOSES173",
+      "order": 4
+    }
+  ]
+}

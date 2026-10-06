@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:448465a3e5bfb75b",
+  "lessonIds": [
+    "FA-C225-hefz-kardan",
+    "FA-C225-nale-kardan",
+    "FA-C225-khamyaze-keshidan",
+    "FA-C225-bala-avardan",
+    "FA-C225-varam-kardan",
+    "FA-R225-first-pass-words-from-chapters-217-220",
+    "FA-R225-second-pass-words-from-chapters-221-225"
+  ],
+  "tex": "persian/book/chapters/ch225-to-memorise-to-moan-to-yawn-to-vomit-to-swell-up.tex"
+}

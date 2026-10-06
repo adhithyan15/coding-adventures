@@ -7,7 +7,7 @@ manifestVersion = 1
 [plugin]
 name        = "@forme/parse-markdown"
 version     = "1.4.2"
-apiVersion  = 1
+apiVersion  = 2
 description = "Parse CommonMark + GFM into a ContentNode"
 license     = "MIT"
 authors     = ["Alice <alice@example.com>"]
@@ -56,7 +56,7 @@ describe("parseManifest — happy path", () => {
     expect(m.manifestVersion).toBe(1);
     expect(m.plugin.name).toBe("@forme/parse-markdown");
     expect(m.plugin.version).toBe("1.4.2");
-    expect(m.plugin.apiVersion).toBe(1);
+    expect(m.plugin.apiVersion).toBe(2);
     expect(m.plugin.description).toBe("Parse CommonMark + GFM into a ContentNode");
     expect(m.plugin.authors).toEqual(["Alice <alice@example.com>"]);
 
@@ -82,7 +82,7 @@ manifestVersion = 1
 [plugin]
 name       = "x"
 version    = "0.1.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind  = "node"
 entry = "./e.js"
@@ -105,7 +105,7 @@ manifestVersion = 1  # trailing comment
 [plugin]              # section comment
 name = "x" # value comment
 version = "0.1.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./e.js"
@@ -123,7 +123,7 @@ manifestVersion = 1
 [plugin]
 name = "x"
 version = "0.1.0"
-apiVersion = 1
+apiVersion = 2
 description = "line1\\nline2\\t\\u0041"
 [runtime]
 kind = "node"
@@ -142,7 +142,7 @@ manifestVersion = 1
 [plugin]
 name = 'x'
 version = "0.1.0"
-apiVersion = 1
+apiVersion = 2
 description = 'no \\n escape here'
 [runtime]
 kind = "node"
@@ -161,7 +161,7 @@ manifestVersion = 1
 [plugin]
 name = "x"
 version = "0.1.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./e.js"
@@ -185,7 +185,7 @@ other = false
 [plugin]
 name = "x"
 version = "0.1.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./e.js"
@@ -202,7 +202,7 @@ manifestVersion = 1
 [plugin]
 name = "x"
 version = "0.1.0"
-apiVersion = 1
+apiVersion = 2
 authors = ["Alice", "Bob", "Carol"]
 [runtime]
 kind = "node"
@@ -221,7 +221,7 @@ manifestVersion = 1
 [plugin]
 name = "x"
 version = "0.1.0"
-apiVersion = 1
+apiVersion = 2
 authors = [
   "Alice",
   "Bob",
@@ -243,7 +243,7 @@ manifestVersion = 1
 [plugin]
 name = "x"
 version = "0.1.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "binary"
 entry = "./fallback"
@@ -266,7 +266,7 @@ manifestVersion = 1
 [plugin]
 name = "x"
 version = "0.1.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./e.js"
@@ -438,7 +438,7 @@ manifestVersion = 1
 [plugin]
 name = "@me/x"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./e.js"

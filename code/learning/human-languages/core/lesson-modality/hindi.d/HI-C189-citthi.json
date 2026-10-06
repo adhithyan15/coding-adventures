@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C189-citthi",
+    "language": "hindi",
+    "chapter": 189,
+    "sequence": 9210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e89ab8b34124f83"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C144-guzashta",
+    "language": "urdu",
+    "chapter": 144,
+    "sequence": 7570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea185258913da5cd"
+  },
+  "findings": []
+}

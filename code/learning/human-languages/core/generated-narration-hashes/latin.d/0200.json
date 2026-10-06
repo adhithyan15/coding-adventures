@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:91fa46b7fad9ab91",
+  "lessonIds": [
+    "LA-C200-tollo",
+    "LA-C200-pervenio",
+    "LA-C200-agnosco",
+    "LA-C200-recuso",
+    "LA-C200-volito"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch200.txt",
+  "json": "latin/narration/ch200.json",
+  "textHash": "fnv1a64:360617928975fdfb",
+  "jsonHash": "fnv1a64:f52698385d64ed93",
+  "findings": []
+}

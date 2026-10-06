@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-identity",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Forme kernel: LogicalId (UUIDv7) and RevisionId (BLAKE2b content hash) generation, plus RFC 8785 canonical JSON serialisation (FM01 §7).",
   "type": "module",
   "main": "src/index.ts",

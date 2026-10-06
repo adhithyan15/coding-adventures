@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:0275ad9fbb8915c9",
+  "lessonIds": [
+    "RU-C192-gazeta",
+    "RU-C192-zhurnal",
+    "RU-C192-slovar",
+    "RU-C192-lineyka",
+    "RU-C192-papka"
+  ],
+  "tex": "russian/book/chapters/ch192-newspaper-magazine-dictionary-ruler-folder.tex"
+}

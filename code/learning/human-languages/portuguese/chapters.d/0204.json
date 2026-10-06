@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "To burn, To throw away, To calculate, To hit, To compare",
+  "label": "ch:pt-to-burn-to-throw-away-to-calculate-to-hit-to-compare",
+  "canDo": "I can say to burn, to throw away, to calculate, to hit and to compare.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C204-comparar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say to burn, to throw away, to calculate, to hit and to compare.",
+    "assesses": [
+      "PT-LEX-C204-VERBOS204-03",
+      "PT-LEX-C204-VERBOS204-04",
+      "PT-LEX-C204-VERBOS204-05"
+    ]
+  }
+}

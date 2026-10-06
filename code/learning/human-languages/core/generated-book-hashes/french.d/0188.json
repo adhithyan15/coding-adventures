@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:d209bf2f2277b143",
+  "lessonIds": [
+    "FR-C188-pres-de",
+    "FR-C188-loin-de",
+    "FR-C188-au-fond",
+    "FR-C188-a-droite",
+    "FR-C188-a-gauche"
+  ],
+  "tex": "french/book/chapters/ch188-near-to-far-from-at-the-bottom-on-the-right-on-the-left.tex"
+}

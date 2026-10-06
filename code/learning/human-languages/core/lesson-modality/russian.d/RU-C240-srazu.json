@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C240-srazu",
+    "language": "russian",
+    "chapter": 240,
+    "sequence": 14610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7edfa618fe8767de"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:674d03a611f2eca1",
+  "lessonIds": [
+    "TE-C262-rotte",
+    "TE-C262-capati",
+    "TE-C262-upma",
+    "TE-C262-tiphinu",
+    "TE-C262-pesalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch262.txt",
+  "json": "telugu/narration/ch262.json",
+  "textHash": "fnv1a64:5f8b9609f1dc1cb7",
+  "jsonHash": "fnv1a64:ada6ec8c47fac54f",
+  "findings": []
+}

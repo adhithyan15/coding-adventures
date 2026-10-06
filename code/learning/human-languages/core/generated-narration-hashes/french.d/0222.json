@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:4aa5816db83c5e1d",
+  "lessonIds": [
+    "FR-C222-societe",
+    "FR-C222-gouvernement",
+    "FR-C222-loi",
+    "FR-C222-tribunal",
+    "FR-C222-juge",
+    "FR-R222-first-pass-words-from-chapters-214-217",
+    "FR-R222-second-pass-words-from-chapters-218-222"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch222.txt",
+  "json": "french/narration/ch222.json",
+  "textHash": "fnv1a64:5b40dbf98515b46e",
+  "jsonHash": "fnv1a64:bec3d04935b0d8b9",
+  "findings": []
+}

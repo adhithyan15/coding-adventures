@@ -8,6 +8,8 @@ Hablas español, Quiero que hables español — fact or wanted event?
 Warm-up.
 [pause 2 seconds]
 Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive.
+[pause 2 seconds]
+Three stems from the last chapter: haré, tendré, podré, and the same stems in haría, tendría, podría.
 
 Grammar Lens: count the doers.
 [a table of 2 rows, read aloud]

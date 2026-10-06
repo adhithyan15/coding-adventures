@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "Driving licence, Helmet, Tunnel, Building site, Block of flats",
+  "label": "ch:fr-driving-licence-helmet-tunnel-building-site-block-of-flats",
+  "canDo": "I can say a driving licence, a helmet, a tunnel, a building site and a block of flats.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C253-immeuble",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say a driving licence, a helmet, a tunnel, a building site and a block of flats.",
+    "assesses": [
+      "FR-LEX-C253-CHOSES253-03",
+      "FR-LEX-C253-CHOSES253-04",
+      "FR-LEX-C253-CHOSES253-05"
+    ]
+  }
+}

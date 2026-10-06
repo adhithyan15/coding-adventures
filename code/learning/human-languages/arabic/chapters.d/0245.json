@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Necklace, Size, Telephone, Mobile phone, Screen",
+  "label": "ch:ar-necklace-size-telephone-mobile-phone-screen",
+  "canDo": "I can say a necklace, a size, a telephone, a mobile phone and a screen.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C245-shasha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say a necklace, a size, a telephone, a mobile phone and a screen.",
+    "assesses": [
+      "AR-LEX-C245-SHAY245-03",
+      "AR-LEX-C245-SHAY245-04",
+      "AR-LEX-C245-SHAY245-05"
+    ]
+  }
+}

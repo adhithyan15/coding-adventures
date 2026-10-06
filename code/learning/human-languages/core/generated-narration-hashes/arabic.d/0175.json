@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:80e6dad502c6ecd2",
+  "lessonIds": [
+    "AR-C175-sadaqa",
+    "AR-C175-mujtama",
+    "AR-C175-diyafa",
+    "AR-C175-raghma",
+    "AR-C175-aydan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch175.txt",
+  "json": "arabic/narration/ch175.json",
+  "textHash": "fnv1a64:783341f2f07793c5",
+  "jsonHash": "fnv1a64:cf74ba18a6a2541f",
+  "findings": []
+}

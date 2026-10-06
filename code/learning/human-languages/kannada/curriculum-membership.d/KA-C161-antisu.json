@@ -1,0 +1,11 @@
+{
+  "id": "KA-C161-antisu",
+  "pathSegment": "KA-PATH-161-KRIYE161",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-161-KRIYE161",
+      "order": 0
+    }
+  ]
+}

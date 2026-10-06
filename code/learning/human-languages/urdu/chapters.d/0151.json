@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "To prepare, To decorate, To sneeze, To cough, To breathe",
+  "label": "ch:ur-to-prepare-to-decorate-to-sneeze-to-cough-to-breathe",
+  "canDo": "I can say to prepare, to decorate, to sneeze, to cough and to breathe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C151-sans-lena",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: I can say to prepare, to decorate, to sneeze, to cough and to breathe.",
+    "assesses": [
+      "UR-LEX-C151-ACT151-03",
+      "UR-LEX-C151-ACT151-04",
+      "UR-LEX-C151-ACT151-05"
+    ]
+  }
+}

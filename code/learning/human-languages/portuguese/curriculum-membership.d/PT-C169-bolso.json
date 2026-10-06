@@ -1,0 +1,11 @@
+{
+  "id": "PT-C169-bolso",
+  "pathSegment": "PT-PATH-169-COISAS169",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-169-COISAS169",
+      "order": 1
+    }
+  ]
+}

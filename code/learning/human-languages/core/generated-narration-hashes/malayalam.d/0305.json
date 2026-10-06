@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:f597935590801437",
+  "lessonIds": [
+    "ML-C305-niksepikkuka",
+    "ML-C305-pinvalikkuka",
+    "ML-C305-ceruka",
+    "ML-C305-kantumuttuka",
+    "ML-C305-sandarsikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch305.txt",
+  "json": "malayalam/narration/ch305.json",
+  "textHash": "fnv1a64:8827fbdac8aea4dc",
+  "jsonHash": "fnv1a64:d9a76531b1a49ff0",
+  "findings": []
+}

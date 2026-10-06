@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:24347318fdd730aa",
+  "lessonIds": [
+    "MR-C188-dindarsika",
+    "MR-C188-khekda",
+    "MR-C188-garud",
+    "MR-C188-kokila",
+    "MR-C188-madhmasi",
+    "MR-R188-first-pass-words-from-chapters-180-183",
+    "MR-R188-second-pass-words-from-chapters-184-188"
+  ],
+  "tex": "marathi/book/chapters/ch188-calendar-crab-eagle-cuckoo-bee.tex"
+}

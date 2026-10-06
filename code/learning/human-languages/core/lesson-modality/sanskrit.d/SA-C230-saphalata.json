@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C230-saphalata",
+    "language": "sanskrit",
+    "chapter": 230,
+    "sequence": 13520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f978c982f8dbfd83"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "Wound, Scar, Head cold, Drug, Ointment",
+  "label": "ch:la-wound-scar-head-cold-drug-ointment",
+  "canDo": "I can say a wound, a scar, a head cold, a drug and an ointment.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-R205-second-pass-words-from-chapters-201-205",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say a wound, a scar, a head cold, a drug and an ointment.",
+    "assesses": [
+      "LA-LEX-C205-VALE205-03",
+      "LA-LEX-C205-VALE205-04",
+      "LA-LEX-C205-VALE205-05"
+    ]
+  }
+}

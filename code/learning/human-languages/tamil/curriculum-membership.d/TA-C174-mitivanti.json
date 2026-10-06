@@ -1,0 +1,11 @@
+{
+  "id": "TA-C174-mitivanti",
+  "pathSegment": "TA-PATH-174-IDAM174",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-174-IDAM174",
+      "order": 1
+    }
+  ]
+}

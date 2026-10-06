@@ -1705,6 +1705,197 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("4.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a runtime real procedure result is formatted by the
+    // same portable IIR helper already proven for BASIC numeric output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; output(pick()) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — runtime-real formatter provenance also begins at a direct
+    // real procedure call whose formal parameters are all value-mode scalars.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure scale(x); value x; real x; scale := x * 2.0; real result; result := scale(1.125); output(result) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — the same runtime result may migrate through a direct real
+    // scalar slot before the shared portable formatter consumes it.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real x; x := pick(); output(x) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — runtime-real formatter provenance follows a straight-line
+    // local scalar copy. Reassigning the source afterwards does not change the
+    // copied value or require a general dynamic-expression formatter.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := x; x := 1.0; output(y) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an unknown statement condition may retain runtime-real
+    // formatter provenance when both exits establish it for the same slot.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; boolean flag; real x; if flag then x := pick() else x := pick(); output(x) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a side-effect-free conditional value may retain runtime-real
+    // formatter provenance when every reachable value branch proves it.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; boolean flag; real x; x := if flag then pick() else pick(); output(x) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — unary plus is an identity and may preserve runtime-real
+    // formatter provenance through assignment and output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real x; x := +pick(); output(+x) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — unary minus preserves runtime-real formatter provenance
+    // while applying the sign at each expression site.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real x; x := -pick(); output(-x) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — additive composition may combine runtime-real provenance
+    // with finite static operands without opening multiplicative expressions.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real x; x := pick() + 1.25; output(10.0 - x + pick()) end",
+        expect: Expect::Stdout("8.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — multiplication may combine runtime-real provenance with
+    // finite static operands while division and powers remain gated.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real x; x := pick() * 2.0; output(2.0 * x * pick()) end",
+        expect: Expect::Stdout("20.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — division may combine runtime-real provenance with finite
+    // static operands.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real x; x := 18.0 / pick(); output(x / 2.0) end",
+        expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — exponentiation may combine runtime-real provenance with
+    // finite static operands on either side of the operator.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.0; real x; x := 2.0 ^ pick(); output(x ^ 2) end",
+        expect: Expect::Stdout("64"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — implemented real-valued standard functions preserve
+    // runtime-real provenance through assignment and nested output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 9.0; real x; x := sqrt(pick()); output(abs(-x)) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a dynamically indexed real array-element read carries
+    // runtime-real provenance through multiplicative output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real array values[1:2]; integer i; i := 2; values[2] := pick(); output(values[i] * 2.0) end",
+        expect: Expect::Stdout("4.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a real value formal is a concrete f64 in the callee frame,
+    // so it may carry runtime-real provenance through composition and output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; procedure show(x); value x; real x; output(x * 2.0); show(pick()) end",
+        expect: Expect::Stdout("4.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — promotion into the existing capture global keeps a real value
+    // formal formatter-safe inside a nested sibling procedure.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; procedure show(x); value x; real x; begin procedure nested; output(x * 2.0); nested() end; show(pick()) end",
+        expect: Expect::Stdout("4.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an ordinary real scalar captured through the existing E6
+    // typed-global path remains a concrete f64 in its nested sibling.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real shared; procedure show; output(shared); shared := 2.25; show() end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a real procedure specialised for a proven runtime-real name
+    // actual returns a concrete f64 without requiring a runtime thunk ABI.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; output(relay(pick())) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a specialised read-only name formal retains the bounded
+    // runtime-real provenance of its non-assignable actual expression.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; procedure show(x); real x; output(x); show(pick()) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — forwarding a name formal preserves the original
+    // non-assignable runtime-real actual and its formatter provenance.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; procedure sink(y); real y; output(y); procedure relay(x); real x; sink(x); relay(pick()) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an assignable real array-element actual is re-evaluated at
+    // each name-formal read and retains formatter provenance through direct
+    // forwarding. The existing specialised write path remains unchanged.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real array a[1:1]; procedure sink(y); real y; output(y); procedure relay(x); real x; sink(x); a[1] := 2.25; relay(a[1]) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — static integer-valued functions may feed checked snapshots and widen into
     // bounded static real expressions. Copying preserves the destination when
     // the source is reassigned; overflow, control flow, calls, captures,
@@ -2898,6 +3089,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — true and false literal string predicates may select exact
+    // initial, step, and limit expressions for finite step loops.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, total; total := 0; for i := if 'ALPHA' < 'BETA' then 1 else 4 step if 'ALPHA' < 'BETA' then 1 else 2 until if 'ALPHA' < 'BETA' then 3 else 4 do total := total + i; print(total + 0.25); total := 0; for i := if 'BETA' < 'ALPHA' then 1 else 2 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'BETA' < 'ALPHA' then 5 else 4 do total := total + i; print(total + 0.25) end",
+        expect: Expect::Stdout("6.259.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a straight-line boolean snapshot can select a statement
     // branch that establishes definite string initialization.
     Prog {
@@ -3214,6 +3414,229 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a supported exact recurrence may evolve a statement selector
+    // while capped source-order execution tracks its selected dependency cycle.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := i < 2; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.250.5-0.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an exact recursive boolean recurrence may evolve a statement
+    // selector while capped execution tracks the selected dependency cycle.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.51.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a conditional expression may preserve an exact direct
+    // self-recursive selector while source-order execution tracks its cycle.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.51.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a selector that changes during capped execution may choose
+    // different leaves when every leaf retains the direct recurrence edge.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := i < 2; choose := if flag then not choose else choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a conditional boolean recurrence may remain acyclic while
+    // selecting different recurrence-cycle statements on successive passes.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if i < 2 then true else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.250.5-0.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an exact evolving selector may choose a self-recursive leaf
+    // on one pass and a non-recursive exact leaf on another pass.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — one exact acyclic copy may forward an evolving selector to
+    // the partial self-recursive boolean recurrence.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — two exact acyclic copies may forward an evolving selector
+    // to the partial self-recursive boolean recurrence.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate, key; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag; key := gate; choose := if key then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — any finite acyclic chain of exact copies may forward an
+    // evolving selector to the partial self-recursive boolean recurrence.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate, key, last; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; last := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag; key := gate; last := key; choose := if last then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — established boolean identities may forward an evolving
+    // selector through an acyclic copy chain to partial self-recursion.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate, key; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and true; key := not not gate; choose := if key then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a dynamic conditional may forward a selector when both
+    // branches are established identities of that unique dependency.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate, other; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; other := false; for i := i + 1 while i <= n do begin n := n - delta; other := not other; flag := if i < 2 then true else false; gate := if other then flag and true else not not flag; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a boolean conditional projection is an exact copy of its
+    // selector and may forward an evolving selector to partial self-recursion.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then true else false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a complemented boolean conditional projection is an exact
+    // copy of its selector and may forward it to partial self-recursion.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if not flag then false else true; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a one-sided guarded projection is an exact selector copy
+    // when its other branch preserves that selector directly.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then flag else false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — literal-only boolean expressions may supply a neutral
+    // identity operand and the constants of an exact selector projection.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate, key; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (false impl true); key := if gate then (false or true) eqv not false else true and false; choose := if key then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — literal integer predicates may supply a neutral operand of
+    // an exact selector identity.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (1 < 2); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — checked literal integer arithmetic may form the neutral
+    // predicate operand of an exact selector identity.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (1 + 2 < 4); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — finite literal real arithmetic may form the neutral
+    // predicate operand of an exact selector identity.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (1.5 + 0.5 < 3.0); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — literal strings may form the neutral predicate operand of an
+    // exact selector identity without introducing dynamic string state.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and ('ALPHA' < 'BETA'); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a variable-free literal string predicate may select a
+    // statement branch while capped execution tracks the recurrence cycle.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; if 'ALPHA' < 'BETA' then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.250.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a variable-free literal string predicate may select an
+    // expression branch while capped execution tracks the recurrence cycle.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; delta := if 'ALPHA' < 'BETA' then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.250.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — exact cross-assigned boolean recurrences may evolve a
+    // statement selector while source-order execution tracks both cycles.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; choose := guard; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.51.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a conditional expression may evolve one exact selector in
+    // a mutually recursive graph while source-order execution tracks both cycles.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; choose := if guard then not choose else guard; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.51.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := not choose else choose := guard; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.51.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — statement control may close an exact selector cycle even
+    // when each selected boolean write contains its own exact conditional.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, guard, flag; i := 0; n := 4; delta := 2; choose := true; guard := false; flag := true; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := if flag then true else false else choose := if flag then false else true; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.51.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exact scalar self-assignment is an idempotent body write,
     // so the stable local while dependency remains available to the proof.
     Prog {
@@ -3296,6 +3719,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a variable-free literal string predicate may discard a
+    // changing leaf while preserving a transitive recurrence dependency.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if 'ALPHA' < 'BETA' then limit else limit + 1 end; print(i + 0.25) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an unchanged known local selector may discard a changing
     // leaf while preserving a transitive dependency through the selected leaf.
     Prog {
@@ -3329,6 +3761,15 @@ fn main() { out(1, VALUE); }\n",
         lang: Language::Algol60,
         ext: "alg",
         src: "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := if true then choose else false end; print(i + 0.25) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a variable-free literal string predicate may discard a
+    // changing leaf while leaving a known recurrence selector stable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := if 'ALPHA' < 'BETA' then choose else false end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -3825,6 +4266,256 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin integer i; real x; for i := 1 step 1 until 10 do if i < 4 then i := i * 2 else i := i + 3; print(i + 0.25); for x := 1.0 step 0.5 until 10.0 do if x < 4.0 then x := x * 2.0 else x := x + 3.0; print(x) end",
         expect: Expect::Stdout("11.2512.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — true and false literal string predicates may select distinct
+    // bounded controlled-scalar recurrences.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, j; for i := 1 step 1 until 10 do if 'ALPHA' < 'BETA' then i := i * 2 else i := i + 3; print(i + 0.25); for j := 1 step 1 until 10 do if 'BETA' < 'ALPHA' then j := j * 2 else j := j + 3; print(j + 0.25) end",
+        expect: Expect::Stdout("15.2513.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — true and false literal string predicates may select distinct
+    // terminating conditions while bounded scalar recurrences advance.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, j; real x, y; i := 0; x := 0.25; for i := i + 1 while if 'ALPHA' < 'BETA' then i <= 3 else i <= 1 do x := x + i; print(x); j := 0; y := 0.25; for j := j + 1 while if 'BETA' < 'ALPHA' then j <= 1 else j <= 2 do y := y + j; print(y) end",
+        expect: Expect::Stdout("6.253.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — true and false literal string predicates may select distinct
+    // controlled expressions while bounded predicates terminate each loop.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, j; real x, y; i := 0; x := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 3 do x := x + i; print(x); j := 0; y := 0.25; for j := if 'BETA' < 'ALPHA' then j + 2 else j + 1 while j <= 2 do y := y + j; print(y) end",
+        expect: Expect::Stdout("6.253.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — exact literal string predicates may choose values in
+    // successive single-value and bounded while elements of one for list.
+    // Each element sees the exact control snapshot left by its predecessor.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9, if 'BETA' < 'ALPHA' then 8 else 2, if 'ALPHA' < 'BETA' then i + 1 else i + 3 while i <= 4 do total := total + i; print(total) end",
+        expect: Expect::Stdout("10.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — exact literal string predicates may choose every header of
+    // a bounded step element and the value of the following single-value
+    // element. The step exit snapshot feeds the next element exactly.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then 8 else 4 do total := total + i; print(total) end",
+        expect: Expect::Stdout("7.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a finite step element may read its controlled variable in
+    // the body without writing it. Its exact exit snapshot then seeds a
+    // following bounded while element in the same for list.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then i + 3 else i + 1 while i <= 4 do total := total + i; print(total) end",
+        expect: Expect::Stdout("7.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — the same cross-element exit propagation works for an exact
+    // finite binary64 step. The real step exit seeds the following while
+    // element while their shared body only reads the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then x + 1.5 else x + 0.5 while x <= 3.0 do total := total + x; print(total) end",
+        expect: Expect::Stdout("7.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a bounded real while element may pass its exact terminating
+    // snapshot into a following finite binary64 step element while their
+    // shared body only reads the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.5 else 0.0 do total := total + x; print(total) end",
+        expect: Expect::Stdout("6.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — one finite binary64 step element may pass its exact exit
+    // snapshot into the initial expression of another finite real step while
+    // their shared body only reads the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 4.0 else 0.0 do total := total + x; print(total) end",
+        expect: Expect::Stdout("15.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a finite binary64 step element may pass its exact exit
+    // snapshot into a following single-value element while their shared body
+    // only reads the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
+        expect: Expect::Stdout("7.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a real single-value element may pass its exact snapshot
+    // into a following single-value element while their shared body only
+    // reads the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 0.5 else 9.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
+        expect: Expect::Stdout("1.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — one exact real snapshot chain may traverse all three for-list
+    // element shapes while their shared body only reads the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 0.5 else 9.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 4.0 else x <= 1.0 do total := total + x; print(total) end",
+        expect: Expect::Stdout("15.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — the reverse three-shape path also propagates exact exits
+    // while the shared body only reads the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while if 'ALPHA' < 'BETA' then x <= 1.0 else x <= 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.5 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
+        expect: Expect::Stdout("9.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — another three-shape permutation propagates a finite-step
+    // exit through a single value into a bounded while element.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 4.5 else x <= 1.0 do total := total + x; print(total) end",
+        expect: Expect::Stdout("19.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — the reverse permutation propagates a bounded-while exit
+    // through a single value into a finite binary64 step element.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while if 'ALPHA' < 'BETA' then x <= 1.0 else x <= 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 4.0 else 0.0 do total := total + x; print(total) end",
+        expect: Expect::Stdout("16.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a fifth three-shape permutation propagates a single value
+    // through a bounded while element into a finite binary64 step.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 0.5 else 9.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 2.0 else x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 4.5 else 0.0 do total := total + x; print(total) end",
+        expect: Expect::Stdout("20.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — the sixth three-shape permutation propagates a finite-step
+    // exit through a bounded while element into a single value.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 4.0 else x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
+        expect: Expect::Stdout("20.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a real single-value element may pass its exact snapshot
+    // into a following finite binary64 step element while their shared body
+    // only reads the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.5 else 0.0 do total := total + x; print(total) end",
+        expect: Expect::Stdout("7.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a real single-value element may pass its exact snapshot
+    // into a following bounded real while element while their shared body
+    // only reads the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 0.5 else 9.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 2.0 else x <= 1.0 do total := total + x; print(total) end",
+        expect: Expect::Stdout("5.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — one bounded real while element may pass its exact
+    // terminating snapshot into another bounded real while element while
+    // their shared body only reads the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then x + 1.5 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 2.5 else x <= 1.5 do total := total + x; print(total) end",
+        expect: Expect::Stdout("6.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a bounded real while element may pass its exact terminating
+    // snapshot into a following single-value element while their shared body
+    // only reads the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
+        expect: Expect::Stdout("3.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a bounded while element may read its controlled variable in
+    // the body without writing it. Its exact terminating snapshot then seeds
+    // a following finite step element in the same for list.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real total; i := 0; total := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 2, if 'BETA' < 'ALPHA' then 9 else i + 1 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 5 else 0 do total := total + i; print(total) end",
+        expect: Expect::Stdout("12.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a finite step element may feed its exact exit into the
+    // initial expression of another finite step element while their shared
+    // body reads but does not write the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then 9 else i + 1 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 5 else 0 do total := total + i; print(total) end",
+        expect: Expect::Stdout("12.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a bounded while element may feed its exact terminating
+    // snapshot into a second bounded while element while their shared body
+    // reads but does not write the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real total; i := 0; total := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 2, if 'BETA' < 'ALPHA' then i + 2 else i + 1 while if 'ALPHA' < 'BETA' then i <= 5 else i <= 3 do total := total + i; print(total) end",
+        expect: Expect::Stdout("12.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a bounded while element may feed its exact terminating
+    // snapshot into a following single-value element while their shared body
+    // reads but does not write the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real total; i := 0; total := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 2, if 'BETA' < 'ALPHA' then 9 else i + 1 do total := total + i; print(total) end",
+        expect: Expect::Stdout("7.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a single-value element may feed its exact control snapshot
+    // into the initial expression of a following finite-step element.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9, if 'BETA' < 'ALPHA' then 9 else i + 1 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 4 else 0 do total := total + i; print(total) end",
+        expect: Expect::Stdout("10.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — an exact control recurrence remains analyzable when every
@@ -11477,6 +12168,496 @@ fn algol_signed_real_literal_output_runs_on_every_available_standard_backend() {
 }
 
 #[test]
+fn algol_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(pick())")
+        })
+        .expect("the ALGOL runtime-real-output program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_runtime_real_value_scalar_call_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("result := scale(1.125); output(result)")
+        })
+        .expect("the ALGOL value-scalar runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but value-scalar runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_runtime_real_scalar_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := pick(); output(x)")
+        })
+        .expect("the ALGOL runtime-real-scalar-output program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but runtime real scalar output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_copied_runtime_real_scalar_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("y := x; x := 1.0; output(y)")
+        })
+        .expect("the ALGOL copied-runtime-real-scalar program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but copied runtime real scalar output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("if flag then x := pick() else x := pick()")
+        })
+        .expect("the ALGOL conditional-runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_value_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := if flag then pick() else pick()")
+        })
+        .expect("the ALGOL conditional-value runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional-value runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_unary_plus_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := +pick(); output(+x)")
+        })
+        .expect("the ALGOL unary-plus runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but unary-plus runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_unary_minus_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := -pick(); output(-x)")
+        })
+        .expect("the ALGOL unary-minus runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but unary-minus runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_additive_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(10.0 - x + pick())")
+        })
+        .expect("the ALGOL additive runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but additive runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multiplicative_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(2.0 * x * pick())")
+        })
+        .expect("the ALGOL multiplicative runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multiplicative runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_division_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := 18.0 / pick(); output(x / 2.0)")
+        })
+        .expect("the ALGOL division runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but division runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_power_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := 2.0 ^ pick(); output(x ^ 2)")
+        })
+        .expect("the ALGOL power runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but power runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_standard_function_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := sqrt(pick()); output(abs(-x))")
+        })
+        .expect("the ALGOL standard-function runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but standard-function runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_array_element_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(values[i] * 2.0)")
+        })
+        .expect("the ALGOL array-element runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but array-element runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_value_formal_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("procedure show(x); value x; real x")
+        })
+        .expect("the ALGOL value-formal runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but value-formal runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_captured_value_formal_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("procedure nested; output(x * 2.0)")
+        })
+        .expect("the captured-value-formal runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but captured value-formal runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_captured_global_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real shared; procedure show; output(shared)")
+        })
+        .expect("the captured-global runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but captured-global runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_name_formal_procedure_result_runtime_real_output_runs_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("real procedure relay(x); real x; relay := x")
+                && program.src.contains("output(relay(pick()))")
+        })
+        .expect("the name-formal procedure-result program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but name-formal procedure-result output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_name_formal_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("procedure show(x); real x; output(x)")
+                && program.src.contains("show(pick())")
+        })
+        .expect("the name-formal runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but name-formal runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_forwarded_name_formal_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("procedure sink(y); real y; output(y)")
+                && program.src.contains("procedure relay(x); real x; sink(x)")
+        })
+        .expect("the forwarded name-formal runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but forwarded name-formal runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_assignable_name_formal_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real array a[1:1]")
+                && program.src.contains("relay(a[1])")
+        })
+        .expect("the assignable name-formal runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but assignable name-formal runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_conditional_real_literal_output_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -13514,6 +14695,31 @@ fn algol_tracked_step_bounds_run_on_every_available_standard_backend() {
 }
 
 #[test]
+fn algol_literal_string_selected_step_bounds_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := if 'ALPHA' < 'BETA' then 1 else 4 step")
+        })
+        .expect("the literal-string-selected step bounds must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected step bounds did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_static_statement_condition_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -13974,6 +15180,677 @@ fn algol_static_conditional_control_recurrences_run_on_every_available_standard_
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the static conditional control recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_predicate_control_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("if 'ALPHA' < 'BETA' then i := i * 2 else i := i + 3")
+        })
+        .expect("the literal-string-predicate control recurrences must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-predicate control recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_while_predicates_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("while if 'ALPHA' < 'BETA' then i <= 3 else i <= 1")
+        })
+        .expect("the literal-string-selected while predicates must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected while predicates did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_while_values_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while")
+        })
+        .expect("the literal-string-selected while values must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected while values did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_for_list_values_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := if 'ALPHA' < 'BETA' then 1 else 9,")
+        })
+        .expect("the literal-string-selected for-list values must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected for-list values did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_mixed_for_list_headers_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA'",
+                )
+        })
+        .expect("the literal-string-selected mixed for-list headers must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected mixed for-list headers did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_step_while_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "else i + 1 while i <= 4 do total := total + i; print(total)",
+                )
+        })
+        .expect("the literal-string-selected step/while for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected step/while for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_step_while_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "else x + 0.5 while x <= 3.0 do total := total + x; print(total)",
+                )
+        })
+        .expect("the literal-string-selected real step/while for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real step/while for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_while_step_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step",
+                )
+        })
+        .expect("the literal-string-selected real while/step for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real while/step for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_step_step_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then 2.0 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step",
+                )
+        })
+        .expect("the literal-string-selected real step/step for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real step/step for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_step_single_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then 2.0 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do",
+                )
+        })
+        .expect("the literal-string-selected real step/single for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real step/single for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_single_single_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then 0.5 else 9.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do",
+                )
+        })
+        .expect("the literal-string-selected real single/single for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real single/single for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_single_step_while_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then 0.5 else 9.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step",
+                )
+                && program.src.contains(
+                    "then 2.0 else 0.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while",
+                )
+        })
+        .expect("the literal-string-selected real single/step/while for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real single/step/while for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_while_step_single_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "else x + 1.0 while if 'ALPHA' < 'BETA' then x <= 1.0 else x <= 0.0,",
+                )
+                && program.src.contains(
+                    "until if 'ALPHA' < 'BETA' then 2.5 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do",
+                )
+        })
+        .expect("the literal-string-selected real while/step/single for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real while/step/single for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_step_single_while_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5,",
+                )
+                && program.src.contains(
+                    "else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 4.5 else x <= 1.0",
+                )
+        })
+        .expect("the literal-string-selected real step/single/while for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real step/single/while for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_while_single_step_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "else x + 1.0 while if 'ALPHA' < 'BETA' then x <= 1.0 else x <= 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5,",
+                )
+                && program.src.contains(
+                    "else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 4.0 else 0.0",
+                )
+        })
+        .expect("the literal-string-selected real while/single/step for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real while/single/step for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_single_while_step_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then 0.5 else 9.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while",
+                )
+                && program.src.contains(
+                    "then x <= 2.0 else x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step",
+                )
+                && program.src.contains(
+                    "until if 'ALPHA' < 'BETA' then 4.5 else 0.0 do total := total + x",
+                )
+        })
+        .expect("the literal-string-selected real single/while/step for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real single/while/step for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_step_while_single_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while",
+                )
+                && program.src.contains(
+                    "then x <= 4.0 else x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do",
+                )
+        })
+        .expect("the literal-string-selected real step/while/single for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real step/while/single for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_single_step_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then 1.0 else 9.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step",
+                )
+        })
+        .expect("the literal-string-selected real single/step for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real single/step for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_single_while_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then 0.5 else 9.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while",
+                )
+        })
+        .expect("the literal-string-selected real single/while for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real single/while for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_while_while_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then x + 1.5 else x + 0.5 while",
+                )
+        })
+        .expect("the literal-string-selected real while/while for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real while/while for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_while_single_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do",
+                )
+        })
+        .expect("the literal-string-selected real while/single for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real while/single for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_while_step_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "else i + 2 while i <= 2, if 'BETA' < 'ALPHA' then 9 else i + 1 step",
+                )
+        })
+        .expect("the literal-string-selected while/step for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected while/step for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_step_step_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then 2 else 0, if 'BETA' < 'ALPHA' then 9 else i + 1 step",
+                )
+        })
+        .expect("the literal-string-selected step/step for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected step/step for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_while_while_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then i + 2 else i + 1 while if 'ALPHA' < 'BETA' then i <= 5",
+                )
+        })
+        .expect("the literal-string-selected while/while for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected while/while for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_while_single_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "while i <= 2, if 'BETA' < 'ALPHA' then 9 else i + 1 do total",
+                )
+        })
+        .expect("the literal-string-selected while/single for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected while/single for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_single_step_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then 1 else 9, if 'BETA' < 'ALPHA' then 9 else i + 1 step",
+                )
+        })
+        .expect("the literal-string-selected single/step for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected single/step for list did not run"
             );
             continue;
         };
@@ -14660,6 +16537,645 @@ fn algol_stable_statement_recurrence_cycles_run_on_every_available_standard_back
 }
 
 #[test]
+fn algol_evolving_recurrence_cycle_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("choose := i < 2; if choose then delta := n")
+        })
+        .expect("the evolving-selector recurrence-cycle program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the evolving-selector recurrence cycle did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_recursive_recurrence_cycle_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("choose := not choose; if choose then delta := n")
+        })
+        .expect("the recursive-selector recurrence-cycle program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the recursive-selector recurrence cycle did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_self_recursive_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("choose := if flag then not choose else false")
+        })
+        .expect("the conditional self-recursive selector program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the conditional self-recursive selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_dynamic_all_branch_self_recursive_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("choose := if flag then not choose else choose")
+        })
+        .expect("the dynamic all-branch self-recursive selector program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the dynamic all-branch self-recursive selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_acyclic_conditional_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("choose := if i < 2 then true else false")
+        })
+        .expect("the acyclic conditional selector program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the acyclic conditional selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_exact_partial_self_recursive_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("flag := if i < 2 then true else false; choose := if flag then not choose else false")
+        })
+        .expect("the exact partial self-recursive selector program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the exact partial self-recursive selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_transitive_exact_partial_self_recursive_selectors_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := flag; choose := if gate then not choose else false",
+                )
+        })
+        .expect("the transitive exact partial self-recursive selector program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the transitive exact partial self-recursive selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_two_level_transitive_partial_self_recursive_selectors_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := flag; key := gate; choose := if key then not choose else false",
+                )
+        })
+        .expect("the two-level transitive partial self-recursive selector program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the two-level transitive partial self-recursive selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_acyclic_partial_self_recursive_selector_copy_chains_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "key := gate; last := key; choose := if last then not choose else false",
+                )
+        })
+        .expect("the acyclic partial self-recursive selector copy-chain program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the acyclic partial self-recursive selector copy chain did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_boolean_identity_partial_self_recursive_selector_copy_chains_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := flag and true; key := not not gate; choose := if key then not choose else false",
+                )
+        })
+        .expect("the boolean-identity partial self-recursive selector copy-chain program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the boolean-identity partial self-recursive selector copy chain did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_identity_partial_self_recursive_selector_copies_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := if other then flag and true else not not flag; choose := if gate then not choose else false",
+                )
+        })
+        .expect("the conditional-identity partial self-recursive selector-copy program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the conditional-identity partial self-recursive selector copy did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_projection_partial_self_recursive_selector_copies_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := if flag then true else false; choose := if gate then not choose else false",
+                )
+        })
+        .expect("the conditional-projection partial self-recursive selector-copy program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the conditional-projection partial self-recursive selector copy did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_complemented_projection_partial_self_recursive_selector_copies_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := if not flag then false else true; choose := if gate then not choose else false",
+                )
+        })
+        .expect("the complemented-projection partial self-recursive selector-copy program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the complemented-projection partial self-recursive selector copy did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_guarded_projection_partial_self_recursive_selector_copies_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := if flag then flag else false; choose := if gate then not choose else false",
+                )
+        })
+        .expect("the guarded-projection partial self-recursive selector-copy program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the guarded-projection partial self-recursive selector copy did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_boolean_projection_partial_self_recursive_selector_copies_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := flag and (false impl true); key := if gate then (false or true) eqv not false else true and false; choose := if key then not choose else false",
+                )
+        })
+        .expect("the literal-boolean projection partial self-recursive selector-copy program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-boolean projection partial self-recursive selector copy did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_integer_predicate_partial_self_recursive_selector_copies_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := flag and (1 < 2); choose := if gate then not choose else false",
+                )
+        })
+        .expect("the literal-integer-predicate partial self-recursive selector-copy program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-integer-predicate partial self-recursive selector copy did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_arithmetic_predicate_partial_self_recursive_selector_copies_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := flag and (1 + 2 < 4); choose := if gate then not choose else false",
+                )
+        })
+        .expect("the literal-arithmetic-predicate partial self-recursive selector-copy program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-arithmetic-predicate partial self-recursive selector copy did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_real_predicate_partial_self_recursive_selector_copies_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := flag and (1.5 + 0.5 < 3.0); choose := if gate then not choose else false",
+                )
+        })
+        .expect("the literal-real-predicate partial self-recursive selector-copy program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-real-predicate partial self-recursive selector copy did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_predicate_partial_self_recursive_selector_copies_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := flag and ('ALPHA' < 'BETA'); choose := if gate then not choose else false",
+                )
+        })
+        .expect("the literal-string-predicate partial self-recursive selector-copy program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-predicate partial self-recursive selector copy did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_predicate_statement_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("if 'ALPHA' < 'BETA' then delta := n else delta := n - 1")
+        })
+        .expect("the literal-string-predicate statement-selector program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-predicate statement selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_predicate_expression_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("delta := if 'ALPHA' < 'BETA' then n else n - 1")
+        })
+        .expect("the literal-string-predicate expression-selector program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-predicate expression selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_mutually_recursive_recurrence_cycle_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("choose := guard; guard := not choose; if choose then delta := n")
+        })
+        .expect("the mutually recursive selector recurrence-cycle program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the mutually recursive selector recurrence cycle did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_recursive_recurrence_cycle_selectors_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "choose := if guard then not choose else guard; guard := not choose",
+                )
+        })
+        .expect("the conditional recursive selector recurrence-cycle program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the conditional recursive selector recurrence cycle did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_statement_assigned_recursive_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "if guard then choose := not choose else choose := guard; guard := not choose",
+                )
+        })
+        .expect("the statement-assigned recursive selector program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the statement-assigned recursive selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_statement_control_recursive_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "if guard then choose := if flag then true else false else choose := if flag then false else true",
+                )
+        })
+        .expect("the statement-control recursive selector program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the statement-control recursive selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_idempotent_while_dependency_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -14835,6 +17351,32 @@ fn algol_static_transitive_selector_runs_on_every_available_standard_backend() {
 }
 
 #[test]
+fn algol_literal_string_predicate_transitive_dependency_selectors_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "limit := if 'ALPHA' < 'BETA' then limit else limit + 1 end; print(i + 0.25)",
+                )
+        })
+        .expect("the literal-string-predicate transitive dependency selector must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-predicate transitive dependency selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_stable_transitive_selector_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -14927,6 +17469,32 @@ fn algol_static_conditional_selector_assignment_runs_on_every_available_standard
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the static conditional selector assignment did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_predicate_preserving_selector_assignments_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "choose := if 'ALPHA' < 'BETA' then choose else false end; print(i + 0.25)",
+                )
+        })
+        .expect("the literal-string-predicate preserving selector assignment must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-predicate preserving selector assignment did not run"
             );
             continue;
         };

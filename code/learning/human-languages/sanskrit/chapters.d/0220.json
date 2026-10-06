@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Balance, Measuring rod, Stick, Staff, Archer's bow",
+  "label": "ch:sa-balance-measuring-rod-stick-staff-archer-s-bow",
+  "canDo": "I can say a balance, a measuring rod, a stick, a staff and an archer's bow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R220-second-pass-words-from-chapters-216-220",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say a balance, a measuring rod, a stick, a staff and an archer's bow.",
+    "assesses": [
+      "SA-LEX-C220-THG220-03",
+      "SA-LEX-C220-THG220-04",
+      "SA-LEX-C220-THG220-05"
+    ]
+  }
+}

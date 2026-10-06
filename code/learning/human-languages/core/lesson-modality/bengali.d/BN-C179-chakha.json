@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C179-chakha",
+    "language": "bengali",
+    "chapter": 179,
+    "sequence": 10510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ca08799c5f0867f"
+  },
+  "findings": []
+}

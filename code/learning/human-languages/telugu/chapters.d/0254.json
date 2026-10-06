@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "State, Area, Direction, East, West",
+  "label": "ch:te-state-area-direction-east-west",
+  "canDo": "I can say a state, an area, a direction, east and west.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C254-padamara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say a state, an area, a direction, east and west.",
+    "assesses": [
+      "TE-LEX-C254-STHALAM254-03",
+      "TE-LEX-C254-STHALAM254-04",
+      "TE-LEX-C254-STHALAM254-05"
+    ]
+  }
+}

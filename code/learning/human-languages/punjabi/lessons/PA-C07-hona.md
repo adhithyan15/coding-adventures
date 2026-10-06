@@ -18,12 +18,12 @@ duration:
 requires:
   knowledge: [PA-SCRIPT-RECOG-HORA-01]
 introduces:
-  knowledge: [PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS]
+  knowledge: [PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS, PA-SCRIPT-RECOG-HORA-01]
+  knowledge: [PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-SCRIPT-RECOG-HORA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,31 +67,17 @@ The root is Indo-European, \**bʰuH-*, “grow, become.” English keeps it in
 *futūrus*, which English borrowed as **future**. Greek held it as *phúsis*
 “nature,” which English borrowed as **physics**.
 
-## Grammar Lens: one verb, two roots
-<!-- hl-knowledge: introduces=[PA-GRAMMAR-BE-TWO-ROOTS]; assesses=[] -->
-
-Chapter 2 traced **ਹੈ** *hai* to a different Sanskrit verb altogether —
-*asti*, “is,” the root behind English **is**, Latin *est*, German *ist*. So
-Punjabi's “to be” is **two ancient verbs braided into one**: the name and the
-stem come from *bhū-*, the everyday present tense comes from *as-*.
-
-English braids the very same two, at the very same seam, and nobody notices:
-*am, is, are* belong to the *as-* verb; *be, being, been* belong to the
-*bʰuH-* verb.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU] -->
 
 - [YOU SAY: **hoṇā** — to be]
 - [YOU STRIP: **hoṇā** minus **-ṇā** leaves the stem **ho-**]
 - [YOU CONNECT: **hoṇā** ← *bhavati* → English **be**]
-- [YOU CONNECT: **hai** ← *asti* → English **is**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS, PA-SCRIPT-RECOG-HORA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-SCRIPT-RECOG-HORA-01] -->
 
 [PAUSE 3s] Which ending names a Punjabi verb, and what is left of *hoṇā* once
-you take it off? (**-ṇā**; the stem **ho-**.) And why do *hoṇā* and *hai* not
-resemble each other at all? (They are two different ancient verbs braided into
-one — the *bhū-* verb and the *as-* verb, exactly as English braids *be* with
-*is*.)
+you take it off? (**-ṇā**; the stem **ho-**.) Which English word shares its
+root? (**be**, from the same *bhū-* verb as *bhavati*.) Next: why *hai* looks
+nothing like it.

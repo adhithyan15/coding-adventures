@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:3b0914650ef61693",
+  "lessonIds": [
+    "LA-C205-vulnus",
+    "LA-C205-cicatrix",
+    "LA-C205-gravedo",
+    "LA-C205-medicamentum",
+    "LA-C205-unguentum",
+    "LA-R205-first-pass-words-from-chapters-197-200",
+    "LA-R205-second-pass-words-from-chapters-201-205"
+  ],
+  "tex": "latin/book/chapters/ch205-wound-scar-head-cold-drug-ointment.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:96acc08d251c6c43",
+  "lessonIds": [
+    "PT-C185-alegre",
+    "PT-C185-timido-timida",
+    "PT-C185-corajoso-corajosa",
+    "PT-C185-medroso-medrosa",
+    "PT-C185-curioso-curiosa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch185.txt",
+  "json": "portuguese/narration/ch185.json",
+  "textHash": "fnv1a64:7bc31b06b77fed42",
+  "jsonHash": "fnv1a64:183709848d3f1667",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C247-socer",
+  "pathSegment": "LA-PATH-247-RES247",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-247-RES247",
+      "order": 1
+    }
+  ]
+}

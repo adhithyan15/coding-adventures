@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C221-pithika",
+    "language": "sanskrit",
+    "chapter": 221,
+    "sequence": 12950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:316d48480685b457"
+  },
+  "findings": []
+}

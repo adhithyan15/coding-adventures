@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C264-passim",
+    "language": "latin",
+    "chapter": 264,
+    "sequence": 14300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9be3a055241e8d9"
+  },
+  "findings": []
+}

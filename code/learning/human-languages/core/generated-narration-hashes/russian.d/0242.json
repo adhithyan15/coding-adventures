@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:bfa7854ae4f3c0b3",
+  "lessonIds": [
+    "RU-C242-biblioteka",
+    "RU-C242-universitet",
+    "RU-C242-kafe",
+    "RU-C242-zoopark",
+    "RU-C242-tsirk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch242.txt",
+  "json": "russian/narration/ch242.json",
+  "textHash": "fnv1a64:cd78240a1fcabece",
+  "jsonHash": "fnv1a64:3b219495f0bf0206",
+  "findings": []
+}

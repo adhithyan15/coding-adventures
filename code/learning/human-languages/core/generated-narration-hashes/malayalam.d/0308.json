@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:5e7015016194c0a2",
+  "lessonIds": [
+    "ML-C308-atikkuka",
+    "ML-C308-cavittuka",
+    "ML-C308-sekharikkuka",
+    "ML-C308-photto-etukkuka",
+    "ML-C308-taippu-ceyyuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch308.txt",
+  "json": "malayalam/narration/ch308.json",
+  "textHash": "fnv1a64:4a729e3b577d6a55",
+  "jsonHash": "fnv1a64:d9a20b033dc90f8f",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C235-ettu",
+  "pathSegment": "KA-PATH-235-KRIYE235",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-235-KRIYE235",
+      "order": 3
+    }
+  ]
+}

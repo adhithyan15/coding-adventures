@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:c12d299e5630e561",
+  "lessonIds": [
+    "HI-C226-sukhna",
+    "HI-C226-bigarna",
+    "HI-C226-banana",
+    "HI-C226-banna",
+    "HI-C226-tutna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch226.txt",
+  "json": "hindi/narration/ch226.json",
+  "textHash": "fnv1a64:588c3e090b36146b",
+  "jsonHash": "fnv1a64:d0b3cc416a01428f",
+  "findings": []
+}

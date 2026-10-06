@@ -1,0 +1,11 @@
+{
+  "id": "FR-C196-electricien",
+  "pathSegment": "FR-PATH-196-CHOSES196",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-196-CHOSES196",
+      "order": 2
+    }
+  ]
+}

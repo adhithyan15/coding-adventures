@@ -26,12 +26,13 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.63.0";
+pub const VERSION: &str = "0.67.0";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
-    DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
+    ChartTextAnchor, ChartTextBaseline, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
+    LayoutedChartDiagram, LayoutedChartItem,
     EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
     LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
@@ -43,7 +44,11 @@ use diagram_ir::{
     GanttTaskTags, SequenceProperty, SwimlaneEdgeKind, TextAlign as GeoTextAlign, TreeViewNodeKind,
     RailroadElementKind, StructuralNodeKind,
 };
-use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
+use layout_ir::{
+    Color, Content, ExtValue, FontSpec, FontStretch, PositionedNode, TextAlign, TextContent,
+    TextDecoration, TextDecorationLines, TextDecorationStyle, TextUnderlinePosition,
+};
+use layout_effects::{EffectColor, EffectFilter, EffectStyle};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::{
     GlyphPosition, PaintBase, PaintEllipse, PaintGlyphRun, PaintGroup, PaintInstruction, PaintPath,
@@ -103,49 +108,115 @@ where
     M: FontMetrics<Handle = S::Handle>,
     R: FontResolver<Handle = S::Handle>,
 {
-    const FILLS: &[&str] = &["#dbeafe", "#dcfce7", "#fef3c7", "#fee2e2", "#e0e7ff"];
     let mut instructions = Vec::new();
     let mut text_children = Vec::new();
     let text_color = Color { r: 15, g: 23, b: 42, a: 255 };
 
     if let Some(title) = &diagram.title {
-        text_children.push(text_node(title, 8.0, 6.0, diagram.width - 16.0, 30.0, options.title_font.clone(), text_color));
+        let mut title_font = options.title_font.clone();
+        title_font.size = diagram.config.title_font_size.unwrap_or(title_font.size);
+        let title_color = diagram.config.title_color.as_deref().map(css_to_color).unwrap_or(text_color);
+        text_children.push(text_node(title, 8.0, 6.0, diagram.width - 16.0, 30.0, title_font, title_color));
     }
     for node in &diagram.nodes {
         if node.width <= 0.0 || node.height <= 0.0 {
             continue;
         }
-        let color_index = node.class_selector.as_ref().map_or(node.depth, |class| {
-            class.bytes().fold(node.depth, |hash, byte| hash.wrapping_mul(31).wrapping_add(byte as usize))
-        });
+        if node.depth == 0 && node.has_children {
+            continue;
+        }
+        let palette_index = node.palette_index;
+        let configured_fill = if node.has_children { &diagram.config.section_fill_color } else { &diagram.config.leaf_fill_color };
+        let configured_stroke = if node.has_children { &diagram.config.section_stroke_color } else { &diagram.config.leaf_stroke_color };
+        let configured_stroke_width = if node.has_children { diagram.config.section_stroke_width } else { diagram.config.leaf_stroke_width };
+        let current_color = treemap_current_color(node, diagram, text_color);
+        let resolve_current_color = |value: String| {
+            if value.eq_ignore_ascii_case("currentcolor") { current_color.clone() } else { value }
+        };
+        let fill = normalize_css_paint(resolve_current_color(node.style.as_ref().and_then(|style| style.node.fill.clone())
+            .or_else(|| configured_fill.clone())
+            .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.fills[index].clone()))));
+        let stroke = normalize_css_paint(resolve_current_color(node.style.as_ref().and_then(|style| style.node.stroke.clone())
+            .or_else(|| configured_stroke.clone())
+            .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.strokes[index].clone()))));
+        let opacity = node.style.as_ref().and_then(|style| style.opacity).unwrap_or(1.0);
+        let fill = if node.style.as_ref().is_some_and(|style| style.opacity.is_some() || style.fill_opacity.is_some()) {
+            with_opacity(&fill, node.style.as_ref().and_then(|style| style.fill_opacity).unwrap_or(1.0) * opacity)
+        } else { fill };
+        let stroke = if node.style.as_ref().is_some_and(|style| style.opacity.is_some() || style.stroke_opacity.is_some()) {
+            with_opacity(&stroke, node.style.as_ref().and_then(|style| style.stroke_opacity).unwrap_or(1.0) * opacity)
+        } else { stroke };
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
             x: node.x,
             y: node.y,
             width: node.width,
             height: node.height,
-            fill: Some(FILLS[color_index % FILLS.len()].into()),
-            stroke: Some("#475569".into()),
-            stroke_width: Some(1.0),
-            corner_radius: Some(3.0),
-            stroke_dash: None,
-            stroke_dash_offset: None,
+            fill: Some(fill),
+            stroke: Some(stroke),
+            stroke_width: Some(node.style.as_ref().and_then(|style| style.node.stroke_width)
+                .or(configured_stroke_width).unwrap_or(diagram.config.border_width)),
+            corner_radius: Some(treemap_corner_radius(node)),
+            stroke_dash: node.style.as_ref().and_then(|style| style.node.stroke_dash.clone()),
+            stroke_dash_offset: node.style.as_ref().and_then(|style| style.stroke_dash_offset),
         }));
         if node.width >= 44.0 && node.height >= 22.0 {
-            let label = if node.height >= 42.0 {
-                format!("{}\n{}", node.label, format_treemap_value(node.value))
-            } else {
-                node.label.clone()
-            };
-            text_children.push(text_node(
-                &label,
+            let mut label_font = options.label_font.clone();
+            label_font.size = node.style.as_ref().and_then(|style| style.node.font_size).unwrap_or(diagram.config.label_font_size);
+            apply_treemap_font_size(&mut label_font, node.style.as_ref());
+            if let Some(style) = &node.style {
+                label_font.weight = style.node.font_weight.unwrap_or(label_font.weight);
+                label_font.italic = style.node.font_italic.unwrap_or(label_font.italic);
+                if let Some(family) = &style.node.font_family { label_font.family.clone_from(family); }
+            }
+            apply_treemap_line_height(&mut label_font, node.style.as_ref());
+            let palette_text_color = || palette_index
+                    .map(|index| css_to_color(&diagram.config.theme.labels[index]))
+                    .unwrap_or(text_color);
+            let label_text_color = node.style.as_ref().and_then(|style| style.node.text_color.as_deref())
+                .or(diagram.config.label_color.as_deref()).map(css_to_color).unwrap_or_else(palette_text_color);
+            let label_text_color = color_with_opacity(label_text_color, opacity);
+            let label_height = label_font.size * label_font.line_height;
+            text_children.push(treemap_text_node(
+                &node.label,
                 node.x + 6.0,
                 node.y + 4.0,
-                (node.width - 12.0).max(0.0),
-                node.height.min(42.0),
-                options.label_font.clone(),
-                text_color,
+                (node.width * if node.has_children { 0.68 } else { 1.0 } - 12.0).max(0.0),
+                label_height,
+                label_font,
+                label_text_color,
+                node.style.as_ref(),
             ));
+            if diagram.config.show_values && node.height >= 42.0 {
+                let mut value_font = options.label_font.clone();
+                value_font.size = node.style.as_ref().and_then(|style| style.node.font_size).unwrap_or(diagram.config.value_font_size);
+                apply_treemap_font_size(&mut value_font, node.style.as_ref());
+                if let Some(style) = &node.style {
+                    value_font.weight = style.node.font_weight.unwrap_or(value_font.weight);
+                    value_font.italic = style.node.font_italic.unwrap_or(value_font.italic);
+                    if let Some(family) = &style.node.font_family { value_font.family.clone_from(family); }
+                }
+                apply_treemap_line_height(&mut value_font, node.style.as_ref());
+                let (value_x, value_y, value_width) = if node.has_children {
+                    (node.x + node.width * 0.68, node.y + 4.0, node.width * 0.32 - 6.0)
+                } else {
+                    (node.x + 6.0, node.y + 8.0 + diagram.config.label_font_size * 1.2, node.width - 12.0)
+                };
+                let value_text_color = node.style.as_ref().and_then(|style| style.node.text_color.as_deref())
+                    .or(diagram.config.value_color.as_deref()).map(css_to_color).unwrap_or_else(palette_text_color);
+                let value_text_color = color_with_opacity(value_text_color, opacity);
+                let value_height = value_font.size * value_font.line_height;
+                text_children.push(treemap_text_node(
+                    &format_treemap_value(node.value, &diagram.config.value_format),
+                    value_x,
+                    value_y,
+                    value_width.max(0.0),
+                    value_height,
+                    value_font,
+                    value_text_color,
+                    node.style.as_ref(),
+                ));
+            }
         }
     }
     let text_root = PositionedNode {
@@ -176,6 +247,8 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    metadata.insert("treemap.useMaxWidth".into(), diagram.config.use_max_width.to_string());
+    metadata.insert("treemap.valueFormat".into(), diagram.config.value_format.clone());
     PaintScene {
         width: diagram.width,
         height: diagram.height,
@@ -186,8 +259,460 @@ where
     }
 }
 
-fn format_treemap_value(value: f64) -> String {
-    if value.fract() == 0.0 { format!("{value:.0}") } else { format!("{value:.2}") }
+fn format_treemap_value(value: f64, format: &str) -> String {
+    let spec = parse_treemap_number_format(format).unwrap_or_else(|| parse_treemap_number_format(",").unwrap());
+    let magnitude = value.abs();
+    let mut rendered = match spec.kind {
+        Some('b') => format!("{:b}", magnitude.round() as i128),
+        Some('d') => format!("{magnitude:.0}"),
+        Some('e' | 'E') => {
+            let precision = spec.precision.unwrap_or(6);
+            let result = format!("{magnitude:.precision$e}");
+            if spec.kind == Some('E') { result.to_ascii_uppercase() } else { result }
+        }
+        Some('f' | 'F') => format!("{magnitude:.precision$}", precision = spec.precision.unwrap_or(6)),
+        Some('g' | 'G' | 'r') => format_significant(magnitude, spec.precision.unwrap_or(6)),
+        Some('o') => format!("{:o}", magnitude.round() as i128),
+        Some('p') => format_significant(magnitude * 100.0, spec.precision.unwrap_or(6)) + "%",
+        Some('%') => format!("{:.precision$}%", magnitude * 100.0, precision = spec.precision.unwrap_or(6)),
+        Some('s') => format_si(magnitude, spec.precision.unwrap_or(6)),
+        Some('x') => format!("{:x}", magnitude.round() as i128),
+        Some('X') => format!("{:X}", magnitude.round() as i128),
+        _ if spec.precision.is_some() => format!("{magnitude:.precision$}", precision = spec.precision.unwrap_or(0)),
+        _ if magnitude.fract() == 0.0 => format!("{magnitude:.0}"),
+        _ => magnitude.to_string(),
+    };
+    if spec.trim { rendered = trim_decimal_zeroes(rendered); }
+    if spec.grouped { rendered = group_decimal_thousands(&rendered); }
+    let mut prefix = match (value.is_sign_negative(), spec.sign) {
+        (true, '(') => "(".into(),
+        (true, _) => "-".into(),
+        (false, '+') => "+".into(),
+        (false, ' ') => " ".into(),
+        _ => String::new(),
+    };
+    match spec.symbol {
+        Some('$') => prefix.push('$'),
+        Some('#') if matches!(spec.kind, Some('b')) => prefix.push_str("0b"),
+        Some('#') if matches!(spec.kind, Some('o')) => prefix.push_str("0o"),
+        Some('#') if matches!(spec.kind, Some('x')) => prefix.push_str("0x"),
+        Some('#') if matches!(spec.kind, Some('X')) => prefix.push_str("0X"),
+        _ => {}
+    }
+    let suffix = if value.is_sign_negative() && spec.sign == '(' { ")" } else { "" };
+    align_treemap_number(prefix, rendered, suffix, &spec)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn treemap_text_node(
+    value: &str,
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    font: FontSpec,
+    color: Color,
+    style: Option<&diagram_ir::TreemapStyle>,
+) -> PositionedNode {
+    let mut font = font;
+    font.stretch = match style.and_then(|style| style.font_stretch) {
+        Some(diagram_ir::TreemapFontStretch::UltraCondensed) => FontStretch::UltraCondensed,
+        Some(diagram_ir::TreemapFontStretch::ExtraCondensed) => FontStretch::ExtraCondensed,
+        Some(diagram_ir::TreemapFontStretch::Condensed) => FontStretch::Condensed,
+        Some(diagram_ir::TreemapFontStretch::SemiCondensed) => FontStretch::SemiCondensed,
+        Some(diagram_ir::TreemapFontStretch::SemiExpanded) => FontStretch::SemiExpanded,
+        Some(diagram_ir::TreemapFontStretch::Expanded) => FontStretch::Expanded,
+        Some(diagram_ir::TreemapFontStretch::ExtraExpanded) => FontStretch::ExtraExpanded,
+        Some(diagram_ir::TreemapFontStretch::UltraExpanded) => FontStretch::UltraExpanded,
+        Some(diagram_ir::TreemapFontStretch::Percentage(value)) => font_stretch_from_percentage(value),
+        Some(diagram_ir::TreemapFontStretch::Normal) | None => FontStretch::Normal,
+    };
+    let text_indent = match style.and_then(|style| style.text_indent) {
+        Some(diagram_ir::TreemapTextIndent::Pixels(value)) => value,
+        Some(diagram_ir::TreemapTextIndent::Factor(value)) => width * value,
+        None => 0.0,
+    };
+    let decoration_thickness = style.and_then(|style| style.text_decoration_thickness).and_then(|thickness| match thickness {
+        diagram_ir::TreemapTextDecorationThickness::Pixels(value) => Some(value),
+        diagram_ir::TreemapTextDecorationThickness::Factor(value) => Some(font.size * value),
+        diagram_ir::TreemapTextDecorationThickness::Auto | diagram_ir::TreemapTextDecorationThickness::FromFont => None,
+    });
+    let underline_offset = style.and_then(|style| style.text_underline_offset).and_then(|offset| match offset {
+        diagram_ir::TreemapTextUnderlineOffset::Pixels(value) => Some(value),
+        diagram_ir::TreemapTextUnderlineOffset::Factor(value) => Some(font.size * value),
+        diagram_ir::TreemapTextUnderlineOffset::Auto => None,
+    });
+    let underline_position = match style.and_then(|style| style.text_underline_position) {
+        Some(diagram_ir::TreemapTextUnderlinePosition::FromFont) => TextUnderlinePosition::FromFont,
+        Some(diagram_ir::TreemapTextUnderlinePosition::Under) => TextUnderlinePosition::Under,
+        Some(diagram_ir::TreemapTextUnderlinePosition::Auto) | None => TextUnderlinePosition::Auto,
+    };
+    let white_space = style.and_then(|style| style.white_space);
+    let whitespace_value = match white_space {
+        None | Some(diagram_ir::TreemapWhiteSpace::Normal | diagram_ir::TreemapWhiteSpace::NoWrap) =>
+            value.split_whitespace().collect::<Vec<_>>().join(" "),
+        Some(diagram_ir::TreemapWhiteSpace::PreLine) => value.lines()
+            .map(|line| line.split_whitespace().collect::<Vec<_>>().join(" "))
+            .collect::<Vec<_>>().join("\n"),
+        Some(diagram_ir::TreemapWhiteSpace::PreserveSpaces) => value.chars()
+            .map(|character| if matches!(character, '\t' | '\r' | '\n') { ' ' } else { character })
+            .collect(),
+        Some(diagram_ir::TreemapWhiteSpace::Pre | diagram_ir::TreemapWhiteSpace::PreWrap
+            | diagram_ir::TreemapWhiteSpace::BreakSpaces) => {
+            let tab = " ".repeat(style.and_then(|style| style.tab_size).unwrap_or(8) as usize);
+            value.replace('\t', &tab)
+        }
+    };
+    let value = match style.and_then(|style| style.text_transform) {
+        Some(diagram_ir::TreemapTextTransform::Uppercase) => whitespace_value.to_uppercase(),
+        Some(diagram_ir::TreemapTextTransform::Lowercase) => whitespace_value.to_lowercase(),
+        Some(diagram_ir::TreemapTextTransform::Capitalize) => capitalize_words(&whitespace_value),
+        Some(diagram_ir::TreemapTextTransform::FullWidth) => whitespace_value.chars().map(|character| match character {
+            ' ' => '\u{3000}',
+            '!'..='~' => char::from_u32(character as u32 + 0xfee0).expect("ASCII full-width mapping is valid"),
+            _ => character,
+        }).collect(),
+        Some(diagram_ir::TreemapTextTransform::FullSizeKana) => full_size_kana(&whitespace_value),
+        _ => whitespace_value,
+    };
+    let font_size = font.size;
+    let mut node = text_node(&value, x, y, width, height, font, color);
+    if let Some(Content::Text(content)) = &mut node.content {
+        content.text_align = match style.and_then(|style| style.text_align) {
+            Some(diagram_ir::TreemapTextAlign::Start) => TextAlign::Start,
+            Some(diagram_ir::TreemapTextAlign::End) => TextAlign::End,
+            Some(diagram_ir::TreemapTextAlign::Justify) => TextAlign::Start,
+            _ => TextAlign::Center,
+        };
+        content.wrap = !matches!(style.and_then(|style| style.white_space),
+            Some(diagram_ir::TreemapWhiteSpace::NoWrap | diagram_ir::TreemapWhiteSpace::Pre));
+        content.decoration = style.and_then(|style| style.text_decoration).and_then(|decoration| {
+            let mut lines = TextDecorationLines::NONE;
+            if decoration.underline { lines = lines.union(TextDecorationLines::UNDERLINE); }
+            if decoration.overline { lines = lines.union(TextDecorationLines::OVERLINE); }
+            if decoration.line_through { lines = lines.union(TextDecorationLines::LINE_THROUGH); }
+            let decoration_color = style.and_then(|style| style.text_decoration_color.as_ref()).map(|authored| match authored {
+                diagram_ir::TreemapTextDecorationColor::CurrentColor => color,
+                diagram_ir::TreemapTextDecorationColor::Color(value) => color_with_opacity(
+                    css_to_color(value), style.and_then(|style| style.opacity).unwrap_or(1.0),
+                ),
+            });
+            let decoration_style = match style.and_then(|style| style.text_decoration_style) {
+                Some(diagram_ir::TreemapTextDecorationStyle::Double) => TextDecorationStyle::Double,
+                Some(diagram_ir::TreemapTextDecorationStyle::Dotted) => TextDecorationStyle::Dotted,
+                Some(diagram_ir::TreemapTextDecorationStyle::Dashed) => TextDecorationStyle::Dashed,
+                Some(diagram_ir::TreemapTextDecorationStyle::Wavy) => TextDecorationStyle::Wavy,
+                _ => TextDecorationStyle::Solid,
+            };
+            (lines != TextDecorationLines::NONE).then_some(TextDecoration {
+                lines, style: decoration_style, color: decoration_color,
+                thickness: decoration_thickness,
+                underline_offset,
+                underline_position,
+            })
+        });
+    }
+    if matches!(white_space, Some(diagram_ir::TreemapWhiteSpace::BreakSpaces)) {
+        node.ext.insert("text.break-spaces".into(), ExtValue::Bool(true));
+    }
+    if matches!(white_space, Some(diagram_ir::TreemapWhiteSpace::PreserveSpaces)) {
+        node.ext.insert("text.preserve-spaces".into(), ExtValue::Bool(true));
+    }
+    if text_indent != 0.0 {
+        node.ext.insert("text.indent".into(), ExtValue::Float(text_indent));
+    }
+    if style.is_some_and(|style| style.text_indent_hanging) {
+        node.ext.insert("text.indent-hanging".into(), ExtValue::Bool(true));
+    }
+    if style.is_some_and(|style| style.text_indent_each_line) {
+        node.ext.insert("text.indent-each-line".into(), ExtValue::Bool(true));
+    }
+    if let Some(spacing) = style.and_then(|style| style.letter_spacing) {
+        let spacing = match spacing {
+            diagram_ir::TreemapLetterSpacing::Normal => 0.0,
+            diagram_ir::TreemapLetterSpacing::Pixels(value) => value,
+            diagram_ir::TreemapLetterSpacing::Factor(value) => value * font_size,
+        };
+        node.ext.insert("text.letter-spacing".into(), ExtValue::Float(spacing));
+    }
+    if let Some(spacing) = style.and_then(|style| style.word_spacing) {
+        let spacing = match spacing {
+            diagram_ir::TreemapWordSpacing::Normal => 0.0,
+            diagram_ir::TreemapWordSpacing::Pixels(value) => value,
+            diagram_ir::TreemapWordSpacing::Factor(value) => value * font_size,
+        };
+        node.ext.insert("text.word-spacing".into(), ExtValue::Float(spacing));
+    }
+    if let Some(align) = style.and_then(|style| style.text_align_last) {
+        let align = match align {
+            diagram_ir::TreemapTextAlignLast::Auto => "auto",
+            diagram_ir::TreemapTextAlignLast::Start => "start",
+            diagram_ir::TreemapTextAlignLast::Center => "center",
+            diagram_ir::TreemapTextAlignLast::End => "end",
+            diagram_ir::TreemapTextAlignLast::Justify => "justify",
+        };
+        node.ext.insert("text.align-last".into(), ExtValue::Str(align.into()));
+    }
+    if let Some(justify) = style.and_then(|style| style.text_justify) {
+        let justify = match justify {
+            diagram_ir::TreemapTextJustify::Auto => "auto",
+            diagram_ir::TreemapTextJustify::None => "none",
+            diagram_ir::TreemapTextJustify::InterWord => "inter-word",
+            diagram_ir::TreemapTextJustify::InterCharacter => "inter-character",
+        };
+        node.ext.insert("text.justify-mode".into(), ExtValue::Str(justify.into()));
+    }
+    if let Some(wrap) = style.and_then(|style| style.overflow_wrap) {
+        let wrap = match wrap {
+            diagram_ir::TreemapOverflowWrap::Normal => "normal",
+            diagram_ir::TreemapOverflowWrap::BreakWord => "break-word",
+            diagram_ir::TreemapOverflowWrap::Anywhere => "anywhere",
+        };
+        node.ext.insert("text.overflow-wrap".into(), ExtValue::Str(wrap.into()));
+    }
+    if let Some(word_break) = style.and_then(|style| style.word_break) {
+        let word_break = match word_break {
+            diagram_ir::TreemapWordBreak::Normal => "normal",
+            diagram_ir::TreemapWordBreak::BreakAll => "break-all",
+            diagram_ir::TreemapWordBreak::KeepAll => "keep-all",
+        };
+        node.ext.insert("text.word-break".into(), ExtValue::Str(word_break.into()));
+    }
+    if let Some(line_break) = style.and_then(|style| style.line_break) {
+        let line_break = match line_break {
+            diagram_ir::TreemapLineBreak::Auto => "auto",
+            diagram_ir::TreemapLineBreak::Loose => "loose",
+            diagram_ir::TreemapLineBreak::Normal => "normal",
+            diagram_ir::TreemapLineBreak::Strict => "strict",
+            diagram_ir::TreemapLineBreak::Anywhere => "anywhere",
+        };
+        node.ext.insert("text.line-break".into(), ExtValue::Str(line_break.into()));
+    }
+    if let Some(hyphens) = style.and_then(|style| style.hyphens) {
+        let hyphens = match hyphens {
+            diagram_ir::TreemapHyphens::None => "none",
+            diagram_ir::TreemapHyphens::Manual => "manual",
+        };
+        node.ext.insert("text.hyphens".into(), ExtValue::Str(hyphens.into()));
+    }
+    if let Some(character) = style.and_then(|style| style.hyphenate_character.as_ref()) {
+        let character = match character {
+            diagram_ir::TreemapHyphenateCharacter::Auto => "-",
+            diagram_ir::TreemapHyphenateCharacter::Character(value) => value,
+        };
+        node.ext.insert("text.hyphenate-character".into(), ExtValue::Str(character.into()));
+    }
+    if let Some(text_overflow) = style.and_then(|style| style.text_overflow) {
+        let text_overflow = match text_overflow {
+            diagram_ir::TreemapTextOverflow::Clip => "clip",
+            diagram_ir::TreemapTextOverflow::Ellipsis => "ellipsis",
+        };
+        node.ext.insert("text.overflow".into(), ExtValue::Str(text_overflow.into()));
+    }
+    if let Some(text_wrap_mode) = style.and_then(|style| style.text_wrap_mode) {
+        let text_wrap_mode = match text_wrap_mode {
+            diagram_ir::TreemapTextWrapMode::Wrap => "wrap",
+            diagram_ir::TreemapTextWrapMode::NoWrap => "nowrap",
+        };
+        node.ext.insert("text.wrap-mode".into(), ExtValue::Str(text_wrap_mode.into()));
+    }
+    if let Some(text_wrap_style) = style.and_then(|style| style.text_wrap_style) {
+        let text_wrap_style = match text_wrap_style {
+            diagram_ir::TreemapTextWrapStyle::Auto => "auto",
+            diagram_ir::TreemapTextWrapStyle::Balance => "balance",
+            diagram_ir::TreemapTextWrapStyle::Pretty => "pretty",
+            diagram_ir::TreemapTextWrapStyle::Stable => "stable",
+        };
+        node.ext.insert("text.wrap-style".into(), ExtValue::Str(text_wrap_style.into()));
+    }
+    if matches!(style.and_then(|style| style.text_align), Some(diagram_ir::TreemapTextAlign::Justify)) {
+        node.ext.insert("text.justify".into(), ExtValue::Bool(true));
+    }
+    if let Some(direction) = style.and_then(|style| style.direction) {
+        let value = match direction {
+            diagram_ir::TreemapTextDirection::LeftToRight => "ltr",
+            diagram_ir::TreemapTextDirection::RightToLeft => "rtl",
+        };
+        node.ext.insert("html".into(), ExtValue::Map(HashMap::from([
+            ("dir".into(), ExtValue::Str(value.into())),
+        ])));
+    }
+    if let Some(diagram_ir::TreemapTextShadow::Shadows(shadows)) =
+        style.and_then(|style| style.text_shadow.as_ref())
+    {
+        let opacity = style.and_then(|style| style.opacity).unwrap_or(1.0);
+        let effects = EffectStyle {
+            filters: shadows.iter().map(|shadow| {
+                let shadow_color = match &shadow.color {
+                    diagram_ir::TreemapTextShadowColor::CurrentColor => color,
+                    diagram_ir::TreemapTextShadowColor::Color(value) =>
+                        color_with_opacity(css_to_color(value), opacity),
+                };
+                EffectFilter::DropShadow {
+                    dx: shadow.offset_x,
+                    dy: shadow.offset_y,
+                    blur: shadow.blur_radius,
+                    color: EffectColor {
+                        r: shadow_color.r, g: shadow_color.g, b: shadow_color.b, a: shadow_color.a,
+                    },
+                }
+            }).collect(),
+            ..EffectStyle::default()
+        };
+        node.ext.insert("effects".into(), effects.to_ext());
+    }
+    node
+}
+
+fn font_stretch_from_percentage(value: f64) -> FontStretch {
+    match value {
+        value if value <= 56.25 => FontStretch::UltraCondensed,
+        value if value <= 68.75 => FontStretch::ExtraCondensed,
+        value if value <= 81.25 => FontStretch::Condensed,
+        value if value <= 93.75 => FontStretch::SemiCondensed,
+        value if value <= 106.25 => FontStretch::Normal,
+        value if value <= 118.75 => FontStretch::SemiExpanded,
+        value if value <= 137.5 => FontStretch::Expanded,
+        value if value <= 175.0 => FontStretch::ExtraExpanded,
+        _ => FontStretch::UltraExpanded,
+    }
+}
+
+fn apply_treemap_line_height(font: &mut FontSpec, style: Option<&diagram_ir::TreemapStyle>) {
+    font.line_height = match style.and_then(|style| style.line_height) {
+        Some(diagram_ir::TreemapLineHeight::Factor(value)) => value,
+        Some(diagram_ir::TreemapLineHeight::Pixels(value)) => value / font.size.max(1.0),
+        None => font.line_height,
+    };
+}
+
+fn apply_treemap_font_size(font: &mut FontSpec, style: Option<&diagram_ir::TreemapStyle>) {
+    font.size = match style.and_then(|style| style.font_size) {
+        Some(diagram_ir::TreemapFontSize::Pixels(value)) => value,
+        Some(diagram_ir::TreemapFontSize::Factor(value)) => font.size * value,
+        None => font.size,
+    };
+}
+
+fn treemap_corner_radius(node: &diagram_ir::LayoutedTreemapNode) -> f64 {
+    match node.style.as_ref().and_then(|style| style.border_radius) {
+        Some(diagram_ir::TreemapBorderRadius::Pixels(value)) => value,
+        Some(diagram_ir::TreemapBorderRadius::Factor(value)) => node.width.min(node.height) * value,
+        None => node.style.as_ref().and_then(|style| style.node.corner_radius).unwrap_or(3.0),
+    }
+}
+
+fn treemap_current_color(
+    node: &diagram_ir::LayoutedTreemapNode,
+    diagram: &diagram_ir::LayoutedTreemapDiagram,
+    fallback: Color,
+) -> String {
+    node.style.as_ref().and_then(|style| style.node.text_color.as_deref())
+        .filter(|value| !value.eq_ignore_ascii_case("currentcolor"))
+        .or(diagram.config.label_color.as_deref())
+        .filter(|value| !value.eq_ignore_ascii_case("currentcolor"))
+        .map(str::to_string)
+        .or_else(|| node.palette_index.map(|index| diagram.config.theme.labels[index].clone()))
+        .unwrap_or_else(|| format!("rgb({}, {}, {})", fallback.r, fallback.g, fallback.b))
+}
+
+struct TreemapNumberFormat {
+    fill: char, align: char, sign: char, symbol: Option<char>, width: Option<usize>, grouped: bool,
+    precision: Option<usize>, trim: bool, kind: Option<char>,
+}
+
+fn parse_treemap_number_format(source: &str) -> Option<TreemapNumberFormat> {
+    let characters = source.chars().collect::<Vec<_>>();
+    let mut index = 0;
+    let (fill, mut align) = if characters.get(1).is_some_and(|value| "<>=^".contains(*value)) {
+        index = 2; (characters[0], characters[1])
+    } else if characters.first().is_some_and(|value| "<>=^".contains(*value)) {
+        index = 1; (' ', characters[0])
+    } else { (' ', '>') };
+    let sign = characters.get(index).copied().filter(|value| "+-( ".contains(*value)).map_or('-', |value| { index += 1; value });
+    let symbol = characters.get(index).copied().filter(|value| matches!(value, '$' | '#'));
+    if symbol.is_some() { index += 1; }
+    let zero = characters.get(index) == Some(&'0');
+    if zero { index += 1; align = '='; }
+    let width_start = index;
+    while characters.get(index).is_some_and(char::is_ascii_digit) { index += 1; }
+    let width = (index > width_start).then(|| characters[width_start..index].iter().collect::<String>().parse().ok()).flatten();
+    let grouped = characters.get(index) == Some(&',');
+    if grouped { index += 1; }
+    if grouped && characters.get(index) == Some(&'0') { index += 1; }
+    let precision = if characters.get(index) == Some(&'.') {
+        index += 1;
+        let start = index;
+        while characters.get(index).is_some_and(char::is_ascii_digit) { index += 1; }
+        if start == index { return None; }
+        let digits = characters[start..index].iter().collect::<String>();
+        Some(if digits.chars().all(|digit| digit == '0') { digits.len() } else { digits.parse().ok()? })
+    } else { None };
+    let trim = characters.get(index) == Some(&'~');
+    if trim { index += 1; }
+    let kind = characters.get(index).copied().filter(|value| "bdeEfFgGoprs%xX".contains(*value));
+    if kind.is_some() { index += 1; }
+    (index == characters.len()).then_some(TreemapNumberFormat {
+        fill: if zero { '0' } else { fill }, align, sign, symbol, width, grouped, precision, trim, kind,
+    })
+}
+
+fn align_treemap_number(prefix: String, rendered: String, suffix: &str, spec: &TreemapNumberFormat) -> String {
+    let content_width = prefix.chars().count() + rendered.chars().count() + suffix.chars().count();
+    let padding = spec.width.unwrap_or(0).saturating_sub(content_width);
+    let fill = spec.fill.to_string().repeat(padding);
+    match spec.align {
+        '<' => format!("{prefix}{rendered}{suffix}{fill}"),
+        '^' => {
+            let left = spec.fill.to_string().repeat(padding / 2);
+            let right = spec.fill.to_string().repeat(padding - padding / 2);
+            format!("{left}{prefix}{rendered}{suffix}{right}")
+        }
+        '=' => format!("{prefix}{fill}{rendered}{suffix}"),
+        _ => format!("{fill}{prefix}{rendered}{suffix}"),
+    }
+}
+
+fn format_significant(value: f64, precision: usize) -> String {
+    if value == 0.0 { return "0".into(); }
+    let exponent = value.abs().log10().floor() as i32;
+    let decimals = (precision as i32 - exponent - 1).max(0) as usize;
+    trim_decimal_zeroes(format!("{value:.decimals$}"))
+}
+
+fn format_si(value: f64, precision: usize) -> String {
+    const PREFIXES: [&str; 17] = ["y", "z", "a", "f", "p", "n", "µ", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y"];
+    if value == 0.0 { return "0".into(); }
+    let group = ((value.abs().log10().floor() / 3.0).floor() as i32).clamp(-8, 8);
+    let scaled = value / 1000_f64.powi(group);
+    format!("{}{}", format_significant(scaled, precision), PREFIXES[(group + 8) as usize])
+}
+
+fn trim_decimal_zeroes(mut value: String) -> String {
+    let exponent = value.find(['e', 'E']).map(|index| value.split_off(index));
+    if value.contains('.') {
+        while value.ends_with('0') { value.pop(); }
+        if value.ends_with('.') { value.pop(); }
+    }
+    if let Some(exponent) = exponent { value.push_str(&exponent); }
+    value
+}
+
+fn group_decimal_thousands(value: &str) -> String {
+    let suffix_start = value.find(|character: char| !character.is_ascii_digit() && !matches!(character, '-' | '+' | '.'))
+        .unwrap_or(value.len());
+    let (number, suffix) = value.split_at(suffix_start);
+    let (integer, fraction) = number.split_once('.').map_or((number, None), |(integer, fraction)| (integer, Some(fraction)));
+    let sign_length = usize::from(integer.starts_with(['-', '+']));
+    let (sign, digits) = integer.split_at(sign_length);
+    let mut grouped = String::from(sign);
+    for (index, digit) in digits.chars().enumerate() {
+        if index > 0 && (digits.len() - index).is_multiple_of(3) { grouped.push(','); }
+        grouped.push(digit);
+    }
+    if let Some(fraction) = fraction { grouped.push('.'); grouped.push_str(fraction); }
+    grouped.push_str(suffix);
+    grouped
 }
 
 /// Lower a layouted TreeView into backend-neutral connectors, markers, and glyphs.
@@ -650,14 +1175,69 @@ fn capitalize(value: &str) -> String {
     let mut characters = value.chars(); characters.next().map_or_else(String::new, |first| first.to_uppercase().collect::<String>() + characters.as_str())
 }
 
-fn with_opacity(color: &str, opacity: f64) -> String {
-    let hex = color.trim_start_matches('#');
-    if hex.len() == 6 {
-        if let (Ok(r), Ok(g), Ok(b)) = (u8::from_str_radix(&hex[0..2], 16), u8::from_str_radix(&hex[2..4], 16), u8::from_str_radix(&hex[4..6], 16)) {
-            return format!("rgba({r},{g},{b},{})", opacity.clamp(0.0, 1.0));
+fn capitalize_words(value: &str) -> String {
+    let mut result = String::new();
+    let mut at_word_start = true;
+    for character in value.chars() {
+        if character.is_whitespace() {
+            result.push(character);
+            at_word_start = true;
+        } else if at_word_start {
+            result.extend(character.to_uppercase());
+            at_word_start = false;
+        } else {
+            result.push(character);
         }
     }
+    result
+}
+
+fn full_size_kana(value: &str) -> String {
+    value.chars().map(|character| match character {
+        'ぁ' => 'あ', 'ぃ' => 'い', 'ぅ' => 'う', 'ぇ' => 'え', 'ぉ' => 'お',
+        'っ' => 'つ', 'ゃ' => 'や', 'ゅ' => 'ゆ', 'ょ' => 'よ', 'ゎ' => 'わ',
+        'ゕ' => 'か', 'ゖ' => 'け',
+        'ァ' => 'ア', 'ィ' => 'イ', 'ゥ' => 'ウ', 'ェ' => 'エ', 'ォ' => 'オ',
+        'ッ' => 'ツ', 'ャ' => 'ヤ', 'ュ' => 'ユ', 'ョ' => 'ヨ', 'ヮ' => 'ワ',
+        'ヵ' => 'カ', 'ヶ' => 'ケ',
+        'ㇰ' => 'ク', 'ㇱ' => 'シ', 'ㇲ' => 'ス', 'ㇳ' => 'ト', 'ㇴ' => 'ヌ',
+        'ㇵ' => 'ハ', 'ㇶ' => 'ヒ', 'ㇷ' => 'フ', 'ㇸ' => 'ヘ', 'ㇹ' => 'ホ',
+        'ㇺ' => 'ム', 'ㇻ' => 'ラ', 'ㇼ' => 'リ', 'ㇽ' => 'ル', 'ㇾ' => 'レ', 'ㇿ' => 'ロ',
+        _ => character,
+    }).collect()
+}
+
+fn with_opacity(color: &str, opacity: f64) -> String {
+    let parsed = if color.eq_ignore_ascii_case("none") {
+        Some(Color { r: 0, g: 0, b: 0, a: 0 })
+    } else {
+        parse_css_color(color)
+    };
+    if let Some(parsed) = parsed {
+        let alpha = f64::from(parsed.a) / 255.0 * opacity.clamp(0.0, 1.0);
+        return format!("rgba({},{},{},{})", parsed.r, parsed.g, parsed.b, css_alpha(alpha));
+    }
     color.to_string()
+}
+
+fn css_alpha(alpha: f64) -> String {
+    let value = format!("{:.6}", alpha.clamp(0.0, 1.0));
+    value.trim_end_matches('0').trim_end_matches('.').to_string()
+}
+
+fn color_with_opacity(mut color: Color, opacity: f64) -> Color {
+    color.a = (f64::from(color.a) * opacity.clamp(0.0, 1.0)).round() as u8;
+    color
+}
+
+fn event_model_kind_name(kind: &EventModelEntityKind) -> &'static str {
+    match kind {
+        EventModelEntityKind::Ui => "ui",
+        EventModelEntityKind::Processor => "processor",
+        EventModelEntityKind::Command => "command",
+        EventModelEntityKind::ReadModel => "readmodel",
+        EventModelEntityKind::Event => "event",
+    }
 }
 
 /// Lower a layouted Event Modeling diagram into backend-neutral paint instructions.
@@ -677,9 +1257,9 @@ where
     if let Some(title) = &diagram.title {
         text_children.push(text_node(
             title,
-            0.0,
-            8.0,
-            diagram.width,
+            diagram.config.padding,
+            diagram.config.padding + 8.0,
+            diagram.width - 2.0 * diagram.config.padding,
             28.0,
             options.title_font.clone(),
             label_color,
@@ -712,22 +1292,18 @@ where
                     label_color,
                 ));
             }
-            LayoutedEventModelItem::Frame { x, y, width, height, label, kind } => {
-                let fill = match kind {
-                    EventModelEntityKind::Ui => "#dbeafe",
-                    EventModelEntityKind::Processor => "#e0e7ff",
-                    EventModelEntityKind::Command => "#fef3c7",
-                    EventModelEntityKind::ReadModel => "#dcfce7",
-                    EventModelEntityKind::Event => "#fee2e2",
-                };
+            LayoutedEventModelItem::Frame { x, y, width, height, label, data_reference, data_label, kind: _, fill, stroke } => {
+                let frame_metadata = data_reference.as_ref().map(|reference| {
+                    HashMap::from([("eventModel.dataReference".into(), reference.clone())])
+                });
                 instructions.push(PaintInstruction::Rect(PaintRect {
-                    base: PaintBase::default(),
+                    base: PaintBase { metadata: frame_metadata, ..PaintBase::default() },
                     x: *x,
                     y: *y,
                     width: *width,
                     height: *height,
-                    fill: Some(fill.into()),
-                    stroke: Some("#475569".into()),
+                    fill: Some(fill.clone()),
+                    stroke: Some(stroke.clone()),
                     stroke_width: Some(1.5),
                     corner_radius: Some(5.0),
                     stroke_dash: None,
@@ -738,10 +1314,21 @@ where
                     x + 6.0,
                     y + 6.0,
                     width - 12.0,
-                    height - 12.0,
+                    if data_label.is_some() { 24.0 } else { height - 12.0 },
                     options.label_font.clone(),
                     label_color,
                 ));
+                if let Some(data_label) = data_label {
+                    text_children.push(text_node(
+                        data_label,
+                        x + 6.0,
+                        y + 32.0,
+                        width - 12.0,
+                        height - 38.0,
+                        options.label_font.clone(),
+                        label_color,
+                    ));
+                }
             }
             LayoutedEventModelItem::Relation { from, to } => {
                 instructions.push(PaintInstruction::Path(line_path(
@@ -780,6 +1367,41 @@ where
     }
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
+    }
+    metadata.insert("eventModel.config.padding".into(), diagram.config.padding.to_string());
+    metadata.insert("eventModel.config.rowHeight".into(), diagram.config.row_height.to_string());
+    metadata.insert("eventModel.config.useMaxWidth".into(), diagram.config.use_max_width.to_string());
+    for (index, entity) in diagram.entities.iter().enumerate() {
+        metadata.insert(format!("eventModel.entity.{index}.id"), entity.id.clone());
+        if let Some(namespace) = &entity.namespace {
+            metadata.insert(format!("eventModel.entity.{index}.namespace"), namespace.clone());
+        }
+    }
+    for (index, note) in diagram.notes.iter().enumerate() {
+        metadata.insert(format!("eventModel.note.{index}.frame"), note.source_frame.clone());
+        metadata.insert(format!("eventModel.note.{index}.data"), note.data.clone());
+        if let Some(data_type) = &note.data_type {
+            metadata.insert(format!("eventModel.note.{index}.type"), data_type.clone());
+        }
+    }
+    for (index, gwt) in diagram.gwt.iter().enumerate() {
+        metadata.insert(format!("eventModel.gwt.{index}.frame"), gwt.source_frame.clone());
+        for (section, statements) in [
+            ("given", &gwt.given),
+            ("when", &gwt.when),
+            ("then", &gwt.then),
+        ] {
+            for (statement_index, statement) in statements.iter().enumerate() {
+                metadata.insert(
+                    format!("eventModel.gwt.{index}.{section}.{statement_index}.kind"),
+                    event_model_kind_name(&statement.kind).into(),
+                );
+                metadata.insert(
+                    format!("eventModel.gwt.{index}.{section}.{statement_index}.entity"),
+                    statement.entity_id.clone(),
+                );
+            }
+        }
     }
     let bg = &options.background;
     PaintScene {
@@ -1377,22 +1999,1023 @@ fn endpoint_marker(edge: &LayoutedGraphEdge, at_start: bool) -> Vec<PaintInstruc
 /// Convert a diagram-ir color string (CSS hex or "none") to a layout-ir Color.
 /// Falls back to opaque black when the string is not a supported hex format.
 fn css_to_color(css: &str) -> Color {
-    let s = css.trim_start_matches('#');
-    if s.len() == 6 {
-        if let (Ok(r), Ok(g), Ok(b)) = (
-            u8::from_str_radix(&s[0..2], 16),
-            u8::from_str_radix(&s[2..4], 16),
-            u8::from_str_radix(&s[4..6], 16),
-        ) {
-            return Color { r, g, b, a: 255 };
+    parse_css_color(css).unwrap_or(Color { r: 0, g: 0, b: 0, a: 255 })
+}
+
+fn parse_css_color(css: &str) -> Option<Color> {
+    if css.eq_ignore_ascii_case("transparent") {
+        return Some(Color { r: 0, g: 0, b: 0, a: 0 });
+    }
+    if let Some(color) = parse_css_color_mix_function(css) {
+        return Some(color);
+    }
+    if let Some(color) = parse_css_rgb_function(css) {
+        return Some(color);
+    }
+    if let Some(color) = parse_css_hsl_function(css) {
+        return Some(color);
+    }
+    if let Some(color) = parse_css_hwb_function(css) {
+        return Some(color);
+    }
+    if let Some(color) = parse_css_lab_function(css) {
+        return Some(color);
+    }
+    if let Some(color) = parse_css_lch_function(css) {
+        return Some(color);
+    }
+    if let Some(color) = parse_css_oklab_function(css) {
+        return Some(color);
+    }
+    if let Some(color) = parse_css_oklch_function(css) {
+        return Some(color);
+    }
+    if let Some(color) = parse_css_color_function(css) {
+        return Some(color);
+    }
+    if let Some(color) = parse_css_named_color(css) {
+        return Some(color);
+    }
+    let value = css.strip_prefix('#')?;
+    if !value.is_ascii() || !value.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+        return None;
+    }
+    let byte = |source: &str| u8::from_str_radix(source, 16).ok();
+    let nibble = |source: &str| byte(source).map(|value| value * 17);
+    match value.len() {
+        3 | 4 => Some(Color {
+            r: nibble(&value[0..1])?,
+            g: nibble(&value[1..2])?,
+            b: nibble(&value[2..3])?,
+            a: if value.len() == 4 { nibble(&value[3..4])? } else { 255 },
+        }),
+        6 | 8 => Some(Color {
+            r: byte(&value[0..2])?,
+            g: byte(&value[2..4])?,
+            b: byte(&value[4..6])?,
+            a: if value.len() == 8 { byte(&value[6..8])? } else { 255 },
+        }),
+        _ => None,
+    }
+}
+
+#[derive(Clone, Copy)]
+enum CssColorMixSpace {
+    Srgb,
+    SrgbLinear,
+    DisplayP3,
+    A98Rgb,
+    ProPhotoRgb,
+    Hsl,
+    Hwb,
+    Lab,
+    Lch,
+    Oklab,
+    Oklch,
+}
+
+fn parse_css_color_mix_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("color-mix(")?.strip_suffix(')')?.trim();
+    let parts = split_css_top_level_commas(inner)?;
+    if parts.len() != 3 {
+        return None;
+    }
+    let interpolation = parts[0].split_whitespace().collect::<Vec<_>>();
+    let space = match interpolation.as_slice() {
+        ["in", "srgb"] => CssColorMixSpace::Srgb,
+        ["in", "srgb-linear"] => CssColorMixSpace::SrgbLinear,
+        ["in", "display-p3"] => CssColorMixSpace::DisplayP3,
+        ["in", "a98-rgb"] => CssColorMixSpace::A98Rgb,
+        ["in", "prophoto-rgb"] => CssColorMixSpace::ProPhotoRgb,
+        ["in", "hsl"] => CssColorMixSpace::Hsl,
+        ["in", "hwb"] => CssColorMixSpace::Hwb,
+        ["in", "lab"] => CssColorMixSpace::Lab,
+        ["in", "lch"] => CssColorMixSpace::Lch,
+        ["in", "oklab"] => CssColorMixSpace::Oklab,
+        ["in", "oklch"] => CssColorMixSpace::Oklch,
+        _ => return None,
+    };
+    let (first_source, first_percentage) = parse_css_color_mix_stop(parts[1])?;
+    let (second_source, second_percentage) = parse_css_color_mix_stop(parts[2])?;
+    let first = parse_css_color(first_source)?;
+    let second = parse_css_color(second_source)?;
+    let (first_weight, second_weight, alpha_multiplier) = match (first_percentage, second_percentage) {
+        (None, None) => (0.5, 0.5, 1.0),
+        (Some(first), None) => (first, 1.0 - first, 1.0),
+        (None, Some(second)) => (1.0 - second, second, 1.0),
+        (Some(first), Some(second)) => {
+            let total = first + second;
+            if total <= 0.0 {
+                return None;
+            }
+            (first / total, second / total, total.min(1.0))
+        }
+    };
+    let first_alpha = f64::from(first.a) / 255.0;
+    let second_alpha = f64::from(second.a) / 255.0;
+    let mixed_alpha = first_alpha * first_weight + second_alpha * second_weight;
+    let mut first_components = css_color_mix_components(first, space);
+    let mut second_components = css_color_mix_components(second, space);
+    match space {
+        CssColorMixSpace::Hsl => {
+            let powerless = (first_components[0] == 0.0, second_components[0] == 0.0);
+            fixup_css_polar_hues(
+                &mut first_components, &mut second_components, powerless.0, powerless.1,
+            );
+        }
+        CssColorMixSpace::Hwb => {
+            let powerless = (
+                first_components[0] + first_components[1] >= 0.99999,
+                second_components[0] + second_components[1] >= 0.99999,
+            );
+            fixup_css_polar_hues(
+                &mut first_components, &mut second_components, powerless.0, powerless.1,
+            );
+        }
+        CssColorMixSpace::Lch => {
+            let powerless = (first_components[1] <= 0.02, second_components[1] <= 0.02);
+            fixup_css_polar_hues(
+                &mut first_components, &mut second_components, powerless.0, powerless.1,
+            );
+        }
+        CssColorMixSpace::Oklch => {
+            let powerless = (first_components[1] <= 0.000004, second_components[1] <= 0.000004);
+            fixup_css_polar_hues(
+                &mut first_components, &mut second_components, powerless.0, powerless.1,
+            );
+        }
+        _ => {}
+    }
+    let component = |index: usize| {
+        if matches!(
+            space,
+            CssColorMixSpace::Hsl | CssColorMixSpace::Hwb
+                | CssColorMixSpace::Lch | CssColorMixSpace::Oklch
+        )
+            && index == 2
+        {
+            first_components[index] * first_weight + second_components[index] * second_weight
+        } else if mixed_alpha == 0.0 {
+            0.0
+        } else {
+            (first_components[index] * first_alpha * first_weight
+                + second_components[index] * second_alpha * second_weight) / mixed_alpha
+        }
+    };
+    let components = [component(0), component(1), component(2)];
+    let alpha = (mixed_alpha * alpha_multiplier * 255.0).clamp(0.0, 255.0).round() as u8;
+    Some(match space {
+        CssColorMixSpace::Srgb => Color {
+            r: (components[0].clamp(0.0, 1.0) * 255.0).round() as u8,
+            g: (components[1].clamp(0.0, 1.0) * 255.0).round() as u8,
+            b: (components[2].clamp(0.0, 1.0) * 255.0).round() as u8,
+            a: alpha,
+        },
+        CssColorMixSpace::SrgbLinear => linear_srgb_to_color(
+            components[0], components[1], components[2], alpha,
+        ),
+        CssColorMixSpace::DisplayP3 => css_display_p3_to_color(components, alpha),
+        CssColorMixSpace::A98Rgb => css_a98_rgb_to_color(components, alpha),
+        CssColorMixSpace::ProPhotoRgb => css_prophoto_rgb_to_color(components, alpha),
+        CssColorMixSpace::Hsl => css_hsl_to_color(
+            components[2].to_degrees(), components[0], components[1], alpha,
+        ),
+        CssColorMixSpace::Hwb => css_hwb_to_color(
+            components[2].to_degrees(), components[0], components[1], alpha,
+        ),
+        CssColorMixSpace::Lab => css_lab_to_color(
+            components[0], components[1], components[2], alpha,
+        ),
+        CssColorMixSpace::Lch => css_lab_to_color(
+            components[0],
+            components[1] * components[2].cos(),
+            components[1] * components[2].sin(),
+            alpha,
+        ),
+        CssColorMixSpace::Oklab => css_oklab_to_color(
+            components[0], components[1], components[2], alpha,
+        ),
+        CssColorMixSpace::Oklch => css_oklab_to_color(
+            components[0],
+            components[1] * components[2].cos(),
+            components[1] * components[2].sin(),
+            alpha,
+        ),
+    })
+}
+
+fn css_color_mix_components(color: Color, space: CssColorMixSpace) -> [f64; 3] {
+    let encoded = [
+        f64::from(color.r) / 255.0,
+        f64::from(color.g) / 255.0,
+        f64::from(color.b) / 255.0,
+    ];
+    match space {
+        CssColorMixSpace::Srgb => encoded,
+        CssColorMixSpace::SrgbLinear => encoded.map(encoded_srgb_to_linear),
+        CssColorMixSpace::DisplayP3 => css_color_to_display_p3(encoded),
+        CssColorMixSpace::A98Rgb => css_color_to_a98_rgb(encoded),
+        CssColorMixSpace::ProPhotoRgb => css_color_to_prophoto_rgb(encoded),
+        CssColorMixSpace::Hsl => css_color_to_hsl(encoded),
+        CssColorMixSpace::Hwb => css_color_to_hwb(encoded),
+        CssColorMixSpace::Lab => css_color_to_lab(encoded),
+        CssColorMixSpace::Lch => {
+            let [lightness, a, b] = css_color_to_lab(encoded);
+            [lightness, a.hypot(b), b.atan2(a)]
+        }
+        CssColorMixSpace::Oklab => css_color_to_oklab(encoded),
+        CssColorMixSpace::Oklch => {
+            let [lightness, a, b] = css_color_to_oklab(encoded);
+            [lightness, a.hypot(b), b.atan2(a)]
         }
     }
+}
+
+fn css_color_to_hsl([r, g, b]: [f64; 3]) -> [f64; 3] {
+    let maximum = r.max(g).max(b);
+    let minimum = r.min(g).min(b);
+    let delta = maximum - minimum;
+    let lightness = (maximum + minimum) / 2.0;
+    let saturation = if delta == 0.0 {
+        0.0
+    } else {
+        delta / (1.0 - (2.0 * lightness - 1.0).abs())
+    };
+    let hue = if delta == 0.0 {
+        0.0
+    } else if maximum == r {
+        ((g - b) / delta).rem_euclid(6.0) * 60.0
+    } else if maximum == g {
+        ((b - r) / delta + 2.0) * 60.0
+    } else {
+        ((r - g) / delta + 4.0) * 60.0
+    };
+    [saturation, lightness, hue.to_radians()]
+}
+
+fn css_color_to_hwb(encoded: [f64; 3]) -> [f64; 3] {
+    let hue = css_color_to_hsl(encoded)[2];
+    let whiteness = encoded[0].min(encoded[1]).min(encoded[2]);
+    let blackness = 1.0 - encoded[0].max(encoded[1]).max(encoded[2]);
+    [whiteness, blackness, hue]
+}
+
+fn css_color_to_lab(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    let x65 = 0.4124 * r + 0.3576 * g + 0.1805 * b;
+    let y65 = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    let z65 = 0.0193 * r + 0.1192 * g + 0.9505 * b;
+    let x50 = 1.0479298 * x65 + 0.0229468 * y65 - 0.0501922 * z65;
+    let y50 = 0.0296278 * x65 + 0.9904345 * y65 - 0.0170738 * z65;
+    let z50 = -0.0092430 * x65 + 0.0150552 * y65 + 0.7518743 * z65;
+    let transform = |value: f64| {
+        if value > 216.0 / 24_389.0 {
+            value.cbrt()
+        } else {
+            ((24_389.0 / 27.0) * value + 16.0) / 116.0
+        }
+    };
+    let f0 = transform(x50 / 0.96422);
+    let f1 = transform(y50);
+    let f2 = transform(z50 / 0.82521);
+    [116.0 * f1 - 16.0, 500.0 * (f0 - f1), 200.0 * (f1 - f2)]
+}
+
+fn css_color_to_oklab(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    let l = (0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b).cbrt();
+    let m = (0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b).cbrt();
+    let s = (0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b).cbrt();
+    [
+        0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+        1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+        0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s,
+    ]
+}
+
+fn fixup_css_polar_hues(
+    first: &mut [f64; 3],
+    second: &mut [f64; 3],
+    first_powerless: bool,
+    second_powerless: bool,
+) {
+    if first_powerless {
+        first[2] = second[2];
+    }
+    if second_powerless {
+        second[2] = first[2];
+    }
+    let turn = std::f64::consts::TAU;
+    let delta = (second[2] - first[2] + std::f64::consts::PI).rem_euclid(turn)
+        - std::f64::consts::PI;
+    second[2] = first[2] + delta;
+}
+
+fn split_css_top_level_commas(source: &str) -> Option<Vec<&str>> {
+    let mut parts = Vec::new();
+    let mut start = 0;
+    let mut depth = 0_u32;
+    for (index, character) in source.char_indices() {
+        match character {
+            '(' => depth += 1,
+            ')' => depth = depth.checked_sub(1)?,
+            ',' if depth == 0 => {
+                parts.push(source[start..index].trim());
+                start = index + 1;
+            }
+            _ => {}
+        }
+    }
+    if depth != 0 {
+        return None;
+    }
+    parts.push(source[start..].trim());
+    Some(parts)
+}
+
+fn parse_css_color_mix_stop(source: &str) -> Option<(&str, Option<f64>)> {
+    let mut depth = 0_u32;
+    let mut split = None;
+    for (index, character) in source.char_indices() {
+        match character {
+            '(' => depth += 1,
+            ')' => depth = depth.checked_sub(1)?,
+            _ if depth == 0 && character.is_whitespace() => split = Some(index),
+            _ => {}
+        }
+    }
+    if depth != 0 {
+        return None;
+    }
+    if let Some(index) = split {
+        let percentage = source[index..].trim();
+        if let Some(value) = percentage.strip_suffix('%').and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && (0.0..=100.0).contains(value))
+        {
+            return Some((source[..index].trim(), Some(value / 100.0)));
+        }
+    }
+    Some((source.trim(), None))
+}
+
+fn parse_css_rgb_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("rgb(").or_else(|| source.strip_prefix("rgba("))?
+        .strip_suffix(')')?.trim();
+    let normalized = inner.replace(',', " ").replace('/', " / ");
+    let parts = normalized.split_whitespace().collect::<Vec<_>>();
+    let slash = parts.iter().position(|part| *part == "/");
+    let legacy_alpha = slash.is_none() && parts.len() == 4;
+    let color_parts = slash.map_or_else(
+        || if legacy_alpha { &parts[..3] } else { &parts[..] },
+        |index| &parts[..index],
+    );
+    if color_parts.len() != 3 {
+        return None;
+    }
+    let component = |value: &str| parse_css_byte(value, 1.0);
+    let alpha_source = slash.and_then(|index| parts.get(index + 1).copied())
+        .or_else(|| legacy_alpha.then(|| parts[3]));
+    let alpha = alpha_source.map_or(Some(255), |value| parse_css_byte(value, 255.0))?;
+    Some(Color {
+        r: component(color_parts[0])?,
+        g: component(color_parts[1])?,
+        b: component(color_parts[2])?,
+        a: alpha,
+    })
+}
+
+fn parse_css_hsl_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("hsl(").or_else(|| source.strip_prefix("hsla("))?
+        .strip_suffix(')')?.trim();
+    let normalized = inner.replace(',', " ").replace('/', " / ");
+    let parts = normalized.split_whitespace().collect::<Vec<_>>();
+    let slash = parts.iter().position(|part| *part == "/");
+    let legacy_alpha = slash.is_none() && parts.len() == 4;
+    let color_parts = slash.map_or_else(
+        || if legacy_alpha { &parts[..3] } else { &parts[..] },
+        |index| &parts[..index],
+    );
+    if color_parts.len() != 3 {
+        return None;
+    }
+    let hue = parse_css_hue(color_parts[0])?;
+    let saturation = parse_css_percentage(color_parts[1])?;
+    let lightness = parse_css_percentage(color_parts[2])?;
+    let alpha_source = slash.and_then(|index| parts.get(index + 1).copied())
+        .or_else(|| legacy_alpha.then(|| parts[3]));
+    let alpha = alpha_source.map_or(Some(255), |value| parse_css_byte(value, 255.0))?;
+    Some(css_hsl_to_color(hue, saturation, lightness, alpha))
+}
+
+fn css_hsl_to_color(hue: f64, saturation: f64, lightness: f64, alpha: u8) -> Color {
+    let chroma = (1.0 - (2.0 * lightness - 1.0).abs()) * saturation;
+    let sector = hue.rem_euclid(360.0) / 60.0;
+    let x = chroma * (1.0 - (sector.rem_euclid(2.0) - 1.0).abs());
+    let (r, g, b) = match sector as u8 {
+        0 => (chroma, x, 0.0),
+        1 => (x, chroma, 0.0),
+        2 => (0.0, chroma, x),
+        3 => (0.0, x, chroma),
+        4 => (x, 0.0, chroma),
+        _ => (chroma, 0.0, x),
+    };
+    let m = lightness - chroma / 2.0;
+    let channel = |value: f64| ((value + m) * 255.0).clamp(0.0, 255.0).round() as u8;
+    Color { r: channel(r), g: channel(g), b: channel(b), a: alpha }
+}
+
+fn parse_css_hwb_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("hwb(")?.strip_suffix(')')?.trim();
+    let normalized = inner.replace('/', " / ");
+    let parts = normalized.split_whitespace().collect::<Vec<_>>();
+    let slash = parts.iter().position(|part| *part == "/");
+    let color_parts = slash.map_or(&parts[..], |index| &parts[..index]);
+    if color_parts.len() != 3 {
+        return None;
+    }
+    let hue = parse_css_hue(color_parts[0])?;
+    let whiteness = parse_css_percentage(color_parts[1])?;
+    let blackness = parse_css_percentage(color_parts[2])?;
+    let alpha = slash.and_then(|index| parts.get(index + 1).copied())
+        .map_or(Some(255), |value| parse_css_byte(value, 255.0))?;
+    Some(css_hwb_to_color(hue, whiteness, blackness, alpha))
+}
+
+fn css_hwb_to_color(hue: f64, mut whiteness: f64, mut blackness: f64, alpha: u8) -> Color {
+    let sum = whiteness + blackness;
+    if sum > 1.0 {
+        whiteness /= sum;
+        blackness /= sum;
+    }
+    let sector = hue.rem_euclid(360.0) / 60.0;
+    let x = 1.0 - (sector.rem_euclid(2.0) - 1.0).abs();
+    let (r, g, b) = match sector as u8 {
+        0 => (1.0, x, 0.0),
+        1 => (x, 1.0, 0.0),
+        2 => (0.0, 1.0, x),
+        3 => (0.0, x, 1.0),
+        4 => (x, 0.0, 1.0),
+        _ => (1.0, 0.0, x),
+    };
+    let factor = 1.0 - whiteness - blackness;
+    let channel = |value: f64| ((value * factor + whiteness) * 255.0).clamp(0.0, 255.0).round() as u8;
+    Color { r: channel(r), g: channel(g), b: channel(b), a: alpha }
+}
+
+fn parse_css_lab_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("lab(")?.strip_suffix(')')?.trim();
+    let (components, alpha) = parse_css_modern_color_components(inner)?;
+    let lightness = parse_css_lab_lightness(&components[0])?;
+    let a = parse_css_lab_axis(&components[1])?;
+    let b = parse_css_lab_axis(&components[2])?;
+    Some(css_lab_to_color(lightness, a, b, alpha))
+}
+
+fn parse_css_lch_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("lch(")?.strip_suffix(')')?.trim();
+    let (components, alpha) = parse_css_modern_color_components(inner)?;
+    let lightness = parse_css_lab_lightness(&components[0])?;
+    let chroma = parse_css_lch_chroma(&components[1])?;
+    let hue = parse_css_hue(&components[2])?.to_radians();
+    Some(css_lab_to_color(lightness, chroma * hue.cos(), chroma * hue.sin(), alpha))
+}
+
+fn parse_css_oklab_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("oklab(")?.strip_suffix(')')?.trim();
+    let (components, alpha) = parse_css_modern_color_components(inner)?;
+    let lightness = parse_css_oklab_lightness(&components[0])?;
+    let a = parse_css_oklab_axis(&components[1])?;
+    let b = parse_css_oklab_axis(&components[2])?;
+    Some(css_oklab_to_color(lightness, a, b, alpha))
+}
+
+fn parse_css_oklch_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("oklch(")?.strip_suffix(')')?.trim();
+    let (components, alpha) = parse_css_modern_color_components(inner)?;
+    let lightness = parse_css_oklab_lightness(&components[0])?;
+    let chroma = parse_css_oklch_chroma(&components[1])?;
+    let hue = parse_css_hue(&components[2])?.to_radians();
+    Some(css_oklab_to_color(lightness, chroma * hue.cos(), chroma * hue.sin(), alpha))
+}
+
+fn parse_css_color_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("color(")?.strip_suffix(')')?.trim();
+    let profile_end = inner.find(char::is_whitespace)?;
+    let (profile, components) = inner.split_at(profile_end);
+    let (components, alpha) = parse_css_modern_color_components(components.trim())?;
+    let r = parse_css_unit_interval(&components[0])?;
+    let g = parse_css_unit_interval(&components[1])?;
+    let b = parse_css_unit_interval(&components[2])?;
+    match profile {
+        "srgb" => Some(Color {
+            r: (r * 255.0).round() as u8,
+            g: (g * 255.0).round() as u8,
+            b: (b * 255.0).round() as u8,
+            a: alpha,
+        }),
+        "srgb-linear" => Some(linear_srgb_to_color(r, g, b, alpha)),
+        "display-p3" => {
+            Some(css_display_p3_to_color([r, g, b], alpha))
+        }
+        "a98-rgb" => {
+            Some(css_a98_rgb_to_color([r, g, b], alpha))
+        }
+        "prophoto-rgb" => {
+            Some(css_prophoto_rgb_to_color([r, g, b], alpha))
+        }
+        "rec2020" => {
+            let transfer_alpha = 1.09929682680944;
+            let beta = 0.018053968510807;
+            let decode = |value: f64| {
+                if value < beta * 4.5 {
+                    value / 4.5
+                } else {
+                    ((value + transfer_alpha - 1.0) / transfer_alpha).powf(1.0 / 0.45)
+                }
+            };
+            let r = decode(r);
+            let g = decode(g);
+            let b = decode(b);
+            Some(xyz_d65_to_color(
+                (63426534.0 / 99577255.0) * r + (20160776.0 / 139408157.0) * g + (47086771.0 / 278816314.0) * b,
+                (26158966.0 / 99577255.0) * r + (472592308.0 / 697040785.0) * g + (8267143.0 / 139408157.0) * b,
+                (19567812.0 / 697040785.0) * g + (295819943.0 / 278816314.0) * b,
+                alpha,
+            ))
+        }
+        "xyz" | "xyz-d65" => Some(xyz_d65_to_color(r, g, b, alpha)),
+        "xyz-d50" => Some(xyz_d50_to_color(r, g, b, alpha)),
+        _ => None,
+    }
+}
+
+fn parse_css_modern_color_components(inner: &str) -> Option<([String; 3], u8)> {
+    let normalized = inner.replace('/', " / ");
+    let parts = normalized.split_whitespace().collect::<Vec<_>>();
+    let slash = parts.iter().position(|part| *part == "/");
+    let color_parts = slash.map_or(&parts[..], |index| &parts[..index]);
+    let components = color_parts.iter().map(|part| (*part).to_owned()).collect::<Vec<_>>()
+        .try_into().ok()?;
+    let alpha = slash.and_then(|index| parts.get(index + 1).copied())
+        .map_or(Some(255), |value| parse_css_byte(value, 255.0))?;
+    if slash.is_some_and(|index| index + 2 != parts.len()) {
+        return None;
+    }
+    Some((components, alpha))
+}
+
+fn parse_css_lab_lightness(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
+    let lightness = value.strip_suffix('%').unwrap_or(value).parse::<f64>().ok()?;
+    lightness.is_finite().then(|| lightness.clamp(0.0, 100.0))
+}
+
+fn parse_css_lab_axis(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
+    let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 1.25));
+    let axis = number.parse::<f64>().ok()? * scale;
+    axis.is_finite().then_some(axis)
+}
+
+fn parse_css_lch_chroma(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
+    let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 1.5));
+    let chroma = number.parse::<f64>().ok()? * scale;
+    chroma.is_finite().then(|| chroma.max(0.0))
+}
+
+fn parse_css_oklab_lightness(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
+    let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 0.01));
+    let lightness = number.parse::<f64>().ok()? * scale;
+    lightness.is_finite().then(|| lightness.clamp(0.0, 1.0))
+}
+
+fn parse_css_oklab_axis(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
+    let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 0.004));
+    let axis = number.parse::<f64>().ok()? * scale;
+    axis.is_finite().then_some(axis)
+}
+
+fn parse_css_oklch_chroma(value: &str) -> Option<f64> {
+    let chroma = parse_css_oklab_axis(value)?;
+    Some(chroma.max(0.0))
+}
+
+fn parse_css_unit_interval(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
+    let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 0.01));
+    let component = number.parse::<f64>().ok()? * scale;
+    component.is_finite().then(|| component.clamp(0.0, 1.0))
+}
+
+fn css_lab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
+    let f1 = (lightness + 16.0) / 116.0;
+    let f0 = a / 500.0 + f1;
+    let f2 = f1 - b / 200.0;
+    let to_xyz = |value: f64| {
+        let cube = value.powi(3);
+        if cube > 216.0 / 24_389.0 { cube } else { (116.0 * value - 16.0) / (24_389.0 / 27.0) }
+    };
+    let x50 = to_xyz(f0) * 0.96422;
+    let y50 = to_xyz(f1);
+    let z50 = to_xyz(f2) * 0.82521;
+    xyz_d50_to_color(x50, y50, z50, alpha)
+}
+
+fn css_oklab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
+    let l = (lightness + 0.3963377774 * a + 0.2158037573 * b).powi(3);
+    let m = (lightness - 0.1055613458 * a - 0.0638541728 * b).powi(3);
+    let s = (lightness - 0.0894841775 * a - 1.2914855480 * b).powi(3);
+    linear_srgb_to_color(
+        4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+        -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+        -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s,
+        alpha,
+    )
+}
+
+fn linear_srgb_to_color(r: f64, g: f64, b: f64, alpha: u8) -> Color {
     Color {
-        r: 0,
-        g: 0,
-        b: 0,
-        a: 255,
-    } // opaque black fallback
+        r: (linear_srgb_to_encoded(r).clamp(0.0, 1.0) * 255.0).round() as u8,
+        g: (linear_srgb_to_encoded(g).clamp(0.0, 1.0) * 255.0).round() as u8,
+        b: (linear_srgb_to_encoded(b).clamp(0.0, 1.0) * 255.0).round() as u8,
+        a: alpha,
+    }
+}
+
+fn linear_srgb_to_encoded(linear: f64) -> f64 {
+    if linear <= 0.0031308 {
+        12.92 * linear
+    } else {
+        1.055 * linear.powf(1.0 / 2.4) - 0.055
+    }
+}
+
+fn encoded_srgb_to_linear(value: f64) -> f64 {
+    if value <= 0.04045 { value / 12.92 } else { ((value + 0.055) / 1.055).powf(2.4) }
+}
+
+fn css_display_p3_to_color([r, g, b]: [f64; 3], alpha: u8) -> Color {
+    let r = encoded_srgb_to_linear(r);
+    let g = encoded_srgb_to_linear(g);
+    let b = encoded_srgb_to_linear(b);
+    let x = 0.4865709486482162 * r + 0.2656676931690931 * g + 0.1982172852343625 * b;
+    let y = 0.2289745640697488 * r + 0.6917385218365064 * g + 0.0792869140937450 * b;
+    let z = 0.0451133818589026 * g + 1.043_944_368_900_976 * b;
+    linear_srgb_to_color(
+        3.2409699419045226 * x - 1.537383177570094 * y - 0.4986107602930034 * z,
+        -0.9692436362808796 * x + 1.8759675015077202 * y + 0.04155505740717559 * z,
+        0.05563007969699366 * x - 0.20397695888897652 * y + 1.0569715142428786 * z,
+        alpha,
+    )
+}
+
+fn css_color_to_display_p3(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    let x = 0.4123907992659595 * r + 0.357_584_339_383_878 * g + 0.1804807884018343 * b;
+    let y = 0.2126390058715104 * r + 0.715_168_678_767_756 * g + 0.0721923153607337 * b;
+    let z = 0.0193308187155918 * r + 0.119_194_779_794_626 * g + 0.9505321522496607 * b;
+    let linear = [
+        2.493496911941425 * x - 0.9313836179191239 * y - 0.40271078445071684 * z,
+        -0.8294889695615747 * x + 1.7626640603183463 * y + 0.023624685841943577 * z,
+        0.03584583024378447 * x - 0.07617238926804182 * y + 0.9568845240076872 * z,
+    ];
+    linear.map(|value| {
+        let encoded = linear_srgb_to_encoded(value);
+        if encoded.abs() < 1e-12 {
+            0.0
+        } else if (encoded - 1.0).abs() < 1e-12 {
+            1.0
+        } else {
+            encoded
+        }
+    })
+}
+
+fn css_a98_rgb_to_color([r, g, b]: [f64; 3], alpha: u8) -> Color {
+    let decode = |value: f64| value.signum() * value.abs().powf(563.0 / 256.0);
+    let r = decode(r);
+    let g = decode(g);
+    let b = decode(b);
+    xyz_d65_to_color(
+        (573536.0 / 994567.0) * r + (263643.0 / 1420810.0) * g + (187206.0 / 994567.0) * b,
+        (591459.0 / 1989134.0) * r + (6239551.0 / 9945670.0) * g + (374412.0 / 4972835.0) * b,
+        (53769.0 / 1989134.0) * r + (351524.0 / 4972835.0) * g + (4929758.0 / 4972835.0) * b,
+        alpha,
+    )
+}
+
+fn css_color_to_a98_rgb(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    let x = 0.4123907992659595 * r + 0.357_584_339_383_878 * g + 0.1804807884018343 * b;
+    let y = 0.2126390058715104 * r + 0.715_168_678_767_756 * g + 0.0721923153607337 * b;
+    let z = 0.0193308187155918 * r + 0.119_194_779_794_626 * g + 0.9505321522496607 * b;
+    let linear = [
+        (1829569.0 / 896150.0) * x - (506331.0 / 896150.0) * y - (308931.0 / 896150.0) * z,
+        -(851781.0 / 878810.0) * x + (1648619.0 / 878810.0) * y + (36519.0 / 878810.0) * z,
+        (16779.0 / 1248040.0) * x - (147721.0 / 1248040.0) * y + (1266979.0 / 1248040.0) * z,
+    ];
+    linear.map(|value| {
+        let encoded = value.signum() * value.abs().powf(256.0 / 563.0);
+        if encoded.abs() < 1e-12 {
+            0.0
+        } else if (encoded - 1.0).abs() < 1e-12 {
+            1.0
+        } else {
+            encoded
+        }
+    })
+}
+
+fn css_prophoto_rgb_to_color([r, g, b]: [f64; 3], alpha: u8) -> Color {
+    let decode = |value: f64| {
+        if value.abs() <= 16.0 / 512.0 {
+            value / 16.0
+        } else {
+            value.signum() * value.abs().powf(1.8)
+        }
+    };
+    let r = decode(r);
+    let g = decode(g);
+    let b = decode(b);
+    xyz_d50_to_color(
+        0.7977666449006423 * r + 0.1351812974005331 * g + 0.0313477341283922 * b,
+        0.2880748288194013 * r + 0.711_835_234_241_873 * g + 0.0000899369387256 * b,
+        0.8251046025104601 * b,
+        alpha,
+    )
+}
+
+fn css_color_to_prophoto_rgb(encoded: [f64; 3]) -> [f64; 3] {
+    let [r, g, b] = encoded.map(encoded_srgb_to_linear);
+    let x65 = 0.4123907992659595 * r + 0.357_584_339_383_878 * g + 0.1804807884018343 * b;
+    let y65 = 0.2126390058715104 * r + 0.715_168_678_767_756 * g + 0.0721923153607337 * b;
+    let z65 = 0.0193308187155918 * r + 0.119_194_779_794_626 * g + 0.9505321522496607 * b;
+    let x = 1.0479298 * x65 + 0.0229468 * y65 - 0.0501922 * z65;
+    let y = 0.0296278 * x65 + 0.9904345 * y65 - 0.0170738 * z65;
+    let z = -0.0092430 * x65 + 0.0150552 * y65 + 0.7518743 * z65;
+    let linear = [
+        1.3457868816471583 * x - 0.25557208737979464 * y - 0.05110186497554526 * z,
+        -0.5446307051249019 * x + 1.5082477428451468 * y + 0.02052744743642139 * z,
+        1.2119675456389452 * z,
+    ];
+    linear.map(|value| {
+        let encoded = if value.abs() >= 1.0 / 512.0 {
+            value.signum() * value.abs().powf(1.0 / 1.8)
+        } else {
+            16.0 * value
+        };
+        if encoded.abs() < 1e-12 {
+            0.0
+        } else if (encoded - 1.0).abs() < 1e-12 {
+            1.0
+        } else {
+            encoded
+        }
+    })
+}
+
+fn xyz_d65_to_color(x: f64, y: f64, z: f64, alpha: u8) -> Color {
+    linear_srgb_to_color(
+        3.2406 * x - 1.5372 * y - 0.4986 * z,
+        -0.9689 * x + 1.8758 * y + 0.0415 * z,
+        0.0557 * x - 0.2040 * y + 1.0570 * z,
+        alpha,
+    )
+}
+
+fn xyz_d50_to_color(x: f64, y: f64, z: f64, alpha: u8) -> Color {
+    xyz_d65_to_color(
+        0.9554734 * x - 0.0230985 * y + 0.0632593 * z,
+        -0.0283697 * x + 1.0099955 * y + 0.0210414 * z,
+        0.0123140 * x - 0.0205077 * y + 1.3303659 * z,
+        alpha,
+    )
+}
+
+fn parse_css_hue(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
+    let (number, scale) = if let Some(value) = value.strip_suffix("deg") {
+        (value, 1.0)
+    } else if let Some(value) = value.strip_suffix("grad") {
+        (value, 0.9)
+    } else if let Some(value) = value.strip_suffix("rad") {
+        (value, 180.0 / std::f64::consts::PI)
+    } else if let Some(value) = value.strip_suffix("turn") {
+        (value, 360.0)
+    } else {
+        (value, 1.0)
+    };
+    number.parse::<f64>().ok().filter(|value| value.is_finite())
+        .map(|value| (value * scale).rem_euclid(360.0))
+}
+
+fn parse_css_percentage(value: &str) -> Option<f64> {
+    if value == "none" {
+        return Some(0.0);
+    }
+    value.strip_suffix('%')?.parse::<f64>().ok().filter(|value| value.is_finite())
+        .map(|value| (value / 100.0).clamp(0.0, 1.0))
+}
+
+fn parse_css_byte(value: &str, numeric_scale: f64) -> Option<u8> {
+    if value == "none" {
+        return Some(0);
+    }
+    let (number, percentage) = value.strip_suffix('%').map_or((value, false), |value| (value, true));
+    number.parse::<f64>().ok().filter(|value| value.is_finite()).map(|value| {
+        let scaled = if percentage { value / 100.0 * 255.0 } else { value * numeric_scale };
+        scaled.clamp(0.0, 255.0).round() as u8
+    })
+}
+
+fn parse_css_named_color(css: &str) -> Option<Color> {
+    let (r, g, b) = match css.trim().to_ascii_lowercase().as_str() {
+        "aqua" => (0, 255, 255),
+        "black" => (0, 0, 0),
+        "blue" => (0, 0, 255),
+        "fuchsia" => (255, 0, 255),
+        "gray" | "grey" => (128, 128, 128),
+        "green" => (0, 128, 0),
+        "lime" => (0, 255, 0),
+        "maroon" => (128, 0, 0),
+        "navy" => (0, 0, 128),
+        "olive" => (128, 128, 0),
+        "orange" => (255, 165, 0),
+        "purple" => (128, 0, 128),
+        "red" => (255, 0, 0),
+        "silver" => (192, 192, 192),
+        "teal" => (0, 128, 128),
+        "white" => (255, 255, 255),
+        "yellow" => (255, 255, 0),
+        "aliceblue" => (240, 248, 255),
+        "antiquewhite" => (250, 235, 215),
+        "aquamarine" => (127, 255, 212),
+        "azure" => (240, 255, 255),
+        "beige" => (245, 245, 220),
+        "bisque" => (255, 228, 196),
+        "blanchedalmond" => (255, 235, 205),
+        "blueviolet" => (138, 43, 226),
+        "brown" => (165, 42, 42),
+        "burlywood" => (222, 184, 135),
+        "cadetblue" => (95, 158, 160),
+        "chartreuse" => (127, 255, 0),
+        "chocolate" => (210, 105, 30),
+        "coral" => (255, 127, 80),
+        "cornflowerblue" => (100, 149, 237),
+        "cornsilk" => (255, 248, 220),
+        "crimson" => (220, 20, 60),
+        "cyan" => (0, 255, 255),
+        "darkblue" => (0, 0, 139),
+        "darkcyan" => (0, 139, 139),
+        "darkgoldenrod" => (184, 134, 11),
+        "darkgray" | "darkgrey" => (169, 169, 169),
+        "darkgreen" => (0, 100, 0),
+        "darkkhaki" => (189, 183, 107),
+        "darkmagenta" => (139, 0, 139),
+        "darkolivegreen" => (85, 107, 47),
+        "darkorange" => (255, 140, 0),
+        "darkorchid" => (153, 50, 204),
+        "darkred" => (139, 0, 0),
+        "darksalmon" => (233, 150, 122),
+        "darkseagreen" => (143, 188, 143),
+        "darkslateblue" => (72, 61, 139),
+        "darkslategray" | "darkslategrey" => (47, 79, 79),
+        "darkturquoise" => (0, 206, 209),
+        "darkviolet" => (148, 0, 211),
+        "deeppink" => (255, 20, 147),
+        "deepskyblue" => (0, 191, 255),
+        "dimgray" | "dimgrey" => (105, 105, 105),
+        "dodgerblue" => (30, 144, 255),
+        "firebrick" => (178, 34, 34),
+        "floralwhite" => (255, 250, 240),
+        "forestgreen" => (34, 139, 34),
+        "gainsboro" => (220, 220, 220),
+        "ghostwhite" => (248, 248, 255),
+        "gold" => (255, 215, 0),
+        "goldenrod" => (218, 165, 32),
+        "greenyellow" => (173, 255, 47),
+        "honeydew" => (240, 255, 240),
+        "hotpink" => (255, 105, 180),
+        "indianred" => (205, 92, 92),
+        "indigo" => (75, 0, 130),
+        "ivory" => (255, 255, 240),
+        "khaki" => (240, 230, 140),
+        "lavender" => (230, 230, 250),
+        "lavenderblush" => (255, 240, 245),
+        "lawngreen" => (124, 252, 0),
+        "lemonchiffon" => (255, 250, 205),
+        "lightblue" => (173, 216, 230),
+        "lightcoral" => (240, 128, 128),
+        "lightcyan" => (224, 255, 255),
+        "lightgoldenrodyellow" => (250, 250, 210),
+        "lightgray" | "lightgrey" => (211, 211, 211),
+        "lightgreen" => (144, 238, 144),
+        "lightpink" => (255, 182, 193),
+        "lightsalmon" => (255, 160, 122),
+        "lightseagreen" => (32, 178, 170),
+        "lightskyblue" => (135, 206, 250),
+        "lightslategray" | "lightslategrey" => (119, 136, 153),
+        "lightsteelblue" => (176, 196, 222),
+        "lightyellow" => (255, 255, 224),
+        "limegreen" => (50, 205, 50),
+        "linen" => (250, 240, 230),
+        "magenta" => (255, 0, 255),
+        "mediumaquamarine" => (102, 205, 170),
+        "mediumblue" => (0, 0, 205),
+        "mediumorchid" => (186, 85, 211),
+        "mediumpurple" => (147, 112, 219),
+        "mediumseagreen" => (60, 179, 113),
+        "mediumslateblue" => (123, 104, 238),
+        "mediumspringgreen" => (0, 250, 154),
+        "mediumturquoise" => (72, 209, 204),
+        "mediumvioletred" => (199, 21, 133),
+        "midnightblue" => (25, 25, 112),
+        "mintcream" => (245, 255, 250),
+        "mistyrose" => (255, 228, 225),
+        "moccasin" => (255, 228, 181),
+        "navajowhite" => (255, 222, 173),
+        "oldlace" => (253, 245, 230),
+        "olivedrab" => (107, 142, 35),
+        "orangered" => (255, 69, 0),
+        "orchid" => (218, 112, 214),
+        "palegoldenrod" => (238, 232, 170),
+        "palegreen" => (152, 251, 152),
+        "paleturquoise" => (175, 238, 238),
+        "palevioletred" => (219, 112, 147),
+        "papayawhip" => (255, 239, 213),
+        "peachpuff" => (255, 218, 185),
+        "peru" => (205, 133, 63),
+        "pink" => (255, 192, 203),
+        "plum" => (221, 160, 221),
+        "powderblue" => (176, 224, 230),
+        "rebeccapurple" => (102, 51, 153),
+        "rosybrown" => (188, 143, 143),
+        "royalblue" => (65, 105, 225),
+        "saddlebrown" => (139, 69, 19),
+        "salmon" => (250, 128, 114),
+        "sandybrown" => (244, 164, 96),
+        "seagreen" => (46, 139, 87),
+        "seashell" => (255, 245, 238),
+        "sienna" => (160, 82, 45),
+        "skyblue" => (135, 206, 235),
+        "slateblue" => (106, 90, 205),
+        "slategray" | "slategrey" => (112, 128, 144),
+        "snow" => (255, 250, 250),
+        "springgreen" => (0, 255, 127),
+        "steelblue" => (70, 130, 180),
+        "tan" => (210, 180, 140),
+        "thistle" => (216, 191, 216),
+        "tomato" => (255, 99, 71),
+        "turquoise" => (64, 224, 208),
+        "violet" => (238, 130, 238),
+        "wheat" => (245, 222, 179),
+        "whitesmoke" => (245, 245, 245),
+        "yellowgreen" => (154, 205, 50),
+        _ => return None,
+    };
+    Some(Color { r, g, b, a: 255 })
+}
+
+fn normalize_css_paint(css: String) -> String {
+    if css.eq_ignore_ascii_case("none") {
+        return "rgba(0,0,0,0)".into();
+    }
+    if css.starts_with('#') {
+        return css;
+    }
+    parse_css_color(&css).map_or(css, |color| {
+        if color.a == 255 {
+            format!("rgb({},{},{})", color.r, color.g, color.b)
+        } else {
+            format!("rgba({},{},{},{})", color.r, color.g, color.b, css_alpha(f64::from(color.a) / 255.0))
+        }
+    })
 }
 
 fn text_node(
@@ -2109,6 +3732,127 @@ where
                     instructions.push(PaintInstruction::Path(line_path(points, color, 2.0)));
                 }
             }
+            LayoutedChartItem::CubicPath {
+                start,
+                segments,
+                color,
+                fill,
+                fill_opacity,
+                stroke_width,
+            } => {
+                let mut commands = Vec::with_capacity(segments.len() + 2);
+                commands.push(PathCommand::MoveTo {
+                    x: start.x,
+                    y: start.y,
+                });
+                commands.extend(segments.iter().map(|segment| PathCommand::CubicTo {
+                    cx1: segment.control1.x,
+                    cy1: segment.control1.y,
+                    cx2: segment.control2.x,
+                    cy2: segment.control2.y,
+                    x: segment.end.x,
+                    y: segment.end.y,
+                }));
+                commands.push(PathCommand::Close);
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands,
+                    fill: fill.as_ref().map(|fill| {
+                        fill_opacity.map_or_else(|| fill.clone(), |opacity| with_opacity(fill, opacity))
+                    }),
+                    fill_rule: None,
+                    stroke: Some(color.clone()),
+                    stroke_width: Some(*stroke_width),
+                    stroke_cap: Some(StrokeCap::Round),
+                    stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+            }
+            LayoutedChartItem::FilledLinePath {
+                points,
+                fill,
+                fill_opacity,
+                stroke,
+                stroke_width,
+            } => {
+                if let Some(first) = points.first() {
+                    let mut commands = Vec::with_capacity(points.len() + 1);
+                    commands.push(PathCommand::MoveTo {
+                        x: first.x,
+                        y: first.y,
+                    });
+                    commands.extend(points[1..].iter().map(|point| PathCommand::LineTo {
+                        x: point.x,
+                        y: point.y,
+                    }));
+                    commands.push(PathCommand::Close);
+                    instructions.push(PaintInstruction::Path(PaintPath {
+                        base: PaintBase::default(),
+                        commands,
+                        fill: Some(with_opacity(fill, *fill_opacity)),
+                        fill_rule: None,
+                        stroke: Some(stroke.clone()),
+                        stroke_width: Some(*stroke_width),
+                        stroke_cap: Some(StrokeCap::Round),
+                        stroke_join: Some(StrokeJoin::Round),
+                        stroke_dash: None,
+                        stroke_dash_offset: None,
+                    }));
+                }
+            }
+            LayoutedChartItem::StyledLine {
+                x1,
+                y1,
+                x2,
+                y2,
+                color,
+                stroke_width,
+            } => {
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
+                    color,
+                    *stroke_width,
+                )));
+            }
+            LayoutedChartItem::AnchoredLabel {
+                x,
+                y,
+                text,
+                font_size,
+                color,
+                anchor,
+                baseline,
+            } => {
+                let width = diagram.width.min(240.0);
+                let label_x = match anchor {
+                    ChartTextAnchor::Start => *x,
+                    ChartTextAnchor::Middle => x - width / 2.0,
+                    ChartTextAnchor::End => x - width,
+                };
+                let label_y = match baseline {
+                    ChartTextBaseline::Top => *y,
+                    ChartTextBaseline::Middle => y - font_size * 0.6,
+                    ChartTextBaseline::Bottom => y - font_size * 0.8,
+                };
+                let mut node = text_node_no_wrap(
+                    text,
+                    label_x,
+                    label_y,
+                    width,
+                    font_size * 1.2,
+                    font_with_size(&lf, Some(*font_size)),
+                    css_to_color(color),
+                );
+                if let Some(Content::Text(content)) = &mut node.content {
+                    content.text_align = match anchor {
+                        ChartTextAnchor::Start => TextAlign::Start,
+                        ChartTextAnchor::Middle => TextAlign::Center,
+                        ChartTextAnchor::End => TextAlign::End,
+                    };
+                }
+                text_children.push(node);
+            }
             LayoutedChartItem::PointLabel {
                 x,
                 y,
@@ -2484,6 +4228,50 @@ where
                         },
                     ));
                     ex += legend_font_size + 4.0 + 88.0;
+                }
+            }
+            LayoutedChartItem::VerticalLegend {
+                x,
+                y,
+                entries,
+                box_size,
+                font_size,
+                line_height,
+                fill_opacity,
+            } => {
+                for (index, entry) in entries.iter().enumerate() {
+                    let entry_y = y + index as f64 * line_height;
+                    instructions.push(PaintInstruction::Rect(PaintRect {
+                        base: PaintBase::default(),
+                        x: *x,
+                        y: entry_y,
+                        width: *box_size,
+                        height: *box_size,
+                        fill: Some(with_opacity(&entry.color, *fill_opacity)),
+                        stroke: Some(entry.color.clone()),
+                        stroke_width: Some(1.0),
+                        corner_radius: None,
+                        stroke_dash: None,
+                        stroke_dash_offset: None,
+                    }));
+                    let mut label = text_node_no_wrap(
+                        &entry.label,
+                        x + 16.0,
+                        entry_y,
+                        120.0,
+                        font_size * 1.2,
+                        font_with_size(&lf, Some(*font_size)),
+                        Color {
+                            r: 51,
+                            g: 51,
+                            b: 51,
+                            a: 255,
+                        },
+                    );
+                    if let Some(Content::Text(content)) = &mut label.content {
+                        content.text_align = TextAlign::Start;
+                    }
+                    text_children.push(label);
                 }
             }
         }
@@ -5276,6 +7064,7 @@ mod tests {
                 size: 18.0,
                 weight: 700,
                 italic: false,
+                stretch: FontStretch::Normal,
                 line_height: 1.2,
             },
             shaper,
@@ -5360,7 +7149,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.63.0");
+        assert_eq!(crate::VERSION, "0.67.0");
     }
 
     #[test]
@@ -6314,6 +8103,357 @@ mod tests {
     }
 
     #[test]
+    fn css_colors_preserve_shorthand_and_alpha() {
+        assert_eq!(css_to_color("#369"), Color { r: 51, g: 102, b: 153, a: 255 });
+        assert_eq!(css_to_color("#369c"), Color { r: 51, g: 102, b: 153, a: 204 });
+        assert_eq!(css_to_color("#336699cc"), Color { r: 51, g: 102, b: 153, a: 204 });
+        assert_eq!(css_to_color("transparent"), Color { r: 0, g: 0, b: 0, a: 0 });
+        assert_eq!(with_opacity("#336699cc", 0.5), "rgba(51,102,153,0.4)");
+    }
+
+    #[test]
+    fn css_colors_parse_legacy_and_modern_rgb_functions() {
+        let expected = Color { r: 51, g: 102, b: 153, a: 204 };
+        assert_eq!(css_to_color("rgba(51, 102, 153, 0.8)"), expected);
+        assert_eq!(css_to_color("rgb(20% 40% 60% / 80%)"), expected);
+        assert_eq!(with_opacity("rgb(20% 40% 60% / 80%)", 0.5), "rgba(51,102,153,0.4)");
+    }
+
+    #[test]
+    fn css_colors_parse_legacy_and_modern_hsl_functions() {
+        let expected = Color { r: 51, g: 102, b: 153, a: 204 };
+        assert_eq!(css_to_color("hsla(210, 50%, 40%, 0.8)"), expected);
+        assert_eq!(css_to_color("hsl(210deg 50% 40% / 80%)"), expected);
+        assert_eq!(with_opacity("hsl(210deg 50% 40% / 80%)", 0.5), "rgba(51,102,153,0.4)");
+        let cyan = Color { r: 0, g: 255, b: 255, a: 255 };
+        assert_eq!(css_to_color("hsl(0.5turn 100% 50%)"), cyan);
+        assert_eq!(css_to_color("hsl(200grad 100% 50%)"), cyan);
+        assert_eq!(css_to_color("hsl(3.141592653589793rad 100% 50%)"), cyan);
+    }
+
+    #[test]
+    fn css_colors_parse_hwb_functions() {
+        let expected = Color { r: 51, g: 102, b: 153, a: 204 };
+        assert_eq!(css_to_color("hwb(210 20% 40% / 80%)"), expected);
+        assert_eq!(css_to_color("hwb(-150deg 20% 40% / 0.8)"), expected);
+        assert_eq!(with_opacity("hwb(210 20% 40% / 80%)", 0.5), "rgba(51,102,153,0.4)");
+        assert_eq!(css_to_color("hwb(0 80% 80%)"), Color { r: 128, g: 128, b: 128, a: 255 });
+        assert_eq!(normalize_css_paint("hwb(210 20% 40% / 80%)".into()), "rgba(51,102,153,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_lab_and_lch_functions() {
+        let expected = Color { r: 125, g: 35, b: 41, a: 204 };
+        assert_eq!(css_to_color("lab(29.2345% 39.3825 20.0664 / 80%)"), expected);
+        assert_eq!(css_to_color("lch(29.2345% 44.2 27 / 0.8)"), expected);
+        assert_eq!(css_to_color("lab(100% 0 0)"), Color { r: 255, g: 255, b: 255, a: 255 });
+        assert_eq!(css_to_color("lch(0% 0 0)"), Color { r: 0, g: 0, b: 0, a: 255 });
+        assert_eq!(with_opacity("lab(29.2345% 39.3825 20.0664 / 80%)", 0.5), "rgba(125,35,41,0.4)");
+        assert_eq!(normalize_css_paint("lch(29.2345% 44.2 27 / 80%)".into()), "rgba(125,35,41,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_oklab_and_oklch_functions() {
+        let expected = Color { r: 125, g: 36, b: 41, a: 204 };
+        assert_eq!(css_to_color("oklab(40.1% 0.1143 0.045 / 80%)"), expected);
+        assert_eq!(css_to_color("oklch(40.1% 0.123 21.57 / 0.8)"), expected);
+        assert_eq!(css_to_color("oklab(1 0 0)"), Color { r: 255, g: 255, b: 255, a: 255 });
+        assert_eq!(css_to_color("oklch(0 0 0)"), Color { r: 0, g: 0, b: 0, a: 255 });
+        assert_eq!(with_opacity("oklab(40.1% 0.1143 0.045 / 80%)", 0.5), "rgba(125,36,41,0.4)");
+        assert_eq!(normalize_css_paint("oklch(40.1% 0.123 21.57 / 80%)".into()), "rgba(125,36,41,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_color_srgb_profiles() {
+        let expected = Color { r: 51, g: 102, b: 153, a: 204 };
+        assert_eq!(css_to_color("color(srgb 0.2 0.4 0.6 / 0.8)"), expected);
+        assert_eq!(css_to_color("color(srgb 20% 40% 60% / 80%)"), expected);
+        assert_eq!(
+            css_to_color("color(srgb-linear 0.0331047666 0.1328683216 0.3185467781 / 80%)"),
+            expected,
+        );
+        assert_eq!(with_opacity("color(srgb 0.2 0.4 0.6 / 80%)", 0.5), "rgba(51,102,153,0.4)");
+        assert_eq!(normalize_css_paint("color(srgb 20% 40% 60% / 80%)".into()), "rgba(51,102,153,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_color_display_p3_profile() {
+        let expected = Color { r: 27, g: 104, b: 157, a: 204 };
+        assert_eq!(css_to_color("color(display-p3 0.2 0.4 0.6 / 0.8)"), expected);
+        assert_eq!(css_to_color("color(display-p3 20% 40% 60% / 80%)"), expected);
+        assert_eq!(with_opacity("color(display-p3 0.2 0.4 0.6 / 80%)", 0.5), "rgba(27,104,157,0.4)");
+        assert_eq!(normalize_css_paint("color(display-p3 20% 40% 60% / 80%)".into()), "rgba(27,104,157,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_color_a98_rgb_profile() {
+        let expected = Color { r: 0, g: 102, b: 156, a: 204 };
+        assert_eq!(css_to_color("color(a98-rgb 0.2 0.4 0.6 / 0.8)"), expected);
+        assert_eq!(css_to_color("color(a98-rgb 20% 40% 60% / 80%)"), expected);
+        assert_eq!(with_opacity("color(a98-rgb 0.2 0.4 0.6 / 80%)", 0.5), "rgba(0,102,156,0.4)");
+        assert_eq!(normalize_css_paint("color(a98-rgb 20% 40% 60% / 80%)".into()), "rgba(0,102,156,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_color_prophoto_rgb_profile() {
+        let expected = Color { r: 0, g: 130, b: 176, a: 204 };
+        assert_eq!(css_to_color("color(prophoto-rgb 0.2 0.4 0.6 / 0.8)"), expected);
+        assert_eq!(css_to_color("color(prophoto-rgb 20% 40% 60% / 80%)"), expected);
+        assert_eq!(with_opacity("color(prophoto-rgb 0.2 0.4 0.6 / 80%)", 0.5), "rgba(0,130,176,0.4)");
+        assert_eq!(normalize_css_paint("color(prophoto-rgb 20% 40% 60% / 80%)".into()), "rgba(0,130,176,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_color_rec2020_profile() {
+        let expected = Color { r: 0, g: 119, b: 168, a: 204 };
+        assert_eq!(css_to_color("color(rec2020 0.2 0.4 0.6 / 0.8)"), expected);
+        assert_eq!(css_to_color("color(rec2020 20% 40% 60% / 80%)"), expected);
+        assert_eq!(with_opacity("color(rec2020 0.2 0.4 0.6 / 80%)", 0.5), "rgba(0,119,168,0.4)");
+        assert_eq!(normalize_css_paint("color(rec2020 20% 40% 60% / 80%)".into()), "rgba(0,119,168,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_color_xyz_profiles() {
+        let d65 = Color { r: 0, g: 167, b: 164, a: 204 };
+        let d50 = Color { r: 0, g: 168, b: 189, a: 204 };
+        assert_eq!(css_to_color("color(xyz 0.2 0.3 0.4 / 0.8)"), d65);
+        assert_eq!(css_to_color("color(xyz-d65 20% 30% 40% / 80%)"), d65);
+        assert_eq!(css_to_color("color(xyz-d50 0.2 0.3 0.4 / 80%)"), d50);
+        assert_eq!(with_opacity("color(xyz-d65 0.2 0.3 0.4 / 80%)", 0.5), "rgba(0,167,164,0.4)");
+        assert_eq!(normalize_css_paint("color(xyz-d50 20% 30% 40% / 80%)".into()), "rgba(0,168,189,0.8)");
+    }
+
+    #[test]
+    fn css_colors_lower_missing_components_to_zero() {
+        assert_eq!(css_to_color("rgb(none 40% 60% / 80%)"), css_to_color("rgb(0% 40% 60% / 80%)"));
+        assert_eq!(css_to_color("hsl(none 100% 50%)"), css_to_color("hsl(0 100% 50%)"));
+        assert_eq!(css_to_color("hwb(none 20% 40%)"), css_to_color("hwb(0 20% 40%)"));
+        assert_eq!(css_to_color("lab(29.2345% none 20.0664)"), css_to_color("lab(29.2345% 0 20.0664)"));
+        assert_eq!(css_to_color("lch(29.2345% none none)"), css_to_color("lch(29.2345% 0 0)"));
+        assert_eq!(css_to_color("oklab(40.1% none 0.045)"), css_to_color("oklab(40.1% 0 0.045)"));
+        assert_eq!(css_to_color("oklch(40.1% none none)"), css_to_color("oklch(40.1% 0 0)"));
+        assert_eq!(
+            css_to_color("color(display-p3 none 0.4 0.6 / 80%)"),
+            css_to_color("color(display-p3 0 0.4 0.6 / 80%)"),
+        );
+        assert_eq!(css_to_color("rgb(20% 40% 60% / none)").a, 0);
+        assert_eq!(css_to_color("rgb(20% 40% 60%)").a, 255);
+    }
+
+    #[test]
+    fn css_colors_mix_in_srgb() {
+        assert_eq!(css_to_color("color-mix(in srgb, red, blue)"), Color { r: 128, g: 0, b: 128, a: 255 });
+        assert_eq!(css_to_color("color-mix(in srgb, red 25%, blue)"), Color { r: 64, g: 0, b: 191, a: 255 });
+        assert_eq!(
+            css_to_color("color-mix(in srgb, rgb(255, 0, 0) 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in srgb, red 20%, blue 20%)"),
+            Color { r: 128, g: 0, b: 128, a: 102 },
+        );
+        assert_eq!(with_opacity("color-mix(in srgb, red, blue)", 0.5), "rgba(128,0,128,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_linear_srgb() {
+        assert_eq!(
+            css_to_color("color-mix(in srgb-linear, black, white)"),
+            Color { r: 188, g: 188, b: 188, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in srgb-linear, red, blue)"),
+            Color { r: 188, g: 0, b: 188, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in srgb-linear, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in srgb-linear, black, white)", 0.5), "rgba(188,188,188,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_display_p3() {
+        assert_eq!(
+            css_to_color("color-mix(in display-p3, black, white)"),
+            Color { r: 128, g: 128, b: 128, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in display-p3, red, blue)"),
+            Color { r: 128, g: 10, b: 145, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in display-p3, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in display-p3, black, white)", 0.5), "rgba(128,128,128,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_a98_rgb() {
+        assert_eq!(
+            css_to_color("color-mix(in a98-rgb, black, white)"),
+            Color { r: 129, g: 129, b: 129, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in a98-rgb, red, blue)"),
+            Color { r: 129, g: 0, b: 129, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in a98-rgb, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in a98-rgb, black, white)", 0.5), "rgba(129,129,129,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_prophoto_rgb() {
+        assert_eq!(
+            css_to_color("color-mix(in prophoto-rgb, black, white)"),
+            Color { r: 146, g: 146, b: 146, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in prophoto-rgb, red, blue)"),
+            Color { r: 186, g: 3, b: 157, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in prophoto-rgb, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in prophoto-rgb, black, white)", 0.5), "rgba(146,146,146,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_hsl() {
+        assert_eq!(
+            css_to_color("color-mix(in hsl, black, white)"),
+            Color { r: 128, g: 128, b: 128, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in hsl, red, blue)"),
+            Color { r: 255, g: 0, b: 255, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in hsl, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in hsl, black, white)", 0.5), "rgba(128,128,128,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_hwb() {
+        assert_eq!(
+            css_to_color("color-mix(in hwb, black, white)"),
+            Color { r: 128, g: 128, b: 128, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in hwb, red, blue)"),
+            Color { r: 255, g: 0, b: 255, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in hwb, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in hwb, black, white)", 0.5), "rgba(128,128,128,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_lab() {
+        assert_eq!(
+            css_to_color("color-mix(in lab, black, white)"),
+            Color { r: 119, g: 119, b: 119, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in lab, red, blue)"),
+            Color { r: 193, g: 0, b: 136, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in lab, red 100%, blue 0%)"),
+            Color { r: 255, g: 0, b: 0, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in lab, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in lab, black, white)", 0.5), "rgba(119,119,119,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_lch() {
+        assert_eq!(
+            css_to_color("color-mix(in lch, black, white)"),
+            Color { r: 119, g: 119, b: 119, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in lch, red, blue)"),
+            Color { r: 245, g: 0, b: 134, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in lch, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in lch, black, white)", 0.5), "rgba(119,119,119,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_oklab() {
+        assert_eq!(
+            css_to_color("color-mix(in oklab, black, white)"),
+            Color { r: 99, g: 99, b: 99, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in oklab, red, blue)"),
+            Color { r: 140, g: 83, b: 162, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in oklab, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in oklab, black, white)", 0.5), "rgba(99,99,99,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_in_oklch() {
+        assert_eq!(
+            css_to_color("color-mix(in oklch, black, white)"),
+            Color { r: 99, g: 99, b: 99, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in oklch, red, blue)"),
+            Color { r: 186, g: 0, b: 194, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in oklch, red 20%, transparent)"),
+            Color { r: 255, g: 0, b: 0, a: 51 },
+        );
+        assert_eq!(with_opacity("color-mix(in oklch, black, white)", 0.5), "rgba(99,99,99,0.5)");
+    }
+
+    #[test]
+    fn css_colors_parse_basic_named_colors() {
+        assert_eq!(css_to_color("ORANGE"), Color { r: 255, g: 165, b: 0, a: 255 });
+        assert_eq!(css_to_color("navy"), Color { r: 0, g: 0, b: 128, a: 255 });
+        assert_eq!(css_to_color("grey"), css_to_color("gray"));
+        assert_eq!(with_opacity("teal", 0.5), "rgba(0,128,128,0.5)");
+    }
+
+    #[test]
+    fn css_colors_parse_extended_named_colors() {
+        assert_eq!(css_to_color("rebeccapurple"), Color { r: 102, g: 51, b: 153, a: 255 });
+        assert_eq!(css_to_color("CornflowerBlue"), Color { r: 100, g: 149, b: 237, a: 255 });
+        assert_eq!(css_to_color("papayawhip"), Color { r: 255, g: 239, b: 213, a: 255 });
+        assert_eq!(css_to_color("darkslategrey"), css_to_color("darkslategray"));
+    }
+
+    #[test]
+    fn css_none_paint_lowers_to_transparent_without_becoming_a_text_color() {
+        assert_eq!(normalize_css_paint("none".into()), "rgba(0,0,0,0)");
+        assert_eq!(normalize_css_paint("TRANSPARENT".into()), "rgba(0,0,0,0)");
+        assert_eq!(with_opacity("none", 0.5), "rgba(0,0,0,0)");
+        assert_eq!(css_to_color("none"), Color { r: 0, g: 0, b: 0, a: 255 });
+    }
+
+    #[test]
     fn chart_accessibility_metadata_reaches_paint_scene() {
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
@@ -6348,6 +8488,7 @@ mod tests {
         let layout = LayoutedTreemapDiagram {
             width: 320.0,
             height: 240.0,
+            config: Default::default(),
             title: Some("Allocation".into()),
             accessibility_title: Some("Allocation treemap".into()),
             accessibility_description: None,
@@ -6356,13 +8497,280 @@ mod tests {
                 label: "Root".into(),
                 value: 10.0,
                 depth: 0,
+                has_children: false,
+                palette_index: Some(0),
                 x: 8.0,
                 y: 48.0,
                 width: 304.0,
                 height: 184.0,
                 class_selector: None,
+                style: Some(diagram_ir::TreemapStyle {
+                    node: diagram_ir::DiagramStyle {
+                        fill: Some("currentColor".into()), stroke: Some("currentcolor".into()), stroke_width: Some(3.0),
+                        stroke_dash: Some(vec![5.0, 2.0]), text_color: Some("rgb(47.059% 20.784% 5.882% / 80%)".into()), font_size: Some(17.0),
+                        font_weight: Some(700), font_italic: Some(true), font_family: Some("Avenir".into()), corner_radius: Some(9.0),
+                    },
+                    font_size: Some(diagram_ir::TreemapFontSize::Factor(1.25)),
+                    border_radius: Some(diagram_ir::TreemapBorderRadius::Factor(0.25)),
+                    opacity: Some(0.8), fill_opacity: Some(0.5), stroke_opacity: Some(0.5), stroke_dash_offset: Some(-1.0),
+                    text_align: Some(diagram_ir::TreemapTextAlign::End),
+                    text_align_last: None,
+                    text_justify: None,
+                    text_transform: Some(diagram_ir::TreemapTextTransform::FullWidth),
+                    text_decoration: Some(diagram_ir::TreemapTextDecoration {
+                        underline: true, overline: true, line_through: true,
+                    }),
+                    text_decoration_color: Some(diagram_ir::TreemapTextDecorationColor::Color("#2563eb".into())),
+                    text_decoration_style: Some(diagram_ir::TreemapTextDecorationStyle::Wavy),
+                    text_decoration_thickness: Some(diagram_ir::TreemapTextDecorationThickness::Factor(0.25)),
+                    text_underline_offset: Some(diagram_ir::TreemapTextUnderlineOffset::Factor(0.25)),
+                    text_underline_position: Some(diagram_ir::TreemapTextUnderlinePosition::Under),
+                    line_height: Some(diagram_ir::TreemapLineHeight::Pixels(24.0)),
+                    text_indent: Some(diagram_ir::TreemapTextIndent::Factor(0.1)),
+                    text_indent_hanging: true,
+                    text_indent_each_line: true,
+                    white_space: Some(diagram_ir::TreemapWhiteSpace::NoWrap),
+                    overflow_wrap: None,
+                    word_break: None,
+                    line_break: None,
+                    hyphens: None,
+                    hyphenate_character: None,
+                    text_overflow: None,
+                    text_wrap_mode: None,
+                    text_wrap_style: None,
+                    letter_spacing: None,
+                    word_spacing: None,
+                    direction: None,
+                    text_shadow: None,
+                    tab_size: None,
+                    font_stretch: Some(diagram_ir::TreemapFontStretch::Percentage(80.0)),
+                }),
             }],
         };
+
+        let mut relative_font = opts.label_font.clone();
+        relative_font.size = 17.0;
+        apply_treemap_font_size(&mut relative_font, layout.nodes[0].style.as_ref());
+        assert_eq!(relative_font.size, 21.25);
+
+        let styled_text = treemap_text_node(
+            "Styled node", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            Color { r: 0, g: 0, b: 0, a: 255 }, layout.nodes[0].style.as_ref(),
+        );
+        assert!(matches!(styled_text.content,
+            Some(Content::Text(TextContent { value, wrap: false, text_align: TextAlign::End, font,
+                decoration: Some(TextDecoration { lines, color: Some(decoration_color),
+                    style: TextDecorationStyle::Wavy, thickness: Some(3.5), underline_offset: Some(3.5),
+                    underline_position: TextUnderlinePosition::Under }), .. }))
+                if value == "\u{ff33}\u{ff54}\u{ff59}\u{ff4c}\u{ff45}\u{ff44}\u{3000}\u{ff4e}\u{ff4f}\u{ff44}\u{ff45}"
+                    && font.stretch == FontStretch::Condensed
+                    && lines.contains(TextDecorationLines::UNDERLINE)
+                    && lines.contains(TextDecorationLines::OVERLINE)
+                    && lines.contains(TextDecorationLines::LINE_THROUGH)
+                    && decoration_color == (Color { r: 37, g: 99, b: 235, a: 204 })));
+        assert_eq!(styled_text.x, 0.0);
+        assert_eq!(styled_text.width, 100.0);
+        assert_eq!(styled_text.ext.get("text.indent"), Some(&ExtValue::Float(10.0)));
+        assert_eq!(styled_text.ext.get("text.indent-hanging"), Some(&ExtValue::Bool(true)));
+        assert_eq!(styled_text.ext.get("text.indent-each-line"), Some(&ExtValue::Bool(true)));
+        let mut current_color_style = layout.nodes[0].style.clone().expect("treemap style");
+        current_color_style.text_decoration_color =
+            Some(diagram_ir::TreemapTextDecorationColor::CurrentColor);
+        let current_color = Color { r: 12, g: 34, b: 56, a: 78 };
+        let current_color_text = treemap_text_node(
+            "Current color", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&current_color_style),
+        );
+        assert!(matches!(current_color_text.content,
+            Some(Content::Text(TextContent {
+                decoration: Some(TextDecoration { color: Some(color), .. }), ..
+            })) if color == current_color));
+        let mut whitespace_style = current_color_style;
+        whitespace_style.text_transform = Some(diagram_ir::TreemapTextTransform::None);
+        whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::Normal);
+        let collapsed_text = treemap_text_node(
+            "  one \n two   three ", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(collapsed_text.content,
+            Some(Content::Text(TextContent { value, wrap: true, .. })) if value == "one two three"));
+        whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::PreLine);
+        let pre_line_text = treemap_text_node(
+            "  one \n two   three ", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(pre_line_text.content,
+            Some(Content::Text(TextContent { value, wrap: true, .. })) if value == "one\ntwo three"));
+        whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::Pre);
+        whitespace_style.text_transform = Some(diagram_ir::TreemapTextTransform::Capitalize);
+        let pre_capitalized_text = treemap_text_node(
+            "one  two\nthree", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(pre_capitalized_text.content,
+            Some(Content::Text(TextContent { value, wrap: false, .. })) if value == "One  Two\nThree"));
+        whitespace_style.text_transform = Some(diagram_ir::TreemapTextTransform::FullSizeKana);
+        let full_size_kana_text = treemap_text_node(
+            "ゃャㇰ", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(full_size_kana_text.content,
+            Some(Content::Text(TextContent { value, .. })) if value == "やヤク"));
+        whitespace_style.text_transform = Some(diagram_ir::TreemapTextTransform::Capitalize);
+        whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::BreakSpaces);
+        let break_spaces_text = treemap_text_node(
+            "one  two", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(break_spaces_text.content,
+            Some(Content::Text(TextContent { value, wrap: true, .. })) if value == "One  Two"));
+        assert_eq!(break_spaces_text.ext.get("text.break-spaces"), Some(&ExtValue::Bool(true)));
+        whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::PreserveSpaces);
+        let preserve_spaces_text = treemap_text_node(
+            "one\t two\nthree", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(preserve_spaces_text.content,
+            Some(Content::Text(TextContent { value, wrap: true, .. })) if value == "One  Two Three"));
+        assert_eq!(preserve_spaces_text.ext.get("text.preserve-spaces"), Some(&ExtValue::Bool(true)));
+        whitespace_style.letter_spacing = Some(diagram_ir::TreemapLetterSpacing::Factor(0.125));
+        let letter_spaced_text = treemap_text_node(
+            "tracked", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(letter_spaced_text.ext.get("text.letter-spacing"), Some(&ExtValue::Float(1.75)));
+        whitespace_style.word_spacing = Some(diagram_ir::TreemapWordSpacing::Factor(0.25));
+        let word_spaced_text = treemap_text_node(
+            "two words", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(word_spaced_text.ext.get("text.word-spacing"), Some(&ExtValue::Float(3.5)));
+        whitespace_style.text_align_last = Some(diagram_ir::TreemapTextAlignLast::Start);
+        let last_aligned_text = treemap_text_node(
+            "last line", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(last_aligned_text.ext.get("text.align-last"), Some(&ExtValue::Str("start".into())));
+        whitespace_style.text_align_last = Some(diagram_ir::TreemapTextAlignLast::Justify);
+        let last_justified_text = treemap_text_node(
+            "last line", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(last_justified_text.ext.get("text.align-last"), Some(&ExtValue::Str("justify".into())));
+        whitespace_style.text_justify = Some(diagram_ir::TreemapTextJustify::InterCharacter);
+        let character_justified_text = treemap_text_node(
+            "last line", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(character_justified_text.ext.get("text.justify-mode"),
+            Some(&ExtValue::Str("inter-character".into())));
+        whitespace_style.overflow_wrap = Some(diagram_ir::TreemapOverflowWrap::Anywhere);
+        let anywhere_text = treemap_text_node(
+            "unbreakable", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(anywhere_text.ext.get("text.overflow-wrap"), Some(&ExtValue::Str("anywhere".into())));
+        whitespace_style.word_break = Some(diagram_ir::TreemapWordBreak::KeepAll);
+        let keep_all_text = treemap_text_node(
+            "日本語", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(keep_all_text.ext.get("text.word-break"), Some(&ExtValue::Str("keep-all".into())));
+        whitespace_style.line_break = Some(diagram_ir::TreemapLineBreak::Loose);
+        let loose_text = treemap_text_node(
+            "あぁ", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(loose_text.ext.get("text.line-break"), Some(&ExtValue::Str("loose".into())));
+        whitespace_style.hyphens = Some(diagram_ir::TreemapHyphens::Manual);
+        let hyphenated_text = treemap_text_node(
+            "extra\u{ad}ordinary", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(hyphenated_text.ext.get("text.hyphens"), Some(&ExtValue::Str("manual".into())));
+        whitespace_style.hyphenate_character = Some(
+            diagram_ir::TreemapHyphenateCharacter::Character("‐".into()));
+        let custom_hyphen_text = treemap_text_node(
+            "extra\u{ad}ordinary", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(custom_hyphen_text.ext.get("text.hyphenate-character"),
+            Some(&ExtValue::Str("‐".into())));
+        whitespace_style.text_overflow = Some(diagram_ir::TreemapTextOverflow::Ellipsis);
+        let ellipsis_text = treemap_text_node(
+            "overflow", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(ellipsis_text.ext.get("text.overflow"), Some(&ExtValue::Str("ellipsis".into())));
+        whitespace_style.text_wrap_mode = Some(diagram_ir::TreemapTextWrapMode::NoWrap);
+        let nowrap_text = treemap_text_node(
+            "one two", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(nowrap_text.ext.get("text.wrap-mode"), Some(&ExtValue::Str("nowrap".into())));
+        whitespace_style.text_wrap_style = Some(diagram_ir::TreemapTextWrapStyle::Balance);
+        let balanced_text = treemap_text_node(
+            "one two three", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(balanced_text.ext.get("text.wrap-style"), Some(&ExtValue::Str("balance".into())));
+        whitespace_style.text_wrap_style = Some(diagram_ir::TreemapTextWrapStyle::Pretty);
+        let pretty_text = treemap_text_node(
+            "one two three", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(pretty_text.ext.get("text.wrap-style"), Some(&ExtValue::Str("pretty".into())));
+        whitespace_style.text_wrap_style = Some(diagram_ir::TreemapTextWrapStyle::Stable);
+        let stable_text = treemap_text_node(
+            "one two three", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(stable_text.ext.get("text.wrap-style"), Some(&ExtValue::Str("stable".into())));
+        whitespace_style.text_align = Some(diagram_ir::TreemapTextAlign::Justify);
+        let justified_text = treemap_text_node(
+            "one two three", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(justified_text.ext.get("text.justify"), Some(&ExtValue::Bool(true)));
+        whitespace_style.direction = Some(diagram_ir::TreemapTextDirection::RightToLeft);
+        let rtl_text = treemap_text_node(
+            "مرحبا", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(rtl_text.ext.get("html"),
+            Some(ExtValue::Map(html)) if html.get("dir") == Some(&ExtValue::Str("rtl".into()))));
+        whitespace_style.text_shadow = Some(diagram_ir::TreemapTextShadow::Shadows(vec![
+            diagram_ir::TreemapTextShadowLayer {
+                offset_x: 2.0, offset_y: 3.0, blur_radius: 4.0,
+                color: diagram_ir::TreemapTextShadowColor::Color("#334155".into()),
+            },
+            diagram_ir::TreemapTextShadowLayer {
+                offset_x: -1.0, offset_y: 0.0, blur_radius: 0.0,
+                color: diagram_ir::TreemapTextShadowColor::CurrentColor,
+            },
+        ]));
+        let shadowed_text = treemap_text_node(
+            "shadowed", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(EffectStyle::from_positioned(&shadowed_text).filters.as_slice(),
+            [EffectFilter::DropShadow { dx: 2.0, dy: 3.0, blur: 4.0,
+                color: EffectColor { r: 51, g: 65, b: 85, a: 204 } },
+             EffectFilter::DropShadow { dx: -1.0, dy: 0.0, blur: 0.0,
+                color: EffectColor { r: 12, g: 34, b: 56, a: 78 } }]));
+        whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::Pre);
+        whitespace_style.tab_size = Some(3);
+        whitespace_style.text_transform = Some(diagram_ir::TreemapTextTransform::None);
+        let tabbed_text = treemap_text_node(
+            "one\ttwo", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(tabbed_text.content,
+            Some(Content::Text(TextContent { value, .. })) if value == "one   two"));
+        let mut styled_font = opts.label_font.clone();
+        styled_font.size = 16.0;
+        apply_treemap_line_height(&mut styled_font, layout.nodes[0].style.as_ref());
+        assert_eq!(styled_font.line_height, 1.5);
 
         let scene = diagram_to_paint_treemap(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
@@ -6370,6 +8778,30 @@ mod tests {
             scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")),
             Some(&"Allocation treemap".to_string())
         );
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("rgba(120,53,15,0.32)")
+                && rect.stroke.as_deref() == Some("rgba(120,53,15,0.32)")
+                && rect.stroke_width == Some(3.0)
+                && rect.corner_radius == Some(46.0)
+                && rect.stroke_dash.as_deref() == Some(&[5.0, 2.0][..])
+                && rect.stroke_dash_offset == Some(-1.0))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 21.25)));
+        assert_eq!(format_treemap_value(12345.0, "$0,0"), "$12,345");
+        assert_eq!(format_treemap_value(12.5, ".2f"), "12.50");
+        assert_eq!(format_treemap_value(12345.0, "$0,0.00"), "$12,345.00");
+        assert_eq!(format_treemap_value(0.125, ".1%"), "12.5%");
+        assert_eq!(format_treemap_value(4500.0, ".2s"), "4.5k");
+        assert_eq!(format_treemap_value(255.0, "x"), "ff");
+        assert_eq!(format_treemap_value(12.0, "+d"), "+12");
+        assert_eq!(format_treemap_value(12.5, ".3~f"), "12.5");
+        assert_eq!(format_treemap_value(1234.5, "*>10,.2f"), "**1,234.50");
+        assert_eq!(format_treemap_value(12.5, "*^12.1f"), "****12.5****");
+        assert_eq!(format_treemap_value(12.5, "=+10.2f"), "+    12.50");
+        assert_eq!(format_treemap_value(12345.0, "08,d"), "0012,345");
+        assert_eq!(format_treemap_value(255.0, "#x"), "0xff");
+        assert_eq!(format_treemap_value(-12.0, "(10.1f"), "    (12.0)");
+        assert_eq!(format_treemap_value(12345.0, "invalid"), "12,345");
     }
 
     #[test]
@@ -6490,6 +8922,114 @@ mod tests {
         };
 
         let scene = diagram_to_paint_chart(&layout, &opts);
+        assert_eq!(
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_)))
+                .count(),
+            2
+        );
+    }
+
+    #[test]
+    fn chart_anchored_labels_preserve_horizontal_and_vertical_placement() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let labels = [
+            ("S", ChartTextAnchor::Start, ChartTextBaseline::Top),
+            ("M", ChartTextAnchor::Middle, ChartTextBaseline::Middle),
+            ("E", ChartTextAnchor::End, ChartTextBaseline::Bottom),
+        ];
+        let layout = LayoutedChartDiagram {
+            width: 400.0,
+            height: 300.0,
+            background_color: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            title_box: None,
+            items: labels
+                .into_iter()
+                .map(|(text, anchor, baseline)| LayoutedChartItem::AnchoredLabel {
+                    x: 200.0,
+                    y: 100.0,
+                    text: text.into(),
+                    font_size: 12.0,
+                    color: "#203040".into(),
+                    anchor,
+                    baseline,
+                })
+                .collect(),
+        };
+
+        let scene = diagram_to_paint_chart(&layout, &opts);
+        let glyphs = scene
+            .instructions
+            .iter()
+            .filter_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => run.glyphs.first(),
+                _ => None,
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(glyphs.len(), 3);
+        assert_eq!(
+            [glyphs[0].x, glyphs[1].x, glyphs[2].x],
+            [200.0, 197.0, 194.0]
+        );
+        assert!(glyphs[0].y > glyphs[1].y && glyphs[1].y > glyphs[2].y);
+    }
+
+    #[test]
+    fn chart_vertical_legend_lowers_to_stroked_translucent_markers_and_glyphs() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedChartDiagram {
+            width: 700.0,
+            height: 700.0,
+            background_color: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            title_box: None,
+            items: vec![LayoutedChartItem::VerticalLegend {
+                x: 612.5,
+                y: 87.5,
+                entries: vec![
+                    diagram_ir::LegendEntry {
+                        color: "#8686ff".into(),
+                        label: "First".into(),
+                    },
+                    diagram_ir::LegendEntry {
+                        color: "#ffff86".into(),
+                        label: "Second".into(),
+                    },
+                ],
+                box_size: 12.0,
+                font_size: 12.0,
+                line_height: 20.0,
+                fill_opacity: 0.5,
+            }],
+        };
+
+        let scene = diagram_to_paint_chart(&layout, &opts);
+        let markers = scene
+            .instructions
+            .iter()
+            .filter_map(|instruction| match instruction {
+                PaintInstruction::Rect(rect) => Some(rect),
+                _ => None,
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(markers.len(), 2);
+        assert_eq!((markers[0].x, markers[0].y), (612.5, 87.5));
+        assert_eq!((markers[1].x, markers[1].y), (612.5, 107.5));
+        assert_eq!(markers[0].fill.as_deref(), Some("rgba(134,134,255,0.5)"));
+        assert_eq!(markers[0].stroke.as_deref(), Some("#8686ff"));
         assert_eq!(
             scene
                 .instructions

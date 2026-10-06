@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Through, According to, About, Tradition, Culture",
+  "label": "ch:ka-through-according-to-about-tradition-culture",
+  "canDo": "I can say through, according to, about, a tradition and culture.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "KA-R215-second-pass-words-from-chapters-211-215",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say through, according to, about, a tradition and culture.",
+    "assesses": [
+      "KA-LEX-C215-KARANA215-03",
+      "KA-LEX-C215-KARANA215-04",
+      "KA-LEX-C215-KARANA215-05"
+    ]
+  }
+}

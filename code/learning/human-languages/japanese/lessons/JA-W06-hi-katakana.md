@@ -43,7 +43,7 @@ reviews_of: [JA-W06-long-mark, JA-W06-ko-katakana]
 
 Write two strokes:
 
-1. a short stroke from right toward left
+1. a short stroke from left to right, rising a little
 2. a longer vertical stroke that turns and sweeps right at the bottom
 
 Read it *hi*, one mora. Japanese *h* is light; keep the vowel clean, like the

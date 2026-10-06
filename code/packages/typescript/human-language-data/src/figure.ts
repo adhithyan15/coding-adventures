@@ -10,6 +10,7 @@ import { renderToSvgString } from "@coding-adventures/paint-vm-svg";
 import { fnv1a64 } from "./hash.js";
 import {
   renderScriptFilmstripFigure,
+  renderScriptSequenceFilmstripFigure,
   type FilmstripEntry,
 } from "./figure-filmstrip.js";
 import type { ParsedLesson } from "./parse.js";
@@ -47,8 +48,21 @@ export interface ScriptFilmstripTarget extends FigureTargetBase {
   kind: "script-filmstrip";
   /** Canonical script id, e.g. `tamil`, `devanagari`, `perso-arabic`. */
   script: string;
-  /** The character whose ductus is drawn. */
+  /**
+   * The character whose ductus is drawn — or, for a SEQUENCE target (one with
+   * `letters`), the headword as the lesson writes it, kept for the figure's
+   * title and the book's alt text.
+   */
   glyph: string;
+  /**
+   * Present only on a sequence target: the letters to draw, in writing order,
+   * each one a key into the filmstrip ledger. A lesson whose headword is a
+   * list of letters ("வ, க") or a word in a script whose letters stand apart
+   * ("はい") gets one strip that writes each letter in turn — see
+   * `writingSequenceOf` in `figure-targets.ts` for exactly which headwords
+   * qualify, and why a Devanagari or Arabic word does not.
+   */
+  letters?: string[];
 }
 
 export type FigureTarget = EtymologyRouteTarget | ScriptFilmstripTarget;
@@ -282,15 +296,23 @@ export function renderFigure(
     return renderEtymologyRouteFigure(lesson, sources.rootTags);
   }
   if (target.kind === "script-filmstrip") {
-    const key = `${target.script}:${target.glyph}`;
-    const entry = sources.filmstrips?.get(key);
-    if (entry === undefined) {
-      throw new Error(
-        `${target.lessonId}: no filmstrip geometry for ${key} — add the target, ` +
-          `then run \`npm run generate:filmstrip-ledger\` in script-ductus`,
-      );
-    }
-    return renderScriptFilmstripFigure(target.lessonId, entry);
+    // One lookup per letter drawn. A single-letter target draws its `glyph`; a
+    // sequence target draws each of its `letters`, and every one of them must
+    // be in the ledger — a strip with a hole in it would teach the word wrong.
+    const entries = (target.letters ?? [target.glyph]).map((glyph) => {
+      const key = `${target.script}:${glyph}`;
+      const entry = sources.filmstrips?.get(key);
+      if (entry === undefined) {
+        throw new Error(
+          `${target.lessonId}: no filmstrip geometry for ${key} — add the target, ` +
+            `then run \`npm run generate:filmstrip-ledger\` in script-ductus`,
+        );
+      }
+      return entry;
+    });
+    return target.letters === undefined
+      ? renderScriptFilmstripFigure(target.lessonId, entries[0]!)
+      : renderScriptSequenceFilmstripFigure(target.lessonId, target.glyph, entries);
   }
   const exhaustive: never = target;
   throw new Error(`unsupported figure kind '${JSON.stringify(exhaustive)}'`);

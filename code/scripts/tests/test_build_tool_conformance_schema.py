@@ -432,6 +432,7 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
                 "lua_windows_sibling_parity",
                 "manifest_uniqueness",
                 "orphan_crate_coverage",
+                "orphan_package_root_coverage",
                 "path_safety",
                 "standalone_prerequisites",
                 "starlark_declarations",
@@ -456,13 +457,13 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
         result = self.pure_schema["$defs"]["validation_result"]
         self.assertEqual(
             result["properties"]["pending_exemption_count"],
-            {"type": "integer", "minimum": 0, "maximum": 4096},
+            {"type": "integer", "minimum": 0, "maximum": 12288},
         )
         self.assertEqual(
             self.pure_schema["$defs"]["validation_input"]["properties"]["options"][
                 "properties"
             ]["checks"]["maxItems"],
-            11,
+            12,
         )
 
         example = next(
@@ -484,6 +485,42 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
         self.assertTrue(list(validator.iter_errors(record)))
         del record["input"]["options"]["orphan_snapshot"]
         record["result"]["pending_exemption_count"] = 0
+        self.assertTrue(list(validator.iter_errors(record)))
+
+    def test_orphan_package_root_snapshot_is_closed_and_bounded(self) -> None:
+        import jsonschema
+
+        snapshot = self.pure_schema["$defs"]["orphan_package_root_snapshot"]
+        self.assertFalse(snapshot["additionalProperties"])
+        self.assertEqual(
+            set(snapshot["required"]),
+            {"registry_sha256", "roots", "build_files", "exemptions"},
+        )
+        self.assertEqual(snapshot["properties"]["roots"]["maxItems"], 8192)
+        self.assertEqual(snapshot["properties"]["build_files"]["maxItems"], 16384)
+        self.assertEqual(snapshot["properties"]["exemptions"]["maxItems"], 8192)
+        root = self.pure_schema["$defs"]["orphan_package_root"]
+        self.assertFalse(root["additionalProperties"])
+        self.assertEqual(
+            set(root["required"]),
+            {"path", "language", "kind", "source_evidence"},
+        )
+        self.assertEqual(len(root["properties"]["language"]["enum"]), 15)
+
+        case = next(
+            item
+            for item in self.examples
+            if item["id"] == "validation/orphan-package-roots-clean"
+        )
+        record = {
+            "domain": case["domain"],
+            "outcome": case["expected"]["outcome"],
+            "input": copy.deepcopy(case["input"]),
+            "result": copy.deepcopy(case["expected"]["result"]),
+        }
+        validator = jsonschema.Draft202012Validator(self.pure_schema)
+        self.assertEqual(list(validator.iter_errors(record)), [])
+        del record["input"]["options"]["orphan_package_root_snapshot"]
         self.assertTrue(list(validator.iter_errors(record)))
 
     def test_tracked_artifact_snapshot_is_closed_and_conditionally_bound(self) -> None:

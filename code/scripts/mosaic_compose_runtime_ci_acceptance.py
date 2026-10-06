@@ -41,6 +41,19 @@ ACCEPTANCE_PACKAGES = frozenset(
 )
 ACCEPTANCE_PACKAGE_PREFIXES = ("mosaic/mosaic-pkg-",)
 CI_WORKFLOW_PATH = ".github/workflows/ci.yml"
+# The lane's own shell scripts (UI89 step 5): they belong to no package, so a
+# change to one reaches the lane only through this list.
+CI_SCRIPT_PATHS = (
+    "code/scripts/build-mosaic-android-libs.sh",
+    "code/scripts/start-mosaic-android-emulator.sh",
+    "code/scripts/mosaic-android-emulator-gate.sh",
+    # Checks the generated gradle-wrapper.jar against Gradle's published
+    # checksum before either Trestle build runs it.
+    "code/scripts/verify-gradle-wrapper-jar.sh",
+    # Assembles Journal's generated Android project through that verified
+    # jar (UI89 §3.9).
+    "code/scripts/assemble-mosaic-android-debug.sh",
+)
 
 
 def requires_mosaic_compose_runtime(
@@ -63,7 +76,8 @@ def requires_mosaic_compose_runtime(
 
 
 def workflow_changed(repo_root: Path, diff_base: str) -> bool:
-    """Return whether the main CI workflow differs from the selected base."""
+    """Return whether the main CI workflow, or a script only this lane runs,
+    differs from the selected base."""
 
     result = subprocess.run(
         [
@@ -73,6 +87,7 @@ def workflow_changed(repo_root: Path, diff_base: str) -> bool:
             f"{diff_base}...HEAD",
             "--",
             CI_WORKFLOW_PATH,
+            *CI_SCRIPT_PATHS,
         ],
         cwd=repo_root,
         check=False,

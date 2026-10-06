@@ -1,0 +1,11 @@
+{
+  "id": "IT-C187-durante",
+  "pathSegment": "IT-PATH-187-TEMPO187",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-187-TEMPO187",
+      "order": 2
+    }
+  ]
+}

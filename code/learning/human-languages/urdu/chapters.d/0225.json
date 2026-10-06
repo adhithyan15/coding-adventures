@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Envelope, Parcel, Magazine, Rubber, File",
+  "label": "ch:ur-envelope-parcel-magazine-rubber-file",
+  "canDo": "I can say an envelope, a parcel, a magazine, a rubber and a file.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C225-fail",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say an envelope, a parcel, a magazine, a rubber and a file.",
+    "assesses": [
+      "UR-LEX-C225-CHIZ225-03",
+      "UR-LEX-C225-CHIZ225-04",
+      "UR-LEX-C225-CHIZ225-05"
+    ]
+  }
+}

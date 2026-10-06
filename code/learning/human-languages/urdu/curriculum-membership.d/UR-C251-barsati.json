@@ -1,0 +1,11 @@
+{
+  "id": "UR-C251-barsati",
+  "pathSegment": "UR-PATH-251-CHIZ251",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-251-CHIZ251",
+      "order": 4
+    }
+  ]
+}

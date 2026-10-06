@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:7cd4e3d9dbae102e",
+  "lessonIds": [
+    "AR-C280-amil2",
+    "AR-C280-muhandis",
+    "AR-C280-muhami",
+    "AR-C280-tayyar",
+    "AR-C280-saydali"
+  ],
+  "tex": "arabic/book/chapters/ch280-client-engineer-lawyer-pilot-pharmacist.tex"
+}

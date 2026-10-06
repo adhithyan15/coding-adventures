@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-style-orchestrator",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Forme Style IR orchestrator: one compile(doc, target, options) entry point that validates, optionally composes a theme, and dispatches to the right backend translator (CSS / LaTeX / terminal). Integration concern per FM03 / FM04 §13.",
   "type": "module",
   "main": "src/index.ts",

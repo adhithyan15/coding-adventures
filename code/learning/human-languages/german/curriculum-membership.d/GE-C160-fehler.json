@@ -1,0 +1,11 @@
+{
+  "id": "GE-C160-fehler",
+  "pathSegment": "GE-PATH-160-THING160",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-160-THING160",
+      "order": 4
+    }
+  ]
+}

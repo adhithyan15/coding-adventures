@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "Vaccination, Heartbeat, Sweat, Vomiting, Dizziness",
+  "label": "ch:ur-vaccination-heartbeat-sweat-vomiting-dizziness",
+  "canDo": "I can say a vaccination, a heartbeat, sweat, vomiting and dizziness.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C154-chakkar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: I can say a vaccination, a heartbeat, sweat, vomiting and dizziness.",
+    "assesses": [
+      "UR-LEX-C154-SEHAT154-03",
+      "UR-LEX-C154-SEHAT154-04",
+      "UR-LEX-C154-SEHAT154-05"
+    ]
+  }
+}

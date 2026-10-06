@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:3403ba49e1488eaa",
+  "lessonIds": [
+    "IT-C160-conto",
+    "IT-C160-mancia",
+    "IT-C160-pizzeria",
+    "IT-C160-villaggio",
+    "IT-C160-marciapiede"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch160.txt",
+  "json": "italian/narration/ch160.json",
+  "textHash": "fnv1a64:eacb9d631edc4d10",
+  "jsonHash": "fnv1a64:06b2a15f9608237e",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C193-majhari",
+  "pathSegment": "BN-PATH-193-GUN193",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-193-GUN193",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Injured, Rural, Traditional, Foreign, Flat",
+  "label": "ch:ar-injured-rural-traditional-foreign-flat",
+  "canDo": "I can say injured, rural, traditional, foreign and flat.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C180-musattah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say injured, rural, traditional, foreign and flat.",
+    "assesses": [
+      "AR-LEX-C180-SIFA180-03",
+      "AR-LEX-C180-SIFA180-04",
+      "AR-LEX-C180-SIFA180-05"
+    ]
+  }
+}

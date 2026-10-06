@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-deploy-runner-github-pages-adapter",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Atomic source-branch publication for Forme sites hosted by GitHub Pages.",
   "type": "module",
   "main": "src/index.ts",

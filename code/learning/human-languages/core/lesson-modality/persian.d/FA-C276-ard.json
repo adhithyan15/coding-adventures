@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C276-ard",
+    "language": "persian",
+    "chapter": 276,
+    "sequence": 14270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b95d4988cc5319e"
+  },
+  "findings": []
+}

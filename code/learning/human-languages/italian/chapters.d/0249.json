@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Dialect, Piece of news, TV news, TV, Advertising",
+  "label": "ch:it-dialect-piece-of-news-tv-news-tv-advertising",
+  "canDo": "I can say a dialect, a piece of news, the TV news, TV and advertising.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C249-pubblicita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say a dialect, a piece of news, the TV news, TV and advertising.",
+    "assesses": [
+      "IT-LEX-C249-COSE249-03",
+      "IT-LEX-C249-COSE249-04",
+      "IT-LEX-C249-COSE249-05"
+    ]
+  }
+}

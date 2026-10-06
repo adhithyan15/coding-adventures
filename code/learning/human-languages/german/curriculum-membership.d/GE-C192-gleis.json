@@ -1,0 +1,11 @@
+{
+  "id": "GE-C192-gleis",
+  "pathSegment": "GE-PATH-192-THING192",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-192-THING192",
+      "order": 4
+    }
+  ]
+}

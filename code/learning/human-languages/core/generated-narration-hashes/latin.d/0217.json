@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:2015dd4d9eb98936",
+  "lessonIds": [
+    "LA-C217-tegula",
+    "LA-C217-fornax",
+    "LA-C217-lectica",
+    "LA-C217-vehiculum",
+    "LA-C217-currus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch217.txt",
+  "json": "latin/narration/ch217.json",
+  "textHash": "fnv1a64:2ab970c9cd421fa3",
+  "jsonHash": "fnv1a64:b6ef05cd60a7c1e8",
+  "findings": []
+}

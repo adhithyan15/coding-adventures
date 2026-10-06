@@ -1,0 +1,11 @@
+{
+  "id": "TA-C187-kanru",
+  "pathSegment": "TA-PATH-187-PORUL187",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-187-PORUL187",
+      "order": 2
+    }
+  ]
+}

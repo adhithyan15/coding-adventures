@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:59b44d11c4138638",
+  "lessonIds": [
+    "AR-C167-taaththara",
+    "AR-C167-inzalaqa",
+    "AR-C167-anqadha",
+    "AR-C167-haraba",
+    "AR-C167-ikhtafa",
+    "AR-R167-first-pass-words-from-chapters-159-162",
+    "AR-R167-second-pass-words-from-chapters-163-167"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch167.txt",
+  "json": "arabic/narration/ch167.json",
+  "textHash": "fnv1a64:5fc080c6a8b2925f",
+  "jsonHash": "fnv1a64:7bc20c2d68e5d7c5",
+  "findings": []
+}

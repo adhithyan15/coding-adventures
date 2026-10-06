@@ -1,0 +1,11 @@
+{
+  "id": "HI-C204-havaijahaz",
+  "pathSegment": "HI-PATH-204-THG204",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-204-THG204",
+      "order": 2
+    }
+  ]
+}

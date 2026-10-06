@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "Wing, Tail, Horn, Beak, Vulture",
+  "label": "ch:sa-wing-tail-horn-beak-vulture",
+  "canDo": "I can say a wing, a tail, a horn, a beak and a vulture.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C227-grdhrah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say a wing, a tail, a horn, a beak and a vulture.",
+    "assesses": [
+      "SA-LEX-C227-THG227-03",
+      "SA-LEX-C227-THG227-04",
+      "SA-LEX-C227-THG227-05"
+    ]
+  }
+}

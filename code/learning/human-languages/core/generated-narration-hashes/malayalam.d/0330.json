@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:a91e31bb522a4a60",
+  "lessonIds": [
+    "ML-C330-muti",
+    "ML-C330-bharani",
+    "ML-C330-kutam",
+    "ML-C330-cakku",
+    "ML-C330-svarnnam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch330.txt",
+  "json": "malayalam/narration/ch330.json",
+  "textHash": "fnv1a64:3b817e4ef33683ce",
+  "jsonHash": "fnv1a64:9e50b9be2e675a5b",
+  "findings": []
+}

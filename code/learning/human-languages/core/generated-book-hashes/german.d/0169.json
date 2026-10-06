@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:ece52bb9d92bceed",
+  "lessonIds": [
+    "GE-C169-bekannt",
+    "GE-C169-fremd",
+    "GE-C169-nervoes",
+    "GE-C169-stolz",
+    "GE-C169-wuetend"
+  ],
+  "tex": "german/book/chapters/ch169-well-known-foreign-nervous-proud-angry.tex"
+}

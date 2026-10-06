@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C173-sudaivane",
+    "language": "marathi",
+    "chapter": 173,
+    "sequence": 8520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d83435f2034c2b9e"
+  },
+  "findings": []
+}

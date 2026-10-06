@@ -51,14 +51,14 @@ curled back. You already write **ல** (*la*) and **ழ** (*ḻa*); ள is the t
 ## Writing: ள
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-RECOG-131] -->
 
-- **1.** start here: curl around the large left loop
-- **2.** without lifting, turn inward through the loop
-- **3.** without lifting, descend around the inner curl, then lift
-- **4.** put the pen down again and rise on the adjoining upright
-- **5.** without lifting, carry the top bar right, then lift
-- **6.** put the pen down again and descend the separate right upright — and only now lift
+- **1.** start inside the loop, curl round its inner bowl, and climb the large outer loop
+- **2.** without lifting, curve over the top and into the junction with the middle upright
+- **3.** without lifting, draw the adjoining stem straight down
+- **4.** without lifting, rise back up the same stem to the top
+- **5.** without lifting, carry the top bar to the right edge
+- **6.** without lifting, return along the bar to the right upright and draw it straight down — and only now lift
 
-**Pen lifts: 2.**
+**Pen lifts: 0.** The pen never leaves the paper.
 
 > Stroke order is one attested teaching order, not a national standard —
 > Tamil handwriting is taught with school-to-school variation. Source:

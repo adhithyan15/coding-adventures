@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:dbd2e6c8d49735db",
+  "lessonIds": [
+    "UR-C263-nanbai",
+    "UR-C263-halvai",
+    "UR-C263-pansari",
+    "UR-C263-phalvala",
+    "UR-C263-sabzivala",
+    "UR-R263-first-pass-words-from-chapters-257-259",
+    "UR-R263-second-pass-words-from-chapters-260-263"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch263.txt",
+  "json": "urdu/narration/ch263.json",
+  "textHash": "fnv1a64:7f5a364b1cfddfe2",
+  "jsonHash": "fnv1a64:0758cf03593bec52",
+  "findings": []
+}

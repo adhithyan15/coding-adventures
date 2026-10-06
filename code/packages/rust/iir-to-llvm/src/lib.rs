@@ -1150,7 +1150,11 @@ pub fn lower_iir_to_llvm(
         defs.sort_by(|a, b| a.1.cmp(b.1));
         for (name, sym) in defs {
             let ty = global_types.get(name).copied().unwrap_or("i64");
-            let init = if ty == "ptr" { "null" } else { "0" };
+            let init = match ty {
+                "ptr" => "null",
+                "double" | "float" => "0.000000e+00",
+                _ => "0",
+            };
             out.push_str(&format!("{sym} = internal global {ty} {init}\n"));
         }
     }

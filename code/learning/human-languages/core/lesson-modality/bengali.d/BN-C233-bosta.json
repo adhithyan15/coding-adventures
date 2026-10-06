@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C233-bosta",
+    "language": "bengali",
+    "chapter": 233,
+    "sequence": 14470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32a85845d623067e"
+  },
+  "findings": []
+}

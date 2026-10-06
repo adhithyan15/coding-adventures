@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "Place, Pavement, Corner, Canal, Zoo",
+  "label": "ch:bn-place-pavement-corner-canal-zoo",
+  "canDo": "I can say a place, a pavement, a corner, a canal and a zoo.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "BN-C157-chiriyakhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: I can say a place, a pavement, a corner, a canal and a zoo.",
+    "assesses": [
+      "BN-LEX-C157-JAYGA157-03",
+      "BN-LEX-C157-JAYGA157-04",
+      "BN-LEX-C157-JAYGA157-05"
+    ]
+  }
+}

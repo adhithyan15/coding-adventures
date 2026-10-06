@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C305-gayaka",
+    "language": "kannada",
+    "chapter": 305,
+    "sequence": 14740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdec6dbf55447b95"
+  },
+  "findings": []
+}

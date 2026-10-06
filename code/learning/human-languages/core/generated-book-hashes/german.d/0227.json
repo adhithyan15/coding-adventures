@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:97d8cad0a6ebc787",
+  "lessonIds": [
+    "GE-C227-bewerbung",
+    "GE-C227-beziehung",
+    "GE-C227-eindruck",
+    "GE-C227-eintritt",
+    "GE-C227-eintrittskarte"
+  ],
+  "tex": "german/book/chapters/ch227-an-application-a-relationship-an-impression-admission-an-admission-ticket.tex"
+}

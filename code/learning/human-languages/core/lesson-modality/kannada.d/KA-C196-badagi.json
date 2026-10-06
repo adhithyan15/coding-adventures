@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C196-badagi",
+    "language": "kannada",
+    "chapter": 196,
+    "sequence": 9030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b92da1cb2063e79d"
+  },
+  "findings": []
+}

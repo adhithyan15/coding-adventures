@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:d47bd7252115e54e",
+  "lessonIds": [
+    "TA-C277-kulu",
+    "TA-C277-verri",
+    "TA-C277-tolvi",
+    "TA-C277-polutupokku",
+    "TA-C277-karuttu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch277.txt",
+  "json": "tamil/narration/ch277.json",
+  "textHash": "fnv1a64:5a428b30a505c21e",
+  "jsonHash": "fnv1a64:a53b47882eae5240",
+  "findings": []
+}

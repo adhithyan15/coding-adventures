@@ -1,0 +1,11 @@
+{
+  "id": "FA-C180-jushandan",
+  "pathSegment": "FA-PATH-180-KONESH180",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-180-KONESH180",
+      "order": 2
+    }
+  ]
+}

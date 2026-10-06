@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C173-matematica",
+    "language": "italian",
+    "chapter": 173,
+    "sequence": 9320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82315609e6ca3c23"
+  },
+  "findings": []
+}

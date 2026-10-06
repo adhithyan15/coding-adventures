@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C287-pappaya",
+    "language": "malayalam",
+    "chapter": 287,
+    "sequence": 13400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:447c0ba1e8c81c7a"
+  },
+  "findings": []
+}

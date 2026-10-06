@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C163-tannu",
+    "language": "telugu",
+    "chapter": 163,
+    "sequence": 7180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5c61c64dcf2dd60"
+  },
+  "findings": []
+}

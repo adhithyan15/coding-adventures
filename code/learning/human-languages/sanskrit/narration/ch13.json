@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Face, Part Two",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f8e99dc31bdf76b9",
+  "sourceHash": "fnv1a64:3c72319d8ef77953",
   "lessons": [
     {
       "id": "SA-C13-nasika",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7ccc250cc21dfec4",
+      "sourceHash": "fnv1a64:41b5a51b76cc1cc6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -91,11 +91,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नासिका (nāsikā) is built on an older word, नासा (nāsā), \"nose,\" plus the diminutive suffix -इका. नासा itself, and the still-older root नस् (nas) behind it, go back to PIE nehas-, the unbroken root of English nose and Latin nasus ( becomes nasal)."
+              "text": "नासिका (nāsikā) is built on an older word, नासा (nāsā), \"nose,\" plus the diminutive suffix -ikā. नासा itself, and the still-older root नस् (nas) behind it, go back to PIE nehas-, the unbroken root of English nose and Latin nasus ( becomes nasal)."
             },
             {
               "kind": "speech",
-              "text": "Here is the correction worth making carefully: नासिका (nāsikā) is not the ancestor of Bengali nāk or Gujarati nāk. Both of those wore straight down from नस् itself, through Prakrit ṇakka, by adding a completely different suffix. नासिका (nāsikā) and नाक share a root, the way ग्रह् and English grab share one — relatives, not parent and child. Reaching for the nearest-looking Sanskrit word is not always reaching for the right ancestor."
+              "text": "Here is the correction worth making carefully: नासिका (nāsikā) is not the ancestor of Bengali nāk or Gujarati nāk. Both of those wore straight down from नस् itself, through Prakrit ṇakka, by adding a completely different suffix. नासिका (nāsikā) and नाक share a root, the way grah and English grab share one — relatives, not parent and child. Reaching for the nearest-looking Sanskrit word is not always reaching for the right ancestor."
             }
           ]
         },
@@ -173,7 +173,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:be88d9538bf48935",
+      "sourceHash": "fnv1a64:0b11c297de4e2179",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -237,7 +237,7 @@
             },
             {
               "kind": "speech",
-              "text": "a separate lower bowl."
+              "text": "a lower bowl."
             },
             {
               "kind": "speech",
@@ -264,27 +264,35 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start at the upper spiral's inner crossing, curl around the small opening, widen left and down around the outer loop, then sweep right through the shoulder without lifting."
+              "text": "1. start at the upper spiral's inner crossing, curl around the small opening, widen left and down around the outer loop, then sweep right through the shoulder."
             },
             {
               "kind": "speech",
-              "text": "2. lift at the left waist and sweep down and around the lower bowl to its right junction."
+              "text": "2. without lifting, turn back left along the shoulder to the left waist."
             },
             {
               "kind": "speech",
-              "text": "3. lift and draw the right stem top-to-bottom."
+              "text": "3. sweep down and around the lower bowl to its right junction."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "5. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "verified four-stroke teaching form; everyday handwriting may join or simplify the loops differently."
+              "text": "6. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw ध (dha) in two strokes (81% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",
@@ -368,7 +376,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7fbba132677e3021",
+      "sourceHash": "fnv1a64:4ba7fddfedaa7207",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -429,7 +437,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "हृ is hṛ: ह ha carrying the vocalic ऋ, the same buzzing vowel you first sounded out in गृह्णाति. द is da, य is ya, म् closes it neuter: hṛ-da-ya-m."
+              "text": "हृ is hṛ: ह ha carrying the vocalic ṛ, the same buzzing vowel you first sounded out in gṛhṇāti. द is da, य is ya, म् closes it neuter: hṛ-da-ya-m."
             }
           ]
         },

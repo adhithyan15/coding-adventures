@@ -7,7 +7,7 @@ chapter: 443
 type: word
 headword: arrepentirse
 gloss: to regret — a verb that looks like it contains sentir, behaves like sentir, and is not related to it
-concept_tag: ES-STATE-ARREPENTIRSE
+concept_tag: ES-VERB-ARREPENTIRSE
 prerequisites: [ES-C443-concentrarse, ES-C20-perdon, ES-C437-equivocarse]
 sounds: [rolled-rr, stress-final]
 roots: [paenitere-latin]

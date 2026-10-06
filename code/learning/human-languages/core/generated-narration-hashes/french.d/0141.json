@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:42540c08e04e4e4e",
+  "lessonIds": [
+    "FR-C141-lavenir",
+    "FR-C141-ce-soir",
+    "FR-C141-le-projet",
+    "FR-C141-prevoir",
+    "FR-C141-organiser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch141.txt",
+  "json": "french/narration/ch141.json",
+  "textHash": "fnv1a64:15bd205d95d577a7",
+  "jsonHash": "fnv1a64:12044e508e0e8e60",
+  "findings": []
+}

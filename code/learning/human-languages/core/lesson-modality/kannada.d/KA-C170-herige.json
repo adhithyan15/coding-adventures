@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C170-herige",
+    "language": "kannada",
+    "chapter": 170,
+    "sequence": 7630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b566658a6f0d3c4e"
+  },
+  "findings": []
+}

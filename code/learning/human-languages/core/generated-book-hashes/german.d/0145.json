@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:f0eb8ce80708ad6f",
+  "lessonIds": [
+    "GE-C145-benutzen",
+    "GE-C145-einkaufen",
+    "GE-C145-einladen",
+    "GE-C145-empfehlen",
+    "GE-C145-entscheiden"
+  ],
+  "tex": "german/book/chapters/ch145-to-use-to-go-shopping-to-invite-to-recommend-to-decide.tex"
+}

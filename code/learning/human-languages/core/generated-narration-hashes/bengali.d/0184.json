@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:927a63bc6f55af8b",
+  "lessonIds": [
+    "BN-C184-mene-neoya",
+    "BN-C184-raji-hooya",
+    "BN-C184-jor-kora",
+    "BN-C184-badha-deoya",
+    "BN-C184-jhuki-neoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch184.txt",
+  "json": "bengali/narration/ch184.json",
+  "textHash": "fnv1a64:4208700dfc9d1d83",
+  "jsonHash": "fnv1a64:3fd67ebf920ab4aa",
+  "findings": []
+}

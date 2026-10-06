@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "mosaic_xaml_windows_ci_acceptance.py"
@@ -94,6 +95,27 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
                 {"affected_packages": []}, workflow_changed=True
             )
         )
+
+    def test_lane_scripts_trigger_the_lane(self) -> None:
+        # The smokes belong to no build package, so a change to one is seen
+        # through the same diff as a workflow change.
+        repo = WORKFLOW.parents[2]
+        self.assertIn(
+            "code/scripts/mosaic-xaml-layout-variants-smoke.ps1", MODULE.LANE_SCRIPT_PATHS
+        )
+        for path in MODULE.LANE_SCRIPT_PATHS:
+            self.assertTrue((repo / path).is_file(), path)
+        calls = []
+
+        def fake_run(command, **kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 1)
+
+        with mock.patch.object(MODULE.subprocess, "run", fake_run):
+            self.assertTrue(MODULE.workflow_changed(repo, "origin/main"))
+        (command,) = calls
+        paths = command[command.index("--") + 1 :]
+        self.assertEqual(paths, [MODULE.CI_WORKFLOW_PATH, *MODULE.LANE_SCRIPT_PATHS])
 
     def test_invalid_affected_packages_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "array or null"):
@@ -230,6 +252,117 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertNotIn("Microsoft.WindowsAppSDK", project)
         self.assertIn("namespace Windows.UI;", color_stub)
         self.assertIn("Color FromArgb", color_stub)
+
+    def test_windows_lane_checks_the_xaml_platform_library(self) -> None:
+        # UI87 §7.6: the platform library TaskApp's generated project compiled
+        # is installed by its window and driven headless in the same lane.
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        step = workflow.index("- name: Check the XAML platform library headless")
+        body = workflow[step : workflow.index("\n      - name:", step + 1)]
+        self.assertIn(
+            "if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'",
+            body,
+        )
+        self.assertIn("'mosaic-xaml-taskapp/xaml'", body)
+        self.assertIn("MosaicPlatformEffects.Install(this, appKinds: null);", body)
+        self.assertIn("conformance/xaml-platform-effects/*", body)
+        self.assertIn("'MosaicPlatformEffects.cs', 'MosaicRuntimeHost.cs'", body)
+        self.assertIn("XamlPlatformEffectsConformance.csproj", body)
+        self.assertIn("Mosaic XAML platform library conformance failed", body)
+        # After the TaskApp build that generates the files it copies.
+        self.assertLess(
+            workflow.index("Build concrete Mosaic TaskApp WinUI shell"), step
+        )
+
+        harness = XAML_CONFORMANCE.parent / "xaml-platform-effects"
+        project = (harness / "XamlPlatformEffectsConformance.csproj").read_text(
+            encoding="utf-8"
+        )
+        program = (harness / "Program.cs").read_text(encoding="utf-8")
+        self.assertIn("<TargetFramework>net9.0</TargetFramework>", project)
+        self.assertIn("MOSAIC_HEADLESS_TEST", project)
+        self.assertNotIn("Microsoft.WindowsAppSDK", project)
+        color_stub = (harness / "WindowsColorStub.cs").read_text(encoding="utf-8")
+        self.assertIn("namespace Windows.UI;", color_stub)
+        self.assertIn("Mosaic XAML platform effects conformance passed", program)
+        self.assertIn("class FakeDialogs : IMosaicFileDialogs", program)
+        self.assertIn("class FakeHost : IMosaicPlatformEffectHost", program)
+
+    def test_layout_rules_require_acceptance(self) -> None:
+        # UI48 §7.11: the rules the WinUI window switches layouts by.
+        self.assertTrue(
+            MODULE.requires_mosaic_xaml_windows(
+                {"affected_packages": ["rust/mosaic-package-manifest"]}
+            )
+        )
+
+    def test_windows_lane_resizes_the_layout_variants_fixture(self) -> None:
+        # UI48 §7.11: the gate that changes the environment. The fixture is
+        # built native-complete against the conformance runtime, its source
+        # contract checked, its WinUI project built, and the real window
+        # resized across 600 effective pixels both ways.
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        step = workflow.index("- name: Resize the WinUI layout-variants fixture (UI48 §7.11)")
+        body = workflow[step : workflow.index("\n      - name:", step + 1)]
+        self.assertIn(
+            "if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'",
+            body,
+        )
+        self.assertIn("shell: pwsh", body)
+        self.assertIn(
+            "pkg code/packages/rust/mosaic-emit-xaml/fixtures/layout-variants --backend xaml",
+            body,
+        )
+        self.assertIn("--profile native-complete --runtime-library $library.Path", body)
+        self.assertIn("mosaic_app_conformance.dll", body)
+        for marker in (
+            '("compact", new[] { ("sizeClass", "compact") }),',
+            "var root = new LayoutProbeCompact();",
+            "MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps);",
+            "this.layoutSwitchQueued = this.DispatcherQueue.TryEnqueue(SwitchLayout);",
+            "if (MosaicRuntimeHost.IsSettling)",
+        ):
+            self.assertIn(marker, body)
+        self.assertIn("LayoutProbe.compact.Event.cs", body)
+        self.assertIn("public event EventHandler<LayoutProbeEvent>? Dispatch;", body)
+        self.assertIn("dotnet build (Split-Path -Leaf $project)", body)
+        self.assertIn("code/scripts/mosaic-xaml-layout-variants-smoke.ps1", body)
+        # Every external command's failure is a thrown error, never ignored.
+        # cargo build, mosaic-compile and the smoke; dotnet build below.
+        self.assertEqual(body.count("if ($LASTEXITCODE -ne 0)"), 3)
+        self.assertIn("if ($buildExitCode -ne 0)", body)
+
+        fixture = XAML_PACKAGE.parents[1] / "mosaic-emit-xaml" / "fixtures" / "layout-variants"
+        self.assertNotIn(
+            "[[app.layouts]]",
+            (fixture / "mosaic-package.toml").read_text(encoding="utf-8").replace(
+                "# No `[[app.layouts]]`", ""
+            ),
+            "the compact layout is selected by convention",
+        )
+        interface = (fixture / "src" / "LayoutProbe.mil").read_text(encoding="utf-8")
+        # Two of the conformance runtime's props, so it drives the window.
+        self.assertIn("slot platform : text ;", interface)
+        self.assertIn("slot status : text ;", interface)
+        counter = (XAML_PACKAGE / "src" / "Counter.mil").read_text(encoding="utf-8")
+        self.assertIn("slot platform : text;", counter)
+        self.assertIn("slot status : text;", counter)
+        for layout, marker in (
+            ("LayoutProbe.mll", "Layout: default"),
+            ("LayoutProbe.compact.mll", "Layout: compact"),
+        ):
+            self.assertIn(marker, (fixture / "src" / layout).read_text(encoding="utf-8"))
+
+        smoke = (
+            WORKFLOW.parents[2] / "code" / "scripts" / "mosaic-xaml-layout-variants-smoke.ps1"
+        ).read_text(encoding="utf-8")
+        self.assertIn("$ErrorActionPreference = 'Stop'", smoke)
+        self.assertIn("SetWindowPos", smoke)
+        self.assertIn("'Layout: default'", smoke)
+        self.assertIn("'Layout: compact'", smoke)
+        # Wide, narrow, wide, narrow: both directions, twice.
+        self.assertEqual(smoke.count("Resize-AndExpect $process $root 1300"), 2)
+        self.assertEqual(smoke.count("Resize-AndExpect $process $root 420"), 2)
 
     def test_conformance_engine_has_a_real_mosaic_package(self) -> None:
         self.assertTrue((XAML_PACKAGE / "mosaic-package.toml").is_file())

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C127-pujari",
+    "language": "bengali",
+    "chapter": 127,
+    "sequence": 6870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d3cc81c56cf950b"
+  },
+  "findings": []
+}

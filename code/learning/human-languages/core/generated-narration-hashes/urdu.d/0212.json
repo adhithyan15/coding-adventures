@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:02b681a04196380d",
+  "lessonIds": [
+    "UR-C212-istri-karna",
+    "UR-C212-pisna",
+    "UR-C212-talna",
+    "UR-C212-ubalna",
+    "UR-C212-chakhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch212.txt",
+  "json": "urdu/narration/ch212.json",
+  "textHash": "fnv1a64:ac399a088edccb64",
+  "jsonHash": "fnv1a64:fe430a13295d24a9",
+  "findings": []
+}

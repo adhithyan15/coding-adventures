@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "A neighbour, A cousin, A granddaughter, A baby, A human being",
+  "label": "ch:ge-a-neighbour-a-cousin-a-granddaughter-a-baby-a-human-being",
+  "canDo": "I can say a neighbour, a cousin, a granddaughter, a baby and a human being.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C164-mensch",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say a neighbour, a cousin, a granddaughter, a baby and a human being.",
+    "assesses": [
+      "GE-LEX-C164-THING164-03",
+      "GE-LEX-C164-THING164-04",
+      "GE-LEX-C164-THING164-05"
+    ]
+  }
+}

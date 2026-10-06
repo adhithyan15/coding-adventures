@@ -1,0 +1,11 @@
+{
+  "id": "ML-C282-sramam",
+  "pathSegment": "ML-PATH-282-KARANAM282",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-282-KARANAM282",
+      "order": 3
+    }
+  ]
+}

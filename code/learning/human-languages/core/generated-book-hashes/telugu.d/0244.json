@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:fb9a32fdebdf7f43",
+  "lessonIds": [
+    "TE-C244-vicu",
+    "TE-C244-prakasincu",
+    "TE-C244-gaddakattu",
+    "TE-C244-vadipovu",
+    "TE-C244-morugu"
+  ],
+  "tex": "telugu/book/chapters/ch244-to-blow-to-shine-to-freeze-to-wilt-to-bark.tex"
+}

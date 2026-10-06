@@ -3,7 +3,7 @@ Kannada, chapter 4: Farewells.
 
 
 Lesson 1 of 9.
-ಹೋಗು (hōgu) — "go," and ಬಾ (come).
+ಹೋಗು (hōgu) — "go," and bā (come).
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
@@ -12,10 +12,10 @@ Warm-up.
 Two everyday verbs — and together they make the Kannada goodbye.
 
 The letters in this word.
-ಹೋ (hō, ha + long-ō sign) + ಗು (gu) becomes ಹೋಗು (hōgu). Its partner: ಬಾ (bā, "come").
+ಹೋ (hō, ha + long-ō sign) + ಗು (gu) becomes ಹೋಗು (hōgu). Its partner: bā ("come").
 
 The word, taken apart.
-ಹೋಗು (hōgu, "to go") and ಬಾ (bā, "come") are native Dravidian verbs. As commands they are whole words: hōgu! ("go!"), bā! ("come!"). You need both, because Kannada — like every Dravidian language — does not say a plain "goodbye." It says "I go, and I come back."
+ಹೋಗು (hōgu, "to go") and bā ("come") are native Dravidian verbs. As commands they are whole words: hōgu! ("go!"), bā! ("come!"). You need both, because Kannada — like every Dravidian language — does not say a plain "goodbye." It says "I go, and I come back."
 
 Guided Practice.
 [pause 1 second]
@@ -123,7 +123,7 @@ The letters in this word.
 ನಾಳೆ (nāḷe): ನಾ (nā) + ಳೆ (ḷe, with the retroflex ಳ (ḷa) ḷ). ಸಿಗೋಣ (sigōṇa) = sigu ("meet, be found") + -ōṇa ("let's").
 
 The word, taken apart.
-ನಾಳೆ (nāḷe, "tomorrow") is native Dravidian, from ನಾಳ್ (nāḷ, "day") — the very same nāḷ behind Tamil's nāḷai. ಸಿಗೋಣ (sigōṇa, "let's meet") is from ಸಿಗು (sigu, "to meet, to be found") — so the phrase is "tomorrow, let's meet." The -ಓಣ (-ōṇa) ending is Kannada's warm "let's ___": hōgōṇa ("let's go"), tinnōṇa ("let's eat").
+ನಾಳೆ (nāḷe, "tomorrow") is native Dravidian, from ನಾಳ್ (nāḷ, "day") — the very same nāḷ behind Tamil's nāḷai. ಸಿಗೋಣ (sigōṇa, "let's meet") is from ಸಿಗು (sigu, "to meet, to be found") — so the phrase is "tomorrow, let's meet." The -ōṇa ending is Kannada's warm "let's ___": hōgōṇa ("let's go"), tinnōṇa ("let's eat").
 
 Guided Practice.
 [pause 1 second]
@@ -183,9 +183,15 @@ It is a consonant, and in this script a consonant is never bare: it comes with a
 You already say these, and every one of them has ಳ (ḷa) somewhere inside it:
 ನಾಳೆ ಸಿಗೋಣ nāḷe sigōṇa — see you tomorrow.
 
-Writing: ಳ — copy what you see.
-Put your pen on ಳ (ḷa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
-This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+Writing: ಳ.
+1. start at the left of the small loop and close it counterclockwise.
+2. without lifting, sweep down the outer left side and along the base.
+3. without lifting, go clockwise round the lower loop and back across its top.
+4. without lifting, climb the right bowl to the top bar.
+5. lift, then draw the top bar from left to right.
+6. without lifting, curl up into the hook.
+Pen lifts: 1. Both loops and the climb up the right side are one run, starting on the left side of the small loop at the top; the curled bar on top comes after the only lift, as it does for ನ.
+This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-lla.gif', 35 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0.
 
 Guided Practice.
 [pause 1 second]
@@ -218,9 +224,13 @@ It is a consonant, and in this script a consonant is never bare: it comes with a
 You already say these, and every one of them has ಬ (ba) somewhere inside it:
 ಹೋಗಿ ಬರುತ್ತೇನೆ hōgi baruttēne — goodbye (lit. "I'll go and come back").
 
-Writing: ಬ — copy what you see.
-Put your pen on ಬ (ba) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
-This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+Writing: ಬ.
+1. start at the curled tip inside the head and loop up over it clockwise.
+2. without lifting, slant down to the left and round the left lobe, rising into the middle point.
+3. without lifting, drop from the point round the right lobe's base.
+4. without lifting, climb the right side to its tip.
+Pen lifts: 0. The whole letter is one run, from the curled tip inside the head to the tip of the tall right side. ಬ has no curled bar on top, so there is nothing to lift for.
+This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-ba.gif', 29 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0.
 
 Guided Practice.
 [pause 1 second]

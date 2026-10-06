@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:2c17d62d96fb8861",
+  "lessonIds": [
+    "SA-C203-modate",
+    "SA-C203-vandate",
+    "SA-C203-yacate",
+    "SA-C203-bhasate",
+    "SA-C203-sobhate"
+  ],
+  "tex": "sanskrit/book/chapters/ch203-rejoices-salutes-begs-speaks-shines.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Microwave, Kettle, Bowl, Saucer, Mug",
+  "label": "ch:ru-microwave-kettle-bowl-saucer-mug",
+  "canDo": "I can say a microwave, a kettle, a bowl, a saucer and a mug.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C246-kruzhka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say a microwave, a kettle, a bowl, a saucer and a mug.",
+    "assesses": [
+      "RU-LEX-C246-VESHCH246-03",
+      "RU-LEX-C246-VESHCH246-04",
+      "RU-LEX-C246-VESHCH246-05"
+    ]
+  }
+}

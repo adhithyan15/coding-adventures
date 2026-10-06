@@ -1,0 +1,11 @@
+{
+  "id": "UR-C233-sailab",
+  "pathSegment": "UR-PATH-233-CHIZ233",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-233-CHIZ233",
+      "order": 4
+    }
+  ]
+}

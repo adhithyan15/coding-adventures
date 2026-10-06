@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Plain Thanks, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cf6a3b25d035f43d",
+  "sourceHash": "fnv1a64:a5e2062ed95e4685",
   "lessons": [
     {
       "id": "JA-W03-a",
@@ -352,7 +352,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dd39d35f40faff27",
+      "sourceHash": "fnv1a64:f9c7617bd2acdd29",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -398,11 +398,11 @@
             },
             {
               "kind": "speech",
-              "text": "a hooked left stroke — down, curving right at the foot into a small hook."
+              "text": "a hooked stroke — across to the right, down the right side, and a small hook back to the left at the foot."
             },
             {
               "kind": "speech",
-              "text": "a short vertical, crossing the first stroke near its top and falling to the right of it."
+              "text": "a long falling stroke, crossing the first stroke left of its middle and falling away to the lower left."
             },
             {
               "kind": "speech",
@@ -426,11 +426,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "か (ka) — hooked stroke, vertical, then the dot at the right",
+              "instruction": "か (ka) — hooked stroke, falling stroke, then the dot at the right",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: か — hooked stroke, vertical, then the dot at the right]"
+              "source": "[YOU WRITE: か — hooked stroke, falling stroke, then the dot at the right]"
             },
             {
               "kind": "prompt",
@@ -489,8 +489,8 @@
                 "three strokes"
               ],
               "feedback": {
-                "correct": "Three — hooked stroke, vertical, dot.",
-                "incorrect": "Three: the hooked stroke, a short vertical, and a dot."
+                "correct": "Three — hooked stroke, falling stroke, dot.",
+                "incorrect": "Three: the hooked stroke, a long falling stroke, and a dot."
               }
             }
           ]
@@ -678,7 +678,7 @@
     {
       "id": "JA-W03-to",
       "sequence": 180,
-      "title": "と (to) — two strokes, and they never meet",
+      "title": "と (to) — two strokes, and the first ends on the second",
       "headword": "と",
       "romanization": "to",
       "gloss": "the hiragana sign for the mora to — two strokes, and the fourth sign of the thank-you",
@@ -689,7 +689,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c92d1840828e1feb",
+      "sourceHash": "fnv1a64:f0b1ab09970a2eb7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -731,7 +731,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two strokes, and like り (ri) they stay apart:"
+              "text": "Two strokes, and unlike り (ri) they touch:"
             },
             {
               "kind": "speech",
@@ -739,7 +739,7 @@
             },
             {
               "kind": "speech",
-              "text": "a long sweeping stroke starting above and to the right of it, falling down and left, then curving out to the right at the bottom."
+              "text": "a long sweeping stroke starting above and to the right of it, falling down and left past the end of the short stroke, then curving out to the right at the bottom."
             },
             {
               "kind": "speech",
@@ -759,11 +759,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "と (to) — the small tick, then the long sweep. Do not join them.",
+              "instruction": "と (to) — the small tick, then the long sweep, passing the tick's end.",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: と — the small tick, then the long sweep. Do not join them.]"
+              "source": "[YOU WRITE: と — the small tick, then the long sweep, passing the tick's end.]"
             },
             {
               "kind": "prompt",
@@ -816,15 +816,15 @@
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "no",
-                "they do not touch",
-                "no, they stay apart",
-                "separate",
-                "no they are separate"
+                "yes",
+                "they touch",
+                "yes, they touch",
+                "yes they meet",
+                "the short one ends on the long one"
               ],
               "feedback": {
-                "correct": "No — the gap is part of the shape, as it is in ri.",
-                "incorrect": "No. They stay apart; the gap is part of the shape."
+                "correct": "Yes — the short stroke ends on the long sweep; in ri the strokes stay apart.",
+                "incorrect": "Yes. The short stroke ends on the long sweep, so the two strokes touch."
               }
             }
           ]

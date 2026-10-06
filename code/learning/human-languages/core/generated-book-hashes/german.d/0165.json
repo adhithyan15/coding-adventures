@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:41eb963676ebe5ef",
+  "lessonIds": [
+    "GE-C165-leute",
+    "GE-C165-glueck",
+    "GE-C165-spass",
+    "GE-C165-lust",
+    "GE-C165-meinung"
+  ],
+  "tex": "german/book/chapters/ch165-people-luck-fun-desire-an-opinion.tex"
+}

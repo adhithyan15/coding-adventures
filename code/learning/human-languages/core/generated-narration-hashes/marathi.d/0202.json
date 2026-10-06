@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:54d9d6a0f5772809",
+  "lessonIds": [
+    "MR-C202-sima",
+    "MR-C202-prades",
+    "MR-C202-rajdhani",
+    "MR-C202-upnagar",
+    "MR-C202-varati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch202.txt",
+  "json": "marathi/narration/ch202.json",
+  "textHash": "fnv1a64:ef97cc79e66295e8",
+  "jsonHash": "fnv1a64:602dd52251838eaf",
+  "findings": []
+}

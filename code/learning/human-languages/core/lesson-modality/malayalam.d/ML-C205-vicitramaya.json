@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C205-vicitramaya",
+    "language": "malayalam",
+    "chapter": 205,
+    "sequence": 9110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:189b88b0e91b72d6"
+  },
+  "findings": []
+}

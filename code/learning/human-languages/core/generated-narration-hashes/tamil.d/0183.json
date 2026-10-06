@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:7fc1c396f956c68b",
+  "lessonIds": [
+    "TA-C183-ponkal",
+    "TA-C183-uppuma",
+    "TA-C183-campar",
+    "TA-C183-catni",
+    "TA-C183-poriyal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch183.txt",
+  "json": "tamil/narration/ch183.json",
+  "textHash": "fnv1a64:3272dab707541e87",
+  "jsonHash": "fnv1a64:b04a06a02c116e0a",
+  "findings": []
+}

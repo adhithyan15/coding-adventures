@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C216-schastlivyy",
+    "language": "russian",
+    "chapter": 216,
+    "sequence": 12910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5640875f2253c40a"
+  },
+  "findings": []
+}

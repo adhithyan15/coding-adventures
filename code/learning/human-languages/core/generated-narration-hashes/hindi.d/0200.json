@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:5cc1f91a240a6bd6",
+  "lessonIds": [
+    "HI-C200-tvaca",
+    "HI-C200-rajya",
+    "HI-C200-rajdhani",
+    "HI-C200-sima",
+    "HI-C200-dvip"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch200.txt",
+  "json": "hindi/narration/ch200.json",
+  "textHash": "fnv1a64:a839e2980c9027a7",
+  "jsonHash": "fnv1a64:51383e5b5c3b3c85",
+  "findings": []
+}

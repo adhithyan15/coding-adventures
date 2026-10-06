@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:ed74ab84bc0f0921",
+  "lessonIds": [
+    "BN-C129-mosjid",
+    "BN-C129-girja",
+    "BN-C129-pensil",
+    "BN-C129-robar",
+    "BN-C129-byag",
+    "BN-R129-first-pass-fruit-vegetables-and-food",
+    "BN-R129-second-pass-clothes-and-animals"
+  ],
+  "tex": "bengali/book/chapters/ch129-mosque-church-pencil-eraser-bag.tex"
+}

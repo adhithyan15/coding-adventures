@@ -1,5 +1,228 @@
 # Changelog
 
+## Chapters 231-255: 125 more headwords, and Portuguese attains A2
+
+The last of four Portuguese A2 vocabulary tranches. Twenty-five chapters of
+five words each, in three runs of at most nine chapters. Each run closes with
+two reviews.
+
+- **Chapters 231-239: forty-five verbs**, including *construir*,
+  *traduzir*, *assinar*, *preencher*, *divertir-se*, *preocupar-se*,
+  *aconselhar*, *partilhar*, *emprestar*, *desperdiçar*, *ultrapassar*,
+  *surpreender*, *sugerir*, *emagrecer* and *arrumar*.
+- **Chapter 240: emergencies and rest** (*as urgências*, *a emergência*,
+  *a consulta*, *a dieta*, *o descanso*).
+- **Chapters 241-243: fifteen qualities**, such as *profundo / profunda*,
+  *desconhecido / desconhecida*, *maduro / madura*, *claro / clara*,
+  *jovem*, *possível* and *impossível*.
+- **Chapters 244-255: sixty nouns**:
+  - customs and travel (*a alfândega*, *a reserva*);
+  - news and screens (*a notícia*, *o ecrã*, *o teclado*);
+  - trades (*o mecânico*, *o eletricista*, *o canalizador*);
+  - success and failure (*o sucesso*, *o fracasso*, *a decisão*);
+  - the bank (*o cartão bancário*, *o multibanco*, *o empréstimo*);
+  - the road (*a portagem*, *a autoestrada*, *a multa*);
+  - plants (*a semente*, *a raiz*, *o ramo*);
+  - materials (*o algodão*, *a lã*, *a seda*);
+  - sport (*a derrota*, *o campeonato*, *o adepto*);
+  - the shop counter (*o provador*, *o tamanho*, *o troco*, *a fila*);
+  - seafood (*o marisco*, *o camarão*, *o bacalhau*);
+  - outdoors (*o quintal*, *o oceano*, *a selva*).
+- **Portuguese attains A2.** At or below A2 it teaches 1,231 distinct
+  headwords, against a target of 1,200, and every A2 spine node is realized.
+  Chapters 134-255 add 610 headwords, 188 of them verbs. The attainment pin
+  moves from A1 to A2, and the level-gate climb history records the climb.
+- **Glosses.** *o troco* is "the change you get back", against *mudar*, "to
+  change". *claro / clara* is "clear, pale (of a colour)", against *leve*.
+- **European Portuguese:** *o ecrã*, *o multibanco*, *a portagem*,
+  *o canalizador*, *o adepto*.
+- **Pins:** the Portuguese lesson-content budget goes from 1165 to 1296.
+
+## Chapters 201-230: 150 more A2 headwords
+
+The third of four Portuguese A2 vocabulary tranches. Thirty chapters of five
+words each, in four runs of at most nine chapters. Each run closes with two
+reviews.
+
+- **Chapters 201-209: forty-five verbs**, including *reservar*, *poupar*,
+  *encomendar*, *arrefecer*, *esvaziar*, *pentear-se*, *aborrecer-se*,
+  *deitar fora*, *piorar*, *passear*, *descobrir*, *conversar*,
+  *descarregar*, *escorregar* and *exprimir*.
+- **Chapters 210-211: at the doctor's** (*a gripe*, *a receita*,
+  *o comprimido*, *o xarope*, *a alergia*, *a dor de cabeça*).
+- **Chapter 212: time** (*o fim*, *o início*, *o prazo*, *a época*,
+  *o feriado*).
+- **Chapter 213: place** (*dentro*, *fora*, *o interior*, *a fronteira*,
+  *a região*).
+- **Chapter 214: joining ideas** (*apenas*, *juntos / juntas*, *contudo*,
+  *talvez*, *aliás*).
+- **Chapters 215-217: fifteen qualities**, such as *orgulhoso / orgulhosa*,
+  *tranquilo / tranquila*, *gratuito / gratuita*, *picante*, *cru / crua*,
+  *nublado / nublada* and *chuvoso / chuvosa*. "Sunny" is *solarengo /
+  solarenga*, the European word, not the Brazilian-leaning *ensolarado*.
+- **Chapters 218-230: sixty-five nouns**:
+  - travel (*o pequeno-almoço*, *a gorjeta*, *o cais*, *o passaporte*);
+  - war and peace (*a guerra*, *a paz*, *o exército*);
+  - professions (*o jornalista*, *o dentista*, *o talhante*);
+  - in-laws and weddings (*o genro*, *a nora*, *o noivo*, *a noiva*);
+  - money (*o desconto*, *os saldos*, *a moeda*);
+  - the car (*o volante*, *a roda*);
+  - the house (*o sótão*, *a garagem*, *a horta*);
+  - the environment (*a poluição*, *a reciclagem*, *a energia*);
+  - sport (*o ginásio*, *a natação*, *o ténis*);
+  - shops (*a papelaria*, *a livraria*, *o centro comercial*);
+  - portions (*a fatia*, *o pedaço*, *a dúzia*, *a metade*);
+  - the bathroom (*o lavatório*, *a sanita*, *a tomada*);
+  - school subjects (*a história*, *a geografia*, *a matemática*).
+- **Glosses.** *ligar* is glossed "to ring, to phone; to switch on", to keep
+  it apart from the taught *chamar*. *antigo* is "ancient, former; old (of
+  things)", with a review cue ("ancient") that stays apart from *velho*. *o interior* is "the interior, inland", against *dentro*.
+- **Pins:** the Portuguese lesson-content budget goes from 1007 to 1165.
+- **Level gate at A2:** vocabulary 244 short -> 94. The book compiles at 1249
+  pages with no overfull box.
+
+## Chapters 171-200: 150 more A2 headwords
+
+The second of four Portuguese A2 vocabulary tranches. Thirty chapters of five
+words each, in four runs of at most nine chapters. Each run closes with two
+reviews.
+
+- **Chapters 171-179: forty-five verbs**, including *cumprimentar*,
+  *agradecer*, *estacionar*, *segurar*, *nascer*, *envelhecer*,
+  *atravessar*, *queixar-se*, *merecer*, *arriscar*, *habituar-se*,
+  *perceber*, *recomendar* and *recuar*.
+- **Chapters 180-181: the body and feelings** (*o músculo*, *a ferida*,
+  *a constipação*, *a confiança*, *a coragem*, *a vergonha*).
+- **Chapter 182: time** (*de repente*, *até*, *desde*, *a década*,
+  *a madrugada*).
+- **Chapter 183: place** (*os arredores*, *o centro*, *o lado*, *o canto*,
+  *o meio*).
+- **Chapter 184: joining ideas** (*felizmente*, *certamente*, *realmente*,
+  *quase*, *cerca de*).
+- **Chapters 185-187: fifteen qualities**, such as *tímido / tímida*,
+  *corajoso / corajosa*, *igual*, *parecido / parecida*,
+  *trabalhador / trabalhadora* and *solteiro / solteira*.
+- **Chapters 188-200: sixty-five nouns**:
+  - the bedroom (*o lençol*, *a gaveta*, *o pijama*);
+  - elections (*o juiz / a juíza*, *as eleições*, *a política*);
+  - the arts (*a atriz*, *o poema*, *o pintor / a pintora*);
+  - family by marriage (*a sogra*, *o sogro*, *o gémeo / a gémea*);
+  - rules (*a regra*, *a autorização*, *a segurança*);
+  - papers (*o postal*, *a pasta*, *a etiqueta*);
+  - monuments (*a estátua*, *a fonte*, *o portão*);
+  - weather and fire (*a lama*, *o fumo*, *a chama*, *o clima*);
+  - tools and music (*a agulha*, *a ferramenta*, *o violino*);
+  - services (*a receção*, *a lavandaria*, *o cabeleireiro*);
+  - quantities (*o quilo*, *o litro*, *a lata*);
+  - the kitchen (*a canela*, *a ementa*, *a torneira*);
+  - work (*a entrevista*, *a carreira*, *a impressora*).
+- **Glosses.** *perceber* is glossed "to grasp, to understand; to realise",
+  so its review cue ("to grasp") stays apart from the taught *entender /
+  compreender* while keeping the everyday European sense, "Não percebo",
+  "I don't understand".
+- **Book.** It passes page 999, so the preamble widens the contents
+  page-number box: `\@pnumwidth` goes to 2.4em and `\@tocrmarg` to 3.4em,
+  as in the French and Italian books. The strict compile reports no
+  overfull box.
+- **Pins:** the Portuguese lesson-content budget goes from 849 to 1007.
+- **Level gate at A2:** vocabulary 394 short -> 244.
+
+## Chapters 138-170: 165 A2 headwords, fifty of them verbs
+
+The first of four Portuguese A2 vocabulary tranches. Thirty-three chapters of
+five words each, in four runs of at most nine chapters. Each run closes with
+two reviews.
+
+- **Chapters 138-147: fifty verbs** (`SPINE-NAME-EVERYDAY-ACTIONS`),
+  including *acender*, *apagar*, *experimentar*, *continuar*, *prometer*,
+  *proibir*, *aparecer*, *aproveitar*, *devolver*, *reconhecer*, *calar-se*,
+  *interromper*, *tossir*, *substituir* and *enganar-se*.
+- **Chapters 148-149: health and feelings** (*a saúde*, *o cérebro*,
+  *o pulmão*, *o sonho*, *a ansiedade*, *a amizade*, *a esperança*).
+- **Chapter 150: time** (*raramente*, *a seguir*, *finalmente*, *a partir de
+  agora*, *ainda*).
+- **Chapter 151: place** (*em cima*, *em baixo*, *ao fundo*, *noutro lado*,
+  *lá em cima*).
+- **Chapter 152: joining ideas** (*portanto*, *de qualquer maneira*,
+  *embora*, *apesar de*, *infelizmente*).
+- **Chapters 153-156: twenty qualities**, such as *confortável*,
+  *educado / educada*, *complicado / complicada*, *útil*, *pontual*,
+  *preguiçoso / preguiçosa* and *público / pública*.
+- **Chapters 157-170: seventy nouns**:
+  - the flat (*o apartamento*, *a varanda*, *a fechadura*);
+  - public life (*o governo*, *a lei*, *o tribunal*);
+  - shows (*o cantor / a cantora*, *o espetáculo*, *o ator*);
+  - people (*o cientista*, *o turista*);
+  - papers and money (*a dívida*, *o imposto*, *o formulário*);
+  - town (*o túnel*, *o prédio*, *o castelo*);
+  - land (*o caminho*, *a planície*, *a terra*);
+  - materials (*o couro*, *o metal*, *o tijolo*);
+  - travel (*a chegada*, *a partida*, *o destino*);
+  - shopping (*o carrinho*, *o cesto*, *a marca*);
+  - vegetables (*a alface*, *os espinafres*, *a abóbora*);
+  - clothes (*o bolso*, *o fecho*, *a manga*);
+  - work (*a empresa*, *o salário*, *o contrato*).
+- **Candidate screen.** Candidates whose form already appears untaught in an
+  earlier Portuguese lesson were dropped, so the tranche adds no forward
+  reference. Examples: *o preço*, *a sopa*, *a praia*, and the contractions
+  in *à direita* and *o pôr do sol*.
+- **Glosses.** They are disambiguated against taught words that share an
+  English cue: *o saco* is "a sack, a carrier bag", against *a bolsa*, and
+  *portanto* is "therefore", against *então*.
+- **European Portuguese:** *o contabilista*, *o relvado*, *o fecho*.
+- **Pins:** the Portuguese lesson-content budget goes from 676 to 849.
+- **Level gate at A2:** verb vocabulary 29 short -> 0; vocabulary 559 short
+  -> 394.
+
+## Chapters 134-137: saying no, the past, the future and practical texts
+
+Portuguese had realized one of its five A2 spine nodes. Four chapters realize
+the other four, so the A2 gate reports no missing spine node. Vocabulary and
+verb vocabulary remain.
+
+- Chapter 134 (SPINE-NEGATE-AND-ASK): *nada*, *nenhum / nenhuma*, *ninguém*,
+  *qual*, *nem*. Each negative keeps *não* before the verb.
+- Chapter 135 (SPINE-TALK-ABOUT-PAST): *recentemente*, *anteontem*,
+  *antigamente*, *o passado*, *acontecer*. They build on the one-word past
+  taught in chapter 15.
+- Chapter 136 (SPINE-TALK-ABOUT-FUTURE): *o futuro*, *daqui a*, *o plano*,
+  *planear*, *organizar*. *ir* with an infinitive is the everyday future, and
+  the one-word future is shown for reading.
+- Chapter 137 (SPINE-READ-PRACTICAL-TEXTS): *o horário*, *o aviso*,
+  *a renda*, *o anúncio*, *a fatura*. Each lesson reads a short sign, advert
+  or bill.
+- The track is European Portuguese, so the Brazilian forms are named in the
+  notes rather than taught: *planejar*, *o aluguel*.
+- Some candidates were dropped because their form already appears untaught in
+  an earlier lesson: *já*, *também não*, *ainda não*, *esta noite*. So there
+  is no new forward reference.
+- The extensions carry stage A2. Two reviews close the four chapters.
+
+## Chapter payoffs say "I can", not "i can"
+
+The payoff line under each chapter's goal lowercased the goal's first letter,
+so 104 chapters printed "Complete the last lesson of chapter N: i can say …".
+Every one now keeps the capital: "…: I can say …", and a new test
+(`payoff-summary-case.test.ts`) fails if the lowercase pronoun comes back. Only
+the payoff summary changed; no lesson, word or atom moved.
+
+## A2 reinforcement — seven atoms revisited twice
+
+The level gate's A2 reinforcement criterion asks that every atom at or below
+A2 is revisited at least twice (etymology hooks are waived). 7 atoms fell
+short. Each now comes back as a one-line retrieval in the Warm-up of a later
+lesson. Each host comes after the introducing lesson in the curriculum path
+and stays under the 300-second budget. Hosts:
+
+- `PT-C18-ir` (*há três anos*)
+- `PT-C18-vir` (*ter que*)
+- `PT-C22-encontrar-meet` (*encontrar*, to find)
+- `PT-C24-queijo` and `PT-C30-perna` (*encontrar-se*, to meet up)
+- `PT-C24-ovo` (*comprar*, and the *tenho comprado* trap)
+- `PT-C26-boca` and `PT-C30-dedo` (*jogar*, *brincar*, *tocar*)
+
+Level gate at A2: reinforcement blocker cleared.
+
 ## Chapters 82-133: 260 headwords, can, want and why, and Portuguese attains A1
 
 Portuguese had three A1 gaps. It was 257 headwords short, and five A1 spine

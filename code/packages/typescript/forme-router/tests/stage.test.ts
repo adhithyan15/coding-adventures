@@ -225,8 +225,8 @@ describe("router stage — cancellation", () => {
 describe("router stage — metadata", () => {
   it("declares the expected shape", () => {
     expect(router.name).toBe("@coding-adventures/forme-router");
-    expect(router.version).toBe("0.1.0");
-    expect(router.apiVersion).toBe(1);
+    expect(router.version).toBe("1.0.0");
+    expect(router.apiVersion).toBe(2);
     expect(router.consumes.name).toBe("Stream");
     expect(router.produces.name).toBe("Stream");
     expect(router.capabilities).toEqual([]);

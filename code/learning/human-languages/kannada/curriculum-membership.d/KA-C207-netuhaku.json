@@ -1,0 +1,11 @@
+{
+  "id": "KA-C207-netuhaku",
+  "pathSegment": "KA-PATH-207-KRIYE207",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-207-KRIYE207",
+      "order": 1
+    }
+  ]
+}

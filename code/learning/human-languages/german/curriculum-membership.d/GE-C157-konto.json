@@ -1,0 +1,11 @@
+{
+  "id": "GE-C157-konto",
+  "pathSegment": "GE-PATH-157-THING157",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-157-THING157",
+      "order": 2
+    }
+  ]
+}

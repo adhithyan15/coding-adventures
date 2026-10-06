@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R217-second-pass-words-from-chapters-213-217",
+    "language": "bengali",
+    "chapter": 217,
+    "sequence": 13170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21bd35ca846679e8"
+  },
+  "findings": []
+}

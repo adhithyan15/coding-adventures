@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C186-larzidan",
+    "language": "persian",
+    "chapter": 186,
+    "sequence": 9570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1a004f3ec28b4d0"
+  },
+  "findings": []
+}

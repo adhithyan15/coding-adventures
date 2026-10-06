@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C234-nihari",
+    "language": "urdu",
+    "chapter": 234,
+    "sequence": 14010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4438779c75bfe49f"
+  },
+  "findings": []
+}

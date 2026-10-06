@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C224-dhulu",
+    "language": "kannada",
+    "chapter": 224,
+    "sequence": 10460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:321c66780c458275"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:25ebf740bae2e403",
+  "lessonIds": [
+    "BN-C258-imel",
+    "BN-C258-barta",
+    "BN-C258-pasoyard",
+    "BN-C258-btari",
+    "BN-C258-suich"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch258.txt",
+  "json": "bengali/narration/ch258.json",
+  "textHash": "fnv1a64:20a2494c1017da8d",
+  "jsonHash": "fnv1a64:3d2dab371b91f741",
+  "findings": []
+}

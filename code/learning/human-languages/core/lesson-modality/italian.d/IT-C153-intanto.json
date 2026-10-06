@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C153-intanto",
+    "language": "italian",
+    "chapter": 153,
+    "sequence": 7960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69ddc90a312661ca"
+  },
+  "findings": []
+}

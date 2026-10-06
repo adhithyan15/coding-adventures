@@ -5,59 +5,26 @@
 // that needs different behaviour for a standard kind claims that kind in its
 // own `[host_effects]` handler instead (UI87 §7.2).
 //
-// What it answers
-// ---------------
-//
-//   files.open  { accept: [MIME...] }
-//               -> ok { name, mimeType, bytes (base64) } | cancelled {} | failed { message }
-//   files.save  { suggestedName, accept: [MIME...], bytes (base64) }
-//               -> ok { name } | cancelled {} | failed { message }
-//
-// These are UI59's and UI87's contracts. A name is returned, never a path: a
-// path would tell the app (and anything it logs) where the person keeps files.
-//
-// Routing
-// -------
-//
-// The generated Main.kt installs the app's own handler first, then this, which
-// wraps it. Each effect is routed by kind:
-//
-//   kind the app claims ........ the app's handler
-//   files.open / files.save .... this library
-//   anything else .............. the app's handler if it claimed nothing
-//                                (the original meaning), otherwise nobody --
-//                                and the host fails an unanswered Await
-//                                rather than leaving it pending.
+// This file is the desktop's half: `java.awt.FileDialog`, and writing a chosen
+// file in place. The contracts, the rules a request must meet and the router
+// are MosaicFileEffects.kt's, which the Android project compiles too (UI89
+// §3.8); this file never reaches Android, which has its own.
 //
 // Threading
 // ---------
 //
-// The host's monitor is held while a handler runs, so a modal dialog shown
-// inline would hold it for as long as the dialog is open. Each standard effect
-// is DEFERRED, then answered from the AWT event thread, which is also where a
-// native dialog has to run. Nothing may escape that block: once deferred, an
-// effect is out of the host's fail sweep, and an exception reaching the EDT's
-// uncaught handler would leave it awaited for the life of the process.
+// The router answers each standard effect from the AWT event thread, which is
+// where a native dialog has to run. A desktop dialog is modal, so it answers
+// the router's `done` before it returns, and the chosen file is read or
+// written right there -- the router's `runInBackground` is inline here.
 
 import java.awt.FileDialog
 import java.awt.Frame
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
-import java.util.Base64
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.SwingUtilities
-
-/** The effect kinds this library answers unless an app claims them. */
-val MOSAIC_STANDARD_EFFECT_KINDS: Set<String> = setOf("files.open", "files.save")
-
-/** The largest file `files.open` reads (UI59 parity with Qt and XAML). */
-const val MOSAIC_MAX_OPEN_BYTES: Long = 50L * 1024 * 1024
-
-/** The largest payload `files.save` writes (UI87 §3.1). */
-const val MOSAIC_MAX_SAVE_BYTES: Int = 16 * 1024 * 1024
 
 /**
  * The two dialogs, behind an interface so a test can answer them without a
@@ -75,6 +42,12 @@ interface MosaicFileDialogs {
 object AwtMosaicFileDialogs : MosaicFileDialogs {
     override fun chooseFileToOpen(extensions: List<String>): File? {
         val dialog = FileDialog(null as Frame?, "Open", FileDialog.LOAD)
+        // Images only: open in Pictures, as a photo picker should. Anything
+        // else -- and a home with no Pictures folder -- keeps the dialog's
+        // own default start.
+        if (mosaicOnlyImages(extensions)) {
+            mosaicPicturesDirectory()?.let { dialog.directory = it.path }
+        }
         if (extensions.isNotEmpty()) {
             dialog.setFilenameFilter { _, name -> extensions.any { name.lowercase().endsWith(".$it") } }
         }
@@ -96,248 +69,52 @@ object AwtMosaicFileDialogs : MosaicFileDialogs {
     }
 }
 
-// The MIME types an app names, and the extensions a dialog filters on. A type
-// this table does not know is dropped rather than failing the request (UI59 §3).
-private val MOSAIC_MIME_EXTENSIONS: Map<String, List<String>> = mapOf(
-    "application/json" to listOf("json"),
-    "text/plain" to listOf("txt"),
-    "text/markdown" to listOf("md", "markdown"),
-    "text/csv" to listOf("csv"),
-    "application/pdf" to listOf("pdf"),
-    "application/zip" to listOf("zip"),
-    "image/jpeg" to listOf("jpg", "jpeg"),
-    "image/png" to listOf("png"),
-    "image/webp" to listOf("webp"),
-    "image/gif" to listOf("gif"),
-    "image/bmp" to listOf("bmp"),
-    "image/tiff" to listOf("tif", "tiff"),
-    "image/svg+xml" to listOf("svg"),
-)
-
-private fun mosaicMimeTypeFor(file: File): String {
-    val extension = file.extension.lowercase()
-    return MOSAIC_MIME_EXTENSIONS.entries.firstOrNull { extension in it.value }?.key
-        ?: "application/octet-stream"
+/**
+ * `~/Pictures`, when this home has one. The JVM names no Pictures folder of its
+ * own; this is the folder macOS and Windows create, and most Linux desktops'
+ * default. A home without it (or with a localized XDG name) keeps the
+ * dialog's default start rather than a folder that is not there.
+ */
+private fun mosaicPicturesDirectory(): File? {
+    val home = System.getProperty("user.home") ?: return null
+    return File(home, "Pictures").takeIf { it.isDirectory }
 }
 
-@Suppress("UNCHECKED_CAST")
-private fun mosaicPayloadMap(payload: Any?): Map<String, Any?> =
-    payload as? Map<String, Any?> ?: emptyMap()
-
-private fun mosaicExtensionsFor(payload: Map<String, Any?>): List<String> =
-    (payload["accept"] as? List<*>).orEmpty()
-        .mapNotNull { it as? String }
-        .flatMap { MOSAIC_MIME_EXTENSIONS[it].orEmpty() }
-        .distinct()
-
-private fun mosaicOk(value: Map<String, Any?>): Map<String, Any?> = mapOf("ok" to value)
-private fun mosaicCancelled(): Map<String, Any?> = mapOf("cancelled" to emptyMap<String, Any?>())
-private fun mosaicFailed(message: String): Map<String, Any?> =
-    mapOf("failed" to mapOf("message" to message))
-
 /**
- * Read at most `limit` bytes, or null if the file is longer. Bounded while
- * reading, not by checking the length first: a file can grow between a check
- * and a read, which is the TOCTOU the XAML handler's review found (#15218).
+ * The desktop dialogs as the router's [MosaicDocumentPicker]: each answers
+ * `done` before it returns, with the chosen file as a document or a target.
  */
-private fun mosaicReadBounded(file: File, limit: Long): ByteArray? {
-    val out = ByteArrayOutputStream()
-    val buffer = ByteArray(64 * 1024)
-    FileInputStream(file).use { stream ->
-        while (true) {
-            val got = stream.read(buffer)
-            if (got < 0) return out.toByteArray()
-            if (out.size() + got > limit) return null
-            out.write(buffer, 0, got)
-        }
+class MosaicDialogPicker(private val dialogs: MosaicFileDialogs) : MosaicDocumentPicker {
+    override fun open(accept: MosaicAccept, done: (MosaicOpenedDocument?) -> Unit) {
+        done(dialogs.chooseFileToOpen(accept.extensions)?.let(::MosaicFileDocument))
+    }
+
+    override fun create(request: MosaicSaveRequest, done: (MosaicSaveTarget?) -> Unit) {
+        done(dialogs.chooseFileToSave(request.suggestedName, request.accept.extensions)?.let(::MosaicFileTarget))
+    }
+}
+
+/** A chosen file, read in place. Its type comes from its name. */
+private class MosaicFileDocument(private val file: File) : MosaicOpenedDocument {
+    override val name: String get() = file.name
+    override val mimeType: String? get() = null
+
+    override fun read(limit: Long): ByteArray? {
+        if (!file.isFile) throw MosaicFileFailure("that is not a regular file")
+        return FileInputStream(file).use { mosaicReadBounded(it, limit) }
     }
 }
 
 /**
- * A suggested name is a plain file name (UI87 §3.1), so an app cannot steer the
- * dialog, or disguise what it is saving:
- *
- * - no directory separators, and not `.` or `..` -- no other directory;
- * - no leading `.` -- a hidden dot-file such as `.zshrc` is configuration a
- *   shell or tool runs, not a document;
- * - no `:` -- on Windows `D:x` names another drive, and `x:y` an alternate
- *   data stream;
- * - no control, format, line- or paragraph-separator characters -- a
- *   right-to-left override can make `invoice<RLO>fdp.exe` read as a PDF in the
- *   dialog, and a separator breaks the name across lines;
- * - no leading or trailing whitespace of any kind (a no-break space included),
- *   no run of two or more whitespace characters, and no trailing dot, which
- *   Windows silently strips -- `report.pdf` padded out and ending `.command`
- *   hides its real extension;
- * - at most 255 UTF-16 units.
- *
- * - no lone surrogate, unassigned or private-use code point;
- * - blank-rendering characters (Hangul fillers, BRAILLE PATTERN BLANK) count as
- *   whitespace, and invisible (default-ignorable) characters are dropped
- *   before the padding and dot rules.
- *
- * Checked by code point, so a format character outside the BMP (the tag
- * characters, U+E0000..) is caught as well as one inside it.
+ * A chosen file to save over. Written beside the target and moved into place,
+ * so an interrupted save never leaves a half-written file where the person's
+ * old one was.
  */
-fun mosaicIsPlainFileName(name: String): Boolean {
-    if (name.isEmpty() || name.length > 255 || name == "." || name == "..") return false
-    val refused = name.codePoints().anyMatch { point ->
-        point == '/'.code || point == '\\'.code || point == ':'.code ||
-            when (Character.getType(point).toByte()) {
-                Character.CONTROL, Character.FORMAT,
-                Character.LINE_SEPARATOR, Character.PARAGRAPH_SEPARATOR,
-                // A lone surrogate cannot be written as a file name (Java
-                // saves it as `?`), and unassigned or private-use code points
-                // mean different things to different runtimes' Unicode tables.
-                Character.SURROGATE, Character.UNASSIGNED, Character.PRIVATE_USE -> true
-                else -> false
-            }
-    }
-    if (refused) return false
-    // The padding and dot rules look at what is visible: invisible characters
-    // cannot split a run of spaces or hide a leading or trailing dot.
-    val visible = name.codePoints().filter { !mosaicIsInvisible(it) }.toArray()
-    if (visible.isEmpty()) return false
-    if (visible.first() == '.'.code || visible.last() == '.'.code) return false
-    if (mosaicIsSpace(visible.first()) || mosaicIsSpace(visible.last())) return false
-    for (index in 1 until visible.size) {
-        if (mosaicIsSpace(visible[index - 1]) && mosaicIsSpace(visible[index])) return false
-    }
-    return true
-}
+private class MosaicFileTarget(private val target: File) : MosaicSaveTarget {
+    override val name: String get() = target.name
 
-private fun mosaicIsSpace(point: Int): Boolean =
-    Character.isWhitespace(point) || Character.isSpaceChar(point) || point in MOSAIC_BLANK_CHARACTERS
-
-/**
- * Characters that are not whitespace to Unicode but render as a wide blank,
- * so they pad a name just as well: the Hangul fillers and BRAILLE PATTERN
- * BLANK. They count as whitespace for the padding rules.
- */
-private val MOSAIC_BLANK_CHARACTERS: Set<Int> = setOf(0x115F, 0x1160, 0x2800, 0x3164, 0xFFA0)
-
-/**
- * Unicode's Default_Ignorable_Code_Point (the JDK has no property for it),
- * minus the blanks above: variation selectors, COMBINING GRAPHEME JOINER and
- * the like. Dropped before the padding and dot rules, so `<space><VS1><space>`
- * is still a run while an emoji's own selector (`❤️ list.txt`) is fine. The
- * browser host uses `\p{DI}` and SwiftUI `isDefaultIgnorableCodePoint`.
- */
-private fun mosaicIsInvisible(point: Int): Boolean =
-    point !in MOSAIC_BLANK_CHARACTERS && (
-        point == 0x00AD || point == 0x034F || point == 0x061C ||
-            point in 0x115F..0x1160 || point in 0x17B4..0x17B5 || point in 0x180B..0x180F ||
-            point in 0x200B..0x200F || point in 0x202A..0x202E || point in 0x2060..0x206F ||
-            point == 0x3164 || point in 0xFE00..0xFE0F || point == 0xFEFF || point == 0xFFA0 ||
-            point in 0xFFF0..0xFFF8 || point in 0x1BCA0..0x1BCA3 || point in 0x1D173..0x1D17A ||
-            point in 0xE0000..0xE0FFF
-        )
-
-/**
- * Extensions that run when the file is opened, on some platform: when an app
- * names no type (`accept` empty) a save may not end in one of these, so a
- * `files.save` cannot drop a launcher next to the person's documents. When the
- * app does name types, the name must already end in one of theirs.
- */
-val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(
-    // macOS: Terminal scripts, Finder location files and installers open
-    // with no prompt, or install.
-    "command", "terminal", "tool", "webloc", "inetloc", "fileloc", "afploc", "ftploc",
-    "mailloc", "newsloc", "atloc", "app", "pkg", "mpkg", "dmg", "mobileconfig", "scpt",
-    "applescript", "workflow",
-    // Windows: run, install, or leak credentials when merely browsed.
-    "exe", "com", "bat", "cmd", "scr", "pif", "msi", "msp", "msc", "lnk", "url", "hta",
-    "cpl", "chm", "inf", "vbs", "vbe", "js", "jse", "wsf", "wsh", "ws", "wsc", "sct",
-    "ps1", "psm1", "reg", "jar", "jnlp", "gadget", "xll", "appref-ms", "application",
-    "settingcontent-ms", "appx", "msix", "appinstaller", "diagcab", "scf",
-    "library-ms", "searchconnector-ms", "iso", "img", "vhd", "vhdx",
-    // Linux desktops.
-    "desktop", "sh", "run", "appimage", "deb", "rpm", "flatpakref",
-)
-
-/** True when [name] ends in an extension from [MOSAIC_EXECUTABLE_EXTENSIONS]. */
-fun mosaicHasExecutableExtension(name: String): Boolean {
-    val dot = name.lastIndexOf('.')
-    // Folded through upper case first: `ſ` (LONG S) lowercases to itself but
-    // is `S` to a case-insensitive file system.
-    return dot >= 0 && name.substring(dot + 1).uppercase().lowercase() in MOSAIC_EXECUTABLE_EXTENSIONS
-}
-
-/** `files.open`: the outcome map, never an exception. */
-fun mosaicRunFilesOpen(payload: Any?, dialogs: MosaicFileDialogs): Map<String, Any?> {
-    val request = mosaicPayloadMap(payload)
-    val chosen = dialogs.chooseFileToOpen(mosaicExtensionsFor(request)) ?: return mosaicCancelled()
-    if (!chosen.isFile) return mosaicFailed("that is not a regular file")
-    // Not the exception's own text: it can carry the full local path, and a
-    // failure message is data the app sees.
-    val bytes = try {
-        mosaicReadBounded(chosen, MOSAIC_MAX_OPEN_BYTES)
-    } catch (error: Exception) {
-        return mosaicFailed("couldn't read the selected file")
-    } ?: return mosaicFailed("the selected file is larger than $MOSAIC_MAX_OPEN_BYTES bytes")
-    return mosaicOk(
-        mapOf(
-            "name" to chosen.name,
-            "mimeType" to mosaicMimeTypeFor(chosen),
-            "bytes" to Base64.getEncoder().encodeToString(bytes),
-        )
-    )
-}
-
-/**
- * Give [to] the POSIX permissions [from] has, when [from] exists and the file
- * system has POSIX permissions at all. A new file keeps the temporary file's
- * owner-only default.
- */
-private fun mosaicCopyPermissions(from: File, to: File) {
-    val source = from.toPath()
-    if (!Files.exists(source, java.nio.file.LinkOption.NOFOLLOW_LINKS)) return
-    try {
-        Files.setPosixFilePermissions(
-            to.toPath(),
-            Files.getPosixFilePermissions(source, java.nio.file.LinkOption.NOFOLLOW_LINKS),
-        )
-    } catch (unsupported: UnsupportedOperationException) {
-        // Not a POSIX file system (Windows): ACLs are inherited from the folder.
-    }
-}
-
-/** `files.save`: the outcome map, never an exception. */
-fun mosaicRunFilesSave(payload: Any?, dialogs: MosaicFileDialogs): Map<String, Any?> {
-    val request = mosaicPayloadMap(payload)
-    val suggestedName = request["suggestedName"] as? String ?: ""
-    if (!mosaicIsPlainFileName(suggestedName)) {
-        return mosaicFailed("suggestedName must be a plain file name")
-    }
-    val encoded = request["bytes"] as? String ?: return mosaicFailed("bytes must be base64 text")
-    // Checked on the encoded length before decoding, so an oversized payload
-    // is refused without allocating its decoded copy (4 base64 chars = 3 bytes).
-    if (encoded.length.toLong() > (MOSAIC_MAX_SAVE_BYTES.toLong() / 3 + 1) * 4) {
-        return mosaicFailed("the file is larger than $MOSAIC_MAX_SAVE_BYTES bytes")
-    }
-    val bytes = try {
-        Base64.getDecoder().decode(encoded)
-    } catch (error: IllegalArgumentException) {
-        return mosaicFailed("bytes must be base64 text")
-    }
-    if (bytes.size > MOSAIC_MAX_SAVE_BYTES) {
-        return mosaicFailed("the file is larger than $MOSAIC_MAX_SAVE_BYTES bytes")
-    }
-    // When the app says what it is saving, the name must agree: a JSON export
-    // cannot be offered as `notes.exe`.
-    val extensions = mosaicExtensionsFor(request)
-    if (extensions.isNotEmpty() && extensions.none { suggestedName.lowercase().endsWith(".$it") }) {
-        return mosaicFailed("suggestedName must end in an extension of an accepted type")
-    }
-    if (extensions.isEmpty() && mosaicHasExecutableExtension(suggestedName)) {
-        return mosaicFailed("suggestedName must not end in an executable extension")
-    }
-    val target = dialogs.chooseFileToSave(suggestedName, extensions)
-        ?: return mosaicCancelled()
-    // Written beside the target and moved into place, so an interrupted save
-    // never leaves a half-written file where the person's old one was.
-    return try {
-        val directory = target.absoluteFile.parentFile ?: return mosaicFailed("couldn't save the file")
+    override fun write(bytes: ByteArray) {
+        val directory = target.absoluteFile.parentFile ?: throw MosaicFileFailure("couldn't save the file")
         // Created owner-only (0600 on POSIX), and given the permissions of the
         // file it replaces, so saving over a private file never leaves the new
         // one readable by other users.
@@ -358,82 +135,39 @@ fun mosaicRunFilesSave(payload: Any?, dialogs: MosaicFileDialogs): Map<String, A
         } finally {
             temporary.delete()
         }
-        mosaicOk(mapOf("name" to target.name))
-    } catch (error: Exception) {
-        mosaicFailed("couldn't save the file")
     }
 }
 
 /**
- * Route one effect (UI87 §7.2). Returns true when this library took it, false
- * when it belongs to the app's handler, and null when nobody should answer it
- * here (the host then fails an unanswered Await).
+ * Give [to] the POSIX permissions [from] has, when [from] exists and the file
+ * system has POSIX permissions at all. A new file keeps the temporary file's
+ * owner-only default.
  */
-fun mosaicRoutesToPlatform(kind: String, appKinds: Set<String>?): Boolean? = when {
-    appKinds?.contains(kind) == true -> false
-    kind in MOSAIC_STANDARD_EFFECT_KINDS -> true
-    appKinds == null -> false
-    else -> null
+private fun mosaicCopyPermissions(from: File, to: File) {
+    val source = from.toPath()
+    if (!Files.exists(source, java.nio.file.LinkOption.NOFOLLOW_LINKS)) return
+    try {
+        Files.setPosixFilePermissions(
+            to.toPath(),
+            Files.getPosixFilePermissions(source, java.nio.file.LinkOption.NOFOLLOW_LINKS),
+        )
+    } catch (unsupported: UnsupportedOperationException) {
+        // Not a POSIX file system (Windows): ACLs are inherited from the folder.
+    }
 }
 
-/**
- * The handler this library installs: it routes each effect by kind (UI87 §7.2)
- * and answers the standard kinds itself. A named class, so installing twice is
- * recognisable -- `Main.kt` installs from inside `application { }`, which can
- * run again, and re-wrapping would stack one router inside another.
- */
-class MosaicPlatformRouter(
-    private val host: MosaicRuntimeHost,
-    private val appHandler: ((Long, String, Any?, String) -> Unit)?,
-    private val appKinds: Set<String>?,
-    private val dialogs: MosaicFileDialogs,
-    private val runOnUi: (() -> Unit) -> Unit,
-) : (Long, String, Any?, String) -> Unit {
-    // One file operation at a time (UI87 §3.1): a second request while a
-    // dialog is open is failed, not queued behind it.
-    private val busy = AtomicBoolean(false)
+/** `files.open` through [dialogs], answered before it returns: the outcome map. */
+fun mosaicRunFilesOpen(payload: Any?, dialogs: MosaicFileDialogs): Map<String, Any?> {
+    var outcome: Map<String, Any?> = mosaicFailed("the file dialog failed")
+    mosaicAnswerFilesOpen(payload, MosaicDialogPicker(dialogs), { it() }) { outcome = it }
+    return outcome
+}
 
-    override fun invoke(id: Long, kind: String, payload: Any?, delivery: String) {
-        when (mosaicRoutesToPlatform(kind, appKinds)) {
-            false -> appHandler?.invoke(id, kind, payload, delivery)
-            null -> Unit
-            true -> answerStandard(id, kind, payload, delivery)
-        }
-    }
-
-    private fun answerStandard(id: Long, kind: String, payload: Any?, delivery: String) {
-        // Only an Await has someone waiting for the answer.
-        if (delivery.lowercase() != "await") return
-        if (!busy.compareAndSet(false, true)) {
-            host.completeEffect(id, mosaicFailed("another file operation is in progress"))
-            return
-        }
-        // Ownership first. False means the runtime is not waiting on this id,
-        // and the right move is to open no dialog at all.
-        if (!host.deferEffect(id)) {
-            busy.set(false)
-            return
-        }
-        runOnUi {
-            val outcome = try {
-                if (kind == "files.open") {
-                    mosaicRunFilesOpen(payload, dialogs)
-                } else {
-                    mosaicRunFilesSave(payload, dialogs)
-                }
-            } catch (error: Throwable) {
-                mosaicFailed("the file dialog failed")
-            } finally {
-                busy.set(false)
-            }
-            try {
-                host.completeEffect(id, outcome)
-            } catch (error: Throwable) {
-                // The host reports a refused answer through its own warning
-                // channel; nothing is left to do here.
-            }
-        }
-    }
+/** `files.save` through [dialogs], answered before it returns: the outcome map. */
+fun mosaicRunFilesSave(payload: Any?, dialogs: MosaicFileDialogs): Map<String, Any?> {
+    var outcome: Map<String, Any?> = mosaicFailed("the file dialog failed")
+    mosaicAnswerFilesSave(payload, MosaicDialogPicker(dialogs), { it() }) { outcome = it }
+    return outcome
 }
 
 /**
@@ -445,12 +179,12 @@ class MosaicPlatformRouter(
  * reinstall its own, and nothing changes.
  */
 fun installMosaicPlatformEffects(
-    host: MosaicRuntimeHost,
+    host: MosaicPlatformEffectHost,
     appKinds: Set<String>?,
     dialogs: MosaicFileDialogs = AwtMosaicFileDialogs,
     runOnUi: (() -> Unit) -> Unit = { SwingUtilities.invokeLater(it) },
 ) {
     val current = host.effectHandler
     if (current is MosaicPlatformRouter) return
-    host.effectHandler = MosaicPlatformRouter(host, current, appKinds, dialogs, runOnUi)
+    host.effectHandler = MosaicPlatformRouter(host, current, appKinds, MosaicDialogPicker(dialogs), runOnUi)
 }

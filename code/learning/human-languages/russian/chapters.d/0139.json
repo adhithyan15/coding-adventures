@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "A Timetable, an Advert, an Entrance, an Exit, a Receipt",
+  "label": "ch:ru-a-timetable-an-advert-an-entrance-an-exit-a-receipt",
+  "canDo": "I can read a timetable, an advert, door signs and a receipt, and act on what they say.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "RU-R139-second-pass-looking-ahead-and-reading-signs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: I can read a timetable, an advert, door signs and a receipt, and act on what they say.",
+    "assesses": [
+      "RU-LEX-C139-CHT139-03",
+      "RU-LEX-C139-CHT139-04",
+      "RU-LEX-C139-CHT139-05"
+    ]
+  }
+}

@@ -31,6 +31,7 @@ var expectedDiffFixtures = []string{
 	"diff-selection-match-work-over-limit.json",
 	"diff-selection-package-prefix.json",
 	"diff-selection-repository-boundary.json",
+	"diff-selection-shared-input-multiconsumer.json",
 	"diff-selection-strict-glob-character-classes.json",
 	"diff-selection-transitive.json",
 	"diff-selection-unknown-all.json",
@@ -317,7 +318,7 @@ func TestBoundaryDigestAndCallerInputsAreStable(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if digest != "252845441c83ddece72e81504bf59319bb0c469e0e0d48b567c3eb1a4c1225b3" {
+	if digest != "220436e5989c1d3b46770da00de3d5c7d55cc0c4d0535f2940daa9c6daa6d6e3" {
 		t.Fatalf("boundary digest = %s", digest)
 	}
 

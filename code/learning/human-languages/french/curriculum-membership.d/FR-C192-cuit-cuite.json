@@ -1,0 +1,11 @@
+{
+  "id": "FR-C192-cuit-cuite",
+  "pathSegment": "FR-PATH-192-QUAL192",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-192-QUAL192",
+      "order": 0
+    }
+  ]
+}

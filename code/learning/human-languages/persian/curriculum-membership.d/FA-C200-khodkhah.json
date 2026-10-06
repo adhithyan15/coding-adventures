@@ -1,0 +1,11 @@
+{
+  "id": "FA-C200-khodkhah",
+  "pathSegment": "FA-PATH-200-SEFAT200",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-200-SEFAT200",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "glyph": "ぴ",
+  "sound": "pi",
+  "role": "hiragana",
+  "components": [
+    "ひ",
+    "the handakuten ゜"
+  ],
+  "strokeOrder": [
+    "begin at the upper left and draw the short high shoulder to the right, turning down at the corner",
+    "without lifting, descend and swing left around the broad bottom",
+    "without lifting, rise up the right side and finish with a short flick outward at the top right",
+    "lift, draw the small circle of the handakuten clockwise, starting and ending at its foot"
+  ],
+  "strokeOrderNote": "KanjiVG's 03074 file records ぴ as two stroke paths in this order and direction: ひ's stroke (the one stroke), then the handakuten, one small circle drawn clockwise from its foot; so there are one pen lift.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03074.svg",
+    "citation": "KanjiVG, kanji/03074.svg, hiragana ぴ (U+3074 HIRAGANA LETTER PI), two stroke paths kvg:03074-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is ひ's stroke, the same paths as in its file for ひ, kanji/03072.svg; s2 is the handakuten, one closed ring that starts at its foot and runs clockwise, round the left side, over the top and down the right side back to the foot. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
+  "notes": "ひ with the handakuten, read pi. The third sign of えんぴつ and of いっぴき."
+}

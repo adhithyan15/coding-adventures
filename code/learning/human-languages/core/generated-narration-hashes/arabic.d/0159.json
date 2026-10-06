@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:5a8a72719a243fe1",
+  "lessonIds": [
+    "AR-C159-istayqaza",
+    "AR-C159-saida",
+    "AR-C159-wasala",
+    "AR-C159-safara",
+    "AR-C159-abara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch159.txt",
+  "json": "arabic/narration/ch159.json",
+  "textHash": "fnv1a64:a16ccb46ee5e0acf",
+  "jsonHash": "fnv1a64:9545a61de2d46c68",
+  "findings": []
+}

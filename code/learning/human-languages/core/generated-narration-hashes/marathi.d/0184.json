@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:f8877c93c6163c82",
+  "lessonIds": [
+    "MR-C184-dhur",
+    "MR-C184-jyot",
+    "MR-C184-havaman",
+    "MR-C184-paryavaran",
+    "MR-C184-pradusan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch184.txt",
+  "json": "marathi/narration/ch184.json",
+  "textHash": "fnv1a64:4164a734a366a4b4",
+  "jsonHash": "fnv1a64:0da33e4b7050ae71",
+  "findings": []
+}

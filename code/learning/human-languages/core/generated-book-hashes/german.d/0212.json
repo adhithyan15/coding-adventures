@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:157538ab482c106e",
+  "lessonIds": [
+    "GE-C212-bewoelkt",
+    "GE-C212-blond",
+    "GE-C212-ehrlich",
+    "GE-C212-eilig",
+    "GE-C212-einsam"
+  ],
+  "tex": "german/book/chapters/ch212-cloudy-blond-honest-urgent-lonely.tex"
+}

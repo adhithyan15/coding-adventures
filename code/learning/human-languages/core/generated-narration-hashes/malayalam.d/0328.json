@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:e2d49d36259377f3",
+  "lessonIds": [
+    "ML-C328-bencu",
+    "ML-C328-selphu",
+    "ML-C328-karttan",
+    "ML-C328-kotali",
+    "ML-C328-manvetti",
+    "ML-R328-first-pass-words-from-chapters-320-323",
+    "ML-R328-second-pass-words-from-chapters-324-328"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch328.txt",
+  "json": "malayalam/narration/ch328.json",
+  "textHash": "fnv1a64:c60809348a3addf5",
+  "jsonHash": "fnv1a64:39b5bc8a57bbdd79",
+  "findings": []
+}

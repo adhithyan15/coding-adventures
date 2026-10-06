@@ -141,6 +141,48 @@ function pipelineConfig(source: ReturnType<typeof observedSource>): PipelineConf
 }
 
 describe("external source state and persistent revision ledger", () => {
+  it("separates ledgers and checkpoints by immutable implementation identity", async () => {
+    const stageWithIdentity = (implementationIdentity: string) => defineStage({
+      name: "@test/identity-source",
+      version: "1.0.0",
+      implementationIdentity,
+      apiVersion: KERNEL_API_VERSION,
+      description: "implementation identity fixture",
+      consumes: Kinds.Void,
+      produces: Kinds.DeployArtifact,
+      capabilities: [],
+      configSchema: null,
+      run() {
+        return {
+          variant: { kind: "dist-tree" }, files: {},
+          manifest: { routes: [], assets: [], buildTime: "", buildId: "blake2b:00" },
+        } as never;
+      },
+    });
+    const makePipeline = async (identity: string) => {
+      const orchestrator = createOrchestrator();
+      const pipeline = await orchestrator.buildPipeline({
+        name: "identity-pipeline",
+        settings: {
+          storageRoot: ".", cacheDir: null, reproducibleBuild: true,
+          maxConcurrency: 1, logLevel: "error", bestEffort: false, deadlineMs: null,
+        },
+        stages: [{ id: "source", stage: stageWithIdentity(identity) }],
+      });
+      await orchestrator.dispose();
+      return pipeline;
+    };
+    const first = await makePipeline("blake2b:" + "1".repeat(64));
+    const second = await makePipeline("blake2b:" + "2".repeat(64));
+    expect(revisionLedgerKey(first)).not.toBe(revisionLedgerKey(second));
+    const inputRevision = ("blake2b:" + "0".repeat(64)) as never;
+    expect(instanceCheckpointKey(
+      revisionLedgerKey(first), first.dag.instances.get("source")!, inputRevision,
+    )).not.toBe(instanceCheckpointKey(
+      revisionLedgerKey(second), second.dag.instances.get("source")!, inputRevision,
+    ));
+  });
+
   it("compares revisions across fresh orchestrators and derives buildId from source state", async () => {
     const cacheRoot = await mkdtemp(join(tmpdir(), "forme-revision-ledger-"));
     roots.push(cacheRoot);

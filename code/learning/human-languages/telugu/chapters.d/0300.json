@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "Shoes, Chain, Earrings, Button, Handkerchief",
+  "label": "ch:te-shoes-chain-earrings-button-handkerchief",
+  "canDo": "I can say shoes, a chain, earrings, a button and a handkerchief.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C300-cetirumalu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can say shoes, a chain, earrings, a button and a handkerchief.",
+    "assesses": [
+      "TE-LEX-C300-VASTUVU300-03",
+      "TE-LEX-C300-VASTUVU300-04",
+      "TE-LEX-C300-VASTUVU300-05"
+    ]
+  }
+}

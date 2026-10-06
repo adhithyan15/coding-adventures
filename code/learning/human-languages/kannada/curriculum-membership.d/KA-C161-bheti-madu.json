@@ -1,0 +1,11 @@
+{
+  "id": "KA-C161-bheti-madu",
+  "pathSegment": "KA-PATH-161-KRIYE161",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-161-KRIYE161",
+      "order": 2
+    }
+  ]
+}

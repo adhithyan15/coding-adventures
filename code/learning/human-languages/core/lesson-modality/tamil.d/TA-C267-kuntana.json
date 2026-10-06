@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C267-kuntana",
+    "language": "tamil",
+    "chapter": 267,
+    "sequence": 15160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05ed1c7be2331977"
+  },
+  "findings": []
+}

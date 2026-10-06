@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:de5ed852afb3fe11",
+  "lessonIds": [
+    "ES-C508-increible",
+    "ES-C508-independiente",
+    "ES-C508-conocido",
+    "ES-C508-actual",
+    "ES-C508-aceptable"
+  ],
+  "tex": "spanish/book/chapters/ch508-como-es.tex"
+}

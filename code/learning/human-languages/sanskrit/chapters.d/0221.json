@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Cotton, Silk, Leather, Knot, Small stool",
+  "label": "ch:sa-cotton-silk-leather-knot-small-stool",
+  "canDo": "I can say cotton, silk, leather, a knot and a small stool.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C221-pithika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say cotton, silk, leather, a knot and a small stool.",
+    "assesses": [
+      "SA-LEX-C221-THG221-03",
+      "SA-LEX-C221-THG221-04",
+      "SA-LEX-C221-THG221-05"
+    ]
+  }
+}

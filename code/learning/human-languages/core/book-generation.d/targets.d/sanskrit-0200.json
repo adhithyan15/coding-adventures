@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 200,
+  "output": "sanskrit/book/chapters/ch200-reading-listening-speech-discussion-dispute.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

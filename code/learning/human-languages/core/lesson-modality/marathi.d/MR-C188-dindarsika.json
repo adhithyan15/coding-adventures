@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C188-dindarsika",
+    "language": "marathi",
+    "chapter": 188,
+    "sequence": 9420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5780a287866a293a"
+  },
+  "findings": []
+}

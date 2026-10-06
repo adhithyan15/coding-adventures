@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "To collect, To broadcast, To print, To download, To type",
+  "label": "ch:te-to-collect-to-broadcast-to-print-to-download-to-type",
+  "canDo": "I can say to collect, to broadcast, to print, to download and to type.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C245-taip-ceyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say to collect, to broadcast, to print, to download and to type.",
+    "assesses": [
+      "TE-LEX-C245-KRIYA245-03",
+      "TE-LEX-C245-KRIYA245-04",
+      "TE-LEX-C245-KRIYA245-05"
+    ]
+  }
+}

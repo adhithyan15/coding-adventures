@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "Is glad, Cries out, Roars, Coos, Chatters",
+  "label": "ch:sa-is-glad-cries-out-roars-coos-chatters",
+  "canDo": "I can say is glad, cries out, roars, coos and chatters.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C145-jalpati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: I can say is glad, cries out, roars, coos and chatters.",
+    "assesses": [
+      "SA-LEX-C145-ACT145-03",
+      "SA-LEX-C145-ACT145-04",
+      "SA-LEX-C145-ACT145-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C207-epouser",
+    "language": "french",
+    "chapter": 207,
+    "sequence": 11440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b530bc3d09593a82"
+  },
+  "findings": []
+}

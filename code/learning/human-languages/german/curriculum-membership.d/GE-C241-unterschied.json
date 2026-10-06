@@ -1,0 +1,11 @@
+{
+  "id": "GE-C241-unterschied",
+  "pathSegment": "GE-PATH-241-THING241",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-241-THING241",
+      "order": 2
+    }
+  ]
+}

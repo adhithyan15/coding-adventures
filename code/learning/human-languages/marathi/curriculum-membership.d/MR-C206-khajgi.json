@@ -1,0 +1,11 @@
+{
+  "id": "MR-C206-khajgi",
+  "pathSegment": "MR-PATH-206-GUN206",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-206-GUN206",
+      "order": 1
+    }
+  ]
+}

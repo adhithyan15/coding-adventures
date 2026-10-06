@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C268-idoneus",
+    "language": "latin",
+    "chapter": 268,
+    "sequence": 14490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca0658697694b5b0"
+  },
+  "findings": []
+}

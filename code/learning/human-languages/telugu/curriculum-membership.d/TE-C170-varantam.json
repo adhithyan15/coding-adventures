@@ -1,0 +1,11 @@
+{
+  "id": "TE-C170-varantam",
+  "pathSegment": "TE-PATH-170-SAMAYAM170",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-170-SAMAYAM170",
+      "order": 4
+    }
+  ]
+}

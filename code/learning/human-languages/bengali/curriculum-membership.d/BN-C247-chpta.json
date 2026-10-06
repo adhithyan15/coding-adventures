@@ -1,0 +1,11 @@
+{
+  "id": "BN-C247-chpta",
+  "pathSegment": "BN-PATH-247-GUN247",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-247-GUN247",
+      "order": 3
+    }
+  ]
+}

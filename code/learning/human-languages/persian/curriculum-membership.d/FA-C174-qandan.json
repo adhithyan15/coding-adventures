@@ -1,0 +1,11 @@
+{
+  "id": "FA-C174-qandan",
+  "pathSegment": "FA-PATH-174-CHIZ174",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-174-CHIZ174",
+      "order": 3
+    }
+  ]
+}

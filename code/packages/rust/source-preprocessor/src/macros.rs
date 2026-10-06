@@ -47,6 +47,7 @@
 use crate::bounds::{Bounds, Spend};
 use crate::diag::PpError;
 use crate::hideset::{HideId, HideSets, NameId};
+use crate::source_map::{ExpansionId, FileId, Position, SourceMap};
 use lexer::token::Token;
 use std::collections::HashMap;
 
@@ -55,11 +56,25 @@ use std::collections::HashMap;
 pub struct MToken {
     pub token: Token,
     pub hide: HideId,
+    /// The physical source of this token's spelling.
+    pub position: Position,
+    /// The innermost macro expansion that produced this token.
+    pub expansion: Option<ExpansionId>,
 }
 
 impl MToken {
-    pub fn bare(token: Token) -> MToken {
-        MToken { token, hide: HideId::EMPTY }
+    pub fn bare(token: Token, file: FileId) -> MToken {
+        let position = Position {
+            file,
+            line: token.line as u32,
+            column: token.column as u32,
+        };
+        MToken {
+            token,
+            hide: HideId::EMPTY,
+            position,
+            expansion: None,
+        }
     }
 }
 
@@ -72,6 +87,8 @@ pub struct MacroDef {
     /// alone.
     pub params: Option<Vec<String>>,
     pub body: Vec<Token>,
+    /// The directive site that introduced this definition.
+    pub defined_at: Position,
 }
 
 /// A definition plus the lookup table substitution needs.
@@ -125,6 +142,15 @@ impl MacroTable {
         self.defs.get(name)
     }
 
+    /// Whether `name` currently has a macro definition.
+    ///
+    /// Conditional-expression syntax such as C's `defined(name)` needs this
+    /// answer without exposing the stored definition or expanding `name`.
+    #[must_use]
+    pub fn is_defined(&self, name: &str) -> bool {
+        self.defs.contains_key(name)
+    }
+
     #[must_use]
     pub fn is_empty(&self) -> bool {
         self.defs.is_empty()
@@ -146,10 +172,14 @@ impl MacroTable {
 ///
 /// `bounds` is clamped to the defaults on entry, so this entry point carries
 /// the same tighten-only guarantee `preprocess` does.
+///
+/// Every actual substitution is interned in `map`; returned tokens name the
+/// innermost expansion that produced them.
 pub fn expand(
     input: Vec<MToken>,
     table: &MacroTable,
     hides: &mut HideSets,
+    map: &mut SourceMap,
     bounds: &Bounds,
     spend: &mut Spend,
 ) -> Result<Vec<MToken>, PpError> {
@@ -161,7 +191,7 @@ pub fn expand(
     // the other entry point. A guarantee enforced at one of two doors is not
     // enforced.
     let bounds = bounds.tighten(Bounds::default());
-    expand_at(input, table, hides, &bounds, spend, 0)
+    expand_at(input, table, hides, map, &bounds, spend, 0)
 }
 
 /// The real expander. `depth` counts nested ARGUMENT pre-expansion, which is
@@ -171,6 +201,7 @@ fn expand_at(
     input: Vec<MToken>,
     table: &MacroTable,
     hides: &mut HideSets,
+    map: &mut SourceMap,
     bounds: &Bounds,
     spend: &mut Spend,
     depth: u32,
@@ -254,7 +285,10 @@ fn expand_at(
 
         let def = &stored.def;
         let produced = match &def.params {
-            None => substitute_object_like(def, &cur.token, cur.hide, name_id, hides, bounds, spend)?,
+            None => {
+                let expansion = intern_invocation(map, &name, &cur, def.defined_at, bounds)?;
+                substitute_object_like(def, cur.hide, name_id, expansion, hides, bounds, spend)?
+            }
             Some(params) => {
                 // A function-like macro's name not followed by `(` is an
                 // ordinary identifier. Leaving it alone is required, not a
@@ -265,8 +299,17 @@ fn expand_at(
                     continue;
                 }
                 let (args, close_hide) = collect_args(&mut work, params.len(), bounds, spend, &cur)?;
-                let expanded_args =
-                    pre_expand_args(args, table, hides, bounds, spend, depth + 1)?;
+                let expansion = intern_invocation(map, &name, &cur, def.defined_at, bounds)?;
+                let args = attach_arguments(args, cur.expansion, expansion, map, bounds)?;
+                let expanded_args = pre_expand_args(
+                    args,
+                    table,
+                    hides,
+                    map,
+                    bounds,
+                    spend,
+                    depth + 1,
+                )?;
                 // The intersection of the NAME token's hide set and the
                 // CLOSING PAREN's: the invocation spans both, so a name hidden
                 // in only one of them was not hidden across the whole
@@ -274,8 +317,15 @@ fn expand_at(
                 // silently drops expansions.
                 let base = hides.intersect(cur.hide, close_hide);
                 substitute_function_like(
-                    def, &stored.param_index, &cur.token, &expanded_args, base, name_id,
-                    hides, bounds, spend,
+                    def,
+                    &stored.param_index,
+                    &expanded_args,
+                    base,
+                    name_id,
+                    expansion,
+                    hides,
+                    bounds,
+                    spend,
                 )?
             }
         };
@@ -289,6 +339,42 @@ fn expand_at(
     }
 
     Ok(out)
+}
+
+fn intern_invocation(
+    map: &mut SourceMap,
+    name: &str,
+    invocation: &MToken,
+    defined_at: Position,
+    bounds: &Bounds,
+) -> Result<ExpansionId, PpError> {
+    if map.expansion_count() as u64 >= bounds.expansion_rounds {
+        return Err(PpError::new("macro provenance exceeded the expansion node budget"));
+    }
+    Ok(map.intern_expansion(name, invocation.position, defined_at, invocation.expansion))
+}
+
+fn attach_arguments(
+    args: Vec<Vec<MToken>>,
+    old_parent: Option<ExpansionId>,
+    new_parent: ExpansionId,
+    map: &mut SourceMap,
+    bounds: &Bounds,
+) -> Result<Vec<Vec<MToken>>, PpError> {
+    let mut attached = Vec::with_capacity(args.len());
+    for mut argument in args {
+        for token in &mut argument {
+            token.expansion = match token.expansion {
+                Some(inner) if Some(inner) != old_parent => Some(
+                    map.reparent_chain(inner, old_parent, new_parent, bounds.expansion_rounds)
+                        .ok_or_else(|| PpError::new("macro provenance exceeded the expansion node budget"))?,
+                ),
+                _ => Some(new_parent),
+            };
+        }
+        attached.push(argument);
+    }
+    Ok(attached)
 }
 
 /// Charge `n` tokens and `bytes` of token text against the budgets.
@@ -405,41 +491,23 @@ fn pre_expand_args(
     args: Vec<Vec<MToken>>,
     table: &MacroTable,
     hides: &mut HideSets,
+    map: &mut SourceMap,
     bounds: &Bounds,
     spend: &mut Spend,
     depth: u32,
 ) -> Result<Vec<Vec<MToken>>, PpError> {
     let mut out = Vec::with_capacity(args.len());
     for a in args {
-        out.push(expand_at(a, table, hides, bounds, spend, depth)?);
+        out.push(expand_at(a, table, hides, map, bounds, spend, depth)?);
     }
     Ok(out)
 }
 
-/// Restamp a macro-body token with the position of the invocation it came from.
-///
-/// Without this, an expanded token carries the line and column it had in the
-/// macro BODY, while `emit` stamps it with the file currently being read. A
-/// body defined in an included header therefore surfaced at a position inside
-/// the *including* file's `@include` line -- text with no relationship to the
-/// token. Confidently wrong provenance, which is worse than none.
-///
-/// The honest interim, not the finished thing: full fidelity needs an
-/// `ExpansionId` on `MToken` written into `Locus::expansion`, tracked as
-/// VM-069. Until then an expanded token at least points at real text in the
-/// file that really produced it.
-fn at_invocation(body: &Token, invocation: &Token) -> Token {
-    let mut t = body.clone();
-    t.line = invocation.line;
-    t.column = invocation.column;
-    t
-}
-
 fn substitute_object_like(
     def: &MacroDef,
-    invocation: &Token,
     invocation_hide: HideId,
     name: NameId,
+    expansion: ExpansionId,
     hides: &mut HideSets,
     bounds: &Bounds,
     spend: &mut Spend,
@@ -453,7 +521,16 @@ fn substitute_object_like(
     let mut out = Vec::with_capacity(def.body.len());
     for token in &def.body {
         spelling_ok(token, bounds)?;
-        out.push(MToken { token: at_invocation(token, invocation), hide });
+        out.push(MToken {
+            token: token.clone(),
+            hide,
+            position: Position {
+                file: def.defined_at.file,
+                line: token.line as u32,
+                column: token.column as u32,
+            },
+            expansion: Some(expansion),
+        });
     }
     Ok(out)
 }
@@ -464,10 +541,10 @@ fn substitute_function_like(
     // The precomputed index replaces the parameter slice entirely: nothing
     // here needs the names in order any more, only name -> position.
     param_index: &HashMap<String, usize>,
-    invocation: &Token,
     args: &[Vec<MToken>],
     base_hide: HideId,
     name: NameId,
+    expansion: ExpansionId,
     hides: &mut HideSets,
     bounds: &Bounds,
     spend: &mut Spend,
@@ -551,7 +628,16 @@ fn substitute_function_like(
             }
             None => {
                 spelling_ok(token, bounds)?;
-                out.push(MToken { token: at_invocation(token, invocation), hide });
+                out.push(MToken {
+                    token: token.clone(),
+                    hide,
+                    position: Position {
+                        file: def.defined_at.file,
+                        line: token.line as u32,
+                        column: token.column as u32,
+                    },
+                    expansion: Some(expansion),
+                });
             }
         }
     }
@@ -562,6 +648,18 @@ fn substitute_function_like(
 mod tests {
     use super::*;
     use lexer::token::TokenType;
+
+    fn file() -> FileId {
+        FileId::new(0)
+    }
+
+    fn position() -> Position {
+        Position {
+            file: file(),
+            line: 1,
+            column: 1,
+        }
+    }
 
     fn tok(v: &str) -> Token {
         Token {
@@ -576,7 +674,9 @@ mod tests {
     }
 
     fn toks(src: &str) -> Vec<MToken> {
-        src.split_whitespace().map(|w| MToken::bare(tok(w))).collect()
+        src.split_whitespace()
+            .map(|w| MToken::bare(tok(w), file()))
+            .collect()
     }
 
     fn body(src: &str) -> Vec<Token> {
@@ -584,7 +684,14 @@ mod tests {
     }
 
     fn obj(t: &mut MacroTable, name: &str, b: &str) {
-        t.define(name, MacroDef { params: None, body: body(b) });
+        t.define(
+            name,
+            MacroDef {
+                params: None,
+                body: body(b),
+                defined_at: position(),
+            },
+        );
     }
 
     fn func(t: &mut MacroTable, name: &str, params: &[&str], b: &str) {
@@ -593,14 +700,26 @@ mod tests {
             MacroDef {
                 params: Some(params.iter().map(|s| s.to_string()).collect()),
                 body: body(b),
+                defined_at: position(),
             },
         );
+    }
+
+    fn test_expand(
+        input: Vec<MToken>,
+        table: &MacroTable,
+        hides: &mut HideSets,
+        bounds: &Bounds,
+        spend: &mut Spend,
+    ) -> Result<Vec<MToken>, PpError> {
+        let mut map = SourceMap::new();
+        expand(input, table, hides, &mut map, bounds, spend)
     }
 
     fn run(table: &MacroTable, src: &str) -> Result<String, PpError> {
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
-        let out = expand(toks(src), table, &mut hides, &Bounds::default(), &mut spend)?;
+        let out = test_expand(toks(src), table, &mut hides, &Bounds::default(), &mut spend)?;
         Ok(out.iter().map(|t| t.token.value.as_str()).collect::<Vec<_>>().join(" "))
     }
 
@@ -677,6 +796,50 @@ mod tests {
     }
 
     #[test]
+    fn forwarding_an_already_expanded_argument_keeps_every_macro() {
+        let mut t = MacroTable::new();
+        obj(&mut t, "H", "7");
+        func(&mut t, "G", &["x"], "x");
+        func(&mut t, "F", &["x"], "G ( x )");
+        func(&mut t, "OUTER", &["x"], "F ( x )");
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let mut map = SourceMap::new();
+        let out = expand(
+            toks("OUTER ( H )"),
+            &t,
+            &mut hides,
+            &mut map,
+            &Bounds::default(),
+            &mut spend,
+        )
+        .unwrap();
+        assert_eq!(out.len(), 1);
+        assert_eq!(out[0].token.value, "7");
+        let mut names = Vec::new();
+        let mut cursor = out[0].expansion;
+        while let Some(id) = cursor {
+            names.push(map.expansion_site(id).unwrap().0);
+            cursor = map.expansion_parent(id);
+        }
+        assert_eq!(names, ["H", "G", "F", "OUTER"]);
+        assert_eq!(out[0].position, position());
+
+        // Four substitutions fit this limit, but forwarding needs copied
+        // provenance nodes. Refuse them before the arena can grow without bound.
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let mut map = SourceMap::new();
+        let bounds = Bounds {
+            expansion_rounds: 4,
+            ..Bounds::default()
+        };
+        let err = expand(toks("OUTER ( H )"), &t, &mut hides, &mut map, &bounds, &mut spend)
+            .expect_err("the copied chain must obey the node cap");
+        assert!(err.to_string().contains("provenance"), "{err}");
+    }
+
+    #[test]
     fn a_function_like_name_without_parens_is_not_an_invocation() {
         // Required, not a nicety: a bare `F` must survive as `F`.
         let mut t = MacroTable::new();
@@ -702,6 +865,34 @@ mod tests {
         func(&mut t, "ID", &["x"], "x");
         obj(&mut t, "ONE", "1");
         assert_eq!(run(&t, "ID ( ONE )").unwrap(), "1");
+    }
+
+    #[test]
+    fn argument_pre_expansion_preserves_the_outer_expansion_parent() {
+        let mut t = MacroTable::new();
+        func(&mut t, "ID", &["x"], "x");
+        obj(&mut t, "ONE", "1");
+
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let mut map = SourceMap::new();
+        let out = expand(
+            toks("ID ( ONE )"),
+            &t,
+            &mut hides,
+            &mut map,
+            &Bounds::default(),
+            &mut spend,
+        )
+        .unwrap();
+
+        assert_eq!(out[0].token.value, "1");
+        assert_eq!(map.expansion_count(), 2);
+        let inner = out[0].expansion.expect("ONE expansion");
+        let outer = map.expansion_parent(inner).expect("ONE expanded as ID's argument");
+        assert_eq!(map.expansion_site(inner).unwrap().0, "ONE");
+        assert_eq!(map.expansion_site(outer).unwrap().0, "ID");
+        assert_eq!(map.expansion_parent(outer), None);
     }
 
     #[test]
@@ -770,6 +961,7 @@ mod tests {
                         MacroDef {
                             params: Some(vec!["x".to_string()]),
                             body: body(&format!("E ( D{} ( x ) )", i - 1)),
+                            defined_at: position(),
                         },
                     );
                 }
@@ -795,13 +987,14 @@ mod tests {
                 MacroDef {
                     params: Some(vec!["x".to_string()]),
                     body: body(&format!("E ( D{} ( x ) )", i - 1)),
+                    defined_at: position(),
                 },
             );
         }
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
         let bounds = Bounds { macro_depth: 4, ..Bounds::default() };
-        let e = expand(toks("D39 ( 1 )"), &t, &mut hides, &bounds, &mut spend)
+        let e = test_expand(toks("D39 ( 1 )"), &t, &mut hides, &bounds, &mut spend)
             .expect_err("depth 4 must refuse a 39-deep chain");
         assert!(e.to_string().contains("nested deeper than 4"), "{e}");
     }
@@ -822,7 +1015,7 @@ mod tests {
             ..Bounds::default()
         };
         // Still succeeds on a small program -- clamping is not refusal.
-        assert!(expand(toks("WIDE"), &t, &mut hides, &greedy, &mut spend).is_ok());
+        assert!(test_expand(toks("WIDE"), &t, &mut hides, &greedy, &mut spend).is_ok());
         // But the budget in force is the default, not u64::MAX.
         assert!(spend.tokens_produced <= Bounds::default().tokens_produced);
     }
@@ -838,7 +1031,7 @@ mod tests {
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
         let bounds = Bounds { synthesised_text_bytes: 32, ..Bounds::default() };
-        let e = expand(toks("WIDE"), &t, &mut hides, &bounds, &mut spend)
+        let e = test_expand(toks("WIDE"), &t, &mut hides, &bounds, &mut spend)
             .expect_err("a byte budget of 32 must refuse ~250 bytes of token text");
         assert!(e.to_string().contains("bytes of token text"), "{e}");
     }
@@ -867,7 +1060,7 @@ mod tests {
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
         let src = std::iter::repeat_n("F ( )", n).collect::<Vec<_>>().join(" ");
-        let out = expand(toks(&src), &t, &mut hides, &Bounds::default(), &mut spend)
+        let out = test_expand(toks(&src), &t, &mut hides, &Bounds::default(), &mut spend)
             .expect("many invocations of a wide macro is legal");
         assert_eq!(out.len(), n, "each invocation yields the one-token body");
     }
@@ -887,7 +1080,7 @@ mod tests {
 
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
-        let out = expand(toks("F ( 1 , 2 )"), &t, &mut hides, &Bounds::default(), &mut spend)
+        let out = test_expand(toks("F ( 1 , 2 )"), &t, &mut hides, &Bounds::default(), &mut spend)
             .expect("an ill-formed duplicate must not panic");
         let got: Vec<&str> = out.iter().map(|m| m.token.value.as_str()).collect();
         assert_eq!(got, ["2", "+", "2"], "the later duplicate wins under a map lookup");
@@ -918,7 +1111,7 @@ mod tests {
 
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
-        let out = expand(toks("F ( 1 )"), &t, &mut hides, &Bounds::default(), &mut spend)
+        let out = test_expand(toks("F ( 1 )"), &t, &mut hides, &Bounds::default(), &mut spend)
             .expect("a wide parameter list is legal, just unusual");
         // Every body token names the last parameter, and there is one argument
         // (index 0), so nothing substitutes.
@@ -938,14 +1131,28 @@ mod tests {
         let n = 1_000;
         let mut t = MacroTable::new();
         for i in 1..n {
-            t.define(format!("M{i}"), MacroDef { params: None, body: body(&format!("M{}", i + 1)) });
+            t.define(
+                format!("M{i}"),
+                MacroDef {
+                    params: None,
+                    body: body(&format!("M{}", i + 1)),
+                    defined_at: position(),
+                },
+            );
         }
-        t.define(format!("M{n}"), MacroDef { params: None, body: body("1") });
+        t.define(
+            format!("M{n}"),
+            MacroDef {
+                params: None,
+                body: body("1"),
+                defined_at: position(),
+            },
+        );
 
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
         let bounds = Bounds { hide_set_depth: 64, ..Bounds::default() };
-        let e = expand(toks("M1"), &t, &mut hides, &bounds, &mut spend)
+        let e = test_expand(toks("M1"), &t, &mut hides, &bounds, &mut spend)
             .expect_err("a 1000-deep paint chain must be refused at a depth of 64");
         assert!(e.to_string().contains("distinct macros painted"), "{e}");
     }
@@ -956,9 +1163,23 @@ mod tests {
         // already unusual; the default allows 256.
         let mut t = MacroTable::new();
         for i in 1..10 {
-            t.define(format!("M{i}"), MacroDef { params: None, body: body(&format!("M{}", i + 1)) });
+            t.define(
+                format!("M{i}"),
+                MacroDef {
+                    params: None,
+                    body: body(&format!("M{}", i + 1)),
+                    defined_at: position(),
+                },
+            );
         }
-        t.define("M10", MacroDef { params: None, body: body("42") });
+        t.define(
+            "M10",
+            MacroDef {
+                params: None,
+                body: body("42"),
+                defined_at: position(),
+            },
+        );
         assert_eq!(run(&t, "M1").unwrap(), "42");
     }
 
@@ -983,7 +1204,7 @@ mod tests {
         let mut spend = Spend::default();
         let bounds = Bounds { tokens_produced: 10_000, ..Bounds::default() };
         let src = format!("BIG ( {arg})");
-        let e = expand(toks(&src), &t, &mut hides, &bounds, &mut spend)
+        let e = test_expand(toks(&src), &t, &mut hides, &bounds, &mut spend)
             .expect_err("N^2 = 160,000 against a 10,000 budget must be refused");
         assert!(e.to_string().contains("tokens"), "{e}");
 
@@ -1005,7 +1226,14 @@ mod tests {
         let mut t = MacroTable::new();
         obj(&mut t, "A0", "x");
         for i in 1..11 {
-            t.define(format!("A{i}"), MacroDef { params: None, body: body(&format!("A{}", i - 1)) });
+            t.define(
+                format!("A{i}"),
+                MacroDef {
+                    params: None,
+                    body: body(&format!("A{}", i - 1)),
+                    defined_at: position(),
+                },
+            );
         }
 
         // A tight stack bound must not refuse this ordinary program.
@@ -1013,7 +1241,7 @@ mod tests {
         let mut spend = Spend::default();
         let tight_stack = Bounds { macro_depth: 8, ..Bounds::default() };
         assert!(
-            expand(toks("A10"), &t, &mut hides, &tight_stack, &mut spend).is_ok(),
+            test_expand(toks("A10"), &t, &mut hides, &tight_stack, &mut spend).is_ok(),
             "tightening macro_depth must cost stack depth, not work budget"
         );
 
@@ -1021,7 +1249,7 @@ mod tests {
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
         let tight_rounds = Bounds { expansion_rounds: 3, ..Bounds::default() };
-        let e = expand(toks("A10"), &t, &mut hides, &tight_rounds, &mut spend)
+        let e = test_expand(toks("A10"), &t, &mut hides, &tight_rounds, &mut spend)
             .expect_err("a 3-round budget must refuse an 11-deep chain");
         assert!(e.to_string().contains("exceeded 3 rounds"), "{e}");
     }
@@ -1036,13 +1264,17 @@ mod tests {
         for i in 1..40 {
             t.define(
                 format!("A{i}"),
-                MacroDef { params: None, body: body(&format!("A{} A{}", i - 1, i - 1)) },
+                MacroDef {
+                    params: None,
+                    body: body(&format!("A{} A{}", i - 1, i - 1)),
+                    defined_at: position(),
+                },
             );
         }
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
         let bounds = Bounds { tokens_produced: 10_000, ..Bounds::default() };
-        let e = expand(toks("A39"), &t, &mut hides, &bounds, &mut spend)
+        let e = test_expand(toks("A39"), &t, &mut hides, &bounds, &mut spend)
             .expect_err("a doubling chain must hit a bound");
         assert!(e.to_string().contains("tokens") || e.to_string().contains("budget"), "{e}");
     }
@@ -1055,7 +1287,7 @@ mod tests {
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
         let bounds = Bounds { arg_group_depth: 16, ..Bounds::default() };
-        let e = expand(toks(&src), &t, &mut hides, &bounds, &mut spend)
+        let e = test_expand(toks(&src), &t, &mut hides, &bounds, &mut spend)
             .expect_err("deep argument grouping must hit a bound");
         assert!(e.to_string().contains("nested deeper"), "{e}");
     }
@@ -1069,7 +1301,8 @@ mod tests {
         obj(&mut t, "BIG", &long);
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
-        let out = expand(toks("BIG"), &t, &mut hides, &Bounds::default(), &mut spend).unwrap();
+        let out =
+            test_expand(toks("BIG"), &t, &mut hides, &Bounds::default(), &mut spend).unwrap();
         assert_eq!(out.len(), 500);
         assert_eq!(hides.node_count(), 1, "one shared set, not one per token");
     }
@@ -1082,7 +1315,7 @@ mod tests {
         obj(&mut t, "WIDE", "a b c d e f g h");
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
-        let _ = expand(toks("WIDE"), &t, &mut hides, &Bounds::default(), &mut spend);
+        let _ = test_expand(toks("WIDE"), &t, &mut hides, &Bounds::default(), &mut spend);
         assert!(spend.tokens_produced >= 8, "produced {} ", spend.tokens_produced);
     }
 

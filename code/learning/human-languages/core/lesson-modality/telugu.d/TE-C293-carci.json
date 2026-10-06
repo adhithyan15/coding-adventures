@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C293-carci",
+    "language": "telugu",
+    "chapter": 293,
+    "sequence": 13980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6381e3080020ba1b"
+  },
+  "findings": []
+}

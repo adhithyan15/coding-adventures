@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "To wake up, To accompany, To add, To announce, To appear",
+  "label": "ch:la-to-wake-up-to-accompany-to-add-to-announce-to-appear",
+  "canDo": "I can say to wake up, to accompany, to add, to announce and to appear.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C230-appareo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say to wake up, to accompany, to add, to announce and to appear.",
+    "assesses": [
+      "LA-LEX-C230-ACT230-03",
+      "LA-LEX-C230-ACT230-04",
+      "LA-LEX-C230-ACT230-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:8ef01a39a710badc",
+  "lessonIds": [
+    "TA-C221-talaikkavacam",
+    "TA-C221-cakkaram",
+    "TA-C221-karumpalakai",
+    "TA-C221-alippan",
+    "TA-C221-cirutai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch221.txt",
+  "json": "tamil/narration/ch221.json",
+  "textHash": "fnv1a64:4c68ddc4d2d91943",
+  "jsonHash": "fnv1a64:1cb797153908380c",
+  "findings": []
+}

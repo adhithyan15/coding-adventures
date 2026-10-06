@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C220-vidua",
+    "language": "latin",
+    "chapter": 220,
+    "sequence": 11030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45a2ac2c51db86c5"
+  },
+  "findings": []
+}

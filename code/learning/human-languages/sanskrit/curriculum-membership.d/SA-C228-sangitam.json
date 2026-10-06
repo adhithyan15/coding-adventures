@@ -1,0 +1,11 @@
+{
+  "id": "SA-C228-sangitam",
+  "pathSegment": "SA-PATH-228-SCH228",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-228-SCH228",
+      "order": 2
+    }
+  ]
+}

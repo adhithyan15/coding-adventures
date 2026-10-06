@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "Crow, Eagle, Parrot, Hamster, Hedgehog",
+  "label": "ch:ru-crow-eagle-parrot-hamster-hedgehog",
+  "canDo": "I can say a crow, an eagle, a parrot, a hamster and a hedgehog.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C165-yozh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say a crow, an eagle, a parrot, a hamster and a hedgehog.",
+    "assesses": [
+      "RU-LEX-C165-VESHCH165-03",
+      "RU-LEX-C165-VESHCH165-04",
+      "RU-LEX-C165-VESHCH165-05"
+    ]
+  }
+}

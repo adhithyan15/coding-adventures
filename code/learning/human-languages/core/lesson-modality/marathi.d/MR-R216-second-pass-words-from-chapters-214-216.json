@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R216-second-pass-words-from-chapters-214-216",
+    "language": "marathi",
+    "chapter": 216,
+    "sequence": 11590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a59f015fb81766b"
+  },
+  "findings": []
+}

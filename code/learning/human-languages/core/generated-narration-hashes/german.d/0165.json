@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:226f227fa023ee3b",
+  "lessonIds": [
+    "GE-C165-leute",
+    "GE-C165-glueck",
+    "GE-C165-spass",
+    "GE-C165-lust",
+    "GE-C165-meinung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch165.txt",
+  "json": "german/narration/ch165.json",
+  "textHash": "fnv1a64:8add2b687d0c103f",
+  "jsonHash": "fnv1a64:19f479deef8e2202",
+  "findings": []
+}

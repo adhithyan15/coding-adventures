@@ -1,0 +1,11 @@
+{
+  "id": "UR-C207-kali-mirch",
+  "pathSegment": "UR-PATH-207-CHIZ207",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-207-CHIZ207",
+      "order": 3
+    }
+  ]
+}

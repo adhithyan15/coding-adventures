@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C143-faramush-kardan",
+    "language": "persian",
+    "chapter": 143,
+    "sequence": 7300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c321e640c9f2203d"
+  },
+  "findings": []
+}

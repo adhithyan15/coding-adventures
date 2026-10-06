@@ -267,6 +267,88 @@ build_package(...)
   `-- Io(_)                  <- read / write / mkdir failed
 ```
 
+### Layout variant names (UI48 ENV2)
+
+A layout variant `<Component>.<variant>.mll` gets a root of its own, named
+`<Component><Variant>` (`<Component><Variant>View` on SwiftUI), and it shares
+one namespace with everything else the package declares. On SwiftUI, Compose,
+Flutter, Qt and XAML the builder refuses a variant, of any export, whose root
+would take a name already claimed, and names both claimants in the `Io` error:
+
+```text
+Card.touch.mll      beside an exported CardTouch       -> `CardTouch` twice
+Card.touch-bar.mll  beside CardTouch.bar.mll           -> `CardTouchBar` twice
+Mosaic.host.mll     beside the shell's MosaicHost      -> `MosaicHost` twice
+```
+
+What each backend's default layout and project shell declare is listed beside
+`check_layout_namespace` in `src/lib.rs`. Every backend checks before anything
+is written, so a refused build leaves no partial tree. SwiftUI, Compose,
+Flutter and XAML check flat builds too; Qt checks only project builds, because
+only a project has a QML module for the names to collide in. On XAML an export
+named inside a variant's support types (`CardTouchMosaicSlider` beside
+`Card.touch`) is refused as well.
+
+### Exports and the project shell (UI32 §3.7)
+
+An export's names and file names come from its own name, so an export can
+spell something the project shell owns. A project build refuses both kinds of
+collision, naming the export:
+
+```text
+MosaicApp.mll on Compose or Flutter  -> `MosaicApp` beside the shell's root
+MosaicHost.mll on Qt                 -> `MosaicHost` beside the shell's type
+App.mll on SwiftUI                   -> App.swift over the shell's App.swift
+Main.mll (or MAIN.mll) on Compose    -> Main.kt over the shell's Main.kt
+```
+
+Names are checked against the same reserved lists as layout variants, before
+anything is written, and only in project builds: a flat build has no shell.
+Files are guarded at the write itself. Once the exports are generated, no later
+write in the build may land on an export's file, and the shell's copy of an
+export into its source set (`Sources/App/`, `src/main/kotlin/`, `lib/`) may not
+land on a file the shell already wrote. Paths are compared without regard to
+case, as macOS's and Windows' default filesystems would. The deliberate
+rewrites, Qt re-emitting its root strictly and XAML re-emitting its root's side
+files, go through `write_export_file`, which is exempt. Two exports whose names
+differ only in letter case (`Card`, `CARD`) are refused on every build, flat
+or project, for the same reason.
+
+### Android `[host_effects]` (UI89 §3.12)
+
+A Compose project build also writes `compose/android/`. A package's Android
+effect handler is a `[host_effects]` entry of its own, `compose-android`,
+because the desktop `compose` one opens Swing dialogs:
+
+```toml
+[host_effects]
+files = [
+  { backend = "compose-android", source = "host/android/EngramAndroidEffects.kt",
+    target = "src/main/kotlin/EngramAndroidEffects.kt" },
+]
+handlers = [
+  { backend = "compose-android", install = "installEngramAndroidEffects",
+    kinds = ["importAnki", "exportAnki"] },
+]
+```
+
+The files are copied into the Android project only, under the desktop
+copy's rules: inside the package, and a regular file. Each target must be a
+Kotlin source under `src/main/kotlin/`; elsewhere in the project a file would
+reach the build itself (`buildSrc/`), the merged manifest or the native
+libraries. A target that would
+replace a file the Android project already holds is refused, compared
+without case. `MosaicActivity` calls the install function as the host loads,
+then installs the platform library with the handler's `kinds`:
+
+```kotlin
+?.also { installEngramAndroidEffects(it); platformRouter = installMosaicPlatformEffects(it, documentPicker, setOf("importAnki", "exportAnki")) }
+```
+
+A plain install name is imported into `mosaic.android`, and a dotted one is
+called by its full name. `include` and a `:` qualifier are refused, because
+Kotlin has neither.
+
 ## Layout Per Backend
 
 | Backend | Files written |

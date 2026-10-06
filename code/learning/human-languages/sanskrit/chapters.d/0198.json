@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "Deer, Leopard, Rhinoceros, Nest, Egg",
+  "label": "ch:sa-deer-leopard-rhinoceros-nest-egg",
+  "canDo": "I can say a deer, a leopard, a rhinoceros, a nest and an egg.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C198-andam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say a deer, a leopard, a rhinoceros, a nest and an egg.",
+    "assesses": [
+      "SA-LEX-C198-THG198-03",
+      "SA-LEX-C198-THG198-04",
+      "SA-LEX-C198-THG198-05"
+    ]
+  }
+}

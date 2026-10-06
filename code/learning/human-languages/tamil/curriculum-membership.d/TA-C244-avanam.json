@@ -1,0 +1,11 @@
+{
+  "id": "TA-C244-avanam",
+  "pathSegment": "TA-PATH-244-PORUL244",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-244-PORUL244",
+      "order": 3
+    }
+  ]
+}

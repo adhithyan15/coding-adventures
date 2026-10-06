@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C277-riyada",
+    "language": "arabic",
+    "chapter": 277,
+    "sequence": 15960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24d0c598dfc886a2"
+  },
+  "findings": []
+}

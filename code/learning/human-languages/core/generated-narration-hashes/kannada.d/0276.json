@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:fa7ceefb641e2e25",
+  "lessonIds": [
+    "KA-C276-bai",
+    "KA-C276-regisu",
+    "KA-C276-jagalavadu",
+    "KA-C276-samadhana-madu",
+    "KA-C276-hemmepadu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch276.txt",
+  "json": "kannada/narration/ch276.json",
+  "textHash": "fnv1a64:84874d45caf3d4d1",
+  "jsonHash": "fnv1a64:8ebaede1ce0d3dd1",
+  "findings": []
+}

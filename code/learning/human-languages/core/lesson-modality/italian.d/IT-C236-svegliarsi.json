@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C236-svegliarsi",
+    "language": "italian",
+    "chapter": 236,
+    "sequence": 14030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fde9fe1d5d9e82f2"
+  },
+  "findings": []
+}

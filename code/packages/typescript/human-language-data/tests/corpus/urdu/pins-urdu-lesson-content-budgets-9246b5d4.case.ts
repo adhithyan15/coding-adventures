@@ -51,10 +51,32 @@ it("pins Urdu lesson-content budgets", () =>
     // introduced more than three atoms, then chapters 38-87 (250 word lessons)
     // and their four reviews. None introduces an idiom, sense or culture claim.
     //
-    // 439 -> 721: the A1 tranche, chapters 88-142. 270 word lessons (twenty-eight
+    // 439 -> 722: the A1 tranche, chapters 88-142. 270 word lessons (twenty-eight
     // verbs) and eight reviews, plus chapter 99's two letter lessons (ز and ط)
-    // and their two reviews. No idiom, sense or culture claim.
-    lessons: 721,
+    // and their two reviews, and one no-new-atom timed writing checkpoint. No
+    // idiom, sense or culture claim.
+    //
+    // 722 -> 723: one no-new-atom A2 connected-composition checkpoint in
+    // chapter 143. No idiom, sense or culture claim.
+    //
+    // 723 -> 740: the A2 spine chapters 144-146 (the past, the future, reading
+    // practical texts): fifteen word lessons and two reviews. No idiom, sense or
+    // culture claim.
+    //
+    // 740 -> 913: the first A2 vocabulary tranche, chapters 147-179: 165 word
+    // lessons (twenty-five verbs) and eight reviews. No idiom, sense or culture
+    // claim.
+    //
+    // 913 -> 1081: the second A2 vocabulary tranche, chapters 180-211: 160 word
+    // lessons (twenty-five verbs) and eight reviews. No idiom, sense or culture
+    // claim.
+    //
+    // 1081 -> 1222: the third A2 vocabulary tranche, chapters 212-238: 135 word
+    // lessons (twenty verbs) and six reviews. No idiom, sense or culture claim.
+    //
+    // 1222 -> 1353: the fourth A2 vocabulary tranche, chapters 239-263: 125 word
+    // lessons (twenty verbs) and six reviews. No idiom, sense or culture claim.
+    lessons: 1353,
     idioms: 2,
     senses: 4,
     cultureClaims: 4,

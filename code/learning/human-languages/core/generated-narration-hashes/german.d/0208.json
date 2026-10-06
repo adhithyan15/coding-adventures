@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:ff9d6bbe093b267c",
+  "lessonIds": [
+    "GE-C208-gesetz",
+    "GE-C208-strafe",
+    "GE-C208-regierung",
+    "GE-C208-staat",
+    "GE-C208-bevoelkerung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch208.txt",
+  "json": "german/narration/ch208.json",
+  "textHash": "fnv1a64:e5f0c88b8b1f9776",
+  "jsonHash": "fnv1a64:c790ac6f6486146d",
+  "findings": []
+}

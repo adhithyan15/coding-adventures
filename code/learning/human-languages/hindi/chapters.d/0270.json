@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "A grater, A lid, A jug, A water jar, A clay pot",
+  "label": "ch:hi-a-grater-a-lid-a-jug-a-water-jar-a-clay-pot",
+  "canDo": "I can say a grater, a lid, a jug, a water jar and a clay pot.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C270-matka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say a grater, a lid, a jug, a water jar and a clay pot.",
+    "assesses": [
+      "HI-LEX-C270-THG270-03",
+      "HI-LEX-C270-THG270-04",
+      "HI-LEX-C270-THG270-05"
+    ]
+  }
+}

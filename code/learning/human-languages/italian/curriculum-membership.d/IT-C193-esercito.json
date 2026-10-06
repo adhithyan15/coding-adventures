@@ -1,0 +1,11 @@
+{
+  "id": "IT-C193-esercito",
+  "pathSegment": "IT-PATH-193-COSE193",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-193-COSE193",
+      "order": 4
+    }
+  ]
+}

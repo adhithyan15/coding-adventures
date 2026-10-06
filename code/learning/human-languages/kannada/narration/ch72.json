@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "When It Happens, and What You Want",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5f462ea291b42c6e",
+  "sourceHash": "fnv1a64:3be5d4dfdbdde7e1",
   "lessons": [
     {
       "id": "KA-C72-when-clause",
@@ -384,7 +384,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1bcef29912871223",
+      "sourceHash": "fnv1a64:87bdec9ab84785cf",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -467,11 +467,31 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಜ (ja) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. start at the curled tip inside the head and loop up over it clockwise."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. without lifting, slant down to the left and round the left lobe, rising into the middle point."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, drop from the point round the right lobe's base."
+            },
+            {
+              "kind": "speech",
+              "text": "4. without lifting, climb the right side and curl in to its tip."
+            },
+            {
+              "kind": "speech",
+              "text": "5. lift, then sweep the upper arc from the head out to its upturned tip."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The body is one run, drawn as ಬ's is, from the curled tip inside the head to the inward curl of the right side; the arc across the top comes after the only lift, starting again at the head."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-ja.gif', 37 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0."
             }
           ]
         },

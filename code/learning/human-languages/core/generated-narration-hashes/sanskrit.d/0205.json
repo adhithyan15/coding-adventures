@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:ed6c0843792b23b1",
+  "lessonIds": [
+    "SA-C205-ksamate",
+    "SA-C205-nindati",
+    "SA-C205-prasamsati",
+    "SA-C205-svikaroti",
+    "SA-C205-vikasati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch205.txt",
+  "json": "sanskrit/narration/ch205.json",
+  "textHash": "fnv1a64:39d0b6b5a88db1c7",
+  "jsonHash": "fnv1a64:f08c1e5598f06a10",
+  "findings": []
+}

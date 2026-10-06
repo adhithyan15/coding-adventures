@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C179-tourner",
+    "language": "french",
+    "chapter": 179,
+    "sequence": 9350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7df32b16d0ab6703"
+  },
+  "findings": []
+}

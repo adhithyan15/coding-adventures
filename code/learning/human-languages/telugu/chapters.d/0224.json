@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Ladle, Rubbish, Floor, Mattress, Flour",
+  "label": "ch:te-ladle-rubbish-floor-mattress-flour",
+  "canDo": "I can say a ladle, rubbish, the floor, a mattress and flour.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C224-pindi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say a ladle, rubbish, the floor, a mattress and flour.",
+    "assesses": [
+      "TE-LEX-C224-VASTUVU224-03",
+      "TE-LEX-C224-VASTUVU224-04",
+      "TE-LEX-C224-VASTUVU224-05"
+    ]
+  }
+}

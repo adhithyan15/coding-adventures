@@ -1,0 +1,11 @@
+{
+  "id": "TA-C173-patukkaiyarai",
+  "pathSegment": "TA-PATH-173-IDAM173",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-173-IDAM173",
+      "order": 2
+    }
+  ]
+}

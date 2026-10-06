@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "Flat, Dining room, Balcony, Lock, Doorbell",
+  "label": "ch:fr-flat-dining-room-balcony-lock-doorbell",
+  "canDo": "I can say a flat, a dining room, a balcony, a lock and a doorbell.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C163-sonnette",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say a flat, a dining room, a balcony, a lock and a doorbell.",
+    "assesses": [
+      "FR-LEX-C163-CHOSES163-03",
+      "FR-LEX-C163-CHOSES163-04",
+      "FR-LEX-C163-CHOSES163-05"
+    ]
+  }
+}

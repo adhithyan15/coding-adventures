@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C218-datram",
+    "language": "sanskrit",
+    "chapter": 218,
+    "sequence": 12610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8da2319e3a7c05ff"
+  },
+  "findings": []
+}

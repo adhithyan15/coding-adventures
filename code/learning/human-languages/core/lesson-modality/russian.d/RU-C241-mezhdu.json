@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C241-mezhdu",
+    "language": "russian",
+    "chapter": 241,
+    "sequence": 14860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:162dd7fd32f05033"
+  },
+  "findings": []
+}

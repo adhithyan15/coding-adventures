@@ -1,0 +1,11 @@
+{
+  "id": "GE-C174-aufraeumen",
+  "pathSegment": "GE-PATH-174-VERB174",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-174-VERB174",
+      "order": 4
+    }
+  ]
+}

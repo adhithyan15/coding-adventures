@@ -1,0 +1,11 @@
+{
+  "id": "GU-W10-a1-timed-production",
+  "pathSegment": "GU-PATH-143-ACT143",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "GU-EXT-143-ACT143",
+      "order": 7
+    }
+  ]
+}

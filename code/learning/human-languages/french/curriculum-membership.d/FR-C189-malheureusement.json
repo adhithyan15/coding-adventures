@@ -1,0 +1,11 @@
+{
+  "id": "FR-C189-malheureusement",
+  "pathSegment": "FR-PATH-189-POURQUOI189",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-189-POURQUOI189",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C238-coram",
+    "language": "latin",
+    "chapter": 238,
+    "sequence": 12450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70d491e88de90d06"
+  },
+  "findings": []
+}

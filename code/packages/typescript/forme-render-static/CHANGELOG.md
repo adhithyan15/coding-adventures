@@ -2,10 +2,26 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
 ### Added
 
 - Resolved image references now render as `forme-asset:` placeholders and
   populate `RenderedPage.usedAssets` without mutating the authored AST.
+- Per-route FM05 documents now resolve every authored element reference against
+  the rendered body and populate exact, declaration-ordered `usedIslands`.
+- Explicitly authorized reviewed package/export mappings bind exact script
+  asset identities and SHA-256 bytes without
+  importing executable modules during rendering; static routes remain empty.
+
+### Security
+
+- Reject missing or ambiguous element IDs, raw-text/comment lookalikes,
+  duplicate module mappings, accessors, proxies, sparse config arrays, and
+  malformed package/export/asset identifiers. A configured route that matches
+  no rendered page fails the completed stream instead of silently dropping JS.
 
 ## 0.2.0 — 2026-08-27
 
@@ -42,8 +58,8 @@
 - `renderHtmlDocument` accepts an escaped header destination and trusted
   generated head tags; the fallback theme styles chronological indexes.
 - Rendered pages carry the input node's logical and revision IDs through
-  deterministic `OutputProvenance`; the legacy single `source` remains as a
-  compatibility hint during the RenderedPage v1.1 migration.
+  deterministic `OutputProvenance`. Kernel API v2 removes the legacy single
+  `source` compatibility field and requires canonical provenance.
 
 ### Tests
 

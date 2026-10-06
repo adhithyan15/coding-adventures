@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C211-ekkillu",
+    "language": "telugu",
+    "chapter": 211,
+    "sequence": 9670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee0f1e3fb38f6ffc"
+  },
+  "findings": []
+}

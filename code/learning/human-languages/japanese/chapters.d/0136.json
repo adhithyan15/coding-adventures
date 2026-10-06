@@ -1,0 +1,25 @@
+{
+  "chapter": 136,
+  "title": "Family and Water: Zo, Zu and Ze",
+  "label": "ch:ja-family-and-water-zo-zu-ze",
+  "canDo": "I can write zo, zu and ze by adding the voicing mark to signs I already write, and read words that use them, such as kazoku, mizu and kaze.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-R136-family-and-water",
+    "kind": "production",
+    "summary": "Read kazoku, kazoeru, mizu, suzushii and kaze, write the three new signs beside the signs they voice, write kazoku and kazoeru from memory and say which one is a verb, and write kaze.",
+    "assesses": [
+      "JA-LEX-ANCHOR-KAZOKU",
+      "JA-SCRIPT-ZO-01",
+      "JA-LEX-C136-KAZOERU",
+      "JA-LEX-ANCHOR-MIZU",
+      "JA-SCRIPT-ZU-01",
+      "JA-LEX-C136-SUZUSHII",
+      "JA-LEX-ANCHOR-KAZE",
+      "JA-SCRIPT-ZE-01"
+    ],
+    "note": "Word before sign, every time, as in chapters 134 and 135. Each of the three voiced signs is first SEEN inside a word taught one lesson earlier -- kazoku for zo, mizu for zu, kaze for ze -- and only then written, so every letter lesson is anchored (HL-C443) rather than building toward a later word. Each one is a sign the book already writes plus the two-stroke voicing mark, and each writing lesson pairs it with that base sign. Two lessons separate each writing lesson from the next, and each new sign is spent at once in a second word (kazoeru, suzushii) or in the review. After this chapter the book writes every sign of the z row, and A2 words that need them (a family, water, to count) can be taught."
+  }
+}

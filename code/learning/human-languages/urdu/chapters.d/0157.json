@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "Place, Neighbourhood, Pavement, Town square, Canal",
+  "label": "ch:ur-place-neighbourhood-pavement-town-square-canal",
+  "canDo": "I can say a place, a neighbourhood, a pavement, a town square and a canal.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-C157-nahar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: I can say a place, a neighbourhood, a pavement, a town square and a canal.",
+    "assesses": [
+      "UR-LEX-C157-JAGAH157-03",
+      "UR-LEX-C157-JAGAH157-04",
+      "UR-LEX-C157-JAGAH157-05"
+    ]
+  }
+}

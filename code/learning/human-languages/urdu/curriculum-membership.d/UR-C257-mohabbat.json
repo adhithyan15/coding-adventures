@@ -1,0 +1,11 @@
+{
+  "id": "UR-C257-mohabbat",
+  "pathSegment": "UR-PATH-257-CHIZ257",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-257-CHIZ257",
+      "order": 2
+    }
+  ]
+}

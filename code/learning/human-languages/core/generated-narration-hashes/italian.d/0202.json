@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:d67632f1829772f6",
+  "lessonIds": [
+    "IT-C202-racchetta",
+    "IT-C202-palestra",
+    "IT-C202-corsa",
+    "IT-C202-nuoto",
+    "IT-C202-sci"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch202.txt",
+  "json": "italian/narration/ch202.json",
+  "textHash": "fnv1a64:e332bcbef4d0efc2",
+  "jsonHash": "fnv1a64:10e5636321e0442b",
+  "findings": []
+}

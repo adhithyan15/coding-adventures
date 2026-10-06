@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "A topic, A tradition, A dream, A surprise, The surroundings",
+  "label": "ch:ge-a-topic-a-tradition-a-dream-a-surprise-the-surroundings",
+  "canDo": "I can say a topic, a tradition, a dream, a surprise and the surroundings.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C240-umgebung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say a topic, a tradition, a dream, a surprise and the surroundings.",
+    "assesses": [
+      "GE-LEX-C240-THING240-03",
+      "GE-LEX-C240-THING240-04",
+      "GE-LEX-C240-THING240-05"
+    ]
+  }
+}

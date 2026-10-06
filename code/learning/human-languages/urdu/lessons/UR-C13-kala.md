@@ -51,7 +51,7 @@ kept.
 
 > *merī ṭopī kālī hai.* — "My cap is black."
 
-## Grammar Lens: a color that agrees like مِیرا
+## Grammar Lens: a color that agrees like میرا
 <!-- hl-knowledge: introduces=[UR-GRAMMAR-ADJECTIVE-AGREEMENT]; assesses=[UR-LEX-KALA] -->
 
 **کالا** ends in **ا** — and a color ending in **ا** changes with the noun

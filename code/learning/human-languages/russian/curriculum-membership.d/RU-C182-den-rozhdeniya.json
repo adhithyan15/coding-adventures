@@ -1,0 +1,11 @@
+{
+  "id": "RU-C182-den-rozhdeniya",
+  "pathSegment": "RU-PATH-182-VREMYA182",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-182-VREMYA182",
+      "order": 2
+    }
+  ]
+}

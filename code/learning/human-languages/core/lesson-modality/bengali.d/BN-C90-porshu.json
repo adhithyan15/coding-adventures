@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C90-porshu",
+    "language": "bengali",
+    "chapter": 90,
+    "sequence": 4730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10814d203b44bf83"
+  },
+  "findings": []
+}

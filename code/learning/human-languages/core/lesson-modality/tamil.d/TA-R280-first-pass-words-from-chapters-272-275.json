@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R280-first-pass-words-from-chapters-272-275",
+    "language": "tamil",
+    "chapter": 280,
+    "sequence": 16050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20d8e30a66f0f279"
+  },
+  "findings": []
+}

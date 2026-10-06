@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:23ec99e1792c9d75",
+  "lessonIds": [
+    "SA-C216-kusalah",
+    "SA-C216-nipunah",
+    "SA-C216-ajnah",
+    "SA-C216-vijnah",
+    "SA-C216-buddhiman"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch216.txt",
+  "json": "sanskrit/narration/ch216.json",
+  "textHash": "fnv1a64:515b560c6c0deaf0",
+  "jsonHash": "fnv1a64:c6f170b1f206522c",
+  "findings": []
+}

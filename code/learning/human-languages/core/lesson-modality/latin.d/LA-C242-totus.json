@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C242-totus",
+    "language": "latin",
+    "chapter": 242,
+    "sequence": 12640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2f5af8ee7691b59"
+  },
+  "findings": []
+}

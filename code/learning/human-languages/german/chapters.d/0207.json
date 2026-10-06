@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "An ambulance, The fire brigade, A thief, A theft, A court",
+  "label": "ch:ge-an-ambulance-the-fire-brigade-a-thief-a-theft-a-court",
+  "canDo": "I can say an ambulance, the fire brigade, a thief, a theft and a court.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C207-gericht",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say an ambulance, the fire brigade, a thief, a theft and a court.",
+    "assesses": [
+      "GE-LEX-C207-THING207-03",
+      "GE-LEX-C207-THING207-04",
+      "GE-LEX-C207-THING207-05"
+    ]
+  }
+}

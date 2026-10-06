@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C247-grhapath",
+    "language": "marathi",
+    "chapter": 247,
+    "sequence": 13950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10995a8fea2ee611"
+  },
+  "findings": []
+}

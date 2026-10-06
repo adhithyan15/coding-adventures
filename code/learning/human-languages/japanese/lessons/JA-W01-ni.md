@@ -43,8 +43,8 @@ reviews_of: [JA-W01-n, JA-W01-ha]
 
 Three strokes, and **the first one you have already practised**:
 
-1. the **vertical** down the left, with the same small flick left at the foot as
-   the sign read *ha*
+1. the **vertical** down the left, with the same small flick up to the right at
+   the foot as the sign read *ha*
 2. a **short horizontal** to its right, upper area
 3. a **longer horizontal** below it, sweeping right
 

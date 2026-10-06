@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C247-siksan",
+    "language": "marathi",
+    "chapter": 247,
+    "sequence": 13960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b23f10943e38f4d"
+  },
+  "findings": []
+}

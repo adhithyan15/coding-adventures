@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C175-lebasshuyi",
+    "language": "persian",
+    "chapter": 175,
+    "sequence": 9010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34fa153e270865a0"
+  },
+  "findings": []
+}

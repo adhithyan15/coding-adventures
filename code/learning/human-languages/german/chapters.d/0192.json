@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "A departure, An arrival, A take-off, A delay, A platform",
+  "label": "ch:ge-a-departure-an-arrival-a-take-off-a-delay-a-platform",
+  "canDo": "I can say a departure, an arrival, a take-off, a delay and a platform.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C192-gleis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say a departure, an arrival, a take-off, a delay and a platform.",
+    "assesses": [
+      "GE-LEX-C192-THING192-03",
+      "GE-LEX-C192-THING192-04",
+      "GE-LEX-C192-THING192-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C248-vote",
+    "language": "french",
+    "chapter": 248,
+    "sequence": 14350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7b7dac0e1533b84"
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 127,
   "title": "The Subjunctive, Regular",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:1c0716b5d2c1d268",
+  "sourceHash": "fnv1a64:a16d6b125de845cc",
   "lessons": [
     {
       "id": "ES-C18-subjuntivo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08912b546777f9ef",
+      "sourceHash": "fnv1a64:28ae5fbde72ce9ce",
       "notice": null,
       "blocks": [
         {
@@ -54,6 +54,16 @@
             {
               "kind": "speech",
               "text": "Plural forms wait. Say the small row: hable, hables, hable."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Viviría, vivirías, viviría: the conditional rides on the whole infinitive."
             }
           ]
         },

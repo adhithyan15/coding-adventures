@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:f4283087b386cfaf",
+  "lessonIds": [
+    "BN-C221-besorkari",
+    "BN-C221-jatiyo",
+    "BN-C221-antorjatik",
+    "BN-C221-shohure",
+    "BN-C221-niyomito"
+  ],
+  "tex": "bengali/book/chapters/ch221-private-national-international-urban-regular.tex"
+}

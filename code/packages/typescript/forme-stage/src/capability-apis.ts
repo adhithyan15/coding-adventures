@@ -37,6 +37,11 @@ import { CapabilityError } from "@coding-adventures/forme-errors";
 
 export interface StorageApi {
   read(path: string): Promise<Uint8Array>;
+  /**
+   * Return the complete value only when it is at most `maxBytes`; reject
+   * larger content after reading no more than `maxBytes + 1` bytes.
+   */
+  readBounded(path: string, maxBytes: number): Promise<Uint8Array>;
   write(path: string, bytes: Uint8Array): Promise<void>;
   exists(path: string): Promise<boolean>;
   list(path: string): AsyncIterable<StorageEntry>;
@@ -71,6 +76,7 @@ export interface StorageStat {
 export function deniedStorageApi(): StorageApi {
   return {
     read:    (path) => deny("storage:read",  `read(${JSON.stringify(path)})`),
+    readBounded: (path) => deny("storage:read", `readBounded(${JSON.stringify(path)})`),
     write:   (path) => deny("storage:write", `write(${JSON.stringify(path)})`),
     exists:  (path) => deny("storage:read",  `exists(${JSON.stringify(path)})`),
     list:    (path) => denyIterable("storage:read",  `list(${JSON.stringify(path)})`),
@@ -98,8 +104,8 @@ export function deniedNetworkApi(): NetworkApi {
 // ─── EnvApi ───────────────────────────────────────────────────────────────
 
 export interface EnvApi {
-  get(name: string): string | undefined;
-  getOrThrow(name: string): string;
+  get(name: string): Promise<string | undefined>;
+  getOrThrow(name: string): Promise<string>;
 }
 
 /**
@@ -111,12 +117,8 @@ export interface EnvApi {
  */
 export function deniedEnvApi(): EnvApi {
   return {
-    get: (name) => {
-      throw capabilityError(`env:${name}`, `env.get(${JSON.stringify(name)})`);
-    },
-    getOrThrow: (name) => {
-      throw capabilityError(`env:${name}`, `env.getOrThrow(${JSON.stringify(name)})`);
-    },
+    get: (name) => deny(`env:${name}`, `env.get(${JSON.stringify(name)})`),
+    getOrThrow: (name) => deny(`env:${name}`, `env.getOrThrow(${JSON.stringify(name)})`),
   };
 }
 
@@ -124,21 +126,26 @@ export function deniedEnvApi(): EnvApi {
 
 export interface FilesystemApi {
   readAbsolute(path: string): Promise<Uint8Array>;
+  /**
+   * Return the complete value only when it is at most `maxBytes`; reject
+   * larger content after reading no more than `maxBytes + 1` bytes.
+   */
+  readAbsoluteBounded(path: string, maxBytes: number): Promise<Uint8Array>;
   writeAbsolute(path: string, bytes: Uint8Array): Promise<void>;
-  homeDir(): string;
-  tempDir(): string;
+  homeDir(): Promise<string>;
+  tempDir(): Promise<string>;
 }
 
 export function deniedFilesystemApi(): FilesystemApi {
   return {
     readAbsolute:  (path) => deny("filesystem:user", `readAbsolute(${JSON.stringify(path)})`),
+    readAbsoluteBounded: (path) => deny(
+      "filesystem:user",
+      `readAbsoluteBounded(${JSON.stringify(path)})`,
+    ),
     writeAbsolute: (path) => deny("filesystem:user", `writeAbsolute(${JSON.stringify(path)})`),
-    homeDir: () => {
-      throw capabilityError("filesystem:user", "homeDir()");
-    },
-    tempDir: () => {
-      throw capabilityError("filesystem:user", "tempDir()");
-    },
+    homeDir: () => deny("filesystem:user", "homeDir()"),
+    tempDir: () => deny("filesystem:user", "tempDir()"),
   };
 }
 

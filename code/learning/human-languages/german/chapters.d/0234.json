@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "A wage, A team, A majority, Fashion, Courage",
+  "label": "ch:ge-a-wage-a-team-a-majority-fashion-courage",
+  "canDo": "I can say a wage, a team, a majority, fashion and courage.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C234-mut",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say a wage, a team, a majority, fashion and courage.",
+    "assesses": [
+      "GE-LEX-C234-THING234-03",
+      "GE-LEX-C234-THING234-04",
+      "GE-LEX-C234-THING234-05"
+    ]
+  }
+}

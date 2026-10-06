@@ -1,0 +1,11 @@
+{
+  "id": "IT-C233-asciugare",
+  "pathSegment": "IT-PATH-233-VERBI233",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-233-VERBI233",
+      "order": 2
+    }
+  ]
+}

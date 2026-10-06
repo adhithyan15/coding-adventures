@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-10-01 (a switch that makes environment changes fail)
+
+### Added -- `failEnvironment` (UI48 ENV4 hardening)
+
+- `failEnvironment` with `{"fail": true}` makes every `environmentChanged`
+  that reaches the app an application error
+  (`conformance environment change failed: failEnvironment is on`) that
+  changes nothing, until `{"fail": false}`; without a boolean `fail` it is
+  refused. The fixture now implements `environment_changed`, ignoring changes
+  (as the default did) while the switch is off.
+- Why: the native hosts now hold back a report only when the runtime refused
+  it as an invalid environment, and must send it again after a failure that
+  is not the report's fault. This gives every host harness such a failure,
+  and a way to see whether a report was sent at all: while the switch is on,
+  a sent report answers an error and a held-back one answers nothing --
+  needed now that an ignored report no longer rewrites the state file the
+  harnesses used to watch.
+- A switch, not a one-shot: `MosaicApp::environment_changed` requires an
+  error to leave the app unchanged, so the failure cannot disarm itself.
+
 ## Unreleased
 
 ### Changed -- the fixture names the environment axes (UI48 ENV1)

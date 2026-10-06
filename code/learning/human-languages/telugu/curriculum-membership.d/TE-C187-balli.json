@@ -1,0 +1,11 @@
+{
+  "id": "TE-C187-balli",
+  "pathSegment": "TE-PATH-187-VASTUVU187",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-187-VASTUVU187",
+      "order": 1
+    }
+  ]
+}

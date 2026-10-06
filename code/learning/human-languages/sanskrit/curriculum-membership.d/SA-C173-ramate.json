@@ -1,0 +1,11 @@
+{
+  "id": "SA-C173-ramate",
+  "pathSegment": "SA-PATH-173-ACT173",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-173-ACT173",
+      "order": 4
+    }
+  ]
+}

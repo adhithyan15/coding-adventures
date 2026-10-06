@@ -7,7 +7,7 @@ chapter: 439
 type: word
 headword: tirar
 gloss: to throw away, and on a door, to pull — one verb pointing two opposite ways
-concept_tag: ES-ACT-TIRAR
+concept_tag: ES-VERB-TIRAR
 prerequisites: [ES-C439-cortar, ES-C366-caja, ES-C279-puerta]
 sounds: [stress-final, r-tap]
 roots: []

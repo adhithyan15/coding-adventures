@@ -4,7 +4,7 @@
   "chapter": 271,
   "title": "Talking About Ideas --- Hedging From Doubt, and From Inference",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:26deb7f2af4a0174",
+  "sourceHash": "fnv1a64:d93db0891475af10",
   "lessons": [
     {
       "id": "ES-C271-quizas",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b596f22e013fe1df",
+      "sourceHash": "fnv1a64:05c7150cf246252f",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "An argument needs one more thing: a way to put an idea forward while admitting you might be wrong."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The sure answers first, then the unsure one. Asked ¿Vas?, say No, no voy. Asked ¿Qué ves?, say No veo nada. Both halves of the negative stay."
             }
           ]
         },

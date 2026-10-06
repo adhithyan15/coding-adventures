@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:22700986f233705d",
+  "lessonIds": [
+    "TE-C208-atuku",
+    "TE-C208-pukkilincu",
+    "TE-C208-canipovu",
+    "TE-C208-puttu",
+    "TE-C208-edurkonu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch208.txt",
+  "json": "telugu/narration/ch208.json",
+  "textHash": "fnv1a64:8df5cd5b6c8470aa",
+  "jsonHash": "fnv1a64:fd6de88c10e2fa82",
+  "findings": []
+}

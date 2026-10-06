@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C238-reduire",
+    "language": "french",
+    "chapter": 238,
+    "sequence": 13640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:206095742c7bb8e3"
+  },
+  "findings": []
+}

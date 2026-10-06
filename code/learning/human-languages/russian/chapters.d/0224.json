@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Birch, Spruce, Pine, Bush, Sheep",
+  "label": "ch:ru-birch-spruce-pine-bush-sheep",
+  "canDo": "I can say a birch, a spruce, a pine, a bush and a sheep.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C224-ovtsa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say a birch, a spruce, a pine, a bush and a sheep.",
+    "assesses": [
+      "RU-LEX-C224-VESHCH224-03",
+      "RU-LEX-C224-VESHCH224-04",
+      "RU-LEX-C224-VESHCH224-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:5249ce60e8e05581",
+  "lessonIds": [
+    "BN-C251-nach",
+    "BN-C251-prodorshoni",
+    "BN-C251-mela",
+    "BN-C251-parti",
+    "BN-C251-jatra"
+  ],
+  "tex": "bengali/book/chapters/ch251-dance-exhibition-fair-party-journey.tex"
+}

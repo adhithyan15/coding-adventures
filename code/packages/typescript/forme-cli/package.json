@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/forme-cli",
-  "version": "0.4.0",
-  "description": "Headless Forme build, persistent incremental cache, check, clean, watch/preview, and local-workspace bootstrap CLI.",
+  "version": "1.0.0",
+  "description": "Forme build, deploy, reviewed plugin install, persistent incremental cache, check, clean, watch/preview, and local-workspace bootstrap CLI.",
   "type": "module",
   "main": "src/index.ts",
   "files": [
@@ -27,8 +27,18 @@
     "@coding-adventures/cli-builder": "file:../cli-builder",
     "@coding-adventures/forme-cache": "file:../forme-cache",
     "@coding-adventures/forme-dev-server": "file:../forme-dev-server",
+    "@coding-adventures/forme-deploy-runner-core": "file:../forme-deploy-runner-core",
+    "@coding-adventures/forme-deploy-runner-fs-adapter": "file:../forme-deploy-runner-fs-adapter",
+    "@coding-adventures/forme-deploy-runner-github-pages-adapter": "file:../forme-deploy-runner-github-pages-adapter",
     "@coding-adventures/forme-orchestrator": "file:../forme-orchestrator",
     "@coding-adventures/forme-pipeline-config": "file:../forme-pipeline-config",
+    "@coding-adventures/forme-plugin-host": "file:../forme-plugin-host",
+    "@coding-adventures/forme-plugin-installer-core": "file:../forme-plugin-installer-core",
+    "@coding-adventures/forme-sandbox-linux": "file:../forme-sandbox-linux",
+    "@coding-adventures/forme-sandbox-macos": "file:../forme-sandbox-macos",
+    "@coding-adventures/forme-sandbox-windows": "file:../forme-sandbox-windows",
+    "@coding-adventures/forme-manifest": "file:../forme-manifest",
+    "@coding-adventures/forme-capability": "file:../forme-capability",
     "@coding-adventures/forme-stage": "file:../forme-stage",
     "tsx": "^4.0.0"
   },

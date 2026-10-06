@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C215-mozhet-byt",
+    "language": "russian",
+    "chapter": 215,
+    "sequence": 12860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68492f707b0febf5"
+  },
+  "findings": []
+}

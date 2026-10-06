@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "Fireworks display, Diwali, Puja, Tradition, Culture",
+  "label": "ch:ml-fireworks-display-diwali-puja-tradition-culture",
+  "canDo": "I can say a fireworks display, Diwali, a puja, tradition and culture.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C326-samskaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can say a fireworks display, Diwali, a puja, tradition and culture.",
+    "assesses": [
+      "ML-LEX-C326-VASTU326-03",
+      "ML-LEX-C326-VASTU326-04",
+      "ML-LEX-C326-VASTU326-05"
+    ]
+  }
+}

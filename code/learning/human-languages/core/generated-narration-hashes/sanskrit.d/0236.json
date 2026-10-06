@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:584344f979c4cd77",
+  "lessonIds": [
+    "SA-C236-sisuh",
+    "SA-C236-kumarah",
+    "SA-C236-kumari",
+    "SA-C236-yuvatih",
+    "SA-C236-purusah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch236.txt",
+  "json": "sanskrit/narration/ch236.json",
+  "textHash": "fnv1a64:f8a743a7446087bd",
+  "jsonHash": "fnv1a64:d251f369569e90c8",
+  "findings": []
+}
