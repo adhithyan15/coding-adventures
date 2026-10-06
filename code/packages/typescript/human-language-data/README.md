@@ -965,7 +965,9 @@ Two kinds exist:
   two steps**: declare it here, then run `npm run generate:filmstrip-ledger` in
   `script-ductus` before `npm run generate:figures` here. A missing entry fails
   with the command to run. Stroke order is never invented — an uncited letter has
-  no ledger entry and therefore no figure.
+  no ledger entry and therefore no figure. A one-frame strip (़, ्, ا) wraps its
+  heading and citation at the width of a two-frame strip, not at its single
+  150-unit panel, so it is not a tall column of text; its panel is unchanged.
 
   Most filmstrip targets are not declared at all: `figure-targets.ts` derives one
   for each `type: writing` lesson on a switched-on track whose headword is one

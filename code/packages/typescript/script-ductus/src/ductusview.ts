@@ -160,7 +160,8 @@ export interface DuctusOptions {
   highlightSegment?: boolean;
 }
 
-const DEFAULTS: Required<DuctusOptions> = {
+/** Every knob's default. Exported so the filmstrip ledger can scale from them. */
+export const DEFAULTS: Readonly<Required<DuctusOptions>> = {
   padding: 70,
   captionGap: 70,
   penWidth: 26,
@@ -475,7 +476,8 @@ export function ductusFor(glyph: string, script?: string): LetterDuctus | undefi
 // and finally extend the bottom by the caption band, which is in SVG space and
 // therefore added after the negation, not before.
 
-function penBounds(letter: LetterDuctus): { x0: number; y0: number; x1: number; y1: number } | null {
+/** The box around every authored pen point, in FONT units, or null when there are none. */
+export function penBounds(letter: LetterDuctus): { x0: number; y0: number; x1: number; y1: number } | null {
   let x0 = Infinity;
   let y0 = Infinity;
   let x1 = -Infinity;

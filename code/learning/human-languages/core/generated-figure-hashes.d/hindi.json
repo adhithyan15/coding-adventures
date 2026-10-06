@@ -33,7 +33,7 @@
       "kind": "script-filmstrip",
       "lessonId": "HI-S05-sign-virama",
       "sourceHash": "fnv1a64:20eacff5f8c8b824",
-      "svgHash": "fnv1a64:dae49f2d60712dbf",
+      "svgHash": "fnv1a64:731bfa15ed79fa57",
       "svg": "hindi/book/figures/HI-S05-sign-virama-filmstrip.svg"
     },
     {
@@ -249,8 +249,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-S140-nuqta",
-      "sourceHash": "fnv1a64:3b80e40cf76906e9",
-      "svgHash": "fnv1a64:cd3ba1aea6488aec",
+      "sourceHash": "fnv1a64:8b2658d2a28bef19",
+      "svgHash": "fnv1a64:f5f5fde338401616",
       "svg": "hindi/book/figures/HI-S140-nuqta-filmstrip.svg"
     },
     {
@@ -298,8 +298,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-S148-sign-anusvara",
-      "sourceHash": "fnv1a64:1a0a7ec26c6ef7ae",
-      "svgHash": "fnv1a64:14eca191576a3a0a",
+      "sourceHash": "fnv1a64:3b9d398b7d55a2c2",
+      "svgHash": "fnv1a64:8833acbb719ebc5a",
       "svg": "hindi/book/figures/HI-S148-sign-anusvara-filmstrip.svg"
     },
     {

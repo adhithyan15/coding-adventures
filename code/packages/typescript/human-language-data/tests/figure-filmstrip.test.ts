@@ -114,6 +114,35 @@ describe("the printed filmstrip", () => {
     expect(svg).toContain('<svg x="16" y="60.75" width="150" height="225" ');
   });
 
+  it("gives a one-frame strip's text the width of a two-frame strip", () => {
+    // A single dab (the nukta, the virama, Perso-Arabic alef) prints one
+    // 150-unit panel. Wrapping its heading and footer to that panel made a
+    // figure three heading lines and ten citation lines tall; the text now
+    // wraps at the 310-unit width of a two-frame strip, like the strip above.
+    const one = entry({ summary: "one unbroken stroke · 1 movement" });
+    one.frames = one.frames.slice(0, 1);
+    const single = renderScriptFilmstripFigure("X", one).svg;
+    const two = renderScriptFilmstripFigure("X", entry({ summary: "one unbroken stroke · 2 movements" })).svg;
+    const outerWidth = (svg: string) => Number(/ width="(\d+(?:\.\d+)?)"/.exec(svg)?.[1]);
+    expect(outerWidth(single)).toBe(16 + 2 * 150 + 10 + 16);
+    expect(outerWidth(single)).toBe(outerWidth(two));
+    const lines = (svg: string, size: number) =>
+      [...svg.matchAll(new RegExp(`<text [^>]*font-size="${size}"[^>]*>([^<]*)</text>`, "g"))].map(
+        (match) => match[1],
+      );
+    expect(lines(single, 15)).toEqual(["How it is written — one unbroken", "stroke · 1 movement"]);
+    // The citation wraps as it does under two frames (two lines), not at the
+    // panel's 150 units (three lines).
+    expect(lines(single, 10)).toEqual([
+      "Stroke order after Sankaran Radhakrishnan, Tamil Script",
+      "Learners Manual, p. 192",
+    ]);
+    expect(lines(single, 10)).toEqual(lines(two, 10));
+    // The one panel keeps its size and its place at the left margin.
+    expect(single.match(/<rect [^>]*rx="6"/g)).toHaveLength(1);
+    expect(single).toContain('<svg x="16" y="60.75" width="150" height="225" ');
+  });
+
   it("keeps a heading that fits on one line exactly where it was", () => {
     const svg = renderScriptFilmstripFigure("X", entry({ summary: "1 stroke" })).svg;
     expect(svg.match(/<text [^>]*font-size="15"/g)).toHaveLength(1);

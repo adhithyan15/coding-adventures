@@ -144,6 +144,16 @@ side by side and nothing animates, so the part of the current stroke travelled
 before this frame drops back to the muted tone and only the movement the caption
 names is in ink. The live app keeps the default whole-stroke shading.
 
+The ledger also sizes two things per letter instead of using one default.
+`captionSizeFor` scales the caption type to the letter's own box, and
+`penSizeFor` shrinks the pen line and the dot marking where the pen is on a
+TINY mark. Below `TINY_STROKE_EXTENT` (150 font units of pen path; today only
+the nukta ़, Devanagari ं and Gujarati ં, at 44 to 60 units) both are scaled by
+`extent / 150`, with a floor of `MIN_TINY_PEN_SCALE` (0.3). Without it, the
+34-unit dot was wider than the mark's whole movement. Every letter whose pen
+path is 150 units or more keeps the defaults. An explicit `penWidth` or
+`tipRadius` overrides the scaling, as an explicit `captionSize` does.
+
 ## No DOM, no filesystem
 
 Nothing here touches `document` or reads a file. Fonts arrive as an
