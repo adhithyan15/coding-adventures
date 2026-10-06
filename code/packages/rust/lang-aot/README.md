@@ -32,8 +32,8 @@ whole expression, while unproven real name actuals remain conservative.
 Direct value and statement calls preserve runtime-real provenance for
 caller-frame real scalar slots that remain unaliased locals after call lowering;
 captured or name-promoted storage stays on the conservative shared path.
-Statically proven zero-trip `step` and `while` loops preserve the same proof for
-unrelated caller-frame locals; controlled and shared storage stays conservative.
+`for` loops preserve the same proof for caller-frame locals whose values their
+bodies leave invariant; controlled, changed, and shared storage stays conservative.
 
 The opt-in CLR integration suite `tests/clr_strict_flow.rs` executes forward-only
 conditional control, nested Bool branches and wide values through joins,
