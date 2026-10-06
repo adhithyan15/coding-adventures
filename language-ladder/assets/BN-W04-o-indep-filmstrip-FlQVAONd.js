@@ -1,0 +1,1 @@
+var e=``+new URL(`BN-W04-o-indep-filmstrip-Cc-RJpch.svg`,import.meta.url).href;export{e as default};
