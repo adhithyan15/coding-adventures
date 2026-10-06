@@ -15719,6 +15719,24 @@ adapter, and the hashing completion umbrella. This is a narrower ready change
 than the newly discovered cross-language families and retains one active
 parity PR at a time.
 
+After guarded auto-merge of Python source-registry PR #16756 at
+`d843a420ec`, the exact merged-main schema-3 report remains at 15 established
+languages, 1,487 implementation identities, 4,757 package slots, 178
+high-consensus identities with 262 missing slots, and zero collisions or
+unknown buckets. Read-only cross-lane audits registered two previously
+unowned Dart/Swift Starlark and SQL lexer/parser verticals under the shared
+frontend fixture prerequisite. Those four package identities each have 13/15
+lane coverage; implementation must remain lexer-before-parser and lane-sized.
+The Haskell neutral adapter is already owned by a selection-blocked terminal
+closure, so this refresh does not invent a duplicate adapter or imply readiness.
+The dependency/leverage pass ranks Haskell's 20-case process-free graph/diff
+core first (six merged prerequisites, three direct children, five unfinished
+descendants), then Ruby source-registry adoption (six merged prerequisites,
+three direct children, four descendants). Fresh-main collision checks found
+no open PR in either candidate's production paths. Select only the Haskell
+core next; keep adapter execution, shared-boundary digest activation, and
+other language ports as separate owners.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
