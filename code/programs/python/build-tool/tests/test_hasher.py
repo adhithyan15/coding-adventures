@@ -118,7 +118,7 @@ class TestCollectSourceFiles:
     """Tests for _collect_source_files."""
 
     def test_collects_python_files(self, tmp_path):
-        pkg_dir = tmp_path / "packages" / "python" / "test-pkg"
+        pkg_dir = tmp_path / "code" / "packages" / "python" / "test-pkg"
         pkg_dir.mkdir(parents=True)
         (pkg_dir / "BUILD").write_text("echo hi")
         (pkg_dir / "main.py").write_text("print('hi')")
@@ -136,7 +136,7 @@ class TestCollectSourceFiles:
         assert "README.md" not in names
 
     def test_collects_ruby_files(self, tmp_path):
-        pkg_dir = tmp_path / "packages" / "ruby" / "test-pkg"
+        pkg_dir = tmp_path / "code" / "packages" / "ruby" / "test-pkg"
         pkg_dir.mkdir(parents=True)
         (pkg_dir / "BUILD").write_text("echo hi")
         (pkg_dir / "main.rb").write_text("puts 'hi'")
@@ -156,7 +156,7 @@ class TestCollectSourceFiles:
         assert "test.gemspec" in names
 
     def test_collects_go_files(self, tmp_path):
-        pkg_dir = tmp_path / "programs" / "go" / "test-pkg"
+        pkg_dir = tmp_path / "code" / "programs" / "go" / "test-pkg"
         pkg_dir.mkdir(parents=True)
         (pkg_dir / "BUILD").write_text("echo hi")
         (pkg_dir / "main.go").write_text("package main")
@@ -189,7 +189,7 @@ class TestCollectSourceFiles:
         expected_paths = tuple(
             entry["path"] for entry in case["expected"]["result"]["files"]
         )
-        pkg_dir = tmp_path / "packages" / "ocaml" / "test-pkg"
+        pkg_dir = tmp_path / "code" / "packages" / "ocaml" / "test-pkg"
 
         # Materialize the fixture's expected portable inputs plus representative
         # non-source files. Generated and linked candidates are already covered
@@ -214,7 +214,7 @@ class TestCollectSourceFiles:
         assert relative_files == expected_paths
 
     def test_declared_ocaml_sources_always_include_opam_manifest(self, tmp_path):
-        pkg_dir = tmp_path / "packages" / "ocaml" / "test-pkg"
+        pkg_dir = tmp_path / "code" / "packages" / "ocaml" / "test-pkg"
         pkg_dir.mkdir(parents=True)
         (pkg_dir / "BUILD").write_text("ocaml_library(name='test')")
         (pkg_dir / "test-pkg.opam").write_text('opam-version: "2.0"')
@@ -237,7 +237,7 @@ class TestCollectSourceFiles:
         ) == ("BUILD", "main.ml", "test-pkg.opam")
 
     def test_invalid_declared_glob_fails_closed(self, tmp_path):
-        pkg_dir = tmp_path / "packages" / "python" / "test-pkg"
+        pkg_dir = tmp_path / "code" / "packages" / "python" / "test-pkg"
         pkg_dir.mkdir(parents=True)
         (pkg_dir / "BUILD").write_text("py_library(name='test-pkg')")
         pkg = Package(
@@ -252,7 +252,7 @@ class TestCollectSourceFiles:
             _collect_source_files(pkg)
 
     def test_sorted_lexicographically(self, tmp_path):
-        pkg_dir = tmp_path / "packages" / "python" / "test"
+        pkg_dir = tmp_path / "code" / "packages" / "python" / "test"
         pkg_dir.mkdir(parents=True)
         (pkg_dir / "BUILD").write_text("echo hi")
         (pkg_dir / "z_file.py").write_text("z")
@@ -267,7 +267,7 @@ class TestCollectSourceFiles:
         assert relative_names == sorted(relative_names)
 
     def test_empty_package(self, tmp_path):
-        pkg_dir = tmp_path / "packages" / "python" / "empty"
+        pkg_dir = tmp_path / "code" / "packages" / "python" / "empty"
         pkg_dir.mkdir(parents=True)
         # No files at all
         pkg = Package(name="python/empty", path=pkg_dir, language="python")
@@ -288,7 +288,7 @@ class TestCollectSourceFiles:
     def test_prunes_exact_generated_directory_components(
         self, tmp_path, is_starlark, declared_srcs
     ):
-        pkg_dir = tmp_path / "packages" / "python" / "test-pkg"
+        pkg_dir = tmp_path / "code" / "packages" / "python" / "test-pkg"
         pkg_dir.mkdir(parents=True)
         (pkg_dir / "BUILD").write_text("echo hi")
         (pkg_dir / "main.py").write_text("print('source')")
@@ -330,7 +330,7 @@ class TestCollectSourceFiles:
     def test_prunes_directory_links_and_reparse_points(
         self, tmp_path, monkeypatch, is_starlark, declared_srcs
     ):
-        pkg_dir = tmp_path / "packages" / "python" / "test-pkg"
+        pkg_dir = tmp_path / "code" / "packages" / "python" / "test-pkg"
         pkg_dir.mkdir(parents=True)
         (pkg_dir / "BUILD").write_text("echo hi")
         for directory in ("source", "linked-source", "reparse-source"):
@@ -366,7 +366,7 @@ class TestCollectSourceFiles:
 
     @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
     def test_prunes_real_posix_directory_and_file_symlinks(self, tmp_path):
-        pkg_dir = tmp_path / "packages" / "python" / "test-pkg"
+        pkg_dir = tmp_path / "code" / "packages" / "python" / "test-pkg"
         pkg_dir.mkdir(parents=True)
         (pkg_dir / "BUILD").write_text("echo hi")
         (pkg_dir / "main.py").write_text("print('source')")
@@ -391,7 +391,7 @@ class TestCollectSourceFiles:
 
     @pytest.mark.skipif(os.name != "nt", reason="Windows junction semantics")
     def test_prunes_real_windows_junction(self, tmp_path):
-        pkg_dir = tmp_path / "packages" / "python" / "test-pkg"
+        pkg_dir = tmp_path / "code" / "packages" / "python" / "test-pkg"
         pkg_dir.mkdir(parents=True)
         (pkg_dir / "BUILD").write_text("echo hi")
         (pkg_dir / "main.py").write_text("print('source')")
@@ -755,7 +755,7 @@ class TestHashPackage:
         assert h1 == h2
 
     def test_changes_on_content_change(self, tmp_path):
-        pkg_dir = tmp_path / "packages" / "python" / "test"
+        pkg_dir = tmp_path / "code" / "packages" / "python" / "test"
         pkg_dir.mkdir(parents=True)
         (pkg_dir / "BUILD").write_text("echo hi")
         src = pkg_dir / "main.py"
@@ -777,7 +777,7 @@ class TestHashPackage:
     def test_changes_when_same_content_moves_to_a_new_path(
         self, tmp_path, is_starlark, declared_srcs
     ):
-        pkg_dir = tmp_path / "packages" / "python" / "test"
+        pkg_dir = tmp_path / "code" / "packages" / "python" / "test"
         pkg_dir.mkdir(parents=True)
         (pkg_dir / "BUILD").write_bytes(b"echo build\n")
         source = pkg_dir / "source.py"
@@ -870,7 +870,7 @@ class TestHashPackage:
         )
 
     def test_empty_package_hash(self, tmp_path):
-        pkg_dir = tmp_path / "packages" / "python" / "empty"
+        pkg_dir = tmp_path / "code" / "packages" / "python" / "empty"
         pkg_dir.mkdir(parents=True)
         pkg = Package(name="python/empty", path=pkg_dir, language="python")
         h = hash_package(pkg)
