@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16778,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16778",
+    "branch": "codex/parity-perl-declared-source-20261006",
+    "implementation_revision": "599b2193edd6f9e195bcdd762c292f0d83eb1d69",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-06T05:08:35Z",
-    "pr_number": 16776,
-    "status": "merged",
-    "notes": "All 32 final-head checks were terminal and acceptable (13 success, 19 expected skips), and GitHub reported MERGEABLE. The loop enabled guarded squash auto-merge; GitHub merged PR #16776 as a8966b6591f23fab05838be84169d5490087d344 without manual merge."
+    "observed_at": "2026-10-06T05:38:37Z",
+    "pr_number": 16778,
+    "status": "checks-pending",
+    "notes": "Ready-for-review Perl declared-source metadata bridge PR opened at 599b2193edd6f9e195bcdd762c292f0d83eb1d69. GitHub reports MERGEABLE; CI detect, CodeQL detect, and human-language detection are queued. Do not enable auto-merge until every required final-head check is terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
     "revision": "a8966b6591f23fab05838be84169d5490087d344",
@@ -1961,10 +1967,10 @@
     {
       "id": "build-tool-perl-declared-source-metadata-plumbing",
       "title": "Plumb declared-source metadata through the Perl build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-perl-dune-build-discovery-fixture-adoption"],
       "branch": "codex/parity-perl-declared-source-20261006",
-      "pr_number": null,
+      "pr_number": 16778,
       "selected_at": "2026-10-06T05:11:42Z",
       "selection_revision": "a8966b6591f23fab05838be84169d5490087d344",
       "selection_notes": "Selected after #16776 auto-merged with 32 terminal acceptable checks. The exact merged-main collision inventory remains 15 established lanes, 1,487 identities, 4,757 slots, five emerging OCaml packages, and zero collisions or unknown buckets. The newly discovered Haskell full-discovery owner was registered before selection. The sole prerequisite is merged, no active parity PR remains, and this narrow metadata-plumbing owner reaches nine unfinished descendants, ahead of Elixir source hashing (seven) and Lua dependency hashing (five). Use this fresh clean main-based branch; full source hashing, native filesystem authority, and unrelated Haskell discovery remain separate owners.",
