@@ -11,21 +11,16 @@ defmodule BuildTool.Hasher do
 
   ## How hashing works
 
-  The hashing algorithm is deterministic — given the same files with the
-  same contents, it always produces the same hash. Here is the procedure:
+  Package source hashing follows the language-neutral Hashing v1 stream:
 
-    1. Collect all source files in the package directory, filtered by the
-       language's relevant extensions. Always include BUILD files.
-    2. Sort the file list lexicographically by relative path. This ensures
-       that file ordering does not affect the hash.
-    3. SHA256-hash each file's contents individually.
-    4. Concatenate all individual hashes into one string.
-    5. SHA256-hash that concatenated string to produce the final hash.
+    1. Select package-local inputs with the checked, immutable source registry.
+    2. Sort normalized repository-relative UTF-8 paths by raw bytes.
+    3. Frame each path and exact content with unsigned 64-bit big-endian lengths.
+    4. SHA256-hash the concatenated frames, including an empty stream for an
+       empty source set.
 
-  This two-level hashing means:
-    - Reordering files doesn't change the hash (we sort first).
-    - Adding or removing a file changes the hash.
-    - Modifying any file's contents changes the hash.
+  Unlike concatenated per-file digests, these frames distinguish both path and
+  file boundaries. No host timestamp, absolute path, or locale enters the hash.
 
   ## Dependency hashing
 
@@ -40,46 +35,7 @@ defmodule BuildTool.Hasher do
   stack — fast, well-tested, and available without any external dependencies.
   """
 
-  alias BuildTool.{DirectedGraph, GlobMatch}
-
-  # ---------------------------------------------------------------------------
-  # Source file extensions by language
-  # ---------------------------------------------------------------------------
-  #
-  # Each language has a set of file extensions that matter for change detection.
-  # If any file with these extensions changes, the package needs rebuilding.
-  # Extensions that don't affect build output (like .md, .txt) are excluded
-  # to avoid unnecessary rebuilds.
-
-  @source_extensions %{
-    "python" => MapSet.new([".py", ".toml", ".cfg"]),
-    "ruby" => MapSet.new([".rb", ".gemspec"]),
-    "go" => MapSet.new([".go"]),
-    "rust" => MapSet.new([".rs", ".toml"]),
-    "typescript" => MapSet.new([".ts", ".tsx", ".js", ".jsx", ".json"]),
-    "elixir" => MapSet.new([".ex", ".exs"]),
-    "perl" => MapSet.new([".pl", ".pm", ".t", ".xs"]),
-    "haskell" => MapSet.new([".hs", ".cabal"])
-  }
-
-  # ---------------------------------------------------------------------------
-  # Special filenames by language
-  # ---------------------------------------------------------------------------
-  #
-  # Certain filenames should always be included regardless of their extension.
-  # These are configuration files that affect build behavior.
-
-  @special_filenames %{
-    "python" => MapSet.new(),
-    "ruby" => MapSet.new(["Gemfile", "Rakefile"]),
-    "go" => MapSet.new(["go.mod", "go.sum"]),
-    "rust" => MapSet.new(["Cargo.lock"]),
-    "typescript" => MapSet.new(["package-lock.json", "tsconfig.json"]),
-    "elixir" => MapSet.new(["mix.lock"]),
-    "perl" =>
-      MapSet.new(["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"]),
-    "haskell" => MapSet.new()
-  }
+  alias BuildTool.{DirectedGraph, SourceInputRegistry}
 
   # ---------------------------------------------------------------------------
   # Public API
@@ -103,45 +59,42 @@ defmodule BuildTool.Hasher do
       64  # SHA256 hex digest is always 64 characters
   """
   def hash_package(package) do
-    # When a package has declared_srcs (from a Starlark BUILD file), we hash
-    # ONLY those declared files — this is strict mode. When declared_srcs is
-    # empty or absent (shell BUILD files), we fall back to extension-based
-    # collection. This mirrors the Go implementation's HashPackage function.
+    language = package.language
+    entry = SourceInputRegistry.language_entry!(language)
+
+    package_root =
+      SourceInputRegistry.validate_package_root!(Map.get(package, :package_root), language, entry)
+
     declared_srcs = Map.get(package, :declared_srcs, [])
 
-    compiled_srcs =
-      if declared_srcs != [] do
-        GlobMatch.compile_patterns!(declared_srcs)
-      else
-        []
-      end
+    requested_mode =
+      if Map.get(package, :is_starlark, false) or declared_srcs != [],
+        do: "declared_sources",
+        else: "extension"
 
-    files =
-      if compiled_srcs != [] do
-        resolve_declared_srcs(package, compiled_srcs)
-      else
-        collect_source_files(package)
-      end
+    {mode, compiled_srcs} = SourceInputRegistry.compile_mode!(requested_mode, declared_srcs)
+    files = collect_source_files(package.path, entry, package_root, mode, compiled_srcs)
 
-    if files == [] do
-      # No source files — hash the empty string.
-      hash_string("")
-    else
-      # Hash each file individually, concatenate all hashes, hash again.
-      # This two-level scheme means the final hash changes if any file
-      # changes, is added, or is removed.
-      file_hashes =
-        Enum.map(files, fn f ->
-          case hash_file(f) do
-            {:ok, h} -> h
-            {:error, _} -> "error-reading-file"
-          end
-        end)
+    files
+    |> Enum.reduce(:crypto.hash_init(:sha256), fn {relative, absolute}, hash ->
+      path = if package_root == nil, do: relative, else: package_root <> "/" <> relative
+      bytes = File.read!(absolute)
 
-      combined = Enum.join(file_hashes, "")
-      hash_string(combined)
-    end
+      :crypto.hash_update(hash, [
+        <<byte_size(path)::unsigned-big-integer-size(64)>>,
+        path,
+        <<byte_size(bytes)::unsigned-big-integer-size(64)>>,
+        bytes
+      ])
+    end)
+    |> :crypto.hash_final()
+    |> Base.encode16(case: :lower)
   end
+
+  defdelegate source_input_registry(), to: SourceInputRegistry, as: :registry
+  defdelegate source_input_registry_snapshot(), to: SourceInputRegistry, as: :snapshot_bytes
+  defdelegate source_input_registry_digest(), to: SourceInputRegistry, as: :digest
+  defdelegate collect_candidates(options), to: SourceInputRegistry
 
   @doc """
   Computes a SHA256 hash of all transitive dependency hashes.
@@ -192,116 +145,56 @@ defmodule BuildTool.Hasher do
     end
   end
 
-  # ---------------------------------------------------------------------------
-  # Declared source resolution (Starlark strict mode)
-  # ---------------------------------------------------------------------------
-  #
-  # When a package has declared_srcs from a Starlark BUILD file, we resolve
-  # those glob patterns into actual file paths. This is "strict mode" — only
-  # files matching the declared patterns (plus BUILD files) are included.
-  #
-  # The algorithm:
-  #   1. Always include BUILD files (the build definition itself).
-  #   2. Walk the package directory recursively.
-  #   3. For each file, compute its path relative to the package root.
-  #   4. Check if it matches any declared src pattern using GlobMatch.
-  #   5. Sort by relative path and deduplicate.
-  #
-  # We use walk_files + GlobMatch instead of Path.wildcard because
-  # Path.wildcard does NOT support ** the way build systems expect.
-
-  defp resolve_declared_srcs(package, compiled_srcs) do
-    # Step 1: Always include BUILD files.
-    build_files =
-      ["BUILD", "BUILD_mac", "BUILD_linux", "BUILD_windows"]
-      |> Enum.map(&Path.join(package.path, &1))
-      |> Enum.filter(&file_exists?/1)
-
-    # Step 2: Walk the package directory and match against declared patterns.
-    matched_files =
-      package.path
-      |> walk_files([])
-      |> Enum.filter(fn path ->
-        rel = Path.relative_to(path, package.path)
-        # Normalize to forward slashes for pattern matching.
-        rel = String.replace(rel, "\\", "/")
-
-        GlobMatch.match_any_compiled_path?(compiled_srcs, rel)
-      end)
-
-    # Step 3: Combine, deduplicate, and sort by relative path.
-    (build_files ++ matched_files)
-    |> Enum.uniq()
-    |> Enum.sort_by(fn path ->
-      Path.relative_to(path, package.path)
-    end)
+  # Discover immediate children before reading bytes. Exact generated names
+  # are pruned before descent, while `File.lstat!` keeps link-shaped children
+  # inert. Stable retained-handle proof is separately owned; this stage only
+  # removes the old follow-links collector and its silent read sentinel.
+  defp collect_source_files(root, entry, package_root, mode, compiled_srcs) do
+    {files, _count} = walk_files(root, "", [], 0, entry, package_root, mode, compiled_srcs)
+    Enum.sort_by(files, fn {relative, _absolute} -> relative end)
   end
 
-  defp file_exists?(path) do
-    case File.stat(path) do
-      {:ok, %File.Stat{type: :regular}} -> true
-      _ -> false
-    end
-  end
+  defp walk_files(dir, prefix, files, count, entry, package_root, mode, compiled_srcs) do
+    dir
+    |> File.ls!()
+    |> Enum.sort()
+    |> Enum.reduce({files, count}, fn name, {found, seen} ->
+      relative = if prefix == "", do: name, else: prefix <> "/" <> name
+      absolute = Path.join(dir, name)
 
-  # ---------------------------------------------------------------------------
-  # File collection (legacy extension-based mode)
-  # ---------------------------------------------------------------------------
-  #
-  # collectSourceFiles walks the package directory and returns all source
-  # files relevant to the package's language. Files are sorted by their
-  # relative path for deterministic hashing.
-  #
-  # The collection rules:
-  #   - BUILD, BUILD_mac, BUILD_linux are always included.
-  #   - Files matching the language's extensions are included.
-  #   - Special filenames (go.mod, Gemfile, etc.) are included.
-  #   - Everything else is ignored.
-
-  defp collect_source_files(package) do
-    extensions = Map.get(@source_extensions, package.language, MapSet.new())
-    specials = Map.get(@special_filenames, package.language, MapSet.new())
-
-    package.path
-    |> walk_files([])
-    |> Enum.filter(fn path ->
-      name = Path.basename(path)
-      ext = Path.extname(name)
-
-      # Always include BUILD files — they define how the package is built.
-      name in ["BUILD", "BUILD_mac", "BUILD_linux"] or
-        MapSet.member?(extensions, ext) or
-        MapSet.member?(specials, name)
-    end)
-    |> Enum.sort_by(fn path ->
-      # Sort by relative path for determinism. Two developers with different
-      # absolute paths to the repo should get the same hash.
-      Path.relative_to(path, package.path)
-    end)
-  end
-
-  # Recursively walks a directory collecting all regular files.
-  defp walk_files(dir, acc) do
-    case File.ls(dir) do
-      {:ok, entries} ->
-        Enum.reduce(entries, acc, fn entry, files ->
-          full_path = Path.join(dir, entry)
-
-          case File.stat(full_path) do
-            {:ok, %File.Stat{type: :regular}} ->
-              [full_path | files]
-
-            {:ok, %File.Stat{type: :directory}} ->
-              walk_files(full_path, files)
-
-            _ ->
-              files
+      case File.lstat!(absolute).type do
+        :directory ->
+          if name in SourceInputRegistry.registry()["universal_inputs"][
+               "generated_directory_components"
+             ] do
+            {found, seen}
+          else
+            walk_files(absolute, relative, found, seen, entry, package_root, mode, compiled_srcs)
           end
-        end)
 
-      {:error, _} ->
-        acc
-    end
+        :regular ->
+          next_count = seen + 1
+
+          if next_count > 100_000 do
+            raise ArgumentError, "source candidate limit exceeded"
+          end
+
+          if SourceInputRegistry.selected_path?(
+               entry,
+               package_root,
+               mode,
+               compiled_srcs,
+               relative
+             ) do
+            {[{relative, absolute} | found], next_count}
+          else
+            {found, next_count}
+          end
+
+        _ ->
+          {found, seen}
+      end
+    end)
   end
 
   # ---------------------------------------------------------------------------

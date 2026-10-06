@@ -1052,10 +1052,13 @@ claim repository-boundary inputs, stable native snapshots, dependency digests,
 cache persistence, or front-door hash-mode activation.
 
 The Elixir build tool keeps the same complete immutable package-local registry
-projection in its own build-tool package. A deterministic sync command and
-native tests compare it byte-for-byte and structurally with the checked neutral
-registry, recompute the domain-separated registry digest, and exercise every
-package-local neutral source-collection case through the production selector.
+projection as generated Elixir source in its own build-tool package. This shape
+ensures that changing the projection itself changes the build tool's own source
+digest without broadening the global language selector. A deterministic sync
+command and native tests compare its embedded JSON bytes and decoded structure
+with the checked neutral registry, recompute the domain-separated digest, and
+exercise every package-local neutral source-collection case through the
+production selector.
 The runtime hasher never locates a repository fixture. Its pure selector applies
 all seven roles, universal BUILD fronts, root-only capability inputs, exact
 generated-component and inert-link pruning, and extension-versus-declared

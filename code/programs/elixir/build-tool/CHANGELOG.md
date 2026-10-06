@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - 2026-10-06
+
+### Changed
+
+- Source selection now uses an immutable, generated package-local projection of
+  the complete language source-input registry rather than eight ad hoc suffix
+  maps. It covers all seven selector roles, exact generated-directory pruning,
+  root-only capability inputs, and all five BUILD fronts; unknown languages,
+  unsafe package roots, and colliding candidate paths fail before selection.
+- Package source hashes now use Hashing v1: raw UTF-8 repository-relative path
+  and raw content bytes, each framed with an unsigned 64-bit big-endian length.
+  Deterministic sorting, binary bytes, and read errors no longer pass through
+  the old concatenated per-file-hex-digest or sentinel paths.
+
+### Tests
+
+- Compare the full generated projection and domain-separated digest with the
+  checked neutral registry, drive every package-local neutral source-collection
+  case through production selection, and cover binary frames, path changes,
+  generated/near-name pruning, explicit empty declared sources, and fail-closed
+  lookup.
+
+Dependency hashing, repository-boundary inputs, cache persistence, and native
+retained-handle snapshot hardening remain separate follow-up contracts.
+
 ## [0.5.1] - 2026-09-27
 
 ### Changed
