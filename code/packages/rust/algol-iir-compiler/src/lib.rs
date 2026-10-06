@@ -3859,7 +3859,7 @@ impl Compiler {
                         (
                             ProcedureParamMode::Name,
                             ProcedureParamType::Scalar(ScalarType::Real),
-                        ) => self.is_selector_call_safe_real_procedure_result(actual),
+                        ) => self.is_selector_call_safe_runtime_real_value(actual),
                         _ => true,
                     }
                 });
@@ -3872,6 +3872,39 @@ impl Compiler {
         }
         let children = direct_nodes(node);
         children.len() == 1 && self.is_selector_call_safe_real_procedure_result(children[0])
+    }
+
+    fn is_selector_call_safe_runtime_real_value(&self, node: &GrammarASTNode) -> bool {
+        if self.is_selector_call_safe_real_procedure_result(node) {
+            return true;
+        }
+        if node.rule_name == "proc_call" {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone());
+            if let Some(source_name) = source_name {
+                let target_name = self.resolve_procedure_identity(&source_name);
+                if !self.proc_sigs.contains_key(&target_name)
+                    && matches!(
+                        target_name.as_str(),
+                        "abs" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+                    )
+                {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self.is_selector_call_safe_runtime_real_value(actuals[0]);
+                }
+            }
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_runtime_real_value(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1 && self.is_selector_call_safe_runtime_real_value(children[0])
     }
 
     fn is_runtime_real_assignment_value(&self, node: &GrammarASTNode) -> bool {
@@ -12486,6 +12519,21 @@ mod tests {
             "test",
         )
         .expect("a calling selector may choose nested direct real name-actual results");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_standard_function_name_actuals() {
+        let module = compile_source(
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := -3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(abs(left())) else relay(abs(right())); output(result) end",
+            "test",
+        )
+        .expect("a calling selector may choose standard-function real name-actual results");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "call"
