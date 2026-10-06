@@ -3382,8 +3382,11 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_ishikawa_to_png() {
-        let diagram = parse_ishikawa("ishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews\n  Tools\n    Slow builds").expect("ishikawa parse failed");
+        let diagram = parse_ishikawa("%%{init: {\"ishikawa\": {\"diagramPadding\": 64}}}%%\nishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews\n  Tools\n    Slow builds").expect("ishikawa parse failed");
         let layout = layout_ishikawa(&diagram, 720.0);
+        assert_eq!(diagram.diagram_padding, 64.0);
+        assert_eq!(layout.spine_from.x, 80.0);
+        assert_eq!(layout.width - (layout.effect_x + layout.effect_width), 64.0);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_ishikawa(&layout, &DiagramToPaintOptions {
             background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,

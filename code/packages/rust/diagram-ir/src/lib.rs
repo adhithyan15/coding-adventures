@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.84.0";
+pub const VERSION: &str = "0.85.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -1778,7 +1778,7 @@ pub struct LayoutedVennDiagram {
 #[derive(Clone, Debug, PartialEq)]
 pub struct IshikawaCause { pub id: String, pub label: String, pub parent_id: Option<String>, pub depth: usize }
 #[derive(Clone, Debug, PartialEq)]
-pub struct IshikawaDiagram { pub effect: String, pub causes: Vec<IshikawaCause> }
+pub struct IshikawaDiagram { pub effect: String, pub causes: Vec<IshikawaCause>, pub diagram_padding: f64 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedIshikawaBone { pub from: Point, pub to: Point, pub label: String, pub label_position: Point, pub depth: usize }
 #[derive(Clone, Debug, PartialEq)]
@@ -2730,7 +2730,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.84.0");
+        assert_eq!(VERSION, "0.85.0");
     }
     #[test]
     fn default_direction_is_tb() {

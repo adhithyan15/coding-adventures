@@ -199,6 +199,9 @@ fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
             .unwrap_or_else(|error| panic!("ishikawa fixture {name} failed: {error}"));
         assert!(!diagram.effect.is_empty());
         assert!(!diagram.causes.is_empty());
+        if name == "diagram-padding-config" {
+            assert_eq!(diagram.diagram_padding, 64.0);
+        }
     }
 }
 
@@ -1170,6 +1173,12 @@ fn ishikawa_dispatches_to_dedicated_causal_tree_ir() {
     let indented_effect = parse_ishikawa("ishikawa-beta\n    Failure\nPeople\n  Training").unwrap();
     assert_eq!(indented_effect.causes[0].parent_id, None);
     assert_eq!(indented_effect.causes[1].parent_id.as_deref(), Some("cause-1"));
+
+    let configured = parse_ishikawa(
+        "---\nconfig:\n  ishikawa:\n    diagramPadding: 52\n---\nishikawa\nFailure\n  People",
+    )
+    .unwrap();
+    assert_eq!(configured.diagram_padding, 52.0);
 }
 
 #[test]
