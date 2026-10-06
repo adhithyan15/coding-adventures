@@ -2226,10 +2226,15 @@ impl Compiler {
             !self.proc_sigs.contains_key(&target_name)
                 && is_supported_standard_function(&target_name)
         });
+        let call_invariant_runtime_real_slots = self.runtime_real_slots.clone();
         if !is_pure_standard_function {
             self.disable_static_tracking();
         }
-        self.emit_call_common(node, true)?.ok_or_else(|| {
+        let result = self.emit_call_common(node, true)?;
+        if !is_pure_standard_function {
+            self.restore_call_invariant_runtime_real_slots(call_invariant_runtime_real_slots);
+        }
+        result.ok_or_else(|| {
             CompileError::Type("proper procedure call has no return value".into())
         })
     }
@@ -2251,8 +2256,10 @@ impl Compiler {
         if self.try_emit_standard_output_stmt(&target_source_name, node)? {
             return Ok(());
         }
+        let call_invariant_runtime_real_slots = self.runtime_real_slots.clone();
         self.disable_static_tracking();
         self.emit_call_common(node, false)?;
+        self.restore_call_invariant_runtime_real_slots(call_invariant_runtime_real_slots);
         Ok(())
     }
 
@@ -3985,6 +3992,26 @@ impl Compiler {
         self.static_integer_slots.clear();
         self.static_boolean_slots.clear();
         self.static_real_tracking_disabled = true;
+    }
+
+    /// A direct call cannot mutate a caller-frame scalar unless capture or a
+    /// name actual promotes that binding to shared global storage. Restore the
+    /// runtime-real formatter proof for slots that remain ordinary locals after
+    /// call lowering; promoted aliases stay invalidated.
+    fn restore_call_invariant_runtime_real_slots(&mut self, candidates: HashSet<String>) {
+        let local_real_slots = self
+            .scopes
+            .iter()
+            .flat_map(HashMap::values)
+            .filter(|binding| {
+                binding.ty == ScalarType::Real
+                    && binding.array.is_none()
+                    && !binding.is_global
+                    && candidates.contains(&binding.slot)
+            })
+            .map(|binding| binding.slot.clone())
+            .collect::<HashSet<_>>();
+        self.runtime_real_slots.extend(local_real_slots);
     }
 
     fn emit_standard_output_literal(&mut self, literal: &str) {
@@ -12780,15 +12807,35 @@ mod tests {
         for source in [
             "begin real procedure pick; pick := 2.25; real x; x := pick(); x := sin(1.0); output(x) end",
             "begin real procedure pick; pick := 2.25; boolean flag; real x; x := pick(); if flag then x := 1.0; output(x) end",
-            "begin real procedure pick; pick := 2.25; procedure touch; begin end; real x; x := pick(); touch(); output(x) end",
         ] {
             let err = compile_source(source, "test")
-                .expect_err("reassignment, control flow, and calls invalidate provenance");
+                .expect_err("reassignment and control flow invalidate provenance");
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
                 "unexpected rejection for {source:?}: {err:?}"
             );
         }
+    }
+
+    #[test]
+    fn al4_runtime_real_local_provenance_survives_unaliased_calls() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; procedure touch; begin end; real x; x := pick(); output(pick(), x); touch(); output(x) end",
+            "test",
+        )
+        .expect("calls preserve formatter provenance for caller-frame locals they cannot alias");
+        let main = module.get_function("main").expect("has main");
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| {
+                    instr.op == "call"
+                        && instr.srcs.first().and_then(Operand::as_var)
+                            == Some("__basic_print_real")
+                })
+                .count(),
+            3
+        );
     }
 
     #[test]

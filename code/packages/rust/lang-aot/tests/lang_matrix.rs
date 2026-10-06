@@ -1905,6 +1905,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("2.252.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — calls preserve formatter provenance for caller-frame real
+    // locals that remain unaliased after call lowering.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; procedure touch; begin end; real x; x := pick(); output(pick(), x); touch(); output(x) end",
+        expect: Expect::Stdout("2.252.252.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a specialised read-only name formal retains the bounded
     // runtime-real provenance of its non-assignable actual expression.
     Prog {
@@ -12716,6 +12725,30 @@ fn algol_string_name_formal_result_runtime_real_output_runs_on_every_available_s
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but string name-formal result output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_invariant_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("procedure touch; begin end")
+                && program.src.contains("output(pick(), x); touch(); output(x)")
+        })
+        .expect("the call-invariant runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but call-invariant runtime-real output did not complete"
             );
             continue;
         };
