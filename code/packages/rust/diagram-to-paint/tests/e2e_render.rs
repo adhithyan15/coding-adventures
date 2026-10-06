@@ -525,7 +525,7 @@ mod apple {
     #[test]
     fn render_mermaid_kanban_to_png() {
         let board = parse_kanban(
-            "%%{init: {'kanban': {'ticketBaseUrl': 'https://tracker.example/issues/#TICKET#', 'sectionWidth': 280, 'padding': 30}}}%%\nkanban\n  todo[\"`**Todo** queue`\"]@{ ticket: KB-7 }\n    :::backlog\n    grammar[\"`Write *grammar*`\"]@{ ticket: MC-42, assigned: Ada, priority: high, icon: code }\n      :::urgent blocked\n    ir{{Lower **semantic**\\nIR}}\n  doing[\"In progress\"]\n    layout(Build board layout)@{ ticket: MC-43, assigned: Grace, priority: medium }\n      ::icon(layout)\n  done)Done(\n    paint))Render native paint((",
+            "%%{init: {'kanban': {'ticketBaseUrl': 'https://tracker.example/issues/#TICKET#', 'sectionWidth': 280, 'padding': 30}}}%%\nkanban\n  todo[\"`**Todo** queue`\"]@{ ticket: KB-7 }\n    :::backlog\n    grammar[\"`Write *grammar*`\"]@{ ticket: MC-42, assigned: Ada, priority: Very High, icon: code }\n      :::urgent blocked\n    ir{{Lower **semantic**\\nIR}}\n  doing[\"In progress\"]\n    layout(Build board layout)@{ ticket: MC-43, assigned: Grace, priority: Low }\n      ::icon(layout)\n  done)Done(\n    paint))Render native paint((",
         )
         .expect("kanban parse failed");
         let layout = layout_board_diagram(&board);
@@ -552,6 +552,14 @@ mod apple {
             PaintInstruction::Rect(rect)
                 if rect.base.metadata.as_ref().and_then(|metadata| metadata.get("diagram.classes"))
                     == Some(&"urgent blocked".to_string())
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#ff0000")
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#0000ff")
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,

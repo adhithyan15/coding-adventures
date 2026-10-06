@@ -521,6 +521,10 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.columns[0].label.text, "Todo\nqueue");
             assert_eq!(board.columns[0].cards[0].label.text, "Line 1\nLine 2\nLine 3");
         }
+        if id == "priority-markers" {
+            assert_eq!(board.columns[0].cards[0].priority.as_deref(), Some("Very High"));
+            assert_eq!(board.columns[0].cards[1].priority.as_deref(), Some("Very Low"));
+        }
     }
 }
 
