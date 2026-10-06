@@ -3805,6 +3805,7 @@ impl Compiler {
                 && sig.params.iter().zip(actuals).all(|(param, actual)| {
                     match (param.mode, &param.ty) {
                         (ProcedureParamMode::Value, ProcedureParamType::Scalar(_)) => true,
+                        (_, ProcedureParamType::Array { .. }) => true,
                         (ProcedureParamMode::Name, ProcedureParamType::Scalar(ScalarType::Real)) => {
                             self.is_runtime_real_assignment_value(actual)
                         }
@@ -12575,6 +12576,28 @@ mod tests {
             instr.op == "call"
                 && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
         }));
+    }
+
+    #[test]
+    fn al4_runtime_real_procedure_result_provenance_includes_array_formals() {
+        let module = compile_source(
+            "begin real array values[1:2]; real procedure copied(a); value a; real array a; copied := a[1] + a[2]; real procedure shared(a); real array a; shared := a[1] + a[2]; values[1] := 1.125; values[2] := 1.125; output(copied(values), shared(values)) end",
+            "test",
+        )
+        .expect("real array-formal results retain formatter provenance");
+        let main = module.get_function("main").expect("has main procedure");
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| {
+                    instr.op == "call"
+                        && instr.srcs.first().and_then(Operand::as_var)
+                            == Some("__basic_print_real")
+                })
+                .count(),
+            2,
+            "value and name array-formal results must both use the portable formatter"
+        );
     }
 
     #[test]
