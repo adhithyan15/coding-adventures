@@ -11,15 +11,21 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16798,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16798",
+    "branch": "codex/parity-dart-swift-frontend-fixtures-20261006",
+    "implementation_revision": "fdc3d4e088d137fcbde9a00371756634c7a09d95",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-06T10:53:41Z",
-    "pr_number": 16796,
-    "status": "merged",
-    "notes": "All 32 final-head checks were terminal and acceptable (13 successes, 19 expected skips), the two required gates passed, and GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge merged PR #16796 as 2547600e9636d1dfd2ad5df9e2cfdf14963d556a without a manual merge."
+    "observed_at": "2026-10-06T11:30:16Z",
+    "pr_number": 16798,
+    "status": "checks-pending",
+    "notes": "Ready-for-review fixture PR #16798 opened from validated implementation fdc3d4e088d137fcbde9a00371756634c7a09d95 after 11 Python 3.13 contract/oracle tests, 586 Python grammar substrate tests, three passing Dart and Swift substrate suites, Swift embedded-grammar regeneration and lexer coverage BUILD, Ruff, schema-3 collision inventory, diff checks, and independent security re-review. GitHub reports MERGEABLE but BLOCKED while checks are queued; no auto-merge is enabled."
   },
   "last_inventory": {
-    "revision": "2547600e9636d1dfd2ad5df9e2cfdf14963d556a",
+    "revision": "d702210f2fe8180761a384c153e5645b188e975b",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -12231,10 +12237,13 @@
     {
       "id": "dart-swift-language-frontends-neutral-fixtures",
       "title": "Freeze Dart and Swift language-frontend token and AST fixture contract",
-      "status": "in-progress", "depends_on": [],
-      "branch": "codex/parity-dart-swift-frontend-fixtures-20261006", "pr_number": null,
+      "status": "pr-open", "depends_on": [],
+      "branch": "codex/parity-dart-swift-frontend-fixtures-20261006", "pr_number": 16798,
       "selected_at": "2026-10-06T10:56:00Z",
       "selection_revision": "2547600e9636d1dfd2ad5df9e2cfdf14963d556a",
+      "opened_at": "2026-10-06T11:30:16Z",
+      "opened_revision": "fdc3d4e088d137fcbde9a00371756634c7a09d95",
+      "validation_notes": "Exact-main schema-3 inventory after conflict-free rebase on d702210f2f remains 1,487 identities, 4,757 slots, zero collisions and unknown buckets. Python 3.13 fixture tests 11/11 including exact oracle replay; canonical Python grammar substrate 586/586; Dart grammar-tools, lexer, parser tests and analyze pass; Swift grammar-tools, lexer, parser suites 68/61/40 pass; Swift lexer coverage BUILD and embedded grammar check pass; Python validator coverage 82%; Ruff, YAML parse, diff check, and independent security re-review pass. CI is queued on the open PR.",
       "selection_notes": "Selected after #16796 auto-merged, exact-main schema-3 collision inventory remained at 15 established lanes, 1,487 identities and 4,757 slots with no collisions or unknown buckets, and parallel audits found no new unowned package, build-tool, or OCaml gate. This prerequisite-free neutral fixture tranche unlocks twelve already-owned Dart/Swift frontend verticals spanning 48 missing slots, ahead of correlation-vector (seven) and block-RAM (four direct, seven total). No active parity PR or live path overlap exists; use this fresh clean main-based branch and keep lexer/parser implementation for later vertical owners.",
       "notes": "Twelve lexer/parser roots in both lanes produce 48 missing slots: C#, Excel, Java, JavaScript, Lattice, Python, Ruby, SQL, Starlark, TypeScript, Verilog, VHDL. Pin grammar embed/drift and neutral token/AST cases; split subsequent vertical lexer-to-parser slices. Contextual generic closer must precede C#/Java semantic ports."
     },
