@@ -1060,6 +1060,7 @@ struct NativeTableEmission {
     header_helper: String,
     cell_name_helper: String,
     for_depth: usize,
+    navigation_handlers: Vec<String>,
 }
 
 /// Mutable state threaded through the recursive XAML emission.
@@ -4442,6 +4443,22 @@ fn container_tap_attrs(
             args.join(", ")
         ),
     });
+    // The native cell owns keyboard focus, while this authored container owns
+    // the event contract. Give its wrapper the same safely lowered payload.
+    // Read Tag when invoked: virtualized templates may acquire a new row VM.
+    if ctx.native_table.as_ref().is_some_and(|table|
+        table.role == NativeTableRole::Body && table.for_depth == 2)
+    {
+        let navigation = format!("{handler}_Navigate");
+        ctx.add_host_handler(HostHandler {
+            name: navigation.clone(),
+            source: format!(
+                "    private void {navigation}(object sender, System.EventArgs e)\n    {{\n{guard}        Dispatch?.Invoke(this, new {union}.{case}({}));\n    }}",
+                args.join(", ")
+            ),
+        });
+        ctx.native_table.as_mut().unwrap().navigation_handlers.push(navigation);
+    }
     Ok(format!("{tag} Tapped=\"{handler}\""))
 }
 
@@ -5593,6 +5610,10 @@ public sealed class __COMPONENT__MosaicTableCell : ContentControl
 {
     public __COMPONENT__MosaicTableCell() => IsTabStop = true;
 
+    // Keyboard navigation reuses the authored pointer activation contract.
+    // Empty/noninteractive cells keep ordinary native focus-only navigation.
+    public event EventHandler? MosaicNavigate;
+
     public int Row
     {
         get => (int)GetValue(RowProperty);
@@ -5638,7 +5659,7 @@ public sealed class __COMPONENT__MosaicTableCell : ContentControl
     protected override void OnKeyDown(KeyRoutedEventArgs e)
     {
         base.OnKeyDown(e);
-        if (e.Handled || FocusManager.GetFocusedElement(XamlRoot) != this) return;
+        if (e.Handled || !ReferenceEquals(FocusManager.GetFocusedElement(XamlRoot), this)) return;
 
         var nextRow = Row;
         var nextColumn = Column;
@@ -5653,7 +5674,14 @@ public sealed class __COMPONENT__MosaicTableCell : ContentControl
 
         var table = FindTable();
         var target = table?.FindCell(nextRow, nextColumn);
-        if (target is not null && target.Focus(FocusState.Keyboard)) e.Handled = true;
+        if (target is null || !target.Focus(FocusState.Keyboard)) return;
+        e.Handled = true;
+        target.MosaicNavigate?.Invoke(target, EventArgs.Empty);
+        // Applying adapter props may replace the row VM and its realization.
+        // Reacquire the cell after bindings/layout, never retain a stale target.
+        if (target.MosaicNavigate is not null)
+            table!.DispatcherQueue.TryEnqueue(() =>
+                table.FindCell(nextRow, nextColumn)?.Focus(FocusState.Keyboard));
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() =>
@@ -7027,6 +7055,12 @@ fn emit_for(
         prop
     });
 
+    if is_cell_loop {
+        if let Some(table) = ctx.native_table.as_mut() {
+            table.navigation_handlers.clear();
+        }
+    }
+
     // -- 4. Push the binding and a namescope-local visual-state collector,
     //       walk the body, then pop both. --
     ctx.for_scope.push(ForBinding {
@@ -7142,6 +7176,16 @@ fn emit_for(
                 ctx.component_name
             )),
             NativeTableRole::Body if is_cell_loop => {
+                let handlers = ctx.native_table.as_mut()
+                    .map(|table| std::mem::take(&mut table.navigation_handlers))
+                    .unwrap_or_default();
+                let navigation_attr = match handlers.as_slice() {
+                    [] => String::new(),
+                    [handler] => format!(" Tag=\"{{x:Bind}}\" MosaicNavigate=\"{handler}\""),
+                    _ => return Err(PipelineEmitError::UnsupportedExpression(
+                        "native table cell has ambiguous navigation events".into())),
+                };
+
                 let row_index_property = ctx
                     .for_scope
                     .last()
@@ -7149,7 +7193,7 @@ fn emit_for(
                     .map(kebab_to_pascal_case)
                     .unwrap_or_else(|| "Index".to_string());
                 Some(format!(
-                    "local:{}MosaicTableCell Row=\"{{x:Bind {row_index_property}, Mode=OneWay}}\" Column=\"{{x:Bind Index, Mode=OneWay}}\" Header=\"{{x:Bind MosaicTableHeader, Mode=OneWay}}\" Value=\"{{x:Bind {element_property}, Mode=OneWay}}\" AutomationProperties.Name=\"{{x:Bind MosaicTableName, Mode=OneWay}}\"",
+                    "local:{}MosaicTableCell Row=\"{{x:Bind {row_index_property}, Mode=OneWay}}\" Column=\"{{x:Bind Index, Mode=OneWay}}\" Header=\"{{x:Bind MosaicTableHeader, Mode=OneWay}}\" Value=\"{{x:Bind {element_property}, Mode=OneWay}}\" AutomationProperties.Name=\"{{x:Bind MosaicTableName, Mode=OneWay}}\"{navigation_attr}",
                     ctx.component_name
                 ))
             }
@@ -13474,6 +13518,7 @@ fn emit_native_host_table(
         header_helper: header_helper.clone(),
         cell_name_helper: cell_name_helper.clone(),
         for_depth: 0,
+        navigation_handlers: Vec::new(),
     });
     let previous_width_source = ctx.header_width_source.take();
     ctx.header_width_source =
@@ -13487,6 +13532,7 @@ fn emit_native_host_table(
         header_helper,
         cell_name_helper,
         for_depth: 0,
+        navigation_handlers: Vec::new(),
     });
     out.push_str(&emit_host_table_section(
         shape.body,
@@ -16530,6 +16576,30 @@ mod tests {
                 ),
             ],
         )
+    }
+
+    #[test]
+    fn native_table_keyboard_uses_unique_authored_activation() {
+        let c = component("Sheet", vec![
+            slot("headers", SlotType::List(Box::new(ListInnerType::Text)), true),
+            slot("rows", SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))), true),
+        ], vec![emit("onNavigate", vec![param("row", EmitPayloadType::Number), param("col", EmitPayloadType::Number)])]);
+        let mut table = canonical_native_table_node();
+        let cell = LayoutNode { tag: "Box".into(), part_name: None, children: vec![], props: vec![
+            LayoutProp { name: "onClick".into(), value: LayoutPropValue::EmitRef("onNavigate".into()) },
+            LayoutProp { name: "row".into(), value: LayoutPropValue::Expr("row-index".into()) },
+            LayoutProp { name: "col".into(), value: LayoutPropValue::Expr("column-index".into()) },
+        ] };
+        table.children[1].children[0].children[0].children[0].children = vec![cell.clone()];
+        let r = compile(&c, &layout_with_root("Sheet", table.clone()), &empty_style("Sheet"));
+        assert!(r.xaml.contains("MosaicNavigate=\""));
+        assert!(r.code_behind.contains("new SheetEvent.Navigate(row.RowIndex, row.Index)"), "{}", r.code_behind);
+        assert!(r.code_behind.contains("target.MosaicNavigate?.Invoke(target, EventArgs.Empty)"));
+        assert!(r.code_behind.contains("ReferenceEquals(FocusManager.GetFocusedElement(XamlRoot), this)"));
+        assert!(r.code_behind.contains("table.FindCell(nextRow, nextColumn)?.Focus"));
+        table.children[1].children[0].children[0].children[0].children[0].children.push(cell);
+        let result = from_pipeline(&c, &layout_with_root("Sheet", table), &empty_style("Sheet"), None, &EmitOptions::default());
+        assert!(result.is_err(), "multiple authored actions must not pick an arbitrary callback");
     }
 
     #[test]
