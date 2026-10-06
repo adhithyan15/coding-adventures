@@ -486,6 +486,12 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
         if id == "section-ticket-metadata" {
             assert_eq!(board.columns[0].ticket.as_deref(), Some("KB-7"));
         }
+        if id == "shape-delimited-labels" {
+            assert_eq!(board.columns[0].label.text, "Todo");
+            assert_eq!(board.columns[0].cards[0].label.text, "Rounded card");
+            assert_eq!(board.columns[0].cards[1].label.text, "Hex card");
+            assert_eq!(board.columns[1].cards[0].label.text, "Circle card");
+        }
     }
 }
 
