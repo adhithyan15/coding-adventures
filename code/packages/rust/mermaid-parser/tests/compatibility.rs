@@ -172,8 +172,12 @@ fn pinned_cynefin_subset_corpus_parses_to_domain_map_ir() {
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
     for fixture in corpus["fixtures"].as_array().expect("fixture array") {
         let name = fixture["name"].as_str().expect("fixture name");
-        parse_cynefin(fixture["source"].as_str().expect("fixture source"))
+        let diagram = parse_cynefin(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("cynefin fixture {name} failed: {error}"));
+        if name == "accessibility" {
+            assert_eq!(diagram.accessibility_title.as_deref(), Some("Incident response framework"));
+            assert_eq!(diagram.accessibility_description.as_deref(), Some("Practices organized by\nuncertainty and causality"));
+        }
     }
 }
 
