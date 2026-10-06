@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16764,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16764",
-    "branch": "codex/parity-ruby-source-registry-20261006",
-    "implementation_revision": "de9a5da155b8c193735e5ed546b8be700c01fa09",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-06T02:04:18Z",
+    "observed_at": "2026-10-06T02:40:12Z",
     "pr_number": 16764,
-    "status": "checks-pending",
-    "notes": "Ready-for-review Ruby source-registry PR opened at de9a5da155b8c193735e5ed546b8be700c01fa09. GitHub reports MERGEABLE but detect and CodeQL checks are queued; do not enable auto-merge until every required final-head check is terminal and acceptable and GitHub reports no conflict."
+    "status": "merged",
+    "notes": "Final head 09ba71fb67ad6be4e73c1d26c578a6068b4238a2 had 24 SUCCESS checks, 30 SKIPPED, one acceptable CodeQL NEUTRAL, no failures, and GitHub CLEAN/MERGEABLE. Guarded squash auto-merge, not a manual merge, completed at 8816976e430215645095aeddf7ae33fbcaa06881."
   },
   "last_inventory": {
-    "revision": "be52215294c542f73ac8142487a5c6f211ab025c",
+    "revision": "8816976e430215645095aeddf7ae33fbcaa06881",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1370,15 +1364,17 @@
     {
       "id": "build-tool-ruby-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Ruby build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-ruby-glob-matcher-complexity-hardening"],
       "branch": "codex/parity-ruby-source-registry-20261006",
       "pr_number": 16764,
+      "merged_at": "2026-10-06T02:40:12Z",
+      "merge_commit": "8816976e430215645095aeddf7ae33fbcaa06881",
       "opened_at": "2026-10-06T02:04:18Z",
       "selected_at": "2026-10-06T01:41:10Z",
       "selection_revision": "cec7a1deb62b8facbdd02f8f8c9275ecbd7b8f17",
       "selection_notes": "Selected after merging #16761, collision-checking exact merged main, registering twelve audited 09/F00/F01 children, and confirming no active parity PR or overlapping Ruby registry work. Six prerequisites merged; exact 23-language registry adoption directly unblocks three pending owners. Use one fresh clean main-based Ruby worktree and keep repository-boundary reverse diff and native snapshot safety separate.",
-      "notes": "Production Ruby currently owns a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including path-scoped native companions and resources, with exact production lookup equality and no selector widening."
+      "notes": "Merged via guarded auto-merge. Production Ruby now consumes the exact checked 23-language, seven-role registry, including scoped native companions and resources. All seven package-local neutral cases, complete registry projection equality, 379 Ruby tests, coverage, build-file, parity, diff, and security checks validated. Repository-boundary reverse diff and native snapshot safety remain separate owners."
     },
     {
       "id": "build-tool-swift-language-source-input-registry-adoption",
@@ -12301,6 +12297,84 @@
       "title": "Specify and port JSON-RPC to Dart, Java, and Kotlin",
       "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
       "notes": "Nine of fifteen lanes present. Freeze neutral request/response/error fixtures and port the three missing lanes independently; JSON-RPC is not inherently gated by an rpc package."
+    },
+    {
+      "id": "brainfuck-language-neutral-interpreter-conformance",
+      "title": "Freeze portable Brainfuck interpreter behavior and reconcile existing lanes",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "The brainfuck core identity exists in 11/15 lanes; Dart, Java, Kotlin, and Swift are missing. Reconcile bounded versus wrapping tape pointers, 30,000 wrapping byte cells, EOF, bracket prevalidation, explicit step and output ceilings, and in-memory input/output API into neutral fixtures before ports. This is distinct from the Brainfuck-to-Wasm compiler identity."
+    },
+    {
+      "id": "brainfuck-swift-lane-parity",
+      "title": "Port the Brainfuck interpreter to Swift",
+      "status": "pending", "depends_on": ["brainfuck-language-neutral-interpreter-conformance"], "branch": null, "pr_number": null,
+      "notes": "One missing high-consensus core interpreter slot. Swift has generic VM foundations; validate pure byte I/O, neutral tape/bounds behavior, native tests, coverage, and BUILD. Keep Wasm compilation separate."
+    },
+    {
+      "id": "brainfuck-dart-lane-parity",
+      "title": "Port the Brainfuck interpreter to Dart",
+      "status": "pending", "depends_on": ["brainfuck-language-neutral-interpreter-conformance"], "branch": null, "pr_number": null,
+      "notes": "One missing high-consensus core interpreter slot. Implement a bounded pure interpreter using the neutral fixtures, native tests, dart analyze, coverage, and BUILD. Keep Wasm compilation separate."
+    },
+    {
+      "id": "brainfuck-java-lane-parity",
+      "title": "Port the Brainfuck interpreter to Java",
+      "status": "pending", "depends_on": ["brainfuck-language-neutral-interpreter-conformance"], "branch": null, "pr_number": null,
+      "notes": "One missing high-consensus core interpreter slot. Implement pure byte input/output and neutral tape/bounds behavior with Gradle tests, coverage, and BUILD."
+    },
+    {
+      "id": "brainfuck-kotlin-lane-parity",
+      "title": "Port the Brainfuck interpreter to Kotlin",
+      "status": "pending", "depends_on": ["brainfuck-language-neutral-interpreter-conformance"], "branch": null, "pr_number": null,
+      "notes": "One missing high-consensus core interpreter slot. Use the same neutral fixtures, pure byte input/output, Gradle tests, coverage, and BUILD; coordinate JVM API shape with the Java port."
+    },
+    {
+      "id": "dart-swift-javascript-frontend-vertical-parity",
+      "title": "Port JavaScript lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Both identities are 13/15, missing exactly Dart and Swift. Split by lane, lexer before parser. Neutral cases must cover ECMAScript editions, regex versus division, template groups, version rejection, and stable ASTs; downstream Closure and Test262 consumers increase leverage."
+    },
+    {
+      "id": "dart-swift-typescript-frontend-vertical-parity",
+      "title": "Port TypeScript lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Both identities are 13/15, missing exactly Dart and Swift. Split by lane, lexer before parser; pin six TypeScript grammar versions, nested generic closers, JSX ambiguity, and stable ASTs. Do not invent a JavaScript vertical dependency."
+    },
+    {
+      "id": "dart-swift-java-lexer-lane-parity",
+      "title": "Port the Java lexer to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Java lexer is 13/15 and missing only Dart and Swift. Split by lane and preserve ten Java grammar versions. Java parser is already owned by parser-contextual-generic-closer-established-lane-parity; do not duplicate it."
+    },
+    {
+      "id": "dart-swift-excel-frontend-vertical-parity",
+      "title": "Port Excel lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Both identities are 13/15 and missing only Dart and Swift. Split by lane, lexer before parser; freeze references, precedence, and ambiguity in neutral token and AST fixtures. TypeScript spreadsheet-engine is a downstream reference."
+    },
+    {
+      "id": "dart-swift-verilog-frontend-vertical-parity",
+      "title": "Port Verilog lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Both identities are 13/15 and missing only Dart and Swift. Split by lane, lexer before parser; cover 1995/2001/2005 grammar, macros, and injected include stubs without ambient filesystem authority."
+    },
+    {
+      "id": "dart-swift-vhdl-frontend-vertical-parity",
+      "title": "Port VHDL lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Both identities are 13/15 and missing only Dart and Swift. Split by lane, lexer before parser; cover 1987/1993/2002/2008/2019 grammar, case folding, attributes, and based and bit strings."
+    },
+    {
+      "id": "dart-swift-csharp-lexer-lane-parity",
+      "title": "Port the C# lexer to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "C# lexer is 13/15 and missing only Dart and Swift. Split by lane and preserve versioned token behavior. C# parser is already owned by the contextual generic-closer umbrella; make its eventual lane children depend on the matching lexer owner."
+    },
+    {
+      "id": "dart-swift-ruby-frontend-vertical-parity",
+      "title": "Port Ruby lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures", "state-machine-tokenizer-and-markup-portable-conformance"], "branch": null, "pr_number": null,
+      "notes": "Both identities are 13/15 and missing only Dart and Swift. Existing Ruby frontend references are placeholders, and state-machine-tokenizer is Rust-only; reconcile the substrate and neutral behavior before lane-sized lexer-before-parser ports."
     }
   ]
 }
