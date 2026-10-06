@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16796,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16796",
-    "branch": "codex/parity-lua-dependency-hashing-20261006",
-    "implementation_revision": "71975e4dacac7d40c020a785de29eae4944bcdf3",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-06T10:42:00Z",
+    "observed_at": "2026-10-06T10:53:41Z",
     "pr_number": 16796,
-    "status": "checks-pending",
-    "notes": "Ready-for-review Lua dependency-hashing PR opened at 71975e4dacac7d40c020a785de29eae4944bcdf3 after 39 focused tests, 34 SHA-256 downstream tests, neutral corpus, build-file dry run, scoped syntax/lint/diff, targeted coverage, and round-2 security approval. Full local Lua suite has one pre-existing Windows shell CLI failure; GitHub reports MERGEABLE but BLOCKED while CI is queued."
+    "status": "merged",
+    "notes": "All 32 final-head checks were terminal and acceptable (13 successes, 19 expected skips), the two required gates passed, and GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge merged PR #16796 as 2547600e9636d1dfd2ad5df9e2cfdf14963d556a without a manual merge."
   },
   "last_inventory": {
-    "revision": "79e4605cda43f5a282d1f773f7d89ca92fac724b",
+    "revision": "2547600e9636d1dfd2ad5df9e2cfdf14963d556a",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1795,13 +1789,17 @@
     {
       "id": "build-tool-lua-portable-dependency-hashing-conformance",
       "title": "Implement portable dependency hashing in the Lua build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-lua-portable-source-hashing-conformance", "build-tool-neutral-dependency-hashing-adversarial-corpus"],
       "branch": "codex/parity-lua-dependency-hashing-20261006",
       "pr_number": 16796,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16796",
       "opened_at": "2026-10-06T10:41:44Z",
       "opened_revision": "71975e4dacac7d40c020a785de29eae4944bcdf3",
+      "merged_head_revision": "b07754448e4cff74407672cb4c9d6a0999a7ab5e",
+      "merged_revision": "2547600e9636d1dfd2ad5df9e2cfdf14963d556a",
+      "merged_at": "2026-10-06T10:53:41Z",
+      "merge_notes": "The final head passed 13 checks with 19 expected skips, including both required gates; GitHub was MERGEABLE/CLEAN. Auto-merge completed without a manual merge. The process-free Lua API consumes all 11 hashing-cache cases and a security-review DoS finding was repaired before publication.",
       "selected_at": "2026-10-06T10:20:00Z",
       "selection_revision": "79e4605cda43f5a282d1f773f7d89ca92fac724b",
       "selection_notes": "Selected after #16794 auto-merged at exact main, the full 15-lane collision report remained unchanged with 1,487 identities, 4,757 slots, and no collisions/unknown buckets, and parallel audits found no new unowned package, build-tool, or OCaml promotion gap. Both prerequisites are merged; no live PR overlaps the Lua engine path; this process-free leaf reaches five unfinished descendants and consumes the eleven neutral hashing-cache cases. Use the fresh clean main-based Lua worktree, keeping native snapshot, persistence, and adapter authority separate.",
