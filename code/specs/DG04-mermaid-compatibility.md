@@ -768,9 +768,11 @@ accessibility descriptions, and labeled cross-domain transitions into dedicated
 domain-map IR. Self-loop transitions are discarded to match upstream semantics.
 Fixed semantic quadrant and center-ellipse layout preserves accessibility
 metadata while lowering through backend-neutral rectangles, ellipses, paths,
-and glyph runs with native Metal-to-PNG validation. Theme/config overrides,
-organic seeded boundary waviness, exact cliff styling, transition arrowheads,
-and overflow badges remain unsupported at the partial level.
+filled transition arrowheads, and glyph runs with native Metal-to-PNG
+validation. Transition endpoints are clipped to rectangular or elliptical
+domain boundaries instead of crossing domain labels. Theme/config overrides,
+organic seeded boundary waviness, exact cliff styling, and overflow badges
+remain unsupported at the partial level.
 
 ### TreeView Native Slice
 

@@ -1141,15 +1141,16 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             width: domain.width, height: domain.height, fill: Some(fill.into()), stroke: Some("#64748b".into()),
             stroke_width: Some(1.5), corner_radius: Some(20.0), stroke_dash: None, stroke_dash_offset: None }));
     }
-    for transition in &diagram.transitions {
-        instructions.push(PaintInstruction::Path(line_path(&[transition.from.clone(), transition.to.clone()], "#475569", 2.0)));
-        if let Some(label) = &transition.label { text_children.push(text_node(label, (transition.from.x + transition.to.x) / 2.0 - 65.0,
-            (transition.from.y + transition.to.y) / 2.0 - 30.0, 130.0, 24.0, options.label_font.clone(), Color { r: 51, g: 65, b: 85, a: 255 })); }
-    }
     if let Some(domain) = diagram.domains.iter().find(|domain| domain.confusion) {
         instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: domain.center.x, cy: domain.center.y,
             rx: domain.width / 2.0, ry: domain.height / 2.0, fill: Some("#e2e8f0".into()), stroke: Some("#475569".into()),
             stroke_width: Some(2.0), stroke_dash: None, stroke_dash_offset: None }));
+    }
+    for transition in &diagram.transitions {
+        instructions.push(PaintInstruction::Path(line_path(&[transition.from.clone(), transition.to.clone()], "#475569", 2.0)));
+        instructions.push(PaintInstruction::Path(simple_arrowhead(&transition.from, &transition.to, "#475569")));
+        if let Some(label) = &transition.label { text_children.push(text_node(label, (transition.from.x + transition.to.x) / 2.0 - 65.0,
+            (transition.from.y + transition.to.y) / 2.0 - 30.0, 130.0, 24.0, options.label_font.clone(), Color { r: 51, g: 65, b: 85, a: 255 })); }
     }
     if let Some(title) = &diagram.title { text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0,
         options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 })); }
@@ -9321,11 +9322,13 @@ mod tests {
             domains: vec![diagram_ir::LayoutedCynefinDomain { name: "complex".into(), items: vec!["Probe".into()], x: 10.0, y: 10.0,
                 width: 180.0, height: 130.0, center: Point { x: 100.0, y: 75.0 }, confusion: false },
                 diagram_ir::LayoutedCynefinDomain { name: "confusion".into(), items: vec![], x: 150.0, y: 110.0,
-                    width: 100.0, height: 80.0, center: Point { x: 200.0, y: 150.0 }, confusion: true }], transitions: vec![] };
+                    width: 100.0, height: 80.0, center: Point { x: 200.0, y: 150.0 }, confusion: true }],
+            transitions: vec![diagram_ir::LayoutedCynefinTransition { from: Point { x: 190.0, y: 75.0 }, to: Point { x: 150.0, y: 130.0 }, label: None }] };
         let scene = diagram_to_paint_cynefin(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Path(_))).count(), 2);
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")).map(String::as_str), Some("Cynefin framework"));
     }
 
