@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.137.0";
+pub const VERSION: &str = "0.138.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -1471,11 +1471,15 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
         }
         let id = unique_mindmap_id(explicit_id.unwrap_or_else(|| mindmap_slug(&label)), &mut ids);
         if indent == column_indent {
-            if metadata.has_card_fields() {
+            if metadata.has_card_only_fields() {
                 return Err(token_error(token, "kanban card metadata requires a card"));
             }
             diagram.columns.push(BoardColumn {
-                id, label: DiagramLabel::new(label), cards: Vec::new(), classes: Vec::new(),
+                id,
+                label: DiagramLabel::new(label),
+                ticket: metadata.ticket,
+                cards: Vec::new(),
+                classes: Vec::new(),
             });
             last_card = None;
         } else if indent > column_indent {
@@ -1517,8 +1521,8 @@ struct KanbanNodeMetadata {
 }
 
 impl KanbanNodeMetadata {
-    fn has_card_fields(&self) -> bool {
-        self.ticket.is_some() || self.assigned.is_some() || self.priority.is_some() || self.icon.is_some()
+    fn has_card_only_fields(&self) -> bool {
+        self.assigned.is_some() || self.priority.is_some() || self.icon.is_some()
     }
 }
 
@@ -12437,6 +12441,16 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn kanban_preserves_section_ticket_metadata() {
+        let board = parse_kanban(
+            "kanban\n  todo[Todo]@{ ticket: KB-7 }\n    parser[Write grammar]",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].ticket.as_deref(), Some("KB-7"));
+        assert_eq!(board.columns[0].label.text, "Todo");
+    }
+
+    #[test]
     fn dispatch_kanban_to_board_ir() {
         match parse_any_mermaid("kanban\nTodo\n  task1[Task]").unwrap() {
             MermaidDiagram::Board(board) => assert_eq!(board.columns.len(), 1),
@@ -16428,7 +16442,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.137.0");
+        assert_eq!(crate::VERSION, "0.138.0");
     }
 
     #[test]

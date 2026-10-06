@@ -483,6 +483,9 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.config.section_width, 300.0);
             assert_eq!(board.config.padding, 32.0);
         }
+        if id == "section-ticket-metadata" {
+            assert_eq!(board.columns[0].ticket.as_deref(), Some("KB-7"));
+        }
     }
 }
 

@@ -11,6 +11,7 @@
     { "id": "card-icon-decoration", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]\n      ::icon(heart)" },
     { "id": "class-decorations", "source": "kanban\n  todo[Todo]\n    :::backlog\n    parser[Grammar parser]\n      :::urgent blocked" },
     { "id": "ticket-base-url", "source": "%%{init: {'kanban': {'ticketBaseUrl': 'https://tracker.example/issues/#TICKET#'}}}%%\nkanban\n  todo[Todo]\n    parser[Grammar parser]@{ ticket: MC-42 }" },
-    { "id": "layout-config", "source": "%%{init: {'kanban': {'sectionWidth': 300, 'padding': 32}}}%%\nkanban\n  todo[Todo]\n    parser[Grammar parser]" }
+    { "id": "layout-config", "source": "%%{init: {'kanban': {'sectionWidth': 300, 'padding': 32}}}%%\nkanban\n  todo[Todo]\n    parser[Grammar parser]" },
+    { "id": "section-ticket-metadata", "source": "kanban\n  todo[Todo]@{ ticket: KB-7 }\n    parser[Grammar parser]" }
   ]
 }
