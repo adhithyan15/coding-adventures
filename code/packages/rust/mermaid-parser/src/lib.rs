@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.138.0";
+pub const VERSION: &str = "0.139.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -1638,15 +1638,26 @@ fn parse_kanban_layout_config(source: &str) -> BoardConfig {
 }
 
 fn parse_board_node(source: &str) -> (Option<String>, String) {
-    if let Some(open) = source.find('[') {
-        if source.ends_with(']') {
+    let source = source.trim();
+    for (open, close) in [("((", "))"), ("{{", "}}"), ("[", "]"), ("(", ")")] {
+        if let Some(open_index) = source.find(open) {
+            if !source.ends_with(close) {
+                continue;
+            }
+            let id = source[..open_index].trim();
+            let label_end = source.len() - close.len();
+            if open_index + open.len() > label_end {
+                continue;
+            }
             return (
-                Some(source[..open].trim().to_string()),
-                normalize_mermaid_line_breaks(source[open + 1..source.len() - 1].trim()),
+                (!id.is_empty()).then(|| id.to_string()),
+                normalize_mermaid_line_breaks(
+                    source[open_index + open.len()..label_end].trim(),
+                ),
             );
         }
     }
-    (None, normalize_mermaid_line_breaks(source.trim()))
+    (None, normalize_mermaid_line_breaks(source))
 }
 
 /// Parse absolute and relative bit ranges from the Mermaid packet family.
@@ -12451,6 +12462,19 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn kanban_normalizes_shape_delimited_labels() {
+        let board = parse_kanban(
+            "kanban\n  todo((Todo))\n    rounded(Rounded card)\n    hex{{Hex card}}\n  plain[Plain]\n    circle((Circle card))",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].id, "todo");
+        assert_eq!(board.columns[0].label.text, "Todo");
+        assert_eq!(board.columns[0].cards[0].label.text, "Rounded card");
+        assert_eq!(board.columns[0].cards[1].label.text, "Hex card");
+        assert_eq!(board.columns[1].cards[0].label.text, "Circle card");
+    }
+
+    #[test]
     fn dispatch_kanban_to_board_ir() {
         match parse_any_mermaid("kanban\nTodo\n  task1[Task]").unwrap() {
             MermaidDiagram::Board(board) => assert_eq!(board.columns.len(), 1),
@@ -16442,7 +16466,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.138.0");
+        assert_eq!(crate::VERSION, "0.139.0");
     }
 
     #[test]
