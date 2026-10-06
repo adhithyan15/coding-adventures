@@ -15557,6 +15557,17 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn treemap_preserves_css_hue_interpolation_methods() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in hsl longer hue, red, blue),fill:color-mix(in oklch increasing hue, red, blue),stroke:color-mix(in lch decreasing hue, red, blue)",
+        ).expect("CSS hue interpolation methods must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("color-mix(in hsl longer hue, red, blue)"));
+        assert_eq!(style.node.fill.as_deref(), Some("color-mix(in oklch increasing hue, red, blue)"));
+        assert_eq!(style.node.stroke.as_deref(), Some("color-mix(in lch decreasing hue, red, blue)"));
+    }
+
+    #[test]
     fn treemap_preserves_css_hwb_color_mix() {
         let diagram = parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:color-mix(in hwb, red 20%, transparent),fill:color-mix(in hwb, black, white)",

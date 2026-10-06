@@ -592,6 +592,9 @@ function around D65 XYZ conversion before backend-neutral paint lowering.
 The rectangular `xyz` and `xyz-d65` interpolation aliases mix directly in D65
 XYZ, while `xyz-d50` applies chromatic adaptation before interpolation; all
 three retain premultiplied-alpha and backend-neutral lowering semantics.
+Polar HSL, HWB, LCH, and OKLCH interpolation accepts the CSS `shorter`,
+`longer`, `increasing`, and `decreasing hue` methods, with `shorter hue`
+remaining the default and powerless-hue fixup applied before interpolation.
 The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
