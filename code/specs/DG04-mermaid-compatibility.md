@@ -420,7 +420,7 @@ preserves indentation-defined columns and cards, with plain labels and explicit
 `id[label]` forms, in typed board semantic IR. Rounded, circular, hexagonal,
 cloud, bang, and alternate node delimiters normalize to Mermaid's fixed Kanban semantics while
 preserving their authored labels through layout and Paint lowering. Quoted labels inside
-node delimiters are unquoted before entering semantic IR, while quoted Markdown labels
+node delimiters are unquoted before entering semantic IR, while quoted and inline Markdown labels
 preserve bold and italic spans through backend-neutral glyph lowering. Inline or multiline `@{...}`
 card metadata preserves label overrides, ticket identifiers, assignees, and
 priorities in semantic IR. Icon identifiers from either metadata or following

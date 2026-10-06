@@ -511,6 +511,12 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(card.label.text, "Quoted card");
             assert!(card.label.spans.iter().any(|span| span.italic));
         }
+        if id == "inline-markdown-labels" {
+            assert_eq!(board.columns[0].label.text, "Todo queue");
+            assert!(board.columns[0].label.spans[0].bold);
+            assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
+            assert!(board.columns[0].cards[0].label.spans.iter().any(|span| span.italic));
+        }
     }
 }
 
