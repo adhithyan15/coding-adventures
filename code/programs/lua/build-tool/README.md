@@ -42,6 +42,29 @@ The build tool follows a pipeline:
    byte-exact CRLF grammar, scheduled and forced toolchain unions, and the
    shared byte, line, and aggregate resource ceilings.
 
+8. **Portable Source Hashing** (`lib/build_tool/source_hashing.lua`): Select
+   package-local files from caller-supplied inert snapshots through the exact
+   23-language, seven-role reviewed registry. It prunes generated components
+   and link boundaries before matching, then computes SHA-256 per-file and
+   length-framed package digests over raw bytes using the repository Lua SHA-256
+   package. The generated registry table is installed beside the module; the
+   runtime does not look for a fixture in the checkout.
+
+   This is a process-free library surface, not yet incremental CLI execution.
+   Repository-boundary union and reverse-diff selection, native no-follow and
+   stable-identity reads, dependency hashing, and persistent cache behavior
+   have separate owners and are not claimed here. For a caller-supplied
+   snapshot, `collect_source_files` accepts `language`, canonical
+   `package_root`, `mode` (`extension` or `declared_sources`), the checked
+   `registry_sha256`, `declared_srcs`, and candidate `{path, kind, content_hex}`
+   records. `package_digest(include_paths, contents)` accepts canonical
+   repository-relative paths and a map of exact byte strings.
+
+   The package-data projection is regenerated only by
+   `python tools/sync_source_registry.py --sync`; CI or maintainers can run
+   `--check` to reject drift from the reviewed neutral registry. Both modes
+   reject linked source, target, or parent paths.
+
 ## OCaml and Dune Discovery
 
 Lua discovery independently projects the shared language-registry fixture's
