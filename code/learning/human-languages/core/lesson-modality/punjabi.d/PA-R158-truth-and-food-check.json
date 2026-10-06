@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R158-truth-and-food-check",
+    "language": "punjabi",
+    "chapter": 158,
+    "sequence": 8760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f45e2082e1364f2"
+  },
+  "findings": []
+}

@@ -45,8 +45,9 @@ it("keeps Punjabi's session map aligned with canonical order", () => {
   // 838 -> 844: chapter 155 joins six taught fields in six bounded steps.
   // 844 -> 863: chapter 156 builds an untimed named-reader message in 19 short steps.
   // 863 -> 868: chapter 157 adds five bounded timed-writing and repair steps.
-  expect(rows).toHaveLength(868);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 868 }, (_, index) => index + 1));
+  // 868 -> 870: two short, no-new-language Chapter 158 quality-word reviews.
+  expect(rows).toHaveLength(870);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 870 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );

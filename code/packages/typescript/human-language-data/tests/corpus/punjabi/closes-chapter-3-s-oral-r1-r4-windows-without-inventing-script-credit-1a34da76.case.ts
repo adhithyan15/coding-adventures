@@ -172,8 +172,10 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // Chapter 157 adds five short timed-writing and repair sessions. A direct
   // before/after (atom, window) diff shows two R3 closures on the six-field
   // cue and repair atoms. Five Chapter 146 quality-word R4 windows become
-  // measurable at the new tail; #16793 owns their later retrieval. The test
-  // pins the measured debt rather than calling these unrelated words taught
-  // by the timed form or message.
-  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 513, R4: 577 });
+  // measurable at the new tail. Chapter 158 now retrieves those five quality
+  // words separately from the timed form and message.
+  // Chapter 158 closes the five Chapter 146 quality-word R4 pairs. Two
+  // Chapter 147 R4, two A1 form R2, and one timed-repair R1 pairs become
+  // measurable at the longer tail; #16801 owns their later retrieval.
+  expect(report.summary.missedByWindow).toEqual({ R1: 57, R2: 568, R3: 513, R4: 574 });
 });

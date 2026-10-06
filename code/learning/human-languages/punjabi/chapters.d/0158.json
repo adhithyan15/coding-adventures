@@ -1,0 +1,21 @@
+{
+  "chapter": 158,
+  "title": "Recall Familiar Quality Words at a Distance",
+  "label": "ch:pa-quality-words-at-a-distance",
+  "canDo": "I can retrieve five already-taught Punjabi quality words in familiar food and truth contexts without confusing this separate review with the scored A1 writing tasks.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-R158-truth-and-food-check",
+    "kind": "recognition",
+    "summary": "At a long interval, identify stale, ripe, unripe, true, and false from short familiar cues without introducing new Punjabi or borrowing the timed writing checkpoints.",
+    "assesses": [
+      "PA-LEX-C146-QUAL146-01",
+      "PA-LEX-C146-QUAL146-02",
+      "PA-LEX-C146-QUAL146-03",
+      "PA-LEX-C146-QUAL146-04",
+      "PA-LEX-C146-QUAL146-05"
+    ]
+  }
+}

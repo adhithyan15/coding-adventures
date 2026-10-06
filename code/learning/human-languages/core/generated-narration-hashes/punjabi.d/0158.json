@@ -1,0 +1,16 @@
+{
+  "language": "punjabi",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:d170ffd6f35b5277",
+  "lessonIds": [
+    "PA-R158-food-quality-recall",
+    "PA-R158-truth-and-food-check"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch158.txt",
+  "json": "punjabi/narration/ch158.json",
+  "textHash": "fnv1a64:382ea6a8eaf5c826",
+  "jsonHash": "fnv1a64:c96f2548f2634838",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-158-QUALITY-RECALL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve five familiar quality words in short food and truth contexts after a long gap, without treating this review as an A1 mock.",
+  "prerequisites": [
+    "PA-EXT-146-QUAL146",
+    "PA-EXT-157-A1-SHORT-WRITING-CLOCKS"
+  ]
+}

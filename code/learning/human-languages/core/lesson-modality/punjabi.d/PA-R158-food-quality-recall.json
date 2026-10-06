@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R158-food-quality-recall",
+    "language": "punjabi",
+    "chapter": 158,
+    "sequence": 8750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5964138f5240f6a2"
+  },
+  "findings": []
+}
