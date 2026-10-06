@@ -1458,9 +1458,193 @@ fn install_flutter_runtime_library(
 }
 
 /// A Flutter phone runtime directory (UI89 §7.2), as read: the Android
-/// libraries by ABI. The iOS half joins with step 3 (§7.7).
+/// libraries by ABI and the iOS libraries by SDK. Either half may be empty,
+/// never both.
 struct FlutterPhoneRuntime {
     android: Vec<(&'static str, PathBuf)>,
+    ios: Vec<(&'static str, PathBuf)>,
+}
+
+/// The iOS SDKs a phone runtime's `ios/` may hold (UI89 §7.2), each with one
+/// dynamic library: `iphoneos` (devices, thin arm64) and `iphonesimulator`
+/// (fat arm64 + x86_64).
+const IOS_SDKS: &[&str] = &["iphoneos", "iphonesimulator"];
+
+/// The libraries in a phone runtime's `ios/`, as (SDK, library) pairs, by the
+/// same rules `android_jni_libs` keeps: known SDK directories only, each a
+/// real directory with exactly one regular `libmosaic_app.dylib`, nothing
+/// followed through a link, at least one present.
+fn ios_dylibs(path: &Path) -> Result<Vec<(&'static str, PathBuf)>, BuildError> {
+    let refuse = |reason: String| BuildError::InvalidRuntimeLibrary {
+        path: path.to_path_buf(),
+        reason,
+    };
+    let entries = fs::read_dir(path).map_err(|error| refuse(format!("cannot read ios/: {error}")))?;
+    let mut libraries = Vec::new();
+    for entry in entries {
+        let entry = entry.map_err(|error| refuse(format!("cannot read ios/: {error}")))?;
+        let name = entry.file_name();
+        let Some(sdk) = name.to_str().and_then(|name| IOS_SDKS.iter().find(|sdk| **sdk == name)) else {
+            return Err(refuse(format!(
+                "ios/{} is not an iOS SDK directory (expected {})",
+                name.to_string_lossy(),
+                IOS_SDKS.join(", ")
+            )));
+        };
+        let sdk_dir = entry.path();
+        if !fs::symlink_metadata(&sdk_dir).is_ok_and(|meta| meta.is_dir()) {
+            return Err(refuse(format!("ios/{sdk} must be a directory, not a link or a file")));
+        }
+        let contents: Vec<_> = fs::read_dir(&sdk_dir)
+            .map_err(|error| refuse(format!("cannot read ios/{sdk}: {error}")))?
+            .collect::<Result<_, _>>()
+            .map_err(|error| refuse(format!("cannot read ios/{sdk}: {error}")))?;
+        let library = sdk_dir.join("libmosaic_app.dylib");
+        if contents.len() != 1
+            || contents[0].file_name() != "libmosaic_app.dylib"
+            || !fs::symlink_metadata(&library).is_ok_and(|meta| meta.is_file())
+        {
+            return Err(refuse(format!(
+                "ios/{sdk} must hold exactly one regular file, libmosaic_app.dylib (build-mosaic-ios-dylibs.sh)"
+            )));
+        }
+        libraries.push((*sdk, library));
+    }
+    if libraries.is_empty() {
+        return Err(refuse(format!("ios/ has no SDK directory ({})", IOS_SDKS.join(", "))));
+    }
+    libraries.sort_by_key(|(sdk, _)| *sdk);
+    Ok(libraries)
+}
+
+// Mach-O, as much of it as an iOS runtime's check needs (UI89 §7.2).
+//
+// | field                 | where                       | byte order    |
+// |-----------------------|-----------------------------|---------------|
+// | MH_MAGIC_64           | thin file, bytes 0..4       | little-endian |
+// | cputype               | thin file, bytes 4..8       | little-endian |
+// | filetype (6: dylib)   | thin file, bytes 12..16     | little-endian |
+// | ncmds, sizeofcmds     | thin file, bytes 16..24     | little-endian |
+// | load commands         | thin file, from byte 32     | little-endian |
+// | FAT_MAGIC, nfat_arch  | fat file, bytes 0..8        | big-endian    |
+// | fat_arch (20 bytes)   | fat file, from byte 8       | big-endian    |
+//
+// LC_BUILD_VERSION's first field after `cmd` and `cmdsize` is the platform:
+// 2 is iOS (a device), 7 is the iOS simulator. That, not the architecture,
+// is what tells a simulator arm64 library from a device one.
+const MACHO_MAGIC_64: [u8; 4] = [0xcf, 0xfa, 0xed, 0xfe];
+const MACHO_FAT_MAGIC: [u8; 4] = [0xca, 0xfe, 0xba, 0xbe];
+const MACHO_CPU_ARM64: u32 = 0x0100_000c;
+const MACHO_CPU_X86_64: u32 = 0x0100_0007;
+const MACHO_LC_BUILD_VERSION: u32 = 0x32;
+const MACHO_FILETYPE_DYLIB: u32 = 6;
+const MACHO_PLATFORM_IOS: u32 = 2;
+const MACHO_PLATFORM_IOS_SIMULATOR: u32 = 7;
+
+fn read_u32(bytes: &[u8], at: usize, big_endian: bool) -> Option<u32> {
+    let word: [u8; 4] = bytes.get(at..at.checked_add(4)?)?.try_into().ok()?;
+    Some(if big_endian { u32::from_be_bytes(word) } else { u32::from_le_bytes(word) })
+}
+
+/// A thin 64-bit Mach-O's CPU type and `LC_BUILD_VERSION` platform. Every
+/// offset is bounds-checked against the bytes and the declared commands.
+fn macho_thin_slice(bytes: &[u8]) -> Result<(u32, u32), String> {
+    if bytes.get(0..4) != Some(&MACHO_MAGIC_64[..]) {
+        return Err("not a 64-bit Mach-O library".to_string());
+    }
+    let truncated = || "a truncated Mach-O header".to_string();
+    let cputype = read_u32(bytes, 4, false).ok_or_else(truncated)?;
+    // A dynamic library, not an executable or an object file: Flutter
+    // bundles it as a framework, which only a dylib can be.
+    if read_u32(bytes, 12, false).ok_or_else(truncated)? != MACHO_FILETYPE_DYLIB {
+        return Err("a Mach-O file that is not a dynamic library (MH_DYLIB)".to_string());
+    }
+    let ncmds = read_u32(bytes, 16, false).ok_or_else(truncated)?;
+    let sizeofcmds = read_u32(bytes, 20, false).ok_or_else(truncated)? as usize;
+    let end = 32usize.checked_add(sizeofcmds).filter(|end| *end <= bytes.len()).ok_or_else(truncated)?;
+    let mut at = 32usize;
+    for _ in 0..ncmds {
+        let cmd = read_u32(bytes, at, false).ok_or_else(truncated)?;
+        let size = read_u32(bytes, at + 4, false).ok_or_else(truncated)? as usize;
+        if size < 8 || at.checked_add(size).is_none_or(|next| next > end) {
+            return Err("a Mach-O load command runs past its header".to_string());
+        }
+        if cmd == MACHO_LC_BUILD_VERSION {
+            if size < 12 {
+                return Err("a truncated LC_BUILD_VERSION".to_string());
+            }
+            let platform = read_u32(bytes, at + 8, false).ok_or_else(truncated)?;
+            return Ok((cputype, platform));
+        }
+        at += size;
+    }
+    Err("no LC_BUILD_VERSION, so device and simulator cannot be told apart; build it with build-mosaic-ios-dylibs.sh (iOS 16)".to_string())
+}
+
+/// Check one iOS runtime library for its SDK directory (UI89 §7.2):
+///
+/// | SDK               | file          | architectures   | platform          |
+/// |-------------------|---------------|-----------------|-------------------|
+/// | `iphoneos`        | thin Mach-O   | arm64           | iOS (2)           |
+/// | `iphonesimulator` | fat (lipo)    | arm64 + x86_64  | iOS simulator (7) |
+///
+/// A simulator library in the device folder has the right architecture and
+/// would pass every other check, then fail only on a real device.
+fn check_ios_dylib(sdk: &str, bytes: &[u8]) -> Result<(), String> {
+    let (wanted, platform) = match sdk {
+        "iphoneos" => (&[MACHO_CPU_ARM64][..], MACHO_PLATFORM_IOS),
+        "iphonesimulator" => (&[MACHO_CPU_ARM64, MACHO_CPU_X86_64][..], MACHO_PLATFORM_IOS_SIMULATOR),
+        _ => return Err(format!("{sdk} is not an iOS SDK")),
+    };
+    let slices = if bytes.get(0..4) == Some(&MACHO_FAT_MAGIC[..]) {
+        if sdk == "iphoneos" {
+            return Err("the device library must be thin arm64, not a fat (lipo) library".to_string());
+        }
+        let count = read_u32(bytes, 4, true).ok_or("a truncated fat header")?;
+        if count > 8 {
+            return Err(format!("a fat header that claims {count} architectures"));
+        }
+        let mut slices = Vec::new();
+        for index in 0..count as usize {
+            let base = 8 + 20 * index;
+            let cputype = read_u32(bytes, base, true).ok_or("a truncated fat header")?;
+            let offset = read_u32(bytes, base + 8, true).ok_or("a truncated fat header")? as usize;
+            let size = read_u32(bytes, base + 12, true).ok_or("a truncated fat header")? as usize;
+            let slice = offset
+                .checked_add(size)
+                .and_then(|end| bytes.get(offset..end))
+                .ok_or("a fat slice runs past the file")?;
+            let (inner, platform) = macho_thin_slice(slice)?;
+            if inner != cputype {
+                return Err("a fat slice's CPU type disagrees with its header".to_string());
+            }
+            slices.push((cputype, platform));
+        }
+        slices
+    } else {
+        if sdk == "iphonesimulator" {
+            return Err("the simulator library must be fat (lipo) with arm64 and x86_64".to_string());
+        }
+        vec![macho_thin_slice(bytes)?]
+    };
+    let mut found: Vec<u32> = slices.iter().map(|(cputype, _)| *cputype).collect();
+    found.sort_unstable();
+    let mut expected = wanted.to_vec();
+    expected.sort_unstable();
+    if found != expected {
+        return Err(format!(
+            "ios/{sdk} must hold {} only",
+            if sdk == "iphoneos" { "arm64" } else { "arm64 and x86_64" }
+        ));
+    }
+    if let Some((_, other)) = slices.iter().find(|(_, found)| *found != platform) {
+        return Err(format!(
+            "ios/{sdk} holds a library built for Mach-O platform {other}, not {} ({})",
+            platform,
+            if sdk == "iphoneos" { "an iOS device" } else { "the iOS simulator" }
+        ));
+    }
+    Ok(())
 }
 
 /// Read a Flutter phone runtime directory, strictly.
@@ -1470,20 +1654,21 @@ struct FlutterPhoneRuntime {
 /// Compose's reader, so the same rules hold: known ABI directories, each
 /// with exactly one regular `libmosaic_app.so`. Anything else is refused,
 /// never ignored, because whatever is accepted here is packaged into an app
-/// that runs it.
+/// that runs it. `ios/` is held to the same rules by `ios_dylibs`.
 ///
-/// | entry      | today                                      |
-/// |------------|--------------------------------------------|
-/// | `android/` | the jniLibs layout                         |
-/// | `ios/`     | refused until UI89 §7.7 step 3 reads it    |
-/// | other      | refused                                    |
+/// | entry      | holds                                          |
+/// |------------|------------------------------------------------|
+/// | `android/` | the jniLibs layout, read by `android_jni_libs` |
+/// | `ios/`     | `iphoneos/`, `iphonesimulator/`, `ios_dylibs`  |
+/// | other      | refused                                        |
 fn flutter_phone_runtime(path: &Path) -> Result<FlutterPhoneRuntime, BuildError> {
     let refuse = |reason: String| BuildError::InvalidRuntimeLibrary {
         path: path.to_path_buf(),
         reason,
     };
     let entries = fs::read_dir(path).map_err(|error| refuse(format!("cannot read the directory: {error}")))?;
-    let mut android = None;
+    let mut android = Vec::new();
+    let mut ios = Vec::new();
     for entry in entries {
         let entry = entry.map_err(|error| refuse(format!("cannot read the directory: {error}")))?;
         let name = entry.file_name();
@@ -1493,28 +1678,30 @@ fn flutter_phone_runtime(path: &Path) -> Result<FlutterPhoneRuntime, BuildError>
                 if !fs::symlink_metadata(&dir).is_ok_and(|meta| meta.is_dir()) {
                     return Err(refuse("android must be a directory, not a link or a file".to_string()));
                 }
-                android = Some(android_jni_libs(&dir)?);
+                android = android_jni_libs(&dir)?;
             }
             Some("ios") => {
-                return Err(refuse(
-                    "ios/ is not read yet: Flutter on iPhone and iPad arrives with UI89 §7.7 step 3. Pass android/ alone"
-                        .to_string(),
-                ))
+                let dir = entry.path();
+                if !fs::symlink_metadata(&dir).is_ok_and(|meta| meta.is_dir()) {
+                    return Err(refuse("ios must be a directory, not a link or a file".to_string()));
+                }
+                ios = ios_dylibs(&dir)?;
             }
             _ => {
                 return Err(refuse(format!(
-                    "{} is not part of a Flutter phone runtime (expected android/<abi>/libmosaic_app.so)",
+                    "{} is not part of a Flutter phone runtime (expected android/<abi>/libmosaic_app.so and ios/<sdk>/libmosaic_app.dylib)",
                     name.to_string_lossy()
                 )))
             }
         }
     }
-    let Some(android) = android else {
+    if android.is_empty() && ios.is_empty() {
         return Err(refuse(
-            "no android/ directory (expected android/<abi>/libmosaic_app.so, UI89 §7.2)".to_string(),
+            "no android/ or ios/ directory (expected android/<abi>/libmosaic_app.so and ios/<sdk>/libmosaic_app.dylib, UI89 §7.2)"
+                .to_string(),
         ));
-    };
-    Ok(FlutterPhoneRuntime { android })
+    }
+    Ok(FlutterPhoneRuntime { android, ios })
 }
 
 /// Remove the Flutter project's `runtime/` before a runtime is installed, so
@@ -1533,13 +1720,17 @@ fn clear_flutter_runtime_dir(backend_dir: &Path) -> Result<(), BuildError> {
     removed.map_err(|error| BuildError::Io(format!("cannot clear {}: {error}", dir.display())))
 }
 
-/// Install a Flutter phone runtime (UI89 §7.2): each Android library, read
-/// without following a link and checked to be ELF, at
-/// `runtime/android/<abi>/libmosaic_app.so`, where the phone hook looks.
+/// Install a Flutter phone runtime (UI89 §7.2), each library read without
+/// following a link and written where the phone hook looks:
+///
+/// - Android: checked to be ELF, at `runtime/android/<abi>/libmosaic_app.so`.
+/// - iOS: checked by `check_ios_dylib`, at
+///   `runtime/ios/<sdk>/libmosaic_app.dylib`.
 fn install_flutter_phone_runtime(source: &Path, backend_dir: &Path) -> Result<PathBuf, BuildError> {
     let runtime = flutter_phone_runtime(source)?;
-    clear_flutter_runtime_dir(backend_dir)?;
-    let dir = backend_dir.join("runtime");
+    // Every library is read and checked before `runtime/` is touched, so a
+    // refused one leaves no half-written runtime behind.
+    let mut files = Vec::new();
     for (abi, library) in runtime.android {
         let bytes = read_regular_file_without_links(&library)?;
         if !bytes.starts_with(b"\x7fELF") {
@@ -1548,7 +1739,20 @@ fn install_flutter_phone_runtime(source: &Path, backend_dir: &Path) -> Result<Pa
                 reason: format!("the {abi} library is not an ELF shared library"),
             });
         }
-        write_file(&dir.join("android").join(abi).join("libmosaic_app.so"), &bytes)?;
+        files.push((Path::new("android").join(abi).join("libmosaic_app.so"), bytes));
+    }
+    for (sdk, library) in runtime.ios {
+        let bytes = read_regular_file_without_links(&library)?;
+        check_ios_dylib(sdk, &bytes).map_err(|reason| BuildError::InvalidRuntimeLibrary {
+            path: library.clone(),
+            reason,
+        })?;
+        files.push((Path::new("ios").join(sdk).join("libmosaic_app.dylib"), bytes));
+    }
+    clear_flutter_runtime_dir(backend_dir)?;
+    let dir = backend_dir.join("runtime");
+    for (relative, bytes) in files {
+        write_file(&dir.join(relative), &bytes)?;
     }
     Ok(dir)
 }
@@ -1850,21 +2054,26 @@ const ELF_VERIFY_HELPER: &str = concat!(
 
 /// `hook/build.dart` for a Flutter phone build (UI89 §7.3).
 ///
-/// Android builds one ABI at a time, so the hook chooses that ABI's library
-/// from the runtime directory and verifies it, strictly:
+/// A phone build asks for one target at a time: one Android ABI, or one iOS
+/// SDK and architecture. The hook chooses that target's library from the
+/// runtime directory and verifies it, strictly:
 ///
-/// | `targetArchitecture` | library                                      |
-/// |----------------------|----------------------------------------------|
-/// | arm64                | `runtime/android/arm64-v8a/libmosaic_app.so`   |
-/// | arm                  | `runtime/android/armeabi-v7a/libmosaic_app.so` |
-/// | x64                  | `runtime/android/x86_64/libmosaic_app.so`      |
-/// | ia32                 | `runtime/android/x86/libmosaic_app.so`         |
+/// | target                   | library                                         | then              |
+/// |--------------------------|-------------------------------------------------|-------------------|
+/// | Android arm64            | `runtime/android/arm64-v8a/libmosaic_app.so`     | ELF, machine      |
+/// | Android arm              | `runtime/android/armeabi-v7a/libmosaic_app.so`   | ELF, machine      |
+/// | Android x64              | `runtime/android/x86_64/libmosaic_app.so`        | ELF, machine      |
+/// | Android ia32             | `runtime/android/x86/libmosaic_app.so`           | ELF, machine      |
+/// | iOS device               | `runtime/ios/iphoneos/libmosaic_app.dylib`       | slice, platform 2 |
+/// | iOS simulator            | `runtime/ios/iphonesimulator/libmosaic_app.dylib`| slice, platform 7 |
 ///
-/// It never falls back to another ABI's library. An ABI with no file, an
-/// architecture outside the table, a file that is not ELF, or an ELF for the
-/// wrong machine each fails the build, naming what was asked for. The
-/// CodeAsset is the desktop hook's, so `mosaic_host.dart`'s `@Native`
-/// bindings are unchanged.
+/// It never falls back to another target's library. A target with no file,
+/// an architecture or SDK outside the table, a file of the wrong format, or
+/// one built for the wrong machine or platform each fails the build, naming
+/// what was asked for. The CodeAsset is the desktop hook's, so
+/// `mosaic_host.dart`'s `@Native` bindings are unchanged. Tools run through
+/// `Process.run` with an argument list (`lipo`, in `_installSlice`), never a
+/// shell.
 fn build_flutter_phone_runtime_hook() -> String {
     format!(
         concat!(
@@ -1883,31 +2092,49 @@ fn build_flutter_phone_runtime_hook() -> String {
             "  await build(args, (input, output) async {{\n",
             "    if (!input.config.buildCodeAssets) return;\n",
             "    final targetOS = input.config.code.targetOS;\n",
-            "    if (targetOS != OS.android) {{\n",
-            "      throw UnsupportedError(\n",
-            "        'The selected Mosaic runtime is for phones (Android), not ${{targetOS.name}}.',\n",
-            "      );\n",
-            "    }}\n",
             "    final architecture = input.config.code.targetArchitecture;\n",
-            "    final abi = _androidAbis[architecture];\n",
-            "    if (abi == null) {{\n",
+            "    final Uri source;\n",
+            "    final Uri runtime;\n",
+            "    if (targetOS == OS.android) {{\n",
+            "      final abi = _androidAbis[architecture];\n",
+            "      if (abi == null) {{\n",
+            "        throw UnsupportedError(\n",
+            "          'This build asked for ${{architecture.name}}, which has no Android ABI '\n",
+            "          'directory in a Mosaic runtime (${{_androidAbis.values.join(', ')}}).',\n",
+            "        );\n",
+            "      }}\n",
+            "      source = input.packageRoot.resolve('runtime/android/$abi/libmosaic_app.so');\n",
+            "      _requirePresent(source, abi, 'build-mosaic-android-libs.sh');\n",
+            "      await _requireElf(source);\n",
+            "      await _verifyElfArchitecture(source, architecture);\n",
+            "      runtime = input.outputDirectory.resolve('libmosaic_app.so');\n",
+            "      await File.fromUri(source).copy(runtime.toFilePath());\n",
+            "    }} else if (targetOS == OS.iOS) {{\n",
+            "      final targetSdk = input.config.code.iOS.targetSdk;\n",
+            "      final String sdk;\n",
+            "      final int platform;\n",
+            "      if (targetSdk == IOSSdk.iPhoneOS) {{\n",
+            "        sdk = 'iphoneos';\n",
+            "        platform = 2;\n",
+            "      }} else if (targetSdk == IOSSdk.iPhoneSimulator) {{\n",
+            "        sdk = 'iphonesimulator';\n",
+            "        platform = 7;\n",
+            "      }} else {{\n",
+            "        throw UnsupportedError(\n",
+            "          'This build asked for the iOS SDK $targetSdk, which has no '\n",
+            "          'directory in a Mosaic runtime (iphoneos, iphonesimulator).',\n",
+            "        );\n",
+            "      }}\n",
+            "      source = input.packageRoot.resolve('runtime/ios/$sdk/libmosaic_app.dylib');\n",
+            "      _requirePresent(source, sdk, 'build-mosaic-ios-dylibs.sh');\n",
+            "      runtime = input.outputDirectory.resolve('libmosaic_app.dylib');\n",
+            "      await _installSlice(source, runtime, architecture);\n",
+            "      await _requireIosPlatform(runtime, sdk, platform);\n",
+            "    }} else {{\n",
             "      throw UnsupportedError(\n",
-            "        'This build asked for ${{architecture.name}}, which has no Android ABI '\n",
-            "        'directory in a Mosaic runtime (${{_androidAbis.values.join(', ')}}).',\n",
+            "        'The selected Mosaic runtime is for phones (Android and iOS), not ${{targetOS.name}}.',\n",
             "      );\n",
             "    }}\n",
-            "    final source = input.packageRoot.resolve('runtime/android/$abi/libmosaic_app.so');\n",
-            "    if (!File.fromUri(source).existsSync()) {{\n",
-            "      throw UnsupportedError(\n",
-            "        'This build asked for $abi, and the Mosaic runtime has no '\n",
-            "        '${{source.toFilePath()}}. Build that ABI (build-mosaic-android-libs.sh) '\n",
-            "        'and pass the runtime directory with --runtime-library.',\n",
-            "      );\n",
-            "    }}\n",
-            "    await _requireElf(source);\n",
-            "    await _verifyElfArchitecture(source, architecture);\n",
-            "    final runtime = input.outputDirectory.resolve('libmosaic_app.so');\n",
-            "    await File.fromUri(source).copy(runtime.toFilePath());\n",
             "    output.dependencies.add(source);\n",
             "    output.assets.code.add(\n",
             "      CodeAsset(\n",
@@ -1918,6 +2145,18 @@ fn build_flutter_phone_runtime_hook() -> String {
             "      ),\n",
             "    );\n",
             "  }});\n",
+            "}}\n",
+            "\n",
+            "/// Fail the build when the runtime has no library for what it asked for.\n",
+            "/// Never another target's instead (UI89 §7.3).\n",
+            "void _requirePresent(Uri source, String target, String script) {{\n",
+            "  if (!File.fromUri(source).existsSync()) {{\n",
+            "    throw UnsupportedError(\n",
+            "      'This build asked for $target, and the Mosaic runtime has no '\n",
+            "      '${{source.toFilePath()}}. Build it ($script) and pass the runtime '\n",
+            "      'directory with --runtime-library.',\n",
+            "    );\n",
+            "  }}\n",
             "}}\n",
             "\n",
             "/// Refuse a phone runtime that is not ELF at all. The desktop verifier\n",
@@ -1942,9 +2181,50 @@ fn build_flutter_phone_runtime_hook() -> String {
             "    );\n",
             "  }}\n",
             "}}\n",
-            "{helper}",
+            "\n",
+            "/// Refuse an iOS slice built for the other half of iOS: a simulator\n",
+            "/// library in a device build, or the reverse (UI89 §7.2). Read from the\n",
+            "/// thin slice's LC_BUILD_VERSION, whose platform is 2 for a device and 7\n",
+            "/// for the simulator; the builder checked the same before copying.\n",
+            "Future<void> _requireIosPlatform(Uri library, String sdk, int platform) async {{\n",
+            "  final bytes = await File.fromUri(library).readAsBytes();\n",
+            "  int word(int at) {{\n",
+            "    if (at < 0 || at + 4 > bytes.length) {{\n",
+            "      throw UnsupportedError('${{library.toFilePath()}} is a truncated Mach-O file.');\n",
+            "    }}\n",
+            "    return bytes[at] | (bytes[at + 1] << 8) | (bytes[at + 2] << 16) | (bytes[at + 3] << 24);\n",
+            "  }}\n",
+            "  if (word(0) != 0xFEEDFACF || word(12) != 6) {{\n",
+            "    throw UnsupportedError('${{library.toFilePath()}} is not a 64-bit Mach-O dynamic library.');\n",
+            "  }}\n",
+            "  final count = word(16);\n",
+            "  final end = 32 + word(20);\n",
+            "  var at = 32;\n",
+            "  for (var index = 0; index < count; index++) {{\n",
+            "    final size = word(at + 4);\n",
+            "    if (size < 8 || at + size > end) break;\n",
+            "    if (word(at) == 0x32) {{\n",
+            "      final found = word(at + 8);\n",
+            "      if (found != platform) {{\n",
+            "        throw UnsupportedError(\n",
+            "          'The Mosaic runtime in ios/$sdk was built for Mach-O platform '\n",
+            "          '$found, not $platform. Rebuild it with build-mosaic-ios-dylibs.sh.',\n",
+            "        );\n",
+            "      }}\n",
+            "      return;\n",
+            "    }}\n",
+            "    at += size;\n",
+            "  }}\n",
+            "  throw UnsupportedError(\n",
+            "    '${{library.toFilePath()}} has no LC_BUILD_VERSION, so it cannot be '\n",
+            "    'told apart from a library for the other iOS SDK.',\n",
+            "  );\n",
+            "}}\n",
+            "{elf}",
+            "{apple}",
         ),
-        helper = ELF_VERIFY_HELPER,
+        elf = ELF_VERIFY_HELPER,
+        apple = APPLE_SLICE_HELPER,
     )
 }
 
@@ -1985,7 +2265,7 @@ fn is_lower_identifier(part: &str) -> bool {
 /// and no org part may be a Java or Kotlin keyword. If any part fails there
 /// is no command, rather than a made-up identity. The command then needs no
 /// quoting, because no token can hold a shell metacharacter.
-fn flutter_phone_create_command(bundle_identifier: &str) -> Result<String, String> {
+fn flutter_phone_create_command(bundle_identifier: &str, platforms: &str) -> Result<String, String> {
     let Some((org, name)) = bundle_identifier.rsplit_once('.') else {
         return Err(format!(
             "`{bundle_identifier}` has no org part; set `[app] bundle_identifier` to a reverse-DNS name such as `dev.example.app`"
@@ -2006,22 +2286,46 @@ fn flutter_phone_create_command(bundle_identifier: &str) -> Result<String, Strin
         }
     }
     Ok(format!(
-        "flutter create --platforms=android --org {org} --project-name {name} ."
+        "flutter create --platforms={platforms} --org {org} --project-name {name} ."
     ))
 }
 
-/// What a phone build's README says (UI89 §7.1, §7.2).
-fn flutter_phone_runtime_note(bundle_identifier: &str) -> String {
-    let create = match flutter_phone_create_command(bundle_identifier) {
-        Ok(command) => format!(
-            "Create the Android runner here, with the app's own identity:\n\n    {command}\n\nThen set `android:allowBackup=\"false\"` on `<application>` in `android/app/src/main/AndroidManifest.xml`, as Mosaic's Compose app does, so the app's state stays on the device. Build with `flutter build apk`."
-        ),
+/// What a phone build's README says (UI89 §7.1, §7.2), for the halves its
+/// runtime has: `flutter create` for those platforms only, the Android
+/// manifest edit when there is an Android half, and a build command for each.
+fn flutter_phone_runtime_note(bundle_identifier: &str, android: bool, ios: bool) -> String {
+    let platforms = match (android, ios) {
+        (true, true) => "android,ios",
+        (true, false) => "android",
+        _ => "ios",
+    };
+    let mut copied = Vec::new();
+    if android {
+        copied.push("each Android ABI's to `runtime/android/<abi>/libmosaic_app.so`");
+    }
+    if ios {
+        copied.push("each iOS SDK's to `runtime/ios/<sdk>/libmosaic_app.dylib`");
+    }
+    let create = match flutter_phone_create_command(bundle_identifier, platforms) {
+        Ok(command) => {
+            let mut steps = format!(
+                "Create the runner here, with the app's own identity:\n\n    {command}\n"
+            );
+            if android {
+                steps.push_str("\nThen set `android:allowBackup=\"false\"` on `<application>` in `android/app/src/main/AndroidManifest.xml`, as Mosaic's Compose app does, so the app's state stays on the device. Build with `flutter build apk`.\n");
+            }
+            if ios {
+                steps.push_str("\nBuild for the simulator with `flutter build ios --simulator`, or for devices with `flutter build ios` (signing required).\n");
+            }
+            steps
+        }
         Err(reason) => format!(
-            "No `flutter create` command is given, because {reason}. Android's `applicationId` would not be the app's identity."
+            "No `flutter create` command is given, because {reason}. The app's Android `applicationId` and iOS bundle identifier would not be its identity.\n"
         ),
     };
     format!(
-        "This is a phone build (UI89 §7). The Rust engine for each Android ABI is copied to `runtime/android/<abi>/libmosaic_app.so`, and `hook/build.dart` bundles the one each ABI's build asks for, refusing a missing or mismatched one. State is kept in the app's support directory (`path_provider`). Bundled-runtime projects require Flutter 3.38+, Dart 3.10+, and `flutter config --enable-native-assets`.\n\n{create}"
+        "This is a phone build (UI89 §7). The Rust engine is copied, {}, and `hook/build.dart` bundles the one each build asks for, refusing a missing or mismatched one. State is kept in the app's support directory (`path_provider`). Bundled-runtime projects require Flutter 3.38+, Dart 3.10+, and `flutter config --enable-native-assets`.\n\n{create}",
+        copied.join(", and ")
     )
 }
 
@@ -5326,8 +5630,13 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 } else {
                     pubspec
                 };
-                let runtime_distribution = if phone_runtime {
-                    flutter_phone_runtime_note(bundle_identifier)
+                let runtime_distribution = if let Some(source) = runtime_library.filter(|_| phone_runtime) {
+                    let halves = flutter_phone_runtime(source)?;
+                    flutter_phone_runtime_note(
+                        bundle_identifier,
+                        !halves.android.is_empty(),
+                        !halves.ios.is_empty(),
+                    )
                 } else if let Some(source) = runtime_library {
                     flutter_runtime_distribution_note(runtime_file_name(source)?)
                 } else {
@@ -15948,17 +16257,18 @@ layout NativeEvents {
         assert!(result.artifacts.contains(&flutter.join("runtime")));
 
         let hook = fs::read_to_string(flutter.join("hook/build.dart")).unwrap();
-        assert!(hook.contains("    if (targetOS != OS.android) {\n"));
+        assert!(hook.contains("    if (targetOS == OS.android) {\n"));
         for (architecture, abi) in [("arm64", "arm64-v8a"), ("arm", "armeabi-v7a"), ("x64", "x86_64"), ("ia32", "x86")] {
             assert!(hook.contains(&format!("  Architecture.{architecture}: '{abi}',\n")), "{hook}");
         }
         assert!(hook.contains("input.packageRoot.resolve('runtime/android/$abi/libmosaic_app.so')"));
-        assert!(hook.contains("    if (!File.fromUri(source).existsSync()) {\n"));
-        assert!(hook.contains("    await _requireElf(source);\n    await _verifyElfArchitecture(source, architecture);\n"));
+        assert!(hook.contains("      _requirePresent(source, abi, 'build-mosaic-android-libs.sh');\n"));
+        assert!(hook.contains("  if (!File.fromUri(source).existsSync()) {\n"));
+        assert!(hook.contains("      await _requireElf(source);\n      await _verifyElfArchitecture(source, architecture);\n"));
         assert!(hook.contains("name: 'mosaic_host.dart',\n        linkMode: DynamicLoadingBundled(),"));
-        // Never another ABI's library, nor the desktop one: the only path to
-        // a library is built from the ABI the build asked for.
-        assert_eq!(hook.matches("runtime/").count(), 1, "{hook}");
+        // Never another target's library, nor the desktop one: the only paths
+        // to a library are built from the ABI or SDK the build asked for.
+        assert_eq!(hook.matches("runtime/").count(), 2, "{hook}");
         assert!(!hook.contains("runtime/libmosaic_app.so"), "{hook}");
 
         let pubspec = fs::read_to_string(flutter.join("pubspec.yaml")).unwrap();
@@ -15999,11 +16309,11 @@ layout NativeEvents {
         };
         let empty = pkg.path().join("empty");
         fs::create_dir_all(&empty).unwrap();
-        assert!(refused(&empty).contains("no android/ directory"));
+        assert!(refused(&empty).contains("no android/ or ios/ directory"));
 
-        let with_ios = flutter_phone_runtime_dir(&pkg.path().join("i"), &["x86_64"]);
-        fs::create_dir_all(with_ios.join("ios/iphoneos")).unwrap();
-        assert!(refused(&with_ios).contains("ios/ is not read yet"));
+        let empty_sdk = flutter_phone_runtime_dir(&pkg.path().join("i"), &["x86_64"]);
+        fs::create_dir_all(empty_sdk.join("ios/iphoneos")).unwrap();
+        assert!(refused(&empty_sdk).contains("ios/iphoneos must hold exactly one regular file"));
 
         let extra = flutter_phone_runtime_dir(&pkg.path().join("e"), &["x86_64"]);
         fs::write(extra.join("notes.txt"), "x").unwrap();
@@ -16040,15 +16350,195 @@ layout NativeEvents {
         assert!(error.contains("requires --emit-project"), "{error}");
     }
 
+    /// A thin 64-bit Mach-O: header, then (when `platform` is given) one
+    /// LC_BUILD_VERSION naming it. Enough for `check_ios_dylib`.
+    fn thin_macho(cputype: u32, platform: Option<u32>) -> Vec<u8> {
+        let mut bytes = Vec::new();
+        let (ncmds, sizeofcmds) = if platform.is_some() { (1u32, 24u32) } else { (0, 0) };
+        for word in [0xfeed_facf_u32, cputype, 0, 6, ncmds, sizeofcmds, 0, 0] {
+            bytes.extend_from_slice(&word.to_le_bytes());
+        }
+        if let Some(platform) = platform {
+            for word in [0x32_u32, 24, platform, 0x0010_0000, 0x0010_0000, 0] {
+                bytes.extend_from_slice(&word.to_le_bytes());
+            }
+        }
+        bytes
+    }
+
+    /// A fat (lipo) Mach-O holding `slices`, each a (cputype, thin file).
+    fn fat_macho(slices: &[(u32, Vec<u8>)]) -> Vec<u8> {
+        let mut bytes = Vec::new();
+        bytes.extend_from_slice(&0xcafe_babe_u32.to_be_bytes());
+        bytes.extend_from_slice(&(slices.len() as u32).to_be_bytes());
+        let mut offset = 8 + 20 * slices.len();
+        for (cputype, slice) in slices {
+            for word in [*cputype, 0, offset as u32, slice.len() as u32, 0] {
+                bytes.extend_from_slice(&word.to_be_bytes());
+            }
+            offset += slice.len();
+        }
+        for (_, slice) in slices {
+            bytes.extend_from_slice(slice);
+        }
+        bytes
+    }
+
+    fn device_dylib() -> Vec<u8> {
+        thin_macho(MACHO_CPU_ARM64, Some(MACHO_PLATFORM_IOS))
+    }
+
+    fn simulator_dylib() -> Vec<u8> {
+        fat_macho(&[
+            (MACHO_CPU_ARM64, thin_macho(MACHO_CPU_ARM64, Some(MACHO_PLATFORM_IOS_SIMULATOR))),
+            (MACHO_CPU_X86_64, thin_macho(MACHO_CPU_X86_64, Some(MACHO_PLATFORM_IOS_SIMULATOR))),
+        ])
+    }
+
+    fn with_ios(dir: &Path, device: Option<Vec<u8>>, simulator: Option<Vec<u8>>) {
+        for (sdk, bytes) in [("iphoneos", device), ("iphonesimulator", simulator)] {
+            if let Some(bytes) = bytes {
+                fs::create_dir_all(dir.join("ios").join(sdk)).unwrap();
+                fs::write(dir.join("ios").join(sdk).join("libmosaic_app.dylib"), bytes).unwrap();
+            }
+        }
+    }
+
+    #[test]
+    fn a_flutter_phone_build_bundles_each_ios_sdk_after_checking_its_platform() {
+        let pkg = card_package();
+        let runtime = pkg.path().join("phone-runtime");
+        with_ios(&runtime, Some(device_dylib()), Some(simulator_dylib()));
+        let out = TempDir::new().unwrap();
+        flutter_phone_build(&pkg, &out, &runtime).expect("iOS phone build");
+        let flutter = out.path().join("flutter");
+        assert_eq!(
+            fs::read(flutter.join("runtime/ios/iphoneos/libmosaic_app.dylib")).unwrap(),
+            device_dylib()
+        );
+        assert_eq!(
+            fs::read(flutter.join("runtime/ios/iphonesimulator/libmosaic_app.dylib")).unwrap(),
+            simulator_dylib()
+        );
+        assert!(!flutter.join("runtime/android").exists());
+
+        let hook = fs::read_to_string(flutter.join("hook/build.dart")).unwrap();
+        assert!(hook.contains("    } else if (targetOS == OS.iOS) {\n"));
+        assert!(hook.contains("input.packageRoot.resolve('runtime/ios/$sdk/libmosaic_app.dylib')"));
+        assert!(hook.contains("      if (targetSdk == IOSSdk.iPhoneOS) {\n        sdk = 'iphoneos';\n        platform = 2;\n"));
+        assert!(hook.contains("      } else if (targetSdk == IOSSdk.iPhoneSimulator) {\n        sdk = 'iphonesimulator';\n        platform = 7;\n"));
+        assert!(hook.contains("      await _installSlice(source, runtime, architecture);\n      await _requireIosPlatform(runtime, sdk, platform);\n"));
+        assert!(hook.contains("Future<void> _installSlice("), "the lipo slicer rides along");
+        // Through Process.run with an argument list, never a shell.
+        assert!(!hook.contains("runInShell"), "{hook}");
+        assert!(!hook.contains("'/bin/sh'") && !hook.contains("'bash'"), "{hook}");
+
+        // Only iOS: the README creates the iOS runner and says nothing of
+        // Android's manifest.
+        let readme = fs::read_to_string(flutter.join("README.md")).unwrap();
+        assert!(readme.contains("    flutter create --platforms=ios --org dev.codingadventures --project-name "), "{readme}");
+        assert!(!readme.contains("allowBackup"), "{readme}");
+        assert!(readme.contains("flutter build ios --simulator"), "{readme}");
+
+        // Both halves: one runner for both.
+        let both = flutter_phone_runtime_dir(&pkg.path().join("both"), &["x86_64"]);
+        with_ios(&both, Some(device_dylib()), None);
+        let out = TempDir::new().unwrap();
+        flutter_phone_build(&pkg, &out, &both).expect("phone build for both");
+        let readme = fs::read_to_string(out.path().join("flutter/README.md")).unwrap();
+        assert!(readme.contains("flutter create --platforms=android,ios "), "{readme}");
+        assert!(readme.contains("allowBackup"), "{readme}");
+        assert!(out.path().join("flutter/runtime/android/x86_64/libmosaic_app.so").is_file());
+        assert!(out.path().join("flutter/runtime/ios/iphoneos/libmosaic_app.dylib").is_file());
+    }
+
+    #[test]
+    fn an_ios_runtime_is_refused_unless_each_sdk_holds_its_own_platform() {
+        let pkg = card_package();
+        let refused = |device: Option<Vec<u8>>, simulator: Option<Vec<u8>>| {
+            let root = TempDir::new().unwrap();
+            let runtime = root.path().join("phone-runtime");
+            with_ios(&runtime, device, simulator);
+            let out = TempDir::new().unwrap();
+            flutter_phone_build(&pkg, &out, &runtime).expect_err("refused").to_string()
+        };
+        let sim_arm64 = || thin_macho(MACHO_CPU_ARM64, Some(MACHO_PLATFORM_IOS_SIMULATOR));
+        // A simulator library swapped into the device folder: right
+        // architecture, wrong platform.
+        assert!(refused(Some(sim_arm64()), None).contains("Mach-O platform 7, not 2"));
+        assert!(refused(Some(simulator_dylib()), None).contains("must be thin arm64"));
+        assert!(refused(Some(thin_macho(MACHO_CPU_X86_64, Some(2))), None).contains("must hold arm64 only"));
+        assert!(refused(None, Some(sim_arm64())).contains("must be fat"));
+        let only_arm64 = fat_macho(&[(MACHO_CPU_ARM64, sim_arm64())]);
+        assert!(refused(None, Some(only_arm64)).contains("must hold arm64 and x86_64 only"));
+        let device_in_simulator = fat_macho(&[
+            (MACHO_CPU_ARM64, thin_macho(MACHO_CPU_ARM64, Some(MACHO_PLATFORM_IOS))),
+            (MACHO_CPU_X86_64, thin_macho(MACHO_CPU_X86_64, Some(MACHO_PLATFORM_IOS_SIMULATOR))),
+        ]);
+        assert!(refused(None, Some(device_in_simulator)).contains("Mach-O platform 2, not 7"));
+        assert!(refused(Some(thin_macho(MACHO_CPU_ARM64, None)), None).contains("no LC_BUILD_VERSION"));
+        assert!(refused(Some(b"\x7fELF not mach-o".to_vec()), None).contains("not a 64-bit Mach-O"));
+        let mut executable = device_dylib();
+        executable[12..16].copy_from_slice(&2u32.to_le_bytes());
+        assert!(refused(Some(executable), None).contains("not a dynamic library"));
+
+        // Refused after an Android half that would pass: nothing is written,
+        // and a runtime from an earlier build is still there untouched.
+        let root = TempDir::new().unwrap();
+        let runtime = flutter_phone_runtime_dir(root.path(), &["x86_64"]);
+        with_ios(&runtime, Some(sim_arm64()), None);
+        let out = TempDir::new().unwrap();
+        let earlier = out.path().join("flutter/runtime/libmosaic_app.so");
+        fs::create_dir_all(earlier.parent().unwrap()).unwrap();
+        fs::write(&earlier, "\x7fELF-earlier").unwrap();
+        flutter_phone_build(&pkg, &out, &runtime).expect_err("wrong platform");
+        assert!(!out.path().join("flutter/runtime/android").exists());
+        assert_eq!(fs::read_to_string(&earlier).unwrap(), "\x7fELF-earlier");
+        // Cut inside its load commands: the header promises more than is there.
+        let mut truncated = device_dylib();
+        truncated.truncate(40);
+        assert!(refused(Some(truncated), None).contains("a truncated Mach-O header"));
+        // A load command whose size runs past the commands the header declares.
+        let mut overlong = device_dylib();
+        overlong[36..40].copy_from_slice(&64u32.to_le_bytes());
+        assert!(refused(Some(overlong), None).contains("runs past its header"));
+        let lying_fat = {
+            let mut bytes = simulator_dylib();
+            bytes[8..12].copy_from_slice(&MACHO_CPU_X86_64.to_be_bytes());
+            bytes
+        };
+        assert!(refused(None, Some(lying_fat)).contains("disagrees with its header"));
+
+        let root = TempDir::new().unwrap();
+        let runtime = root.path().join("phone-runtime");
+        fs::create_dir_all(runtime.join("ios/watchos")).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = flutter_phone_build(&pkg, &out, &runtime).expect_err("watchos").to_string();
+        assert!(error.contains("ios/watchos is not an iOS SDK directory"), "{error}");
+
+        #[cfg(unix)]
+        {
+            let root = TempDir::new().unwrap();
+            let elsewhere = root.path().join("elsewhere");
+            with_ios(&elsewhere, Some(device_dylib()), None);
+            let runtime = root.path().join("phone-runtime");
+            fs::create_dir_all(&runtime).unwrap();
+            std::os::unix::fs::symlink(elsewhere.join("ios"), runtime.join("ios")).unwrap();
+            let out = TempDir::new().unwrap();
+            let error = flutter_phone_build(&pkg, &out, &runtime).expect_err("linked").to_string();
+            assert!(error.contains("ios must be a directory, not a link"), "{error}");
+        }
+    }
+
     #[test]
     fn the_flutter_create_command_keeps_the_apps_identity_or_is_not_given() {
         assert_eq!(
-            flutter_phone_create_command("dev.codingadventures.trestle").unwrap(),
+            flutter_phone_create_command("dev.codingadventures.trestle", "android").unwrap(),
             "flutter create --platforms=android --org dev.codingadventures --project-name trestle ."
         );
         assert_eq!(
-            flutter_phone_create_command("dev.codingadventures.journalapp").unwrap(),
-            "flutter create --platforms=android --org dev.codingadventures --project-name journalapp ."
+            flutter_phone_create_command("dev.codingadventures.journalapp", "android,ios").unwrap(),
+            "flutter create --platforms=android,ios --org dev.codingadventures --project-name journalapp ."
         );
         for (identifier, why) in [
             ("solo", "no org part"),
@@ -16063,11 +16553,11 @@ layout NativeEvents {
             ("2d.example.app", "`2d`"),
             ("dev.fun.app", "`fun`"),
         ] {
-            let error = flutter_phone_create_command(identifier).expect_err(identifier);
+            let error = flutter_phone_create_command(identifier, "android").expect_err(identifier);
             assert!(error.contains(why), "{identifier}: {error}");
         }
         // No command at all, rather than a made-up identity.
-        let note = flutter_phone_runtime_note("dev.example.task-app");
+        let note = flutter_phone_runtime_note("dev.example.task-app", true, true);
         assert!(!note.contains("--project-name"), "{note}");
         assert!(note.contains("No `flutter create` command is given"), "{note}");
     }

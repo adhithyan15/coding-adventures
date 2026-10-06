@@ -44,6 +44,7 @@ CI_WORKFLOW_PATH = ".github/workflows/ci.yml"
 # change to one reaches the lane only through this list.
 CI_SCRIPT_PATHS = (
     "code/scripts/build-mosaic-xcframework.sh",
+    "code/scripts/build-mosaic-ios-dylibs.sh",
     "code/scripts/mosaic-ios-simulator-gate.sh",
 )
 

@@ -1475,3 +1475,41 @@ What differs from the design, or what the design left open:
   Flutter lanes do. The emulator step gates it last, after the Compose
   apps, with its timeout raised to 55 minutes.
 
+### 7.9 iOS, as built (step 3)
+
+- **The library.** `build-mosaic-ios-dylibs.sh <cargo-package> <phone-runtime-dir>`
+  builds the app crate with `cargo rustc --crate-type cdylib` for
+  `aarch64-apple-ios`, `aarch64-apple-ios-sim` and `x86_64-apple-ios`. It
+  writes `ios/iphoneos/` (thin arm64) and `ios/iphonesimulator/` (the two
+  simulator slices, joined with `lipo`). It replaces only `ios/`, so an
+  `android/` half beside it is kept.
+- **The deployment target.** The script exports
+  `IPHONEOS_DEPLOYMENT_TARGET=16.0`, as Mosaic's iOS app target uses. That
+  also makes the linker write `LC_BUILD_VERSION`. An older target gets only
+  `LC_VERSION_MIN_IPHONEOS`, which cannot tell device from simulator, and
+  the builder refuses such a library by name.
+- **The builder's checks.** The builder reads `ios/` as it reads
+  `android/`: known SDK directories only, each with exactly one regular
+  library, nothing followed through a link, at least one present. Each
+  library's Mach-O is checked without trusting a single offset:
+  - `iphoneos`: a thin `MH_MAGIC_64` arm64 library, platform 2;
+  - `iphonesimulator`: `FAT_MAGIC` holding exactly arm64 and x86_64, each
+    slice's CPU type agreeing with the fat header, and platform 7.
+- **The hook's iOS branch.** It chooses by `IOSSdk` (`iPhoneOS` or
+  `iPhoneSimulator`, nothing else), slices with the existing `lipo`
+  helper, and reads the thin slice's `LC_BUILD_VERSION` again in Dart. It
+  runs no tool through a shell.
+- **The README.** It names only the platforms the runtime has:
+  `--platforms=android`, `ios` or `android,ios`. The Android manifest edit
+  appears only with an Android half, and an iOS half adds the
+  `flutter build ios` commands.
+- **CI.**
+  - The macOS job sets Flutter up when the Swift lane runs, and builds
+    `flutter build ios --simulator --debug`.
+  - It finds `_mosaic_app_create` in one of the `Runner.app`'s frameworks.
+  - It uninstalls the SwiftUI Trestle (same bundle id), then runs
+    `mosaic-ios-simulator-gate.sh` on the iPhone simulator.
+  - A local `flutter analyze` of a generated Android-and-iOS phone project
+    (Flutter 3.44) finds no issues. That confirms the hook's `IOSSdk`
+    calls exist in `code_assets`.
+

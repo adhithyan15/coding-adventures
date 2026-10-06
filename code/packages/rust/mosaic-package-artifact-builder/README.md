@@ -143,8 +143,10 @@ SwiftPM resource bundle, or XAML's WinUI output directory under its conventional
 `mosaic_app` filename. Flutter emits `hook/build.dart` so the Flutter toolchain
 packages and resolves the selected target library without application-specific
 runner edits. For phones (UI89 §7), Flutter instead takes a runtime directory,
-`android/<abi>/libmosaic_app.so`. Its hook bundles the library for each ABI
-the build asks for, and the generated `main()` keeps state in the app-support
+`android/<abi>/libmosaic_app.so` and `ios/{iphoneos,iphonesimulator}/libmosaic_app.dylib`
+(`build-mosaic-ios-dylibs.sh`). Each iOS library's Mach-O platform is
+checked, so a simulator build is never shipped to a device. Its hook bundles
+the library for each ABI or SDK the build asks for, and the generated `main()` keeps state in the app-support
 directory that `path_provider` reports. The README then gives the
 `flutter create` command, derived from the app's bundle identifier. The
 Compose and SwiftUI bindings resolve their installed
