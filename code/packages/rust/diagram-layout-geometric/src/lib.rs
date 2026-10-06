@@ -134,9 +134,12 @@ pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
         ("chaotic", left, top + domain_height + gap), ("clear", left + domain_width + gap, top + domain_height + gap)];
     let mut domains: Vec<_> = specs.into_iter().map(|(name, x, y)| LayoutedCynefinDomain { name: name.into(),
         items: diagram.domains.iter().find(|domain| domain.name == name).map_or_else(Vec::new, |domain| domain.items.clone()),
-        x, y, width: domain_width, height: domain_height, center: Point { x: x + domain_width / 2.0, y: y + domain_height / 2.0 }, confusion: false }).collect();
+        overflow_count: 0, x, y, width: domain_width, height: domain_height,
+        center: Point { x: x + domain_width / 2.0, y: y + domain_height / 2.0 }, confusion: false }).collect();
+    let confusion_items = diagram.domains.iter().find(|domain| domain.name == "confusion").map_or_else(Vec::new, |domain| domain.items.clone());
+    let confusion_overflow = confusion_items.len().saturating_sub(3);
     domains.push(LayoutedCynefinDomain { name: "confusion".into(),
-        items: diagram.domains.iter().find(|domain| domain.name == "confusion").map_or_else(Vec::new, |domain| domain.items.clone()),
+        items: confusion_items.into_iter().take(3).collect(), overflow_count: confusion_overflow,
         x: width / 2.0 - 90.0, y: top + (height - top - 28.0) / 2.0 - 58.0, width: 180.0, height: 116.0,
         center: Point { x: width / 2.0, y: top + (height - top - 28.0) / 2.0 }, confusion: true });
     let domain_by_name: HashMap<_, _> = domains.iter().map(|domain| (domain.name.as_str(), domain)).collect();
@@ -346,12 +349,15 @@ mod tests {
 
     #[test]
     fn cynefin_layout_places_domains_in_fixed_semantic_quadrants() {
-        let layout = layout_cynefin(&CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None, domains: vec![],
+        let layout = layout_cynefin(&CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None,
+            domains: vec![diagram_ir::CynefinDomain { name: "confusion".into(),
+                items: vec!["One".into(), "Two".into(), "Three".into(), "Four".into(), "Five".into()] }],
             transitions: vec![diagram_ir::CynefinTransition { from: "complex".into(), to: "clear".into(), label: None }] });
         let complex = layout.domains.iter().find(|domain| domain.name == "complex").unwrap();
         let clear = layout.domains.iter().find(|domain| domain.name == "clear").unwrap();
         assert!(complex.center.x < clear.center.x && complex.center.y < clear.center.y);
         assert!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().confusion);
+        assert_eq!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().overflow_count, 2);
         assert!(layout.transitions[0].from.x > complex.center.x);
         assert!(layout.transitions[0].to.x < clear.center.x);
     }

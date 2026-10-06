@@ -1158,9 +1158,17 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         let label_y = if domain.confusion { domain.center.y - 34.0 } else { domain.y + 14.0 };
         text_children.push(text_node(&capitalize(&domain.name), domain.x + 12.0, label_y, domain.width - 24.0, 28.0,
             options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
-        for (index, item) in domain.items.iter().take(if domain.confusion { 3 } else { usize::MAX }).enumerate() {
+        for (index, item) in domain.items.iter().enumerate() {
             let y = if domain.confusion { domain.center.y - 2.0 + index as f64 * 22.0 } else { domain.y + 52.0 + index as f64 * 28.0 };
             text_children.push(text_node(item, domain.x + 18.0, y, domain.width - 36.0, 24.0, options.label_font.clone(), Color { r: 30, g: 41, b: 59, a: 255 }));
+        }
+        if domain.overflow_count > 0 {
+            let y = domain.center.y - 2.0 + domain.items.len() as f64 * 22.0;
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: domain.center.x - 45.0, y,
+                width: 90.0, height: 24.0, fill: Some("#cbd5e1".into()), stroke: None, stroke_width: None,
+                corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
+            text_children.push(text_node(&format!("+{} more", domain.overflow_count), domain.center.x - 40.0, y,
+                80.0, 24.0, options.label_font.clone(), Color { r: 51, g: 65, b: 85, a: 255 }));
         }
     }
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
@@ -9319,9 +9327,9 @@ mod tests {
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver; let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedCynefinDiagram { width: 400.0, height: 300.0, title: None, accessibility_title: Some("Cynefin framework".into()),
             accessibility_description: Some("Practices by domain".into()),
-            domains: vec![diagram_ir::LayoutedCynefinDomain { name: "complex".into(), items: vec!["Probe".into()], x: 10.0, y: 10.0,
+            domains: vec![diagram_ir::LayoutedCynefinDomain { name: "complex".into(), items: vec!["Probe".into()], overflow_count: 0, x: 10.0, y: 10.0,
                 width: 180.0, height: 130.0, center: Point { x: 100.0, y: 75.0 }, confusion: false },
-                diagram_ir::LayoutedCynefinDomain { name: "confusion".into(), items: vec![], x: 150.0, y: 110.0,
+                diagram_ir::LayoutedCynefinDomain { name: "confusion".into(), items: vec!["One".into(), "Two".into(), "Three".into()], overflow_count: 2, x: 150.0, y: 110.0,
                     width: 100.0, height: 80.0, center: Point { x: 200.0, y: 150.0 }, confusion: true }],
             transitions: vec![diagram_ir::LayoutedCynefinTransition { from: Point { x: 190.0, y: 75.0 }, to: Point { x: 150.0, y: 130.0 }, label: None }] };
         let scene = diagram_to_paint_cynefin(&layout, &opts);
@@ -9329,6 +9337,7 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Path(_))).count(), 2);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#cbd5e1"))));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")).map(String::as_str), Some("Cynefin framework"));
     }
 
