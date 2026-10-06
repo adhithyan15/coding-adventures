@@ -10,6 +10,7 @@
     { "id": "multiline-card-metadata", "source": "kanban\n  todo[Todo]\n    parser@{\n      label: \"Grammar parser\"\n      ticket: MC-42\n      assigned: Ada\n      priority: high\n      icon: heart\n    }" },
     { "id": "card-icon-decoration", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]\n      ::icon(heart)" },
     { "id": "class-decorations", "source": "kanban\n  todo[Todo]\n    :::backlog\n    parser[Grammar parser]\n      :::urgent blocked" },
-    { "id": "ticket-base-url", "source": "%%{init: {'kanban': {'ticketBaseUrl': 'https://tracker.example/issues/#TICKET#'}}}%%\nkanban\n  todo[Todo]\n    parser[Grammar parser]@{ ticket: MC-42 }" }
+    { "id": "ticket-base-url", "source": "%%{init: {'kanban': {'ticketBaseUrl': 'https://tracker.example/issues/#TICKET#'}}}%%\nkanban\n  todo[Todo]\n    parser[Grammar parser]@{ ticket: MC-42 }" },
+    { "id": "layout-config", "source": "%%{init: {'kanban': {'sectionWidth': 300, 'padding': 32}}}%%\nkanban\n  todo[Todo]\n    parser[Grammar parser]" }
   ]
 }

@@ -479,6 +479,10 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
                 Some("https://tracker.example/issues/#TICKET#")
             );
         }
+        if id == "layout-config" {
+            assert_eq!(board.config.section_width, 300.0);
+            assert_eq!(board.config.padding, 32.0);
+        }
     }
 }
 

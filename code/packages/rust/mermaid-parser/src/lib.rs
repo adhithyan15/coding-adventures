@@ -6,13 +6,13 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.136.0";
+pub const VERSION: &str = "0.137.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
-    BlockArrowDirections, BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel,
+    BlockArrowDirections, BoardCard, BoardColumn, BoardConfig, BoardDiagram, DiagramDirection, DiagramLabel,
     DiagramShape, DiagramTextSpan, EdgeMarker,
     DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
@@ -1400,6 +1400,7 @@ fn parse_architecture_labeled_edge_operator(
 /// Parse a core indentation-defined Mermaid Kanban board.
 pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
     let ticket_base_url = parse_kanban_ticket_base_url(source);
+    let config = parse_kanban_layout_config(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_kanban(&prepared).map_err(|message| ParseError {
         message, line: 1, col: 1,
@@ -1423,7 +1424,7 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
         .ok_or_else(|| ParseError {
             message: "kanban diagram requires a column".into(), line: 1, col: 1,
         })?;
-    let mut diagram = BoardDiagram { ticket_base_url, ..BoardDiagram::default() };
+    let mut diagram = BoardDiagram { ticket_base_url, config, ..BoardDiagram::default() };
     let mut ids = HashSet::new();
     let mut card_indent = None;
     let mut last_card: Option<(usize, usize)> = None;
@@ -1605,6 +1606,31 @@ fn parse_kanban_ticket_base_url(source: &str) -> Option<String> {
             })
         })
     }).filter(|value| !value.is_empty())
+}
+
+fn parse_kanban_layout_config(source: &str) -> BoardConfig {
+    let front_matter = mermaid_front_matter_section(source, &["config", "kanban"]);
+    let kanban_source = mermaid_directive_object(source, "kanban")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |key| {
+        quadrant_directive_value(kanban_source, key).or_else(|| {
+            kanban_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+    };
+    let positive_number = |key| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value > 0.0)
+    };
+    let defaults = BoardConfig::default();
+    BoardConfig {
+        section_width: positive_number("sectionWidth").unwrap_or(defaults.section_width),
+        padding: positive_number("padding").unwrap_or(defaults.padding),
+    }
 }
 
 fn parse_board_node(source: &str) -> (Option<String>, String) {
@@ -12395,6 +12421,22 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn kanban_preserves_layout_configuration() {
+        let board = parse_kanban(
+            "%%{init: {'kanban': {'sectionWidth': 300, 'padding': 32}}}%%\nkanban\n  todo[Todo]\n    parser[Write grammar]",
+        )
+        .unwrap();
+        assert_eq!(board.config.section_width, 300.0);
+        assert_eq!(board.config.padding, 32.0);
+        let front_matter = parse_kanban(
+            "---\nconfig:\n  kanban:\n    sectionWidth: 320\n    padding: 28\n---\nkanban\n  todo[Todo]\n    parser[Write grammar]",
+        )
+        .unwrap();
+        assert_eq!(front_matter.config.section_width, 320.0);
+        assert_eq!(front_matter.config.padding, 28.0);
+    }
+
+    #[test]
     fn dispatch_kanban_to_board_ir() {
         match parse_any_mermaid("kanban\nTodo\n  task1[Task]").unwrap() {
             MermaidDiagram::Board(board) => assert_eq!(board.columns.len(), 1),
@@ -16386,7 +16428,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.136.0");
+        assert_eq!(crate::VERSION, "0.137.0");
     }
 
     #[test]
