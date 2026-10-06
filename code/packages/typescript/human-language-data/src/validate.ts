@@ -195,7 +195,46 @@ export function validate(input: ValidateInput): Issue[] {
     }
   }
 
+  // Digit rows are identity rows: they carry no ductus, and `uncoveredGlyphs`
+  // below lets each one cover its glyph in a headword. That trust is only
+  // safe while a digit row really is one decimal digit. A row whose glyph is
+  // a letter (`"ক"`), a two-digit number (`"১০"`) or a letter-like numeral
+  // (`"Ⅶ"`) would otherwise quietly widen the covered set and hide a real
+  // glyph gap. So every digit row must be exactly one
+  // code point of Unicode general category Nd ("Number, decimal digit"):
+  //
+  //   glyph   code points   category   verdict
+  //   "৭"     1             Nd         ok
+  //   "১০"    2             Nd Nd      error: two code points
+  //   "ক"     1             Lo         error: not a decimal digit
+  //   "Ⅶ"     1             Nl         error: not a decimal digit
+  //   ""      0             -          error: empty
+  for (const [scriptId, script] of Object.entries(scripts)) {
+    for (const digit of script.digits ?? []) {
+      if (isSingleDecimalDigit(digit.glyph)) continue;
+      const shown = JSON.stringify(digit.glyph);
+      err(
+        "invalid-digit-row",
+        `${scriptId} digit ${shown}: a digit row must be exactly one code point of Unicode category Nd (decimal digit)`,
+      );
+    }
+  }
+
   return issues;
+}
+
+/**
+ * True when `glyph` is exactly one code point and that code point is a
+ * decimal digit (Unicode general category Nd). Iterating the string with
+ * `[...glyph]` counts code points, not UTF-16 units, so an astral digit such
+ * as U+1D7CE MATHEMATICAL BOLD DIGIT ZERO still counts as one.
+ */
+export function isSingleDecimalDigit(glyph: unknown): boolean {
+  // Malformed JSON can put a number or nothing where the glyph belongs; report
+  // that as an invalid row instead of letting the spread below throw.
+  if (typeof glyph !== "string") return false;
+  const codePoints = [...glyph];
+  return codePoints.length === 1 && /^\p{Nd}$/u.test(codePoints[0]);
 }
 
 /** Characters of a headword not represented anywhere in the script data. */
@@ -227,7 +266,11 @@ function uncoveredGlyphs(headword: string, sd: ScriptData): string[] {
   // so they are covered as identity only, like a plain letter row. Only the
   // Bengali track has digit headwords today; the other inventories that list
   // `digits` (Kannada, Malayalam, Telugu) have no headword these rows change.
-  for (const digit of sd.digits ?? []) add(digit.glyph);
+  // A malformed digit row is an error above, and it covers nothing here, so
+  // it can never mask an uncovered letter even in a report that keeps going.
+  for (const digit of sd.digits ?? []) {
+    if (isSingleDecimalDigit(digit.glyph)) add(digit.glyph);
+  }
   for (const m of sd.marks ?? []) {
     add(m.mark);
     // A source-backed composition owns the encoded carrier as well as the

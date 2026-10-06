@@ -27,9 +27,20 @@ separate from discovery: a source directory such as `specs` remains eligible,
 while exact `_build`, `blib`, `node_modules`, `.cargo`, and `cover` components do not
 affect a package cache key.
 
-The portable source registry includes OCaml `.ml`, `.mli`, and `.opam` inputs
-plus exact `.ocamlformat`, `dune`, and `dune-project` metadata in extension and
-declared-source modes. Package digests sort normalized repository-relative
+Source selection now loads the complete checked 23-language, seven-role
+source-input registry from package data beside `hasher.ts`. It includes exact
+BUILD and capability inputs, language-specific root metadata, recursive
+sources, scoped resources and native companions, and the two exact registered
+TypeScript site roots. Declared-source mode retains required fixed inputs but
+uses explicit globs for other sources; unknown languages fail before walking.
+In a repository checkout, refresh the snapshot with
+`node scripts/sync-source-input-registry.mjs --sync` and verify it with
+`node scripts/sync-source-input-registry.mjs --check`. The maintenance script
+is not part of the installed package; runtime hashing never looks for the
+repository fixture. Repository-boundary shared inputs, reverse diff,
+and tracked-index stability remain separate work.
+
+Package digests sort normalized repository-relative
 paths by UTF-8 bytes and frame each path and exact raw file content with
 unsigned 64-bit big-endian lengths. A same-content rename therefore changes the
 cache identity without incorporating an absolute checkout prefix, host locale,

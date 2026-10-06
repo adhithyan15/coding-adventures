@@ -125,6 +125,18 @@ file, and places each frame in a nested SVG viewport so a frame can only ever
 paint inside its own panel. A tampered ledger therefore fails the build, and
 could at worst spoil the one frame it belongs to.
 
+**Tiny marks and one-frame strips.** Two layout rules keep the smallest strips
+readable. Every frame's box is the letter's ink plus fixed padding, so the panel
+zooms in on a dot-sized mark, and a pen line and pen dot sized for whole letters
+(26 and 34 font units) covered the mark. When a letter's whole pen path spans
+less than 150 font units (`TINY_STROKE_EXTENT`; today the nukta ़, Devanagari ं
+and Gujarati ં, at 44 to 60), the ledger draws the pen and the dot at
+`extent / 150` of their default size, never below 0.3 of it. Every other letter
+keeps the defaults. Separately, a strip of ONE frame (a dab such as ़ or ्, or
+Perso-Arabic ا) wraps its heading and citation at the width of a two-frame strip
+(310) instead of at its one 150-unit panel, which had made a figure three heading
+lines and ten citation lines tall. The panel keeps its size at the left margin.
+
 #### As built (HL-C443) — sequence strips
 
 A writing lesson that names several letters gets one `script-filmstrip` figure
@@ -212,6 +224,15 @@ side), and the consonant-sign pairs the bundled Noto Sans Gujarati reshapes,
 read from its GSUB table: the ligatures ણુ, રુ, રૂ and the "stem" forms 22
 consonants take before ુ and ૂ (`blws`), and જ and ૹ with ા, ી, ો and ૌ, whose
 ā bar joins the consonant (`psts`). So જો and બજાર stay undrawn.
+
+Every fused pair, Tamil's and Gujarati's, stands on a cited source:
+`FUSED_SIGN_PAIRS` is built only from `FUSED_SIGN_PAIR_SOURCES`, which groups
+the pairs under a citation (Unicode 17.0 §12.6.3, Figure 12-21 for Tamil; Noto
+Sans Gujarati 2.106's GSUB lookups by feature and number for Gujarati) and an
+HTTPS URL. A test holds each citation to its pairs both ways (it names every
+pair's letter and sign, and every letter it names has a pair), pins each
+source's pair count, and checks that the bundled Gujarati font is still the
+cited version.
 
 #### As built — Devanagari signs drawn alone
 

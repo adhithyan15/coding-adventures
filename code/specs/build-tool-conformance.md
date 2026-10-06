@@ -1010,6 +1010,22 @@ enumeration. Package-exact inputs require a canonical language-matched
 only the two registered exact `code/sites/<site>` roots. This adoption does not
 claim the separately owned repository-boundary or atomic native-snapshot work.
 
+The TypeScript build tool packages a byte-for-byte JSON snapshot of the same
+checked language registry beside its production hasher. A deterministic sync
+command refreshes only this package-data snapshot from the neutral fixture;
+the native suite compares complete structural equality, recomputes the
+domain-separated canonical digest, and drives every package-local neutral
+source-collection case through the production selector. Runtime collection
+loads installed package data only, never searches for the repository fixture.
+It resolves all seven roles with universal BUILD names, root-only capability
+and language metadata, exact package-root inputs, extension/declared
+precedence, and exact generated-component pruning. Unknown languages fail
+before enumeration. Exact package paths require a canonical
+`code/packages|programs/<lane>/<name...>` root matching the declared
+language; only the two registered TypeScript `code/sites/<site>` roots are
+also valid. This package-local adoption does not claim the separately owned
+repository-boundary reverse diff, tracked-index snapshot, or digest work.
+
 Swift and the shared C#/F# engine complete this package-local projection with
 the repository-relative boundary registry, tracked-regular-file evidence, and
 an exact reverse diff index. Their native readers remain responsible for

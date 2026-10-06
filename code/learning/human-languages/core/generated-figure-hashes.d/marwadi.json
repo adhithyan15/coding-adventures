@@ -32,8 +32,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "MW-W03-anusvara",
-      "sourceHash": "fnv1a64:25d92fd11f968e0f",
-      "svgHash": "fnv1a64:14eca191576a3a0a",
+      "sourceHash": "fnv1a64:4027ea2ccfd56f3f",
+      "svgHash": "fnv1a64:8833acbb719ebc5a",
       "svg": "marwadi/book/figures/MW-W03-anusvara-filmstrip.svg"
     },
     {
@@ -89,7 +89,7 @@
       "kind": "script-filmstrip",
       "lessonId": "MW-W05-virama",
       "sourceHash": "fnv1a64:32334d07fab36f37",
-      "svgHash": "fnv1a64:dae49f2d60712dbf",
+      "svgHash": "fnv1a64:731bfa15ed79fa57",
       "svg": "marwadi/book/figures/MW-W05-virama-filmstrip.svg"
     },
     {
@@ -200,8 +200,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "MW-W15-nukta",
-      "sourceHash": "fnv1a64:587692a575441429",
-      "svgHash": "fnv1a64:cd3ba1aea6488aec",
+      "sourceHash": "fnv1a64:d05f0b6035eac859",
+      "svgHash": "fnv1a64:f5f5fde338401616",
       "svg": "marwadi/book/figures/MW-W15-nukta-filmstrip.svg"
     },
     {

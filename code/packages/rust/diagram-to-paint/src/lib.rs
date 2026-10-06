@@ -2077,6 +2077,14 @@ enum CssColorMixSpace {
     Oklch,
 }
 
+#[derive(Clone, Copy)]
+enum CssHueInterpolation {
+    Shorter,
+    Longer,
+    Increasing,
+    Decreasing,
+}
+
 fn parse_css_color_mix_function(css: &str) -> Option<Color> {
     let source = css.trim().to_ascii_lowercase();
     let inner = source.strip_prefix("color-mix(")?.strip_suffix(')')?.trim();
@@ -2085,23 +2093,43 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
         return None;
     }
     let interpolation = parts[0].split_whitespace().collect::<Vec<_>>();
-    let space = match interpolation.as_slice() {
-        ["in", "srgb"] => CssColorMixSpace::Srgb,
-        ["in", "srgb-linear"] => CssColorMixSpace::SrgbLinear,
-        ["in", "display-p3"] => CssColorMixSpace::DisplayP3,
-        ["in", "a98-rgb"] => CssColorMixSpace::A98Rgb,
-        ["in", "prophoto-rgb"] => CssColorMixSpace::ProPhotoRgb,
-        ["in", "rec2020"] => CssColorMixSpace::Rec2020,
-        ["in", "xyz"] | ["in", "xyz-d65"] => CssColorMixSpace::XyzD65,
-        ["in", "xyz-d50"] => CssColorMixSpace::XyzD50,
-        ["in", "hsl"] => CssColorMixSpace::Hsl,
-        ["in", "hwb"] => CssColorMixSpace::Hwb,
-        ["in", "lab"] => CssColorMixSpace::Lab,
-        ["in", "lch"] => CssColorMixSpace::Lch,
-        ["in", "oklab"] => CssColorMixSpace::Oklab,
-        ["in", "oklch"] => CssColorMixSpace::Oklch,
+    let (space_name, hue_interpolation, explicit_hue_method) = match interpolation.as_slice() {
+        ["in", space] => (*space, CssHueInterpolation::Shorter, false),
+        ["in", space, method, "hue"] => {
+            let method = match *method {
+                "shorter" => CssHueInterpolation::Shorter,
+                "longer" => CssHueInterpolation::Longer,
+                "increasing" => CssHueInterpolation::Increasing,
+                "decreasing" => CssHueInterpolation::Decreasing,
+                _ => return None,
+            };
+            (*space, method, true)
+        }
         _ => return None,
     };
+    let space = match space_name {
+        "srgb" => CssColorMixSpace::Srgb,
+        "srgb-linear" => CssColorMixSpace::SrgbLinear,
+        "display-p3" => CssColorMixSpace::DisplayP3,
+        "a98-rgb" => CssColorMixSpace::A98Rgb,
+        "prophoto-rgb" => CssColorMixSpace::ProPhotoRgb,
+        "rec2020" => CssColorMixSpace::Rec2020,
+        "xyz" | "xyz-d65" => CssColorMixSpace::XyzD65,
+        "xyz-d50" => CssColorMixSpace::XyzD50,
+        "hsl" => CssColorMixSpace::Hsl,
+        "hwb" => CssColorMixSpace::Hwb,
+        "lab" => CssColorMixSpace::Lab,
+        "lch" => CssColorMixSpace::Lch,
+        "oklab" => CssColorMixSpace::Oklab,
+        "oklch" => CssColorMixSpace::Oklch,
+        _ => return None,
+    };
+    let polar = matches!(space,
+        CssColorMixSpace::Hsl | CssColorMixSpace::Hwb
+            | CssColorMixSpace::Lch | CssColorMixSpace::Oklch);
+    if explicit_hue_method && !polar {
+        return None;
+    }
     let (first_source, first_percentage) = parse_css_color_mix_stop(parts[1])?;
     let (second_source, second_percentage) = parse_css_color_mix_stop(parts[2])?;
     let first = parse_css_color(first_source)?;
@@ -2128,6 +2156,7 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
             let powerless = (first_components[0] == 0.0, second_components[0] == 0.0);
             fixup_css_polar_hues(
                 &mut first_components, &mut second_components, powerless.0, powerless.1,
+                hue_interpolation,
             );
         }
         CssColorMixSpace::Hwb => {
@@ -2137,18 +2166,21 @@ fn parse_css_color_mix_function(css: &str) -> Option<Color> {
             );
             fixup_css_polar_hues(
                 &mut first_components, &mut second_components, powerless.0, powerless.1,
+                hue_interpolation,
             );
         }
         CssColorMixSpace::Lch => {
             let powerless = (first_components[1] <= 0.02, second_components[1] <= 0.02);
             fixup_css_polar_hues(
                 &mut first_components, &mut second_components, powerless.0, powerless.1,
+                hue_interpolation,
             );
         }
         CssColorMixSpace::Oklch => {
             let powerless = (first_components[1] <= 0.000004, second_components[1] <= 0.000004);
             fixup_css_polar_hues(
                 &mut first_components, &mut second_components, powerless.0, powerless.1,
+                hue_interpolation,
             );
         }
         _ => {}
@@ -2318,6 +2350,7 @@ fn fixup_css_polar_hues(
     second: &mut [f64; 3],
     first_powerless: bool,
     second_powerless: bool,
+    interpolation: CssHueInterpolation,
 ) {
     if first_powerless {
         first[2] = second[2];
@@ -2326,9 +2359,31 @@ fn fixup_css_polar_hues(
         second[2] = first[2];
     }
     let turn = std::f64::consts::TAU;
-    let delta = (second[2] - first[2] + std::f64::consts::PI).rem_euclid(turn)
-        - std::f64::consts::PI;
-    second[2] = first[2] + delta;
+    match interpolation {
+        CssHueInterpolation::Shorter => {
+            let delta = (second[2] - first[2] + std::f64::consts::PI).rem_euclid(turn)
+                - std::f64::consts::PI;
+            second[2] = first[2] + delta;
+        }
+        CssHueInterpolation::Longer => {
+            let delta = second[2] - first[2];
+            if delta > 0.0 && delta < std::f64::consts::PI {
+                first[2] += turn;
+            } else if delta < 0.0 && delta > -std::f64::consts::PI {
+                second[2] += turn;
+            }
+        }
+        CssHueInterpolation::Increasing => {
+            if second[2] < first[2] {
+                second[2] += turn;
+            }
+        }
+        CssHueInterpolation::Decreasing => {
+            if first[2] < second[2] {
+                first[2] += turn;
+            }
+        }
+    }
 }
 
 fn split_css_top_level_commas(source: &str) -> Option<Vec<&str>> {
@@ -8445,6 +8500,30 @@ mod tests {
             Color { r: 255, g: 0, b: 0, a: 51 },
         );
         assert_eq!(with_opacity("color-mix(in hsl, black, white)", 0.5), "rgba(128,128,128,0.5)");
+    }
+
+    #[test]
+    fn css_colors_mix_with_explicit_hue_interpolation() {
+        assert_eq!(
+            css_to_color("color-mix(in hsl shorter hue, red, blue)"),
+            Color { r: 255, g: 0, b: 255, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in hsl longer hue, red, blue)"),
+            Color { r: 0, g: 255, b: 0, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in hsl increasing hue, red, blue)"),
+            Color { r: 0, g: 255, b: 0, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in hsl decreasing hue, red, blue)"),
+            Color { r: 255, g: 0, b: 255, a: 255 },
+        );
+        assert_eq!(
+            css_to_color("color-mix(in srgb longer hue, red, blue)"),
+            Color { r: 0, g: 0, b: 0, a: 255 },
+        );
     }
 
     #[test]
