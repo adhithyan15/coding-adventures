@@ -11,7 +11,7 @@ ramp: 0 lessons above 3 new atoms (110 unmeasurable, 100% measurable); 62 chapte
 script ramp: 30 lessons above 3 new glyphs; 0 opening more than 1 writing system at once; steepest RU-C01-privet at 14
 cousin layer: 216 lessons show another script (max 26 glyphs) — context, never charged to the budget
 script closure: 194 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
-exposure: 46 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1648 glyphs and makes 574 lessons clean on its own
+exposure: 46 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1646 glyphs and makes 573 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 156 of 29952 atoms never revisited (1%); missed windows R1 1746, R2 19993, R3 15989, R4 24333
 forward references: 1188 uses of material a later lesson teaches
@@ -128,7 +128,7 @@ info dump (report-only): 120 of 29470 lessons -- 32 rule statements, 91 paradigm
 lesson content budgets (report-only): 25078 of 29470 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
   annotation coverage: idioms 25078, senses 25079, culture claims 25078
 
-metalanguage: 54 of 54 grammar terms appear in 28533 lessons; 46672 uses come before introduction, of which 6562 are technical terms across 3774 lessons
+metalanguage: 54 of 54 grammar terms appear in 28533 lessons; 46676 uses come before introduction, of which 6562 are technical terms across 3774 lessons
   most-used-before-introduction: verb (2110 lessons), noun (1215 lessons), adjective (376 lessons), case (270 lessons), voice (264 lessons), pronoun (261 lessons)
 literal markup: none in 29470 lessons or any generated book
 glyph coverage: every character renders -- 135 main-font and 827 script characters across 5895 generated files

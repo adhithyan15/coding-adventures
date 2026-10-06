@@ -27,7 +27,7 @@
     "scriptRampOverBudgetLessons": 30,
     "lessonsOpeningMultipleScripts": 0,
     "scriptClosureViolations": 194,
-    "scriptExposureExemptedGlyphs": 1648,
+    "scriptExposureExemptedGlyphs": 1646,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
@@ -346232,8 +346232,8 @@
         "shownGlyphs": 69,
         "neverTaughtGlyphs": 0,
         "violations": 0,
-        "exposureOnly": 42,
-        "exposureExemptedGlyphs": 77,
+        "exposureOnly": 41,
+        "exposureExemptedGlyphs": 75,
         "headwordsWithoutRomanization": 0
       },
       {
@@ -347731,8 +347731,8 @@
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
       "violations": 194,
-      "exposureOnly": 574,
-      "exposureExemptedGlyphs": 1648,
+      "exposureOnly": 573,
+      "exposureExemptedGlyphs": 1646,
       "headwordsWithoutRomanization": 46,
       "tracksWithUnknownScript": 0
     },
@@ -453280,7 +453280,7 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28533,
-    "usesBeforeIntroduction": 46672,
+    "usesBeforeIntroduction": 46676,
     "technicalUsesBeforeIntroduction": 6562,
     "technicalLessons": 3774,
     "worstTerms": [
