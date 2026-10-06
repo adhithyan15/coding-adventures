@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16774,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16774",
+    "branch": "codex/parity-lua-source-hashing-20261006",
+    "implementation_revision": "d5e14d4159d4ea6372906ec39ee855d429e14b96",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-06T03:24:15Z",
-    "pr_number": 16770,
-    "status": "merged",
-    "notes": "All 33 final-head checks were terminal and acceptable (14 success, 18 expected skips, one neutral); GitHub reported MERGEABLE and the loop enabled guarded squash auto-merge. GitHub merged PR #16770 as 3054917763cf0bc2921398f59cc2d57a15fd4b33 without manual merge."
+    "observed_at": "2026-10-06T04:14:31Z",
+    "pr_number": 16774,
+    "status": "checks-pending",
+    "notes": "Ready-for-review Lua source-hashing PR opened at d5e14d4159d4ea6372906ec39ee855d429e14b96. GitHub reports MERGEABLE; detect, CodeQL, and human-language checks are queued. Do not enable auto-merge until every required final-head check is terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
     "revision": "317de0ca9c9dc852a58fdbe75e9aeb538a570fcb",
@@ -1737,10 +1743,10 @@
     {
       "id": "build-tool-lua-portable-source-hashing-conformance",
       "title": "Implement portable source hashing in the Lua build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-lua-dune-build-discovery-fixture-adoption", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension"],
       "branch": "codex/parity-lua-source-hashing-20261006",
-      "pr_number": null,
+      "pr_number": 16774,
       "selected_at": "2026-10-06T03:26:43Z",
       "selection_revision": "3054917763cf0bc2921398f59cc2d57a15fd4b33",
       "selection_notes": "Selected after #16770 auto-merged, exact-main schema-3 collision check confirmed 15 lanes, 1,487 identities, 4,757 slots, 262 high-consensus missing slots, and no package topology changes; five additional neutral-contract owners were registered before selection. All six prerequisites are merged and no live PR overlaps the Lua build-tool, neutral fixture, ledger, or roadmap paths. The process-free source hashing core directly unlocks dependency hashing and several downstream Lua owners; native snapshot and persistence authority remain separate and selection-blocked. Use the fresh clean main-based Lua worktree, not the prior merged TypeScript branch.",
