@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16794,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16794",
+    "branch": "codex/parity-elixir-source-hashing-20261006",
+    "implementation_revision": "3f78744158b26dcf0a60eb817f3e9514d136935b",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-06T09:01:38Z",
-    "pr_number": 16787,
-    "status": "merged",
-    "notes": "All final-head checks were terminal and acceptable and GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge merged PR #16787 as 2ec42cd3e02a2ec98bf4c9f1d8121524a6cccdc9 without manual merge."
+    "observed_at": "2026-10-06T09:58:50Z",
+    "pr_number": 16794,
+    "status": "checks-pending",
+    "notes": "Ready-for-review Elixir Source Inputs and Hashing v1 PR opened at 3f78744158b26dcf0a60eb817f3e9514d136935b after local native/dependency tests, neutral corpus, build-file dry run, scoped format/lint/diff, and round-2 security review. GitHub reports MERGEABLE but BLOCKED while CI is being reported; do not enable auto-merge until final-head checks are terminal and acceptable."
   },
   "last_inventory": {
     "revision": "2ec42cd3e02a2ec98bf4c9f1d8121524a6cccdc9",
@@ -1470,10 +1476,11 @@
     {
       "id": "build-tool-elixir-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Elixir build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-elixir-glob-matcher-complexity-hardening"],
       "branch": "codex/parity-elixir-source-hashing-20261006",
-      "pr_number": null,
+      "pr_number": 16794,
+      "opened_at": "2026-10-06T09:58:50Z",
       "selected_at": "2026-10-06T09:04:00Z",
       "selection_revision": "2ec42cd3e02a2ec98bf4c9f1d8121524a6cccdc9",
       "selection_notes": "Selected after #16787 merged through guarded auto-merge and the exact-main 15-lane inventory stayed collision-clean with unchanged 1,487 package identities and 4,757 slots. Parallel read-only audits found no new unowned package, build-tool, or OCaml promotion gap. All six prerequisites are merged, no live PR touches Elixir build-tool files, and this process-free source collector unblocks seven unfinished descendants. Use the fresh clean main-based Elixir worktree; keep dependency hashing, native retained-handle snapshot authority, cache persistence, and adapter activation separate.",
