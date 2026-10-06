@@ -1939,10 +1939,13 @@
     {
       "id": "build-tool-perl-dune-build-discovery-fixture-adoption",
       "title": "Make Perl consume the Dune discovery fixture",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-generated-directory-hashing-conformance-corpus"],
-      "branch": null,
+      "branch": "codex/parity-perl-dune-20261006",
       "pr_number": null,
+      "selected_at": "2026-10-06T04:32:09Z",
+      "selection_revision": "5bce810b2aad798b5be2d2035142cb65db7cf832",
+      "selection_notes": "Selected after #16774 auto-merged, exact-main collision report confirmed 15 lanes, 1,487 identities, 4,757 slots, five emerging OCaml packages, and zero collisions. Both prerequisites are merged; this narrow fixture owner reaches 12 unfinished downstream owners and does not overlap any open PR. Register the newly discovered stack-VM neutral owner before selection. Keep full OCaml source hashing, declared-source plumbing, and native snapshot authority outside this slice.",
       "notes": "Perl already prunes exact _build but does not consume the shared language-registry fixture. Add independent exact _build evidence through both Discovery and Hasher, consuming the shared generated-directory hashing corpus, and change behavior only if that evidence exposes a real divergence."
     },
     {

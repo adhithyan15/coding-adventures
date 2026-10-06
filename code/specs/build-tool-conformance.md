@@ -423,6 +423,16 @@ components such as `_Build` and `_build-example` remain discoverable. The same
 shared language-registry fixture makes this exact-component rule normative for
 every discovery implementation.
 
+The Perl Dune-discovery adopter MUST independently project the checked OCaml
+package and `_build` decoy records from that fixture through its production
+Discovery walk. It MUST also prove that `_Build` and `_build-example` remain
+discoverable. Its production Hasher MUST consume the shared generated-directory
+source cases by projecting those exact path components to Perl-eligible source
+files; the projection proves pruning behavior, not OCaml `.ml` recognition or
+full source-input registry adoption. The OCaml program identity and complete
+multi-lane discovery registry remain governed by the broader discovery
+contract and are not evidence furnished by this Perl-specific slice.
+
 If two discovered directories still produce one qualified name, discovery
 fails with `DUPLICATE_PACKAGE_IDENTITY`. The diagnostic includes the duplicate
 package identity and every repository-relative package path in sorted order;
