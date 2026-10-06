@@ -1,0 +1,12 @@
+{
+  "id": "PA-EXT-154-A1-AGE-PHONE-DATE-FORM",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can select only taught fictional age, phone, and date values from one nonverbal cue, write all three Gurmukhi form fields without a visible answer model, and repair selection, digit order, date format, spelling, spacing, and placement in separate passes.",
+  "prerequisites": [
+    "PA-EXT-036-A1-AGE-FIELD",
+    "PA-EXT-037-A1-PHONE-FIELD",
+    "PA-EXT-153-A1-DATE-FIELD"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W10-form-repair-layout",
+    "language": "punjabi",
+    "chapter": 154,
+    "sequence": 8430,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:603084bc60f784a2",
+    "detachableSegments": [
+      "Writing — three different layout passes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

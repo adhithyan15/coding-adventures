@@ -1,0 +1,22 @@
+{
+  "chapter": 154,
+  "title": "Join Three Fictional Form Fields",
+  "label": "ch:pa-form-age-phone-date-checkpoint",
+  "canDo": "I can choose taught fictional age, phone, and date values from one nonverbal cue, write the three Gurmukhi fields without a visible answer model, and check each error dimension separately.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W10-form-no-model",
+    "kind": "production",
+    "summary": "The learner fills age, phone, and date lines from one remembered selector without romanization or copyable answers, then repairs selection, digit order, date format, spelling, spacing, and placement in separate passes.",
+    "assesses": [
+      "PA-FORM-LABEL-AGE-01",
+      "PA-FORM-LABEL-PHONE-01",
+      "PA-FORM-LABEL-DATE-01",
+      "PA-FORM-AGE-PHONE-DATE-CUE-01",
+      "PA-FORM-AGE-PHONE-DATE-ORDER-01",
+      "PA-FORM-AGE-PHONE-DATE-REPAIR-01"
+    ]
+  }
+}
