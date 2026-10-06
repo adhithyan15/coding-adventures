@@ -1855,7 +1855,28 @@ pub fn build_package_with_profile_runtime_and_tokens(
     runtime_library: Option<&Path>,
     tokens: &mosstyle_compiler::TokenOverrides,
 ) -> Result<BuildResult, BuildError> {
+    build_package_with_ios_ui_tests(opts, profile, runtime_library, tokens, &[])
+}
+
+/// [`build_package_with_profile_runtime_and_tokens`], plus XCUITest sources
+/// for the iOS app (UI89 §4.3, `mosaic-compile pkg --ios-ui-test`).
+///
+/// Each file is copied to `swiftui/UITests/<name>` and compiled by a UI test
+/// bundle beside the app target, and a shared scheme is written so
+/// `xcodebuild test` can run it. Only an iOS app build takes them (SwiftUI,
+/// `--emit-project`, an `.xcframework` runtime). Each must be a regular
+/// `.swift` file whose name is plain (`^[A-Za-z0-9_]+\.swift$`), and only that
+/// name reaches the project. With none, the build is exactly
+/// [`build_package_with_profile_runtime_and_tokens`]'s.
+pub fn build_package_with_ios_ui_tests(
+    opts: &BuildOptions,
+    profile: BuildProfile,
+    runtime_library: Option<&Path>,
+    tokens: &mosstyle_compiler::TokenOverrides,
+    ios_ui_tests: &[PathBuf],
+) -> Result<BuildResult, BuildError> {
     validate_runtime_library_selection(opts, runtime_library)?;
+    validate_ios_ui_tests(opts, runtime_library, ios_ui_tests)?;
     let report = analyze_package_degradations_with_runtime_and_tokens(
         opts,
         profile,
@@ -1875,7 +1896,8 @@ pub fn build_package_with_profile_runtime_and_tokens(
         });
     }
 
-    let mut result = build_package_inner(opts, Some(profile), runtime_library, tokens)?;
+    let mut result =
+        build_package_inner(opts, Some(profile), runtime_library, tokens, ios_ui_tests)?;
     // Filled in after emission, from what the build actually overwrote — the
     // analysis pass above cannot know, because it writes nothing.
     let mut report = report;
@@ -2734,7 +2756,7 @@ pub fn build_package_with_tokens(
     opts: &BuildOptions,
     tokens: &mosstyle_compiler::TokenOverrides,
 ) -> Result<BuildResult, BuildError> {
-    build_package_inner(opts, None, None, tokens)
+    build_package_inner(opts, None, None, tokens, &[])
 }
 
 fn build_package_inner(
@@ -2742,6 +2764,7 @@ fn build_package_inner(
     profile: Option<BuildProfile>,
     runtime_library: Option<&Path>,
     tokens: &mosstyle_compiler::TokenOverrides,
+    ios_ui_tests: &[PathBuf],
 ) -> Result<BuildResult, BuildError> {
     // ----- 1. Validate the backend up front --------------------------------
     //
@@ -3058,7 +3081,12 @@ fn build_package_inner(
             components_built.first(),
             runtime_library.is_some_and(is_xcframework),
         ) {
-            artifacts.extend(write_ios_app_project(&manifest, &backend_dir, root_component)?);
+            artifacts.extend(write_ios_app_project(
+                &manifest,
+                &backend_dir,
+                root_component,
+                ios_ui_tests,
+            )?);
         }
     }
 
@@ -3757,9 +3785,33 @@ fn write_ios_app_project(
     manifest: &MosaicPackage,
     backend_dir: &Path,
     root_component: &str,
+    ios_ui_tests: &[PathBuf],
 ) -> Result<Vec<PathBuf>, BuildError> {
     const LOADER_INCLUDE: &str = "Sources/CMosaicRuntime/include";
     let mut written = Vec::new();
+
+    // XCUITest sources (UI89 §4.3), copied by their plain name only; they
+    // were checked by `validate_ios_ui_tests` before anything was written.
+    let mut ui_test_sources = Vec::new();
+    for source in ios_ui_tests {
+        let name = ios_ui_test_name(source)?;
+        let relative = format!("{IOS_UI_TESTS_DIR}/{name}");
+        let target = backend_dir.join(&relative);
+        if let Some(parent) = target.parent() {
+            create_dir_all(parent)?;
+        }
+        write_file(
+            &target,
+            &fs::read(source).map_err(|error| {
+                BuildError::Io(format!(
+                    "cannot read iOS UI test {}: {error}",
+                    source.display()
+                ))
+            })?,
+        )?;
+        written.push(target);
+        ui_test_sources.push(relative);
+    }
 
     let module_map = backend_dir.join(LOADER_INCLUDE).join("module.modulemap");
     write_file(
@@ -3798,6 +3850,7 @@ fn write_ios_app_project(
         // The project lives in iOS/, so `xcodebuild` in the package directory
         // still builds the Swift package rather than picking this project up.
         source_root: "..".to_string(),
+        ui_test_sources,
     };
     let project = mosaic_ios_project::project_pbxproj(&app)
         .map_err(|error| BuildError::Io(format!("iOS app project: {error}")))?;
@@ -3807,7 +3860,90 @@ fn write_ios_app_project(
     }
     write_file(&project_path, project.as_bytes())?;
     written.push(project_path);
+    // `xcodebuild test` needs a scheme; there is one only with UI tests.
+    if let Some(scheme) = mosaic_ios_project::shared_scheme(&app, "App.xcodeproj")
+        .map_err(|error| BuildError::Io(format!("iOS app scheme: {error}")))?
+    {
+        let scheme_path = backend_dir.join("iOS/App.xcodeproj/xcshareddata/xcschemes/App.xcscheme");
+        if let Some(parent) = scheme_path.parent() {
+            create_dir_all(parent)?;
+        }
+        write_file(&scheme_path, scheme.as_bytes())?;
+        written.push(scheme_path);
+    }
     Ok(written)
+}
+
+/// Where the builder copies XCUITest sources, inside `swiftui/`.
+const IOS_UI_TESTS_DIR: &str = "UITests";
+
+/// A UI test source's name, if it is a plain `.swift` file name
+/// (`^[A-Za-z0-9_]+\.swift$`). Only this name reaches the Xcode project, so
+/// the caller's directories never do.
+fn ios_ui_test_name(source: &Path) -> Result<String, BuildError> {
+    let refuse = |reason: &'static str| BuildError::UnsafePath {
+        kind: "--ios-ui-test",
+        path: source.display().to_string(),
+        reason,
+    };
+    let name = source
+        .file_name()
+        .and_then(|name| name.to_str())
+        .ok_or_else(|| refuse("has no file name"))?;
+    let Some(stem) = name.strip_suffix(".swift") else {
+        return Err(refuse("must be a .swift file"));
+    };
+    if stem.is_empty()
+        || !stem
+            .chars()
+            .all(|character| character.is_ascii_alphanumeric() || character == '_')
+    {
+        return Err(refuse(
+            "must be named with letters, digits and _ only, then .swift",
+        ));
+    }
+    Ok(name.to_string())
+}
+
+/// UI tests (UI89 §4.3) belong to an iOS app build only, and each must be a
+/// regular file with a plain name, named once. Checked before anything is
+/// emitted, so a refused test leaves nothing half-written.
+fn validate_ios_ui_tests(
+    opts: &BuildOptions,
+    runtime_library: Option<&Path>,
+    ios_ui_tests: &[PathBuf],
+) -> Result<(), BuildError> {
+    if ios_ui_tests.is_empty() {
+        return Ok(());
+    }
+    if !(opts.backend == Backend::SwiftUI
+        && opts.emit_project
+        && runtime_library.is_some_and(is_xcframework))
+    {
+        return Err(BuildError::Io(
+            "--ios-ui-test needs an iOS app build: --backend swiftui --emit-project with an .xcframework --runtime-library"
+                .to_string(),
+        ));
+    }
+    let mut names = HashSet::new();
+    for source in ios_ui_tests {
+        let name = ios_ui_test_name(source)?;
+        if !fs::symlink_metadata(source).is_ok_and(|meta| meta.is_file()) {
+            return Err(BuildError::UnsafePath {
+                kind: "--ios-ui-test",
+                path: source.display().to_string(),
+                reason: "must be a regular file, not a link or a directory",
+            });
+        }
+        if !names.insert(name.clone()) {
+            return Err(BuildError::UnsafePath {
+                kind: "--ios-ui-test",
+                path: source.display().to_string(),
+                reason: "names a file another --ios-ui-test already named",
+            });
+        }
+    }
+    Ok(())
 }
 
 /// Every `.{extension}` file under `backend_dir/relative`, as sorted
@@ -14555,6 +14691,184 @@ layout NativeEvents {
         )
         .unwrap();
         assert!(module_map.contains("module CMosaicRuntime"));
+    }
+
+    /// UI89 §4.3: `--ios-ui-test` adds the XCUITest bundle and the shared
+    /// scheme `xcodebuild test` runs; without it neither exists.
+    #[test]
+    fn ios_ui_tests_add_a_test_target_and_a_scheme() {
+        let pkg = card_package();
+        let framework = fake_xcframework(pkg.path());
+        let test = pkg.path().join("CardUiTests.swift");
+        fs::write(
+            &test,
+            b"import XCTest\nfinal class CardUiTests: XCTestCase {}\n",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_ios_ui_tests(
+            &swiftui_options(&pkg, &out, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+            &mosstyle_compiler::TokenOverrides::default(),
+            std::slice::from_ref(&test),
+        )
+        .expect("iOS app with a UI test");
+
+        let copied = out.path().join("swiftui/UITests/CardUiTests.swift");
+        assert_eq!(fs::read(&copied).unwrap(), fs::read(&test).unwrap());
+        assert!(result.artifacts.contains(&copied));
+        let project =
+            fs::read_to_string(out.path().join("swiftui/iOS/App.xcodeproj/project.pbxproj"))
+                .unwrap();
+        assert!(
+            project.contains("path = \"UITests/CardUiTests.swift\";"),
+            "{project}"
+        );
+        assert!(
+            project.contains("com.apple.product-type.bundle.ui-testing"),
+            "{project}"
+        );
+        assert!(project.contains("TEST_TARGET_NAME = \"App\";"), "{project}");
+        // Only the plain name reaches the project, never the caller's path.
+        assert!(
+            !project.contains(&pkg.path().display().to_string()),
+            "{project}"
+        );
+        let scheme_path = out
+            .path()
+            .join("swiftui/iOS/App.xcodeproj/xcshareddata/xcschemes/App.xcscheme");
+        assert!(result.artifacts.contains(&scheme_path));
+        let scheme = fs::read_to_string(&scheme_path).unwrap();
+        assert!(
+            scheme.contains("BuildableName = \"AppUITests.xctest\""),
+            "{scheme}"
+        );
+
+        // The same build without the flag: one target, no scheme, no copy.
+        let plain = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &plain, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+        )
+        .expect("iOS app without UI tests");
+        let project = fs::read_to_string(
+            plain
+                .path()
+                .join("swiftui/iOS/App.xcodeproj/project.pbxproj"),
+        )
+        .unwrap();
+        assert_eq!(project.matches("isa = PBXNativeTarget;").count(), 1);
+        assert!(!plain
+            .path()
+            .join("swiftui/iOS/App.xcodeproj/xcshareddata")
+            .exists());
+        assert!(!plain.path().join("swiftui/UITests").exists());
+    }
+
+    #[test]
+    fn ios_ui_tests_are_refused_outside_an_ios_app_build_or_with_a_bad_name() {
+        let pkg = card_package();
+        let framework = fake_xcframework(pkg.path());
+        let good = pkg.path().join("CardUiTests.swift");
+        fs::write(&good, b"import XCTest\n").unwrap();
+        let tokens = mosstyle_compiler::TokenOverrides::default();
+        let build = |backend: Backend, runtime: Option<&Path>, tests: &[PathBuf]| {
+            let out = TempDir::new().unwrap();
+            let result = build_package_with_ios_ui_tests(
+                &swiftui_options(&pkg, &out, backend),
+                BuildProfile::Permissive,
+                runtime,
+                &tokens,
+                tests,
+            );
+            (out, result)
+        };
+
+        // Not an iOS app: no .xcframework, or not SwiftUI.
+        let (_, result) = build(Backend::SwiftUI, None, std::slice::from_ref(&good));
+        assert!(
+            matches!(result, Err(BuildError::Io(ref message)) if message.contains("--ios-ui-test")),
+            "{result:?}"
+        );
+        let (_, result) = build(Backend::Compose, None, std::slice::from_ref(&good));
+        assert!(matches!(result, Err(BuildError::Io(_))), "{result:?}");
+
+        // Names that are not plain .swift names, and the same name twice.
+        let other_dir = pkg.path().join("other");
+        fs::create_dir_all(&other_dir).unwrap();
+        fs::write(other_dir.join("CardUiTests.swift"), b"").unwrap();
+        for (name, body) in [
+            ("Card-UiTests.swift", Some(&b""[..])),
+            ("Card UiTests.swift", Some(&b""[..])),
+            ("CardUiTests.swift.txt", Some(&b""[..])),
+            (".swift", Some(&b""[..])),
+        ] {
+            let path = pkg.path().join(name);
+            if let Some(body) = body {
+                fs::write(&path, body).unwrap();
+            }
+            let (out, result) = build(Backend::SwiftUI, Some(&framework), &[path]);
+            assert!(
+                matches!(
+                    result,
+                    Err(BuildError::UnsafePath {
+                        kind: "--ios-ui-test",
+                        ..
+                    })
+                ),
+                "{name}: {result:?}"
+            );
+            // Refused before anything was emitted.
+            assert!(!out.path().join("swiftui").exists(), "{name}");
+        }
+        let (_, result) = build(
+            Backend::SwiftUI,
+            Some(&framework),
+            &[good.clone(), other_dir.join("CardUiTests.swift")],
+        );
+        assert!(
+            matches!(
+                result,
+                Err(BuildError::UnsafePath {
+                    kind: "--ios-ui-test",
+                    ..
+                })
+            ),
+            "{result:?}"
+        );
+
+        // A directory, and (on Unix) a link, are not regular files.
+        let directory = pkg.path().join("DirUiTests.swift");
+        fs::create_dir_all(&directory).unwrap();
+        let (_, result) = build(Backend::SwiftUI, Some(&framework), &[directory]);
+        assert!(
+            matches!(
+                result,
+                Err(BuildError::UnsafePath {
+                    kind: "--ios-ui-test",
+                    ..
+                })
+            ),
+            "{result:?}"
+        );
+        #[cfg(unix)]
+        {
+            let link = pkg.path().join("LinkUiTests.swift");
+            std::os::unix::fs::symlink(&good, &link).unwrap();
+            let (_, result) = build(Backend::SwiftUI, Some(&framework), &[link]);
+            assert!(
+                matches!(
+                    result,
+                    Err(BuildError::UnsafePath {
+                        kind: "--ios-ui-test",
+                        ..
+                    })
+                ),
+                "{result:?}"
+            );
+        }
     }
 
     #[test]

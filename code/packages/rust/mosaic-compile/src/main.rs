@@ -37,7 +37,7 @@ use mosaic_emit_html::HtmlRenderer;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
 use mosaic_package_artifact_builder::{
-    build_package_with_profile_runtime_and_tokens, compose_component_with_model,
+    build_package_with_ios_ui_tests, compose_component_with_model,
     compose_component_with_model_in_package, Backend, BuildOptions, BuildProfile,
 };
 use mosaic_vm::MosaicVM;
@@ -1479,7 +1479,7 @@ fn pkg_profile_from_str(value: &str) -> Option<BuildProfile> {
 /// Spec (mosaic-compile.json):
 ///
 /// ```text
-/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|electron|swiftui|qt|xaml|webcomponent|html|flutter|compose> --output <DIR> [--emit-project] [--profile permissive|native-complete]
+/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|electron|swiftui|qt|xaml|webcomponent|html|flutter|compose> --output <DIR> [--emit-project] [--profile permissive|native-complete] [--ios-ui-test <FILE.swift>]...
 /// ```
 ///
 /// Required: `package_root` positional, `--backend`, `--output`. cli-builder
@@ -1536,6 +1536,20 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         .get("runtime-library")
         .and_then(|value| value.as_str())
         .map(PathBuf::from);
+
+    // XCUITest sources for the iOS app (UI89 §4.3), in the order given. The
+    // builder checks each name and where it may be used.
+    let ios_ui_tests: Vec<PathBuf> = flags
+        .get("ios-ui-test")
+        .and_then(|value| value.as_array())
+        .map(|values| {
+            values
+                .iter()
+                .filter_map(|value| value.as_str())
+                .map(PathBuf::from)
+                .collect()
+        })
+        .unwrap_or_default();
 
     let token_palette = flags
         .get("token-palette")
@@ -1601,11 +1615,12 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         theme: theme.map(|s| s.to_string()),
     };
 
-    match build_package_with_profile_runtime_and_tokens(
+    match build_package_with_ios_ui_tests(
         &opts,
         profile,
         runtime_library.as_deref(),
         &token_palette,
+        &ios_ui_tests,
     ) {
         Ok(result) => {
             for path in &result.artifacts {

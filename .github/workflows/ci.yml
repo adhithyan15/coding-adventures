@@ -2791,8 +2791,9 @@ jobs:
         if: runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'
         shell: bash
         # 16 minutes before Journal's iOS gate (UI89 §2.4) joined it, about 25
-        # after; Engram's (§2.5) adds a second engine and app build.
-        timeout-minutes: 60
+        # after; Engram's (§2.5) adds a second engine and app build, and
+        # Journal's XCUITest (§4.3) a test build and run on the iPad.
+        timeout-minutes: 75
         run: |
           set -euo pipefail
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
@@ -3123,7 +3124,9 @@ jobs:
           journal_ios_runtime="$RUNNER_TEMP/JournalAppRuntime.xcframework"
           bash code/scripts/build-mosaic-xcframework.sh journal-mosaic-app "$journal_ios_runtime"
           journal_ios_output="$RUNNER_TEMP/mosaic-swift-journal-ios-linked"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend swiftui --output "$journal_ios_output" --emit-project --profile native-complete --runtime-library "$journal_ios_runtime"
+          # Journal's XCUITest (UI89 §4.3) goes into the project as a UI test
+          # bundle with a shared scheme; it runs on the iPad below.
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend swiftui --output "$journal_ios_output" --emit-project --profile native-complete --runtime-library "$journal_ios_runtime" --ios-ui-test code/packages/rust/journal-mosaic-app/conformance/swiftui-ios/JournalUiTests.swift
           jq -e '.replacedGeneratedFiles == []' "$journal_ios_output/swiftui/mosaic-degradations.json"
           jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_ios_output/swiftui/mosaic-degradations.json"
           test -f "$journal_ios_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
@@ -3151,6 +3154,20 @@ jobs:
           # for its PID, so the label is matched exactly with a numeric PID.
           ipad_services="$(xcrun simctl spawn "$ipad" launchctl list)"
           awk -v b=dev.codingadventures.journalapp '$1 ~ /^[0-9]+$/ && ($3 == b || index($3, "UIKitApplication:" b "[") == 1) { f = 1 } END { exit !f }' <<< "$ipad_services"
+          # A person's use of it (UI89 §4.3): write, save and delete entries
+          # through the generated controls, in landscape so both columns of
+          # the split are on screen, and find the survivor after a relaunch.
+          # Uninstalled first, so launch 1 starts without the state the launch
+          # above left; `xcodebuild test` installs the app fresh.
+          xcrun simctl uninstall "$ipad" dev.codingadventures.journalapp
+          journal_ui_test_log="$RUNNER_TEMP/mosaic-journal-ios-ui-test.log"
+          (
+            cd "$journal_ios_output/swiftui/iOS"
+            xcodebuild test -project App.xcodeproj -scheme App -destination "platform=iOS Simulator,id=$ipad" -derivedDataPath "$RUNNER_TEMP/mosaic-journal-ios-ui-test" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$journal_ui_test_log"
+          )
+          # The count, not just the exit status: a test that was never compiled
+          # in, or was filtered out, would leave xcodebuild green.
+          grep -q 'Executed 1 test, with 0 failures' "$journal_ui_test_log"
           xcrun simctl shutdown "$ipad"
 
           # ---- Engram on iOS and iPadOS (UI89 §2.5, step 7). ----------------

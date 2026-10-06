@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **iPadOS UI test.** New `conformance/swiftui-ios/JournalUiTests.swift`, an
+  XCUITest that CI compiles into the iOS project (`--ios-ui-test`) and runs on
+  the iPad simulator (UI89 §4.3). It runs the same steps as the Android test
+  and also terminates and relaunches the app. It runs in landscape so both
+  columns of the navigation split are on screen; on an iPhone the split
+  collapses into a stack.
+
 - **Android UI test.** New `conformance/compose-android/JournalAndroidUiTest.kt`,
   run by CI on the x86_64 emulator (UI89 §4.2). It is the desktop
   JournalUiTest on a phone: it writes, saves and deletes entries through the

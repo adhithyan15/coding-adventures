@@ -1047,6 +1047,22 @@ cold launches against one state file:
   -destination 'platform=iOS Simulator,id=<udid>' CODE_SIGNING_ALLOWED=NO`
   on the simulator the gate already picked, after the gate. Test bundles
   need no signing on the simulator.
+- **As built.**
+  - **The test runs on the iPad simulator, in landscape.** The app shell's
+    `NavigationSplitView` (`collapse: auto`) collapses into a stack on an
+    iPhone, so the editor is a navigation push away from the timeline, and
+    an XCUITest touches only what is on screen. On a landscape iPad both
+    columns are showing.
+  - **Before each Save it hides the software keyboard** when one is up,
+    since that keyboard covers the bottom of a landscape iPad.
+  - **It runs after the iPad launch check.** The app is uninstalled first,
+    and the step requires `Executed 1 test, with 0 failures` in the log.
+  - **The builder.** It takes the sources through
+    `build_package_with_ios_ui_tests`, which
+    `build_package_with_profile_runtime_and_tokens` now calls with none, so
+    its many callers are unchanged. `mosaic-ios-project` names the bundle
+    `<product>UITests`, gives it the app's bundle identifier plus
+    `.uitests`, and checks its sources like every other path.
 
 ### 4.4 Engram: the picker round trip (after 4.2 and 4.3)
 

@@ -2,6 +2,17 @@
 
 ## 0.1.0 — unreleased
 
+- **UI test bundle and shared scheme (UI89 §4.3).** `IosApp.ui_test_sources`
+  (empty by default) adds a `com.apple.product-type.bundle.ui-testing` target.
+  It is named `<product>UITests`, its bundle identifier is the app's plus
+  `.uitests`, and `TEST_TARGET_NAME` names the app. A
+  `PBXTargetDependency` on the app means `xcodebuild test` builds the app
+  first. Its sources compile in its own phase, never the app's. The paths
+  are checked like every other path.
+  - `shared_scheme` returns the scheme XML (build, launch, and test with the
+    bundle), with every attribute value XML-escaped, or `None` without UI
+    tests. Without them the project is byte-for-byte what it was.
+  - `cargo fmt` was applied to the whole file with this change.
 - **New crate (UI89 §2.2).** `project_pbxproj` writes the Xcode project for a
   Mosaic app on iOS and iPadOS: one application target for iPhone and iPad,
   the generated Swift and the C runtime loader, the runtime `.xcframework`
