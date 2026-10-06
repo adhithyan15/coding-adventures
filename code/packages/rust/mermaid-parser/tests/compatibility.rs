@@ -473,6 +473,12 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.columns[0].classes, ["backlog"]);
             assert_eq!(board.columns[0].cards[0].classes, ["urgent", "blocked"]);
         }
+        if id == "ticket-base-url" {
+            assert_eq!(
+                board.ticket_base_url.as_deref(),
+                Some("https://tracker.example/issues/#TICKET#")
+            );
+        }
     }
 }
 
