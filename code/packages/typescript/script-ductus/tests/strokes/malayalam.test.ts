@@ -507,3 +507,264 @@ describe("Malayalam consonants cited to Thooval", () => {
     });
   }
 });
+
+// Glyphs cited to Rodney F. Moag's Malayalam: A University Course and Reference
+// Grammar (facts only; CC BY-NC-SA 4.0, nothing copied). Moag numbers MOVEMENTS,
+// not pen lifts, so each glyph is one continuous run whose segments are Moag's
+// numbered movements, in order; the scan page is pinned at the digital
+// edition's commit.
+const MOAG_GLYPHS: ReadonlyArray<
+  readonly [glyph: string, scan: string, labels: readonly string[]]
+> = [
+  [
+    "ക",
+    "035",
+    [
+      "climb clockwise over the top loop",
+      "round the bottom to the left",
+      "climb the middle stem",
+      "retrace down into the left bowl",
+      "round the left bowl to the bar",
+      "draw the crossbar to the right",
+      "curl the right hook down",
+    ],
+  ],
+  [
+    "യ",
+    "040",
+    [
+      "curve down round the left bowl",
+      "climb to the top of the middle loop",
+      "come back down its inner side",
+      "round the right bowl to the top",
+    ],
+  ],
+  [
+    "ഏ",
+    "028",
+    [
+      "climb clockwise over the small arch",
+      "run right along the bar",
+      "climb the stem",
+      "retrace it down and round the loop",
+      "climb clockwise over the big arch",
+      "come down to the middle",
+      "round the lower bowl",
+    ],
+  ],
+  [
+    "ഖ",
+    "035",
+    [
+      "circle the small inner loop",
+      "arch over and down to the base",
+      "run right along the base",
+      "climb the upright to the top",
+    ],
+  ],
+  [
+    "ങ",
+    "035",
+    [
+      "circle the small inner loop",
+      "arch over to the stem",
+      "descend the stem to the line",
+      "climb back and round the top bowl",
+      "round the lower bowl",
+    ],
+  ],
+  [
+    "ച",
+    "036",
+    [
+      "curl clockwise over the top",
+      "run left along the base",
+      "run back right along the base",
+      "climb the upright to the top",
+    ],
+  ],
+  [
+    "ഛ",
+    "036",
+    [
+      "curl clockwise over the top",
+      "run left along the base",
+      "run back right along the base",
+      "climb clockwise over the big arch",
+      "curl up round the inner loop",
+    ],
+  ],
+  [
+    "ഞ",
+    "036",
+    [
+      "circle the small inner loop",
+      "arch over to the stem",
+      "descend the stem to the line",
+      "climb the stem again",
+      "loop over and round the oval",
+      "arch over the right side",
+      "come down to the right foot",
+    ],
+  ],
+  [
+    "ഥ",
+    "038",
+    [
+      "descend the left stem",
+      "run right along the base",
+      "climb, arch over and come down",
+    ],
+  ],
+  [
+    "ധ",
+    "038",
+    [
+      "curve down round the left bowl",
+      "climb the middle stem",
+      "retrace the stem down",
+      "round the right bowl to the top",
+    ],
+  ],
+  [
+    "ഭ",
+    "039",
+    [
+      "climb clockwise over the top",
+      "come down into the middle",
+      "curl left, then right",
+      "round the lower bowl to the left",
+    ],
+  ],
+  [
+    "ഫ",
+    "039",
+    [
+      "climb clockwise over the small arch",
+      "run right along the base",
+      "climb, arch over and come down",
+    ],
+  ],
+  [
+    "ള",
+    "041",
+    [
+      "circle the small inner loop",
+      "arch over and down to the middle",
+      "round the right side to the left",
+      "loop down and run right below",
+    ],
+  ],
+  [
+    "ം",
+    "034",
+    [
+      "circle clockwise",
+    ],
+  ],
+  [
+    "ാ",
+    "030",
+    [
+      "curve clockwise round to the foot",
+    ],
+  ],
+  [
+    "ി",
+    "030",
+    [
+      "arch over and draw the stem down",
+    ],
+  ],
+  [
+    "ീ",
+    "030",
+    [
+      "circle the small loop",
+      "arch over and draw the stem down",
+    ],
+  ],
+  [
+    "ു",
+    "031",
+    [
+      "draw the stem down from the hook",
+      "round the left side and bottom",
+      "climb its right side",
+    ],
+  ],
+  [
+    "ൂ",
+    "031",
+    [
+      "draw the stem down from the hook",
+      "round the left side and bottom",
+      "climb its right side",
+      "circle the small inner loop",
+    ],
+  ],
+  [
+    "ൃ",
+    "031",
+    [
+      "draw the stem down",
+      "circle the loop clockwise",
+    ],
+  ],
+  [
+    "െ",
+    "032",
+    [
+      "circle the small inner loop",
+      "arch over and down to the foot",
+    ],
+  ],
+  [
+    "േ",
+    "032",
+    [
+      "circle the small top loop",
+      "sweep left and round the bottom",
+      "curl up round the lower loop",
+    ],
+  ],
+];
+
+describe("Malayalam glyphs cited to Moag's numbered movements", () => {
+  for (const [glyph, scan, labels] of MOAG_GLYPHS) {
+    const letter = DUCTUS[ductusKey("malayalam", glyph)];
+
+    it(`${glyph} is one continuous run through Moag's numbered movements`, () => {
+      expect(letter).toBeDefined();
+      expect(penLifts(letter)).toBe(0);
+      expect(letter.strokes).toHaveLength(1);
+      expect(
+        letter.strokes[0].segments.map((segment) => segment.label),
+      ).toEqual(labels);
+      for (const gap of joinGaps(letter.strokes[0])) expect(gap).toBe(0);
+    });
+
+    it(`${glyph} cites the pinned Moag scan and the Malayalam font`, () => {
+      expect(letter.source.url).toBe(
+        `https://github.com/matjic/malayalam/blob/7141acd2f310bc8928822a7aec61d1149efa6fa3/docs/assets/images/front-writing-${scan}.jpg`,
+      );
+      expect(letter.source.citation).toMatch(
+        /^Rodney F\. Moag, Malayalam: A University Course and Reference Grammar .*CC BY-NC-SA 4\.0.*written by hand by Thomas Joseph/,
+      );
+      expect(letter.source.citation).toContain(` for ${glyph},`);
+      expect(letter.source.variation).toMatch(
+        /only these facts .* are cited; no drawing is copied.*not pen lifts.*Noto Sans Malayalam/,
+      );
+      expect(verifiedLetterFont(glyph, letter.source.url)).toBe(
+        "_fonts/NotoSansMalayalam-Static.ttf",
+      );
+    });
+  }
+
+  it("states the anusvara's direction as medium-low confidence, with the conflicting sources", () => {
+    const anusvara = DUCTUS[ductusKey("malayalam", "ം")];
+    expect(anusvara.source.variation).toMatch(
+      /clockwise.*medium-low confidence.*anticlockwise/,
+    );
+  });
+});

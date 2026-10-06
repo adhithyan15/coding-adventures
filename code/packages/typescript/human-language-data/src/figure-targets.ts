@@ -267,11 +267,33 @@ const SIGNS_ONLY = /^\p{M}+$/u;
 //   * The virama ્ and the vocalic-r sign ૃ have no row: no Gujarati source
 //     gives their pen path or place, so every word with one stays refused.
 //
+// Malayalam has a table with one row. Its anusvara ം is written AFTER its
+// base, to the right of it:
+//
+//     typed (code points)      written (by hand)        looks like
+//     ----------------------   ----------------------   ----------
+//     അ + ം                    അ, then the ring         അം
+//     ക + ം                    ക, then the ring         കം
+//
+//   * The anusvara's mark record (data/scripts/malayalam.json) cites it as
+//     its `compositionSource`: in Rodney F. Moag's Malayalam: A University
+//     Course and Reference Grammar, Table II numbers the ring of അം as
+//     movement 9, after the eight movements of അ, and Table III draws ം to
+//     the right of a dash standing for the consonant. A test holds the row
+//     to that record. Dumping every GSUB lookup of Noto Sans Malayalam that
+//     mentions the anusvara glyph finds only Vedic-sign reorderings, so no
+//     consonant + ം pair is fused.
+//   * Moag draws each vowel sign beside that dash too, but never numbers the
+//     consonant against the sign, so no Malayalam vowel sign has a row: a
+//     sign is drawn only by itself, in a lesson that teaches it alone, and a
+//     word with a vowel sign stays refused. So does every word with the
+//     candrakkala ്, whose Moag table gives no movements at all.
+//
 // Everything without a row is refused: the Tamil signs ு and ூ (no cited
 // ductus, and they fuse with their consonant into shapes of their own),
-// Gujarati ્ and ૃ, and every sign in every other script
-// (Devanagari ि, the kana voicing mark ゙), because no other script has a
-// table yet.
+// Gujarati ્ and ૃ, every Malayalam sign but ം, and every sign in every
+// other script (Devanagari ि, the kana voicing mark ゙), because no other
+// script has a table yet.
 //
 // Two signs on the same side of one consonant (Gujarati ાં, a vowel sign and
 // then the anusvara) are refused as well: each sign's own place is cited, but
@@ -324,6 +346,9 @@ export const WRITTEN_SIGN_SIDES: Readonly<Record<string, Readonly<Record<string,
     "\u0ACC": "after", //  ૌ  au
     "\u0A82": "after", //  ં  anusvara
     "\u0A83": "after", //  ઃ  visarga
+  },
+  malayalam: {
+    "\u0D02": "after", //  ം  anusvara (a ring to the right, after its base)
   },
 };
 

@@ -525,12 +525,25 @@ describe("stroke ownership migration baseline", () => {
       // 35 -> 36, with the ordered key hash, measured after the caption was
       // settled. No other script changes, so the non-Tamil data hash and both
       // shared-identity values remain unchanged.
+      //
+      // Twenty-two Malayalam glyphs cite the numbered movements of Rodney F.
+      // Moag's Malayalam: A University Course and Reference Grammar (facts
+      // only; CC BY-NC-SA 4.0): the consonants ക യ ഖ ങ ച ഛ ഞ ഥ ധ ഭ ഫ ള
+      // (U+0D15, U+0D2F, U+0D16, U+0D19, U+0D1A, U+0D1B, U+0D1E, U+0D25,
+      // U+0D27, U+0D2D, U+0D2B, U+0D33), the independent vowel ഏ (U+0D0F),
+      // the anusvara ം (U+0D02) and the vowel signs ാ ി ീ ു ൂ ൃ െ േ (U+0D3E,
+      // U+0D3F, U+0D40, U+0D41, U+0D42, U+0D43, U+0D46, U+0D47), one
+      // unbroken run each. They follow ബ at the end of the Malayalam owner,
+      // so no existing key changes its relative order. Keys move 582 -> 604
+      // and Malayalam 31 -> 53, with the ordered key hash and the non-Tamil
+      // data hash, measured after the last caption was settled; Tamil and
+      // both shared-identity values remain unchanged.
     }).toEqual({
-      keys: 582,
+      keys: 604,
       keyHash:
-        "1a0a07993327043b67ce4602a2b8308fd9a011f961fef66c64a826e563c9b4a2",
+        "a2b2c7cb41da0b5f18f4730b9befe6c3f591023f94311c48915e5b341c2b54f5",
       nonTamilDataHash:
-        "e09d3e90c94cd412e4f2d369141db7eda556e8b6803289b931f234ac6d1fd436",
+        "ee314747bb3df8467f78ef30e8950307a4bc6fe71c30d4fe191dff1621979c06",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -545,7 +558,7 @@ describe("stroke ownership migration baseline", () => {
         hebrew: 22,
         japanese: 83,
         kannada: 44,
-        malayalam: 31,
+        malayalam: 53,
         "perso-arabic": 24,
         tamil: 36,
         telugu: 43,

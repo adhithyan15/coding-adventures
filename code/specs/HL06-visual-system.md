@@ -398,10 +398,52 @@ stroke in *hand*, and no grahyam sample jumps between points the way a lift
 would (its files keep no pen-up marker, so a jump is the only sign). Letters whose sources disagree on the start (ക, യ) or whose source is
 uncertain (ഏ) or missing (ം) are not drawn.
 
-**Divergence: lesson prose.** As with the vowels and chillus already drawn, the
-lessons keep their "copy what you see" writing blocks; the filmstrip is added
-beside them. Rewriting those blocks to list the movements is left to a lesson
-tranche.
+**Divergence: lesson prose (since resolved).** These lessons first kept their
+"copy what you see" writing blocks, with the filmstrip added beside them. A
+later prose fix pointed every strip lesson's writing block at its strip, and a
+figure-targets guard now fails any strip lesson that still disclaims its stroke
+order.
+
+#### As built — Malayalam letters and signs, cited to a textbook's numbered movements
+
+Twenty-two more Malayalam glyphs gain a ductus, which brings the Malayalam
+filmstrips from 35 to 58: the consonants ക യ ഖ ങ ച ഛ ഞ ഥ ധ ഭ ഫ ള, the vowel ഏ,
+the anusvara ം and the vowel signs ാ ി ീ ു ൂ ൃ െ േ, each drawn by itself. The
+order comes from Rodney F. Moag's *Malayalam: A University Course and Reference
+Grammar* (UT Austin South Asia Institute / COERLL, April 2018), whose Tables
+II-IV number and arrow every movement of every letter and sign in the hand of a
+native writer. The book is CC BY-NC-SA 4.0, so it is a source of facts only
+(order, start, direction, end); each record links the page's scan in a digital
+edition at a pinned commit, and nothing of the drawings is copied. Moag settles
+ക and യ, held in the earlier batch while the other sources disagreed on their
+start, and confirms that Thooval's `EE` image is ഏ.
+
+**Movements are not lifts.** Moag numbers movements; the digital edition notes
+that consecutive numbers can belong to one stroke. Each glyph is therefore one
+run whose segments are Moag's numbers, and the zero-lift claim rests, as
+before, on *hand* (MIT) and *grahyam* (counts only). Where the sources disagree
+the record says so: യ's start, ു's end, and ം's direction (clockwise in Moag,
+read from a small arrowhead, so medium-low confidence; anticlockwise in an
+unlicensed tracing app and in the Gujarati and Devanagari analogues).
+
+**One written-order row.** `WRITTEN_SIGN_SIDES.malayalam` has a single row, ം
+"after", cited on the anusvara's mark record: in Moag's അം the ring is movement
+9, after the eight movements of അ. Moag draws each vowel sign beside a dash
+standing for the consonant but never numbers the consonant against the sign, so
+no vowel sign gets a row: a sign is drawn only in a lesson that teaches it
+alone, and a word with a vowel sign stays refused.
+
+**Not drawn:** ജ (Moag's arrows do not place the short stem between its humps),
+ഠ (Moag runs the ring clockwise, Thooval and grahyam anticlockwise), ൈ (two
+pieces of ink need a lift no source records), ോ and ൊ (the consonant between
+the sign's two parts is not numbered) and ് (Table V shows it without
+movements).
+
+**Divergence: lesson prose, now resolved.** The 21 newly stripped lessons that
+still carried the "copy what you see / this book does not yet tell you where
+to start" block now point at the numbered strip, in the wording the earlier
+strip lessons use, so the figure-targets guard against a strip lesson
+disclaiming its stroke order holds.
 
 ### Class B — data diagrams (generated)
 
