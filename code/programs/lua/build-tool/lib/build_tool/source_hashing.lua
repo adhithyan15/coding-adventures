@@ -481,4 +481,98 @@ function SourceHashing.package_digest(include_paths, contents)
     return digest:hex_digest()
 end
 
+local function digest_bytes(hex, label)
+    if type(hex) ~= "string" or #hex ~= 64 or hex:find("[^0-9a-fA-F]") then
+        reject("invalid " .. label)
+    end
+    return hex_bytes(hex)
+end
+
+local function package_identity(name)
+    local parts = parts_of(name)
+    if #parts < 2 then reject("package identity needs a language and name") end
+    return name
+end
+
+function SourceHashing.dependencies_digest(dependency_digests)
+    local count = dense_count(dependency_digests, MAX_SELECTED, "dependency digests")
+    local sorted, seen = {}, {}
+    local total = 0
+    for index = 1, count do
+        local record = dependency_digests[index]
+        if type(record) ~= "table" then reject("dependency digest record shape") end
+        local name = package_identity(record.package)
+        if seen[name] then reject("duplicate dependency package") end
+        seen[name] = true
+        local bytes = digest_bytes(record.digest, "dependency digest")
+        total = total + #name + #bytes + 16
+        if total > MAX_PACKAGE_BYTES then reject("dependency digest byte limit") end
+        sorted[#sorted + 1] = {name = name, bytes = bytes}
+    end
+    table.sort(sorted, function(left, right) return left.name < right.name end)
+    local digest = sha256.new()
+    for _, record in ipairs(sorted) do
+        digest:update(string.pack(">I8", #record.name))
+        update_bounded(digest, record.name)
+        digest:update(string.pack(">I8", #record.bytes))
+        digest:update(record.bytes)
+    end
+    return digest:hex_digest()
+end
+
+function SourceHashing.combined_digest(package_digest_hex, dependencies_digest_hex)
+    local package_bytes = digest_bytes(package_digest_hex, "package digest")
+    local dependency_bytes = digest_bytes(dependencies_digest_hex, "dependencies digest")
+    return digest_bounded(package_bytes .. dependency_bytes)
+end
+
+function SourceHashing.evaluate_hashing_cache(options, contents)
+    if type(options) ~= "table" or options.algorithm ~= "sha256-v1" then
+        reject("unsupported hashing-cache options")
+    end
+    local package = package_identity(options.package)
+    local dependent_count = dense_count(options.dependents, MAX_SELECTED, "dependents")
+    local invalidated, seen = {package}, {[package] = true}
+    for index = 1, dependent_count do
+        local dependent = package_identity(options.dependents[index])
+        if not seen[dependent] then
+            seen[dependent] = true
+            invalidated[#invalidated + 1] = dependent
+        end
+    end
+    table.sort(invalidated)
+
+    local package_digest_hex = SourceHashing.package_digest(options.include_paths, contents)
+    local dependencies_digest_hex = SourceHashing.dependencies_digest(options.dependency_digests)
+    local combined_digest_hex = SourceHashing.combined_digest(
+        package_digest_hex, dependencies_digest_hex)
+    local prior = options.prior_cache
+    if type(prior) ~= "table" then reject("prior cache record shape") end
+    local status, diagnostics = "miss", {}
+    if prior.state == "record" then
+        digest_bytes(prior.combined_digest, "prior combined digest")
+        if prior.status ~= "success" and prior.status ~= "failed" then
+            reject("prior cache status")
+        end
+        if prior.status == "success"
+            and prior.combined_digest:lower() == combined_digest_hex then
+            status = "hit"
+            invalidated = {}
+        end
+    elseif prior.state == "corrupt" then
+        status = "recovered"
+        diagnostics[1] = {code = "CACHE_CORRUPT_RECOVERED", severity = "warning",
+            package = package}
+    elseif prior.state ~= "missing" then
+        reject("prior cache state")
+    end
+    return {result = {
+        package_digest = package_digest_hex,
+        dependencies_digest = dependencies_digest_hex,
+        combined_digest = combined_digest_hex,
+        cache_status = status,
+        invalidated_packages = invalidated,
+    }, diagnostics = diagnostics}
+end
+
 return SourceHashing
