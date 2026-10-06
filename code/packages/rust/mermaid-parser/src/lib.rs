@@ -32,7 +32,8 @@ use mermaid_lexer::{
     try_tokenize_mermaid_treemap, try_tokenize_mermaid_venn, try_tokenize_mermaid_ishikawa,
     try_tokenize_mermaid_wardley, try_tokenize_mermaid_cynefin, try_tokenize_mermaid_treeview,
     try_tokenize_mermaid_swimlane, try_tokenize_mermaid_railroad,
-    try_tokenize_mermaid_railroad_ebnf, try_tokenize_mermaid_info,
+    try_tokenize_mermaid_railroad_ebnf, try_tokenize_mermaid_railroad_abnf,
+    try_tokenize_mermaid_info,
     try_tokenize_mermaid_zenuml,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
@@ -80,6 +81,8 @@ const SWIMLANE_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/
 const RAILROAD_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/railroad.grammar");
 const RAILROAD_EBNF_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/railroad-ebnf.grammar");
+const RAILROAD_ABNF_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/railroad-abnf.grammar");
 const INFO_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/info.grammar");
 const ZENUML_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/zenuml.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
@@ -551,6 +554,7 @@ fn token_name(token: &Token) -> &str {
         TokenType::Plus => "PLUS",
         TokenType::Minus => "MINUS",
         TokenType::Star => "STAR",
+        TokenType::Slash => "SLASH",
         TokenType::Colon => "COLON",
         TokenType::Comma => "COMMA",
         TokenType::Equals => "EQUALS",
@@ -5878,6 +5882,9 @@ pub fn parse_railroad(source: &str) -> Result<RailroadDiagram, ParseError> {
     if prepared.trim_start().starts_with("railroad-ebnf-beta") {
         return parse_railroad_ebnf_prepared(&prepared);
     }
+    if prepared.trim_start().starts_with("railroad-abnf-beta") {
+        return parse_railroad_abnf_prepared(&prepared);
+    }
     if !prepared.trim_start().starts_with("railroad-beta") {
         return Err(ParseError { message: format!("Mermaid {} Railroad {:?} notation is recognized but not implemented", MERMAID_COMPATIBILITY_BASELINE, family.canonical_id()), line: 1, col: 1 });
     }
@@ -6016,11 +6023,11 @@ fn parse_railroad_ebnf_term(cursor: &mut RailroadCursor<'_>) -> Result<RailroadE
             }
             "STAR" => {
                 cursor.index += 1;
-                RailroadExpression::Repetition { element: Box::new(expression), min: 0 }
+                RailroadExpression::Repetition { element: Box::new(expression), min: 0, max: None }
             }
             "PLUS" => {
                 cursor.index += 1;
-                RailroadExpression::Repetition { element: Box::new(expression), min: 1 }
+                RailroadExpression::Repetition { element: Box::new(expression), min: 1, max: None }
             }
             "MINUS" => {
                 cursor.index += 1;
@@ -6056,7 +6063,7 @@ fn parse_railroad_ebnf_primary(cursor: &mut RailroadCursor<'_>) -> Result<Railro
             cursor.expect(close)?;
             Ok(match kind {
                 1 => RailroadExpression::Optional(Box::new(expression)),
-                2 => RailroadExpression::Repetition { element: Box::new(expression), min: 0 },
+                2 => RailroadExpression::Repetition { element: Box::new(expression), min: 0, max: None },
                 _ => expression,
             })
         }
@@ -6074,6 +6081,168 @@ fn unquote_railroad_string(raw: &str) -> String {
         .and_then(|value| value.strip_suffix('\''))
         .unwrap_or(raw);
     unquote_mermaid_string(inner)
+}
+
+fn parse_railroad_abnf_prepared(source: &str) -> Result<RailroadDiagram, ParseError> {
+    let tokens = try_tokenize_mermaid_railroad_abnf(source)
+        .map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let grammar = parse_parser_grammar(RAILROAD_ABNF_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse railroad-abnf.grammar: {error}"));
+    GrammarParser::new(tokens.clone(), grammar)
+        .with_max_depth(MAX_RULE_DEPTH)
+        .parse()
+        .map_err(|error| ParseError {
+            message: error.message,
+            line: error.token.line,
+            col: error.token.column,
+        })?;
+    let mut cursor = RailroadCursor { tokens: &tokens, index: 1 };
+    let mut diagram = RailroadDiagram {
+        title: None,
+        accessibility_title: None,
+        accessibility_description: None,
+        rules: Vec::new(),
+    };
+    while !cursor.at("EOF") {
+        match cursor.name() {
+            "TITLE" => {
+                let value = cursor.take_value();
+                diagram.title = Some(unquote_railroad_string(value["title".len()..].trim()));
+            }
+            "ACC_TITLE" => {
+                diagram.accessibility_title = Some(
+                    cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string(),
+                );
+            }
+            "ACC_DESCR" => {
+                diagram.accessibility_description = Some(
+                    cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string(),
+                );
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.take_value();
+                let description = value
+                    .split_once('{')
+                    .and_then(|(_, body)| body.rsplit_once('}').map(|(body, _)| body))
+                    .unwrap_or("")
+                    .trim();
+                diagram.accessibility_description = Some(description.to_string());
+            }
+            "RULENAME" => {
+                let name = cursor.take_value();
+                cursor.expect("EQUAL")?;
+                let definition = parse_railroad_abnf_alternation(&mut cursor)?;
+                cursor.expect("SEMICOLON")?;
+                if diagram.rules.iter().any(|rule| rule.name == name) {
+                    return Err(cursor.error(format!("duplicate Railroad rule {name:?}")));
+                }
+                diagram.rules.push(RailroadRule { name, definition });
+            }
+            other => return Err(cursor.error(format!("unexpected Railroad ABNF token {other}"))),
+        }
+    }
+    if diagram.rules.is_empty() {
+        return Err(ParseError {
+            message: "Railroad diagrams require at least one rule".into(),
+            line: 1,
+            col: 1,
+        });
+    }
+    Ok(diagram)
+}
+
+fn parse_railroad_abnf_alternation(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut alternatives = vec![parse_railroad_abnf_concatenation(cursor)?];
+    while cursor.at("SLASH") {
+        cursor.index += 1;
+        alternatives.push(parse_railroad_abnf_concatenation(cursor)?);
+    }
+    if alternatives.len() == 1 {
+        Ok(alternatives.remove(0))
+    } else {
+        Ok(RailroadExpression::Choice(alternatives))
+    }
+}
+
+fn parse_railroad_abnf_concatenation(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let mut elements = vec![parse_railroad_abnf_element(cursor)?];
+    while railroad_abnf_element_starts(cursor.name()) {
+        elements.push(parse_railroad_abnf_element(cursor)?);
+    }
+    if elements.len() == 1 {
+        Ok(elements.remove(0))
+    } else {
+        Ok(RailroadExpression::Sequence(elements))
+    }
+}
+
+fn parse_railroad_abnf_element(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    let repeat = if matches!(cursor.name(), "REPEAT" | "STAR" | "EXACT_REPEAT") {
+        Some(cursor.take_value())
+    } else {
+        None
+    };
+    let expression = parse_railroad_abnf_primary(cursor)?;
+    let Some(repeat) = repeat else { return Ok(expression); };
+    let (min, max) = parse_railroad_abnf_repeat(&repeat, cursor)?;
+    if min == 0 && max == Some(1) {
+        Ok(RailroadExpression::Optional(Box::new(expression)))
+    } else {
+        Ok(RailroadExpression::Repetition { element: Box::new(expression), min, max })
+    }
+}
+
+fn parse_railroad_abnf_repeat(
+    repeat: &str,
+    cursor: &RailroadCursor<'_>,
+) -> Result<(usize, Option<usize>), ParseError> {
+    if let Some((minimum, maximum)) = repeat.split_once('*') {
+        let min = if minimum.is_empty() {
+            0
+        } else {
+            minimum.parse().map_err(|_| cursor.error("invalid ABNF repeat minimum"))?
+        };
+        let max = if maximum.is_empty() {
+            None
+        } else {
+            Some(maximum.parse().map_err(|_| cursor.error("invalid ABNF repeat maximum"))?)
+        };
+        if max.is_some_and(|max| min > max) {
+            return Err(cursor.error("ABNF repeat minimum exceeds maximum"));
+        }
+        Ok((min, max))
+    } else {
+        let exact = repeat.parse().map_err(|_| cursor.error("invalid exact ABNF repeat"))?;
+        Ok((exact, Some(exact)))
+    }
+}
+
+fn parse_railroad_abnf_primary(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    match cursor.name() {
+        "STRING" => Ok(RailroadExpression::Terminal(unquote_railroad_string(&cursor.take_value()))),
+        "NUMVAL" => Ok(RailroadExpression::Terminal(cursor.take_value())),
+        "RULENAME" => Ok(RailroadExpression::NonTerminal(cursor.take_value())),
+        "LPAREN" | "LBRACKET" => {
+            let optional = cursor.at("LBRACKET");
+            let close = if optional { "RBRACKET" } else { "RPAREN" };
+            cursor.index += 1;
+            let expression = parse_railroad_abnf_alternation(cursor)?;
+            cursor.expect(close)?;
+            if optional {
+                Ok(RailroadExpression::Optional(Box::new(expression)))
+            } else {
+                Ok(expression)
+            }
+        }
+        _ => Err(cursor.error("expected Railroad ABNF expression")),
+    }
+}
+
+fn railroad_abnf_element_starts(name: &str) -> bool {
+    matches!(
+        name,
+        "REPEAT" | "STAR" | "EXACT_REPEAT" | "STRING" | "NUMVAL" | "RULENAME" | "LPAREN" | "LBRACKET"
+    )
 }
 
 struct RailroadCursor<'a> { tokens: &'a [Token], index: usize }
@@ -6102,8 +6271,8 @@ fn parse_railroad_expression(cursor: &mut RailroadCursor<'_>) -> Result<Railroad
         "sequence" if !arguments.is_empty() => Ok(RailroadExpression::Sequence(arguments)),
         "choice" if arguments.len() >= 2 => Ok(RailroadExpression::Choice(arguments)),
         "optional" if arguments.len() == 1 => Ok(RailroadExpression::Optional(Box::new(arguments.remove(0)))),
-        "zeroOrMore" if arguments.len() == 1 => Ok(RailroadExpression::Repetition { element: Box::new(arguments.remove(0)), min: 0 }),
-        "oneOrMore" if arguments.len() == 1 => Ok(RailroadExpression::Repetition { element: Box::new(arguments.remove(0)), min: 1 }),
+        "zeroOrMore" if arguments.len() == 1 => Ok(RailroadExpression::Repetition { element: Box::new(arguments.remove(0)), min: 0, max: None }),
+        "oneOrMore" if arguments.len() == 1 => Ok(RailroadExpression::Repetition { element: Box::new(arguments.remove(0)), min: 1, max: None }),
         _ => Err(cursor.error(format!("invalid or unsupported Railroad constructor {constructor:?}"))),
     }
 }

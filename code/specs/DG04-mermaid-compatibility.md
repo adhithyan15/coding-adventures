@@ -766,10 +766,17 @@ rule-assignment spellings, comments, titles, and accessibility metadata lower
 to the same recursive semantic IR, deterministic layout, and backend-neutral
 PaintScene path as constructor notation, with native Metal-to-PNG validation.
 
-This is intentionally partial. The textual `railroad-abnf-beta` and
-`railroad-peg-beta` dialects, upstream curve geometry, theme/config overrides,
-and exact typography remain unsupported and fail explicitly rather than being
-counted as compatible.
+The textual `railroad-abnf-beta` dialect likewise uses dedicated portable
+grammars and lowers string literals, numeric values and ranges, rule
+references, concatenation, alternation, groups, optional groups, and exact or
+bounded repetition into the recursive Railroad IR. Repetition bounds remain
+semantic even though the pinned renderer draws every repeat with the same
+loopback convention. A pinned syntax corpus and native Metal-to-PNG fixture
+exercise the complete backend-neutral path.
+
+This is intentionally partial. The textual `railroad-peg-beta` dialect,
+upstream curve geometry, theme/config overrides, and exact typography remain
+unsupported and fail explicitly rather than being counted as compatible.
 
 ### Info Full Compatibility
 
