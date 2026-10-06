@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16756,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16756",
+    "branch": "codex/parity-python-source-registry-20261005",
+    "implementation_revision": "1dbf66344e9ac3c62c14c1b8a261b70f88a2b079",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-05T23:26:18Z",
-    "pr_number": 16749,
-    "status": "merged",
-    "notes": "Required CI gate and Human Languages Books gate passed, all 49 terminal checks were successful with nine skipped, and GitHub reported CLEAN/MERGEABLE before guarded squash auto-merge. PR #16749 merged as eadd4774e5a8e28a9a25ccdac1c34153e5274db2; no manual merge."
+    "observed_at": "2026-10-06T00:01:46Z",
+    "pr_number": 16756,
+    "status": "checks-pending",
+    "notes": "Ready-for-review Python exact registry adoption PR opened from validated implementation head 1dbf66344e9ac3c62c14c1b8a261b70f88a2b079. GitHub reports MERGEABLE with checks queued; do not enable auto-merge until every required final-head check is terminal and acceptable, with no CI failure or merge conflict."
   },
   "last_inventory": {
     "revision": "eadd4774e5a8e28a9a25ccdac1c34153e5274db2",
@@ -1346,10 +1352,10 @@
     {
       "id": "build-tool-python-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Python build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-python-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-python-glob-matcher-complexity-hardening"],
       "branch": "codex/parity-python-source-registry-20261005",
-      "pr_number": null,
+      "pr_number": 16756,
       "selected_at": "2026-10-05T23:30:11Z",
       "selection_revision": "eadd4774e5a8e28a9a25ccdac1c34153e5274db2",
       "selection_notes": "Selected after registering 25 audited ownership gaps and an exact-main schema-3 collision-checked refresh. All six prerequisites are merged; no open PR touches Python build-tool or neutral source-registry paths. Three direct children depend on this owner. Scope is production Python registry adoption and dynamic equality tests, not a second implementation lane.",
