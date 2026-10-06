@@ -771,8 +771,9 @@ metadata while lowering through backend-neutral rectangles, ellipses, paths,
 filled transition arrowheads, and glyph runs with native Metal-to-PNG
 validation. Transition endpoints are clipped to rectangular or elliptical
 domain boundaries instead of crossing domain labels. Theme/config overrides,
-organic seeded boundary waviness, exact cliff styling, and overflow badges
-remain unsupported at the partial level.
+organic seeded boundary waviness, and exact cliff styling remain unsupported at
+the partial level. Confusion domains follow Mermaid's three-item display cap
+and lower any hidden count to a backend-neutral `+N more` badge.
 
 ### TreeView Native Slice
 

@@ -3415,7 +3415,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_cynefin_to_png() {
-        let diagram = parse_cynefin("cynefin-beta\ntitle Incident Response\naccTitle: Incident response framework\naccDescr {\nPractices grouped by uncertainty\nand causality\n}\ncomplex\n  \"Investigate root cause\"\ncomplicated\n  \"Expert review\"\nclear\n  \"Apply known fix\"\nchaotic\n  \"Page on-call\"\nconfusion\n  \"Unknown mode\"\ncomplex --> complicated : \"Pattern found\"\nclear --> chaotic : \"Complacency\"").expect("cynefin parse failed");
+        let diagram = parse_cynefin("cynefin-beta\ntitle Incident Response\naccTitle: Incident response framework\naccDescr {\nPractices grouped by uncertainty\nand causality\n}\ncomplex\n  \"Investigate root cause\"\ncomplicated\n  \"Expert review\"\nclear\n  \"Apply known fix\"\nchaotic\n  \"Page on-call\"\nconfusion\n  \"Unknown mode\"\n  \"Insufficient evidence\"\n  \"Mixed signals\"\n  \"Unclear ownership\"\n  \"Novel incident\"\ncomplex --> complicated : \"Pattern found\"\nclear --> chaotic : \"Complacency\"").expect("cynefin parse failed");
         let layout = layout_cynefin(&diagram);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_cynefin(&layout, &DiagramToPaintOptions {
