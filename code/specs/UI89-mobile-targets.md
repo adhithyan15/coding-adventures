@@ -428,7 +428,7 @@ What step 4 changed from §3.4, and why:
   Unlike the iOS gate, which restores the macOS run's snapshot, the app
   restores its own: the Linux job has no desktop TaskApp snapshot to hand,
   and one written by the same APK is the case a user meets.
-- **Still to come:** an instrumented Compose test that edits, relaunches and
+- **Then (§4.2):** an instrumented Compose test that edits, relaunches and
   reads the screen (§4.2). Journal runs the same gate (§3.9).
 
 ### 3.8 Mobile file effects, designed (step 6)
@@ -956,11 +956,15 @@ cold launches against one state file:
 
 - **The project.** `build.gradle.kts` for `android/` gains
   `testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"`
-  and `androidTestImplementation` dependencies only: `androidx.test:runner`,
-  `androidx.test.ext:junit` and `androidx.compose.ui:ui-test-junit4` at the
-  androidx version that the pinned JetBrains Compose version resolves to on
-  Android (checked with `dependencyInsight` in the implementation PR, and
-  pinned beside it). Every `androidTest` dependency, including §4.4's
+  and `androidTestImplementation` dependencies only: `androidx.test:runner`
+  1.6.2, `androidx.test.ext:junit` 1.2.1 (one androidx.test release, with the
+  repository's core 1.6.1) and JetBrains' `ui-test-junit4` at the app's own
+  Compose version. JetBrains' module metadata maps that artifact on Android
+  to androidx `ui-test-junit4` (1.11.2 for Compose 1.11.1), so the rule
+  follows the Compose pin rather than holding a second one that could drift.
+  *As built:* the metadata was read from Maven Central; Google's Maven is
+  unreachable from the authoring sandbox, so CI's `assembleDebugAndroidTest`
+  is what resolves the androidx.test pins. Every `androidTest` dependency, including §4.4's
   `espresso-intents`, is pinned to an exact version (no `+`, range or
   BOM-only resolution) and comes from the app's own repositories. The app
   APK is unchanged: `assembleDebug` never resolves
@@ -994,6 +998,17 @@ cold launches against one state file:
   space, which the device shell would expand or cut). `mosaicLaunch` is the
   literal 1 or 2 in the script, never the caller's. The APK paths go only to
   host-side `adb install`, as separate arguments.
+- **Driving the controls (as built).** On the emulator's phone screen the
+  app shell's navigation split collapses (`collapse: auto`), so whether the
+  timeline and the editor share the screen depends on the window size
+  class. The test therefore drives controls through their semantics
+  actions (OnClick, text input), which run a control's own handler wherever
+  it is drawn, and reads the result through the semantics tree
+  (`assertExists`) rather than asserting what is visible. It still proves
+  that the controls reach the engine, that the screen is rebuilt from the
+  engine's answer, and that a new process restores it. Asserting what a
+  compact screen shows is the compact layout's own test. The desktop test's
+  malformed-event check is not repeated: the activity keeps its host private.
 - **Where it runs.** In the emulator step, after the three-launch gate for
   the same app. The gate leaves state behind, which is why the script clears
   first rather than relying on a fresh install.

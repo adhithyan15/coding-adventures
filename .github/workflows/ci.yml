@@ -4258,7 +4258,13 @@ jobs:
           jq -e '.replacedGeneratedFiles == []' "$output/compose/mosaic-degradations.json"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
           android_project="$output/compose/android"
-          bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"
+          # Journal's instrumented UI test (UI89 §4.2) lives with the app, as
+          # the desktop JournalUiTest does; the emulator step runs it.
+          mkdir -p "$android_project/src/androidTest/kotlin"
+          cp code/packages/rust/journal-mosaic-app/conformance/compose-android/JournalAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"
+          bash code/scripts/assemble-mosaic-android-debug.sh "$android_project" --with-android-test
+          test_apk="$(find "$android_project/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$test_apk"
 
           apk="$(find "$android_project/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
           test -n "$apk"
@@ -4433,7 +4439,7 @@ jobs:
       - name: Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
         shell: bash
-        timeout-minutes: 30
+        timeout-minutes: 40
         run: |
           set -euo pipefail
           # Let the runner's user open /dev/kvm (GitHub's documented recipe).
@@ -4462,6 +4468,12 @@ jobs:
           journal_apk="$(find "$RUNNER_TEMP/mosaic-compose-journal-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
           test -n "$journal_apk"
           bash code/scripts/mosaic-android-emulator-gate.sh "$journal_apk" dev.codingadventures.journalapp journal-app
+          # Then a person's use of it (UI89 §4.2): write, save and delete
+          # entries through the generated controls, and find the survivor
+          # again after a cold relaunch.
+          journal_test_apk="$(find "$RUNNER_TEMP/mosaic-compose-journal-android-runtime/compose/android/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$journal_test_apk"
+          bash code/scripts/mosaic-android-ui-test.sh "$journal_apk" "$journal_test_apk" dev.codingadventures.journalapp dev.codingadventures.journalapp.uitest.JournalAndroidUiTest
 
           engram_apk="$(find "$RUNNER_TEMP/mosaic-compose-engram-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
           test -n "$engram_apk"

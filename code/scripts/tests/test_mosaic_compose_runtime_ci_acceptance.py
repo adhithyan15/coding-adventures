@@ -310,6 +310,133 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertNotIn('-list-avds | grep', emulator)
         self.assertIn("the emulator exited before it appeared to adb", emulator)
 
+    def test_journal_runs_its_instrumented_ui_test_on_the_emulator(self) -> None:
+        """UI89 §4.2: Journal's instrumented test is built beside the APK and
+        run on the emulator after the Journal gate, across two cold
+        launches."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Journal for Android with its Rust runtime (UI89 step 7)")
+        build = workflow[start : workflow.index("\n      - name:", start)]
+        copy = (
+            "cp code/packages/rust/journal-mosaic-app/conformance/compose-android/"
+            'JournalAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"'
+        )
+        assemble = 'bash code/scripts/assemble-mosaic-android-debug.sh "$android_project" --with-android-test'
+        self.assertIn(copy, build)
+        self.assertIn(assemble, build)
+        # The test is in place before Gradle compiles the androidTest sources.
+        self.assertLess(build.index(copy), build.index(assemble))
+        self.assertIn("build/outputs/apk/androidTest/debug", build)
+        test_source = (
+            Path(__file__).resolve().parents[2]
+            / "packages/rust/journal-mosaic-app/conformance/compose-android/JournalAndroidUiTest.kt"
+        )
+        self.assertTrue(test_source.is_file(), test_source)
+        source = test_source.read_text(encoding="utf-8")
+        self.assertIn("package dev.codingadventures.journalapp.uitest", source)
+        self.assertIn("createAndroidComposeRule<MosaicActivity>()", source)
+        self.assertIn('getString("mosaicLaunch")', source)
+
+        emulator = workflow.index("- name: Launch Trestle, Journal and Engram on an Android emulator")
+        gate = workflow[emulator : workflow.index("\n      - name:", emulator)]
+        run = (
+            'bash code/scripts/mosaic-android-ui-test.sh "$journal_apk" "$journal_test_apk" '
+            "dev.codingadventures.journalapp dev.codingadventures.journalapp.uitest.JournalAndroidUiTest"
+        )
+        self.assertIn(run, gate)
+        # After the gate, whose launches leave state that the test clears.
+        self.assertLess(gate.index("dev.codingadventures.journalapp journal-app"), gate.index(run))
+
+        script = (SCRIPT.parent / "mosaic-android-ui-test.sh").read_text(encoding="utf-8")
+        self.assertIn('runner="$package.test/androidx.test.runner.AndroidJUnitRunner"', script)
+        self.assertLess(script.index('adb shell pm clear "$package"'), script.index("run_launch 1\n"))
+        self.assertLess(script.index("run_launch 1\n"), script.index("run_launch 2\n"))
+        self.assertIn('"OK (1 test)"', script)
+        self.assertIn('"FAILURES!!!"', script)
+        self.assertIn('"INSTRUMENTATION_CODE: -1"', script)
+
+    def test_the_ui_test_script_reads_am_instrument_output_not_its_status(self) -> None:
+        """`am instrument` exits 0 when a test fails, so the script decides
+        from its output: a fake adb plays each outcome."""
+
+        script = SCRIPT.parent / "mosaic-android-ui-test.sh"
+        ok = "INSTRUMENTATION_STATUS: test=t\nOK (1 test)\nINSTRUMENTATION_CODE: -1\n"
+        cases = {
+            "passes": (ok, ok, 0),
+            "launch 2 fails": (ok, "FAILURES!!!\nTests run: 1,  Failures: 1\nINSTRUMENTATION_CODE: -1\n", 1),
+            "no test ran": ("OK (0 tests)\nINSTRUMENTATION_CODE: -1\n", ok, 1),
+            "app crashed": ("INSTRUMENTATION_RESULT: shortMsg=Process crashed.\nINSTRUMENTATION_CODE: 0\n", ok, 1),
+            "empty output": ("", ok, 1),
+        }
+        for name, (first, second, expected) in cases.items():
+            with self.subTest(name), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                (root / "one.txt").write_text(first, encoding="utf-8")
+                (root / "two.txt").write_text(second, encoding="utf-8")
+                log = root / "adb.log"
+                adb = root / "adb"
+                adb.write_text(
+                    "#!/usr/bin/env bash\n"
+                    f'echo "$*" >> "{log}"\n'
+                    'case "$*" in\n'
+                    f'  *"mosaicLaunch 1"*) cat "{root}/one.txt" ;;\n'
+                    f'  *"mosaicLaunch 2"*) cat "{root}/two.txt" ;;\n'
+                    "esac\n"
+                    "exit 0\n",
+                    encoding="utf-8",
+                )
+                adb.chmod(0o755)
+                for apk in ("app.apk", "test.apk"):
+                    (root / apk).write_bytes(b"")
+                result = subprocess.run(
+                    [
+                        "bash",
+                        str(script),
+                        str(root / "app.apk"),
+                        str(root / "test.apk"),
+                        "dev.example.app",
+                        "dev.example.app.uitest.AppUiTest",
+                    ],
+                    env={"PATH": f"{root}:/usr/bin:/bin"},
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+                calls = log.read_text(encoding="utf-8").splitlines()
+                # Both APKs installed and the app cleared before launch 1.
+                self.assertTrue(calls[0].startswith("install -r -t "), calls)
+                self.assertEqual(calls[2], "shell pm clear dev.example.app", calls)
+                instrument = [call for call in calls if "am instrument" in call]
+                self.assertIn(
+                    "-e class dev.example.app.uitest.AppUiTest -e mosaicLaunch 1 "
+                    "dev.example.app.test/androidx.test.runner.AndroidJUnitRunner",
+                    instrument[0],
+                )
+                # A failed launch 1 stops before launch 2.
+                self.assertEqual(len(instrument), 2 if name in ("passes", "launch 2 fails") else 1, calls)
+
+        # Names that would reach the device shell unchecked are refused.
+        for package, test_class in (
+            ("dev.example.app; reboot", "dev.example.app.T"),
+            ("dev.example.app", "dev.example.app.Outer$Inner"),
+            ("dev.example.app", "dev.example.app.T#method"),
+            ("dev.example.app", "T"),
+        ):
+            with self.subTest(package=package, test_class=test_class), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                for apk in ("app.apk", "test.apk"):
+                    (root / apk).write_bytes(b"")
+                result = subprocess.run(
+                    ["bash", str(script), str(root / "app.apk"), str(root / "test.apk"), package, test_class],
+                    env={"PATH": "/usr/bin:/bin"},
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                self.assertEqual(result.returncode, 2, result.stderr)
+
     def test_a_lane_script_change_alone_requires_acceptance(self) -> None:
         """The Android scripts belong to no package; changing one must still
         run the lane that executes it."""
