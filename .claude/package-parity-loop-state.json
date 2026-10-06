@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16770,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16770",
+    "branch": "codex/parity-ts-source-registry-20261006",
+    "implementation_revision": "84819e9b944f8a7848fadfc65a743c75d934aacf",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-06T02:40:12Z",
-    "pr_number": 16764,
-    "status": "merged",
-    "notes": "Final head 09ba71fb67ad6be4e73c1d26c578a6068b4238a2 had 24 SUCCESS checks, 30 SKIPPED, one acceptable CodeQL NEUTRAL, no failures, and GitHub CLEAN/MERGEABLE. Guarded squash auto-merge, not a manual merge, completed at 8816976e430215645095aeddf7ae33fbcaa06881."
+    "observed_at": "2026-10-06T03:02:27Z",
+    "pr_number": 16770,
+    "status": "checks-pending",
+    "notes": "Ready-for-review TypeScript source-registry PR opened at 84819e9b944f8a7848fadfc65a743c75d934aacf. GitHub reports MERGEABLE; detect, CodeQL, and human-language checks are queued. Do not enable auto-merge until every required final-head check is terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
     "revision": "8816976e430215645095aeddf7ae33fbcaa06881",
@@ -1436,14 +1442,15 @@
     {
       "id": "build-tool-typescript-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the TypeScript build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-typescript-glob-matcher-complexity-hardening"],
       "branch": "codex/parity-ts-source-registry-20261006",
-      "pr_number": null,
+      "pr_number": 16770,
+      "opened_at": "2026-10-06T03:02:27Z",
       "selected_at": "2026-10-06T02:43:49Z",
       "selection_revision": "8816976e430215645095aeddf7ae33fbcaa06881",
       "selection_notes": "Selected after #16764 merged, refreshing collision-checked exact main, and registering 13 additional audited owners. All six prerequisites merged, no active parity PR, no overlapping TypeScript build-tool PR, and three direct pending children. Use one clean fresh main-based TypeScript worktree; keep repository-boundary reverse diff and native snapshot concerns separate.",
-      "notes": "Production TypeScript currently owns a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including path-scoped CSS, native Rust companions, exact metadata scope, and universal capability input without blanket JSON, YAML, or TOML inclusion."
+      "notes": "PR #16770 adopts the checked 23-language, seven-role registry as immutable package data; production extension and declared-source lookup passes all seven package-local neutral cases, complete equality and digest tests, TypeScript typecheck, focused coverage, shared conformance, Go BUILD dry run, diff, and read-only security review. Two unrelated Windows-only package tests also fail unchanged on pre-change main and are explicitly documented in the PR. Repository-boundary reverse diff and native snapshot safety remain separate owners."
     },
     {
       "id": "build-tool-elixir-portable-source-hashing-conformance",
