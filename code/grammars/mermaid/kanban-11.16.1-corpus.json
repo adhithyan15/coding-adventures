@@ -14,6 +14,7 @@
     { "id": "layout-config", "source": "%%{init: {'kanban': {'sectionWidth': 300, 'padding': 32}}}%%\nkanban\n  todo[Todo]\n    parser[Grammar parser]" },
     { "id": "section-ticket-metadata", "source": "kanban\n  todo[Todo]@{ ticket: KB-7 }\n    parser[Grammar parser]" },
     { "id": "shape-delimited-labels", "source": "kanban\n  todo((Todo))\n    rounded(Rounded card)\n    hex{{Hex card}}\n  plain[Plain]\n    circle((Circle card))" },
-    { "id": "cloud-and-bang-labels", "source": "kanban\n  todo)Cloud section(\n    bang))Bang card((\n    cloud(-Cloud card-)\n    burst-)Burst card(-" }
+    { "id": "cloud-and-bang-labels", "source": "kanban\n  todo)Cloud section(\n    bang))Bang card((\n    cloud(-Cloud card-)\n    burst-)Burst card(-" },
+    { "id": "quoted-labels", "source": "kanban\n  todo[\"Todo queue\"]\n    card[\"Quoted card\"]" }
   ]
 }
