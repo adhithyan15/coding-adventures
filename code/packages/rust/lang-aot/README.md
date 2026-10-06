@@ -14,7 +14,9 @@ direct formatter-safe real procedure results that do not depend on pre-call
 local provenance. A real name-formal result is also allowed when its actual has
 the same proof. Unary signs, arithmetic composition with finite static operands,
 and real-valued standard functions preserve it, while a finite static real
-actual is safe directly. Other real name-actual provenance remains conservative.
+actual is safe directly. Variable-free exact `sign` and exact-range `entier`
+results may also widen through a real name formal. Other real name-actual
+provenance remains conservative.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The
