@@ -15885,6 +15885,13 @@ pending full language-registry discovery owner after the narrow Haskell Dune
 owner; the latter remains a focused exact `_build` predecessor and must not
 claim the entire neutral case. The new ID has no exact or normalized collision.
 
+A subsequent exact-main audit also found that the shared Dart/Swift language-
+frontend fixture owner lists Python among twelve roots, but no implementation
+child owned the Python lexer/parser vertical. Both identities are 13/15,
+missing those two lanes only (four slots). Register a pending vertical owner
+after the neutral fixture, then split lane and lexer/parser implementation;
+the new ID has no collision or open-PR file overlap.
+
 With Perl Dune merged, Perl declared-source metadata plumbing is the highest
 leverage eligible next slice: it directly unlocks Perl source hashing and
 reaches nine unfinished descendants. Elixir portable source hashing reaches

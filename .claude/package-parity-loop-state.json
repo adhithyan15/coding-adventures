@@ -1961,10 +1961,13 @@
     {
       "id": "build-tool-perl-declared-source-metadata-plumbing",
       "title": "Plumb declared-source metadata through the Perl build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-perl-dune-build-discovery-fixture-adoption"],
-      "branch": null,
+      "branch": "codex/parity-perl-declared-source-20261006",
       "pr_number": null,
+      "selected_at": "2026-10-06T05:11:42Z",
+      "selection_revision": "a8966b6591f23fab05838be84169d5490087d344",
+      "selection_notes": "Selected after #16776 auto-merged with 32 terminal acceptable checks. The exact merged-main collision inventory remains 15 established lanes, 1,487 identities, 4,757 slots, five emerging OCaml packages, and zero collisions or unknown buckets. The newly discovered Haskell full-discovery owner was registered before selection. The sole prerequisite is merged, no active parity PR remains, and this narrow metadata-plumbing owner reaches nine unfinished descendants, ahead of Elixir source hashing (seven) and Lua dependency hashing (five). Use this fresh clean main-based branch; full source hashing, native filesystem authority, and unrelated Haskell discovery remain separate owners.",
       "notes": "Carry declared-source metadata from Perl discovery into hashing after the Dune fixture owner proves exact generated-directory behavior."
     },
     {
@@ -12159,6 +12162,12 @@
       "title": "Port SQL lexer and parser verticals to Dart and Swift",
       "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
       "notes": "Collision-checked after PR #16756. SQL lexer and parser each exist in 13/15 established lanes, missing only Dart and Swift; shared SQL grammar and same-lane foundations exist. Preserve case-insensitive keywords, <> aliasing, comments, quoted identifiers, PEG precedence, and stable ASTs. Do not invent a dependency on the independent SQL CSV adapter owner. Split by lane and lexer before parser."
+    },
+    {
+      "id": "dart-swift-python-frontend-vertical-parity",
+      "title": "Port Python lexer and parser verticals to Dart and Swift",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Read-only post-#16776 audit found Python lexer and parser each present in 13/15 established lanes, missing Dart and Swift only (four slots). The neutral frontend fixture owner lists Python among twelve roots, but no Python implementation child owned these four slots. Split by lane and lexer before parser after the shared token/AST fixture; Python self-hosting and C#/Java contextual parsing are separate concerns. Exact and punctuation-insensitive owner-ID collision checks found no match, and live open-PR file lists had no overlap."
     },
     {
       "id": "dart-java-kotlin-core-eight-family-parity",
