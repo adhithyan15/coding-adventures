@@ -39,7 +39,7 @@ reviews_of: [PA-W02-name-select, PA-W06-three-field-cues, PA-W10-form-select]
 The old word cards use A and B. The old digit cards use ਕ and ਖ. No new
 name, word, digit, or field is introduced here.
 
-## Meaning — point before writing
+## You'll want to know — point before writing
 <!-- hl-knowledge: introduces=[PA-FORM-SIX-CUE-01]; assesses=[PA-FORM-SIX-ORDER-01] -->
 
 Look once at the familiar banks. A chooses ਅਮਨ, ਪੰਜਾਬੀ, ਪਿੰਡ, ਖੇਤੀ; ਕ

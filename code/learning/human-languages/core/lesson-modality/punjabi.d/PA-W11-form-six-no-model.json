@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W11-form-six-no-model",
+    "language": "punjabi",
+    "chapter": 155,
+    "sequence": 8500,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3fe2baa57223a106",
+    "detachableSegments": [
+      "Writing — independent controlled choice"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
