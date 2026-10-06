@@ -12,6 +12,7 @@
     "summary": "After a timed six-field mixed-cue form and a short message pacing rehearsal, the learner independently writes a 30–40-word Gurmukhi message for a named reader under a short clock; the full twenty-minute paper remains for the mocks.",
     "assesses": [
       "PA-A1-FORM-TIMED-01",
+      "PA-A1-MESSAGE-PACING-01",
       "PA-A1-MESSAGE-TIMED-01"
     ]
   }
