@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16787,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16787",
+    "branch": "codex/parity-neutral-dependency-fixtures-20261006",
+    "implementation_revision": "97b93f3b86a462ed3fae54c7f355c9ccdf2f38c5",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-06T07:38:58Z",
-    "pr_number": 16785,
-    "status": "merged",
-    "notes": "All 32 final-head checks were terminal and acceptable (13 success, 19 expected skips) and GitHub reported MERGEABLE. Guarded squash auto-merge merged PR #16785 as deffa7f4837dc36835b1b23426e43eabd2ac8ee4 without manual merge."
+    "observed_at": "2026-10-06T08:15:34Z",
+    "pr_number": 16787,
+    "status": "checks-pending",
+    "notes": "Ready-for-review neutral dependency hashing fixture PR opened at 97b93f3b86a462ed3fae54c7f355c9ccdf2f38c5. GitHub reports MERGEABLE; detect and CodeQL detection are running and the human-language gate is queued. Do not enable auto-merge until every required final-head check is terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
     "revision": "deffa7f4837dc36835b1b23426e43eabd2ac8ee4",
@@ -1769,10 +1775,10 @@
     {
       "id": "build-tool-neutral-dependency-hashing-adversarial-corpus",
       "title": "Complete adversarial neutral dependency-hashing fixtures",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-contract", "build-tool-fixtures"],
       "branch": "codex/parity-neutral-dependency-fixtures-20261006",
-      "pr_number": null,
+      "pr_number": 16787,
       "selected_at": "2026-10-06T07:42:02Z",
       "selection_revision": "deffa7f4837dc36835b1b23426e43eabd2ac8ee4",
       "selection_notes": "Selected after PR #16785 merged through guarded auto-merge, exact-main inventory stayed collision-clean with unchanged 1,487 identities and 4,757 slots, and read-only audits found no other unowned package or OCaml promotion gap. This process-free neutral fixture tranche governs ten pending native dependency-hashing leaves; it outranks one-lane Elixir source hashing, Lua dependency hashing, and TypeScript diff selection by reusable contract leverage. Both prerequisites are merged, a fresh clean worktree and codex branch start at exact merged main, and no open PR overlaps the neutral hashing fixtures or schema/runner paths.",
