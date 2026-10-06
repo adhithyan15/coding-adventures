@@ -20,6 +20,10 @@ it("builds a gentle Punjabi named-reader message from separately practised parts
     "PA-W12-spacing-repair",
     "PA-W12-spelling-repair",
     "PA-W12-punctuation-repair",
+    "PA-W12-wellbeing-supported",
+    "PA-W12-interests-supported",
+    "PA-W12-meeting-supported",
+    "PA-W12-body-blocks-delayed",
     "PA-W12-message-supported",
     "PA-W12-message-delayed",
     "PA-W12-message-no-model",
@@ -36,15 +40,13 @@ it("builds a gentle Punjabi named-reader message from separately practised parts
   const independent = byId.get("PA-W12-message-no-model")!;
   expect(independent.blocks.map((block) => block.writingStage).filter(Boolean))
     .toContain("controlled-composition");
-  const activities = compileLessonActivities(independent.blocks);
-  const message = activities.find((activity) => activity.id === "PA-W12-message-no-model-write");
-  expect(message).toBeDefined();
-  expect(message!.prompt).not.toMatch(/[\u0A00-\u0A7F]/u);
-  expect(message!.prompt).not.toMatch(/romaniz|copy|model/i);
-  const wordCount = message!.answer.trim().split(/\s+/u).length;
-  expect(wordCount).toBeGreaterThanOrEqual(30);
-  expect(wordCount).toBeLessThanOrEqual(40);
-  expect(message!.answer).toContain("ਨਮਸਤੇ");
-  expect(message!.answer).toContain("ਮਨਨ");
-  expect(message!.answer).toContain("ਫਿਰ ਮਿਲਾਂਗੇ");
+  const finalPrompt = independent.blocks.map((block) => block.markdown).join("\n");
+  expect(finalPrompt).not.toMatch(/[\u0A00-\u0A7F]/u);
+  expect(finalPrompt).not.toMatch(/romaniz|transliterat/i);
+  expect(finalPrompt).toMatch(/30.{0,3}40.word/iu);
+  expect(finalPrompt).toMatch(/reader|Manan/iu);
+  expect(finalPrompt).toMatch(/agreement|spelling|spacing/iu);
+  // Free composition has many valid outputs. An exact-answer activity would
+  // incorrectly mark a different valid 30–40-word message wrong.
+  expect(compileLessonActivities(independent.blocks)).toEqual([]);
 });
