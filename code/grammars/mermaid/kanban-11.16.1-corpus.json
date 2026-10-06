@@ -7,6 +7,7 @@
     { "id": "plain", "source": "kanban\n  Todo\n    Write grammar\n    Add tests\n  Done\n    Ship" },
     { "id": "explicit-ids", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]\n  done[Done]\n    paint[Native paint]" },
     { "id": "inline-card-metadata", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]@{ ticket: MC-42, assigned: Ada, priority: high }" },
-    { "id": "multiline-card-metadata", "source": "kanban\n  todo[Todo]\n    parser@{\n      label: \"Grammar parser\"\n      ticket: MC-42\n      assigned: Ada\n      priority: high\n    }" }
+    { "id": "multiline-card-metadata", "source": "kanban\n  todo[Todo]\n    parser@{\n      label: \"Grammar parser\"\n      ticket: MC-42\n      assigned: Ada\n      priority: high\n      icon: heart\n    }" },
+    { "id": "card-icon-decoration", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]\n      ::icon(heart)" }
   ]
 }

@@ -1,6 +1,6 @@
 //! Deterministic column/card layout for board diagrams.
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 use diagram_ir::{
     BoardDiagram, DiagramStyle, LayoutedBoardCard, LayoutedBoardColumn, LayoutedBoardDiagram,
@@ -47,6 +47,7 @@ pub fn layout_board_diagram(board: &BoardDiagram) -> LayoutedBoardDiagram {
                         ticket: card.ticket.clone(),
                         assigned: card.assigned.clone(),
                         priority: card.priority.clone(),
+                        icon: card.icon.clone(),
                     };
                     next_card_y += height + CARD_GAP;
                     layouted
@@ -124,6 +125,7 @@ mod tests {
                     ticket: None,
                     assigned: None,
                     priority: None,
+                    icon: None,
                 }],
             }],
         };
@@ -145,6 +147,7 @@ mod tests {
                     ticket: Some("MC-42".into()),
                     assigned: Some("Ada".into()),
                     priority: Some("high".into()),
+                    icon: Some("heart".into()),
                 }],
             }],
         };

@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.68.0";
+pub const VERSION: &str = "0.69.0";
 
 use std::collections::HashMap;
 
@@ -3709,9 +3709,38 @@ where
                 corner_radius: Some(card.style.corner_radius),
                 stroke_dash: None, stroke_dash_offset: None,
             }));
+            let (label_x, label_width) = if let Some(icon) = &card.icon {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: card.x + 8.0,
+                    y: card.y + 12.0,
+                    width: 52.0,
+                    height: 22.0,
+                    fill: None,
+                    stroke: Some(card.style.stroke.clone()),
+                    stroke_width: Some(1.0),
+                    corner_radius: Some(11.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                let mut icon_font = options.label_font.clone();
+                icon_font.size = 9.0;
+                text_children.push(text_node_no_wrap(
+                    icon,
+                    card.x + 11.0,
+                    card.y + 15.0,
+                    46.0,
+                    16.0,
+                    icon_font,
+                    css_to_color(&card.style.text_color),
+                ));
+                (card.x + 66.0, card.width - 76.0)
+            } else {
+                (card.x + 10.0, card.width - 20.0)
+            };
             text_children.push(text_node(
-                &card.label.text, card.x + 10.0, card.y + 18.0,
-                card.width - 20.0, card.height - if metadata.is_some() { 46.0 } else { 24.0 },
+                &card.label.text, label_x, card.y + 18.0,
+                label_width, card.height - if metadata.is_some() { 46.0 } else { 24.0 },
                 options.label_font.clone(), css_to_color(&card.style.text_color),
             ));
             if let Some(metadata) = metadata {
@@ -7301,7 +7330,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.68.0");
+        assert_eq!(crate::VERSION, "0.69.0");
     }
 
     #[test]

@@ -464,6 +464,10 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
         }
         if id == "multiline-card-metadata" {
             assert_eq!(board.columns[0].cards[0].label.text, "Grammar parser");
+            assert_eq!(board.columns[0].cards[0].icon.as_deref(), Some("heart"));
+        }
+        if id == "card-icon-decoration" {
+            assert_eq!(board.columns[0].cards[0].icon.as_deref(), Some("heart"));
         }
     }
 }

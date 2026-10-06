@@ -1413,9 +1413,10 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
         })?;
 
     let lines = tokens.iter()
-        .filter(|token| matches!(token.type_name.as_deref(), Some("STATEMENT_LINE" | "NODE_WITH_DATA")))
+        .filter(|token| matches!(token.type_name.as_deref(), Some("STATEMENT_LINE" | "NODE_WITH_DATA" | "ICON_LINE")))
         .collect::<Vec<_>>();
     let column_indent = lines.iter()
+        .filter(|token| token.type_name.as_deref() != Some("ICON_LINE"))
         .map(|token| token.value.len() - token.value.trim_start().len())
         .min()
         .ok_or_else(|| ParseError {
@@ -1424,7 +1425,21 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
     let mut diagram = BoardDiagram::default();
     let mut ids = HashSet::new();
     let mut card_indent = None;
+    let mut last_card: Option<(usize, usize)> = None;
     for token in lines {
+        if token.type_name.as_deref() == Some("ICON_LINE") {
+            let (column_index, card_index) = last_card
+                .ok_or_else(|| token_error(token, "kanban icon must follow a card"))?;
+            let value = token.value.trim();
+            let icon = value
+                .strip_prefix("::icon(")
+                .and_then(|value| value.strip_suffix(')'))
+                .map(str::trim)
+                .filter(|value| !value.is_empty())
+                .ok_or_else(|| token_error(token, "kanban icon name cannot be empty"))?;
+            diagram.columns[column_index].cards[card_index].icon = Some(icon.to_string());
+            continue;
+        }
         let indent = token.value.len() - token.value.trim_start().len();
         let value = token.value.trim();
         if value.starts_with("::") || value.starts_with("style ") {
@@ -1443,6 +1458,7 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
             diagram.columns.push(BoardColumn {
                 id, label: DiagramLabel::new(label), cards: Vec::new(),
             });
+            last_card = None;
         } else if indent > column_indent {
             match card_indent {
                 Some(expected) if indent != expected => {
@@ -1451,7 +1467,9 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
                 None => card_indent = Some(indent),
                 Some(_) => {}
             }
-            let column = diagram.columns.last_mut()
+            let column_index = diagram.columns.len().checked_sub(1)
+                .ok_or_else(|| token_error(token, "kanban card must follow a column"))?;
+            let column = diagram.columns.get_mut(column_index)
                 .ok_or_else(|| token_error(token, "kanban card must follow a column"))?;
             column.cards.push(BoardCard {
                 id,
@@ -1459,7 +1477,9 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
                 ticket: metadata.ticket,
                 assigned: metadata.assigned,
                 priority: metadata.priority,
+                icon: metadata.icon,
             });
+            last_card = Some((column_index, column.cards.len() - 1));
         } else {
             return Err(token_error(token, "invalid kanban indentation"));
         }
@@ -1473,11 +1493,12 @@ struct KanbanNodeMetadata {
     ticket: Option<String>,
     assigned: Option<String>,
     priority: Option<String>,
+    icon: Option<String>,
 }
 
 impl KanbanNodeMetadata {
     fn has_card_fields(&self) -> bool {
-        self.ticket.is_some() || self.assigned.is_some() || self.priority.is_some()
+        self.ticket.is_some() || self.assigned.is_some() || self.priority.is_some() || self.icon.is_some()
     }
 }
 
@@ -1502,6 +1523,7 @@ fn parse_kanban_node_metadata<'a>(
             "ticket" => metadata.ticket = Some(value),
             "assigned" => metadata.assigned = Some(value),
             "priority" => metadata.priority = Some(value),
+            "icon" => metadata.icon = Some(value),
             _ => {}
         }
     }
@@ -12295,16 +12317,18 @@ mod tests_dg04 {
     #[test]
     fn kanban_preserves_inline_and_multiline_card_metadata() {
         let board = parse_kanban(
-            "kanban\n  todo[Todo]\n    parser[Write grammar]@{ ticket: MC-42, assigned: 'Ada Lovelace', priority: high }\n    tests@{\n      label: \"Add parser tests\"\n      ticket: MC-43\n      assigned: Grace\n      priority: low\n    }",
+            "kanban\n  todo[Todo]\n    parser[Write grammar]@{ ticket: MC-42, assigned: 'Ada Lovelace', priority: high, icon: heart }\n    tests@{\n      label: \"Add parser tests\"\n      ticket: MC-43\n      assigned: Grace\n      priority: low\n    }\n      ::icon(test-tube)",
         )
         .unwrap();
         let parser = &board.columns[0].cards[0];
         assert_eq!(parser.ticket.as_deref(), Some("MC-42"));
         assert_eq!(parser.assigned.as_deref(), Some("Ada Lovelace"));
         assert_eq!(parser.priority.as_deref(), Some("high"));
+        assert_eq!(parser.icon.as_deref(), Some("heart"));
         let tests = &board.columns[0].cards[1];
         assert_eq!(tests.label.text, "Add parser tests");
         assert_eq!(tests.ticket.as_deref(), Some("MC-43"));
+        assert_eq!(tests.icon.as_deref(), Some("test-tube"));
     }
 
     #[test]
