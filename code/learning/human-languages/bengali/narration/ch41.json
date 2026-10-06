@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Letters You Have Read All Along",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5104724f830f8beb",
+  "sourceHash": "fnv1a64:31e4bdfc329672ea",
   "lessons": [
     {
       "id": "BN-W41-anusvar",
@@ -175,7 +175,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9199cd7602639eb8",
+      "sourceHash": "fnv1a64:4a56120c05a94476",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -238,11 +238,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ঃ (bisarga) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ঃ (bisarga) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start this letter and which way to travel, in one attested order, and names its source beneath it. Teachers vary, so treat it as a sound way in, not the only one."
             }
           ]
         },

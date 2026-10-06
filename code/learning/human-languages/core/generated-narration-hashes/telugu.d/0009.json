@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 9,
-  "sourceHash": "fnv1a64:181cab5b315ef9f6",
+  "sourceHash": "fnv1a64:c1e1eb55c63afa52",
   "lessonIds": [
     "TE-C09-kshaminchandi",
     "TE-C09-itika",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch09.txt",
   "json": "telugu/narration/ch09.json",
-  "textHash": "fnv1a64:3731f774a27df9ca",
-  "jsonHash": "fnv1a64:4523a2404f1a63d7",
+  "textHash": "fnv1a64:5037f47dd4c757ed",
+  "jsonHash": "fnv1a64:10c55654a9442058",
   "findings": []
 }

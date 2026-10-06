@@ -81,7 +81,7 @@ Every one of these was yours long before this page:
 Read them again and this time **the dot is part of what you are reading**. Look
 at where in each word the dotted letter falls.
 
-## Writing: ◌़ — copy what you see
+## Writing: ◌़ — follow the numbered strip
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-140] -->
 
 Draw the consonant the way you already draw it. Then put one dot below it,
@@ -90,11 +90,10 @@ under the middle of the letter, clear of the line.
 Put your pen on **ड़** and follow it. Copy the shape slowly and larger than it
 is printed.
 
-> This book does not tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+> The strip shows **where to start the dot and which way to make it**, in
+> one attested order. That is taught with real variation from school to school,
+> so the strip names its source beneath it: treat it as a sound way in, not the
+> only one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-140, HI-SCRIPT-DA-RETROFLEX-01] -->

@@ -48,8 +48,8 @@ The short-*o* sign reaches around its consonant. Part appears on the left and
 part on the right, but together they are one vowel sign. Read the whole joined
 shape as one syllable: **சொ**, *so*.
 
-Do not invent a stroke order from the printed font. Follow the model as one
-shape today.
+Do not invent a stroke order from the printed font: the strip gives a sourced
+one, in written order — the left part of **ொ**, then **ச**, then the right part.
 
 ## Writing — observe and trace
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-SHORT-O-01, TA-LEX-SOLLUNGAL-01] -->

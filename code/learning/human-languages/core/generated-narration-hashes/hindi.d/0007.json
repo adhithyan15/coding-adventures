@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 7,
-  "sourceHash": "fnv1a64:b4c91502eeb6c560",
+  "sourceHash": "fnv1a64:f13093f622f35845",
   "lessonIds": [
     "HI-C07-haan",
     "HI-C07-nahin",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch07.txt",
   "json": "hindi/narration/ch07.json",
-  "textHash": "fnv1a64:77abc4837a72901c",
-  "jsonHash": "fnv1a64:e6da87c61dbbbd8b",
+  "textHash": "fnv1a64:2da0d8648b135681",
+  "jsonHash": "fnv1a64:1b6783e592bc9150",
   "findings": []
 }

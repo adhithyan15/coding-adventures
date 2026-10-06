@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Body Parts",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:36a13bc5ec765a7a",
+  "sourceHash": "fnv1a64:e00f0b0af76c6a3e",
   "lessons": [
     {
       "id": "TA-C13-udal-uruppugal",
@@ -497,7 +497,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:56fff8d4231254af",
+      "sourceHash": "fnv1a64:ffc512eb3d9b8dd1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -576,15 +576,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ர — copy what you see",
+          "title": "Writing: ர — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ர (ra) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ர (ra) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

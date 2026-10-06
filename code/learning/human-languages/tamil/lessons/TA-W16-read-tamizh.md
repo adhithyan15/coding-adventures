@@ -55,10 +55,9 @@ sound sits somewhere between an *r*, an *l* and a *zh* — rare enough in the
 world's languages that Tamil is sometimes called the **ḻ** language. That is why
 the word for the language itself ends in it.
 
-> Read both; do not draw them yet. Neither **த** nor **ழ** has an entry in this
-> book's script data, so neither gets a stroke order, and the mouth positions
-> above are this lesson's own — the data is sourced for **ண**'s retroflex curl
-> and nothing else here.
+> Read both. The strip writes the whole word, numbered movement by movement,
+> with each source beneath it. The script data calls **த** dental and **ழ**
+> retroflex; the finer mouth positions above are this lesson's own.
 
 ## Script you'll notice: build the word
 <!-- hl-knowledge: introduces=[TA-SCRIPT-READ-TAMIZH-02]; assesses=[TA-SCRIPT-TA-ZHA-01, TA-SCRIPT-MA-RETROFLEX-NA-01, TA-SCRIPT-I-SIGN-WRITE-NANDRI-01, TA-SCRIPT-PULLI-VANAKKAM-01] -->

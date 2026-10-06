@@ -55,8 +55,8 @@ fills in the rest.
 **ர** is *ra*, with its built-in *a*. It is the other of Tamil's **two**
 *r*-letters, alongside the **ற** you met in **நன்றி**.
 
-> Read both letters here; do not draw them yet. This book gives a stroke order
-> only where it has a sourced one, and ச and ர do not have one yet.
+> Read both letters here. The strip writes ச, ர and then the ி sign, numbered
+> movement by movement, with each source beneath it.
 
 ## Script you'll notice: build the word
 <!-- hl-knowledge: introduces=[TA-SCRIPT-WRITE-SARI-02]; assesses=[TA-SCRIPT-CA-ONE-LETTER-01, TA-SCRIPT-I-SIGN-WRITE-NANDRI-01] -->

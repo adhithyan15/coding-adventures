@@ -69,17 +69,16 @@ lesson ever naming it.
 There is a second nasal mark, a crescent with a dot inside it, and which of the
 two a word takes depends on what else is sitting above the letter.
 
-## Writing: ◌ं — copy what you see
+## Writing: ◌ं — follow the numbered strip
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-148] -->
 
 Draw the letter and its head-line as you already do. Then put one dot **above
 the line**, over the middle of the letter.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+> The strip shows **where to start the character and which way to travel**, in
+> one attested order. That is taught with real variation from school to school,
+> so the strip names its source beneath it: treat it as a sound way in, not the
+> only one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-148, HI-SCRIPT-RECOG-144] -->

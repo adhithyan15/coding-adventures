@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:eced9b9a3e4a93d0",
+  "sourceHash": "fnv1a64:4d87a04bf3a67b7c",
   "lessons": [
     {
       "id": "ML-C01-namaskaram",
@@ -1166,7 +1166,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eafbfc87f30b9d2d",
+      "sourceHash": "fnv1a64:16e185e33e030177",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1237,15 +1237,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: അ — copy what you see",
+          "title": "Writing: അ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on അ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write അ yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

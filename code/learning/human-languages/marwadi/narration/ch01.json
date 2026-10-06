@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Ram-Ram Sa: A Greeting the Hand Can Make",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:559c8adffb9cc2ae",
+  "sourceHash": "fnv1a64:30cc055dd88b61e7",
   "lessons": [
     {
       "id": "MW-W01-ra",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:56ab212c5d743006",
+      "sourceHash": "fnv1a64:04b7af4ac74fb2fe",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -77,7 +77,7 @@
             },
             {
               "kind": "speech",
-              "text": "This lesson asks you to copy the shape you can see. It does not invent one universal stroke order where school traditions differ."
+              "text": "The strip shows one attested stroke order for र, with its source beneath it. It is not one universal order: school traditions differ."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Your Town, Your Friend",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:832227221bc5dfcc",
+  "sourceHash": "fnv1a64:de7c14219d27db57",
   "lessons": [
     {
       "id": "TA-C37-uur",
@@ -417,7 +417,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a4d00dabaf8d79bf",
+      "sourceHash": "fnv1a64:bc4d2fba94dec533",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -472,7 +472,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read it; do not draw it yet. ஊ has no entry in this book's script data, and neither has உ — so neither gets a stroke order, and the pairing above, like the way the shorter letter sits inside the longer one, is what the page shows rather than something the data states."
+              "text": "Read it. The strip writes ஊ, ர and the puḷḷi in turn, numbered movement by movement. Its source for ஊ builds the letter as the page suggests: உ first, then the ள form written over it."
             }
           ]
         },

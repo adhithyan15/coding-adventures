@@ -48,10 +48,9 @@ the fourth short-and-long pair the strand has handed you, after **அ**/**ஆ**,
 | **உ** | short *u* |
 | **ஊ** | long *ū* |
 
-> Read it; do not draw it yet. **ஊ** has no entry in this book's script data, and
-> neither has **உ** — so neither gets a stroke order, and the pairing above, like
-> the way the shorter letter sits inside the longer one, is what the page shows
-> rather than something the data states.
+> Read it. The strip writes **ஊ**, **ர** and the puḷḷi in turn, numbered
+> movement by movement. Its source for **ஊ** builds the letter as the page
+> suggests: **உ** first, then the **ள** form written over it.
 
 ## Script you'll notice: build the word
 <!-- hl-knowledge: introduces=[TA-SCRIPT-READ-UUR-02]; assesses=[TA-SCRIPT-UU-VOWEL-01, TA-SCRIPT-CA-ONE-LETTER-01, TA-SCRIPT-PULLI-VANAKKAM-01] -->

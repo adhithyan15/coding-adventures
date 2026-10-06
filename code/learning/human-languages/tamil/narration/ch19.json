@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6f25a70388d1cc41",
+  "sourceHash": "fnv1a64:0cdf28a3af298c3a",
   "lessons": [
     {
       "id": "TA-C19-vayathu",
@@ -385,7 +385,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e901b4d9eeba8fde",
+      "sourceHash": "fnv1a64:689c3142dec9dac2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -450,7 +450,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read both letters here; do not draw them yet. This book gives a stroke order only where it has a sourced one, and ச and ர do not have one yet."
+              "text": "Read both letters here. The strip writes ச, ர and then the ி (i sign) sign, numbered movement by movement, with each source beneath it."
             }
           ]
         },
@@ -566,7 +566,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ff9f282f0d7c5fe5",
+      "sourceHash": "fnv1a64:c30ee6e9baeab50b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -645,15 +645,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ◌ே — copy what you see",
+          "title": "Writing: ◌ே — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ே (ē) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ே (ē) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

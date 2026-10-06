@@ -150,7 +150,7 @@ Script you'll notice: த and ழ.
 ழ, ḻ — the third l-letter, curled far back.
 த is the dental partner of the retroflex ட you read in எப்படி: same kind of stop, different place in the mouth. Tamil keeps the pair apart in writing, so த and ட are never interchangeable.
 ழ is the one Tamil is known for. It is made further back than ள, and its sound sits somewhere between an r, an l and a zh — rare enough in the world's languages that Tamil is sometimes called the ḻ language. That is why the word for the language itself ends in it.
-Read both; do not draw them yet. Neither த nor ழ has an entry in this book's script data, so neither gets a stroke order, and the mouth positions above are this lesson's own — the data is sourced for ண's retroflex curl and nothing else here.
+Read both. The strip writes the whole word, numbered movement by movement, with each source beneath it. The script data calls த dental and ழ retroflex; the finer mouth positions above are this lesson's own.
 
 Script you'll notice: build the word.
 [a table of 3 rows, read aloud]

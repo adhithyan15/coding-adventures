@@ -53,13 +53,13 @@ stroke above a consonant, for *e*. Two strokes, **ૈ**, make it *ai*.
 ## Writing: ૈ
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-C45-AI-SIGN-01] -->
 
-Put your pen on ૈ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Follow the numbered strip: start where movement 1 begins, and let each panel
+show you the next movement before your pen makes it. Then write ૈ yourself —
+slowly, and larger than it is printed.
 
-> This book does not yet tell you **where to start this letter or which way to
-> travel**. It is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+> The strip shows **where to start this letter and which way to travel**, in one
+> attested order, and names its source beneath it. Teachers vary, so treat it as
+> a sound way in, not the only one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-TTHA-01, GU-SCRIPT-C45-GHA-01, GU-SCRIPT-C45-AI-SIGN-01] -->

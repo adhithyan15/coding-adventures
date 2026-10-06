@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bbf75caa6a49e1ca",
+  "sourceHash": "fnv1a64:c6776ad4adcac66c",
   "lessons": [
     {
       "id": "KA-C26-belagge",
@@ -250,7 +250,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ce8260518972824c",
+      "sourceHash": "fnv1a64:c50acf40efb5bb90",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -346,15 +346,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ಈ — copy what you see",
+          "title": "Writing: ಈ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಈ (ī) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ಈ (ī) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

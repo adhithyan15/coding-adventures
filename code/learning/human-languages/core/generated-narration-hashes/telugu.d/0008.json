@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 8,
-  "sourceHash": "fnv1a64:a4ebf46b99ebdac4",
+  "sourceHash": "fnv1a64:47b2ba50a088f3d1",
   "lessonIds": [
     "TE-C08-dayachesi",
     "TE-C08-andi",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch08.txt",
   "json": "telugu/narration/ch08.json",
-  "textHash": "fnv1a64:1fe7d5c94b93d9aa",
-  "jsonHash": "fnv1a64:efd7d53d2cd46a71",
+  "textHash": "fnv1a64:b5f426b90ca72b36",
+  "jsonHash": "fnv1a64:0d009ee6be4c76d9",
   "findings": []
 }
