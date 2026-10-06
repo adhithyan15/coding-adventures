@@ -29,6 +29,26 @@ declared-source matching. Component names are exact and case-sensitive, so
 Directory and file symlinks plus Windows junction/reparse attributes are
 excluded before source matching or file reads.
 
+The Python wheel carries a byte-for-byte snapshot of the checked
+`build-tool-v1/language-source-input-registry.json` contract. Its production
+collector uses the complete 23-language registry: recursive suffixes and
+exact names, root-only names and variable manifests, language-wide exact
+paths, exact package inputs, and bounded native-companion/resource scopes.
+Universal BUILD fronts are recursive; `required_capabilities.json` is root-
+only. Fixed paths apply even with declared source globs, while recursive and
+scoped inputs are replaced by those globs in declared mode. The two reviewed
+site roots use the TypeScript registry despite their legacy `unknown/*` graph
+names; other unknown languages and unregistered site roots fail closed. This
+package-local step does not yet hash the separately registered shared ancestor
+or generated-pruning-exception inputs. To refresh the installed projection
+after a reviewed neutral registry edit, run
+`python tools/sync_source_input_registry.py` from this package; CI checks
+`--check` and the full neutral case roster.
+Collection bounds candidate and selected counts, glob matching work, and
+individual and aggregate source bytes before hashing; unsafe or ambiguous
+portable path spellings, linked roots, hardlinked inputs, and non-regular files
+fail closed.
+
 Declared-source globs are matched by a pure, host-independent engine. An
 entire `**` path segment spans zero or more segments; `*`, `?`, and portable
 character classes operate on Unicode scalar values within one segment. Both
