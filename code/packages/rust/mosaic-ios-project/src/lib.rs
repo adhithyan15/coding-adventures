@@ -753,6 +753,9 @@ fn target_settings(app: &IosApp) -> Vec<(&'static str, Setting)> {
             text(app.bundle_identifier.clone()),
         ),
         ("PRODUCT_NAME", text(app.product_name.clone())),
+        // Also set on the project; repeated on each target so a scheme's
+        // destinations resolve from the target itself (UI89 §4.3).
+        ("SDKROOT", text("iphoneos")),
         ("SUPPORTED_PLATFORMS", text("iphoneos iphonesimulator")),
         ("SUPPORTS_MACCATALYST", text("NO")),
         ("SWIFT_EMIT_LOC_STRINGS", text("NO")),
@@ -779,6 +782,7 @@ fn ui_test_settings(app: &IosApp) -> Vec<(&'static str, Setting)> {
             text(format!("{}.uitests", app.bundle_identifier)),
         ),
         ("PRODUCT_NAME", text(ui_test_target_name(app))),
+        ("SDKROOT", text("iphoneos")),
         ("SUPPORTED_PLATFORMS", text("iphoneos iphonesimulator")),
         ("SWIFT_EMIT_LOC_STRINGS", text("NO")),
         ("TARGETED_DEVICE_FAMILY", text("1,2")),

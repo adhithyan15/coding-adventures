@@ -3165,9 +3165,13 @@ jobs:
             cd "$journal_ios_output/swiftui/iOS"
             # What xcodebuild makes of the generated scheme, logged before the
             # run so a scheme it cannot use is diagnosable from this log.
+            find App.xcodeproj -name '*.xcscheme' -print
             xcodebuild -list -project App.xcodeproj || true
-            xcodebuild -showdestinations -project App.xcodeproj -scheme App || true
-            xcodebuild test -project App.xcodeproj -scheme App -destination "platform=iOS Simulator,id=$ipad" -derivedDataPath "$RUNNER_TEMP/mosaic-journal-ios-ui-test" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$journal_ui_test_log"
+            xcodebuild -showBuildSettings -project App.xcodeproj -target App -sdk iphonesimulator 2>/dev/null | grep -E ' (SDKROOT|SUPPORTED_PLATFORMS|PLATFORM_NAME|EFFECTIVE_PLATFORM_NAME) = ' || true
+            xcodebuild -showdestinations -project App.xcodeproj -scheme App -sdk iphonesimulator || true
+            # -sdk as the app build above passes it: the destination is a
+            # simulator, so the SDK is the simulator's.
+            xcodebuild test -project App.xcodeproj -scheme App -sdk iphonesimulator -destination "platform=iOS Simulator,id=$ipad" -derivedDataPath "$RUNNER_TEMP/mosaic-journal-ios-ui-test" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$journal_ui_test_log"
           )
           # The count, not just the exit status: a test that was never compiled
           # in, or was filtered out, would leave xcodebuild green.

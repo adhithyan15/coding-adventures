@@ -214,7 +214,7 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
 
         uninstall = 'xcrun simctl uninstall "$ipad" dev.codingadventures.journalapp'
         test = (
-            'xcodebuild test -project App.xcodeproj -scheme App '
+            'xcodebuild test -project App.xcodeproj -scheme App -sdk iphonesimulator '
             '-destination "platform=iOS Simulator,id=$ipad"'
         )
         self.assertIn(uninstall, block)
