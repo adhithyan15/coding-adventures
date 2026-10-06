@@ -4,7 +4,7 @@
   "chapter": 156,
   "title": "Write to One Named Reader",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ec40f32fd6156cc2",
+  "sourceHash": "fnv1a64:aaf9694cd84918d5",
   "lessons": [
     {
       "id": "PA-W12-greeting-choice",
@@ -107,7 +107,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d1a2ec85c26a6e83",
+      "sourceHash": "fnv1a64:609f5ace7ea0ed3d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -128,7 +128,7 @@
             },
             {
               "kind": "speech",
-              "text": "The name you just retrieved is ਮਨਨ. Say the greeting selected for a reader whose community is not specified. Now add that already-read name."
+              "text": "The name you retrieved is ਮਨਨ. Say the greeting selected for a reader whose community is not specified. Now add that already-read name."
             }
           ]
         },
@@ -562,7 +562,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:a76b7ac0a3c4ccda",
+      "sourceHash": "fnv1a64:70e15c6cfd132244",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -590,7 +590,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy just this block, not the whole message:"
+              "text": "Copy this block, not the whole message:"
             },
             {
               "kind": "speech",
@@ -1291,7 +1291,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:196c8691df34532a",
+      "sourceHash": "fnv1a64:a55a7a5533e0b7d2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1330,7 +1330,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "In a note to Manan, this line goes after Aman's facts and before ਧੰਨਵਾਦ। ਫਿਰ ਮਿਲਾਂਗੇ। (dhanvād · phir milāṁge) Do not write the whole note yet; just point to where the line belongs."
+              "text": "In a note to Manan, this line goes after Aman's facts and before ਧੰਨਵਾਦ। ਫਿਰ ਮਿਲਾਂਗੇ। (dhanvād · phir milāṁge) Do not write the whole note yet; point to where the line belongs."
             }
           ]
         },

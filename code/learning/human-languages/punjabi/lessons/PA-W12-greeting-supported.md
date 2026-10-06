@@ -42,7 +42,7 @@ compare one dimension at a time: selection, spelling, spaces, digits, and
 placement. Repair the first difference you find. This is a short recall of
 the form, not a new form lesson or a model for the message.
 
-The name you just retrieved is **ਮਨਨ**. Say the greeting selected for a
+The name you retrieved is **ਮਨਨ**. Say the greeting selected for a
 reader whose community is not specified. Now add that already-read name.
 
 ## Writing — a supported opening

@@ -50,7 +50,7 @@ Copy **ਅਸੀਂ ਜਲਦੀ ਮਿਲਾਂਗੇ।** once. Point to **ਅ
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SKILL-CONNECTED-READING] -->
 
 In a note to Manan, this line goes after Aman's facts and before
-**ਧੰਨਵਾਦ। ਫਿਰ ਮਿਲਾਂਗੇ।** Do not write the whole note yet; just point to
+**ਧੰਨਵਾਦ। ਫਿਰ ਮਿਲਾਂਗੇ।** Do not write the whole note yet; point to
 where the line belongs.
 
 ## Wrap-up recall

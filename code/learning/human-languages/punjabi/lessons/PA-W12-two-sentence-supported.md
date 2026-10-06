@@ -43,7 +43,7 @@ time. Their meanings are already familiar.
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SKILL-CONNECTED-READING] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy just this block, not the whole message:
+Copy this block, not the whole message:
 
 > ਮੇਰਾ ਨਾਂ ਅਮਨ ਹੈ। ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ।
 
