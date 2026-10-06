@@ -3,8 +3,8 @@
 ALGOL runtime real output now includes values migrated through provenance-tracked
 scalar slots: a real procedure result with zero parameters, value-mode scalar
 parameters, value/name array descriptor formals, a direct procedure formal, or
-an integer/boolean name formal can be assigned and copied between real locals
-before the shared portable formatter prints it on all seven standard backends.
+an integer/boolean/string name formal can be assigned and copied between real
+locals before the shared portable formatter prints it on all seven standard backends.
 Unknown
 statement conditions may also merge that provenance
 when both exits establish it for the same slot, and side-effect-free conditional
@@ -26,8 +26,9 @@ by the existing finite specialisation to a proven runtime-real actual. Array
 formals reuse their existing concrete typed descriptor paths and require no new
 dynamic ABI. Direct procedure formals use the existing finite specialisation
 that substitutes a statically known target without an IIR procedure descriptor.
-Integer and boolean name formals use that same finite substitution; unproven
-real name actuals and string name formals remain conservative.
+Integer, boolean, and string name formals use that same finite substitution;
+string-literal actuals remain call arguments rather than being mistaken for the
+whole expression, while unproven real name actuals remain conservative.
 
 The opt-in CLR integration suite `tests/clr_strict_flow.rs` executes forward-only
 conditional control, nested Bool branches and wide values through joins,
