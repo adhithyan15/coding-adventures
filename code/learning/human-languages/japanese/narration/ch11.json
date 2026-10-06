@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Seven Body Words, No New Guessing",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:30691b733e4fffd2",
+  "sourceHash": "fnv1a64:b08876cc36cf3f63",
   "lessons": [
     {
       "id": "JA-W11-small-tsu",
@@ -665,8 +665,8 @@
     {
       "id": "JA-C11-kuchi",
       "sequence": 750,
-      "title": "くち (kuchi) — mouth",
-      "headword": "くち",
+      "title": "口 (kuchi) — mouth",
+      "headword": "口",
       "romanization": "kuchi",
       "gloss": "mouth",
       "script": "japanese",
@@ -675,7 +675,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e43acd579124b51b",
+      "sourceHash": "fnv1a64:a0c43f5d4f377f15",
       "notice": null,
       "blocks": [
         {
@@ -702,11 +702,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "くち — kuchi — mouth."
+              "text": "口 (くち) — kuchi — mouth."
             },
             {
               "kind": "speech",
-              "text": "Join two earned signs; keep two even morae."
+              "text": "The three-stroke box you have written since chapter five is the word: 口 is kuchi. Its reading joins two earned signs, く and ち; keep two even morae."
             }
           ]
         },
@@ -721,11 +721,11 @@
             },
             {
               "kind": "speech",
-              "text": "Read く | ち."
+              "text": "Read 口 (kuchi), then its reading く | ち."
             },
             {
               "kind": "speech",
-              "text": "Hide it and write the two signs in order."
+              "text": "Hide it and write 口 (kuchi), then the two signs in order."
             }
           ]
         },
@@ -740,7 +740,7 @@
             },
             {
               "kind": "speech",
-              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+              "text": "Sources: Japan Foundation Marugoto A1 vocabulary database; KanjiVG stroke-order data."
             },
             {
               "kind": "activity",
@@ -752,12 +752,13 @@
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
+                "口",
                 "くち",
                 "kuchi"
               ],
               "feedback": {
-                "correct": "Right: くち is mouth.",
-                "incorrect": "Join known く and ち: くち — kuchi."
+                "correct": "Right: 口, read くち, is mouth.",
+                "incorrect": "Write the box 口, read く and ち: くち — kuchi."
               }
             }
           ]
@@ -793,7 +794,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write あ and し. Retrieve くち (kuchi) — mouth."
+              "text": "Write あ and し. Retrieve くち — mouth."
             }
           ]
         },
@@ -1212,7 +1213,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "て (te) ・ みみ (mimi) ・ くち (kuchi) ・ あし (ashi) ・ はな (hana) ・ かお (kao) ・ め (me)."
+              "text": "て (te) ・ みみ (mimi) ・ くち ・ あし (ashi) ・ はな (hana) ・ かお (kao) ・ め (me)."
             },
             {
               "kind": "speech",

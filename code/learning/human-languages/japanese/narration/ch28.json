@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "To use, To sing, To say, To think, To hold",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2b451f700a33acbb",
+  "sourceHash": "fnv1a64:5d6e8704f7e76dbc",
   "lessons": [
     {
       "id": "JA-C28-tsukau",
@@ -291,8 +291,8 @@
     {
       "id": "JA-C28-iu",
       "sequence": 2030,
-      "title": "いう (iu) — to say",
-      "headword": "いう",
+      "title": "言う (iu) — to say",
+      "headword": "言う",
       "romanization": "iu",
       "gloss": "to say",
       "script": "japanese",
@@ -301,7 +301,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:160302fabb8e1d70",
+      "sourceHash": "fnv1a64:7c2a965b9380ec57",
       "notice": null,
       "blocks": [
         {
@@ -324,11 +324,15 @@
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: いう",
+          "title": "You'll want to know: 言う",
           "segments": [
             {
               "kind": "speech",
-              "text": "いう — iu — \"to say\"."
+              "text": "言う (いう) — iu — \"to say\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Its first sign is 言, the speech side of 語 that you have written since chapter five; the う after it is hiragana."
             }
           ]
         },
@@ -365,12 +369,12 @@
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "iu, once more",
+              "action": "READ",
+              "instruction": "言う, then say iu once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *iu*, once more]"
+              "source": "[YOU READ: **言う**, then say *iu* once more]"
             },
             {
               "kind": "prompt",
@@ -405,7 +409,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does いう (iu) mean? (\"To say\".) Say it once more."
+              "text": "What does 言う (iu) mean? (\"To say\".) Say it once more."
             },
             {
               "kind": "activity",
@@ -417,12 +421,13 @@
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
+                "言う",
                 "いう",
                 "iu"
               ],
               "feedback": {
-                "correct": "Right: いう (iu) is 'to say'.",
-                "incorrect": "'to say' is いう (iu)."
+                "correct": "Right: 言う (iu) is 'to say'.",
+                "incorrect": "'to say' is 言う (iu)."
               }
             }
           ]

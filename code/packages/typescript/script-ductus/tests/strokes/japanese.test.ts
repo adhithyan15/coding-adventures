@@ -94,6 +94,9 @@ const JAPANESE_HI_KATAKANA = DUCTUS[ductusKey("japanese", "ヒ")];
 const JAPANESE_NICHI = DUCTUS[ductusKey("japanese", "日")];
 const JAPANESE_GO_LANGUAGE = DUCTUS[ductusKey("japanese", "語")];
 const JAPANESE_HON = DUCTUS[ductusKey("japanese", "本")];
+const JAPANESE_GEN = DUCTUS[ductusKey("japanese", "言")];
+const JAPANESE_GO_FIVE = DUCTUS[ductusKey("japanese", "五")];
+const JAPANESE_KUCHI = DUCTUS[ductusKey("japanese", "口")];
 
 const OWNER_SCRIPTS = new Set(["japanese"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -1797,9 +1800,10 @@ describe("handwriting ductus", () => {
   });
 
   // The katakana and kanji the writing lessons teach that have inventory
-  // rows: コ and ヒ, and 語, 日 and 本. Each follows KanjiVG's file for its own
-  // code point and is fitted to its own Noto Sans JP outline. 語 is KanjiVG's
-  // 言, 五 and 口 in that order.
+  // rows: コ and ヒ, and 語, 日 and 本, and 言, 五 and 口. Each follows
+  // KanjiVG's file for its own code point and is fitted to its own Noto Sans
+  // JP outline. 語 is KanjiVG's 言, 五 and 口 in that order, and the three
+  // standalone components keep that order and those directions.
   const BOX = [
     ["draw the left side down"],
     ["draw the top to the right", "turn down the right side"],
@@ -1853,6 +1857,26 @@ describe("handwriting ductus", () => {
       "0672c",
       "U+672C CJK UNIFIED IDEOGRAPH-672C",
       [["draw the bar to the right"], ["draw the centre stem down"], ["sweep down to the lower left"], ["sweep down to the lower right"], ["draw the short bar to the right"]],
+    ],
+    [JAPANESE_GEN, "08a00", "U+8A00 CJK UNIFIED IDEOGRAPH-8A00", SPEECH],
+    [
+      JAPANESE_GO_FIVE,
+      "04e94",
+      "U+4E94 CJK UNIFIED IDEOGRAPH-4E94",
+      [
+        ["draw the top bar to the right"],
+        // Standalone, the falling stroke runs from the top bar to the base,
+        // so its caption does not call it short.
+        ["draw the stroke down and left"],
+        ["draw the middle bar to the right", "turn down"],
+        ["draw the long base bar to the right"],
+      ],
+    ],
+    [
+      JAPANESE_KUCHI,
+      "053e3",
+      "U+53E3 CJK UNIFIED IDEOGRAPH-53E3",
+      [...BOX, ["close the base to the right"]],
     ],
   ] as const) {
     it(`Japanese ${letter.glyph} follows KanjiVG's ${labels.length}-path order on its own outline`, () => {
@@ -1920,13 +1944,16 @@ describe("handwriting ductus", () => {
     expect(Math.abs(first(hiBar).x - first(hiStem).x)).toBeLessThan(40);
     downward(hiStem, "ヒ");
     rightward(hiBase, "ヒ");
-    // 日 and the two boxes of 語 (言's and 口's): the left side DOWN, the top
-    // RIGHT turning DOWN the right side, every further bar RIGHT, the last at
-    // the foot. 日's middle bar lies between its top and its base.
+    // 日, the two boxes of 語 (言's and 口's), 言's box and 口: the left side
+    // DOWN, the top RIGHT turning DOWN the right side, every further bar
+    // RIGHT, the last at the foot. 日's middle bar lies between its top and
+    // its base.
     for (const [letter, from, count] of [
       [JAPANESE_NICHI, 0, 4],
       [JAPANESE_GO_LANGUAGE, 4, 3],
       [JAPANESE_GO_LANGUAGE, 11, 3],
+      [JAPANESE_GEN, 4, 3],
+      [JAPANESE_KUCHI, 0, 3],
     ] as const) {
       const [side] = segments(letter, from);
       const [top, right] = segments(letter, from + 1);
@@ -1948,10 +1975,10 @@ describe("handwriting ductus", () => {
         (first(side).y - last(side).y) / 5,
       );
     }
-    // 五 at the upper right of 語: the top bar RIGHT; a short stroke that
-    // starts on it and falls DOWN to the LEFT; the middle bar RIGHT, turning
-    // DOWN; the base bar RIGHT, the longest and lowest.
-    for (const [letter, from] of [[JAPANESE_GO_LANGUAGE, 7]] as const) {
+    // 五, at the upper right of 語 and on its own: the top bar RIGHT; a
+    // stroke that starts on it and falls DOWN to the LEFT; the middle bar
+    // RIGHT, turning DOWN; the base bar RIGHT, the longest and lowest.
+    for (const [letter, from] of [[JAPANESE_GO_LANGUAGE, 7], [JAPANESE_GO_FIVE, 0]] as const) {
       const [top] = segments(letter, from);
       const [fall] = segments(letter, from + 1);
       const [middle, turn] = segments(letter, from + 2);
@@ -1966,9 +1993,18 @@ describe("handwriting ductus", () => {
       expect(last(base).x - first(base).x, letter.glyph).toBeGreaterThan(last(top).x - first(top).x);
       expect(first(base).y, letter.glyph).toBeLessThan(first(middle).y);
     }
-    // 言 on the left of 語: the top mark, the long bar and the two short bars
-    // all run RIGHT, each lower than the last.
-    for (const letter of [JAPANESE_GO_LANGUAGE]) {
+    // Standalone 五's falling stroke reaches the base bar, as KanjiVG's s2
+    // does; the middle bar's turn ends there too.
+    {
+      const [fall] = segments(JAPANESE_GO_FIVE, 1);
+      const [, turn] = segments(JAPANESE_GO_FIVE, 2);
+      const [base] = segments(JAPANESE_GO_FIVE, 3);
+      expect(Math.abs(last(fall).y - first(base).y)).toBeLessThan(40);
+      expect(Math.abs(last(turn).y - first(base).y)).toBeLessThan(40);
+    }
+    // 言, on the left of 語 and on its own: the top mark, the long bar and the
+    // two short bars all run RIGHT, each lower than the last.
+    for (const letter of [JAPANESE_GO_LANGUAGE, JAPANESE_GEN]) {
       const bars = letter.strokes.slice(0, 4).map((stroke) => penPath(stroke));
       for (const [index, bar] of bars.entries()) {
         rightward(bar, letter.glyph);
@@ -2009,11 +2045,11 @@ describe("handwriting ductus", () => {
 
   // Every katakana and kanji row a writing lesson teaches has a cited stroke
   // order and a ductus drawn from it, with one pen lift fewer than its
-  // strokes. (言, 五 and 口, which chapter 5 also writes on their own, have no
-  // inventory row, so they are drawn only as the parts of 語.)
+  // strokes. 言, 五 and 口, which chapter 5 also writes on their own, have
+  // rows of their own now that each is read in a word headword (言う, 五, 口).
   it("every katakana and kanji row a writing lesson teaches has a cited stroke order and a ductus", () => {
     const japanese = SCRIPTS.find((script) => script.script === "japanese")!;
-    for (const glyph of ["コ", "ヒ", "日", "語", "本"]) {
+    for (const glyph of ["コ", "ヒ", "日", "語", "本", "言", "五", "口"]) {
       const row = japanese.letters.find((letter) => letter.glyph === glyph);
       expect(row?.role, glyph).toBe(/[\u30a0-\u30ff]/.test(glyph) ? "katakana" : "logograph");
       expect(row?.strokeOrderSource, glyph).toBeDefined();

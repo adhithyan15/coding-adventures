@@ -1,0 +1,21 @@
+{
+  "glyph": "口",
+  "sound": "kou / ku / kuchi",
+  "role": "logograph",
+  "components": [
+    "a box of three strokes"
+  ],
+  "strokeOrder": [
+    "draw the left side from top to bottom",
+    "lift, draw the top from left to right, then without lifting turn down the right side",
+    "lift, close the base from left to right"
+  ],
+  "strokeOrderNote": "KanjiVG's 053e3 file records 口 as three stroke paths in this order and direction: the left side, the top turning down the right side, then the base; so there are two pen lifts.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/053e3.svg",
+    "citation": "KanjiVG, kanji/053e3.svg, kanji 口 (U+53E3 CJK UNIFIED IDEOGRAPH-53E3), three stroke paths kvg:053e3-s1 to s3 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the left side drawn top to bottom (kvg:type ㇑); s2 is the top drawn left to right, turning down the right side without lifting (㇕b); s3 is the base, drawn left to right (㇐b). Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
+  "notes": "Mouth, opening. Read kuchi standing alone; the lower-right box of 語 and, with its middle bar, the frame of 日."
+}

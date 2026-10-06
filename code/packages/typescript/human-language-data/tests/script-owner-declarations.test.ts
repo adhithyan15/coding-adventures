@@ -49,7 +49,12 @@ const CONFIGS = [
   // get rows of their own, because a cited stroke order and a ductus need a
   // row to belong to. Every voiced kana row and the three spacing marks now
   // cite KanjiVG.
-  { language: "japanese", script: "japanese", letters: 87, marks: 3 },
+  // 87 -> 90: 言 (U+8A00), 五 (U+4E94) and 口 (U+53E3), written on their own
+  // since chapter 5 (JA-W05-gen-component, -five-component, -mouth-component),
+  // get rows once each is read in a word headword (言う in JA-C28-iu, 五 in
+  // JA-C14-go, 口 in JA-C11-kuchi), so each can carry its KanjiVG stroke order
+  // and a ductus.
+  { language: "japanese", script: "japanese", letters: 90, marks: 3 },
   // 24 -> 26: HL-C350 adds ج and ص as RECOGNITION-ONLY owners. panj (five) and
   // sad (a hundred) need them in a headword, and `uncoveredGlyphs` is a
   // headword check, so the numerals could not be taught without them. Both

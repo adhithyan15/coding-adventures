@@ -149,24 +149,24 @@ Write the Japanese word for ear.
 
 
 Lesson 7 of 12.
-くち (kuchi) — mouth.
+口 (kuchi) — mouth.
 
 Warm-up.
 [pause 12 seconds]
 Write く and ち separately. Retrieve みみ (mimi).
 
 You'll want to know.
-くち — kuchi — mouth.
-Join two earned signs; keep two even morae.
+口 (くち) — kuchi — mouth.
+The three-stroke box you have written since chapter five is the word: 口 is kuchi. Its reading joins two earned signs, く and ち; keep two even morae.
 
 Guided Practice.
 Hear kuchi; point to the mouth.
-Read く | ち.
-Hide it and write the two signs in order.
+Read 口 (kuchi), then its reading く | ち.
+Hide it and write 口 (kuchi), then the two signs in order.
 
 Wrap-up Recall.
 Contrast mimi and kuchi once.
-Source: Japan Foundation Marugoto A1 vocabulary database.
+Sources: Japan Foundation Marugoto A1 vocabulary database; KanjiVG stroke-order data.
 [question — say your answer, then pause 10 seconds]
 Write the Japanese word for mouth.
 
@@ -176,7 +176,7 @@ Lesson 8 of 12.
 
 Warm-up.
 [pause 12 seconds]
-Write あ and し. Retrieve くち (kuchi) — mouth.
+Write あ and し. Retrieve くち — mouth.
 
 You'll want to know.
 あし — ashi — foot; leg.
@@ -271,7 +271,7 @@ Warm-up.
 Write っ (small tsu), て, た (ta), だ (da). Read ゆっくり, いって, わかりました, and ください once; the old repair exposure is now closed.
 
 You'll want to know.
-て (te) ・ みみ (mimi) ・ くち (kuchi) ・ あし (ashi) ・ はな (hana) ・ かお (kao) ・ め (me).
+て (te) ・ みみ (mimi) ・ くち ・ あし (ashi) ・ はな (hana) ・ かお (kao) ・ め (me).
 This is a reading-and-writing map, not a new-word dump. Every word arrived in its own lesson, and every sign was already earned.
 
 Guided Practice.
