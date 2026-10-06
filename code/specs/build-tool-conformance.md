@@ -1051,6 +1051,25 @@ never acquire package-exact authority. This package-local adoption does not
 claim repository-boundary inputs, stable native snapshots, dependency digests,
 cache persistence, or front-door hash-mode activation.
 
+The Elixir build tool keeps the same complete immutable package-local registry
+projection as generated Elixir source in its own build-tool package. This shape
+ensures that changing the projection itself changes the build tool's own source
+digest without broadening the global language selector. A deterministic sync
+command and native tests compare its embedded JSON bytes and decoded structure
+with the checked neutral registry, recompute the domain-separated digest, and
+exercise every package-local neutral source-collection case through the
+production selector.
+The runtime hasher never locates a repository fixture. Its pure selector applies
+all seven roles, universal BUILD fronts, root-only capability inputs, exact
+generated-component and inert-link pruning, and extension-versus-declared
+precedence; unknown languages fail before any native directory walk. Its
+package-root binding follows the canonical lane-matched roots and only the two
+registered TypeScript site exceptions. Native package hashing then sorts
+normalized relative UTF-8 paths by raw bytes and hashes path-length, path,
+content-length, and raw-content frames under Hashing v1. Dependency digest
+framing, repository-boundary inputs, cache persistence, and stable retained-
+handle native snapshots remain separate owners and are not claimed here.
+
 Swift and the shared C#/F# engine complete this package-local projection with
 the repository-relative boundary registry, tracked-regular-file evidence, and
 an exact reverse diff index. Their native readers remain responsible for

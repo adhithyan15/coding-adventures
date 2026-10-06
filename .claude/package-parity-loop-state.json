@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16787,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16787",
-    "branch": "codex/parity-neutral-dependency-fixtures-20261006",
-    "implementation_revision": "97b93f3b86a462ed3fae54c7f355c9ccdf2f38c5",
+    "number": 16794,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16794",
+    "branch": "codex/parity-elixir-source-hashing-20261006",
+    "implementation_revision": "3f78744158b26dcf0a60eb817f3e9514d136935b",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-06T08:15:34Z",
-    "pr_number": 16787,
+    "observed_at": "2026-10-06T09:58:50Z",
+    "pr_number": 16794,
     "status": "checks-pending",
-    "notes": "Ready-for-review neutral dependency hashing fixture PR opened at 97b93f3b86a462ed3fae54c7f355c9ccdf2f38c5. GitHub reports MERGEABLE; detect and CodeQL detection are running and the human-language gate is queued. Do not enable auto-merge until every required final-head check is terminal and acceptable and GitHub reports no conflict."
+    "notes": "Ready-for-review Elixir Source Inputs and Hashing v1 PR opened at 3f78744158b26dcf0a60eb817f3e9514d136935b after local native/dependency tests, neutral corpus, build-file dry run, scoped format/lint/diff, and round-2 security review. GitHub reports MERGEABLE but BLOCKED while CI is being reported; do not enable auto-merge until final-head checks are terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "deffa7f4837dc36835b1b23426e43eabd2ac8ee4",
+    "revision": "2ec42cd3e02a2ec98bf4c9f1d8121524a6cccdc9",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1476,10 +1476,14 @@
     {
       "id": "build-tool-elixir-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Elixir build tool",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-elixir-glob-matcher-complexity-hardening"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-elixir-source-hashing-20261006",
+      "pr_number": 16794,
+      "opened_at": "2026-10-06T09:58:50Z",
+      "selected_at": "2026-10-06T09:04:00Z",
+      "selection_revision": "2ec42cd3e02a2ec98bf4c9f1d8121524a6cccdc9",
+      "selection_notes": "Selected after #16787 merged through guarded auto-merge and the exact-main 15-lane inventory stayed collision-clean with unchanged 1,487 package identities and 4,757 slots. Parallel read-only audits found no new unowned package, build-tool, or OCaml promotion gap. All six prerequisites are merged, no live PR touches Elixir build-tool files, and this process-free source collector unblocks seven unfinished descendants. Use the fresh clean main-based Elixir worktree; keep dependency hashing, native retained-handle snapshot authority, cache persistence, and adapter activation separate.",
       "notes": "Discovered by the post-#13544 source-hashing audit. Elixir recursively hashes without the exact generated-component registry and lacks portable path framing and OCaml source recognition. Repair those bounded collector semantics, consume the complete checked language source-input registry in production, and prove exact projection equality with no undeclared selector."
     },
     {
@@ -1775,13 +1779,14 @@
     {
       "id": "build-tool-neutral-dependency-hashing-adversarial-corpus",
       "title": "Complete adversarial neutral dependency-hashing fixtures",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-contract", "build-tool-fixtures"],
       "branch": "codex/parity-neutral-dependency-fixtures-20261006",
       "pr_number": 16787,
       "selected_at": "2026-10-06T07:42:02Z",
       "selection_revision": "deffa7f4837dc36835b1b23426e43eabd2ac8ee4",
       "selection_notes": "Selected after PR #16785 merged through guarded auto-merge, exact-main inventory stayed collision-clean with unchanged 1,487 identities and 4,757 slots, and read-only audits found no other unowned package or OCaml promotion gap. This process-free neutral fixture tranche governs ten pending native dependency-hashing leaves; it outranks one-lane Elixir source hashing, Lua dependency hashing, and TypeScript diff selection by reusable contract leverage. Both prerequisites are merged, a fresh clean worktree and codex branch start at exact merged main, and no open PR overlaps the neutral hashing fixtures or schema/runner paths.",
+      "merged_revision": "2ec42cd3e02a2ec98bf4c9f1d8121524a6cccdc9",
       "notes": "Discovered in the post-#16785 read-only fixture audit. The eight hashing_cache cases have at most one dependency and do not prove multi-dependency name sorting, dependency-only invalidation with unchanged package bytes, or failed-prior-record miss behavior. Add bounded language-neutral cases and schema/oracle tests before the pending native dependency-hashing adopters consume them. Keep filesystem cache persistence and native authority outside this process-free fixture owner."
     },
     {

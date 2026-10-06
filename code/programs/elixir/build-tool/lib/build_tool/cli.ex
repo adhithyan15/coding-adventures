@@ -438,7 +438,11 @@ defmodule BuildTool.CLI do
          affected_set
        ) do
     # Step 6: Hash all packages.
-    package_hashes = Map.new(packages, fn pkg -> {pkg.name, Hasher.hash_package(pkg)} end)
+    package_hashes =
+      Map.new(packages, fn pkg ->
+        package_root = Path.relative_to(pkg.path, repo_root) |> String.replace("\\", "/")
+        {pkg.name, Hasher.hash_package(Map.put(pkg, :package_root, package_root))}
+      end)
 
     deps_hashes =
       Map.new(packages, fn pkg ->
