@@ -15,6 +15,7 @@ use Test2::V0;
 use File::Temp qw(tempdir);
 use File::Path qw(make_path);
 use File::Spec ();
+use JSON::PP qw(decode_json);
 
 use CodingAdventures::BuildTool::Hasher;
 
@@ -27,6 +28,16 @@ sub write_file {
     open(my $fh, '>', $path) or die "Cannot write $path: $!";
     print $fh $content;
     close $fh;
+}
+
+sub load_source_fixture {
+    my ($name) = @_;
+    my $path = "$Bin/../../../../specs/fixtures/build-tool-v1/cases/$name.json";
+    open(my $fh, '<:raw', $path) or die "Cannot read $path: $!";
+    local $/;
+    my $fixture = decode_json(<$fh>);
+    close $fh;
+    return $fixture;
 }
 
 # ---------------------------------------------------------------------------
@@ -184,6 +195,35 @@ subtest 'blib pruning is exact and case-sensitive' => sub {
         [qw(near-case/Blib/source.pm near-name/blib-example/source.pm)],
         'only exact lowercase blib is pruned',
     );
+};
+
+subtest 'neutral source fixtures project exact Dune pruning to Perl files' => sub {
+    for my $name (qw(source-collection-extension source-collection-declared)) {
+        my $fixture = load_source_fixture($name);
+        my $dir = tempdir(CLEANUP => 1);
+        my @dune = grep {
+            $_->{kind} eq 'file' &&
+            $_->{path} =~ m{(?:^|/)(?:_build|_Build|_build-example)/}
+        } @{ $fixture->{input}{options}{candidates} };
+        is(scalar @dune, 3, "$name has three Dune path components");
+        for my $candidate (@dune) {
+            (my $relative = $candidate->{path}) =~ s/\.ml$/.pm/;
+            my $path = "$dir/$relative";
+            (my $parent = $path) =~ s{/[^/]+$}{};
+            make_path($parent);
+            write_file($path, pack('H*', $candidate->{content_hex}));
+        }
+        my @relative = map {
+            my $path = File::Spec->abs2rel($_, $dir);
+            $path =~ s{\\}{/}g;
+            $path;
+        } $h->collect_source_files(make_pkg($dir));
+        is(
+            \@relative,
+            [qw(case/_Build/generated.pm near/_build-example/generated.pm)],
+            "$name prunes only the exact lowercase Dune directory",
+        );
+    }
 };
 
 done_testing();
