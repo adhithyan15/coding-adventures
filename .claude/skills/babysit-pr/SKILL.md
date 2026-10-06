@@ -1,92 +1,85 @@
 ---
 description: >
-  Watch a PR for CI failures and merge conflicts, fix them, and push.
-  Use after creating or pushing to a PR. Sets a recurring 3-minute timer
-  to monitor CI status until everything is green and conflict-free.
-  Trigger: "babysit this PR", "watch the PR", "monitor CI", or after
-  any PR creation/push when the user wants ongoing monitoring.
+  Watch a pull request's required checks and merge state at its exact current
+  head. Investigate real failures, repair conflicts, and verify the expected
+  head merged without acting on superseded or redundant runs.
 user_invocable: true
 ---
 
 # Babysit PR
 
-Monitor a pull request's CI checks and merge conflict status on a recurring
-3-minute interval. Investigate and fix CI failures, resolve merge conflicts,
-push fixes, and keep watching until the PR is fully green.
+Monitor one pull request until its current head is green and merged or until a
+real blocker needs user input. Required checks on the current pull-request head
+are authoritative. Duplicate push runs and runs for older heads are context,
+not permission to cancel, rerun, or modify anything.
 
-## Instructions
+## Bind the pull request and current head
 
-### Step 1: Identify the PR
+Resolve the pull request from the supplied number/URL or the current branch.
+Keep the returned `headRefOid` as `expected_head` for the complete polling
+cycle:
 
-- If a PR number or URL was provided as an argument, use that.
-- Otherwise, detect the current branch and find its open PR:
-  ```
-  gh pr view --json number,url,headRefName,state
-  ```
-- If no PR exists for the current branch, tell the user and stop.
-- Store the PR number for all subsequent checks.
-
-### Step 2: Run the first check immediately
-
-Perform the **PR Health Check** (described below) right away — don't wait
-for the first timer tick.
-
-### Step 3: Set up the recurring timer
-
-Use `CronCreate` to schedule a recurring check every 3 minutes:
-- **cron**: `*/3 * * * *`
-- **prompt**: The check prompt below (substituting the actual PR number)
-
-**Check prompt to schedule:**
-```
-Check PR #<NUMBER> in this repo for CI and merge conflict status.
-
-1. Run: gh pr checks <NUMBER>
-   - If any check has FAILED or ERROR status, investigate the failure:
-     a. Get the failed run ID: gh run view <run-id> --log-failed
-     b. Read the error logs to understand what broke
-     c. Fix the code causing the failure
-     d. Commit the fix with message: "fix(ci): <description of what was fixed>"
-     e. Push the fix: git push
-
-2. Run: gh pr view <NUMBER> --json mergeable,mergeStateStatus
-   - If mergeable is "CONFLICTING":
-     a. Fetch latest main: git fetch origin main
-     b. Rebase onto main: git rebase origin/main
-     c. Resolve any conflicts (prefer keeping our changes when intent is clear, otherwise investigate both sides)
-     d. Continue rebase: git rebase --continue
-     e. Push the resolution: git push --force-with-lease
-
-3. If ALL checks pass (green) AND no merge conflicts exist:
-   - Report success to the user: "PR #<NUMBER> is green and conflict-free!"
-   - Cancel the recurring timer using CronDelete with the job ID
-
-4. If checks are still PENDING, report status and wait for next timer tick.
+```bash
+pr_json="$(gh pr view "$pr" --json number,url,state,mergedAt,mergeable,mergeStateStatus,headRefOid,mergeCommit,autoMergeRequest)"
+expected_head="$(jq -r '.headRefOid' <<<"$pr_json")"
+local_head="$(git rev-parse HEAD)"
 ```
 
-### Step 4: Report initial status
+Both hashes must be full 40-character lowercase hexadecimal values. Before a
+push, the local and pull-request heads must match the state you inspected. If
+the PR merged or either head changed unexpectedly, stop and re-read the PR;
+never push into a closed branch or describe an older revision as current.
 
-After the first check and timer setup, tell the user:
-- Current CI status (passing/failing/pending)
-- Whether merge conflicts exist
-- That you've set up a 3-minute recurring check
-- Remind them the timer auto-expires after 3 days (CronCreate limit)
+## Read only authoritative checks
 
-## PR Health Check procedure
+Ask GitHub for required checks on the PR, not every check run attached to the
+commit:
 
-This is what runs on each check cycle:
+```bash
+gh pr checks "$pr" --required --json bucket,event,link,name,state,workflow
+```
 
-1. **Check CI status**: `gh pr checks <NUMBER>`
-2. **Check merge status**: `gh pr view <NUMBER> --json mergeable,mergeStateStatus`
-3. **If CI failed**: investigate logs, fix code, commit, push
-4. **If merge conflict**: rebase onto main, resolve conflicts, push
-5. **If all green + no conflicts**: cancel timer, report success
-6. **If pending**: wait for next cycle
+Also refresh `gh pr view` on every cycle. `state`, `headRefOid`, `mergeable`,
+and `mergeStateStatus` answer different questions and must be evaluated
+together. An empty legacy commit-status response is not a CI result; this
+repository uses check runs.
 
-## Important notes
+For diagnostics only, `gh run list --commit "$expected_head"` may reveal a
+redundant push run. Do not use that list in place of `--required`, and never
+cancel a run: the current required PR suite may still be authoritative even
+when another event looks duplicative.
 
-- Always use `--force-with-lease` (never `--force`) when pushing after rebase
-- When fixing CI, make small focused commits — one fix per failure
-- If a CI fix requires changes you're unsure about, ask the user instead of guessing
-- If rebase conflicts are complex or ambiguous, ask the user for guidance
-- The cron job auto-expires after 3 days per CronCreate limits
+Classify required checks as follows:
+
+- `pending`: wait and poll again.
+- `pass` or `skipping`: healthy.
+- `fail`: inspect the linked job's real conclusion and logs. Act only after a
+  fresh PR read proves its head still equals `expected_head`.
+- `cancel`: first refresh `headRefOid`. Ignore the result if a newer head
+  superseded it. If the cancelled check belongs to the unchanged current head
+  and no replacement run exists, rerun the failed/cancelled job without making
+  a source commit.
+
+Fix genuine current-head failures in focused commits. Before each push, refresh
+the PR state and head again. A source change invalidates any exact-head security
+approval, so repeat required local validation and mandatory security review,
+then push once after batching the complete fix.
+
+## Resolve merge conflicts without losing the head
+
+If GitHub reports `CONFLICTING`, fetch `origin/main`, merge it into the feature
+branch, resolve the conflict from both sides' intended behavior, rerun affected
+validation and mandatory security review, and push normally. Do not rewrite a
+shared branch merely to make the graph tidy. Re-read the PR immediately before
+pushing so auto-merge cannot race a local conflict repair.
+
+## Completion proof
+
+Green checks are not the terminal condition. Continue until `state` is
+`MERGED`, then fetch the PR one final time and verify its `headRefOid` still
+equals `expected_head` and `mergeCommit.oid` is present. If local work was meant
+to be included, `git rev-parse HEAD` must also equal that expected head. A
+merged PR whose recorded head differs is a dropped-push incident, not success.
+
+Report pending states quietly. Report only a real failure, conflict, unexpected
+head change, successful merge, or user action requirement.
