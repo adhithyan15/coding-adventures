@@ -9,7 +9,9 @@ tokens. No backend changes are needed.
 Every primary or included file is capped before tokenization at the tighter
 of the file-byte budget and the token budget minus one EOF token. This
 conservative source-byte limit prevents a dense input from allocating more
-tokens than the preprocessor allows. The in-memory include API also checks
+tokens than the preprocessor allows. The same pre-lex budget is shared across
+the primary file and all included files, so nested include frames cannot each
+retain a full token budget. The in-memory include API also checks
 unused files, names, file count, and aggregate bytes before copying them into
 `MemoryFs`; the engine retains its include-read and expansion bounds.
 

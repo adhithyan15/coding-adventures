@@ -60,7 +60,7 @@ pub fn preprocess_source(
     let bounds = bounds.tighten(Bounds::default());
     let dialect = MacroNibDialect::new(bounds);
     dialect
-        .check_prelex_bytes(source)
+        .reserve_prelex_bytes(source)
         .map_err(MacroNibError::Preprocess)?;
     let mut tokens = try_tokenize_macronib(source).map_err(MacroNibError::Lex)?;
     let sentinel = tokens.last().cloned();
@@ -94,7 +94,7 @@ pub fn compile_source_with_includes(
     let bounds = Bounds::default();
     let dialect = MacroNibDialect::new(bounds);
     dialect
-        .check_prelex_bytes(source)
+        .check_file_prelex_bytes(source)
         .map_err(MacroNibError::Preprocess)?;
     let source_bytes = u64::try_from(source.len()).unwrap_or(u64::MAX);
     let mut total_bytes = source_bytes;
@@ -110,7 +110,7 @@ pub fn compile_source_with_includes(
     }
     for (name, text) in includes {
         dialect
-            .check_prelex_bytes(text)
+            .check_file_prelex_bytes(text)
             .map_err(MacroNibError::Preprocess)?;
         let name_bytes = u64::try_from(name.len()).unwrap_or(u64::MAX);
         let text_bytes = u64::try_from(text.len()).unwrap_or(u64::MAX);
@@ -317,6 +317,30 @@ mod tests {
             Ok(_) => panic!("dense included input must be rejected before lexing"),
         };
         assert!(error.to_string().contains("pre-lex byte budget"), "{error}");
+    }
+
+    #[test]
+    fn nested_dense_includes_share_one_prelex_token_budget() {
+        let source = ".include \"a\"\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        fs.insert("a", format!(".include \"b\"\n{}", ";".repeat(26)));
+        fs.insert("b", ";".repeat(39));
+        // Each file is smaller than the per-file limit, but the lexed bytes
+        // across three simultaneously retained include frames exceed it.
+        let error = match preprocess_source(
+            source,
+            file,
+            &mut fs,
+            Bounds {
+                tokens_produced: 80,
+                ..Bounds::default()
+            },
+        ) {
+            Err(error) => error,
+            Ok(_) => panic!("nested dense includes must share the pre-lex budget"),
+        };
+        assert!(error.to_string().contains("aggregate pre-lex"), "{error}");
     }
 
     #[test]

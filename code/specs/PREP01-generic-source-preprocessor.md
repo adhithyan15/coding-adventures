@@ -602,7 +602,9 @@ genericity defect is found and documented.
 MacroNib must check the primary and every included file before lexing. The
 generic lexer materializes the token vector before the shared engine can apply
 its token budget, so each file has a conservative pre-lex source-byte cap no
-larger than the tightened token budget minus the EOF sentinel. The primary
+larger than the tightened token budget minus the EOF sentinel. That cap is
+also aggregate across lexed files so nested include frames cannot retain one
+full token budget apiece. The primary
 file also obeys the tightened file and aggregate byte budgets; included files
 retain the engine's read guards. The in-memory include API checks unused files,
 names, count, and aggregate bytes before copying them into `MemoryFs`.

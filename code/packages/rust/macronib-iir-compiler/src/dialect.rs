@@ -6,11 +6,14 @@ use coding_adventures_source_preprocessor::{
     Bounds, Dialect, Directive, FileId, IncludeRequest, PpError,
 };
 use lexer::token::{Token, TokenType};
+use std::cell::Cell;
 
-/// MacroNib adapter for the shared preprocessor, carrying the pre-lex byte cap.
-#[derive(Debug, Clone, Copy)]
+/// MacroNib adapter for the shared preprocessor, carrying pre-lex byte budgets.
+#[derive(Debug)]
 pub struct MacroNibDialect {
-    max_prelex_bytes: u64,
+    max_prelex_file_bytes: u64,
+    max_prelex_total_bytes: u64,
+    lexed_bytes: Cell<u64>,
 }
 
 impl MacroNibDialect {
@@ -21,20 +24,35 @@ impl MacroNibDialect {
         // A non-EOF token consumes at least one source byte. The generic
         // lexer materializes all tokens before returning, so cap source bytes
         // conservatively to ensure the peak token count stays within budget.
+        let max_prelex_total_bytes = bounds
+            .total_source_bytes
+            .min(bounds.tokens_produced.saturating_sub(1));
         Self {
-            max_prelex_bytes: bounds
-                .bytes_per_file
-                .min(bounds.total_source_bytes)
-                .min(bounds.tokens_produced.saturating_sub(1)),
+            max_prelex_file_bytes: bounds.bytes_per_file.min(max_prelex_total_bytes),
+            max_prelex_total_bytes,
+            lexed_bytes: Cell::new(0),
         }
     }
 
-    pub(crate) fn check_prelex_bytes(&self, text: &str) -> Result<(), PpError> {
-        if u64::try_from(text.len()).unwrap_or(u64::MAX) > self.max_prelex_bytes {
+    pub(crate) fn check_file_prelex_bytes(&self, text: &str) -> Result<(), PpError> {
+        if u64::try_from(text.len()).unwrap_or(u64::MAX) > self.max_prelex_file_bytes {
             return Err(PpError::new(
                 "MacroNib source exceeds the pre-lex byte budget (including token limit)",
             ));
         }
+        Ok(())
+    }
+
+    pub(crate) fn reserve_prelex_bytes(&self, text: &str) -> Result<(), PpError> {
+        self.check_file_prelex_bytes(text)?;
+        let bytes = u64::try_from(text.len()).unwrap_or(u64::MAX);
+        let used = self.lexed_bytes.get().saturating_add(bytes);
+        if used > self.max_prelex_total_bytes {
+            return Err(PpError::new(
+                "MacroNib source exceeds the aggregate pre-lex token budget",
+            ));
+        }
+        self.lexed_bytes.set(used);
         Ok(())
     }
 }
@@ -182,7 +200,7 @@ impl Dialect for MacroNibDialect {
     }
 
     fn lex(&self, text: &str, _file: FileId) -> Result<Vec<Token>, PpError> {
-        self.check_prelex_bytes(text)?;
+        self.reserve_prelex_bytes(text)?;
         let mut tokens = try_tokenize_macronib(text).map_err(PpError::new)?;
         strip_eof(&mut tokens);
         Ok(tokens)
