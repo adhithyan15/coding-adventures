@@ -140,6 +140,10 @@ Reject excessive input before parsing. Parsing must have explicit work/depth/
 payload limits and reject duplicate decoded object keys before reading a
 replacement value, including nested metadata and escaped spellings. Do not
 first parse through a representation that already discards duplicates.
+Charge each object-key visit before decoding the key. Validate its role,
+duplicates and encoded metadata-key budget before copying a borrowed decoded
+key into owned storage. Serde's escaped-string scratch remains bounded by the
+already-checked input-byte cap; the limits do not claim a precise RAM cap.
 Validate the entire graph: matching keys/IDs, correct identity version/state,
 complete checked allocation coverage, resolved parents, acyclicity and limits.
 Build or expose a log only after validation succeeds. Unchecked allocator-only
