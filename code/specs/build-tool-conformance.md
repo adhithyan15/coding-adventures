@@ -447,6 +447,17 @@ complete registry, program identity, or duplicate-identity behavior; those
 remain separate Haskell conformance items. Adding this native fixture consumer
 MUST also extend the exact fixture-to-build-tool CI selection map.
 
+The Elixir Dune-discovery adopter MUST project those same four OCaml package
+BUILD records through its production `discover_packages` walk. It MUST exclude
+the exact `_build` component while retaining `_Build` and `_build-example`,
+then compare the three qualified names and repository-relative BUILD paths to
+the shared fixture's expected records on every supported host. This is a
+narrow fixture-consumer obligation, not evidence of complete registry,
+program-identity, duplicate-identity, or Windows-override conformance; those
+have separate owners. The native Elixir test MUST read the checked fixture
+directly, materialize only bounded safe OCaml paths in an isolated directory,
+and extend the exact fixture-to-build-tool CI selection map.
+
 If two discovered directories still produce one qualified name, discovery
 fails with `DUPLICATE_PACKAGE_IDENTITY`. The diagnostic includes the duplicate
 package identity and every repository-relative package path in sorted order;

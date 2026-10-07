@@ -195,6 +195,69 @@ defmodule BuildTool.DiscoveryTest do
   # ---------------------------------------------------------------------------
 
   describe "discover_packages/1" do
+    test "projects checked Dune discovery records through the production walk", %{
+      tmp_dir: tmp_dir
+    } do
+      fixture_path =
+        Path.expand(
+          "../../../../specs/fixtures/build-tool-v1/cases/discovery-language-registry.json",
+          __DIR__
+        )
+
+      fixture = fixture_path |> File.read!() |> Jason.decode!()
+
+      ocaml_files =
+        Enum.filter(fixture["workspace"]["files"], fn file ->
+          String.starts_with?(file["path"], "code/packages/ocaml/")
+        end)
+
+      expected =
+        fixture["expected"]["result"]["packages"]
+        |> Enum.filter(&String.starts_with?(&1["build_file"], "code/packages/ocaml/"))
+        |> Enum.map(&{&1["name"], &1["build_file"], &1["rel_path"]})
+        |> Enum.sort()
+
+      assert length(ocaml_files) == 4
+      assert length(expected) == 3
+
+      Enum.each(ocaml_files, fn file ->
+        path = file["path"]
+        parts = String.split(path, "/")
+
+        assert Enum.take(parts, 3) == ["code", "packages", "ocaml"]
+
+        assert Enum.all?(
+                 parts,
+                 &(&1 not in ["", ".", ".."] and not String.contains?(&1, ["\\", ":"]))
+               )
+
+        destination = Path.join([tmp_dir | parts])
+        File.mkdir_p!(Path.dirname(destination))
+        File.write!(destination, file["content_utf8"])
+      end)
+
+      actual =
+        Path.join(tmp_dir, "code")
+        |> Discovery.discover_packages()
+        |> Enum.map(fn package ->
+          {package.name,
+           package.path
+           |> Discovery.get_build_file()
+           |> Path.relative_to(tmp_dir)
+           |> String.replace("\\", "/"),
+           package.path |> Path.relative_to(tmp_dir) |> String.replace("\\", "/")}
+        end)
+        |> Enum.sort()
+
+      assert actual == expected
+
+      assert Enum.map(actual, &elem(&1, 0)) == [
+               "ocaml/case-source",
+               "ocaml/demo-ocaml",
+               "ocaml/near-source"
+             ]
+    end
+
     test "discovers packages with BUILD files", %{tmp_dir: tmp_dir} do
       # Create: tmp_dir/packages/python/logic-gates/BUILD
       pkg_dir = Path.join([tmp_dir, "packages", "python", "logic-gates"])

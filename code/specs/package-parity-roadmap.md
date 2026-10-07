@@ -16176,6 +16176,61 @@ MacroNib-specific frontend contracts, so the raw singleton count does not
 create 28 automatic generic-language ports. The current Haskell Dune slice
 remains the dependency-ready selection.
 
+## Post-#16891 merge and collision-checked refresh (2026-10-07)
+
+PR #16891 passed all 37 final-head checks (29 successes, seven expected skips,
+one neutral result). GitHub reported `MERGEABLE/CLEAN`; guarded squash
+auto-merge produced `c6c014e91fbd01ba71b8722e77f1dca823a45446` without a manual
+merge. A Windows fixture-root path comparison failure on the preceding head
+was fixed on the same PR; final Linux, Windows, and macOS builds passed.
+
+The fresh schema-3 inventory at that exact main revision has 15 established
+lanes, 1,491 implementation identities, 4,761 slots, 1,533 all-reported
+identities, 178 high-consensus identities with 262 missing slots, 1,009
+singleton identities with 14,126 missing slots, 810 Rust singletons, five
+emerging OCaml packages, and zero canonical collisions or unknown buckets.
+The new main-only `python-iir-compiler` identity accounts for the one-slot
+increase since the pre-merge snapshot; it is a bounded LANG79 pilot rather
+than an automatic 14-lane obligation.
+
+Parallel read-only audits found three distinct unowned Elixir build-tool
+discovery defects beyond the narrow Dune fixture adoption: incomplete exact
+language/bucket/program classification, missing duplicate-identity rejection,
+and native Windows override plus canonical BUILD-membership mistakes. Their
+three dependency-shaped pending owners are registered in the state graph;
+the Elixir neutral adapter closure depends on all three. The Dune adoption
+remains a separate, dependency-ready slice, including four OCaml fixture BUILD
+records, three positive identities, and extension of exact native fixture CI
+selection to Elixir.
+
+Additional collision-checked Rust-singleton and cross-lane audit findings are
+now registered as 21 pending prerequisite or classification owners. The
+highest-leverage portable roots include MX03 executor wire (12 direct Rust
+consumers), JavaScript tokens/AST (21/17), smart-home local HTTP (19), discovery
+(42), and runtime (71). Smart-home registry precedes runtime and testkit;
+catalog precedes pure discovery, while UDP and HTTP server authority remain
+native. JR00 generic-job framing, SML02 Excel serial 60, MX03 frame/payload
+versioning, and matrix-IR JSON parse versus semantic validation are explicit
+spec-reconciliation owners, not silently inherited Rust behavior.
+
+Broader classification owners record the audited sparse language frontends,
+compiler/IR chains, diagram/document/layout packages, codecs/DSP, storage and
+network/job seams, and business/spreadsheet cores. They require further
+dependency-shaped neutral fixtures and lane-sized implementation children;
+native FFI, GPU, OS, target ISA, process, CSPRNG, and security-sensitive pieces
+receive applicability review rather than automatic fifteen-lane port claims.
+The Go-only rectangle raster core is a separate bounded candidate. A validated
+state graph now has 1,128 unique items and zero missing dependency IDs. This
+inventory refresh does not imply that sparse packages already meet parity.
+
+The dependency-ready Elixir Dune discovery fixture adoption remains the next
+bounded delivery: it has three merged prerequisites, four OCaml fixture BUILD
+records, three positive identities, and one native CI selection-map extension.
+It unblocks the newly recorded Elixir registry, duplicate-identity, and Windows
+override conformance owners without mixing those defects into this PR. The
+JavaScript and smart-home roots have greater eventual leverage but still need
+their neutral prerequisite slices before implementation claims.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
