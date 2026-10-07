@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-07 — re-audited after PREP01 C rooted-file composition
+Status date: 2026-10-07 — re-audited after PREP01 C division/remainder
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -133,17 +133,20 @@ LANG81 pilot, whose decimal token rules accepted Perl octal spellings such as
 `08`, `09`, and `010` incorrectly. It merged as
 `1ab69d602a7bb9b20f1571bc9c8973d10bc33f08` after latest-head CI,
 CodeQL, and books checks passed. No octal execution is claimed.
+PR #16952 delivered one checked `/` or `%` operation per bounded C `#if`
+logical clause and merged as `f889e3db081c174cab17e890776dccd3ff274495`
+after latest-head CI, CodeQL, and books checks passed. Zero divisors and
+unsupported longer expressions remain explicit errors.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** add one checked `/` or `%` operation per bounded
-   `#if` logical clause, with zero-divisor and unsupported-form rejection.
-   Continue full C `#if`, stringize/paste, and default frontend routing in
-   later slices.
-2. **LANG82 Perl release grammars:** continue source-backed distinct pairs
-   for the remaining 741 inventoried releases, with no false completeness
-   claim or fallback to another release's grammar.
+1. **LANG82 Perl release grammars (selected):** add distinct source-backed,
+   explicitly partial token and grammar pairs for 5.003_16 through 5.003_28.
+   Keep the existing decimal-only `print` arithmetic boundary and negative
+   probes; do not imply complete release syntax.
+2. **PREP01 C:** continue full C `#if`, stringize/paste, and default
+   frontend routing in later bounded slices.
 
 The following run records the first VM-067 selection.
 
