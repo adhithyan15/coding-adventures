@@ -90,6 +90,9 @@ fn check_ast_budget(tree: &GrammarASTNode) -> Result<(), String> {
                     if let Some(type_name) = &token.type_name {
                         count_ast_text(type_name, &mut text_bytes)?;
                     }
+                    if let Some(cv) = &token.cv {
+                        count_ast_text(cv, &mut text_bytes)?;
+                    }
                 }
             }
         }
@@ -474,15 +477,19 @@ mod tests {
 
     #[test]
     fn direct_ast_text_and_module_names_are_bounded_before_lowering() {
-        fn enlarge_float_token(node: &mut GrammarASTNode) -> bool {
+        fn enlarge_float_token(node: &mut GrammarASTNode, cv: bool) -> bool {
             for child in &mut node.children {
                 match child {
                     ASTNodeOrToken::Token(token) if token.type_name.as_deref() == Some("FLOAT") => {
-                        token.value = "9".repeat(MAX_AST_FIELD_BYTES + 1);
+                        if cv {
+                            token.cv = Some("c".repeat(MAX_AST_FIELD_BYTES + 1));
+                        } else {
+                            token.value = "9".repeat(MAX_AST_FIELD_BYTES + 1);
+                        }
                         return true;
                     }
                     ASTNodeOrToken::Node(inner) => {
-                        if enlarge_float_token(inner) {
+                        if enlarge_float_token(inner, cv) {
                             return true;
                         }
                     }
@@ -493,8 +500,14 @@ mod tests {
         }
 
         let mut oversized_token = parse_python("print(1.0)\n", "3.12").unwrap();
-        assert!(enlarge_float_token(&mut oversized_token));
+        assert!(enlarge_float_token(&mut oversized_token, false));
         assert!(compile_ast(&oversized_token, "test")
+            .unwrap_err()
+            .contains("text limit"));
+
+        let mut oversized_cv = parse_python("print(1.0)\n", "3.12").unwrap();
+        assert!(enlarge_float_token(&mut oversized_cv, true));
+        assert!(compile_ast(&oversized_cv, "test")
             .unwrap_err()
             .contains("text limit"));
 
