@@ -24,6 +24,10 @@
       "source": "---\nconfig:\n  treeView:\n    rowIndent: 14\n    paddingX: 8\n    showIcons: false\n---\ntreeView-beta\nproject/"
     },
     {
+      "name": "icon-resolution-config",
+      "source": "%%{init: {\"treeView\": {\"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nnotes.txt icon(custom)"
+    },
+    {
       "name": "indented-directories-and-files",
       "source": "treeView-beta\nproject/\n    src/\n        index.js\n    README.md"
     },

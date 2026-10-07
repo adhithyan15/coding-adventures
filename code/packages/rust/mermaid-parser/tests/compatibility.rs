@@ -183,6 +183,11 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
         } else if name == "front-matter-config" {
             assert_eq!((diagram.config.row_indent, diagram.config.padding_x), (14.0, 8.0));
             assert!(!diagram.config.show_icons);
+        } else if name == "icon-resolution-config" {
+            assert_eq!(diagram.config.default_icon_pack, "devicon");
+            assert_eq!(diagram.nodes.iter().map(|node| node.icon.as_deref()).collect::<Vec<_>>(),
+                [Some("logos:markdown"), Some("none"), Some("devicon:rust"),
+                    Some("logos:typescript"), Some("devicon:custom")]);
         } else {
             assert!(!diagram.nodes.is_empty());
         }

@@ -5884,6 +5884,7 @@ pub fn parse_treeview(source: &str) -> Result<TreeViewDiagram, ParseError> {
         while ancestors.last().is_some_and(|(ancestor_indent, _, _)| *ancestor_indent >= indentation) { ancestors.pop(); }
         let depth = ancestors.last().map_or(0, |(_, depth, _)| depth + 1);
         let (label, kind, class_selector, icon, description) = parse_treeview_node(trimmed, line_number)?;
+        let icon = resolve_treeview_icon(&diagram.config, &label, &kind, icon);
         let id = format!("treeview-{}", diagram.nodes.len() + 1);
         let parent_id = ancestors.last().map(|(_, _, id)| id.clone());
         diagram.nodes.push(TreeViewNode { id: id.clone(), parent_id, depth, label, kind, class_selector, icon, description });
@@ -5913,6 +5914,65 @@ fn parse_treeview_config(source: &str) -> TreeViewConfig {
         padding_y: non_negative("paddingY", defaults.padding_y),
         line_thickness: non_negative("lineThickness", defaults.line_thickness),
         show_icons: boolean("showIcons", defaults.show_icons),
+        default_icon_pack: value("defaultIconPack").unwrap_or(defaults.default_icon_pack),
+        filename_icons: parse_treeview_icon_map(source, config, "filenameIcons", false),
+        extension_icons: parse_treeview_icon_map(source, config, "extensionIcons", true),
+    }
+}
+
+fn parse_treeview_icon_map(
+    source: &str,
+    config: &str,
+    name: &str,
+    normalize_extensions: bool,
+) -> std::collections::BTreeMap<String, String> {
+    let mut entries = std::collections::BTreeMap::new();
+    if let Some(object) = mermaid_directive_object(config, name) {
+        let json = format!("{{{object}}}");
+        if let Ok(values) = serde_json::from_str::<std::collections::BTreeMap<String, String>>(&json) {
+            entries.extend(values);
+        }
+    }
+    if let Some(section) = mermaid_front_matter_section(source, &["config", "treeView", name]) {
+        entries.extend(section.lines().filter_map(|line| {
+            let (key, value) = line.split_once(':')?;
+            Some((key.trim().trim_matches(['"', '\'']).to_string(),
+                value.trim().trim_matches(['"', '\'']).to_string()))
+        }));
+    }
+    if normalize_extensions {
+        entries = entries.into_iter()
+            .map(|(key, value)| (key.trim_start_matches('.').to_ascii_lowercase(), value))
+            .collect();
+    }
+    entries
+}
+
+fn resolve_treeview_icon(
+    config: &TreeViewConfig,
+    label: &str,
+    kind: &TreeViewNodeKind,
+    explicit: Option<String>,
+) -> Option<String> {
+    let icon = if let Some(explicit) = explicit {
+        explicit
+    } else if !config.show_icons {
+        return None;
+    } else if matches!(kind, TreeViewNodeKind::Directory) {
+        "folder".to_string()
+    } else {
+        config.filename_icons.get(label).cloned().or_else(|| {
+            label.rsplit_once('.').and_then(|(_, extension)|
+                config.extension_icons.get(&extension.to_ascii_lowercase()).cloned())
+        }).unwrap_or_else(|| "file".to_string())
+    };
+    if icon == "none" {
+        return Some(icon);
+    }
+    if icon.contains(':') || matches!(icon.as_str(), "file" | "folder") || config.default_icon_pack.is_empty() {
+        Some(icon)
+    } else {
+        Some(format!("{}:{icon}", config.default_icon_pack))
     }
 }
 
