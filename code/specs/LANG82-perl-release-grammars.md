@@ -35,6 +35,9 @@ another release's files, including maintenance releases with unchanged syntax.
 The filename uses the release's exact public version spelling, normalized only
 where a filesystem character is illegal. A release inventory records that
 normalization, source tag or archive, pair paths, coverage, and validation.
+The initial `code/grammars/perl/releases.csv` inventory expands 763 numbered
+releases from a pinned `perlhist.pod` snapshot; tagged source and CPAN archives
+must be compared before treating that count as exhaustive.
 
 A pair must not claim to describe the complete language while it covers only
 a pilot subset. Mark partial pairs explicitly, list their accepted constructs,
