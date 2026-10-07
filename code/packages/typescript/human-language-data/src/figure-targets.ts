@@ -128,7 +128,9 @@ function isScriptBlock(title: string): boolean {
  * tracks that present a letter under `## Script` instead (chinese, japanese,
  * urdu, persian and most russian letter lessons), its first Script block, or,
  * in a lesson with neither, its first practice block that shows the learner a
- * model (`modelledPracticeBlockIndex`). `-1` when the lesson has none of them.
+ * model (`modelledPracticeBlockIndex`); a block that declares a no-model stage
+ * (a dictation, a composition) is never one of them (`stripBlockIndex`).
+ * `-1` when the lesson has none of them.
  */
 export function filmstripBlockIndex(lesson: ParsedLesson): number {
   const home = stripBlockIndex(lesson);
@@ -185,7 +187,9 @@ export function filmstripBlockIndex(lesson: ParsedLesson): number {
 // headword is अ, a letter it never asks the learner to write).
 //
 // This is a FALLBACK. A lesson with a Writing or Script block keeps its strip
-// there, and the fallback only ever adds lessons; it never moves a strip.
+// there, and the fallback only ever adds lessons; it never moves a strip. (The
+// same stage test does keep a strip out of a Writing or Script block that is
+// itself a dictation or a composition: see the next section.)
 
 /** Writing stages whose block shows the learner a model of what to write. */
 export const MODELLED_WRITING_STAGES: ReadonlySet<string> = new Set([
@@ -204,9 +208,10 @@ export function modelledPracticeBlockIndex(lesson: ParsedLesson): number {
 /**
  * The block that TEACHES a lesson's letter: its first Writing block, else its
  * first Script block; `-1` when neither. `letter-anchoring.ts` counts exactly
- * these lessons as letter lessons. A copy or delayed-copy lesson that gets its
- * strip from the fallback above practises a letter some earlier lesson
- * taught, and is not counted there, as a dictation is not.
+ * these lessons as letter lessons, whether or not the block prints a strip
+ * (a single-letter dictation's does not; see `stripBlockIndex`). A copy or
+ * delayed-copy lesson that gets its strip from the fallback above practises a
+ * letter some earlier lesson taught, and is not counted there.
  */
 export function letterBlockIndex(lesson: ParsedLesson): number {
   const writing = lesson.blocks.findIndex((block) => isWritingBlock(block.title));
@@ -214,14 +219,53 @@ export function letterBlockIndex(lesson: ParsedLesson): number {
   return lesson.blocks.findIndex((block) => isScriptBlock(block.title));
 }
 
+// ---------------------------------------------------------------------------
+// A Writing block that is a dictation is not a home for the strip either
+// ---------------------------------------------------------------------------
+//
+// The stage rule above was first applied only to the fallback. A Writing or
+// Script block took the strip whatever stage it declared, and 37 lessons
+// declare a no-model stage on their Writing block: the short dictations that
+// close each track's first writing runway (ES-W00-hola-dictation,
+// SA-S02-dictation, GU-W01-haa-dictation …), the Gujarati spaced-return
+// lessons' "Writing — from sound", the Marathi "Writing — heard cue", and the
+// four-line connected compositions. The book printed the strip at the TOP of
+// that block, under its heading and above the cue:
+//
+//   Writing — short dictation
+//   [strip: How hola is written, letter by letter]
+//   Hear: OH-la
+//   Write the Spanish greeting from that sound alone.
+//
+// That is the answer, drawn large, above the question. SA-S02-dictation's
+// Warm-up even says "no stroke order in front of you" a few lines above it.
+// The check these lessons do have ("Now uncover and compare: hola") is a line
+// of the same block, after the attempt, not a block of its own, so there is no
+// later block the strip could move to.
+//
+// So a block whose declared stage shows no model is skipped wherever the strip
+// is looked for. A Marathi letter lesson (MR-W03-ba) then finds its Script
+// block, which prints the letter and describes its strokes, and which the
+// dictation tells the learner to cover: the strip moves up to the model it
+// belongs to. A lesson with no other home prints no strip; its earlier copy
+// lessons already printed one (ES-W00-hola-delayed-copy, SA-S02-letter-na).
+
+/** Does this block declare a writing stage in which the learner sees no model? */
+function declaresNoModel(block: ParsedLesson["blocks"][number]): boolean {
+  return block.writingStage !== undefined && !MODELLED_WRITING_STAGES.has(block.writingStage);
+}
+
 /**
- * The block a writing lesson's strip lands in: its letter block (above), else
- * its first modelled practice block; `-1` when it has neither, and then the
- * lesson is not a filmstrip candidate.
+ * The block a writing lesson's strip lands in: its first Writing block, else
+ * its first Script block, else its first modelled practice block, skipping
+ * any block whose declared stage shows no model (above); `-1` when none is
+ * left, and then the lesson is not a filmstrip candidate.
  */
 export function stripBlockIndex(lesson: ParsedLesson): number {
-  const letter = letterBlockIndex(lesson);
-  if (letter !== -1) return letter;
+  const writing = lesson.blocks.findIndex((block) => isWritingBlock(block.title) && !declaresNoModel(block));
+  if (writing !== -1) return writing;
+  const script = lesson.blocks.findIndex((block) => isScriptBlock(block.title) && !declaresNoModel(block));
+  if (script !== -1) return script;
   return modelledPracticeBlockIndex(lesson);
 }
 

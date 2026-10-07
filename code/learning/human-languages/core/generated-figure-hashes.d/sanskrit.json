@@ -24,13 +24,6 @@
     },
     {
       "kind": "script-filmstrip",
-      "lessonId": "SA-S02-dictation",
-      "sourceHash": "fnv1a64:aac8b5894fbebc9f",
-      "svgHash": "fnv1a64:677884c6a47ec9f2",
-      "svg": "sanskrit/book/figures/SA-S02-dictation-filmstrip.svg"
-    },
-    {
-      "kind": "script-filmstrip",
       "lessonId": "SA-S02-letter-na",
       "sourceHash": "fnv1a64:37ec1312f735db26",
       "svgHash": "fnv1a64:677884c6a47ec9f2",
@@ -332,13 +325,6 @@
     },
     {
       "kind": "script-filmstrip",
-      "lessonId": "SA-W03-mama-dictation",
-      "sourceHash": "fnv1a64:f46dce1c9cfc30dc",
-      "svgHash": "fnv1a64:b05dd274e41c44ca",
-      "svg": "sanskrit/book/figures/SA-W03-mama-dictation-filmstrip.svg"
-    },
-    {
-      "kind": "script-filmstrip",
       "lessonId": "SA-W03-mama-guided-copy",
       "sourceHash": "fnv1a64:c1fb10fcb0b7623b",
       "svgHash": "fnv1a64:b05dd274e41c44ca",
@@ -353,13 +339,6 @@
     },
     {
       "kind": "script-filmstrip",
-      "lessonId": "SA-W03-mama-nama-dictation",
-      "sourceHash": "fnv1a64:cd857f810cf6b1f3",
-      "svgHash": "fnv1a64:b00f184aa543a4db",
-      "svg": "sanskrit/book/figures/SA-W03-mama-nama-dictation-filmstrip.svg"
-    },
-    {
-      "kind": "script-filmstrip",
       "lessonId": "SA-W03-mama-nama-guided-copy",
       "sourceHash": "fnv1a64:f8d5c95031432436",
       "svgHash": "fnv1a64:b00f184aa543a4db",
@@ -371,13 +350,6 @@
       "sourceHash": "fnv1a64:4f87fcc06bca68c7",
       "svgHash": "fnv1a64:2865fe9e10ac84e6",
       "svg": "sanskrit/book/figures/SA-W05-vocalic-r-delayed-copy-filmstrip.svg"
-    },
-    {
-      "kind": "script-filmstrip",
-      "lessonId": "SA-W05-vocalic-r-dictation",
-      "sourceHash": "fnv1a64:5aa269372cd432b6",
-      "svgHash": "fnv1a64:2865fe9e10ac84e6",
-      "svg": "sanskrit/book/figures/SA-W05-vocalic-r-dictation-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

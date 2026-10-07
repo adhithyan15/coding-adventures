@@ -104,8 +104,10 @@ describe("the real corpus", () => {
   });
 
   it("draws every Gujarati sign lesson, and every Gujarati word or list whose signs are cited", () => {
-    // Ten lessons teach a sign by itself; fourteen word lessons (eleven words,
-    // and હા three times) and six lists carry one: 30 in all. All are drawn
+    // Ten lessons teach a sign by itself, and thirteen word lessons (eleven
+    // words, and હા twice) carry one: 23 in all. The six lists that carry one
+    // (GU-R04 … GU-R19) and હા's dictation are writing from sound, so they
+    // print no strip (no-strip-above-a-dictation). All are drawn
     // consonant first, sign after: KanoAI's barakhadi templates write every
     // sign after its consonant, even િ. GU-W21-ai-matra and the seven place
     // words of chapters 20-23 (મંદિર … ગામ) have no Writing block: their strip
@@ -130,16 +132,9 @@ describe("the real corpus", () => {
       "GU-C33-ke-write": "ક ે",
       "GU-C34-kemke-write": "ક ે મ ક ે",
       "GU-C36-te-write": "ત ે",
-      "GU-R04-doorway-nine-r2": "જ ો ં ી ુ છ ક ણ શ",
-      "GU-R04-first-four-r1": "ળ થ અ િ",
-      "GU-R07-second-four-r1": "ૂ ટ ઈ ઢ",
-      "GU-R13-doorway-nine-r3": "ણ જ ુ શ ં ક ો છ ી",
-      "GU-R15-u-matra-r4": "ુ ી",
-      "GU-R19-doorway-nine-r4": "ો ક ં જ ી ણ છ શ ુ",
       "GU-W01-aa-matra": "ા",
       "GU-W01-e-matra": "ે",
       "GU-W01-haa-delayed-copy": "હ ા",
-      "GU-W01-haa-dictation": "હ ા",
       "GU-W01-haa-guided-copy": "હ ા",
       "GU-W03-anusvara": "ં",
       "GU-W03-ii-matra": "ી",
@@ -168,7 +163,7 @@ describe("the real corpus", () => {
   });
 
   it("draws a Devanagari sign only where a lesson teaches it alone", () => {
-    // 36 Hindi, Marathi, Sanskrit and Marwadi lessons teach one of nine
+    // 35 Hindi, Marathi, Sanskrit and Marwadi lessons teach one of nine
     // signs by itself (ा ु ू े ं ़ ् ृ ँ), each cited to native writers who
     // wrote it alone. Each is one glyph, never a sequence: Devanagari has no
     // written-order table, so no sign is placed against a consonant here
@@ -211,7 +206,6 @@ describe("the real corpus", () => {
       "SA-S209-sign-anusvara": "ं",
       "SA-S222-vowel-sign-uu": "ू",
       "SA-W05-vocalic-r-delayed-copy": "ृ",
-      "SA-W05-vocalic-r-dictation": "ृ",
       "SA-W05-vocalic-r-guided-copy": "ृ",
     });
     // Left undrawn: the signs Noto prints with a piece of headline the traces
@@ -241,10 +235,10 @@ describe("the real corpus", () => {
     // twelve Tamil words whose signs are all written AFTER their consonant
     // (சரி, சரியா, and ten words whose puḷḷi follows its consonant, such as
     // வணக்கம் and நீங்கள்), and the Gujarati words, whose signs are all written after their
-    // consonant (અને, કે, કેમકે, તે, and હા three times, and the eight place
+    // consonant (અને, કે, કેમકે, તે, and હા twice, and the eight place
     // words ઘર … ગામ of chapters 20-23, drawn in their copy practice since
     // strips may land in a modelled practice block), and the Malayalam
-    // word നമ three times, once ന and മ gained their Thooval-cited ductus
+    // word നമ twice, once ന and മ gained their Thooval-cited ductus
     // (its fourth lesson, ML-W01-na-ma-trace, lists "ന മ" and is not a
     // word). A Tamil word
     // with a sign written before its consonant is drawn in written order,
@@ -257,25 +251,20 @@ describe("the real corpus", () => {
       (target) => target.letters !== undefined && target.letters.join("") === target.glyph,
     );
     expect(words.map((target) => target.lessonId).sort()).toEqual([
-      // Latin print letters stand apart: weil, once its letters gained a
-      // Grundschrift-cited ductus, and every word whose a waited for an outline
-      // with a one-storey a (hola, salut, ciao, olá, Hallo, quia, ayer,
-      // buenos días and parce que, whose space is not drawn). Großschreibung
-      // is cited letter for letter too, but at 14 pieces it is past
-      // MAX_SEQUENCE_PIECES and prints none.
+      // Latin print letters stand apart: every word whose a waited for an
+      // outline with a one-storey a (hola, salut, ciao, olá, Hallo), in its
+      // observe and copy lessons. Their dictations, and the composition
+      // headwords weil, quia and ayer, print none: a dictation or composition
+      // block shows no model. Großschreibung is cited letter for letter too,
+      // but at 14 pieces it is past MAX_SEQUENCE_PIECES and prints none.
       "ES-W00-hola-delayed-copy",
-      "ES-W00-hola-dictation",
       "ES-W00-hola-guided-copy",
       "ES-W00-hola-observe",
-      "ES-W02-cuatro-lineas-ayer",
       "FR-W01-salut-delayed-copy",
-      "FR-W01-salut-dictation",
       "FR-W01-salut-guided-copy",
       "FR-W01-salut-observe",
       "GE-W01-hallo-delayed-copy",
-      "GE-W01-hallo-dictation",
       "GE-W01-hallo-guided-copy",
-      "GE-W04-vier-zeilen",
       "GU-C20-ghar",
       "GU-C20-mandir",
       "GU-C21-haath",
@@ -289,21 +278,16 @@ describe("the real corpus", () => {
       "GU-C34-kemke-write",
       "GU-C36-te-write",
       "GU-W01-haa-delayed-copy",
-      "GU-W01-haa-dictation",
       "GU-W01-haa-guided-copy",
       "IT-W01-ciao-delayed-copy",
-      "IT-W01-ciao-dictation",
       "IT-W01-ciao-guided-copy",
       "JA-W01-hai-read",
       "JA-W01-konnichiwa-read",
       "JA-W03-arigatou-read",
       "JA-W08-sayounara-read",
-      "LA-W04-quattuor-versus",
       "ML-W01-na-ma-delayed-copy",
-      "ML-W01-na-ma-dictation",
       "ML-W01-na-ma-guided-copy",
       "PT-W01-ola-delayed-copy",
-      "PT-W01-ola-dictation",
       "PT-W01-ola-guided-copy",
       "TA-W03-write-vanakkam",
       "TA-W05-write-aam",
@@ -326,8 +310,8 @@ describe("the real corpus", () => {
 
   it("draws a Devanagari word as its letters' bodies and one shared headline", () => {
     // The Devanagari writing headwords that are one word of bare letters, or
-    // of letters and the ā sign straight after a consonant: Sanskrit मम (three
-    // lessons), Hindi नाम (two) and Marwadi सा. ā is the one sign whose place
+    // of letters and the ā sign straight after a consonant: Sanskrit मम (two
+    // copy lessons; its dictation prints none), Hindi नाम (two) and Marwadi सा. ā is the one sign whose place
     // against its consonant and the headline is cited (its mark record cites
     // the cited आ). Every other word carries a sign, a virama, a nasal or a
     // visarga with no cited place, so it is not even a candidate (नमस्ते, नमः,
@@ -339,16 +323,15 @@ describe("the real corpus", () => {
       "HI-W12-schwa-drop": "नाम",
       "MW-W01-saa": "सा",
       "SA-W03-mama-delayed-copy": "मम",
-      "SA-W03-mama-dictation": "मम",
       "SA-W03-mama-guided-copy": "मम",
     });
     expect(shared.every((target) => target.script === "devanagari")).toBe(true);
     // A phrase of such words, separated by single spaces, is drawn word by
-    // word, each word with its own headline: Sanskrit मम नाम, three lessons.
+    // word, each word with its own headline: Sanskrit मम नाम, its two copy
+    // lessons.
     const phrases = shared.filter((target) => target.letters !== undefined);
     expect(Object.fromEntries(phrases.map((target) => [target.lessonId, target.letters]))).toEqual({
       "SA-W03-mama-nama-delayed-copy": ["मम", "नाम"],
-      "SA-W03-mama-nama-dictation": ["मम", "नाम"],
       "SA-W03-mama-nama-guided-copy": ["मम", "नाम"],
     });
     const lessonIds = new Set(targets.map((target) => target.lessonId));
@@ -368,7 +351,8 @@ describe("the real corpus", () => {
   });
 
   it("draws the Latin lessons whose every letter is cited, one-storey a included", () => {
-    // 26 lessons over all six Latin-script tracks. The a waited for an outline
+    // 16 lessons over five Latin-script tracks (Latin's one, a composition,
+    // prints none now that a composition block takes no strip). The a waited for an outline
     // that prints the one-storey a every source teaches (LatinPrint-Subset.ttf,
     // from SIL's Andika); the acute vowels follow UJIpenchars2's writers.
     const latin = targets.filter((target) => target.script === "latin");
@@ -376,30 +360,20 @@ describe("the real corpus", () => {
       Object.fromEntries(latin.map((target) => [target.lessonId, (target.letters ?? [target.glyph]).join(" ")])),
     ).toEqual({
       "ES-W00-hola-delayed-copy": "h o l a",
-      "ES-W00-hola-dictation": "h o l a",
       "ES-W00-hola-guided-copy": "h o l a",
       "ES-W00-hola-observe": "h o l a",
       "ES-W01-acento": "á é í ó ú",
-      "ES-W01-frase-propia": "b u e n o s d í a s",
-      "ES-W02-cuatro-lineas-ayer": "a y e r",
       "ES-W02-enye": "ñ",
       "ES-W03-inverted": "¿ ¡",
       "FR-W01-salut-delayed-copy": "s a l u t",
-      "FR-W01-salut-dictation": "s a l u t",
       "FR-W01-salut-guided-copy": "s a l u t",
       "FR-W01-salut-observe": "s a l u t",
-      "FR-W04-quatre-lignes": "p a r c e q u e",
       "GE-W01-eszett": "ß",
       "GE-W01-hallo-delayed-copy": "H a l l o",
-      "GE-W01-hallo-dictation": "H a l l o",
       "GE-W01-hallo-guided-copy": "H a l l o",
-      "GE-W04-vier-zeilen": "w e i l",
       "IT-W01-ciao-delayed-copy": "c i a o",
-      "IT-W01-ciao-dictation": "c i a o",
       "IT-W01-ciao-guided-copy": "c i a o",
-      "LA-W04-quattuor-versus": "q u i a",
       "PT-W01-ola-delayed-copy": "o l á",
-      "PT-W01-ola-dictation": "o l á",
       "PT-W01-ola-guided-copy": "o l á",
     });
     // Still undrawn: an uncited mark (è ê ç ï ë ä ö ē œ), punctuation inside
@@ -432,12 +406,15 @@ describe("the real corpus", () => {
     const pins = loadFilmstripTargetCountPins(
       join(dirname(fileURLToPath(import.meta.url)), "..", "filmstrip-target-counts"),
     );
-    const byTrack = Object.fromEntries(
+    const byTrack: Record<string, number> = Object.fromEntries(
       Object.entries(counts).map(([prefix, count]) => [
         targets.find((target) => target.lessonId.startsWith(`${prefix}-`))!.output.split("/", 1)[0]!,
         count,
       ]),
     );
+    // A pinned track may draw nothing at all (latin, whose one strip was on a
+    // composition), and a pin of 0 still has to hold.
+    for (const track of Object.keys(pins)) byTrack[track] ??= 0;
     expect(byTrack).toEqual(pins);
   });
 
