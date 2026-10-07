@@ -74,7 +74,13 @@ mod tests {
                 issues.iter().all(|issue| !issue.starts_with("Error:")),
                 "{release}: {issues:?}"
             );
-            for source in ["print(1);", "print(1+2*3);", "print(-4);"] {
+            for source in [
+                "print(0);",
+                "print(10);",
+                "print(1);",
+                "print(1+2*3);",
+                "print(-4);",
+            ] {
                 let tokens = GrammarLexer::new(source, &token_grammar)
                     .tokenize()
                     .unwrap();
@@ -123,7 +129,25 @@ mod tests {
             );
             if matches!(
                 *release,
-                "5.003_04"
+                "1.000"
+                    | "1.0.15"
+                    | "1.0_16"
+                    | "2.000"
+                    | "2.001"
+                    | "3.000"
+                    | "3.044"
+                    | "4.000"
+                    | "4.036"
+                    | "5.000"
+                    | "5.001"
+                    | "5.001n"
+                    | "5.002"
+                    | "5.002_01"
+                    | "5.003"
+                    | "5.003_01"
+                    | "5.003_02"
+                    | "5.003_03"
+                    | "5.003_04"
                     | "5.003_05"
                     | "5.003_06"
                     | "5.003_07"

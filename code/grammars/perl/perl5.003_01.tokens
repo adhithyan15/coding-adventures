@@ -6,8 +6,9 @@
 # This release's tokenizer differs from 5.003 and still maps `print` to
 # KEY_print, emits ADDOP/MULOP, and distinguishes PREDEC/POSTDEC.
 
+# Leading-zero multi-digit forms are octal and outside this partial subset.
 PRINT     = "print"
-INT       = /[0-9]+/
+INT       = /0|[1-9][0-9]*/
 PLUS      = "+"
 DECREMENT = "--"
 MINUS     = "-"

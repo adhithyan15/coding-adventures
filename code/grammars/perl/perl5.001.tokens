@@ -5,8 +5,9 @@
 # Evidence: https://github.com/Perl/perl5/blob/perl-5.001/toke.c
 # The tagged tokenizer maps `print` to KEY_print and exposes ADDOP/MULOP.
 
+# Leading-zero multi-digit forms are octal and outside this partial subset.
 PRINT     = "print"
-INT       = /[0-9]+/
+INT       = /0|[1-9][0-9]*/
 PLUS      = "+"
 DECREMENT = "--"
 MINUS     = "-"

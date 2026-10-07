@@ -24,6 +24,18 @@ The Rust `perl-parser` tests load every non-pending pair from this inventory,
 cross-check token references, and run shared accepted and malformed-source
 probes. These probes verify the recorded subset, not full language coverage.
 
+The first 18 versioned pairs, from 1.000 through 5.003_03, now limit their
+integer token to plain decimal forms (`0` or a nonzero first digit). Their
+original tokenizers treat a leading zero as octal and reject `08` or `09`;
+the pair grammar cannot yet represent octal values accurately, so it also
+rejects valid octal forms such as `012` rather than reading them as decimal.
+This boundary is grounded in the tagged Perl 1
+[`perly.c`](https://github.com/Perl/perl5/blob/perl-1.0/perly.c) and Perl
+[2](https://github.com/Perl/perl5/blob/perl-2.0/toke.c),
+[3](https://github.com/Perl/perl5/blob/perl-3.000/toke.c),
+[4](https://github.com/Perl/perl5/blob/perl-4.0.36/toke.c), and
+[5](https://github.com/Perl/perl5/blob/perl-5.003_03/toke.c) tokenizers.
+
 Current pairs:
 
 - `perl1.000.*` is an explicitly **partial** arithmetic and `print` subset

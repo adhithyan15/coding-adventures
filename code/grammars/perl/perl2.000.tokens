@@ -6,8 +6,9 @@
 # The tagged tokenizer maps `print` to the yacc LISTOP token; this bounded
 # grammar names that one keyword PRINT and rejects the other list operators.
 
+# Leading-zero multi-digit forms are octal and outside this partial subset.
 PRINT     = "print"
-INT       = /[0-9]+/
+INT       = /0|[1-9][0-9]*/
 PLUS      = "+"
 DECREMENT = "--"
 MINUS     = "-"

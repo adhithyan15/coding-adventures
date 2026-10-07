@@ -6,8 +6,9 @@
 # The tagged tokenizer recognizes `print` as a list operator. This pair
 # admits that spelling only, and leaves all other list operators unsupported.
 
+# Leading-zero multi-digit forms are octal and outside this partial subset.
 PRINT     = "print"
-INT       = /[0-9]+/
+INT       = /0|[1-9][0-9]*/
 PLUS      = "+"
 DECREMENT = "--"
 MINUS     = "-"
