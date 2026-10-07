@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-07 — re-audited after LANG81
+Status date: 2026-10-07 — re-audited after PREP01 C staging
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -96,17 +96,22 @@ PR #16897 delivered LANG81's bounded Perl `print` arithmetic lexer, parser,
 direct-to-IIR compiler, and native VM runner. It merged as
 `a29d4de837cf14ef4bc73f92da3c3ad67f07a4a0` after its latest-head checks
 passed. The historical per-release Perl grammar inventory is tracked separately.
+PR #16902 delivered the bounded PREP01 C directive-token, dialect, and parser
+token-handoff stage and merged as `7cafea593aca52764f49ee2e528e7e1cad11031f`
+after its exact-head CI, CodeQL, and books checks passed. Its `compile_source`
+still uses the legacy path; full C `#if`, stringize/paste, and actual
+preprocessor-to-C-frontend composition remain open.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** publish the bounded directive-token, C dialect,
-   and parser token-handoff stage, then compose the generic preprocessor with
-   the C frontend when the remaining C contracts are ready. The staged dialect
-   does not yet preprocess `compile_source` input.
-2. **LANG82 Perl release grammars:** continue the separately tracked token and
-   grammar pairs for each public Perl release, with distinct files and source
-   evidence for every release.
+1. **LANG82 Perl release grammars (selected):** publish the source-grounded
+   release inventory and individually checked partial grammar/token pairs as a
+   bounded first installment. Continue until every public release has its own
+   files; do not label partial pairs complete or treat the first installment as
+   satisfying the full per-release request.
+2. **PREP01 C:** complete full C `#if` semantics, stringize/paste, and
+   preprocessor-to-C-frontend composition with executed end-to-end tests.
 
 The following run records the first VM-067 selection.
 
