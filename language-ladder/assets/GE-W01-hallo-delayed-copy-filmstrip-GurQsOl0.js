@@ -1,0 +1,1 @@
+var e=``+new URL(`GE-W01-hallo-guided-copy-filmstrip-CE2FS26k.svg`,import.meta.url).href;export{e as default};

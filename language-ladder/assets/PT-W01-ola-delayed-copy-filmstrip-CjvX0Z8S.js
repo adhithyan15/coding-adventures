@@ -1,0 +1,1 @@
+var e=``+new URL(`PT-W01-ola-guided-copy-filmstrip-BBsGf_OX.svg`,import.meta.url).href;export{e as default};

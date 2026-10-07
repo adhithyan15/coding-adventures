@@ -1,0 +1,1 @@
+var e=``+new URL(`SA-W03-mama-nama-guided-copy-filmstrip-Bt1849Tg.svg`,import.meta.url).href;export{e as default};

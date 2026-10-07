@@ -1,0 +1,1 @@
+var e=``+new URL(`IT-W01-ciao-guided-copy-filmstrip-D2uFTpJc.svg`,import.meta.url).href;export{e as default};

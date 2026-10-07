@@ -1,0 +1,1 @@
+var e=``+new URL(`ML-W01-na-ma-guided-copy-filmstrip-DcLI0I3J.svg`,import.meta.url).href;export{e as default};
