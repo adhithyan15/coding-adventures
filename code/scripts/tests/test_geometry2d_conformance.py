@@ -76,6 +76,33 @@ class Geometry2DConformanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "not degenerate"):
             MODULE.validate_document(changed)
 
+    def test_shape_and_semantic_boundaries_rejected(self) -> None:
+        edits = [
+            (lambda d: d.update(version=2), "version"),
+            (lambda d: d.update(cases=[]), "cases"),
+            (lambda d: d["cases"][0].update(id="Bad_ID"), "case id"),
+            (lambda d: d["cases"][0].update(operation="unknown"), "unsupported"),
+            (lambda d: d["cases"][0].update(point=[0]), "exactly 2"),
+            (lambda d: d["cases"][4].update(sample_t=2), "sample_t"),
+            (lambda d: d["cases"][4].update(expected_point=[0, 0]), "expected"),
+        ]
+        for edit, error in edits:
+            with self.subTest(error=error):
+                changed = copy.deepcopy(self.document)
+                edit(changed)
+                with self.assertRaisesRegex(ValueError, error):
+                    MODULE.validate_document(changed)
+
+    def test_bad_case_type_and_root_extra_field_rejected(self) -> None:
+        changed = copy.deepcopy(self.document)
+        changed["cases"][0] = None
+        with self.assertRaisesRegex(ValueError, "case fields"):
+            MODULE.validate_document(changed)
+        changed = copy.deepcopy(self.document)
+        changed["extra"] = 1
+        with self.assertRaisesRegex(ValueError, "fields"):
+            MODULE.validate_document(changed)
+
 
 if __name__ == "__main__":
     unittest.main()
