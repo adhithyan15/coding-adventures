@@ -253,6 +253,7 @@ The exact-main front-door audit at
 | Ruby | no | `build-tool-ruby-ci-gate-selection-conformance` |
 | Rust | no | `build-tool-rust-ci-gate-selection-conformance` |
 | Swift | no | `build-tool-swift-ci-gate-selection-conformance` |
+| TypeScript | no | `build-tool-typescript-ci-gate-selection-conformance` |
 
 For the C#/F# owner, the portable evaluator lives in the C# build-tool
 assembly, separate from graph/diff selection. The F# build tool exposes an
@@ -264,7 +265,6 @@ and never acquires Git, filesystem, process, workflow, or output authority.
 Register both native fixture readers in the Go build-plan selector in the same
 change, so a fixture-only diff schedules their actual package tests on all
 supported CI platforms.
-| TypeScript | no | `build-tool-typescript-ci-gate-selection-conformance` |
 
 Java/Kotlin, Dart, and OCaml remain owned by their existing build-tool creation
 and promotion items; the final CI gate aggregate depends on those owners as
