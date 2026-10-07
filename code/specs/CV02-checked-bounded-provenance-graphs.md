@@ -84,8 +84,16 @@ reason and metadata keys/string/scalar/container encodings in retained payload
 accounting; identity/edge storage is separately bounded by fixed IDs and counts.
 Structural work counts graph/JSON visits and queue/index operations; byte caps
 bound string scanning/encoding, and sorted traversal must retain documented
-O((V+E) log V) or better graph complexity. These are explicit finite limits,
-not a claim of a precise RAM cap. Callers can select other finite limits;
+O((V+E) log V) or better graph complexity.
+
+Import and export share one work allowance across their phases. Bounded parse,
+typed conversion, independent graph validation and encoding cannot each restart
+the operation's budget. Typed conversion may conservatively reserve another
+allowance equal to the parser's charged structural visits before conversion;
+this includes object keys and wrappers as well as payload values.
+
+These are explicit finite limits, not a claim of a precise RAM cap.
+Callers can select other finite limits;
 compiler configuration must expose a documented way to exercise or raise them.
 Verification must measure real corpus usage before confirming default adequacy.
 
