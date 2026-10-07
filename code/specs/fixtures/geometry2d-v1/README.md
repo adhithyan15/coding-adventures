@@ -11,8 +11,12 @@ center conversion must be absent, cubic list empty, evaluation equal to
 `expected_point`, and ordered bounds equal to `[x, y, width, height]`.
 The x-rotation is zero, large-arc false, and sweep true for these degenerate
 cases because those flags cannot change a line fallback. All numbers must be
-finite. Adapters should compare numeric outputs with the pinned absolute
-tolerance while checking presence, list length, and field shape exactly.
+finite. The `comparison` field requires adapters to compare a
+`point-normalize` expected origin exactly,
+coordinate by coordinate: the sub-threshold input `5e-13` must not pass merely
+because it is within the general `1e-12` output tolerance. Compare other
+numeric outputs with the pinned absolute tolerance (no relative tolerance),
+while checking presence, list length, and field shape exactly.
 
 The independent validator recomputes every expected point and rectangle from
 the spec's formulas without calling a package implementation:
