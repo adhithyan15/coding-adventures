@@ -1,6 +1,6 @@
 # Perl release grammars
 
-`releases.csv` inventories 774 numbered releases from the official
+`releases.csv` inventories 776 release entries from the official
 `perlhist.pod` snapshot and annotated Perl source tags retrieved on 2026-10-07.
 It expands historical range rows such as `1.001..10` into one row per release.
 The `perlhist_line` column points to the source line, or names a `tag:v...`
@@ -13,6 +13,10 @@ On 2026-10-07, all 337 distinct version names from CPAN's `/src/5.0/`
 `perl5.<version>.tar.gz` names were present in this inventory. This comparison
 does not establish that the inventory covers every historical public release;
 other archive names and pre-Perl-5 sources still need review.
+The pinned history also lists `p54rc1` and `p54rc2` at lines 264 and 265.
+They were omitted from the earlier inventory and are now distinct pending
+rows. Historical archives list both candidates; their token and grammar
+pairs still require source comparison and validation.
 
 The user requested a **separate `.tokens` and `.grammar` file for every
 release**, including maintenance and development versions. The filenames are

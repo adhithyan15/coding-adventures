@@ -44,7 +44,8 @@ mod tests {
                 panic!("malformed Perl release row: {row}");
             };
             assert!(
-                release.starts_with(|character: char| character.is_ascii_digit())
+                (release.starts_with(|character: char| character.is_ascii_digit())
+                    || matches!(*release, "p54rc1" | "p54rc2"))
                     && release
                         .chars()
                         .all(|character| character.is_ascii_alphanumeric()
