@@ -1,0 +1,8 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "fixtures": [
+    "basic-handoff",
+    "parallel-branch-and-join"
+  ]
+}
