@@ -149,8 +149,13 @@ pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
     let transitions = diagram.transitions.iter().filter_map(|transition| {
         let from = domain_by_name.get(transition.from.as_str())?;
         let to = domain_by_name.get(transition.to.as_str())?;
-        Some(LayoutedCynefinTransition { from: cynefin_boundary_point(from, &to.center),
-            to: cynefin_boundary_point(to, &from.center), label: transition.label.clone() })
+        let dx = to.center.x - from.center.x;
+        let dy = to.center.y - from.center.y;
+        let length = dx.hypot(dy);
+        let middle = Point { x: (from.center.x + to.center.x) / 2.0, y: (from.center.y + to.center.y) / 2.0 };
+        let control = Point { x: middle.x - dy / length * length * 0.15,
+            y: middle.y + dx / length * length * 0.15 };
+        Some(LayoutedCynefinTransition { from: from.center.clone(), control, to: to.center.clone(), label: transition.label.clone() })
     }).collect();
     let boundaries = cynefin_boundaries(&diagram.config, left, top);
     let cliff = cynefin_cliff(&diagram.config, left, top);
@@ -205,20 +210,6 @@ fn cynefin_cliff(config: &diagram_ir::CynefinConfig, left: f64, top: f64) -> Lay
             control2: Point { x: center_x + amplitude * 0.3, y: top_y + height * 0.95 },
             end: Point { x: center_x, y: bottom_y } },
     ] }
-}
-
-fn cynefin_boundary_point(domain: &LayoutedCynefinDomain, toward: &Point) -> Point {
-    let dx = toward.x - domain.center.x;
-    let dy = toward.y - domain.center.y;
-    if dx.abs() < f64::EPSILON && dy.abs() < f64::EPSILON { return domain.center.clone(); }
-    let scale = if domain.confusion {
-        1.0 / ((dx / (domain.width / 2.0)).powi(2) + (dy / (domain.height / 2.0)).powi(2)).sqrt()
-    } else {
-        let horizontal = if dx.abs() < f64::EPSILON { f64::INFINITY } else { domain.width / 2.0 / dx.abs() };
-        let vertical = if dy.abs() < f64::EPSILON { f64::INFINITY } else { domain.height / 2.0 / dy.abs() };
-        horizontal.min(vertical)
-    };
-    Point { x: domain.center.x + dx * scale, y: domain.center.y + dy * scale }
 }
 
 /// Resolve canvas size and produce a `LayoutedGeometricDiagram`.
@@ -421,8 +412,9 @@ mod tests {
         assert_eq!(layout.cliff.start, Point { x: 344.0, y: 234.0 });
         assert_eq!(layout.cliff.segments.len(), 2);
         assert_eq!(layout.cliff.segments[1].end, Point { x: 344.0, y: 444.0 });
-        assert!(layout.transitions[0].from.x > complex.center.x);
-        assert!(layout.transitions[0].to.x < clear.center.x);
+        assert_eq!(layout.transitions[0].from, complex.center);
+        assert_eq!(layout.transitions[0].to, clear.center);
+        assert_ne!(layout.transitions[0].control, Point { x: 344.0, y: 234.0 });
     }
 
     #[test]

@@ -1161,10 +1161,14 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             stroke_width: Some(2.0), stroke_dash: None, stroke_dash_offset: None }));
     }
     for transition in &diagram.transitions {
-        instructions.push(PaintInstruction::Path(line_path(&[transition.from.clone(), transition.to.clone()], "#475569", 2.0)));
-        instructions.push(PaintInstruction::Path(simple_arrowhead(&transition.from, &transition.to, "#475569")));
-        if let Some(label) = &transition.label { text_children.push(text_node(label, (transition.from.x + transition.to.x) / 2.0 - 65.0,
-            (transition.from.y + transition.to.y) / 2.0 - 30.0, 130.0, 24.0, options.label_font.clone(), Color { r: 51, g: 65, b: 85, a: 255 })); }
+        instructions.push(PaintInstruction::Path(PaintPath { base: PaintBase::default(), commands: vec![
+            PathCommand::MoveTo { x: transition.from.x, y: transition.from.y },
+            PathCommand::QuadTo { cx: transition.control.x, cy: transition.control.y, x: transition.to.x, y: transition.to.y },
+        ], fill: None, fill_rule: None, stroke: Some("#475569".into()), stroke_width: Some(2.0),
+            stroke_cap: Some(StrokeCap::Round), stroke_join: Some(StrokeJoin::Round), stroke_dash: None, stroke_dash_offset: None }));
+        instructions.push(PaintInstruction::Path(simple_arrowhead(&transition.control, &transition.to, "#475569")));
+        if let Some(label) = &transition.label { text_children.push(text_node(label, transition.control.x - 65.0,
+            transition.control.y - 30.0, 130.0, 24.0, options.label_font.clone(), Color { r: 51, g: 65, b: 85, a: 255 })); }
     }
     if let Some(title) = &diagram.title { text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0,
         options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 })); }
@@ -9367,7 +9371,8 @@ mod tests {
                 width: 180.0, height: 130.0, center: Point { x: 100.0, y: 75.0 }, confusion: false },
                 diagram_ir::LayoutedCynefinDomain { name: "confusion".into(), items: vec!["One".into(), "Two".into(), "Three".into()], overflow_count: 2, x: 150.0, y: 110.0,
                     width: 100.0, height: 80.0, center: Point { x: 200.0, y: 150.0 }, confusion: true }],
-            transitions: vec![diagram_ir::LayoutedCynefinTransition { from: Point { x: 190.0, y: 75.0 }, to: Point { x: 150.0, y: 130.0 }, label: None }] };
+            transitions: vec![diagram_ir::LayoutedCynefinTransition { from: Point { x: 100.0, y: 75.0 },
+                control: Point { x: 145.0, y: 95.0 }, to: Point { x: 200.0, y: 150.0 }, label: None }] };
         let scene = diagram_to_paint_cynefin(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
@@ -9379,6 +9384,8 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#8b0000") && path.stroke_width == Some(4.0)
                 && path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. })) )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::QuadTo { .. })) )));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#cbd5e1"))));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")).map(String::as_str), Some("Cynefin framework"));
     }
