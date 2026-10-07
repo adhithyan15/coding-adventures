@@ -165,7 +165,21 @@ pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
         let middle = Point { x: (from.center.x + to.center.x) / 2.0, y: (from.center.y + to.center.y) / 2.0 };
         let control = Point { x: middle.x - dy / length * length * 0.15,
             y: middle.y + dx / length * length * 0.15 };
-        Some(LayoutedCynefinTransition { from: from.center.clone(), control, to: to.center.clone(), label: transition.label.clone() })
+        let tangent_x = to.center.x - control.x;
+        let tangent_y = to.center.y - control.y;
+        let tangent_length = tangent_x.hypot(tangent_y);
+        let unit_x = tangent_x / tangent_length;
+        let unit_y = tangent_y / tangent_length;
+        let normal_x = -unit_y;
+        let normal_y = unit_x;
+        let arrow_tip = Point { x: to.center.x + unit_x * 0.6, y: to.center.y + unit_y * 0.6 };
+        let arrow_base = Point { x: to.center.x - unit_x * 5.4, y: to.center.y - unit_y * 5.4 };
+        let arrowhead = [arrow_tip,
+            Point { x: arrow_base.x + normal_x * 3.0, y: arrow_base.y + normal_y * 3.0 },
+            Point { x: arrow_base.x - normal_x * 3.0, y: arrow_base.y - normal_y * 3.0 }];
+        let label_position = transition.label.as_ref().map(|_| Point { x: control.x, y: control.y - 6.0 });
+        Some(LayoutedCynefinTransition { from: from.center.clone(), control, to: to.center.clone(),
+            label: transition.label.clone(), label_position, arrowhead })
     }).collect();
     let boundaries = cynefin_boundaries(&diagram.config, left, top);
     let cliff = cynefin_cliff(&diagram.config, left, top);
@@ -430,7 +444,7 @@ mod tests {
                 boundary_amplitude: 12.0, seed: 17, style: diagram_ir::CynefinStyle::default() },
             domains: vec![diagram_ir::CynefinDomain { name: "confusion".into(),
                 items: vec!["One".into(), "Two".into(), "Three".into(), "Four".into(), "Five".into()] }],
-            transitions: vec![diagram_ir::CynefinTransition { from: "complex".into(), to: "clear".into(), label: None }] });
+            transitions: vec![diagram_ir::CynefinTransition { from: "complex".into(), to: "clear".into(), label: Some("Shift".into()) }] });
         let complex = layout.domains.iter().find(|domain| domain.name == "complex").unwrap();
         let clear = layout.domains.iter().find(|domain| domain.name == "clear").unwrap();
         assert!(complex.center.x < clear.center.x && complex.center.y < clear.center.y);
@@ -451,6 +465,13 @@ mod tests {
         assert_eq!(layout.transitions[0].from, complex.center);
         assert_eq!(layout.transitions[0].to, clear.center);
         assert_ne!(layout.transitions[0].control, Point { x: 344.0, y: 234.0 });
+        assert_eq!(layout.transitions[0].label_position, Some(Point {
+            x: layout.transitions[0].control.x, y: layout.transitions[0].control.y - 6.0 }));
+        let arrow_tip = &layout.transitions[0].arrowhead[0];
+        assert!(((arrow_tip.x - clear.center.x).hypot(arrow_tip.y - clear.center.y) - 0.6).abs() < 1e-9);
+        for arrow_base in &layout.transitions[0].arrowhead[1..] {
+            assert!(((arrow_base.x - clear.center.x).hypot(arrow_base.y - clear.center.y) - 6.177_378_084_592_2).abs() < 1e-9);
+        }
     }
 
     #[test]
