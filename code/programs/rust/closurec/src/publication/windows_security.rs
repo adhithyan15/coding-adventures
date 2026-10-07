@@ -610,3 +610,24 @@ impl Drop for PrivateDescriptor {
         }
     }
 }
+
+#[cfg(test)]
+pub(super) fn allow_then_owner_rights_denial(file: &File) -> io::Result<Policy> {
+    // The private creator gives exactly one protected current-user allow.
+    // Append a denial without canonicalizing ACE order: native access can
+    // succeed after the earlier FullControl grant satisfies the request.
+    let mut policy = Policy::capture(file)?;
+    let acl = policy.dacl.as_mut().unwrap();
+    assert_eq!(acl[1] & 0xffff, 1);
+    acl.extend_from_slice(&[(20u32 << 16) | 1, 0x0002_0000, 0x0000_0101, 0x0300_0000, 4]);
+    acl[0] = (acl[0] & 0xffff) | ((acl.len() as u32 * 4) << 16);
+    acl[1] = (acl[1] & 0xffff_0000) | 2;
+    policy.apply(file)?;
+    Ok(policy)
+}
+
+#[cfg(test)]
+pub(super) fn token_owner_diagnostics() -> io::Result<String> {
+    let token = Token::current()?;
+    Ok(format!("token_user={:?}; token_default_owner={:?}", token.sid(1)?, token.sid(4)?))
+}

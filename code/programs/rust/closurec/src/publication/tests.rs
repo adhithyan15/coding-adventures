@@ -141,6 +141,33 @@ fn windows_orphan_inherited_policy_rejects_before_original_mutation() {
 
 #[cfg(windows)]
 #[test]
+fn windows_allow_before_owner_rights_denial_rejects_despite_successful_fresh_open() {
+    let fixture = Fixture::new();
+    let path = fixture.path("output.js");
+    let mut file = windows_security::create_file(&path).unwrap();
+    file.write_all(b"original").unwrap();
+    let intended = windows_security::allow_then_owner_rights_denial(&file).unwrap();
+    // Independent native precondition: the final policy actually permits the
+    // production fresh open. Rejection must enforce the documented class,
+    // rather than depending on the caller's observed effective permissions.
+    let original = observe(&path, false).unwrap().unwrap();
+    assert_eq!(original.policy, intended);
+    let mut original_mutated = false;
+    let result = publish_with_hook(&[(path.clone(), "replacement".into())], &mut |phase, _| {
+        if phase == Phase::BackupRemove {
+            original_mutated = true;
+        }
+        Ok(())
+    });
+    assert!(result.is_err(), "OWNER RIGHTS denial accepted: {result:?}");
+    assert!(!original_mutated, "unsupported policy discovered after original mutation");
+    assert!(same_original(&original, &observe(&path, false).unwrap().unwrap()));
+    assert_eq!(fs::read(&path).unwrap(), b"original");
+    assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 1);
+}
+
+#[cfg(windows)]
+#[test]
 fn windows_final_verification_denial_rejects_before_any_original_mutation() {
     use std::os::windows::process::CommandExt;
     let fixture = Fixture::new();
@@ -152,6 +179,8 @@ fn windows_final_verification_denial_rejects_before_any_original_mutation() {
         $sid=[Security.Principal.SecurityIdentifier]::new('S-1-3-4')
         $acl.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($sid,'ReadPermissions','ObjectInherit','InheritOnly','Deny'))
         Set-Acl -LiteralPath $env:CLOSUREC_TEST_ACL_PATH -AclObject $acl
+        Write-Output ('parent_sddl='+(Get-Acl -LiteralPath $env:CLOSUREC_TEST_ACL_PATH).Sddl)
+        whoami.exe /all
     "#;
     let output = std::process::Command::new("powershell.exe")
         .args(["-NoProfile", "-NonInteractive", "-Command", script])
@@ -165,6 +194,27 @@ fn windows_final_verification_denial_rejects_before_any_original_mutation() {
         "{}",
         String::from_utf8_lossy(&output.stderr)
     );
+    let parent = observe(&restricted, true).unwrap().unwrap();
+    let intended = windows_security::new_file_policy(&parent.file).unwrap();
+    let probe_path = fixture.path("empty-policy-diagnostic");
+    let probe = windows_security::create_file(&probe_path).unwrap();
+    let private = windows_security::Policy::capture(&probe).unwrap();
+    let public_probe = restricted.join("empty-policy-diagnostic");
+    fs::hard_link(&probe_path, &public_probe).unwrap();
+    intended.apply(&windows_security::policy_handle(&public_probe).unwrap()).unwrap();
+    let fresh = observe(&public_probe, false);
+    let fresh_diagnostic = fresh.as_ref().map(|value| value.as_ref().map(|observed| {
+        format!("len={}; policy={:?}", observed.len, observed.policy)
+    }));
+    eprintln!(
+        "inherited OWNER RIGHTS fixture: {}; parent={:?}; derived={intended:?}; fresh_open={fresh_diagnostic:?}\n{}",
+        windows_security::token_owner_diagnostics().unwrap(),
+        parent.policy,
+        String::from_utf8_lossy(&output.stdout)
+    );
+    private.apply(&probe).unwrap();
+    fs::remove_file(&public_probe).unwrap();
+    fs::remove_file(&probe_path).unwrap();
     let old = fixture.path("old.js");
     fs::write(&old, "original").unwrap();
     let original = observe(&old, false).unwrap().unwrap();
