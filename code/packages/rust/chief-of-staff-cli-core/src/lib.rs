@@ -13,6 +13,10 @@ use chief_of_staff_pipeline_bindings::{HostPipelineBinding, PipelineId};
 use chief_of_staff_service_registry::{
     DesiredState, HostName, HostRegistration, PackagePath, RegistryError, RestartPolicy,
 };
+use chief_of_staff_vault_runtime::{AllowedAgents, SecretPolicy, VaultDeliveryMode};
+use chief_of_staff_vault_secret_store::{
+    validate_policy, NameError, SecretName, MAX_PRIVILEGE_TIER,
+};
 use cli_builder::{load_spec_from_str, CliBuilderError, ParseResult, Parser, ParserOutput};
 use coding_adventures_json_serializer::{serialize_pretty, JsonSerializerError, SerializerConfig};
 use coding_adventures_json_value::JsonValue;
@@ -111,6 +115,44 @@ const CLI_SPEC: &str = r#"{
       "arguments": [
         {"id": "host", "name": "HOST", "description": "Registered host name.", "type": "string", "required": true}
       ]
+    },
+    {
+      "id": "vault",
+      "name": "vault",
+      "description": "Provision Chief vault secrets locally; changes take effect at the next daemon restart.",
+      "commands": [
+        {
+          "id": "vault_put",
+          "name": "put",
+          "description": "Seal one secret, read from stdin, with its admission policy.",
+          "arguments": [
+            {"id": "name", "name": "NAME", "description": "Secret name: a lowercase letter or digit, then a-z 0-9 . _ - (at most 120 bytes).", "type": "string", "required": true}
+          ],
+          "flags": [
+            {"id": "mode", "long": "mode", "description": "How the secret may leave the vault.", "type": "enum", "enum_values": ["direct", "leased", "both"], "required": true, "value_name": "MODE"},
+            {"id": "tier", "long": "tier", "description": "Minimum approval tier, 0-3 (recorded, not yet enforced).", "type": "integer", "required": true, "value_name": "TIER"},
+            {"id": "allow_agent", "long": "allow-agent", "description": "Repeatable registered host name allowed to request the secret.", "type": "string", "repeatable": true, "value_name": "HOST"},
+            {"id": "any_agent", "long": "any-agent", "description": "Allow every agent; must be stated explicitly.", "type": "boolean"},
+            {"id": "raw", "long": "raw", "description": "Keep the stdin bytes exactly instead of stripping one trailing newline.", "type": "boolean"}
+          ],
+          "mutually_exclusive_groups": [
+            {"id": "agents", "flag_ids": ["allow_agent", "any_agent"], "required": true}
+          ]
+        },
+        {
+          "id": "vault_delete",
+          "name": "delete",
+          "description": "Remove one sealed secret.",
+          "arguments": [
+            {"id": "name", "name": "NAME", "description": "Secret name.", "type": "string", "required": true}
+          ]
+        },
+        {
+          "id": "vault_list",
+          "name": "list",
+          "description": "List sealed secret names without decrypting anything."
+        }
+      ]
     }
   ]
 }"#;
@@ -128,6 +170,79 @@ pub enum CliAction {
     InstallDaemon,
     /// One validated operation for an already-authenticated daemon client.
     Command(CliCommand),
+    /// One local vault provisioning operation (D18U "Provisioning commands").
+    ///
+    /// Like [`CliAction::InstallDaemon`] this never reaches the daemon: it
+    /// opens the sealed store directly with the owner-only KEK file.
+    Vault(VaultCommand),
+}
+
+/// A local vault provisioning operation.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum VaultCommand {
+    /// Seal one secret read from stdin.
+    Put(VaultPut),
+    /// Remove one sealed secret.
+    Delete(SecretName),
+    /// List sealed secret names.
+    List,
+}
+
+/// A validated `vault put`: everything except the secret itself.
+///
+/// The secret is deliberately absent. It is read from stdin by the
+/// executable adapter (D18U U-C1), so it never passes through argv, the
+/// declarative parser, or this type's `Debug` output.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct VaultPut {
+    /// The secret's name.
+    pub name: SecretName,
+    /// Minimum approval tier, 0–3.
+    pub privilege_tier: u8,
+    /// Which attested hosts may request the secret.
+    pub allowed_agents: AllowedAgents,
+    /// Which delivery modes are admissible.
+    pub allowed_mode: VaultDeliveryMode,
+    /// Keep stdin bytes exactly (`--raw`) instead of stripping one newline.
+    pub raw: bool,
+}
+
+impl VaultPut {
+    /// The policy to store, stamped with the time of this write.
+    ///
+    /// The timestamp is supplied by the caller because this crate has no
+    /// clock authority; the adapter reads the wall clock.
+    pub fn policy_at(&self, rotated_at_ms: u64) -> SecretPolicy {
+        SecretPolicy {
+            privilege_tier: self.privilege_tier,
+            allowed_agents: self.allowed_agents.clone(),
+            allowed_mode: self.allowed_mode,
+            rotated_at_ms,
+        }
+    }
+
+    /// Apply D18U U-C3 to the bytes read from stdin.
+    ///
+    /// `echo` and `printf '%s\n'` both append a newline, and keeping it would
+    /// provision a value that never matches what the owner meant. So exactly
+    /// one trailing `\n`, or one `\r\n`, is dropped — never more, because a
+    /// secret may legitimately end in whitespace. `--raw` keeps every byte.
+    ///
+    /// | input        | default  | `--raw`      |
+    /// |--------------|----------|--------------|
+    /// | `abc`        | `abc`    | `abc`        |
+    /// | `abc\n`      | `abc`    | `abc\n`      |
+    /// | `abc\r\n`    | `abc`    | `abc\r\n`    |
+    /// | `abc\n\n`    | `abc\n`  | `abc\n\n`    |
+    pub fn secret_bytes<'a>(&self, stdin: &'a [u8]) -> &'a [u8] {
+        if self.raw {
+            return stdin;
+        }
+        stdin
+            .strip_suffix(b"\r\n")
+            .or_else(|| stdin.strip_suffix(b"\n"))
+            .unwrap_or(stdin)
+    }
 }
 
 /// One typed operator command supported by the current daemon API.
@@ -266,6 +381,9 @@ pub fn parse_argv(argv: &[String]) -> Result<CliAction, CliError> {
         {
             Ok(CliAction::InstallDaemon)
         }
+        ParserOutput::Parse(result) if result.command_path.iter().any(|part| part == "vault") => {
+            parse_vault(&result).map(CliAction::Vault)
+        }
         ParserOutput::Parse(result) => parse_command(&result).map(CliAction::Command),
     }
 }
@@ -359,6 +477,96 @@ fn parse_wire(result: &ParseResult) -> Result<CliCommand, CliError> {
         agent_id,
         launch_bindings,
     )))
+}
+
+fn parse_vault(result: &ParseResult) -> Result<VaultCommand, CliError> {
+    match result.command_path.last().map(String::as_str) {
+        Some("put") => parse_vault_put(result).map(VaultCommand::Put),
+        Some("delete") => secret_name(result).map(VaultCommand::Delete),
+        Some("list") => Ok(VaultCommand::List),
+        _ => Err(invalid_value(
+            "command",
+            "vault needs a subcommand: put, delete, or list",
+        )),
+    }
+}
+
+/// Validate `vault put`. The declarative parser already requires `--mode` and
+/// `--tier` and enforces the agent group; every rule is checked again here so
+/// the typed boundary does not depend on the parser's spec staying correct.
+fn parse_vault_put(result: &ParseResult) -> Result<VaultPut, CliError> {
+    let name = secret_name(result)?;
+    let allowed_mode = match flag(result, "mode")? {
+        "direct" => VaultDeliveryMode::Direct,
+        "leased" => VaultDeliveryMode::Leased,
+        "both" => VaultDeliveryMode::Both,
+        _ => return Err(invalid_spec_value("mode")),
+    };
+    let privilege_tier = result
+        .flags
+        .get("tier")
+        .and_then(|value| value.as_i64())
+        .ok_or_else(|| invalid_value("tier", "--tier is required"))?;
+    let privilege_tier = u8::try_from(privilege_tier)
+        .ok()
+        .filter(|tier| *tier <= MAX_PRIVILEGE_TIER)
+        .ok_or_else(|| invalid_value("tier", "must be 0, 1, 2, or 3"))?;
+    let allow = repeatable_flag(result, "allow_agent")?;
+    let any = bool_flag(result, "any_agent")?;
+    // D18U U-C4: exactly one of the two, and never a default.
+    let allowed_agents = match (allow.is_empty(), any) {
+        (true, true) => AllowedAgents::Any,
+        (false, false) => {
+            // U-C5: an allow-list entry must be a name a caller can actually
+            // be attested as, which is a registered host name.
+            let hosts = allow
+                .iter()
+                .map(|host| HostName::new(*host).map(|host| host.as_str().to_string()))
+                .collect::<Result<Vec<_>, _>>()
+                .map_err(CliError::Registry)?;
+            AllowedAgents::only(hosts)
+        }
+        (true, false) => {
+            return Err(invalid_value(
+                "allow_agent",
+                "state who may request the secret: --allow-agent HOST or --any-agent",
+            ))
+        }
+        (false, true) => {
+            return Err(invalid_value(
+                "any_agent",
+                "--any-agent cannot be combined with --allow-agent",
+            ))
+        }
+    };
+    let put = VaultPut {
+        name,
+        privilege_tier,
+        allowed_agents,
+        allowed_mode,
+        raw: bool_flag(result, "raw")?,
+    };
+    // The record format's own bounds (agent count, id length) are checked
+    // now, before the adapter reads a single byte of the secret.
+    validate_policy(&put.policy_at(0)).map_err(|_| {
+        invalid_value(
+            "allow_agent",
+            "the allow-list exceeds the sealed record's bounds",
+        )
+    })?;
+    Ok(put)
+}
+
+fn secret_name(result: &ParseResult) -> Result<SecretName, CliError> {
+    SecretName::parse(argument(result, "name")?).map_err(CliError::SecretName)
+}
+
+fn bool_flag(result: &ParseResult, id: &'static str) -> Result<bool, CliError> {
+    match result.flags.get(id) {
+        None => Ok(false),
+        Some(value) if value.is_null() => Ok(false),
+        Some(value) => value.as_bool().ok_or_else(|| invalid_spec_value(id)),
+    }
 }
 
 fn parse_restart_policy(value: &str) -> Result<RestartPolicy, CliError> {
@@ -573,6 +781,8 @@ pub enum CliError {
     },
     /// Shared registry identity validation failed.
     Registry(RegistryError),
+    /// A vault secret name violated D18U U-N1.
+    SecretName(NameError),
     /// The authenticated daemon client rejected or could not complete the call.
     Daemon(DaemonClientError),
     /// A successful JSON result could not be represented.
@@ -587,6 +797,7 @@ impl Display for CliError {
                 write!(formatter, "invalid {field}: {message}")
             }
             Self::Registry(error) => write!(formatter, "{error}"),
+            Self::SecretName(error) => write!(formatter, "invalid secret name: {error}"),
             Self::Daemon(error) => write!(formatter, "{error}"),
             Self::Serialize(_) => formatter.write_str("chief CLI could not serialize the result"),
         }
@@ -598,6 +809,7 @@ impl std::error::Error for CliError {
         match self {
             Self::Parse(error) => Some(error),
             Self::Registry(error) => Some(error),
+            Self::SecretName(error) => Some(error),
             Self::Daemon(error) => Some(error),
             Self::Serialize(error) => Some(error),
             Self::InvalidInput { .. } => None,
@@ -997,5 +1209,224 @@ mod tests {
                 ..
             })
         ));
+    }
+
+    // ── vault (D18U "Provisioning commands") ─────────────────────────────────
+
+    fn vault(values: &[&str]) -> Result<VaultCommand, CliError> {
+        match parse_argv(&argv(values))? {
+            CliAction::Vault(command) => Ok(command),
+            other => panic!("expected a vault action, got {other:?}"),
+        }
+    }
+
+    fn put(values: &[&str]) -> Result<VaultPut, CliError> {
+        let mut full = vec!["chief", "vault", "put"];
+        full.extend_from_slice(values);
+        match vault(&full)? {
+            VaultCommand::Put(put) => Ok(put),
+            other => panic!("expected put, got {other:?}"),
+        }
+    }
+
+    fn invalid_field(error: CliError) -> &'static str {
+        match error {
+            CliError::InvalidInput { field, .. } => field,
+            other => panic!("expected InvalidInput, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn vault_put_parses_a_fully_stated_policy() {
+        let parsed = put(&[
+            "weather-key",
+            "--mode",
+            "leased",
+            "--tier",
+            "2",
+            "--allow-agent",
+            "weather-host",
+            "--allow-agent",
+            "alpha-host",
+        ])
+        .unwrap();
+        assert_eq!(parsed.name.as_str(), "weather-key");
+        assert_eq!(parsed.privilege_tier, 2);
+        assert_eq!(parsed.allowed_mode, VaultDeliveryMode::Leased);
+        assert_eq!(
+            parsed.allowed_agents,
+            AllowedAgents::only(["alpha-host", "weather-host"])
+        );
+        assert!(!parsed.raw);
+        let policy = parsed.policy_at(1_234);
+        assert_eq!(policy.rotated_at_ms, 1_234);
+        assert_eq!(policy.allowed_mode, VaultDeliveryMode::Leased);
+    }
+
+    #[test]
+    fn vault_put_any_agent_direct_and_raw() {
+        let parsed = put(&[
+            "bank",
+            "--mode",
+            "direct",
+            "--tier",
+            "0",
+            "--any-agent",
+            "--raw",
+        ])
+        .unwrap();
+        assert_eq!(parsed.allowed_agents, AllowedAgents::Any);
+        assert_eq!(parsed.allowed_mode, VaultDeliveryMode::Direct);
+        assert!(parsed.raw);
+        let both = put(&["x", "--mode", "both", "--tier", "3", "--any-agent"]).unwrap();
+        assert_eq!(both.allowed_mode, VaultDeliveryMode::Both);
+        assert_eq!(both.privilege_tier, 3);
+    }
+
+    #[test]
+    fn vault_put_requires_every_policy_flag() {
+        // U-C4: no flag has a default; each omission is refused.
+        for missing in [
+            &["k", "--tier", "1", "--any-agent"][..],
+            &["k", "--mode", "leased", "--any-agent"][..],
+            &["k", "--mode", "leased", "--tier", "1"][..],
+        ] {
+            assert!(put(missing).is_err(), "{missing:?} must be refused");
+        }
+    }
+
+    #[test]
+    fn vault_put_refuses_both_agent_forms_together() {
+        assert!(put(&[
+            "k",
+            "--mode",
+            "leased",
+            "--tier",
+            "1",
+            "--any-agent",
+            "--allow-agent",
+            "alpha-host",
+        ])
+        .is_err());
+    }
+
+    #[test]
+    fn vault_put_refuses_out_of_range_tiers_and_bad_modes() {
+        for tier in ["4", "-1", "300"] {
+            let error = put(&["k", "--mode", "leased", "--tier", tier, "--any-agent"]).unwrap_err();
+            assert_eq!(invalid_field(error), "tier", "tier {tier}");
+        }
+        assert!(matches!(
+            put(&["k", "--mode", "sometimes", "--tier", "1", "--any-agent"]),
+            Err(CliError::Parse(_))
+        ));
+    }
+
+    #[test]
+    fn vault_put_allow_agent_uses_the_host_name_grammar() {
+        // U-C5: a value no attested caller could ever carry is refused.
+        for bad in ["Upper", "a", "has space", "under_score", "1digit"] {
+            assert!(
+                matches!(
+                    put(&["k", "--mode", "leased", "--tier", "1", "--allow-agent", bad]),
+                    Err(CliError::Registry(_))
+                ),
+                "{bad:?} must be refused"
+            );
+        }
+    }
+
+    #[test]
+    fn vault_put_bounds_the_allow_list_before_reading_any_secret() {
+        let mut values = vec!["k", "--mode", "leased", "--tier", "1"];
+        let hosts: Vec<String> = (0..65).map(|i| format!("host-{i}")).collect();
+        for host in &hosts {
+            values.push("--allow-agent");
+            values.push(host);
+        }
+        assert_eq!(invalid_field(put(&values).unwrap_err()), "allow_agent");
+    }
+
+    #[test]
+    fn vault_secret_names_follow_d18u() {
+        let error =
+            put(&["Bad/Name", "--mode", "leased", "--tier", "1", "--any-agent"]).unwrap_err();
+        assert!(matches!(error, CliError::SecretName(NameError::BadStart)));
+        assert!(error.to_string().contains("invalid secret name"));
+        assert!(std::error::Error::source(&error).is_some());
+        assert!(matches!(
+            vault(&["chief", "vault", "delete", "a..b"]),
+            Err(CliError::SecretName(NameError::DotDot))
+        ));
+    }
+
+    #[test]
+    fn vault_delete_and_list_parse() {
+        assert!(matches!(
+            vault(&["chief", "vault", "delete", "weather-key"]).unwrap(),
+            VaultCommand::Delete(name) if name.as_str() == "weather-key"
+        ));
+        assert_eq!(
+            vault(&["chief", "vault", "list"]).unwrap(),
+            VaultCommand::List
+        );
+        assert_eq!(
+            invalid_field(vault(&["chief", "vault"]).unwrap_err()),
+            "command"
+        );
+    }
+
+    #[test]
+    fn vault_put_never_takes_the_secret_on_argv() {
+        // There is no flag or argument for the value: an extra positional is a
+        // parse error rather than a silently accepted secret.
+        assert!(matches!(
+            parse_argv(&argv(&[
+                "chief",
+                "vault",
+                "put",
+                "k",
+                "s3cret",
+                "--mode",
+                "leased",
+                "--tier",
+                "1",
+                "--any-agent",
+            ])),
+            Err(CliError::Parse(_))
+        ));
+        let CliAction::Help(help) =
+            parse_argv(&argv(&["chief", "vault", "put", "--help"])).unwrap()
+        else {
+            panic!("expected help");
+        };
+        assert!(help.contains("stdin"));
+    }
+
+    #[test]
+    fn secret_bytes_strips_exactly_one_newline_unless_raw() {
+        let cooked = put(&["k", "--mode", "leased", "--tier", "1", "--any-agent"]).unwrap();
+        let raw = put(&[
+            "k",
+            "--mode",
+            "leased",
+            "--tier",
+            "1",
+            "--any-agent",
+            "--raw",
+        ])
+        .unwrap();
+        let table: [(&[u8], &[u8], &[u8]); 6] = [
+            (b"abc", b"abc", b"abc"),
+            (b"abc\n", b"abc", b"abc\n"),
+            (b"abc\r\n", b"abc", b"abc\r\n"),
+            (b"abc\n\n", b"abc\n", b"abc\n\n"),
+            (b"abc\r", b"abc\r", b"abc\r"),
+            (b"\n", b"", b"\n"),
+        ];
+        for (input, default, kept) in table {
+            assert_eq!(cooked.secret_bytes(input), default, "{input:?}");
+            assert_eq!(raw.secret_bytes(input), kept, "{input:?} raw");
+        }
     }
 }

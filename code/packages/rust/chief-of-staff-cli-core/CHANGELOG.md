@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+- Add `vault put|delete|list` as typed local actions (`CliAction::Vault`,
+  `VaultCommand`, `VaultPut`) for D18U provisioning.
+- `--mode`, `--tier`, and exactly one of `--allow-agent`/`--any-agent` are
+  required, so no policy field has a default (U-C4). Each rule is checked again
+  in the typed boundary, so it does not rely only on the parser spec.
+- `--allow-agent` values use the service-registry host-name grammar (U-C5).
+- The allow-list is checked against the sealed record's bounds before any
+  secret is read.
+- `VaultPut::secret_bytes` strips exactly one trailing `\n` or `\r\n` unless
+  `--raw` is given (U-C3).
+- Add `CliError::SecretName`.
+
 ## 0.1.0
 
 - Add a declarative host-lifecycle command surface over an authenticated Chief daemon client.
