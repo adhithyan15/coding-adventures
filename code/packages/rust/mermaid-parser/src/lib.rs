@@ -5921,6 +5921,7 @@ fn parse_treeview_config(source: &str) -> TreeViewConfig {
         padding_x: non_negative("paddingX", defaults.padding_x),
         padding_y: non_negative("paddingY", defaults.padding_y),
         line_thickness: non_negative("lineThickness", defaults.line_thickness),
+        use_max_width: boolean("useMaxWidth", defaults.use_max_width),
         show_icons: boolean("showIcons", defaults.show_icons),
         default_icon_pack: value("defaultIconPack").unwrap_or(defaults.default_icon_pack),
         filename_icons: parse_treeview_icon_map(source, config, "filenameIcons", false),
