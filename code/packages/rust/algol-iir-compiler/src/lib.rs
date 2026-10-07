@@ -3993,7 +3993,7 @@ impl Compiler {
         }
         match target_name.as_str() {
             "sign" => Some(actuals[0]),
-            "abs" => self.builtin_sign_operand(actuals[0]),
+            "abs" | "entier" => self.builtin_sign_operand(actuals[0]),
             _ => None,
         }
     }
@@ -13318,6 +13318,38 @@ mod tests {
             let err = compile_source(source, "test").expect_err(
                 "a non-unit, variable, or exponent-position sign exceeds the bounded proof",
             );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_nested_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(entier(sign(pick()))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(abs(entier(abs(sign(pick()))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "nested entier preserves an already integral bounded sign result for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_nested_entier_sign_widening_rejects_unbounded_operands() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(entier(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(abs(entier(pick()))); output(result) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("nested entier without a bounded sign root must remain conservative");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }
